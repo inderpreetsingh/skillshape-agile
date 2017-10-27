@@ -1,0 +1,35 @@
+<template name="SchoolUpload">
+  <div class="col-md-12">
+      <div class="card">
+        <div class="col-sm-12">
+
+    <div class="col-sm-6 col-sm-offset-3">
+
+      <div class="card card-stats">
+        <div class="card-header" data-background-color="blue">
+          <i class="material-icons">file_upload</i>
+        </div>
+        <div class="card-content">
+          <p class="category">Upload Project</p>
+          <form class="fileinput-box">
+            <div class="fileinput fileinput-new card-button text-right" data-provides="fileinput">
+              <div class="fileinput-preview fileinput-exists thumbnail" style="margin-top: 10px"> </div>
+                  <div>
+                      <span class="btn btn-warning btn-sm btn-file">
+                      <span class="fileinput-new">Select</span>
+                      <span class="fileinput-exists">Change</span>
+                      <input type="hidden">
+                      <input type="file" name="..." id="project_file">
+                      </span>
+                      <a href="#" class="btn btn-danger btn-sm fileinput-exists" data-dismiss="fileinput" ><i class="fa fa-times"></i>Remove</a>
+                  </div>
+                  <button type='button' class='btn btn-sm btn-success' id="project_upload">upload</button>
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</template>

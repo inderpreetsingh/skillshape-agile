@@ -1,0 +1,186 @@
+<!-- 
+
+Tagging System 
+
+This implements a simple tagging system and stores tags in a 'tags' column of a collection 
+
+it will store tags like this in your collection : 
+
+London, Berlin, Amsterdam, New York 
+
+
+You can do generate the tag manager using this template : 
+
+{{ > tags tag_table="attachments" tag_id=_id tag_data=tags }}  
+
+if you dont want to display all tags and only a count you can 
+
+{{ > tags tag_table="wbs_data" tag_id=_id tag_data=tags tag_count="yes" }}
+
+or change the tag icon 
+
+{{ > tags tag_table="entities" tag_id=_id tag_data=city tag_class="cities" tag_column="city" tag_icon="fa fa-map-marker"}} 
+
+you can also classify tags using a class column 
+
+{{ > tags tag_table="defects" tag_id=_id tag_data=tags tag_class="defects" tag_column="tags"  }} 
+
+you can also show tags only using showTags 
+
+{{ > showTags tag_data=city tag_icon="fa fa-map-marker"  }} 
+
+parameters used in template : 
+
+tag_table - table in which tags will be stored 
+tag_id = id that will be used to do operations 
+tag_data - string of tags 
+tag_icon - icon to use to denote tags 
+tag_class - class of tags to display 
+tag_class_disp - name of this class to display 
+tag_count - display tag count only  
+tag_newline - show tags in new line 
+
+
+This system is dependant on a tag table to store all tags and its classes 
+
+this can be loaded using subscribeTags() function 
+
+note : some functions will be using 
+getCurrentUserId() - company of logged in user 
+getCurrentUserResourceId() - account of logged in user 
+
+both can be ignored if we are implementing system wide static tags 
+
+
+There are some advanced functions provided in library of functions tagLib
+
+ -->
+
+ <template name="selectTags">
+
+	<span class="{{helperTags tag_data tag_icon}}" id="{{tag_id}}"  style="cursor:pointer;"></span>
+
+	{{ #if tag_filter }}
+		<input id="searchTag" type="text" class="input-xs" size="20" placeholder="Search {{helperClassName tag_class tag_class_disp}}..." style="margin-top:10px;margin-left: 10px;margin-right: 10px;" autocomplete="off" data-class="{{tag_class}}" value="{{ helperSessionVariable 'tagInstant' }}">
+	{{ /if }}
+
+	{{#each entTags "" tag_class tag_count }}
+		
+		<span class="label {{colourClickedTag this.tag }} clickEntTag hvr-grow-rotate " id="{{../tag_id}}{{_id}}" enttag="{{tag}}" table="{{../tag_table}}" column="{{../tag_column}}" tagclass="{{../tag_class}}"  data="{{../tag_id}}" tag="{{../tag_data}}"  style="cursor:pointer;font-size: x-small">{{tag}}&nbsp;&nbsp;</span>&nbsp;
+		
+	{{/each}}
+
+
+</template>
+
+<template name="showTags">
+
+	<span class="{{helperTags tag_data tag_icon}}" id="{{tag_id}}"  style="cursor:pointer;"></span>
+
+	{{#each parseTags tag_data}}
+
+		<span class="label {{colourClickedTag this}} clickTag hvr-grow-rotate" clicktag="{{this}}" style="cursor:pointer;font-size: x-small">{{cutstring this tag_length}}&nbsp;</span>&nbsp;
+		
+	{{/each}}
+
+
+</template>
+
+<template name="tags">
+
+
+	<span class="{{helperTags tag_data tag_icon}} showTagAdd  hvr-grow-rotate" id="{{tag_id}}" data-toggle="collapse" data-target="#tagAddPanel{{tag_id}}{{tag_class}}" style="cursor:pointer;"></span>
+	
+	
+	<small>
+
+		{{ #if tag_count }}
+			<span class="showTagAdd" id="{{tag_id}}" data-toggle="collapse" data-target="#tagAddPanel{{tag_id}}{{tag_class}}" style="cursor:pointer;">
+
+				<span class="{{ helperTagCountStyle tag_data}}">
+					{{ countTags tag_data }}
+				</span>
+				{{#if tag_class}}
+					{{#if tag_class_disp}}
+						<small>{{tag_class_disp}}</small>	
+					{{ else }}
+						<small>{{tag_class}}</small>
+					{{ /if }}
+				{{ else }}
+					<small>Tags</small>
+				{{ /if }}
+			</span>			
+		{{ else }}
+			
+			{{#each parseTags tag_data tag_noupdate}}
+			
+				<span class="label {{colourClickedTag this}} clickTag hvr-grow-rotate" clicktag="{{this}}" style="cursor:pointer;font-size: x-small">{{this}}&nbsp;&nbsp;<span class="fa fa-times-circle deleteTag hvr-pop" style="cursor:pointer;color: rgba(0,0,0,1.0)!important;font-size: small" table="{{../tag_table}}" column="{{../tag_column}}" tagclass="{{../tag_class}}" id="{{../tag_id}}" tag="{{../tag_data}}" deltag="{{this}}" tagnoupdate="{{../tag_noupdate}}"></span></span>&nbsp;
+				
+			{{/each}}
+		
+
+		{{ /if }}
+	</small>
+
+
+	
+	
+		
+		<div id="tagAddPanel{{tag_id}}{{tag_class}}" class="collapse tagPanel" style="margin-left: 5px;">
+
+			{{ #if tag_newline}}
+				<br>
+			{{ /if }}
+
+			<div class="row col-md-12" style="margin-top: 10px;margin-top: 10px;border-top: 1px dotted lightgray;padding-top: 10px;">
+			
+			{{ #unless tag_skipcurrent }} 
+
+				<span class="pull-right fa fa-times apply-opacity" data-toggle="collapse" data-target="#tagAddPanel{{tag_id}}{{tag_class}}" style="cursor:pointer;"></span>
+
+				<small>Current Tags:</small>
+
+				{{ #if tag_noupdate }}
+					{{#each storedTags }}
+						<span class="label {{colourClickedTag this}} clickTag hvr-grow-rotate" clicktag="{{this}}" style="cursor:pointer;font-size: x-small">{{this}}&nbsp;&nbsp;<span class="fa fa-times-circle deleteTag hvr-pop" style="cursor:pointer;color: rgba(0,0,0,1.0)!important;font-size: small" table="{{../tag_table}}" column="{{../tag_column}}" tagclass="{{../tag_class}}" id="{{../tag_id}}" tag="{{../tag_data}}" deltag="{{this}}" tagnoupdate="{{../tag_noupdate}}"></span></span>&nbsp;
+						
+					{{/each}}
+				{{ else }}
+					{{#each parseTags tag_data }}
+						<span class="label {{colourClickedTag this}} clickTag hvr-grow-rotate" clicktag="{{this}}" style="cursor:pointer;font-size: x-small">{{this}}&nbsp;&nbsp;<span class="fa fa-times-circle deleteTag hvr-pop" style="cursor:pointer;color: rgba(0,0,0,1.0)!important;font-size: small" table="{{../tag_table}}" column="{{../tag_column}}" tagclass="{{../tag_class}}" id="{{../tag_id}}" tag="{{../tag_data}}" deltag="{{this}}" tagnoupdate="{{../tag_noupdate}}"></span></span>&nbsp;
+						
+					{{/each}}
+				{{ /if }}
+
+				<!-- {{ #unless emptyTags tag_data }}
+					<span class="btn fa fa-plus apply-opacity showTagAdd hvr-grow-rotate" data-toggle="collapse" data-target="#tagAddPanel{{tag_id}}{{tag_class}}" id="{{tag_id}}{{tag_class}}" style="cursor:pointer;padding:3px;display:inline-block;"></span>
+				{{ /unless }} -->
+
+			
+				<br>
+			{{ /unless }}
+			<!-- {{> inputAutocomplete settings=tagAutocompleteSettings id="newTag" class="input-xs apply-opacity"  size="20" placeholder="New Tag..." style="margin-top:10px;" autocomplete="off"}} -->
+			
+			<input id="newTag" type="text" class="input-xs" size="20" placeholder="Search {{helperClassName tag_class tag_class_disp}}..." style="margin-top:10px;" autocomplete="off" data-class="{{tag_class}}" value="{{ helperSessionVariable 'tagInstant' }}">
+
+			{{ #unless tag_noupdate }}
+
+			<span class="addTag fa fa-check-circle" table="{{tag_table}}" column="{{tag_column}}" tagclass="{{tag_class}}"  id="{{tag_id}}" tag="{{tag_data}}" style="cursor: pointer;display:none"></span>
+			<span class="cancelTag fa fa-times-circle" table="{{tag_table}}" column="{{tag_column}}" tagclass="{{tag_class}}"  id="{{tag_id}}" tag="{{tag_data}}" style="cursor: pointer;display:none"></span>
+			{{ /unless }}
+
+			&nbsp; 
+				{{#each entTags tag_data tag_class tag_noupdate }}
+					<span class="label label-primary clickEntTag hvr-grow-rotate" id="{{../tag_id}}{{_id}}" enttag="{{tag}}" table="{{../tag_table}}" column="{{../tag_column}}" tagclass="{{../tag_class}}"  data="{{../tag_id}}" tag="{{../tag_data}}" tagnoupdate="{{../tag_noupdate}}"  style="cursor:pointer;font-size: x-small">{{tag}}&nbsp;&nbsp;</span>&nbsp;
+				{{/each}}	
+
+			</div>	
+		</div>
+
+	
+			
+</template>
+
+<template name="tagLine">
+	{{ tag }}
+</template>

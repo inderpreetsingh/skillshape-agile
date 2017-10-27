@@ -1,0 +1,545 @@
+<template name="MyCalendar">
+  <div class="content" >
+      <div class="container-fluid">
+          <div class="row">
+            {{#if is_embed}}
+            <div class="card col-md-12" style="overflow-y: auto; margin-bottom: 0px;margin-top: 0px">
+              <div class="col-md-12">
+              <div class="row col-md-12 ">
+              {{#each AllClassToSchool}}
+              <div class="col-md-3">
+                <div class="checkbox">
+                  <label>
+                        <input type="checkbox" name="optionsCheckboxes" class="ignore_list checkbox-material" data-id="{{_id}}" id="{{_id}}" checked>
+                        <strong title="{{className}}">
+                        {{cutStringBySize className 25}}
+                        </strong>
+                  </label>
+                </div>
+              </div>
+              {{/each}}
+              </div>
+              </div>
+              </div>
+            {{/if}}
+            {{#if needToShowFilter}}
+            <div class="card col-md-12" style="overflow-y: auto; margin-bottom: 0px;margin-top: 0px">
+              <div class="col-md-6">
+              <p class="text-muted" style="margin-top: 10px;font-size: medium;">Classes I am managing </p>
+              <div class="">
+              <div class="row col-md-12 ">
+              <div class="checkbox col-md-12">
+                    <label>
+                      <input type="checkbox" name="uncheckManagclass" class="ignore_list checkbox-material uncheckManageclass" id="uncheckManageclass" checked>
+                      <strong>All managed Classes</strong>
+                    </label>
+                  </div>
+              {{#each MyClass}}
+                <div class="checkbox col-md-4">
+                  <label>
+                        <input type="checkbox" name="optionsCheckboxes" class="ignore_list checkbox-material" data-id="{{_id}}" id="{{_id}}" checked>
+                        <strong title="{{className}}">
+                        {{cutStringBySize className 12}}
+                        </strong>
+                  </label>
+                </div>
+              {{/each}}
+              </div>
+              </div>
+              </div>
+              <div class="col-md-6">
+              <p class="text-muted" style="margin-top: 10px;font-size: medium;">Classes I am attending </p>
+                <div class="">
+                <div class="row col-md-12 ">
+                  <div class="checkbox col-md-12">
+                    <label>
+                      <input type="checkbox" name="uncheckMyclass" class="ignore_list checkbox-material uncheckMyclass" id="uncheckMyclass" checked>
+                      <strong>All my Classes</strong>
+                    </label>
+                  </div>
+
+                  {{#each joinClass}}
+                    <div class="checkbox col-md-4">
+                    <label>
+                          <input type="checkbox" name="optionsCheckboxes" class="ignore_list checkbox-material" data-id="{{_id}}" id="{{_id}}" checked>
+                          <strong title="{{className}}">
+                          {{cutStringBySize className 12}}
+                          </strong>
+                    </label>
+                     <i class="fa fa-trash delete-file class_remove" aria-hidden="true" data-id="{{_id}}" style="color: #c84513;cursor: pointer"></i>
+                    </div>
+                  {{/each}}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            {{/if}}
+            <div class="col-md-12 nopaddb">
+                   <div class="card card-calendar">
+                       <div class="card-content ps-child">
+                           <div id="fullCalendar"></div>
+                       </div>
+                   </div>
+               </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="modal fade " id="ClassDetailModal" role="dialog">
+      {{>ClassDetailModalTemplate}}
+  </div>
+</template>
+<template name="UserDetailModalTemplate">
+  <div class="modal-dialog ">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close close-btn" data-dismiss="modal"><i class="material-icons">cancel</i></button>
+              <h3 class="modal-title">User Details</h3>
+          </div>
+          {{#with userDetails}}
+          <div class="modal-body card" style="">
+            <div class="col-md-2 text-center" style="padding-top:20px;">
+              <div class="fileinput fileinput-new card-button text-center" data-provides="fileinput">
+                  <div class="fileinput-new card-button thumbnail">
+                      <img class="" src="{{ValidateImage profile.pic}}" alt="Profile Image" id="pic">
+                  </div>
+              </div>
+            </div>
+            <div class="col-md-9 right txtwar">
+              <div class="form-group row">
+                <label for="example-text-input" class="col-md-3 col-form-label" style="text-align: right;">First Name</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="text"  id="firstName" value="{{profile.firstName}}" readonly="true">
+                </div>
+              </div>
+              <div class="form-group row">
+               <label for="example-text-input" class="col-md-3 col-form-label" style="text-align: right;">Nickname</label>
+               <div class="col-md-9">
+                 <input class="form-control" type="text"  id="nickame" value="{{profile.nickame}}" readonly="true">
+               </div>
+             </div>
+             <div class="form-group row">
+               <label for="example-text-input" class="col-md-3 col-form-label" style="text-align: right;">Last Name</label>
+               <div class="col-md-9">
+                 <input class="form-control" type="text"  id="lastName" value="{{profile.lastName}}" readonly="true">
+               </div>
+               </div>
+               <div class="form-group row">
+                 <label for="example-text-input" class="col-md-3 col-form-label" style="text-align: right;">Email</label>
+                 <div class="col-md-9">
+                   <input class="form-control" type="text"  id="example-text-input" value="{{email}}" readonly="true">
+                 </div>
+               </div>
+               </div>
+               </div>
+               {{/with}}
+          </div>
+     </div>
+</template>
+<template name="ClassDetailModalTemplate">
+  <div class="modal fade " id="UserDetailModal" role="dialog">
+      {{>UserDetailModalTemplate}}
+  </div>
+  <div class="modal-dialog calender-model">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close close-btn" data-dismiss="modal"><i class="material-icons">cancel</i></button>
+              <h3 class="modal-title">Class Details </h3>
+          </div>
+          <div class="modal-body model-highlight" style="">
+              {{#with current_class}}
+              <form class="formMonthModal">
+              <div class="grey-box clearfix">
+               <div class="col-md-4">
+                    <div class="card card-profile" style="margin-top: 0px;">
+                          <div class="">
+                            <div class="">
+
+                              <a class="link-redirect link" data-target="/schools/{{schoolNameSlug schoolId}}"><div class="thumb" style="background-image: url({{view_image classTypeId classImagePath schoolId}}); height:155px; width:100%"></div></a>
+<!--                                     <div class="">
+                                    <img src="{{view_image classTypeId}}" style="height:155px">
+                                </div> -->
+                            </div>
+                            <!--div class="card-content">
+                              <h4 class="card-title">
+                                  <a href="#">{{className}}</a>
+                              </h4>
+                            </div-->
+                          </div>
+                          <p class="text-center">
+                                {{#if is_embed}}
+                                    <a href="#" class="btn btn-success btn_join_class btn_join_check" data-class="{{_id}}" data-class-type="{{classTypeId}}" >Join Class<div class="ripple-container"></div></a>
+                                {{/if}}
+                          </p>
+                    </div>
+                </div>
+                <div class="col-md-8 list-box-min">
+                      <div class="main-detail-box">
+                        <p class="text-center">
+                            <h3 style="margin:0px;">{{className}}</h3>
+                            At <a class="link-redirect link" data-target="/schools/{{schoolNameSlug schoolId}}"><span class="material-input">{{schoolName schoolId}}</span></a>
+                        </p>
+                      <div class="main-detail-heading-box clearfix">
+                          {{#if needToShowFilter}}
+                              <div class="main-detail-edit-button action_btn">
+                                {{#if ownClass _id}}
+                                <button class="btn btn-just-icon btn-round" type="button" id="detail-edit" title="Edit class" data-id="{{_id}}"><i class="material-icons">edit</i></button>
+                                {{/if}}
+                                {{#if ownClass _id}}
+                                {{else}}
+                                  <a href="#" class="btn btn-just-icon btn-round class_remove" data-id="{{_id}}"><i class="material-icons">delete</i><div class="ripple-container"></div></a>
+                                {{/if}}
+                                </div>
+                           {{/if}}
+                      </div>
+
+                      <p >
+                          <label for="repeat" class="location-address-icon"> Location : </label>
+                          <span class="material-input">{{address_view locationId}}</span>
+                      </p>
+                <p>
+                 <label>Event Date : </label>
+                    <span class="material-input">{{#with current_event}}{{eventDay}}{{/with}}, {{current_date}}</span>
+                 </p>
+                <p>
+                    <label for="repeat"> Time :</label>
+                    {{#with current_event}}
+                    <span class="material-input">{{eventStartTime}} to {{eventEndTime}}</span>
+                    {{/with}}
+                </p>
+
+
+                  {{#with class_type_detail}}
+                    <p>
+                        <label>Class Type : </label>
+                        <span class="material-input">{{name}}</span>
+                  </p>
+                  {{#if checkSkill skillTypeId}}
+                    <p>
+                        <label for="repeat">Skill Type : </label>
+                        <span class="material-input">{{skillTypeId}}</span>
+                    </p>
+                    {{/if}}
+                  {{/with}}
+</div>
+            <div class="change-detail-box">
+                <div  class="form-group">
+                {{#if needToShowFilter}}
+                              <div class="main-detail-edit-button action_btn">
+                                {{#if ownClass _id}}
+                                  <button type="button" class="btn btn-just-icon btn-round" id="CancelClassdetailClick"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                {{/if}}
+                                {{#if ownClass _id}}
+                                {{else}}
+                                  <a href="#" class="btn btn-just-icon btn-round class_remove" data-id="{{_id}}"><i class="material-icons">delete</i><div class="ripple-container"></div></a>
+                                {{/if}}
+                                </div>
+                           {{/if}}
+                    <label>Class Name : </label>
+                    <span class="material-input">{{className}}</span>
+                </div>
+                {{#with current_event}}
+                     <div class="col-sm-6 row">
+                        <label class=""><b>Start Time</b></label>
+                        <div class="form-group"><input class="form-control timepicker" id="start_time" value="{{eventStartTime}}" type="text">
+                            <span class="material-input"></span></div>
+                        </div>
+                        <div class="col-sm-6">
+                        <label >End Time</label>
+                        <div class="form-group"><input class="form-control timepicker" id="end_time" value="{{eventEndTime}}" type="text">
+                          <span class="material-input"></span></div>
+                      </div>
+                    {{/with}}
+                <span >
+                        <label class=""><b>Class Location</b></label>
+                        <select class="form-control cc_locationt" style="width:100%" id="ClassDetailModal_location">
+                          <option disabled>Location</option>
+                          {{#each locations schoolId}}
+                                <option value="{{_id}}" {{is_selected _id}}>{{title}}, {{address}}</option>
+                          {{/each}}
+                      </select>
+                </span>
+              <div class="class_detail_edit_btn">
+                <button type="button" class="btn btn-sm btn-success"  id="btn-update_class" data-id={{_id}}>Save Event</button>
+                <button type="button" class="btn btn-sm btn-rose"  id="removeEvent" data-id={{_id}}>Remove  Event</button>
+
+                <button type="button" class="btn btn-sm btn-warning"  id="editClass" data-id={{_id}}>Edit Series</button>
+             </div>
+                <!--p>
+                    <label>School Name : </label>
+                    <span class="material-input">{{schoolName schoolId}}</span>
+                </p-->
+            </div>
+
+          </div>
+          </div>
+<!--Editable div box-->
+                {{#if is_embed}}
+                  <div class="wizard-navigation" id="wizard-navigation-class-edit">
+                     <div class="row">
+                       <ul class="nav nav-pills class-nav-tab nav-navigation">
+                           <li style="" class="active col-sm-6 col-xs-12" id="ClassDetails">
+                               <a class = "remove-radius" href="#tab_default_a"  data-toggle="tab" aria-expanded="false"><b>Class Details</b></a>
+                           </li>
+                           <li style="" class="col-sm-6 col-xs-12" id="StudentDetails">
+                               <a href="#tab_default_b"  data-toggle="tab" aria-expanded="true" class="remove-radius validate"><b>Student Details</b></a>
+                           </li>
+                       </ul>
+                       </div>
+                   </div>
+                   <div class="tab-content">
+                     <div class="tab-pane  navigation-tab active" id="tab_default_a">
+                     	 <div class="row">
+                         <div class="col-md-12">
+                           <div class="form-group ">
+                         <div class="col-sm-12">
+                           {{#with class_type_detail}}
+                             <p>
+                                 <label>Class Type : </label>
+                                 <span class="material-input">{{name}}</span>
+                             </p>
+                           {{/with}}
+                           {{#with disply_date this}}
+                             <p>
+                                 <label>Start : </label>
+                                 <span class="material-input">{{start_date}}</span>
+                             </p>
+                               {{#if checkValue end_option}}
+                                 <p>
+                                     <label>End : </label>
+                                     <span class="material-input">{{end_option_value}}</span>
+                                 </p>
+                               {{/if}}
+                             {{/with}}
+                             <p>
+                                 <h3 class="material-input">{{disply_str this}}</h3>
+                             </p>
+                             <!-- {{#with current_event}}
+                              <span><i class="material-icons" title="Timing">schedule</i><span id="vstart_time" style="padding-left: 10px;">{{eventStartTime}}</span> to <span id="vend_time" style="padding-left: 10px;">{{eventEndTime}}</span></span>
+                            {{/with}} -->
+
+
+                         <p>
+                             <span class="material-input">{{{view_schedule_with_location this}}}</span>
+                         </p>
+                         </div>
+                         <div class="col-md-12 grey-box">
+                         <p class="text-center">
+                           <b>Class Description</b>
+                         </p>
+                           <p>
+                             <span class="material-input">{{view_desc classTypeId}}</span>
+                           </p>
+                         </div>
+                         <!--p class="time-detail-box">
+                           <i class="material-icons">schedule</i><b>{{{view_schedule this}}}</b>
+                           </p-->
+                           {{#with current_event}}
+                             <input type="hidden" id="current_schedule_id" value="{{_id}}">
+                           {{/with}}
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                     <div class="tab-pane  navigation-tab" id="tab_default_b">
+                     	 <div class="row">
+                         <div class="col-sm-12">
+                           <div class="table-responsive">
+                               <table class="table table-box-head" style="max-height:200px; overflow-y:auto;">
+                               <thead class="">
+                               	<th>#</th>
+                               	<th>First Name</th>
+                               	<th>Last Name</th>
+                               	<th>Image</th>
+                               </thead>
+                               {{#each student_join}}
+                               <tr>
+                               <td></td>
+                               <td>{{profile.firstName}}</td>
+                               <td>{{profile.lastName}}</td>
+                               <td>
+                                 <a href="#" class="viewUser" data-user-id="{{_id}}">
+                                 <div class="card-image" data-header-animation="true" style="background: whitesmoke">
+                                         <img class="img" src="{{ValidateImage profile.pic}}" height="50px;">
+                                 </div>
+                                 </a>
+                               </td>
+                               </tr>
+                               {{/each}}
+
+                             </table>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                {{else}}
+                <div class="col-md-12">
+                  <div class="form-group ">
+                <div class="col-sm-12">
+                  {{#with class_type_detail}}
+                    <p>
+                        <label>Class Type : </label>
+                        <span class="material-input">{{name}}</span>
+                    </p>
+                  {{/with}}
+                  {{#with disply_date this}}
+                    <p>
+                        <label>Start : </label>
+                        <span class="material-input">{{start_date}}</span>
+                    </p>
+                      {{#if checkValue end_option}}
+                        <p>
+                            <label>End : </label>
+                            <span class="material-input">{{end_option_value}}</span>
+                        </p>
+                      {{/if}}
+                    {{/with}}
+                    <p>
+                        <h3 class="material-input">{{disply_str this}}</h3>
+                    </p>
+                    <!-- {{#with current_event}}
+                     <span><i class="material-icons" title="Timing">schedule</i><span id="vstart_time" style="padding-left: 10px;">{{eventStartTime}}</span> to <span id="vend_time" style="padding-left: 10px;">{{eventEndTime}}</span></span>
+                   {{/with}} -->
+
+
+                <p>
+                    <span class="material-input">{{{view_schedule_with_location this}}}</span>
+                </p>
+                </div>
+                <div class="col-md-12 grey-box">
+                <p class="text-center">
+                  <b>Class Description</b>
+                </p>
+                  <p>
+                    <span class="material-input">{{view_desc classTypeId}}</span>
+                  </p>
+                </div>
+                <!--p class="time-detail-box">
+                  <i class="material-icons">schedule</i><b>{{{view_schedule this}}}</b>
+                  </p-->
+                  {{#with current_event}}
+                    <input type="hidden" id="current_schedule_id" value="{{_id}}">
+                  {{/with}}
+                  </div>
+                </div>
+                {{/if}}
+
+              </form>
+                {{/with}}
+          </div>
+          <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+          </div>
+      </div>
+  </div>
+  {{#if is_embed}}
+    {{>embedlogin}}
+  {{/if}}
+  <div id="addClass1" class="modal fade" tabindex="-1" role="dialog">
+      {{>classTemplate}}
+  </div>
+</template>
+<template id="embedlogin" name="embedlogin">
+  <div class="modal fade " id="embedJoin" role="dialog">
+      {{>regTemplate}}
+  </div>
+  <div class="modal fade " id="embedloginmodal" role="dialog">
+      {{>loginTemplate}}
+  </div>
+</template>
+<template name="loginTemplate">
+  <div class="modal-dialog" style="max-width: 450px;">
+      <div class="modal-content">
+        <div class="modal-body" style="min-height: 325px;">
+          <form method="#" action="#" id="">
+              <div class="card-login card-hidden" style="padding-bottom: 0px;">
+                  <div class="card-header text-center" data-background-color="info">
+                      <h4 class="card-title">Login</h4>
+                  </div>
+                  <div class="card-content">
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                              <i class="material-icons">email</i>
+                          </span>
+                          <div class="form-group label-floating">
+                              <label class="control-label">Email address</label>
+                              <input type="email" class="form-control" id="email">
+                          </div>
+                      </div>
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                              <i class="material-icons">lock_outline</i>
+                          </span>
+                          <div class="form-group label-floating">
+                              <label class="control-label">Password</label>
+                              <input type="password" class="form-control" id="password">
+                          </div>
+                      </div>
+                  </div>
+                  <div class="footer text-center">
+                      <button type="button" id="btn_login" class="btn btn-danger btn-sm">Log in</button>
+                  </div>
+
+              </div>
+          </form>
+          <div class="modal-footer text-center" style="padding:0px;">
+            <span class="">Not a member yet? <a href="#" class="btn btn-primary btn-sm join_school">Join Now</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+</template>
+<template name="regTemplate">
+  <div class="modal-dialog" style="max-width: 425px;">
+      <div class="modal-content">
+        <div class="modal-body" style="min-height: 350px;">
+          <div class="card-signup" style="padding-bottom: 0px;padding: 20px 0px;">
+            <div class="card-header text-center" data-background-color="info">
+                <h4 class="card-title">Register & Join</h4>
+            </div>
+            <!-- <ul class="nav nav-pills nav-pills-primary nav-pills-icons" style="margin-top: 0px;padding-left: 45px;margin-bottom: 10px;">
+                <li class="active sheade" id="student-tab">
+                  <a href="#" class="card-title text-center">Register</a>
+                </li>
+            </ul> -->
+              <div class="">
+                  <div class="col-md-12">
+                    <div class="col-md-12 text-center">
+                        <!-- <span class="">Sign up with  <a href="#" style="text-decoration: underline;">facebook</a> or <a href="#" style="text-decoration: underline;">Google</a></span> -->
+                    </div>
+                      <form class="form" method="" action="" id="signupmodal">
+                              <div class="input-group">
+                                  <span class="input-group-addon">
+                                      <i class="material-icons">email</i>
+                                  </span>
+                                  <input type="text" class="form-control" placeholder="Email..." id="email">
+                              </div>
+                              <div class="input-group">
+                                  <span class="input-group-addon">
+                                      <i class="material-icons">lock_outline</i>
+                                  </span>
+                                  <input type="password" placeholder="Password..." class="form-control" id="password"/>
+                              </div>
+                              <div class="input-group">
+                                  <span class="input-group-addon">
+                                      <i class="material-icons">lock_outline</i>
+                                  </span>
+                                  <input type="password" placeholder="Re-enter Password..." class="form-control" id="re_password" />
+                              </div>
+                      </form>
+                  </div>
+                  <div class="modal-footer text-center">
+                      <button type="button" class="btn btn-danger btn_sign_up" id="btn_sign_up" style="width:100%;margin-top: 20px">Join</button>
+                      <hr style="margin-top: 10px;margin-bottom:5px;">
+                      <!-- <div class="col-md-12 text-center">
+                          <span class="">Already a Skillshape Member?  <a href="#" class="btn btn-success btn-sm login" >Log in</a></span>
+                      </div> -->
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</template>

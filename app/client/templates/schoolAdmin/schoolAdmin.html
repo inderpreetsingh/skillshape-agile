@@ -1,0 +1,1698 @@
+<template name="schoolAdmin">
+    <div class="wizard-navigation">
+        <ul class="nav nav-pills nav-navigation">
+            <li style="margin-left: 0px;" class="active col-sm-2 col-xs-12" >
+                <a class = "remove-radius" href="#tab_default_1"  data-toggle="tab" aria-expanded="false"><b>School Details</b></a>
+            </li>
+            <li style="margin-left: 0px;" class="col-sm-2 col-xs-12">
+                <a href="#tab_default_2" data-toggle="tab" aria-expanded="false" class=" remove-radius validate"><b>Location Details</b></a>
+            </li>
+            <li style="margin-left: 0px;" class="col-sm-2 col-xs-12">
+                <a href="#tab_default_5"  data-toggle="tab" aria-expanded="true" class="remove-radius validate"><b>Class Type Details</b></a>
+            </li>
+            <li style="margin-left: 0px;" class="col-sm-2 col-xs-12">
+                <a href="#tab_default_7"  data-toggle="tab" aria-expanded="true" class="remove-radius validate"><b>Prices</b></a>
+            </li>
+            <li style="margin-left: 0px;" class="col-sm-2 col-xs-12">
+                <a href="#tab_default_8"  data-toggle="tab" aria-expanded="true" class="remove-radius validate"><b>Media</b></a>
+            </li>
+            <li style="margin-left: 0px;" class="col-sm-2 col-xs-12">
+                <a href="#tab_default_10"  data-toggle="tab" aria-expanded="true" class="remove-radius validate"><b>Iframe Code</b></a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_default_1">
+          <div class="col-md-12">
+              <div class="card">
+              <div class="card-content">
+                <form class="form schoolForm" method="" action="">
+                <!-- <div class="table-responsive col-md-8"> -->
+                <div class="row">
+                <div class="col-sm-8">
+                  <div class="form-group">
+                      <label>
+                          School Name *
+                      </label>
+                      <input type="text" class="form-control form-mandatory onChange" name="sname" id="sname" key-value="name" value="{{name}}" required="true">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="row">
+                  <div class="form-group col-sm-7">
+                      <label>
+                          Website
+                      </label>
+                      <input type="text" class="form-control form-mandatory onChange" id="Website" key-value="website" value="{{website}}">
+                      <span class="material-input">
+                                  </span>
+                  </div>
+                  <div class="form-group col-sm-5">
+                      <label>
+                          Phone Number
+                      </label>
+                      <input type="text" class="form-control onChange" name="pnum" id="phone" key-value="phone" value="{{phone}}">
+                      <span class="material-input">
+                                  </span>
+                  </div>
+                  </div>
+                  <div class="form-group">
+                      <label>
+                          Background Video URL
+                      </label>
+                      <input type="text" class="form-control form-mandatory " name="sname" id="backGroundVideoUrl" key-value="name" value="{{backGroundVideoUrl}}">
+                      <span class="material-input"></span>
+                  </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="fileinput fileinput-new card-button text-center" data-provides="fileinput">
+                    <div class="fileinput-new card-button thumbnail">
+                        <img class="" src="{{SchoolImageValidate mainImage}}" alt="Profile Image" id="pic">
+                    </div>
+                    <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                    <div>
+                        <span class="btn btn-warning btn-sm btn-file">
+                                <span class="fileinput-new">Upload New Image</span>
+                        <span class="fileinput-exists">Change</span>
+                        <input type="hidden">
+                        <input type="file" name="..." accept="image/*" class="validateImageType" id="schoolImage">
+                        </span>
+                        <a href="#" class="btn btn-danger  fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i>Remove</a>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group  onChange">
+                <label>
+                   About  School
+                </label>
+                <div id="summernote1">About School</div>
+                <span class="material-input"></span>
+            </div>
+                <div class="form-group  onChange">
+                    <label>
+                        School Description
+                    </label>
+                    <div id="summernote2">School Description</div>
+                    <span class="material-input"></span>
+                </div>
+                <!-- {{else}}
+                    <div class="form-group  onChange">
+                        <label>
+                            School Description
+                        </label>
+                        <div class="classEd">{{{Allschool.schooldesc}}}</div>
+                        <span class="material-input"></span>
+                    </div>
+                {{/if}} -->
+                <div class="form-group form-button col-md-6 pull-right">
+
+                </div>
+                <!-- </div> -->
+            </form>
+            <div class="wizard-footer col-md-12">
+                <div class="pull-right">
+                  {{#if use_has_school}}
+                  <button type="button" style="float:left" class="btn btn-success" id="editSchool">Update & Next
+                      <div class="ripple-container"></div>
+                  </button>
+                  {{else}}
+                  <button type="button" style="float:left" class="btn btn-success" id="addSchool">ADD School & Next
+                      <div class="ripple-container"></div>
+                  </button>
+
+                  {{/if}}
+                </div>
+                <div class="clearfix"></div>
+            </div>
+          </div>
+          </div>
+        </div>
+            <!-- <div class="col-md-12">
+                <div class="col-md-6">
+                    &nbsp;
+                </div>
+                <div class="col-md-6">
+                    <button type="button" style="float:left" class="btn  btn-danger" id="nxt">Next
+                        <div class="ripple-container"></div>
+                    </button>
+                </div>
+            </div> -->
+        </div>
+        <div class="tab-pane" id="tab_default_2">
+            <div class="col-md-12" style="padding-top:20px;">
+                <div class="card">
+                    <div class="card-header card-header-tabs" data-background-color="blue">
+                    <div class="nav-tabs-navigation">
+                      <div class="nav-tabs-wrapper">
+                        <span class="nav-tabs-title"></span>
+                        <ul class="nav nav-tabs" data-tabs="tabs">
+                          <li class="col-md-3 col-sm-3 col-xs-12">
+                            <a href="#" data-toggle="tab" aria-expanded="true">
+                              <i class="material-icons">assignment</i> Locations
+                              <div class="ripple-container"></div>
+                            </a>
+                          </li>
+                          <li class="filter-archive filter-evaluation active col-md-3 col-sm-3 col-xs-12">
+                            <a href="#" id="add_location" data-toggle="tab" class="" aria-expanded="false" style="cursor: pointer">
+                              <i class="fa fa-plus" aria-hidden="true"></i> ADD LOCATION
+                              <div class="ripple-container"></div>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                    <div class="card-content">
+                        <div class="table-responsive">
+                            <table class="table text-center">
+                                <thead>
+                                    <tr>
+                                        <!-- <th class="text-center">#</th> -->
+                                        <th class="location-details">Location Name</th>
+                                        <th class="location-details">Street Address</th>
+                                        <th class="location-details">City</th>
+                                        <th class="location-details">Neighborhood</th>
+                                        <th class="location-details">State</th>
+                                        <th class="location-details">Zip Code</th>
+                                        <th class="location-details">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each locations}}
+                                        <tr>
+                                            <td>{{title}}</td>
+                                            <td>{{address}}</td>
+                                            <td>{{city}}</td>
+                                            <td>{{neighbourhood}}</td>
+                                            <td>{{state}}</td>
+                                            <td>{{zip}}</td>
+                                            <td class="td-actions ">
+                                            <button type="button" rel="tooltip" class="btn btn-primary arrow-rotate-box" data-original-title="" title="" id="showClasses" data-id="{{_id}}" data-toggle="collapse" data-target="#{{_id}}">
+                                                    <i class="material-icons">expand_more</i>
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-warning" data-id="{{_id}}" title="" id="editLocation">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-danger " data-original-title="" title="" id="deleteLocation"  data-id="{{_id}}">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+										<!-- Code starting for toggle table  -->
+
+										<tr id="{{_id}}" class="collapse in">
+                                            <td colspan="7">
+                                              <div class="col-sm-1">
+                                              </div>
+                                                <div class="col-md-11">
+                                                    <div class="card card-plain" style="background: whitesmoke;">
+                                                      <div class="row box-row">
+                                                        <div class="col-sm-8 hidden-xs"><h4 class="card-title card-list-title">Rooms</h4></div>
+                                                        <div class="col-sm-4 hidden-xs">
+                                                          <button type="button" rel="tooltip" class="btn btn-success btn-sm" data-original-title="" title="" id="addRoomsModel" data-id="{{_id}}">
+                                                            <i class="material-icons">add</i> Room
+                                                        </button></div>
+                                                        <div class="col-xs-12 hidden-lg hidden-md hidden-sm room-content-box">
+                                                          <h4 class="card-title card-list-title">Rooms</h4>
+                                                          <button type="button" rel="tooltip" class="btn btn-success btn-sm" data-original-title="" title="" id="addRoomsModel" data-id="{{_id}}">
+                                                            <i class="material-icons">add</i> Room
+                                                        </button>
+                                                        </div>
+                                                      </div>
+                                                        <div class="card-content">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-capacity-heading">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Name</th>
+                                                                            <th >Capacity</th>
+                                                                            <th >Actions</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody class="table-capacity-content">
+                                                                        {{#each rooms}}
+                                                                            <tr>
+                                                                                <td>{{name}}</td>
+                                                                                <td>{{capicity}}</td>
+
+                                                                                <td class="td-actions ">
+                                                                                    <button type="button" rel="tooltip" class="btn btn-warning editRoomLocat" data-original-title="" title="" id="editRoomLocat" data-id="{{id}}" data-location="{{../_id}}" data-name="{{name}}" data-capicity="{{capicity}}" >
+                                                                                        <i class="material-icons">edit</i>
+                                                                                    </button>
+                                                                                    <button type="button" rel="tooltip" class="btn btn-danger" data-original-title="" title="" id="deleteRoom" data-id="{{id}}" data-location="{{../_id}}">
+                                                                                        <i class="material-icons">close</i>
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                            {{/each}}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+										<!-- end of toggle table  -->
+                                    {{/each}}
+                                    <tr>
+                                        <!-- <td colspan="6"></td> -->
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wizard-footer col-md-12">
+                <div class="pull-right">
+                    <input type="button" class="btn btn-next btn-fill btn-success btn-wd" name="next" id="nxt" value="Next">
+                    <input type="button" class="btn btn-finish btn-fill btn-rose btn-wd" name="finish" value="Finish" style="display: none;">
+                </div>
+                <div class="pull-left">
+                    <input type="button" class="btn btn-previous btn-fill btn-warning btn-wd" name="previous" value="Previous" id="prv">
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="tab_default_5">
+            <div class="col-md-12" style="padding-top:20px;">
+                <div class="card">
+                    <div class="card-header card-header-tabs" data-background-color="blue">
+                    <div class="nav-tabs-navigation">
+                      <div class="nav-tabs-wrapper">
+                        <span class="nav-tabs-title"></span>
+                        <ul class="nav nav-tabs" data-tabs="tabs">
+`                          <li class="">
+                            <a href="#" data-toggle="tab" aria-expanded="true">
+                              <i class="material-icons">assignment</i> Class Types
+                              <div class="ripple-container"></div>
+                            </a>
+                          </li>
+                          <li class="filter-archive filter-evaluation active">
+                            <a href="#" id="newClasstype" data-toggle="tab" class="text-right" aria-expanded="false" style="cursor: pointer">
+                              <i class="fa fa-plus" aria-hidden="true"></i> ADD CLASS TYPE
+                              <div class="ripple-container"></div>
+                            </a>
+                          </li>
+                          {{#if IsOnlySuperadmin}}
+                          <li class="filter-archive filter-evaluation">
+                            <a href="#" id="addSkillType" data-toggle="tab" class="text-right" aria-expanded="false" style="cursor: pointer">
+                              <i class="fa fa-plus" aria-hidden="true"></i> ADD SKILL TYPE
+                              <div class="ripple-container"></div>
+                            </a>
+                          </li>
+                          {{/if}}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                    <div class="card-content">
+                        <div class="table-responsive">
+                            <table class="table text-center" style="width: 100%;overflow: auto;">
+                                <thead>
+                                    <tr>
+                                        <!-- <th class="text-center">#</th> -->
+                                        <th class="class-type-detail">Class Types</th>
+                                        <th class="class-type-detail">Skill Taught</th>
+                                        <th class="class-type-detail">Class Type Description</th>
+                                        <th class="class-type-detail">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each schoolClassTypes}}
+                                        <tr>
+                                            <td data-toggle="collapse" data-target="#{{_id}}">{{name}} </td>
+                                            <td data-toggle="collapse" data-target="#{{_id}}">{{skillTypeId}}</td>
+                                            <td data-toggle="collapse" data-target="#{{_id}}">{{desc}}</td>
+                                            <td class="td-actions ">
+                                               <button type="button" rel="tooltip" class="btn btn-primary arrow-rotate-box" data-original-title="" title="" id="roomClasses" data-id="{{_id}}" data-toggle="collapse" data-target="#{{_id}}">
+                                                    <i class="material-icons">expand_more</i>
+                                                </button>
+
+                                                <button type="button" rel="tooltip" class="btn btn-warning" data-original-title="" title="" id="editClassType" data-id="{{_id}}">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-danger" data-original-title="" title="" id="deleteClassType" data-id="{{_id}}">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr id="{{_id}}" class="collapse in">
+                                            <td colspan="4">
+                                              <div class="col-sm-1">
+                                              </div>
+                                                <div class="col-md-11">
+                                                    <div class="card card-plain" style="background: whitesmoke;">
+                                                      <div class="row box-row">
+                                                        <div class="col-sm-8 hidden-xs"><h4 class="card-title">Classes</h4></div>
+                                                        <div class="col-sm-4 hidden-xs">
+                                                          <button type="button" rel="tooltip" class="btn btn-success btn-sm" data-original-title="" title="" id="AddNewClass" data-id="{{_id}}">
+                                                            <i class="material-icons">add</i> Class
+                                                        </button></div>
+                                                        <div class="col-xs-12 hidden-lg hidden-md hidden-sm room-content-box">
+                                                            <h4 class="card-title">Classes</h4>
+                                                        <button type="button" rel="tooltip" class="btn btn-success btn-sm" data-original-title="" title="" id="AddNewClass" data-id="{{_id}}">
+                                                            <i class="material-icons">add</i> Class
+                                                        </button>
+                                                        </div>
+                                                      </div>
+                                                        <div class="card-content">
+                                                            <div class="table-responsive">
+                                                                <table class="table text-center">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="font-weight-bold">Class name</th>
+                                                                            <th class="font-weight-bold">Start Date</th>
+                                                                            <th class="font-weight-bold">End Date</th>
+                                                                            <th class="font-weight-bold">Actions</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {{#each schoolClasses _id}}
+                                                                            <tr>
+                                                                                <td>{{className}}</td>
+                                                                                <td>{{format_date this}}</td>
+                                                                                <td>{{repeat_end}}</td>
+                                                                                <td class="td-actions ">
+                                                                                    <button type="button" rel="tooltip" class="btn btn-warning" data-original-title="" title="" id="editClass" data-id="{{_id}}">
+                                                                                        <i class="material-icons">edit</i>
+                                                                                    </button>
+                                                                                    <button type="button" rel="tooltip" class="btn btn-danger" data-original-title="" title="" id="deleteClass" data-id="{{_id}}">
+                                                                                        <i class="material-icons">close</i>
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        {{/each}}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                    <tr>
+                                        <!-- <td colspan="4"></td> -->
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="wizard-footer col-md-12">
+                <div class="pull-right">
+                    <input type="button" class="btn btn-next btn-fill btn-success btn-wd" name="next" id="nxt" value="Next">
+                    <input type="button" class="btn btn-finish btn-fill btn-rose btn-wd" name="finish" value="Finish" style="display: none;">
+                </div>
+                <div class="pull-left">
+                    <input type="button" class="btn btn-previous btn-fill btn-warning btn-wd" name="previous" value="Previous" id="prv">
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab_default_7">
+            <div class="col-md-12" style="padding-top: 20px;">
+                <div class="card">
+                    <!-- <div class="card-header card-header-icon" data-background-color="rose">
+                        <i class="material-icons">assignment</i>
+                    </div>
+                    <div class="card-header pull-right">
+                        <button type="button" class="btn btn-info btn-round" id="newMonth">Add Monthly Packages
+                        </button>
+                    </div>
+                    <h4 class="card-title">Monthly Packages:</h4> -->
+                    <div class="card-header card-header-tabs" data-background-color="blue">
+                  	<div class="nav-tabs-navigation">
+                  		<div class="nav-tabs-wrapper">
+                  			<span class="nav-tabs-title"></span>
+                  			<ul class="nav nav-tabs" data-tabs="tabs">
+                  				<li class="">
+                  					<a href="#" data-toggle="tab" aria-expanded="true">
+                  						<i class="material-icons">assignment</i> Monthly Packages
+                  						<div class="ripple-container"></div>
+                  					</a>
+                  				</li>
+                  				<li class="filter-archive filter-evaluation active">
+                  					<a href="#" id="newMonth" data-toggle="tab" class="text-right" aria-expanded="false" style="cursor: pointer">
+                  						<i class="fa fa-plus" aria-hidden="true"></i> Add Monthly Packages
+                  						<div class="ripple-container"></div>
+                  					</a>
+                  				</li>
+                  			</ul>
+                  		</div>
+                  	</div>
+                  </div>
+                    <div class="card-content">
+                        <div class="table-responsive">
+                            <table class="table text-center">
+                                <thead>
+                                    <tr class="font-weight-bold">
+                                        <!-- <th class="text-center">#</th> -->
+                                        <th class = "prices">Package Name</th>
+                                        <th class = "prices">Payment Type</th>
+                                        <th class = "prices">Covers Class Types</th>
+                                        <th class = "prices">1 month</th>
+                                        <th class = "prices">3 month</th>
+                                        <th class = "prices">6 month</th>
+                                        <th class = "prices">1 year</th>
+                                        <th class = "prices">Life Time Cost</th>
+                                        <th class = "prices">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each AllMonthlyPrice}}
+                                        <tr>
+                                            <td>{{packageName}}</td>
+                                            <td>{{pymtType}}</td>
+                                            <td>{{class_name_array classTypeId}}</td>
+                                            <td>{{oneMonCost}}</td>
+                                            <td>{{threeMonCost}}</td>
+                                            <td>{{sixMonCost}}</td>
+                                            <td>{{annualCost}}</td>
+                                            <td>{{lifetimeCost}}</td>
+                                            <td class="td-actions ">
+                                                <button type="button" rel="tooltip" class="btn btn-warning" data-original-title="" title="" id="editpriceMonth" data-id="{{_id}}">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-danger" data-original-title="" title="" id="deletepriceMonth" data-id="{{_id}}">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                    <tr>
+                                        <!-- <td colspan="6"></td> -->
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-tabs" data-background-color="blue">
+                  	<div class="nav-tabs-navigation">
+                  		<div class="nav-tabs-wrapper">
+                  			<span class="nav-tabs-title"></span>
+                  			<ul class="nav nav-tabs" data-tabs="tabs">
+                  				<li class="">
+                  					<a href="#" data-toggle="tab" aria-expanded="true">
+                  						<i class="material-icons">assignment</i> Class Packages
+                  						<div class="ripple-container"></div>
+                  					</a>
+                  				</li>
+                  				<li class="filter-archive filter-evaluation active">
+                  					<a href="#" id="newClass" data-toggle="tab" class="text-right" aria-expanded="false" style="cursor: pointer">
+                  						<i class="fa fa-plus" aria-hidden="true"></i> Add Class Packages
+                  						<div class="ripple-container"></div>
+                  					</a>
+                  				</li>
+                  			</ul>
+                  		</div>
+                  	</div>
+                  </div>
+                    <div class="card-content">
+                        <div class="table-responsive prices">
+                            <table class="table text-center">
+                                <thead>
+                                    <tr class="font-weight-bold">
+                                        <!-- <th class="text-center">#</th> -->
+                                        <th class="class-packages">Package Name</th>
+                                        <th class="class-packages">Cost</th>
+                                        <th class="class-packages">Cover Class Type</th>
+                                        <th class="class-packages">Number of Classes</th>
+                                        <th class="class-packages">Expires</th>
+                                        <th class="class-packages">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each AllClassPrice}}
+                                        <tr>
+                                            <td>{{packageName}}</td>
+                                            <td>{{cost}}</td>
+                                            <td>{{class_name_array classTypeId}}</td>
+                                            <td>{{noClasses}}</td>
+                                            <td>{{start}} {{finish}}</td>
+                                            <td class="td-actions ">
+                                                <button type="button" rel="tooltip" class="btn btn-warning" data-original-title="" title="" id="editPriceClass" data-id="{{_id}}">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button type="button" rel="tooltip" class="btn btn-danger" data-original-title="" title="" id="deletePriceClass" data-id="{{_id}}">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                    <tr>
+                                        <!-- <td colspan="6"></td> -->
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wizard-footer col-md-12">
+                <div class="pull-right">
+                    <!-- <input type="button" class="btn btn-next btn-fill btn-success btn-wd" name="Finish" id="finalAccess" value="Finish & Preview"> -->
+                    <input type="button" class="btn btn-next btn-fill btn-success btn-wd" name="next" id="nxt" value="Next">
+                </div>
+                <div class="pull-left">
+                    <input type="button" class="btn btn-previous btn-fill btn-warning btn-wd" name="previous" value="Previous" id="prv">
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab_default_8">
+            <div class="col-md-12">
+                <div class="card">
+                  <div class="col-sm-12">
+
+              <div class="col-sm-6 col-sm-offset-3">
+
+                <div class="card card-stats">
+                  <div class="card-header" data-background-color="blue">
+                    <i class="material-icons">file_upload</i>
+                  </div>
+                  <div class="card-content">
+                    <p class="category">Upload Media</p>
+                      <div class="fileinput fileinput-new card-button text-right" data-provides="fileinput">
+                        <div class="fileinput-preview fileinput-exists thumbnail" style="margin-top: 10px"> </div>
+                            <div>
+                                <span class="btn btn-warning btn-sm btn-file">
+                                <span class="fileinput-new">Select</span>
+                                <span class="fileinput-exists">Change</span>
+                                <input type="hidden">
+                                <input type="file" name="..." id="schoolImageGroup">
+                                </span>
+                                <a href="#" class="btn btn-danger btn-sm fileinput-exists" data-dismiss="fileinput" ><i class="fa fa-times"></i>Remove</a>
+                            </div>
+                            <button type='button' class='btn btn-sm btn-success' id="image_upload">upload</button>
+                        </div>
+                        <div class="card-footer text-center">
+                        <a href="#" class="btn_upload">
+                          <div class="">
+                              <i class="material-icons text-warning link">link</i>
+                              <h4 class="card-title"><b>Link to Media</b></h4>
+                          </div>
+                        </a>
+                      </div>
+                  </div>
+                </div>
+              </div>
+                  </div>
+                  <div class="col-sm-12">
+                     <div class="progress progress-striped" style="height: 15px; width: 100%; margin-top:10px;display:none">
+                      {{#each files}}
+                       <div class="progress-bar progress-bar-success active" role="progressbar" aria-valuenow="{{percent_uploaded}}" aria-valuemin="0" aria-valuemax="100" style="width: {{percent_uploaded}}%">
+                          <small>{{percent_uploaded}}%</small>
+                       </div>
+                      {{/each}}
+                    </div>
+                  </div>
+                  <!-- <div class="col-sm-12">
+                    <div class="col-sm-12 card text-center" style="padding-bottom: 20px;">
+                      <button type="button" class="btn btn-success" id="calander_iframe">Calander Iframe</button>
+                      <button type="button" class="btn btn-success" id="price_iframe">Price Iframe</button>
+                      <div class="col-sm-12" id="iframe_code">
+                        <textarea id="iframe_code_textarea" class="form-group form-control" data-gramm="true" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: normal; font-size: 14px;border: none;color: beige;background-color: #898989;">
+                        </textarea>
+                      </div>
+                    </div>
+                  </div> -->
+                  <div class="col-sm-12">
+                    <div class="col-sm-12 card" style="padding-bottom: 20px;">
+                      <h4 class="tagline line-bottom"><b>Image Preview</b></h4>
+                      <div class="carousel slide" id="myCarousel">
+                        <div class="carousel-inner">
+                          {{#each image_group}}
+                            <div class="item {{check_active @index}} ">
+                              <div class="row">
+                              {{#each item}}
+                                  <div class="col-xs-6 col-sm-3 nopaddb"><a href="#">
+                                    <div class="thumb" style="background-image: url({{filePath}});height:155px;width:100%" ></div>
+                                  </a>
+                                    <button type="button" class="btn btn-danger btn-xs delete-file" data="BRxJE48y8tZEz2usp" data-src="{{filePath}}">
+                                      <span class="fa fa-trash-o hvr-wobble-skew"></span></button>
+                                  </div>
+                               {{/each}}
+                              </div>
+                            </div>
+                          {{/each}}
+                        </div>
+                        <a class="left carousel-control" href="#myCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                        <a class="right carousel-control" href="#myCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="wizard-footer col-md-12">
+                <div class="pull-right">
+                    <input type="button" class="btn btn-next btn-fill btn-success btn-wd" name="Finish" id="finalAccess" value="Finish & Preview">
+                </div>
+                <div class="pull-left">
+                    <input type="button" class="btn btn-previous btn-fill btn-warning btn-wd" name="previous" value="Previous" id="prv">
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="tab-pane active" id="tab_default_10">
+          <div class="col-md-12">
+            <div class="col-sm-12 card" style="padding-bottom: 20px;">
+              <h4 class="tagline line-bottom"><b>Calendar Iframe Code</b></h4>
+              <div class="col-sm-12" id="iframe_code">
+                <textarea id="iframe_code_textarea" class="form-group form-control" data-gramm="true" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: normal; font-size: 14px;border: none;color: beige;background-color: #898989;">{{calendar_code}}
+                </textarea>
+              </div>
+            </div>
+            <div class="col-sm-12 card" style="padding-bottom: 20px;">
+              <h4 class="tagline line-bottom"><b>Price Iframe Code</b></h4>
+              <div class="col-sm-12" id="iframe_code">
+                <textarea id="iframe_code_textarea" class="form-group form-control" data-gramm="true" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: normal; font-size: 14px;border: none;color: beige;background-color: #898989;">{{price_code}}
+                </textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal fade" id="LinkUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      {{>LinkUploadTemplate}}
+    </div>
+    <div class="modal fade " id="ClassModal" role="dialog">
+      {{>EditPriceClassTemplate}}
+    </div>
+    <div id="myModal" class="modal fade" role="dialog">
+        {{>LocationAdd}}
+    </div>
+    <div id="ClassTypeModal" class="modal fade" tabindex="-1" role="dialog">
+          {{>AddClassType}}
+    </div>
+    <div id="addClass1" class="modal fade" tabindex="-1" role="dialog">
+        {{>classTemplate}}
+    </div>
+    <div id="EditLocModal" class="modal fade" tabindex="-1" role="dialog">
+       {{>EditLocationModal}}
+    </div>
+    <div id="EditClassTypeModal" class="modal fade"  tabindex="-1"  role="dialog">
+        {{>EditClassType classType=getTags}}
+    </div>
+    <div class="modal fade " id="EditPriceMonth"  tabindex="-1" role="dialog">
+        {{>EditMonthlyPackageTemplate}}
+    </div>
+    <div class="modal fade " id="MonthModal" role="dialog">
+        {{>AddMonthlyPackageTemplate}}
+    </div>
+    <div class="modal fade " id="skillTypeModal" role="dialog">
+        {{>AddSkillTypeModalTemplate}}
+    </div>
+	<!-- add room popup on adding new room -->
+	 <div class="modal fade" id="roomModel" tabindex="-1" role="dialog" >
+      {{>roomTemplate}}
+    </div>
+	<!-- end here -->
+</template>
+<template name="LinkUploadTemplate">
+  <div class="modal-dialog modal-small">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Enter URL</h4>
+        </div>
+          <div class="modal-body">
+            <div class="form-group label-floating">
+                <label class="control-label">Please enter Url to link</label>
+                <input type="text" class="form-control" id="link_url">
+            </div>
+          </div>
+          <div class="modal-footer text-center">
+              <button type="button" class="btn btn-info btn_submit_link" data-dismiss="modal">Upload</button>
+          </div>
+      </div>
+  </div>
+</template>
+<template name="AddSkillTypeModalTemplate">
+  <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Add Skill</h4>
+          </div>
+          <div class="modal-body" style="">
+              <form class="AddSkillTypeModalForm">
+                  <div class="form-group is-empty">
+                      <label>
+                          Skill Name
+                      </label>
+                      <input type="text" class="form-control" id="newSkillNmae" key-value="newSkillNmae" required="true">
+                      <span class="material-input"></span>
+                  </div>
+                </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-success" id="addSkillType">Add</button>
+          </div>
+        </div>
+    </div>
+</template>
+<template name="EditPriceClassTemplate">
+  <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Class Packages</h4>
+          </div>
+          <div class="modal-body" style="">
+              <form class="formClassModal">
+                <input type="hidden" id="classCostsId">
+                  <div class="form-group is-empty">
+                      <label>
+                          Package Name
+                      </label>
+                      <input type="text" class="form-control" id="CpackageName" key-value="packageName" value="">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          Cost
+                      </label>
+                      <input type="number" class="form-control cost" id="Ccost" key-value="cost" value="">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group ">
+                      <label for="repeat">Cover Class Type</label>
+                      <select class="form-control onClassPrice select2classtype" id="CclassTypeId" key-value="classTypeId" value="" style="width:100%" multiple>
+                          <option disabled="">select</option>
+                          {{#each schoolClassTypes}}
+                              <option value="{{_id}}">{{name}}</option>
+                          {{/each}}
+                      </select>
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          Number Of Classes
+                      </label>
+                      <input type="number" class="form-control" id="CnoClasses" key-value="noClasses" value="">
+
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                    <div class="col-xs-2 col-sm-2">
+                      <label>
+                          Expires
+                      </label>
+                    </div>
+                    <div class="col-xs-2 col-sm-2">
+                    <input type="number" class="" id="Cstart" style="width:80px;" >
+                    </div>
+                    <div class="col-xs-6 col-sm-6">
+                      <select id="Cfinish">
+                          <option disabled="">selcct</option>
+                              <option value="days">Days</option>
+                              <option value="months">Months</option>
+                              <option value="year">Year</option>
+                      </select>
+                    </div>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-success" data-dismiss="modal" id="addClassPrice">Add</button>
+          </div>
+      </div>
+  </div>
+</template>
+<template name="EditClassType">
+  <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Class Type</h4>
+          </div>
+          <div class="modal-body">
+              <form class="editformClassTypeModal">
+                <div class="row">
+                  <div class="col-sm-8">
+                  <div class="form-group">
+                      <label>
+                          Class Type(Programme)
+                      </label>
+                      <input type="text" class="form-control form-mandatory onEditClassType" name="loc1" id="EclassType1" key-value="name" value="{{thisClasType.name}}" required="true" >
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group">
+                      <label>
+                          Skill Taught
+                      </label>
+                      <select class="form-control required" style="width:100%" id="EskillTypeId" required="true">
+                        <option value =""  disabled selected >Type Of Skill</option>
+                        {{#each skill_type}}
+                          <option value="{{name}}">{{name}}</option>
+                        {{/each}}
+                      </select>
+                  </div>
+                  <div class="form-group">
+ 
+                        <label>Tags </label>
+                          {{ > tags tag_table="ClassType" tag_data=this.classType.tags tag_id=this.classType._id tag_class=getSelectedSkill tag_class_disp="Tag" tag_column="tags"  tag_skipcurrent="yes" tag_noupdate="yes" }}
+
+ 
+                  </div>
+                  </div>
+                  <div class="col-sm-4">
+                            <div class="fileinput fileinput-new card-button text-center" data-provides="fileinput">
+                                <div class="fileinput-new card-button thumbnail">
+                                    <img class="" alt="Profile Image" id="EclassTypeImg">
+                                </div>
+                                <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                                <div>
+                                    <span class="btn btn-warning btn-sm btn-file">
+                                            <span class="fileinput-new">Upload New Image</span>
+                                    <span class="fileinput-exists">Change</span>
+                                    <input type="hidden">
+                                    <input type="file" name="..." id="eclassTypeImg" accept="image/*">
+                                    </span>
+                                    <a href="#" class="btn btn-danger  fileinput-exists" data-dismiss="fileinput" ><i class="fa fa-times"></i>Remove</a>
+                                </div>
+                    </div>
+                  </div>
+                  </div>
+
+                  <!-- <div class="form-group">
+                    <label>Tags </label>
+                      {{ > tags tag_table="ClassType" tag_data=this.classType.tags tag_id=this.classType._id tag_class=getSelectedSkill tag_class_disp="Tag" tag_column="tags"  tag_skipcurrent="yes" tag_noupdate="yes" }}
+                  </div> -->
+
+                  <div class="form-group is-empty">
+                      <label>Class Type Description</label>
+                      <textarea type="text" id="EclassDesc" class="form-control onEditClassType" key-value="desc" value="">{{thisClasType.desc}}
+                      </textarea>
+                      <span class="material-input"></span>
+                  </div>
+                  <input type="hidden" id="editClassTypeIdValue">
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" id="EditClassTypeClick" data-action="edit">Save</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          </div>
+      </div>
+  </div>
+</template>
+<template name="AddMonthlyPackageTemplate">
+  <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Monthly Packages</h4>
+          </div>
+          <div class="modal-body" style="">
+              <form class="formMonthModal">
+                  <div class="form-group is-empty package">
+                      <label>
+                          Package Name
+                      </label>
+                      <input type="text" class="form-control " id="packageName" key-value="packageName" value="">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group ">
+                      <label for="repeat">Cover Class Type:</label>
+                      <select class="form-control onMonthPrice select2classtype" id="classTypeId" key-value="classTypeId" value=""  style="width:100%;" multiple>
+                          <option disabled="">select</option>
+                          {{#each schoolClassTypes}}
+                              <option value="{{_id}}">{{name}}</option>
+                          {{/each}}
+                      </select>
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          Payment Type
+                      </label>
+                      <!-- <input type="text" class="form-control" id="pymtType" key-value="pymtType" value=""> -->
+                      <select class="form-control" style="width:100%" id="pymtType" name="pymtType">
+                        <option value="" disabled selected >Payment type</option>
+                        <option value="Automatic Withdrawal">Automatic Withdrawal</option>
+                        <option value="Pay As You Go" >Pay As You Go</option>
+                      </select>
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          1 Month Rate
+                      </label>
+                      <input type="number" class="form-control " id="oneMonCost" key-value="oneMonCost" value="">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          3 Month Rate
+                      </label>
+                      <input type="number" class="form-control" id="threeMonCost" key-value="threeMonCost" value="">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          6 Month Rate
+                      </label>
+                      <input type="number" class="form-control sixMonCost" id="sixMonCost" key-value="sixMonCost" value="">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          1 Year Rate
+                      </label>
+                      <input type="number" class="form-control" id="annualCost" key-value="annualCost" value="">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                        LifeTime Cost
+                      </label>
+                      <input type="number" class="form-control lifetimeCost" id="lifetimeCost" key-value="lifetimeCost" value="">
+                      <span class="material-input"></span>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-success" data-dismiss="modal" id="addMonthlyPackages">ADD</button>
+          </div>
+      </div>
+  </div>
+</template>
+<template name="EditMonthlyPackageTemplate">
+  <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Monthly Packages</h4>
+          </div>
+          <div class="modal-body" style="">
+              <form class="formMonthModal">
+                <input type="hidden" class="form-control" id="MonthlyPackagesId">
+                <div class="form-group is-empty package">
+                    <label>
+                        Package Name
+                    </label>
+                    <input type="text" class="form-control " id="EpackageName" key-value="packageName" value="">
+                    <span class="material-input"></span>
+                </div>
+                <div class="form-group ">
+                    <label for="repeat">Cover Class Type:</label>
+                    <select class="form-control onEMonthPrice select2classtype" id="EclassTypeId" key-value="classTypeId" value="" style="width: 100%;" multiple>
+                        <option disabled="">select</option>
+                        {{#each schoolClassTypes}}
+                            <option value="{{_id}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                    <span class="material-input"></span>
+                </div>
+                <div class="form-group is-empty">
+                    <label>
+                        Payment Type
+                    </label>
+                    <!-- <input type="text" class="form-control" id="EpymtType" key-value="pymtType" value=""> -->
+                    <select class="form-control" style="width:100%" id="EpymtType" name="EpymtType">
+                      <option value="" disabled selected >Payment type</option>
+                      <option value="Automatic Withdrawal">Automatic Withdrawal</option>
+                      <option value="Pay As You Go" >Pay As You Go</option>
+                    </select>
+                    <span class="material-input"></span>
+                </div>
+                <div class="form-group is-empty">
+                    <label>
+                        1 Month Rate
+                    </label>
+                    <input type="number" class="form-control " id="EoneMonCost" key-value="oneMonCost" value="">
+                    <span class="material-input"></span>
+                </div>
+                <div class="form-group is-empty">
+                    <label>
+                        3 Month Rate
+                    </label>
+                    <input type="number" class="form-control" id="EthreeMonCost" key-value="threeMonCost" value="">
+                    <span class="material-input"></span>
+                </div>
+                <div class="form-group is-empty">
+                    <label>
+                        6 Month Rate
+                    </label>
+                    <input type="number" class="form-control sixMonCost" id="EsixMonCost" key-value="sixMonCost" value="">
+                    <span class="material-input"></span>
+                </div>
+                <div class="form-group is-empty">
+                    <label>
+                        1 Year Rate
+                    </label>
+                    <input type="number" class="form-control lifetimeCost" id="EannualCost" key-value="lifetimeCost" value="">
+                    <span class="material-input"></span>
+                </div>
+                <div class="form-group is-empty">
+                    <label>
+                      Life Time Cost
+                    </label>
+                    <input type="number" class="form-control lifetimeCost" id="ElifetimeCost" key-value="lifetimeCost" value="">
+                    <span class="material-input"></span>
+                </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-success" data-dismiss="modal" id="updateMonth">ADD</button>
+          </div>
+      </div>
+  </div>
+</template>
+<template name="s3_progress">
+	<input type="file" class="file_bag">
+	<button class="upload">Upload</button>
+	{{#each files}}
+		<p>{{percent_uploaded}}</p>
+	{{/each}}
+</template>
+
+<template name="LocationAdd">
+  <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Location</h4>
+          </div>
+          <div class="modal-body" style="height:auto;overflow-x:auto;">
+              <form class="formmyModal addLocationForm">
+                  <div class="form-group">
+                      <label>
+                          Location Name
+                      </label>
+                      <input type="text" class="form-control form-mandatory onChangeLoc" name="loc1" id="Nloc" key-value="title" >
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group">
+                      <label>
+                          Street Address *
+                      </label>
+                      <input type="text" class="form-control form-mandatory onChangeLoc" id="NStAddress" key-value="address" required="true">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group">
+                      <label>
+                          City *
+                      </label>
+                      <input type="text" class="form-control onChangeLoc" name="city" id="Ncity" key-value="city" required="true">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          Neighborhood
+                      </label>
+                      <input type="text" class="form-control onChangeLoc" name="neighbor" id="Nneighbor" key-value="neighbourhood">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          State
+                      </label>
+                      <input type="text" class="form-control onChangeLoc" name="state" id="Nstate" key-value="state">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          Zip Code *
+                      </label>
+                      <input type="text" class="form-control onChangeLoc" name="zcode" id="Nzcode" key-value="zip" required="true">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          Country *
+                      </label>
+                      <input type="text" class="form-control" name="Ncountry" id="Ncountry" key-value="country" required="true">
+                      <span class="material-input"></span>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" id="AddLocOnclick">ADD</button>
+          </div>
+      </div>
+  </div>
+</template>
+
+<template name="EditLocationModal">
+  <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Edit Location</h4>
+          </div>
+          <div class="modal-body" style="height:auto;overflow-x:auto">
+              <form class="LocationEditModal">
+                  <div class="form-group">
+                      <label>
+                          Location Name
+                      </label>
+                      <input type="text" class="form-control form-mandatory onEditLoc" name="loc1" id="Eloc1" key-value="title">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group">
+                      <label>
+                          Street Address *
+                      </label>
+                      <input type="text" class="form-control form-mandatory onEditLoc" id="EStAddress" key-value="address" required="true">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group">
+                      <label>
+                          City *
+                      </label>
+                      <input type="text" class="form-control onEditLoc" name="city" id="Ecity" key-value="city" required="true">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          Neighborhood
+                      </label>
+                      <input type="text" class="form-control onEditLoc" name="neighbor" id="Eneighbor" key-value="neighbourhood" >
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          State
+                      </label>
+                      <input type="text" class="form-control onEditLoc" name="state" id="Estate" key-value="state" >
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          Zip Code *
+                      </label>
+                      <input type="text" class="form-control onEditLoc" name="zcode" id="Ezcode" key-value="zip" required="true">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group is-empty">
+                      <label>
+                          Country *
+                      </label>
+                      <input type="text" class="form-control" name="Ecountry" id="Ecountry" key-value="country" required="true">
+                      <span class="material-input"></span>
+                  </div>
+                  <input type="hidden" id="Eid">
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-warning" id="EditLocClick" data-action="edit">EDIT</button>
+          </div>
+      </div>
+  </div>
+</template>
+<template name="AddClassType">
+  <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Class Type</h4>
+          </div>
+          <div class="modal-body" style="">
+            <form class="formClassTypeModal">
+              <div class="row">
+              <div class="col-sm-8">
+                  <div class="form-group">
+                      <label>
+                          Class Type(Programme) *
+                      </label>
+                      <input type="text" class="form-control form-mandatory onChangeClassType" name="loc1" id="NclassType1" key-value="name" required="true">
+                      <span class="material-input"></span>
+                  </div>
+                  <div class="form-group">
+                      <label>
+                          Skill Taught *
+                      </label>
+                      <select class="form-control required" style="width:100%" id="NskillTypeId" required="true">
+                        <option value="" disabled selected >Type Of Skill</option>
+                        {{#each skill_type}}
+                          <option value="{{name}}">{{name}}</option>
+                        {{/each}}
+                      </select>
+                  </div>
+
+                  <div class="form-group">
+                      <label>
+                          Tags
+                      </label>
+                      
+                        {{ > tags tag_table="ClassType" tag_data="" tag_id="" tag_class=getSelectedSkill tag_class_disp="Tag" tag_column="tags"  tag_noupdate="yes" tag_skipcurrent="yes" }}
+                      
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                          <div class="fileinput fileinput-new card-button text-center" data-provides="fileinput">
+                              <div class="fileinput-new card-button thumbnail">
+                                  <img class="" src="{{SchoolImageValidate classTypeImg}}" alt="Profile Image" id="pic" style="" >
+                              </div>
+                              <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                              <div>
+                                  <span class="btn btn-warning btn-sm btn-file">
+                                          <span class="fileinput-new">Upload New Image</span>
+                                  <span class="fileinput-exists">Change</span>
+                                  <input type="hidden">
+                                  <input type="file" name="..." id="nclassTypeImg" accept="image/*">
+                                  </span>
+                                  <a href="#" class="btn btn-danger  fileinput-exists" data-dismiss="fileinput" ><i class="fa fa-times"></i>Remove</a>
+                              </div>
+                  </div>
+                </div>
+                </div>
+                <div class="form-group is-empty">
+                    <label>Class Type Description</label>
+                    <textarea type="text" id="NclassDesc" class="form-control onChangeClassType" key-value="desc" value="">
+                    </textarea>
+                    <span class="material-input"></span>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-success" id="AddClassTypeClick">ADD</button>
+          </div>
+      </div>
+  </div>
+</template>
+<template name="classTemplate">
+  <div class="modal-dialog modal-lg modal-class-box">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Class</h4>
+          </div>
+          <div class="modal-body" style="">
+              <form class="formaddClass1">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group is-empty">
+                            <label class="control-label"><b>Class Name *</b></label>
+                            <input class="form-control" type="text" aria-required="true" id="class_name" required="true">
+                            <span class="material-input"></span>
+                        </div>
+
+                        <div class="form-group is-empty">
+                          <label>Class Description</label>
+                        	<textarea type="text" id="classDescription" class="form-control" key-value="desc" value="">
+                        	</textarea>
+                        </div>
+                      </div>
+                    </div>
+              </form>
+           <!--mid tab start here-->
+           <div class="wizard-navigation" id="wizard-navigation-class-edit">
+        <ul class="nav nav-pills class-nav-tab nav-navigation">
+            <input type="hidden" id="currentClassId">
+            <input type="hidden" id="newclassTypeId">
+            <li style="" class="active col-sm-4 col-xs-12" id="SingleClass">
+                <a class = "remove-radius" href="#tab_default_a"  data-toggle="tab" aria-expanded="false"><b>Single Class</b></a>
+            </li>
+            <li style="" class="col-sm-4 col-xs-12"  id="RepeatingClass">
+                <a href="#tab_default_b" data-toggle="tab" aria-expanded="false" class="remove-radius validate"><b>Repeating Class With <span>Start and End Dates</span></b></a>
+            </li>
+            <li style="" class="col-sm-4 col-xs-12" id="OngoingClass">
+                <a href="#tab_default_c"  data-toggle="tab" aria-expanded="true" class="remove-radius validate"><b>Ongoing Classes</b></a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content">
+    <div class="tab-pane  navigation-tab active" id="tab_default_a">
+    	 <div class="row">
+
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                            <label class="control-label"><b>Class Location</b></label>
+                            <select class="form-control cc_locationt" style="width:100%" id="class_location">
+                              <option disabled selected>Location</option>
+                              {{#each locations}}
+                                    <option value="{{_id}}">{{title}}, {{address}}</option>
+                              {{/each}}
+                            </select>
+                          </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                            <label class="control-label"><b>Room</b></label>
+                            <select class="form-control cc_locationt" style="width:100%" id="class_room">
+                              <option disabled>Room</option>
+                              {{#each rooms}}
+                                    <option value="{{id}}">{{name}}</option>
+                              {{/each}}
+                            </select>
+                          </div>
+                          </div>
+            </div>
+                  <div class="row">
+                        <div class="col-sm-6">
+                          <div class="col-sm-6">
+                            <label class="control-label"><b>Date</b></label>
+                            <input type="text" class="form-control datepicker" id="start_date">
+                          </div>
+                          <div class="col-sm-6">
+                            <label class="control-label"><b>Start Time</b></label>
+                            <input type="text" class="form-control timepicker" id="start_time" value="00">
+                          </div>
+                        </div>
+                          <div class="col-sm-6">
+                            <!-- <div class="col-sm-6">
+                            <label class="control-label"><b>End on</b></label>
+                            <input type="text" class="form-control datepicker" id="end_date">
+                          </div> -->
+                            <div class="col-sm-6">
+                            <label class="control-label"><b>End Time</b></label>
+                            <input type="text" class="form-control timepicker" id="end_time" value="00">
+                            </div>
+                        </div>
+                  </div>
+    </div>
+    <div class="tab-pane navigation-tab " id="tab_default_b">
+    	 <div class="row">
+
+                          <div class="col-sm-6">
+                            <div class="date-label-box">
+                            <label class=""><b>Start Date</b></label>
+                            <input type="text" class=" datepicker" id="RepeatingClass_start_date" placeholder="--/--/----">
+                          	</div>
+                        </div>
+                         <div class="col-sm-6">
+
+                           <div class="date-label-box">
+                            <label class=""><b>End Date</b></label>
+                            <input type="text" class="datepicker" id="RepeatingClass_end_date" placeholder="--/--/----">
+                         	</div>
+
+                        </div>
+            </div>
+             <div class="card-content">
+                        <div class="table-responsive ">
+                            <table class="table  table-box-head ofInherit">
+                            <thead class="">
+                            	<th>Day</th>
+                            	<th>Start Time</th>
+                            	<th>End Time</th>
+                            	<th>Location</th>
+                            	<th>Room</th>
+                            </thead>
+                            <tr>
+                            <td><input type="checkbox" name="optionsCheckboxes" class="RepeatingClass_repeat_on repeat_on" value="Monday"> Monday</td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Monday_start_time" value="00"></td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Monday_end_time" value="00"></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Monday_location">
+                              <option disabled selected>Location</option>
+                              {{#each locations}}
+                                    <option value="{{_id}}">{{title}}, {{address}}</option>
+                              {{/each}}
+                            </select></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Monday_room">
+                              <option disabled>Room</option>
+                              {{#each rooms}}
+                                    <option value="{{id}}">{{name}}</option>
+                              {{/each}}
+                            </select></td>
+                            </tr>
+                            <tr>
+                            <td><input type="checkbox" name="optionsCheckboxes" class="RepeatingClass_repeat_on repeat_on" value="Tuesday"> Tuesday</td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Tuesday_start_time" value="00"></td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Tuesday_end_time" value="00"></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Tuesday_location">
+                              <option disabled selected>Location</option>
+                              {{#each locations}}
+                                    <option value="{{_id}}">{{title}}, {{address}}</option>
+                              {{/each}}
+                            </select></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Tuesday_room">
+                              <option disabled>Room</option>
+                              {{#each rooms}}
+                                    <option value="{{id}}">{{name}}</option>
+                              {{/each}}
+                            </select></td>
+                            </tr>
+                            <tr>
+                            <td><input type="checkbox" name="optionsCheckboxes" class="RepeatingClass_repeat_on repeat_on" value="Wednesday"> Wednesday</td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Wednesday_start_time" value="00"></td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Wednesday_end_time" value="00"></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Wednesday_location">
+                              <option disabled selected>Location</option>
+                              {{#each locations}}
+                                    <option value="{{_id}}">{{title}}, {{address}}</option>
+                              {{/each}}
+                            </select></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Wednesday_room">
+                              <option disabled>Room</option>
+                              {{#each rooms}}
+                                    <option value="{{id}}">{{name}}</option>
+                              {{/each}}
+                            </select></td>
+                            </tr>
+                            <tr>
+                            <td><input type="checkbox" name="optionsCheckboxes" class="RepeatingClass_repeat_on repeat_on" value="Thursday"> Thursday</td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Thursday_start_time" value="00"></td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Thursday_end_time" value="00"></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Thursday_location">
+                              <option disabled selected>Location</option>
+                              {{#each locations}}
+                                    <option value="{{_id}}">{{title}}, {{address}}</option>
+                              {{/each}}
+                            </select></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Thursday_room">
+                              <option disabled>Room</option>
+                              {{#each rooms}}
+                                    <option value="{{id}}">{{name}}</option>
+                              {{/each}}
+                            </select></td>
+                            </tr>
+                            <tr>
+                            <td><input type="checkbox" name="optionsCheckboxes" class="RepeatingClass_repeat_on repeat_on" value="Friday"> Friday</td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Friday_start_time" value="00"></td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Friday_end_time" value="00"></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Friday_location">
+                              <option disabled selected>Location</option>
+                              {{#each locations}}
+                                    <option value="{{_id}}">{{title}}, {{address}}</option>
+                              {{/each}}
+                            </select></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Friday_room">
+                              <option disabled>Room</option>
+                              {{#each rooms}}
+                                    <option value="{{id}}">{{name}}</option>
+                              {{/each}}
+                            </select></td>
+                            </tr>
+                            <tr>
+                            <td><input type="checkbox" name="optionsCheckboxes" class="RepeatingClass_repeat_on repeat_on" value="Saturday"> Saturday</td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Saturday_start_time" value="00"></td>
+                            <td> <input type="text" class="form-control timepicker" id="RepeatingClass_Saturday_end_time" value="00"></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Saturday_location">
+                              <option disabled selected>Location</option>
+                              {{#each locations}}
+                                    <option value="{{_id}}">{{title}}, {{address}}</option>
+                              {{/each}}
+                            </select></td>
+                            <td><select class="form-control cc_locationt" style="width:100%" id="RepeatingClass_Saturday_room">
+                              <option disabled>Room</option>
+                              {{#each rooms}}
+                                    <option value="{{id}}">{{name}}</option>
+                              {{/each}}
+                            </select></td>
+                            </tr>
+                            </table>
+                        </div>
+              </div>
+
+    </div>
+     <div class="tab-pane navigation-tab " id="tab_default_c">
+    	<div class="card-content">
+        <div class="table-responsive ">
+            <table class="table  table-box-head ofInherit">
+            <thead class="">
+              <th>Day</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Location</th>
+              <th>Room</th>
+            </thead>
+            <tr>
+            <td><input type="checkbox" name="optionsCheckboxes" class="OngoingClass_repeat_on repeat_on" value="Monday"> Monday</td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Monday_start_time" value="00"></td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Monday_end_time" value="00"></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Monday_location">
+              <option disabled selected>Location</option>
+              {{#each locations}}
+                    <option value="{{_id}}">{{title}}, {{address}}</option>
+              {{/each}}
+            </select></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Monday_room">
+              <option disabled>Room</option>
+              {{#each rooms}}
+                    <option value="{{id}}">{{name}}</option>
+              {{/each}}
+            </select></td>
+            </tr>
+            <tr>
+            <td><input type="checkbox" name="optionsCheckboxes" class="OngoingClass_repeat_on repeat_on" value="Tuesday"> Tuesday</td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Tuesday_start_time" value="00"></td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Tuesday_end_time" value="00"></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Tuesday_location">
+              <option disabled selected>Location</option>
+              {{#each locations}}
+                    <option value="{{_id}}">{{title}}, {{address}}</option>
+              {{/each}}
+            </select></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Tuesday_room">
+              <option disabled>Room</option>
+              {{#each rooms}}
+                    <option value="{{id}}">{{name}}</option>
+              {{/each}}
+            </select></td>
+            </tr>
+            <tr>
+            <td><input type="checkbox" name="optionsCheckboxes" class="OngoingClass_repeat_on repeat_on" value="Wednesday"> Wednesday</td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Wednesday_start_time" value="00"></td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Wednesday_end_time" value="00"></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Wednesday_location">
+              <option disabled selected>Location</option>
+              {{#each locations}}
+                    <option value="{{_id}}">{{title}}, {{address}}</option>
+              {{/each}}
+            </select></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Wednesday_room">
+              <option disabled>Room</option>
+              {{#each rooms}}
+                    <option value="{{id}}">{{name}}</option>
+              {{/each}}
+            </select></td>
+            </tr>
+            <tr>
+            <td><input type="checkbox" name="optionsCheckboxes" class="OngoingClass_repeat_on repeat_on" value="Thursday"> Thursday</td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Thursday_start_time" value="00"></td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Thursday_end_time" value="00"></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Thursday_location">
+              <option disabled selected>Location</option>
+              {{#each locations}}
+                    <option value="{{_id}}">{{title}}, {{address}}</option>
+              {{/each}}
+            </select></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Thursday_room">
+              <option disabled>Room</option>
+              {{#each rooms}}
+                    <option value="{{id}}">{{name}}</option>
+              {{/each}}
+            </select></td>
+            </tr>
+            <tr>
+            <td><input type="checkbox" name="optionsCheckboxes" class="OngoingClass_repeat_on repeat_on" value="Friday"> Friday</td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Friday_start_time" value="00"></td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Friday_end_time" value="00"></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Friday_location">
+              <option disabled selected>Location</option>
+              {{#each locations}}
+                    <option value="{{_id}}">{{title}}, {{address}}</option>
+              {{/each}}
+            </select></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Friday_room">
+              <option disabled>Room</option>
+              {{#each rooms}}
+                    <option value="{{id}}">{{name}}</option>
+              {{/each}}
+            </select></td>
+            </tr>
+            <tr>
+            <td><input type="checkbox" name="optionsCheckboxes" class="OngoingClass_repeat_on repeat_on" value="Saturday"> Saturday</td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Saturday_start_time" value="00"></td>
+            <td> <input type="text" class="form-control timepicker" id="OngoingClass_Saturday_end_time" value="00"></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Saturday_location">
+              <option disabled selected>Location</option>
+              {{#each locations}}
+                    <option value="{{_id}}">{{title}}, {{address}}</option>
+              {{/each}}
+            </select></td>
+            <td><select class="form-control cc_locationt" style="width:100%" id="OngoingClass_Saturday_room">
+              <option disabled>Room</option>
+              {{#each rooms}}
+                    <option value="{{id}}">{{name}}</option>
+              {{/each}}
+            </select></td>
+            </tr>
+            </table>
+        </div>
+          </div>
+    </div>
+    </div>
+    <!--mid tab End here-->
+          </div>
+          <!-- <div class="col-md-12">
+              <center>
+                  <button type="button" class="btn pull-right btn-danger" id="addClass" data-dismiss="modal">Add Class
+                      <div class="ripple-container"></div>
+                  </button>
+              </center>
+          </div> -->
+          <div class="modal-footer">
+              <button type="button" class="btn btn-success" id="addClass">Add Class</button>
+          </div>
+      </div>
+  </div>
+</template>
+<template name="roomTemplate">
+<div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Room</h4>
+		     <form id="room-form" class="room-form">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group is-empty">
+                            <label class="control-label"><b>Name</b></label>
+                            <input class="form-control" type="text" aria-required="true" id="room_name" required="true">
+                            <span class="material-input"></span>
+                        </div>
+			</div>
+                    </div>
+		   <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group is-empty">
+                            <label class="control-label"><b>Capacity</b></label>
+                            <input class="form-control" type="number" aria-required="true" id="room_capacity" required="true">
+                            <span class="material-input"></span>
+                        </div>
+		                </div>
+       </div>
+
+       <input class="form-control" type="hidden"  id="room_id" >
+       <input class="form-control" type="hidden" id="location_id">
+
+		</form>
+	    </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-success" id="add-room">Save Room</button>
+          </div>
+      </div>
+</div>
+</template>

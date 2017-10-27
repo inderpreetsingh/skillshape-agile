@@ -1,0 +1,160 @@
+<template id="MemberChooser" name="MemberChooser">
+  <div class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card">
+                      <div class="card-header card-header-tabs" data-background-color="blue">
+                          <div class="nav-tabs-navigation">
+                              <div class="nav-tabs-wrapper">
+                                  <span class="nav-tabs-title"></span>
+                                  <ul class="nav nav-tabs" data-tabs="tabs">
+                                      <li class="active">
+                                          <a href="#" data-toggle="tab">
+                                              <i class="material-icons">person</i> Member
+                                              <div class="ripple-container"></div>
+                                          </a>
+                                      </li>
+                                      {{#if or IsInstructor IsAdmin }}
+                                      <li class="filter-archive filter-member">
+                                          <a href="#" data-toggle="tab" class="text-right">
+                                              <i class="fa fa-filter" aria-hidden="true"></i> Filter
+                                              <div class="ripple-container"></div>
+                                          </a>
+                                      </li>
+                                      {{/if}}
+                                      {{#if or IsStaff IsAdmin }}
+                                      <li class="filter-archive">
+                                          <a href="/member_signup"  class="text-right">
+                                              <i class="fa fa-plus" aria-hidden="true"></i> Add Member
+                                              <div class="ripple-container"></div>
+                                          </a>
+                                      </li>
+                                      {{/if}}
+                                      <li class="filter-archive">
+                                      <form class="navbar-form " role="search" style="margin-top: 0px;margin-bottom: 0px;">
+                                                <div class="form-group form-search is-empty" style="margin: 5px 0 0 0;">
+                                                    <input type="text" class="form-control" placeholder="Search" style="color: white;">
+                                                    <span class="material-input"></span>
+                                                <span class="material-input"></span></div>
+                                                <button type="button" class="btn btn-white btn-round search_btn">
+                                                    <i class="material-icons">search</i>
+                                                    <div class="ripple-container"></div>
+                                                </button>
+                                            </form>
+                                        </li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="card-content table-responsive table-shopping">
+                          <table  id="datatables"
+                                 class="table table-striped table-no-bordered table-hover dataTable dtr-inline" cellspacing="0" width="100%"
+                                 style="width: 100%;" role="grid" aria-describedby="datatables_info">
+                              <!-- <thead class="">
+                              <tr><th>Name</th>
+                                  <th>Level(s)</th>
+                                  <th>Since</th>
+                                  <th>Age</th>
+                                  <th>Next belt</th>
+                                  <th>Role</th>
+                                  <th></th>
+                              </tr></thead> -->
+                              <thead class="text-info">
+                              <tr>
+                                  <th class="sorting_asc" tabindex="0" aria-controls="datatables" rowspan="1" colspan="1" aria-sort="ascending">Name</th>
+                                  <th class="sorting" tabindex="0" aria-controls="datatables" rowspan="1" colspan="1">Level(s)</th>
+                                  <th class="sorting" tabindex="0" aria-controls="datatables" rowspan="1" colspan="1">Since</th>
+                                  <th class="sorting" tabindex="0" aria-controls="datatables" rowspan="1" colspan="1">Age</th>
+                                  <th class="sorting" tabindex="0" aria-controls="datatables" rowspan="1" colspan="1">Next belt</th>
+                                  <th class="sorting" tabindex="0" aria-controls="datatables" rowspan="1" colspan="1">Role</th>
+                                  <th class="">Actions</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <td>Joe piscipoe</td>
+                                  <td>Capoeira Orange</td>
+                                  <td>2009</td>
+                                  <td>44</td>
+                                  <td>75%</td>
+                                  <td>Student</td>
+                                  <td>
+                                    <a href="/MemberDetailsStudent" class="btn btn-default btn-simple">
+                                        <i class="material-icons">remove_red_eye</i> View</a>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>Dakota Niger</td>
+                                  <td>Capoeira Orange</td>
+                                  <td>2010</td>
+                                  <td>44</td>
+                                  <td>75%</td>
+                                  <td>Instructor</td>
+                                  <td>
+                                    <a href="/MemberDetailsInstructor" class="btn btn-default btn-simple">
+                                        <i class="material-icons">remove_red_eye</i> View</a>
+                                      <!-- <a href="/MemberDetailsInstructor" class="text-warning">View</a> -->
+                                  </td>
+                              </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="modal fade" id="member_filter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-small">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
+              <h4 class="modal-title">Search</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group label-floating">
+                   <label class="control-label">Level</label>
+                     <select class="form-control cc_locationt" style="width:100%">
+                         <option disabled="">Level</option>
+                           <option>Level 1</option>
+                           <option>Level 2</option>
+                           <option>Level 3</option>
+                     </select>
+                   <span class="material-input"></span><span class="material-input"></span>
+             </div>
+                   <div class="form-group label-floating">
+                 <label class="control-label">Class</label>
+                   <select class="form-control cc_locationt" style="width:100%">
+                       <option disabled="">Boxing</option>
+                         <option>Boxing</option>
+                         <option>Boxing 2</option>
+                         <option>Boxing 3</option>
+                   </select>
+                 <span class="material-input"></span><span class="material-input"></span>
+               </div>
+               <div class="form-group label-floating">
+             <label class="control-label">Role</label>
+               <select class="form-control cc_locationt" style="width:100%">
+                   <option disabled="">Role</option>
+                     <option>Instructor</option>
+                     <option>Superadmin</option>
+                     <option>Staff</option>
+                     <option>Student</option>
+                     <option>Evaluator</option>
+               </select>
+             <span class="material-input"></span><span class="material-input"></span>
+           </div>
+               <div class="form-group label-floating is-empty">
+                    <label class="control-label">Class Name</label>
+                    <input type="text" class="form-control">
+                <span class="material-input"></span><span class="material-input"></span></div>
+          </div>
+          <div class="modal-footer text-center">
+              <button type="button" class="btn btn-info" data-dismiss="modal">Apply</button>
+              <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</template>

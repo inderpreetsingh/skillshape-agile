@@ -1,0 +1,114 @@
+<template name="ClaimSchool">
+    <div class="content">
+        <div class="container-fluid">
+
+            <div class="row ">
+                <div class="col-md-12 ">
+                    <div class="card">
+                        <div class="col-sm-2">
+                            <div class="form-group label-floating is-empty has-warning">
+                                <input class="form-control" type="text" aria-required="true" placeholder="School name"
+                                       id="name" value="{{vname}}">
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group label-floating is-empty has-warning">
+                                <select class="form-control" style="width:100%" id="cskill">
+                                    <option value="" disabled selected>Type Of School</option>
+                                    <option value="">Any</option>
+                                    {{#each skill_type}}
+                                        <option value="{{name}}" {{selectedSkill name}}>{{name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group label-floating is-empty has-warning">
+                                <input class="form-control" type="text" aria-required="true" placeholder="Address"
+                                       id="clocation" value="{{vlocation}}">
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group label-floating is-empty has-warning">
+                                <input class="form-control" type="text" aria-required="true" placeholder="Website"
+                                       id="web"
+                                       value="{{vweb}}">
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group label-floating is-empty has-warning">
+                                <input class="form-control" type="text" aria-required="true" placeholder="Phone Number"
+                                       id="phone" value="{{vphone}}">
+                                <span class="material-input"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2" style="padding-top: 10px;">
+                            <a href="#" id="search" title="Search" class="btn btn-warning btn-sm search"><i
+                                    class="material-icons md-18">search</i></a>
+                            <a href="#" id="view_list" title="reset filter" class="btn btn-warning btn-sm clear_filter"><i
+                                    class="material-icons md-18">autorenew</i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-12">
+                    <h3 style="margin: 0 0 0 0;">Is your school one of these schools?</h3>
+                </div>
+                <div class="clearfix"></div>
+                <div class="nopaadding">
+               {{#each school_list}}
+                    <div class="col-md-3 col-sm-6 npding">
+
+                        <div class="card card-profile">
+                            <a href="/schoolAdmin/{{_id}}" >
+                              <h4 class="card-title" title="{{name}}">
+                                  {{cutString name}}
+                              </h4>
+                              <div class="card-content">
+                                  <div class="">
+                                        <div class="thumb" style="background-image: url({{SchoolImageValidate mainImage}});height:155px;width:100%; cursor:pointer;" ></div>
+                                  </div>
+                              </div>
+                              </a>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <a href="/schoolAdmin/{{_id}}" class="btn btn-rose" data-id="{{_id}}">View
+                                        <div class="ripple-container"></div>
+                                    </a>
+                                    {{#if checkUserAccess userId}}
+                                      <div class="togglebutton">
+                                           <label><span class="btn-label"> Publish / Unpublish</span>
+                                               <input type="checkbox" data-school_id="{{_id}}" class="schoolStatus toggelSchoolStatus" style="position: absolute;" {{school_status is_publish}}>
+                                           </label>
+                                       </div>
+                                    {{/if}}
+                              </div>
+                            </div>
+                            </div>
+
+                    </div>
+                {{/each}}
+                {{#if moreResults}}
+                  <div class="row col-md-12">
+                      <div id="SchoolShowMoreResults" class="text-center" style="margin-left: 25px;">
+                          <span class="loading"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i></span>
+                      </div>
+                  </div>
+                {{/if}}
+				</div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3> No none of these are my school. Please let me start a new listing.</h3>
+                    <a href="#" class="btn btn-rose btn_claim">Start New School
+                        <div class="ripple-container"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,220 @@
+<template id="Evaluation" name="Evaluation">
+  <div class="modal fade" id="class-evaluation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" style="width:80%">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                      <i class="material-icons">clear</i>
+                  </button>
+                  <h4 class="modal-title">Evaluation</h4>
+              </div>
+              <div class="modal-body">
+                  {{>EvaluationBox}}
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>
+</template>
+<template id="EvaluationBox" name="EvaluationBox">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card box1">
+        <div class=" card-header-text" data-background-color="blue">
+                <h4 class="card-title">Feedback</h4>
+            </div>
+          <div class="card-content">
+                <form method="#" action="#">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="form-group label-floating">
+                        <label class="control-label">Student</label>
+                        <select class="form-control co_student" style="width:100%">
+                            <option disabled>Student</option>
+                              <option >Aleksandar</option>
+                              <option >Angelique</option>
+                              <option >Alec Thompson</option>
+                              <option >Alexandra</option>
+                              <option >Ludmila</option>
+                              <option >Gisela</option>
+                              <option >Fernando</option>
+                        </select>
+                      </div>
+                    </div>
+                      <div class="col-sm-6">
+                        <div class="form-group label-floating">
+                        <label class="control-label ">Skill(Not Required)</label>
+                        <select class="form-control co_skill" style="width:100%">
+                            <option disabled> Skill</option>
+                            <option value="Skill 1"> Skill 1</option>
+                            <option value="Skill 2"> Skill 2</option>
+                            <option value="Skill 3"> Skill 3</option>
+                        </select>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group label-floating">
+                            <label class="control-label">Citation</label>
+                            <select class="form-control co_citation" style="width:100%">
+                                <option disabled>Citation</option>
+                                <option value="Commendation">Commendation</option>
+                                <option value="Recommendation">Recommendation</option>
+                                <option value="Caution"> Caution</option>
+                            </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card card-note col-md-12">
+                        <div class="card-header">
+                            <span class="label label-info">Notes:</span>
+                        </div>
+                        <div class="card-content">
+                            <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-warning col-md-5">Upload video</button>
+                        <button type="button" class="btn btn-info col-md-5">Save Evaluation</button>
+                    </div>
+                </form>
+          </div>
+      </div>
+    </div>
+    <div class="col-md-6 box2">
+      <div class="card">
+        <div class=" card-header-text" data-background-color="blue">
+                <h4 class="card-title">Evaluation of Skill</h4>
+            </div>
+          <div class="card-content">
+                <form method="#" action="#">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="form-group label-floating">
+                        <label class="control-label">Student</label>
+                        <select class="form-control el_student" style="width:100%">
+                              <option disabled>Student</option>
+                              <option value="Aleksandar">Aleksandar</option>
+                              <option value="Angelique">Angelique</option>
+                              <option value="Alec Thompson">Alec Thompson</option>
+                              <option value="Alexandra">Alexandra</option>
+                              <option value="Ludmila">Ludmila</option>
+                              <option value="Gisela">Gisela</option>
+                              <option value="Fernando">Fernando</option>
+                        </select>
+                      </div>
+                    </div>
+                      <div class="col-sm-6">
+                        <div class="form-group label-floating">
+                        <label class="control-label">Choose Skill to Evaluate </label>
+                        <select class="form-control el_skill"  style="width:100%">
+                            <option disabled> Skill</option>
+                              <option value="Skill 1"> Skill 1</option>
+                              <option value="Skill 2"> Skill 2</option>
+                              <option value="Skill 3"> Skill 3</option>
+                        </select>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group label-floating">
+                            <label class="control-label ">Level</label>
+                            <select class="form-control el_level"  style="width:100%">
+                                <option disabled>Level</option>
+                                  <option > Level 1</option>
+                                  <option > Level 2</option>
+                                  <option ></option>
+                            </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card card-note col-md-12">
+                        <div class="card-header">
+                            <span class="label label-info">Notes:</span>
+                        </div>
+                        <div class="card-content">
+                            <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                        </div>
+                    </div>
+                    <div class="md-12">
+                        <button type="button" class="btn  btn-warning">Upload video</button>
+                        <button type="button" class="btn  btn-info">Save Evaluation</button>
+                    </div>
+                </form>
+          </div>
+      </div>
+    </div>
+    <div class="col-md-12 box3">
+      <div class="card">
+        <div class="card-header-text" data-background-color="blue">
+                <h4 class="card-title">Accident Or Injury</h4>
+            </div>
+          <div class="card-content">
+                <form method="#" action="#">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="form-group label-floating">
+                        <label class="control-label">Student Injured </label>
+                        <select class="form-control ac_student1" style="width:100%">
+                            <option disabled>Student</option>
+                              <option >Aleksandar</option>
+                              <option >Angelique</option>
+                              <option >Alec Thompson</option>
+                              <option >Alexandra</option>
+                              <option >Ludmila</option>
+                              <option >Gisela</option>
+                              <option >Fernando</option>
+                        </select>
+                      </div>
+                    </div>
+                      <div class="col-sm-6">
+                        <div class="form-group label-floating">
+                        <label class="control-label">Student Injured By</label>
+                        <select class="form-control ac_student2" style="width:100%">
+                            <option disabled>Student</option>
+                              <option >Aleksandar</option>
+                              <option >Angelique</option>
+                              <option >Alec Thompson</option>
+                              <option >Alexandra</option>
+                              <option >Ludmila</option>
+                              <option >Gisela</option>
+                              <option >Fernando</option>
+                        </select>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group label-floating">
+                        <label class="control-label">Injury Types</label>
+                        <select class="form-control ac_accidental" style="width:100%">
+                            <option disabled>Injury Types</option>
+                            <option value="Accidental 1"> Accidental</option>
+                            <option value="Accidental 2"> Negligent</option>
+                            <option value="Accidental 3"> Intentional</option>
+                        </select>
+                        </div>
+                        <button type="button" class="btn btn-fill btn-warning">Upload video</button>
+                        <button type="button" class="btn btn-fill btn-info">Save Evaluation</button>
+                      </div>
+                    <div class="col-sm-6">
+                        <div class="card card-note">
+                            <div class="card-header">
+                                <span class="label label-info">Notes:</span>
+                            </div>
+                            <div class="card-content">
+                                <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </form>
+          </div>
+      </div>
+    </div>
+</div>
+</template>

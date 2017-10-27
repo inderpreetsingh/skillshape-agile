@@ -1,0 +1,16 @@
+{
+  "name": "scioma",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "bcrypt": "^0.8.7",
+    "datatables.net": "^1.10.15",
+    "handlebars": "^4.0.6",
+    "html-pdf": "^2.1.0",
+    "jquery": "^1.12.4",
+    "meteor-node-stubs": "~0.2.0",
+    "moment": "^2.18.1"
+  }
+}

@@ -1,0 +1,479 @@
+<template name="SchoolView">
+  <!-- <div class="full-page login-page home-page" filter-color="black" data-image="/images/comingsoon.jpg"> -->
+  <div class="content">
+       <div class="container-fluid">
+         {{#if special_view}}
+         {{#if calendar_view}}
+           {{>MyCalendar}}
+         {{/if}}
+         {{#if price_view}}
+         <div class="row">
+           <div class="card">
+           {{#if checkArrayRecord "AllClassPrice" school}}
+           <div class="col-md-12">
+             <h2 class="tagline line-bottom">Prices</h2>
+             <div class="card-content table-grey-box">
+             <h4 class="card-title border-line-text line-bottom">Monthly Packages</h4>
+                 <div class="card-content table-responsive prices school-view-price" style="overflow-x:auto !important;">
+                     <table class="table">
+                         <thead>
+                             <tr>
+                                 <!-- <th class="text-center">#</th> -->
+                                 <th class="th_header">Package Name</th>
+                                 <th class="th_header">Payment Type</th>
+                                 <th class="th_header">Class Type includes</th>
+                                 <th class="th_header">1 month</th>
+                                 <th class="th_header">3 month</th>
+                                 <th class="th_header">6 month</th>
+                                 <th class="th_header">1 year</th>
+                                 <th class="th_header">Life Time Cost</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                           {{#each AllMonthlyPrice school}}
+                            {{#if checkNamePresent packageName}}
+                               <tr>
+                                   <td>{{packageName}}</td>
+                                   <td>{{#if checkNamePresent pymtType }}{{pymtType}}{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                   <td>{{class_name classTypeId}}</td>
+                                   <td>{{#if validAmount oneMonCost }}<span class="btn-info">{{oneMonCost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                   <td>{{#if validAmount threeMonCost }}<span class="btn-warning">{{threeMonCost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                   <td>{{#if validAmount sixMonCost }}<span class="btn-success">{{sixMonCost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                   <td>{{#if validAmount annualCost }}<span class="btn-danger">{{annualCost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                   <td>{{#if validAmount lifetimeCost }}<span class="btn-primary">{{lifetimeCost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                               </tr>
+                               {{/if}}
+                           {{/each}}
+                         </tbody>
+                     </table>
+                 </div>
+             </div>
+           </div>
+           {{/if}}
+           {{#if checkArrayRecord "AllClassPrice" school}}
+           <div class="col-md-12">
+
+                 <div class="card-content table-grey-box ">
+                 <h4 class="card-title border-line-text line-bottom" >Class Costs</h4>
+                     <div class="card-content table-responsive clascost school-view-price" style="overflow-x:auto !important;">
+                         <table class="table">
+                             <thead class="">
+                                 <tr>
+                                     <!-- <th class="text-center">#</th> -->
+                                     <th class="th_header">Package Name</th>
+                                     <th class="th_header">Cost</th>
+                                     <th class="th_header">Class Type includes</th>
+                                     <th class="th_header">Number of Classes</th>
+                                     <th class="th_header">Expires</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                               {{#each AllClassPrice school}}
+                                  {{#if checkNamePresent packageName}}
+                                   <tr>
+                                       <td class="">{{packageName}}</td>
+                                       <td class="">{{#if validAmount cost }}<span class="btn-warning">{{cost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                       <td class="">{{class_name classTypeId}}</td>
+                                       <td class="">{{noClasses}}</td>
+                                       <td class="text-warning">{{#if validAmount start}} {{start}} {{finish}} {{else}} <span class="text-warning link"> check with school</span> {{/if}}</td>
+                                   </tr>
+                                   {{/if}}
+                               {{/each}}
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+
+           </div>
+           {{/if}}
+         </div>
+         </div>
+         {{/if}}
+         {{else}}
+         {{#with school}}
+         <div class="row">
+
+           <div class="col-sm-12">
+             <div class="col-sm-6">
+               <!--h2 class="card-title">
+                   <a href="#">{{name}}</a>
+               </h2-->
+             </div>
+             <!--div class="col-sm-6">
+             {{#if checkUserAccess userId}}
+                 <a href="/SchoolAdmin/{{_id}}/edit" type="button" class="btn btn-default pull-right"><i class="fa fa-edit"></i>  Edit</a>
+             {{/if}}
+             {{#if IsClaim claimed _id}}
+                <a href="#" type="button" class="btn {{ClaimBtnCSS claimed}} pull-right btn_claim" id="claimSchool1"><i class="fa fa-gavel"></i>  Claim</a>
+             {{/if}}
+            </div-->
+           </div>
+           <div class="col-sm-12">
+             <div class="card">
+               <div class="card-content">
+                 <div class="">
+                     <div class="thumb about-school-top" style="{{view_school_image mainImage}}" >
+                     <figure class="about-head-image">
+                     <div class="overlay-box"></div>
+                     <img src="{{view_school_image mainImage}}"></figure>
+                     <div class="col-md-12">
+                       {{#if checkUserAccess userId}}
+                         <div class="togglebutton pull-right">
+                              <label><span class="btn-label" style="color:white"> Publish / Unpublish</span>
+                                  <input type="checkbox" data-school_id="{{_id}}" class="schoolStatus toggelSchoolStatus" style="position: absolute;" {{school_status is_publish}}>
+                              </label>
+                          </div>
+                       {{/if}}
+                     </div>
+                     <div class="col-md-12">
+             {{#if checkUserAccess userId}}
+                 <a href="/SchoolAdmin/{{_id}}/edit" type="button" class="btn btn-default pull-right"><i class="fa fa-edit"></i>  Edit</a>
+             {{/if}}
+
+             {{#if IsClaim claimed _id}}
+               <a href="#" type="button" style="margin-right: 10px;" class="btn {{ClaimBtnCSS claimed}} pull-right btn_claim" id="claimSchool1"><i class="fa fa-gavel"></i>  Claim</a>
+             {{/if}}
+
+            </div>
+                     <div class="school-view-top-heading">
+                     	<div class="col-md-12">	<h1> <a href="#">{{name}}</a></h1>
+                     		<hr></div>
+
+                     	<div class="col-md-6 col-lg-7">
+
+                     		<a href="#">{{website}}</a>
+                     		</div>
+                     	</div>
+                     	<div class="col-md-6 col-lg-5  view-btn-top">
+                     		<button class="btn account-view-btn btn-warning">
+                     			<span class="btn-label">
+                     				<i class="material-icons">account_circle</i>
+                     				Contact Us
+                     			</span>
+                     		</button>
+                     		<button class="btn account-view-btn btn-info">
+                     			<span class="btn-label">
+                     				<i class="material-icons">phone</i>
+                     				Call Us
+                     			</span>
+                     		</button>
+                     	</div>
+                     </div>
+                 </div>
+               </div>
+
+               <div class="card-footer">
+                 <div class="col-sm-12">
+
+                 </div>
+              </div>
+             </div>
+           </div>
+           <div class="col-sm-12">
+           <div class="clearfix card" >
+           <div class="col-sm-9">
+           	<div class="">
+              {{#if HtmlPresent aboutHtml}}
+           	<div class="card-content">
+            <div class="content-list-heading">
+             <h2 class="card-title text-center ">About School
+             <figure><img src="/images/heading-line.png"  /></figure>
+             </h2>
+             <!-- <h3 class="card-title">What Makes us Special<hr></h3> -->
+              {{{aboutHtml}}}
+              </div>
+              </div>
+              {{/if}}
+           </div>
+            </div>
+           <div class="col-sm-3">
+           	  <div class="card">
+
+                 {{#each locations}}
+
+           		       <div class="btn-info address-bar-box"><h4><i class="fa fa-map-marker"></i>&nbsp;{{title}}</h4>
+                     </div>
+           		           <div class="school-view-adress card-content">
+
+                            <p>{{address}}<br>{{city}},{{state}} - {{zip}}<br>{{country}}</p>
+
+                   <!--p><i class="fa fa-globe"></i> {{website}}</p>
+                   <p><i class="fa fa-phone"></i> {{phone}}</p-->
+                              {{#if checkIndex @index }}
+                                <div class="card-content" id="google-map" style="height:200px;">
+                                </div>
+                               {{/if}}
+                          </div>
+                 {{/each}}
+               </div>
+           </div>
+           </div>
+
+         </div>
+         </div>
+         {{#if HtmlPresent descHtml}}
+           <div class="row  card">
+            <div class="col-md-12">
+              <div class="">
+              <div class="card-content">
+               <div class="content-list-heading">
+             	 <h2 class="card-title text-center">Description
+             	 	 <figure><img src="/images/heading-line.png"  /></figure>
+             	 </h2>
+             	 <!-- <h3 class="card-title text-left">School Description<hr></h3> -->
+                {{{descHtml}}}
+                </div>
+             	 </div>
+             	 </div>
+             </div>
+             </div>
+           {{/if}}
+           <div class="row  card">
+             <div class="col-sm-12 text-left">
+               <div class="content-list-heading ">
+               <h2 class="text-center">{{name}} offers the following class types
+                  <figure><img src="/images/heading-line.png"  /></figure>
+                  </h2>
+               </div>
+             </div>
+           <div class="col-sm-12">
+           {{#each class_type}}
+               {{#each skill_list _id}}
+                 <div class="col-md-4 npdagin npding">
+                   <div class="card card-profile">
+                     <h4 class="tagline" title="{{className}}">
+                        {{../skillTypeId}} at {{../../name}}
+                     </h4>
+                         <div class="card-content">
+                           <div class="" data-header-animation="false">
+                               <div class="">
+                                  <div class="thumb " style="background-image: url({{view_image classTypeId classImagePath}});height:155px;width:100%" ></div>
+                               </div>
+                           </div>
+                           <div class="card-content">
+                             <h4 class="card-title">
+                                 <a href="#">{{className}}</a>
+                             </h4>
+                             <div class="card-description">
+                               {{view_desc classTypeId}}
+                               {{#if validate_class_price}}
+                                ${{view_class_price classTypeId}}/Month
+                               {{/if}}
+                             </div>
+                             <br>
+                             <p class="text-center">{{{view_schedule this}}}</p>
+                           </div>
+                         </div>
+                         <div class="card-footer">
+                           <div class="col-sm-12 col-xs-12">
+
+                             {{#if checkOwnerAccess ../../userId}}
+                             <a href="#" class="btn btn-success" data-class="{{_id}}" data-class-type="{{classTypeId}}"><i class="material-icons">check</i>  Managing
+                             <div class="ripple-container"></div></a>
+                             {{else}}
+                             {{#if check_join _id}}
+                                 <a href="#" class="btn btn-success" data-class="{{_id}}" data-class-type="{{classTypeId}}"><i class="material-icons">check</i>  Joined
+                                 <div class="ripple-container"></div></a>
+                             {{else}}
+                                 <a href="#" class="btn btn-danger btn_join_class btn_join_check" data-class="{{_id}}" data-class-type="{{classTypeId}}">Add to my calendar! <div class="ripple-container"></div></a>
+                             {{/if}}
+                             {{/if}}
+
+                           </div>
+                           <div class="clearfix"></div>
+                              <div class="col-sm-12 col-xs-12" style="padding: 5px;">
+                               <div class="col-sm-9">
+                                    <p class="text-center">Toggle {{className}} view </p>
+                               </div>
+                               <div class="col-sm-3 col-xs-3">
+                                 <div class="togglebutton">
+                                      <label>
+                                          <input type="checkbox" data-id="{{_id}}" class="toggeleview" style="position: absolute;" checked>
+                                          <span class="toggle toggle-success"></span>
+                                      </label>
+                                  </div>
+                               </div>
+                              </div>
+                        </div>
+                   </div>
+                 </div>
+               {{/each}}
+
+           {{/each}}
+         </div>
+         </div>
+         <video autoplay loop id="video-background" muted plays-inline>
+           <source src="{{backGroundVideoUrl}}" type="video/mp4">
+         </video>
+         {{/with}}
+         {{>MyCalendar}}
+         <div class="card col-sm-12">
+           <div class="col-md-12">
+             {{#if checkArrayRecord "MonthlyPrice" school}}
+             <div class="content-list-heading">
+             <h2 class="tagline text-center">Prices<figure><img src="/images/heading-line.png"  /></figure></h2>
+             </div>
+             <div class="">
+                   <div class="card-content table-grey-box">
+                   <h4 class="card-title border-line-text line-bottom">Monthly Packages</h4>
+                       <div class="card-content table-responsive prices school-view-price">
+                           <table class="table">
+                               <thead>
+                                   <tr>
+                                       <!-- <th class="text-center">#</th> -->
+                                       <th>Package Name</th>
+                                       <th>Payment Type</th>
+                                       <th>Class Type includes</th>
+                                       <th>1 month</th>
+                                       <th>3 month</th>
+                                       <th>6 month</th>
+                                       <th>1 year</th>
+                                       <th>Life Time Cost</th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                 {{#each AllMonthlyPrice school}}
+                                  {{#if checkNamePresent packageName}}
+                                     <tr>
+                                         <td>{{packageName}}</td>
+                                         <td>{{#if checkNamePresent pymtType }}{{pymtType}}{{else}} <span class="text-warning link">check with school</span>{{/if}}</td>
+                                         <td>{{class_name classTypeId}}</td>
+                                         <td>{{#if validAmount oneMonCost }}<span class="btn-info">{{oneMonCost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                         <td>{{#if validAmount threeMonCost }}<span class="btn-warning">{{threeMonCost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                         <td>{{#if validAmount sixMonCost }}<span class="btn-success">{{sixMonCost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                         <td>{{#if validAmount annualCost }}<span class="btn-danger">{{annualCost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                         <td>{{#if validAmount lifetimeCost }}<span class="btn-primary">{{lifetimeCost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                     </tr>
+                                     {{/if}}
+                                 {{/each}}
+                               </tbody>
+                           </table>
+                       </div>
+                   </div>
+               </div>
+               {{/if}}
+           </div>
+           <div class="col-md-12">
+              {{#if checkArrayRecord "AllClassPrice" school}}
+               <div class="">
+                   <div class="card-content table-grey-box ">
+                   <h4 class="card-title border-line-text line-bottom" >Class Costs</h4>
+                       <div class="card-content table-responsive clascost school-view-price">
+                           <table class="table">
+                               <thead class="">
+                                   <tr>
+                                       <!-- <th class="text-center">#</th> -->
+                                       <th>Package Name</th>
+                                       <th>Cost</th>
+                                       <th>Class Type includes</th>
+                                       <th>Number of Classes</th>
+                                       <th>Expires</th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   {{#each AllClassPrice school}}
+                                      {{#if checkNamePresent packageName}}
+                                       <tr>
+                                           <td class="">{{packageName}}</td>
+                                           <td class="">{{#if validAmount cost }}<span class="btn-warning">{{cost}}</span>{{else}} <span class="text-warning link"> check with school</span>{{/if}}</td>
+                                           <td class="">{{class_name classTypeId}}</td>
+                                           <td class="">{{noClasses}}</td>
+                                           <td class="text-warning">{{#if validAmount start}} {{start}} {{finish}} {{else}} Check with School {{/if}}</td>
+                                       </tr>
+                                       {{/if}}
+                                   {{/each}}
+                               </tbody>
+                           </table>
+                       </div>
+                   </div>
+               </div>
+               {{/if}}
+           </div>
+         </div>
+
+         <div class="card">
+           <div class="col-md-12 media-heading-box">
+            <div class="content-list-heading ">
+             <h2 class="tagline  text-center">Media
+             	<figure><img src="/images/heading-line.png"  /></figure>
+             </h2>
+             </div>
+             <div class="col-sm-6 " style="padding-bottom: 20px;">
+             	<div class="">
+             	<div class="card-content">
+               <h4 class="tagline line-bottom border-line-text text-center">Images</h4>
+               <div class="carousel slide" id="myCarousel">
+                 <div class="carousel-inner">
+                   {{#each image_group school}}
+                   <div class="item {{check_active @index}} ">
+                     <div class="row">
+                     {{#each item}}
+                         <div class="col-xs-12">
+	                         <a  href="#">
+	                           <div class="thumb targetImage" style="background-image: url({{filePath}});height:220px;width:100%" data-src="{{filePath}}"></div>
+	                         </a>
+                         </div>
+                      {{/each}}
+                     </div>
+                   </div>
+                   {{/each}}
+                 </div >
+                 <div class="carousel-selector-main">
+                 <a class="left carousel-control left-carousal" href="#myCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                 <a class="right carousel-control right-carousal" href="#myCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
+               	</div>
+               </div>
+               </div>
+               </div>
+             </div>
+             <div class="col-sm-6 " style="padding-bottom: 20px;">
+             <div class="">
+             <div class="card-content">
+               <h4 class="tagline line-bottom border-line-text text-center">Other Media</h4>
+               <div class="carousel slide" id="MediaCarousel">
+                 <div class="carousel-inner">
+                   {{#each other_media school}}
+                   <div class="item {{check_active @index}} ">
+                     <div class="row">
+                     {{#each item}}
+                         <div class="col-xs-3">
+                           <div style="margin-top:10px; margin-bottom:10px; margin-left:10px; cursor:zoom-in; height:80px">
+                                  <a target="_blank" href="{{filePath}}">
+                                    <span class="fa fa-file-pdf-o fa-5x"></span>
+                                  </a>
+                            </div>
+                         </div>
+                      {{/each}}
+                     </div>
+                   </div>
+                   {{/each}}
+                 </div>
+                 <div class="carousel-selector-main">
+                 <a class="left carousel-control left-carousal" href="#MediaCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                 <a class="right carousel-control right-carousal" href="#MediaCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
+               	</div>
+               </div>
+             </div>
+             </div>
+             </div>
+           </div>
+         </div>
+
+         {{/if}}
+       </div>
+   </div>
+
+   <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Image Preview</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+          <div class="modal-body" style="overflow-x:auto;overflow-y:auto;max-height: 100%;">
+            <img id="mimg" src="" class="img-responsive">
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</template>

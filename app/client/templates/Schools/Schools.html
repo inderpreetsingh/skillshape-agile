@@ -1,0 +1,33 @@
+<template name="Schools">
+  <div class="content">
+     <div class="container-fluid">
+
+          <!-- {{>ListView}} -->
+        {{#each school_list}}
+          <div class="col-md-3">
+            <div class="card card-profile">
+                <h4 class="card-title">
+                    <a href="#">{{name}}</a>
+                </h4>
+                    <div class="card-content">
+                      <div class="">
+                          <img src="{{mainImage}}" style="height:155px">
+                      </div>
+                    </div>
+
+                  <div class="card-footer">
+                    <div class="row">
+                        <a class="btn btn-danger btn-xs" href="/Schools/{{_id}}/edit">
+                        <i class="material-icons">mode_edit</i></a> |
+                        <a class="btn btn-danger btn-xs" href="/Schools/{{_id}}">
+                        <i class="material-icons">remove_red_eye</i></a> |
+                        <a class="btn btn-danger btn-xs" href="#">
+                        <i class="material-icons">delete</i></a>
+                    </div>
+                 </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+  </div>
+</template>

@@ -1,0 +1,221 @@
+<template id="sidebar" name="sidebar">
+    <div class="sidebar" data-active-color="rose" data-background-color="black" data-image="/images/background.jpg">
+        <!--
+  Tip 1: You can change the color of active element of the sidebar using: data-active-color="purple | blue | green | orange | red | rose"
+  Tip 2: you can also add an image using data-image tag
+  Tip 3: you can change the color of the sidebar with data-background-color="white | black"
+-->
+        <div class="logo">
+            <a href="/" class="simple-text">
+            SkillShape
+            <!-- <img src="/images/logo1.png" alt="logo" width=48> -->
+          </a>
+        </div>
+        <div class="logo logo-mini">
+            <a href="/" class="simple-text">
+              SS
+          </a>
+        </div>
+        <div class="sidebar-wrapper">
+            <div class="user">
+                <div class="photo">
+                    <img src="http://s3-eu-west-1.amazonaws.com/graphical.io/graphical/be7d9c7c-c2ea-4b92-9ea5-024d92973cb5.jpg" />
+                </div>
+                <div class="info">
+                    <a data-toggle="collapse" href="#collapseExample" class="collapsed">
+                      Sam Schikowitz
+                      <b class="caret"></b>
+                  </a>
+                    <div class="collapse" id="collapseExample">
+                        <ul class="nav">
+                            <li>
+                              {{#if IsStudent }}
+                                  <a href="/MemberDetailsStudent" class="close-nav">My Profile</a>
+                              {{else}}
+                                  <a href="/MemberDetailsInstructor" class="close-nav">My Profile</a>
+                              {{/if}}
+                            </li>
+                            <li>
+                                <a href="#">Settings</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav">
+                <!-- <li class="active">
+                  <a href="/schedule">
+                      <i class="material-icons ">event_note</i><p>Schedule</p>
+                  </a>
+              </li> -->
+                <li>
+                    <a data-toggle="collapse" href="#Curriculum">
+                        <i class="material-icons">school</i>
+                        <p>Curriculum
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse" id="Curriculum">
+                        <ul class="nav">
+                            <li>
+                                <a href="/school" class="close-nav">School Overview</a>
+                            </li>
+                            <li>
+                                <a href="/schedule" class="close-nav">Schedule</a>
+                            </li>
+                            <li>
+                                <a href="/class_archive" class="close-nav">Class Archive</a>
+                            </li>
+                            <li>
+                                <a href="/SkillList" class="close-nav">Skill List</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a data-toggle="collapse" href="#Members">
+                        <i class="material-icons">person_pin</i>
+                        <p>Members
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse" id="Members">
+                        <ul class="nav">
+                            <li>
+                                <a href="/member_home" class="close-nav">Home</a>
+                            </li>
+                            <li>
+                                <a href="/instructor" class="close-nav">Instructors</a>
+                            </li>
+                            <!-- <li>
+                                <a href="/member_signup">Sign Up</a>
+                            </li> -->
+
+                            <!-- <li>
+                                <a href="/MemberDetailsInstructor">Member Details Instructor</a>
+                            </li>
+                            <li>
+                                <a href="/MemberDetailsStudent">Member Details Student</a>
+                            </li> -->
+                            <!-- <li>
+                                <a href="/MemberNewAdmin">New Admin</a>
+                            </li> -->
+                            <li>
+                                <a href="/MemberList" class="close-nav">Staff</a>
+                            </li>
+                            <li>
+                                <a href="/member_chooser" class="close-nav">Students</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- <li>
+                    <a data-toggle="collapse" href="#Student">
+                        <i class="material-icons">Student</i>
+                        <p>Student
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse" id="Student">
+                        <ul class="nav">
+                            <li>
+                                <a href="/StudentProgressView">Student Progress View</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li> -->
+                {{#if or_check IsInstructor IsAdmin IsStaff }}
+                <li>
+                    <a data-toggle="collapse" href="#Instruction">
+                        <i class="material-icons">supervisor_account</i>
+                        <p>Instruction
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse" id="Instruction">
+                        <ul class="nav">
+                            {{#if or IsInstructor IsAdmin }}
+                            <li>
+                                <a href="/class_edit/1" class="close-nav">Class Builder</a>
+                            </li>
+                            <li>
+                                <a href="/student_evaluator" class="close-nav">Student Evaluation</a>
+                            </li>
+                            {{/if}}
+                            <li>
+                                <a href="/media_upload" class="close-nav" >Media Upload</a>
+                            </li>
+                            <li>
+                                <a href="/EvaluationArchive" class="close-nav">Evaluation Archive</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                {{/if}}
+                <!-- <li>
+                    <a data-toggle="collapse" href="#Skill">
+                        <i class="material-icons">assignment</i>
+                        <p>Skill
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse" id="Skill">
+                        <ul class="nav">
+                            <li>
+                                <a href="/SkillView">Skill View</a>
+                            </li>
+                            <li>
+                                <a href="/SkillList">Skill List</a>
+                            </li>
+                            <li>
+                                <a href="/SkillEditor">Skill Editor</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li> -->
+                {{#if or IsAdmin IsStaff }}
+                <li>
+                    <a data-toggle="collapse" href="#Staff">
+                        <i class="material-icons">vpn_key</i>
+                        <p>Staff activities
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse" id="Staff">
+                        <ul class="nav">
+                            <li>
+                                <a href="/ComingSoon" class="close-nav">Staff Home</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                {{/if}}
+                {{#if IsAdmin }}
+                <li>
+                    <a data-toggle="collapse" href="#admin">
+                        <i class="material-icons">settings</i>
+                        <p>Admin
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse" id="admin">
+                        <ul class="nav">
+                            <li>
+                                <a href="/school/1" class="close-nav">School Settings</a>
+                            </li>
+                            <li>
+                                <a href="/users" class="close-nav">Manage Users</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                {{/if}}
+            </ul>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function() {
+
+    });
+    </script>
+</template>

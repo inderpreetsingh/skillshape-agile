@@ -1,0 +1,462 @@
+<template id="SkillEditor" name="SkillEditor">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <h4 class="card-title">Skill Editor</h4>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <form method="#" action="#">
+                                            <div class="form-group label-floating is-empty">
+                                                <label class="control-label">Skill Name</label>
+                                                <input type="text" class="form-control">
+                                                <span class="material-input"></span></div>
+                                            <div class="form-group label-floating is-empty">
+                                                <label class="control-label">Category</label>
+                                                <input type="text" class="form-control">
+                                                <span class="material-input"></span>
+                                            </div>
+                                            <div class="form-group label-floating is-empty">
+                                                <label class="control-label">Subject</label>
+                                                <input type="text" class="form-control">
+                                                <span class="material-input"></span>
+                                            </div>
+                                            <div class="form-group label-floating is-empty">
+                                                <label class="control-label">Level</label>
+                                                <input type="text" class="form-control">
+                                                <span class="material-input"></span>
+                                            </div>
+                                            <div class="form-group label-floating is-empty">
+                                                <label class="control-label">Dependancy</label>
+                                                <input type="text" class="form-control">
+                                                <span class="material-input"></span>
+                                            </div>
+                                            <div class="form-group label-floating is-empty">
+                                                <label class="control-label">Correlation</label>
+                                                <input type="text" class="form-control">
+                                                <span class="material-input"></span>
+                                            </div>
+                                            <div class="form-group label-floating is-empty">
+                                                <label class="control-label">Tags</label>
+                                                <input type="text" class="form-control">
+                                                <span class="material-input"></span>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card card-note">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                                <div class="fileinput-new thumbnail img-circle">
+                                                    <img src="../images/skill.png" alt="...">
+                                                </div>
+                                                <div class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
+                                                <div>
+                                                    <span class="btn-file col-md-12">
+                                                    <span class="fileinput-new btn btn-info btn-sm">Change Icon</span>
+                                                    <span class="fileinput-exists">Change</span>
+                                                    <input type="file" name="...">
+                                                    </span>
+                                                    <br>
+                                                    <a href="#pablo" class="btn btn-warning btn-sm fileinput-exists"
+                                                       data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 pull-right">
+                                            <div class="card card-button">
+                                                <button type="button" class="btn pull-right btn-warning"><i class="material-icons">save</i>Save Skill
+                                                </button>
+                                                <button type="button" class="btn pull-right btn-info"><i class="material-icons">clear_all</i>Clear Editor
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="card card-note">
+                                            <div class="card-header">
+                                                <span class="label label-info">Notes:</span>
+                                            </div>
+                                            <div class="card-content">
+                                                <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="optionsCheckboxes"
+                                               class="skil_group checkbox-material" checked="checked"> Group Skill?
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card" id="skil_group">
+                                    <div class="col-md-2 col-sm-6">
+                                        <div class="card">
+                                            <div class="card-content text-info text-center">
+                                                <i class="material-icons">transfer_within_a_station</i>
+                                                <h6 class="card-title">Skill 1</h6>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">access_time</i>
+                                                    <a href="#pablo">5 minutes</a>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <a href="" class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="View"><i class="material-icons md-14 text-success">dvr</i></a>
+                                                    <a class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="Switch"><i class="material-icons md-14 text-warning">swap_horiz</i></a>
+                                                    <a class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="Delete"><i class="material-icons md-14 text-danger">delete_forever</i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6">
+                                        <div class="card">
+                                            <div class="card-content text-info text-center">
+                                                <i class="material-icons">directions_run</i>
+                                                <h6 class="card-title">Skill 2</h6>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">access_time</i>
+                                                    <a href="#pablo">5 minutes</a>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <a href="" class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="View"><i class="material-icons md-14 text-success">dvr</i></a>
+                                                    <a class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="Switch"><i class="material-icons md-14 text-warning">swap_horiz</i></a>
+                                                    <a class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="Delete"><i class="material-icons md-14 text-danger">delete_forever</i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6">
+                                        <div class="card">
+                                            <div class="card-content text-info text-center">
+                                                <i class="material-icons">directions_bike</i>
+                                                <h6 class="card-title">Skill 3</h6>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">access_time</i>
+                                                    <a href="#pablo">10 minutes</a>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <a href="" class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="View"><i class="material-icons md-14 text-success">dvr</i></a>
+                                                    <a class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="Switch"><i class="material-icons md-14 text-warning">swap_horiz</i></a>
+                                                    <a class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="Delete"><i class="material-icons md-14 text-danger">delete_forever</i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6">
+                                        <div class="card">
+                                            <div class="card-content text-info text-center">
+                                                <i class="material-icons">rowing</i>
+                                                <h6 class="card-title">Skill 4</h6>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">access_time</i>
+                                                    <a href="#pablo">13 minutes</a>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <a href="" class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="View"><i class="material-icons md-14 text-success">dvr</i></a>
+                                                    <a class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="Switch"><i class="material-icons md-14 text-warning">swap_horiz</i></a>
+                                                    <a class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="Delete"><i class="material-icons md-14 text-danger">delete_forever</i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6">
+                                        <div class="card">
+                                            <div class="card-content text-info text-center">
+                                                <i class="material-icons">accessibility</i>
+                                                <h6 class="card-title">Skill 5</h6>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">access_time</i>
+                                                    <a href="#pablo">10 minutes</a>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <a href="" class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="View"><i class="material-icons md-14 text-success">dvr</i></a>
+                                                    <a class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="Switch"><i class="material-icons md-14 text-warning">swap_horiz</i></a>
+                                                    <a class="text-info" rel="tooltip" data-placement="bottom"
+                                                       title="Delete"><i class="material-icons md-14 text-danger">delete_forever</i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-6">
+                                        <div class="card">
+                                            <div class="card-content text-info text-center">
+                                                <a href="#" class="text-info">
+                                                    <i class="material-icons" href="#">add_box</i>
+                                                </a>
+                                                <a href="#" class="text-info">
+                                                    <h6 class="card-title">Add A Topic</h6>
+                                                </a>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">access_time</i>
+                                                    <a href="#pablo">Add minutes</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <div class="card">
+                            <div class="card-content text-center">
+                                <div class="card-header card-header-text pull-left" data-background-color="blue">
+                                    <h4 class="card-title ">Instructor's Overview</h4>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="card card-note">
+                                        <div class="card-header pull-left">
+                                            <span class="label label-info">Notes:</span>
+                                        </div>
+                                        <div class="card-content">
+                                            <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-header text-left">
+                                    <span class="btn btn-warning btn-sm">Notes to Instructors:</span>
+                                </div>
+                               <div class="col-md-12">
+                                   <div class="card card-note">
+                                       <div class="card-header pull-left">
+                                           <span class="label label-info">Notes:</span>
+                                       </div>
+                                       <div class="card-content">
+                                           <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                       </div>
+                                   </div>
+                               </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <i class="material-icons pull-left">slideshow</i>
+                                            <div>Add Basic Instructor Video</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card card-note">
+                                        <div class="card-header pull-left">
+                                            <span class="label label-info">Notes:</span>
+                                        </div>
+                                        <div class="card-content">
+                                            <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <i class="material-icons pull-left">slideshow</i>
+                                            <div>Add Advanced Instructor Video</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card card-note ">
+                                        <div class="card-header pull-left">
+                                            <span class="label label-info">Notes:</span>
+                                        </div>
+                                        <div class="card-content">
+                                            <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="card">
+                            <div class="card-header card-header-text pull-left" data-background-color="blue">
+                                <h4 class="card-title ">Instructions</h4>
+                            </div>
+                            <div class="card-content">
+                                <div class="col-sm-12">
+                                    <div class="form-group label-floating is-empty">
+                                        <label class="control-label">Basic Instructions</label>
+                                        <input type="text" class="form-control">
+                                        <span class="material-input"></span>
+                                    </div>
+                                    <div class="form-group label-floating is-empty">
+                                        <label class="control-label">Variations</label>
+                                        <input type="text" class="form-control">
+                                        <span class="material-input"></span>
+                                    </div>
+                                    <div class="form-group label-floating is-empty">
+                                        <label class="control-label">Counters</label>
+                                        <input type="text" class="form-control">
+                                        <span class="material-input"></span>
+                                    </div>
+                                    <div class="form-group label-floating is-empty">
+                                        <label class="control-label">Comment to Student</label>
+                                        <textarea name="Name" class="form-control" rows="4" cols="40"></textarea>
+                                        <span class="material-input"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-content">
+                                                <i class="material-icons pull-left">slideshow</i>
+                                                <div>Add Quick Video</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card card-note">
+                                            <div class="card-header">
+                                                <span class="label label-info">Notes:</span>
+                                            </div>
+                                            <div class="card-content">
+                                                <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-content">
+                                                <i class="material-icons pull-left">slideshow</i>
+                                                <div>Add Variations Video</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card card-note">
+                                            <div class="card-header">
+                                                <span class="label label-info">Notes:</span>
+                                            </div>
+                                            <div class="card-content">
+                                                <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-content">
+                                                <i class="material-icons pull-left">slideshow</i>
+                                                <div>Add Action Video</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card card-note">
+                                            <div class="card-header">
+                                                <span class="label label-info">Notes:</span>
+                                            </div>
+                                            <div class="card-content">
+                                                <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header card-header-text pull-left" data-background-color="blue">
+                            <h4 class="card-title ">Instructions</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <i class="material-icons pull-left">slideshow</i>
+                                            <div>Add Basic Video</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card card-note">
+                                        <div class="card-header">
+                                            <span class="label label-info">Full Instructions:</span>
+                                        </div>
+                                        <div class="card-content">
+                                            <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <i class="material-icons pull-left">slideshow</i>
+                                            <div>Add Variations Video</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card card-note">
+                                        <div class="card-header">
+                                            <span class="label label-info">Full Instructions:</span>
+                                        </div>
+                                        <div class="card-content">
+                                            <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <i class="material-icons pull-left">slideshow</i>
+                                            <div>Add Escape Video</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card card-note">
+                                        <div class="card-header">
+                                            <span class="label label-info">Full Instructions:</span>
+                                        </div>
+                                        <div class="card-content">
+                                            <textarea class="col-md-12 col-xs-12  note" name="notes" id=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
