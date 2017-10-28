@@ -7,60 +7,26 @@
 meteor-base@1.1.0             # Packages every Meteor app needs to have
 mobile-experience@1.0.5       # Packages for a great mobile UX
 mongo@1.2.2                   # The database Meteor supports right now
-blaze-html-templates@1.0.4    # Compile .html files into Meteor Blaze views
+#blaze-html-templates@1.0.4 # Compile .html files into Meteor Blaze views
+static-html@1.1.12_1
 reactive-var@1.0.11            # Reactive variable for tracker
-jquery@1.11.10                  # Helpful client-side library
 tracker@1.1.3                 # Meteor's client-side reactive programming library
 
 standard-minifier-css@1.3.5   # CSS minifier run for production mode
 standard-minifier-js@2.1.2    # JS minifier run for production mode
-es5-shim@4.6.15                # ECMAScript 5 compatibility for older browsers.
+es5-shim@4.6.15                # ECMAScript 5 compatibility for older browsers
 ecmascript@0.8.3              # Enable ECMAScript2015+ syntax in app code
 shell-server@0.2.4            # Server-side component of the `meteor shell` command
 
-aldeed:autoform
+react-meteor-data
 aldeed:collection2
-iron:router
-check@1.2.5
-accounts-password@1.4.0
-matb33:collection-hooks
-sacha:spin
-twbs:bootstrap
-fortawesome:fontawesome
-fourseven:scss
-chrismbeckett:toastr
-email@1.2.3
-aldeed:tabular
-session@1.1.7
-alanning:roles
-ongoworks:security
-menway:jquery-datatables
-chuangbo:cookie
-http@1.2.12
-dburles:collection-helpers
-accounts-base@1.3.4
-houston:admin
-lyquocnam:sweetalert
 cfs:autoform
-yogiben:autoform-file
 cfs:gridfs@0.0.32
-mrt:cheerio
-simple:reactive-method
-url@1.1.0
-momentjs:moment
-mouse0270:bootstrap-notify
-alethes:pages
-
-nilsdannemann:pdfmake
-meteorhacks:ssr
-random@1.0.10
-jgdovin:html-pdf
-risul:bootstrap-colorpicker
-mystor:device-detection
-tsega:bootstrap3-datetimepicker
-lepozepo:s3
+matb33:collection-hooks
 todda00:friendly-slugs
-summernote:summernote
-harrison:papa-parse
-force-ssl@1.0.15
-dynamic-import
+accounts-base
+accounts-password
+alethes:pages
+lepozepo:s3
+alanning:roles
+chrismbeckett:toastr

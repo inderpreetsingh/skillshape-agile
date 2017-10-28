@@ -1,0 +1,20 @@
+import React from 'react';
+import { Router, Route, browserHistory, DefaultRoute, IndexRoute } from 'react-router';
+
+//layout
+import MainLayout from '/imports/ui/layout/mainLayout';
+
+//components
+import Home from '/imports/ui/components/home';
+
+//pages
+import AboutUs from '/imports/ui/pages/aboutUs';
+
+export default Routes = () => (
+    <Router history={browserHistory}>
+      <Route path="/" component={MainLayout} >
+        <IndexRoute component={Home} />
+        <Route path="/Aboutus" component={AboutUs} />
+      </Route>
+    </Router>
+);
