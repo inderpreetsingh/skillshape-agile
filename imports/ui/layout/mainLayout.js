@@ -55,7 +55,7 @@ export default class MainLayout extends React.Component {
                 </div>
             {{else}}
       */}
-      <div className="wrapper perfectScroll" id="MainPanel">
+      <div className="wrapper perfectScroll">
         <Header/>
         <div className="content">
           <div className="container-fluid">
