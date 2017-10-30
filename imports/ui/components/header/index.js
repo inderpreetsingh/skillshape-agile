@@ -1,5 +1,6 @@
 import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
+import { browserHistory } from 'react-router';
 import Signin from '/imports/ui/components/account/signin';
 import Signup from '/imports/ui/components/account/signup';
 
@@ -10,8 +11,8 @@ class Header extends React.Component{
     this.state = {
       showSigninModal: false,
       showSignupModal: false,
-      schoolRegister: false,
       studentRegister: false,
+      schoolRegister: false,
     }
   }
 
@@ -22,11 +23,28 @@ class Header extends React.Component{
     })
   }
 
-  render(){
-    const {
-      currentUser,
-      // IsDemoUser,
-    } = this.props;
+  logIn = () => this.setState({showSigninModal: true});
+
+  logOut = (event) => {
+    event.preventDefault();
+    Meteor.logout();
+    $('body').removeAttr('style');
+    setTimeout(function () {
+      browserHistory.push('/');
+    }, 1000); 
+  }
+
+  openSignupModalWithRegisterationType = (studentRegister, schoolRegister) => {
+    this.setState({
+      showSignupModal: true,
+      showSigninModal: false,
+      studentRegister,
+      schoolRegister,
+    })
+  }
+
+  render() {
+    const { currentUser } = this.props;
 
     return(
       <div>
@@ -74,7 +92,7 @@ class Header extends React.Component{
                   currentUser ?
                     ( <ul className="nav navbar-nav navbar-right">
                         <li className="logout">
-                          <a href="#">
+                          <a onClick={this.logOut}>
                             <i className="material-icons ">exit_to_app</i>Logout
                           </a>
                         </li>
@@ -87,12 +105,12 @@ class Header extends React.Component{
                         </a>
                     </li>
                     <li className="">
-                        <a onClick={() => (this.setState({showSignupModal: true, schoolRegister: false, studentRegister: true}))} id="join_student" className="join_school cursor-lint" data-action="student">
+                        <a onClick={this.openSignupModalWithRegisterationType.bind(this, true, false)} id="join_student" className="join_school cursor-lint" data-action="student">
                             <i className="material-icons">person_add</i> Student Sign Up
                         </a>
                     </li>
                     <li className="">
-                        <a onClick={() => (this.setState({showSignupModal: true, schoolRegister: true, studentRegister: false}))} id="join_school" className="join_school cursor-lint" data-action="school">
+                        <a onClick={this.openSignupModalWithRegisterationType.bind(this, false, true)} id="join_school" className="join_school cursor-lint" data-action="school">
                             <i className="material-icons">school</i> Register a School
                         </a>
                     </li>
@@ -112,7 +130,7 @@ class Header extends React.Component{
                         </a>
                     </li>
                     <li className="">
-                        <a onClick={() => (this.setState({showSigninModal:true}))} className="login cursor-lint">
+                        <a onClick={this.logIn} className="login cursor-lint">
                             <i className="material-icons ">fingerprint</i> Login
                         </a>
                     </li>
@@ -137,12 +155,18 @@ class Header extends React.Component{
       </div>
     </nav>
     { this.state.showSignupModal && <Signup 
-          onClose={this.closeModal}
-          schoolRegister={this.state.schoolRegister}
-          studentRegister={this.state.studentRegister}
-        />
-      }
-    { this.state.showSigninModal && <Signin onClose={this.closeModal}/> }
+        onClose={this.closeModal}
+        schoolRegister={this.state.schoolRegister}
+        studentRegister={this.state.studentRegister}
+        openSignupModal={this.openSignupModalWithRegisterationType}
+        logIn={this.logIn}
+      />
+    }
+    { this.state.showSigninModal && <Signin 
+        openSignupModal={this.openSignupModalWithRegisterationType}
+        onClose={this.closeModal}
+      /> 
+    }
   <div className="modal fade " id="forget_pass_modal" role="dialog">
       <div className="modal-dialog" style={{maxWidth: '420px'}}>
           <div className="modal-content">

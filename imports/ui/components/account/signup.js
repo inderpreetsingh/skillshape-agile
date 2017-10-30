@@ -1,5 +1,6 @@
 import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
+import { browserHistory} from 'react-router';
 
 export default class Signup extends React.Component{
 
@@ -20,21 +21,79 @@ export default class Signup extends React.Component{
     event.preventDefault();
     console.log("email -->>",this.refs.email.value);
     const email = this.refs.email.value;
+    const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     const password = this.refs.password.value;
     const re_password = this.refs.re_password.value;
     const fname = this.refs.fname.value;
-    const lname = this.refs.lname.value;
-    const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    if(!emailReg.test(email))
-    {
-        toastr.error("Please enter valid email address","Error");
-        return false;
+    const lname = this.refs.fname.value;
+    
+    if (!fname) {
+      toastr.error("Please enter a first name","Error");
+      return false;
     }
-    if(password != re_password){
+
+    const profile = {
+      "firstName": fname,
+      "lastName": lname,
+    }
+
+    if(!emailReg.test(email)) {
+      toastr.error("Please enter valid email address","Error");
+      return false;
+    }
+
+    if(password != re_password) {
       toastr.error("Please enter valid confirm password","Error");
       return false;
     }
-    console.log("Form submit data-->>",this.state);
+
+    Accounts.createUser({ email: email, password: password, profile: profile }, (error) => {
+      if(error) {
+        toastr.error(error.reason,"Eroor");
+      } else {
+        const { schoolRegister, studentRegister } = this.props;
+        let user_id = Meteor.userId();
+        $('#signupmodal').modal('hide');
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+        
+        Meteor.call( 'sendVerificationLink', (error, response ) =>  {
+          if ( error ) {
+            toastr.error(error.reason,"Error");
+          } else {
+            let email = Meteor.user().emails[0].address;
+            toastr.success("Verification sent to "+email+"","Success");
+          }
+        });
+
+        let role_name = "Admin"
+        let data = null;
+       // var active_selection = $('.sheade.active').attr("id");
+        if(studentRegister) {
+          data = {"profile.acess_type":"student"}
+          role_name = "Student"
+        }
+        else if(schoolRegister) {
+          data = {"profile.acess_type":"school"}
+          role_name = "Admin"
+        }
+        console.log(data);
+
+        Meteor.call("editUser", data,user_id,role_name, (error, result) => {
+          if(error) {
+            console.log("error :"+error);
+            console.log("error", error);
+          }
+          if(result) {
+            if(studentRegister) {
+              browserHistory.push(`/profile/${Meteor.userId()}`)
+            } else if(schoolRegister) {
+              browserHistory.push('/ClaimSchool')                
+            }
+          }
+        });
+      }
+    });
   }
 
   render() {
@@ -51,10 +110,10 @@ export default class Signup extends React.Component{
                 <div className="card-signup" style={{paddingBottom: '20px', paddingTop: '20px', paddingLeft: '0px', paddingRight: '0px'}}>
                   <ul className="nav nav-pills nav-pills-primary nav-pills-icons" style={{marginTop: '0px', paddingLeft: '45px', marginBottom: '10px'}}>
                       <li className={studentRegister ? "active sheade" : "sheade"} id="student-tab">
-                        <a href="#" className="card-title text-center">Sign Up as a Student</a>
+                        <a onClick={this.props.openSignupModal.bind(this, true, false)} className="card-title text-center">Sign Up as a Student</a>
                       </li>
                       <li className={schoolRegister ? "active sheade" : "sheade"} id="school-tab">
-                        <a href="#" className="card-title text-center">Register a School</a>
+                        <a onClick={this.props.openSignupModal.bind(this, false, true)} className="card-title text-center">Register a School</a>
                       </li>
                   </ul>
                     <div className="">
@@ -149,7 +208,7 @@ export default class Signup extends React.Component{
                             <button type="submit" form="signupmodal" className="btn btn-danger btn_sign_up" id="btn_sign_up" style={{width:'100%', marginTop: '20px'}}>Sign up</button>
                             <hr style={{marginTop: '10px', marginBottom: '5px'}}/>
                             <div className="col-md-12 text-center">
-                                <span className="">Already a Skillshape Member?  <a href="#" className="btn btn-success btn-sm login" >Log in</a></span>
+                                <span className="">Already a Skillshape Member?  <a onClick={this.props.logIn} className="btn btn-success btn-sm login" >Log in</a></span>
                             </div>
                         </div>
                     </div>

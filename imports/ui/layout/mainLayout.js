@@ -22,7 +22,12 @@ export default class MainLayout extends React.Component {
   constructor( props ) {
     super( props );
   }
+
   componentWillMount( ) {
+  }
+
+  componentDidMount() {
+    $.material.init();
   }
 
   render( ) {
