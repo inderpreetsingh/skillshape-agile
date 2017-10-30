@@ -16,6 +16,27 @@ export default class Signup extends React.Component{
 		})		
   }
 
+  submit = (event) => {
+    event.preventDefault();
+    console.log("email -->>",this.refs.email.value);
+    const email = this.refs.email.value;
+    const password = this.refs.password.value;
+    const re_password = this.refs.re_password.value;
+    const fname = this.refs.fname.value;
+    const lname = this.refs.lname.value;
+    const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+    if(!emailReg.test(email))
+    {
+        toastr.error("Please enter valid email address","Error");
+        return false;
+    }
+    if(password != re_password){
+      toastr.error("Please enter valid confirm password","Error");
+      return false;
+    }
+    console.log("Form submit data-->>",this.state);
+  }
+
   render() {
   	const {
   		schoolRegister,
@@ -41,13 +62,19 @@ export default class Signup extends React.Component{
                           <div className="col-md-12 text-center">
                               {/*<!-- <span className="">Sign up with  <a href="#" style="text-decoration: underline;">facebook</a> or <a href="#" style="text-decoration: underline;">Google</a></span> -->*/}
                           </div>
-                            <form className="form" method="" action="" id="signupmodal">
+                            <form className="form" id="signupmodal" onSubmit={this.submit}>
                               <div className="input-group">
                                   <span className="input-group-addon">
                                       <i className="material-icons">email</i>
                                   </span>
                                   <div className="form-group">
-                                  	<input type="text" className="form-control" placeholder="Email..." id="email"/>
+                                  	<input 
+                                      type="text" 
+                                      className="form-control" 
+                                      placeholder="Email..." 
+                                      id="email"
+                                      ref="email" 
+                                    />
                                   </div>
                               </div>
                               <div className="input-group">
@@ -55,7 +82,13 @@ export default class Signup extends React.Component{
                                       <i className="material-icons">account_box</i>
                                   </span>
                                   <div className="form-group">
-                                  	<input type="text" className="form-control" placeholder="First Name" id="fname"/>
+                                  	<input 
+                                      type="text" 
+                                      className="form-control" 
+                                      placeholder="First Name" 
+                                      id="fname"
+                                      ref="fname"
+                                      />
                                   </div>
                               </div>
                               <div className="input-group">
@@ -63,7 +96,13 @@ export default class Signup extends React.Component{
                                       <i className="material-icons">account_box</i>
                                   </span>
                                   <div className="form-group">
-                                  	<input type="text" className="form-control" placeholder="Last Name" id="lname"/>
+                                  	<input 
+                                      type="text" 
+                                      className="form-control" 
+                                      placeholder="Last Name" 
+                                      id="lname"
+                                      ref="lname"
+                                    />
                                   </div>
                               </div>
                               <div className="input-group">
@@ -71,7 +110,13 @@ export default class Signup extends React.Component{
                                       <i className="material-icons">lock_outline</i>
                                   </span>
                                   <div className="form-group">
-                                  	<input type="password" placeholder="Password..." className="form-control" id="password"/>
+                                  	<input 
+                                      type="password" 
+                                      placeholder="Password..." 
+                                      className="form-control" 
+                                      id="password"
+                                      ref="password"
+                                    />
                                   </div>
                               </div>
                               <div className="input-group">
@@ -79,7 +124,13 @@ export default class Signup extends React.Component{
                                       <i className="material-icons">lock_outline</i>
                                   </span>
                                   <div className="form-group">
-                                  	<input type="password" placeholder="Re-enter Password..." className="form-control" id="re_password" />
+                                  	<input 
+                                      type="password" 
+                                      placeholder="Re-enter Password..." 
+                                      className="form-control" 
+                                      id="re_password"
+                                      ref="re_password" 
+                                    />
                                   </div>
                               </div>
                                     {/*<!-- If you want to add a checkbox to this form, uncomment this code -->*/}
@@ -95,7 +146,7 @@ export default class Signup extends React.Component{
                           </div>
                         </div> -->*/}
                         <div className="modal-footer text-center">
-                            <button type="button" className="btn btn-danger btn_sign_up" id="btn_sign_up" style={{width:'100%', marginTop: '20px'}}>Sign up</button>
+                            <button type="submit" form="signupmodal" className="btn btn-danger btn_sign_up" id="btn_sign_up" style={{width:'100%', marginTop: '20px'}}>Sign up</button>
                             <hr style={{marginTop: '10px', marginBottom: '5px'}}/>
                             <div className="col-md-12 text-center">
                                 <span className="">Already a Skillshape Member?  <a href="#" className="btn btn-success btn-sm login" >Log in</a></span>
