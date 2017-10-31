@@ -1,4 +1,5 @@
 import React from 'react';
+import SearchControl from '/imports/ui/components/searchControl';
 
 export default class Home extends React.Component{
 
@@ -10,7 +11,6 @@ export default class Home extends React.Component{
     return(
       <div className="content">
         <div className="container-fluid">
-          Middle Content
         </div>
       </div>
     )

@@ -6,6 +6,7 @@ import MainLayout from '/imports/ui/layout/mainLayout';
 
 //components
 import Home from '/imports/ui/components/home';
+import ResetPassword from '/imports/ui/components/account/resetPassword';
 
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
@@ -17,6 +18,7 @@ export default Routes = () => (
         <IndexRoute component={Home} />
         <Route path="/Aboutus" component={AboutUs} />
         <Route path="/Contactus" component={ContactUs} />
+      	<Route path="/reset-password/:token" component={ResetPassword}/>
       </Route>
     </Router>
 );
