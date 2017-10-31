@@ -1,6 +1,7 @@
 import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
-import { browserHistory} from 'react-router';
+import { browserHistory } from 'react-router';
+import { emailRegex } from '/imports/util';
 
 let login_fail_count = 0;
 
@@ -14,14 +15,13 @@ export default class Signin extends React.Component{
   	$('#signupmodal').modal('hide')
     $('#loginmodal').modal('show')
     $('#loginmodal').on('hidden.bs.modal', () => {
-      this.props.onClose();
+      this.props.onClose({showSigninModal: false});
 		})		
   }
 
   submit = (event) => {
     event.preventDefault();
     const email = this.refs.email.value;
-    const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     const password = this.refs.password.value;
     
     if(!email) {
@@ -34,7 +34,7 @@ export default class Signin extends React.Component{
       return false;
     }
 
-    if(!emailReg.test(email)) {
+    if(!emailRegex.email.test(email)) {
       toastr.error("Please enter valid email address","Error");
       return false;
     }
@@ -151,7 +151,7 @@ export default class Signin extends React.Component{
 	                    <div className="footer text-center">
 	                        <button type="submit" id="btn_login" className="btn btn-danger btn-sm">Log in</button>
 	                        <br/>
-	                        <a href="#" className="forgetPass">Lost your password? Click Here</a>
+	                        <a onClick={this.props.showForgotPasswordModal.bind(this)} className="forgetPass">Lost your password? Click Here</a>
 	                        <br/>
 	                    </div>
 

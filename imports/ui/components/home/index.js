@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 export default class Home extends React.Component{
 
@@ -8,13 +8,11 @@ export default class Home extends React.Component{
 
   render(){
     return(
-      <footer className="footer" style={{textAlign: 'center'}}>
-        <div className="container-fluid" >
-          <div className="container">
-            middle content
-         </div>
-       </div>
-     </footer>
+      <div className="content">
+        <div className="container-fluid">
+          Middle Content
+        </div>
+      </div>
     )
   }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import { browserHistory} from 'react-router';
+import { emailRegex } from '/imports/util';
 
 export default class Signup extends React.Component{
 
@@ -13,7 +14,7 @@ export default class Signup extends React.Component{
   	$('#Join').modal('show')
     $('#loginmodal').modal('hide')
     $('#Join').on('hidden.bs.modal', () => {
-      this.props.onClose();
+      this.props.onClose({showSignupModal: false});
 		})		
   }
 
@@ -21,7 +22,6 @@ export default class Signup extends React.Component{
     event.preventDefault();
     console.log("email -->>",this.refs.email.value);
     const email = this.refs.email.value;
-    const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     const password = this.refs.password.value;
     const re_password = this.refs.re_password.value;
     const fname = this.refs.fname.value;
@@ -37,7 +37,7 @@ export default class Signup extends React.Component{
       "lastName": lname,
     }
 
-    if(!emailReg.test(email)) {
+    if(!emailRegex.email.test(email)) {
       toastr.error("Please enter valid email address","Error");
       return false;
     }

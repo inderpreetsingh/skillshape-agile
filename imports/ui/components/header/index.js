@@ -1,8 +1,9 @@
 import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import Signin from '/imports/ui/components/account/signin';
 import Signup from '/imports/ui/components/account/signup';
+import ForgotPassword from '/imports/ui/components/account/forgotPassword';
 
 class Header extends React.Component{
 
@@ -11,20 +12,40 @@ class Header extends React.Component{
     this.state = {
       showSigninModal: false,
       showSignupModal: false,
+      showForgotPasswordModal: false,
       studentRegister: false,
       schoolRegister: false,
     }
   }
 
-  closeModal = () => {
+  closeModal = (modalObj) => this.setState(modalObj)
+
+  openLogInModal = () => {
     this.setState({
-      showSigninModal: false,
+      showSigninModal: true,
       showSignupModal: false,
+      showForgotPasswordModal: false,
+    })
+  }
+  
+  openSignupModalWithRegisterationType = (studentRegister, schoolRegister) => {
+    this.setState({
+      showSignupModal: true,
+      showSigninModal: false,
+      showForgotPasswordModal: false,
+      studentRegister,
+      schoolRegister,
     })
   }
 
-  logIn = () => this.setState({showSigninModal: true});
-
+  openForgotPasswordModal = () => {
+    this.setState({
+      showSignupModal: false,
+      showSigninModal: false,
+      showForgotPasswordModal: true
+    })
+  }
+  
   logOut = (event) => {
     event.preventDefault();
     Meteor.logout();
@@ -34,18 +55,9 @@ class Header extends React.Component{
     }, 1000); 
   }
 
-  openSignupModalWithRegisterationType = (studentRegister, schoolRegister) => {
-    this.setState({
-      showSignupModal: true,
-      showSigninModal: false,
-      studentRegister,
-      schoolRegister,
-    })
-  }
-
   render() {
     const { currentUser } = this.props;
-
+   
     return(
       <div>
       <nav className="navbar navbar-default" style={{marginBottom: '0px'}}>
@@ -125,12 +137,12 @@ class Header extends React.Component{
                         </a>
                     </li>
                     <li>
-                        <a href="/Aboutus">
+                        <Link to="/Aboutus">
                             <i className="material-icons">info</i> About Us
-                        </a>
+                        </Link>
                     </li>
                     <li className="">
-                        <a onClick={this.logIn} className="login cursor-lint">
+                        <a onClick={this.openLogInModal} className="login cursor-lint">
                             <i className="material-icons ">fingerprint</i> Login
                         </a>
                     </li>
@@ -159,47 +171,22 @@ class Header extends React.Component{
         schoolRegister={this.state.schoolRegister}
         studentRegister={this.state.studentRegister}
         openSignupModal={this.openSignupModalWithRegisterationType}
-        logIn={this.logIn}
+        logIn={this.openLogInModal}
       />
     }
     { this.state.showSigninModal && <Signin 
-        openSignupModal={this.openSignupModalWithRegisterationType}
         onClose={this.closeModal}
+        openSignupModal={this.openSignupModalWithRegisterationType}
+        showForgotPasswordModal={this.openForgotPasswordModal}
       /> 
     }
-  <div className="modal fade " id="forget_pass_modal" role="dialog">
-      <div className="modal-dialog" style={{maxWidth: '420px'}}>
-          <div className="modal-content">
-            <div className="modal-body" style={{minHeight: '290px'}}>
-              <form method="#" action="#">
-                    <div className="card-hidden" style={{paddingBottom: '0px'}}>
-                        <div className="card-header text-center" data-background-color="info">
-                            <h4 className="card-title">Forgot password</h4>
-                        </div>
-                        <div className="card-content">
-                            <div className="input-group">
-                                <span className="input-group-addon">
-                                    <i className="material-icons">email</i>
-                                </span>
-                                <div className="form-group label-floating">
-                                    <label className="control-label">Email address</label>
-                                    <input type="email" className="form-control" id="email"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="footer text-center">
-                            <button type="button" id="btn_reset_password" className="btn btn-danger" style={{width: '80%'}}>Submit</button>
-                        </div>
-                    </div>
-                </form>
-              <div className="modal-footer text-center">
-                <span className="pull-right">Back to <a href="#" className="btn btn-primary btn-sm back_to_login login"> Login</a></span>
-                <span className="pull-left">Not Member yet? <a href="#" className="btn btn-primary btn-sm btn_signup join_school">Join Now</a></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    {
+      this.state.showForgotPasswordModal && <ForgotPassword
+        onClose={this.closeModal}
+        logIn={this.openLogInModal}
+        openSignupModal={this.openSignupModalWithRegisterationType}
+      />
+    }
     </div>
     )
   }
