@@ -9,12 +9,14 @@ import Home from '/imports/ui/components/home';
 
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
+import ContactUs from '/imports/ui/pages/contactUs'
 
 export default Routes = () => (
     <Router history={browserHistory}>
       <Route path="/" component={MainLayout} >
         <IndexRoute component={Home} />
         <Route path="/Aboutus" component={AboutUs} />
+        <Route path="/Contactus" component={ContactUs} />
       </Route>
     </Router>
 );
