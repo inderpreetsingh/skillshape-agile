@@ -1,6 +1,7 @@
 import React from 'react';
+import { createContainer } from 'meteor/react-meteor-data';
 
-export default class SearchControl extends React.Component {
+class SearchControl extends React.Component {
 
   constructor(props){
     super(props);
@@ -32,6 +33,11 @@ export default class SearchControl extends React.Component {
   }
 
   render(){
+    console.log("SearchControl props -->>",this.props)
+    const {
+      skillType,
+    } = this.props;
+
     return(
       <div className="row " id="scr_affix">
         <div className="col-md-12 card clear-margin-bt custom-card-filter">
@@ -71,7 +77,13 @@ export default class SearchControl extends React.Component {
               <select className="form-control search-bar-form" style={{width: '100%'}} id="cskill" name="cskill">
                 <option value="" disabled selected >Type Of Skill</option>
                 <option value="">Any</option>
-                <option value="">name</option>
+                {
+                  skillType.map((type, index) => {
+                    return <option key={index} value={type.name}>
+                      {type.name}
+                    </option>
+                  })
+                }
               </select>
             </div>
           </div>
@@ -116,3 +128,9 @@ export default class SearchControl extends React.Component {
     )
   }
 }
+
+export default createContainer(props => {
+  Meteor.subscribe("SkillType");
+  const skillType = SkillType.find({}).fetch();
+  return { ...props, skillType };
+}, SearchControl);
