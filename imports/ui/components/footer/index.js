@@ -1,20 +1,10 @@
-import React from 'react'
+import React from 'react';
+import FooterBase from './footerBase';
+import FooterRender from './footerRender';
 
-export default class Footer extends React.Component{
+export default class Footer extends FooterBase{
 
-  constructor(props){
-    super(props);
-  }
-
-  render(){
-    return(
-      <footer className="footer" style={{textAlign: 'center'}}>
-        <div className="container-fluid" >
-          <div className="container">
-           skillshape © 2017
-         </div>
-       </div>
-     </footer>
-    )
+  render() {
+    return FooterRender.call(this, this.props, this.state);
   }
 }
