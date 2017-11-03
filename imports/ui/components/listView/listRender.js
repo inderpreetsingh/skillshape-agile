@@ -37,8 +37,8 @@ export default function() {
             {{/with}}  */}
         </div>
       </div>
-      <div class="card-footer text-center">
-        <div class="row ">
+      <div className="card-footer text-center">
+        <div className="row ">
             {
               isMyClass ?
               (<a href="/schoolAdmin/{{schoolId}}" className="btn btn-warning" data-className="{{_id}}" data-className-type="{{classTypeId}}" >
@@ -48,14 +48,14 @@ export default function() {
               </a>) : 
               (
                 checkJoin ? 
-                (<a href="/MyCalendar" class="btn btn-success" data-class="{{_id}}" data-class-type="{{classTypeId}}"><i class="material-icons">check</i>  
+                (<a href="/MyCalendar" className="btn btn-success" data-class="{{_id}}" data-class-type="{{classTypeId}}"><i className="material-icons">check</i>  
                   Joined
-                  <div class="ripple-container">
+                  <div className="ripple-container">
                   </div>
                 </a>) : 
-                (<a href="#" class="btn btn-rose btn_join_class btn_join_check" data-class="{{_id}}" data-class-type="{{classTypeId}}" >
+                (<a href="#" className="btn btn-rose btn_join_class btn_join_check" data-class="{{_id}}" data-class-type="{{classTypeId}}" >
                   Join Class
-                  <div class="ripple-container">
+                  <div className="ripple-container">
                   </div>
                 </a>
                 )

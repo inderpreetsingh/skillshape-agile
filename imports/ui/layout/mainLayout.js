@@ -2,6 +2,9 @@ import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import Header from '/imports/ui/components/header';
 import Footer from '/imports/ui/components/footer';
+import MVPSideBar from '/imports/ui/components/MVPSideBar';
+import SideBar from '/imports/ui/components/sideBar';
+import { checkDemoUser } from '/imports/util';
 // var styles = {
 //   rowstyle: {
 //     display: 'table',
@@ -18,7 +21,8 @@ import Footer from '/imports/ui/components/footer';
 //   }
 // };
 
-export default class MainLayout extends React.Component {
+class MainLayout extends React.Component {
+  
   constructor( props ) {
     super( props );
   }
@@ -30,10 +34,19 @@ export default class MainLayout extends React.Component {
     $.material.init();
   }
 
+  showSideBar = (currentUser) => {
+    if(checkDemoUser(currentUser)) {
+      return <SideBar {...this.props}/>
+    } else {
+      return <MVPSideBar {...this.props}/>
+    }
+  }
+
   render( ) {
-    const { nav, content, footer } = this.props;
+    const { currentUser } = this.props;
     return (
       <div className="wrapper">
+       { currentUser && this.showSideBar(currentUser)}
       {/*
            {{{#if currentUser}}
                 {{#if IsDemoUser}}
@@ -61,7 +74,7 @@ export default class MainLayout extends React.Component {
             {{else}}
       */}
       <div className="wrapper perfectScroll">
-        <Header/>
+        <Header {...this.props}/>
         <div className="content">
           <div className="container-fluid">
               <div className="row">
@@ -77,3 +90,8 @@ export default class MainLayout extends React.Component {
     )
   }
 }
+
+export default createContainer(props => {
+  const currentUser = Meteor.user();
+  return { ...props, currentUser };
+}, MainLayout);

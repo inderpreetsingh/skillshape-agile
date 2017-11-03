@@ -4,6 +4,7 @@ import { browserHistory, Link } from 'react-router';
 import Signin from '/imports/ui/components/account/signin';
 import Signup from '/imports/ui/components/account/signup';
 import ForgotPassword from '/imports/ui/components/account/forgotPassword';
+import { checkDemoUser } from '/imports/util';
 
 export default function() {
     const { currentUser } = this.props;
@@ -29,7 +30,7 @@ export default function() {
                     <span className="icon-bar"></span>
                 </button>
                 {
-                  currentUser && currentUser.profile &&  currentUser.profile.is_demo_user &&
+                  checkDemoUser(currentUser) &&
                     <a className="cust-brand" href="/school">
                       <img src="/images/YourStudio.png" alt="logo" width="150"/>
                       {/*<!-- <span className="brand-text text-warning" style="font-weight: 900;font-size: 20px;">Fitness<span> Studio</span></span> -->*/}
