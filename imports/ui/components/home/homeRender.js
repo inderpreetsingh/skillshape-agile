@@ -1,5 +1,6 @@
 import React from 'react';
 import SearchControl from '/imports/ui/components/searchControl';
+import { InfiniteScroll } from '/imports/util';
 
 export default function() {
 	return(
