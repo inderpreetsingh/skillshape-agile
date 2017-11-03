@@ -9,20 +9,20 @@ function topPosition(domElt) {
 }
 
 export class InfiniteScroll extends React.Component {
-    // getDefaultProps() {                                                                                     
-    //   return {                                                                                                        
-    //     pageStart: 0,                                                                                                 
-    //     hasMore: false,                                                                                               
-    //     loadMore: function () {},                                                                                      
-    //     threshold: 250                                                                                                
-    //   };                                                                                                               
-    // }                                                                                                                
+    // getDefaultProps() {
+    //   return {
+    //     pageStart: 0,
+    //     hasMore: false,
+    //     loadMore: function () {},
+    //     threshold: 250
+    //   };
+    // }
     componentDidMount() {
         this.pageLoaded = this.props.pageStart;
         this.attachScrollListener();
     }
     componentDidUpdate() {
-        this.attachScrollListener();
+        // this.attachScrollListener();
     }
     render() {
         var props = this.props;
@@ -38,11 +38,11 @@ export class InfiniteScroll extends React.Component {
         var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
         if (topPosition(el) + el.offsetHeight - scrollTop - window.innerHeight < Number(this.props.threshold)) {
             this.detachScrollListener();
-            // call loadMore after detachScrollListener to allow                                                        
+            // call loadMore after detachScrollListener to allow
             // for non-async loadMore functions
             if(this.props.loadMoreEnabled) {
               this.props.loadMore(this.pageLoaded += 1);
-            }                                                                          
+            }
         }
     }
     attachScrollListener() {

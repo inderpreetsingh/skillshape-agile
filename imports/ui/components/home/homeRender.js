@@ -1,9 +1,7 @@
 import React from 'react';
 import SearchControl from '/imports/ui/components/searchControl';
-import { InfiniteScroll } from '/imports/util';
 
 export default function() {
-
 	return(
 		<div className="content">
         <div className="container-fluid">
@@ -17,18 +15,18 @@ export default function() {
               </div>
               <div className="col-sm-7 text-right p0">
                 <p className="dispInBlk text-center-xs dispBlk-xs">
-                  Choose View:  
-                </p>   
-                <button 
-                  onClick={()=>{this.setState({gridView: true,mapView: false})}} 
+                  Choose View:
+                </p>
+                <button
+                  onClick={()=>{this.setState({gridView: true,mapView: false})}}
                   className="btn btn-default btn-grid btn-custom-active"
                 >
                   <i className="material-icons card-material-icon" title="GridView">
                     grid_on
                   </i>
                 </button>
-                <button 
-                  onClick={()=>{this.setState({gridView: false,mapView: true})}} 
+                <button
+                  onClick={()=>{this.setState({gridView: false,mapView: true})}}
                   className="btn btn-default btn-map"
                 >
                   <i className="material-icons card-material-icon" title="Map">
@@ -48,11 +46,11 @@ export default function() {
           <div className="row">
             <InfiniteScroll
               pageStart={0}
-              loadMore={(pageToLoad)=>{console.log("Load more.....");this.props.loadMore(pageToLoad)}}
-              hasMore={true}
+              loadMore={(pageToLoad)=>{this.props.loadMore(pageToLoad)}}
+              hasMore={this.props.hasMore}
               threshold={100}
               loadMoreEnabled={this.props.loadMoreEnabled}
-              loader={<div className="loader">Loading ...</div>}
+              loader={<div className="row" style={{textAlign: "center"}}><img style={{height: "40px"}} src="/images/infiniteloading.gif"/></div>}
             >
             {
 						  this.props.classType.map((classByClassType, index) => {
