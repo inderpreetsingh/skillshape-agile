@@ -300,7 +300,7 @@ div.card-header.card-header-text.sparring {
 .p0{padding:0px;}
 
 .custom-tabs{background:transparent;display: inline-block;float: right;}
-.btn-grid, .btn-map{background:#eeeeee!important; border:1px solid #cccccc; border-radius: 0px;margin:0px; color:#666666;     
+.btn-grid, .btn-map{background:#eeeeee!important; border:1px solid #cccccc; border-radius: 0px;margin:0px; color:#666666;
   padding:10px 15px;}
 .btn-grid i, .btn-map i{left: 0;right: 0;margin: 0 auto; color:#aeaeae; font-size:19px;}
 .grid-map-wrap{padding:15px 0;}
@@ -1045,7 +1045,7 @@ border-top: 2px solid #ccc;}
 {
   .school-view-top-heading h1{font-size: 30px;}
   .school-view-price table tr th,.school-view-price table tr tr{font-size:12px !important; }
-  .modal .modal-dialog.modal-class-box{width: 660px !important;} 
+  .modal .modal-dialog.modal-class-box{width: 660px !important;}
 }
 
 @media (max-width:767px)
@@ -1117,4 +1117,9 @@ border-top: 2px solid #ccc;}
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+#UserMainPanel {
+  overflow-y: auto;
+  overflow-x: hidden;
 }

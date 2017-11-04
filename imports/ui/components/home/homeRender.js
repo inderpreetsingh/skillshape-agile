@@ -51,7 +51,7 @@ export default function() {
               hasMore={this.props.hasMore}
               threshold={100}
               loadMoreEnabled={this.props.loadMoreEnabled}
-              loader={<div className="row" style={{textAlign: "center"}}><img style={{height: "40px"}} src="/images/infiniteloading.gif"/></div>}
+              loader={<div id="load-icon" className="row col-xs-12 none" style={{textAlign: "center"}}><img style={{height: "40px"}} src="/images/infiniteloading.gif"/></div>}
               getMainPanelRef={this.props.getMainPanelRef}
             >
             {

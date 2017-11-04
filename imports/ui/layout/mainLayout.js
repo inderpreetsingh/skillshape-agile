@@ -23,7 +23,7 @@ import { checkDemoUser } from '/imports/util';
 
 
 class MainLayout extends React.Component {
-  
+
   constructor( props ) {
     super( props );
   }
@@ -36,7 +36,7 @@ class MainLayout extends React.Component {
   }
 
   showSideBar = (currentUser) => {
-    if(checkDemoUser(currentUser)) 
+    if(checkDemoUser(currentUser))
       return <SideBar {...this.props}/>
     return <MVPSideBar {...this.props}/>
   }
@@ -49,7 +49,7 @@ class MainLayout extends React.Component {
     let className = {
       mainClass: "wrapper perfectScroll main_wrapper",
       contentClass: "content",
-      id: "MainPanel",
+      id: "UserMainPanel",
     }
     if(currentUser) {
       className.mainClass = "main-panel";
@@ -65,12 +65,12 @@ class MainLayout extends React.Component {
             <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
-                  {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this) })}      
+                  {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this) })}
                 </div>
               </div>
             </div>
           </div>
-          <Footer/>    
+          <Footer/>
         </div>
           {/*
            {{{#if currentUser}}
@@ -98,8 +98,8 @@ class MainLayout extends React.Component {
                 </div>
             {{else}}
       */}
-      </div>   
-    )  
+      </div>
+    )
   }
 }
 
