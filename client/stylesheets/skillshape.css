@@ -1123,3 +1123,12 @@ border-top: 2px solid #ccc;}
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+.map-view-container {
+  max-height: 700px;
+  overflow-y: scroll;
+}
+
+.sidebar {
+  background-color: #348CC0 !important;
+}

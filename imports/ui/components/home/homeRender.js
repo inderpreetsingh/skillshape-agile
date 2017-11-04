@@ -3,6 +3,16 @@ import SearchControl from '/imports/ui/components/searchControl';
 import { InfiniteScroll } from '/imports/util';
 
 export default function() {
+  const { gridView , mapView} = this.state
+  let className = {
+    listClass: "row",
+    id: "ListPanel",
+  }
+  if(mapView) {
+    className.listClass = "col-md-6 map-view-container";
+    className.id = "MainPanel";
+  }
+
 	return(
 		<div className="content">
         <div className="container-fluid">
@@ -19,7 +29,8 @@ export default function() {
                   Choose View:
                 </p>
                 <button
-                  onClick={()=>{this.setState({gridView: true,mapView: false})}}
+                  id="view_list"
+                  onClick={this.handleListView}
                   className="btn btn-default btn-grid btn-custom-active"
                 >
                   <i className="material-icons card-material-icon" title="GridView">
@@ -27,7 +38,8 @@ export default function() {
                   </i>
                 </button>
                 <button
-                  onClick={()=>{this.setState({gridView: false,mapView: true})}}
+                  id="map_view"
+                  onClick={this.handleMapView}
                   className="btn btn-default btn-map"
                 >
                   <i className="material-icons card-material-icon" title="Map">
@@ -44,7 +56,7 @@ export default function() {
               {{/if}}*/}
             </div>
           </div>
-          <div className="row">
+          <div className={className.listClass} id={className.id}>
             <InfiniteScroll
               pageStart={0}
               loadMore={(pageToLoad)=>{this.props.loadMore(pageToLoad)}}
@@ -61,6 +73,12 @@ export default function() {
 						}
             </InfiniteScroll>
           </div>
+          {
+            mapView && (<div className="col-md-6 mapview" style={{ height:'700px'}}>
+              <div id="google-map" style={{height:'700px'}}>
+              </div>
+            </div>)
+          }
         </div>
       </div>
 	)

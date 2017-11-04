@@ -1,5 +1,7 @@
 import React from 'react';
 import ListView from '/imports/ui/components/listView';
+import MapView from '/imports/ui/components/mapView';
+import { initializeMap } from '/imports/util';
 
 export default class HomeBase extends React.Component {
 
@@ -19,6 +21,11 @@ export default class HomeBase extends React.Component {
   //   $('#MainPanel').scroll(this.fixedHeader)
   //   $('.main-panel').scroll(this.fixedHeader);
   // }
+
+  componentDidUpdate() {
+    if(this.state.mapView)
+      initializeMap()
+  } 
 
   fixedHeader = () => {
     // console.log("this -->>",this)
@@ -79,8 +86,21 @@ export default class HomeBase extends React.Component {
     }
     return default_value;
   }
- 
+  
+  handleListView = () => {
+    $("#view_list").addClass("btn-custom-active");
+    $("#map_view").removeClass("btn-custom-active");
+    this.setState({gridView: true,mapView: false})
+  }
+
+  handleMapView = () => {
+    $("#map_view").addClass("btn-custom-active");
+    $("#view_list").removeClass("btn-custom-active");
+    this.setState({gridView: false,mapView: true})
+  }
+
   showSkillClass = (classTypeData) => {
+    const { gridView, mapView } = this.state;
     const skillClass = SkillClass.find({classTypeId: classTypeData._id}).fetch();
     const school = School.findOne({_id: classTypeData.schoolId});
     
@@ -89,16 +109,31 @@ export default class HomeBase extends React.Component {
     const isMyClass = this.isMyClass(classTypeData.schoolId)
     const backgroundUrl = this.viewImage(classTypeData._id, classTypeData.classTypeImg, classTypeData.schoolId);
     
-    return skillClass.map((data, index) => {
-      return <ListView
-          key={index}
-          school={school}
-          classTypeData={classTypeData}
-          backgroundUrl={backgroundUrl}
-          locationId={locationId}
-          checkJoin={checkJoin}
-          isMyClass={isMyClass}
-        />
-    })
+
+    if(gridView) {
+      return skillClass.map((data, index) => {
+        return <ListView
+            key={index}
+            school={school}
+            classTypeData={classTypeData}
+            backgroundUrl={backgroundUrl}
+            locationId={locationId}
+            checkJoin={checkJoin}
+            isMyClass={isMyClass}
+          />
+      })
+    } else if(mapView) {
+      return skillClass.map((data, index) => {
+        return <MapView
+            key={index}
+            school={school}
+            classTypeData={classTypeData}
+            backgroundUrl={backgroundUrl}
+            locationId={locationId}
+            checkJoin={checkJoin}
+            isMyClass={isMyClass}
+          />
+      })
+    }
   }
 }

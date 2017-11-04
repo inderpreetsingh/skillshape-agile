@@ -11,3 +11,4 @@ export {
 	checkSuperAdmin, 
 } from '/imports/util/checkUserType';
 export { validateImage } from '/imports/util/getUserData';
+export { initializeMap } from '/imports/util/initializeMap';
