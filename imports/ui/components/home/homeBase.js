@@ -11,6 +11,30 @@ export default class HomeBase extends React.Component {
     }
   }
 
+  // componentDidMount() {
+  //   $(window).off('scroll');
+  //   $('.main-panel').off('scroll');
+  //   $('#MainPanel').off('scroll');
+  //   $(window).scroll(this.fixedHeader);
+  //   $('#MainPanel').scroll(this.fixedHeader)
+  //   $('.main-panel').scroll(this.fixedHeader);
+  // }
+
+  fixedHeader = () => {
+    // console.log("this -->>",this)
+    // console.log($("#s").scrollTop());
+    if (window.innerWidth>767){
+      if ($("#s").scrollTop() >= 200) {
+        $('#scr_affix').addClass('fixed-header');
+        if($('.sidebar').length > 0)
+          $('#scr_affix').css({'position': 'relative', 'top': ($(this).scrollTop() - 100)+'px'});
+      } else {
+        $('#scr_affix').removeClass('fixed-header');
+        $('#scr_affix').attr('style','')
+      }
+    }
+  }
+
   viewImage = (classType,classImagePath,schoolId) => {
     const image = ClassType.findOne({_id: classType})
     if (typeof image!=="undefined"){

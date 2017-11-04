@@ -52,6 +52,7 @@ export default function() {
               threshold={100}
               loadMoreEnabled={this.props.loadMoreEnabled}
               loader={<div className="row" style={{textAlign: "center"}}><img style={{height: "40px"}} src="/images/infiniteloading.gif"/></div>}
+              getMainPanelRef={this.props.getMainPanelRef}
             >
             {
 						  this.props.classType.map((classByClassType, index) => {

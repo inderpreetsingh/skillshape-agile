@@ -21,6 +21,7 @@ import { checkDemoUser } from '/imports/util';
 //   }
 // };
 
+
 class MainLayout extends React.Component {
   
   constructor( props ) {
@@ -35,19 +36,43 @@ class MainLayout extends React.Component {
   }
 
   showSideBar = (currentUser) => {
-    if(checkDemoUser(currentUser)) {
+    if(checkDemoUser(currentUser)) 
       return <SideBar {...this.props}/>
-    } else {
-      return <MVPSideBar {...this.props}/>
-    }
+    return <MVPSideBar {...this.props}/>
   }
 
+  getMainPanelRef() {
+    return this.mainPanelRef
+  }
   render( ) {
     const { currentUser } = this.props;
+    let className = {
+      mainClass: "wrapper perfectScroll main_wrapper",
+      contentClass: "content",
+      id: "MainPanel",
+    }
+    if(currentUser) {
+      className.mainClass = "main-panel";
+      className.contentClass = "content no-padding";
+      className.id = "UserMainPanel";
+    }
     return (
       <div className="wrapper">
-       { currentUser && this.showSideBar(currentUser)}
-      {/*
+        { currentUser && this.showSideBar(currentUser)}
+        <div ref={(ref)=> {this.mainPanelRef = ref}} className={className.mainClass} id={className.id}>
+          <Header {...this.props}/>
+          <div className={className.contentClass}>
+            <div className="container-fluid">
+              <div className="row">
+                <div className="col-md-12">
+                  {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this) })}      
+                </div>
+              </div>
+            </div>
+          </div>
+          <Footer/>    
+        </div>
+          {/*
            {{{#if currentUser}}
                 {{#if IsDemoUser}}
                   {{> sidebar}}
@@ -73,21 +98,8 @@ class MainLayout extends React.Component {
                 </div>
             {{else}}
       */}
-      <div className="wrapper perfectScroll">
-        <Header {...this.props}/>
-        <div className="content">
-          <div className="container-fluid">
-              <div className="row">
-                  <div className="col-md-12">
-                    {this.props.children}
-                  </div>
-              </div>
-          </div>
-        </div>
-        <Footer/>
-      </div>
-    </div>
-    )
+      </div>   
+    )  
   }
 }
 

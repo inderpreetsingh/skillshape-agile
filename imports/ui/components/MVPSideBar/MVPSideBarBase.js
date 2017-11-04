@@ -1,5 +1,6 @@
 import React from 'react';
 import { Session } from 'meteor/session';
+import { initializeLayout } from '/imports/util/initializeLayout';
 
 export default class MVPSideBarBase extends React.Component {
 
@@ -13,7 +14,6 @@ export default class MVPSideBarBase extends React.Component {
   }
 
   componentWillMount() {
-    console.log("---- MVPSideBarBase componentWillMount ----")
     Session.set("ConnectedSchool",[])
     Session.set("MySchool",[])
     if(Meteor.userId()) {
@@ -21,6 +21,10 @@ export default class MVPSideBarBase extends React.Component {
       this.loadMySchool();
       this.claimRequestPresnet();
     }
+  }
+
+  componentDidMount() {
+    initializeLayout()
   }
 
   claimRequestPresnet = () => {
