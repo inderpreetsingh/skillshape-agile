@@ -10,7 +10,8 @@ import ResetPassword from '/imports/ui/components/account/resetPassword';
 
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
-import ContactUs from '/imports/ui/pages/contactUs'
+import ContactUs from '/imports/ui/pages/contactUs';
+import ClaimSchool from '/imports/ui/components/claimSchool';
 
 export default Routes = () => (
     <Router history={browserHistory}>
@@ -19,6 +20,7 @@ export default Routes = () => (
         <Route path="/Aboutus" component={AboutUs} />
         <Route path="/Contactus" component={ContactUs} />
       	<Route path="/reset-password/:token" component={ResetPassword}/>
+        <Route path="/claimSchool" component={ClaimSchool} />
       </Route>
     </Router>
 );
