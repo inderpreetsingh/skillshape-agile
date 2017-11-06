@@ -1,6 +1,7 @@
 import React from 'react';
 import SearchControl from '/imports/ui/components/searchControl';
 import { InfiniteScroll } from '/imports/util';
+import { Loading } from '/imports/ui/loading';
 
 export default function() {
   const { gridView , mapView, listContainerClass} = this.state
@@ -55,7 +56,7 @@ export default function() {
               hasMore={this.props.hasMore}
               threshold={100}
               loadMoreEnabled={this.props.loadMoreEnabled}
-              loader={<div id="load-icon" className="row col-xs-12 none" style={{textAlign: "center"}}><img style={{height: "40px"}} src="/images/infiniteloading.gif"/></div>}
+              loader={<Loading/>}
               getMainPanelRef={this.props.getMainPanelRef}
             >
             {

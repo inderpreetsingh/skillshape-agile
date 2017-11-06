@@ -7,6 +7,7 @@ import MainLayout from '/imports/ui/layout/mainLayout';
 //components
 import Home from '/imports/ui/components/home';
 import ResetPassword from '/imports/ui/components/account/resetPassword';
+import MyProfile from '/imports/ui/components/users/myProfile';
 
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
@@ -21,6 +22,7 @@ export default Routes = () => (
         <Route path="/Contactus" component={ContactUs} />
       	<Route path="/reset-password/:token" component={ResetPassword}/>
         <Route path="/claimSchool" component={ClaimSchool} />
+        <Route path="/profile/:id" component={MyProfile} />
       </Route>
     </Router>
 );

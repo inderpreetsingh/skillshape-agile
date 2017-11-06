@@ -1,5 +1,6 @@
 import React from 'react';
 import { validateImage, checkSuperAdmin } from '/imports/util';
+import { browserHistory, Link } from 'react-router';
 
 export default function() {
 	const { currentUser } = this.props;
@@ -24,23 +25,23 @@ export default function() {
             <img src={validateImage(currentUser)} />
           </div>
           <div className="info">
-              <a data-toggle="collapse" href="#collapseExample" >
-                {this.getUserName()}
+            <a data-toggle="collapse" href="#collapseExample" >
+              {this.getUserName()}
             </a>
           </div>
       	</div>
       	<ul className="nav">
       		<li>
-            <a href={`/profile/${Meteor.userId()}`}>
+            <Link to={`/profile/${Meteor.userId()}`} >
               <i className="material-icons">account_circle</i>
               <p>My Profile</p>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/MyCalendar">
+            <Link to="/MyCalendar">
               <i className="material-icons">schedule</i>
               <p>My Calendar</p>
-            </a>
+            </Link>
           </li>
           {
             this.checkSchoolAccess() && (
