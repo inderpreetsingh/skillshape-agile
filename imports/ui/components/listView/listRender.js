@@ -2,6 +2,7 @@ import React from 'react';
 
 export default function() {
   const {
+    className,
     school,
     classTypeData,
     checkJoin,
@@ -11,7 +12,7 @@ export default function() {
   } = this.props;
 
 	return (
-		<div className="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+		<div className={`${className} col-sm-12 col-xs-12`}>
       <div className="card card-product card-product-new" data-count="6" >
         <a href={`/schools/${school.slug}`}>
           <div className="card-image" style={{backgroundImage: `url(${backgroundUrl})`}} data-header-animation="true" >

@@ -3,15 +3,7 @@ import SearchControl from '/imports/ui/components/searchControl';
 import { InfiniteScroll } from '/imports/util';
 
 export default function() {
-  const { gridView , mapView} = this.state
-  let className = {
-    listClass: "row",
-    id: "ListPanel",
-  }
-  if(mapView) {
-    className.listClass = "col-md-6 map-view-container";
-    className.id = "MainPanel";
-  }
+  const { gridView , mapView, listContainerClass} = this.state
 
 	return(
 		<div className="content">
@@ -56,7 +48,7 @@ export default function() {
               {{/if}}*/}
             </div>
           </div>
-          <div className={className.listClass} id={className.id}>
+          <div className={listContainerClass}>
             <InfiniteScroll
               pageStart={0}
               loadMore={(pageToLoad)=>{this.props.loadMore(pageToLoad)}}
