@@ -1,8 +1,10 @@
 import React from "react";
 import {cutString} from '/imports/util';
+import { InfiniteScroll } from '/imports/util';
+import { Loading } from '/imports/ui/loading';
 
 export default function (props) {
-  let schools = this.props.dataForSchoolList || [];
+  let schools = this.props.schoolList || [];
   return (
       <div>
         <div className="clearfix"></div>
@@ -11,10 +13,19 @@ export default function (props) {
         </div>
         <div className="clearfix"></div>
         <div className="nopaadding">
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={(pageToLoad)=>{this.props.loadMore(pageToLoad)}}
+          hasMore={this.props.hasMore}
+          threshold={100}
+          loadMoreEnabled={this.props.loadMoreEnabled}
+          loader={<Loading/>}
+          getMainPanelRef={this.props.getMainPanelRef}
+        >
           {
-            schools.map((school, i) => {
+            schools.map((school, index) => {
               return (
-                  <div className="col-md-3 col-sm-6 npding">
+                  <div key={index} className="col-md-3 col-sm-6 npding">
                     <div className="card card-profile">
                       <a href="">
                         <h4 className="card-title" title={school.name}>{cutString(school.name, 27)}</h4>
@@ -41,6 +52,7 @@ export default function (props) {
               )
             })
           }
+          </InfiniteScroll>
           <div className="col-md-12">
             <h3> No none of these are my school. Please let me start a new listing.</h3>
             <a href="#" className="btn btn-rose btn_claim">Start New School

@@ -5,8 +5,8 @@ export default function () {
   console.log("claim school render ==",this.props);
    return (
        <div>
-         <ClaimSchoolFilter ref="ClaimSchoolFilter" {...this.props} onSearch={this.onSearch}/>
-         <ClaimSchoolList filter={this.state.filters} />
+         <ClaimSchoolFilter ref="ClaimSchoolFilter" {...this.props} resetFilter={this.resetFilter} onSearch={this.onSearch}/>
+         <ClaimSchoolList filters={this.state.filters} />
        </div>
    )
  }

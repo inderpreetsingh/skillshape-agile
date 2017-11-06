@@ -45,9 +45,9 @@ export default function() {
                 <span className="icon-bar"></span>
                 <span className="icon-bar"></span>
             </button>
-            <a className="brand" href="/">
+            <Link className="brand" to="/">
               <img src="/images/logo-location.png" alt="logo" width="52"/>
-            </a>
+            </Link>
             </div>)
         }
         <div className="collapse navbar-collapse">
@@ -63,9 +63,9 @@ export default function() {
                     )
                     : ( <ul className="nav navbar-nav navbar-right">
                       <li>
-                        <a href="/">
+                        <Link to="/">
                             <i className="material-icons">home</i> Home
-                        </a>
+                        </Link>
                     </li>
                     <li className="">
                         <a onClick={this.openSignupModalWithRegisterationType.bind(this, true, false)} id="join_student" className="join_school cursor-lint" data-action="student">
@@ -78,14 +78,14 @@ export default function() {
                         </a>
                     </li>
                     <li>
-                        <a href="/claimSchool">
+                        <Link to="/claimSchool">
                             <i className="material-icons">check_box</i> Claim a School
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a href="/Contactus">
+                        <Link to="/Contactus">
                             <i className="material-icons">email</i> Contact Us
-                        </a>
+                        </Link>
                     </li>
                     <li>
                         <Link to="/Aboutus">

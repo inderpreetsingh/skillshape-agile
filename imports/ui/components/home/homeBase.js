@@ -1,6 +1,7 @@
 import React from 'react';
 import ListView from '/imports/ui/components/listView';
 import { initializeMap } from '/imports/util';
+import { Session } from 'meteor/session';
 
 export default class HomeBase extends React.Component {
 
@@ -27,6 +28,10 @@ export default class HomeBase extends React.Component {
     if(this.state.mapView)
       initializeMap()
   } 
+
+  componentWillUnmount() {
+    Session.set("pagesToload",1)
+  }
 
   fixedHeader = () => {
     // console.log("this -->>",this)

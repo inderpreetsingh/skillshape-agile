@@ -22,7 +22,7 @@ export default Routes = () => (
         <Route path="/Contactus" component={ContactUs} />
       	<Route path="/reset-password/:token" component={ResetPassword}/>
         <Route path="/claimSchool" component={ClaimSchool} />
-        <Route path="/profile/:id" component={MyProfile} />
+        {/*<Route path="/profile/:id" component={MyProfile} />*/}
       </Route>
     </Router>
 );

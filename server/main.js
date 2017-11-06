@@ -119,22 +119,10 @@ if (Meteor.isServer)
         user.profile =  options.profile
       }
       user.profile = _.extend(user.profile, {"user_type":"C"});
-
-      debugger;
-
      if(options.preverfiedUser) {
         user.emails[0].verified=true;
         return user;
      }
-
-      console.log("--------------------USER-------------------")
-      
-      console.log(user);
-
-      console.log("--------------------OPTIONS-------------------")
-
-      console.log(options);
-
       if(options.auto_created == true){
         try {
           userRegistration(user,options.password)

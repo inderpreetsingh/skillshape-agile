@@ -100,7 +100,7 @@ export default class Signin extends React.Component{
               browserHistory.push('ScheduleView');
             }
           } else {
-            browserHistory.push('Home');
+            browserHistory.push('/');
           }
         }
      });

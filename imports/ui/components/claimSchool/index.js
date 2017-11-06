@@ -15,6 +15,5 @@ class ClaimSchool extends ClaimSchoolBase {
 export default createContainer(props => {
   Meteor.subscribe('SkillType');
   let dataForSkillTypes = SkillType.find().fetch();
-  console.log("dataForSkillTypes-->>",dataForSkillTypes);
   return {...props, dataForSkillTypes};
 }, ClaimSchool);

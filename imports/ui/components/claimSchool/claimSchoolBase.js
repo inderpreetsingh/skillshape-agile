@@ -5,38 +5,35 @@ export default class ClaimSchoolBase extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      filters: {
-        schoolName: '',
-        typeOfSchool: '',
-        address: '',
-        website: '',
-        phoneNumber: ''
-      }
-    };
-    this.onSearch = this.onSearch.bind(this);
-    this.updateState = this.updateState.bind(this)
+      filters: {}
+    }
   }
 
-  updateState = (e) => {
-    console.log("updateState called")
-    let filters = this.state.filters;
-    let name = e.target.name;
-    let value = e.target.value;
-    filters[name] = value;
-    this.setState({filters});
-  };
+  resetFilter = (filterRef) => {
+    filterRef.schoolName.value = "";
+    filterRef.website.value = "";
+    filterRef.phoneNumber.value = "";
+    filterRef.claimcoords = "";
+    filterRef.address.value = "";
+    filterRef.typeOfSkill.value = "Any";
+    this.setState({
+      filters: {}
+    });
+  }
 
   onSearch = (filterRef) => {
-    const schoolName = filterRef.schoolName.value;
-    const website = filterRef.website.value;
-    const phoneNumber = filterRef.phoneNumber.value;
-
-    this.setState({filters: {
-      schoolName,
-      website,
-      phoneNumber
-    }});
-    console.log("after clicking onSearch, state is = ", this.state);
-  };
+    let cskill = filterRef.typeOfSkill.value;
+    if(filterRef.typeOfSkill.value == "Type Of Skills")
+      cskill = ""
+    this.setState({
+      filters: {
+        phone : filterRef.phoneNumber.value,
+        website: filterRef.website.value,
+        name: filterRef.schoolName.value,
+        coords: filterRef.claimcoords,
+        cskill: cskill,
+      }
+    });
+  }
 
 }

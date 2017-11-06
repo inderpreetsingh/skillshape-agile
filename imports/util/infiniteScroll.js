@@ -11,7 +11,7 @@ export class InfiniteScroll extends React.Component {
         return ( <div> { props.children } { props.hasMore && props.loader } </div>)
     }
     scrollListener() {
-        var el = ReactDOM.findDOMNode(this);
+        // var el = ReactDOM.findDOMNode(this);
         // var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
         var scrollTop = $("#UserMainPanel").scrollTop();
         var threshold, target = $("#load-icon");

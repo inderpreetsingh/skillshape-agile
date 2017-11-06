@@ -85,7 +85,7 @@ export default function () {
           <div className="col-sm-2" style={{paddingTop: 10}}>
             <a onClick={() => this.props.onSearch(this) } style={{marginRight: '4px'}} id="search" title="Search"
                className="btn btn-warning btn-sm search"><i className="material-icons md-18">search</i></a>
-            <a href="#" id="view_list" title="reset filter" className="btn btn-warning btn-sm clear_filter"><i
+            <a onClick={() => this.props.resetFilter(this) } id="view_list" title="reset filter" className="btn btn-warning btn-sm clear_filter"><i
                 className="material-icons md-18">autorenew</i></a>
           </div>
         </div>

@@ -1,19 +1,35 @@
 import React from "react";
 import {createContainer} from 'meteor/react-meteor-data';
 import ClaimSchoolListRender from "./claimSchoolListRender";
+import { Session } from 'meteor/session';
 
 class ClaimSchoolList extends React.Component {
+  
+  componentWillUnmount() {
+    Session.set("pagesToload",1)
+  }
+
   render() {
     return ClaimSchoolListRender.call(this, this.props, this.state)
   }
 }
 
 export default createContainer(props => {
-  Meteor.subscribe("School");
-  let dataForSchoolList = School.find().fetch();
-  console.log("dataForSchoolList isssssss = ", props);
-  applyFilter = (filter) => {
-    dataForSchools = School.find(filter).fetch();
-  };
-  return {...props, dataForSchoolList, applyFilter};
+  let pagesToload = Session.get("pagesToload") || 1;
+  let subscription = Meteor.subscribe("ClaimSchoolFilter", { limit: pagesToload * 10, ...props.filters });
+  let hasMore = true;
+  let schoolListCursor = School.find();
+  let schoolList = schoolListCursor.fetch();
+  const loadMore = () => {
+    if (subscription.ready() && schoolListCursor.count() + 10 > pagesToload * 10) {
+      Session.set("pagesToload", pagesToload + 1);
+    }
+  }
+  if (subscription.ready()) {
+    if (schoolListCursor.count() + 10 < pagesToload * 10) {
+      hasMore = false;
+    }
+  }
+
+  return {...props, schoolList, hasMore, loadMore, loadMoreEnabled: subscription.ready()};
 }, ClaimSchoolList );
