@@ -60,13 +60,14 @@ export default class MyProfileBase extends React.Component {
 
   editUserCall = (imageUpload) => {
   	const { currentUser } = this.props;
+    // console.log("editUserCall -->>",this.state.dob)
   	const userData = {
   		"profile.firstName": this.state.firstName,
   		"profile.nickame": this.state.nickame,
   		"profile.lastName": this.state.lastName,
   		"profile.phone": this.state.phone,
   		"profile.gender": this.state.gender,
-  		"profile.dob": this.state.dob._i,
+  		"profile.dob": (this.state.dob && this.state.dob._d) || null,
   		"profile.address": this.state.address,
   	}
   	if(imageUpload) {
