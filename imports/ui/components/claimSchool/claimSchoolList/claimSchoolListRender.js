@@ -2,9 +2,11 @@ import React from "react";
 import {cutString} from '/imports/util';
 import { InfiniteScroll } from '/imports/util';
 import { Loading } from '/imports/ui/loading';
+import { browserHistory, Link } from 'react-router';
 
 export default function (props) {
-  let schools = this.props.schoolList || [];
+  const schools = this.props.schoolList || [];
+
   return (
       <div>
         <div className="clearfix"></div>
@@ -42,9 +44,9 @@ export default function (props) {
                       </a>
                       <div className="card-footer">
                         <div className="row">
-                          <a href="" className="btn btn-rose" data-id="">View
+                          <Link to={`/schoolAdmin/${school._id}`} className="btn btn-rose" data-id="">View
                             <div className="ripple-container"></div>
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>

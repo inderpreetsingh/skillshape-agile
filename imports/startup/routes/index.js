@@ -8,11 +8,12 @@ import MainLayout from '/imports/ui/layout/mainLayout';
 import Home from '/imports/ui/components/home';
 import ResetPassword from '/imports/ui/components/account/resetPassword';
 import MyProfile from '/imports/ui/components/users/myProfile';
+import SchoolView from '/imports/ui/components/schoolView';
+import ClaimSchool from '/imports/ui/components/claimSchool';
 
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
-import ClaimSchool from '/imports/ui/components/claimSchool';
 
 export default Routes = () => (
     <Router history={browserHistory}>
@@ -22,7 +23,8 @@ export default Routes = () => (
         <Route path="/Contactus" component={ContactUs} />
       	<Route path="/reset-password/:token" component={ResetPassword}/>
         <Route path="/claimSchool" component={ClaimSchool} />
-        {/*<Route path="/profile/:id" component={MyProfile} />*/}
+        <Route path="/profile/:id" component={MyProfile} />
+        <Route path="/schoolAdmin/:schoolId" component={SchoolView} />
       </Route>
     </Router>
 );

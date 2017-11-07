@@ -1,9 +1,14 @@
 "use strict";
 
-export const emailRegexStrings = {
-  email: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/
+const regexStrings = {
+  email: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
+  image: (/\.(gif|jpg|jpeg|tiff|png)$/i),
 }
 
 export const emailRegex = {
-  email: new RegExp(emailRegexStrings.email),
+  email: new RegExp(regexStrings.email),
+}
+
+export const imageRegex = {
+  image: new RegExp(regexStrings.image),
 }

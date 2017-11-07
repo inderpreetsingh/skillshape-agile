@@ -284,7 +284,7 @@ let md = {
                    mobile_menu_initialized = false;
                }
            }
-            join_school_events();
+            // join_school_events();
             $('.off-canvas-sidebar').remove()
              $logout = $('.logout');
              $logout.off('click');
@@ -418,7 +418,7 @@ let md = {
              });
          }
          console.log("initBootstrapNavbarMenu");
-         join_school_events();
+         // join_school_events();
      }, 800),
 
      startAnimationForLineChart: function(chart){

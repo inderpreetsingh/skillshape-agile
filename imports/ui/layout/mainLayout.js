@@ -5,6 +5,7 @@ import Footer from '/imports/ui/components/footer';
 import MVPSideBar from '/imports/ui/components/MVPSideBar';
 import SideBar from '/imports/ui/components/sideBar';
 import { checkDemoUser } from '/imports/util';
+import { initializeLayout } from '/imports/util/initializeLayout';
 // var styles = {
 //   rowstyle: {
 //     display: 'table',
@@ -33,6 +34,7 @@ class MainLayout extends React.Component {
 
   componentDidMount() {
     $.material.init();
+    initializeLayout()
   }
 
   showSideBar = (currentUser) => {

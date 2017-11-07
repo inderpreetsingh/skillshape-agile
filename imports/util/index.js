@@ -4,7 +4,7 @@
  * @module util
  **/
 
-export { emailRegex } from '/imports/util/regExp';
+export { emailRegex, imageRegex } from '/imports/util/regExp';
 export { InfiniteScroll } from '/imports/util/infiniteScroll';
 export { 
 	checkDemoUser,

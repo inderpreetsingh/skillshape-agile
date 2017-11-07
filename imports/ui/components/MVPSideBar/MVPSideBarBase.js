@@ -38,7 +38,7 @@ export default class MVPSideBarBase extends React.Component {
       }
       if(result){
         this.setState({connectedSchool: result})
-        Session.set("ConnectedSchool",result) //no use
+        // Session.set("ConnectedSchool",result) //no use
       }
     });
   }
@@ -53,7 +53,7 @@ export default class MVPSideBarBase extends React.Component {
         if(result){
           console.log(result);
           this.setState({mySchool: result})
-          Session.set("MySchool",result) //no use
+          // Session.set("MySchool",result) //no use
         }
       });
     }
