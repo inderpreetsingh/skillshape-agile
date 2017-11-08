@@ -8,7 +8,7 @@ export default function () {
     monthPrice,
     SLocation,
   } = this.state;
-  
+  // console.log("skill filter state -->>",this.state)
   return(
       <div className="row " id="scr_affix">
         <div className="col-md-12 card clear-margin-bt custom-card-filter">

@@ -25,14 +25,14 @@ class SkillClassFilter extends React.Component {
         console.log(place.geometry['location'].lat());
         console.log(place.geometry['location'].lng());
         this.coords = coords;
+        this.setState({SLocation: place.formatted_address})
         this.props.onSearch(this)
       })
     },5000)
   }
   
   componentWillReceiveProps(props) {
-    console.log("componentWillReceiveProps -->>",props);
-    if(props.currentAddress)
+    if(props.currentAddress && !this.state.SLocation)
       this.setState({SLocation: props.currentAddress})
   }
 
