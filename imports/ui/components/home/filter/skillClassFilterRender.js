@@ -1,44 +1,15 @@
-import React from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
+import React from "react";
+import TagFilter from '/imports/ui/components/tag';
 
-class SearchControl extends React.Component {
-
-  constructor(props){
-    super(props);
-  }
-
-  componentDidMount() {
-    this.initializeSlider()  
-  }
-
-  initializeSlider = () => {
-    const rangeClass = document.getElementById('sliderPriceClass');
-    const rangeMonth = document.getElementById('sliderPriceMonth');
-    noUiSlider.create(rangeClass,{
-      start: [20, 80],
-      connect: true,
-      range: {
-          'min': 0,
-          'max': 100
-      }
-    });
-    noUiSlider.create(rangeMonth,{
-      start: [20, 80],
-      connect: true,
-      range: {
-          'min': 0,
-          'max': 100
-      }
-    })
-  }
-
-  render(){
-    console.log("SearchControl props -->>",this.props)
-    const {
-      skillType,
-    } = this.props;
-
-    return(
+export default function () {
+	const skillType = this.props.skillType || [];
+  const { 
+    classPrice, 
+    monthPrice,
+    SLocation,
+  } = this.state;
+  
+  return(
       <div className="row " id="scr_affix">
         <div className="col-md-12 card clear-margin-bt custom-card-filter">
           <div className="col-md-2 col-sm-4">
@@ -49,7 +20,10 @@ class SearchControl extends React.Component {
                   type="text" 
                   aria-required="true" 
                   placeholder="Location" 
-                  id="location" value="test"
+                  id="location"
+                  value={SLocation}
+                  onChange={(e) => this.setState({SLocation: e.target.value})} 
+                  ref= { (ref) => {this.location = ref} }
                 />
                 <span className="material-input"></span>
                 <i className="material-icons card-material-icon" title="Search around your location...">
@@ -66,6 +40,8 @@ class SearchControl extends React.Component {
                 aria-required="true" 
                 placeholder="School"  
                 autoComplete="off"
+                ref= { (ref) => {this.schoolName = ref} }
+                onChange={() => this.props.onSearch(this) }
               />
               <i className="material-icons card-material-icon" title="Search around your location...">
                 search
@@ -74,7 +50,14 @@ class SearchControl extends React.Component {
           </div>
           <div className="col-md-2 col-sm-4">
             <div className="form-group label-floating is-empty has-warning">
-              <select className="form-control search-bar-form" style={{width: '100%'}} id="cskill" name="cskill">
+              <select 
+                className="form-control search-bar-form" 
+                style={{width: '100%'}} 
+                id="cskill" 
+                name="cskill"
+                ref= { (ref) => {this.typeOfSkill = ref}}
+                onChange= {() => this.props.onSearch(this)}
+              >
                 <option value="" disabled selected >Type Of Skill</option>
                 <option value="">Any</option>
                 {
@@ -95,7 +78,7 @@ class SearchControl extends React.Component {
                 </div>
                 <div className="col-sm-5 p0 text-right">
                   <strong>
-                    $10 - 35$
+                    ${classPrice[0]} - {classPrice[1]}$
                   </strong>
                 </div>
               </div>
@@ -113,7 +96,7 @@ class SearchControl extends React.Component {
                 </div>
                 <div className="col-sm-5 p0 text-right">
                   <strong>
-                    $35 - 250$
+                    ${monthPrice[0]} - {monthPrice[1]}$
                   </strong>
                 </div>
               </div>  
@@ -123,14 +106,12 @@ class SearchControl extends React.Component {
               </div>
             </div>
           </div>
+          <div className="col-sm-12 col-md-12 ">
+            <TagFilter
+              selectedSkill={this.typeOfSkill && this.typeOfSkill.value}
+            />
+          </div>
         </div>
       </div>
     )
-  }
 }
-
-export default createContainer(props => {
-  Meteor.subscribe("SkillType");
-  const skillType = SkillType.find({}).fetch();
-  return { ...props, skillType };
-}, SearchControl);

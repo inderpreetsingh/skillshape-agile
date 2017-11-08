@@ -10,14 +10,14 @@ export default function() {
 	return (
 		<div className="sidebar" data-active-color="rose" data-background-color="black" data-image="/images/background.jpg">
 			<div className="logo">
-        <a href="#" className="simple-text">
+        <Link to="/" className="simple-text">
           <img src="/images/logo-location.png" alt="logo" width="80"/>
-        </a>
+        </Link>
       </div>
       <div className="logo logo-mini">
-        <a href="#" className="simple-text">
+        <Link to="/" className="simple-text">
           SS
-        </a>
+        </Link>
       </div>
       <div className="sidebar-wrapper">
       	<div className="user">
@@ -58,9 +58,9 @@ export default function() {
                       mySchool.map((school, index) => {
                         return (
                           <li key={index}>
-                            <a href={`/schools/${school.slug}`} className="close-nav">
+                            <Link to={`/schools/${school.slug}`} className="close-nav">
                               {school.name}
-                            </a>
+                            </Link>
                           </li>
                         )
                       })
@@ -85,9 +85,9 @@ export default function() {
                     connectedSchool.map((school, index) => {
                       return (
                         <li key={index}>
-                          <a href={`/schools/${school.slug}`} className="close-nav">
+                          <Link to={`/schools/${school.slug}`} className="close-nav">
                             {school.name}
-                          </a>
+                          </Link>
                         </li>
                       )
                     })
@@ -97,17 +97,17 @@ export default function() {
             </li>
           }
           <li>
-            <a href="/">
+            <Link to="/">
               <i className="material-icons">find_in_page</i>
               <p>Find a School</p>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/claimSchool">
+            <Link to="/claimSchool">
               <i className="material-icons">assignment</i>
                 <p>Claim a School
               </p>
-            </a>
+            </Link>
           </li>
           {
             claimRequest.length > 0 &&
@@ -124,9 +124,9 @@ export default function() {
                     claimRequest.map((data, index) => {
                       return (
                         <li key={index}>
-                          <a href="#" className="close-nav btn-primary claimProgress">
+                          <Link to="#" className="close-nav btn-primary claimProgress">
                             {data.schoolName}
-                          </a>
+                          </Link>
                         </li>
                       )
                     })

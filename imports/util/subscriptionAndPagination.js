@@ -7,12 +7,13 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
   // ...and returns another component...
   let {collection, subscriptionName , recordLimit } = params;
   let Container = createContainer(props => {
-    let filter = props.filter ? props.filter : {};
+    // console.log("createContainer ",props);
+    let filters = props.filters ? props.filters : {};
     const collectionCursor = collection.find({});
     const collectionData = collectionCursor.fetch();
     const currentUser = Meteor.user();
     let pagesToload = Session.get("pagesToload") || 1;
-    let subscription = Meteor.subscribe(subscriptionName, { limit: pagesToload * recordLimit, ...filter });
+    let subscription = Meteor.subscribe(subscriptionName, { limit: pagesToload * recordLimit, ...filters });
     let hasMore = true;
     const loadMore = () => {
         if (subscription.ready() && collectionCursor.count() + recordLimit > pagesToload * recordLimit) {
@@ -20,9 +21,9 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
         }
     }
     if (subscription.ready()) {
-        if (collectionCursor.count() + recordLimit < pagesToload * recordLimit) {
-            hasMore = false;
-        }
+        if ((collectionCursor.count() + recordLimit < pagesToload * recordLimit) || (collectionCursor.count() == 0)) {
+          hasMore = false;
+        } 
     }
     return { ...props,
       collectionData,
@@ -52,10 +53,10 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
     render() {
       // ... and renders the wrapped component with the fresh data!
       // Notice that we pass through any additional props
-      console.log("Container", Container);
-      return  <Container ref="Container">
-                    <WrappedComponent  {...this.props} />
-              </Container>
+      // console.log("Container", Container);
+      return  <Container {...this.props}>
+        <WrappedComponent/>
+      </Container>
     }
   };
 }

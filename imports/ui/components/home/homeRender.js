@@ -1,67 +1,67 @@
 import React from 'react';
-import SearchControl from '/imports/ui/components/searchControl';
+import SkillClassFilter from './filter';
 import { Loading } from '/imports/ui/loading';
+import SkillClassList from './skillClassList';
 
 export default function() {
-  const { gridView , mapView, listContainerClass} = this.state
-
+  const { 
+  	gridView, 
+  	mapView, 
+  	listContainerClass, 
+  	isLoading,
+  	currentAddress,
+  } = this.state
+  
 	return(
 		<div className="content">
-        <div className="container-fluid">
-          <SearchControl/>
-          <div className="row">
-            <div className="col-sm-12 grid-map-wrap">
-              <div className="col-sm-5 p0">
-                <p className="search-no text-center-xs">
-                  46 Classes Found
-                </p>
-              </div>
-              <div className="col-sm-7 text-right p0">
-                <p className="dispInBlk text-center-xs dispBlk-xs">
-                  Choose View:
-                </p>
-                <button
-                  id="view_list"
-                  onClick={this.handleListView}
-                  className="btn btn-default btn-grid btn-custom-active"
-                >
-                  <i className="material-icons card-material-icon" title="GridView">
-                    grid_on
-                  </i>
-                </button>
-                <button
-                  id="map_view"
-                  onClick={this.handleMapView}
-                  className="btn btn-default btn-map"
-                >
-                  <i className="material-icons card-material-icon" title="Map">
-                    map
-                  </i>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-sm-12 pt-15">
-              {/*{{#if hasSkillValue}}
-                {{ > selectTags tag_class=skillvalue tag_filter="yes" tag_count=10  }}
-              {{/if}}*/}
-            </div>
-          </div>
-          <div className={listContainerClass}>
-            {
-						  this.props.collectionData.map((classByClassType, index) => {
-						    return this.showSkillClass(classByClassType)
-						  })
-						}
-          </div>
-          {
-            mapView && (<div className="col-md-6 mapview" style={{ height:'700px'}}>
-              <div id="google-map" style={{height:'700px'}}>
-              </div>
-            </div>)
-          }
-        </div>
+      <div className="container-fluid">
+        <SkillClassFilter 
+        	currentAddress={currentAddress} 
+        	onSearch={this.onSearch}
+        	filters={this.state.filters}
+        />
+				<div className="row">
+		      <div className="col-sm-12 grid-map-wrap">
+		        <div className="col-sm-5 p0">
+		          <p className="search-no text-center-xs">
+		            46 Classes Found
+		          </p>
+		        </div>
+		        <div className="col-sm-7 text-right p0">
+		          <p className="dispInBlk text-center-xs dispBlk-xs">
+		            Choose View:
+		          </p>
+		          <button
+		            id="view_list"
+		            onClick={this.handleListView}
+		            className="btn btn-default btn-grid btn-custom-active"
+		          >
+			          <i className="material-icons card-material-icon" title="GridView">
+			            grid_on
+			          </i>
+		          </button>
+		          <button
+		            id="map_view"
+		            onClick={this.handleMapView}
+		            className="btn btn-default btn-map"
+		          >
+		            <i className="material-icons card-material-icon" title="Map">
+		              map
+		            </i>
+		          </button>
+		        </div>
+		      </div>
+		    </div>
+		    <div className={this.state.listContainerClass} id="skillList"> 
+		    	 {!isLoading && <SkillClassList  {...this.props} {...this.state}/>}
+		    </div>
+		    {
+		      mapView && (<div className="col-md-6 mapview" style={{ height:'700px'}}>
+		          <div id="google-map" style={{height:'700px'}}>
+		        </div>
+		      </div>)
+		    }
       </div>
+    </div>
 	)
 }

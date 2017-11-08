@@ -13,6 +13,7 @@ export default class ClaimSchoolFilter extends React.Component {
         coords[1] = place.geometry['location'].lng();
         console.log(place.geometry['location'].lat());
         console.log(place.geometry['location'].lng());
+        
         this.claimcoords = coords;
       })
     },5000)
