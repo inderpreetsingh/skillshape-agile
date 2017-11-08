@@ -1,6 +1,5 @@
 import React from 'react';
 import SearchControl from '/imports/ui/components/searchControl';
-import { InfiniteScroll } from '/imports/util';
 import { Loading } from '/imports/ui/loading';
 
 export default function() {
@@ -50,21 +49,11 @@ export default function() {
             </div>
           </div>
           <div className={listContainerClass}>
-            <InfiniteScroll
-              pageStart={0}
-              loadMore={(pageToLoad)=>{this.props.loadMore(pageToLoad)}}
-              hasMore={this.props.hasMore}
-              threshold={100}
-              loadMoreEnabled={this.props.loadMoreEnabled}
-              loader={<Loading/>}
-              getMainPanelRef={this.props.getMainPanelRef}
-            >
             {
-						  this.props.classType.map((classByClassType, index) => {
+						  this.props.collectionData.map((classByClassType, index) => {
 						    return this.showSkillClass(classByClassType)
 						  })
 						}
-            </InfiniteScroll>
           </div>
           {
             mapView && (<div className="col-md-6 mapview" style={{ height:'700px'}}>

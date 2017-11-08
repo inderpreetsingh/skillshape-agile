@@ -8,7 +8,12 @@ export class InfiniteScroll extends React.Component {
     }
     render() {
         var props = this.props;
-        return ( <div> { props.children } { props.hasMore && props.loader } </div>)
+        const childrenWithProps = React.Children.map(props.children,
+         (child) => React.cloneElement(child, {
+           collectionData: props.collectionData
+         })
+        );
+        return ( <div> { childrenWithProps } { props.hasMore && props.loader } </div>)
     }
     scrollListener() {
         // var el = ReactDOM.findDOMNode(this);

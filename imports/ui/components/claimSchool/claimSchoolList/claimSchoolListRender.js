@@ -5,8 +5,7 @@ import { Loading } from '/imports/ui/loading';
 import { browserHistory, Link } from 'react-router';
 
 export default function (props) {
-  const schools = this.props.schoolList || [];
-
+  let schools = this.props.collectionData || [];
   return (
       <div>
         <div className="clearfix"></div>
@@ -15,15 +14,6 @@ export default function (props) {
         </div>
         <div className="clearfix"></div>
         <div className="nopaadding">
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={(pageToLoad)=>{this.props.loadMore(pageToLoad)}}
-          hasMore={this.props.hasMore}
-          threshold={100}
-          loadMoreEnabled={this.props.loadMoreEnabled}
-          loader={<Loading/>}
-          getMainPanelRef={this.props.getMainPanelRef}
-        >
           {
             schools.map((school, index) => {
               return (
@@ -54,7 +44,6 @@ export default function (props) {
               )
             })
           }
-          </InfiniteScroll>
           <div className="col-md-12">
             <h3> No none of these are my school. Please let me start a new listing.</h3>
             <a href="#" className="btn btn-rose btn_claim">Start New School
