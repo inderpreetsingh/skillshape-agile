@@ -8,7 +8,7 @@ export default function () {
     monthPrice,
     SLocation,
   } = this.state;
-  // console.log("skill filter state -->>",this.state)
+  // console.log("skillClassFilterRender -->>",this.state)
   return(
       <div className="row " id="scr_affix">
         <div className="col-md-12 card clear-margin-bt custom-card-filter">
@@ -109,6 +109,7 @@ export default function () {
           <div className="col-sm-12 col-md-12 ">
             <TagFilter
               selectedSkill={this.typeOfSkill && this.typeOfSkill.value}
+              onSearchTag={this.props.onSearchTag}
             />
           </div>
         </div>

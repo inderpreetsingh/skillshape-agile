@@ -32,8 +32,10 @@ class SkillClassFilter extends React.Component {
   }
   
   componentWillReceiveProps(props) {
-    if(props.currentAddress && !this.state.SLocation)
+    if(props.currentAddress && props.filters.coords && !this.state.SLocation) {
+      this.coords = props.filters.coords;
       this.setState({SLocation: props.currentAddress})
+    }
   }
 
   initializeSlider = () => {

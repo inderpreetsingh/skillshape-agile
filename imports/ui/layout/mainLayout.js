@@ -67,7 +67,7 @@ class MainLayout extends React.Component {
             <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
-                  {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this) })}
+                  {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser })}
                 </div>
               </div>
             </div>

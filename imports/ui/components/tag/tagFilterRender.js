@@ -2,7 +2,7 @@ import React from 'react';
 import TagList from './tagList';
 
 export default function() {
-	console.log("this.props.selectedSkill",this.props.selectedSkill)
+	// console.log("this.props.selectedSkill",this.props)
 	return (
 		<div>
 			{
@@ -22,6 +22,8 @@ export default function() {
 						/>
 						<TagList
 							filterTag={this.state.tagStr}
+							skillClass={this.props.selectedSkill}
+							onSearchTag={this.props.onSearchTag}
 						/> 
 					</div>
 				)

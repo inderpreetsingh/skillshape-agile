@@ -136,25 +136,25 @@ export default function() {
             </li>
           }
           <li>
-            <a href="/ContactUs">
+            <Link to="/ContactUs">
                 <i className="material-icons">comment</i>
                 <p>Send us feedback</p>
-            </a>
+            </Link>
           </li>
           {
             superAdmin && <li>
-              <a href="/schoolAdmin">
+              <Link to="/schoolAdmin">
                 <i className="material-icons">library_add</i>
                 <p>Add schools</p>
-              </a>
+              </Link>
             </li>
           }
           {
             superAdmin && <li>
-              <a href="/SchoolUpload">
+              <Link to="/SchoolUpload">
                 <i className="material-icons">file_upload</i>
                 <p>Upload schools</p>
-              </a>
+              </Link>
             </li>
           }
       	</ul>

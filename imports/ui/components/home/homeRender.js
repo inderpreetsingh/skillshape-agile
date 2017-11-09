@@ -18,6 +18,7 @@ export default function() {
         <SkillClassFilter 
         	currentAddress={currentAddress} 
         	onSearch={this.onSearch}
+        	onSearchTag={this.onSearchTag}
         	filters={this.state.filters}
         />
 				<div className="row">

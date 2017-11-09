@@ -20,6 +20,7 @@ export default class HomeBase extends React.Component {
       },
     }
     this.onSearch = _.debounce(this.onSearch, 1000);
+    this.onSearchTag = _.debounce(this.onSearchTag, 1000);
   }
 
   // componentDidMount() {
@@ -111,15 +112,23 @@ export default class HomeBase extends React.Component {
   }
 
   onSearch = (filterRef) => {
-    console.log("onSearch fn called",)
-    this.setState({
-      filters: {
-        textSearch: filterRef.schoolName.value,
-        skill: filterRef.typeOfSkill.value,
-        _classPrice: filterRef._classPrice,
-        _monthPrice: filterRef._monthPrice,
-        coords: filterRef.coords,
-      }
-    })
+    let oldFilters = {...this.state.filters};
+    // console.log("onSearch fn oldFilters",oldFilters)
+    
+    oldFilters.textSearch = filterRef.schoolName.value;
+    oldFilters.skill = filterRef.typeOfSkill.value;
+    oldFilters._classPrice = filterRef._classPrice;
+    oldFilters._monthPrice = filterRef._monthPrice
+    oldFilters.coords = filterRef.coords;
+    
+    this.setState({filters: oldFilters})
+  }
+
+  onSearchTag = (tagValue) => {
+    let oldFilters = {...this.state.filters};
+    oldFilters.selectedTag = tagValue 
+    
+    // console.log("onSearchTag fn called",oldFilters)
+    this.setState({filters: oldFilters})
   }
 }

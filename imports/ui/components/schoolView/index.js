@@ -16,9 +16,11 @@ export default createContainer(props => {
   Meteor.subscribe("SkillClassbySchool",schoolId);
   Meteor.subscribe("ClaimOrder","");
   let schoolData = School.findOne({_id: schoolId})
-  let classPricing = ClassPricing.find({schoolId: schoolId}).fetch()  
+  let classPricing = ClassPricing.find({schoolId: schoolId}).fetch() 
+  let monthlyPricing = MonthlyPricing.find({schoolId:school._id}).fetch()
   // console.log("schoolId --->>",schoolId)
-  // console.log("schoolData --->>",schoolData)
-  // console.log("SchoolView --->>",classPricing)
-  return { ...props };
+  console.log("SchoolView schoolData--->>",schoolData)
+  console.log("SchoolView classPricing--->>",classPricing)
+  console.log("SchoolView monthlyPricing--->>",monthlyPricing)
+  return { ...props, schoolData, classPricing, monthlyPricing };
 }, SchoolView);

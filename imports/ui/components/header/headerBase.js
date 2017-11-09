@@ -3,6 +3,7 @@ import { browserHistory, Link } from 'react-router';
 import Signin from '/imports/ui/components/account/signin';
 import Signup from '/imports/ui/components/account/signup';
 import ForgotPassword from '/imports/ui/components/account/forgotPassword';
+import Events from 'react-native-simple-events';
 
 export default class HeaderBase extends React.Component{
 
@@ -15,6 +16,13 @@ export default class HeaderBase extends React.Component{
       studentRegister: false,
       schoolRegister: false,
     }
+  }
+
+  componentWillMount() {
+    Events.on("join_school", "123456",(data)=>{
+      let {studentRegister, schoolRegister} = data;
+      this.openSignupModalWithRegisterationType(studentRegister, schoolRegister);
+    })
   }
 
   closeModal = (modalObj) => this.setState(modalObj)

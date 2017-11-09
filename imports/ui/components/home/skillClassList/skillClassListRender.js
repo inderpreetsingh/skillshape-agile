@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function() {
 	//listContainerClass
-	console.log("SkillClassListRender -->>",this.props)
+	// console.log("SkillClassListRender -->>",this.props)
 	return ( 
 		<div>
       {

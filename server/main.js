@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import _tagObj from "../imports/startup/server/tagsDump";
 
 Meteor.startup(() => {
         // Accounts.config({
@@ -22,79 +23,17 @@ Meteor.startup(() => {
         };
   // code to run on server at startup
 
-var _tagObj={"Dance":["African","Argentine tango","B-boying","Ballet","Ballroom dance","Belly dance","Bounce","Break Dancing","Capoeira","Cha Cha",
-"Charleston","Classical Indian dance","Concert dance","Contact improvisation","Contemporary Dance","Disco / electronic dance","East Coast Swing",
-"Ethnic dance","Experimental / freestyle","Flamenco","Flexing","Floating","Folk dance","Footwork","Foxtrot","Hip Hop / Street Dance","Jazz dance",
-"Jitterbug","Krumping","Locking","MaculelÃª","Mambo","Medieval dance","Merengue","Metal Mosh","Modern dance","Quickstep","Reggaeton","Robot dance",
-"Rumba","Salsa","Samba","Swing dance","Tango","Tap dance","Vogue","Waltz","Zumba"],
-"Art/ Design/Craft":["Acrylic Painting","Cartoon Art","Crafting","Creative Writing","Crocheting","Drawing","Figure Drawing","Fingernail Art",
-"Graphic Design","Hair Styling","Knitting","Makeup","Oil Paint","Sculpture","Sewing","Soap / Cosmetic","Stitching","Watercolor"],
-"Sport/Exercise":["American Football","Baseball","Basketball","Boot Camp","Cycling","Darts","Football / Soccer","Frisbee","Gymnastics",
-"High Intensity Interval Training","Jogging","Juggling","Other Ball Games","Parkour","Rugby","Sprinting","Swimming","Tai Chi","Tennis",
-"Ultimate Frisbee","Walking","Weight / Resistance","Racketball"],
-"Language":["Arabic","Bengali","Dutch","English","French","German","Hindi","Italian","Japanese","Mandarin","Portuguese","Russian","Spanish"],
-"Coding and Computers":["Android","C#","C+","iOS","Javascript","Javascript","Meteor","Node","PHP","Python"],
-"Business/Marketing":["Accounting","Business Strategy","Business Writing","Entrepreneurship","Marketing","Sales","Software Development"],
-"Meditation/Religion":["Meditation","Catholic Prayer Meeting","Muslim Prayer Meeting","Buddhist Chanting","Protestant Prayer Meeting",
-"Christian Meeting","Bible Study","Koran Study","Sutra Study"],
-"Acting/Comedy":["Acting Class","Improvisation","Stand-Up Comedy","Movement / Slapstick"],
-"Games":["Video Games","Role Playing Games","Miniature Games","Chess","Checkers","Poker","Board Games","Card Games"],
-"Pets":["Dog Walks","Dog Grooming","Dog Meetups","Exotic Pet Meetups","Dog Training"],
-"Parents/Children":["Child Meetup by Age","Parents with Autistic Children","Parents with Special Needs Children"],
-"Yoga/Pilates":["Anusara","Ashtanga","Bikram","Hatha","Hot Yoga","Iyengar","Jivamukti","Kripalu","Kundalini","Prenatal",
-"Restorative","Sivananda","Viniyoga","Vinyasa / Power","Yin"],
-"Food and Beverage":["Cooking","Fermentation","Bread Making","Wine Tasting","Beer Making","Cocktail Mixing"]}
 
-  if(tags.find().count()==0){
-
+  if(tags.find({_mig_: 1}).count()==0){
+    console.log("_____tag dump start___");
+        tags.remove({});
+        SkillType.remove({});
         for(var key in _tagObj){
-            _tagObj[key].forEach((f)=>{
-            tags.insert({tag:f,class:key});
+          SkillType.insert({name: key, _mig_ : 1})
+          _tagObj[key].forEach((f)=>{
+          tags.insert({tag:f,class:key,_mig_ : 1});
         })
-        }
-
-        tags.insert({tag:'Aikido',class:'Martial Art'});
-        tags.insert({tag:'American Karate',class:'Martial Art'});
-        tags.insert({tag:'American Kenpo',class:'Martial Art'});
-        tags.insert({tag:'Arnis/Eskrima/Kali',class:'Martial Art'});
-        tags.insert({tag:'Brazilian jiu-jitsu',class:'Martial Art'});
-        tags.insert({tag:'DaitÅ-ryÅ« Aiki-jÅ«jutsu',class:'Martial Art'});
-        tags.insert({tag:'Danzan-ryÅ«',class:'Martial Art'});
-        tags.insert({tag:'Hapkido',class:'Martial Art'});
-        tags.insert({tag:'Iaido',class:'Martial Art'});
-        tags.insert({tag:'Japanese Jujitsu',class:'Martial Art'});
-        tags.insert({tag:'Japanese Karate',class:'Martial Art'});
-        tags.insert({tag:'Japnese KenPo',class:'Martial Art'});
-        tags.insert({tag:'Jeet Kune Do',class:'Martial Art'});
-        tags.insert({tag:'Judo',class:'Martial Art'});
-        tags.insert({tag:'Jujutsu',class:'Martial Art'});
-        tags.insert({tag:'Kalaripayattu',class:'Martial Art'});
-        tags.insert({tag:'Kendo',class:'Martial Art'});
-        tags.insert({tag:'Kenjutsu',class:'Martial Art'});
-        tags.insert({tag:'Kick Boxing',class:'Martial Art'});
-        tags.insert({tag:'Krav Maga',class:'Martial Art'});
-        tags.insert({tag:'Kung Fu',class:'Martial Art'});
-        tags.insert({tag:'Mixed Martial Arts',class:'Martial Art'});
-        tags.insert({tag:'Muay Thai',class:'Martial Art'});
-        tags.insert({tag:'Ninjutsu',class:'Martial Art'});
-        tags.insert({tag:'Nippon Kempo',class:'Martial Art'});
-        tags.insert({tag:'Okinawan martial arts',class:'Martial Art'});
-        tags.insert({tag:'Japanese Karate',class:'Martial Art'});
-        tags.insert({tag:'Other Traditional Martial Art',class:'Martial Art'});
-        tags.insert({tag:'Pankration',class:'Martial Art'});
-        tags.insert({tag:'Sambo',class:'Martial Art'});
-        tags.insert({tag:'Jujutsu',class:'Martial Art'});
-        tags.insert({tag:'Savate',class:'Martial Art'});
-        tags.insert({tag:'SCA',class:'Martial Art'});
-        tags.insert({tag:'Shootfighting (American)',class:'Martial Art'});
-        tags.insert({tag:'Small Circle Jujutsu',class:'Martial Art'});
-        tags.insert({tag:'Sumo',class:'Martial Art'});
-        tags.insert({tag:'Systema',class:'Martial Art'});
-        tags.insert({tag:"T'ai chi ch'uan",class:'Martial Art'});
-        tags.insert({tag:'Vale Tudo',class:'Martial Art'});
-        tags.insert({tag:'Wing Chun',class:'Martial Art'});
-        tags.insert({tag:'WuShu',class:'Martial Art'});
-
+    }
 }
 
 });
