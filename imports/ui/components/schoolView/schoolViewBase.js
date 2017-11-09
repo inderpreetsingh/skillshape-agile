@@ -1,6 +1,6 @@
 import React from 'react';
 import { checkSuperAdmin } from '/imports/util';
-import Events from 'react-native-simple-events';
+// import Events from 'react-native-simple-events';
 
 export default class SchoolViewBase extends React.Component {
 
@@ -36,7 +36,7 @@ export default class SchoolViewBase extends React.Component {
   	} else {
       toastr.error("Please register yourself as an individual member before claiming your school","Error");
   		Meteor.setTimeout(() => {
-        Events.trigger("join_school",{studentRegister: false, schoolRegister: true})
+        // Events.trigger("join_school",{studentRegister: false, schoolRegister: true})
       }, 1000);
   	}
   }
