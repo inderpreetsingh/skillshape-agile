@@ -48,7 +48,7 @@ export class InfiniteScroll extends React.Component {
         // console.log("attachScrollListener -->>",scrollOnId)
         $(`#${scrollOnId}`).on('scroll', this.scrollListener.bind(this));
         $(`#${scrollOnId}`).on('resize', this.scrollListener.bind(this));
-        this.scrollListener();
+        // this.scrollListener();
     }
     detachScrollListener() {
         let scrollOnId = this.props.scrollOnId || "UserMainPanel";
