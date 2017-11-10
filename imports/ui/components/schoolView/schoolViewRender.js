@@ -2,7 +2,8 @@ import React from 'react';
 import { Loading } from '/imports/ui/loading';
 import { checkSuperAdmin } from '/imports/util';
 import { browserHistory, Link } from 'react-router';
-import Signup from '/imports/ui/components/account/signup';
+import { ClaimSchoolModal } from '/imports/ui/modal';
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 export default function() {
 
@@ -11,22 +12,29 @@ export default function() {
 		schoolData,
 		classPricing,
 		monthlyPricing,
+		schoolLocation,
+		classType,
 		currentUser,
 	} = this.props;
 
+	const {
+		showClaimSchoolModal
+	} = this.state;
 	if(!schoolData) {
 		return <Loading/>
 	}
 
+	console.log("SchoolView render state -->>",this.props)
 	const checkUserAccess = this.checkUserAccess(currentUser, schoolData.userId);
 	const claimBtnCSS = this.claimBtnCSS(currentUser, schoolData.claimed);
 	return (
 		<div className="content">
+			{ false && <ClaimSchoolModal/>}
       <div className="container-fluid">
       	<div className="row">
           <div className="card">
 							{
-								classPricing && classPricing.length > 0 && (
+								false && classPricing && classPricing.length > 0 && (
 									<div className="col-md-12">
              				<h2 className="tagline line-bottom">Prices</h2>
              				<div className="card-content table-grey-box">
@@ -55,7 +63,7 @@ export default function() {
 								)
 							} 
 							{
-								classPricing && classPricing.length > 0 && (
+								false && classPricing && classPricing.length > 0 && (
 									<div className="col-md-12">
                  		<div className="card-content table-grey-box ">
                  			<h4 className="card-title border-line-text line-bottom" >Class Costs</h4>
@@ -124,7 +132,7 @@ export default function() {
                       		)
                       	}
                 				{ true && (
-                						<a onClick={this.claimASchool.bind(this,currentUser)} type="button" style={{marginRight: '10px'}} className={`btn ${claimBtnCSS} pull-right btn_claim`} id="claimSchool1">
+                						<a onClick={this.claimASchool.bind(this,currentUser, schoolData)} type="button" style={{marginRight: '10px'}} className={`btn ${claimBtnCSS} pull-right btn_claim`} id="claimSchool1">
                 							<i className="fa fa-gavel"></i>  Claim
                 						</a>
                 					)
@@ -161,7 +169,142 @@ export default function() {
             		</div>
         			</div>
         		</div>     
-        	</div>     
+        	</div>
+        	<div className="col-sm-12">
+        		<div className="clearfix card" >
+           		<div className="col-sm-9">
+           			<div className="">
+           				
+           				<div className="card-content">
+            				<div className="content-list-heading">
+             					<h2 className="card-title text-center ">About School
+             						<figure>
+             							<img src="/images/heading-line.png"/>
+             						</figure>
+            				 	</h2>
+            				 	{schoolData.descHtml}
+            				</div>
+            			</div>	 	
+        				</div>     
+        			</div>
+        			<div className="col-sm-3">
+           	  	<div className="card">
+           	  		{
+           	  			schoolLocation.map((data, index) => {
+           	  				return (<div key={index}>
+           	  					<div className="btn-info address-bar-box">
+           	  						<h4><i className="fa fa-map-marker"></i>&nbsp;{data.title}</h4>
+                     		</div>
+           		          <div className="school-view-adress card-content">
+                          <p>{data.address}<br/>
+                          	{data.city},{data.state} - {data.zip}<br/>
+                          	{data.country}
+                          </p>
+                              <div className="card-content" id="google-map" style={{height:'200px'}}>
+                              </div>
+                          </div>
+           	  					</div>
+           	  				)
+           	  			})
+           	  		}
+           	  	</div>
+           	  </div>	     
+        		</div>     
+        	</div>
+        	{
+        		schoolData.descHtml && (
+		        	<div className="row  card">
+		            <div className="col-md-12">
+		              <div className="">
+			              <div className="card-content">
+			                <div className="content-list-heading">
+				             	  <h2 className="card-title text-center">Description
+				             	 	  <figure><img src="/images/heading-line.png"/></figure>
+				             	  </h2>
+			                  {schoolData.descHtml}
+			                </div>
+			             	</div>
+		             	</div>
+		            </div>
+		          </div>     
+        		)
+        	}
+        	<div className="row  card">
+            <div className="col-sm-12 text-left">
+              <div className="content-list-heading ">
+               	<h2 className="text-center">{schoolData.name} offers the following class types
+                  <figure>
+                  	<img src="/images/heading-line.png"/>
+                  </figure>
+                </h2>
+              </div>
+            </div>
+            <div className="col-sm-12">
+          	{
+          		classType.map((classTypeData, index)=> {
+          		  console.log("classTypeData -->>",classTypeData)
+          			const skillClass = SkillClass.find({classTypeId: classTypeData._id}).fetch();
+          			return skillClass.map((skillClassData, index) => {
+          				console.log("skillClassData -->>",skillClassData)
+          				const imgUrl = this.getClassImageUrl(skillClassData.classTypeId, skillClassData.classImagePath);
+          				return (<div className="col-md-4 npdagin npding">
+          						<div className="card card-profile">
+                     		<h4 className="tagline" title={skillClassData.className}>
+                        	{classTypeData.skillTypeId} at {schoolData.name}
+                     		</h4>
+	                     	<div className="card-content">
+											    <div className="" data-header-animation="false">
+										        <div className="">
+									            <div className="thumb " style={{backgroundImage: `url(${imgUrl})`, height: '155px', width:'100%'}}>
+									            </div>
+										        </div>
+											    </div>
+											    <div className="card-content">
+	                          <h4 className="card-title">
+	                            <a href="#">{skillClassData.className}</a>
+	                          </h4>
+	                          <div className="card-description">
+	                            {classTypeData.desc}
+	                            <br/>
+	                            <br/>
+	                            {this.getClassPrice(skillClassData.classTypeId)}  
+	                          </div>
+	                          <br/>
+	                          <p className="text-center">
+	                          	{ReactHtmlParser(this.viewSchedule(skillClassData))}
+	                          </p>
+	                        </div>
+	                        <div className="card-footer">
+												    <div className="col-sm-12 col-xs-12">
+												      <a href="#" className="btn btn-danger btn_join_className btn_join_check" data-className="KCcabqEX4Kb5c58cW" data-className-type="YXdAyLNiR45yqiDXs">
+												      	Add to my calendar! 
+												      	<div className="ripple-container"></div>
+												      </a>
+												    </div>
+												    <div className="clearfix"></div>
+												    <div className="col-sm-12 col-xs-12" style={{padding: '5px'}}>
+											        <div className="col-sm-9">
+											            <p className="text-center">Toggle Weekend view </p>
+											        </div>
+											        <div className="col-sm-3 col-xs-3">
+										            <div className="togglebutton">
+									                <label>
+								                    <input type="checkbox" data-id="KCcabqEX4Kb5c58cW" className="toggeleview" style={{position: 'absolute'}}/>
+								                    <span className="toggle toggle-success"></span>
+									                </label>
+										            </div>
+											        </div>
+												    </div>
+													</div>
+												</div>
+											</div>	
+          					</div>
+          				)
+          			})
+          		})
+          	}
+          	</div>
+          </div>
         </div>     
 			</div>
 		</div>

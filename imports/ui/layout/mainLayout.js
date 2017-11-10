@@ -46,6 +46,13 @@ class MainLayout extends React.Component {
   getMainPanelRef() {
     return this.mainPanelRef
   }
+
+  checkEmailVerification = (currentUser) => {
+    if(currentUser && currentUser.emails) 
+      return currentUser.emails[0].verified
+    return true // when no user login to let them see home page
+  }
+
   render( ) {
     const { currentUser } = this.props;
     let className = {
@@ -65,11 +72,22 @@ class MainLayout extends React.Component {
           <Header {...this.props}/>
           <div className={className.contentClass}>
             <div className="container-fluid">
-              <div className="row">
-                <div className="col-md-12">
-                  {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser })}
-                </div>
-              </div>
+              { 
+                this.checkEmailVerification(currentUser) ? (
+                  <div className="row">
+                    <div className="col-md-12">
+                      {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser })}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="alert alert-warning">
+                    You need to verify your email address before using Skillshape. 
+                    <a href="#" className="resend-verification-link" style={{color:'blue'}}>
+                      Resend verification link
+                    </a>
+                  </p>
+                )
+              }
             </div>
           </div>
           <Footer/>

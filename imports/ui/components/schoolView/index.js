@@ -12,15 +12,30 @@ class SchoolView extends SchoolViewBase {
 
 export default createContainer(props => {
   const { schoolId } = props.params
+
   Meteor.subscribe("UserSchool",schoolId);
   Meteor.subscribe("SkillClassbySchool",schoolId);
   Meteor.subscribe("ClaimOrder","");
+  Meteor.subscribe("SchoolLocation",schoolId);
+  Meteor.subscribe("classTypeBySchool",schoolId);
+  Meteor.subscribe("ClassPricing",schoolId)
+  Meteor.subscribe("MonthlyPricing",schoolId)
+
   let schoolData = School.findOne({_id: schoolId})
   let classPricing = ClassPricing.find({schoolId: schoolId}).fetch() 
   let monthlyPricing = MonthlyPricing.find({schoolId:school._id}).fetch()
-  // console.log("schoolId --->>",schoolId)
+  let schoolLocation = SLocation.find({schoolId:schoolId}).fetch()
+  let classType = ClassType.find({schoolId: schoolId}).fetch();
+
   console.log("SchoolView schoolData--->>",schoolData)
-  console.log("SchoolView classPricing--->>",classPricing)
-  console.log("SchoolView monthlyPricing--->>",monthlyPricing)
-  return { ...props, schoolData, classPricing, monthlyPricing };
+  console.log("SchoolView classType--->>",classType)
+  // console.log("SchoolView classPricing--->>",classPricing)
+  // console.log("SchoolView monthlyPricing--->>",monthlyPricing)
+  return { ...props, 
+    schoolData, 
+    classPricing, 
+    monthlyPricing, 
+    schoolLocation,
+    classType, 
+  };
 }, SchoolView);
