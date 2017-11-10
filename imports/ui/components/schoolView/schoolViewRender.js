@@ -4,6 +4,7 @@ import { checkSuperAdmin } from '/imports/util';
 import { browserHistory, Link } from 'react-router';
 import { ClaimSchoolModal } from '/imports/ui/modal';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
+import MyCalender from '/imports/ui/components/users/myCalender';
 
 export default function() {
 
@@ -305,6 +306,7 @@ export default function() {
           	}
           	</div>
           </div>
+          <MyCalender/>
         </div>     
 			</div>
 		</div>
