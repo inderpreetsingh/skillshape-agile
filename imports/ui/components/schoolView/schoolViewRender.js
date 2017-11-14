@@ -306,7 +306,7 @@ export default function() {
           	}
           	</div>
           </div>
-          <MyCalender/>
+          <MyCalender {...this.props}/>
         </div>     
 			</div>
 		</div>

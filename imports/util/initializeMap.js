@@ -1,7 +1,7 @@
 export function initializeMap() {
-	console.log("initialize Map start")
+	// console.log("initialize Map start")
 	var bounds = new google.maps.LatLngBounds();
-	console.log("bounds -->>",bounds,document.getElementById('google-map'))
+	// console.log("bounds -->>",bounds,document.getElementById('google-map'))
   if(document.getElementById('google-map'))
   {
     document.getElementById('google-map').innerHTML = ""
@@ -12,15 +12,15 @@ export function initializeMap() {
       scrollwheel: true,
       minZoom:1
     };
-    console.log("skill_class -->>",skill_class)
+    // console.log("skill_class -->>",skill_class)
     var map = new google.maps.Map(document.getElementById('google-map'),mapOptions);
     for(var i = 0; i < skill_class.length; i++){
       class_location = SLocation.findOne({_id:skill_class[i].locationId})
       if(class_location && class_location.geoLat && class_location.geoLong){
         cost = 0
-        console.log(skill_class[i].classTypeId);
+        // console.log(skill_class[i].classTypeId);
         class_price = ClassPricing.findOne({classTypeId: { '$regex': ''+skill_class[i].classTypeId+'', '$options' : 'i' }})
-        console.log(class_price);
+        // console.log(class_price);
         if(class_price){
           cost = class_price.cost;
         }

@@ -9,6 +9,28 @@ export default class ClaimSchoolBase extends React.Component {
     }
   }
 
+  componentDidMount() {
+    $(window).off('scroll');
+    $('.main-panel').off('scroll');
+    $('#UserMainPanel').off('scroll');
+    $(window).scroll(this.fixedHeader);
+    $('#UserMainPanel').scroll(this.fixedHeader)
+    $('.main-panel').scroll(this.fixedHeader);
+  }
+
+  fixedHeader = () => {
+    if (window.innerWidth>767){
+      if ($("#UserMainPanel").scrollTop() >= 200) {
+        $('#scr_affix').addClass('fixed-header');
+        if($('.sidebar').length > 0)
+          $('#scr_affix').css({'position': 'relative', 'top': ($("#UserMainPanel").scrollTop() - 100)+'px'});
+      } else {
+        $('#scr_affix').removeClass('fixed-header');
+        $('#scr_affix').attr('style','')
+      }
+    }
+  }
+
   resetFilter = (filterRef) => {
     filterRef.schoolName.value = "";
     filterRef.website.value = "";

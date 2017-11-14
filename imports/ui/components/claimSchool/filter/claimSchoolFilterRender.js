@@ -3,8 +3,8 @@ import React from "react";
 export default function () {
 
   return (
-      <div className='container-fluid'>
-        <div className="card">
+      <div className='container-fluid' >
+        <div className="card" id="scr_affix">
           <div className="col-sm-2">
             <div className="form-group label-floating is-empty has-warning">
               <input

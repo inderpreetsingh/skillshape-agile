@@ -23,14 +23,14 @@ export default class HomeBase extends React.Component {
     this.onSearchTag = _.debounce(this.onSearchTag, 1000);
   }
 
-  // componentDidMount() {
-  //   $(window).off('scroll');
-  //   $('.main-panel').off('scroll');
-  //   $('#MainPanel').off('scroll');
-  //   $(window).scroll(this.fixedHeader);
-  //   $('#MainPanel').scroll(this.fixedHeader)
-  //   $('.main-panel').scroll(this.fixedHeader);
-  // }
+  componentDidMount() {
+    $(window).off('scroll');
+    $('.main-panel').off('scroll');
+    $('#UserMainPanel').off('scroll');
+    $(window).scroll(this.fixedHeader);
+    $('#UserMainPanel').scroll(this.fixedHeader)
+    $('.main-panel').scroll(this.fixedHeader);
+  }
 
   componentWillMount() {
     this.getMyCurrentLocation()
@@ -43,6 +43,19 @@ export default class HomeBase extends React.Component {
 
   componentWillUnmount() {
     Session.set("pagesToload",1)
+  }
+
+  fixedHeader = () => {
+    if (window.innerWidth>767){
+      if ($("#UserMainPanel").scrollTop() >= 200) {
+        $('#scr_affix').addClass('fixed-header');
+        if($('.sidebar').length > 0)
+          $('#scr_affix').css({'position': 'relative', 'top': ($("#UserMainPanel").scrollTop() - 100)+'px'});
+      } else {
+        $('#scr_affix').removeClass('fixed-header');
+        $('#scr_affix').attr('style','')
+      }
+    }
   }
 
   getMyCurrentLocation = () => {
@@ -62,7 +75,7 @@ export default class HomeBase extends React.Component {
           } 
         }
         this.setState({
-          filters: {coords: coords},
+          filters: {coords: [52.3702157, 4.8951]},
           currentAddress: sLocation,
           isLoading: false,
         })
@@ -70,21 +83,6 @@ export default class HomeBase extends React.Component {
       toastr.success("Showing classes around you...","Found your location");
       // Session.set("coords",coords)
     })
-  }
-
-  fixedHeader = () => {
-    // console.log("this -->>",this)
-    // console.log($("#s").scrollTop());
-    if (window.innerWidth>767){
-      if ($("#s").scrollTop() >= 200) {
-        $('#scr_affix').addClass('fixed-header');
-        if($('.sidebar').length > 0)
-          $('#scr_affix').css({'position': 'relative', 'top': ($(this).scrollTop() - 100)+'px'});
-      } else {
-        $('#scr_affix').removeClass('fixed-header');
-        $('#scr_affix').attr('style','')
-      }
-    }
   }
 
   handleListView = () => {
@@ -113,7 +111,7 @@ export default class HomeBase extends React.Component {
 
   onSearch = (filterRef) => {
     let oldFilters = {...this.state.filters};
-    // console.log("onSearch fn oldFilters",oldFilters)
+    console.log("onSearch fn oldFilters",oldFilters)
     
     oldFilters.textSearch = filterRef.schoolName.value;
     oldFilters.skill = filterRef.typeOfSkill.value;
