@@ -83,7 +83,7 @@ class FullCalendar extends React.Component {
       start: "2017-11-26",
       title: "Test class 12:00 to 15:00"
     }]
-    return test
+    return []
   }
 
   render() {
