@@ -7,10 +7,17 @@ export class ClaimSchoolModal extends React.Component{
     this.state = {}
   }
 
+  componentDidMount() {
+    $('#claimSchoolModal').modal('show')
+    $('#claimSchoolModal').on('hidden.bs.modal', () => {
+      // this.props.onClose({showSigninModal: false});
+    })    
+  }
+
   render() {
     console.log("ClaimSchoolModal render")
     return (
-      <div className="modal fade " role="dialog">
+      <div className="modal fade" id="claimSchoolModal" role="dialog">
         <div className="modal-dialog" style={{maxWidth: '450px'}}>
           <div className="modal-content">
             <div className="modal-header">

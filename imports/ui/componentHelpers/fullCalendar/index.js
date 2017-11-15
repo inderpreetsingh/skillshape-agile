@@ -7,43 +7,56 @@ class FullCalendar extends React.Component {
 
 	constructor(props) {
     super(props);
+    this.options = {
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay,listWeek'
+      },
+      defaultDate: new Date(),
+      selectable: true,
+      selectHelper: true,
+      navLinks: false, // can click day/week names to navigate views
+      editable: false,
+      eventLimit: true, // allow "more" link when too many events
+      /*eventSources :[sevents],*/
+      eventSources: (start, end, timezone, callback) => {
+        let startDate = new Date(start)
+        // console.log("eventSources old startDate-->>",this.props.startDate)
+        // console.log("eventSources new startDate-->>",startDate)
+        if(!this.props.startDate && startDate) {
+          this.props.setDate(startDate)
+        }
+        if(this.props.startDate && startDate && (this.props.startDate.valueOf() !== startDate.valueOf())) {
+          // console.log("eventSources startDate changed-->>")
+          this.props.setDate(startDate)
+        }
+        let sevents = this.buildCalander() || []
+        // console.log("sevents -->>",sevents);
+        callback(sevents);
+      },
+      dayRender: function(date, cell) {
+      },
+      eventClick: (event) => {
+        // console.log("eventClick -->>",event)
+        if (event.classId && event.classTypeId) {
+          this.props.showEventModal(true,event)
+        }
+      }
+    }
   }
 
   buildCalander = () => {
-    let schoolId;
+    // console.log("buildCalander props -->>",this.props);
+    let { skillClass, myClassIds } = this.props;
     let sevents = [];
-    if (Meteor.user()) {
-      schoolId = Meteor.user().profile.schoolId
-    } else {
-      schoolId = School.findOne()._id
-    }
-
-    let skillClass = SkillClass.find({schoolId: schoolId}).fetch();
     
-    let myClassIds = skillClass.map(function(a) {
-     return a._id
-    })
-
-    let skillClassIds = SkillClass.find().fetch().map(function(i) {
-      return i._id
-    });
-
-    if (skillClassIds && skillClassIds.length > 0 || skillClassIds && skillClassIds.length == 0) {
-      skillClass = SkillClass.find({
-        _id: {
-          $in: skillClassIds
-        }
-      }).fetch()
-    } else {
-      skillClass = SkillClass.find({}).fetch()
-    }
-    console.log("skillClassIds 12-->>",skillClass)
     for (var i = 0; i < skillClass.length; i++) {
       let sclass = skillClass[i];
       try {
-        console.log("sclass._id 122 -->>",sclass._id)
+        // console.log("sclass._id 122 -->>",sclass._id)
         let classSchedule = ClassSchedule.find({skillClassId:sclass._id}).fetch()
-        console.log("classSchedule 122 -->>",classSchedule)
+        // console.log("classSchedule 122 -->>",classSchedule)
         for(var s = 0 ; s < classSchedule.length;s++){
           sevent = {};
           sevent.title = sclass.className;
@@ -64,74 +77,47 @@ class FullCalendar extends React.Component {
           sevents.push(sevent)
         }
       } catch (err) {
-        console.log("Error");
-        console.log(err);
-        console.log(sclass);
+        console.error("Error -->>",err);
       }
     }
 
-    console.log("sevents 12-->>",sevents)
-    let test = [{
-      classId: "TPvJMShcGofJbHE3w",
-      className: "event-green",
-      classTypeId: "YXdAyLNiR45yqiDXs",
-      eventDay: "Sunday",
-      eventEndTime: "15:00",
-      eventStartTime: "12:00",
-      id: "FQhJ5WAL4yD4PWC3A",
-      locationId: "dhee4Pf9fbqL3oSdE",
-      start: "2017-11-26",
-      title: "Test class 12:00 to 15:00"
-    }]
-    return []
+    // console.log("sevent/s 12-->>",sevents)
+    return sevents
   }
 
   render() {
-    const { schoolId, startDate } = this.props;
-    this.startDate = startDate;
-    this.options = {
-      header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'month,agendaWeek,agendaDay,listWeek'
-      },
-      defaultDate: new Date(),
-      selectable: true,
-      selectHelper: true,
-      navLinks: false, // can click day/week names to navigate views
-      editable: false,
-      eventLimit: true, // allow "more" link when too many events
-      /*eventSources :[sevents],*/
-      eventSources: (start, end, timezone, callback) => {
-        console.log("eventSources startDate-->>",this.startDate)
-        if(!this.startDate && start) {
-          this.props.setDate(new Date(start))
-        }
-        let sevents = this.buildCalander() || []
-        console.log("sevents -->>",sevents);
-        callback(sevents);
-      },
-      dayRender: function(date, cell) {
-      },
-      eventClick: function(event) {
-        
-      }
-    }
+  
     return FullCalendarRender.call(this, this.props, this.state);
   }
 }
 
 export default createContainer(props => {
-  console.log("props FullCalendarContainer = ", props);
+  // console.log("props FullCalendarContainer = ", props);
   const { startDate } = props;
-  const schoolId = props.params.schoolId
+  let schoolId;
+  let classSchedule;
+  
+  if (Meteor.user()) {
+    schoolId = Meteor.user().profile.schoolId
+  } else {
+    schoolId = School.findOne()._id
+  }
+ 
+  let skillClass = SkillClass.find({}).fetch();
+  let myClassIds = SkillClass.find({schoolId: schoolId}).fetch().map(function(a) {
+   return a._id
+  })
 
   if(schoolId && startDate) {
-    console.log("yes",schoolId,startDate)
-  	Meteor.subscribe("ClassSchedule",schoolId,startDate,{ onReady: function () {
-      console.log("ClassSchedule subscribe done !!")
-    }});
+  	Meteor.subscribe("ClassSchedule",schoolId,startDate)
+    classSchedule = ClassSchedule.find().fetch()
   }
-  
-  return { ...props};
+
+  // console.log("skillClass createContainer -->>",props)
+  return { 
+    ...props, 
+    classSchedule,
+    skillClass,
+    myClassIds,
+  };
 }, FullCalendar);

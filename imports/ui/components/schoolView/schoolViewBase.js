@@ -106,4 +106,52 @@ export default class SchoolViewBase extends React.Component {
   	}
   	return "";
   }
+
+  getClassName = (classTypeId) => {
+    if(classTypeId) {
+      let str_name = []
+      let classTypeIds = classTypeId.split(",")
+      let classTypeList = ClassType.find({_id:{$in:classTypeIds}}).fetch();
+      classTypeList.map((a) => { str_name.push(a.name)})
+      return str_name.join(",")
+    } else {
+      return ""
+    }
+  }
+
+  getImageMediaList = (mediaList, type) => {
+    if(!mediaList) {
+      return []
+    } else {
+      let size = 1;
+      let imageList = []
+      let return_list = []
+      
+      if(type == "Image") {
+        mediaList.map((a) => { 
+          if(a && a.mediaType) {
+
+            if(a.mediaType.toLowerCase() == "Image".toLowerCase()) {
+              imageList.push(a)
+            }
+          }
+        })
+      } else {
+        mediaList.map((a) => { 
+          if(a && a.mediaType) {
+
+            if(a.mediaType.toLowerCase() != "Image".toLowerCase()) {
+              imageList.push(a)
+            }
+          }
+        })
+      }
+
+      for (var i=0; i< imageList.length; i+=size) {
+        var smallarray = imageList.slice(i,i+size);
+        return_list.push({"item":smallarray})
+      }
+      return return_list;
+    }
+  }
 }

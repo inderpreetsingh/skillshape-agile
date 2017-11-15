@@ -1,5 +1,6 @@
 import React from 'react';
 import FullCalendarContainer from "/imports/ui/componentHelpers/fullCalendar"
+import ClassDetailModal from "/imports/ui/modal/classDetailModal";
 
 export default class MyCalender extends React.Component {
 
@@ -8,19 +9,31 @@ export default class MyCalender extends React.Component {
     this.state = {};
   }
 
-  setDate = (date) => {
-  	console.log("setDate -->>",date)
-  	this.setState({
-  		startDate: date
-  	})
+  setDate = (date) => this.setState({startDate: date})
+  
+  handleEventModal = (isOpen, eventData) => {
+    this.setState({
+      isOpen,
+      eventData 
+    })
   }
 
   render() {
-    return  <FullCalendarContainer 
-			subscriptionName="ClassSchedule"
-			setDate={this.setDate}
-			{...this.state}
-			{...this.props} 
-		/>
+    let { isOpen, eventData } = this.state;
+    return  (<div>
+      <FullCalendarContainer 
+			  subscriptionName="ClassSchedule"
+			  setDate={this.setDate}
+        showEventModal={this.handleEventModal}
+			  {...this.state}
+			 {...this.props} 
+		  />
+      {
+        isOpen && <ClassDetailModal
+          data={eventData}
+          closeEventModal={this.handleEventModal}
+        />
+      }
+    </div>)
   }
 }

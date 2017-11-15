@@ -25,10 +25,12 @@ export default function() {
 		return <Loading/>
 	}
 
-	console.log("SchoolView render state -->>",this.props)
+	// console.log("SchoolView render props -->>",this.props)
 	const checkUserAccess = this.checkUserAccess(currentUser, schoolData.userId);
 	const claimBtnCSS = this.claimBtnCSS(currentUser, schoolData.claimed);
-	return (
+  const imageMediaList = this.getImageMediaList(schoolData.mediaList, "Image");
+	const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
+  return (
 		<div className="content">
 			{ false && <ClaimSchoolModal/>}
       <div className="container-fluid">
@@ -307,6 +309,237 @@ export default function() {
           	</div>
           </div>
           <MyCalender {...this.props}/>
+          <div className="card col-sm-12">
+           {
+              monthlyPricing && monthlyPricing.length > 0 && (
+                <div className="col-md-12">
+                  <div className="content-list-heading">
+                    <h2 className="tagline text-center">Prices
+                      <figure>
+                        <img src="/images/heading-line.png"/>
+                      </figure>
+                    </h2>
+                  </div>
+                  <div className="">
+                   <div className="card-content table-grey-box">
+                   <h4 className="card-title border-line-text line-bottom">Monthly Packages</h4>
+                      <div className="card-content table-responsive prices school-view-price">
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th>Package Name</th>
+                              <th>Payment Type</th>
+                              <th>Class Type includes</th>
+                              <th>1 month</th>
+                              <th>3 month</th>
+                              <th>6 month</th>
+                              <th>1 year</th>
+                              <th>Life Time Cost</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           {
+                              monthlyPricing.map((data, index) => {
+                                return (<tr key={index}>
+                                  <td>{data.packageName}</td>
+                                  <td>{ data.pymtType ? 
+                                    data.pymtType :
+                                    <span className="text-warning link">check with school</span>
+                                  }
+                                  </td>
+                                  <td>{this.getClassName(data.classTypeId)}</td>
+                                  <td>
+                                    {
+                                      data.oneMonCost ? 
+                                      <span className="btn-info">{data.oneMonCost}</span> :
+                                      <span className="text-warning link"> check with school</span>
+                                    }
+                                  </td>
+                                  <td>
+                                    {
+                                      data.threeMonCost ? 
+                                      <span className="btn-info">{data.threeMonCost}</span> :
+                                      <span className="text-warning link"> check with school</span>
+                                    }
+                                  </td>
+                                  <td>
+                                    {
+                                      data.sixMonCost ? 
+                                      <span className="btn-info">{data.sixMonCost}</span> :
+                                      <span className="text-warning link"> check with school</span>
+                                    }
+                                  </td>
+                                  <td>
+                                    {
+                                      data.annualCost ? 
+                                      <span className="btn-info">{data.annualCost}</span> :
+                                      <span className="text-warning link"> check with school</span>
+                                    }
+                                  </td>
+                                  <td>
+                                    {
+                                      data.lifetimeCost ? 
+                                      <span className="btn-info">{data.lifetimeCost}</span> :
+                                      <span className="text-warning link"> check with school</span>
+                                    }
+                                  </td>
+                                </tr>   
+                                )
+                              }) 
+                            }
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) 
+            }
+            <div className="col-md-12">
+              {
+                classPricing && classPricing.length > 0 && (
+                  <div className="">
+                    <div className="card-content table-grey-box ">
+                      <h4 className="card-title border-line-text line-bottom" >Class Costs</h4>
+                        <div className="card-content table-responsive clascost school-view-price">
+                          <table className="table">
+                            <thead className="">
+                              <tr>
+                                <th>Package Name</th>
+                                <th>Cost</th>
+                                <th>Class Type includes</th>
+                                <th>Number of Classes</th>
+                                <th>Expires</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {
+                                classPricing.map((data, index) => {
+                                  return (
+                                    <tr>
+                                      <td className="">{data.packageName}</td>
+                                      <td className="">
+                                        {
+                                          data.cost ? <span className="btn-warning">{data.cost}</span> :
+                                          <span className="text-warning link"> check with school</span>
+                                        }
+                                      </td>
+                                      <td className="">{this.getClassName(data.classTypeId)}</td>
+                                      <td className="">{data.noClasses}</td>
+                                      <td className="text-warning">
+                                        {
+                                          (data.start && data.finish) ? `${data.start} ${data.finish}` :
+                                          "Check with School"
+                                        }
+                                      </td>
+                                    </tr>
+                                  )
+                                })
+                              }
+                            </tbody>
+                          </table>     
+                        </div>
+                    </div>
+                  </div>
+                )
+              }
+            </div>
+          </div>
+          <div className="card">
+            <div className="col-md-12 media-heading-box">
+              <div className="content-list-heading ">
+                <h2 className="tagline  text-center">Media
+                  <figure>
+                    <img src="/images/heading-line.png"/>
+                  </figure>
+                </h2>
+              </div>
+              <div className="col-sm-6 " style={{paddingBottom: '20px'}}>
+                <div className="">
+                  <div className="card-content">
+                    <h4 className="tagline line-bottom border-line-text text-center">Images</h4>
+                    <div className="carousel slide" id="myCarousel">
+                      <div className="carousel-inner">
+                        {
+                          imageMediaList.map((imageMediaData, index) => {
+                            return(<div key={index} className={index == 0 ? "item active" : "item"}>
+                              <div className="row">
+                                {
+                                  imageMediaData.item && imageMediaData.item.map((itemData,key)=>{
+                                    return (
+                                      <div key={key} className="col-xs-12">
+                                        <a  href="#">
+                                          <div 
+                                            className="thumb targetImage" 
+                                            style={{backgroundImage: `url(${itemData.filePath})`,height: '220px', width:'100%'}} 
+                                            data-src={itemData.filePath}>
+                                          </div>
+                                        </a>
+                                      </div>  
+                                    )
+                                  })
+                                }
+                                </div>
+                              </div>
+                            )
+                          })
+                        }
+                      </div>
+                      <div className="carousel-selector-main">
+                        <a className="left carousel-control left-carousal" href="#myCarousel" data-slide="prev">
+                          <i className="glyphicon glyphicon-chevron-left"></i>
+                        </a>
+                        <a className="right carousel-control right-carousal" href="#myCarousel" data-slide="next">
+                          <i className="glyphicon glyphicon-chevron-right"></i>
+                        </a>
+                      </div>
+                    </div>  
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6 " style={{paddingBottom: '20px'}}>
+                <div className="">
+                  <div className="card-content">
+                    <h4 className="tagline line-bottom border-line-text text-center">Other Media</h4>
+                    <div className="carousel slide" id="MediaCarousel">
+                      <div className="carousel-inner">
+                        {
+                          otherMediaList.map((otherMediaData, index) => {
+                            return(<div key={index} className={index == 0 ? "item active" : "item"}>
+                              <div className="row">
+                                {
+                                  otherMediaData.item && otherMediaData.item.map((itemData,key)=>{
+                                    return (
+                                      <div key={key} className="col-xs-3">
+                                        <div style={{marginTop:'10px', marginBottom: '10px', marginLeft: '10px', cursor: 'zoom-in', height: '80px'}}>
+                                          <a target="_blank" href={itemData.filePath}>
+                                            <span className="fa fa-file-pdf-o fa-5x"></span>
+                                          </a>
+                                        </div>
+                                      </div>  
+                                    )
+                                  })
+                                }
+                                </div>
+                              </div>
+                            )
+                          })
+                        }
+                      </div> 
+                      <div className="carousel-selector-main">
+                        <a className="left carousel-control left-carousal" href="#MediaCarousel" data-slide="prev">
+                          <i className="glyphicon glyphicon-chevron-left"></i>
+                        </a>
+                        <a className="right carousel-control right-carousal" href="#MediaCarousel" data-slide="next">
+                          <i className="glyphicon glyphicon-chevron-right"></i>
+                        </a>
+                      </div>   
+                    </div>  
+                  </div>  
+                </div>  
+              </div>  
+            </div>
+          </div>  
         </div>     
 			</div>
 		</div>

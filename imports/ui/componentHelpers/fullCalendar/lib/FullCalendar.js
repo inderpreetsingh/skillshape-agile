@@ -44,7 +44,7 @@ class FullCalendar extends React.Component {
 
     this.calendar.fullCalendar('refetchEvents');
     this.calendar.fullCalendar('changeView', newOptions.defaultView);
-    this.calendar.fullCalendar('gotoDate', newOptions.defaultDate);
+    // this.calendar.fullCalendar('gotoDate', newOptions.defaultDate);
   }
 
   render() {

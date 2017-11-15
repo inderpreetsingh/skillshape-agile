@@ -23,12 +23,12 @@ export default createContainer(props => {
 
   let schoolData = School.findOne({_id: schoolId})
   let classPricing = ClassPricing.find({schoolId: schoolId}).fetch() 
-  let monthlyPricing = MonthlyPricing.find({schoolId:school._id}).fetch()
-  let schoolLocation = SLocation.find({schoolId:schoolId}).fetch()
+  let monthlyPricing = MonthlyPricing.find({schoolId: schoolId}).fetch()
+  let schoolLocation = SLocation.find({schoolId: schoolId}).fetch()
   let classType = ClassType.find({schoolId: schoolId}).fetch();
 
-  console.log("SchoolView schoolData--->>",schoolData)
-  console.log("SchoolView classType--->>",classType)
+  // console.log("SchoolView schoolData--->>",schoolData)
+  // console.log("SchoolView classType--->>",classType)
   // console.log("SchoolView classPricing--->>",classPricing)
   // console.log("SchoolView monthlyPricing--->>",monthlyPricing)
   return { ...props, 
