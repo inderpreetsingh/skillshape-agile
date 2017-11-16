@@ -1,14 +1,13 @@
 import React from 'react';
 import { checkSuperAdmin, initializeMap } from '/imports/util';
 import Events from '/imports/util/events';
+import { browserHistory, Link } from 'react-router';
 
 export default class SchoolViewBase extends React.Component {
 
   constructor(props){
     super(props);
-    this.state = {
-    	showClaimSchoolModal: false
-    }
+    this.state = {}
   }
 
   componentDidUpdate() {
@@ -43,11 +42,12 @@ export default class SchoolViewBase extends React.Component {
               return
             }
             if(schoolData.claimed == "Y") {
-            	if(currentUser) {
-            		// show modal over here
-                return
-              }
+              this.setState({claimRequestModal: true})
+            	// show modal over here
+              return
             } else {
+              this.setState({claimSchoolModal: true,})
+              return
             	// show modal over here
             }
           }
@@ -152,6 +152,92 @@ export default class SchoolViewBase extends React.Component {
         return_list.push({"item":smallarray})
       }
       return return_list;
+    }
+  }
+
+  checkClaim = (currentUser, schoolId) => {
+    if(currentUser && currentUser.profile && currentUser.profile.schoolId === schoolId)
+      return false;
+    return true;
+  }
+
+  getPublishStatus = (isPublish) => {
+    if(isPublish && isPublish === "Y")
+      return true;
+    return false;
+  }
+
+  handlePublishStatus = (schoolId, event) => {
+
+    let publish_state = event.target.checked ? "Y" : "N"
+    if(schoolId) {
+      Meteor.call("publish_school",schoolId,publish_state,(error, result) => {
+        if(error){
+          console.error("Error ->>", error);
+        }
+        if(result){
+          console.log("Successfully updation")
+        }
+      });
+    }
+  }
+
+  getClaimSchoolModalTitle = () => {
+    const { claimSchoolModal, claimRequestModal, successModal } = this.state;
+    if(claimSchoolModal) {
+      return 'Are you sure You Claim this school?';
+    } else if(claimRequestModal) {
+      return 'This school is already claimed. Do you want to continue?';
+    } else if(successModal) {
+      return "Claim Status";
+    }
+  }
+
+  modalClose = () => {
+    this.setState({
+      claimRequestModal: false, 
+      claimSchoolModal: false,
+      successModal: false
+    })
+  }
+
+  modalSubmit = () => {
+    const { claimSchoolModal,claimRequestModal, successModal } = this.state;
+    const { currentUser, schoolId, schoolData } = this.props;
+    
+    if(claimSchoolModal && currentUser && currentUser._id && schoolId) {
+      
+      Meteor.call("claimSchool", currentUser._id, schoolId, (error, result) => {
+        if(error) {
+          console.error("error", error);
+        }
+        if(result) {
+          // console.log("result", result);
+          this.setState({successModal: true, claimSchoolModal: false})
+        }
+      })
+    } else if(claimRequestModal && currentUser && currentUser._id && schoolId && schoolData) {
+      
+      const payload = {
+        userId: currentUser._id,
+        schoolId: schoolId,
+        currentUserId: schoolData.userId,
+        schoolName: schoolData.name,
+        Status:"new"
+      }
+      
+      Meteor.call("addClaimRequest", payload, (error, result) => {
+       console.log(e);
+        if(error) {
+          console.error("error", error);
+        }
+        if(result) {
+          console.log("result", result);
+          toastr.success("You have requested to manage a school that has already been claimed. We will investigate this double claim and inform you as soon as a decision has been made. If you are found to be the rightful manager of the listing, you will be able to edit the school listing.","Success");
+        }
+      });
+    } else if(successModal && schoolId) {
+      browserHistory.push(`/schoolAdmin/${schoolId}/edit`)
     }
   }
 }

@@ -1134,3 +1134,32 @@ border-top: 2px solid #ccc;}
 .sidebar {
   background-color: #348CC0 !important;
 }
+
+.card-header-title {
+  color: darkgray;
+  font-weight: 500;
+  font-size: small;
+}
+
+.card-header-sub-title {
+  color: black;
+  font-weight: 500;
+  font-size: x-small;
+}
+
+.alert-info-msg {
+  border: 2px solid #bce8f1;
+  background-color: #d9edf7;
+  height: 40px;
+  color: black;
+  padding-top: 8px;
+  text-align: center;
+  font-size: smaller;
+}
+
+.circle-icon {
+  border: 1px solid #f77f73;
+  border-radius: 50%;
+  padding: 11px;
+  color: #f77f73;
+}

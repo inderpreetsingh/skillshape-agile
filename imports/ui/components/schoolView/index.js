@@ -4,6 +4,14 @@ import SchoolViewBase from './schoolViewBase';
 import SchoolViewRender from './schoolViewRender';
 
 class SchoolView extends SchoolViewBase {
+  
+  constructor(props){
+    super(props);
+    this.state = {
+      isPublish: true,
+      // successModal: true
+    }
+  }
 
   render() {
     return SchoolViewRender.call(this, this.props, this.state);
@@ -36,6 +44,7 @@ export default createContainer(props => {
     classPricing, 
     monthlyPricing, 
     schoolLocation,
-    classType, 
+    classType,
+    schoolId, 
   };
 }, SchoolView);

@@ -30,7 +30,7 @@ export default class MyCalender extends React.Component {
 		  />
       {
         isOpen && <ClassDetailModal
-          data={eventData}
+          eventData={eventData}
           closeEventModal={this.handleEventModal}
         />
       }

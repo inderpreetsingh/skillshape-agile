@@ -4,4 +4,4 @@
  * @module modal
  **/
 
-export { ClaimSchoolModal } from '/imports/ui/modal/claimSchoolModal'; 
+export { CustomModal } from '/imports/ui/modal/customModal'; 

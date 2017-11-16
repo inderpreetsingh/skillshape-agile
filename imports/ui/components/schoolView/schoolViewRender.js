@@ -2,37 +2,51 @@ import React from 'react';
 import { Loading } from '/imports/ui/loading';
 import { checkSuperAdmin } from '/imports/util';
 import { browserHistory, Link } from 'react-router';
-import { ClaimSchoolModal } from '/imports/ui/modal';
+import { CustomModal } from '/imports/ui/modal';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 import MyCalender from '/imports/ui/components/users/myCalender';
 
 export default function() {
 
 	const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
-	let {
+	const {
 		schoolData,
 		classPricing,
 		monthlyPricing,
 		schoolLocation,
 		classType,
 		currentUser,
+    schoolId,
 	} = this.props;
 
 	const {
-		showClaimSchoolModal
+		claimSchoolModal,
+    claimRequestModal,
+    successModal,
 	} = this.state;
+
 	if(!schoolData) {
 		return <Loading/>
 	}
 
-	// console.log("SchoolView render props -->>",this.props)
-	const checkUserAccess = this.checkUserAccess(currentUser, schoolData.userId);
-	const claimBtnCSS = this.claimBtnCSS(currentUser, schoolData.claimed);
+  const checkUserAccess = this.checkUserAccess(currentUser, schoolData.userId);
+  const claimBtnCSS = this.claimBtnCSS(currentUser, schoolData.claimed);
   const imageMediaList = this.getImageMediaList(schoolData.mediaList, "Image");
-	const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
+  const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
+  let isPublish = this.getPublishStatus(schoolData.is_publish)
+	console.log("State  -->>",this.state)
+
   return (
 		<div className="content">
-			{ false && <ClaimSchoolModal/>}
+			{ (claimSchoolModal || claimRequestModal || successModal) && <CustomModal
+          title={this.getClaimSchoolModalTitle()}
+          message={successModal && `You are now owner of ${schoolData.name} Would you like to edit ?`}
+          onClose={this.modalClose}
+          onSubmit={this.modalSubmit}
+          closeBtnLabel={successModal ? "Continue" : "No"}
+          submitBtnLabel={"Yes"}
+        />
+      }
       <div className="container-fluid">
       	<div className="row">
           <div className="card">
@@ -116,11 +130,13 @@ export default function() {
 	                          	</span>
 	                            <input 
 	                            	type="checkbox" 
-	                            	data-school_id="{{_id}}" 
+	                            	data-school_id={schoolId} 
 	                            	className="schoolStatus toggelSchoolStatus" 
-	                            	style={{position: 'absolute'}} 
-	                            	
+	                            	style={{position: 'absolute'}}
+                                onChange={this.handlePublishStatus.bind(this, schoolId)}
+                                checked={isPublish} 
 	                            />
+                              <span className="toggle"></span>
 	                          </label>
 	                        </div>
                       	)
@@ -134,8 +150,8 @@ export default function() {
                           	</Link> 
                       		)
                       	}
-                				{ true && (
-                						<a onClick={this.claimASchool.bind(this,currentUser, schoolData)} type="button" style={{marginRight: '10px'}} className={`btn ${claimBtnCSS} pull-right btn_claim`} id="claimSchool1">
+                				{ this.checkClaim(currentUser, schoolId) && (
+                						<a onClick={this.claimASchool.bind(this,currentUser,schoolData)} type="button" style={{marginRight: '10px'}} className={`btn ${claimBtnCSS} pull-right btn_claim`} id="claimSchool1">
                 							<i className="fa fa-gavel"></i>  Claim
                 						</a>
                 					)
