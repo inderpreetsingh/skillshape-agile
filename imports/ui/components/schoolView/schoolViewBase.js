@@ -20,11 +20,9 @@ export default class SchoolViewBase extends React.Component {
     return "";
   }
 
-  checkUserAccess = (currentUser,ownerUserId) => {
-  	if(checkSuperAdmin(currentUser) || (currentUser && currentUser._id == ownerUserId))
-  		return true;
-  	return false;
-  }
+  // checkUserAccess = (currentUser,schoolId) => {
+  //   return checkMyAccess({user: currentUser,schoolId});
+  // }
 
   claimASchool = (currentUser, schoolData) => {
   	if(currentUser) {
@@ -237,7 +235,20 @@ export default class SchoolViewBase extends React.Component {
         }
       });
     } else if(successModal && schoolId) {
+      this.setState({successModal: false})
       browserHistory.push(`/schoolAdmin/${schoolId}/edit`)
     }
+  }
+
+  checkOwnerAccess = (currentUser, userId) => {
+    if(currentUser)
+      return currentUser._id == userId
+    return false;
+  }
+
+  checkForJoin = (currentUser, classId) => {
+    if(currentUser && currentUser.profile && currentUser.profile.classIds)
+      return currentUser.profile.classIds.includes(classId)
+    return false;
   }
 }

@@ -172,6 +172,53 @@ export default function() {
             </div>
           </div>
         </div>
+
+        <div className="card">
+          <div className="card-header" style={{height: '70px', backgroundColor: '#337ab7'}}>
+            <p className="change-pass-header-txt">Change Your Password</p>
+          </div>
+          <div className="row" style={{padding: '35px'}}>
+            <div className="form-group row">
+              <label for="example-text-input" className="col-md-2 col-form-label" >Current Password</label>
+              <div className="col-md-10">
+                <input 
+                  className="form-control" 
+                  type="text"  
+                  ref="currentPassword" 
+                />
+              </div>
+            </div>
+            <div className="form-group row">
+              <label for="example-text-input" className="col-md-2 col-form-label" >New Password</label>
+              <div className="col-md-10">
+                <input 
+                  className="form-control" 
+                  type="text"  
+                  ref="newPassword" 
+                />
+              </div>
+            </div>
+            <div className="form-group row">
+              <label for="example-text-input" className="col-md-2 col-form-label" >Confirm Password</label>
+              <div className="col-md-10">
+                <input 
+                  className="form-control" 
+                  type="text"  
+                  ref="confirmPassword" 
+                />
+              </div>
+            </div>
+            <div className="row form-group right">
+              <button
+                onClick={this.changePassword} 
+                type='button' 
+                className='btn btn-md btn-rose' 
+                id="btn_update_user"
+              > Change Password
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

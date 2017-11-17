@@ -1,4 +1,5 @@
 import React from 'react';
+import "/imports/ui/css/customModal.css"; 
 
 export class CustomModal extends React.Component{
 
@@ -17,6 +18,7 @@ export class CustomModal extends React.Component{
   render() {
     console.log("CustomModal render",this.props)
     const {
+      className,
       title,
       message,
       closeBtnLabel,
@@ -26,21 +28,21 @@ export class CustomModal extends React.Component{
     return (
       <div className="modal fade " id="CustomModal" role="dialog">
         <div className="modal-dialog" style={{maxWidth: '550px'}}>
-          <div className="modal-content">
+          <div className={`modal-content ${className}`}>
             
-            <div className="modal-header" style={{backgroundColor:'#428bca'}}>
+            <div className={`modal-header ${className}-header`} >
               <button type="button" className="close" onClick={this.props.onClose} data-dismiss="modal">&times;</button>
               <h4 className="modal-title" style={{textAlign: 'center', color: 'white'}}>{title}</h4>
             </div>
             
-            <div className="modal-body">
+            <div className={`modal-body ${className}-body`}>
               <p style={{textAlign: 'center'}}>{message}</p>
             </div>
             
-            <div className="modal-footer">
-              <div className="bootstrap-dialog-footer-buttons" style={{textAlign: 'center'}}>
-                <button className="btn btn-default" onClick={this.props.onClose} >{closeBtnLabel}</button>
-                <button className="btn btn-success btn_wi" onClick={this.props.onSubmit}>{submitBtnLabel}</button>
+            <div className={`modal-footer ${className}-footer`}>
+              <div className={`bootstrap-dialog-footer-buttons ${className}-footer-buttons`} style={{textAlign: 'center'}}>
+                <button className={`btn btn-default ${className}-close-btn`} onClick={this.props.onClose} >{closeBtnLabel}</button>
+                <button className={`btn btn-success btn_wi ${className}-submit-btn`} onClick={this.props.onSubmit}>{submitBtnLabel}</button>
               </div>
             </div>
           </div>

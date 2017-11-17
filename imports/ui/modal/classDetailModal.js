@@ -11,10 +11,19 @@ class ClassDetailModal extends React.Component{
   }
 
   componentDidMount() {
-    $('#classDetailModal').modal('show')
+    this.handleModal();		
+  }
+
+  componentDidUpdate() {
+    this.handleModal();
+  }
+
+  handleModal = () => {
+    $('#classDetailModal').appendTo("body").modal('show')
     $('#classDetailModal').on('hidden.bs.modal', () => {
-      this.props.closeEventModal(false, null);
-		})		
+      $('#classDetailModal').modal('hide')
+      // this.props.closeEventModal(false, null);
+    })    
   }
 
   getImageSrc = (skillclass, classType, school) => {

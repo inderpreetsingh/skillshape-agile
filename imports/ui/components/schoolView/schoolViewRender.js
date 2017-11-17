@@ -29,7 +29,7 @@ export default function() {
 		return <Loading/>
 	}
 
-  const checkUserAccess = this.checkUserAccess(currentUser, schoolData.userId);
+  const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
   const claimBtnCSS = this.claimBtnCSS(currentUser, schoolData.claimed);
   const imageMediaList = this.getImageMediaList(schoolData.mediaList, "Image");
   const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
@@ -39,6 +39,7 @@ export default function() {
   return (
 		<div className="content">
 			{ (claimSchoolModal || claimRequestModal || successModal) && <CustomModal
+          className={successModal ? "success-modal" : "info-modal" }
           title={this.getClaimSchoolModalTitle()}
           message={successModal && `You are now owner of ${schoolData.name} Would you like to edit ?`}
           onClose={this.modalClose}
@@ -201,7 +202,7 @@ export default function() {
              							<img src="/images/heading-line.png"/>
              						</figure>
             				 	</h2>
-            				 	{schoolData.descHtml}
+            				 	{schoolData.aboutHtml && ReactHtmlParser(schoolData.aboutHtml)}
             				</div>
             			</div>	 	
         				</div>     
@@ -290,20 +291,36 @@ export default function() {
 	                          </div>
 	                          <br/>
 	                          <p className="text-center">
-	                          	{ReactHtmlParser(this.viewSchedule(skillClassData))}
+	                          	{skillClassData && ReactHtmlParser(this.viewSchedule(skillClassData))}
 	                          </p>
 	                        </div>
 	                        <div className="card-footer">
 												    <div className="col-sm-12 col-xs-12">
-												      <a href="#" className="btn btn-danger btn_join_className btn_join_check" data-className="KCcabqEX4Kb5c58cW" data-className-type="YXdAyLNiR45yqiDXs">
-												      	Add to my calendar! 
-												      	<div className="ripple-container"></div>
-												      </a>
+                              {
+                                this.checkOwnerAccess(currentUser, schoolData.userId)  ? (
+                                  <a href="#" class="btn btn-success" data-class={skillClassData._id} data-class-type={skillClassData.classTypeId}>
+                                    <i class="material-icons">check</i>  Managing
+                                    <div class="ripple-container"></div>
+                                  </a>
+                                ) : (
+                                  this.checkForJoin(currentUser, skillClassData._id) ? (
+                                    <a href="#" class="btn btn-success" data-class={skillClassData._id} data-class-type="{{classTypeId}}">
+                                      <i class="material-icons">check</i>  Joined
+                                      <div class="ripple-container"></div>
+                                    </a>
+                                  ) : (
+                                    <a href="#" className="btn btn-danger btn_join_className btn_join_check" data-className="KCcabqEX4Kb5c58cW" data-className-type="YXdAyLNiR45yqiDXs">
+                                      Add to my calendar! 
+                                      <div className="ripple-container"></div>
+                                    </a>
+                                  )
+                                )
+                              }
 												    </div>
 												    <div className="clearfix"></div>
 												    <div className="col-sm-12 col-xs-12" style={{padding: '5px'}}>
 											        <div className="col-sm-9">
-											            <p className="text-center">Toggle Weekend view </p>
+											            <p className="text-center">Toggle {skillClassData.className} view </p>
 											        </div>
 											        <div className="col-sm-3 col-xs-3">
 										            <div className="togglebutton">
@@ -503,10 +520,10 @@ export default function() {
                       </div>
                       <div className="carousel-selector-main">
                         <a className="left carousel-control left-carousal" href="#myCarousel" data-slide="prev">
-                          <i className="glyphicon glyphicon-chevron-left"></i>
+                          <i className="fa fa-chevron-left fa-em"></i>
                         </a>
                         <a className="right carousel-control right-carousal" href="#myCarousel" data-slide="next">
-                          <i className="glyphicon glyphicon-chevron-right"></i>
+                          <i className="fa fa-chevron-right fa-em"></i>
                         </a>
                       </div>
                     </div>  
@@ -544,10 +561,10 @@ export default function() {
                       </div> 
                       <div className="carousel-selector-main">
                         <a className="left carousel-control left-carousal" href="#MediaCarousel" data-slide="prev">
-                          <i className="glyphicon glyphicon-chevron-left"></i>
+                          <i className="fa fa-chevron-left fa-em"></i>
                         </a>
                         <a className="right carousel-control right-carousal" href="#MediaCarousel" data-slide="next">
-                          <i className="glyphicon glyphicon-chevron-right"></i>
+                          <i className="fa fa-chevron-right fa-em"></i>
                         </a>
                       </div>   
                     </div>  

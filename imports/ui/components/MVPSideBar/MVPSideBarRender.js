@@ -43,33 +43,36 @@ export default function() {
               <p>My Calendar</p>
             </Link>
           </li>
-          {
-            this.checkSchoolAccess() && (
-              <li>
-                <a data-toggle="collapse" href="#Curriculum">
-                  <i className="material-icons">school</i>
-                  <p>Manage my school
-                    <b className="caret"></b>
-                  </p>
-                </a>
-                <div className="collapse" id="Curriculum">
-                  <ul className="nav">
-                    {
-                      mySchool.map((school, index) => {
-                        return (
-                          <li key={index}>
-                            <Link to={`/schools/${school.slug}`} className="close-nav">
-                              {school.name}
-                            </Link>
-                          </li>
-                        )
-                      })
-                    } 
-                  </ul>
-                </div>
-            </li>
-            )
-          }
+          <li>
+            <a data-toggle="collapse" href="#Curriculum">
+              <i className="material-icons">school</i>
+              <p>Manage my school
+                <b className="caret"></b>
+              </p>
+            </a>
+            <div className="collapse" id="Curriculum">
+              <ul className="nav">
+                {
+                  mySchool.length > 0 ? mySchool.map((school, index) => {
+                    return (
+                      <li key={index}>
+                        <Link to={`/schools/${school.slug}`} className="close-nav">
+                          {school.name}
+                        </Link>
+                      </li>
+                    )
+                  }) : (
+                    <li>
+                      <Link to={`/schoolAdmin`} className="close-nav">
+                        START NEW SCHOOL
+                      </Link>
+                    </li>
+                  )
+                } 
+              </ul>
+            </div>
+          </li>
+            
           {
             connectedSchool.length > 0 &&
             <li>

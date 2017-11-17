@@ -25,6 +25,7 @@ export default Routes = () => (
         <Route path="/claimSchool" component={ClaimSchool} />
         <Route path="/profile/:id" component={MyProfile} />
         <Route path="/schoolAdmin/:schoolId" component={SchoolView} />
+        <Route path="/schools/:slug" component={SchoolView} />
       </Route>
     </Router>
 );

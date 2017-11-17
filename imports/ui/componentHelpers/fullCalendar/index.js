@@ -104,16 +104,19 @@ export default createContainer(props => {
   }
  
   let skillClass = SkillClass.find({}).fetch();
-  let myClassIds = SkillClass.find({schoolId: schoolId}).fetch().map(function(a) {
+  let myClassIds = SkillClass.find({schoolId: schoolId}).fetch().map((a) => {
    return a._id
   })
 
-  if(schoolId && startDate) {
-  	Meteor.subscribe("ClassSchedule",schoolId,startDate)
+  if(startDate) {
+    const { schoolId, slug } = props.params;
+  	Meteor.subscribe("ClassSchedule", (schoolId || slug), startDate)
     classSchedule = ClassSchedule.find().fetch()
   }
 
-  // console.log("skillClass createContainer -->>",props)
+  // console.log("FullCalendar createContainer classSchedule-->>",classSchedule)
+  // console.log("FullCalendar createContainer skillClass-->>",skillClass)
+  // console.log("FullCalendar createContainer myClassIds-->>",myClassIds)
   return { 
     ...props, 
     classSchedule,

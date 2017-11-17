@@ -9,7 +9,6 @@ class SchoolView extends SchoolViewBase {
     super(props);
     this.state = {
       isPublish: true,
-      // successModal: true
     }
   }
 
@@ -19,21 +18,36 @@ class SchoolView extends SchoolViewBase {
 }
 
 export default createContainer(props => {
-  const { schoolId } = props.params
+  let { schoolId, slug } = props.params
+  let schoolData;
+  let classPricing;
+  let monthlyPricing;
+  let schoolLocation;
+  let classType;
 
-  Meteor.subscribe("UserSchool",schoolId);
-  Meteor.subscribe("SkillClassbySchool",schoolId);
-  Meteor.subscribe("ClaimOrder","");
-  Meteor.subscribe("SchoolLocation",schoolId);
-  Meteor.subscribe("classTypeBySchool",schoolId);
-  Meteor.subscribe("ClassPricing",schoolId)
-  Meteor.subscribe("MonthlyPricing",schoolId)
+  if(slug) {
+    Meteor.subscribe("UserSchoolbySlug", slug);
+    Meteor.subscribe("SkillClassbySchoolBySlug", slug)
 
-  let schoolData = School.findOne({_id: schoolId})
-  let classPricing = ClassPricing.find({schoolId: schoolId}).fetch() 
-  let monthlyPricing = MonthlyPricing.find({schoolId: schoolId}).fetch()
-  let schoolLocation = SLocation.find({schoolId: schoolId}).fetch()
-  let classType = ClassType.find({schoolId: schoolId}).fetch();
+    schoolData = School.findOne({slug: slug})
+    schoolId = schoolData && schoolData._id
+  }
+
+  if(schoolId) {
+    Meteor.subscribe("UserSchool", schoolId);
+    Meteor.subscribe("SkillClassbySchool", schoolId);
+    Meteor.subscribe("ClaimOrder", "");
+    Meteor.subscribe("SchoolLocation", schoolId);
+    Meteor.subscribe("classTypeBySchool", schoolId);
+    Meteor.subscribe("ClassPricing", schoolId)
+    Meteor.subscribe("MonthlyPricing", schoolId)
+
+    schoolData = School.findOne({_id: schoolId})
+    classPricing = ClassPricing.find({schoolId: schoolId}).fetch() 
+    monthlyPricing = MonthlyPricing.find({schoolId: schoolId}).fetch()
+    schoolLocation = SLocation.find({schoolId: schoolId}).fetch()
+    classType = ClassType.find({schoolId: schoolId}).fetch();
+  } 
 
   // console.log("SchoolView schoolData--->>",schoolData)
   // console.log("SchoolView classType--->>",classType)

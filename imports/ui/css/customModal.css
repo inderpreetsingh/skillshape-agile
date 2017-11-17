@@ -1,0 +1,17 @@
+.success-modal .success-modal-header {
+  background-color: #5cb85c;
+  padding: 15px;
+}
+
+.success-modal .success-modal-close-btn {
+  background-color: red;
+}
+
+.success-modal .success-modal-submit-btn {
+  background-color: #54b07d;
+}
+
+.info-modal .info-modal-header {
+  background-color: #428bca;
+  padding: 15px;
+}

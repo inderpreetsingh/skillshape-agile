@@ -83,4 +83,31 @@ export default class MyProfileBase extends React.Component {
     });
   }
 
+  changePassword = () => {
+    let currentPassword = this.refs.currentPassword.value;
+    let newPassword = this.refs.newPassword.value;
+    let confirmPassword = this.refs.confirmPassword.value;
+    if(!currentPassword) {
+      toastr.error("Please fill the current password field","Error");
+      return
+    }
+
+    if(newPassword && confirmPassword && (newPassword != confirmPassword)) {
+      toastr.error("Password Not Match","Error");
+      return
+    }
+
+    if(newPassword && confirmPassword && currentPassword) {
+      Accounts.changePassword(currentPassword, newPassword, (err, result) => {
+        if (err) {
+          toastr.error('We are sorry but something went wrong.');
+        } else {
+          this.refs.currentPassword.value = null
+          this.refs.newPassword.value = null
+          this.refs.confirmPassword.value = null
+          toastr.success("Your password has been changed.","Success");
+        }
+      });
+    }
+  }
 }
