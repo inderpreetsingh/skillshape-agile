@@ -87,8 +87,8 @@ export default class MyProfileBase extends React.Component {
     let currentPassword = this.refs.currentPassword.value;
     let newPassword = this.refs.newPassword.value;
     let confirmPassword = this.refs.confirmPassword.value;
-    if(!currentPassword) {
-      toastr.error("Please fill the current password field","Error");
+    if(!currentPassword || !newPassword || !confirmPassword) {
+      toastr.error("All fields are mandatory","Error");
       return
     }
 

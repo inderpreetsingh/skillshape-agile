@@ -174,7 +174,7 @@ export default function() {
         </div>
 
         <div className="card">
-          <div className="card-header" style={{height: '70px', backgroundColor: '#337ab7'}}>
+          <div className="card-header" style={{height: '70px', backgroundColor: '#348CC0'}}>
             <p className="change-pass-header-txt">Change Your Password</p>
           </div>
           <div className="row" style={{padding: '35px'}}>
