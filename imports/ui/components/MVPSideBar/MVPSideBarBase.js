@@ -51,7 +51,7 @@ export default class MVPSideBarBase extends React.Component {
           console.log("error", error);
         }
         if(result){
-          console.log(result);
+          // console.log(result);
           this.setState({mySchool: result})
           // Session.set("MySchool",result) //no use
         }

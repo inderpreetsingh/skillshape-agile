@@ -54,7 +54,7 @@ class MainLayout extends React.Component {
   }
 
   render( ) {
-    const { currentUser } = this.props;
+    const { currentUser, isUserSubsReady } = this.props;
     let className = {
       mainClass: "wrapper perfectScroll main_wrapper",
       contentClass: "content",
@@ -76,7 +76,7 @@ class MainLayout extends React.Component {
                 this.checkEmailVerification(currentUser) ? (
                   <div className="row">
                     <div className="col-md-12">
-                      {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser })}
+                      {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
                     </div>
                   </div>
                 ) : (
@@ -125,5 +125,7 @@ class MainLayout extends React.Component {
 
 export default createContainer(props => {
   const currentUser = Meteor.user();
-  return { ...props, currentUser };
+  let userSubs = Meteor.subscribe("myInfo");
+  let isUserSubsReady = userSubs.ready();
+  return { ...props, currentUser, isUserSubsReady };
 }, MainLayout);

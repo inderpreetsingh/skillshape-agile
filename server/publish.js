@@ -16,3 +16,7 @@ Meteor.publish("priceMonth", function() {
 Meteor.publish("priceClass", function() {
     return Priceclass.find({});
 });
+
+Meteor.publish("myInfo", function() {
+  return Meteor.users.find({_id: this.userId});
+});

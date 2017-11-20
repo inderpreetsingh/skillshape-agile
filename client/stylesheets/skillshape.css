@@ -1174,3 +1174,7 @@ border-top: 2px solid #ccc;}
   padding: 8px;
   font-size: x-large;
 }
+
+.cpointer {
+  cursor: pointer;
+}
