@@ -4,15 +4,20 @@ import locationSettings from './locationSettings'
 
 export default function () {
 
-	let { locationData, showAddModal, moveTab } = this.props
+	let { 
+		locationData, 
+		showFormBuilderModal, 
+		moveTab, 
+	} = this.props
 
 	return (
 		<div className="tab-pane active" id="tab_default_2">
 			<div className="col-md-12" style={{paddingTop: '20px'}}>
 				<PanelWithTable
+				 className="location-details"
 				 settings={locationSettings}
 				 mainTableData={locationData}
-				 showAddModal={showAddModal}
+				 showFormBuilderModal={showFormBuilderModal}
 				/>
 			</div>
 			<div className="wizard-footer col-md-12">

@@ -13,20 +13,29 @@ class SchoolEditView extends React.Component {
   }
 
   checkSchoolAccess = (currentUser, schoolId) => {
-    if(!currentUser) 
+    if(!currentUser || !schoolId) 
       browserHistory.push("/")
     else if(checkMyAccess({user: currentUser,schoolId})) 
       return
-    else if(currentUser.profile && currentUser.profile.schoolId && (currentUser.profile.schoolId != schoolId)) 
+    else if(currentUser.profile && currentUser.profile.schoolId && (currentUser.profile.schoolId != schoolId) || !currentUser.profile || !currentUser.profile.schoolId) 
       browserHistory.push("/")
   }
 
   moveTab = (tabId) => this.refs[tabId].click();
 
-  showAddModal = (formFields) => {
-    console.log("<<<< showAddModal >>>>>",formFields)
+  showFormBuilderModal = (type, formFields, formFieldsValues, headerTitle, callApi) => {
+    console.log("<<<< showEditModal >>>>>",formFields, formFieldsValues, headerTitle)
+    this.setState({ 
+      formBuilderModal: {
+        formFields: formFields,
+        formFieldsValues: formFieldsValues,
+        modalType: type,
+        headerTitle: headerTitle,
+        callApi: callApi
+      }
+    })
   }
-
+  
   render() {
     return SchoolEditRender.call(this, this.props, this.state)
   }

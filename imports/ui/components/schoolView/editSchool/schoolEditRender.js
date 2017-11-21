@@ -3,11 +3,13 @@ import { Loading } from '/imports/ui/loading';
 import { browserHistory, Link } from 'react-router';
 import SchoolDetails from './schoolDetails';
 import LocationDetails from './locationDetails';
+import { FormBuilderModal } from '/imports/ui/modal';
 
 export default function (props) {
 
   const {
     selecetdView,
+    formBuilderModal,
   } = this.state;
 
   let {
@@ -18,13 +20,19 @@ export default function (props) {
     locationData,
   } = this.props;
 
-  console.log("SchoolEditDetails render currentUser -->>", this.state)
+  // console.log("SchoolEditDetails render formBuilderModal -->>", this.refs)
   if(isUserSubsReady && schoolData) {
 
     this.checkSchoolAccess(currentUser, schoolId)
 
   	return (
   		<div>
+        {
+          formBuilderModal && <FormBuilderModal
+            {...formBuilderModal}
+            onSubmit={this.refs[`${selecetdView}_tab`] && this.refs[`${selecetdView}_tab`].onSubmit}
+          />
+        }
   			<div className="wizard-navigation">
           <ul className="nav nav-pills nav-navigation">
             <li style={{marginLeft: 0}} className="active col-sm-2 col-xs-12">
@@ -106,8 +114,9 @@ export default function (props) {
           {
             (selecetdView === "location_details") && <LocationDetails
               locationData={locationData}
-              showAddModal={this.showAddModal}
+              showFormBuilderModal={this.showFormBuilderModal}
               moveTab={this.moveTab}
+              ref="location_details_tab"
             />
           }
         </div>
