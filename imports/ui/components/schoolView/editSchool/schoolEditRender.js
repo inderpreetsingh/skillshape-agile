@@ -30,7 +30,7 @@ export default function (props) {
         {
           formBuilderModal && <FormBuilderModal
             {...formBuilderModal}
-            onSubmit={this.refs[`${selecetdView}_tab`] && this.refs[`${selecetdView}_tab`].onSubmit}
+            {...this.props}
           />
         }
   			<div className="wizard-navigation">
@@ -114,6 +114,7 @@ export default function (props) {
           {
             (selecetdView === "location_details") && <LocationDetails
               locationData={locationData}
+              schoolId={schoolId}
               showFormBuilderModal={this.showFormBuilderModal}
               moveTab={this.moveTab}
               ref="location_details_tab"

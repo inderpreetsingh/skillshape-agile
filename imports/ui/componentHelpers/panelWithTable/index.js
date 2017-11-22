@@ -35,7 +35,7 @@ export default function (props) {
 
   					 	{
   					 		settings.mainTable.actions.edit && (
-  					 			<button type="button" onClick={()=>{showFormBuilderModal("Edit", settings.mainTable.tableFields, dataItem, `Edit ${settings.mainTable.title}`, settings.mainTable.submit.edit)}} rel="tooltip" className="btn btn-warning" data-id={dataItem._id} title="" id="editLocation">
+  					 			<button type="button" onClick={()=>{showFormBuilderModal("Edit", settings.mainTable.actions.edit.formFields, dataItem, settings.mainTable.actions.edit.title, settings.mainTable.actions.edit.onSubmit)}} rel="tooltip" className="btn btn-warning" data-id={dataItem._id} title="" id="editLocation">
 							      <i className="material-icons">edit</i>
 							    </button>
   					 		)
@@ -62,11 +62,11 @@ export default function (props) {
 		        	<div className="card card-plain" style={{background: 'whitesmoke'}}>
 		        		<div className="row box-row">
                   <div className="col-sm-8 hidden-xs">
-                    <h4 className="card-title card-list-title">Rooms</h4>
+                    <h4 className="card-title card-list-title">{settings.childPanelHeader.title}</h4>
                   </div>
                   <div className="col-sm-4 hidden-xs">
-                    <button onClick={()=>{showFormBuilderModal("Add", settings.childTable.tableFields, null, settings.childTable.title, settings.childTable.submit.add)}} type="button" rel="tooltip" className="btn btn-success btn-sm" data-original-title="" title="" id="addRoomsModel" data-id={dataItem._id}>
-                      <i className="material-icons">add</i> Room
+                    <button onClick={()=>{showFormBuilderModal("Add", settings.childPanelHeader.actions.formFields, null, settings.childPanelHeader.actions.buttonTitle, settings.childPanelHeader.actions.onSubmit)}} type="button" rel="tooltip" className="btn btn-success btn-sm" data-original-title="" title="" id="addRoomsModel" data-id={dataItem._id}>
+                      <i className="material-icons">{settings.childPanelHeader.leftIcon}</i> Room
                     </button>
                   </div>
                   <div className="col-xs-12 hidden-lg hidden-md hidden-sm room-content-box">
@@ -105,7 +105,7 @@ export default function (props) {
 													    			<td className="td-actions ">
 													    				{
 													    					settings.childTable.actions.edit && (
-													    						<button type="button" onClick={()=>{showFormBuilderModal("Edit", settings.childTable.tableFields, roomData, `Edit ${settings.childTable.title}`, settings.childTable.submit.edit)}} rel="tooltip" className="btn btn-warning editRoomLocat" data-original-title="" title="" id="editRoomLocat" data-id={roomData._id} data-location={dataItem._id} data-name={roomData.name} data-capicity={roomData.capicity}>
+													    						<button type="button" onClick={()=>{showFormBuilderModal("Edit", settings.childTable.actions.edit.formFields, roomData, settings.childTable.actions.edit.title, settings.childTable.actions.edit.onSubmit)}} rel="tooltip" className="btn btn-warning editRoomLocat" data-original-title="" title="" id="editRoomLocat" data-id={roomData._id} data-location={dataItem._id} data-name={roomData.name} data-capicity={roomData.capicity}>
                                             <i className="material-icons">edit</i>
                                         	</button>
 													    					)
@@ -153,10 +153,10 @@ export default function (props) {
 		            </a>
 		          </li>
 		          {
-		          	settings.mainPanelHeader.rightButtonTitle && (
+		          	settings.mainPanelHeader.actions && settings.mainPanelHeader.actions.buttonTitle && (
 		          		<li className="filter-archive filter-evaluation active col-md-3 col-sm-3 col-xs-12">
-									  <a onClick={()=>{showFormBuilderModal("Add", settings.mainTable.tableFields, null, settings.mainPanelHeader.title, settings.mainTable.submit.add)}} id="add_location" data-toggle="tab" className="cpointer" aria-expanded="false">
-									  <i className="fa fa-plus" aria-hidden="true"></i>{settings.mainPanelHeader.rightButtonTitle}
+									  <a onClick={()=>{showFormBuilderModal("Add", settings.mainPanelHeader.actions.formFields, null, settings.mainPanelHeader.actions.buttonTitle, settings.mainPanelHeader.actions.onSubmit)}} id="add_location" data-toggle="tab" className="cpointer" aria-expanded="false">
+									  <i className="fa fa-plus" aria-hidden="true"></i>{settings.mainPanelHeader.actions.buttonTitle}
 									  <div className="ripple-container"></div>
 									  </a>
 									</li>

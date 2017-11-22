@@ -1,4 +1,7 @@
 import React from 'react';
+import methods from './formBuilderMethods';
+
+const formId = "form-builder";
 
 export class FormBuilderModal extends React.Component {
 
@@ -13,7 +16,7 @@ export class FormBuilderModal extends React.Component {
   }
 
   componentDidMount() {
-    this.handleModal();   
+    this.handleModalView();   
   }
 
   componentWillReceiveProps(newProps) {
@@ -23,10 +26,10 @@ export class FormBuilderModal extends React.Component {
     else 
       this.state = {};
     this.setState()
-    this.handleModal();
+    this.handleModalView();
   }
 
-  handleModal = () => {
+  handleModalView = () => {
     $('#FormBuilderModal').appendTo("body").modal('show')
     $('#FormBuilderModal').on('hidden.bs.modal', () => {
       $('#FormBuilderModal').modal('hide')
@@ -37,19 +40,50 @@ export class FormBuilderModal extends React.Component {
     const { callApi } = this.props
     let btnArray = [];
     if(type === "Edit") {
-      btnArray.push(<button onClick={() => {this.props.onSubmit(this.state, callApi)}} key={`${type}-save`} type="button" className="btn btn-default"  data-action="edit">
+      btnArray.push(<button 
+        key={`${type}-save`} 
+        form={formId}
+        type="submit"  
+        className="btn btn-default"  
+        data-action="edit"
+      >
         Save
       </button>)
-      btnArray.push(<button key={`${type}-cancel`} type="button" className="btn btn-default" data-dismiss="modal">
+      btnArray.push(<button 
+        key={`${type}-cancel`} 
+        type="button" 
+        className="btn btn-default" 
+        data-dismiss="modal"
+      >
         Cancel 
       </button>)
     } else if(type == "Add") {
-      btnArray.push(<button onClick={() => {this.props.onSubmit(this.state, callApi)}} key={type} type="button" className="btn btn-default">
+      btnArray.push(<button  
+        key={type}
+        form={formId} 
+        type="submit" 
+        className="btn btn-default"
+      >
         ADD
       </button>)
     }
 
     return btnArray
+  }
+
+  onSubmit = (event) => {
+    event.preventDefault()
+    const { callApi } = this.props;
+    console.log("FormBuilderModal onSubmit payload",this.state)
+    console.log("FormBuilderModal onSubmit callApi",callApi)
+
+    if(!callApi && !this.state && !Meteor.userId()) {
+      toastr.error("Something went wrong.","Error");
+      return
+    } else {
+      methods[callApi]({state:this.state, props:this.props, close: this.handleModalView});
+      
+    }
   }
 
   render() {
@@ -61,6 +95,7 @@ export class FormBuilderModal extends React.Component {
       modalType,
       formFields,
       formFieldsValues,
+      callApi,
     } = this.props
 
     return (
@@ -74,18 +109,19 @@ export class FormBuilderModal extends React.Component {
             </div>
             
             <div className="modal-body">
-              <form className="formmyModal">
+              <form id={formId} className="formmyModal" onSubmit={this.onSubmit}>
                 {
                   formFields.map((field, index) => {
                     let fieldName = field["key"];
-                    // console.log("fieldName -->>",fieldName)
+                    console.log("field -->>",field)
                     return (
                       <div key={index} className="form-group">
                         <label>
                           {field.label} {field.required && "*"}
                         </label>
                         <input 
-                          type={field.type} 
+                          type={field.type}
+                          required={field.required} 
                           className="form-control form-mandatory " 
                           onChange={(e) => this.setState({ [fieldName]: e.target.value})}
                           value={this.state && this.state.hasOwnProperty(fieldName) ? this.state[field["key"]] : ""}
