@@ -3,6 +3,7 @@ import { Loading } from '/imports/ui/loading';
 import { browserHistory, Link } from 'react-router';
 import SchoolDetails from './schoolDetails';
 import LocationDetails from './locationDetails';
+import ClassTypeDetails from './classTypeDetails';
 import { FormBuilderModal } from '/imports/ui/modal';
 
 export default function (props) {
@@ -18,21 +19,20 @@ export default function (props) {
     currentUser,
     isUserSubsReady,
     locationData,
+    classTypeData,
   } = this.props;
 
-  // console.log("SchoolEditDetails render formBuilderModal -->>", this.refs)
   if(isUserSubsReady && schoolData) {
 
     this.checkSchoolAccess(currentUser, schoolId)
 
   	return (
   		<div>
-        {
-          formBuilderModal && <FormBuilderModal
+          <FormBuilderModal
             {...formBuilderModal}
             {...this.props}
+            ref={ref => this.formBuilderModal = ref}
           />
-        }
   			<div className="wizard-navigation">
           <ul className="nav nav-pills nav-navigation">
             <li style={{marginLeft: 0}} className="active col-sm-2 col-xs-12">
@@ -65,7 +65,7 @@ export default function (props) {
                 aria-expanded="true" 
                 className="remove-radius validate"
               >
-                <b>className Type Details</b>
+                <b>class Type Details</b>
               </a>
             </li>
             <li style={{marginLeft: 0}} className="col-sm-2 col-xs-12">
@@ -118,6 +118,14 @@ export default function (props) {
               showFormBuilderModal={this.showFormBuilderModal}
               moveTab={this.moveTab}
               ref="location_details_tab"
+            />
+          }
+          {
+            (selecetdView === "class_type_details") && <ClassTypeDetails
+              classTypeData={classTypeData}
+              schoolId={schoolId}
+              showFormBuilderModal={this.showFormBuilderModal}
+              moveTab={this.moveTab}
             />
           }
         </div>

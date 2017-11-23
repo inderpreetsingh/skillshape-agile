@@ -23,16 +23,18 @@ class SchoolEditView extends React.Component {
 
   moveTab = (tabId) => this.refs[tabId].click();
 
-  showFormBuilderModal = (type, formFields, formFieldsValues, headerTitle, callApi) => {
-    console.log("<<<< showEditModal >>>>>",formFields, formFieldsValues, headerTitle)
+  showFormBuilderModal = ({type, tableData, formFieldsValues, parentData}) => {
+    console.log("<<<< showEditModal >>>>>",parentData)
     this.setState({ 
       formBuilderModal: {
-        formFields: formFields,
-        formFieldsValues: formFieldsValues,
         modalType: type,
-        headerTitle: headerTitle,
-        callApi: callApi
+        tableData: tableData,
+        formFieldsValues: formFieldsValues,
+        parentData: parentData,
       }
+    }, ()=>{
+      console.log("this.formBuilderModal show -->>",this.formBuilderModal);
+      this.formBuilderModal.show();
     })
   }
   
@@ -53,14 +55,16 @@ export default createContainer(props => {
   Meteor.subscribe("MonthlyPricing", schoolId);
   Meteor.subscribe("ClassPricing", schoolId);
 
-  let schoolData = School.findOne({_id: schoolId})
-  let locationData = SLocation.find({ schoolId: schoolId })
+  let schoolData = School.findOne({_id: schoolId});
+  let locationData = SLocation.find({ schoolId: schoolId }).fetch();
+  let classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
 
   return {
   	...props,
     schoolId,
   	schoolData,
-    locationData, 
+    locationData,
+    classTypeData, 
   };
 
 }, SchoolEditView);

@@ -1,4 +1,6 @@
 import React from "react";
+import methods from '/imports/ui/modal/formBuilderMethods';
+import {cutString} from '/imports/util';
 
 export default function (props) {
 	console.log("panel with table props -->>",props)
@@ -11,14 +13,19 @@ export default function (props) {
 
 	const mainTableRows = [];
 	
+	const onDeleteRow = ({callApi, editByFieldValue, parentKeyValue}) => {
+		methods[callApi]({editByFieldValue, parentKeyValue});
+	}
+
 	const renderTableRows = () => { 
   	mainTableData.map((dataItem,index) => {
+  		let childTableData = props.getChildTableData(dataItem);
     	mainTableRows.push(
         <tr key={index}>
         {
         	settings.mainTable.tableFields.map((tableField, index) => {
 		    		return (
-          		<td key={index}>{dataItem[tableField.key]}</td>
+          		<td key={index}>{cutString(dataItem[tableField.key], 50)}</td>
 		    		)
 	    		})
 	    	}
@@ -35,7 +42,7 @@ export default function (props) {
 
   					 	{
   					 		settings.mainTable.actions.edit && (
-  					 			<button type="button" onClick={()=>{showFormBuilderModal("Edit", settings.mainTable.actions.edit.formFields, dataItem, settings.mainTable.actions.edit.title, settings.mainTable.actions.edit.onSubmit)}} rel="tooltip" className="btn btn-warning" data-id={dataItem._id} title="" id="editLocation">
+  					 			<button type="button" onClick={()=>{showFormBuilderModal({type: "Edit", tableData: settings.mainTable, formFieldsValues: dataItem})}} rel="tooltip" className="btn btn-warning" data-id={dataItem._id} title="" id="editLocation">
 							      <i className="material-icons">edit</i>
 							    </button>
   					 		)
@@ -43,7 +50,7 @@ export default function (props) {
 
   					 	{
   					 		settings.mainTable.actions.delete && (
-  					 			<button type="button" rel="tooltip" className="btn btn-danger " data-original-title="" title="" id="deleteLocation" data-id="{{_id}}">
+  					 			<button type="button" onClick={() => {onDeleteRow({callApi: settings.mainTable.actions.delete, editByFieldValue: dataItem._id})}} rel="tooltip" className="btn btn-danger " data-original-title="" title="" id="deleteLocation" data-id="{{_id}}">
 							      <i className="material-icons">close</i>
 							    </button>
   					 		)
@@ -53,88 +60,95 @@ export default function (props) {
   			}
         </tr>
       )
-      mainTableRows.push(
-      	<tr key={dataItem._id} id={dataItem._id} className="collapse in">
-			    <td colSpan="7">
-		        <div className="col-sm-1">
-		        </div>
-		        <div className="col-md-11">
-		        	<div className="card card-plain" style={{background: 'whitesmoke'}}>
-		        		<div className="row box-row">
-                  <div className="col-sm-8 hidden-xs">
-                    <h4 className="card-title card-list-title">{settings.childPanelHeader.title}</h4>
-                  </div>
-                  <div className="col-sm-4 hidden-xs">
-                    <button onClick={()=>{showFormBuilderModal("Add", settings.childPanelHeader.actions.formFields, null, settings.childPanelHeader.actions.buttonTitle, settings.childPanelHeader.actions.onSubmit)}} type="button" rel="tooltip" className="btn btn-success btn-sm" data-original-title="" title="" id="addRoomsModel" data-id={dataItem._id}>
-                      <i className="material-icons">{settings.childPanelHeader.leftIcon}</i> Room
-                    </button>
-                  </div>
-                  <div className="col-xs-12 hidden-lg hidden-md hidden-sm room-content-box">
-                    <h4 className="card-title card-list-title">Rooms</h4>
-                    <button type="button" rel="tooltip" className="btn btn-success btn-sm" data-original-title="" title="" id="addRoomsModel" data-id={dataItem._id}>
-                      <i className="material-icons">add</i> Room
-                    </button>
-                  </div>
-              	</div>
-              	<div className="card-content">
-                  <div className="table-responsive">
-                    <table className="table table-capacity-heading">
-                      <thead>
-                        <tr>
-                        	{
-							            	settings.childTable.tableFields.map((tableField, index) => {
-											    		return (
-								            		<th key={index} className={className}>{tableField.label || tableField.key}</th>
-											    		)
-										    		})
-										    	}		
-										    	{	
-										    		settings.childTable.actions && <th key={settings.childTable.tableFields.length} className={className}>{settings.childTable.actions.label || "Actions"}</th>
-										    	}
-                        </tr>
-                      </thead>
-                      <tbody className="table-capacity-content">
-                       {
-                       		dataItem.rooms && dataItem.rooms.map((roomData, index) => {
-                       			return (
-                       				<tr key={index}>
-                       					<td>{roomData.name}</td>
-                                <td>{roomData.capicity}</td>
-                                {	
-													    		settings.childTable.actions && (
-													    			<td className="td-actions ">
-													    				{
-													    					settings.childTable.actions.edit && (
-													    						<button type="button" onClick={()=>{showFormBuilderModal("Edit", settings.childTable.actions.edit.formFields, roomData, settings.childTable.actions.edit.title, settings.childTable.actions.edit.onSubmit)}} rel="tooltip" className="btn btn-warning editRoomLocat" data-original-title="" title="" id="editRoomLocat" data-id={roomData._id} data-location={dataItem._id} data-name={roomData.name} data-capicity={roomData.capicity}>
-                                            <i className="material-icons">edit</i>
-                                        	</button>
-													    					)
-													    				}
+      if(settings.childTable) {
+	      mainTableRows.push(
+	      	<tr key={dataItem._id} id={dataItem._id} className="collapse in">
+				    <td colSpan="7">
+			        <div className="col-sm-1">
+			        </div>
+			        <div className="col-md-11">
+			        	<div className="card card-plain" style={{background: 'whitesmoke'}}>
+			        		<div className="row box-row">
+	                  <div className="col-sm-8 hidden-xs">
+	                    <h4 className="card-title card-list-title">{settings.childPanelHeader.title}</h4>
+	                  </div>
+	                  <div className="col-sm-4 hidden-xs">
+	                    <button onClick={()=>{showFormBuilderModal({type:"Add", tableData: settings.childPanelHeader, parentData: dataItem})}} type="button" rel="tooltip" className="btn btn-success btn-sm" data-original-title="" title="" id="addRoomsModel" data-id={dataItem._id}>
+	                      <i className="material-icons">{settings.childPanelHeader.leftIcon}</i>{settings.childPanelHeader.title}
+	                    </button>
+	                  </div>
+	                  <div className="col-xs-12 hidden-lg hidden-md hidden-sm room-content-box">
+	                    <h4 className="card-title card-list-title">{settings.childPanelHeader.title}</h4>
+	                    <button type="button" rel="tooltip" className="btn btn-success btn-sm" data-original-title="" title="" id="addRoomsModel" data-id={dataItem._id}>
+	                      <i className="material-icons">{settings.childPanelHeader.leftIcon}</i> {settings.childPanelHeader.title}
+	                    </button>
+	                  </div>
+	              	</div>
+	              	<div className="card-content">
+	                  <div className="table-responsive">
+	                    <table className="table table-capacity-heading">
+	                      <thead>
+	                        <tr>
+	                        	{
+								            	settings.childTable.tableFields.map((tableField, index) => {
+												    		return (
+									            		<th key={index} className={className}>{tableField.label || tableField.key}</th>
+												    		)
+											    		})
+											    	}		
+											    	{	
+											    		settings.childTable.actions && <th key={settings.childTable.tableFields.length} className={className}>{settings.childTable.actions.label || "Actions"}</th>
+											    	}
+	                        </tr>
+	                      </thead>
+	                      <tbody className="table-capacity-content">
+	                       {
+	                       		childTableData && childTableData.map((roomData, index) => {
+	                       			return (
+	                       				<tr key={index}>
+	                       				  {
+		                       					settings.childTable.tableFields.map((tableField, index) => {
+															    		return (
+													          		<td key={index}>{roomData[tableField.key]}</td>
+															    		)
+														    		})
+	                       				  }
+	                                {	
+														    		settings.childTable.actions && (
+														    			<td className="td-actions ">
+														    				{
+														    					settings.childTable.actions.edit && (
+														    						<button type="button" onClick={()=>{showFormBuilderModal({type:"Edit", tableData: settings.childTable, formFieldsValues: roomData, parentData: dataItem})}} rel="tooltip" className="btn btn-warning editRoomLocat" data-original-title="" title="" id="editRoomLocat" data-id={roomData._id} data-location={dataItem._id} data-name={roomData.name} data-capicity={roomData.capicity}>
+	                                            <i className="material-icons">edit</i>
+	                                        	</button>
+														    					)
+														    				}
 
-													    				{
-													    					settings.childTable.actions.delete && (
-													    						<button type="button" rel="tooltip" className="btn btn-danger" data-original-title="" title="" id="deleteRoom" data-id={roomData._id} data-location={dataItem._id}>
-                                            <i className="material-icons">close</i>
-                                          </button>
-													    					)
-													    				}
+														    				{
+														    					settings.childTable.actions.delete && (
+														    						<button type="button" onClick={() => {onDeleteRow({callApi: settings.childTable.actions.delete, parentKeyValue: dataItem._id, editByFieldValue: roomData.id})}} rel="tooltip" className="btn btn-danger" data-original-title="" title="" id="deleteRoom" data-id={roomData._id} data-location={dataItem._id}>
+	                                            <i className="material-icons">close</i>
+	                                          </button>
+														    					)
+														    				}
 
-													    			</td>
-													    		)
-													    	}
-                       				</tr>
-                       			)
-                       		})
-                       }
-                      </tbody>
-                    </table>        
-		        			</div>
-		        		</div>
-		        	</div>
-		        </div>
-			    </td>    
-		  	</tr>
-    	)
+														    			</td>
+														    		)
+														    	}
+	                       				</tr>
+	                       			)
+	                       		})
+	                       }
+	                      </tbody>
+	                    </table>        
+			        			</div>
+			        		</div>
+			        	</div>
+			        </div>
+				    </td>    
+			  	</tr>
+	    	)
+      }
   	})
   	return mainTableRows;
   }
@@ -155,7 +169,7 @@ export default function (props) {
 		          {
 		          	settings.mainPanelHeader.actions && settings.mainPanelHeader.actions.buttonTitle && (
 		          		<li className="filter-archive filter-evaluation active col-md-3 col-sm-3 col-xs-12">
-									  <a onClick={()=>{showFormBuilderModal("Add", settings.mainPanelHeader.actions.formFields, null, settings.mainPanelHeader.actions.buttonTitle, settings.mainPanelHeader.actions.onSubmit)}} id="add_location" data-toggle="tab" className="cpointer" aria-expanded="false">
+									  <a onClick={()=>{showFormBuilderModal({type:"Add", tableData: settings.mainPanelHeader})}} id="add_location" data-toggle="tab" className="cpointer" aria-expanded="false">
 									  <i className="fa fa-plus" aria-hidden="true"></i>{settings.mainPanelHeader.actions.buttonTitle}
 									  <div className="ripple-container"></div>
 									  </a>
