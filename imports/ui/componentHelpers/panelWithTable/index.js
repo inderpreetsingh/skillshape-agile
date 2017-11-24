@@ -25,13 +25,13 @@ export default function (props) {
         {
         	settings.mainTable.tableFields.map((tableField, index) => {
 		    		return (
-          		<td key={index}>{cutString(dataItem[tableField.key], 50)}</td>
+          		<td key={index}>{cutString(dataItem[tableField.key], 30)}</td>
 		    		)
 	    		})
 	    	}
   			{
   				settings.mainTable.actions && (
-  					<td key={settings.mainTable.tableFields.length} className={`${className} td-actions`}>
+  					<td key={settings.mainTable.tableFields.length} className={`td-actions`}>
   					  {
   					 		settings.mainTable.actions.toggleChildTable && (
   					 			<button type="button" rel="tooltip" className="btn btn-primary arrow-rotate-box" data-original-title="" title="" id="showClasses" data-id={dataItem._id} data-toggle="collapse" data-target={`#${dataItem._id}`}>
@@ -42,7 +42,7 @@ export default function (props) {
 
   					 	{
   					 		settings.mainTable.actions.edit && (
-  					 			<button type="button" onClick={()=>{showFormBuilderModal({type: "Edit", tableData: settings.mainTable, formFieldsValues: dataItem})}} rel="tooltip" className="btn btn-warning" data-id={dataItem._id} title="" id="editLocation">
+  					 			<button type="button" onClick={()=>{showFormBuilderModal({type: "Edit", tableData: settings.mainTable, formFieldsValues: dataItem})}} rel="tooltip" className="btn btn-warning mr-2" data-id={dataItem._id} title="" id="editLocation">
 							      <i className="material-icons">edit</i>
 							    </button>
   					 		)
@@ -50,7 +50,7 @@ export default function (props) {
 
   					 	{
   					 		settings.mainTable.actions.delete && (
-  					 			<button type="button" onClick={() => {onDeleteRow({callApi: settings.mainTable.actions.delete, editByFieldValue: dataItem._id})}} rel="tooltip" className="btn btn-danger " data-original-title="" title="" id="deleteLocation" data-id="{{_id}}">
+  					 			<button type="button" onClick={() => {onDeleteRow({callApi: settings.mainTable.actions.delete, editByFieldValue: dataItem._id})}} rel="tooltip" className="btn btn-danger" data-original-title="" title="" id="deleteLocation" data-id="{{_id}}">
 							      <i className="material-icons">close</i>
 							    </button>
   					 		)
@@ -197,7 +197,7 @@ export default function (props) {
 		          </tr>
 		        </thead>
 		        <tbody>
-              {renderTableRows()}               
+              { mainTableData && renderTableRows()}               
             </tbody>
 		      </table>
 		    </div>

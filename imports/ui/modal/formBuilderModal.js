@@ -1,5 +1,7 @@
 import React from 'react';
 import methods from './formBuilderMethods';
+import config from '/imports/config';
+import AutoComplete from '/imports/ui/form/autoComplete';
 
 const formId = "form-builder";
 
@@ -32,11 +34,20 @@ export class FormBuilderModal extends React.Component {
     let { formFieldsValues } = this.props;
     let formFields = this.getFormFields();
     // console.log("initializeFormValues formFields-->>", formFields);
-    console.log("initializeFormValues formFieldsValues-->>", formFieldsValues);
+    // console.log("initializeFormValues formFieldsValues-->>", formFieldsValues);
     if(formFields) {
       for(let field of formFields) {
-        let value = formFieldsValues && formFieldsValues[field["key"]]
-        this.refs[field.key].value = value ? value : null;
+        // console.log("field -->>",field)
+        let value = formFieldsValues && formFieldsValues[field.key]
+        if(field.type === "image") {
+          this.refs[`${field.key}_src`].src = value ? value : config.defaultSchoolImage;
+          // console.log("rrc -->>",this.refs[`${field.key}_src`].src)
+          this.refs[field.key].value = null;
+          $(this.refs[field.key]).change();
+
+        } else {
+          this.refs[field.key].value = value ? value : null;
+        }
       }
     }
   }
@@ -126,8 +137,13 @@ export class FormBuilderModal extends React.Component {
       // console.log("this.refs", this.refs.title.value)
       let payload = {};
       let formFields = this.getFormFields()
+      
       for(formField of formFields) {
-        payload[formField.key] = this.refs[formField.key].value;
+        if(formField.type === "image") {
+          payload[formField.key] = this.refs[formField.key].files[0];
+        } else {
+          payload[formField.key] = this.refs[formField.key].value;
+        }
       }
 
       if(parentData && tableData && tableData.actions.parentKey) {
@@ -136,10 +152,10 @@ export class FormBuilderModal extends React.Component {
 
       if(modalType === "Edit" && tableData && tableData.actions.edit.editByField) {
         editByFieldValue = formFieldsValues[tableData.actions.edit.editByField];
-      } 
-      console.log("editByField -->>",editByFieldValue, callApi)
+      }
+
       console.log("payload -->>",payload)
-      console.log("formFieldsValues 123-->>",formFieldsValues)
+      console.log("callApi -->>",callApi, methods[callApi])
       methods[callApi]({formPayload: payload, props: this.props, closeModal: this.hideModal.bind(this), editByFieldValue, parentKeyValue});
 
     }
@@ -175,6 +191,49 @@ export class FormBuilderModal extends React.Component {
             }) 
           }
         </select>)
+      case "textArea":
+        return (
+          <textarea
+            type={field.type}
+            required={field.required} 
+            ref={field.key} 
+            className="form-control" 
+          >
+          </textarea>
+        )
+      case "autoComplete": 
+        return (<AutoComplete
+            type={field.type}
+            required={field.required} 
+            className="form-control form-mandatory"
+            ref={field.key}
+          />
+        )
+      case "image": 
+        return (
+          <div className="" style={{textAlign: 'center'}}>
+            <div className="fileinput fileinput-new card-button text-center" data-provides="fileinput">
+              <div className="fileinput-new card-button thumbnail">
+                <img className="" ref={`${field.key}_src`} alt="Profile Image" />
+              </div>
+              <div className="fileinput-preview fileinput-exists thumbnail">
+              </div>
+              <div>
+                <span className="btn btn-warning btn-sm btn-file">
+                  <span className="fileinput-new">Upload New Image</span>
+                  <span className="fileinput-exists">Change</span>
+                  <input type="hidden"/>
+                  <input type="file" name="..." ref={field.key} accept="image/*"/>
+                </span>
+                <a href="#" className="btn btn-danger btn-sm btn-file fileinput-exists" data-dismiss="fileinput">
+                  Remove
+                </a>
+              </div>
+            </div>
+          </div>
+        )
+      default:
+        return null   
     } 
   }
 
@@ -211,7 +270,7 @@ export class FormBuilderModal extends React.Component {
                     let fieldName = field["key"];
                     console.log("field -->>",field)
                     return (
-                      <div key={index} className="form-group">
+                      <div key={index} className={field.type !== "image" ? "form-group": null }>
                         <label>
                           {field.label} {field.required && "*"}
                         </label>

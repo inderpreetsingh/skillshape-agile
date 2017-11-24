@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import _tagObj from "../imports/startup/server/tagsDump";
+import "../imports/startup/server";
 
 Meteor.startup(() => {
         // Accounts.config({

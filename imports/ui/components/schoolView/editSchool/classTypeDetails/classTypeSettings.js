@@ -9,8 +9,19 @@ export default classTypeSettings = {
             onSubmit: "addClassType",
             title: "Class Type",
             formFields: [
+              { key: "classTypeImg", label: "", type: "image", required: false },
               { key: "name", label: "Class Type", type: "text", required: true },
-              { key: "desc", label: "Class Type Description", type: "text", required: true },
+              { key: "desc", label: "Class Type Description", type: "textArea", required: true },
+              { key: "gender", 
+              	label: "Gender", 
+              	type: "select", 
+              	required: true,
+              	defaultOption: "Gender",
+              	options: [
+              		{ label: "Male", value: "Male"},
+              		{ label: "Female", value: "Female"},
+              	]
+              },
               { key: "ageMin", label: "Age Min", type: "text", required: true },
               { key: "ageMax", label: "Age Max", type: "text", required: true },
               { key: "experienceLevel", 
@@ -35,6 +46,7 @@ export default classTypeSettings = {
         tableFields: [
             { key: "name", label: "Class Type" },
             { key: "desc", label: "Class Type Description" },
+            { key: "gender", label: "Gender" },
             { key: "ageMin", label: "Age Min" },
             { key: "ageMax", label: "Age Max"},
             { key: "experienceLevel", label: "Experience Level"},
@@ -47,8 +59,19 @@ export default classTypeSettings = {
                 onSubmit: "updateClassType",
                 editByField: "_id",
                 formFields: [
+                		{ key: "classTypeImg", label: "", type: "image", required: false },
                     { key: "name", label: "Class Type", type: "text", required: false },
-                    { key: "desc", label: "Class Type Description", type: "text", required: true },
+                    { key: "desc", label: "Class Type Description", type: "textArea", required: true },
+                    { key: "gender", 
+			              	label: "Gender", 
+			              	type: "select", 
+			              	required: true,
+			              	defaultOption: "Gender",
+			              	options: [
+			              		{ label: "Male", value: "Male"},
+			              		{ label: "Female", value: "Female"},
+			              	]
+			              },
                     { key: "ageMin", label: "Age Min", type: "text", required: true },
               			{ key: "ageMax", label: "Age Max", type: "text", required: true },
               			{ key: "experienceLevel", 

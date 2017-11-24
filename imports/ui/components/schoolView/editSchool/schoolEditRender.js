@@ -4,6 +4,7 @@ import { browserHistory, Link } from 'react-router';
 import SchoolDetails from './schoolDetails';
 import LocationDetails from './locationDetails';
 import ClassTypeDetails from './classTypeDetails';
+import Modules from './modules';
 import { FormBuilderModal } from '/imports/ui/modal';
 
 export default function (props) {
@@ -70,6 +71,17 @@ export default function (props) {
             </li>
             <li style={{marginLeft: 0}} className="col-sm-2 col-xs-12">
               <a
+                ref="modules" 
+                onClick={()=> { this.setState({selecetdView: "modules"})}} 
+                data-toggle="tab" 
+                aria-expanded="true" 
+                className="remove-radius validate"
+              >
+                <b>Modules</b>
+              </a>
+            </li>
+            <li style={{marginLeft: 0}} className="col-sm-2 col-xs-12">
+              <a
                 ref="prices_details" 
                 onClick={()=> { this.setState({selecetdView: "prices_details"})}} 
                 data-toggle="tab" 
@@ -90,7 +102,7 @@ export default function (props) {
                 <b>Media</b>
               </a>
             </li>
-            <li style={{marginLeft: 0}} className="col-sm-2 col-xs-12">
+            {/*<li style={{marginLeft: 0}} className="col-sm-2 col-xs-12">
               <a
                 ref="iframe_details" 
                 onClick={()=> { this.setState({selecetdView: "iframe_details"})}} 
@@ -100,7 +112,7 @@ export default function (props) {
               >
                 <b>Iframe Code</b>
               </a>
-            </li>
+            </li>*/}
           </ul>
         </div>
         <div className="tab-content">
@@ -123,6 +135,13 @@ export default function (props) {
           {
             (selecetdView === "class_type_details") && <ClassTypeDetails
               classTypeData={classTypeData}
+              schoolId={schoolId}
+              showFormBuilderModal={this.showFormBuilderModal}
+              moveTab={this.moveTab}
+            />
+          }
+          {
+            (selecetdView === "modules") && <Modules
               schoolId={schoolId}
               showFormBuilderModal={this.showFormBuilderModal}
               moveTab={this.moveTab}
