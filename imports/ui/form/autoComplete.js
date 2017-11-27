@@ -46,7 +46,7 @@ export default class AutoComplete extends React.Component {
     onSuggestionsFetchRequested = ({ value }) => {
         Meteor.call(this.props.methodname,{textSearch: value}, (err,res) => {
     	    this.setState({
-    	      suggestions: res
+    	      suggestions: res || []
     	    })
         })
 	}

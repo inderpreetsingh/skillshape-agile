@@ -3,5 +3,7 @@ export default config = {
 	collections: {
 		modules : "Modules",
 		skills : "Skills",
+		skillCategory: "SkillCategory",
+		skillSubject: "SkillSubject",
 	}
 }
