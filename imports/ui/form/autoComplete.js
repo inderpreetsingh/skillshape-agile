@@ -1,22 +1,36 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
 
-const renderSuggestion = suggestion => (
-  <div>
-    {suggestion.name}
-  </div>
-);
-
-const getSuggestionValue = suggestion => suggestion.name;
-
 export default class AutoComplete extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             value: '',
-            suggestions: []
-        };
+            suggestions: [],
+            selectedValue: null,
+        }
+    }
+
+    componentWillMount() {
+        const { suggestions, suggestionfield } = this.props;
+        if(suggestions && suggestionfield) {
+            this.initializeValues(suggestions, suggestionfield);
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.suggestions && nextProps.suggestionfield) {
+            this.initializeValues(nextProps.suggestions, nextProps.suggestionfield);
+        }
+    }
+
+    initializeValues = (suggestions, suggestionfield) => {
+        this.setState({
+            value: suggestions ?  suggestions[suggestionfield]: '',
+            suggestions: suggestions ? [suggestions] : [],
+            selectedValue: suggestions ? suggestions : null,
+        })
     }
 
     onChange = (event, { newValue }) => {
@@ -25,19 +39,16 @@ export default class AutoComplete extends React.Component {
         })
     }
 
+    getSelectedAutoCompleteValue = () => {
+        return this.state.selectedValue
+    }
+
     onSuggestionsFetchRequested = ({ value }) => {
-	    this.setState({
-	      suggestions: [
-	      	{
-			    name: 'Gaurav',
-			    year: 1972
-			},
-			{
-			    name: 'Ramesh',
-			    year: 1972
-			}
-			]
-	    })
+        Meteor.call(this.props.methodname,{textSearch: value}, (err,res) => {
+    	    this.setState({
+    	      suggestions: res
+    	    })
+        })
 	}
 
 	onSuggestionsClearRequested = () => {
@@ -46,17 +57,28 @@ export default class AutoComplete extends React.Component {
 	    })
 	}
 
+    onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
+        this.setState({
+            selectedValue: suggestion
+        })
+    }
+
     render() {
     	const { value, suggestions } = this.state;
-
+        const { suggestionfield } = this.props;
         return ( 
         	<Autosuggest
         		suggestions={suggestions}
         		onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
         		onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-        		getSuggestionValue={getSuggestionValue}
-        		renderSuggestion={renderSuggestion}
-        		inputProps={{...this.props, value, onChange: this.onChange}}
+        		onSuggestionSelected={this.onSuggestionSelected}
+                inputProps={{...this.props, value, onChange: this.onChange}}
+                getSuggestionValue={(suggestion) => {
+                    return suggestion[suggestionfield];
+                }}
+                renderSuggestion={(suggestion)=> {
+                   return <div>{suggestion[suggestionfield]}</div>
+                }}
         	/>
         )
     }

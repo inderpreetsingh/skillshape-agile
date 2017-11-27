@@ -21,6 +21,7 @@ export default function (props) {
     isUserSubsReady,
     locationData,
     classTypeData,
+    moduleData,
   } = this.props;
 
   if(isUserSubsReady && schoolData) {
@@ -142,6 +143,7 @@ export default function (props) {
           }
           {
             (selecetdView === "modules") && <Modules
+              moduleData={moduleData}
               schoolId={schoolId}
               showFormBuilderModal={this.showFormBuilderModal}
               moveTab={this.moveTab}

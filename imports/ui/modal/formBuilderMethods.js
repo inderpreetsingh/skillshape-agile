@@ -1,8 +1,9 @@
 import { imageRegex } from '/imports/util';
+import '/imports/api/modules/methods';
 
 export default methods = {
   callMeteorAddMethod: ({methodName, payload, closeModal}) => {
-    console.log("callMeteorMethod")
+    console.log("callMeteorMethod -->>",payload)
     Meteor.call(methodName, payload, (error, result) => {
       if (error) {
         console.error("error", error);
@@ -251,14 +252,16 @@ export default methods = {
     const { schoolId } = props;
     formPayload.schoolId = schoolId
     methods.callMeteorAddMethod({
-      methodName: "school.addModule", 
+      methodName: "module.addModule", 
       payload: formPayload, 
       closeModal
     });
   },
-  editModule: ({formPayload, closeModal, editByFieldValue, parentKeyValue}) => {
-    formPayload.id = editByFieldValue;
-    Meteor.call("editRoom", formPayload, parentKeyValue, (error, result) => {
+  editModule: ({formPayload, closeModal, editByFieldValue, props}) => {
+    //formPayload.id = editByFieldValue;
+    const { schoolId } = props;
+    formPayload.schoolId = schoolId
+    Meteor.call("module.editModule", editByFieldValue, formPayload, (error, result) => {
       if (result) { 
         closeModal();
       } else if(error) {
@@ -266,9 +269,9 @@ export default methods = {
       }
     });
   },
-  removeModule: ({editByFieldValue, parentKeyValue}) => {
+  removeModule: ({formPayload}) => {
 
-    Meteor.call("roomRemove", editByFieldValue, parentKeyValue, (error, result) => {
+    Meteor.call("module.removeModule", formPayload, (error, result) => {
       if(error) {
         toastr.error("Unable to delete.","Error");
         return

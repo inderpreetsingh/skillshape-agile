@@ -1,5 +1,7 @@
 import Modules from "../fields";
 
-Meteor.publish("school.getModules", function({ schoolId }) {
-    return Modules.find({schoolId});
+Meteor.publish("modules.getModules", function({ schoolId }) {
+	
+    let cursor = Modules.find({schoolId});
+    return Modules.publishJoinedCursors(cursor,{ reactive: true }, this);
 });

@@ -37,11 +37,11 @@ export class FormBuilderModal extends React.Component {
     // console.log("initializeFormValues formFieldsValues-->>", formFieldsValues);
     if(formFields) {
       for(let field of formFields) {
-        // console.log("field -->>",field)
         let value = formFieldsValues && formFieldsValues[field.key]
+        
         if(field.type === "image") {
+          
           this.refs[`${field.key}_src`].src = value ? value : config.defaultSchoolImage;
-          // console.log("rrc -->>",this.refs[`${field.key}_src`].src)
           this.refs[field.key].value = null;
           $(this.refs[field.key]).change();
 
@@ -134,13 +134,19 @@ export class FormBuilderModal extends React.Component {
 
     } else {
       
-      // console.log("this.refs", this.refs.title.value)
       let payload = {};
       let formFields = this.getFormFields()
       
       for(formField of formFields) {
         if(formField.type === "image") {
           payload[formField.key] = this.refs[formField.key].files[0];
+        } else if(formField.type === "autoComplete") {
+          let temp = this.refs[formField.key].getSelectedAutoCompleteValue()
+          if(!temp) {
+            toastr.error(`Please select any ${formField.label}`,"Error");
+            return
+          }
+          payload[formField.key] = temp[formField.valueField];
         } else {
           payload[formField.key] = this.refs[formField.key].value;
         }
@@ -162,7 +168,7 @@ export class FormBuilderModal extends React.Component {
   }
 
   getInputField = (field) => {
-
+    let { formFieldsValues } = this.props;
     switch(field.type) {
 
       case "text":
@@ -171,7 +177,6 @@ export class FormBuilderModal extends React.Component {
           required={field.required} 
           className="form-control form-mandatory"
           ref={field.key}
-          //ref={ (ref) => props.bindRef(field.key, ref)}
         />)
 
       case "select":
@@ -180,7 +185,6 @@ export class FormBuilderModal extends React.Component {
           required={field.required} 
           className="form-control form-mandatory "
           ref={field.key}
-          //ref={ (ref) => props.bindRef(field.key, ref)}
         >
           { 
             field.defaultOption && <option disabled selected>{field.defaultOption}</option>
@@ -207,6 +211,9 @@ export class FormBuilderModal extends React.Component {
             required={field.required} 
             className="form-control form-mandatory"
             ref={field.key}
+            methodname={field.method}
+            suggestionfield={field.suggestion}
+            suggestions={formFieldsValues && formFieldsValues[field.objKey]}
           />
         )
       case "image": 
@@ -267,8 +274,6 @@ export class FormBuilderModal extends React.Component {
               <form id={formId} className="formmyModal" onSubmit={this.onSubmit}>
                 {
                   formFields.map((field, index) => {
-                    let fieldName = field["key"];
-                    console.log("field -->>",field)
                     return (
                       <div key={index} className={field.type !== "image" ? "form-group": null }>
                         <label>

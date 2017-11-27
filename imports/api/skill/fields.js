@@ -22,7 +22,7 @@ Skills.attachSchema(new SimpleSchema({
 
 Meteor.startup(function() {
     if (Meteor.isServer) {
-        Skills._ensureIndex({ "name": 1 });
+        Skills._ensureIndex({ "name": "text" });
     }
 });
 

@@ -1,4 +1,5 @@
 import config from "/imports/config"
+import Skills from "/imports/api/skill/fields";
 
 const Modules = new Mongo.Collection(config.collections.modules);
 /**
@@ -38,6 +39,8 @@ Modules.attachSchema(new SimpleSchema({
         optional: true
     }
 }));
+
+Modules.join(Skills, "skillId", "skill", ["name"]);
 
 Meteor.startup(function() {
     if (Meteor.isServer) {

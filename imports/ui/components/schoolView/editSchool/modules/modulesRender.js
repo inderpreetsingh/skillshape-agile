@@ -6,7 +6,7 @@ export default function () {
 	let { 
 		showFormBuilderModal, 
 		moveTab,
-		modulesData, 
+		moduleData, 
 	} = this.props
 
   // console.log("SchoolEditDetails locationData 222-->>", locationData)
@@ -16,7 +16,7 @@ export default function () {
 				<PanelWithTable
 					className="location-details"
 					settings={modulesSettings}
-					mainTableData={modulesData}
+					mainTableData={moduleData}
 					getChildTableData={this.getChildTableData}
 					showFormBuilderModal={showFormBuilderModal}
 				/>	

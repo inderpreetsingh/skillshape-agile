@@ -13,20 +13,26 @@ export default function (props) {
 
 	const mainTableRows = [];
 	
-	const onDeleteRow = ({callApi, editByFieldValue, parentKeyValue}) => {
-		methods[callApi]({editByFieldValue, parentKeyValue});
+	const onDeleteRow = ({callApi, editByFieldValue, parentKeyValue, formPayload}) => {
+		methods[callApi]({editByFieldValue, parentKeyValue, formPayload});
 	}
 
-	const renderTableRows = () => { 
+ 	const renderTableRows = () => { 
   	mainTableData.map((dataItem,index) => {
   		let childTableData = props.getChildTableData(dataItem);
     	mainTableRows.push(
         <tr key={index}>
         {
         	settings.mainTable.tableFields.map((tableField, index) => {
-		    		return (
-          		<td key={index}>{cutString(dataItem[tableField.key], 30)}</td>
-		    		)
+		    		if(!tableField.fk) {
+			    		return (
+	          		<td key={index}>{cutString(dataItem[tableField.key], 30)}</td>
+			    		)
+		    		} else {
+		    			return (
+	          		<td key={index}>{cutString(dataItem[tableField.key][tableField.displayField], 30)}</td>
+			    		)
+		    		}
 	    		})
 	    	}
   			{
@@ -50,7 +56,7 @@ export default function (props) {
 
   					 	{
   					 		settings.mainTable.actions.delete && (
-  					 			<button type="button" onClick={() => {onDeleteRow({callApi: settings.mainTable.actions.delete, editByFieldValue: dataItem._id})}} rel="tooltip" className="btn btn-danger" data-original-title="" title="" id="deleteLocation" data-id="{{_id}}">
+  					 			<button type="button" onClick={() => {onDeleteRow({callApi: settings.mainTable.actions.delete, editByFieldValue: dataItem._id, formPayload: dataItem})}} rel="tooltip" className="btn btn-danger" data-original-title="" title="" id="deleteLocation" data-id="{{_id}}">
 							      <i className="material-icons">close</i>
 							    </button>
   					 		)
