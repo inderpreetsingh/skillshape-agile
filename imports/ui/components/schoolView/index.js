@@ -3,6 +3,9 @@ import { createContainer } from 'meteor/react-meteor-data';
 import SchoolViewBase from './schoolViewBase';
 import SchoolViewRender from './schoolViewRender';
 
+// import collection definition over here
+import ClassType from "/imports/api/classType/fields";
+
 class SchoolView extends SchoolViewBase {
   
   constructor(props){

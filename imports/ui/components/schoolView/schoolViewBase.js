@@ -3,6 +3,9 @@ import { checkSuperAdmin, initializeMap } from '/imports/util';
 import Events from '/imports/util/events';
 import { browserHistory, Link } from 'react-router';
 
+// import collection definition over here
+import ClassType from "/imports/api/classType/fields";
+
 export default class SchoolViewBase extends React.Component {
 
   constructor(props){
