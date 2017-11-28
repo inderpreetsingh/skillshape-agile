@@ -1,5 +1,6 @@
 import { imageRegex } from '/imports/util';
 import '/imports/api/modules/methods';
+import '/imports/api/classType/methods';
 
 export default methods = {
   callMeteorAddMethod: ({methodName, payload, closeModal}) => {
@@ -195,18 +196,20 @@ export default methods = {
           }
           if(res) {
             payload.classTypeImg = res.secure_url
-            methods.callMeteorAddMethod({methodName: "addClassType", payload, closeModal});
+            methods.callMeteorAddMethod({methodName: "classType.addClassType", payload, closeModal});
           }
         })
       } else {
         delete payload.classTypeImg
-        methods.callMeteorAddMethod({methodName: "addClassType", payload, closeModal});
+        methods.callMeteorAddMethod({methodName: "classType.addClassType", payload, closeModal});
       }
     }
   },
   updateClassType: ({formPayload, props, closeModal, editByFieldValue}) => {
     console.log("updateClassType -->>",formPayload, editByFieldValue);
-    if(formPayload && editByFieldValue) {
+    const { schoolId } = props;
+    if(formPayload && editByFieldValue && schoolId) {
+      formPayload.schoolId = schoolId;
       if(formPayload.classTypeImg) {
         if(!imageRegex.image.test(formPayload.classTypeImg.name)) {
           toastr.error("Please enter valid Image file","Error");
@@ -220,7 +223,7 @@ export default methods = {
             // this.editUserCall(res)
             formPayload.classTypeImg = res.secure_url
             methods.callMeteorUpdateMethod({
-              methodName: "updateClassType", 
+              methodName: "classType.editClassType", 
               payload: formPayload, 
               updateKey: editByFieldValue,
               closeModal
@@ -230,7 +233,7 @@ export default methods = {
       } else {
         delete formPayload.classTypeImg
         methods.callMeteorUpdateMethod({
-          methodName: "updateClassType", 
+          methodName: "classType.editClassType", 
           payload: formPayload, 
           updateKey: editByFieldValue, 
           closeModal
@@ -238,15 +241,13 @@ export default methods = {
       }
     }
   },
-  removeClassType: ({editByFieldValue}) => {
-    if(editByFieldValue) {
-      Meteor.call("removeClassType", editByFieldValue, (error, result) => {
-        if(error) {
-          toastr.error("Unable to delete.","Error");
-          return
-        }
-      });
-    }
+  removeClassType: ({formPayload}) => {
+    Meteor.call("classType.removeClassType", formPayload, (error, result) => {
+      if(error) {
+        toastr.error("Unable to delete.","Error");
+        return
+      }
+    });
   },
   addModule: ({formPayload, props, closeModal}) => {
     const { schoolId } = props;

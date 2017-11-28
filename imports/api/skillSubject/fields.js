@@ -17,8 +17,8 @@ SkillSubject.attachSchema(new SimpleSchema({
     skillCategoryId: {
         type: String,
     },
-    remoteIP: {
-        type: String,
+    _mig_: {
+        type: Number,
         optional: true
     }
 }));

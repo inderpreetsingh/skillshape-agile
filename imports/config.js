@@ -5,5 +5,8 @@ export default config = {
 		skills : "Skills",
 		skillCategory: "SkillCategory",
 		skillSubject: "SkillSubject",
+		classType: "ClassType",
+		classPricing: "ClassPricing",
+		monthlyPricing: "MonthlyPricing",
 	}
 }

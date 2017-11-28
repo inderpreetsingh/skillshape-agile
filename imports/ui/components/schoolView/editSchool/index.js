@@ -2,7 +2,10 @@ import React from "react";
 import { createContainer } from 'meteor/react-meteor-data';
 import SchoolEditRender from "./schoolEditRender";
 import { browserHistory} from 'react-router';
+
+// import collection definition over here
 import Modules from "/imports/api/modules/fields";
+import ClassType from "/imports/api/classType/fields";
 
 class SchoolEditView extends React.Component {
 
@@ -56,12 +59,13 @@ export default createContainer(props => {
   Meteor.subscribe("MonthlyPricing", schoolId);
   Meteor.subscribe("ClassPricing", schoolId);
   Meteor.subscribe("modules.getModules", {schoolId});
+  Meteor.subscribe("classType.getclassType", {schoolId});
 
   let schoolData = School.findOne({_id: schoolId});
   let locationData = SLocation.find({ schoolId: schoolId }).fetch();
   let classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
   let moduleData = Modules.find({ schoolId: schoolId }).fetch();
-  // console.log("moduleData -->>",moduleData)
+  console.log("classTypeData -->>",classTypeData)
   return {
   	...props,
     schoolId,

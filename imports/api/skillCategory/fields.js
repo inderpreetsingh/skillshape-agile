@@ -14,10 +14,10 @@ SkillCategory.attachSchema(new SimpleSchema({
         type: Date,
         optional: true
     },
-    remoteIP: {
-        type: String,
+    _mig_: {
+        type: Number,
         optional: true
-    }
+   }
 }));
 
 Meteor.startup(function() {

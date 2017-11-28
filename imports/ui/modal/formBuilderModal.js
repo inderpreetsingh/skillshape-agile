@@ -2,6 +2,7 @@ import React from 'react';
 import methods from './formBuilderMethods';
 import config from '/imports/config';
 import AutoComplete from '/imports/ui/form/autoComplete';
+import AutoSelect from '/imports/ui/form/autoSelect';
 
 const formId = "form-builder";
 
@@ -138,17 +139,36 @@ export class FormBuilderModal extends React.Component {
       let formFields = this.getFormFields()
       
       for(formField of formFields) {
+        
         if(formField.type === "image") {
+          
           payload[formField.key] = this.refs[formField.key].files[0];
+        
         } else if(formField.type === "autoComplete") {
+          
           let temp = this.refs[formField.key].getSelectedAutoCompleteValue()
           if(!temp) {
             toastr.error(`Please select any ${formField.label}`,"Error");
             return
           }
+          
           payload[formField.key] = temp[formField.valueField];
+
+          if(formField.child) {
+            let temp = this.refs[formField.key].getAutoSelectValue()
+            if(!temp) {
+              toastr.error(`Please select any ${formField.child.label}`,"Error");
+              return
+            }
+            
+            payload[formField.child.key] = this.refs[formField.key].getAutoSelectValue();
+          }
+
+        
         } else {
+          
           payload[formField.key] = this.refs[formField.key].value;
+        
         }
       }
 
@@ -178,7 +198,13 @@ export class FormBuilderModal extends React.Component {
           className="form-control form-mandatory"
           ref={field.key}
         />)
-
+      case "number": 
+        return (<input 
+          type={field.type}
+          required={field.required} 
+          className="form-control form-mandatory"
+          ref={field.key}
+        />) 
       case "select":
         return (<select
           type={field.type}
@@ -208,14 +234,23 @@ export class FormBuilderModal extends React.Component {
       case "autoComplete": 
         return (<AutoComplete
             type={field.type}
+            fieldobj={field}
             required={field.required} 
             className="form-control form-mandatory"
             ref={field.key}
             methodname={field.method}
             suggestionfield={field.suggestion}
             suggestions={formFieldsValues && formFieldsValues[field.objKey]}
+            data={formFieldsValues}
           />
         )
+      case "auto-select":
+        return (<AutoSelect
+            className="form-control form-mandatory"
+            ref={field.key}
+            fieldobj={field}
+          />
+        )  
       case "image": 
         return (
           <div className="" style={{textAlign: 'center'}}>
@@ -261,7 +296,7 @@ export class FormBuilderModal extends React.Component {
 
     return (
       <div className="modal fade " id="FormBuilderModal" role="dialog">
-        <div className="modal-dialog" style={{maxWidth: '550px'}}>
+        <div className="modal-dialog" style={{maxWidth: '650px'}}>
           <div className={`modal-content ${className}`}>
             
             <div className="modal-header">

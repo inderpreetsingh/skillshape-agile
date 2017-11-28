@@ -1,4 +1,4 @@
-export default _tagObj = {
+export default _skillCategoryObj = {
     "Martial Art": [
         "Aikido",
         "American Karate",

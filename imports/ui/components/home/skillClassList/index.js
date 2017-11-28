@@ -5,6 +5,8 @@ import { Session } from 'meteor/session';
 import { withSubscriptionAndPagination } from '/imports/util';
 import ListView from '/imports/ui/components/listView';
 
+// import collection definition over here
+import ClassType from "/imports/api/classType/fields";
 
 class SkillClassList extends React.Component {
 

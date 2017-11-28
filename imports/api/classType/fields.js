@@ -1,6 +1,8 @@
-class_type = "ClassType"; // avoid typos, this string occurs many times.
-//
-ClassType = new Mongo.Collection(class_type);
+import config from "/imports/config";
+import SkillCategory from "/imports/api/skillCategory/fields";
+import SkillSubject from "/imports/api/skillSubject/fields";
+
+const ClassType = new Mongo.Collection(config.collections.classType);
 /**
  * Create the schema
  * See: https://github.com/aldeed/meteor-autoform#common-questions
@@ -35,10 +37,6 @@ ClassType.attachSchema(new SimpleSchema({
         type: [String],
         optional: true
     },
-    tags:{
-        type:String,
-        optional:true
-    },
     gender: {
         type:String,
         optional:true
@@ -54,40 +52,25 @@ ClassType.attachSchema(new SimpleSchema({
     experienceLevel : {
         type:String,
         optional:true
+    },
+    skillCategoryId: {
+       type:String,
+       optional:true 
+    },
+    skillSubject: {
+       type: [String],
+       optional:true 
     }
 }));
 
-ClassType.allow({
-    insert: function () {
-        return true;
-    },
-    update: function () {
-        return true;
-    },
-    remove: function () {
-        return true;
+ClassType.join(SkillCategory, "skillCategoryId", "skillCategory", ["name"]);
+
+// ClassType.join(SkillSubject, "skillSubject", "subject", []);
+
+Meteor.startup(function() {
+    if (Meteor.isServer) {
+        ClassType._ensureIndex({ name:"text",desc:"text" });
     }
 });
 
-
-if(Meteor.isServer){
-
-  ClassType._ensureIndex({name:"text",desc:"text"});
-  Meteor.publish("classTypeBySchool", function(schoolId){
-    return ClassType.find({schoolId:schoolId})
-  });
-Meteor.methods({
-  "addClassType": function (doc) {
-    return ClassType.insert(doc);
-  },
-  "updateClassType" : function(id,doc){
-    return ClassType.update({_id:id}, {$set:doc});
-  },
-  "removeClassType" : function(id){
-    SkillClass.remove({classTypeId:id});
-    ClassSchedule.remove({skillClassId:id});
-    ClassType.remove({_id:id});
-  }
-
-});
-}
+export default ClassType;

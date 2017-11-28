@@ -1,6 +1,8 @@
 import { Meteor } from 'meteor/meteor';
-import _tagObj from "../imports/startup/server/tagsDump";
+import _skillCategoryObj from "../imports/startup/server/skillCategoryDump";
 import "../imports/startup/server";
+import SkillCategory from "../imports/api/skillCategory/fields";
+import SkillSubject from "../imports/api/skillSubject/fields";
 
 Meteor.startup(() => {
         // Accounts.config({
@@ -25,14 +27,19 @@ Meteor.startup(() => {
   // code to run on server at startup
 
 
-  if(tags.find({_mig_: 1}).count()==0){
-    console.log("_____tag dump start___");
-        tags.remove({});
-        SkillType.remove({});
-        for(var key in _tagObj){
-          SkillType.insert({name: key, _mig_ : 1})
-          _tagObj[key].forEach((f)=>{
-          tags.insert({tag:f,class:key,_mig_ : 1});
+  if(SkillSubject.find({_mig_: 1}).count()==0){
+    console.log("_____SkillSubject dump start___");
+        SkillSubject.remove({});
+        SkillCategory.remove({});
+        
+        for(var key in _skillCategoryObj){
+          let objId = SkillCategory.insert({name: key, _mig_ : 1})
+          _skillCategoryObj[key].forEach((f)=>{
+          SkillSubject.insert({
+            name:f,
+            skillCategoryId: objId,
+            _mig_ : 1
+          });
         })
     }
 }
