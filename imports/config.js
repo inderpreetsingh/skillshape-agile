@@ -8,5 +8,6 @@ export default config = {
 		classType: "ClassType",
 		classPricing: "ClassPricing",
 		monthlyPricing: "MonthlyPricing",
+		media: "Media",
 	}
 }

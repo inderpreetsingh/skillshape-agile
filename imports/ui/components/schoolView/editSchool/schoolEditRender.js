@@ -1,12 +1,17 @@
 import React from "react";
 import { Loading } from '/imports/ui/loading';
 import { browserHistory, Link } from 'react-router';
+import { FormBuilderModal } from '/imports/ui/modal';
+
+//tab details import over here
 import SchoolDetails from './schoolDetails';
 import LocationDetails from './locationDetails';
 import ClassTypeDetails from './classTypeDetails';
 import PriceDetails from './priceDetails';
 import Modules from './modules';
-import { FormBuilderModal } from '/imports/ui/modal';
+import EmbedCodes from './embedCodes';
+import MediaDetails from './mediaDetails';
+
 
 export default function (props) {
 
@@ -23,6 +28,7 @@ export default function (props) {
     locationData,
     classTypeData,
     moduleData,
+    ...editSchoolProps
   } = this.props;
 
   if(isUserSubsReady && schoolData) {
@@ -95,13 +101,13 @@ export default function (props) {
             </li>
             <li style={{marginLeft: 0}} className="col-sm-2 col-xs-12">
               <a
-                ref="iframe_details" 
-                onClick={()=> { this.setState({selecetdView: "iframe_details"})}} 
+                ref="embed_codes" 
+                onClick={()=> { this.setState({selecetdView: "embed_codes"})}} 
                 data-toggle="tab" 
                 aria-expanded="true" 
                 className="remove-radius validate"
               >
-                <b>Iframe Code</b>
+                <b>Embed Codes</b>
               </a>
             </li>
           </ul>
@@ -145,6 +151,21 @@ export default function (props) {
               schoolId={schoolId}
               showFormBuilderModal={this.showFormBuilderModal}
               moveTab={this.moveTab}
+            />
+          }
+          {
+            (selecetdView === "embed_codes") && <EmbedCodes
+              schoolData={schoolData}
+              schoolId={schoolId}
+              moveTab={this.moveTab}
+            />
+          }
+          {
+            (selecetdView === "media_details") && <MediaDetails
+              schoolData={schoolData}
+              schoolId={schoolId}
+              moveTab={this.moveTab}
+              {...editSchoolProps}
             />
           }
         </div>

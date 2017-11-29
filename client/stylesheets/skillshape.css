@@ -1241,3 +1241,13 @@ border-top: 2px solid #ccc;}
 .react-autosuggest__suggestion--highlighted {
   background-color: #ddd;
 }
+
+.embed-code_box {
+  z-index: auto; 
+  position: relative; 
+  line-height: normal; 
+  font-size: 14px;
+  border: none;
+  color: beige;
+  background-color: #898989;
+}
