@@ -28,7 +28,7 @@ export default function(){
 			            <DatePicker
 	                  		className="form-control" 
 	                  		selected={this.state.startDate}
-	                  		onChange={(date)=> this.setState({startDate: date})}
+	                  		onChange={(date)=> {this.startDate = date._d;this.setState({startDate: date})}}
 	                	/>
 	            	</div>
             	</div>
@@ -39,8 +39,8 @@ export default function(){
 	            	<div className="col-sm-8">
 	                	<DatePicker
 	                  		className="form-control" 
-	                  		selected={this.state.startEnd}
-	                  		onChange={(date)=> this.setState({startEnd: date})}
+	                  		selected={this.state.endDate}
+	                  		onChange={(date)=> {this.endDate = date._d;this.setState({endDate: date})}}
 	                	/>
 	            	</div>
             	</div>
@@ -48,7 +48,7 @@ export default function(){
           <div className="col-sm-2" style={{paddingTop: 10}}>
             <a onClick={() => this.props.onSearch(this) } style={{marginRight: '4px'}} id="search" title="Search"
                className="btn btn-warning btn-sm search"><i className="material-icons md-18">search</i></a>
-            <a onClick={() => this.props.resetFilter(this) } id="view_list" title="reset filter" className="btn btn-warning btn-sm clear_filter"><i
+            <a onClick={() => {this.endDate=null;this.startDate=null;this.setState({startDate:null,endDate:null});this.props.resetFilter(this)} } id="view_list" title="reset filter" className="btn btn-warning btn-sm clear_filter"><i
                 className="material-icons md-18">autorenew</i></a>
           </div>
         </div>

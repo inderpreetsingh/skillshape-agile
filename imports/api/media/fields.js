@@ -9,11 +9,9 @@ const Media = new Mongo.Collection(config.collections.media);
 Media.attachSchema(new SimpleSchema({
     type: {
         type: String,
-        optional: true
     },
     name: {
         type: String,
-        optional: true
     },
     desc: {
         type: String,
@@ -21,25 +19,24 @@ Media.attachSchema(new SimpleSchema({
     },
     sourcePath: {
         type: String,
-        optional: true
     },
     schoolId: {
         type: String,
-        optional: true
     },
     createdBy: {
         type: String,
-        optional: true
     },
     createdAt: {
         type: Date,
-        optional: true
     }
 }));
 
+Media.join(Meteor.users, "createdBy", "creator", ["profile"]);
 
 Meteor.startup(function() {
-
+    if (Meteor.isServer) {
+        Media._ensureIndex({ "name": "text" });
+    }
 });
 
 export default Media;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { imageRegex } from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container';
 import '/imports/api/media/methods';
 
 const formId = "create-media";
@@ -8,15 +9,34 @@ export default class CreateMedia extends React.Component {
 
 	constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+        	isBusy: false,
+        }
     }
 
     componentDidMount() {
-	    this.handleModal();		
+	    this.handleModal();
+	    this.initializeFormValues();		
 	}
 
 	componentDidUpdate() {
 	    this.handleModal();
+	    this.initializeFormValues();
+	}
+
+	initializeFormValues = () => {
+		let { mediaFormData } = this.props;
+		this.refs.mediaFile.value = null
+		$(this.refs.mediaFile).change();
+		if(mediaFormData) {
+			this.refs.mediaName.value = mediaFormData.name || null
+			this.refs.mediaNotes.value = mediaFormData.notes || null
+			this.refs.mediaImg.src = mediaFormData.sourcePath;
+		} else {
+			this.refs.mediaName.value = null
+			this.refs.mediaNotes.value = null
+		}
+		
 	}
 
   	handleModal = () => {
@@ -27,6 +47,7 @@ export default class CreateMedia extends React.Component {
   	}
 
   	hideModal = () => {
+  		this.setState({isBusy:false})
   		$('#createMedia').modal('hide')
   	}
 
@@ -42,43 +63,29 @@ export default class CreateMedia extends React.Component {
 
   	onSubmit = (event) => {
   		event.preventDefault()
-  		let file = this.refs.mediaFile.files[0];
-  		console.log("file -->>",file);
+  		this.setState({isBusy:true})
+  		const file = this.refs.mediaFile.files[0];
+  		const { mediaFormData } = this.props;
   		const mediaData = {
   			"name": this.refs.mediaName.value,
   			"desc": this.refs.mediaNotes.value,
   			"schoolId": this.props.schoolId,
+  			"type": file && this.getFileType(file),
   		}
-  		if(file) {
-  			mediaData.type = this.getFileType(file);
-  			console.log("mediaData -->>",mediaData);
-	  		S3.upload({files: { "0": file}, path:"schools"}, (err, res) => {
-	  			if(err) {
-	  				console.error("err ",err);
-	  			}
-	  			if(res) {
-	  				mediaData.sourcePath = res.secure_url;
-	  				this.addMedia(mediaData)
-	  			}
-	  		})
-  		} else {
-  			this.addMedia(mediaData) 
-  		}
-  	}
+ 		console.log("onSubmit file",file)
+ 		console.log("onSubmit mediaData",mediaData)
 
-  	addMedia = (mediaData) => {
-  		Meteor.call("media.addMedia", mediaData, (error, result) => {
-	      if(error) {
-	        console.error("error", error);
-	      }
-	      if(result) {
-	        this.hideModal()
-	      }
-	    });
+  		if(mediaFormData) {
+  			this.props.onEdit({editKey: mediaFormData._id , data: mediaData, fileData:file});
+  		} else {
+	  		this.props.onAdd(mediaData, file);
+  		}
+  	
   	}
 
     render() {
-    	
+    	let { mediaFormData } = this.props;
+    	console.log("createMedia props -->>",this.props)
 	    return (
 		    <div className="modal fade " id="createMedia" role="dialog">
         		<div className="modal-dialog" style={{minWidth: '850px'}}>
@@ -90,6 +97,7 @@ export default class CreateMedia extends React.Component {
 			            </div>
             
 	            		<div className="modal-body">
+	            			{this.state.isBusy && <ContainerLoader/>}
 	            			<form id={formId} className="formmyModal" onSubmit={this.onSubmit}>
 	            				<div className="row">
     								<div className="col-sm-8">
@@ -128,6 +136,11 @@ export default class CreateMedia extends React.Component {
 										    <div className="card-content bootstrap-dialog-footer">
 										        <p className="category">Upload Media</p>
 										        <div className="fileinput card-button text-right fileinput-new" data-provides="fileinput">
+										            {
+										            	mediaFormData && <div className="fileinput-new card-button thumbnail">
+										                	<img className="" ref="mediaImg" alt="Profile Image" />
+										            	</div>
+										        	}
 										            <div className="fileinput-preview fileinput-exists thumbnail" style={{marginTop: '10px'}}></div>
 										            <div>
 										                <span className="btn btn-warning btn-sm btn-file">
@@ -135,7 +148,7 @@ export default class CreateMedia extends React.Component {
 										                	<span className="fileinput-exists">Change</span>
 										                	<input type="hidden"/>
 										                	<input type="hidden" value="" name="..."/>
-										                	<input type="file" name="" ref="mediaFile"/>
+										                	<input type="file" name="" required={mediaFormData ? false : true} ref="mediaFile"/>
 										                	<div className="ripple-container"></div>
 										                </span>
 										                <a href="#" className="btn btn-danger btn-sm fileinput-exists" data-dismiss="fileinput">

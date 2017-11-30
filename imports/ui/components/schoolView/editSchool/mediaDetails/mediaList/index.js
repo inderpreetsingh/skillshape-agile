@@ -1,7 +1,9 @@
 import React from "react";
 import MediaListRender from "./mediaListRender";
+import { withSubscriptionAndPagination } from '/imports/util';
+import Media from "/imports/api/media/fields";
 
-export default class MediaList extends React.Component {
+class MediaList extends React.Component {
   
   constructor(props){
     super(props);
@@ -13,3 +15,5 @@ export default class MediaList extends React.Component {
   }
 
 }
+
+export default withSubscriptionAndPagination(MediaList, {collection: Media, subscriptionName: "media.getMedia", filter: {}, recordLimit: 30});

@@ -1,10 +1,39 @@
 import React from "react";
+import Thumbnail from './thumbnail';
 
-export default function(){
+export default function() {
 
+	const { collectionData } = this.props;
+	console.log("media list render props -->>",this.props);
+	console.log("media list render state -->>",this.state);
+	const { isHovering, thumbnailData, imgIndex } = this.state;
+
+	
 	return (
-		<div>
-		Media List
+		<div className="col-sm-offset-2 col-sm-8 no-padding">
+				{
+					collectionData && collectionData.map((media, index) => {
+						return (
+							<div 
+								key={index} 
+								className="thumb" 
+								onMouseEnter={() => this.setState({isHovering: true, thumbnailData: media, imgIndex: index})}
+          						onMouseLeave={() => this.setState({isHovering: false, thumbnailData: null})}
+								style={{
+									backgroundImage: `url(${media.sourcePath})`, 
+									height:'125px', 
+									width:'125px',
+									marginRight: '5px',
+									cursor: 'pointer'
+								}}
+							>
+								{
+									isHovering && (imgIndex === index) && <Thumbnail thumbnailData={this.state.thumbnailData} {...this.props}/>
+								}
+							</div>
+						)
+					})
+				}
 		</div>
 	)
 }
