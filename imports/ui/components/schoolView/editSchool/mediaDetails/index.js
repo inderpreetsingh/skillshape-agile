@@ -17,7 +17,9 @@ export default class MediaDetails extends React.Component {
     
     openEditMediaForm = (data) => this.setState({showCreateMediaModal: true, mediaFormData: data})
     
-    onAddMedia = (data, fileData) => {
+    onAddMedia = ({data, fileData, formType}) => {
+      // console.log("onAddMedia data -->>",data, fileData);
+      if(formType === "system" && fileData) {
 
         S3.upload({files: { "0": fileData}, path:"schools"}, (err, res) => {
             if(err) {
@@ -25,37 +27,49 @@ export default class MediaDetails extends React.Component {
             }
             if(res) {
               data.sourcePath = res.secure_url;
-              Meteor.call("media.addMedia", data, (error, result) => {
-                if(error) {
-                  console.error("error", error);
-                }
-                this.refs.createMedia.hideModal()
-              });
+              this.meteorCall({type:"add", data})
             }
-       })
+        })
+      } else if(formType === "url") 
+          this.meteorCall({type:"add", data})
       
     } 
 
     onEditMedia = ({editKey, data, fileData}) => {
-
-        if(fileData) {
-            
-            S3.upload({files: { "0": fileData}, path:"schools"}, (err, res) => {
-                if(err) {
-                  console.error("err ",err);
-                }
-                if(res) {
-                  data.sourcePath = res.secure_url;
-                  Meteor.call("media.editMedia", editKey, data, (error, result) => {
-                    if(error) {
-                      console.error("error", error);
-                    }
-                    this.refs.createMedia.hideModal()
-                  });
-                }
-            })
-
+        // console.log("onEditMedia data -->>",data, fileData);
+        if(data.type === "url") {
+            this.meteorCall({type:"edit", data, editKey})
         } else {
+
+            if(fileData) {
+            
+                S3.upload({files: { "0": fileData}, path:"schools"}, (err, res) => {
+                    if(err) {
+                      console.error("err ",err);
+                    }
+                    if(res) {
+                      data.sourcePath = res.secure_url;
+                      this.meteorCall({type:"edit", data, editKey})
+                    }
+                })
+
+            } else {
+                this.meteorCall({type:"edit", data, editKey})
+            }
+        }
+        
+    }
+
+    meteorCall = ({type, data, editKey}) => {
+        if(type === "add") {
+
+            Meteor.call("media.addMedia", data, (error, result) => {
+                if(error) {
+                  console.error("error", error);
+                }
+                this.refs.createMedia.hideModal()
+            });
+        } else if(type === "edit") {
             
             Meteor.call("media.editMedia", editKey, data, (error, result) => {
                 if(error) {
@@ -64,10 +78,8 @@ export default class MediaDetails extends React.Component {
                 this.refs.createMedia.hideModal()
             });
         }
-        
     }
-
-
+    
     onDeleteMedia = (data) => {
       
       Meteor.call("media.removeModule", data, (error, result) => {

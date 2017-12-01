@@ -11,6 +11,10 @@ export default class MediaFilter extends React.Component {
     }
   }
 
+  handleSelect = (date) => {
+    console.log(date); // Momentjs object
+  }
+
   render() {
     return MediaFilterRender.call(this, this.props);
   }

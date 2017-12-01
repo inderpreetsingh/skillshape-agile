@@ -12,6 +12,7 @@ export default function () {
 		<div>
 			{
 				showCreateMediaModal && <CreateMedia
+					formType={showCreateMediaModal}
 					schoolId={schoolId}
 					ref="createMedia"
 					onAdd={this.onAddMedia}
@@ -26,17 +27,34 @@ export default function () {
 				/>
 			</div>
 			<div className="row">
-				<div className="col-sm-offset-2 col-sm-8 no-padding" style={{textAlign: 'center'}}>
-					<h2>Thumbnails View</h2>
-					<p>Create beautiful thumbnaiuls to display the content of your entire gallery. Upon clicking on the image an image lightbox will be opened. As an alternative you can redirect the images to specific URLs.</p>
-				</div>
-				<div className="col-sm-2 no-padding">
-					<button onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null})} className="btn btn-warning" type="button" >
-       				  Add New Media 
-      				</button>
+				<div className="col-sm-3 col-offset-9 no-padding pull-right">
+					<div className="card" style={{margin: 0, width:'86%'}}>
+						<div className="card-body" style={{display: 'flex'}}>
+							<div className="upload-box">
+								<div className="upload-box-header text-center">
+									<button onClick={()=> this.setState({showCreateMediaModal:"system", mediaFormData: null})} className="btn btn-warning" type="button" >
+					   				  <i class="fa fa-upload" aria-hidden="true"></i> 
+					  				</button>
+					  			</div>
+					  			<div className="upload-box-footer text-center">
+									<p>Upload From Computer</p>
+					  			</div>	
+							</div>
+							<div className="upload-box">
+								<div className="upload-box-header text-center">
+									<button onClick={()=> this.setState({showCreateMediaModal:"url", mediaFormData: null})} className="btn btn-warning" type="button" >
+					   				  <i class="fa fa-globe" aria-hidden="true"></i> 
+					  				</button>
+								</div>
+								<div className="upload-box-footer text-center">
+									<p>Upload From URL's</p>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div className="row">
+			<div className="row" style={{marginTop: 10}}>
 				<MediaList
 					mediaData={mediaData}
 					schoolId={schoolId}

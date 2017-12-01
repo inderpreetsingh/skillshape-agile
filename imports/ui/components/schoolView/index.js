@@ -5,6 +5,8 @@ import SchoolViewRender from './schoolViewRender';
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
+import ClassPricing from "/imports/api/classPricing/fields";
+import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 
 class SchoolView extends SchoolViewBase {
   

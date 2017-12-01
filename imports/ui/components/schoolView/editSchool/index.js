@@ -56,8 +56,6 @@ export default createContainer(props => {
   Meteor.subscribe("classtype");
   Meteor.subscribe("SkillType");
   Meteor.subscribe("SkillClassbySchool", schoolId);
-  Meteor.subscribe("MonthlyPricing", schoolId);
-  Meteor.subscribe("ClassPricing", schoolId);
   Meteor.subscribe("modules.getModules", {schoolId});
   Meteor.subscribe("classType.getclassType", {schoolId});
 

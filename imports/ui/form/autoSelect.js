@@ -19,6 +19,10 @@ export default class AutoSelect extends React.Component {
 
     getInitialState = () => {
     	console.log("getInitialState")
+    	const { fieldobj } = this.props;
+    	if(fieldobj && fieldobj.onLoad) {
+    		this.getData({schoolId:"betg4HL7A7uCW7aiT"})
+    	}
 		this.setState({
 			removeSelected: true,
 			disabled: false,

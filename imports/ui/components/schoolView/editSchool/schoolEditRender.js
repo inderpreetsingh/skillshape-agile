@@ -147,7 +147,6 @@ export default function (props) {
           }
           {
             (selecetdView === "prices_details") && <PriceDetails
-              priceData={null}
               schoolId={schoolId}
               showFormBuilderModal={this.showFormBuilderModal}
               moveTab={this.moveTab}

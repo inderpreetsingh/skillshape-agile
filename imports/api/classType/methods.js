@@ -1,6 +1,10 @@
 import ClassType from "./fields";
 
 Meteor.methods({
+    "classType.getClassType": function({schoolId}) {
+        
+        return ClassType.find({schoolId}).fetch();
+    },
     "classType.addClassType": function(doc) {
          const user = Meteor.users.findOne(this.userId);
         // console.log("classType.addClassType methods called!!!");
