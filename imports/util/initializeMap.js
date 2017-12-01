@@ -1,3 +1,5 @@
+import ClassPricing from "/imports/api/classPricing/fields";
+
 export function initializeMap() {
 	// console.log("initialize Map start")
 	var bounds = new google.maps.LatLngBounds();
