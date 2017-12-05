@@ -15,12 +15,16 @@ export default class CreateMedia extends React.Component {
     }
 
     componentDidMount() {
-	    this.handleModal();
+	    if(!this.props.filterStatus) {
+	    	this.handleModal();
+    	}
 	    this.initializeFormValues();		
 	}
 
 	componentDidUpdate() {
-	    this.handleModal();
+		if(!this.props.filterStatus) {
+	    	this.handleModal();
+    	}
 	    this.initializeFormValues();
 	}
 

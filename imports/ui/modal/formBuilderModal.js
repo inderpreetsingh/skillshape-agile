@@ -10,6 +10,9 @@ export class FormBuilderModal extends React.Component {
 
   constructor(props){
     super(props);
+    this.state = {
+        isBusy: false,
+    }
   }
 
   componentDidMount() {
@@ -18,6 +21,10 @@ export class FormBuilderModal extends React.Component {
 
   componentDidUpdate() {
     this.initializeFormValues();  
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log("FormBuilderModal componentWillReceiveProps-->>",nextProps);
   }
 
   getFormFields = () => {
@@ -61,6 +68,7 @@ export class FormBuilderModal extends React.Component {
   }
 
   hideModal = () => {
+    this.setState({isBusy:false})
     $('#FormBuilderModal').appendTo("body").modal('hide');
   }
 
@@ -112,6 +120,7 @@ export class FormBuilderModal extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault()
+    this.setState({isBusy:true})
     let editByFieldValue;
     let parentKeyValue;
     let callApi;
@@ -140,36 +149,56 @@ export class FormBuilderModal extends React.Component {
       
       for(formField of formFields) {
         
-        if(formField.type === "image") {
-          
-          payload[formField.key] = this.refs[formField.key].files[0];
-        
-        } else if(formField.type === "autoComplete") {
-          
-          let temp = this.refs[formField.key].getSelectedAutoCompleteValue()
-          if(!temp) {
-            toastr.error(`Please select any ${formField.label}`,"Error");
-            return
-          }
-          
-          payload[formField.key] = temp[formField.valueField];
+        switch(formField.type) {
 
-          if(formField.child) {
-            let temp = this.refs[formField.key].getAutoSelectValue()
-            if(!temp) {
-              toastr.error(`Please select any ${formField.child.label}`,"Error");
+          case "image": {
+              payload[formField.key] = this.refs[formField.key].files[0];
+              break;
+            }
+
+          case "auto-select": {
+            let autoSelectValue = this.refs[formField.key].getValue()
+            if(!autoSelectValue && formField.required) {
+                toastr.error(`Please select any ${formField.label}`,"Error");
+                return
+            }
+
+            payload[formField.key] = autoSelectValue;
+            break;
+          }
+
+          case "autoComplete": {
+
+            let temp = this.refs[formField.key].getSelectedAutoCompleteValue()
+            if(!temp && formField.required) {
+              toastr.error(`Please select any ${formField.label}`,"Error");
               return
             }
-            
-            payload[formField.child.key] = this.refs[formField.key].getAutoSelectValue();
-          }
-
-        
-        } else {
           
-          payload[formField.key] = this.refs[formField.key].value;
-        
+            payload[formField.key] = temp[formField.valueField];
+
+            if(formField.child) {
+              let temp = this.refs[formField.key].getAutoSelectValue()
+              if(!temp && formField.child.required) {
+                toastr.error(`Please select any ${formField.child.label}`,"Error");
+                return
+              }
+            
+              payload[formField.child.key] = this.refs[formField.key].getAutoSelectValue();
+            }
+            break;
+          }
+           
+          default: {
+            let fieldValue = this.refs[formField.key].value;
+            if(formField.type === "number" && fieldValue) {
+                fieldValue = parseInt(fieldValue);
+            }
+            payload[formField.key] = fieldValue;
+            break;
+          }    
         }
+
       }
 
       if(parentData && tableData && tableData.actions.parentKey) {
@@ -180,15 +209,25 @@ export class FormBuilderModal extends React.Component {
         editByFieldValue = formFieldsValues[tableData.actions.edit.editByField];
       }
 
-      console.log("payload -->>",payload)
-      console.log("callApi -->>",callApi, methods[callApi])
+      console.log("onSubmit payload -->>",payload)
+      // console.log("callApi -->>",callApi, methods[callApi])
       methods[callApi]({formPayload: payload, props: this.props, closeModal: this.hideModal.bind(this), editByFieldValue, parentKeyValue});
 
     }
   }
 
+  getFilters = (filterArr) => {
+    let filters = {};
+    for(let i=0; i < filterArr.length; i++) {
+      filters[filterArr[i]] = this.props[filterArr[i]];
+    }
+    // console.log("FormBuilderModal getFilters -->>",filters);
+    return filters
+  }
+
   getInputField = (field) => {
     let { formFieldsValues } = this.props;
+    console.log("getInputField this.props -->>",formFieldsValues);
     switch(field.type) {
 
       case "text":
@@ -249,6 +288,8 @@ export class FormBuilderModal extends React.Component {
             className="form-control form-mandatory"
             ref={field.key}
             fieldobj={field}
+            defaultData={formFieldsValues && formFieldsValues[field.key]}
+            methodFilters={field.filterKeys && this.getFilters(field.filterKeys)}
           />
         )  
       case "image": 

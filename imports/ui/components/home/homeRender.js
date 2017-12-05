@@ -2,6 +2,7 @@ import React from 'react';
 import SkillClassFilter from './filter';
 import { Loading } from '/imports/ui/loading';
 import SkillClassList from './skillClassList';
+import MapView from './mapView';
 
 export default function() {
   const { 
@@ -21,7 +22,7 @@ export default function() {
         	onSearchTag={this.onSearchTag}
         	filters={this.state.filters}
         />
-				<div className="row">
+			<div className="row">
 		      <div className="col-sm-12 grid-map-wrap">
 		        <div className="col-sm-5 p0">
 		          <p className="search-no text-center-xs">
@@ -53,15 +54,12 @@ export default function() {
 		        </div>
 		      </div>
 		    </div>
-		    <div className={this.state.listContainerClass} id="skillList"> 
-		    	 {!isLoading && <SkillClassList  {...this.props} {...this.state}/>}
-		    </div>
 		    {
-		      mapView && (<div className="col-md-6 mapview" style={{ height:'700px'}}>
-		          <div id="google-map" style={{height:'700px'}}>
-		        </div>
-		      </div>)
+		      mapView && <MapView {...this.props}/>
 		    }
+		    <div className={this.state.listContainerClass} id="skillList"> 
+		    	 {!mapView && !isLoading && <SkillClassList  {...this.props} {...this.state}/>}
+		    </div>
       </div>
     </div>
 	)

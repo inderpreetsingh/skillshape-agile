@@ -5,9 +5,10 @@ import CreateMedia from './createMedia';
 
 export default function () {
 
-	const { showCreateMediaModal, mediaFormData } = this.state;
+	const { showCreateMediaModal, mediaFormData, filterStatus } = this.state;
 	const { schoolId, mediaData } = this.props;
 
+	console.log("<<<<media details state --->>",this.state);
 	return (
 		<div>
 			{
@@ -18,6 +19,7 @@ export default function () {
 					onAdd={this.onAddMedia}
 					onEdit={this.onEditMedia}
 					mediaFormData={mediaFormData}
+					filterStatus={filterStatus}
 				/>
 			}
 			<div className="row">
@@ -32,8 +34,8 @@ export default function () {
 						<div className="card-body" style={{display: 'flex'}}>
 							<div className="upload-box">
 								<div className="upload-box-header text-center">
-									<button onClick={()=> this.setState({showCreateMediaModal:"system", mediaFormData: null})} className="btn btn-warning" type="button" >
-					   				  <i class="fa fa-upload" aria-hidden="true"></i> 
+									<button onClick={()=> this.setState({showCreateMediaModal:"system", mediaFormData: null, filterStatus: false})} className="btn btn-warning" type="button" >
+					   				  <i className="fa fa-upload" aria-hidden="true"></i> 
 					  				</button>
 					  			</div>
 					  			<div className="upload-box-footer text-center">
@@ -42,8 +44,8 @@ export default function () {
 							</div>
 							<div className="upload-box">
 								<div className="upload-box-header text-center">
-									<button onClick={()=> this.setState({showCreateMediaModal:"url", mediaFormData: null})} className="btn btn-warning" type="button" >
-					   				  <i class="fa fa-globe" aria-hidden="true"></i> 
+									<button onClick={()=> this.setState({showCreateMediaModal:"url", mediaFormData: null, filterStatus: false})} className="btn btn-warning" type="button" >
+					   				  <i className="fa fa-globe" aria-hidden="true"></i> 
 					  				</button>
 								</div>
 								<div className="upload-box-footer text-center">

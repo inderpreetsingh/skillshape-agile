@@ -36,11 +36,6 @@ export default class HomeBase extends React.Component {
     this.getMyCurrentLocation()
   }
 
-  componentDidUpdate() {
-    if(this.state.mapView)
-      initializeMap()
-  }
-
   componentWillUnmount() {
     Session.set("pagesToload",1)
   }

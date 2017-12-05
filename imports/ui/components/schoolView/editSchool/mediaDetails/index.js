@@ -15,7 +15,7 @@ export default class MediaDetails extends React.Component {
         }
     }
     
-    openEditMediaForm = (data) => this.setState({showCreateMediaModal: true, mediaFormData: data})
+    openEditMediaForm = (data) => this.setState({showCreateMediaModal: true, mediaFormData: data, filterStatus: false})
     
     onAddMedia = ({data, fileData, formType}) => {
       // console.log("onAddMedia data -->>",data, fileData);
@@ -99,7 +99,7 @@ export default class MediaDetails extends React.Component {
       filters.name = filterRef.imageName.value
       filters.startDate = filterRef.startDate
       filters.endDate = filterRef.endDate
-      this.setState({filters})
+      this.setState({filters, filterStatus: true})
     }
 
     resetFilter = (filterRef) => {
@@ -108,7 +108,8 @@ export default class MediaDetails extends React.Component {
       this.setState({
         filters: {
             schoolId: this.props.schoolId
-        }
+        },
+        filterStatus: true,
       });
     }
 

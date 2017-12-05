@@ -16,7 +16,7 @@ MonthlyPricing.attachSchema(new SimpleSchema({
         optional: true
     },
     classTypeId: {
-        type: String,
+        type: [String],
         optional: true
     },
     oneMonCost: {
