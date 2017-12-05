@@ -15,29 +15,20 @@ export default class SkillClassListBase extends React.Component {
     Session.set("pagesToload",1)
   }
 
-  viewImage = (classType,classImagePath,schoolId) => {
-    const image = ClassType.findOne({_id: classType})
-    if (typeof image!=="undefined"){
-     if(image.hasOwnProperty("classTypeImg") && image.classTypeImg.length>0){
-        return image.classTypeImg;
-     }
-     else if(image.hasOwnProperty("classImagePath") && image.classImagePath.length>0){
-     return image.classImagePath;
+  viewImage = ({classType, schoolData}) => {
+    let image = "images/SkillShape-Whitesmoke.png";
+    if(classType && (classType.hasOwnProperty("classTypeImg") || classType.hasOwnProperty("classImagePath"))) {
+        image = classType.classTypeImg || classType.classImagePath;
+    } else if(schoolData && schoolData.mainImage) {
+        image = schoolData.mainImage
     }
-   }
-    else {
-      school = School.findOne({_id: schoolId})
-        if(school && school.mainImage){
-          return school.mainImage;
-        }
-    }
-    return "images/SkillShape-Whitesmoke.png";
+    return image;
   }
 
   addressView = (locationId) => {
     const class_location = SLocation.findOne({_id:locationId})
     if(class_location){
-      return (class_location.city == undefined  || class_location.city.length < 1 ? "" : class_location.city+", ")+""+(class_location.state == undefined ? "" : class_location.state);
+      return (class_location.city  || class_location.city.length < 1 ? "" : class_location.city+", ")+""+(class_location.state ? "" : class_location.state);
     }
     return
   }
@@ -60,22 +51,24 @@ export default class SkillClassListBase extends React.Component {
     return default_value;
   }
 
-  showSkillClass = (classTypeData) => {
-    console.log("showSkillClass -->>",classTypeData)
-    const skillClass = SkillClass.find({classTypeId: classTypeData._id}).fetch();
-    const school = School.findOne({_id: classTypeData.schoolId});
+  showSkillClass = ({classType, skillClass, school}) => {
+    const skillClassData = skillClass || SkillClass.find({classTypeId: classType._id}).fetch();
+    const schoolData = school || School.findOne({_id: classType.schoolId});
     
-    const checkJoin = this.checkJoin(classTypeData._id)
-    const locationId = this.addressView(classTypeData.locationId)
-    const isMyClass = this.isMyClass(classTypeData.schoolId)
-    const backgroundUrl = this.viewImage(classTypeData._id, classTypeData.classTypeImg, classTypeData.schoolId);
+    const checkJoin = this.checkJoin(classType._id)
+    const isMyClass = this.isMyClass(classType.schoolId)
+    const backgroundUrl = this.viewImage({classType, schoolData});
     
-    return skillClass.map((data, index) => {
+    // console.log("showSkillClass school -->>",schoolData)
+    // console.log("showSkillClass classType -->>",classType)
+    // console.log("showSkillClass skillClass -->>",skillClassData)
+    return skillClassData.map((data, index) => {
+      const locationId = this.addressView(data.locationId)
       return <ListView
           key={index}
           className={this.props.listClass || "col-lg-6 col-md-6"}
-          school={school}
-          classTypeData={classTypeData}
+          school={schoolData}
+          classTypeData={classType}
           backgroundUrl={backgroundUrl}
           locationId={locationId}
           checkJoin={checkJoin}

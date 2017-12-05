@@ -3,6 +3,12 @@ import React, {Fragment} from 'react';
 export default function() {
 	
 	// console.log("Map view Render -->>",this.props.classType)
+	const {
+		classType,
+		school,
+		skillClass,
+	} = this.state;
+
 	return ( 
 		<Fragment>
 			<div className="col-md-6 mapview" style={{ height:'700px'}}>
@@ -11,8 +17,8 @@ export default function() {
 	      	</div>
 	      	<div className="col-md-6 map-view-container" id="skillList"> 
 	      		{
-					this.props.classType.map((classByClassType, index) => {
-						return this.showSkillClass(classByClassType)
+					this.state.classType.map((data, index) => {
+						return this.showSkillClass({classType: data, school, skillClass})
 					})
 				}
 	      	</div>
