@@ -1,9 +1,12 @@
 import React from "react";
 import { Session } from 'meteor/session';
 import ListView from '/imports/ui/components/listView';
+import config from '/imports/config';
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
+import SLocation from "/imports/api/sLocation/fields";
+import Classes from "/imports/api/classes/fields";
 
 export default class SkillClassListBase extends React.Component {
 
@@ -16,7 +19,7 @@ export default class SkillClassListBase extends React.Component {
   }
 
   viewImage = ({classType, schoolData}) => {
-    let image = "images/SkillShape-Whitesmoke.png";
+    let image = config.defaultSchoolImage;
     if(classType && (classType.hasOwnProperty("classTypeImg") || classType.hasOwnProperty("classImagePath"))) {
         image = classType.classTypeImg || classType.classImagePath;
     } else if(schoolData && schoolData.mainImage) {
@@ -51,9 +54,9 @@ export default class SkillClassListBase extends React.Component {
     return default_value;
   }
 
-  showSkillClass = ({classType, skillClass, school}) => {
-    const skillClassData = skillClass || SkillClass.find({classTypeId: classType._id}).fetch();
-    const schoolData = school || School.findOne({_id: classType.schoolId});
+  showSkillClass = ({classType}) => {
+    const skillClassData = Classes.find({classTypeId: classType._id}).fetch();
+    const schoolData = School.findOne({_id: classType.schoolId});
     
     const checkJoin = this.checkJoin(classType._id)
     const isMyClass = this.isMyClass(classType.schoolId)

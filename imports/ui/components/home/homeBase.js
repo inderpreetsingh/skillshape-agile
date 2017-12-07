@@ -1,7 +1,7 @@
 import React from 'react';
 import ListView from '/imports/ui/components/listView';
-import { initializeMap } from '/imports/util';
 import { Session } from 'meteor/session';
+import config from '/imports/config';
 
 export default class HomeBase extends React.Component {
   
@@ -16,7 +16,8 @@ export default class HomeBase extends React.Component {
       isLoading: true,
       currentAddress: null,
       filters: {
-        coords: null
+        coords: null,
+        is_map_view: false,
       },
     }
     this.onSearch = _.debounce(this.onSearch, 1000);
@@ -59,8 +60,8 @@ export default class HomeBase extends React.Component {
       let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       let geocoder = new google.maps.Geocoder();
       let coords = [];
-      coords[0] = position.coords.latitude
-      coords[1] = position.coords.longitude
+      coords[0] = position.coords.latitude || config.defaultLocation[0];
+      coords[1] = position.coords.longitude || config.defaultLocation[1];
       geocoder.geocode({'latLng': latlng}, (results, status) => {
         let sLocation = "near by me";
         if (status == google.maps.GeocoderStatus.OK) {
@@ -70,7 +71,7 @@ export default class HomeBase extends React.Component {
           } 
         }
         this.setState({
-          filters: {coords: [52.3702157, 4.8951]},
+          filters: {coords: coords},
           currentAddress: sLocation,
           isLoading: false,
         })
@@ -81,6 +82,8 @@ export default class HomeBase extends React.Component {
   }
 
   handleListView = () => {
+    let oldFilters = {...this.state.filters};
+    oldFilters.is_map_view = false;
     $("#view_list").addClass("btn-custom-active");
     $("#map_view").removeClass("btn-custom-active");
     this.setState({
@@ -89,18 +92,22 @@ export default class HomeBase extends React.Component {
       listClass: "col-lg-3 col-md-4",
       listContainerClass: "row",
       scrollOnId: null,
+      filters: oldFilters,
     })
   }
 
   handleMapView = () => {
+    let oldFilters = {...this.state.filters};
     $("#map_view").addClass("btn-custom-active");
     $("#view_list").removeClass("btn-custom-active");
+    oldFilters.is_map_view = true;
     this.setState({
       gridView: false,
       mapView: true,
       listClass: "col-lg-6 col-md-6",
       listContainerClass: "col-md-6 map-view-container",
       scrollOnId: "skillList",
+      filters: oldFilters,
     })
   }
 
@@ -114,6 +121,7 @@ export default class HomeBase extends React.Component {
     oldFilters._monthPrice = filterRef._monthPrice
     oldFilters.coords = filterRef.coords;
     
+    console.log("onSearch fn oldFilters",oldFilters)
     this.setState({filters: oldFilters})
   }
 
@@ -122,6 +130,13 @@ export default class HomeBase extends React.Component {
     oldFilters.selectedTag = tagValue 
     
     // console.log("onSearchTag fn called",oldFilters)
+    this.setState({filters: oldFilters})
+  }
+
+  setSchoolIdFilter = ({schoolId}) => {
+    let oldFilters = {...this.state.filters};
+    oldFilters.schoolId = schoolId;
+    console.log("setSchoolIdFilter",oldFilters)
     this.setState({filters: oldFilters})
   }
 }

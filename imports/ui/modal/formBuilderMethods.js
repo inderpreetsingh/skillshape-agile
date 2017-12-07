@@ -3,6 +3,7 @@ import '/imports/api/modules/methods';
 import '/imports/api/classType/methods';
 import '/imports/api/monthlyPricing/methods';
 import '/imports/api/classPricing/methods';
+import '/imports/api/sLocation/methods';
 
 export default methods = {
   callMeteorMethod: ({methodName, payload, closeModal}) => {
@@ -53,7 +54,7 @@ export default methods = {
               payload.loc = [data.lat, data.lng]
               console.log("Final payload 2-->>",payload)
               methods.callMeteorMethod({
-                methodName: "addLocation", 
+                methodName: "location.addLocation", 
                 payload: payload, 
                 closeModal
               });
@@ -66,7 +67,7 @@ export default methods = {
           console.log("Final payload 3-->>",payload)
 
           methods.callMeteorMethod({
-            methodName: "addLocation", 
+            methodName: "location.addLocation", 
             payload: payload, 
             closeModal
           });
@@ -107,7 +108,7 @@ export default methods = {
               console.log("editLocation Final payload 2-->>",payload)
               
               methods.callMeteorUpdateMethod({
-                methodName: "editLocation", 
+                methodName: "location.editLocation", 
                 payload: payload, 
                 updateKey: editByFieldValue,
                 closeModal
@@ -121,7 +122,7 @@ export default methods = {
             console.log("editLocation Final payload 3-->>",payload)
 
             methods.callMeteorUpdateMethod({
-              methodName: "editLocation", 
+              methodName: "location.editLocation", 
               payload: payload, 
               updateKey: editByFieldValue,
               closeModal
@@ -130,9 +131,9 @@ export default methods = {
       });
     }
   },
-  removeLocation: ({editByFieldValue}) => {
-    console.log("removeLocation fn editByFieldValue -->>", editByFieldValue);
-    Meteor.call("removeLocation", editByFieldValue, (error, result) => {
+  removeLocation: ({formPayload}) => {
+    console.log("removeLocation fn editByFieldValue -->>", formPayload);
+    Meteor.call("location.removeLocation", formPayload, (error, result) => {
       if(error) {
         toastr.error("Unable to delete.","Error");
         return

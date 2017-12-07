@@ -7,6 +7,7 @@ import SchoolViewRender from './schoolViewRender';
 import ClassType from "/imports/api/classType/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
+import SLocation from "/imports/api/sLocation/fields";
 
 class SchoolView extends SchoolViewBase {
   
@@ -42,7 +43,7 @@ export default createContainer(props => {
     Meteor.subscribe("UserSchool", schoolId);
     Meteor.subscribe("SkillClassbySchool", schoolId);
     Meteor.subscribe("ClaimOrder", "");
-    Meteor.subscribe("SchoolLocation", schoolId);
+    Meteor.subscribe("location.getSchoolLocation", {schoolId});
     Meteor.subscribe("classTypeBySchool", schoolId);
     Meteor.subscribe("ClassPricing", schoolId)
     Meteor.subscribe("MonthlyPricing", schoolId)

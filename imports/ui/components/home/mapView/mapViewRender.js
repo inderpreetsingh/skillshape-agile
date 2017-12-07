@@ -15,13 +15,7 @@ export default function() {
 	          	<div id="google-map" style={{height:'700px'}}>
 	        	</div>
 	      	</div>
-	      	<div className="col-md-6 map-view-container" id="skillList"> 
-	      		{
-					this.state.classType.map((data, index) => {
-						return this.showSkillClass({classType: data, school, skillClass})
-					})
-				}
-	      	</div>
+	      	
       	</Fragment>
 	)
 }

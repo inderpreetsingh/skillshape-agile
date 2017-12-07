@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 import ClassType from "/imports/api/classType/fields";
 import {cutString} from '/imports/util';
 import Events from '/imports/util/events';
+import config from '/imports/config';
 
 let mc;
 let googleMarkers = [];
@@ -15,13 +16,13 @@ const mapOptions = {
     center: { lat: -25.363, lng: 131.044 }
 };
 
-function infoSchool({classType, school, skillClass}) {
-    if(school && skillClass) {
-        console.log("infoSchool classType -->>",classType)
+function infoSchool({school}) {
+    if(school) {
+        // console.log("<< --infoSchool -->>")
         let backgroundUrl = school.mainImage || "images/SkillShape-Whitesmoke.png";
         const schoolName = school ? cutString(school.name, 20) : "";
         
-        Events.trigger("getSeletedSchoolData",{classType, skillClass, school});
+        Events.trigger("getSeletedSchoolData",{school});
         const view = `<div id="content">
             <h3>${schoolName}</h3>
             <img src=${backgroundUrl} width="250" height="200">
@@ -31,20 +32,36 @@ function infoSchool({classType, school, skillClass}) {
     return
 }
 
-export function initializeMap() {
+export function reCenterMap(map, center) {
+    // console.log("reCenterMap center -->>",center)
+    map.panTo(new google.maps.LatLng(center[0], center[1]));
+    return map;
+}
+
+export function initializeMap(center) {
     if (document.getElementById('google-map')) {
         document.getElementById('google-map').innerHTML = ""
+        let geolocate;
         let map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
         
-        if (!!navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                console.log("geolocate", geolocate);
-                map.setCenter(geolocate);
-            });
-        } else {
-            map.setCenter(new google.maps.LatLng(52.3702, 4.8952));
-        }
+        geolocate = new google.maps.LatLng(center[0], center[1])
+        map.setCenter(geolocate);
+        // if (!!navigator.geolocation) {
+        //     navigator.geolocation.getCurrentPosition(function(position) {
+        //         geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        //         console.log("geolocate", geolocate);
+        //         map.setCenter(geolocate);
+        //     });
+        // } else {
+        //     geolocate = new google.maps.LatLng(config.defaultLocation[0], config.defaultLocation[1])
+        //     map.setCenter(geolocate);
+        // }
+
+        let marker = new google.maps.Marker({
+            position: geolocate,
+            icon: '/images/bluecircle.png',
+            map: map
+        });
 
         google.maps.event.addListener(map, "bounds_changed", function() {
             _.debounce(()=> {
@@ -67,9 +84,8 @@ export function setMarkersOnMap(map, SLocation) {
     let deleteMakers = [];
     locations = [];
 
-    console.log("before ", mc);
     if(mc && googleMarkers.length > 0) {
-        console.log("Old googleMarkers --->>",googleMarkers)
+        // console.log("Old googleMarkers --->>",googleMarkers)
         // mc.clearMarkers(googleMarkers);
         googleMarkers = [];
     }
@@ -78,9 +94,7 @@ export function setMarkersOnMap(map, SLocation) {
         locations.push(SLocation[i]._id);
 
         let index = previousLocation.indexOf(SLocation[i]._id);
-        if(index > -1) {
-
-        } else {
+        if(index < 0) {
 
             let latLng = new google.maps.LatLng(eval(SLocation[i].geoLat),eval(SLocation[i].geoLong));
             let marker = new google.maps.Marker({
@@ -111,7 +125,7 @@ export function setMarkersOnMap(map, SLocation) {
             deleteMakers.push(googleMarkers[j]);
         }
     }
-    console.log("deleteMakers --->>",deleteMakers);
+    // console.log("deleteMakers --->>",deleteMakers);
     if(mc && deleteMakers.length > 0) {
         mc.clearMarkers(deleteMakers);
     }

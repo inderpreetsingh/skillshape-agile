@@ -8,7 +8,15 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
   let {collection, subscriptionName , recordLimit } = params;
   let Container = createContainer(props => {
     // console.log("createContainer ",props);
+    const { query } = props.location;
     let filters = props.filters ? props.filters : {};
+    if(filters.is_map_view) {
+      if(query && query.NEPoint && query.SWPoint) {
+        filters.NEPoint = query.NEPoint.split(",").map(Number)
+        filters.SWPoint = query.SWPoint.split(",").map(Number)
+      }
+    }
+    
     const collectionCursor = collection.find({});
     const collectionData = collectionCursor.fetch();
     const currentUser = Meteor.user();

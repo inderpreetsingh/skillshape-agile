@@ -15,4 +15,4 @@ class SkillClassList extends SkillClassListBase {
   }
 }
 
-export default withSubscriptionAndPagination(SkillClassList, {collection: ClassType, subscriptionName: "School", filter: {}, recordLimit: 10});
+export default withSubscriptionAndPagination(SkillClassList, {collection: ClassType, subscriptionName: "school.getSchoolClasses", filter: {}, recordLimit: 10});

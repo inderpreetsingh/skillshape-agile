@@ -5,6 +5,7 @@ import { browserHistory} from 'react-router';
 
 // import collection definition over here
 import Modules from "/imports/api/modules/fields";
+import SLocation from "/imports/api/sLocation/fields";
 
 class SchoolEditView extends React.Component {
 
