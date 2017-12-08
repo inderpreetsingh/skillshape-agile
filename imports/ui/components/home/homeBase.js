@@ -18,6 +18,7 @@ export default class HomeBase extends React.Component {
       filters: {
         coords: null,
         is_map_view: false,
+       // skillCategoryId:"Pkoa2RYhXFwpaRtvG",
       },
     }
     this.onSearch = _.debounce(this.onSearch, 1000);
@@ -64,6 +65,8 @@ export default class HomeBase extends React.Component {
       coords[1] = position.coords.longitude || config.defaultLocation[1];
       geocoder.geocode({'latLng': latlng}, (results, status) => {
         let sLocation = "near by me";
+        let oldFilters = {...this.state.filters};
+        oldFilters["coords"] = coords;
         if (status == google.maps.GeocoderStatus.OK) {
           if (results[1]) {
             sLocation = results[0].formatted_address
@@ -71,7 +74,7 @@ export default class HomeBase extends React.Component {
           } 
         }
         this.setState({
-          filters: {coords: coords},
+          filters: oldFilters,
           currentAddress: sLocation,
           isLoading: false,
         })

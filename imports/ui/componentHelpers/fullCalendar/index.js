@@ -100,32 +100,32 @@ export default createContainer(props => {
   let skillClass = [];
   let myClassIds = [];
   
-  if(isUserSubsReady) {
-
-    if(!schoolId && !slug) {
-      schoolId = currentUser && currentUser.profile && currentUser.profile.schoolId;
-    }
-
-    skillClass = Classes.find({}).fetch();
-    if(manageMyCalendar) {
-      allClassesIds = skillClass.map((a) => {
-        return a._id
-      })
-      Meteor.subscribe("classes.userClasses", { userId: currentUser && currentUser._id})
-      Meteor.subscribe("ClassSchedulebyClassIds", allClassesIds, startDate)
-    } 
-
-    if(startDate) {
-      Meteor.subscribe("ClassSchedule", (schoolId || slug), startDate)
-    }
-
-    classSchedule = ClassSchedule.find().fetch()
-    if(currentUser) {
-      myClassIds = Classes.find({schoolId: schoolId}).fetch().map((a) => {
-        return a._id
-      })
-    }
+  if(!schoolId && !slug) {
+    schoolId = currentUser && currentUser.profile && currentUser.profile.schoolId;
   }
+
+  if(startDate) {
+    console.log("startDate = ", startDate);
+    Meteor.subscribe("ClassSchedule", (schoolId || slug), startDate)
+  }
+  
+  skillClass = Classes.find({}).fetch();
+  if(manageMyCalendar) {
+    allClassesIds = skillClass.map((a) => {
+      return a._id
+    })
+    Meteor.subscribe("classes.userClasses", { userId: currentUser && currentUser._id})
+    Meteor.subscribe("ClassSchedulebyClassIds", allClassesIds, startDate)
+  } 
+
+
+  classSchedule = ClassSchedule.find().fetch()
+  if(currentUser) {
+    myClassIds = Classes.find({schoolId: schoolId}).fetch().map((a) => {
+      return a._id
+    })
+  }
+  
   
   console.log("FullCalendar createContainer skillClass-->>",skillClass)
   console.log("FullCalendar createContainer myClassIds-->>",myClassIds)

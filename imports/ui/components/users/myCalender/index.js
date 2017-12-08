@@ -19,6 +19,7 @@ export default class MyCalender extends React.Component {
   }
 
   render() {
+    console.log("<<<< MyCalender >>>>")
     let { isOpen, eventData } = this.state;
     return  (<div>
       <FullCalendarContainer 

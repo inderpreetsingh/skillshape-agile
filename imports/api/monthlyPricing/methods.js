@@ -1,7 +1,7 @@
 import MonthlyPricing from "./fields";
-import Classes from "/imports/api/classes/fields";
+import ClassType from "/imports/api/classType/fields";
 
-function updateClasses({classTypeId, doc }) {
+function updateHookForClassType({classTypeId, doc }) {
     if(classTypeId && _.isArray(classTypeId)) {
         const allCost = doc && {
             oneMonCost: doc.oneMonCost && parseInt(doc.oneMonCost),
@@ -10,7 +10,7 @@ function updateClasses({classTypeId, doc }) {
             annualCost: doc.annualCost && parseInt(doc.annualCost),
             lifetimeCost: doc.lifetimeCost && parseInt(doc.lifetimeCost),
         }
-        Classes.update({ classTypeId: { $in: classTypeId } }, { $set: {"filters.monthlyPriceCost": allCost} });
+        ClassType.update({ _id: { $in: classTypeId } }, { $set: {"filters.monthlyPriceCost": allCost} });
     }
     return;
 }
@@ -22,7 +22,7 @@ Meteor.methods({
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "monthlyPricing_CUD" })) {
             // doc.remoteIP = this.connection.clientAddress;
             console.log(doc);
-            updateClasses({classTypeId: doc.classTypeId, doc});
+            updateHookForClassType({classTypeId: doc.classTypeId, doc});
             return MonthlyPricing.insert(doc);
         } else {
             throw new Meteor.Error("Permission denied!!");
@@ -36,9 +36,9 @@ Meteor.methods({
             let monthlyPriceData = MonthlyPricing.findOne({_id:doc_id});
             let diff = _.difference(monthlyPriceData.classTypeId, doc.classTypeId);
             if(diff && diff.length > 0) {
-                updateClasses({classTypeId: diff, doc: null});
+                updateHookForClassType({classTypeId: diff, doc: null});
             }
-            updateClasses({classTypeId: doc.classTypeId, doc});
+            updateHookForClassType({classTypeId: doc.classTypeId, doc});
             return MonthlyPricing.update({ _id: doc_id }, { $set: doc });
         } else {
             throw new Meteor.Error("Permission denied!!");
@@ -48,7 +48,7 @@ Meteor.methods({
         const user = Meteor.users.findOne(this.userId);
         // console.log("MonthlyPricing.removeMonthlyPricing methods called!!!",doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "monthlyPricing_CUD" })) {
-            updateClasses({classTypeId: doc.classTypeId, doc: null});
+            updateHookForClassType({classTypeId: doc.classTypeId, doc: null});
             return MonthlyPricing.remove({ _id: doc._id });
         } else {
             throw new Meteor.Error("Permission denied!!");

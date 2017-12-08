@@ -62,22 +62,25 @@ export default class SkillClassListBase extends React.Component {
     const isMyClass = this.isMyClass(classType.schoolId)
     const backgroundUrl = this.viewImage({classType, schoolData});
     
-    // console.log("showSkillClass school -->>",schoolData)
+    console.log("showSkillClass school -->>",schoolData)
     // console.log("showSkillClass classType -->>",classType)
     // console.log("showSkillClass skillClass -->>",skillClassData)
-    return skillClassData.map((data, index) => {
-      const locationId = this.addressView(data.locationId)
-      return <ListView
-          key={index}
-          className={this.props.listClass || "col-lg-6 col-md-6"}
-          school={schoolData}
-          classTypeData={classType}
-          backgroundUrl={backgroundUrl}
-          locationId={locationId}
-          checkJoin={checkJoin}
-          isMyClass={isMyClass}
-        />
-    })   
+    if(schoolData) {
+      return skillClassData.map((data, index) => {
+        const locationId = this.addressView(data.locationId)
+        return <ListView
+            key={index}
+            className={this.props.listClass || "col-lg-6 col-md-6"}
+            school={schoolData}
+            classTypeData={classType}
+            backgroundUrl={backgroundUrl}
+            locationId={locationId}
+            checkJoin={checkJoin}
+            isMyClass={isMyClass}
+          />
+      })   
+    }
+    return "No Result Found";
   }
 
 }

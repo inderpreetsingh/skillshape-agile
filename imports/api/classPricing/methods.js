@@ -1,5 +1,5 @@
 import ClassPricing from "./fields";
-import Classes from "/imports/api/classes/fields";
+import ClassType from "/imports/api/classType/fields";
 
 Meteor.methods({
     "classPricing.addClassPricing": function(doc) {
@@ -10,7 +10,7 @@ Meteor.methods({
             // console.log("addClassPricing doc-->>",doc);
             if(doc.classTypeId && _.isArray(doc.classTypeId)) {
                 
-                Classes.update({ classTypeId: { $in: doc.classTypeId } }, { $set: {"filters.classPriceCost": doc.cost} }, {multi: true});
+                ClassType.update({ _id: { $in: doc.classTypeId } }, { $set: {"filters.classPriceCost": doc.cost} }, {multi: true});
             }
 
             return ClassPricing.insert(doc);
@@ -33,11 +33,11 @@ Meteor.methods({
 
                 // console.log("doc.classTypeId-->>",doc.classTypeId);
                 if(diff && diff.length > 0) {
-                    Classes.update({ classTypeId: { $in: diff } }, { $set: {"filters.classPriceCost": null} }, {multi: true});
+                    ClassType.update({ _id: { $in: diff } }, { $set: {"filters.classPriceCost": null} }, {multi: true});
                 }
 
                 if(doc.classTypeId && _.isArray(doc.classTypeId) && doc.classTypeId.length > 0) {
-                    Classes.update({ classTypeId: { $in: doc.classTypeId } }, { $set: {"filters.classPriceCost": doc.cost} }, {multi: true});
+                    ClassType.update({ _id: { $in: doc.classTypeId } }, { $set: {"filters.classPriceCost": doc.cost} }, {multi: true});
                 }
 
             }
@@ -53,7 +53,7 @@ Meteor.methods({
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {
             
             if(doc.classTypeId && _.isArray(doc.classTypeId)) {
-                Classes.update({ classTypeId: { $in: doc.classTypeId } }, { $set: {"filters.classPriceCost": null} }, {multi: true});
+                ClassType.update({ _id: { $in: doc.classTypeId } }, { $set: {"filters.classPriceCost": null} }, {multi: true});
             }
             
             return ClassPricing.remove({ _id: doc._id });

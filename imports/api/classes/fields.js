@@ -91,29 +91,7 @@ Classes.attachSchema(new SimpleSchema({
     room: {
         type: String,
         optional: true
-    },
-    filters: {
-    	type: Object,
-        optional: true
-    },
-	"filters.classPriceCost": {
-		type: Number,
-    	optional: true
-	},
-	"filters.monthlyPriceCost": {
-		type: Object,
-		optional: true,
-    	blackbox: true
-	},
-    "filters.location": {
-        type: [Number], 
-        optional: true,
-        decimal: true
-    },
-    "filters.schoolName": {
-        type: String,
-        optional: true,
-    },
+    }
 }));
 
 Meteor.startup(function() {
