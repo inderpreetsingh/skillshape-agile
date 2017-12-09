@@ -6,7 +6,7 @@ Meteor.methods({
 		return SkillSubject.find({skillCategoryId}).fetch();
 	},
     "getSkillSubject": function({textSearch}) {
-    	let filter = { $text: { $search: textSearch, $caseSensitive: false } }
+    	let filter = { $text: { $search: textSearch } }
     	return SkillSubject.find(filter).fetch();
     }
 });

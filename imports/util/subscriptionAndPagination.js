@@ -21,9 +21,9 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
         }
     }
     if (subscription.ready()) {
-        if ((collectionCursor.count() + recordLimit < pagesToload * recordLimit) || (collectionCursor.count() == 0)) {
+        if ((collectionCursor.count() + recordLimit < pagesToload * recordLimit) || (collectionCursor.count() < recordLimit)) {
           hasMore = false;
-        } 
+        }
     }
     return { ...props,
       collectionData,
