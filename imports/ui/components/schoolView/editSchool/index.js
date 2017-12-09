@@ -5,12 +5,8 @@ import { browserHistory} from 'react-router';
 
 // import collection definition over here
 import Modules from "/imports/api/modules/fields";
-<<<<<<< HEAD
-import ClassType from "/imports/api/classType/fields";
 import Skills from "/imports/api/skill/fields";
-=======
 import SLocation from "/imports/api/sLocation/fields";
->>>>>>> 09139fe2240236d2aa561af037401f02520bdd0c
 
 class SchoolEditView extends React.Component {
 
@@ -80,7 +76,6 @@ export default createContainer(props => {
     schoolId,
   	schoolData,
     locationData,
-    classTypeData,
     moduleData,
   };
 
