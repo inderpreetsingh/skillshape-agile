@@ -19,7 +19,7 @@ export default function (props) {
 
  	const renderTableRows = () => { 
   	mainTableData.map((dataItem,index) => {
-  		let childTableData = props.getChildTableData(dataItem);
+  		let childTableData = props.getChildTableData && props.getChildTableData(dataItem);
     	mainTableRows.push(
         <tr key={index}>
         {

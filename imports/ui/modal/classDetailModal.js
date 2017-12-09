@@ -2,6 +2,9 @@ import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import { browserHistory, Link } from 'react-router';
 import moment from 'moment';
+import ClassType from "/imports/api/classType/fields";
+import SLocation from "/imports/api/sLocation/fields";
+import Classes from "/imports/api/classes/fields";
 
 class ClassDetailModal extends React.Component{
 
@@ -152,7 +155,7 @@ export default createContainer(props => {
 	const { classId, classTypeId, locationId } = props.eventData;
  	console.log("ClassDetailModal createContainer props -->>",props)
  	
-  let skillclass = SkillClass.findOne({ _id: classId });
+  let skillclass = Classes.findOne({ _id: classId });
  	let classType = ClassType.findOne({_id: classTypeId});
  	let school = School.findOne({_id: skillclass.schoolId});
   let classLocation = SLocation.findOne({_id: locationId});

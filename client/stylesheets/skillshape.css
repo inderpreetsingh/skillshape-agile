@@ -1251,3 +1251,30 @@ border-top: 2px solid #ccc;}
   color: beige;
   background-color: #898989;
 }
+
+.upload-box {
+  border-radius: 6px;
+  color: rgba(0,0,0, 0.87);
+  background: #fff;
+  display: inline-block;
+  position: relative;
+  margin: 5px;
+}
+
+.upload-box-header {
+  margin-top: 10px;
+}
+
+.upload-box-header .btn {
+  padding: 5px;
+  margin: 0px;
+}
+
+.upload-box-footer {
+  padding: 3px;
+  font-size: smaller;
+}
+
+.text-center {
+  text-align: center;
+}

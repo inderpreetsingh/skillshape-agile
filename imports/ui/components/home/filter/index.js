@@ -1,5 +1,6 @@
 import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
+import { browserHistory } from 'react-router';
 import SkillClassFilterRender from "./skillClassFilterRender";
 
 class SkillClassFilter extends React.Component {
@@ -28,7 +29,7 @@ class SkillClassFilter extends React.Component {
         this.setState({SLocation: place.formatted_address})
         this.props.onSearch(this)
       })
-    },5000)
+    },4000)
   }
   
   componentWillReceiveProps(props) {
@@ -64,7 +65,7 @@ class SkillClassFilter extends React.Component {
       }
     }).on('slide', function(){
       let value = this.get();
-      self.monthPrice = value
+      self._monthPrice = value
       self.setState({ monthPrice : value})
       self.props.onSearch(self)
     });

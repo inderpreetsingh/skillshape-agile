@@ -1,93 +1,140 @@
-export function initializeMap() {
-	// console.log("initialize Map start")
-	var bounds = new google.maps.LatLngBounds();
-	// console.log("bounds -->>",bounds,document.getElementById('google-map'))
-  if(document.getElementById('google-map'))
-  {
-    document.getElementById('google-map').innerHTML = ""
-    skill_class = SkillClass.find({}).fetch()
-    var gmarkers = [];
-    var mapOptions = {
-      zoom: 8,
-      scrollwheel: true,
-      minZoom:1
-    };
-    // console.log("skill_class -->>",skill_class)
-    var map = new google.maps.Map(document.getElementById('google-map'),mapOptions);
-    for(var i = 0; i < skill_class.length; i++){
-      class_location = SLocation.findOne({_id:skill_class[i].locationId})
-      if(class_location && class_location.geoLat && class_location.geoLong){
-        cost = 0
-        // console.log(skill_class[i].classTypeId);
-        class_price = ClassPricing.findOne({classTypeId: { '$regex': ''+skill_class[i].classTypeId+'', '$options' : 'i' }})
-        // console.log(class_price);
-        if(class_price){
-          cost = class_price.cost;
-        }
-        school = School.findOne({_id:skill_class[i].schoolId})
-        if (school && school.slug){
-          content = "<b><a href='/schools/"+school.slug+"'>"+skill_class[i].className+"</a></b>"+"</br> $"+cost+" Cost";
-          /*console.log(content);*/
-          var myLatlng = new google.maps.LatLng(eval(class_location.geoLat),eval(class_location.geoLong));
-          var marker = new google.maps.Marker({
-            position: myLatlng,
-            title: skill_class[i].className,
-            map: map,
-            contentString:content,
-            classId:skill_class[i]._id
-          });
-          bounds.extend(myLatlng);
-          gmarkers.push(marker)
-          var infowindow = new google.maps.InfoWindow();
-          google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent(this.contentString);
-            infowindow.open(map,this);
-            $('#MainPanel').scrollTop($('#'+this.classId).offset().top);
-            $('#'+this.classId).animateCss("wobble");
-          });
-        }
-      }
+import ClassPricing from "/imports/api/classPricing/fields";
+import { browserHistory } from 'react-router';
+import ClassType from "/imports/api/classType/fields";
+import {cutString} from '/imports/util';
+import Events from '/imports/util/events';
+import config from '/imports/config';
+
+let mc;
+let googleMarkers = [];
+let locations = [];
+
+const mapOptions = {
+    zoom: 15,
+    scrollwheel: true,
+    minZoom: 1,
+    center: { lat: -25.363, lng: 131.044 }
+};
+
+function infoSchool({school}) {
+    if(school) {
+        // console.log("<< --infoSchool -->>")
+        let backgroundUrl = school.mainImage || "images/SkillShape-Whitesmoke.png";
+        const schoolName = school ? cutString(school.name, 20) : "";
+        
+        Events.trigger("getSeletedSchoolData",{school});
+        const view = `<div id="content">
+            <h3>${schoolName}</h3>
+            <img src=${backgroundUrl} width="250" height="200">
+        </div>`
+        return view;
     }
-    map.fitBounds(bounds);
-    map.panToBounds(bounds);
-    var mcOptions = {gridSize: 10,   minZoom:1};
-    mc = new MarkerClusterer(map, gmarkers, mcOptions);
-    skill = Session.get("Hskill")
-    classPrice = Session.get("HclassPrice")
-    monthPrice = Session.get("HmonthPrice")
-    coords = Session.get("coords")
-    //&& !!skill && !!classPrice && !!monthPrice && !!coords
-    if(!!navigator.geolocation)
-    {
-      navigator.geolocation.getCurrentPosition(function(position)
-      {
-               var geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-               if(!skill && !classPrice && !monthPrice && !coords){
-                 map.setCenter(geolocate);
-               }
-               /*var infowindow = new google.maps.InfoWindow({map: map,position: geolocate,content:'Your Location!'});*/
-               var infowindow = new google.maps.InfoWindow();
-               // map.setZoom(8);
+    return
+}
 
-               bounds.extend(geolocate);
-               map.fitBounds(bounds);
-                map.panToBounds(bounds);
+export function reCenterMap(map, center) {
+    // console.log("reCenterMap center -->>",center)
+    map.panTo(new google.maps.LatLng(center[0], center[1]));
+    return map;
+}
 
+export function initializeMap(center) {
+    if (document.getElementById('google-map')) {
+        document.getElementById('google-map').innerHTML = ""
+        let geolocate;
+        let map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
+        
+        geolocate = new google.maps.LatLng(center[0], center[1])
+        map.setCenter(geolocate);
+        // if (!!navigator.geolocation) {
+        //     navigator.geolocation.getCurrentPosition(function(position) {
+        //         geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        //         console.log("geolocate", geolocate);
+        //         map.setCenter(geolocate);
+        //     });
+        // } else {
+        //     geolocate = new google.maps.LatLng(config.defaultLocation[0], config.defaultLocation[1])
+        //     map.setCenter(geolocate);
+        // }
 
-               var marker = new google.maps.Marker({
-                position: geolocate,
-                icon: '/images/bluecircle.png',
-                map: map
-              });
-              google.maps.event.addListener(marker, 'click', function() {
-                infowindow.setContent('Your Location!');
-                infowindow.open(map,this);
-              });
-       });
+        let marker = new google.maps.Marker({
+            position: geolocate,
+            icon: '/images/bluecircle.png',
+            map: map
+        });
+
+        google.maps.event.addListener(map, "bounds_changed", function() {
+            _.debounce(()=> {
+                bounds = map.getBounds();
+                NEPoint = [bounds.getNorthEast().lat(),bounds.getNorthEast().lng()];
+                SWPoint = [bounds.getSouthWest().lat(),bounds.getSouthWest().lng()];
+                browserHistory.push({
+                  pathname: '',
+                  search: `?zoom=${map.getZoom()}&SWPoint=${SWPoint}&NEPoint=${NEPoint}`
+                })
+            },3000)();
+        });
+        return map;
+    }
+}
+
+export function setMarkersOnMap(map, SLocation) {
+    let previousLocation = [...locations];
+    let newMakers = [];
+    let deleteMakers = [];
+    locations = [];
+
+    if(mc && googleMarkers.length > 0) {
+        // console.log("Old googleMarkers --->>",googleMarkers)
+        // mc.clearMarkers(googleMarkers);
+        googleMarkers = [];
+    }
+    
+    for (let i = 0; i < SLocation.length; i++) {
+        locations.push(SLocation[i]._id);
+
+        let index = previousLocation.indexOf(SLocation[i]._id);
+        if(index < 0) {
+
+            let latLng = new google.maps.LatLng(eval(SLocation[i].geoLat),eval(SLocation[i].geoLong));
+            let marker = new google.maps.Marker({
+                position: latLng,
+                title: SLocation[i].title,
+                schoolId: SLocation[i].schoolId,
+                map: map,
+                _id: SLocation[i]._id,
+            });
+
+            google.maps.event.addListener(marker, 'click', function() {
+                Meteor.call("getClassesForMap",{schoolId: SLocation[i].schoolId},(err,result)=> {
+                    if(result) {
+                        console.log("getClassesForMap result", result);
+                        let infowindow = new google.maps.InfoWindow();
+                        infowindow.setContent(infoSchool(result));
+                        infowindow.open(map, marker);
+                    }
+                })
+            });
+            googleMarkers.push(marker);
+            newMakers.push(marker);
+        }
+    }
+
+    for(let j=0; j<googleMarkers.length; j++ ) {
+        if(locations.indexOf(googleMarkers[j]._id) != -1) {
+            deleteMakers.push(googleMarkers[j]);
+        }
+    }
+    // console.log("deleteMakers --->>",deleteMakers);
+    if(mc && deleteMakers.length > 0) {
+        mc.clearMarkers(deleteMakers);
+    }
+    let mcOptions = {  maxZoom: 12 };
+    if(mc) {
+        mc.addMarkers(newMakers)
     } else {
-        // No support
+        mc = new MarkerClusterer(map, newMakers, mcOptions);
     }
-    $('#google-map').show();
-     /*map.setOptions({ minZoom:1,maxZoom: 13 });*/
-  }
+
+    return
 }

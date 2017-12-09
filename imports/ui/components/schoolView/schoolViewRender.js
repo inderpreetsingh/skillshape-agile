@@ -298,15 +298,15 @@ export default function() {
 												    <div className="col-sm-12 col-xs-12">
                               {
                                 this.checkOwnerAccess(currentUser, schoolData.userId)  ? (
-                                  <a href="#" class="btn btn-success" data-class={skillClassData._id} data-class-type={skillClassData.classTypeId}>
-                                    <i class="material-icons">check</i>  Managing
-                                    <div class="ripple-container"></div>
+                                  <a href="#" className="btn btn-success" data-class={skillClassData._id} data-class-type={skillClassData.classTypeId}>
+                                    <i className="material-icons">check</i>  Managing
+                                    <div className="ripple-container"></div>
                                   </a>
                                 ) : (
                                   this.checkForJoin(currentUser, skillClassData._id) ? (
-                                    <a href="#" class="btn btn-success" data-class={skillClassData._id} data-class-type="{{classTypeId}}">
-                                      <i class="material-icons">check</i>  Joined
-                                      <div class="ripple-container"></div>
+                                    <a href="#" className="btn btn-success" data-class={skillClassData._id} data-class-type="{{classTypeId}}">
+                                      <i className="material-icons">check</i>  Joined
+                                      <div className="ripple-container"></div>
                                     </a>
                                   ) : (
                                     <a href="#" className="btn btn-danger btn_join_className btn_join_check" data-className="KCcabqEX4Kb5c58cW" data-className-type="YXdAyLNiR45yqiDXs">

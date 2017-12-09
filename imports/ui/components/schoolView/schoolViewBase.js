@@ -14,7 +14,7 @@ export default class SchoolViewBase extends React.Component {
   }
 
   componentDidUpdate() {
-    initializeMap()
+    // initializeMap()
   }
 
   validateString = (value) => {

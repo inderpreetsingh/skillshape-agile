@@ -60,6 +60,28 @@ ClassType.attachSchema(new SimpleSchema({
     skillSubject: {
        type: [String],
        optional:true 
+    },
+    filters: {
+        type: Object,
+        optional: true
+    },
+    "filters.classPriceCost": {
+        type: Number,
+        optional: true
+    },
+    "filters.monthlyPriceCost": {
+        type: Object,
+        optional: true,
+        blackbox: true
+    },
+    "filters.location": {
+        type: [Number], 
+        optional: true,
+        decimal: true
+    },
+    "filters.schoolName": {
+        type: String,
+        optional: true,
     }
 }));
 

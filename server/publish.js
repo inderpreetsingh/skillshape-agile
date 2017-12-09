@@ -1,9 +1,10 @@
+
 Meteor.publish("school", function() {
     return School.find({});
 });
-Meteor.publish("salocation", function() {
-    return SLocation.find({});
-});
+// Meteor.publish("salocation", function() {
+//     return SLocation.find({});
+// });
 // Meteor.publish("classtype", function() {
 //     return ClassType.find({});
 // });
