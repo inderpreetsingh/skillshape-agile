@@ -5,12 +5,7 @@ export default function() {
 	console.log("SkillClassListRender collectionData -->>",this.props.collectionData)
 	return ( 
 		<div>
-      		{
-				this.props.collectionData.map((data, index) => {
-					
-					return this.showSkillClass({classType: data})
-				})
-			}
+			{this.showClassTypes({classType: this.makeCategorization({items: this.props.collectionData})})}
     	</div>
 	)
 }

@@ -12,10 +12,26 @@ export default class SkillClassListBase extends React.Component {
 
   constructor(props){
     super(props);
+    this.state = {
+        products: []
+    }
   }
    
   componentWillUnmount() {
     Session.set("pagesToload",1)
+  }
+
+  makeCategorization = ({items = []}) => {
+    if(items.length > 0) {
+        const grouped = _.groupBy(items, function(item) {
+          return item.skillCategory.name;
+        });
+       console.log("grouped -->>",grouped)
+       // this.setState({
+       //  products: grouped
+       // })
+       return grouped
+    }
   }
 
   viewImage = ({classType, schoolData}) => {
@@ -54,33 +70,59 @@ export default class SkillClassListBase extends React.Component {
     return default_value;
   }
 
-  showSkillClass = ({classType}) => {
-    const skillClassData = Classes.find({classTypeId: classType._id}).fetch();
-    const schoolData = School.findOne({_id: classType.schoolId});
-    
-    const checkJoin = this.checkJoin(classType._id)
-    const isMyClass = this.isMyClass(classType.schoolId)
-    const backgroundUrl = this.viewImage({classType, schoolData});
-    
-    console.log("showSkillClass school -->>",schoolData)
-    // console.log("showSkillClass classType -->>",classType)
-    // console.log("showSkillClass skillClass -->>",skillClassData)
-    if(schoolData) {
-      return skillClassData.map((data, index) => {
-        const locationId = this.addressView(data.locationId)
-        return <ListView
-            key={index}
-            className={this.props.listClass || "col-lg-6 col-md-6"}
-            school={schoolData}
-            classTypeData={classType}
-            backgroundUrl={backgroundUrl}
-            locationId={locationId}
-            checkJoin={checkJoin}
-            isMyClass={isMyClass}
-          />
-      })   
+  showClassTypes = ({classType}) => {
+    if(classType && _.size(classType) > 0) {
+        console.log("showClassTypes classType -->>",classType)
+        // const skillClassData = Classes.find({classTypeId: classType._id}).fetch();
+        return Object.keys(classType).map((key, index) => {
+            
+            return <div className="product-sort">
+                <h5>{key}</h5>
+                {
+                    classType[key].map((data, i) => {
+                        const { schoolId, locationId } = data;
+                        console.log("showClassTypes data -->>",data)
+                        const schoolData = School.findOne({_id: schoolId});
+                        const backgroundUrl = this.viewImage({ classType: data, schoolData});
+                        const locationData = locationId && this.addressView(locationId)
+                        return <ListView
+                            key={i}
+                            className={this.props.listClass || "col-lg-6 col-md-6"}
+                            school={schoolData}
+                            classTypeData={data}
+                            backgroundUrl={backgroundUrl}
+                            locationData={locationData}
+                        />
+                    })
+                }
+            </div>
+        })
+
+
+
+        
+        // const checkJoin = this.checkJoin(classType._id)
+        // const isMyClass = this.isMyClass(classType.schoolId)
+        
+        // console.log("showSkillClass school -->>",schoolData)
+        // console.log("showSkillClass classType -->>",classType)
+        // console.log("showSkillClass skillClass -->>",skillClassData)
+        // if(schoolData) {
+        //   return skillClassData.map((data, index) => {
+        //     return <ListView
+        //         key={index}
+        //         className={this.props.listClass || "col-lg-6 col-md-6"}
+        //         school={schoolData}
+        //         classTypeData={classType}
+        //         backgroundUrl={backgroundUrl}
+        //         locationData={locationData}
+        //         checkJoin={checkJoin}
+        //         isMyClass={isMyClass}
+        //       />
+        //   })   
+        // }
     }
-    return "No Result Found";
+   return "No Result Found";
   }
 
 }

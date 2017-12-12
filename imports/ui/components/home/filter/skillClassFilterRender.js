@@ -1,6 +1,28 @@
 import React from "react";
 import TagFilter from '/imports/ui/components/tag';
+import config from '/imports/config';
+import AutoComplete from '/imports/ui/form/autoComplete';
 
+const skillCategory = {
+    className: "home_skillcategoty_filter", 
+    key: "skillCategoryId",
+    objKey: "skillCategory", 
+    label: "Skill Category", 
+    required: true, 
+    method: "getSkillCategory", 
+    suggestion: "name",
+    valueField: "_id",
+    child: {
+        className: "home_skillsubject_filter",
+        key: "skillSubject",
+        type: "auto-select",
+        multi: true,
+        method: "getSkillSubjectBySkillCategory", 
+        suggestion: "name",
+        suggestionData: null,
+        valueField: "_id" 
+    } 
+}
 export default function () {
 	const skillType = this.props.skillType || [];
   const { 
@@ -112,6 +134,62 @@ export default function () {
               onSearchTag={this.props.onSearchTag}
             />
           </div>
+        </div>
+        <div className="col-md-12 card clear-margin-bt custom-card-filter">
+            <div className="col-md-2 col-sm-4">
+                <select 
+                    className="form-control search-bar-form" 
+                    style={{width: '100%'}} 
+                    id="gender" 
+                    name="gender"
+                    ref= { (ref) => {this.gender = ref}}
+                    onChange= {() => this.props.onSearch(this)}
+                >
+                    {
+                        config.gender.map((data, index)=> {
+                            return <option value={data.value}>{data.label}</option>
+                        })
+                    }
+                </select>
+            </div>
+            <div className="col-md-2 col-sm-4">
+                <select 
+                    className="form-control search-bar-form" 
+                    style={{width: '100%'}} 
+                    id="experienceLevel" 
+                    name="experienceLevel"
+                    ref= { (ref) => {this.experienceLevel = ref}}
+                    onChange= {() => this.props.onSearch(this)}
+                >
+                   {
+                        config.experienceLevel.map((data, index)=> {
+                            return <option value={data.value}>{data.label}</option>
+                        })
+                    } 
+                </select>
+            </div>
+            <div className="col-md-2 col-sm-4">
+                <input 
+                    className="form-control search-bar-form" 
+                    type="number" 
+                    aria-required="true" 
+                    placeholder="Age"  
+                    autoComplete="off"
+                    min="1" 
+                    max="60"
+                    ref= { (ref) => {this.age = ref} }
+                    onChange={() => this.props.onSearch(this) }
+                />
+            </div>
+            { false && <div className="col-md-6 col-sm-8">
+                <AutoComplete
+                    fieldobj={skillCategory}
+                    className="form-control form-mandatory"
+                    ref={skillCategory.key}
+                    methodname={skillCategory.method}
+                    suggestionfield={skillCategory.suggestion}
+                  />
+            </div>}
         </div>
       </div>
     )

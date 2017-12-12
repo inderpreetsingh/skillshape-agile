@@ -89,7 +89,7 @@ export default class AutoSelect extends React.Component {
 				multi={fieldobj.multi}
 				onChange={this.handleSelectChange}
 				options={options}
-				placeholder={`Please Select ${fieldobj.label}`}
+				placeholder={fieldobj.label && `Please Select ${fieldobj.label}`}
 	 			removeSelected={this.state.removeSelected}
 				rtl={this.state.rtl}
 				simpleValue

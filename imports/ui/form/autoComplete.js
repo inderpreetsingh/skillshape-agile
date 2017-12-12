@@ -105,7 +105,7 @@ export default class AutoComplete extends React.Component {
         console.log("AutoComplete render props-->>",this.props);
         console.log("AutoComplete render state-->>",this.state);
         return ( 
-        	<div>
+        	<div className={fieldobj.className ? fieldobj.className : "autocomplete-field"}>
                 <Autosuggest
             		suggestions={suggestions}
                     shouldRenderSuggestions={(value) => value && value.trim().length > 0}

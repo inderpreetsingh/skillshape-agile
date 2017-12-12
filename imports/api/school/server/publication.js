@@ -175,13 +175,13 @@ Meteor.publish("school.getClassTypesByCategory", function({
     let cursors = []
     let classTypeIds = [];
     let schoolIds = [];
-    let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
+    let skillCategoryCursor = SkillCategory.find(skillCategoryFilter,{limit});
     cursors.push(skillCategoryCursor);
 
     skillCategoryCursor.forEach((skillCategory) => {
-        console.log("skillCategory data -->>",skillCategory)
+        // console.log("skillCategory data -->>",skillCategory)
         classfilter["skillCategoryId"] = skillCategory._id;
-        console.log("class type filters -->>",classfilter)
+        // console.log("class type filters -->>",classfilter)
         let classTypeCursor = ClassType.find(classfilter, { limit: is_map_view ? undefined : 4 });
         classTypeCursor.forEach((classTypeData) => {
             console.log("classTypeData --->>",classTypeData)
@@ -195,12 +195,14 @@ Meteor.publish("school.getClassTypesByCategory", function({
     classesCursor.map((classData) => {
         locationIds.push(classData.locationId);
     })
+    console.log("skillCategoryCursor -->>",skillCategoryCursor);
     if ((is_map_view && schoolId) || !is_map_view) {
         return [
             classesCursor,
             ClassType.find({ _id: { $in: classTypeIds } }),
             SLocation.find({ _id: { $in: locationIds } }),
             School.find({ _id: { $in: schoolIds } }),
+            skillCategoryCursor,
         ];
     } else {
         return [

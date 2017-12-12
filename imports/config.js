@@ -14,5 +14,18 @@ export default config = {
 		school: "School",
 		classes: "Classes",
 		sLocation: "SLocation",
-	}
+	},
+	gender : [
+		{ label: "All", value: "All"},
+		{ label: "Male", value: "Male"},
+		{ label: "Female", value: "Female"},
+	],
+	experienceLevel : [
+		{ label: "Beginner", value: "beginner"},
+		{ label: "Intermediate", value: "intermediate"},
+		{ label: "Advanced", value: "advanced"},
+		{ label: "Beginner plus intermediate", value: "beginner plus intermediate"},
+		{ label: "Intermediate plus advanced", value: "intermediate plus advanced"},
+		{ label: "All", value: "all"},
+	]
 }

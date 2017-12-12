@@ -24,12 +24,7 @@ export default function() {
 	        />
 			<div className="row">
 		      	<div className="col-sm-12 grid-map-wrap">
-			        <div className="col-sm-5 p0">
-			         	<p className="search-no text-center-xs">
-			              46 Classes Found
-			            </p>
-			        </div>
-			        <div className="col-sm-7 text-right p0">
+			        <div className="col-sm-7 text-right p0 pull-right">
 			            <p className="dispInBlk text-center-xs dispBlk-xs">
 			              Choose View:
 			            </p>
