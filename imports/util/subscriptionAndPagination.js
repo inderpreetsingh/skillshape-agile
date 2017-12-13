@@ -5,10 +5,10 @@ import { Loading } from '/imports/ui/loading';
 // This function takes a component...
 export function withSubscriptionAndPagination(WrappedComponent, params) {
   // ...and returns another component...
-  let {collection, subscriptionName , recordLimit } = params;
-  let Container = createContainer(props => {
-    // console.log("createContainer ",props);
-    const { query } = props.location;
+    let {collection, subscriptionName , recordLimit } = params;
+    let Container = createContainer(props => {
+    console.log("createContainer ",props);
+    const query = props.location && props.location.query;
     let filters = props.filters ? props.filters : {};
     if(filters.is_map_view) {
       if(query && query.NEPoint && query.SWPoint) {

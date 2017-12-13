@@ -2,6 +2,11 @@ import React from 'react';
 import Autosuggest from 'react-autosuggest';
 import AutoSelect from '/imports/ui/form/autoSelect';
 
+let viewClass = {
+    AutoSuggestClassName: "autocomplete-container",
+    AutoSelectClassName: "autoselect-container form-group",
+}
+
 export default class AutoComplete extends React.Component {
 
     constructor(props) {
@@ -25,7 +30,7 @@ export default class AutoComplete extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("AutoComplete componentWillReceiveProps-->>",nextProps);
+        // console.log("AutoComplete componentWillReceiveProps-->>",nextProps);
         this.initializeValues(nextProps.suggestions, nextProps.suggestionfield);
         
     }
@@ -35,8 +40,8 @@ export default class AutoComplete extends React.Component {
     }
 
     initializeChildValues = () => {
-        console.log("AutoComplete initializeChildValues state-->>",this.state);
-        console.log("AutoComplete initializeChildValues props-->>",this.props);
+        // console.log("AutoComplete initializeChildValues state-->>",this.state);
+        // console.log("AutoComplete initializeChildValues props-->>",this.props);
         const { fieldobj } = this.props;
         const { selectedValue } = this.state;
         if(fieldobj.child && selectedValue) {
@@ -55,7 +60,7 @@ export default class AutoComplete extends React.Component {
     }
 
     onChange = (event, { newValue }) => {
-        console.log("AutoComplete onChange-->>", newValue)
+        // console.log("AutoComplete onChange-->>", newValue)
         const { fieldobj } = this.props;
         if(fieldobj.child) {
             this.refs.autoSelect.getInitialState();
@@ -88,6 +93,7 @@ export default class AutoComplete extends React.Component {
 	}
 
     onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
+        console.log("onSuggestionSelected-->>", suggestion)
         const { fieldobj } = this.props;
         if(fieldobj.child) {
             this.refs.autoSelect.getData({ 
@@ -96,23 +102,29 @@ export default class AutoComplete extends React.Component {
         }
         this.setState({
             selectedValue: suggestion
+        }, () => {
+            if(this.props.onChange) {
+                this.props.onChange()
+            }
         })
     }
 
     render() {
     	const { value, suggestions } = this.state;
-        const { suggestionfield, fieldobj, data } = this.props;
+        const { suggestionfield, fieldobj, data, onChange } = this.props;
         console.log("AutoComplete render props-->>",this.props);
-        console.log("AutoComplete render state-->>",this.state);
+        // console.log("AutoComplete render state-->>",this.state);
+    
         return ( 
-        	<div className={fieldobj.className ? fieldobj.className : "autocomplete-field"}>
+        	<div className={fieldobj.className ? fieldobj.className : viewClass.AutoSuggestClassName}>
                 <Autosuggest
+                    
             		suggestions={suggestions}
                     shouldRenderSuggestions={(value) => value && value.trim().length > 0}
                     onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
             		onSuggestionsClearRequested={this.onSuggestionsClearRequested}
             		onSuggestionSelected={this.onSuggestionSelected}
-                    inputProps={{...this.props, value, onChange: this.onChange}}
+                    inputProps={{...this.props, value, onChange: this.onChange, placeholder: fieldobj.placeHolder ? fieldobj.placeHolder : ""}}
                     getSuggestionValue={(suggestion) => {
                         return suggestion[suggestionfield];
                     }}
@@ -122,14 +134,19 @@ export default class AutoComplete extends React.Component {
             	/>
                 { 
                     fieldobj.child && (
-                        <div className="form-group">
-                            <label>
-                              {fieldobj.child.label} {fieldobj.child.required && "*"}
-                            </label>
+                        <div className={fieldobj.child.className ? fieldobj.child.className : viewClass.AutoSuggestClassName}>
+                            {
+                                fieldobj.child.label && (
+                                    <label>
+                                        fieldobj.child.label {fieldobj.child.required && "*"}
+                                    </label>
+                                )
+                            }
                             <AutoSelect
                                 className="form-control form-mandatory"
                                 ref={"autoSelect"}
                                 fieldobj={fieldobj.child}
+                                onChange={onChange}
                                 defaultData={data && data[fieldobj.child.key]}
                             />
                         </div>

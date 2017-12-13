@@ -27,9 +27,6 @@ export default class SkillClassListBase extends React.Component {
           return item.skillCategory.name;
         });
        console.log("grouped -->>",grouped)
-       // this.setState({
-       //  products: grouped
-       // })
        return grouped
     }
   }

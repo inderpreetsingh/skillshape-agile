@@ -1283,3 +1283,16 @@ border-top: 2px solid #ccc;}
   width: 100%;
   display: inline-block;
 }
+
+.skillCategory-filter-container {
+  display: flex;
+}
+
+.skillCategory-filter-input{
+  width: 48%;
+}
+
+.skillSubject-filter-container{
+  width: 70%;
+  margin-left: 20px;
+}

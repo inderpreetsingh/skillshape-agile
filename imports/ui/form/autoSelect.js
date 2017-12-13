@@ -56,7 +56,13 @@ export default class AutoSelect extends React.Component {
 	}
 
 	handleSelectChange = (value) => {
-		this.setState({ value });
+		console.log(`handleSelectChange:-`,value);
+		this.setState({ value 
+		},() => {
+            if(this.props.onChange) {
+                this.props.onChange()
+            }
+        });
 	}
 	
 	toggleCheckbox = (e) => {
@@ -89,7 +95,7 @@ export default class AutoSelect extends React.Component {
 				multi={fieldobj.multi}
 				onChange={this.handleSelectChange}
 				options={options}
-				placeholder={fieldobj.label && `Please Select ${fieldobj.label}`}
+				placeholder={fieldobj.placeHolder || fieldobj.label && `Please Select ${fieldobj.label}`}
 	 			removeSelected={this.state.removeSelected}
 				rtl={this.state.rtl}
 				simpleValue

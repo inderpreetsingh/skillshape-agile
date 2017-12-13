@@ -11,6 +11,8 @@ class SkillClassFilter extends React.Component {
       classPrice: ["0.0", "1000"],
       monthPrice: ["0.0", "1000"],
       SLocation: null,
+      skillCategory: null,
+      skillSubject: null,
     }
   }
 
@@ -69,6 +71,15 @@ class SkillClassFilter extends React.Component {
       self.setState({ monthPrice : value})
       self.props.onSearch(self)
     });
+  }
+
+  autocompleteOnChange = () => {
+    console.log("autocompleteOnChange -->>",this.refs)
+    this.skillCategory = this.refs["skillCategoryId"].getSelectedAutoCompleteValue()
+    this.skillSubject = this.refs["skillCategoryId"].getAutoSelectValue()
+    if(this.skillCategory) {
+      this.props.onSearch(this)
+    }
   }
 
   render(){
