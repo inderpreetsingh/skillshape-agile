@@ -6,22 +6,7 @@ import MVPSideBar from '/imports/ui/components/MVPSideBar';
 import SideBar from '/imports/ui/components/sideBar';
 import { checkDemoUser } from '/imports/util';
 import { initializeLayout } from '/imports/util/initializeLayout';
-// var styles = {
-//   rowstyle: {
-//     display: 'table',
-//     width: '100%'
-//   },
-//   colstyle: {
-//     backgroundColor: '#2e4462',
-//     display: 'table-cell',
-//     float: 'none'
-//   },
-//   colnav: {
-//     display: 'table-cell',
-//     float: 'none'
-//   }
-// };
-
+import withWidth from 'material-ui/utils/withWidth';
 
 class MainLayout extends React.Component {
 
@@ -66,59 +51,33 @@ class MainLayout extends React.Component {
       className.id = "UserMainPanel";
     }
     return (
-      <div className="wrapper">
-        { currentUser && this.showSideBar(currentUser)}
-        <div ref={(ref)=> {this.mainPanelRef = ref}} className={className.mainClass} id={className.id}>
-          <Header {...this.props}/>
-          <div className={className.contentClass}>
-            <div className="container-fluid">
-              { 
-                this.checkEmailVerification(currentUser) ? (
-                  <div className="row">
-                    <div className="col-md-12">
-                      {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
-                    </div>
-                  </div>
-                ) : (
-                  <p className="alert alert-warning">
-                    You need to verify your email address before using Skillshape. 
-                    <a href="#" className="resend-verification-link" style={{color:'blue'}}>
-                      Resend verification link
-                    </a>
-                  </p>
-                )
-              }
-            </div>
-          </div>
-          <Footer/>
-        </div>
-          {/*
-           {{{#if currentUser}}
-                {{#if IsDemoUser}}
-                  {{> sidebar}}
-                {{else}}
-                  {{> MVPSidebar}}
-               {{/if}} }
-                <div className="main-panel"  style="overflow-y: auto;">
-                  {{Header}}
-                  <div className="content no-padding" style="{{coming_soon_page_style}}">
-                    <div className="container-fluid">
-                      {{#unless currentUser.emails.[0].verified}}
-                        <p className="alert alert-warning">You need to verify your email address before using Skillshape. <a href="#" className="resend-verification-link" style="color:blue">Resend verification link</a></p>
-                      {{else}}
-                        <div className="row">
-                            <div className="col-md-12">
-                              {{> yield}}
-                            </div>
+        <div className="wrapper">
+            { currentUser && this.showSideBar(currentUser)}
+            <div ref={(ref)=> {this.mainPanelRef = ref}} className={className.mainClass} id={className.id}>
+              <Header {...this.props}/>
+              <div className={className.contentClass}>
+                <div className="container-fluid">
+                  { 
+                    this.checkEmailVerification(currentUser) ? (
+                      <div className="row">
+                        <div className="col-md-12">
+                          {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
                         </div>
-                        {{/unless}}
-                    </div>
-                  </div>
-                  {{> Footer}}
+                      </div>
+                    ) : (
+                      <p className="alert alert-warning">
+                        You need to verify your email address before using Skillshape. 
+                        <a href="#" className="resend-verification-link" style={{color:'blue'}}>
+                          Resend verification link
+                        </a>
+                      </p>
+                    )
+                  }
                 </div>
-            {{else}}
-      */}
-      </div>
+              </div>
+              <Footer/>
+            </div>
+        </div>
     )
   }
 }
@@ -128,4 +87,4 @@ export default createContainer(props => {
   let userSubs = Meteor.subscribe("myInfo");
   let isUserSubsReady = userSubs.ready();
   return { ...props, currentUser, isUserSubsReady };
-}, MainLayout);
+}, withWidth()(MainLayout));

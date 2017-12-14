@@ -132,6 +132,7 @@ export default function (props) {
           {
             (selecetdView === "class_type_details") && <ClassTypeDetails
               classTypeData={classTypeData}
+              locationData={locationData}
               schoolId={schoolId}
               showFormBuilderModal={this.showFormBuilderModal}
               moveTab={this.moveTab}

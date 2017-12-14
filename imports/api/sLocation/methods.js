@@ -1,6 +1,9 @@
 import SLocation from "./fields";
 
 Meteor.methods({
+    "location.getLocationBySchoolId": function({schoolId}) {
+        return SLocation.find({schoolId}).fetch()
+    },
     "location.addLocation": function(doc) {
         const user = Meteor.users.findOne(this.userId);
         console.log("location.addModule methods called!!!");

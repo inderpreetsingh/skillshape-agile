@@ -61,6 +61,10 @@ ClassType.attachSchema(new SimpleSchema({
        type: [String],
        optional:true 
     },
+    locationId: {
+        type: String,
+        optional: true
+    },
     filters: {
         type: Object,
         optional: true
@@ -75,7 +79,8 @@ ClassType.attachSchema(new SimpleSchema({
         blackbox: true
     },
     "filters.location": {
-        type: [Number], 
+        type: [Number], // [<longitude>, <latitude>]
+        index: '2d', // create the geospatial index
         optional: true,
         decimal: true
     },
@@ -85,9 +90,9 @@ ClassType.attachSchema(new SimpleSchema({
     }
 }));
 
-ClassType.join(SkillCategory, "skillCategoryId", "skillCategory", ["name"]);
+ClassType.join(SkillCategory, "skillCategoryId", "selectedSkillCategory", ["name"]);
 
-// ClassType.join(SkillSubject, "skillSubject", "subject", []);
+ClassType.join(SkillSubject, "skillSubject", "selectedSkillSubject", ["name"]);
 
 Meteor.startup(function() {
     if (Meteor.isServer) {

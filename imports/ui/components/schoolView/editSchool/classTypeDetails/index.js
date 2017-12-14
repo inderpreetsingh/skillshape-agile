@@ -2,6 +2,7 @@ import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import ClassTypeDetailsRender from './classTypeDetailsRender';
 import ClassType from "/imports/api/classType/fields";
+import SkillSubject from "/imports/api/skillSubject/fields";
 
 class ClassTypeDetails extends React.Component {
 
@@ -17,6 +18,12 @@ class ClassTypeDetails extends React.Component {
   	return parentData.rooms;
   }
   
+  hideAddClassTypeForm = () => {
+    this.setState({
+        showClassTypeForm: false
+    })
+  }
+
   onDeleteRow = () => {
     alert('Not yet implemented!!!!')
   }
@@ -27,16 +34,18 @@ class ClassTypeDetails extends React.Component {
 }  
 
 export default createContainer(props => {
- 	const { schoolId } = props;
+ 	const { schoolId, locationData } = props;
  	
     Meteor.subscribe("classType.getclassType", {schoolId});
 
-    let classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
-
+    let classTypeData = ClassType.find({ schoolId: schoolId },{sort: {_id: -1}}).fetch();
+    let skillSubjectData = SkillSubject.find().fetch(); 
     console.log("classTypeData --->>",classTypeData)
+    console.log("skillSubjectData --->>",skillSubjectData)
  	return {
   		...props,
     	classTypeData,
+      locationData,
   	}
 
 }, ClassTypeDetails);

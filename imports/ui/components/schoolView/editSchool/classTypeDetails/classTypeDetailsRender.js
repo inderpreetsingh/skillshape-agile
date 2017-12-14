@@ -3,6 +3,13 @@ import PanelWithTable from '/imports/ui/componentHelpers/panelWithTable';
 import classTypeSettings from './classTypeSettings';
 import {cutString} from '/imports/util';
 import ClassTypeForm from './classTypeForm';
+import ClassTypeExpansionPanel from './classTypeExpansionPanel';
+
+const styles = {
+  root: {
+    width: '100%',
+  },
+};
 
 export default function () {
 
@@ -10,7 +17,8 @@ export default function () {
 		classTypeData, 
 		showFormBuilderModal, 
 		moveTab,
-		onDeleteRow, 
+		onDeleteRow,
+		locationData, 
 	} = this.props
 
   console.log("classTypeDetails render -->>", classTypeData);
@@ -41,36 +49,24 @@ export default function () {
 					    </div>
 					</div>
 					<div className="card-content">
-			    		<div className="table-responsive">
-			      			<table className="table text-center" style={{display: 'table'}}>
-		        				{ false && <ClassTypeForm/>}
-					        	<tbody>
-						        	{
-						        		classTypeData && classTypeData.map((dataItem,index) => {
-						        			return (
-						        				<Fragment>
-							        				<tr key={index}>
-							        					<td >
-							  					 			<button type="button" rel="tooltip" className="btn btn-primary arrow-rotate-box pull-left" data-original-title="" title="" id="showClasses" data-id={dataItem._id} data-toggle="collapse" data-target={`#${dataItem._id}`}>
-														      <i className="material-icons">expand_more</i>
-														    </button>
-							        					</td>
-				        								<td><h4 className="pull-left">{dataItem.name}</h4></td>
-									  					<td className="td-actions">
-							  					 			<button type="button" onClick={() => {this.onDeleteRow({editByFieldValue: dataItem._id, formPayload: dataItem})}} rel="tooltip" className="btn btn-danger pull-right" data-original-title="" title="" id="deleteLocation" data-id="{{_id}}">
-														      Remove
-														    </button>
-									  					</td>
-							        				</tr>
-							        				<div key={dataItem._id} id={dataItem._id} className="collapse in">
-							        				</div>
-						        				</Fragment>	
-						        			)	
-						        		})
-						        	}
-			            		</tbody>
-					      	</table>
-					    </div>
+						{
+							this.state.showClassTypeForm && (
+								<ClassTypeExpansionPanel data={{}} 
+									hideAddClassTypeForm={this.hideAddClassTypeForm}
+					    		  	{...this.props}
+					    		/>
+							)
+						}
+						
+						{ 
+							classTypeData && classTypeData.map((dataItem,index) => {
+					    		return <ClassTypeExpansionPanel
+					    			data={dataItem} 
+					    			hideAddClassTypeForm={this.hideAddClassTypeForm}
+					    			key={index} 
+					    			{...this.props}/>
+							})
+						}
 				  	</div>
 				</div>
 			</div>

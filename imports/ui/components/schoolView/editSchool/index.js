@@ -53,7 +53,7 @@ export default createContainer(props => {
 
   if(props.isUserSubsReady) {
    	Meteor.subscribe("UserSchool", schoolId);
-   	Meteor.subscribe("salocation");
+   	Meteor.subscribe("location.getSchoolLocation", {schoolId});
     Meteor.subscribe("classtype");
     Meteor.subscribe("SkillType");
     Meteor.subscribe("SkillClassbySchool", schoolId);
@@ -62,7 +62,7 @@ export default createContainer(props => {
 
 
   let schoolData = School.findOne({_id: schoolId});
-  let locationData = SLocation.find({ schoolId: schoolId }).fetch();
+  let locationData = SLocation.find().fetch();
   let moduleData = Modules.find({ schoolId: schoolId }).fetch();
 
   /*Find skills to make this container reactive on skill

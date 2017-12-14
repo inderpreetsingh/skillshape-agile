@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router, Route, browserHistory, DefaultRoute, IndexRoute } from 'react-router';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 //layout
 import MainLayout from '/imports/ui/layout/mainLayout';
@@ -19,6 +20,7 @@ import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
 
 export default Routes = () => (
+  <MuiThemeProvider>
     <Router history={browserHistory}>
       <Route path="/" component={MainLayout} >
         <IndexRoute component={Home} />
@@ -34,4 +36,5 @@ export default Routes = () => (
       </Route>
       <Route path="/embed/schools/:slug/calendar" component={MyCalender} />
     </Router>
+  </MuiThemeProvider>  
 );
