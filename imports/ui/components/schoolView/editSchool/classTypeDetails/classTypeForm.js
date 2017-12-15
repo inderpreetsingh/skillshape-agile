@@ -164,6 +164,7 @@ export default class ClassTypeForm extends React.Component {
     editClassType = (updatekey, payload) => {
     	Meteor.call("classType.editClassType", updatekey, payload, (err,res) => {
     	    this.setState({isBusy: false});
+    	    this.props.disableEditMode()
     	})
     }
 
@@ -183,7 +184,7 @@ export default class ClassTypeForm extends React.Component {
 				               	<div style={styles.formControlInput}>
 				                    <TextField
 				                    	floatingLabelText="Class Type Name *"
-				                    	disabled={!editMode}
+				                    	disabled={editMode}
 				                    	fullWidth={true}
 							            value={this.state.name}
 							            onChange={this.handleInputChange.bind(this, "name")}
@@ -194,7 +195,7 @@ export default class ClassTypeForm extends React.Component {
 				               	<div style={styles.formControlInput}>
 				               		<TextField
 				               			floatingLabelText="Brief Description"
-				               			disabled={!editMode}
+				               			disabled={editMode}
 				               			fullWidth={true}
 				               			multiLine={true}
 				               			row={3}
@@ -206,7 +207,7 @@ export default class ClassTypeForm extends React.Component {
 	      					<div style={styles.formControl}>
 				               	<div style={styles.formControlInput}>
 		      						<AutoComplete
-		      							disabled={!editMode}
+		      							disabled={editMode}
 		      							floatingLabelText="Skill Category *"
 		      							searchText={searchSkillCategoryText}
 		      							openOnFocus={true}
@@ -222,7 +223,7 @@ export default class ClassTypeForm extends React.Component {
 	      					<div style={styles.formControl}>
 				               	<div style={styles.formControlInput}>
 		      						<SelectArrayInput
-		      							disabled={!editMode}
+		      							disabled={editMode}
 		      							floatingLabelText="Skill Subject"  
 		      							optionValue="_id" 
 		      							optionText="name" 
@@ -240,7 +241,7 @@ export default class ClassTypeForm extends React.Component {
 							            <SelectField 
 							            	hintText="Select Gender" 
 							            	floatingLabelText="Gender" 
-							            	disabled={!editMode}
+							            	disabled={editMode}
 							            	fullWidth={true} 
 							            	value={this.state.gender} 
 							            	onChange={this.handleSelectChange.bind(this, "gender")}
@@ -258,7 +259,7 @@ export default class ClassTypeForm extends React.Component {
 								        <SelectField 
 									        floatingLabelText="Experience Level" 
 									        hintText="Experience Level" 
-									        disabled={!editMode}
+									        disabled={editMode}
 									        fullWidth={true} 
 									        value={this.state.experienceLevel} 
 									        onChange={this.handleSelectChange.bind(this, "experienceLevel")}
@@ -277,7 +278,7 @@ export default class ClassTypeForm extends React.Component {
 							        <div style={styles.formControlInput}>
 							            <TextField 
 							            	floatingLabelText="Age From" 
-							            	disabled={!editMode}
+							            	disabled={editMode}
 							            	type="number"
 							            	fullWidth={true} 
 							            	value={this.state.ageMin} 
@@ -289,7 +290,7 @@ export default class ClassTypeForm extends React.Component {
 							        <div style={styles.formControlInput}>
 							            <TextField
 							            	floatingLabelText="To" 
-							            	disabled={!editMode}
+							            	disabled={editMode}
 							            	type="number" 
 							            	fullWidth={true} 
 							            	value={this.state.ageMax} 
@@ -303,7 +304,7 @@ export default class ClassTypeForm extends React.Component {
 				               		<SelectField
 				               			floatingLabelText="Location"
 								        hintText="Select Location"
-				               			disabled={!editMode}
+				               			disabled={editMode}
 				               			fullWidth={true}
 								        value={this.state.location}
 								        onChange={this.handleSelectChange.bind(this, "location")}
@@ -342,7 +343,8 @@ export default class ClassTypeForm extends React.Component {
       					<RaisedButton
       						className="pull-right" 
       						label="Save"
-      						type="submit" 
+      						type="submit"
+      						disabled={editMode} 
       						primary={true} 
       						style={{margin: 12}}
       					/>

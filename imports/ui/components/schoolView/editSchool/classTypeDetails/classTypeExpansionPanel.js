@@ -54,11 +54,13 @@ export default class ClassTypeExpansionPanel extends React.Component {
     enableEditMode = (event) => {
         event.stopPropagation();
         this.setState({
-            editMode: !this.state.editMode,
+            editMode: true,
             showForm: true,
         })
     }
 	
+    disableEditMode = () => this.setState({editMode: false})
+
     removeclassType = (event, classTypeData) => {
         event.stopPropagation();
         Meteor.call("classType.removeClassType", classTypeData, (err,res) => {
@@ -78,7 +80,7 @@ export default class ClassTypeExpansionPanel extends React.Component {
         }
         return (
 			<div>
-                <div style={styles.panelHeader} onClick={()=> this.setState({showForm: !this.state.showForm})}>
+                <div style={styles.panelHeader} onClick={()=> this.setState({showForm: !this.state.showForm, editMode: false})}>
                  	<span style={styles.panelHeaderContent}>{data.name || "Add New Class Type"}</span>
                  	{
                         !addForm && (
@@ -87,6 +89,7 @@ export default class ClassTypeExpansionPanel extends React.Component {
                                     <RaisedButton
                                         label="Edit"
                                         onClick={this.enableEditMode}
+                                        disabled={editMode} 
                                         buttonStyle={{backgroundColor:amber800}}
                                         primary={true} 
                                     />
@@ -117,7 +120,8 @@ export default class ClassTypeExpansionPanel extends React.Component {
                     			locationData={locationData}
                     			schoolId={schoolId}
                     			hideAddClassTypeForm={hideAddClassTypeForm}
-                                editMode={editMode}
+                                editMode={!editMode}
+                                disableEditMode={this.disableEditMode}
                     		/>
                     	}
                     </Paper>                
