@@ -52,6 +52,7 @@ export default function () {
 						{
 							this.state.showClassTypeForm && (
 								<ClassTypeExpansionPanel 
+									addForm={true}
 									data={{}}
 									hideAddClassTypeForm={this.hideAddClassTypeForm}
 					    		  	{...this.props}
