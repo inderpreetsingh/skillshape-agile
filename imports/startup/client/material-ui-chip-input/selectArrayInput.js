@@ -176,6 +176,8 @@ export class SelectArrayInput extends Component {
                 onUpdateInput={setFilter}
                 dataSource={choices}
                 dataSourceConfig={dataSourceConfig}
+                floatingLabelText={this.props.floatingLabelText}
+                disabled={this.props.disabled}
             />
         );
     }

@@ -1,5 +1,7 @@
 import React from 'react';
+import { ContainerLoader } from '/imports/ui/loading/container';
 import AutoComplete from 'material-ui/AutoComplete';
+import { imageRegex, formStyles } from '/imports/util';
 import RaisedButton from 'material-ui/RaisedButton';
 import SelectArrayInput from '/imports/startup/client/material-ui-chip-input/selectArrayInput';
 import config from '/imports/config';
@@ -12,7 +14,7 @@ export default class ClassTypeForm extends React.Component {
 	constructor(props){
 	    super(props);
 	    this.state = this.initializeFields();
-	    this.onUpdateSkillCategoryInput = _.debounce(this.onUpdateSkillCategoryInput, 500);
+	    // this.onUpdateSkillCategoryInput = _.debounce(this.onUpdateSkillCategoryInput, 500);
   	}
 
   	initializeFields = () => {
@@ -23,20 +25,17 @@ export default class ClassTypeForm extends React.Component {
 	      	skillSubjectData: [],
 	      	skillCategoryId: null,
 	      	selectedSkillSubject: null,
+	      	searchSkillCategoryText: "",
 	    }
   		if(data  && _.size(data) > 0) {
-  			// const temp = [];
-  			// if(data.locationId) {
-	  		// 	temp = locationData.filter((location)=>{
-	    // 			return data.locationId === location._id
-	    // 		});
-  				
-  			// }
+  			if(data.selectedSkillCategory && _.size(data.selectedSkillCategory) > 0) {
+  				state.searchSkillCategoryText = data.selectedSkillCategory.name;
+  			}
   			return {
   				...state, 
   				...data, 
   				skillCategoryData: [data.selectedSkillCategory],
-  				location: data.locationId
+  				location: data.locationId,
   			}
   		}
   		return state
@@ -59,6 +58,7 @@ export default class ClassTypeForm extends React.Component {
 
 	onUpdateSkillCategoryInput = (text, dataSource) => {
   		console.log("changeSkillCategoryData -->>",text, dataSource)
+  		this.setState({searchSkillCategoryText: text})
   		Meteor.call("getSkillCategory",{textSearch: text}, (err,res) => {
     	    if(res) {
 	    	    this.setState({
@@ -68,28 +68,65 @@ export default class ClassTypeForm extends React.Component {
         })
   	}
 
-  	onChange = (values)=> {
-        console.log("value", values);
-        this.setState({selectedSkillSubject: values})
-    }
+  	onChange = (values)=> this.setState({selectedSkillSubject: values})
 
+    handleInputChange = (fieldName, event) => this.setState({[fieldName]: event.target.value})
+    	
+    handleSelectChange = (fieldName, event, index, value) => this.setState({[fieldName]: value})
+    
     onSubmit = (event) => {
     	event.preventDefault()
-    	const { skillCategoryId, selectedSkillSubject} = this.state;
-    	const { schoolId, locationData, data, hideAddClassTypeForm } = this.props;
-    	
+    	this.setState({isBusy: true});
+    	const imageFile = this.refs.classTypeImage.files[0];
+	    if(imageFile) {
+	    	if(!imageRegex.image.test(imageFile.name)) {
+	  			toastr.error("Please enter valid Image file","Error");
+	  			return 
+	  		}
+	  		S3.upload({files: { "0": imageFile}, path:"schools"}, (err, res) => {
+	  			if(err) {
+	  				console.error("err ",err)
+	  			}
+	  			if(res) {
+	  				this.handleFormData(res)
+	  			}
+	  		})
+    	} else {
+    		this.handleFormData()
+    	}
+    }
+
+    handleFormData = (imageUpload) => {
+    	const { schoolId, locationData, data } = this.props;
+    	const {
+    		methodName, 
+    		skillCategoryId, 
+    		selectedSkillSubject, 
+    		selectedSkillCategory,
+    		name,
+    		desc,
+    		gender,
+    		ageMin,
+    		ageMax,
+    		location,
+    		experienceLevel,
+    	} = this.state;
     	const payload = {
-    		name: this.state.name,
-    		desc: this.state.desc,
+    		name: name,
+    		desc: desc,
     		skillCategoryId: skillCategoryId,
     		schoolId: schoolId,
     		skillSubject: selectedSkillSubject && selectedSkillSubject.map(data => data._id),
-    		gender: this.state.gender,
-    		experienceLevel: this.state.experienceLevel,
-    		ageMin: this.state.ageMin,
-    		ageMax: this.state.ageMax,
-    		locationId: this.state.location,
+    		gender: gender,
+    		experienceLevel: experienceLevel,
+    		ageMin: ageMin,
+    		ageMax: ageMax,
+    		locationId: location,
     	}
+
+    	if(imageUpload) {
+	  		payload.classTypeImg = imageUpload.secure_url
+	  	}
 
     	if(payload.locationId) {
     		const temp = locationData.filter((data)=>{
@@ -103,68 +140,75 @@ export default class ClassTypeForm extends React.Component {
     	
     	if(schoolId && payload.name && payload.locationId && payload.skillCategoryId) {
 
-    		Meteor.call("classType.addClassType", payload, (err,res) => {
-	    	    if(res) {
-		    	   if(data && _.size(data) <= 0) {
-		    	   		hideAddClassTypeForm()
-		    	   }
-	    	    }
-        	})
+	    	if(data && data._id && _.size(data) > 0) {
+	    		this.editClassType(data._id, payload)
+	    	}
+	    	else {
+	    		this.addClassType(payload)
+	    	}
+
     	} else {
     		toastr.error("Missing required fields","Error");
     	}
     }
 
-    handleInputChange = (fieldName, event) => this.setState({[fieldName]: event.target.value})
-    	
-    handleSelectChange = (fieldName, event, index, value) => {
-    	this.setState({[fieldName]: value})
+    addClassType = (payload) => {
+    	Meteor.call("classType.addClassType", payload, (err,res) => {
+    	    if(res) {
+    	   		this.props.hideAddClassTypeForm()
+    	    }
+    	    this.setState({isBusy: false});
+    	})
+    }
+
+    editClassType = (updatekey, payload) => {
+    	Meteor.call("classType.editClassType", updatekey, payload, (err,res) => {
+    	    this.setState({isBusy: false});
+    	})
     }
 
 	render() {
 		console.log("ClassTypeForm state -->>",this.state);
 		console.log("ClassTypeForm props -->>",this.props);
-		const { locationData } = this.props;
-		const { skillCategoryData, skillSubjectData } = this.state;
+		const { locationData, data, editMode } = this.props;
+		const { skillCategoryData, skillSubjectData, searchSkillCategoryText } = this.state;
+		const styles = formStyles();
 		return (
 			<div className="content">
 				<form onSubmit={this.onSubmit}>
-	      			<div className="container-fluid no-padding">
-	      				<div className="col-sm-8 col-sm-8 col-xs-12">
-	      					<div className="form-group row">
-				               	<label for="example-text-input" className="col-md-4 col-form-label">
-				               		Class Type Name *
-				               	</label>
-				               	<div className="col-md-8">
+					{ this.state.isBusy && <ContainerLoader/> }
+	      			<div style={styles.row}>
+	      				<div style={styles.col}>
+	      					<div style={styles.formControl}>
+				               	<div style={styles.formControlInput}>
 				                    <TextField
+				                    	floatingLabelText="Class Type Name *"
+				                    	disabled={!editMode}
 				                    	fullWidth={true}
-							            id="text-field-controlled"
 							            value={this.state.name}
 							            onChange={this.handleInputChange.bind(this, "name")}
 							        />
-				                    
 			                	</div>
 	      					</div>
-	      					<div className="form-group row">
-				               	<label for="example-text-input" className="col-md-4 col-form-label">
-				               		Brief Description
-				               	</label>
-				               	<div className="col-md-8">
+	      					<div style={styles.formControl}>
+				               	<div style={styles.formControlInput}>
 				               		<TextField
+				               			floatingLabelText="Brief Description"
+				               			disabled={!editMode}
 				               			fullWidth={true}
 				               			multiLine={true}
-							            id="text-field-controlled"
+				               			row={3}
 							            value={this.state.desc}
 							            onChange={this.handleInputChange.bind(this, "desc")}
 							        />
 			                	</div>
 	      					</div>
-	      					<div className="form-group row">
-	      						<label for="example-text-input" className="col-md-4 col-form-label">
-				               		Skill Category *
-				               	</label>
-				               	<div className="col-md-8">
+	      					<div style={styles.formControl}>
+				               	<div style={styles.formControlInput}>
 		      						<AutoComplete
+		      							disabled={!editMode}
+		      							floatingLabelText="Skill Category *"
+		      							searchText={searchSkillCategoryText}
 		      							openOnFocus={true}
 		      							fullWidth={true}
 								      	dataSource={skillCategoryData}
@@ -175,97 +219,92 @@ export default class ClassTypeForm extends React.Component {
 								    />
 	      						</div>
 	      					</div>
-	      					<div className="form-group row">
-	      						<label for="example-text-input" className="col-md-4 col-form-label">
-				               		Skill Subject
-				               	</label>
-				               	<div className="col-md-8">
-		      						<SelectArrayInput  
+	      					<div style={styles.formControl}>
+				               	<div style={styles.formControlInput}>
+		      						<SelectArrayInput
+		      							disabled={!editMode}
+		      							floatingLabelText="Skill Subject"  
 		      							optionValue="_id" 
 		      							optionText="name" 
 		      							input={{ value: this.state.selectedSkillSubject ,onChange: this.onChange}} 
 		      							onChange={this.onChange} 
 		      							source=""
 		      							dataSourceConfig={{ text: 'name', value: '_id' }} 
-		      							choices={skillSubjectData} />
+		      							choices={skillSubjectData} 
+		      						/>
 	      						</div>
 	      					</div>
-	      					<div className="form-group row">
-	      						<label for="example-text-input" className="col-md-4 col-form-label">
-				               		Gender
-				               	</label>
-				               	<div className="col-md-8">
-				               		<SelectField
-				               			fullWidth={true}
-								        hintText="Select Gender"
-								        value={this.state.gender}
-								        onChange={this.handleSelectChange.bind(this, "gender")}
-								       
-								      >
-							        	{
-							        		config.gender.map((data, index) => {
-								        		return <MenuItem key={index} value={data.value} primaryText={data.label} />
-							        		})
-							        	}
-								     </SelectField>
-				               	</div>
+	      					<div style={styles.formControlInline}>
+	      						<div style={styles.formControl}>
+							        <div style={styles.formControlInput}>
+							            <SelectField 
+							            	hintText="Select Gender" 
+							            	floatingLabelText="Gender" 
+							            	disabled={!editMode}
+							            	fullWidth={true} 
+							            	value={this.state.gender} 
+							            	onChange={this.handleSelectChange.bind(this, "gender")}
+							            >
+							                { 
+							                	config.gender.map((data, index) => { 
+							                		return <MenuItem key={index} value={data.value} primaryText={data.label} /> 
+							                	}) 
+							            	}
+							            </SelectField>
+							        </div>
+							    </div>
+							    <div style={styles.formControl}>
+								    <div style={styles.formControlInput}>
+								        <SelectField 
+									        floatingLabelText="Experience Level" 
+									        hintText="Experience Level" 
+									        disabled={!editMode}
+									        fullWidth={true} 
+									        value={this.state.experienceLevel} 
+									        onChange={this.handleSelectChange.bind(this, "experienceLevel")}
+								        >
+								            { 
+								            	config.experienceLevel.map((data, index) => { 
+								            		return <MenuItem key={index} value={data.value} primaryText={data.label} /> 
+								            	}) 
+								            }
+								        </SelectField>
+								    </div>
+								</div>
 	      					</div>
-	      					<div className="form-group row">
-	      						<label for="example-text-input" className="col-md-4 col-form-label">
-				               		Experience Level
-				               	</label>
-				               	<div className="col-md-8">
-				               		<SelectField
-				               			fullWidth={true}
-								        hintText="Experience Level"
-								        value={this.state.experienceLevel}
-								        onChange={this.handleSelectChange.bind(this, "experienceLevel")}
-								       
-								      >
-							        	{
-							        		config.experienceLevel.map((data, index) => {
-								        		return <MenuItem key={index} value={data.value} primaryText={data.label} />
-							        		})
-							        	}
-								     </SelectField>
-				               	</div>
+	      					<div style={styles.formControlInline}>
+	      						<div style={styles.formControl}>
+							        <div style={styles.formControlInput}>
+							            <TextField 
+							            	floatingLabelText="Age From" 
+							            	disabled={!editMode}
+							            	type="number"
+							            	fullWidth={true} 
+							            	value={this.state.ageMin} 
+							            	onChange={this.handleInputChange.bind(this, "ageMin")} 
+							            />
+							        </div>
+							    </div>
+							    <div style={styles.formControl}>
+							        <div style={styles.formControlInput}>
+							            <TextField
+							            	floatingLabelText="To" 
+							            	disabled={!editMode}
+							            	type="number" 
+							            	fullWidth={true} 
+							            	value={this.state.ageMax} 
+							            	onChange={this.handleInputChange.bind(this, "ageMax")} 
+							            />
+							        </div>
+							    </div>
 	      					</div>
-	      					<div className="row">
-	      						<div className="form-group col-md-6">
-		      						<label for="example-text-input" className="col-md-4 col-form-label">
-					               		<span>Age</span>
-					               	</label>
-					               	<div className="col-md-8">
-					                    <TextField
-					                    	fullWidth={true}
-								            id="text-field-controlled"
-								            value={this.state.ageMin}
-								            onChange={this.handleInputChange.bind(this, "ageMin")}
-								        />
-   					               	</div>
-	      						</div>
-	      						<div className="form-group col-md-6">
-		      						<label for="example-text-input" className="col-md-4 col-form-label">
-					               		<span>To</span>
-					               	</label>
-					               	<div className="col-md-8">
-					                    <TextField
-					                    	fullWidth={true}
-								          id="text-field-controlled"
-								          value={this.state.ageMax}
-								          onChange={this.handleInputChange.bind(this, "ageMax")}
-								        />
-					               	</div>
-	      						</div>
-				            </div>
-				            <div className="form-group row">
-	      						<label for="example-text-input" className="col-md-4 col-form-label">
-				               		Location *
-				               	</label>
-				               	<div className="col-md-8">
+				            <div style={styles.formControl}>
+				               	<div style={styles.formControlInput}>
 				               		<SelectField
-				               			fullWidth={true}
+				               			floatingLabelText="Location"
 								        hintText="Select Location"
+				               			disabled={!editMode}
+				               			fullWidth={true}
 								        value={this.state.location}
 								        onChange={this.handleSelectChange.bind(this, "location")}
 								    >
@@ -278,10 +317,10 @@ export default class ClassTypeForm extends React.Component {
 				               	</div>
 	      					</div>   		
 	      				</div>	
-	      				<div className="col-sm-4 col-sm-4 col-xs-12">
+	      				<div style={{...styles.col, ...styles.center}}>
 	      					<div className="fileinput fileinput-new card-button text-center" data-provides="fileinput">
 							    <div className="fileinput-new card-button thumbnail">
-							        <img className="" src={config.defaultSchoolImage} alt="Profile Image" id="pic" />
+							        <img className="" src={data.classTypeImg || config.defaultSchoolImage} alt="Profile Image" id="pic" />
 							    </div>
 							    <div className="fileinput-preview fileinput-exists thumbnail"></div>
 							    <div>
@@ -289,7 +328,7 @@ export default class ClassTypeForm extends React.Component {
 					                    <span className="fileinput-new">Upload New Image</span>
 							        	<span className="fileinput-exists">Change</span>
 							        	<input type="hidden" />
-							        	<input type="file" name="..." accept="image/*" id="ProfileImage" ref="ProfileImage" />
+							        	<input type="file" name="..." accept="image/*" ref="classTypeImage" />
 							        </span>
 							        <a href="#" className="btn btn-danger  fileinput-exists" data-dismiss="fileinput">
 					                    <i className="fa fa-times"></i>
@@ -299,7 +338,7 @@ export default class ClassTypeForm extends React.Component {
 							</div>
 	      				</div>
 	      			</div>
-      				<div className="row">
+      				<div >
       					<RaisedButton
       						className="pull-right" 
       						label="Save"

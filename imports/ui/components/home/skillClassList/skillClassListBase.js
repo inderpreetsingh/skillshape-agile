@@ -24,7 +24,8 @@ export default class SkillClassListBase extends React.Component {
   makeCategorization = ({items = []}) => {
     if(items.length > 0) {
         const grouped = _.groupBy(items, function(item) {
-          return item.skillCategory.name;
+          if(item.selectedSkillCategory && item.selectedSkillCategory.name)
+            return item.selectedSkillCategory.name;
         });
        console.log("grouped -->>",grouped)
        return grouped

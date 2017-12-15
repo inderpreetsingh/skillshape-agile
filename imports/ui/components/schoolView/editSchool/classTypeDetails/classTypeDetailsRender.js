@@ -51,7 +51,8 @@ export default function () {
 					<div className="card-content">
 						{
 							this.state.showClassTypeForm && (
-								<ClassTypeExpansionPanel data={{}} 
+								<ClassTypeExpansionPanel 
+									data={{}}
 									hideAddClassTypeForm={this.hideAddClassTypeForm}
 					    		  	{...this.props}
 					    		/>
@@ -61,10 +62,12 @@ export default function () {
 						{ 
 							classTypeData && classTypeData.map((dataItem,index) => {
 					    		return <ClassTypeExpansionPanel
+					    			addForm={false}
 					    			data={dataItem} 
 					    			hideAddClassTypeForm={this.hideAddClassTypeForm}
 					    			key={index} 
-					    			{...this.props}/>
+					    			{...this.props}
+					    		/>
 							})
 						}
 				  	</div>
