@@ -152,11 +152,11 @@ export default class ClassTimeForm extends React.Component {
 		console.log("Final validateObject --->>>",this.validateObject(payload));
     	if(this.validateObject(payload)) {
 			this.setState({isBusy: true});
-	    	// if(addForm) {
-	    	// 	this.addClassTimes(payload)
-	    	// } else {
-	    	// 	this.editClassTimes(classTimesData._id, payload)
-	    	// }
+	    	if(addForm) {
+	    		this.addClassTimes(payload)
+	    	} else {
+	    		this.editClassTimes(classTimesData._id, payload)
+	    	}
     	}
     	
     }
@@ -324,6 +324,7 @@ export default class ClassTimeForm extends React.Component {
 														disabled={editMode} 
 														hintText="Start Date"
 														floatingLabelText="Date *"
+														value={this.state.startDate}
 														onChange={this.handleChangeDate.bind(this, "startDate")} 
 													/>
 												</div>
@@ -333,6 +334,7 @@ export default class ClassTimeForm extends React.Component {
 													<TimePicker
 														disabled={editMode}
 											            format="ampm"
+											            value={this.state.startTime}
 											            floatingLabelText="Start Time *" 
 											            hintText="Start Time"
 											            disabled={editMode}

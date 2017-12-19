@@ -32,6 +32,10 @@ ClassTimes.attachSchema(new SimpleSchema({
         type: Date,
         optional: true
     },
+    startTime: {
+        type: Date,
+        optional: true
+    },
     duration: {
         type: Number,
         optional: true

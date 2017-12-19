@@ -30,7 +30,7 @@ export default function () {
 						>
 					      	<FontIcon 
 			                    className="material-icons"
-			                    style={{color: config.themeColor.blue}}
+			                    style={{color: config.themeColor.green}}
 		                	>
 		                    	add
 		                	</FontIcon>

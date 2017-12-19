@@ -82,7 +82,7 @@ export default class ClassTypeExpansionPanel extends React.Component {
         }
         return (
 			<div>
-                <Toolbar style={{marginTop: 2,marginBottom: 2}}>
+                <Toolbar style={{marginTop: 5,marginBottom: 5}}>
                     <ToolbarGroup>
                       <span style={styles.panelHeaderContent}>{data.name || "Add New Class Type"}</span>
                     </ToolbarGroup>
