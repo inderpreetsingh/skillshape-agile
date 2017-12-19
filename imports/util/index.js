@@ -15,3 +15,4 @@ export { initializeMap, setMarkersOnMap, reCenterMap } from '/imports/util/initi
 export { cutString } from '/imports/util/cutString';
 export { withSubscriptionAndPagination } from '/imports/util/subscriptionAndPagination';
 export { formStyles } from '/imports/util/formStyle';
+export { createTable } from '/imports/util/createTable';

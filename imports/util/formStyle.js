@@ -4,7 +4,7 @@ export function formStyles() {
           display: 'flex',
           flexWrap: "wrap",
           width: "100%",
-          justifyContent: "space-between"
+          // justifyContent: "space-between"
         },
         formControl: {
           display: 'flex',
@@ -18,7 +18,7 @@ export function formStyles() {
         formControlInput: {
           display: 'flex',
           width: "100%",
-          minWidth: 211
+          minWidth: 256
         },
         row: {
           display: 'flex',
@@ -33,6 +33,10 @@ export function formStyles() {
         },
         center: {
             alignItems: 'center',
+        },
+        colPadding: {
+          paddingRight: 15,
+          paddingLeft: 15
         }
     };
 };

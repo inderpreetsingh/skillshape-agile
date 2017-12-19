@@ -1,6 +1,15 @@
-export default config = {
+export default config = Object.freeze({
 	// defaultSchoolImage: "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg",
 	defaultSchoolImage: "/images/school.png",
+	themeColor: {
+		yellow: '#E9B942', 
+		green: '#9DC161', 
+		red: '#D84B47', 
+		gray: '#989797', 
+		blue: '#348CC0', 
+		black: '#292828',
+		white: '#ffffff',
+	},
 	defaultLocation: [52.3702157, 4.8951],
 	collections: {
 		modules : "Modules",
@@ -14,6 +23,7 @@ export default config = {
 		school: "School",
 		classes: "Classes",
 		sLocation: "SLocation",
+		classTimes: "ClassTimes",
 	},
 	gender : [
 		{ label: "Male", value: "Male"},
@@ -27,4 +37,4 @@ export default config = {
 		{ label: "Beginner plus intermediate", value: "beginner plus intermediate"},
 		{ label: "Intermediate plus advanced", value: "intermediate plus advanced"},
 	]
-}
+})

@@ -8,6 +8,9 @@ import config from '/imports/config';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
+import ClassTimeDetails from './classTimes';
+
+const formId = "create-class-type";
 
 export default class ClassTypeForm extends React.Component {
 
@@ -25,17 +28,20 @@ export default class ClassTypeForm extends React.Component {
 	      	skillSubjectData: [],
 	      	skillCategoryId: null,
 	      	selectedSkillSubject: null,
+	      	selectedLocation: null,
 	      	searchSkillCategoryText: "",
 	    }
   		if(data  && _.size(data) > 0) {
   			if(data.selectedSkillCategory && _.size(data.selectedSkillCategory) > 0) {
   				state.searchSkillCategoryText = data.selectedSkillCategory.name;
   			}
+  			
   			return {
   				...state, 
   				...data, 
   				skillCategoryData: [data.selectedSkillCategory],
   				location: data.locationId,
+  				selectedLocation: locationData && _.find(locationData, function(location) { return data.locationId === location._id })
   			}
   		}
   		return state
@@ -75,7 +81,9 @@ export default class ClassTypeForm extends React.Component {
     handleSelectChange = (fieldName, event, index, value) => this.setState({[fieldName]: value})
     
     onSubmit = (event) => {
+    	console.log("--------------------- ClassType from submit----------------")
     	event.preventDefault()
+    	event.stopPropagation();
     	this.setState({isBusy: true});
     	const imageFile = this.refs.classTypeImage.files[0];
 	    if(imageFile) {
@@ -176,7 +184,8 @@ export default class ClassTypeForm extends React.Component {
 		const styles = formStyles();
 		return (
 			<div className="content">
-				<form onSubmit={this.onSubmit}>
+				<div>
+				<form id={formId} onSubmit={this.onSubmit}>
 					{ this.state.isBusy && <ContainerLoader/> }
 	      			<div style={styles.row}>
 	      				<div style={styles.col}>
@@ -339,17 +348,21 @@ export default class ClassTypeForm extends React.Component {
 							</div>
 	      				</div>
 	      			</div>
-      				<div >
       					<RaisedButton
-      						className="pull-right" 
       						label="Save"
+      						form={formId}
       						type="submit"
       						disabled={editMode} 
       						primary={true} 
       						style={{margin: 12}}
       					/>
-      				</div>
       			</form>	
+      			</div>
+      			<ClassTimeDetails
+      				classTypeId={data._id} 
+      				selectedLocation={this.state.selectedLocation}
+      				{...this.props}
+      			/>
       		</div>	
 		)
 	}

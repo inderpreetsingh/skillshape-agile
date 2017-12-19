@@ -143,7 +143,7 @@ export default methods = {
   addRoom: ({formPayload, closeModal, parentKeyValue}) => {
 
     formPayload.id = Math.random().toString(36).substr(2, 16);
-    Meteor.call("addRoom", formPayload, parentKeyValue, (error, result) => {
+    Meteor.call("location.addRoom", formPayload, parentKeyValue, (error, result) => {
       if (result) { 
         closeModal();
       } else if(error) {
@@ -154,7 +154,7 @@ export default methods = {
   editRoom: ({formPayload, closeModal, editByFieldValue, parentKeyValue}) => {
     formPayload.id = editByFieldValue;
     methods.callMeteorUpdateMethod({
-        methodName: "editRoom", 
+        methodName: "location.editRoom", 
         payload: formPayload, 
         updateKey: parentKeyValue,
         closeModal
@@ -162,7 +162,7 @@ export default methods = {
   },
   removeRoom: ({editByFieldValue, parentKeyValue}) => {
 
-    Meteor.call("roomRemove", editByFieldValue, parentKeyValue, (error, result) => {
+    Meteor.call("location.roomRemove", editByFieldValue, parentKeyValue, (error, result) => {
       if(error) {
         toastr.error("Unable to delete.","Error");
         return

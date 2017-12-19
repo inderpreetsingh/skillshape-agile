@@ -6,6 +6,22 @@ const SLocation = new Mongo.Collection(config.collections.sLocation);
  * See: https://github.com/aldeed/meteor-autoform#common-questions
  * See: https://github.com/aldeed/meteor-autoform#affieldinput
  */
+const Schema = {}
+Schema.Room = new SimpleSchema({
+    id: {
+      optional: true,
+      type: String
+    },
+    name: {
+       optional: true,
+       type: String
+    },
+    capicity: {
+        optional: true,
+        type: Number
+    }
+});
+
 SLocation.attachSchema(new SimpleSchema({
     createdBy: {
         type: String,
@@ -60,6 +76,10 @@ SLocation.attachSchema(new SimpleSchema({
         index: '2d', // create the geospatial index
         optional: true,
         decimal: true
+    },
+    "rooms.$": {
+        type: Schema.Room,
+        optional: true
     },
 }));
 

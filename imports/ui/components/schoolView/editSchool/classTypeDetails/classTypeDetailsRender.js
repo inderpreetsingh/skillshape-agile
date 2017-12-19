@@ -4,6 +4,12 @@ import classTypeSettings from './classTypeSettings';
 import {cutString} from '/imports/util';
 import ClassTypeForm from './classTypeForm';
 import ClassTypeExpansionPanel from './classTypeExpansionPanel';
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar';
+import Divider from 'material-ui/Divider';
+import FontIcon from 'material-ui/FontIcon';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import config from '/imports/config';
 
 const styles = {
   root: {
@@ -24,55 +30,55 @@ export default function () {
   console.log("classTypeDetails render -->>", classTypeData);
   
 	return (
-		<div className="tab-pane active" id="tab_default_2">
-			<div className="col-md-12" style={{paddingTop: '20px'}}>
-				<div className="card">
-					<div className="card-header card-header-tabs" data-background-color="blue">
-					    <div className="nav-tabs-navigation">
-					      	<div className="nav-tabs-wrapper">
-					        	<span className="nav-tabs-title"></span>
-				        		<ul className="nav nav-tabs" data-tabs="tabs">
-				          			<li className="col-md-3 col-sm-3 col-xs-12">
-				            			<a href="#" data-toggle="tab" aria-expanded="true">
-				              				<i className="material-icons">assignment</i> Class Types
-				              				<div className="ripple-container"></div>
-				            			</a>
-				          			</li>
-			          				<li className="filter-archive filter-evaluation active col-md-3 col-sm-3 col-xs-12">
-										<a onClick={() => this.setState({showClassTypeForm: true}) } id="add_location" data-toggle="tab" className="cpointer" aria-expanded="false">
-											<i className="fa fa-plus" aria-hidden="true"></i>ADD CLASS TYPE
-										  	<div className="ripple-container"></div>
-										</a>
-									</li>
-				        		</ul>
-					        </div>
-					    </div>
-					</div>
-					<div className="card-content">
-						{
-							this.state.showClassTypeForm && (
-								<ClassTypeExpansionPanel 
-									addForm={true}
-									data={{}}
-									hideAddClassTypeForm={this.hideAddClassTypeForm}
-					    		  	{...this.props}
-					    		/>
-							)
-						}
-						
-						{ 
-							classTypeData && classTypeData.map((dataItem,index) => {
-					    		return <ClassTypeExpansionPanel
-					    			addForm={false}
-					    			data={dataItem} 
-					    			hideAddClassTypeForm={this.hideAddClassTypeForm}
-					    			key={index} 
-					    			{...this.props}
-					    		/>
-							})
-						}
-				  	</div>
-				</div>
+		<div >
+			<Toolbar style={{marginTop: 5,marginBottom: 5,backgroundColor: config.themeColor.blue}}>
+	            <ToolbarGroup>
+	            	 <FontIcon 
+	                    className="material-icons"
+	                    color={config.themeColor.white}
+	                >
+	                    assignment
+	                </FontIcon>
+	            	 <span style={{marginLeft: 5, color: config.themeColor.white}}>Class Types</span>
+	            </ToolbarGroup>
+	            <ToolbarGroup>
+					<FloatingActionButton 
+						backgroundColor={config.themeColor.white}
+						mini={true}
+						onClick={() => this.setState({showClassTypeForm: true}) }
+					>
+				      	<FontIcon 
+		                    className="material-icons"
+		                    style={{color: config.themeColor.blue}}
+		                >
+		                    add
+		                </FontIcon>
+				    </FloatingActionButton>
+	            </ToolbarGroup>
+			</Toolbar>
+			<div className="card-content">
+				{
+					this.state.showClassTypeForm && (
+						<ClassTypeExpansionPanel 
+							addForm={true}
+							data={{}}
+							hideAddClassTypeForm={this.hideAddClassTypeForm}
+			    		  	{...this.props}
+			    		/>
+					)
+				}
+				
+				{ 
+					classTypeData && classTypeData.map((dataItem,index) => {
+			    		return <ClassTypeExpansionPanel
+			    			addForm={false}
+			    			data={dataItem} 
+			    			hideAddClassTypeForm={this.hideAddClassTypeForm}
+			    			key={index} 
+			    			{...this.props}
+			    		/>
+					})
+				}
 			</div>
 			<div className="wizard-footer col-md-12">
 		        <div className="pull-right">

@@ -1,11 +1,11 @@
-import React from 'react';
-import ClassTypeForm from './classTypeForm';
+import React,{Fragment} from 'react';
+import ClassTimeForm from './classTimeForm';
 import RaisedButton from 'material-ui/RaisedButton';
 import config from '/imports/config';
 import Paper from 'material-ui/Paper';
-import {blue500, red500, amber800 } from 'material-ui/styles/colors';
 import FontIcon from 'material-ui/FontIcon';
-import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar';
+import {blue500, red500, amber800 } from 'material-ui/styles/colors';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import Divider from 'material-ui/Divider';
 
 const getStyles = () => {
@@ -43,12 +43,12 @@ const getStyles = () => {
     };
 };
 
-export default class ClassTypeExpansionPanel extends React.Component {
+export default class ClassTimesExpansionPanel extends React.Component {
 
 	constructor(props){
 	    super(props);
 	    this.state = {
-            showForm: _.size(this.props.data) <= 0,
+            showForm: !this.props.classTimesData,
             editMode: false,
         }
   	}
@@ -63,9 +63,9 @@ export default class ClassTypeExpansionPanel extends React.Component {
 	
     disableEditMode = () => this.setState({editMode: false})
 
-    removeclassType = (event, classTypeData) => {
+    removeclassType = (event, classTimesData) => {
         event.stopPropagation();
-        Meteor.call("classType.removeClassType", classTypeData, (err,res) => {
+        Meteor.call("classTimes.removeClassTimes", classTimesData, (err,res) => {
             if(res) {
 
             }
@@ -75,16 +75,16 @@ export default class ClassTypeExpansionPanel extends React.Component {
 	render() {
         let editMode = this.state.editMode
 		const styles = getStyles();
-		const { data, schoolId, locationData, hideAddClassTypeForm, addForm  } = this.props;
-		console.log("ClassTypeExpansionPanel props -->>",this.props);
+		const { classTimesData, schoolId, classTypeId, hideAddClassTimesForm, addForm, selectedLocation  } = this.props;
+		console.log("ClassTimesExpansionPanel props -->>",this.props);
 		if(addForm) {
             editMode = addForm;
         }
         return (
 			<div>
-                <Toolbar style={{marginTop: 2,marginBottom: 2}}>
+                <Toolbar style={{marginTop: 2,marginBottom: 2,marginLeft: 15, marginRight: 15}}>
                     <ToolbarGroup>
-                      <span style={styles.panelHeaderContent}>{data.name || "Add New Class Type"}</span>
+                 	  <span style={styles.panelHeaderContent}>{(classTimesData && classTimesData.name) || "Add New Class Times"}</span>
                     </ToolbarGroup>
                     {!addForm && (
                         <ToolbarGroup>
@@ -96,7 +96,7 @@ export default class ClassTypeExpansionPanel extends React.Component {
                                 mode_edit
                             </FontIcon>
                             <FontIcon 
-                                onClick={(event) => this.removeclassType(event, data)}   
+                                onClick={(event) => this.removeclassType(event, classTimesData)}  
                                 className="material-icons"
                                 color={config.themeColor.red}
                             >
@@ -111,25 +111,26 @@ export default class ClassTypeExpansionPanel extends React.Component {
                         </ToolbarGroup>
                     )}
                 </Toolbar>
-                
+          
                 {
                     <Paper
                         style={this.state.showForm ? styles.panelOpen : styles.panelClosed}
                     > 
                     	{
-                    		this.state.showForm && <ClassTypeForm 
-                    			data={data}
+                    		this.state.showForm && <ClassTimeForm 
+                    			classTimesData={classTimesData}
                                 addForm={addForm}
-                    			locationData={locationData}
                     			schoolId={schoolId}
-                    			hideAddClassTypeForm={hideAddClassTypeForm}
+                                classTypeId={classTypeId}
+                    			hideAddClassTimesForm={hideAddClassTimesForm}
                                 editMode={!editMode}
+                                selectedLocation={selectedLocation}
                                 disableEditMode={this.disableEditMode}
                     		/>
                     	}
                     </Paper>                
                 }
-                <Divider />    
+            <Divider />
             </div>
 		)
 	}

@@ -11,6 +11,7 @@ import "/imports/api/monthlyPricing/methods";
 import "/imports/api/school/methods";
 import "/imports/api/sLocation/methods";
 import "/imports/api/classes/methods";
+import "/imports/api/classTimes/methods";
 
 // All publication imported over here
 
@@ -25,3 +26,4 @@ import "/imports/api/monthlyPricing/server/publication";
 import "/imports/api/school/server/publication";
 import "/imports/api/sLocation/server/publication";
 import "/imports/api/classes/server/publication";
+import "/imports/api/classTimes/server/publication";
