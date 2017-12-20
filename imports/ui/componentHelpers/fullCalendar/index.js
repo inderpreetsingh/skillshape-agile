@@ -91,6 +91,7 @@ class FullCalendar extends React.Component {
                     sevent.attending = false;
                 } 
                 if (classTime.scheduleType === "oneTime") {
+                    sevent.start = sevent.startDate;
                     sevent.roomId = classTime.roomId;
                     sevent.eventStartTime = moment(classTime.startTime).format("hh:mm");
                     sevent.eventEndTime = moment(new Date(classTime.startTime)).add(classTime.duration, "minutes").format("hh:mm");

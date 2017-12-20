@@ -113,7 +113,7 @@ export default class ClassTimeForm extends React.Component {
 		console.log("validateObject -->>",obj)
 		for (var key in obj) {
 		    
-		    if (obj.hasOwnProperty(key) && !obj[key] && key != "desc") {
+		    if (obj.hasOwnProperty(key) && !obj[key] && key != "desc" && key != "roomId") {
 		        console.log(key + " -> " + obj[key]);
 		        toastr.error(`Please fill all the required fields *`,"Error");
 		        return null;
