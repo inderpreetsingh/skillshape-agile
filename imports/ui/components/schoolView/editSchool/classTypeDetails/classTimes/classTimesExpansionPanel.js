@@ -12,17 +12,23 @@ const getStyles = () => {
 
    return {
         panelOpen: {
-            maxHeight: 1400,
+            maxHeight: 14000,
             order: -1,
             overflowY: 'auto',
             overflowX: 'hidden',
             transition: 'max-height 800ms ease-in-out 0ms',
+            marginRight: 15,
+            marginLeft: 15,
+            marginBottom: 5,
         },
         panelClosed: {
             maxHeight: 0,
             order: -1,
             overflowY: 'auto',
             transition: 'max-height 800ms ease-in-out 0ms',
+            marginRight: 15,
+            marginLeft: 15,
+            marginBottom: 5,
         },
         panelHeaderContent: {
         	display: 'flex',
@@ -86,30 +92,42 @@ export default class ClassTimesExpansionPanel extends React.Component {
                     <ToolbarGroup>
                  	  <span style={styles.panelHeaderContent}>{(classTimesData && classTimesData.name) || "Add New Class Times"}</span>
                     </ToolbarGroup>
-                    {!addForm && (
-                        <ToolbarGroup>
-                            <FontIcon 
-                                onClick={this.enableEditMode} 
-                                className="material-icons"
-                                color={config.themeColor.yellow}
-                            >
-                                mode_edit
-                            </FontIcon>
-                            <FontIcon 
-                                onClick={(event) => this.removeclassType(event, classTimesData)}  
-                                className="material-icons"
-                                color={config.themeColor.red}
-                            >
-                                delete_forever
-                            </FontIcon>
-                            <FontIcon 
-                                onClick={()=> this.setState({showForm: !this.state.showForm, editMode: false})} 
-                                className="material-icons"
-                            >
-                                {this.state.showForm ? "keyboard_arrow_up" : "keyboard_arrow_down"}
-                            </FontIcon>
-                        </ToolbarGroup>
-                    )}
+                    {
+                        !addForm ? (
+                            <ToolbarGroup>
+                                <FontIcon 
+                                    onClick={this.enableEditMode} 
+                                    className="material-icons"
+                                    color={config.themeColor.yellow}
+                                >
+                                    mode_edit
+                                </FontIcon>
+                                <FontIcon 
+                                    onClick={(event) => this.removeclassType(event, classTimesData)}  
+                                    className="material-icons"
+                                    color={config.themeColor.red}
+                                >
+                                    delete_forever
+                                </FontIcon>
+                                <FontIcon 
+                                    onClick={()=> this.setState({showForm: !this.state.showForm, editMode: false})} 
+                                    className="material-icons"
+                                >
+                                    {this.state.showForm ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+                                </FontIcon>
+                            </ToolbarGroup>
+                        ) : (
+                            <ToolbarGroup>
+                                <FontIcon 
+                                    onClick={() => hideAddClassTimesForm()}   
+                                    className="material-icons"
+                                    color={config.themeColor.red}
+                                >
+                                    cancel
+                                </FontIcon>
+                            </ToolbarGroup>
+                        )
+                    }
                 </Toolbar>
           
                 {

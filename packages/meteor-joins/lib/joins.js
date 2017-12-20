@@ -155,6 +155,7 @@ Mongo.Collection.prototype.publishJoinedCursors = function(cursor, options, publ
 
 			if(coll) {
 				var ids = cursor.map(function(doc) { return accessPropertyViaDotNotation(join.foreignKey, doc); });
+				ids = _.flatten(ids);
 				if(!filters[coll._name]) {
 					filters[coll._name] = {
 						collection: coll,
@@ -182,7 +183,7 @@ Mongo.Collection.prototype.publishJoinedCursors = function(cursor, options, publ
 			var data = cursor.map(function(doc) {
 				var res = {};
 				res[join.collectionNameField] = doc[join.collectionNameField];
-				res[join.foreignKey] = accessPropertyViaDotNotation(join.foreignKey, doc);
+				res[join.foreignKey] = _.flatten(accessPropertyViaDotNotation(join.foreignKey, doc));
 				return res;
 			});
 
@@ -191,6 +192,7 @@ Mongo.Collection.prototype.publishJoinedCursors = function(cursor, options, publ
 				var coll = globalContext[collectionName];
 				if(coll) {
 					var ids = _.map(_.filter(data, function(doc) { return doc[join.collectionNameField] === collectionName; }), function(el) { return accessPropertyViaDotNotation(join.foreignKey, el); });
+					ids = _.flatten(ids);
 					if(!filters[coll._name]) {
 						filters[coll._name] = {
 							collection: coll,
@@ -222,7 +224,6 @@ Mongo.Collection.prototype.publishJoinedCursors = function(cursor, options, publ
 		var observer = cursor.observe({
 			added: function(newDocument) {
 				if(publication._ready) {
-					console.log("_ReactiveJoins", _ReactiveJoins.find().fetch());
 					_ReactiveJoins.upsert({ name: publication._name }, { $set: { name: publication._name, updateId: Random.id() }});
 				}
 			},
@@ -252,7 +253,6 @@ Mongo.Collection.prototype.publishJoinedCursors = function(cursor, options, publ
 
 	var cursors = [];
 	cursors.push(cursor);
-
 	for(var key in filters) {
 		var filter = filters[key];
 		if(filter && filter.collection && filter.filter) {
@@ -286,6 +286,6 @@ Mongo.Collection.prototype.publishJoinedCursors = function(cursor, options, publ
 			})
 		});
 	}
-	console.log("cursors", cursors.length)
 	return cursors;
 };
+

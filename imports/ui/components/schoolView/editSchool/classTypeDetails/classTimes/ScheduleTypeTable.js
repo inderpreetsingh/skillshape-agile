@@ -56,42 +56,49 @@ export const scheduleDetails = {
     startTime: {},
     duration: "",
     roomId: null,
-    isSeleted: false
+    isSeleted: false,
+    day: 1,
   },
   "Tuesday": {
     startTime: {},
     duration: "",
     roomId: null,
-    isSeleted: false
+    isSeleted: false,
+    day: 2,
   },
   "Wednesday": {
     startTime: {},
     duration: "",
     roomId: null,
-    isSeleted: false
+    isSeleted: false,
+    day: 3,
   },
   "Thursday": {
     startTime: {},
     duration: "",
     roomId: null,
-    isSeleted: false
+    isSeleted: false,
+    day: 4,
   },
   "Friday": {
     startTime: {},
     duration: "",
     roomId: null,
-    isSeleted: false
+    isSeleted: false,
+    day: 5,
   },
   "Saturday": {
     startTime: {},
     duration: "",
     roomId: null,
-    isSeleted: false
+    isSeleted: false,
+    day: 6,
   },
   "Sunday": {
     startTime: {},
     duration: "",
     roomId: null,
-    isSeleted: false
+    isSeleted: false,
+    day: 7,
   }
 }

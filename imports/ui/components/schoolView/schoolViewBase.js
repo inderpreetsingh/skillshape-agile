@@ -5,6 +5,8 @@ import { browserHistory, Link } from 'react-router';
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
+import ClassPricing from "/imports/api/classPricing/fields";
+import SLocation from "/imports/api/sLocation/fields";
 
 export default class SchoolViewBase extends React.Component {
 

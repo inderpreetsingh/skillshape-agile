@@ -44,6 +44,10 @@ ClassTimes.attachSchema(new SimpleSchema({
         type: String,
         optional: true
     },
+    locationId: {
+        type: String,
+        optional: true
+    },
     scheduleDetails: {
         type: Object,
         optional: true,

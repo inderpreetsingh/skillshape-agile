@@ -24,8 +24,10 @@ export default config = Object.freeze({
 		classes: "Classes",
 		sLocation: "SLocation",
 		classTimes: "ClassTimes",
+		classInterest: "ClassInterest",
 	},
 	gender : [
+		{ label: "Any", value: "Any"},
 		{ label: "Male", value: "Male"},
 		{ label: "Female", value: "Female"},
 	],

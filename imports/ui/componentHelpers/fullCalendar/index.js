@@ -2,6 +2,7 @@ import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import FullCalendarRender from './fullCalendarRender';
 import ClassTimes from '/imports/api/classTimes/fields';
+import ClassInterest from '/imports/api/classInterest/fields';
 import moment from 'moment';
 
 class FullCalendar extends React.Component {
@@ -37,6 +38,25 @@ class FullCalendar extends React.Component {
                 callback(sevents);
             },
             dayRender: function(date, cell) {},
+            eventRender: function(event, element, view){
+                // console.log("event -->>",event);
+                switch(event.scheduleType) {
+                    case "oneTime": {
+                        return true
+                    }
+                    case "recurring": {
+                        if((moment(event.start).format("YYYY-MM-DD") >= moment(event.startDate).format("YYYY-MM-DD")) && (moment(event.start).format("YYYY-MM-DD") <= moment(event.endDate).format("YYYY-MM-DD"))) 
+                            return true;
+                        return false;
+                    }
+                    case "onGoing": {
+                        if(moment(event.start).format("YYYY-MM-DD") >= moment(event.startDate).format("YYYY-MM-DD")) 
+                            return true;
+                        return false;
+                    }
+                }
+              
+            },
             eventClick: (event) => {
                 // console.log("eventClick -->>",event)
                 if (event.classId && event.classTypeId) {
@@ -47,37 +67,49 @@ class FullCalendar extends React.Component {
     }
 
     buildCalander = () => {
-        console.log("buildCalander props -->>", this.classTimesData);
-        let { classTimesData, myClassIds } = this.props;
+        console.log("buildCalander props -->>",this.props);
+        let { classTimesData, classInterestData } = this.props;
         let sevents = [];
-
+        let myClassTimesIds = classInterestData.map(data => data.classTimeId);
         for (var i = 0; i < classTimesData.length; i++) {
             let classTime = classTimesData[i];
+
             try {
-                // console.log("sclass._id 122 -->>",sclass._id)
-                // console.log("classSchedule 122 -->>",classSchedule)
-                sevent = {};
-                sevent.title = classTime.name;
-                sevent.classTypeId = classTime.classTypeId;
-                sevent.locationId = classTime.locationId;
-                sevent.roomId = classTime.roomId;
-                sevent.classTimeId = classTime._id
-                if (classTime.scheduleType == "oneTime") {
-                    sevent.start = moment(classTime.startDate).format("YYYY-MM-DD");
+             
+                let sevent = {
+                    classTypeId: classTime.classTypeId,
+                    locationId: classTime.locationId,
+                    classTimeId: classTime._id,
+                    startDate: moment(classTime.startDate),
+                    scheduleType: classTime.scheduleType,
+                };
+                if (myClassTimesIds.indexOf(classTime._id) > -1) {
+                    sevent.className = "event-green";
+                    sevent.attending = true;
+                } else {
+                    sevent.className = "event-azure";
+                    sevent.attending = false;
+                } 
+                if (classTime.scheduleType === "oneTime") {
+                    sevent.roomId = classTime.roomId;
                     sevent.eventStartTime = moment(classTime.startTime).format("hh:mm");
                     sevent.eventEndTime = moment(new Date(classTime.startTime)).add(classTime.duration, "minutes").format("hh:mm");
                     sevent.title = classTime.name + " " + sevent.eventStartTime + " to " + sevent.eventEndTime;
-                    // sevent.eventDay = classTime.startDate
+                    sevents.push(sevent)
                 }
-                if (myClassIds.indexOf(classTime._id) > -1) {
-                    sevent.className = "event-green"
-                } else {
-                    sevent.className = "event-azure"
-                }
-                console.error("Error -->>", sevent);
-                if (classTime.scheduleType == "oneTime") {
 
-                  sevents.push(sevent)
+                if((classTime.scheduleType === "recurring" || classTime.scheduleType === "onGoing") && classTime.scheduleDetails) {
+                    let scheduleData = {...classTime.scheduleDetails};
+                    sevent.endDate = classTime.endDate && moment(classTime.endDate)
+                    for (let key in scheduleData) {
+                        let temp = {...sevent};
+                        temp.dow = [scheduleData[key].day];
+                        temp.eventStartTime = moment(scheduleData[key].startTime).format("hh:mm");
+                        temp.eventEndTime = moment(new Date(scheduleData[key].startTime)).add(scheduleData[key].duration, "minutes").format("hh:mm");
+                        temp.title = classTime.name + " " + temp.eventStartTime + " to " + temp.eventEndTime;
+                        temp.roomId = scheduleData[key].roomId;
+                        sevents.push(temp);
+                    }
                 }
 
             } catch (err) {
@@ -85,7 +117,7 @@ class FullCalendar extends React.Component {
             }
         }
 
-        // console.log("sevent/s 12-->>",sevents)
+        console.warn("Final sevent/s 12-->>",sevents)
         return sevents
     }
 
@@ -98,48 +130,28 @@ class FullCalendar extends React.Component {
 export default createContainer(props => {
     console.log("props FullCalendarContainer = ", props);
     const { startDate, manageMyCalendar, isUserSubsReady, currentUser } = props;
+    let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
     let { schoolId, slug } = props.params;
-    let classSchedule = [];
-    let skillClass = [];
-    let myClassIds = [];
-    let classTimesData = [];
-
     if (!schoolId && !slug) {
         schoolId = currentUser && currentUser.profile && currentUser.profile.schoolId;
     }
 
     if (startDate) {
         console.log("startDate = ", startDate);
-        Meteor.subscribe("classTimes.getclassTimesForCalendar", (schoolId || slug), startDate)
+        Meteor.subscribe("classTimes.getclassTimesForCalendar", {schoolId: schoolId || slug, current_date: startDate, view})
     }
 
     classTimesData = ClassTimes.find({}).fetch();
-    if (manageMyCalendar) {
-        allClassesIds = skillClass.map((a) => {
-            return a._id
-        })
-        Meteor.subscribe("classes.userClasses", { userId: currentUser && currentUser._id })
-        Meteor.subscribe("ClassSchedulebyClassIds", allClassesIds, startDate)
-    }
-
-
-    // classSchedule = ClassSchedule.find().fetch()
-    if (currentUser) {
-        // myClassIds = Classes.find({schoolId: schoolId}).fetch().map((a) => {
-        //   return a._id
-        // })
-    }
-
+    classInterestData = ClassInterest.find({}).fetch();
+    
 
     console.log("FullCalendar createContainer classTimesData-->>", classTimesData)
-    // console.log("FullCalendar createContainer skillClass-->>",skillClass)
+    console.log("FullCalendar createContainer classInterestData-->>",classInterestData)
     // console.log("FullCalendar createContainer myClassIds-->>",myClassIds)
     // console.log("FullCalendar createContainer classSchedule-->>",classSchedule)
     return {
         ...props,
-        classSchedule,
-        skillClass,
-        myClassIds,
         classTimesData,
+        classInterestData,
     };
 }, FullCalendar);

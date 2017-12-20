@@ -12,7 +12,7 @@ const getStyles = () => {
 
    return {
         panelOpen: {
-            maxHeight: 1400,
+            maxHeight: 14000,
             order: -1,
             overflowY: 'auto',
             overflowX: 'hidden',
@@ -86,30 +86,42 @@ export default class ClassTypeExpansionPanel extends React.Component {
                     <ToolbarGroup>
                       <span style={styles.panelHeaderContent}>{data.name || "Add New Class Type"}</span>
                     </ToolbarGroup>
-                    {!addForm && (
-                        <ToolbarGroup>
-                            <FontIcon 
-                                onClick={this.enableEditMode} 
-                                className="material-icons"
-                                color={config.themeColor.yellow}
-                            >
-                                mode_edit
-                            </FontIcon>
-                            <FontIcon 
-                                onClick={(event) => this.removeclassType(event, data)}   
-                                className="material-icons"
-                                color={config.themeColor.red}
-                            >
-                                delete_forever
-                            </FontIcon>
-                            <FontIcon 
-                                onClick={()=> this.setState({showForm: !this.state.showForm, editMode: false})} 
-                                className="material-icons"
-                            >
-                                {this.state.showForm ? "keyboard_arrow_up" : "keyboard_arrow_down"}
-                            </FontIcon>
-                        </ToolbarGroup>
-                    )}
+                    {
+                        !addForm ? (
+                            <ToolbarGroup>
+                                <FontIcon 
+                                    onClick={this.enableEditMode} 
+                                    className="material-icons"
+                                    color={config.themeColor.yellow}
+                                >
+                                    mode_edit
+                                </FontIcon>
+                                <FontIcon 
+                                    onClick={(event) => this.removeclassType(event, data)}   
+                                    className="material-icons"
+                                    color={config.themeColor.red}
+                                >
+                                    delete_forever
+                                </FontIcon>
+                                <FontIcon 
+                                    onClick={()=> this.setState({showForm: !this.state.showForm, editMode: false})} 
+                                    className="material-icons"
+                                >
+                                    {this.state.showForm ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+                                </FontIcon>
+                            </ToolbarGroup>
+                        ) : (
+                            <ToolbarGroup>
+                                <FontIcon 
+                                    onClick={() => hideAddClassTypeForm()}   
+                                    className="material-icons"
+                                    color={config.themeColor.red}
+                                >
+                                    cancel
+                                </FontIcon>
+                            </ToolbarGroup>
+                        )
+                }
                 </Toolbar>
                 
                 {

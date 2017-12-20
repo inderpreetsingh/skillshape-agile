@@ -54,7 +54,7 @@ ClassType.attachSchema(new SimpleSchema({
         optional:true
     },
     skillCategoryId: {
-       type:String,
+       type:[String],
        optional:true 
     },
     skillSubject: {

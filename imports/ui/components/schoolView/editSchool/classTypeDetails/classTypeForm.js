@@ -1,4 +1,5 @@
 import React from 'react';
+import { findIndex } from 'lodash';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import AutoComplete from 'material-ui/AutoComplete';
 import { imageRegex, formStyles } from '/imports/util';
@@ -22,8 +23,9 @@ export default class ClassTypeForm extends React.Component {
 
   	initializeFields = () => {
   		const { data, locationData } = this.props;
-  		console.log("initializeFields data -->>",data)
+  		// console.log("initializeFields data -->>",data)
   		let state = {
+  			gender: "Any",
 	      	skillCategoryData: [],
 	      	skillSubjectData: [],
 	      	skillCategoryId: null,
@@ -47,50 +49,61 @@ export default class ClassTypeForm extends React.Component {
   		return state
   	}
 
-	onSkillCategorySelect = (selectItem, index) => {
-		console.log("selectItem index -->>",selectItem, index)
-		if(selectItem && selectItem._id) {
-			Meteor.call("getSkillSubjectBySkillCategory",{skillCategoryId: selectItem._id}, (err,res) => {
-	    	    if(res) {
-		    	    this.setState({
-		    	      skillSubjectData: res || [],
-		    	      selectedSkillSubject: [],
-		    	      skillCategoryId: selectItem._id,
-		    	    })
-	    	    }
-	        })
-		}
-	}
 
-	onUpdateSkillCategoryInput = (text, dataSource) => {
-  		console.log("changeSkillCategoryData -->>",text, dataSource)
-  		this.setState({searchSkillCategoryText: text})
-  		Meteor.call("getSkillCategory",{textSearch: text}, (err,res) => {
+  	onSkillSubjectChange = (values)=> this.setState({selectedSkillSubject: values})
+  	
+  	onSkillCategoryChange = (values)=> {
+
+  		const selectedSkillSubject = this.state.selectedSkillSubject && this.state.selectedSkillSubject.filter((data) => {
+  			return findIndex(values, {_id: data.skillCategoryId}) > -1
+  		})
+  		console.log("selectedSkillSubject -->>",selectedSkillSubject)
+  		this.setState({selectedSkillCategory: values, selectedSkillSubject});
+  	}
+
+    handleInputChange = (fieldName, event) => this.setState({[fieldName]: event.target.value})
+    	
+    handleSelectChange = (fieldName, event, index, value) => this.setState({[fieldName]: value})
+    
+    handleSkillCategoryInputChange = (value) => {
+    	console.log("handleSkillCategoryInputChange -->>",value)
+    	Meteor.call("getSkillCategory",{textSearch: value}, (err,res) => {
+    	    console.log("getSkillCategory res -->>",res)
     	    if(res) {
 	    	    this.setState({
 	    	      skillCategoryData: res || [],
 	    	    })
     	    }
         })
-  	}
+    }
 
-  	onChange = (values)=> this.setState({selectedSkillSubject: values})
+    handleSkillSubjectInputChange = (value) => {
+    	console.log("handleSkillSubjectInputChange -->>",value)
+    	if(!_.isEmpty(this.state.selectedSkillCategory)) {
+	    	let skillCategoryIds = this.state.selectedSkillCategory.map((data) => data._id)
+	    	Meteor.call("getSkillSubjectBySkillCategory",{skillCategoryIds: skillCategoryIds, textSearch: value}, (err,res) => {
+	    	    if(res) {
+		    	    this.setState({
+		    	      skillSubjectData: res || [],
+		    	    })
+	    	    }
+	        })
+    	} else {
+    		toastr.error("Please select skill category first","Error");
+    	}
+    }
 
-    handleInputChange = (fieldName, event) => this.setState({[fieldName]: event.target.value})
-    	
-    handleSelectChange = (fieldName, event, index, value) => this.setState({[fieldName]: value})
-    
     onSubmit = (event) => {
     	console.log("--------------------- ClassType from submit----------------")
     	event.preventDefault()
     	event.stopPropagation();
-    	this.setState({isBusy: true});
     	const imageFile = this.refs.classTypeImage.files[0];
 	    if(imageFile) {
 	    	if(!imageRegex.image.test(imageFile.name)) {
 	  			toastr.error("Please enter valid Image file","Error");
 	  			return 
 	  		}
+    		this.setState({isBusy: true});
 	  		S3.upload({files: { "0": imageFile}, path:"schools"}, (err, res) => {
 	  			if(err) {
 	  				console.error("err ",err)
@@ -122,7 +135,7 @@ export default class ClassTypeForm extends React.Component {
     	const payload = {
     		name: name,
     		desc: desc,
-    		skillCategoryId: skillCategoryId,
+    		skillCategoryId: selectedSkillCategory && selectedSkillCategory.map(data => data._id),
     		schoolId: schoolId,
     		skillSubject: selectedSkillSubject && selectedSkillSubject.map(data => data._id),
     		gender: gender,
@@ -146,8 +159,8 @@ export default class ClassTypeForm extends React.Component {
     	}
     	console.log("onSubmit payload 2-->>",payload)
     	
-    	if(schoolId && payload.name && payload.locationId && payload.skillCategoryId) {
-
+    	if(schoolId && payload.name) {
+    		this.setState({isBusy: true});
 	    	if(data && data._id && _.size(data) > 0) {
 	    		this.editClassType(data._id, payload)
 	    	}
@@ -215,18 +228,17 @@ export default class ClassTypeForm extends React.Component {
 	      					</div>
 	      					<div style={styles.formControl}>
 				               	<div style={styles.formControlInput}>
-		      						<AutoComplete
+				               		<SelectArrayInput
 		      							disabled={editMode}
-		      							floatingLabelText="Skill Category *"
-		      							searchText={searchSkillCategoryText}
-		      							openOnFocus={true}
-		      							fullWidth={true}
-								      	dataSource={skillCategoryData}
-								      	dataSourceConfig={{text: "name", value: "_id"}}
-								      	filter={AutoComplete.caseInsensitiveFilter}
-								      	onNewRequest={this.onSkillCategorySelect}
-	                      				onUpdateInput={this.onUpdateSkillCategoryInput}
-								    />
+		      							floatingLabelText="Skill Category"  
+		      							optionValue="_id" 
+		      							optionText="name" 
+		      							input={{ value: this.state.selectedSkillCategory ,onChange: this.onSkillCategoryChange}} 
+		      							onChange={this.onSkillCategoryChange} 
+		      							setFilter={this.handleSkillCategoryInputChange}
+		      							dataSourceConfig={{ text: 'name', value: '_id' }} 
+		      							choices={skillCategoryData} 
+		      						/>
 	      						</div>
 	      					</div>
 	      					<div style={styles.formControl}>
@@ -236,9 +248,9 @@ export default class ClassTypeForm extends React.Component {
 		      							floatingLabelText="Skill Subject"  
 		      							optionValue="_id" 
 		      							optionText="name" 
-		      							input={{ value: this.state.selectedSkillSubject ,onChange: this.onChange}} 
-		      							onChange={this.onChange} 
-		      							source=""
+		      							input={{ value: this.state.selectedSkillSubject ,onChange: this.onSkillSubjectChange}} 
+		      							onChange={this.onSkillSubjectChange} 
+		      							setFilter={this.handleSkillSubjectInputChange}
 		      							dataSourceConfig={{ text: 'name', value: '_id' }} 
 		      							choices={skillSubjectData} 
 		      						/>
@@ -358,11 +370,15 @@ export default class ClassTypeForm extends React.Component {
       					/>
       			</form>	
       			</div>
-      			<ClassTimeDetails
-      				classTypeId={data._id} 
-      				selectedLocation={this.state.selectedLocation}
-      				{...this.props}
-      			/>
+      			{
+      				!_.isEmpty(data) && (
+	      				<ClassTimeDetails
+		      				classTypeId={data._id} 
+		      				selectedLocation={this.state.selectedLocation}
+		      				{...this.props}
+	      				/>
+      				)
+      			}
       		</div>	
 		)
 	}
