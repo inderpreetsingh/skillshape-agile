@@ -7,21 +7,33 @@ Meteor.publish("classTimes.getclassTimes", function({ schoolId, classTypeId }) {
     return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
-Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, current_date, view}) {
-    var date = '';
+Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, calendarStartDate, calendarEndDate, view}) {
+    console.log("classTimes.getclassTimesForCalendar -->>>",calendarStartDate, calendarEndDate);
+    let startDate = '';
+    let endDate = '';
     let result = []
-    if (current_date) {
-        date = new Date(current_date);
+    if (calendarStartDate && calendarEndDate) {
+        startDate = new Date(calendarStartDate);
+        endDate = new Date(calendarEndDate);
     } else {
-        current_date = new Date();
-        date = new Date(current_date.getFullYear(), current_date.getMonth(), 0);
+        calendarStartDate = new Date();
+        calendarEndDate = new Date();
+        startDate = new Date(calendarStartDate.getFullYear(), calendarStartDate.getMonth(), 0);
+        endDate = new Date(calendarEndDate.getFullYear(), calendarEndDate.getMonth(), 0);
     }
 
     let school = School.findOne({ $or: [{ _id: schoolId }, { slug: schoolId }] });
-    let condition = { "startDate": { '$gte': date }, schoolId: school && school._id };
+    let condition = {
+        '$or': [
+            { scheduleType: "oneTime", startDate: { '$gte': startDate } },
+            { scheduleType: "onGoing", startDate: { '$lte': endDate } },
+            { scheduleType: "recurring", endDate: { '$gte': startDate } },
+        ],  
+        schoolId: school && school._id 
+    };
     if(view === "schoolCalendar") {
         if (school) {
-            console.log("classTimes.getclassTimesForCalendar --->>", condition)
+            console.log("classTimes.getclassTimesForCalendar condition --->>", condition)
             result.push(ClassTimes.find(condition));
             // result.push(ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this));
         } 
@@ -33,8 +45,9 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, curren
             return data.classTimeId;
         })
         console.log("classTimeIds -->>",classTimeIds)
-        let classTimeCursor = ClassTimes.find({ $or: [{classTypeId: { $in: classTimeIds }}, {schoolId: school && school._id}], "startDate": { '$gte': date } });
-        console.log("classTimeCursor data -->>",ClassTimes.find({ _id: { $in: classTimeIds }, "startDate": { '$gte': date } }).fetch())
+        condition['$or'].push({classTypeId: { $in: classTimeIds }})
+        console.log("myCalendar condition -->>",condition)
+        let classTimeCursor = ClassTimes.find(condition);
         result.push(classInterestCursor);
         result.push(classTimeCursor);
     }

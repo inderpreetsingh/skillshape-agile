@@ -1158,10 +1158,10 @@ border-top: 2px solid #ccc;}
 }
 
 .circle-icon {
-  border: 1px solid #f77f73;
-  border-radius: 50%;
+  /*border: 1px solid #f77f73;*/
+  /*border-radius: 100%;*/
   padding: 11px;
-  color: #f77f73;
+  /*color: #f77f73;*/
 }
 
 .fa-em {

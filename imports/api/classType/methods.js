@@ -1,5 +1,6 @@
 import ClassType from "./fields";
 import ClassTimes from "/imports/api/classTimes/fields";
+import ClassInterest from "/imports/api/classInterest/fields";
 
 Meteor.methods({
     "classType.getClassType": function({schoolId}) {
@@ -31,6 +32,7 @@ Meteor.methods({
         console.log("classType.removeClassType methods called!!!",doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
             ClassTimes.remove({classTypeId: doc._id})
+            ClassInterest.remove({classTypeId: doc._id})
             return ClassType.remove({ _id: doc._id });
         } else {
             throw new Meteor.Error("Permission denied!!");

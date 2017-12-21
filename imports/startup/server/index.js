@@ -12,6 +12,7 @@ import "/imports/api/school/methods";
 import "/imports/api/sLocation/methods";
 import "/imports/api/classes/methods";
 import "/imports/api/classTimes/methods";
+import "/imports/api/classInterest/methods";
 
 // All publication imported over here
 
@@ -27,3 +28,4 @@ import "/imports/api/school/server/publication";
 import "/imports/api/sLocation/server/publication";
 import "/imports/api/classes/server/publication";
 import "/imports/api/classTimes/server/publication";
+import "/imports/api/classInterest/server/publication";

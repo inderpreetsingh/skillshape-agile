@@ -19,4 +19,12 @@ Meteor.methods({
             throw new Meteor.Error("Permission denied!!");
         }
     },
+    "classInterest.removeClassInterestByClassTimeId": function({classTimeId}) {
+        console.log("classInterest.removeClassInterestByClassTimeId -->>",classTimeId)
+        if (this.userId && classTimeId) {
+            return ClassInterest.remove({ userId: this.userId, classTimeId });
+        } else {
+            throw new Meteor.Error("Unable to delete due to insufficient information!!");
+        }
+    },
 });

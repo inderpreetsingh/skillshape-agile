@@ -24,14 +24,15 @@ class FullCalendar extends React.Component {
             /*eventSources :[sevents],*/
             eventSources: (start, end, timezone, callback) => {
                 let startDate = new Date(start)
+                let endDate = new Date(end)
                 // console.log("eventSources old startDate-->>",this.props.startDate)
                 // console.log("eventSources new startDate-->>",startDate)
                 if (!this.props.startDate && startDate) {
-                    this.props.setDate(startDate)
+                    this.props.setDate(startDate, endDate)
                 }
                 if (this.props.startDate && startDate && (this.props.startDate.valueOf() !== startDate.valueOf())) {
                     // console.log("eventSources startDate changed-->>")
-                    this.props.setDate(startDate)
+                    this.props.setDate(startDate, endDate)
                 }
                 let sevents = this.buildCalander() || []
                 // console.log("sevents -->>",sevents);
@@ -59,7 +60,7 @@ class FullCalendar extends React.Component {
             },
             eventClick: (event) => {
                 // console.log("eventClick -->>",event)
-                if (event.classId && event.classTypeId) {
+                if (event.classTimeId && event.classTypeId) {
                     this.props.showEventModal(true, event)
                 }
             }
@@ -77,9 +78,10 @@ class FullCalendar extends React.Component {
             try {
              
                 let sevent = {
-                    classTypeId: classTime.classTypeId,
-                    locationId: classTime.locationId,
                     classTimeId: classTime._id,
+                    classTypeId: classTime.classTypeId,
+                    schoolId: classTime.schoolId,
+                    locationId: classTime.locationId,
                     startDate: moment(classTime.startDate),
                     scheduleType: classTime.scheduleType,
                 };
@@ -99,8 +101,9 @@ class FullCalendar extends React.Component {
                     sevents.push(sevent)
                 }
 
-                if((classTime.scheduleType === "recurring" || classTime.scheduleType === "onGoing") && classTime.scheduleDetails) {
+                if(classTime.scheduleDetails && (classTime.scheduleType === "recurring" || classTime.scheduleType === "onGoing")) {
                     let scheduleData = {...classTime.scheduleDetails};
+                    sevent.scheduleDetails = classTime.scheduleDetails;
                     sevent.endDate = classTime.endDate && moment(classTime.endDate)
                     for (let key in scheduleData) {
                         let temp = {...sevent};
@@ -130,16 +133,22 @@ class FullCalendar extends React.Component {
 
 export default createContainer(props => {
     console.log("props FullCalendarContainer = ", props);
-    const { startDate, manageMyCalendar, isUserSubsReady, currentUser } = props;
+    const { startDate, endDate, manageMyCalendar, isUserSubsReady, currentUser } = props;
     let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
     let { schoolId, slug } = props.params;
     if (!schoolId && !slug) {
         schoolId = currentUser && currentUser.profile && currentUser.profile.schoolId;
     }
 
-    if (startDate) {
-        console.log("startDate = ", startDate);
-        Meteor.subscribe("classTimes.getclassTimesForCalendar", {schoolId: schoolId || slug, current_date: startDate, view})
+    if (startDate && endDate) {
+        console.log("Calendar startDate = ", startDate);
+        console.log("Calendar endDate = ", endDate);
+        let subscription = Meteor.subscribe("classTimes.getclassTimesForCalendar", {schoolId: schoolId || slug, calendarStartDate: startDate, calendarEndDate: endDate, view})
+        if(subscription.ready()) {
+            if(manageMyCalendar) {
+                props.createClassTimeOption();
+            }
+        }
     }
 
     classTimesData = ClassTimes.find({}).fetch();
