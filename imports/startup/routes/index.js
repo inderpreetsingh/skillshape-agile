@@ -14,6 +14,7 @@ import ClaimSchool from '/imports/ui/components/claimSchool';
 import SchoolEditView from '/imports/ui/components/schoolView/editSchool';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
 import MyCalender from '/imports/ui/components/users/myCalender';
+import SchoolUpload from '/imports/ui/components/schoolUpload';
 
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
@@ -33,8 +34,9 @@ export default Routes = () => (
         <Route path="/schools/:slug" component={SchoolView} />
         <Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />
         <Route path="/MyCalendar" component={ManageMyCalendar} />
+        <Route path="/SchoolUpload" component={SchoolUpload} />
       </Route>
       <Route path="/embed/schools/:slug/calendar" component={MyCalender} />
     </Router>
-  </MuiThemeProvider>  
+  </MuiThemeProvider>
 );
