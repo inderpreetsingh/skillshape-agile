@@ -8,6 +8,7 @@ import ClassType from "/imports/api/classType/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import SLocation from "/imports/api/sLocation/fields";
+import School from "/imports/api/school/fields";
 
 class SchoolView extends SchoolViewBase {
   

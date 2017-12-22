@@ -2,6 +2,15 @@ import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import Classes from "/imports/api/classes/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
+import School from "../fields";
+
+Meteor.publish("UserSchool", function(schoolId) {
+    return School.find({ _id: schoolId });
+});
+
+Meteor.publish("UserSchoolbySlug", function(slug) {
+    return School.find({ slug: slug });
+});
 
 Meteor.publish("school.getSchoolClasses", function({ is_map_view, schoolId, user_id, coords, NEPoint, SWPoint, skill, _classPrice, _monthPrice, textSearch, limit, selectedTag }) {
     console.log("schoolId-->>", schoolId)
@@ -211,3 +220,67 @@ Meteor.publish("school.getClassTypesByCategory", function({
         ]
     }
 })
+
+Meteor.publish("ClaimSchoolFilter", function ({phone, website, name, coords, cskill, role, limit}) {
+    filter = {}
+    limit = { limit: limit }
+    schoolList = School.find({ is_publish: 'N' }).fetch();
+    // UnPublishSchoolIds = schoolList.map(function (a) { return a._id });
+    if (phone) {
+      filter.phone = { '$regex': '' + phone + '', '$options': '-i' };
+    }
+    if (website) {
+      filter.website = { '$regex': '' + website + '', '$options': '-i' };
+    }
+    if (name) {
+      filter.name = { '$regex': '' + name + '', '$options': '-i' };
+    }
+    AllSchoolIds = []
+    console.log(coords);
+    if (coords) {
+      // place variable will have all the information you are looking for.
+      var maxDistance = 50;
+      // we need to convert the distance to radians
+      // the raduis of Earth is approximately 6371 kilometers
+      maxDistance /= 63;
+      slocations = SLocation.find({
+        loc: {
+          $near: coords,
+          $maxDistance: maxDistance
+        }
+      }).fetch();
+      schoolIds = slocations.map(function (a) {
+        return a.schoolId;
+      });
+      console.log(schoolIds);
+      filter._id = { $in: schoolIds };
+      AllSchoolIds = schoolIds;
+    }
+    if (cskill) {
+      class_type = ClassType.find({ skillTypeId: cskill }).fetch()
+      schoolIds = class_type.map(function (a) {
+        return a.schoolId;
+      });
+      console.log(schoolIds);
+      AllSchoolIds = schoolIds.concat(AllSchoolIds)
+      if (AllSchoolIds.length > 0) {
+        filter._id = { $in: AllSchoolIds };
+      } else {
+        filter._id = { $in: schoolIds };
+      }
+
+    }
+    if (role && role == "Superadmin") {
+
+
+    } else {
+      /*result = {}
+      result = _.extend(result,filter._id, {$nin:UnPublishSchoolIds});*/
+      filter.is_publish = { $ne: 'N' }
+    }
+    /*filter.claimed = { $ne : 'Y' }*/
+    console.log(filter);
+    return School.find(filter, limit);
+
+
+  });

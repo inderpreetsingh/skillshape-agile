@@ -1,5 +1,6 @@
 import ClassTimes from "../fields";
 import ClassInterest from "/imports/api/classInterest/fields";
+import School from "/imports/api/school/fields";
 
 Meteor.publish("classTimes.getclassTimes", function({ schoolId, classTypeId }) {
     console.log("classTimes.getclassTimes -->>", schoolId, classTypeId);

@@ -3,6 +3,7 @@ import {createContainer} from 'meteor/react-meteor-data';
 import ClaimSchoolListRender from "./claimSchoolListRender";
 import { Session } from 'meteor/session';
 import { withSubscriptionAndPagination } from '/imports/util';
+import School from "/imports/api/school/fields";
 
 class ClaimSchoolList extends React.Component {
 

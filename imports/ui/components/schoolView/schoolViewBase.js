@@ -174,7 +174,7 @@ export default class SchoolViewBase extends React.Component {
 
     let publish_state = event.target.checked ? "Y" : "N"
     if(schoolId) {
-      Meteor.call("publish_school",schoolId,publish_state,(error, result) => {
+      Meteor.call("school.publishSchool",schoolId,publish_state,(error, result) => {
         if(error){
           console.error("Error ->>", error);
         }
@@ -210,7 +210,7 @@ export default class SchoolViewBase extends React.Component {
     
     if(claimSchoolModal && currentUser && currentUser._id && schoolId) {
       
-      Meteor.call("claimSchool", currentUser._id, schoolId, (error, result) => {
+      Meteor.call("school.claimSchool", currentUser._id, schoolId, (error, result) => {
         if(error) {
           console.error("error", error);
         }

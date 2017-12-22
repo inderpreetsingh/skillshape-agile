@@ -32,7 +32,7 @@ export default class MVPSideBarBase extends React.Component {
   }
 
   loadConnectedSchool = () => {
-    Meteor.call("getConnectedSchool", Meteor.userId(), (error, result) => {
+    Meteor.call("school.getConnectedSchool", Meteor.userId(), (error, result) => {
       if(error){
         console.log("error", error);
       }
@@ -46,7 +46,7 @@ export default class MVPSideBarBase extends React.Component {
   loadMySchool = () => {
     if(Meteor.user() && Meteor.user().profile && Meteor.user().profile.schoolId && Meteor.user().profile.schoolId.length > 1){
       school_id = Meteor.user().profile.schoolId
-      Meteor.call("getMySchool", school_id,Meteor.userId(), (error, result) => {
+      Meteor.call("school.getMySchool", school_id,Meteor.userId(), (error, result) => {
         if(error){
           console.log("error", error);
         }

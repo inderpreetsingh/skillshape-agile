@@ -7,6 +7,7 @@ import config from '/imports/config';
 import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import Classes from "/imports/api/classes/fields";
+import School from "/imports/api/school/fields";
 
 export default class SkillClassListBase extends React.Component {
 

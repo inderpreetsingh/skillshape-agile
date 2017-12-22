@@ -2,6 +2,7 @@ import ClassTimes from "./fields";
 import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
+import School from "/imports/api/school/fields";
 
 Meteor.methods({
     "classTimes.getClassTimes": function({ schoolId, classTypeId, classTimeId, locationId}) {

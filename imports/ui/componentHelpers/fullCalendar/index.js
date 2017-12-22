@@ -68,7 +68,7 @@ class FullCalendar extends React.Component {
     }
 
     buildCalander = () => {
-        console.log("buildCalander props -->>",this.props);
+        // console.log("buildCalander props -->>",this.props);
         let { classTimesData, classInterestData } = this.props;
         let sevents = [];
         let myClassTimesIds = classInterestData.map(data => data.classTimeId);
@@ -121,7 +121,7 @@ class FullCalendar extends React.Component {
             }
         }
 
-        console.warn("Final sevent/s 12-->>",sevents)
+        // console.warn("Final sevent/s 12-->>",sevents)
         return sevents
     }
 
@@ -133,30 +133,36 @@ class FullCalendar extends React.Component {
 
 export default createContainer(props => {
     console.log("props FullCalendarContainer = ", props);
-    const { startDate, endDate, manageMyCalendar, isUserSubsReady, currentUser } = props;
+    const { startDate, endDate, manageMyCalendar, isUserSubsReady, currentUser, manageMyCalendarFilter } = props;
     let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
     let { schoolId, slug } = props.params;
+    let classTimesData = [];
+    let classInterestData = [];
+    
     if (!schoolId && !slug) {
         schoolId = currentUser && currentUser.profile && currentUser.profile.schoolId;
     }
 
     if (startDate && endDate) {
-        console.log("Calendar startDate = ", startDate);
-        console.log("Calendar endDate = ", endDate);
         let subscription = Meteor.subscribe("classTimes.getclassTimesForCalendar", {schoolId: schoolId || slug, calendarStartDate: startDate, calendarEndDate: endDate, view})
+        let classTimesFilter = {};
+        let classInterestFilter = {};
         if(subscription.ready()) {
             if(manageMyCalendar) {
-                props.createClassTimeOption();
+                classTimesFilter = { _id: { $in: manageMyCalendarFilter.classTimesIds } } 
+                classInterestFilter = { classTimeId: { $in: manageMyCalendarFilter.classTimesIdsForCI } } 
             }
         }
+        // console.log("classTimesFilter -->>",classTimesFilter)
+        // console.log("classInterestFilter -->>",classInterestFilter)
+        classTimesData = ClassTimes.find(classTimesFilter).fetch();
+        classInterestData = ClassInterest.find(classInterestFilter).fetch();
     }
 
-    classTimesData = ClassTimes.find({}).fetch();
-    classInterestData = ClassInterest.find({}).fetch();
     
 
-    console.log("FullCalendar createContainer classTimesData-->>", classTimesData)
-    console.log("FullCalendar createContainer classInterestData-->>",classInterestData)
+    // console.log("FullCalendar createContainer classTimesData-->>", classTimesData)
+    // console.log("FullCalendar createContainer classInterestData-->>",classInterestData)
     // console.log("FullCalendar createContainer myClassIds-->>",myClassIds)
     // console.log("FullCalendar createContainer classSchedule-->>",classSchedule)
     return {

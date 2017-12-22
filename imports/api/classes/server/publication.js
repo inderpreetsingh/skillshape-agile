@@ -3,6 +3,7 @@ import SLocation from "/imports/api/sLocation/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import ClassType from "/imports/api/classType/fields";
+import School from "/imports/api/school/fields";
 
 Meteor.publish("classes.userClasses", function({ userId }) {
 
