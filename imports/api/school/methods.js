@@ -12,8 +12,6 @@ Meteor.methods({
 	getClassesForMap: function ({schoolId}) {
 		return {
 			school: School.findOne({ _id: schoolId}), 
-			// skillClass: Classes.find({ schoolId: schoolId}).fetch(),
-			// classType: ClassType.find({ schoolId: schoolId}).fetch(),
 		}
 	},
 	"school.getConnectedSchool": function (userId) {

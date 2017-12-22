@@ -46,8 +46,8 @@ export default createContainer(props => {
     Meteor.subscribe("ClaimOrder", "");
     Meteor.subscribe("location.getSchoolLocation", {schoolId});
     Meteor.subscribe("classTypeBySchool", schoolId);
-    Meteor.subscribe("ClassPricing", schoolId)
-    Meteor.subscribe("MonthlyPricing", schoolId)
+    Meteor.subscribe("classPricing.getClassPricing", {schoolId})
+    Meteor.subscribe("monthlyPricing.getMonthlyPricing", {schoolId})
 
     schoolData = School.findOne({_id: schoolId})
     classPricing = ClassPricing.find({schoolId: schoolId}).fetch() 
@@ -56,10 +56,10 @@ export default createContainer(props => {
     classType = ClassType.find({schoolId: schoolId}).fetch();
   } 
 
-  // console.log("SchoolView schoolData--->>",schoolData)
-  // console.log("SchoolView classType--->>",classType)
-  // console.log("SchoolView classPricing--->>",classPricing)
-  // console.log("SchoolView monthlyPricing--->>",monthlyPricing)
+  console.log("SchoolView schoolData--->>",schoolData)
+  console.log("SchoolView classType--->>",classType)
+  console.log("SchoolView classPricing--->>",classPricing)
+  console.log("SchoolView monthlyPricing--->>",monthlyPricing)
   return { ...props, 
     schoolData, 
     classPricing, 

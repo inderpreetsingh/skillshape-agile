@@ -161,7 +161,7 @@ class ManageMyCalendar extends React.Component {
                 <Card style={{padding: 10, margin: 15}}>
                     <RadioButtonGroup 
                         name="classTimes"
-                        style={{width: '100%', color: "blue", display: 'flex', flexWrap: 'wrap'}} 
+                        style={{width: '100%', padding: 15, display: 'flex', flexWrap: 'wrap'}} 
                         onChange={this.handleClassOnChange} 
                         defaultSelected="both"
                     >

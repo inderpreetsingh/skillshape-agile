@@ -6,7 +6,6 @@ import config from '/imports/config';
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
-import Classes from "/imports/api/classes/fields";
 import School from "/imports/api/school/fields";
 
 export default class SkillClassListBase extends React.Component {
@@ -72,7 +71,6 @@ export default class SkillClassListBase extends React.Component {
   showClassTypes = ({classType}) => {
     if(classType && _.size(classType) > 0) {
         console.log("showClassTypes classType -->>",classType)
-        // const skillClassData = Classes.find({classTypeId: classType._id}).fetch();
         return Object.keys(classType).map((key, index) => {
             
             return <div className="product-sort">

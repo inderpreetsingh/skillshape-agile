@@ -9,7 +9,6 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 import { browserHistory, Link } from 'react-router';
 import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
-import Classes from "/imports/api/classes/fields";
 import '/imports/api/classInterest/methods';
 import '/imports/api/classTimes/methods';
 

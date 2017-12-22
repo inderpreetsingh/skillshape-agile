@@ -18,7 +18,7 @@ export default class HomeBase extends React.Component {
       filters: {
         coords: null,
         is_map_view: false,
-       // skillCategoryId:"Pkoa2RYhXFwpaRtvG",
+        skillCategoryIds:[],
       },
     }
     this.onSearch = _.debounce(this.onSearch, 1000);
@@ -126,7 +126,7 @@ export default class HomeBase extends React.Component {
     oldFilters.gender = filterRef.gender.value;
     oldFilters.experienceLevel = filterRef.experienceLevel.value;
     oldFilters.age = filterRef.age.value;
-    oldFilters.skillCategoryId = filterRef.skillCategory && filterRef.skillCategory._id;
+    oldFilters.skillCategoryIds = filterRef.skillCategory && [filterRef.skillCategory._id];
     oldFilters.skillSubjectIds = filterRef.skillSubject;
     
     console.log("onSearch after fn oldFilters",oldFilters)
