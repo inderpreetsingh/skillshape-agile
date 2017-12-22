@@ -17,7 +17,7 @@ class SchoolPriceView extends React.Component {
 
   getClassName = (classTypeId) => {
     console.log("SchoolPriceView getClassName classTypeId-->>",classTypeId)
-    if(!_.isEmpty(classTypeId)) {
+    if(_.isArray(classTypeId)) {
       let str_name = []
       // let classTypeIds = classTypeId.split(",")
       let classTypeList = ClassType.find({_id:{$in:classTypeId}}).fetch();
