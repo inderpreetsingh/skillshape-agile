@@ -16,3 +16,4 @@ export { cutString } from '/imports/util/cutString';
 export { withSubscriptionAndPagination } from '/imports/util/subscriptionAndPagination';
 export { formStyles } from '/imports/util/formStyle';
 export { createTable } from '/imports/util/createTable';
+export { downloadingFunction } from '/imports/util/csvFileDownload';

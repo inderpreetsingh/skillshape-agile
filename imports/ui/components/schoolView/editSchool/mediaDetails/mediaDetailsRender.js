@@ -2,7 +2,6 @@ import React from "react";
 import MediaFilter from './filter';
 import MediaList from './mediaList';
 import CreateMedia from './createMedia';
-
 export default function () {
 
 	const { showCreateMediaModal, mediaFormData, filterStatus } = this.state;
@@ -35,17 +34,17 @@ export default function () {
 							<div className="upload-box">
 								<div className="upload-box-header text-center">
 									<button onClick={()=> this.setState({showCreateMediaModal:"system", mediaFormData: null, filterStatus: false})} className="btn btn-warning" type="button" >
-					   				  <i className="fa fa-upload" aria-hidden="true"></i> 
+					   				  <i className="fa fa-upload" aria-hidden="true"></i>
 					  				</button>
 					  			</div>
 					  			<div className="upload-box-footer text-center">
 									<p>Upload From Computer</p>
-					  			</div>	
+					  			</div>
 							</div>
 							<div className="upload-box">
 								<div className="upload-box-header text-center">
 									<button onClick={()=> this.setState({showCreateMediaModal:"url", mediaFormData: null, filterStatus: false})} className="btn btn-warning" type="button" >
-					   				  <i className="fa fa-globe" aria-hidden="true"></i> 
+					   				  <i className="fa fa-globe" aria-hidden="true"></i>
 					  				</button>
 								</div>
 								<div className="upload-box-footer text-center">
@@ -55,6 +54,7 @@ export default function () {
 						</div>
 					</div>
 				</div>
+
 			</div>
 			<div className="row" style={{marginTop: 10}}>
 				<MediaList

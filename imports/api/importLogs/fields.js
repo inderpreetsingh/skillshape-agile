@@ -33,7 +33,22 @@ ImportLogs.attachSchema(new SimpleSchema({
     },
     errorRecord: {
         type: [Object],
+        blackbox: true,
         optional: true
+    },
+    createdOn:{
+        type: Date,
+        autoValue: function() {
+                if (this.isInsert) {
+                    return new Date();
+                } else if (this.isUpsert) {
+                    return {
+                            $setOnInsert: new Date()
+                    };
+                } else {
+                    this.unset(); // Prevent user from supplying their own value
+                }
+        }
     }
 }));
 

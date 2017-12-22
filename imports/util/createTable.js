@@ -1,6 +1,6 @@
 "use strict"
-
 import React from "react"
+import './tableCss'
 import {
   Table,
   TableBody,
@@ -17,7 +17,7 @@ export const createTable = ({
   tableHeaderColumns,
   tableHeaderColumnProps,
   tableBodyProps,
-  }) => ({ children: tableRows, ...props }) => (  
+  }) => ({ children: tableRows, ...props }) => (
     <Table
       {...tableProps}
       {...props}

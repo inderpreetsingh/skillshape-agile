@@ -1,7 +1,6 @@
 "use strict"
 import React from "react"
 import { createTable } from '/imports/util';
-import "./custom";
 
 const getTableProps = () => {
   const tableProps = {

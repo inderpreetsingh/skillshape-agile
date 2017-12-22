@@ -3,6 +3,7 @@ import SLocation from "../sLocation/fields";
 import SkillCategory from "../skillCategory/fields";
 import ClassType from "../classType/fields";
 import ClassTimes from "../classTimes/fields";
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,8}$/;
 
 Meteor.methods({
     project_upload: function(fileName, fileData) {
@@ -10,7 +11,6 @@ Meteor.methods({
     	const user = Meteor.users.findOne(this.userId);
     	if(checkMyAccess({user, viewName: 'csvUpload_Schools'})){
 	        console.log("received file ", fileName );
-	    	const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 	        const results = Papa.parse(fileData, {
 	            header: true
 	        });
@@ -20,39 +20,42 @@ Meteor.methods({
 	        const csvLogId = ImportLogs.insert({
 	        	fileName: fileName
 	        })
-	        for (let i = 0; i < csvLength; i++) {
+	        for (var i = 0; i < csvLength; i++) {
 	        	try{
-		            if (csvdata[i].name && csvdata[i].website && csvdata[i].name.length > 0 && emailRegex.test(csvdata[i].emailAddress)) {
-		                let school = School.findOne({ name: csvdata[i].name, website: csvdata[i].website, email: csvdata[i].emailAddress });
+	        		for(let key in csvdata[i]){
+						csvdata[i][key] = csvdata[i][key].trim();
+	        		}
+		            if (csvdata[i].schoolName && csvdata[i].website && csvdata[i].schoolName.length > 0 && emailRegex.test(csvdata[i].email)) {
+		                let school = School.findOne({ name: csvdata[i].schoolName, website: csvdata[i].website, email: csvdata[i].email });
 		                let locationId = ""
 		                let schoolId = null;
 		                if (school) {
 		                    schoolId = school._id
 		                    const schoolUpdateDoc = {
-		                        name: csvdata[i].name,
+		                        name: csvdata[i].schoolName,
 		                        website: findUrl(csvdata[i].website),
 		                        phone: csvdata[i].phone,
 		                        mainImage: findUrl(csvdata[i].mainImage),
 		                        aboutHtml: csvdata[i].aboutHtml,
 		                        descHtml: csvdata[i].descHtml,
-		                        email: csvdata[i].emailAddress,
-		                        firstName: csvdata[i].firstName,
-		                        lastName: csvdata[i].lastName
+		                        email: csvdata[i].email,
+		                        firstName: csvdata[i].fName,
+		                        lastName: csvdata[i].lName
 		                    }
 		                    School.update({ _id: schoolId }, { $set: schoolUpdateDoc });
 		                } else {
 		                    const schoolInsertDoc = {
-		                        name: csvdata[i].name,
+		                        name: csvdata[i].schoolName,
 		                        website: findUrl(csvdata[i].website),
 		                        phone: csvdata[i].phone,
 		                        mainImage: findUrl(csvdata[i].mainImage),
 		                        aboutHtml: csvdata[i].aboutHtml,
 		                        descHtml: csvdata[i].descHtml,
-		                        email: csvdata[i].emailAddress,
-		                        firstName: csvdata[i].firstName,
-		                        lastName: csvdata[i].lastName
+		                        email: csvdata[i].email,
+		                        firstName: csvdata[i].fName,
+		                        lastName: csvdata[i].lName
 		                    }
-		                    let newUser = CreateNewUser(csvdata[i].emailAddress, csvdata[i].name, csvdata[i].firstName, csvdata[i].lastName);
+		                    let newUser = CreateNewUser(csvdata[i].email, csvdata[i].schoolName, csvdata[i].fName, csvdata[i].lName);
 		                    if (newUser) {
 		                        schoolInsertDoc["userId"] = newUser;
 		                    }
@@ -77,6 +80,7 @@ Meteor.methods({
 		                    var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + slocation_detail + "&key=AIzaSyBtQoiRR6Ft0wGTajMd8uTZb71h8kwD5Ew"
 		                    data = Meteor.http.call("GET", url);
 		                    data = JSON.parse(data.content);
+		                    console.log(">>>>>data is >>>>> ", data)
 		                    if (data.results[0] && data.results[0].geometry && data.results[0].geometry.location) {
 		                        data = data.results[0].geometry.location
 		                    }
@@ -147,7 +151,7 @@ Meteor.methods({
 		                if (classTime) {
 		                    ClassTimes.update({ _id: classTime._id }, { $set: classTimeObject });
 		                } else {
-		                    if (obj.className) {
+		                    if (classTimeObject.className) {
 		                        ClassTimes.insert(classTimeObject);
 		                    }
 		                }
@@ -259,6 +263,14 @@ Meteor.methods({
 		                // }
 		                ImportLogs.update({_id: csvLogId},{$inc: {sucessCount:1, totalRecord:1}})
 		            } else {
+		            	if(!csvdata[i].schoolName ){
+		            		csvdata[i]['errorMessage'] = "School name is required";
+		            	} else if(!csvdata[i].website){
+		            		csvdata[i]['errorMessage'] = "Website URL is required";
+		            	} else if(!emailRegex.test(csvdata[i].email)){
+		            		csvdata[i]['errorMessage'] = "Invalid email";
+		            	}
+		            	console.log("I CAlled>>????>>>> ", csvdata[i])
 		            	ImportLogs.update({_id: csvLogId},{$inc: {errorRecordCount:1, totalRecord: 1}, $push:{'errorRecord':csvdata[i]}})
 		            }
 
@@ -272,6 +284,17 @@ Meteor.methods({
     		throw new Meteor.Error("Permission Denied");
     	}
     },
+    getErrorDocs: function(logId){
+    	if(logId){
+    		let log = ImportLogs.findOne({_id: logId});
+    		if(log && log.errorRecord && log.errorRecord.length > 0){
+    			return log.errorRecord;
+    		}
+    		return false;
+    	} else{
+    		throw new Meteor.Error('Log identifier is required')
+    	}
+    }
 })
 
 function CreateNewUser(email, name, firstName, lastName) {

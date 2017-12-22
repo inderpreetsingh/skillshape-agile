@@ -9,6 +9,7 @@
     "bcrypt": "^1.0.3",
     "datatables.net": "^1.10.16",
     "jquery": "^3.2.1",
+    "json2csv": "^3.11.5",
     "lodash": "^4.17.4",
     "lodash.get": "^4.4.2",
     "material-ui": "^0.20.0",
@@ -24,6 +25,7 @@
     "react-datepicker": "^0.60.0",
     "react-dom": "^16.2.0",
     "react-html-parser": "^2.0.1",
+    "react-image-gallery": "^0.8.6",
     "react-mounter": "^1.2.0",
     "react-router": "3.0.5",
     "react-select": "^1.1.0"
