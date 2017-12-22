@@ -115,7 +115,7 @@ export default class SchoolViewBase extends React.Component {
     if(!_.isEmpty(classTypeId)) {
       let str_name = []
       // let classTypeIds = classTypeId.split(",")
-      let classTypeList = ClassType.find({_id:{$in:classTypeId}}).fetch();
+      let classTypeList = ClassType.find({_id:{$in:[classTypeId] || []}}).fetch();
       classTypeList.map((a) => { str_name.push(a.name)})
       return str_name.join(",")
     } else {
