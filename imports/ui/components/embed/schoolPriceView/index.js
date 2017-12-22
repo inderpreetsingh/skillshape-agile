@@ -128,7 +128,7 @@ class SchoolPriceView extends React.Component {
                             )
                         }) : (
                             <TableRow selectable={false} displayBorder={false}>
-                                <TableRowColumn style={{textAlign: 'center' color: 'red'}}>
+                                <TableRowColumn style={{textAlign: 'center', color: 'red'}}>
                                     No Record Found        
                                 </TableRowColumn>        
                             </TableRow>
