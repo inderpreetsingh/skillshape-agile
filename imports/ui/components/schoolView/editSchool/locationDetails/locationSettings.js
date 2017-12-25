@@ -1,10 +1,16 @@
 import React from "react";
+import AddLocation from './addLocation';
+import EditLocation from './editLocation';
 
 export default locationSettings = {
     mainPanelHeader: {
         leftIcon: "assignment",
         title: "Locations",
+        titleKey: "address",
+        notes: "Right Now I don't any Idea",
+        havingImage: false,
         actions: {
+            component: AddLocation,
             buttonTitle: "ADD LOCATION",
             onSubmit: "addLocation",
             title: "Location",
@@ -31,8 +37,10 @@ export default locationSettings = {
         ],
         actions: {
             label: "Actions",
+            havingImage: false,
             toggleChildTable: true,
             edit: {
+                component: EditLocation,
                 title: "Edit Location",
                 onSubmit: "editLocation",
                 editByField: "_id",
@@ -52,6 +60,7 @@ export default locationSettings = {
     childPanelHeader: {
         leftIcon: "add",
         title: "Room",
+        havingImage: false,
         actions: {
             parentKey: "_id",
             buttonTitle: "Room",
@@ -72,6 +81,7 @@ export default locationSettings = {
         actions: {
             parentKey: "_id",
             label: "Actions",
+            havingImage: false,
             toggleChildTable: false,
             edit: {
                 onSubmit: "editRoom",

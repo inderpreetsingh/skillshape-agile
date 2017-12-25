@@ -6,7 +6,7 @@ import ResponsiveTabs from '/imports/util/responsiveTabs';
 
 //tab details import over here
 // import SchoolDetails from './schoolDetails';
-// import LocationDetails from './locationDetails';
+import LocationDetails from './locationDetails';
 // import ClassTypeDetails from './classTypeDetails';
 // import PriceDetails from './priceDetails';
 // import Modules from './modules';
@@ -48,7 +48,17 @@ export default function (props) {
                 color= "primary"
                 onTabChange={this.onTabChange}
             />  
-  			
+      		<div>
+                {
+                    this.state.tabValue === 1 &&  <LocationDetails
+                      locationData={locationData}
+                      schoolId={schoolId}
+                      showFormBuilderModal={this.showFormBuilderModal}
+                      moveTab={this.moveTab}
+                      ref="location_details_tab"
+                    />
+                }
+            </div>	
         {/*<div className="tab-content">
           { 
             (selecetdView === "school_details") && <SchoolDetails

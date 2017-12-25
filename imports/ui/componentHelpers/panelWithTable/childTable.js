@@ -1,22 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PanelWithTableRender from './panelWithTableRender';
 import { withStyles } from 'material-ui/styles';
+import ChildTableRender from './childTableRender';
 
 const styles = theme => {
-      console.log("theme", theme);
-      return {
+    console.log("theme", theme);
+    return {
         input: {
             display: 'none',
         },
-        classtypeHeader: {
-            backgroundColor: theme.palette.primary[100],
+        classtimeHeader: {
+            backgroundColor: theme.palette.secondary[100],
             padding: 5
         },
-        classtypeForm: {
-            backgroundColor: theme.palette.grey[100],
+        classtimeFormOuter: {
+            backgroundColor: theme.palette.secondary[100],
             borderRadius: 5,
-            padding: 12
+            padding: 12,
+            width: '100%'
+        },
+        classtimeFormContainer: {
+            backgroundColor: "#fff",
+            padding: 12,
+            borderRadius: 5,
+            marginBottom: 12
         },
         inputDisableBox: {
             textAlign: 'left',
@@ -35,27 +42,20 @@ const styles = theme => {
     }
 }
 
+class ChildTable extends React.Component {
 
-
-class PanelWithTable extends React.Component {
-    
     constructor(props) {
         super(props);
         this.state = {
             open: false,
             expanded: false,
             value: '',
-            showAddForm: false,
-            showEditForm: false,
-        }  
+            classTimeModalOpen: false
+        }
     }
 
-    handleAddFormModal = ()=> this.setState({showAddForm: false})
-    
-    handleEditFormModal = ()=> this.setState({showEditForm: false})
-
     handleChange = (event, value) => {
-        if(value == 0) {
+        if (value == 0) {
           this.uploadInput.click();
         }
         this.setState({ value });
@@ -69,21 +69,35 @@ class PanelWithTable extends React.Component {
         this.setState({
           open: false,
         });
-    };
+    }
 
     handleClick = () => {
         this.setState({
           open: true,
         });
-    };
+    }
 
+    classTimeModalHandleClose = () => {
+        this.setState({
+          classTimeModalOpen: false,
+        });
+    }
+    
+    handleAddClassTime = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        this.setState({
+          classTimeModalOpen: true,
+        })
+    }
+    
     render() {
-        return PanelWithTableRender.call(this, this.props, this.state)
-  }
+        return ChildTableRender.call(this, this.props, this.state)
+    }
 }
 
-PanelWithTable.propTypes = {
+ChildTable.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PanelWithTable);
+export default withStyles(styles)(ChildTable);

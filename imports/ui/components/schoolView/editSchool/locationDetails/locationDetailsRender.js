@@ -7,7 +7,8 @@ export default function () {
 	let { 
 		locationData, 
 		showFormBuilderModal, 
-		moveTab, 
+		moveTab,
+		schoolId, 
 	} = this.props
 
   // console.log("SchoolEditDetails locationData 222-->>", locationData)
@@ -15,11 +16,12 @@ export default function () {
 		<div className="tab-pane active" id="tab_default_2">
 			<div className="col-md-12" style={{paddingTop: '20px'}}>
 				<PanelWithTable
-				 className="location-details"
-				 settings={locationSettings}
-				 mainTableData={locationData}
-				 getChildTableData={this.getChildTableData}
-				 showFormBuilderModal={showFormBuilderModal}
+					schoolId={schoolId}
+				    className="location-details"
+				    settings={locationSettings}
+				    mainTableData={locationData}
+				    getChildTableData={this.getChildTableData}
+				    showFormBuilderModal={showFormBuilderModal}
 				/>
 			</div>
 			<div className="wizard-footer col-md-12">

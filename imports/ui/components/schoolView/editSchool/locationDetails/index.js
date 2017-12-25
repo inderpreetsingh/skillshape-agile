@@ -3,7 +3,7 @@ import LocationDetailsRender from './locationDetailsRender';
 
 export default class LocationDetails extends React.Component {
 
-	constructor(props) {
+  constructor(props) {
     super(props);  
   }
 

@@ -22,8 +22,8 @@ export class ContainerLoader extends React.Component {
     return (
         <div className={viewClass}>
             <CircularProgress 
-                style={{ color: "#FF9800" }} 
-                thickness={7} 
+                color="primary"
+                thickness={5} 
             />
         </div>
     )
