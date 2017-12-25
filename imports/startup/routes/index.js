@@ -14,7 +14,7 @@ import MyProfile from '/imports/ui/components/users/myProfile';
 // import SchoolEditView from '/imports/ui/components/schoolView/editSchool';
 // import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
 // import MyCalender from '/imports/ui/components/users/myCalender';
-// import SchoolUpload from '/imports/ui/components/schoolUpload';
+import SchoolUpload from '/imports/ui/components/schoolUpload';
 // import SchoolPriceView from '/imports/ui/components/embed/schoolPriceView';
 
 //pages
@@ -29,6 +29,7 @@ export default Routes = () => (
         <Route path="/Contactus" component={ContactUs} />
       	<Route path="/reset-password/:token" component={ResetPassword}/>
         <Route path="/profile/:id" component={MyProfile} />
+        <Route path="/SchoolUpload" component={SchoolUpload} />
       </Route>
     </Router>
 );
@@ -39,6 +40,5 @@ export default Routes = () => (
         // <Route path="/claimSchool" component={ClaimSchool} />
         // <Route path="/MyCalendar" component={ManageMyCalendar} />
         // <Route path="/schoolAdmin/:schoolId" component={SchoolView} />
-        //<Route path="/SchoolUpload" component={SchoolUpload} />
         // <Route path="/schools/:slug" component={SchoolView} />
         // <Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />
