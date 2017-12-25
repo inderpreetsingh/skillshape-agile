@@ -5,15 +5,60 @@ import Signin from '/imports/ui/components/account/signin';
 import Signup from '/imports/ui/components/account/signup';
 import ForgotPassword from '/imports/ui/components/account/forgotPassword';
 import { checkDemoUser } from '/imports/util';
+import Button from 'material-ui/Button';
+import Email from 'material-ui-icons/Email';
 
 export default function() {
     const { currentUser } = this.props;
-   
+
+    return(
+        <div>
+          <Link to="/" style={{ textDecoration: 'none'}}>
+            <Button color="contrast">
+                    <i className="material-icons">home</i> Home
+            </Button>
+          </Link>
+          <a style={{ textDecoration: 'none'}} onClick={this.openSignupModalWithRegisterationType.bind(this, true, false)} id="join_student" className="join_school cursor-lint" data-action="student">
+            <Button color="contrast">
+                    <i className="material-icons">person_add</i> Student Sign Up
+            </Button>
+          </a>
+          <a style={{ textDecoration: 'none'}} onClick={this.openSignupModalWithRegisterationType.bind(this, false, true)} id="join_school" className="join_school cursor-lint" data-action="school">
+            <Button color="contrast">
+                    <i className="material-icons">school</i> Register a School
+            </Button>
+          </a>
+          <Link style={{ textDecoration: 'none'}} to="/claimSchool">
+            <Button color="contrast">
+                    <i className="material-icons">check_box</i> Claim a School
+            </Button>
+          </Link>
+          <Link style={{ textDecoration: 'none'}} to="/Contactus">
+            <Button color="contrast">
+                    <Email /> Contact Us
+            </Button>
+          </Link>
+          <Link style={{ textDecoration: 'none'}} to="/Aboutus">
+            <Button color="contrast">
+                    <i className="material-icons">info</i> About Us
+            </Button>
+          </Link>
+          <a style={{ textDecoration: 'none'}} onClick={this.openLogInModal} className="login cursor-lint">
+            <Button color="contrast">
+                    <i className="material-icons ">fingerprint</i> Login
+            </Button>
+          </a>
+        </div>
+
+    )
+
+
+
     return(
       <div>
       <nav className="navbar navbar-default" style={{marginBottom: '0px'}}>
         <div className="container-fluid">
-        { 
+        {
           currentUser ?
           (<div>
             <div className="navbar-minimize">
@@ -117,7 +162,7 @@ export default function() {
         </div>
       </div>
     </nav>
-    { this.state.showSignupModal && <Signup 
+    { this.state.showSignupModal && <Signup
         onClose={this.closeModal}
         schoolRegister={this.state.schoolRegister}
         studentRegister={this.state.studentRegister}
@@ -125,11 +170,11 @@ export default function() {
         logIn={this.openLogInModal}
       />
     }
-    { this.state.showSigninModal && <Signin 
+    { this.state.showSigninModal && <Signin
         onClose={this.closeModal}
         openSignupModal={this.openSignupModalWithRegisterationType}
         showForgotPasswordModal={this.openForgotPasswordModal}
-      /> 
+      />
     }
     {
       this.state.showForgotPasswordModal && <ForgotPassword

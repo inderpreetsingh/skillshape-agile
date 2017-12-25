@@ -5,7 +5,7 @@ import Footer from '/imports/ui/components/footer';
 import MVPSideBar from '/imports/ui/components/MVPSideBar';
 import SideBar from '/imports/ui/components/sideBar';
 import { checkDemoUser } from '/imports/util';
-import { initializeLayout } from '/imports/util/initializeLayout';
+// import { initializeLayout } from '/imports/util/initializeLayout';
 import withWidth from 'material-ui/utils/withWidth';
 
 class MainLayout extends React.Component {
@@ -18,8 +18,6 @@ class MainLayout extends React.Component {
   }
 
   componentDidMount() {
-    $.material.init();
-    initializeLayout()
   }
 
   showSideBar = (currentUser) => {
@@ -33,7 +31,7 @@ class MainLayout extends React.Component {
   }
 
   checkEmailVerification = (currentUser) => {
-    if(currentUser && currentUser.emails) 
+    if(currentUser && currentUser.emails)
       return currentUser.emails[0].verified
     return true // when no user login to let them see home page
   }
@@ -52,12 +50,12 @@ class MainLayout extends React.Component {
     }
     return (
         <div className="wrapper">
-            { currentUser && this.showSideBar(currentUser)}
+            { false && currentUser && this.showSideBar(currentUser)}
             <div ref={(ref)=> {this.mainPanelRef = ref}} className={className.mainClass} id={className.id}>
               <Header {...this.props}/>
               <div className={className.contentClass}>
                 <div className="container-fluid">
-                  { 
+                  {
                     this.checkEmailVerification(currentUser) ? (
                       <div className="row">
                         <div className="col-md-12">
@@ -66,7 +64,7 @@ class MainLayout extends React.Component {
                       </div>
                     ) : (
                       <p className="alert alert-warning">
-                        You need to verify your email address before using Skillshape. 
+                        You need to verify your email address before using Skillshape.
                         <a href="#" className="resend-verification-link" style={{color:'blue'}}>
                           Resend verification link
                         </a>

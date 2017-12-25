@@ -17,7 +17,7 @@ class SkillClassFilter extends React.Component {
   }
 
   componentDidMount() {
-    this.initializeSlider()  
+    this.initializeSlider()
     setTimeout(()=> {
       let autocomplete = new google.maps.places.Autocomplete(this.location);
       autocomplete.addListener('place_changed', () => {
@@ -33,7 +33,7 @@ class SkillClassFilter extends React.Component {
       })
     },4000)
   }
-  
+
   componentWillReceiveProps(props) {
     if(props.currentAddress && props.filters.coords && !this.state.SLocation) {
       this.coords = props.filters.coords;
@@ -45,32 +45,32 @@ class SkillClassFilter extends React.Component {
     let self = this;
     const rangeClass = document.getElementById('sliderPriceClass');
     const rangeMonth = document.getElementById('sliderPriceMonth');
-    noUiSlider.create(rangeClass,{
-      start: [0, 1000],
-      connect: true,
-      range: {
-          'min': 0,
-          'max': 1000
-      }
-    }).on('slide', function(){
-      let value = this.get();
-      self._classPrice = value;
-      self.setState({ classPrice : value})
-      self.props.onSearch(self)
-    });
-    noUiSlider.create(rangeMonth,{
-      start: [0, 1000],
-      connect: true,
-      range: {
-        'min': 0,
-        'max': 1000
-      }
-    }).on('slide', function(){
-      let value = this.get();
-      self._monthPrice = value
-      self.setState({ monthPrice : value})
-      self.props.onSearch(self)
-    });
+    // noUiSlider.create(rangeClass,{
+    //   start: [0, 1000],
+    //   connect: true,
+    //   range: {
+    //       'min': 0,
+    //       'max': 1000
+    //   }
+    // }).on('slide', function(){
+    //   let value = this.get();
+    //   self._classPrice = value;
+    //   self.setState({ classPrice : value})
+    //   self.props.onSearch(self)
+    // });
+    // noUiSlider.create(rangeMonth,{
+    //   start: [0, 1000],
+    //   connect: true,
+    //   range: {
+    //     'min': 0,
+    //     'max': 1000
+    //   }
+    // }).on('slide', function(){
+    //   let value = this.get();
+    //   self._monthPrice = value
+    //   self.setState({ monthPrice : value})
+    //   self.props.onSearch(self)
+    // });
   }
 
   autocompleteOnChange = () => {
