@@ -1,13 +1,12 @@
 "use strict"
 import React from "react"
 import './tableCss'
-import {
-  Table,
+import Table, {
   TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-} from "material-ui/Table"
+  TableCell,
+  TableHead,
+  TableRow
+} from 'material-ui/Table';
 
 
 export const createTable = ({
@@ -23,15 +22,15 @@ export const createTable = ({
       {...props}
       bodyStyle={{overflow:'visible'}}
     >
-      <TableHeader {...tableHeaderProps}>
+      <TableHead {...tableHeaderProps}>
         <TableRow {...tableRowProps}>
           {
             tableHeaderColumns && Array.isArray(tableHeaderColumns) && tableHeaderColumns.map(({ tooltip, columnName, className }, id) => (
-              <TableHeaderColumn key={id} className={className}  tooltip={tooltip} {...tableHeaderColumnProps}>{columnName}</TableHeaderColumn>
+              <TableCell key={id} className={className}  tooltip={tooltip} {...tableHeaderColumnProps}>{columnName}</TableCell>
             ))
           }
         </TableRow>
-      </TableHeader>
+      </TableHead>
       <TableBody {...tableBodyProps}>
         {tableRows}
       </TableBody>
