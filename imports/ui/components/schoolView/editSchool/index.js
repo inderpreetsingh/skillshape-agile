@@ -1,7 +1,7 @@
 import React from "react";
 import { createContainer } from 'meteor/react-meteor-data';
 import SchoolEditRender from "./schoolEditRender";
-import { browserHistory} from 'react-router';
+import { browserHistory } from 'react-router';
 
 // import collection definition over here
 import Modules from "/imports/api/modules/fields";
@@ -41,6 +41,10 @@ class SchoolEditView extends React.Component {
       console.log("this.formBuilderModal show -->>",this.formBuilderModal);
       this.formBuilderModal.show();
     })
+  }
+
+  onTabChange = (tabValue) => {
+    this.setState({tabValue})
   }
 
   render() {

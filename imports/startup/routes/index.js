@@ -11,7 +11,7 @@ import ResetPassword from '/imports/ui/components/account/resetPassword';
 import MyProfile from '/imports/ui/components/users/myProfile';
 // import SchoolView from '/imports/ui/components/schoolView';
 // import ClaimSchool from '/imports/ui/components/claimSchool';
-// import SchoolEditView from '/imports/ui/components/schoolView/editSchool';
+import SchoolEditView from '/imports/ui/components/schoolView/editSchool';
 // import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
 // import MyCalender from '/imports/ui/components/users/myCalender';
 // import SchoolUpload from '/imports/ui/components/schoolUpload';
@@ -29,6 +29,7 @@ export default Routes = () => (
         <Route path="/Contactus" component={ContactUs} />
       	<Route path="/reset-password/:token" component={ResetPassword}/>
         <Route path="/profile/:id" component={MyProfile} />
+        <Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />
       </Route>
     </Router>
 );
@@ -41,4 +42,3 @@ export default Routes = () => (
         // <Route path="/schoolAdmin/:schoolId" component={SchoolView} />
         //<Route path="/SchoolUpload" component={SchoolUpload} />
         // <Route path="/schools/:slug" component={SchoolView} />
-        // <Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />

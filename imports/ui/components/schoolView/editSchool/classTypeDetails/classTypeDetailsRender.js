@@ -31,34 +31,34 @@ export default function () {
   
 	return (
 		<div >
-			<Toolbar style={{marginTop: 5,marginBottom: 5,backgroundColor: config.themeColor.blue}}>
-	            <ToolbarGroup>
-	            	 <FontIcon 
-	                    className="material-icons"
-	                    color={config.themeColor.white}
-	                >
-	                    assignment
-	                </FontIcon>
-	            	 <span style={{marginLeft: 5, color: config.themeColor.white}}>Class Types</span>
-	            </ToolbarGroup>
-	            <ToolbarGroup>
-					<FloatingActionButton 
-						backgroundColor={config.themeColor.white}
-						mini={true}
-						onClick={() => this.setState({showClassTypeForm: true}) }
-					>
-				      	<FontIcon 
-		                    className="material-icons"
-		                    style={{color: config.themeColor.blue}}
-		                >
-		                    add
-		                </FontIcon>
-				    </FloatingActionButton>
-	            </ToolbarGroup>
-			</Toolbar>
+			{false && <Toolbar style={{marginTop: 5,marginBottom: 5,backgroundColor: config.themeColor.blue}}>
+				            <ToolbarGroup>
+				            	 <FontIcon 
+				                    className="material-icons"
+				                    color={config.themeColor.white}
+				                >
+				                    assignment
+				                </FontIcon>
+				            	 <span style={{marginLeft: 5, color: config.themeColor.white}}>Class Types</span>
+				            </ToolbarGroup>
+				            <ToolbarGroup>
+								<FloatingActionButton 
+									backgroundColor={config.themeColor.white}
+									mini={true}
+									onClick={() => this.setState({showClassTypeForm: true}) }
+								>
+							      	<FontIcon 
+					                    className="material-icons"
+					                    style={{color: config.themeColor.blue}}
+					                >
+					                    add
+					                </FontIcon>
+							    </FloatingActionButton>
+				            </ToolbarGroup>
+						</Toolbar>}
 			<div className="card-content">
 				{
-					this.state.showClassTypeForm && (
+					false && this.state.showClassTypeForm && (
 						<ClassTypeExpansionPanel 
 							addForm={true}
 							data={{}}
@@ -69,7 +69,7 @@ export default function () {
 				}
 				
 				{ 
-					classTypeData && classTypeData.map((dataItem,index) => {
+					false && classTypeData && classTypeData.map((dataItem,index) => {
 			    		return <ClassTypeExpansionPanel
 			    			addForm={false}
 			    			data={dataItem} 

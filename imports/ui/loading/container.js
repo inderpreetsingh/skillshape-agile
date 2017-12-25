@@ -1,8 +1,7 @@
 "use strict"
 
 import React from "react";
-import PropTypes from "prop-types";
-import RefreshIndicator from "material-ui/RefreshIndicator";
+import { CircularProgress } from 'material-ui/Progress';
 import './container.css';
 
 const style = {
@@ -22,16 +21,10 @@ export class ContainerLoader extends React.Component {
 
     return (
         <div className={viewClass}>
-          <div>
-            <RefreshIndicator
-              size={50}
-              left={0}
-              top={0}
-              loadingColor="#FF9800"
-              status="loading"
-              style={style}
+            <CircularProgress 
+                style={{ color: "#FF9800" }} 
+                thickness={7} 
             />
-          </div>
         </div>
     )
   }
