@@ -11,7 +11,7 @@ import LocationDetails from './locationDetails';
 // import PriceDetails from './priceDetails';
 // import Modules from './modules';
 // import EmbedCodes from './embedCodes';
-// import MediaDetails from './mediaDetails';
+import MediaDetails from './mediaDetails';
 
 
 export default function (props) {
@@ -60,13 +60,13 @@ export default function (props) {
                 }
             </div>	
         {/*<div className="tab-content">
-          { 
+          {
             (selecetdView === "school_details") && <SchoolDetails
               schoolData={schoolData}
               schoolId={schoolId}
               moveTab={this.moveTab}
-            /> 
-          } 
+            />
+          }
           {
             (selecetdView === "location_details") && <LocationDetails
               locationData={locationData}
@@ -107,15 +107,16 @@ export default function (props) {
               moveTab={this.moveTab}
             />
           }
-          {
-            (selecetdView === "media_details") && <MediaDetails
+
+        </div>*/}
+        {
+            (this.state.tabValue === 4) && <MediaDetails
               schoolData={schoolData}
               schoolId={schoolId}
               moveTab={this.moveTab}
               {...editSchoolProps}
             />
           }
-        </div>*/}
   		</div>
   	)
   } else {

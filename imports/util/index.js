@@ -17,3 +17,5 @@ export { withSubscriptionAndPagination } from '/imports/util/subscriptionAndPagi
 export { formStyles } from '/imports/util/formStyle';
 export { createTable } from '/imports/util/createTable';
 export { downloadingFunction } from '/imports/util/csvFileDownload';
+
+export { withStyles } from "./withStyle";
