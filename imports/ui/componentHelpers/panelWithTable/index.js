@@ -45,15 +45,13 @@ class PanelWithTable extends React.Component {
             open: false,
             expanded: false,
             value: '',
-            showAddForm: false,
+            showForm: false,
             showEditForm: false,
         }  
     }
 
-    handleAddFormModal = ()=> this.setState({showAddForm: false})
+    handleFormModal = ()=> this.setState({showForm: false, formData: null})
     
-    handleEditFormModal = ()=> this.setState({showEditForm: false})
-
     handleChange = (event, value) => {
         if(value == 0) {
           this.uploadInput.click();

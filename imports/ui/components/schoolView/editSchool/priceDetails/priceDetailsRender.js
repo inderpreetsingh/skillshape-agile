@@ -8,13 +8,15 @@ export default function () {
 		classPricingData,
 		monthlyPricingData, 
 		showFormBuilderModal, 
-		moveTab, 
+		moveTab,
+		schoolId, 
 	} = this.props
 
 	return (
 		<div className="tab-pane active">
 			<div className="col-md-12" style={{paddingTop: '20px'}}>
 				<PanelWithTable
+					schoolId={schoolId}
 					className="location-details"
 					settings={monthlyPriceSettings}
 					mainTableData={monthlyPricingData}
@@ -23,6 +25,7 @@ export default function () {
 			</div>
 			<div className="col-md-12" style={{paddingTop: '20px'}}>
 				<PanelWithTable
+					schoolId={schoolId}
 					className="location-details"
 					settings={classPriceSettings}
 					mainTableData={classPricingData}

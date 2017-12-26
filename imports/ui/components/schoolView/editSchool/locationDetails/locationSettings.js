@@ -1,16 +1,16 @@
 import React from "react";
-import AddLocation from './addLocation';
-import EditLocation from './editLocation';
+import LocationForm from './locationForm';
+import RoomForm from './roomForm';
 
 export default locationSettings = {
     mainPanelHeader: {
         leftIcon: "assignment",
         title: "Locations",
         titleKey: "address",
-        notes: "Right Now I don't any Idea",
+        notes: "",
         havingImage: false,
         actions: {
-            component: AddLocation,
+            component: LocationForm,
             buttonTitle: "ADD LOCATION",
             onSubmit: "addLocation",
             title: "Location",
@@ -40,7 +40,7 @@ export default locationSettings = {
             havingImage: false,
             toggleChildTable: true,
             edit: {
-                component: EditLocation,
+                component: LocationForm,
                 title: "Edit Location",
                 onSubmit: "editLocation",
                 editByField: "_id",
@@ -61,9 +61,11 @@ export default locationSettings = {
         leftIcon: "add",
         title: "Room",
         havingImage: false,
+        notes: "Rooms with this location",
         actions: {
+            component: RoomForm,
             parentKey: "_id",
-            buttonTitle: "Room",
+            buttonTitle: "Add Room",
             onSubmit: "addRoom",
             title: "Room",
             formFields: [
@@ -84,6 +86,7 @@ export default locationSettings = {
             havingImage: false,
             toggleChildTable: false,
             edit: {
+                component: RoomForm,
                 onSubmit: "editRoom",
                 title: "Edit Room",
                 editByField: "id",
