@@ -4,7 +4,7 @@ Meteor.methods({
     "location.getLocationBySchoolId": function({ schoolId }) {
         return SLocation.find({ schoolId }).fetch()
     },
-    "location.addLocation": function(doc) {
+    "location.addLocation": function({doc}) {
         const user = Meteor.users.findOne(this.userId);
         console.log("location.addModule methods called!!!");
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })) {
@@ -16,7 +16,7 @@ Meteor.methods({
             throw new Meteor.Error("Permission denied!!");
         }
     },
-    "location.editLocation": function(doc_id, doc) {
+    "location.editLocation": function({doc_id, doc}) {
         const user = Meteor.users.findOne(this.userId);
         console.log("location.editModule methods called!!!", doc_id, doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })) {
@@ -26,7 +26,7 @@ Meteor.methods({
             throw new Meteor.Error("Permission denied!!");
         }
     },
-    "location.removeLocation": function(doc) {
+    "location.removeLocation": function({doc}) {
         const user = Meteor.users.findOne(this.userId);
         console.log("location.removeModule methods called!!!", doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })) {
@@ -35,19 +35,19 @@ Meteor.methods({
             throw new Meteor.Error("Permission denied!!");
         }
     },
-    "location.addRoom": function(data, location) {
+    "location.addRoom": function({locationId, data}) {
         console.log(data);
-        console.log(location);
-        return SLocation.update({ _id: location }, { $push: { "rooms": data } });
+        console.log(locationId);
+        data.id = Math.random().toString(36).substr(2, 16);
+        return SLocation.update({ _id: locationId }, { $push: { "rooms": data } });
     },
-    "location.editRoom": function(location, data) {
+    "location.editRoom": function({locationId, data}) {
         console.log("location.editRoom data -->>",data);
-        console.log("location.editRoom location -->>",location);
-        console.log(location);
-        return SLocation.update({ _id: location, "rooms.id": data.id }, { $set: { "rooms.$": data } });
+        console.log("location.editRoom location -->>",locationId);
+        return SLocation.update({ _id: locationId, "rooms.id": data.id }, { $set: { "rooms.$": data } });
     },
-    "location.roomRemove": function(id, location) {
-        SLocation.update({ _id: location }, { $pull: { "rooms": { id: id } } }, { multi: true });
+    "location.roomRemove": function({locationId, data}) {
+        SLocation.update({ _id: locationId }, { $pull: { "rooms": { id: data.id } } }, { multi: true });
         return true;
     }
 });

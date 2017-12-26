@@ -1,16 +1,16 @@
 /**
- * Notice: Some code was adapted from Material-UI's text field.
- *         Copyright (c) 2014 Call-Em-All (https://github.com/callemall/material-ui)
+ * Notice: Some code was adapted from /imports/startup/client/lib/material-ui-old/'s text field.
+ *         Copyright (c) 2014 Call-Em-All (https://github.com/callemall//imports/startup/client/lib/material-ui-old/)
  */
 import React from 'react'
 import PropTypes from 'prop-types'
-import TextFieldUnderline from 'material-ui/TextField/TextFieldUnderline'
-import TextFieldHint from 'material-ui/TextField/TextFieldHint'
-import TextFieldLabel from 'material-ui/TextField/TextFieldLabel'
-import AutoComplete from 'material-ui/AutoComplete/AutoComplete'
-import transitions from 'material-ui/styles/transitions'
-import Chip from 'material-ui/Chip'
-import {blue300} from 'material-ui/styles/colors'
+import TextFieldUnderline from '/imports/startup/client/lib/material-ui-old/TextField/TextFieldUnderline';
+import TextFieldHint from '/imports/startup/client/lib/material-ui-old/TextField/TextFieldHint';
+import TextFieldLabel from '/imports/startup/client/lib/material-ui-old/TextField/TextFieldLabel';
+import AutoComplete from '/imports/startup/client/lib/material-ui-old/AutoComplete/AutoComplete';
+import transitions from '/imports/startup/client/lib/material-ui-old/styles/transitions';
+import Chip from '/imports/startup/client/lib/material-ui-old/Chip';
+// import {blue300} from '/imports/startup/clie0nt/lib/material-ui-old/styles/colors';
 
 const getStyles = (props, context, state) => {
   const {
@@ -101,7 +101,7 @@ const defaultChipRenderer = ({ value, text, isFocused, isDisabled, handleClick, 
   <Chip
     key={key}
     style={{ ...defaultStyle, pointerEvents: isDisabled ? 'none' : undefined }}
-    backgroundColor={isFocused ? blue300 : null}
+    backgroundColor={isFocused ? "blue" : null}
     onClick={handleClick}
     onRequestDelete={handleRequestDelete}
   >
@@ -170,7 +170,7 @@ class ChipInput extends React.Component {
       setTimeout(() => this.focus(), 1)
     }
 
-    // Ensuring that ChipInput works with with Material-UI 0.19.1 and 0.20.0
+    // Ensuring that ChipInput works with with /imports/startup/client/lib/material-ui-old/ 0.19.1 and 0.20.0
     if (this.autoComplete.handleItemClick) {
       this.autoComplete.handleItemClick = onAutocompleteItemClick;
     } else {
@@ -417,7 +417,7 @@ class ChipInput extends React.Component {
    * Using a bound class method here to set `autoComplete` to avoid it being set
    * to null by an inline ref callback.
    *
-   * See [Issue #71](https://github.com/TeamWertarbyte/material-ui-chip-input/issues/71)
+   * See [Issue #71](https://github.com/TeamWertarbyte//imports/startup/client/lib/material-ui-old/-chip-input/issues/71)
    *
    * @param {Object} autoComplete - The AutoComplete DOM element or null
    */

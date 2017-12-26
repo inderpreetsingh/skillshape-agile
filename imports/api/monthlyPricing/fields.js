@@ -1,4 +1,5 @@
 import config from "/imports/config"
+import ClassType from "/imports/api/classType/fields";
 
 const MonthlyPricing = new Mongo.Collection(config.collections.monthlyPricing);
 /**
@@ -44,5 +45,7 @@ MonthlyPricing.attachSchema(new SimpleSchema({
         optional: true
     }
 }));
+
+MonthlyPricing.join(ClassType, "classTypeId", "selectedClassType", ["name"]);
 
 export default MonthlyPricing;

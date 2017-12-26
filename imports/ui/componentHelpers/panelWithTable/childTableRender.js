@@ -10,7 +10,7 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import MoreVertIcon from 'material-ui-icons/MoreVert';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
-import Assignment from 'material-ui-icons/Assignment';
+import Icon from 'material-ui/Icon';
 import Add from 'material-ui-icons/Add';
 import Edit from 'material-ui-icons/Edit';
 import Delete from 'material-ui-icons/Delete';
@@ -22,22 +22,33 @@ import ExpansionPanel, {
 import Divider from 'material-ui/Divider';
 
 export default function (props) {
-	const { classes, childTable, childTableData } = this.props;
-	// console.log("child Table render childTable -->>",childTable)
+	const { classes, childPanelHeader, childTable, childTableData, parentKey } = this.props;
+	const FormComponent = childPanelHeader.actions.component;
+	console.log("child Table render this.props -->>",this.props)
 	// console.log("child Table render childTableData -->>",childTableData)
 	return (
 		<div className="panel-child-table">
+			{
+          		this.state.showForm && <FormComponent
+          			parentKey={parentKey} 
+          			data={this.state.formData} 
+          			open={this.state.showForm} 
+          			onClose={this.handleFormModal}
+          		/>	
+          	}
 			<ExpansionPanel>
 				<ExpansionPanelSummary className={classes.classtimeHeader} color="primary" expandIcon={<ExpandMoreIcon />} >
 	                <Grid container >
 		                <Grid  item sm={7} xs={12} style={{display: 'inline-flex',alignItems: 'center'}}>
-		                    <span> <Assignment style={{marginRight: 5}}/>
-		                    </span> <span>Upcoming classes with this class type </span>
+		                    <span> 
+		                    	<Icon className="material-icons" style={{marginRight: 5}}>{childPanelHeader.leftIcon}</Icon>
+		                    </span> 
+		                    <span>{childPanelHeader.notes}</span>
 		                </Grid>
 		                <Grid style={{display: 'inline-flex',alignItems: 'center',justifyContent: 'center'}} item sm={5} xs={12}>
-		                    <Button raised dense onClick={this.handleAddClassTime} >
+		                    <Button raised dense onClick={() => this.setState({showForm: true, formData: null})} >
 		                    	<Add style = {{marginRight: 2}} />
-		                   		 Add Class Times
+		                   		   {childPanelHeader.actions.buttonTitle}
 		                  	</Button>
 		                </Grid>
 	                </Grid>
@@ -63,8 +74,8 @@ export default function (props) {
 												)
 											})
 			    						}
-			    						<Grid  item xs={12} sm={5} style={{textAlign: 'right'}}>
-					                        <Button color="accent" raised dense>
+			    						<Grid  item xs={12} sm={5} >
+					                        <Button onClick={() => this.setState({showForm: true, formData:tableData})} color="accent" raised dense>
 					                           <Edit style = {{marginRight: 2}} />
 					                          	{ childTable.actions.edit.title }
 					                        </Button>

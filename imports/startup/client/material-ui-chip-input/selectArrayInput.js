@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash.get';
 import ChipInput from "./chipInput";
+import MuiThemeProvider from '/imports/startup/client/lib/material-ui-old/styles/MuiThemeProvider';
+import getMuiTheme from '/imports/startup/client/lib/material-ui-old/styles/getMuiTheme';
+
+const muiTheme = getMuiTheme();
 // import FieldTitle from '../../util/FieldTitle';
 
 /**
@@ -166,19 +170,21 @@ export class SelectArrayInput extends Component {
         } = this.props;
 
         return (
-            <ChipInput
-                {...input}
-                fullWidth={true}
-                fullWidthInput={true}
-                value={this.state.values}
-                onRequestAdd={this.handleAdd}
-                onRequestDelete={this.handleDelete}
-                onUpdateInput={setFilter}
-                dataSource={choices}
-                dataSourceConfig={dataSourceConfig}
-                floatingLabelText={this.props.floatingLabelText}
-                disabled={this.props.disabled}
-            />
+            <MuiThemeProvider muiTheme={muiTheme}>
+                <ChipInput
+                    {...input}
+                    fullWidth={true}
+                    fullWidthInput={true}
+                    value={this.state.values}
+                    onRequestAdd={this.handleAdd}
+                    onRequestDelete={this.handleDelete}
+                    onUpdateInput={setFilter}
+                    dataSource={choices}
+                    dataSourceConfig={dataSourceConfig}
+                    floatingLabelText={this.props.floatingLabelText}
+                    disabled={this.props.disabled}
+                />
+            </MuiThemeProvider>
         );
     }
 }

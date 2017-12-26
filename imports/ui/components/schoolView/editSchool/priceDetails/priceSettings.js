@@ -1,10 +1,14 @@
 import React from "react";
+import ClassPriceForm from './classPriceForm';
+import MonthlyPriceForm from './monthlyPriceForm';
 
 export const monthlyPriceSettings = {
     mainPanelHeader: {
         leftIcon: "assignment",
-        title: "Monthly Package",
+        title: "Per Month Packages",
+        titleKey: "packageName",
         actions: {
+            component: MonthlyPriceForm,
         	buttonTitle: "ADD MONTHLY PACKAGES",
             onSubmit: "addMonthlyPackage",
             title: "Monthly Packages",
@@ -54,6 +58,7 @@ export const monthlyPriceSettings = {
             {key: "lifetimeCost", label: "LifeTime Cost"},
         ],
         actions: {
+            component: MonthlyPriceForm,
             label: "Actions",
             toggleChildTable: false,
             edit: {
@@ -101,8 +106,10 @@ export const monthlyPriceSettings = {
 export const classPriceSettings = {
     mainPanelHeader: {
         leftIcon: "assignment",
-        title: "Class Package",
+        title: "Per Class Packages",
+        titleKey: "packageName",
         actions: {
+            component: ClassPriceForm,
         	buttonTitle: "ADD CLASS PACKAGES",
             onSubmit: "addClassPackage",
             title: "Class Packages",
@@ -152,6 +159,7 @@ export const classPriceSettings = {
             label: "Actions",
             toggleChildTable: false,
             edit: {
+                component: ClassPriceForm,
                 title: "Class Packages",
                 onSubmit: "editClassPackage",
                 editByField: "_id",

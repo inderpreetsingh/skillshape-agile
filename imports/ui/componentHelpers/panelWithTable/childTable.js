@@ -50,10 +50,13 @@ class ChildTable extends React.Component {
             open: false,
             expanded: false,
             value: '',
+            showForm: false,
             classTimeModalOpen: false
         }
     }
 
+    handleFormModal = ()=> this.setState({showForm: false, formData: null})
+    
     handleChange = (event, value) => {
         if (value == 0) {
           this.uploadInput.click();

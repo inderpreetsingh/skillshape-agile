@@ -38,6 +38,23 @@ export function reCenterMap(map, center) {
     return map;
 }
 
+export function initializeSchoolEditLocationMap(location) {
+    const mapId = location && `goolge-map-${location._id}`;
+    if (location && document.getElementById(mapId)) {
+        document.getElementById(mapId).innerHTML = ""
+        let geolocate;
+        let map = new google.maps.Map(document.getElementById(mapId), mapOptions);
+        
+        geolocate = new google.maps.LatLng(location.loc[0], location.loc[1])
+        map.setCenter(geolocate);
+
+        let marker = new google.maps.Marker({
+            position: geolocate,
+            map: map
+        });
+    }    
+}
+
 export function initializeMap(center) {
     if (document.getElementById('google-map')) {
         document.getElementById('google-map').innerHTML = ""

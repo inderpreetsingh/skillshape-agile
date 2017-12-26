@@ -37,6 +37,8 @@ class MainLayout extends React.Component {
   }
 
   render( ) {
+    console.log("Main layout props -->>",this.props);
+    console.log("Main layout context -->>",this.context);
     const { currentUser, isUserSubsReady } = this.props;
     let className = {
       mainClass: "wrapper perfectScroll main_wrapper",
