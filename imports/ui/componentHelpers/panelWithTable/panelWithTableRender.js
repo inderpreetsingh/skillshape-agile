@@ -4,6 +4,7 @@ import ChildTable from './childTable';
 import {cutString} from '/imports/util';
 import classnames from 'classnames';
 import Collapse from 'material-ui/transitions/Collapse';
+import Icon from 'material-ui/Icon';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
 import red from 'material-ui/colors/red';
@@ -14,7 +15,6 @@ import MoreVertIcon from 'material-ui-icons/MoreVert';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
-import Assignment from 'material-ui-icons/Assignment';
 import Add from 'material-ui-icons/Add';
 import Edit from 'material-ui-icons/Edit';
 import Delete from 'material-ui-icons/Delete';
@@ -33,6 +33,7 @@ import Dialog, {
   DialogContentText,
   DialogActions,
 } from 'material-ui/Dialog';
+import MapComponent from './mapComponent';
 
 export default function () {
 
@@ -55,7 +56,7 @@ export default function () {
           	<Paper elevation={4}>
 	            <Grid container className={classes.classtypeHeader}>
 	              	<Grid  item sm={2} xs={12} style={{display: 'inline-flex',alignItems: 'center'}}>
-	                	<span> <Assignment style={{marginRight: 5}}/>  </span> <span>{settings.mainPanelHeader.title}</span>
+	                	<span> <Icon className="material-icons" style={{marginRight: 5}}>{settings.mainPanelHeader.leftIcon}</Icon></span> <span>{settings.mainPanelHeader.title}</span>
 	              	</Grid>
 	              	<Grid item sm={7} xs={12}>
 		                <Typography type="caption" >
@@ -85,7 +86,7 @@ export default function () {
 	            			</ExpansionPanelSummary>
 	            			<ExpansionPanelDetails className={classes.details}>
 	            				<Grid container>
-	            					<Grid  item md={settings.mainPanelHeader.havingImage ? 7 : 12} sm={12} xs={12}>
+	            					<Grid  item md={(settings.mainPanelHeader.showImageUpload || settings.mainPanelHeader.showAddressOnMap) ? 7 : 12} sm={(settings.mainPanelHeader.showImageUpload || settings.mainPanelHeader.showAddressOnMap) ? 8 : 12} xs={12}>
 	            						<div className={classes.classtypeForm}>
 	            							{
 	            								settings.mainTable && settings.mainTable.tableFields.map((field, index) => {
@@ -110,6 +111,20 @@ export default function () {
 						                    </Grid>    
 	            						</div>
 	            					</Grid>
+	            					{
+	            						 settings.mainPanelHeader.showAddressOnMap && (
+			            					<Grid className={classes.classtypeInputContainer} item md={5} sm={4} xs={12}>
+							              		<MapComponent mapData={tableData}/>
+							              	</Grid>
+	            						)
+	            					}
+	            					{
+	            						settings.mainPanelHeader.showImageUpload  && (
+			            					<Grid className={classes.classtypeInputContainer} item md={5} sm={4} xs={12}>
+							              		showImageUpload
+							              	</Grid>
+	            						)
+	            					}
 		            				{
 		            					settings.childTable && <Grid className={classes.classtypeInputContainer} item md={7} sm={12} xs={12}>
 							                <ChildTable 

@@ -5,7 +5,8 @@ import MonthlyPriceForm from './monthlyPriceForm';
 export const monthlyPriceSettings = {
     mainPanelHeader: {
         leftIcon: "assignment",
-        title: "Monthly Package",
+        title: "Per Month Packages",
+        titleKey: "packageName",
         actions: {
             component: MonthlyPriceForm,
         	buttonTitle: "ADD MONTHLY PACKAGES",
@@ -105,7 +106,8 @@ export const monthlyPriceSettings = {
 export const classPriceSettings = {
     mainPanelHeader: {
         leftIcon: "assignment",
-        title: "Class Package",
+        title: "Per Class Packages",
+        titleKey: "packageName",
         actions: {
             component: ClassPriceForm,
         	buttonTitle: "ADD CLASS PACKAGES",

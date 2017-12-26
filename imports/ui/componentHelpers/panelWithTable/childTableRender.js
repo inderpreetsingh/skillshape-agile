@@ -10,7 +10,7 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import MoreVertIcon from 'material-ui-icons/MoreVert';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
-import Assignment from 'material-ui-icons/Assignment';
+import Icon from 'material-ui/Icon';
 import Add from 'material-ui-icons/Add';
 import Edit from 'material-ui-icons/Edit';
 import Delete from 'material-ui-icons/Delete';
@@ -40,8 +40,10 @@ export default function (props) {
 				<ExpansionPanelSummary className={classes.classtimeHeader} color="primary" expandIcon={<ExpandMoreIcon />} >
 	                <Grid container >
 		                <Grid  item sm={7} xs={12} style={{display: 'inline-flex',alignItems: 'center'}}>
-		                    <span> <Assignment style={{marginRight: 5}}/>
-		                    </span> <span>{childPanelHeader.notes}</span>
+		                    <span> 
+		                    	<Icon className="material-icons" style={{marginRight: 5}}>{childPanelHeader.leftIcon}</Icon>
+		                    </span> 
+		                    <span>{childPanelHeader.notes}</span>
 		                </Grid>
 		                <Grid style={{display: 'inline-flex',alignItems: 'center',justifyContent: 'center'}} item sm={5} xs={12}>
 		                    <Button raised dense onClick={() => this.setState({showForm: true, formData: null})} >

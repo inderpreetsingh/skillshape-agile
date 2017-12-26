@@ -1,5 +1,6 @@
 import React from "react";
 import PanelWithTable from '/imports/ui/componentHelpers/panelWithTable';
+// import TableView from '/imports/ui/componentHelpers/panelWithTable/tableView';
 import { classPriceSettings, monthlyPriceSettings } from './priceSettings';
 
 export default function () {

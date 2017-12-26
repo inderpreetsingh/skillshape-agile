@@ -49,7 +49,7 @@ class PanelWithTable extends React.Component {
             showEditForm: false,
         }  
     }
-
+    
     handleFormModal = ()=> this.setState({showForm: false, formData: null})
     
     handleChange = (event, value) => {

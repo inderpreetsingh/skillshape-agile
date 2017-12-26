@@ -4,11 +4,12 @@ import RoomForm from './roomForm';
 
 export default locationSettings = {
     mainPanelHeader: {
-        leftIcon: "assignment",
+        leftIcon: "location_on",
         title: "Locations",
         titleKey: "address",
         notes: "",
-        havingImage: false,
+        showImageUpload: false,
+        showAddressOnMap: true,
         actions: {
             component: LocationForm,
             buttonTitle: "ADD LOCATION",
@@ -58,7 +59,7 @@ export default locationSettings = {
         }
     },
     childPanelHeader: {
-        leftIcon: "add",
+        leftIcon: "business",
         title: "Room",
         havingImage: false,
         notes: "Rooms with this location",

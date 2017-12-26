@@ -1,7 +1,8 @@
 import React from 'react';
 import { Router, Route, browserHistory, DefaultRoute, IndexRoute } from 'react-router';
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
+import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
+import green from "material-ui/colors/green";
 //layout
 import MainLayout from '/imports/ui/layout/mainLayout';
 
@@ -21,7 +22,14 @@ import SchoolUpload from '/imports/ui/components/schoolUpload';
 import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: green,
+  }
+});
+
 export default Routes = () => (
+  <MuiThemeProvider theme={theme}>
     <Router history={browserHistory}>
       <Route path="/" component={MainLayout} >
         <IndexRoute component={Home} />
@@ -34,6 +42,7 @@ export default Routes = () => (
         <Route path="/schools/:slug" component={SchoolView} />
       </Route>
     </Router>
+  </MuiThemeProvider>  
 );
   // <MuiThemeProvider>
   // </MuiThemeProvider>

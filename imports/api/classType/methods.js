@@ -7,6 +7,10 @@ Meteor.methods({
         
         return ClassType.find({schoolId}).fetch();
     },
+    "classType.getClassTypeByTextSearch": function({schoolId, textSearch}) {
+        
+        return ClassType.find({schoolId: schoolId, name: { $regex: new RegExp(textSearch, 'mi') }},{limit: 10,fields:{name:1}}).fetch();
+    },
     "classType.addClassType": function(doc) {
          const user = Meteor.users.findOne(this.userId);
         // console.log("classType.addClassType methods called!!!");
