@@ -1,10 +1,19 @@
-import React from 'react';
-import Dialog from 'material-ui/Dialog';
+import React, {Fragment} from 'react';
 import moment from 'moment';
 import { formStyles } from '/imports/util';
-import FontIcon from 'material-ui/FontIcon';
-import { blue500 } from 'material-ui/styles/colors';
-import { Card, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+// import { blue500 } from 'material-ui/styles/colors';
+
+import Dialog, {
+  DialogActions,
+  withMobileDialog,
+} from 'material-ui/Dialog';
+import Icon from 'material-ui/Icon';
+import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+import Button from 'material-ui/Button';
+import Typography from 'material-ui/Typography';
+import Grid from 'material-ui/Grid';
+import { withStyles } from 'material-ui/styles';
+
 import { ContainerLoader } from '/imports/ui/loading/container';
 import { browserHistory, Link } from 'react-router';
 import ClassType from "/imports/api/classType/fields";
@@ -12,9 +21,36 @@ import SLocation from "/imports/api/sLocation/fields";
 import '/imports/api/classInterest/methods';
 import '/imports/api/classTimes/methods';
 
-const styles = formStyles();
+const formStyle = formStyles();
 
-export default class ClassDetailModal extends React.Component{
+const styles = theme => {
+  console.log("theme", theme);
+  return {
+    image: {
+      verticalAlign: 'middle',
+      width: '100%'
+    },
+    imageContainer: {
+      backgroundColor: theme.palette.grey[100],
+      display: 'inline-flex',
+      alignItems: 'center',
+      color: '#fff',
+      width: '100%',
+      minHeight: 250,
+      justifyContent: 'center',
+      backgroundSize: 'auto',
+    },
+    iconStyle: {
+        marginRight: '5px'
+    },
+    iconWithDetailContainer: {
+        display:'inline-flex',
+        alignItems: "center"
+    }
+  }
+}
+
+class ClassDetailModal extends React.Component{
 
   constructor(props){
     super(props);
@@ -38,6 +74,7 @@ export default class ClassDetailModal extends React.Component{
                 classType,
                 location,
                 error,
+                modalOpen: this.props.showModal
             })
         })
     } else {
@@ -70,201 +107,184 @@ export default class ClassDetailModal extends React.Component{
         }
     })
   }
-
+  closeModal = ()=>{
+    this.setState({modalOpen: false})
+  }
   render() {
     console.log("ClassDetailModal render props -->>", this.props);
     console.log("ClassDetailModal render state -->>", this.state);
-  	const { isLoading, error, school, classType, classTimes, location } = this.state;
-    const { eventData } = this.props;
-  	return (
+    const { isLoading, error, school, classType, classTimes, location } = this.state;
+    const { eventData, fullScreen, classes } = this.props;
+    return (
         <Dialog
-          modal={false}
-          open={this.props.showModal}
-          bodyStyle={{padding: 0}}
-          contentStyle={{ maxWidth: 600, maxheight: 1400 }}
-          autoScrollBodyContent={true}
-          onRequestClose={() => this.props.closeEventModal(false, null)}
+          fullScreen={fullScreen}
+          open={this.state.modalOpen}
+          onClose={() => this.props.closeEventModal(false, null)}
+          aria-labelledby="responsive-dialog-title"
         >
             { isLoading && <ContainerLoader/> }
             { error && <div style={{color: 'red'}}>{error}</div> }
             { !isLoading && !error && (
                     <Card>
-                        <CardMedia
-                            overlayContentStyle={{float: 'right', width: 25, height: 35, position: 'relative', background: 'none'}}
-                            overlay={
-                                <span>
+                        <CardMedia>
+                            <div className={classes.imageContainer}>
+                                <div style={{position: "absolute", top: 10, right: 10}}>
                                     {
                                         eventData.attending && (
-                                            <FontIcon
-                                                style={{cursor: 'pointer'}}
-                                                hoverColor={blue500} 
-                                                className="material-icons"
-                                                onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)}
-                                                color={config.themeColor.red}
-                                            >
-                                                delete
-                                            </FontIcon>
+                                            <Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
+                                               <Icon
+                                                    className="material-icons"
+                                                >
+                                                    delete
+                                                </Icon>
+                                            </Button>
                                         )
                                     }
-                                </span>
-                            }
-                        >
-                            <img src={this.getImageSrc(classType,school)} style={{height: '200px'}} alt="Card image cap" />
-                            <CardTitle title={classType && classType.name} />
-                            <CardText>
-                              {classType && classType.desc}
-                            </CardText>
-                            <CardText>
-                                <div style={{...styles.formControlInline, marginBottom: 15}}>
-                                    <div style={styles.formControl}>
-                                        <div style={styles.formControlInput}>
-                                            <div className="circle-icon">
-                                                <FontIcon 
-                                                    className="material-icons"
-                                                    color={config.themeColor.red}
-                                                >
-                                                    account_balance
-                                                </FontIcon>
-                                            </div>
-                                            <div>
-                                                <div className="card-header-title">SCHOOL</div>
-                                                <div className="card-header-sub-title">
-                                                    <p>{school && school.name}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style={styles.formControl}>
-                                        <div style={styles.formControlInput}>
-                                            <div className="circle-icon">
-                                                <FontIcon 
-                                                    className="material-icons"
-                                                    color={config.themeColor.red}
-                                                >
-                                                    date_range
-                                                </FontIcon>
-                                            </div>
-                                            <div>
-                                                <div className="card-header-title">DATE</div>
-                                                <div className="card-header-sub-title">
-                                                    <p>{eventData.startDate && eventData.startDate.format("dddd, Do MMM YYYY")}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>    
                                 </div>
-                                <div style={styles.formControlInline}>
-                                    <div style={styles.formControl}>
-                                        <div style={styles.formControlInput}>
-                                            <div className="circle-icon">
-                                                <FontIcon 
-                                                    className="material-icons"
-                                                    color={config.themeColor.red}
-                                                >
-                                                    location_on
-                                                </FontIcon>
-                                            </div>
-                                            <div>
-                                                <div className="card-header-title">LOCATION</div>
-                                                <div className="card-header-sub-title">
-                                                    <p>{location && `${location.address}, ${location.city}, ${location.state}`}</p>
-                                                </div>
-                                            </div>
+                                <img className={classes.image} src={this.getImageSrc(classType,school)}/>
+                            </div>
+                        </CardMedia>
+                        <CardContent>
+                            <Typography type="headline" component="h2">
+                                {classType && classType.name}
+                            </Typography>
+                            <Typography component="p" style={{marginBottom:'20px'}}>
+                                {classType && classType.desc}
+                            </Typography>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <div className={classes.iconWithDetailContainer}>
+                                        <div className="circle-icon" className={classes.iconStyle}>
+                                            <Icon
+                                                className="material-icons"
+                                                color="primary"
+                                            >
+                                                account_balance
+                                            </Icon>
+                                        </div>
+                                        <div>
+                                            <Typography type="caption" >SCHOOL</Typography>
+                                            <Typography type="caption" >{school && school.name}</Typography>
                                         </div>
                                     </div>
-                                    <div style={styles.formControl}>
-                                        <div style={styles.formControlInput}>
-                                            <div className="circle-icon">
-                                                <FontIcon 
-                                                    className="material-icons"
-                                                    color={config.themeColor.red}
-                                                >
-                                                    av_timer
-                                                </FontIcon>
-                                            </div>
-                                            <div>
-                                                <div className="card-header-title">TIME</div>
-                                                <div className="card-header-sub-title">
-                                                    <p>{`${eventData.eventStartTime} to ${eventData.eventEndTime}`}</p>
-                                                </div>
-                                            </div>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <div className={classes.iconWithDetailContainer}>
+                                        <div className="circle-icon" className={classes.iconStyle}>
+                                            <Icon
+                                                className="material-icons"
+                                                color="primary"
+                                            >
+                                                date_range
+                                            </Icon>
                                         </div>
-                                    </div>    
-                                </div>
-                            </CardText>
-                            <CardText>
-                                <div style={styles.formControl}>
-                                    <div style={styles.formControlInput}>
-                                        <strong className="card-title" style={{color: 'black'}}>Entire Class Dates</strong>
-                                    </div>
-                                </div>
-                                <div style={styles.formControlInline}>
-                                    <div style={{...styles.formControlInline, width: '50%'}}>
-                                        <div style={styles.formControlInline}>
-                                            <div style={styles.formControl}>
-                                                <div style={styles.formControlInput}>
-                                                    <div className="card-header-title">FROM : </div>
-                                                    <div className="card-header-sub-title">
-                                                        { eventData.startDate ? moment(eventData.startDate).format("Do MMM YYYY") : "NA"}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div style={styles.formControl}>
-                                                <div style={styles.formControlInput}>
-                                                    <div className="card-header-title">TO : </div>
-                                                    <div className="card-header-sub-title">
-                                                        { eventData.endDate ? moment(eventData.endDate).format("Do MMM YYYY") : "NA"}
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div>
+                                            <Typography type="caption" >DATE</Typography>
+                                            <Typography type="caption" >{eventData.startDate && eventData.startDate.format("dddd, Do MMM YYYY")}</Typography>
                                         </div>
                                     </div>
-                                    <div style={styles.formControl} >
-                                        <div className="alert-info-msg" style={styles.formControlInput}>
-                                            <div>
-                                                <FontIcon 
-                                                    className="material-icons"
-                                                    color={config.themeColor.red}
-                                                >
-                                                    warning
-                                                </FontIcon>
-                                            </div>
-                                            <div>
-                                                <p>This is a class series with start and end date.</p>
-                                            </div>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <div className={classes.iconWithDetailContainer}>
+                                        <div className="circle-icon" className={classes.iconStyle}>
+                                            <Icon
+                                                className="material-icons"
+                                                color="primary"
+                                            >
+                                                location_on
+                                            </Icon>
+                                        </div>
+                                        <div>
+                                            <Typography type="caption" >LOCATION</Typography>
+                                            <Typography type="caption" >{location && `${location.address}, ${location.city}, ${location.state}`}</Typography>
                                         </div>
                                     </div>
-                                </div>
-                            </CardText>
-                           { 
-                                eventData.scheduleDetails && ( 
-                                    <CardText>
-                                        <div style={styles.formControl}>
-                                            <div style={styles.formControlInput}>
-                                                <strong className="card-title" style={{color: 'black'}}>Entire Class Times Schedule</strong>
-                                            </div>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <div className={classes.iconWithDetailContainer}>
+                                        <div className="circle-icon" className={classes.iconStyle}>
+                                            <Icon
+                                                className="material-icons"
+                                                color="primary"
+                                            >
+                                                av_timer
+                                            </Icon>
                                         </div>
-                                        { 
-                                            Object.keys(eventData.scheduleDetails).map((day, index) => { 
-                                                const { startTime, duration} = eventData.scheduleDetails[day]; 
-                                                const eventStartTime = moment(startTime).format("hh:mm"); 
-                                                const eventEndTime = moment(new Date(startTime)).add(duration, "minutes").format("hh:mm"); 
-                                                return (
-                                                    <div style={styles.formControl} key={index}>
-                                                        <div style={styles.formControlInput}>
-                                                            {day} - {`${eventStartTime} to ${eventEndTime}`}
-                                                        </div>
-                                                    </div>
-                                            ) }) 
-                                        }
-                                    </CardText>
+                                        <div>
+                                            <Typography type="caption" >TIME</Typography>
+                                            <Typography type="caption" >{`${eventData.eventStartTime} to ${eventData.eventEndTime}`}</Typography>
+                                        </div>
+                                    </div>
+                                </Grid>
+                            </Grid>
+                            <Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
+                                Entire Class Dates
+                            </Typography>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <div>
+                                        <div style={{display: 'inline-flex'}}>
+                                            <Typography type="caption" >FROM : </Typography>
+                                            <Typography type="caption" >{ eventData.startDate ? moment(eventData.startDate).format("Do MMM YYYY") : "NA"}</Typography>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style={{display: 'inline-flex'}}>
+                                            <Typography type="caption" >TO : </Typography>
+                                            <Typography type="caption" >{ eventData.endDate ? moment(eventData.endDate).format("Do MMM YYYY") : "NA"}</Typography>
+                                        </div>
+                                    </div>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <div className={classes.iconWithDetailContainer}>
+                                        <div className="circle-icon" className={classes.iconStyle}>
+                                            <Icon
+                                                className="material-icons"
+                                                color="accent"
+                                            >
+                                                warning
+                                            </Icon>
+                                        </div>
+                                        <div>
+                                            <Typography type="caption" >This is a class series with start and end date.</Typography>
+                                        </div>
+                                    </div>
+                                </Grid>
+                            </Grid>
+                            {
+                                eventData.scheduleDetails && (
+                                    <Fragment>
+                                    <Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
+                                        Entire Class Times Schedule
+                                    </Typography>
+                                    {
+                                        Object.keys(eventData.scheduleDetails).map((day, index) => {
+                                            const { startTime, duration} = eventData.scheduleDetails[day];
+                                            const eventStartTime = moment(startTime).format("hh:mm");
+                                            const eventEndTime = moment(new Date(startTime)).add(duration, "minutes").format("hh:mm");
+                                            return (
+                                                <Typography type="caption" >
+                                                        {day} - {`${eventStartTime} to ${eventEndTime}`}
+                                                </Typography>
+                                        ) })
+                                    }
+                                    </Fragment>
                                 )
                             }
-                        </CardMedia>
+                        </CardContent>
                     </Card>
                 )
             }
+            {fullScreen && (
+                <DialogActions>
+                    <Button onClick={()=>{this.closeModal()}} color="primary">
+                      Close
+                    </Button>
+                </DialogActions>
+            )}
         </Dialog>
-    )   
+    )
   }
 }
+
+export default withMobileDialog()(withStyles(styles)(ClassDetailModal));

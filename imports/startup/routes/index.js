@@ -12,7 +12,7 @@ import MyProfile from '/imports/ui/components/users/myProfile';
 import SchoolView from '/imports/ui/components/schoolView';
 // import ClaimSchool from '/imports/ui/components/claimSchool';
 import SchoolEditView from '/imports/ui/components/schoolView/editSchool';
-// import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
+import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
 // import MyCalender from '/imports/ui/components/users/myCalender';
 import SchoolUpload from '/imports/ui/components/schoolUpload';
 // import SchoolPriceView from '/imports/ui/components/embed/schoolPriceView';
@@ -32,13 +32,13 @@ export default Routes = () => (
         <Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />
         <Route path="/SchoolUpload" component={SchoolUpload} />
         <Route path="/schools/:slug" component={SchoolView} />
+        <Route path="/MyCalendar" component={ManageMyCalendar} />
       </Route>
     </Router>
 );
   // <MuiThemeProvider>
   // </MuiThemeProvider>
       // <Route path="/embed/schools/:slug/pricing" component={SchoolPriceView} />
-      // <Route path="/embed/schools/:slug/calendar" component={MyCalender} />
+        // <Route path="/embed/schools/:slug/calendar" component={MyCalender} />
         // <Route path="/claimSchool" component={ClaimSchool} />
-        // <Route path="/MyCalendar" component={ManageMyCalendar} />
         // <Route path="/schoolAdmin/:schoolId" component={SchoolView} />

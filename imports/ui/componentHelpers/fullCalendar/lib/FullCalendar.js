@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { isOption } from './utils';
-
+import './fullcalendar.css'
+import './fullcalendar.min.js'
 
 class FullCalendar extends React.Component {
   componentDidMount() {

@@ -2,15 +2,17 @@ export default styles = theme => {
   return {
     imageContainer: {
       backgroundColor: theme.palette.grey[100],
-      display: 'inline-flex',
-      alignItems: 'center',
-      color: '#fff',
+      position: 'absolute',
+      top:0,
+      left:0,
       width: '100%',
-      minHeight: 250,
-      justifyContent: 'center',
-      backgroundSize: 'auto',
+      height: '100%'
     },
     schoolHeaderContainer: {
+      position: "relative",
+      padding: theme.spacing.unit * 2
+    },
+    content: {
       position: "relative",
       padding: theme.spacing.unit * 2
     },
@@ -22,17 +24,20 @@ export default styles = theme => {
       position: "absolute",
       padding: theme.spacing.unit * 2,
       bottom: 0,
-      width: "97%"
+      width: "97%",
+      backgroundColor: 'rgba(0,0,116,0.5)'
     },
     card:{
       width :'100%'
     },
     ImageFooterbutton : {
-      marginLeft: 15
+      marginLeft: 15,
+      textDecoration: 'none',
+      float: 'right'
     },
     imageFooterBtnContainer: {
-      display: "flex",
-      justifyContent: "space-around"
+      justifyContent: "space-around",
+
     }
 
   }

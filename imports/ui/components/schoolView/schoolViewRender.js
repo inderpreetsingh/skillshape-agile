@@ -14,7 +14,7 @@ import Paper from 'material-ui/Paper';
 import { Loading } from '/imports/ui/loading';
 import { checkSuperAdmin } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
-// import MyCalender from '/imports/ui/components/users/myCalender';
+import MyCalender from '/imports/ui/components/users/myCalender';
 
 export default function() {
 
@@ -70,45 +70,47 @@ export default function() {
                   {/*<div className={classes.imageContainer}>
                     <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
                   </div>*/}
+                  <div style={{"background-color": 'blue'}}>
+                  </div>
                   <div className={classes.imageFooter} >
-                  <Grid container>
-                    <Grid item xs={12} sm={6}>
-                      <Typography type="headline" component="h3"> {schoolData.name} </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <div className={classes.imageFooterBtnContainer}>
-                       {
-                        !checkUserAccess &&
-                          <Fragment>
-                            <Button className={classes.ImageFooterbutton} raised color="accent">
-                              <Email className={classes.ImageFooterIcon} />
-                              Call Us
-                            </Button>
-                            <Button className={classes.ImageFooterbutton} raised color="accent">
-                              <Email className={classes.ImageFooterIcon} />
-                              Email Us
-                            </Button>
-                          </Fragment>
-                        }
-                        {
-                          checkUserAccess && (
-                            <Link to={`/SchoolAdmin/${schoolData._id}/edit`}>
-                              <Button raised color="accent">
-                                Edit
+                    <Grid container>
+                      <Grid item xs={12} sm={8}>
+                        <Typography type="headline" style={{color:"#fff"}} component="h3"> {schoolData.name} </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <div className={classes.imageFooterBtnContainer}>
+                         {
+                          !checkUserAccess &&
+                            <Fragment>
+                              <Button className={classes.ImageFooterbutton} raised color="accent">
+                                <Email className={classes.ImageFooterIcon} />
+                                Call Us
                               </Button>
-                            </Link>
-                          )
-                        }
-                        { this.checkClaim(currentUser, schoolId) && (
-                          <Button onClick={this.claimASchool.bind(this,currentUser,schoolData)} raised color="accent">
-                            Claim
-                          </Button>
-                          )
-                        }
-                      </div>
+                              <Button className={classes.ImageFooterbutton} raised color="accent">
+                                <Email className={classes.ImageFooterIcon} />
+                                Email Us
+                              </Button>
+                            </Fragment>
+                          }
+                          {
+                            checkUserAccess && (
+                              <Link className={classes.ImageFooterbutton}  to={`/SchoolAdmin/${schoolData._id}/edit`}>
+                                <Button raised color="accent">
+                                  Edit
+                                </Button>
+                              </Link>
+                            )
+                          }
+                          { this.checkClaim(currentUser, schoolId) && (
+                            <Button className={classes.ImageFooterbutton} onClick={this.claimASchool.bind(this,currentUser,schoolData)} raised color="accent">
+                              Claim
+                            </Button>
+                            )
+                          }
+                        </div>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </div>
+                  </div>
                 </CardMedia>
                 <CardContent >
 
@@ -160,6 +162,7 @@ export default function() {
                         </Grid>
                         <Grid item xs={12} sm={6} md={12}>
                           <Typography type="p">Monthly Package from ......</Typography>
+                          <Typography type="p">Monthly Package from .....</Typography>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -167,9 +170,15 @@ export default function() {
                 </CardContent>
               </Card>
             </Grid>
+
         </Grid>
-        <Paper elevation={4}>
-        </Paper>
+        <Grid container className={classes.content}>
+        <Grid item xs={12}>
+        <Card className={classes.content}>
+          {<MyCalender {...this.props}/>}
+        </Card>
+        </Grid>
+        </Grid>
         {/*<div className="row">
           <div className="card">
               {
@@ -407,7 +416,7 @@ export default function() {
                       }
                       </div>
                     </div>*/}
-          {/*<MyCalender {...this.props}/>*/}
+
           {/*<div className="card col-sm-12">
                      {
                         monthlyPricing && monthlyPricing.length > 0 && (

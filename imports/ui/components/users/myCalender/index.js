@@ -10,11 +10,11 @@ export default class MyCalender extends React.Component {
   }
 
   setDate = (startDate, endDate) => this.setState({startDate,endDate})
-  
+
   handleEventModal = (isOpen, eventData) => {
     this.setState({
       isOpen,
-      eventData 
+      eventData
     })
   }
 
@@ -23,12 +23,12 @@ export default class MyCalender extends React.Component {
     let { isOpen, eventData } = this.state;
     return  (
         <div>
-            <FullCalendarContainer 
+            <FullCalendarContainer
     			subscriptionName="ClassSchedule"
     			setDate={this.setDate}
                 showEventModal={this.handleEventModal}
     			{...this.state}
-    			{...this.props} 
+    			{...this.props}
     		/>
             {
                 isOpen && <ClassDetailModal
