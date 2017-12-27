@@ -10,11 +10,11 @@ const styles = theme => {
             display: 'none',
         },
         classtimeHeader: {
-            backgroundColor: theme.palette.secondary[100],
+            backgroundColor: theme.palette.secondary[500],
             padding: 5
         },
         classtimeFormOuter: {
-            backgroundColor: theme.palette.secondary[100],
+            backgroundColor: theme.palette.secondary[500],
             borderRadius: 5,
             padding: 12,
             width: '100%'
@@ -56,7 +56,7 @@ class ChildTable extends React.Component {
     }
 
     handleFormModal = ()=> this.setState({showForm: false, formData: null})
-    
+
     handleChange = (event, value) => {
         if (value == 0) {
           this.uploadInput.click();
@@ -85,7 +85,7 @@ class ChildTable extends React.Component {
           classTimeModalOpen: false,
         });
     }
-    
+
     handleAddClassTime = (event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -93,7 +93,7 @@ class ChildTable extends React.Component {
           classTimeModalOpen: true,
         })
     }
-    
+
     render() {
         return ChildTableRender.call(this, this.props, this.state)
     }

@@ -45,13 +45,13 @@ export default function () {
 	return (
 		<div className={`${className} panel-table`}>
           	{
-          		this.state.showForm && <FormComponent 
+          		this.state.showForm && <FormComponent
           			schoolId={schoolId}
-          			data={this.state.formData} 
-          			open={this.state.showForm} 
+          			data={this.state.formData}
+          			open={this.state.showForm}
           			onClose={this.handleFormModal}
           			settings={settings}
-          		/>	
+          		/>
           	}
           	<Paper elevation={4}>
 	            <Grid container className={classes.classtypeHeader}>
@@ -64,7 +64,7 @@ export default function () {
 		                </Typography>
 	            	</Grid>
 	              	<Grid style={{display: 'inline-flex',alignItems: 'center',justifyContent: 'center'}} item sm={3} xs={12}>
-		                <Button onClick={() => this.setState({showForm: true, formData: null})} color="primary" raised dense>
+		                <Button onClick={() => this.setState({showForm: true, formData: null})}  raised dense>
 		                  <Add style = {{marginRight: 2}} />
 		                  	{settings.mainPanelHeader.actions.buttonTitle}
 		                </Button>
@@ -79,7 +79,7 @@ export default function () {
           			return (
           				<ExpansionPanel key={index}>
 	          				<ExpansionPanelSummary color="primary" expandIcon={<ExpandMoreIcon />} >
-	              
+
 	              				<div style={{marginLeft: 15}}>
 	                				<Typography className={classes.secondaryHeading}>{tableData[settings.mainPanelHeader.titleKey]}</Typography>
 	              				</div>
@@ -108,7 +108,7 @@ export default function () {
 						                        <Edit style = {{marginRight: 2}} />
 						                        	{ settings.mainTable.actions.edit.title }
 						                        </Button>
-						                    </Grid>    
+						                    </Grid>
 	            						</div>
 	            					</Grid>
 	            					{
@@ -127,7 +127,7 @@ export default function () {
 	            					}
 		            				{
 		            					settings.childTable && <Grid className={classes.classtypeInputContainer} item md={7} sm={12} xs={12}>
-							                <ChildTable 
+							                <ChildTable
 							                	childPanelHeader={settings.childPanelHeader}
 							                	childTable={settings.childTable}
 							                	childTableData={childTableData}
