@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import ImageGallery from 'react-image-gallery';
+import Button from 'material-ui/Button';
+import ModeEditIcon from 'material-ui-icons/ModeEdit';
+import DeleteIcon from 'material-ui-icons/Delete';
+
+import { withStyles } from "/imports/util";
 import './gallery.css';
 const PREFIX_URL = 'https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/';
 import "react-image-gallery/styles/css/image-gallery.css";
-export default class ImageGalleryView extends React.Component {
-
+class ImageGalleryView extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -53,10 +56,19 @@ export default class ImageGalleryView extends React.Component {
     }
   }
   _renderCustomControls = (events) => {
-  	return <span></span>
+    if(this.props.showEditButton){
+  	 return (<div style={{position: 'absolute', zIndex: 5,top: '3%', left: '3%'}}>
+      <Button onClick={(e)=>{this.props.openEditMediaForm(this.props.images[this._imageGallery.getCurrentIndex()]['media'])}}  fab mini color="accent" aria-label="edit" className={this.props.classes.button}>
+        <ModeEditIcon />
+      </Button>
+      <Button fab mini aria-label="delete" onClick={(e)=>{this.props.onDelete(this.props.images[this._imageGallery.getCurrentIndex()]['media'])}} className={this.props.classes.button}>
+        <DeleteIcon />
+      </Button></div>)
+    }
+    return;
   }
   _onImageClick(event) {
-    console.debug('clicked on image', event.target, 'at index', this._imageGallery.getCurrentIndex());
+    console.debug('clicked on image', event.target, 'at index', this.props.images[this._imageGallery.getCurrentIndex()]);
   }
 
   _onImageLoad(event) {
@@ -172,10 +184,9 @@ export default class ImageGalleryView extends React.Component {
     );
   }
 
+
   render() {
     return (
-
-
         <ImageGallery
           ref={i => this._imageGallery = i}
           items={this.props.images}
@@ -203,3 +214,9 @@ export default class ImageGalleryView extends React.Component {
     );
   }
 }
+const styles = theme => ({
+    button: {
+      margin: theme.spacing.unit,
+    },
+  });
+export default withStyles(styles)(ImageGalleryView)

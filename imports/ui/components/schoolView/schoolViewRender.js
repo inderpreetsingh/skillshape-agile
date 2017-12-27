@@ -15,7 +15,7 @@ import { Loading } from '/imports/ui/loading';
 import { checkSuperAdmin } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
-
+import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 export default function() {
 
 	const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
@@ -61,124 +61,250 @@ export default function() {
       }
       <div>
         <Grid container className={classes.schoolHeaderContainer}>
-            <Grid item xs={12}>
-             {/* <div className={classes.imageContainer}>
-                <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
-              </div>*/}
-              <Card className={classes.card}>
-                <CardMedia style={{position: "relative", height:250}} image={ schoolData.mainImage || defaultSchoolImage }>
-                  {/*<div className={classes.imageContainer}>
-                    <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
-                  </div>*/}
-                  <div style={{"background-color": 'blue'}}>
-                  </div>
-                  <div className={classes.imageFooter} >
-                    <Grid container>
-                      <Grid item xs={12} sm={8}>
-                        <Typography type="headline" style={{color:"#fff"}} component="h3"> {schoolData.name} </Typography>
-                      </Grid>
-                      <Grid item xs={12} sm={4}>
-                        <div className={classes.imageFooterBtnContainer}>
-                         {
-                          !checkUserAccess &&
-                            <Fragment>
-                              <Button className={classes.ImageFooterbutton} raised color="accent">
-                                <Email className={classes.ImageFooterIcon} />
-                                Call Us
-                              </Button>
-                              <Button className={classes.ImageFooterbutton} raised color="accent">
-                                <Email className={classes.ImageFooterIcon} />
-                                Email Us
-                              </Button>
-                            </Fragment>
-                          }
-                          {
-                            checkUserAccess && (
-                              <Link className={classes.ImageFooterbutton}  to={`/SchoolAdmin/${schoolData._id}/edit`}>
-                                <Button raised color="accent">
-                                  Edit
-                                </Button>
-                              </Link>
-                            )
-                          }
-                          { this.checkClaim(currentUser, schoolId) && (
-                            <Button className={classes.ImageFooterbutton} onClick={this.claimASchool.bind(this,currentUser,schoolData)} raised color="accent">
-                              Claim
-                            </Button>
-                            )
-                          }
-                        </div>
-                      </Grid>
-                    </Grid>
-                  </div>
-                </CardMedia>
-                <CardContent >
-
-                  {
-                    checkUserAccess && (
-                      <div>Publish / Unpublish <Switch
-                          checked={isPublish}
-                          onChange={this.handlePublishStatus.bind(this, schoolId)}
-                          aria-label={schoolId}
-                        /></div>
-                    )
-                  }
+          <Grid item xs={12}>
+           {/* <div className={classes.imageContainer}>
+              <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
+            </div>*/}
+            <Card className={classes.card}>
+              <CardMedia style={{position: "relative", height:250}} image={ schoolData.mainImage || defaultSchoolImage }>
+                {/*<div className={classes.imageContainer}>
+                  <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
+                </div>*/}
+                <div style={{"background-color": 'blue'}}>
+                </div>
+                <div className={classes.imageFooter} >
                   <Grid container>
-
-                    <Grid item xs={12} sm={8} md={6} >
-                      <Grid item xs={12}>
-                          <Typography type="p"> About {schoolData.name} </Typography>
-                          <Typography type="caption"> {schoolData.aboutHtml && ReactHtmlParser(schoolData.aboutHtml)} </Typography>
-                      </Grid>
-                      <Grid item xs={12} >
-                        <Typography type="p">Notes for student of  {schoolData.name} <br/> <br/> </Typography>
-                        <Typography type="caption"> {schoolData.notesHtml && ReactHtmlParser(schoolData.notesHtml)} </Typography>
-                      </Grid>
+                    <Grid item xs={12} sm={8}>
+                      <Typography type="headline" style={{color:"#fff"}} component="h3"> {schoolData.name} </Typography>
                     </Grid>
-                    <Grid item xs={12} sm={4} md={3}>
-                      <div className="card-content" id="google-map" style={{height:'200px'}}>
+                    <Grid item xs={12} sm={4}>
+                      <div className={classes.imageFooterBtnContainer}>
+                       {
+                        !checkUserAccess &&
+                          <Fragment>
+                            <Button className={classes.ImageFooterbutton} raised color="accent">
+                              <Email className={classes.ImageFooterIcon} />
+                              Call Us
+                            </Button>
+                            <Button className={classes.ImageFooterbutton} raised color="accent">
+                              <Email className={classes.ImageFooterIcon} />
+                              Email Us
+                            </Button>
+                          </Fragment>
+                        }
+                        {
+                          checkUserAccess && (
+                            <Link className={classes.ImageFooterbutton}  to={`/SchoolAdmin/${schoolData._id}/edit`}>
+                              <Button raised color="accent">
+                                Edit
+                              </Button>
+                            </Link>
+                          )
+                        }
+                        { this.checkClaim(currentUser, schoolId) && (
+                          <Button className={classes.ImageFooterbutton} onClick={this.claimASchool.bind(this,currentUser,schoolData)} raised color="accent">
+                            Claim
+                          </Button>
+                          )
+                        }
                       </div>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={3}>
-                      <Grid container style={{textAlign: "center"}}>
-                        <Grid item xs={12} sm={6} md={12} >
-                          {
-                           schoolLocation.map((data, index) => {
-                             return (
-                              <div key={index}>
-                               <div className="btn-info address-bar-box">
-                                 <h4><i className="fa fa-map-marker"></i>&nbsp;{data.title}</h4>
-                               </div>
-                               <div className="school-view-adress card-content">
-                                <p>{data.address}<br/>
-                                  {data.city},{data.state} - {data.zip}<br/>
-                                  {data.country}
-                                </p>
-                                </div>
-                               </div>
-                             )
-                           })
-                          }
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={12}>
-                          <Typography type="p">Monthly Package from ......</Typography>
-                          <Typography type="p">Monthly Package from .....</Typography>
-                        </Grid>
+                  </Grid>
+                </div>
+              </CardMedia>
+              <CardContent >
+
+                {
+                  checkUserAccess && (
+                    <div>Publish / Unpublish <Switch
+                        checked={isPublish}
+                        onChange={this.handlePublishStatus.bind(this, schoolId)}
+                        aria-label={schoolId}
+                      /></div>
+                  )
+                }
+                <Grid container>
+
+                  <Grid item xs={12} sm={8} md={6} >
+                    <Grid item xs={12}>
+                        <Typography type="p"> About {schoolData.name} </Typography>
+                        <Typography type="caption"> {schoolData.aboutHtml && ReactHtmlParser(schoolData.aboutHtml)} </Typography>
+                    </Grid>
+                    <Grid item xs={12} >
+                      <Typography type="p">Notes for student of  {schoolData.name} <br/> <br/> </Typography>
+                      <Typography type="caption"> {schoolData.notesHtml && ReactHtmlParser(schoolData.notesHtml)} </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12} sm={4} md={3}>
+                    <div className="card-content" id="google-map" style={{height:'200px'}}>
+                    </div>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={3}>
+                    <Grid container style={{textAlign: "center"}}>
+                      <Grid item xs={12} sm={6} md={12} >
+                        {
+                         schoolLocation.map((data, index) => {
+                           return (
+                            <div key={index}>
+                             <div className="btn-info address-bar-box">
+                               <h4><i className="fa fa-map-marker"></i>&nbsp;{data.title}</h4>
+                             </div>
+                             <div className="school-view-adress card-content">
+                              <p>{data.address}<br/>
+                                {data.city},{data.state} - {data.zip}<br/>
+                                {data.country}
+                              </p>
+                              </div>
+                             </div>
+                           )
+                         })
+                        }
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={12}>
+                        <Typography type="p">Monthly Package from ......</Typography>
+                        <Typography type="p">Monthly Package from .....</Typography>
                       </Grid>
                     </Grid>
                   </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
         <Grid container className={classes.content}>
-        <Grid item xs={12}>
-        <Card className={classes.content}>
-          {<MyCalender {...this.props}/>}
-        </Card>
+          <Grid item xs={12}>
+            <Card className={classes.content}>
+              {<MyCalender {...this.props}/>}
+            </Card>
+          </Grid>
         </Grid>
+        <Grid container className={classes.content}>
+          <Grid item xs={12}>
+            <Card className={classes.content}>
+              <div className="content-list-heading ">
+                <h2 style={{textAlign: 'center'}}>Media
+                  <figure>
+                    <img src="/images/heading-line.png"/>
+                  </figure>
+                </h2>
+              </div>
+              <MediaDetails
+                  schoolId={schoolId}
+                  schoolView= {true}
+              />
+            </Card>
+          </Grid>
         </Grid>
+
+
+
+        {/*<div className="card">
+          <div className="col-md-12 media-heading-box">
+            <div className="content-list-heading ">
+              <h2 className="tagline  text-center">Media
+                <figure>
+                  <img src="/images/heading-line.png"/>
+                </figure>
+              </h2>
+            </div>
+            <div className="col-sm-6 " style={{paddingBottom: '20px'}}>
+              <div className="">
+                <div className="card-content">
+                  <h4 className="tagline line-bottom border-line-text text-center">Images</h4>
+                  <div className="carousel slide" id="myCarousel">
+                    <div className="carousel-inner">
+                      {
+                        imageMediaList.map((imageMediaData, index) => {
+                          return(<div key={index} className={index == 0 ? "item active" : "item"}>
+                            <div className="row">
+                              {
+                                imageMediaData.item && imageMediaData.item.map((itemData,key)=>{
+                                  return (
+                                    <div key={key} className="col-xs-12">
+                                      <a  href="#">
+                                        <div
+                                          className="thumb targetImage"
+                                          style={{backgroundImage: `url(${itemData.filePath})`,height: '220px', width:'100%'}}
+                                          data-src={itemData.filePath}>
+                                        </div>
+                                      </a>
+                                    </div>
+                                  )
+                                })
+                              }
+                              </div>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                    <div className="carousel-selector-main">
+                      <a className="left carousel-control left-carousal" href="#myCarousel" data-slide="prev">
+                        <i className="fa fa-chevron-left fa-em"></i>
+                      </a>
+                      <a className="right carousel-control right-carousal" href="#myCarousel" data-slide="next">
+                        <i className="fa fa-chevron-right fa-em"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6 " style={{paddingBottom: '20px'}}>
+              <div className="">
+                <div className="card-content">
+                  <h4 className="tagline line-bottom border-line-text text-center">Other Media</h4>
+                  <div className="carousel slide" id="MediaCarousel">
+                    <div className="carousel-inner">
+                      {
+                        otherMediaList.map((otherMediaData, index) => {
+                          return(<div key={index} className={index == 0 ? "item active" : "item"}>
+                            <div className="row">
+                              {
+                                otherMediaData.item && otherMediaData.item.map((itemData,key)=>{
+                                  return (
+                                    <div key={key} className="col-xs-3">
+                                      <div style={{marginTop:'10px', marginBottom: '10px', marginLeft: '10px', cursor: 'zoom-in', height: '80px'}}>
+                                        <a target="_blank" href={itemData.filePath}>
+                                          <span className="fa fa-file-pdf-o fa-5x"></span>
+                                        </a>
+                                      </div>
+                                    </div>
+                                  )
+                                })
+                              }
+                              </div>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                    <div className="carousel-selector-main">
+                      <a className="left carousel-control left-carousal" href="#MediaCarousel" data-slide="prev">
+                        <i className="fa fa-chevron-left fa-em"></i>
+                      </a>
+                      <a className="right carousel-control right-carousal" href="#MediaCarousel" data-slide="next">
+                        <i className="fa fa-chevron-right fa-em"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>*/}
+
+
+
+
+
+
+
+
+
+
+
+
         {/*<div className="row">
           <div className="card">
               {

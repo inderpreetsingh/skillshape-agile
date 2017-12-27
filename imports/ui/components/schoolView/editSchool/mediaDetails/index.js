@@ -3,24 +3,30 @@ import { createContainer } from 'meteor/react-meteor-data';
 import MediaDetailsRender from './mediaDetailsRender';
 import Media from "/imports/api/media/fields";
 import '/imports/api/media/methods';
+import { withStyles } from "/imports/util";
 
-export default class MediaDetails extends React.Component {
+class MediaDetails extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
+          open: false,
           filters: {
             schoolId: this.props.schoolId
           }
         }
     }
-    
-    openEditMediaForm = (data) => this.setState({showCreateMediaModal: true, mediaFormData: data, filterStatus: false})
-    
-    onAddMedia = ({data, fileData, formType}) => {
-      // console.log("onAddMedia data -->>",data, fileData);
-      if(formType === "system" && fileData) {
 
+    closeMediaUpload = ()=>{
+      this.setState({showCreateMediaModal: false})
+    }
+    openEditMediaForm = (data) => this.setState({showCreateMediaModal: true, mediaFormData: data, filterStatus: false})
+
+    onAddMedia = ({data, fileData, isUrl}) => {
+      // console.log("onAddMedia data -->>",data, fileData);
+      if(isUrl){
+          this.meteorCall({type:"add", data})
+      } else {
         S3.upload({files: { "0": fileData}, path:"schools"}, (err, res) => {
             if(err) {
               console.error("err ",err);
@@ -30,10 +36,8 @@ export default class MediaDetails extends React.Component {
               this.meteorCall({type:"add", data})
             }
         })
-      } else if(formType === "url") 
-          this.meteorCall({type:"add", data})
-      
-    } 
+      }
+    }
 
     onEditMedia = ({editKey, data, fileData}) => {
         // console.log("onEditMedia data -->>",data, fileData);
@@ -42,7 +46,7 @@ export default class MediaDetails extends React.Component {
         } else {
 
             if(fileData) {
-            
+
                 S3.upload({files: { "0": fileData}, path:"schools"}, (err, res) => {
                     if(err) {
                       console.error("err ",err);
@@ -57,7 +61,7 @@ export default class MediaDetails extends React.Component {
                 this.meteorCall({type:"edit", data, editKey})
             }
         }
-        
+
     }
 
     meteorCall = ({type, data, editKey}) => {
@@ -67,21 +71,21 @@ export default class MediaDetails extends React.Component {
                 if(error) {
                   console.error("error", error);
                 }
-                this.refs.createMedia.hideModal()
+                this.closeMediaUpload();
             });
         } else if(type === "edit") {
-            
+
             Meteor.call("media.editMedia", editKey, data, (error, result) => {
                 if(error) {
                   console.error("error", error);
                 }
-                this.refs.createMedia.hideModal()
+                this.closeMediaUpload();
             });
         }
     }
-    
+
     onDeleteMedia = (data) => {
-      
+
       Meteor.call("media.removeModule", data, (error, result) => {
         if(error) {
           console.error("Error -->>",error)
@@ -117,3 +121,9 @@ export default class MediaDetails extends React.Component {
         return MediaDetailsRender.call(this, this.props, this.state)
     }
 }
+
+const styles = theme => {
+  return {}
+}
+
+export default  withStyles(styles)(MediaDetails);

@@ -1,33 +1,81 @@
 import React from "react";
+import Grid from 'material-ui/Grid';
+import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
+import FileUpload from 'material-ui-icons/FileUpload';
+
+
 import MediaFilter from './filter';
 import MediaList from './mediaList';
 import CreateMedia from './createMedia';
+
 export default function () {
 
 	const { showCreateMediaModal, mediaFormData, filterStatus } = this.state;
-	const { schoolId, mediaData } = this.props;
-
+	const { schoolId, mediaData, classes, fullScreen, schoolView  } = this.props;
 	console.log("<<<<media details state --->>",this.state);
 	return (
 		<div>
-			{
-				showCreateMediaModal && <CreateMedia
-					formType={showCreateMediaModal}
-					schoolId={schoolId}
-					ref="createMedia"
-					onAdd={this.onAddMedia}
-					onEdit={this.onEditMedia}
-					mediaFormData={mediaFormData}
-					filterStatus={filterStatus}
-				/>
-			}
-			<div className="row">
+			 {!schoolView && <CreateMedia
+			 	showCreateMediaModal={showCreateMediaModal}
+			 	onClose = {this.closeMediaUpload}
+				formType={showCreateMediaModal}
+				schoolId={schoolId}
+				ref="createMedia"
+				onAdd={this.onAddMedia}
+				onEdit={this.onEditMedia}
+				mediaFormData={mediaFormData}
+				filterStatus={filterStatus}
+			/>}
+			{/*<div className="row">
 				<MediaFilter
 					onSearch={this.onSearch}
 					resetFilter={this.resetFilter}
 				/>
-			</div>
-			<div className="row">
+			</div>*/}
+			<Grid container>
+				<Grid item xs={12}>
+					{!schoolView && <Card>
+						<Grid container>
+							<Grid item xs={12}>
+								<div style={{textAlign:"right"}}>
+									<Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
+							          	Upload Media <FileUpload />
+							        </Button>
+						        </div>
+				        	</Grid>
+				        	<Grid item xs={12}>
+						        <MediaList
+									mediaData={mediaData}
+									schoolId={schoolId}
+									onDelete={this.onDeleteMedia}
+									openEditMediaForm={this.openEditMediaForm}
+									showEditButton={true}
+									{...this.state}
+								/>
+				        	</Grid>
+				        </Grid>
+					</Card>}
+					{schoolView &&
+						<Grid container>
+
+				        	<Grid item xs={12}>
+						        <MediaList
+									mediaData={mediaData}
+									schoolId={schoolId}
+									onDelete={this.onDeleteMedia}
+									openEditMediaForm={this.openEditMediaForm}
+									showEditButton={false}
+									{...this.state}
+								/>
+				        	</Grid>
+				        </Grid>
+					}
+				</Grid>
+			</Grid>
+
+			{/*<div className="row">
 				<div className="col-sm-3 col-offset-9 no-padding pull-right">
 					<div className="card" style={{margin: 0, width:'86%'}}>
 						<div className="card-body" style={{display: 'flex'}}>
@@ -54,17 +102,9 @@ export default function () {
 						</div>
 					</div>
 				</div>
+			</div>*/}
 
-			</div>
-			<div className="row" style={{marginTop: 10}}>
-				<MediaList
-					mediaData={mediaData}
-					schoolId={schoolId}
-					onDelete={this.onDeleteMedia}
-					openEditMediaForm={this.openEditMediaForm}
-					{...this.state}
-				/>
-			</div>
+
 		</div>
 	)
 }
