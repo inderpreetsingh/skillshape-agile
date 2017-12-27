@@ -25,7 +25,7 @@ export default styles = theme => {
       padding: theme.spacing.unit * 2,
       bottom: 0,
       width: "97%",
-      backgroundColor: 'rgba(0,0,116,0.5)'
+      backgroundColor: theme.palette.primary.rgba
     },
     card:{
       width :'100%'

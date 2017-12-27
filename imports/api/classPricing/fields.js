@@ -1,4 +1,5 @@
 import config from "/imports/config"
+import ClassType from "/imports/api/classType/fields";
 
 const ClassPricing = new Mongo.Collection(config.collections.classPricing);
 /**
@@ -23,11 +24,11 @@ ClassPricing.attachSchema(new SimpleSchema({
         type: String,
         optional: true
     },
-    start: {
-        type: String,
+    expDuration: {
+        type: Number,
         optional: true
     },
-    finish: {
+    expPeriod: {
         type: String,
         optional: true
     },
@@ -36,5 +37,7 @@ ClassPricing.attachSchema(new SimpleSchema({
         optional: true
     }
 }));
+
+ClassPricing.join(ClassType, "classTypeId", "selectedClassType", ["name"]);
 
 export default ClassPricing;

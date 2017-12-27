@@ -22,11 +22,10 @@ import SchoolUpload from '/imports/ui/components/schoolUpload';
 import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: green,
-  }
-});
+import { material_ui_next_theme } from '/imports/util';
+console.log("material_ui_next_theme", material_ui_next_theme)
+
+const theme = createMuiTheme({...material_ui_next_theme});
 
 export default Routes = () => (
   <MuiThemeProvider theme={theme}>
@@ -43,7 +42,7 @@ export default Routes = () => (
         <Route path="/MyCalendar" component={ManageMyCalendar} />
       </Route>
     </Router>
-  </MuiThemeProvider>  
+  </MuiThemeProvider>
 );
   // <MuiThemeProvider>
   // </MuiThemeProvider>

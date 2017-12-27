@@ -10,7 +10,7 @@ const styles = theme => {
             display: 'none',
         },
         classtypeHeader: {
-            backgroundColor: theme.palette.primary[100],
+            backgroundColor: theme.palette.primary[500],
             padding: 5
         },
         classtypeForm: {
@@ -38,7 +38,7 @@ const styles = theme => {
 
 
 class PanelWithTable extends React.Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -47,11 +47,11 @@ class PanelWithTable extends React.Component {
             value: '',
             showForm: false,
             showEditForm: false,
-        }  
+        }
     }
-    
+
     handleFormModal = ()=> this.setState({showForm: false, formData: null})
-    
+
     handleChange = (event, value) => {
         if(value == 0) {
           this.uploadInput.click();

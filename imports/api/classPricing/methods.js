@@ -2,12 +2,12 @@ import ClassPricing from "./fields";
 import ClassType from "/imports/api/classType/fields";
 
 Meteor.methods({
-    "classPricing.addClassPricing": function(doc) {
+    "classPricing.addClassPricing": function({doc}) {
         const user = Meteor.users.findOne(this.userId);
         
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {
            
-            // console.log("addClassPricing doc-->>",doc);
+            console.log("addClassPricing doc-->>",doc);
             if(doc.classTypeId && _.isArray(doc.classTypeId)) {
                 
                 ClassType.update({ _id: { $in: doc.classTypeId } }, { $set: {"filters.classPriceCost": doc.cost} }, {multi: true});
@@ -19,7 +19,7 @@ Meteor.methods({
             throw new Meteor.Error("Permission denied!!");
         }
     },
-    "classPricing.editclassPricing": function(doc_id, doc) {
+    "classPricing.editclassPricing": function({doc_id, doc}) {
         const user = Meteor.users.findOne(this.userId);
         
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {
@@ -47,7 +47,7 @@ Meteor.methods({
             throw new Meteor.Error("Permission denied!!");
         }
     },
-    "classPricing.removeClassPricing": function(doc) {
+    "classPricing.removeClassPricing": function({doc}) {
         const user = Meteor.users.findOne(this.userId);
         
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {

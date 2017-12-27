@@ -30,19 +30,19 @@ export default function (props) {
 		<div className="panel-child-table">
 			{
           		this.state.showForm && <FormComponent
-          			parentKey={parentKey} 
-          			data={this.state.formData} 
-          			open={this.state.showForm} 
+          			parentKey={parentKey}
+          			data={this.state.formData}
+          			open={this.state.showForm}
           			onClose={this.handleFormModal}
-          		/>	
+          		/>
           	}
 			<ExpansionPanel>
-				<ExpansionPanelSummary className={classes.classtimeHeader} color="primary" expandIcon={<ExpandMoreIcon />} >
+				<ExpansionPanelSummary className={classes.classtimeHeader}  expandIcon={<ExpandMoreIcon />} >
 	                <Grid container >
 		                <Grid  item sm={7} xs={12} style={{display: 'inline-flex',alignItems: 'center'}}>
-		                    <span> 
+		                    <span>
 		                    	<Icon className="material-icons" style={{marginRight: 5}}>{childPanelHeader.leftIcon}</Icon>
-		                    </span> 
+		                    </span>
 		                    <span>{childPanelHeader.notes}</span>
 		                </Grid>
 		                <Grid style={{display: 'inline-flex',alignItems: 'center',justifyContent: 'center'}} item sm={5} xs={12}>
@@ -80,8 +80,8 @@ export default function (props) {
 					                          	{ childTable.actions.edit.title }
 					                        </Button>
 				                        </Grid>
-				                	</div>  
-				                </div>  
+				                	</div>
+				                </div>
 							</ExpansionPanelDetails>
 						)
 					})

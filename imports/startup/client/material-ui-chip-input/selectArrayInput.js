@@ -4,8 +4,14 @@ import get from 'lodash.get';
 import ChipInput from "./chipInput";
 import MuiThemeProvider from '/imports/startup/client/lib/material-ui-old/styles/MuiThemeProvider';
 import getMuiTheme from '/imports/startup/client/lib/material-ui-old/styles/getMuiTheme';
+import { material_ui_next_theme } from '/imports/util';
 
-const muiTheme = getMuiTheme();
+const muiTheme = getMuiTheme({
+
+    palette: {
+        primary1Color: material_ui_next_theme.palette.primary[900]
+    }
+});
 // import FieldTitle from '../../util/FieldTitle';
 
 /**
@@ -168,7 +174,7 @@ export class SelectArrayInput extends Component {
             setFilter,
             dataSourceConfig
         } = this.props;
-
+        console.log("muiTheme", muiTheme)
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <ChipInput
