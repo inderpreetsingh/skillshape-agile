@@ -2,7 +2,6 @@ import React from "react";
 import methods from '/imports/ui/modal/formBuilderMethods';
 import ChildTable from './childTable';
 import {cutString} from '/imports/util';
-import classnames from 'classnames';
 import Collapse from 'material-ui/transitions/Collapse';
 import Icon from 'material-ui/Icon';
 import Avatar from 'material-ui/Avatar';
