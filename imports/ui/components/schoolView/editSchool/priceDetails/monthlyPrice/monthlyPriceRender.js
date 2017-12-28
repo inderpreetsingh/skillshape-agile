@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Fragment} from "react";
 import Icon from 'material-ui/Icon';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
@@ -37,12 +37,12 @@ export default function () {
 	                	</span>
 	              	</Grid>
 	              	<Grid item sm={7} xs={12}>
-		                <Typography type="caption" >
+		               <Typography type="caption" >
 		                	
-		                </Typography>
+		               </Typography>
 	            	</Grid>
 	              	<Grid style={{display: 'inline-flex',alignItems: 'center',justifyContent: 'center'}} item sm={3} xs={12}>
-		                <Button onClick={() => alert("Not yet implemented")} color="primary" raised dense>
+		                <Button onClick={() => this.setState({showForm: true, formData: null})} color="primary" raised dense>
 		                  <Add style = {{marginRight: 2}} />
 		                  	Add Per Month Package
 		                </Button>
@@ -54,16 +54,26 @@ export default function () {
                		monthlyPricingData && monthlyPricingData.map((monthPrice, index)=> {
                			console.log("monthPrice -->>",monthPrice)
                			return (
-               				<Card key={index} className={classes.card}>
+               				<Card key={index} className={`${classes.card} price-card-container`}>
                					<CardContent className={classes.content}>
                       					<Typography align="center" type="headline">
                       						{monthPrice.packageName}
                       					</Typography>
                                              <br></br>
                                              <Typography component="p">
-                                                  {monthPrice.pymtType}
+                                                 Payment Method: {monthPrice.pymtMethod}
                                              </Typography>
                                              <br></br>
+                                             {
+                                                  monthPrice.pymtType && (
+                                                       <Fragment>
+                                                            <Typography component="p">
+                                                                Payment Type: {monthPrice.pymtType}
+                                                            </Typography>
+                                                            <br></br>
+                                                       </Fragment>
+                                                  )
+                                             }
                						<Typography component="p">
                							Covers: {
                								_.isEmpty(monthPrice.selectedClassType) ? "None" : 
@@ -72,9 +82,23 @@ export default function () {
                								})
                							}
                						</Typography>
+                                             <br></br>
+                                             {
+                                                  _.isEmpty(monthPrice.pymtDetails) ? "None" :
+                                                  monthPrice.pymtDetails.map((payment) => {
+                                                       return <Fragment> 
+                                                            <Typography component="p">
+                                                                 {payment.cost}$ per month for {payment.month} months
+                                                            </Typography>
+                                                            <br></br>
+                                                       </Fragment> 
+                                                  })
+                                             }
                                         </CardContent>
           						<CardActions>
-						              <Button onClick={() => alert("Not yet implemented")} color="primary" style={{width: '100%'}} dense>Edit</Button>
+						               <Button onClick={() => this.setState({showForm: true, formData: monthPrice})} color="primary" style={{width: '100%'}} dense>
+                                                  Edit
+                                             </Button>
 						          </CardActions>
                				</Card>
                			)

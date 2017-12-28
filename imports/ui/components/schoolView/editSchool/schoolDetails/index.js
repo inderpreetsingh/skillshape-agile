@@ -1,7 +1,9 @@
 import React from 'react';
 import SchoolDetailsRender from './schoolDetailsRender';
+import styles from "/imports/ui/components/schoolView/style";
+import { withStyles } from "/imports/util";
 
-export default class SchoolDetails extends React.Component {
+class SchoolDetails extends React.Component {
 
 	constructor(props) {
     super(props);
@@ -34,8 +36,8 @@ export default class SchoolDetails extends React.Component {
   }
 
   componentDidMount() {
-    $('#summernote1').summernote();
-    $('#summernote2').summernote();
+    // $('#summernote1').summernote();
+    // $('#summernote2').summernote();
   }
 
   updateSchool = () => {
@@ -80,3 +82,5 @@ export default class SchoolDetails extends React.Component {
     return SchoolDetailsRender.call(this, this.props, this.state)
   }
 }  
+
+export default withStyles(styles)(SchoolDetails)
