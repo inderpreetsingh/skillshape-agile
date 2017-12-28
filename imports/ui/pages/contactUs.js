@@ -5,6 +5,9 @@ import { withStyles } from "material-ui/styles";
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Grid from 'material-ui/Grid';
+import Radio, { RadioGroup } from 'material-ui/Radio';
+import Button from 'material-ui/Button';
+import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'material-ui/Form';
 
 const insertPadding = {
   paddingRight: '8px',
@@ -12,6 +15,15 @@ const insertPadding = {
 };
 
 const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+  paddingLeft: {
+    'padding-left': 28
+  },
+  fullWidth: {
+    width: '100%'
+  },
   backColor: {
     height:400
   },
@@ -35,7 +47,7 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200,
+    height:32,
   },
   root: theme.mixins.gutters({
     paddingTop: 16,
@@ -107,104 +119,126 @@ class ContactUs extends React.Component {
                                         <Typography className={classes.textColor} type="headline" component="h3">Send Us Feedback</Typography>
                                     </Paper>
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <div className= {classes.gridProps}>
+                            <div className={classes.paddingLeft}>
+                                <Grid container>
+                                    <Grid item xs={12} sm={6} md={6}>
                                         <form method="post" onSubmit={this.submit} name="contact" noValidate="novalidate">
-                                            <div className="col-md-6">
-                                                <div className="form-group">
+                                            <Grid container>
+                                                <Grid item xs={6}>
                                                     <TextField
                                                         type="text"
                                                         id="name"
-                                                        className="form-control"
+                                                        className={classes.textField}
                                                         name="text"
                                                         ref="name"
                                                         placeholder="Name"
+                                                        margin="normal"
                                                     />
-                                                </div>
-                                                <div className="form-group">
                                                     <TextField
                                                         type="email"
                                                         id="email"
-                                                        className="form-control"
+                                                        className={classes.textField}
                                                         name="email"
                                                         ref="email"
                                                         placeholder="E-mail"
+                                                        margin="normal"
                                                     />
-                                                </div>
-                                            </div>
-                                            <div className="col-md-6">
-                                                <div className="radio">
-                                                    <label>
-                                                        <input
-                                                            type="radio"
-                                                            name="optionsRadios"
-                                                            className="end_option"
-                                                            ref="featureRequested"
-                                                            defaultValue="Feature Request"
-                                                        />
-                                                        <span className="circle" /><span className="check" />
-                                                        Feature Request
-                                                    </label>
-                                                </div>
-                                                <div className="radio">
-                                                    <label>
-                                                        <input
-                                                            type="radio"
-                                                            name="optionsRadios"
-                                                            className="end_option"
-                                                            ref="somethingIsBroken"
-                                                            defaultValue="Something is broken"
-                                                        />
-                                                        <span className="circle" /><span className="check" />
-                                                        Something is broken
-                                                    </label>
-                                                </div>
-                                                <div className="radio">
-                                                    <label>
-                                                        <input type="radio"
-                                                               name="optionsRadios"
-                                                               className="end_option"
-                                                               ref="iLoveThis"
-                                                               defaultValue="I Love This!"
-                                                        />
-                                                        <span className="circle" /><span className="check" />
-                                                        I Love This!
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="col-md-12 resbtn">
-                                                <div className="form-group">
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    {/*<div className="radio">
+                                                        <label>
+                                                            <input
+                                                                type="radio"
+                                                                name="optionsRadios"
+                                                                className="end_option"
+                                                                ref="featureRequested"
+                                                                defaultValue="Feature Request"
+                                                            />
+                                                            <span className="circle" /><span className="check" />
+                                                            Feature Request
+                                                        </label>
+                                                    </div>
+                                                    <div className="radio">
+                                                        <label>
+                                                            <input
+                                                                type="radio"
+                                                                name="optionsRadios"
+                                                                className="end_option"
+                                                                ref="somethingIsBroken"
+                                                                defaultValue="Something is broken"
+                                                            />
+                                                            <span className="circle" /><span className="check" />
+                                                            Something is broken
+                                                        </label>
+                                                    </div>
+                                                    <div className="radio">
+                                                        <label>
+                                                            <input type="radio"
+                                                                   name="optionsRadios"
+                                                                   className="end_option"
+                                                                   ref="iLoveThis"
+                                                                   defaultValue="I Love This!"
+                                                            />
+                                                            <span className="circle" /><span className="check" />
+                                                            I Love This!
+                                                        </label>
+                                                    </div>*/}
+                                                    <FormControl component="fieldset" required className={classes.formControl}>
+                                                          <RadioGroup
+                                                            aria-label="gender"
+                                                            name="gender1"
+                                                            className=''
+                                                            value='value'
+                                                            onChange=''
+                                                          >
+                                                            <FormControlLabel value="Feature Request" control={<Radio />} label="Feature Request" />
+                                                            <FormControlLabel value="Something is broken" control={<Radio />} label="Something is broken" />
+                                                            <FormControlLabel value="I Love This" control={<Radio />} label="I Love This" />
+                                                          </RadioGroup>
+                                                    </FormControl>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container className="resbtn">
+                                                <Grid item xs={12} md={12} className={classes.fullWidth}>
                                                     <TextField
-                                                        className="form-control"
+                                                        className={classes.textField}
                                                         id="message"
                                                         name="message"
                                                         rows="4"
                                                         ref="yourMessage"
                                                         placeholder="Your message"
+                                                        multiline
+                                                        fullWidth={true}
                                                     />
-                                                </div>
-                                                <button
-                                                    type="submit"
-                                                    className="btn"
-                                                    id="sendfeedback">
-                                                    Send Message
-                                                </button>
-                                            </div>
+                                                </Grid>
+                                                <Grid item xs={12} md={12}>
+                                                    <Button
+                                                        type="submit"
+                                                        className="btn"
+                                                        id="sendfeedback"
+                                                        raised
+                                                        component="span"
+                                                        className={classes.button}>
+                                                        Send Message
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
                                         </form>
-                                    </div>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={6}>
+                                        <ul className="address-info">
+                                            <img src="/images/new-logo.png" className="" alt="logo" width="48" style={{width: 'auto', height: '250px'}} />
+                                            <div  className="sl-bar">
+                                                <a style={insertPadding} href="#" className="fa fa-facebook social_icon"></a>
+                                                <a style={insertPadding} href="#" className="fa fa-twitter social_icon  "></a>
+                                                <a style={insertPadding} href="#" className="fa fa-google-plus social_icon "></a>
+                                                <a style={insertPadding} href="#" className="fa fa-dribbble social_icon  "></a>
+                                                <a style={insertPadding} href="#" className="fa fa-instagram social_icon "></a>
+                                            </div>
+                                        </ul>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <ul className="address-info">
-                                        <img src="/images/new-logo.png" className="" alt="logo" width="48" style={{width: 'auto', height: '250px'}} />
-                                        <div  className="sl-bar">
-                                            <a style={insertPadding} href="#" className="fa fa-facebook social_icon"></a>
-                                            <a style={insertPadding} href="#" className="fa fa-twitter social_icon  "></a>
-                                            <a style={insertPadding} href="#" className="fa fa-google-plus social_icon "></a>
-                                            <a style={insertPadding} href="#" className="fa fa-dribbble social_icon  "></a>
-                                            <a style={insertPadding} href="#" className="fa fa-instagram social_icon "></a>
-                                        </div>
-                                    </ul>
-                                </Grid>
+                            </div>
                             </Grid>
                         </div>
                     </div>
