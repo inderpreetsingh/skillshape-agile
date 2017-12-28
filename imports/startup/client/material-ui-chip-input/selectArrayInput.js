@@ -174,7 +174,7 @@ export class SelectArrayInput extends Component {
             setFilter,
             dataSourceConfig
         } = this.props;
-        console.log("muiTheme", muiTheme)
+        // console.log("muiTheme", muiTheme)
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <ChipInput

@@ -5,7 +5,7 @@ import { FormBuilderModal } from '/imports/ui/modal';
 import ResponsiveTabs from '/imports/util/responsiveTabs';
 
 //tab details import over here
-// import SchoolDetails from './schoolDetails';
+import SchoolDetails from './schoolDetails';
 import LocationDetails from './locationDetails';
 // import ClassTypeDetails from './classTypeDetails';
 import PriceDetails from './priceDetails';
@@ -50,6 +50,13 @@ export default function (props) {
                 />
           		<div>
                     {
+                        this.state.tabValue === 0 && <SchoolDetails
+                            schoolData={schoolData}
+                            schoolId={schoolId}
+                            moveTab={this.moveTab}
+                        />
+                    }
+                    {
                         this.state.tabValue === 1 &&  <LocationDetails
                           locationData={locationData}
                           schoolId={schoolId}
@@ -82,13 +89,7 @@ export default function (props) {
                     }
                 </div>
             {/*<div className="tab-content">
-              {
-                (selecetdView === "school_details") && <SchoolDetails
-                  schoolData={schoolData}
-                  schoolId={schoolId}
-                  moveTab={this.moveTab}
-                />
-              }
+              
               {
                 (selecetdView === "location_details") && <LocationDetails
                   locationData={locationData}

@@ -49,7 +49,7 @@ class ConfirmationModal extends React.Component {
                     {message}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => this.props.onSubmit()} color="primary">
+                    <Button onClick={() => this.props.onSubmit()} color="accent">
                       {submitBtnLabel} 
                     </Button>
                     <Button onClick={() => this.props.onClose()} color="primary">

@@ -117,7 +117,6 @@ class RoomForm extends React.Component {
                                         fullWidth
                                     />
                                     <TextField
-                                        required={true}
                                         defaultValue={data && data.capicity}
                                         margin="dense"
                                         inputRef={(ref)=> this.capicity = ref}

@@ -2,4 +2,8 @@ body {
   margin: 0
 }
 
-
+.price-card-container {
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

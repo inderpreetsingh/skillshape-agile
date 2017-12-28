@@ -39,7 +39,6 @@ export default function () {
 	              	</Grid>
 	              	<Grid item sm={7} xs={12}>
 		                <Typography type="caption" >
-		                	
 		                </Typography>
 	            	</Grid>
 	              	<Grid style={{display: 'inline-flex',alignItems: 'center',justifyContent: 'center'}} item sm={3} xs={12}>
@@ -54,7 +53,7 @@ export default function () {
                	{
                		classPricingData && classPricingData.map((classPrice, index)=> {
                			return (
-               				<Card key={index} className={classes.card}>
+               				<Card key={index} className={`${classes.card} price-card-container`}>
                					<CardContent className={classes.content}>
                       					<Typography align="center" type="headline">
                       						{classPrice.packageName}

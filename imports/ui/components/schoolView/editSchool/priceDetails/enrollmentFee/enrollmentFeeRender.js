@@ -53,7 +53,7 @@ export default function () {
 	          	{
 	          		enrollmentFeeData && enrollmentFeeData.map((enrollmentFee, index)=> {
 	          			return (
-	          				<Card key={index} className={classes.card}>
+	          				<Card key={index} className={`${classes.card} price-card-container`}>
 	          					<CardContent className={classes.content}>
 	             					<Typography align="center" type="headline">
 	             						{enrollmentFee.name}

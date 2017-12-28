@@ -1,8 +1,9 @@
 import React from "react";
 import { Loading } from '/imports/ui/loading';
 import { browserHistory, Link } from 'react-router';
-
-const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
+import Grid from 'material-ui/Grid';
+import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
+import config from '/imports/config';
 
 export default function () {
     
@@ -22,12 +23,22 @@ export default function () {
   const {
     schoolId,
     schoolData,
+    classes,
   } = this.props;
   
-  console.log("SchoolEditDetails render schoolData -->>", schoolData)
+  console.log("SchoolEditDetails render props -->>", this.props)
   return  (
-    <div className="tab-pane active">
-      <div className="tab-pane active" id="tab_default_1">
+    <div>
+        <Grid container className={classes.schoolHeaderContainer}>
+            <Grid item xs={12}>
+                <Card className={classes.card}>
+                    <CardMedia style={{position: "relative", height:250}} image={ schoolData.mainImage || config.defaultSchoolImage }>
+                    
+                    </CardMedia>
+                </Card>
+            </Grid>    
+        </Grid>    
+      {/*<div className="tab-pane active" id="tab_default_1">
         <div className="col-md-12">
           <div className="card">
             <div className="card-content">
@@ -200,7 +211,7 @@ export default function () {
             </div>
           </div>
         </div>
-      </div>
+      </div>*/}
     </div>
   )
 }

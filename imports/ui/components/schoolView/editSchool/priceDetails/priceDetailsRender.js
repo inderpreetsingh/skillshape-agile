@@ -15,20 +15,20 @@ export default function () {
 	} = this.props
 
 	return (
-		<div className="tab-pane active">
-			<div className="col-md-12" style={{paddingTop: '20px'}}>
+		<div>
+			<div style={{paddingTop: '20px'}}>
 				<ClassPrice
 					schoolId={schoolId}
 					classPricingData={classPricingData}
 				/>
 			</div>
-			<div className="col-md-12" style={{paddingTop: '20px'}}>
+			<div style={{paddingTop: '20px'}}>
 				<MonthlyPrice
 					schoolId={schoolId}
 					monthlyPricingData={monthlyPricingData}
 				/>
 			</div>
-			<div className="col-md-12" style={{paddingTop: '20px'}}>
+			<div style={{paddingTop: '20px'}}>
 				<EnrollmentFee
 					schoolId={schoolId}
 					enrollmentFeeData={enrollmentFeeData}
