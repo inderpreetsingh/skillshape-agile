@@ -10,7 +10,7 @@ import LocationDetails from './locationDetails';
 // import ClassTypeDetails from './classTypeDetails';
 import PriceDetails from './priceDetails';
 // import Modules from './modules';
-// import EmbedCodes from './embedCodes';
+import EmbedCodes from './embedCodes';
 import MediaDetails from './mediaDetails';
 
 
@@ -47,7 +47,7 @@ export default function (props) {
                     tabs={["School Details","Location Details","Class Details", "Prices", "Media", "Embed Codes"]}
                     color= "primary"
                     onTabChange={this.onTabChange}
-                />  
+                />
           		<div>
                     {
                         this.state.tabValue === 1 &&  <LocationDetails
@@ -73,7 +73,14 @@ export default function (props) {
                           {...editSchoolProps}
                         />
                     }
-                </div>	
+                    {
+                      (this.state.tabValue === 5) && <EmbedCodes
+                        schoolData={schoolData}
+                        schoolId={schoolId}
+                        moveTab={this.moveTab}
+                      />
+                    }
+                </div>
             {/*<div className="tab-content">
               {
                 (selecetdView === "school_details") && <SchoolDetails
@@ -115,16 +122,10 @@ export default function (props) {
                   moveTab={this.moveTab}
                 />
               }
-              {
-                (selecetdView === "embed_codes") && <EmbedCodes
-                  schoolData={schoolData}
-                  schoolId={schoolId}
-                  moveTab={this.moveTab}
-                />
-              }
+
 
             </div>*/}
-            
+
       		</div>
       	)
   } else {

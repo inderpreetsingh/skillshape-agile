@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import ReactDOM from 'react-dom';
 import ImageGallery from 'react-image-gallery';
 import Button from 'material-ui/Button';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import DeleteIcon from 'material-ui-icons/Delete';
 
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { withStyles } from "/imports/util";
 import './gallery.css';
 const PREFIX_URL = 'https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/';
@@ -61,7 +63,7 @@ class ImageGalleryView extends React.Component {
       <Button onClick={(e)=>{this.props.openEditMediaForm(this.props.images[this._imageGallery.getCurrentIndex()]['media'])}}  fab mini color="accent" aria-label="edit" className={this.props.classes.button}>
         <ModeEditIcon />
       </Button>
-      <Button fab mini aria-label="delete" onClick={(e)=>{this.props.onDelete(this.props.images[this._imageGallery.getCurrentIndex()]['media'])}} className={this.props.classes.button}>
+      <Button fab mini aria-label="delete" onClick={this.showConfirmationModal} className={this.props.classes.button}>
         <DeleteIcon />
       </Button></div>)
     }
@@ -77,7 +79,11 @@ class ImageGalleryView extends React.Component {
 
   _onSlide(index) {
     this._resetVideo();
-    console.debug('slid to index', index);
+    imagesLength = this.props.images.length-1;
+    if(index == imagesLength){
+      this.props.changeLimit();
+      console.debug('slid to index', index);
+    }
   }
 
   _onPause(index) {
@@ -183,34 +189,50 @@ class ImageGalleryView extends React.Component {
       </div>
     );
   }
-
+  showConfirmationModal = () => this.setState({showConfirmationModal: true})
+  cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
   render() {
     return (
-        <ImageGallery
-          ref={i => this._imageGallery = i}
-          items={this.props.images}
-          lazyLoad={false}
-          onClick={this._onImageClick.bind(this)}
-          onImageLoad={this._onImageLoad}
-          onSlide={this._onSlide.bind(this)}
-          onPause={this._onPause.bind(this)}
-          onScreenChange={this._onScreenChange.bind(this)}
-          onPlay={this._onPlay.bind(this)}
-          infinite={this.state.infinite}
-          showBullets={this.state.showBullets}
-          showFullscreenButton={this.state.showFullscreenButton && this.state.showGalleryFullscreenButton}
-          showPlayButton={this.state.showPlayButton && this.state.showGalleryPlayButton}
-          showThumbnails={this.state.showThumbnails}
-          showIndex={this.state.showIndex}
-          showNav={this.state.showNav}
-          thumbnailPosition={this.state.thumbnailPosition}
-          slideDuration={parseInt(this.state.slideDuration)}
-          slideInterval={parseInt(this.state.slideInterval)}
-          slideOnThumbnailHover={this.state.slideOnThumbnailHover}
-          renderCustomControls = {this._renderCustomControls}
-        />
+        <div style={{position: "relative"}}>
+          {
+              this.state.showConfirmationModal && <ConfirmationModal
+                  open={this.state.showConfirmationModal}
+                  submitBtnLabel="Yes, Delete"
+                  cancelBtnLabel="Cancel"
+                  message="This will permanently delete this media. Are you sure? "
+                  onSubmit={()=>{this.props.onDelete(this.props.images[this._imageGallery.getCurrentIndex()]['media']);this.setState({showConfirmationModal: false});}}
+                  onClose={this.cancelConfirmationModal}
+              />
+          }
+          {
+            !this.props.mediaSubscriptionReady && <ContainerLoader />
+          }
 
+          <ImageGallery
+            ref={i => this._imageGallery = i}
+            items={this.props.images}
+            lazyLoad={this.props.lazyLoad || false}
+            onClick={this._onImageClick.bind(this)}
+            onImageLoad={this._onImageLoad}
+            onSlide={this._onSlide.bind(this)}
+            onPause={this._onPause.bind(this)}
+            onScreenChange={this._onScreenChange.bind(this)}
+            onPlay={this._onPlay.bind(this)}
+            infinite={this.state.infinite}
+            showBullets={this.state.showBullets}
+            showFullscreenButton={this.state.showFullscreenButton && this.state.showGalleryFullscreenButton}
+            showPlayButton={this.state.showPlayButton && this.state.showGalleryPlayButton}
+            showThumbnails={this.state.showThumbnails}
+            showIndex={this.state.showIndex}
+            showNav={this.state.showNav}
+            thumbnailPosition={this.state.thumbnailPosition}
+            slideDuration={parseInt(this.state.slideDuration)}
+            slideInterval={parseInt(this.state.slideInterval)}
+            slideOnThumbnailHover={this.state.slideOnThumbnailHover}
+            renderCustomControls = {this._renderCustomControls}
+          />
+        </div>
     );
   }
 }

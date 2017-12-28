@@ -9,9 +9,10 @@ import Dialog, {
 import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
-import { withStyles, imageRegex } from "/imports/util";
+import Typography from 'material-ui/Typography';
 
-import { ContainerLoader } from '/imports/ui/loading/container';
+
+import { withStyles, imageRegex } from "/imports/util";
 import '/imports/api/media/methods';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
 
@@ -86,8 +87,6 @@ class CreateMedia extends React.Component {
 
 
   	getFileType = (file , mediaFormData) => {
-  		console.log("thisis  s s s  s s ", file)
-  		console.log("thisis  s s s  s s >?>?>?>? ", mediaFormData)
   		if(file) {
 	  		if (file.type.match('image/*')) {
 	        	return "Image";
@@ -104,16 +103,21 @@ class CreateMedia extends React.Component {
 
   	handleChange = (file)=>{
   		console.log("handleChange>>>file>>>>", file)
+  		this.setState({fileUploadError: false});
   		this.state.file = file;
   	}
 
   	onSubmit = (event) => {
   		event.preventDefault()
-  		this.setState({isBusy:true})
   		let file;
   		const mediaData = {};
   		const { mediaFormData, formType } = this.props;
-
+  		if(!this.state.file){
+  			this.setState({fileUploadError: true})
+  			return
+  		} else {
+  			this.setState({isBusy:true, fileUploadError: false})
+  		}
  		if(this.state.file.isUrl) {
  			mediaData.sourcePath = this.state.file.file;
 			mediaData.type = "url"
@@ -177,12 +181,19 @@ class CreateMedia extends React.Component {
 		        	</form>
 	        	</DialogContent>
 	        	<DialogActions>
+	        		<div>
+    				{
+                    	this.state.fileUploadError && <Typography color="error" type="caption">
+				        	*Image is required
+				      	</Typography>
+				  	}
 	        		<Button color="primary" type="submit" form={formId} >
 				        Save
 				    </Button>
 				    <Button color="primary" onClick={onClose} >
 				        Close
 				    </Button>
+				    </div>
 	        	</DialogActions>
 	        </Dialog>
 	    )

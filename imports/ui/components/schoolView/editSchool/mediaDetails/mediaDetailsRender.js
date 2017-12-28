@@ -12,7 +12,7 @@ import CreateMedia from './createMedia';
 
 export default function () {
 
-	const { showCreateMediaModal, mediaFormData, filterStatus } = this.state;
+	const { showCreateMediaModal, mediaFormData, filterStatus, limit } = this.state;
 	const { schoolId, mediaData, classes, fullScreen, schoolView  } = this.props;
 	console.log("<<<<media details state --->>",this.state);
 	return (
@@ -47,6 +47,8 @@ export default function () {
 				        	</Grid>
 				        	<Grid item xs={12}>
 						        <MediaList
+						        	changeLimit = {this.changeLimit}
+						        	limit= {limit || 0}
 									mediaData={mediaData}
 									schoolId={schoolId}
 									onDelete={this.onDeleteMedia}
@@ -62,6 +64,8 @@ export default function () {
 
 				        	<Grid item xs={12}>
 						        <MediaList
+						        	changeLimit = {this.changeLimit}
+						        	limit= {limit || 0}
 									mediaData={mediaData}
 									schoolId={schoolId}
 									onDelete={this.onDeleteMedia}
