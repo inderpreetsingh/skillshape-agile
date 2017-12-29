@@ -20,6 +20,12 @@ export default styles = theme => {
       verticalAlign: 'middle',
       width: '100%'
     },
+    imageHeader: {
+      top: 0,
+      position: "absolute",
+      width: "97%",
+      padding: theme.spacing.unit * 2,
+    },
     imageFooter: {
       position: "absolute",
       padding: theme.spacing.unit * 2,
@@ -37,8 +43,11 @@ export default styles = theme => {
     },
     imageFooterBtnContainer: {
       justifyContent: "space-around",
-
-    }
-
+    },
+    imageLogoContainer: {
+        width: 60,
+        height: 60,
+        border: '1px solid black',
+    },
   }
 }

@@ -78,6 +78,19 @@ class SchoolDetails extends React.Component {
     });
   }
 
+  onAddMedia = ()=> {
+  
+  }
+
+  closeMediaUpload = ()=> {
+  
+  }
+
+  onEditMedia = ()=> {
+  
+  }
+
+
   render() {
     return SchoolDetailsRender.call(this, this.props, this.state)
   }

@@ -1,9 +1,14 @@
 import React from "react";
+import Button from 'material-ui/Button';
 import { Loading } from '/imports/ui/loading';
 import { browserHistory, Link } from 'react-router';
 import Grid from 'material-ui/Grid';
+import CreateMedia from '/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import config from '/imports/config';
+import Typography from 'material-ui/Typography';
+import Edit from 'material-ui-icons/Edit';
+import UploadMedia from './uploadMedia';
 
 export default function () {
     
@@ -24,6 +29,7 @@ export default function () {
     schoolId,
     schoolData,
     classes,
+    mediaFormData,
   } = this.props;
   
   console.log("SchoolEditDetails render props -->>", this.props)
@@ -33,7 +39,43 @@ export default function () {
             <Grid item xs={12}>
                 <Card className={classes.card}>
                     <CardMedia style={{position: "relative", height:250}} image={ schoolData.mainImage || config.defaultSchoolImage }>
-                    
+                        <div className={classes.imageHeader}>
+                            <Button onClick={() => this.setState({ showBackgroundUpload: true, imageType: "mainImage"})} color="accent">
+                                <Edit style = {{margin: 2}} />
+                                    Background
+                            </Button>
+                            { 
+                                this.state.showBackgroundUpload && <UploadMedia 
+                                    showCreateMediaModal= {this.state.showBackgroundUpload}
+                                    onClose={()=> this.setState({ showBackgroundUpload: false})}
+                                />
+                            }
+                        </div>
+                        <div className={classes.imageFooter}>
+                            <Grid container>
+                                <Grid item xs={12} sm={4}>
+                                    <div className={classes.imageLogoContainer}>
+                                        <CardMedia style={{position: "relative", height:60}} image={ schoolData.mainImage || config.defaultSchoolImage }/>
+                                    </div>
+                                    <Button onClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})} color="accent">
+                                        <Edit style = {{margin: 2}} />
+                                            Logo
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={12} sm={8}>
+                                    <Typography type="headline" style={{color:"#fff"}} component="h3"> {schoolData.name} </Typography>
+                                </Grid>
+                            </Grid>
+                            { 
+                                this.state.showBackgroundUpload && <UploadMedia 
+                                    schoolId={schoolId}
+                                    showCreateMediaModal= {this.state.showBackgroundUpload}
+                                    onClose={()=> this.setState({ showBackgroundUpload: false})}
+                                    mediaFormData={schoolData}
+                                    imageType={this.state.imageType}
+                                />
+                            }
+                        </div>
                     </CardMedia>
                 </Card>
             </Grid>    
