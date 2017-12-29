@@ -33,14 +33,16 @@ import Dialog, {
   DialogActions,
 } from 'material-ui/Dialog';
 import MapComponent from './mapComponent';
+import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
+import Card, { CardActions, CardContent } from 'material-ui/Card';
 
 export default function () {
 
-	const { classes, className, settings, mainTableData, schoolId } = this.props;
+	const { classes, className, settings, mainTableData, schoolId, fullScreen } = this.props;
 	const FormComponent = settings.mainPanelHeader.actions.component;
 	// const EditForm = settings.mainTable.actions.edit.component;
 	console.log("Panel with table props -->>",this.props);
-	console.log("Panel with table state -->>",this.state);
+	// console.log("Panel with table state -->>",this.state);
 	return (
 		<div className={`${className} panel-table`}>
           	{
@@ -50,6 +52,7 @@ export default function () {
           			open={this.state.showForm}
           			onClose={this.handleFormModal}
           			settings={settings}
+          			{...this.props}
           		/>
           	}
           	<Paper elevation={4}>
@@ -72,9 +75,9 @@ export default function () {
           	</Paper>
           	{
           		_.isArray(mainTableData) &&  mainTableData.map((tableData, index) => {
-          			console.log("tableData -->>",tableData);
+          			// console.log("tableData -->>",tableData);
 					let childTableData = this.props.getChildTableData && this.props.getChildTableData(tableData);
-          			// console.log("childTableData -->>",childTableData);
+          			console.log("childTableData -->>",childTableData);
           			return (
           				<ExpansionPanel key={index}>
 	          				<ExpansionPanelSummary color="primary" expandIcon={<ExpandMoreIcon />} >
@@ -120,7 +123,17 @@ export default function () {
 	            					{
 	            						settings.mainPanelHeader.showImageUpload  && (
 			            					<Grid className={classes.classtypeInputContainer} item md={5} sm={4} xs={12}>
-							              		showImageUpload
+							              		<MediaUpload 
+							              			fullScreen={fullScreen} 
+							              			width={300} 
+							              			onChange={this.props.handleImageChange} 
+							              			data={tableData && {file: tableData.classTypeImg, isUrl: true}}  
+							              			showVideoOption={false} 
+							              		/>
+							              		
+							              		<Button onClick={()=> this.props.handleImageSave(tableData.schoolId, tableData._id)} color="primary" style={{width: 300}} dense raised>
+							              			Save
+							              		</Button>
 							              	</Grid>
 	            						)
 	            					}
