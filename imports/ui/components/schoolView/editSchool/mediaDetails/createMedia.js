@@ -27,65 +27,6 @@ class CreateMedia extends React.Component {
         	isBusy: false,
         }
     }
-
- //    componentDidMount() {
-	//     if(!this.props.filterStatus) {
-	//     	this.handleModal();
- //    	}
-	//     this.initializeFormValues();
-	// }
-
-	// componentDidUpdate() {
-	// 	if(!this.props.filterStatus) {
-	//     	this.handleModal();
- //    	}
-	//     this.initializeFormValues();
-	// }
-
-	// initializeFormValues = () => {
-	// 	let { mediaFormData, formType } = this.props;
-
-	// 	if(mediaFormData) {
-
-	// 		this.refs.mediaName.value = mediaFormData.name || null;
-	// 		this.refs.mediaNotes.value = mediaFormData.desc || null;
-
-	// 		if(mediaFormData.type === "url") {
-	// 			this.refs.mediaUrl.value = mediaFormData.sourcePath;
-	// 		} else {
-	// 			this.refs.mediaFile.value = null;
-	// 			$(this.refs.mediaFile).change();
-	// 			this.refs.mediaImg.src = mediaFormData.sourcePath;
-	// 		}
-
-	// 	} else {
-
-	// 		this.refs.mediaName.value = null;
-	// 		this.refs.mediaNotes.value = null;
-
-	// 		if(formType === "system") {
-	// 			this.refs.mediaFile.value = null;
-	// 			$(this.refs.mediaFile).change();
-	// 		} else if(formType === "url") {
-	// 			this.refs.mediaUrl.value = null;
-	// 		}
-	// 	}
-
-	// }
-
- //  	handleModal = () => {
-	//     $('#createMedia').appendTo("body").modal('show')
-	//     $('#createMedia').on('hidden.bs.modal', () => {
-	//       $('#createMedia').modal('hide')
-	//     })
- //  	}
-
- //  	hideModal = () => {
- //  		this.setState({isBusy:false})
- //  		$('#createMedia').modal('hide')
- //  	}
-
-
   	getFileType = (file , mediaFormData) => {
   		if(file) {
 	  		if (file.type.match('image/*')) {
@@ -116,6 +57,7 @@ class CreateMedia extends React.Component {
   			this.setState({fileUploadError: true})
   			return
   		} else {
+  			this.props.showLoading();
   			this.setState({isBusy:true, fileUploadError: false})
   		}
  		if(this.state.file.isUrl) {

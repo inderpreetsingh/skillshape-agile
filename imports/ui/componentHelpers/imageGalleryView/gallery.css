@@ -1,12 +1,8 @@
-/*.image-gallery-image {
+.image-gallery-image {
   text-align: center;
   background-color: #000;
-  min-height: 300px;
 }
 .image-gallery-image img {
-  width: 100% !important;
-  height: 100vh
+  width: auto !important;
+  height: 400px
 }
-. image-gallery-slides {
-  height: 100vh
-}*/

@@ -1,11 +1,10 @@
 import React from "react";
 import Grid from 'material-ui/Grid';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import FileUpload from 'material-ui-icons/FileUpload';
 
-
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 import MediaFilter from './filter';
 import MediaList from './mediaList';
 import CreateMedia from './createMedia';
@@ -17,6 +16,9 @@ export default function () {
 	console.log("<<<<media details state --->>",this.state);
 	return (
 		<div>
+			{
+				this.state.loading && <ContainerLoader />
+			}
 			 {!schoolView && <CreateMedia
 			 	showCreateMediaModal={showCreateMediaModal}
 			 	onClose = {this.closeMediaUpload}
@@ -27,6 +29,7 @@ export default function () {
 				onEdit={this.onEditMedia}
 				mediaFormData={mediaFormData}
 				filterStatus={filterStatus}
+				showLoading = {this.showLoading}
 			/>}
 			{/*<div className="row">
 				<MediaFilter

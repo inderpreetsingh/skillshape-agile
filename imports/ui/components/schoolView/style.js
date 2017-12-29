@@ -26,28 +26,13 @@ export default styles = theme => {
       width: "97%",
       padding: theme.spacing.unit * 2,
     },
-    imageFooter: {
-      position: "absolute",
-      padding: theme.spacing.unit * 2,
-      bottom: 0,
-      width: "97%",
-      backgroundColor: theme.palette.primary.rgba
-    },
     card:{
       width :'100%'
     },
-    ImageFooterbutton : {
-      marginLeft: 15,
-      textDecoration: 'none',
-      float: 'right'
-    },
-    imageFooterBtnContainer: {
-      justifyContent: "space-around",
-    },
-    imageLogoContainer: {
-        width: 60,
-        height: 60,
-        border: '1px solid black',
-    },
+    formContainer:{
+      display: 'inline-flex',
+      justifyContent: 'center',
+      width: '100%',
+    }
   }
 }

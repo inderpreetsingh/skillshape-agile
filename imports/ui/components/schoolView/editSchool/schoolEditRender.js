@@ -54,6 +54,7 @@ export default function (props) {
                             schoolData={schoolData}
                             schoolId={schoolId}
                             moveTab={this.moveTab}
+                            currentUser={currentUser}
                         />
                     }
                     {
@@ -89,7 +90,7 @@ export default function (props) {
                     }
                 </div>
             {/*<div className="tab-content">
-              
+
               {
                 (selecetdView === "location_details") && <LocationDetails
                   locationData={locationData}

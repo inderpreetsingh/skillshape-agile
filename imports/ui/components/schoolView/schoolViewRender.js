@@ -16,6 +16,7 @@ import { checkSuperAdmin } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
+import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 export default function() {
 
 	const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
@@ -66,10 +67,8 @@ export default function() {
               <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
             </div>*/}
             <Card className={classes.card}>
-              <CardMedia style={{position: "relative", height:250}} image={ schoolData.mainImage || defaultSchoolImage }>
-                {/*<div className={classes.imageContainer}>
-                  <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
-                </div>*/}
+              <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
+              {/*<CardMedia style={{position: "relative", height:250}} image={ schoolData.mainImage || defaultSchoolImage }>
                 <div style={{"background-color": 'blue'}}>
                 </div>
                 <div className={classes.imageFooter} >
@@ -111,7 +110,7 @@ export default function() {
                     </Grid>
                   </Grid>
                 </div>
-              </CardMedia>
+              </CardMedia>*/}
               <CardContent >
 
                 {

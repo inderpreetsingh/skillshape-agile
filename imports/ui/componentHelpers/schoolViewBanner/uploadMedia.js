@@ -16,7 +16,7 @@ import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
 
 class UploadMedia extends React.Component {
 
-	constructor(props) {
+	  constructor(props) {
         super(props);
         this.state = {
         	isBusy: false,
@@ -29,36 +29,53 @@ class UploadMedia extends React.Component {
   		// this.setState({file})
   	}
 
+    getFileType = (file , mediaFormData) => {
+      if(file) {
+        if (file.type.match('image/*')) {
+            return "Image";
+          } else if (file.type.match('video/*') || file.type.match('audio/*')) {
+            return "Media";
+          } else {
+            return "Document";
+          }
+      } else {
+        return mediaFormData.type
+      }
+    }
+
   	onSubmit = (event)=> {
   		event.preventDefault()
   		console.log("handleSubmit state -->>",this.state);
   		const mediaData = {};
   		const { file } = this.state;
   		this.setState({isBusy: true})
-  		if(file && file.isUrl) {
-  			this.handleSubmit({ [this.props.imageType]: file.file })
-  		} else {
-  			S3.upload({files: { "0": file.file}, path:"schools"}, (err, res) => {
+      if(file && file.isUrl) {
+        this.handleSubmit({ [this.props.imageType]: file.file })
+      } else {
+
+        console.log("yessssssssssssssssssssssssssssssssssssfile", file.fileData)
+  			S3.upload({files: { "0": file.fileData}, path:"schools"}, (err, res) => {
 	            if(err) {
-	                console.error("err ",err);
+	                console.log("err s3 >>>>>>>????????>>>> ",err);
 	            }
 	            if(res) {
-  					this.handleSubmit({ [this.props.imageType]: res.secure_url })
+                console.log("res from s3>>>>>>>>>>>>>>>>>> ", res)
+                this.handleSubmit({ [this.props.imageType]: res.secure_url })
 	            }
         	})
   		}
-  
+
   	}
 
   	handleSubmit = ({ logoImg, mainImage })=> {
-  		const data = { _id: this.props.schoolId}
+  		const data = {}
   		if(logoImg) {
   			data.logoImg = logoImg;
   		} else if(mainImage) {
   			data.mainImage = mainImage;
   		}
-
-  		Meteor.call("editSchool", data, (error, result) => {
+      console.log("calling >>>>>>>>>>> editSchool")
+  		Meteor.call("editSchool", this.props.schoolId, data, (error, result) => {
             if(error) {
               console.error("error", error);
             }
@@ -83,12 +100,12 @@ class UploadMedia extends React.Component {
 		        	<DialogContent>
 			        	<Grid container >
 			        		<Grid item xs={12} sm={6}>
-			        			<MediaUpload 
-			        				fullScreen={fullScreen} 
-			        				width={275} 
-			        				onChange={this.handleChange} 
-			        				data={mediaFormData && {file: mediaFormData.sourcePath, isUrl: true}}  
-			        				showVideoOption={false} 
+			        			<MediaUpload
+			        				fullScreen={fullScreen}
+			        				width={275}
+			        				onChange={this.handleChange}
+			        				data={mediaFormData && {file: mediaFormData.sourcePath, isUrl: true}}
+			        				showVideoOption={false}
 			        			/>
 			        		</Grid>
 			        	</Grid>
