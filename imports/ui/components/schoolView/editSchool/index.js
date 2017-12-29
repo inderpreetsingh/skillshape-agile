@@ -8,6 +8,9 @@ import Modules from "/imports/api/modules/fields";
 import Skills from "/imports/api/skill/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import School from "/imports/api/school/fields";
+import ClassType from "/imports/api/classType/fields";
+import SkillCategory from "/imports/api/skillCategory/fields";
+import SkillSubject from "/imports/api/skillSubject/fields";
 
 class SchoolEditView extends React.Component {
 
@@ -63,17 +66,20 @@ export default createContainer(props => {
     Meteor.subscribe("SkillType");
     Meteor.subscribe("SkillClassbySchool", schoolId);
     Meteor.subscribe("modules.getModules", {schoolId});
+    // Meteor.subscribe("classType.getclassType", {schoolId});
   }
 
 
   let schoolData = School.findOne({_id: schoolId});
   let locationData = SLocation.find().fetch();
   let moduleData = Modules.find({ schoolId: schoolId }).fetch();
+  // let classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
 
   /*Find skills to make this container reactive on skill
   other wise skills are joined with collections using package
   perak:joins */
-  Skills.find().fetch()
+  // SkillCategory.find().fetch()
+  // SkillSubject.find().fetch()
   /*****************************************************/
 
   return {

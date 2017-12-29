@@ -55,3 +55,11 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, calend
 
     return result;
 });
+
+
+
+Meteor.publish("classTimes.getclassTimesByClassTypeIds", function({ schoolId, classTypeIds }) {
+    console.log("classTimes.getclassTimesByClassTypeIds -->>", schoolId, classTypeIds);
+    let cursor = ClassTimes.find({ schoolId, classTypeId: { $in: classTypeIds} });
+    return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
+});

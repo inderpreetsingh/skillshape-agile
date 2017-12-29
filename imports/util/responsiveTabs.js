@@ -5,7 +5,7 @@ import Button from 'material-ui/Button';
 
 
 const styles = theme => {
-  console.log("theme", theme);
+  // console.log("theme", theme);
   return {
     button: {
       margin: 5,

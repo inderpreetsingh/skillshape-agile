@@ -11,7 +11,7 @@ Meteor.methods({
         
         return ClassType.find({schoolId: schoolId, name: { $regex: new RegExp(textSearch, 'mi') }},{limit: 10,fields:{name:1}}).fetch();
     },
-    "classType.addClassType": function(doc) {
+    "classType.addClassType": function({doc}) {
          const user = Meteor.users.findOne(this.userId);
         // console.log("classType.addClassType methods called!!!");
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
@@ -22,7 +22,7 @@ Meteor.methods({
             throw new Meteor.Error("Permission denied!!");
         }
     },
-    "classType.editClassType": function(doc_id, doc) {
+    "classType.editClassType": function({doc_id, doc}) {
         const user = Meteor.users.findOne(this.userId);
         console.log("classType.editClassType methods called!!!",doc_id, doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
@@ -31,7 +31,7 @@ Meteor.methods({
             throw new Meteor.Error("Permission denied!!");
         }
     },
-    "classType.removeClassType": function(doc) {
+    "classType.removeClassType": function({doc}) {
         const user = Meteor.users.findOne(this.userId);
         console.log("classType.removeClassType methods called!!!",doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {

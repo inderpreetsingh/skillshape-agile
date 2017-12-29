@@ -1,19 +1,40 @@
 import React from 'react';
-import { findIndex } from 'lodash';
 import { ContainerLoader } from '/imports/ui/loading/container';
-import AutoComplete from 'material-ui/AutoComplete';
-import { imageRegex, formStyles } from '/imports/util';
-import RaisedButton from 'material-ui/RaisedButton';
 import SelectArrayInput from '/imports/startup/client/material-ui-chip-input/selectArrayInput';
+import { withStyles } from 'material-ui/styles';
+import { findIndex } from 'lodash';
+import Button from 'material-ui/Button';
 import config from '/imports/config';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
-import ClassTimeDetails from './classTimes';
+import Input, { InputLabel } from 'material-ui/Input';
+import Select from 'material-ui/Select';
+import Grid from 'material-ui/Grid';
+import Dialog, {
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  withMobileDialog,
+} from 'material-ui/Dialog';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import '/imports/api/sLocation/methods';
 
-const formId = "create-class-type";
+const formId = "classTypeForm";
 
-export default class ClassTypeForm extends React.Component {
+const styles = theme => {
+  	return {
+	    button: {
+	        margin: 5,
+	        width: 150
+	    },
+	    classtypeInputContainer: {
+		    alignItems: 'center',
+		    textAlign: 'left'
+		}
+    }
+}
+
+class ClassTypeForm extends React.Component {
 
 	constructor(props){
 	    super(props);
@@ -96,140 +117,91 @@ export default class ClassTypeForm extends React.Component {
     onSubmit = (event) => {
     	console.log("--------------------- ClassType from submit----------------")
     	event.preventDefault()
-    	event.stopPropagation();
-    	const imageFile = this.refs.classTypeImage.files[0];
-	    if(imageFile) {
-	    	if(!imageRegex.image.test(imageFile.name)) {
-	  			toastr.error("Please enter valid Image file","Error");
-	  			return 
-	  		}
-    		this.setState({isBusy: true});
-	  		S3.upload({files: { "0": imageFile}, path:"schools"}, (err, res) => {
-	  			if(err) {
-	  				console.error("err ",err)
-	  			}
-	  			if(res) {
-	  				this.handleFormData(res)
-	  			}
-	  		})
-    	} else {
-    		this.handleFormData()
-    	}
-    }
-
-    handleFormData = (imageUpload) => {
-    	const { schoolId, locationData, data } = this.props;
-    	const {
-    		methodName, 
-    		skillCategoryId, 
-    		selectedSkillSubject, 
-    		selectedSkillCategory,
-    		name,
-    		desc,
-    		gender,
-    		ageMin,
-    		ageMax,
-    		location,
-    		experienceLevel,
-    	} = this.state;
-    	const payload = {
-    		name: name,
-    		desc: desc,
-    		skillCategoryId: selectedSkillCategory && selectedSkillCategory.map(data => data._id),
-    		schoolId: schoolId,
-    		skillSubject: selectedSkillSubject && selectedSkillSubject.map(data => data._id),
-    		gender: gender,
-    		experienceLevel: experienceLevel,
-    		ageMin: ageMin,
-    		ageMax: ageMax,
-    		locationId: location,
-    	}
-
-    	if(imageUpload) {
-	  		payload.classTypeImg = imageUpload.secure_url
-	  	}
-
-    	if(payload.locationId) {
-    		const temp = locationData.filter((data)=>{
-    			return payload.locationId === data._id
-    		});
-    		payload.filters = {
-    			location: temp[0].loc
-    		}
-    	}
-    	console.log("onSubmit payload 2-->>",payload)
+    	console.log("onSubmit state -->>",this.state);
+    	const { schoolId, data } = this.props;
     	
-    	if(schoolId && payload.name) {
-    		this.setState({isBusy: true});
-	    	if(data && data._id && _.size(data) > 0) {
-	    		this.editClassType(data._id, payload)
-	    	}
-	    	else {
-	    		this.addClassType(payload)
-	    	}
-
-    	} else {
-    		toastr.error("Missing required fields","Error");
+    	const payload = {
+    		schoolId: schoolId,
+    		name: this.classTypeName.value,
+    		desc: this.desc.value,
+    		skillCategoryId: this.state.selectedSkillCategory && this.state.selectedSkillCategory.map(data => data._id),
+    		skillSubject: this.state.selectedSkillSubject && this.state.selectedSkillSubject.map(data => data._id),
+    		gender: this.state.gender,
+    		experienceLevel: this.state.experienceLevel,
+    		ageMin: this.ageMin.value,
+    		ageMax: this.ageMax.value,
+    		locationId: this.state.location,
     	}
+
+    	if(data && data._id) {
+            this.handleSubmit({ methodName: "classType.editClassType", doc: payload, doc_id: data._id })
+        } else {
+            this.handleSubmit({ methodName: "classType.addClassType", doc: payload })
+        }
+    	
     }
 
-    addClassType = (payload) => {
-    	Meteor.call("classType.addClassType", payload, (err,res) => {
-    	    if(res) {
-    	   		this.props.hideAddClassTypeForm()
-    	    }
-    	    this.setState({isBusy: false});
-    	})
-    }
-
-    editClassType = (updatekey, payload) => {
-    	Meteor.call("classType.editClassType", updatekey, payload, (err,res) => {
-    	    this.setState({isBusy: false});
-    	    this.props.disableEditMode()
-    	})
+    handleSubmit = ({ methodName, doc, doc_id })=> {
+    	console.log("handleSubmit methodName-->>",methodName)
+        console.log("handleSubmit doc-->>",doc)
+        console.log("handleSubmit doc_id-->>",doc_id)
+        Meteor.call(methodName, { doc, doc_id }, (error, result) => {
+            if (error) {
+              console.error("error", error);
+            }
+            if (result) {
+                this.props.onClose()
+            }
+            this.setState({isBusy: false, error});
+        });
     }
 
 	render() {
-		console.log("ClassTypeForm state -->>",this.state);
-		console.log("ClassTypeForm props -->>",this.props);
-		const { locationData, data, editMode } = this.props;
-		const { skillCategoryData, skillSubjectData, searchSkillCategoryText } = this.state;
-		const styles = formStyles();
+		const { fullScreen, data, classes, locationData } = this.props;
+		const { skillCategoryData, skillSubjectData } = this.state;
+
 		return (
-			<div className="content">
-				<div>
-				<form id={formId} onSubmit={this.onSubmit}>
-					{ this.state.isBusy && <ContainerLoader/> }
-	      			<div style={styles.row}>
-	      				<div style={styles.col}>
-	      					<div style={styles.formControl}>
-				               	<div style={styles.formControlInput}>
-				                    <TextField
-				                    	floatingLabelText="Class Type Name *"
-				                    	disabled={editMode}
-				                    	fullWidth={true}
-							            value={this.state.name}
-							            onChange={this.handleInputChange.bind(this, "name")}
-							        />
-			                	</div>
-	      					</div>
-	      					<div style={styles.formControl}>
-				               	<div style={styles.formControlInput}>
-				               		<TextField
-				               			floatingLabelText="Brief Description"
-				               			disabled={editMode}
-				               			fullWidth={true}
-				               			multiLine={true}
-				               			row={3}
-							            value={this.state.desc}
-							            onChange={this.handleInputChange.bind(this, "desc")}
-							        />
-			                	</div>
-	      					</div>
-	      					<div style={styles.formControl}>
-				               	<div style={styles.formControlInput}>
-				               		<SelectArrayInput
-		      							disabled={editMode}
+			<div>
+				<Dialog
+		          open={this.props.open}
+		          onClose={this.props.onClose}
+		          aria-labelledby="form-dialog-title"
+		          fullScreen={fullScreen}
+		        >
+		        	<DialogTitle id="form-dialog-title">Add Class Type</DialogTitle>
+		        	{ this.state.isBusy && <ContainerLoader/>}
+		        	{ 
+	                    this.state.showConfirmationModal && <ConfirmationModal
+	                        open={this.state.showConfirmationModal}
+	                        submitBtnLabel="Yes, Delete"
+	                        cancelBtnLabel="Cancel"
+	                        message="You will delete this Class Type, Are you sure?"
+	                        onSubmit={() => this.handleSubmit({ methodName: "classType.removeClassType", doc: data})}
+	                        onClose={() => this.setState({showConfirmationModal: false})}
+	                    />
+	                }
+		        	{ 
+                        this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
+				        	<DialogContent>
+				        		<form id={formId} onSubmit={this.onSubmit}>
+					        		<TextField
+					        			required={true}
+						                defaultValue={data && data.name}
+						                margin="dense"
+						                inputRef={(ref)=> this.classTypeName = ref}
+						                label="Class Type Name"
+						                type="text"
+						                fullWidth
+						            />
+						            <TextField
+						            	defaultValue={data && data.desc}
+						                margin="dense"
+						                inputRef={(ref)=> this.desc = ref}
+						                label="Brief Description"
+						                type="text"
+						                fullWidth
+						            />
+						            <SelectArrayInput
 		      							floatingLabelText="Skill Category"  
 		      							optionValue="_id" 
 		      							optionText="name" 
@@ -239,12 +211,7 @@ export default class ClassTypeForm extends React.Component {
 		      							dataSourceConfig={{ text: 'name', value: '_id' }} 
 		      							choices={skillCategoryData} 
 		      						/>
-	      						</div>
-	      					</div>
-	      					<div style={styles.formControl}>
-				               	<div style={styles.formControlInput}>
 		      						<SelectArrayInput
-		      							disabled={editMode}
 		      							floatingLabelText="Skill Subject"  
 		      							optionValue="_id" 
 		      							optionText="name" 
@@ -254,132 +221,124 @@ export default class ClassTypeForm extends React.Component {
 		      							dataSourceConfig={{ text: 'name', value: '_id' }} 
 		      							choices={skillSubjectData} 
 		      						/>
-	      						</div>
-	      					</div>
-	      					<div style={styles.formControlInline}>
-	      						<div style={styles.formControl}>
-							        <div style={styles.formControlInput}>
-							            <SelectField 
-							            	hintText="Select Gender" 
-							            	floatingLabelText="Gender" 
-							            	disabled={editMode}
-							            	fullWidth={true} 
-							            	value={this.state.gender} 
-							            	onChange={this.handleSelectChange.bind(this, "gender")}
-							            >
-							                { 
-							                	config.gender.map((data, index) => { 
-							                		return <MenuItem key={index} value={data.value} primaryText={data.label} /> 
-							                	}) 
-							            	}
-							            </SelectField>
-							        </div>
-							    </div>
-							    <div style={styles.formControl}>
-								    <div style={styles.formControlInput}>
-								        <SelectField 
-									        floatingLabelText="Experience Level" 
-									        hintText="Experience Level" 
-									        disabled={editMode}
-									        fullWidth={true} 
-									        value={this.state.experienceLevel} 
-									        onChange={this.handleSelectChange.bind(this, "experienceLevel")}
-								        >
-								            { 
-								            	config.experienceLevel.map((data, index) => { 
-								            		return <MenuItem key={index} value={data.value} primaryText={data.label} /> 
-								            	}) 
-								            }
-								        </SelectField>
-								    </div>
-								</div>
-	      					</div>
-	      					<div style={styles.formControlInline}>
-	      						<div style={styles.formControl}>
-							        <div style={styles.formControlInput}>
-							            <TextField 
-							            	floatingLabelText="Age From" 
-							            	disabled={editMode}
-							            	type="number"
-							            	fullWidth={true} 
-							            	value={this.state.ageMin} 
-							            	onChange={this.handleInputChange.bind(this, "ageMin")} 
-							            />
-							        </div>
-							    </div>
-							    <div style={styles.formControl}>
-							        <div style={styles.formControlInput}>
-							            <TextField
-							            	floatingLabelText="To" 
-							            	disabled={editMode}
-							            	type="number" 
-							            	fullWidth={true} 
-							            	value={this.state.ageMax} 
-							            	onChange={this.handleInputChange.bind(this, "ageMax")} 
-							            />
-							        </div>
-							    </div>
-	      					</div>
-				            <div style={styles.formControl}>
-				               	<div style={styles.formControlInput}>
-				               		<SelectField
-				               			floatingLabelText="Location"
-								        hintText="Select Location"
-				               			disabled={editMode}
-				               			fullWidth={true}
-								        value={this.state.location}
-								        onChange={this.handleSelectChange.bind(this, "location")}
-								    >
-							        	{
-							        		locationData.map((data, index) => {
-								        		return <MenuItem key={index} value={data._id} primaryText={`${data.address}, ${data.city}, ${data.country}`} />
-							        		})
-							        	}
-								     </SelectField>
-				               	</div>
-	      					</div>   		
-	      				</div>	
-	      				<div style={{...styles.col, ...styles.center}}>
-	      					<div className="fileinput fileinput-new card-button text-center" data-provides="fileinput">
-							    <div className="fileinput-new card-button thumbnail">
-							        <img className="" src={data.classTypeImg || config.defaultSchoolImage} alt="Profile Image" id="pic" />
-							    </div>
-							    <div className="fileinput-preview fileinput-exists thumbnail"></div>
-							    <div>
-							        <span className="btn btn-warning btn-sm btn-file">
-					                    <span className="fileinput-new">Upload New Image</span>
-							        	<span className="fileinput-exists">Change</span>
-							        	<input type="hidden" />
-							        	<input type="file" name="..." accept="image/*" ref="classTypeImage" />
-							        </span>
-							        <a href="#" className="btn btn-danger  fileinput-exists" data-dismiss="fileinput">
-					                    <i className="fa fa-times"></i>
-				                      	Remove
-				                  </a>
-							    </div>
-							</div>
-	      				</div>
-	      			</div>
-      					<RaisedButton
-      						label="Save"
-      						form={formId}
-      						type="submit"
-      						disabled={editMode} 
-      						primary={true} 
-      						style={{margin: 12}}
-      					/>
-      			</form>	
-      			</div>
-      			{
-      				!_.isEmpty(data) && (
-	      				<ClassTimeDetails
-		      				classTypeId={data._id} 
-		      				selectedLocation={this.state.selectedLocation}
-		      				{...this.props}
-	      				/>
-      				)
-      			}
-      		</div>	
+		      						<Grid container className={classes.classtypeInputContainer}>
+		      							<Grid  item xs={4} sm={2}>
+					                      <div>Gender</div>
+					                    </Grid>
+					                    <Grid  item xs={8} sm={3}>
+					                    	<Select
+	                                            native
+	                                            required={true}
+	                                            margin="dense"
+	                                            input={<Input id="gender"/>}
+	                                            value={this.state.gender}
+	                                            onChange={(event) => this.setState({ gender: event.target.value })}
+	                                            fullWidth
+	                                        >
+		                                        {
+		                                        	config.gender.map((data, index)=> {
+		                                        		return <option key={index} value={data.label}>{data.value}</option>
+		                                        	})
+		                                        }
+                                            </Select>
+					                    </Grid>
+					                    <Grid  item xs={2} sm={1} style={{textAlign: 'left'}}>
+					                      <div>Age</div>
+					                    </Grid>
+					                    <Grid  item xs={12} sm={6}>
+					                    	<div style={{display: 'flex', alignItems: 'center'}}>
+						                        <TextField
+									            	defaultValue={data && data.ageMin}
+									                margin="dense"
+									                inputRef={(ref)=> this.ageMin = ref}
+									                label="Min Age"
+									                type="number"
+									                style={{
+							                            textAlign: 'left',
+							                            margin: 4,
+							                            padding: 2,
+							                            backgroundColor: "#fff",
+							                        }}
+									            />
+						                        <Grid  item xs={6} sm={1} style={{textAlign: 'left'}}>
+							                      <div> to: </div>
+							                    </Grid>
+						                        <TextField
+									            	defaultValue={data && data.ageMax}
+									                margin="dense"
+									                inputRef={(ref)=> this.ageMax = ref}
+									                label="Max Age"
+									                type="number"
+									                style={{
+							                            textAlign: 'left',
+							                            margin: 4,
+							                            padding: 2,
+							                            backgroundColor: "#fff",
+							                        }}
+									            />
+						                      </div>
+					                    </Grid>
+		      						</Grid>
+		      						<Grid container>
+		      							<Grid  item xs={12} sm={6}>
+					                        <Select
+	                                            native
+	                                            required={true}
+	                                            margin="dense"
+	                                            input={<Input id="experienceLevel"/>}
+	                                            value={this.state.experienceLevel}
+	                                            onChange={(event) => this.setState({ experienceLevel: event.target.value })}
+	                                            fullWidth
+	                                        >
+		                                        {
+		                                        	config.experienceLevel.map((data, index)=> {
+		                                        		return <option key={index} value={data.label}>{data.value}</option>
+		                                        	})
+		                                        }
+                                            </Select>
+					                    </Grid>
+					                    <Grid  item xs={12} sm={6}>
+					                      <Select
+	                                            native
+	                                            required={true}
+	                                            margin="dense"
+	                                            input={<Input id="experienceLevel"/>}
+	                                            value={this.state.location}
+	                                            onChange={(event) => this.setState({ location: event.target.value })}
+	                                            fullWidth
+	                                        >
+		                                        {
+		                                        	locationData.map((data, index)=> {
+		                                        		return <option key={index} value={data._id}>{`${data.address}, ${data.city}, ${data.country}`}</option>
+		                                        	})
+		                                        }
+                                            </Select>
+					                    </Grid>
+		      						</Grid>
+				        		</form>
+				        	</DialogContent>
+                        
+                        )
+                    }
+	        		<DialogActions>
+                    {
+                        data && (
+                            <Button onClick={() => this.setState({showConfirmationModal: true})} color="accent">
+                                Delete
+                            </Button>
+                        )
+                    }
+                    <Button onClick={() => this.props.onClose()} color="primary">
+                      Cancel
+                    </Button>
+                    <Button type="submit" form={formId} color="primary">
+                      { data ? "Save" : "Submit" } 
+                    </Button>
+                </DialogActions>
+		        </Dialog>
+			</div>
 		)
 	}
-}
+}  
+
+export default withStyles(styles)(withMobileDialog()(ClassTypeForm));
