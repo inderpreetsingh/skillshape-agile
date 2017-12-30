@@ -1,3 +1,5 @@
+import { lightBlue, amber } from 'material-ui/colors';
+
 const themeGreen = {
   50: '#F7F7F1',
   100: '#EDF1E1',
@@ -56,12 +58,17 @@ const themeYellow = {
   rgba: 'rgba(233, 185, 66, 0.54)',
 };
 
-
+lightBlue.rgba = '#31a9f461'
 
 export const material_ui_next_theme = {
     palette: {
-        primary: themeGreen,
-        secondary: themeRed,
+        primary: lightBlue,
+        secondary: amber,
         themeColor3: themeYellow
+    },
+    typography: {
+    	button: {
+    		fontWeight: 300
+    	}
     }
 }

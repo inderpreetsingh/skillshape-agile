@@ -183,7 +183,7 @@ export default function() {
               <div className="content-list-heading ">
                 <h2 style={{textAlign: 'center'}}>Media
                   <figure>
-                    <img src="/images/heading-line.png"/>
+                    <img style={{maxWidth: "100%"}} src="/images/heading-line.png"/>
                   </figure>
                 </h2>
               </div>

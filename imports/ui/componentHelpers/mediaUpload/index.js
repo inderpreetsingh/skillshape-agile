@@ -43,7 +43,7 @@ const styles = theme => {
         alignItems: 'center',
         color: '#fff',
         width: '100%',
-        minHeight: 250,
+        minHeight: 195,
         justifyContent: 'center',
         backgroundSize: 'auto'
       },

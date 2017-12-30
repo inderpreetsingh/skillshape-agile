@@ -10,6 +10,7 @@ import Button from 'material-ui/Button';
 import Delete from 'material-ui-icons/Delete';
 
 import MonthlyPriceForm from './monthlyPriceForm';
+import PanelHeader from '../panelHeader';
 
 export default function () {
 
@@ -19,36 +20,16 @@ export default function () {
 	return (
 		<div className="class-price-details">
 			{
-          		this.state.showForm && <MonthlyPriceForm 
+          		this.state.showForm && <MonthlyPriceForm
           			schoolId={schoolId}
-          			data={this.state.formData} 
-          			open={this.state.showForm} 
+          			data={this.state.formData}
+          			open={this.state.showForm}
           			onClose={this.handleFormModal}
-          		/>	
+          		/>
           	}
-			<Paper elevation={4}>
-	            <Grid container className={classes.classtypeHeader}>
-	              	<Grid  item sm={2} xs={12} style={{display: 'inline-flex',alignItems: 'center'}}>
-	                	<span> 
-	                		<Icon className="material-icons" style={{marginRight: 5}}>assignment</Icon>
-	                	</span> 
-	                	<span>
-	                		Per Month Packages
-	                	</span>
-	              	</Grid>
-	              	<Grid item sm={7} xs={12}>
-		               <Typography type="caption" >
-		                	
-		               </Typography>
-	            	</Grid>
-	              	<Grid style={{display: 'inline-flex',alignItems: 'center',justifyContent: 'center'}} item sm={3} xs={12}>
-		                <Button onClick={() => this.setState({showForm: true, formData: null})} color="primary" raised dense>
-		                  <Add style = {{marginRight: 2}} />
-		                  	Add Per Month Package
-		                </Button>
-	                </Grid>
-	            </Grid>
-          	</Paper>
+               <PanelHeader btnText="Add Per Month Package" title="Per Month Packages" cpation="" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
+
+
                <div style={{display: 'inline-flex', flexWrap: 'wrap'}}>
                	{
                		monthlyPricingData && monthlyPricingData.map((monthPrice, index)=> {
@@ -76,7 +57,7 @@ export default function () {
                                              }
                						<Typography component="p">
                							Covers: {
-               								_.isEmpty(monthPrice.selectedClassType) ? "None" : 
+               								_.isEmpty(monthPrice.selectedClassType) ? "None" :
                								monthPrice.selectedClassType.map((classType) => {
                									return <span>{classType.name} </span>
                								})
@@ -86,12 +67,12 @@ export default function () {
                                              {
                                                   _.isEmpty(monthPrice.pymtDetails) ? "None" :
                                                   monthPrice.pymtDetails.map((payment) => {
-                                                       return <Fragment> 
+                                                       return <Fragment>
                                                             <Typography component="p">
                                                                  {payment.cost}$ per month for {payment.month} months
                                                             </Typography>
                                                             <br></br>
-                                                       </Fragment> 
+                                                       </Fragment>
                                                   })
                                              }
                                         </CardContent>

@@ -26,7 +26,7 @@ import { material_ui_next_theme } from '/imports/util';
 console.log("material_ui_next_theme", material_ui_next_theme)
 
 const theme = createMuiTheme({...material_ui_next_theme});
-
+console.log("theme", theme);
 export default Routes = () => (
   <MuiThemeProvider theme={theme}>
     <Router history={browserHistory}>

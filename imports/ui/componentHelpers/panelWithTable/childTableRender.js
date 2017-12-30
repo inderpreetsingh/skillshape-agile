@@ -37,17 +37,16 @@ export default function (props) {
           		/>
           	}
 			<ExpansionPanel>
-				<ExpansionPanelSummary className={classes.classtimeHeader}  expandIcon={<ExpandMoreIcon />} >
+				<ExpansionPanelSummary className={classes.classtimeHeader}  expandIcon={<ExpandMoreIcon style={{color: "#fff"}}/>} >
 	                <Grid container >
-		                <Grid  item sm={7} xs={12} style={{display: 'inline-flex',alignItems: 'center'}}>
+		                <Grid  item lg={9} sm={9} xs={12} style={{color:"#fff", display: 'inline-flex',alignItems: 'center'}}>
 		                    <span>
 		                    	<Icon className="material-icons" style={{marginRight: 5}}>{childPanelHeader.leftIcon}</Icon>
 		                    </span>
 		                    <span>{childPanelHeader.notes}</span>
 		                </Grid>
-		                <Grid style={{display: 'inline-flex',alignItems: 'center',justifyContent: 'center'}} item sm={5} xs={12}>
-		                    <Button raised dense onClick={() => this.setState({showForm: true, formData: null})} >
-		                    	<Add style = {{marginRight: 2}} />
+		                <Grid item lg={1} sm={3} xs={12}>
+		                    <Button className={classes.headerBtn} onClick={() => this.setState({showForm: true, formData: null})} >
 		                   		   {childPanelHeader.actions.buttonTitle}
 		                  	</Button>
 		                </Grid>
@@ -74,12 +73,12 @@ export default function (props) {
 												)
 											})
 			    						}
-			    						<Grid  item xs={12} sm={5} >
+			    						<div  style={{float: 'right',margin: 10}} >
 					                        <Button onClick={() => this.setState({showForm: true, formData:tableData})} color="accent" raised dense>
 					                           <Edit style = {{marginRight: 2}} />
 					                          	{ childTable.actions.edit.title }
 					                        </Button>
-				                        </Grid>
+				                        </div>
 				                	</div>
 				                </div>
 							</ExpansionPanelDetails>

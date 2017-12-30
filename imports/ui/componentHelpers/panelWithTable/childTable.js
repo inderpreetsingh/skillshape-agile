@@ -10,18 +10,28 @@ const styles = theme => {
             display: 'none',
         },
         classtimeHeader: {
-            backgroundColor: theme.palette.secondary[500],
-            padding: 5
+            backgroundColor: theme.palette.grey[400],
+            padding: theme.spacing.unit,
+            paddingLeft: theme.spacing.unit * 2,
+            color: "#fff"
+        },
+        headerBtn: {
+            color: "#fff",
+            fontSize: 13,
+            border: "solid 1px #fff",
+            whiteSpace: "nowrap"
+        },
+        headerText: {
+            color: "#fff",
         },
         classtimeFormOuter: {
-            backgroundColor: theme.palette.secondary[500],
+            // backgroundColor: theme.palette.secondary[500],
             borderRadius: 5,
-            padding: 12,
             width: '100%'
         },
         classtimeFormContainer: {
             backgroundColor: "#fff",
-            padding: 12,
+            padding: theme.spacing.unit,
             borderRadius: 5,
             marginBottom: 12
         },
@@ -30,7 +40,7 @@ const styles = theme => {
             border: '1px solid #ccc',
             boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075)',
             marginRight: 6,
-            padding: 10,
+            padding: theme.spacing.unit,
             borderRadius: 2,
             backgroundColor: "#fff",
             minHeight: 15,

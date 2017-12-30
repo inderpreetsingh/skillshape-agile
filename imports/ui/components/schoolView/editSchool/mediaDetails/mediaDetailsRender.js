@@ -42,7 +42,7 @@ export default function () {
 					{!schoolView && <Card>
 						<Grid container>
 							<Grid item xs={12}>
-								<div style={{textAlign:"right"}}>
+								<div style={{textAlign:"right",padding: 8}}>
 									<Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
 							          	Upload Media <FileUpload />
 							        </Button>

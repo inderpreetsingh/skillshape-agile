@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{Fragment} from 'react';
 import Grid from 'material-ui/Grid';
 import Card, {CardMedia} from 'material-ui/Card';
 import Button from 'material-ui/Button';
@@ -39,29 +39,32 @@ class SchoolViewBanner extends React.Component {
 			<Grid container className={classes.schoolHeaderContainer}>
 	            <Grid item xs={12}>
 	                <Card className={classes.card}>
-	                    <CardMedia style={{position: "relative", height:300, textAlign: 'center'}} >
-	                    	<img src={ schoolData.mainImage || config.defaultSchoolImage } style={{width:'auto', height:300}} />
+	                    <CardMedia image={ schoolData.mainImage || config.defaultSchoolImage } style={{position: "relative", height:320, textAlign: 'center',backgroundSize: "cover"}} >
 	                        <div className={classes.imageHeader}>
-	                        	{isEdit && <div className={classes.bgEditButton} onClick={() => this.setState({ showBackgroundUpload: true, imageType: "mainImage"})} >
-                                    <Edit style = {{margin: 1,height: 20}} />
-                                        Background
-                                </div>}
+	                        	{isEdit &&
+	                        		<Button raised dense color="accent" className={classes.bgEditButton1}  onClick={() => this.setState({ showBackgroundUpload: true, imageType: "mainImage"})}>
+					                              <Edit className={classes.ImageFooterIcon} />
+					                              Background
+					                </Button>
+	                        		}
 	                        </div>
 	                        <div className={classes.imageFooter}>
 	                            <Grid container style={{padding: 10}}>
 	                                <Grid item xs={12} sm={4} md={2}>
-	                                    <div style={{height: '100%',transform: 'translate(0%,-85%)'}}>
+	                                    <div style={{height: '100%',textAlign: 'left'}}>
 		                                    <div className={classes.imageLogoContainer}>
 		                                        <img className={classes.logo} src={ schoolData.logoImg || config.defaultSchoolLogo }/>
 		                                    </div>
-		                                    {isEdit && <div className={classes.logoEditButton} onClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})} >
-		                                        <Edit style = {{margin: 1,height: 20}} />
-		                                            Logo
-		                                    </div>}
+		                                    { isEdit &&
+			                                    <Button raised dense color="accent" className={classes.logoEditButton}  onClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})}>
+								                    <Edit className={classes.ImageFooterIcon} />
+								                        Logo
+								                </Button>
+		                                  	}
 	                                    </div>
 	                                </Grid>
 	                                <Grid item xs={12} sm={8} md={6} >
-	                                    <Typography type="headline" style={{color:"#fff"}} component="h3"> {schoolData.name} </Typography>
+	                                    <Typography type="headline" style={{color:"#fff",marginTop: 8}} component="h3"> {schoolData.name} </Typography>
 	                                </Grid>
 	                                <Grid item xs={12} sm={12} md={4}>
 	                                	{!isEdit && <div className={classes.imageFooterBtnContainer}>

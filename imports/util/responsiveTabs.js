@@ -7,9 +7,16 @@ import Button from 'material-ui/Button';
 const styles = theme => {
   // console.log("theme", theme);
   return {
-    button: {
+    btn: {
       margin: 5,
-      width: 165
+      width: 165,
+      border: "solid 2px black"
+    },
+    btnActive: {
+      margin: 5,
+      width: 165,
+      border: "solid 2px black",
+      color: "#fff"
     }
   }
 }
@@ -27,13 +34,13 @@ class ResponsiveTabs extends React.Component {
     const { classes } = this.props;
     return (
       <div className="responsive-tab">
-          <div style={{display: "inline-flex",flexWrap: 'wrap',justifyContent: 'center'}}>
+          <div style={{display: "inline-flex",flexWrap: 'wrap',justifyContent: 'center', width: "100%", marginBottom: 25}}>
               {this.props.tabs.map((tab,index)=> {
-                return <Button className={classes.button} raised color={index == this.state.tabValue && this.props.color } onClick={()=> {this.props.onTabChange(index);this.setState({tabValue: index})}} >
+                return <Button className={index == this.state.tabValue ? classes.btnActive : classes.btn} raised color={index == this.state.tabValue && this.props.color } onClick={()=> {this.props.onTabChange(index);this.setState({tabValue: index})}} >
                    {tab}
                 </Button>
               })}
-            </div>
+          </div>
       </div>
     );
   }

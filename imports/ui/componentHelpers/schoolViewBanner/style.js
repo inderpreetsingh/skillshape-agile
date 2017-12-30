@@ -8,6 +8,7 @@ export default styles = theme => {
       top: 0,
       position: "absolute",
       width: "97%",
+      textAlign: "left",
       padding: theme.spacing.unit * 2,
     },
     imageFooter: {
@@ -21,25 +22,15 @@ export default styles = theme => {
     },
     imageLogoContainer: {
         position: "absolute",
-        top: -40,
-        zIndex: -1
+        top: -66,
+        left: 40
     },
     logo: {
         height: 100,
         border: '1px solid black',
     },
     logoEditButton: {
-        // position: 'absolute',
-        width: 44,
-        textAlign: 'center',
-        padding: 2,
-        fontSize: 14,
-        // top: 30,
-        // left: -8,
-        border: '1px solid black',
-        backgroundColor: theme.palette.grey[500],
-        transform: 'translate(-19%, 70%)',
-        cursor: 'pointer',
+        position: 'relative',
     },
     bgEditButton: {
         width: 72,

@@ -4,9 +4,20 @@ import Header from '/imports/ui/components/header';
 import Footer from '/imports/ui/components/footer';
 import MVPSideBar from '/imports/ui/components/MVPSideBar';
 import SideBar from '/imports/ui/components/sideBar';
-import { checkDemoUser } from '/imports/util';
+import Grid from 'material-ui/Grid';
+
+import { checkDemoUser, withStyles } from '/imports/util';
 // import { initializeLayout } from '/imports/util/initializeLayout';
 import withWidth from 'material-ui/utils/withWidth';
+
+const styles = theme => ({
+  content: {
+    backgroundColor: theme.palette.background.default,
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing.unit * 3,
+    },
+  }
+});
 
 class MainLayout extends React.Component {
 
@@ -39,7 +50,7 @@ class MainLayout extends React.Component {
   render( ) {
     console.log("Main layout props -->>",this.props);
     console.log("Main layout context -->>",this.context);
-    const { currentUser, isUserSubsReady } = this.props;
+    const { currentUser, isUserSubsReady, classes} = this.props;
     let className = {
       mainClass: "wrapper perfectScroll main_wrapper",
       contentClass: "content",
@@ -51,31 +62,31 @@ class MainLayout extends React.Component {
       className.id = "UserMainPanel";
     }
     return (
-        <div className="wrapper">
+        <div>
             { false && currentUser && this.showSideBar(currentUser)}
             <div ref={(ref)=> {this.mainPanelRef = ref}} className={className.mainClass} id={className.id}>
-              <Header {...this.props}/>
+             {/* <Header {...this.props}/>*/}
               <div className={className.contentClass}>
-                <div className="container-fluid">
-                  {
-                    this.checkEmailVerification(currentUser) ? (
-                      <div className="row">
-                        <div className="col-md-12">
-                          {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="alert alert-warning">
-                        You need to verify your email address before using Skillshape.
-                        <a href="#" className="resend-verification-link" style={{color:'blue'}}>
-                          Resend verification link
-                        </a>
-                      </p>
-                    )
-                  }
-                </div>
+
+                    <main className={classes.content}>
+                        {
+                          this.checkEmailVerification(currentUser) ? (
+                            <div >
+                                {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
+                            </div>
+                          ) : (
+                            <p>
+                              You need to verify your email address before using Skillshape.
+                              <a href="#" style={{color:'blue'}}>
+                                Resend verification link
+                              </a>
+                            </p>
+                          )
+                        }
+                    </main>
+
               </div>
-              <Footer/>
+              {/*<Footer/>*/}
             </div>
         </div>
     )
@@ -87,4 +98,4 @@ export default createContainer(props => {
   let userSubs = Meteor.subscribe("myInfo");
   let isUserSubsReady = userSubs.ready();
   return { ...props, currentUser, isUserSubsReady };
-}, withWidth()(MainLayout));
+}, withWidth()(withStyles(styles)(MainLayout)));
