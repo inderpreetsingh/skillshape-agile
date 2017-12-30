@@ -50,7 +50,7 @@ class SchoolViewBanner extends React.Component {
 	                        </div>
 	                        <div className={classes.imageFooter}>
 	                            <Grid container style={{padding: 10}}>
-	                                <Grid item xs={12} sm={4} md={2}>
+	                                <Grid item xs={12} sm={4} md={3}>
 	                                    <div style={{height: '100%',textAlign: 'left'}}>
 		                                    <div className={classes.imageLogoContainer}>
 		                                        <img className={classes.logo} src={ schoolData.logoImg || config.defaultSchoolLogo }/>
@@ -66,7 +66,7 @@ class SchoolViewBanner extends React.Component {
 	                                <Grid item xs={12} sm={8} md={6} >
 	                                    <Typography type="headline" style={{color:"#fff",marginTop: 8}} component="h3"> {schoolData.name} </Typography>
 	                                </Grid>
-	                                <Grid item xs={12} sm={12} md={4}>
+	                                <Grid item xs={12} sm={12} md={3}>
 	                                	{!isEdit && <div className={classes.imageFooterBtnContainer}>
 					                       {
 					                        !checkUserAccess &&
