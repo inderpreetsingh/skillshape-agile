@@ -58,7 +58,7 @@ const themeYellow = {
   rgba: 'rgba(233, 185, 66, 0.54)',
 };
 
-lightBlue.rgba = '#31a9f461'
+lightBlue.rgba = 'rgba(3, 169, 244, 0.34)'
 
 export const material_ui_next_theme = {
     palette: {
