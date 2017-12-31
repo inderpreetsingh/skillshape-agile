@@ -91,7 +91,7 @@ class SchoolViewBanner extends React.Component {
 					                          )
 					                        }
 					                        { this.checkClaim(currentUser, schoolId) && (
-					                          <Button className={classes.ImageFooterbutton} onClick={this.claimASchool.bind(this,currentUser,schoolData)} raised color="accent">
+					                          <Button className={classes.ImageFooterbutton} onClick={this.claimASchool && this.claimASchool.bind(this,currentUser,schoolData)} raised color="accent">
 					                            Claim
 					                          </Button>
 					                          )
