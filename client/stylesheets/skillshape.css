@@ -5,9 +5,9 @@ body {
   font-weight: 100;
 }
 
-svg {
+/*svg {
 	height: 16px !important;
-}
+}*/
 .price-card-container {
 	display: flex;
     flex-direction: column;

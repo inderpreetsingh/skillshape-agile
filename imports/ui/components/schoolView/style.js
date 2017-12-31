@@ -33,6 +33,12 @@ export default styles = theme => {
       display: 'inline-flex',
       justifyContent: 'center',
       width: '100%',
+    },
+    classTypeContainer: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      padding: theme.spacing.unit * 2
     }
+
   }
 }

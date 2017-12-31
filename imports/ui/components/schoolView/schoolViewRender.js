@@ -17,6 +17,8 @@ import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
+import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
+
 export default function() {
 
 	const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
@@ -167,6 +169,44 @@ export default function() {
                   </Grid>
                 </Grid>
               </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid container className={classes.content}>
+          <Grid item xs={12}>
+            <Card>
+                <Grid container className={classes.content}>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                </Grid>
             </Card>
           </Grid>
         </Grid>

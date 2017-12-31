@@ -10,6 +10,7 @@ import { checkDemoUser, withStyles } from '/imports/util';
 // import { initializeLayout } from '/imports/util/initializeLayout';
 import withWidth from 'material-ui/utils/withWidth';
 
+
 const styles = theme => ({
   content: {
     backgroundColor: theme.palette.background.default,
@@ -67,7 +68,6 @@ class MainLayout extends React.Component {
             <div ref={(ref)=> {this.mainPanelRef = ref}} className={className.mainClass} id={className.id}>
              {/* <Header {...this.props}/>*/}
               <div className={className.contentClass}>
-
                     <main className={classes.content}>
                         {
                           this.checkEmailVerification(currentUser) ? (
