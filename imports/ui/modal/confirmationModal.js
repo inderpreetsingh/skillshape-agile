@@ -29,8 +29,8 @@ class ConfirmationModal extends React.Component {
 
 	render() {
 		console.log("ConfirmationModal props-->>",this.props);
-		const { 
-			fullScreen, 
+		const {
+			fullScreen,
 			title,
 			message,
 			submitBtnLabel,
@@ -50,10 +50,10 @@ class ConfirmationModal extends React.Component {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => this.props.onSubmit()} color="primary">
-                      {submitBtnLabel} 
+                      {submitBtnLabel}
                     </Button>
                     <Button onClick={() => this.props.onClose()} color="primary">
-                      {cancelBtnLabel} 
+                      {cancelBtnLabel}
                     </Button>
                 </DialogActions>
             </Dialog>

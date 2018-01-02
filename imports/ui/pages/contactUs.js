@@ -9,14 +9,18 @@ import Radio, { RadioGroup } from 'material-ui/Radio';
 import Button from 'material-ui/Button';
 import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'material-ui/Form';
 
-const insertPadding = {
-  paddingRight: '8px',
-  paddingLeft: '8px'
-};
+import { toastrModal } from '/imports/util';
+
 
 const styles = theme => ({
   textColor: {
     color: "#fff"
+  },
+  socialIcon: {
+    fontSize: '3em',
+    padding: '5px',
+    textDecoration: 'none',
+    color: theme.palette.primary[500]
   },
   container: {
     padding: 10
@@ -38,14 +42,15 @@ class ContactUs extends React.Component {
   constructor(props){
     super(props);
   }
-
+  // Initial value for radio buttons
   state = {
-    value: '',
-  };
+    optionsRadios:''
+  }
 
+  /*Set radio button values into state in order to set `value` attribute for radio button
+  Please note that `value` is needed so that user can select radio buttons*/.
   handleChange = (event, value) => {
-    console.log("value===>",value);
-    this.setState({ value });
+    this.setState({ optionsRadios:value });
   };
 
   componentDidMount() {
@@ -60,34 +65,34 @@ class ContactUs extends React.Component {
 
   submit = (event) => {
         event.preventDefault();
+        const {toastr} = this.props;
         console.log("this",this);
         const name = this.name.value;
         const email = this.email.value;
         const message = this.yourMessage.value;
-        // const selectedOption = $("input[name=optionsRadios]:checked").val();
-
-        // const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-        // if(!email) {
-        //     toastr.error('Please enter your email.','Error');
-        //     return false;
-        // } else if(!emailReg.test(email)) {
-        //     toastr.error("Please enter valid email address","Error");
-        //     return false;
-        // } else if(!message) {
-        //     toastr.error("Please enter a message.","Error");
-        //     return false;
-        // } else {
-        //  Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
-        //      if(error) {
-        //          console.log("error", error);
-        //      } else {
-        //          toastr.success("Thanks for provide your feedback","Success");
-        //          setTimeout(() => {
-        //              browserHistory.push(`/`);
-        //          }, 200);
-        //      }
-        //  })
-        // }
+        const selectedOption = this.state.optionsRadios;
+        const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        if(!email) {
+            toastr.error('Please enter your email.','Error');
+            return false;
+        } else if(!emailReg.test(email)) {
+            toastr.error("Please enter valid email address","Error");
+            return false;
+        } else if(!message) {
+            toastr.error("Please enter a message.","Error");
+            return false;
+        } else {
+         Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
+             if(error) {
+                 console.log("error", error);
+             } else {
+                 toastr.success("Thanks for providing your feedback","Success");
+                 setTimeout(() => {
+                     browserHistory.push(`/`);
+                 }, 200);
+             }
+         });
+        }
     };
 
     render() {
@@ -127,53 +132,14 @@ class ContactUs extends React.Component {
                                             />
                                         </Grid>
                                         <Grid item xs={6}>
-                                            {/*<div className="radio">
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        name="optionsRadios"
-                                                        className="end_option"
-                                                        ref="featureRequested"
-                                                        defaultValue="Feature Request"
-                                                    />
-                                                    <span className="circle" /><span className="check" />
-                                                    Feature Request
-                                                </label>
-                                            </div>
-                                            <div className="radio">
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        name="optionsRadios"
-                                                        className="end_option"
-                                                        ref="somethingIsBroken"
-                                                        defaultValue="Something is broken"
-                                                    />
-                                                    <span className="circle" /><span className="check" />
-                                                    Something is broken
-                                                </label>
-                                            </div>
-                                            <div className="radio">
-                                                <label>
-                                                    <input type="radio"
-                                                           name="optionsRadios"
-                                                           className="end_option"
-                                                           ref="iLoveThis"
-                                                           defaultValue="I Love This!"
-                                                    />
-                                                    <span className="circle" /><span className="check" />
-                                                    I Love This!
-                                                </label>
-                                            </div>*/}
                                             <FormControl component="fieldset" required className={classes.formControl}>
                                                   <RadioGroup
                                                     aria-label="gender"
-                                                    name="gender1"
+                                                    name="optionsRadios"
                                                     className=''
-                                                    value={this.state.value}
+                                                    value={this.state.optionsRadios}
                                                     onChange={this.handleChange}
-
-                                                  >
+                                                   >
                                                     <FormControlLabel value="Feature Request" control={<Radio />} label="Feature Request" />
                                                     <FormControlLabel value="Something is broken" control={<Radio />} label="Something is broken" />
                                                     <FormControlLabel value="I Love This" control={<Radio />} label="I Love This" />
@@ -192,6 +158,7 @@ class ContactUs extends React.Component {
                                                     placeholder="Your message"
                                                     multiline
                                                     fullWidth={true}
+                                                    required={true}
                                                 />
                                         </Grid>
                                     </Grid>
@@ -213,11 +180,11 @@ class ContactUs extends React.Component {
                                 <div className={classes.imageContainer}>
                                     <img src="/images/new-logo.png" className="" alt="logo" width="48" style={{width: 'auto', height: '250px'}} />
                                     <div  className="sl-bar">
-                                        <a style={insertPadding} href="#" className="fa fa-facebook social_icon"></a>
-                                        <a style={insertPadding} href="#" className="fa fa-twitter social_icon  "></a>
-                                        <a style={insertPadding} href="#" className="fa fa-google-plus social_icon "></a>
-                                        <a style={insertPadding} href="#" className="fa fa-dribbble social_icon  "></a>
-                                        <a style={insertPadding} href="#" className="fa fa-instagram social_icon "></a>
+                                        <a href="#" className={[`${classes.socialIcon} fa fa-facebook social_icon`]}></a>
+                                        <a href="#" className={[`${classes.socialIcon} fa fa-twitter social_icon`]}></a>
+                                        <a href="#" className={[`${classes.socialIcon} fa fa-google-plus social_icon`]}></a>
+                                        <a href="#" className={[`${classes.socialIcon} fa fa-dribbble social_icon`]}></a>
+                                        <a href="#" className={[`${classes.socialIcon} fa fa-instagram social_icon`]}></a>
                                     </div>
                                 </div>
                             </Grid>
@@ -229,4 +196,4 @@ class ContactUs extends React.Component {
     }
 }
 
-export default withStyles(styles)(ContactUs);
+export default withStyles(styles)(toastrModal(ContactUs));
