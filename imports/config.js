@@ -1,6 +1,7 @@
 export default config = Object.freeze({
 	// defaultSchoolImage: "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg",
-	defaultSchoolImage: "/images/school.png",
+	defaultSchoolImage: "/images/new-logo.png",
+	defaultSchoolLogo: "/images/new-logo.png",
 	themeColor: {
 		yellow: '#E9B942',
 		green: '#9DC161',

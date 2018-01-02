@@ -12,7 +12,7 @@ MonthlyPricing.attachSchema(new SimpleSchema({
         type: String,
         optional: true
     },
-    pymtType: {
+    schoolId: {
         type: String,
         optional: true
     },
@@ -20,30 +20,19 @@ MonthlyPricing.attachSchema(new SimpleSchema({
         type: [String],
         optional: true
     },
-    oneMonCost: {
-        type: Number,
-        optional: true
-    },
-    threeMonCost: {
-        type: Number,
-        optional: true
-    },
-    sixMonCost: {
-        type: Number,
-        optional: true
-    },
-    annualCost: {
-        type: Number,
-        optional: true
-    },
-    lifetimeCost: {
-        type: Number,
-        optional: true
-    },
-    schoolId: {
+    pymtType: {
         type: String,
         optional: true
-    }
+    },
+    pymtMethod: {
+        type: String,
+        optional: true
+    },
+    pymtDetails: {
+        type: [Object],
+        optional: true,
+        blackbox: true
+    },
 }));
 
 MonthlyPricing.join(ClassType, "classTypeId", "selectedClassType", ["name"]);

@@ -11,19 +11,28 @@ const styles = theme => {
         },
         classtypeHeader: {
             backgroundColor: theme.palette.primary[500],
-            padding: 5
+            padding: "0 20px",
+            color: "#fff"
+        },
+        headerBtn: {
+            color: "#fff",
+            fontSize: 13,
+            border: "solid 1px #fff"
+        },
+        headerText: {
+            color: "#fff",
         },
         classtypeForm: {
             backgroundColor: theme.palette.grey[100],
             borderRadius: 5,
-            padding: 12
+            padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 4}px`
         },
         inputDisableBox: {
             textAlign: 'left',
             border: '1px solid #ccc',
             boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075)',
             marginRight: 6,
-            padding: 10,
+            padding: theme.spacing.unit,
             borderRadius: 2,
             backgroundColor: "#fff",
             minHeight: 15,

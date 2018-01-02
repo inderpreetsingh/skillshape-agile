@@ -24,6 +24,32 @@ const styles = theme => {
             marginBottom: 12,
             color: theme.palette.text.secondary,
         },
+        input: {
+            display: 'none',
+        },
+        classtypeHeader: {
+            backgroundColor: theme.palette.primary[500],
+            padding: 5
+        },
+        classtypeForm: {
+            backgroundColor: theme.palette.grey[100],
+            borderRadius: 5,
+            padding: 12
+        },
+        inputDisableBox: {
+            textAlign: 'left',
+            border: '1px solid #ccc',
+            boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075)',
+            marginRight: 6,
+            padding: 10,
+            borderRadius: 2,
+            backgroundColor: "#fff",
+            minHeight: 15,
+        },
+        classtypeInputContainer: {
+            alignItems: 'center',
+            textAlign: 'left'
+        }
     }
 }
 

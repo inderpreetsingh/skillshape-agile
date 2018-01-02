@@ -9,11 +9,9 @@ const SLocation = new Mongo.Collection(config.collections.sLocation);
 const Schema = {}
 Schema.Room = new SimpleSchema({
     id: {
-      optional: true,
       type: String
     },
     name: {
-       optional: true,
        type: String
     },
     capicity: {

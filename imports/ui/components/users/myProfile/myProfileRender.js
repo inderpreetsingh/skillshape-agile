@@ -5,13 +5,13 @@ import DatePicker from 'react-datepicker';
 
 export default function() {
 	let { currentUser } = this.props;
-	let { 
+	let {
 		firstName,
 		nickame,
 		lastName,
 		dob,
 		phone,
-		address 
+		address
 	} = this.state;
 
 	if(!currentUser)
@@ -52,11 +52,11 @@ export default function() {
                		First Name
                	</label>
                	<div className="col-md-10">
-                  <input 
-                  	className="form-control" 
-                  	type="text"  
-                  	id="firstName" 
-                  	ref="firstName" 
+                  <input
+                  	className="form-control"
+                  	type="text"
+                  	id="firstName"
+                  	ref="firstName"
                   	value={firstName}
                   	onChange={(e) => this.setState({firstName: e.target.value})}
                   />
@@ -67,11 +67,11 @@ export default function() {
               		Nickname
               	</label>
               <div className="col-md-10">
-                <input 
-                	className="form-control" 
-                	type="text" 
-                	id="nickame" 
-                	ref="nickame"  
+                <input
+                	className="form-control"
+                	type="text"
+                	id="nickame"
+                	ref="nickame"
                 	value={nickame}
                 	onChange={(e) => this.setState({nickame: e.target.value})}
                 />
@@ -80,11 +80,11 @@ export default function() {
             <div className="form-group row">
               <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>Last Name</label>
               <div className="col-md-10">
-                <input 
-                	className="form-control" 
-                	type="text"  
-                	id="lastName" 
-                	ref="lastName" 
+                <input
+                	className="form-control"
+                	type="text"
+                	id="lastName"
+                	ref="lastName"
                 	value={lastName}
                 	onChange={(e) => this.setState({lastName: e.target.value})}
                 />
@@ -94,11 +94,11 @@ export default function() {
             <div className="form-group row">
               <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>I AM</label>
               <div className="col-md-10">
-                <select 
-                	className="custom-select mb-2 mr-sm-2 mb-sm-0" 
+                <select
+                	className="custom-select mb-2 mr-sm-2 mb-sm-0"
                 	id="gender"
-                	ref="gender" 
-                	value={this.state.gender} 
+                	ref="gender"
+                	value={this.state.gender}
                 	onChange={(e) => this.setState({gender: e.target.value})}
                 >
                   <option value="Male">Male</option>
@@ -113,7 +113,7 @@ export default function() {
               <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>Birth Date</label>
               <div className="col-md-10">
                 <DatePicker
-                  className="form-control react-datepicker-text-field" 
+                  className="form-control react-datepicker-text-field"
                   selected={this.state.dob}
                   onChange={(date)=> this.setState({dob: date})}
                 />
@@ -123,11 +123,11 @@ export default function() {
             <div className="form-group row">
               <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>Email</label>
               <div className="col-md-10">
-                <input 
-                	className="form-control" 
-                	type="text"  
-                	id="example-text-input" 
-                	value={currentUser.emails.length > 0 && (currentUser.emails[0].address || "")} 
+                <input
+                	className="form-control"
+                	type="text"
+                	id="example-text-input"
+                	value={currentUser.emails.length > 0 && (currentUser.emails[0].address || "")}
                 	readOnly="true"
                 />
                 <small>We won't share your private email address with other Members.</small>
@@ -136,11 +136,11 @@ export default function() {
             <div className="form-group row">
               <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>Phone</label>
               <div className="col-md-10">
-                <input 
-                	className="form-control" 
-                	type="text"  
-                	id="phone" 
-                	ref="phone"  
+                <input
+                	className="form-control"
+                	type="text"
+                	id="phone"
+                	ref="phone"
                 	value={phone}
                 	onChange={(e) => this.setState({phone: e.target.value})}
                 />
@@ -150,11 +150,11 @@ export default function() {
             <div className="form-group row">
               <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>Address</label>
               <div className="col-md-10">
-                <input 
-                	className="form-control" 
-                	type="text"  
-                	id="address" 
-                	ref="address" 
+                <input
+                	className="form-control"
+                	type="text"
+                	id="address"
+                	ref="address"
                 	value={address}
                 	onChange={(e) => this.setState({address: e.target.value})}
                 />
@@ -163,9 +163,9 @@ export default function() {
             </div>
             <div className="row form-group right">
               <button
-              	onClick={this.updateUser} 
-              	type='button' 
-              	className='btn btn-md btn-rose' 
+              	onClick={this.updateUser}
+              	type='button'
+              	className='btn btn-md btn-rose'
               	id="btn_update_user"
               > Save
               </button>
@@ -181,38 +181,38 @@ export default function() {
             <div className="form-group row">
               <label for="example-text-input" className="col-md-2 col-form-label" >Current Password</label>
               <div className="col-md-10">
-                <input 
-                  className="form-control" 
-                  type="text"  
-                  ref="currentPassword" 
+                <input
+                  className="form-control"
+                  type="text"
+                  ref="currentPassword"
                 />
               </div>
             </div>
             <div className="form-group row">
               <label for="example-text-input" className="col-md-2 col-form-label" >New Password</label>
               <div className="col-md-10">
-                <input 
-                  className="form-control" 
-                  type="text"  
-                  ref="newPassword" 
+                <input
+                  className="form-control"
+                  type="text"
+                  ref="newPassword"
                 />
               </div>
             </div>
             <div className="form-group row">
               <label for="example-text-input" className="col-md-2 col-form-label" >Confirm Password</label>
               <div className="col-md-10">
-                <input 
-                  className="form-control" 
-                  type="text"  
-                  ref="confirmPassword" 
+                <input
+                  className="form-control"
+                  type="text"
+                  ref="confirmPassword"
                 />
               </div>
             </div>
             <div className="row form-group right">
               <button
-                onClick={this.changePassword} 
-                type='button' 
-                className='btn btn-md btn-rose' 
+                onClick={this.changePassword}
+                type='button'
+                className='btn btn-md btn-rose'
                 id="btn_update_user"
               > Change Password
               </button>

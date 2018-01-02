@@ -5,17 +5,18 @@ import { FormBuilderModal } from '/imports/ui/modal';
 import ResponsiveTabs from '/imports/util/responsiveTabs';
 
 //tab details import over here
-// import SchoolDetails from './schoolDetails';
+import SchoolDetails from './schoolDetails';
 import LocationDetails from './locationDetails';
-// import ClassTypeDetails from './classTypeDetails';
+import ClassTypeDetails from './classTypeDetails';
 import PriceDetails from './priceDetails';
 // import Modules from './modules';
-// import EmbedCodes from './embedCodes';
+import EmbedCodes from './embedCodes';
 import MediaDetails from './mediaDetails';
 
 
 export default function (props) {
     console.log("school edit render state -->>",this.state);
+    console.log("school edit render props -->>",this.props);
     const {
         selecetdView,
         formBuilderModal,
@@ -27,7 +28,6 @@ export default function (props) {
         currentUser,
         isUserSubsReady,
         locationData,
-        classTypeData,
         moduleData,
         ...editSchoolProps
     } = this.props;
@@ -47,41 +47,58 @@ export default function (props) {
                     tabs={["School Details","Location Details","Class Details", "Prices", "Media", "Embed Codes"]}
                     color= "primary"
                     onTabChange={this.onTabChange}
-                />  
+                />
           		<div>
                     {
+                        this.state.tabValue === 0 && <SchoolDetails
+                            schoolData={schoolData}
+                            schoolId={schoolId}
+                            moveTab={this.moveTab}
+                            currentUser={currentUser}
+                        />
+                    }
+                    {
                         this.state.tabValue === 1 &&  <LocationDetails
-                          locationData={locationData}
-                          schoolId={schoolId}
-                          showFormBuilderModal={this.showFormBuilderModal}
-                          moveTab={this.moveTab}
-                          ref="location_details_tab"
+                            locationData={locationData}
+                            schoolId={schoolId}
+                            showFormBuilderModal={this.showFormBuilderModal}
+                            moveTab={this.moveTab}
+                            ref="location_details_tab"
+                        />
+                    }
+                    {
+                        this.state.tabValue === 2 && <ClassTypeDetails
+                            locationData={locationData}
+                            schoolId={schoolId}
+                            showFormBuilderModal={this.showFormBuilderModal}
+                            moveTab={this.moveTab}
                         />
                     }
                     {
                         this.state.tabValue === 3 && <PriceDetails
-                          schoolId={schoolId}
-                          showFormBuilderModal={this.showFormBuilderModal}
-                          moveTab={this.moveTab}
+                            schoolId={schoolId}
+                            showFormBuilderModal={this.showFormBuilderModal}
+                            moveTab={this.moveTab}
                         />
                     }
                     {
                         this.state.tabValue === 4 && <MediaDetails
-                          schoolData={schoolData}
-                          schoolId={schoolId}
-                          moveTab={this.moveTab}
-                          {...editSchoolProps}
+                            schoolData={schoolData}
+                            schoolId={schoolId}
+                            moveTab={this.moveTab}
+                            {...editSchoolProps}
                         />
                     }
-                </div>	
+                    {
+                        this.state.tabValue === 5 && <EmbedCodes
+                            schoolData={schoolData}
+                            schoolId={schoolId}
+                            moveTab={this.moveTab}
+                      />
+                    }
+                </div>
             {/*<div className="tab-content">
-              {
-                (selecetdView === "school_details") && <SchoolDetails
-                  schoolData={schoolData}
-                  schoolId={schoolId}
-                  moveTab={this.moveTab}
-                />
-              }
+
               {
                 (selecetdView === "location_details") && <LocationDetails
                   locationData={locationData}
@@ -115,16 +132,10 @@ export default function (props) {
                   moveTab={this.moveTab}
                 />
               }
-              {
-                (selecetdView === "embed_codes") && <EmbedCodes
-                  schoolData={schoolData}
-                  schoolId={schoolId}
-                  moveTab={this.moveTab}
-                />
-              }
+
 
             </div>*/}
-            
+
       		</div>
       	)
   } else {

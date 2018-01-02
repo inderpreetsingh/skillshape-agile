@@ -20,24 +20,24 @@ export default styles = theme => {
       verticalAlign: 'middle',
       width: '100%'
     },
-    imageFooter: {
+    imageHeader: {
+      top: 0,
       position: "absolute",
-      padding: theme.spacing.unit * 2,
-      bottom: 0,
       width: "97%",
-      backgroundColor: theme.palette.primary.rgba
+      padding: theme.spacing.unit * 2,
     },
     card:{
       width :'100%'
     },
-    ImageFooterbutton : {
-      marginLeft: 15,
-      textDecoration: 'none',
-      float: 'right'
+    formContainer:{
+      display: 'inline-flex',
+      justifyContent: 'center',
+      width: '100%',
     },
-    imageFooterBtnContainer: {
-      justifyContent: "space-around",
-
+    classTypeContainer: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      padding: theme.spacing.unit * 2
     }
 
   }

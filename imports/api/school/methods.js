@@ -3,15 +3,16 @@ import School from "./fields";
 
 Meteor.methods({
 	editSchool: function (id, data) {
-		let schoolData = School.findOne({_id: id});
-		if(schoolData && schoolData.name !== data.name) {
-	    	ClassType.update({schoolId: id}, { $set:{ "filters.schoolName": data.name }})	
-		}
+        console.log("editSchool >>> ", data, id)
+        let schoolData = School.findOne({_id: id});
+        if(schoolData && data.name && schoolData.name !== data.name) {
+            ClassType.update({schoolId: id}, { $set:{ "filters.schoolName": data.name }})
+        }
         return School.update({ _id: id }, { $set: data });
     },
 	getClassesForMap: function ({schoolId}) {
 		return {
-			school: School.findOne({ _id: schoolId}), 
+			school: School.findOne({ _id: schoolId}),
 		}
 	},
 	"school.getConnectedSchool": function (userId) {
@@ -44,7 +45,7 @@ Meteor.methods({
         return Meteor.users.update({ _id: data.userId }, { $set: { "profile.schoolId": schoolId, "profile.acess_type": "school" } });
     },
     "school.publishSchool": function (schoolId, is_publish) {
-        
+
         return School.update({ _id: schoolId }, { $set: { "is_publish": is_publish } });
     }
 })

@@ -11,16 +11,24 @@ class MediaDetails extends React.Component {
         super(props);
         this.state = {
           open: false,
+          limit: 10,
           filters: {
             schoolId: this.props.schoolId
           }
         }
     }
-
+    changeLimit = ()=>{
+      let incerementFactor = 10;
+      this.setState({limit: this.state.limit+incerementFactor})
+    }
     closeMediaUpload = ()=>{
-      this.setState({showCreateMediaModal: false})
+      this.setState({showCreateMediaModal: false, loading: false})
     }
     openEditMediaForm = (data) => this.setState({showCreateMediaModal: true, mediaFormData: data, filterStatus: false})
+
+    showLoading = ()=>{
+      this.setState({loading: true})
+    }
 
     onAddMedia = ({data, fileData, isUrl}) => {
       // console.log("onAddMedia data -->>",data, fileData);

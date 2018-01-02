@@ -13,7 +13,6 @@ import Clear from 'material-ui-icons/Clear';
 import {findDOMNode} from 'react-dom';
 import {filter, assign} from 'lodash';
 
-
 import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Typography from 'material-ui/Typography';
@@ -44,7 +43,7 @@ const styles = theme => {
         alignItems: 'center',
         color: '#fff',
         width: '100%',
-        minHeight: 250,
+        minHeight: 195,
         justifyContent: 'center',
         backgroundSize: 'auto'
       },
@@ -70,7 +69,8 @@ class Upload extends React.Component {
 	  	this.state = {
 		    value: '',
 		    open: false,
-		    files: props.data
+		    files: props.data,
+        loading: false
 	  	};
 
 	}
@@ -138,7 +138,7 @@ class Upload extends React.Component {
 
   render() {
   	console.log("media index state>>>>> ", this.state)
-    const { classes, fullScreen } = this.props;
+    const { classes, fullScreen, loading } = this.props;
     return (
       <div>
         <Card style={{width: this.props.width || 300, position: 'relative'}}>

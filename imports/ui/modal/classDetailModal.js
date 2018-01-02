@@ -28,7 +28,8 @@ const styles = theme => {
   return {
     image: {
       verticalAlign: 'middle',
-      width: '100%'
+      width: 'auto',
+      height: 250,
     },
     imageContainer: {
       backgroundColor: theme.palette.grey[100],
@@ -64,6 +65,9 @@ class ClassDetailModal extends React.Component{
     console.log("classTimes.getClassTimes calling start -->>",this.props);
     if(this.props.eventData) {
         const {schoolId, classTypeId, classTimeId, locationId} = this.props.eventData;
+        this.setState({
+            isLoading: true,
+        })
         Meteor.call("classTimes.getClassTimes", {schoolId, classTypeId, classTimeId, locationId}, (error, {school, classTimes, classType, location}) => {
             console.log("classTimes.getClassTimes res -->>");
             console.log("classTimes.getClassTimes error -->>",error);
@@ -73,8 +77,7 @@ class ClassDetailModal extends React.Component{
                 classTimes,
                 classType,
                 location,
-                error,
-                modalOpen: this.props.showModal
+                error
             })
         })
     } else {
@@ -107,9 +110,7 @@ class ClassDetailModal extends React.Component{
         }
     })
   }
-  closeModal = ()=>{
-    this.setState({modalOpen: false})
-  }
+
   render() {
     console.log("ClassDetailModal render props -->>", this.props);
     console.log("ClassDetailModal render state -->>", this.state);
@@ -118,7 +119,7 @@ class ClassDetailModal extends React.Component{
     return (
         <Dialog
           fullScreen={fullScreen}
-          open={this.state.modalOpen}
+          open={this.props.showModal}
           onClose={() => this.props.closeEventModal(false, null)}
           aria-labelledby="responsive-dialog-title"
         >
@@ -126,7 +127,7 @@ class ClassDetailModal extends React.Component{
             { error && <div style={{color: 'red'}}>{error}</div> }
             { !isLoading && !error && (
                     <Card>
-                        <CardMedia>
+                        <CardMedia style={{height:250}}>
                             <div className={classes.imageContainer}>
                                 <div style={{position: "absolute", top: 10, right: 10}}>
                                     {
@@ -277,7 +278,7 @@ class ClassDetailModal extends React.Component{
             }
             {fullScreen && (
                 <DialogActions>
-                    <Button onClick={()=>{this.closeModal()}} color="primary">
+                    <Button onClick={()=>{this.props.closeEventModal(false, null)}} color="primary">
                       Close
                     </Button>
                 </DialogActions>

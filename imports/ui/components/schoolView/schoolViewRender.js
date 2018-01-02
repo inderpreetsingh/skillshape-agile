@@ -16,6 +16,9 @@ import { checkSuperAdmin } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
+import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
+import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
+
 export default function() {
 
 	const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
@@ -66,10 +69,8 @@ export default function() {
               <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
             </div>*/}
             <Card className={classes.card}>
-              <CardMedia style={{position: "relative", height:250}} image={ schoolData.mainImage || defaultSchoolImage }>
-                {/*<div className={classes.imageContainer}>
-                  <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
-                </div>*/}
+              <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
+              {/*<CardMedia style={{position: "relative", height:250}} image={ schoolData.mainImage || defaultSchoolImage }>
                 <div style={{"background-color": 'blue'}}>
                 </div>
                 <div className={classes.imageFooter} >
@@ -111,7 +112,7 @@ export default function() {
                     </Grid>
                   </Grid>
                 </div>
-              </CardMedia>
+              </CardMedia>*/}
               <CardContent >
 
                 {
@@ -173,6 +174,44 @@ export default function() {
         </Grid>
         <Grid container className={classes.content}>
           <Grid item xs={12}>
+            <Card>
+                <Grid container className={classes.content}>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3} >
+                    <SkillShapeCard />
+                  </Grid>
+                </Grid>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid container className={classes.content}>
+          <Grid item xs={12}>
             <Card className={classes.content}>
               {<MyCalender {...this.props}/>}
             </Card>
@@ -184,7 +223,7 @@ export default function() {
               <div className="content-list-heading ">
                 <h2 style={{textAlign: 'center'}}>Media
                   <figure>
-                    <img src="/images/heading-line.png"/>
+                    <img style={{maxWidth: "100%"}} src="/images/heading-line.png"/>
                   </figure>
                 </h2>
               </div>
