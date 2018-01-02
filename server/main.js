@@ -8,7 +8,7 @@ Meteor.startup(() => {
         // Accounts.config({
         //   sendVerificationEmail: true
         // });
-        Accounts.emailTemplates.from = 'admin <admin@techmeetups.com>';
+        Accounts.emailTemplates.from = 'admin <Notices@SkillShape.com>';
         // The public name of your application. Defaults to the DNS name of the application (eg: awesome.meteor.com).
         Accounts.emailTemplates.siteName = 'skillshape';
         // A Function that takes a user object and returns a String for the subject line of the email.
@@ -31,7 +31,7 @@ Meteor.startup(() => {
     console.log("_____SkillSubject dump start___");
         SkillSubject.remove({});
         SkillCategory.remove({});
-        
+
         for(var key in _skillCategoryObj){
           let objId = SkillCategory.insert({name: key, _mig_ : 1})
           _skillCategoryObj[key].forEach((f)=>{
@@ -85,10 +85,10 @@ if (Meteor.isServer)
       }
       return user;
   });
-  
+
     var userRegistration = function(user,pass)
     {
-        var fromEmail = "admin@techmeetups.com";
+        var fromEmail = "Notices@SkillShape.com";
         var toEmail = user.emails[0].address;
         Email.send({
             from: fromEmail,
@@ -105,8 +105,8 @@ if (Meteor.isServer)
 
     var userFeedBack = function(user,email,message,request)
     {
-        var fromEmail = "admin@techmeetups.com";
-        var toEmail = "admin@techmeetups.com";
+        var fromEmail = "Notices@SkillShape.com";
+        var toEmail = "Notices@SkillShape.com";
         Email.send({
             from: fromEmail,
             to: toEmail,
@@ -123,7 +123,7 @@ if (Meteor.isServer)
 
     var userPasswordReset = function(user,pass)
     {
-        var fromEmail = "admin@techmeetups.com";
+        var fromEmail = "Notices@SkillShape.com";
         var toEmail = user.emails[0].address;
         Email.send({
             from: fromEmail,
