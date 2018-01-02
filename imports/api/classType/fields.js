@@ -1,6 +1,7 @@
 import config from "/imports/config";
 import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
+import SLocation from "/imports/api/sLocation/fields";
 
 const ClassType = new Mongo.Collection(config.collections.classType);
 /**
@@ -93,6 +94,8 @@ ClassType.attachSchema(new SimpleSchema({
 ClassType.join(SkillCategory, "skillCategoryId", "selectedSkillCategory", ["name"]);
 
 ClassType.join(SkillSubject, "skillSubject", "selectedSkillSubject", ["name"]);
+
+ClassType.join(SLocation, "locationId", "selectedLocation", ["rooms"]);
 
 Meteor.startup(function() {
     if (Meteor.isServer) {

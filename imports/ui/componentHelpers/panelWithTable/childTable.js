@@ -4,7 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import ChildTableRender from './childTableRender';
 
 const styles = theme => {
-    console.log("theme", theme);
+    // console.log("theme", theme);
     return {
         input: {
             display: 'none',

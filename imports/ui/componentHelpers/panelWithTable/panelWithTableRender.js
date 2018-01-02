@@ -144,10 +144,12 @@ export default function () {
 				            				{
 				            					settings.childTable && <Grid className={classes.classtypeInputContainer} item md={8} sm={12} xs={12}>
 									                <ChildTable
+									                	schoolId={schoolId}
 									                	childPanelHeader={settings.childPanelHeader}
 									                	childTable={settings.childTable}
 									                	childTableData={childTableData}
 									                	parentKey={tableData._id}
+									                	parentData={tableData}
 									                />
 									            </Grid>
 									        }

@@ -24,14 +24,21 @@ const styles = theme => {
 
 
 class ResponsiveTabs extends React.Component {
-  state = {
-    tabValue: 0
-  };
+  
+  constructor(props){
+    super(props);
+    let { defaultValue } = this.props;
+    this.state = {
+      tabValue: defaultValue || 0
+    };
+  }
+  
   componentDidMount() {
-    this.props.onTabChange(0);
+    let { defaultValue } = this.props;
+    this.props.onTabChange(defaultValue || 0);
   }
   render() {
-    const { classes } = this.props;
+    const { classes, defaultValue } = this.props;
     return (
       <div className="responsive-tab">
           <div style={{display: "inline-flex",flexWrap: 'wrap',justifyContent: 'center', width: "100%", marginBottom: 25}}>

@@ -31,7 +31,7 @@ import Dialog, {
 
 
 const styles = theme => {
-  console.log("theme", theme);
+  // console.log("theme", theme);
   return {
       card: {
         maxWidth: 300,
@@ -137,7 +137,7 @@ class Upload extends React.Component {
     };
 
   render() {
-  	console.log("media index state>>>>> ", this.state)
+  	// console.log("media index state>>>>> ", this.state)
     const { classes, fullScreen, loading } = this.props;
     return (
       <div>

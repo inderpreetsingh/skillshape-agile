@@ -22,15 +22,18 @@ import ExpansionPanel, {
 import Divider from 'material-ui/Divider';
 
 export default function (props) {
-	const { classes, childPanelHeader, childTable, childTableData, parentKey } = this.props;
+	const { classes, childPanelHeader, childTable, childTableData, parentKey, parentData, schoolId } = this.props;
 	const FormComponent = childPanelHeader.actions.component;
 	console.log("child Table render this.props -->>",this.props)
+	// console.log("child Table render this.state -->>",this.state)
 	// console.log("child Table render childTableData -->>",childTableData)
 	return (
 		<div className="panel-child-table">
 			{
           		this.state.showForm && <FormComponent
+          			schoolId={schoolId}
           			parentKey={parentKey}
+          			parentData={parentData}
           			data={this.state.formData}
           			open={this.state.showForm}
           			onClose={this.handleFormModal}
