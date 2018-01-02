@@ -2,13 +2,16 @@ import React from 'react';
 import SchoolDetailsRender from './schoolDetailsRender';
 import styles from "/imports/ui/components/schoolView/style";
 import { withStyles } from "/imports/util";
+import RichTextEditor from 'react-rte-image';
 
+state = {
+    }
 class SchoolDetails extends React.Component {
 
-	constructor(props) {
+  constructor(props) {
     super(props);
-    let { schoolData } = this.props; 
-    let { 
+    let { schoolData } = this.props;
+    let {
       name,
       website,
       phone,
@@ -18,10 +21,12 @@ class SchoolDetails extends React.Component {
       backGroundVideoUrl,
       mainImage,
       aboutHtml,
-      descHtml, 
+      studentNotesHtml,
     } = schoolData;
 
     this.state = {
+      aboutHtml: RichTextEditor.createEmptyValue(aboutHtml),
+      studentNotesHtml: RichTextEditor.createEmptyValue(studentNotesHtml),
       name: name,
       website: website,
       phone: phone,
@@ -30,8 +35,8 @@ class SchoolDetails extends React.Component {
       email: email,
       backGroundVideoUrl: backGroundVideoUrl,
       mainImage: mainImage,
-      aboutHtml: aboutHtml,
-      descHtml: descHtml,
+      // aboutHtml: aboutHtml,
+      // descHtml: descHtml,
     };
   }
 
@@ -58,14 +63,14 @@ class SchoolDetails extends React.Component {
   editSchoolCall = (imageUpload) => {
     const { schoolId } = this.props;
 
-    let schoolObj = {...this.state, 
+    let schoolObj = {...this.state,
       aboutHtml: $('#summernote1').summernote('code'),
       descHtml: $('#summernote2').summernote('code')
     }
     if(imageUpload) {
       schoolObj.mainImage = imageUpload.secure_url
     }
-    
+
     Meteor.call("editSchool", schoolId, schoolObj, (error, result) => {
       if (error) {
         console.log("error", error);
@@ -79,21 +84,25 @@ class SchoolDetails extends React.Component {
   }
 
   onAddMedia = ()=> {
-  
+
   }
 
   closeMediaUpload = ()=> {
-  
+
   }
 
   onEditMedia = ()=> {
-  
-  }
 
+  }
+  aboutSchoolTREOnChange = (value)=> {
+    console.log("aboutSchoolTREOnChange", value.toString('html'));
+  }
+  studentNotesTREOnChange = (value)=> {
+  }
 
   render() {
     return SchoolDetailsRender.call(this, this.props, this.state)
   }
-}  
+}
 
 export default withStyles(styles)(SchoolDetails)

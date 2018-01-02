@@ -38,6 +38,14 @@ export default styles = theme => {
       display: 'flex',
       flexWrap: 'wrap',
       padding: theme.spacing.unit * 2
+    },
+    editorTop: {
+      marginTop: '24px',
+      border: '1px solid #ddd',
+      borderRadius: '6px'
+    },
+    typographyRoot: {
+      padding: '10px'
     }
 
   }
