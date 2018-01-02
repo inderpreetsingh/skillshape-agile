@@ -21,3 +21,7 @@ body {
 .event-green {
 	background-color: "#9E9E9E"
 }
+
+.public-DraftEditor-content {
+  min-height: 150px
+}

@@ -13,14 +13,12 @@ const muiTheme = getMuiTheme({
 });
 
 export class MaterialRTE extends Component {
-    state = {
-        value: RichTextEditor.createEmptyValue()
-    }
+
     render() {
         // console.log("muiTheme", muiTheme)
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
-                <RichTextEditor value={this.state.value} {...this.props} />
+                <RichTextEditor onChange={this.props.onChange} value={this.props.value} {...this.props} />
             </MuiThemeProvider>
         );
     }

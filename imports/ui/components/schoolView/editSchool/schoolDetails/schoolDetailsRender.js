@@ -12,6 +12,7 @@ import { Loading } from '/imports/ui/loading';
 import CreateMedia from '/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia';
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 
+import MaterialRTE from "/imports/startup/client/material-rte"
 export default function () {
 
   let {
@@ -24,7 +25,7 @@ export default function () {
     backGroundVideoUrl,
     mainImage,
     aboutHtml,
-    descHtml,
+    studentNotesHtml,
   } = this.state;
 
   const {
@@ -39,25 +40,25 @@ export default function () {
   return  (
     <div>
       <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />
-      {/*<Card className={classes.formContainer} style={{alignItem: 'center'}}>
-        <form style={{maxWidth: 600}} method="" action="">
-          <Grid container style={{marginBottom: '5px'}}>
-            <Grid item xs={4}>
-              <Typography type="Subheading"> School Info : </Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <TextField
-                      required={true}
-                      defaultValue={mediaFormData && mediaFormData.name}
-                      inputRef={(ref)=> this.website = ref}
-                      label="Website"
-                      type="text"
-                      fullWidth
-                  />
+        <Card className={classes.formContainer} style={{alignItem: 'center'}}>
+          <form style={{maxWidth: 600,padding:24}} method="" action="">
+            <Grid container style={{marginBottom: '5px',display: 'flex',alignItems: 'baseline'}}>
+                <Grid item xs={12} sm={4}>
+                  <Typography type="Subheading"> School Info  </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={8}>
+                    <TextField
+                        required={true}
+                        defaultValue={mediaFormData && mediaFormData.name}
+                        inputRef={(ref)=> this.website = ref}
+                        label="Website"
+                        type="text"
+                        fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                </Grid>
+                <Grid item xs={12} sm={4}>
                   <TextField
                       required={true}
                       defaultValue={mediaFormData && mediaFormData.name}
@@ -68,7 +69,7 @@ export default function () {
                       fullWidth
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={4}>
                   <TextField
                       required={true}
                       defaultValue={mediaFormData && mediaFormData.name}
@@ -78,40 +79,50 @@ export default function () {
                       fullWidth
                   />
                 </Grid>
+            </Grid>
+            <Grid container style={{display: 'flex',alignItems: 'baseline'}}>
+              <Grid item xs={12} sm={4}>
+                <Typography type="Subheading"> School Contact  </Typography>
+              </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                        required={true}
+                        defaultValue={mediaFormData && mediaFormData.name}
+                        inputRef={(ref)=> this.fname = ref}
+                        label="First Name"
+                        type="text"
+                        fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                        required={true}
+                        defaultValue={mediaFormData && mediaFormData.name}
+                        inputRef={(ref)=> this.lname = ref}
+                        label="Last Name"
+                        type="text"
+                        fullWidth
+                    />
+                  </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={12}>
+                <div className={classes.editorTop}>
+                  <Typography  type="Subheading" className={classes.typographyRoot}> About the School  </Typography>
+                <MaterialRTE value={this.state.aboutHtml} onChange={this.aboutSchoolTREOnChange} />
+                </div>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid container>
-            <Grid item xs={4}>
-              <Typography type="Subheading"> School Contact : </Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <Grid container>
-                <Grid xs={6}>
-                  <TextField
-                      required={true}
-                      defaultValue={mediaFormData && mediaFormData.name}
-                      inputRef={(ref)=> this.fname = ref}
-                      label="First Name"
-                      type="text"
-                      fullWidth
-                  />
-                </Grid>
-                <Grid xs={6}>
-                  <TextField
-                      required={true}
-                      defaultValue={mediaFormData && mediaFormData.name}
-                      inputRef={(ref)=> this.lname = ref}
-                      label="Last Namee"
-                      type="text"
-                      fullWidth
-                  />
-                </Grid>
+            <Grid container>
+              <Grid item xs={12}>
+                <div className={classes.editorTop}>
+                  <Typography type="Subheading" className={classes.typographyRoot}> Notes for Students  </Typography>
+                <MaterialRTE value={this.state.studentNotesHtml} onChange={this.studentNotesTREOnChange} />
+                </div>
               </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </Card>*/}
+          </form>
+        </Card>
       {/*<div className="tab-pane active" id="tab_default_1">
         <div className="col-md-12">
           <div className="card">

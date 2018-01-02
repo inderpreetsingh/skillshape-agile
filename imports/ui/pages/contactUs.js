@@ -44,12 +44,13 @@ class ContactUs extends React.Component {
   }
   // Initial value for radio buttons
   state = {
-    optionsRadios:''
+    optionsRadios:'Feature Request'
   }
 
   /*Set radio button values into state in order to set `value` attribute for radio button
   Please note that `value` is needed so that user can select radio buttons*/.
   handleChange = (event, value) => {
+    console.log("value==>",value)
     this.setState({ optionsRadios:value });
   };
 
@@ -169,7 +170,7 @@ class ContactUs extends React.Component {
                                                 className="btn"
                                                 form = "sendfeedback"
                                                 raised
-                                                color="primary">
+                                                color="accent">
                                                 Send Message
                                             </Button>
                                         </Grid>
