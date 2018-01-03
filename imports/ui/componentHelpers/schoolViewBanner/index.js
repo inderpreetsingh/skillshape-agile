@@ -37,7 +37,7 @@ class SchoolViewBanner extends React.Component {
 	  	const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
 		return(
 			<Grid container className={classes.schoolHeaderContainer}>
-	            <Grid item xs={12}>
+	            <Grid item xs={12}  style={{paddingTop: 0}}>
 	                <Card className={classes.card}>
 	                    <CardMedia image={ schoolData.mainImage || config.defaultSchoolImage } style={{position: "relative", height:320, textAlign: 'center',backgroundSize: "cover"}} >
 	                        <div className={classes.imageHeader}>
