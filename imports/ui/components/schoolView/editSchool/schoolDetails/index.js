@@ -2,10 +2,8 @@ import React from 'react';
 import SchoolDetailsRender from './schoolDetailsRender';
 import styles from "/imports/ui/components/schoolView/style";
 import { withStyles } from "/imports/util";
-import RichTextEditor from 'react-rte-image';
+import { toastrModal } from '/imports/util';
 
-state = {
-    }
 class SchoolDetails extends React.Component {
 
   constructor(props) {
@@ -25,8 +23,8 @@ class SchoolDetails extends React.Component {
     } = schoolData;
 
     this.state = {
-      aboutHtml: RichTextEditor.createEmptyValue(aboutHtml),
-      studentNotesHtml: RichTextEditor.createEmptyValue(studentNotesHtml),
+      aboutHtml: aboutHtml,
+      studentNotesHtml: studentNotesHtml ? studentNotesHtml:'',
       name: name,
       website: website,
       phone: phone,
@@ -35,8 +33,6 @@ class SchoolDetails extends React.Component {
       email: email,
       backGroundVideoUrl: backGroundVideoUrl,
       mainImage: mainImage,
-      // aboutHtml: aboutHtml,
-      // descHtml: descHtml,
     };
   }
 
@@ -56,29 +52,21 @@ class SchoolDetails extends React.Component {
           this.editSchoolCall(res)
         }
       })
-    } else
+    } else {
       this.editSchoolCall()
+    }
   }
 
   editSchoolCall = (imageUpload) => {
-    const { schoolId } = this.props;
+    const { schoolId,toastr } = this.props;
 
-    let schoolObj = {...this.state,
-      aboutHtml: $('#summernote1').summernote('code'),
-      descHtml: $('#summernote2').summernote('code')
-    }
-    if(imageUpload) {
-      schoolObj.mainImage = imageUpload.secure_url
-    }
-
+    let schoolObj = {...this.state}
     Meteor.call("editSchool", schoolId, schoolObj, (error, result) => {
       if (error) {
-        console.log("error", error);
+        toastr.error("Oops! something went wrong.",error.message);
       }
       if (result) {
-        setTimeout(() => {
-          this.props.moveTab("location_details");
-        }, 1000);
+          toastr.success("School editing successfull!!!!!!","Success");
       }
     });
   }
@@ -94,10 +82,13 @@ class SchoolDetails extends React.Component {
   onEditMedia = ()=> {
 
   }
+  // This is used to set Content into `About School` editor.
   aboutSchoolTREOnChange = (value)=> {
-    console.log("aboutSchoolTREOnChange", value.toString('html'));
+    this.setState({ aboutHtml: value })
   }
+  // This is used to set Content into `Notes for Students` editor.
   studentNotesTREOnChange = (value)=> {
+    this.setState({ studentNotesHtml: value })
   }
 
   render() {
@@ -105,4 +96,4 @@ class SchoolDetails extends React.Component {
   }
 }
 
-export default withStyles(styles)(SchoolDetails)
+export default withStyles(styles)(toastrModal(SchoolDetails))

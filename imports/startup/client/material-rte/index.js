@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
 import MuiThemeProvider from '/imports/startup/client/lib/material-ui-old/styles/MuiThemeProvider';
-import RichTextEditor from 'react-rte-image';
 import getMuiTheme from '/imports/startup/client/lib/material-ui-old/styles/getMuiTheme';
 import { material_ui_next_theme } from '/imports/util';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const muiTheme = getMuiTheme({
 
@@ -18,7 +19,7 @@ export class MaterialRTE extends Component {
         // console.log("muiTheme", muiTheme)
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
-                <RichTextEditor onChange={this.props.onChange} value={this.props.value} {...this.props} />
+                <ReactQuill onChange={this.props.onChange} value={this.props.value} />
             </MuiThemeProvider>
         );
     }

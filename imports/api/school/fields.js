@@ -99,7 +99,7 @@ School.attachSchema(new SimpleSchema({
     type: String,
     optional: true
   },
-  descHtml: {
+  studentNotesHtml: {
     type: String,
     optional: true
   },
