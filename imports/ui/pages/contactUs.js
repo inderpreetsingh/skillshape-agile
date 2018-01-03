@@ -41,17 +41,15 @@ class ContactUs extends React.Component {
 
   constructor(props){
     super(props);
-  }
-  // Initial value for radio buttons
-  state = {
-    optionsRadios:'Feature Request'
+    this.state = {
+      optionsRadios:'',
+    }
   }
 
   /*Set radio button values into state in order to set `value` attribute for radio button
-  Please note that `value` is needed so that user can select radio buttons*/.
-  handleChange = (event, value) => {
-    console.log("value==>",value)
-    this.setState({ optionsRadios:value });
+  Please note that `value` is needed so that user can select radio buttons*/
+  handleChange = (event) => {
+    this.setState({ optionsRadios: event.target.value });
   };
 
   componentDidMount() {
