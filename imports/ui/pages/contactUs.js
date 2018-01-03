@@ -10,6 +10,8 @@ import Button from 'material-ui/Button';
 import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'material-ui/Form';
 
 import { toastrModal } from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
+
 
 
 const styles = theme => ({
@@ -43,6 +45,7 @@ class ContactUs extends React.Component {
     super(props);
     this.state = {
       optionsRadios:'',
+      isLoading:false
     }
   }
 
@@ -63,42 +66,48 @@ class ContactUs extends React.Component {
   }
 
   submit = (event) => {
-        event.preventDefault();
-        const {toastr} = this.props;
-        console.log("this",this);
-        const name = this.name.value;
-        const email = this.email.value;
-        const message = this.yourMessage.value;
-        const selectedOption = this.state.optionsRadios;
-        const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-        if(!email) {
-            toastr.error('Please enter your email.','Error');
-            return false;
-        } else if(!emailReg.test(email)) {
-            toastr.error("Please enter valid email address","Error");
-            return false;
-        } else if(!message) {
-            toastr.error("Please enter a message.","Error");
-            return false;
-        } else {
-         Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
-             if(error) {
-                 console.log("error", error);
-             } else {
-                 toastr.success("Thanks for providing your feedback","Success");
-                 setTimeout(() => {
-                     browserHistory.push(`/`);
-                 }, 200);
-             }
-         });
-        }
-    };
+      event.preventDefault();
+      const { toastr } = this.props;
+      console.log("this", this);
+      const name = this.name.value;
+      const email = this.email.value;
+      const message = this.yourMessage.value;
+      const selectedOption = this.state.optionsRadios;
+      const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+      if (!email) {
+          toastr.error('Please enter your email.', 'Error');
+          return false;
+      } else if (!emailReg.test(email)) {
+          toastr.error("Please enter valid email address", "Error");
+          return false;
+      } else if (!message) {
+          toastr.error("Please enter a message.", "Error");
+          return false;
+      } else {
+          // Start loading
+          this.setState({ isLoading: true });
+          Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
+              if (error) {
+                  console.log("error", error);
+              } else {
+                  toastr.success("Thanks for providing your feedback", "Success");
+                  setTimeout(() => {
+                      browserHistory.push(`/`);
+                  }, 200);
+              }
+              this.setState({ isLoading: false });
+          });
+      }
+  };
 
     render() {
         const { classes } = this.props;
         console.log("Props====>",this.props);
         return(
             <Grid container style={{paddingLeft: 8}}>
+              {
+              this.state.isLoading && <ContainerLoader />
+              }
                 <Grid item xs={12}>
                     <Paper elevation={1}>
                         <Paper className={classes.header} elevation={4}>

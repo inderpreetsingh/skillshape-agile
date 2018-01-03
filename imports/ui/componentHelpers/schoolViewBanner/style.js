@@ -2,13 +2,12 @@ export default styles = theme => {
   return {
     schoolHeaderContainer: {
       position: "relative",
-      padding: theme.spacing.unit * 2
     },
     imageHeader: {
       top: 0,
       position: "absolute",
       width: "97%",
-      textAlign: "left",
+      textAlign: "right",
       padding: theme.spacing.unit * 2,
     },
     imageFooter: {

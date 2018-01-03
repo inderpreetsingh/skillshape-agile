@@ -13,6 +13,8 @@ import CreateMedia from '/imports/ui/components/schoolView/editSchool/mediaDetai
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 
 import MaterialRTE from "/imports/startup/client/material-rte"
+// Need to import this in order to show loading component.
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 export default function () {
 
   let {
@@ -40,6 +42,9 @@ export default function () {
   return  (
     <div>
       <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />
+        {
+        this.state.isLoading && <ContainerLoader />
+        }
         <Card className={classes.formContainer} style={{alignItem: 'center'}}>
           <form style={{maxWidth: 600,padding:24}} method="" action="">
             <Grid container style={{marginBottom: '5px',display: 'flex',alignItems: 'baseline'}}>

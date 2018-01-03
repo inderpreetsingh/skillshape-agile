@@ -1,8 +1,7 @@
 import React from 'react';
 import SchoolDetailsRender from './schoolDetailsRender';
 import styles from "/imports/ui/components/schoolView/style";
-import { withStyles } from "/imports/util";
-import { toastrModal } from '/imports/util';
+import { withStyles, toastrModal } from "/imports/util";
 
 class SchoolDetails extends React.Component {
 
@@ -33,6 +32,7 @@ class SchoolDetails extends React.Component {
       email: email,
       backGroundVideoUrl: backGroundVideoUrl,
       mainImage: mainImage,
+      isLoading:false // Loading variable in state.
     };
   }
 
@@ -58,16 +58,21 @@ class SchoolDetails extends React.Component {
   }
 
   editSchoolCall = (imageUpload) => {
+    // Start loading on when user press button to update school details.
+    this.setState({isLoading: true});
     const { schoolId,toastr } = this.props;
 
     let schoolObj = {...this.state}
+    // This function is used to edit school details.
     Meteor.call("editSchool", schoolId, schoolObj, (error, result) => {
       if (error) {
         toastr.error("Oops! something went wrong.",error.message);
       }
       if (result) {
-          toastr.success("School editing successfull!!!!!!","Success");
+          toastr.success("School details editing successfull!!!!!!","Success");
       }
+      // Stop loading on completion of editing school details.
+      this.setState({isLoading: false});
     });
   }
 
