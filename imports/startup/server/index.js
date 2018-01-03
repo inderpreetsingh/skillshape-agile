@@ -14,6 +14,7 @@ import "/imports/api/classTimes/methods";
 import "/imports/api/classInterest/methods";
 import "/imports/api/importLogs/methods";
 import "/imports/api/enrollmentFee/methods";
+import "/imports/api/school/server/methods";
 
 // All publication imported over here
 

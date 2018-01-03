@@ -67,8 +67,8 @@ class ClassPriceForm extends React.Component {
             classTypeId: selectedClassType && selectedClassType.map(data => data._id),
             expDuration: this.expDuration.value && parseInt(this.expDuration.value),
             expPeriod: expPeriod,
-            noClasses: this.noClasses.value,
-            cost: this.classPriceCost.value,
+            noClasses: this.noClasses.value && parseInt(this.noClasses.value),
+            cost: this.classPriceCost.value && parseInt(this.classPriceCost.value),
 
         }
         this.setState({isBusy: true});

@@ -6,7 +6,7 @@ import School from "/imports/api/school/fields";
 
 Meteor.methods({
     "classTimes.getClassTimes": function({ schoolId, classTypeId, classTimeId, locationId}) {
-        console.log("classTimes.getClassTimes -->>",schoolId, classTypeId, classTimeId)
+        // console.log("classTimes.getClassTimes -->>",schoolId, classTypeId, classTimeId)
         // console.log("SchoolSchool -->>",School.find({ _id: schoolId}))
         return {
             school: School.findOne({ _id: schoolId}), 
@@ -17,7 +17,7 @@ Meteor.methods({
     },
     "classTimes.addClassTimes": function({doc}) {
         const user = Meteor.users.findOne(this.userId);
-        console.log("classTimes.addClassTimes methods called!!!", doc);
+        // console.log("classTimes.addClassTimes methods called!!!", doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "ClassTimes_CUD" })) {
             // doc.remoteIP = this.connection.clientAddress;
             doc.createdAt = new Date();
@@ -39,7 +39,7 @@ Meteor.methods({
     },
     "classTimes.removeClassTimes": function({doc}) {
         const user = Meteor.users.findOne(this.userId);
-        console.log("classTimes.removeClassTimes methods called!!!",doc);
+        // console.log("classTimes.removeClassTimes methods called!!!",doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "ClassTimes_CUD" })) {
             ClassInterest.remove({classTimeId: doc._id})
             return ClassTimes.remove({ _id: doc._id });

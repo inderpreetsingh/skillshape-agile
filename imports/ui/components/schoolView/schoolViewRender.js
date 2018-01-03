@@ -1,5 +1,7 @@
 import React,{Fragment} from 'react';
+import ReactDOM from 'react-dom';
 import { browserHistory, Link } from 'react-router';
+import { floor } from 'lodash';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
@@ -8,7 +10,7 @@ import Email from 'material-ui-icons/Email';
 import Phone from 'material-ui-icons/Phone';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import Switch from 'material-ui/Switch';
-
+import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 
 import { Loading } from '/imports/ui/loading';
@@ -18,6 +20,7 @@ import MyCalender from '/imports/ui/components/users/myCalender';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
+import { ContainerLoader } from '/imports/ui/loading/container';
 
 export default function() {
 
@@ -30,7 +33,8 @@ export default function() {
 		classType,
 		currentUser,
     schoolId,
-    classes
+    classes,
+    enrollmentFee,
 	} = this.props;
 
 	const {
@@ -48,8 +52,9 @@ export default function() {
   const imageMediaList = this.getImageMediaList(schoolData.mediaList, "Image");
   const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
   let isPublish = this.getPublishStatus(schoolData.is_publish)
-	console.log("State  -->>",this.state)
-
+	// console.log("State  -->>",this.state)
+  console.log("SchoolView render classPricing -->>",classPricing)
+  console.log("SchoolView render monthlyPricing -->>",monthlyPricing)
   return (
 		<div className="content">
 			{ (claimSchoolModal || claimRequestModal || successModal) && <CustomModal
@@ -115,19 +120,19 @@ export default function() {
               </CardMedia>*/}
               <CardContent >
 
-                {
-                  checkUserAccess && (
-                    <div>Publish / Unpublish <Switch
-                        checked={isPublish}
-                        onChange={this.handlePublishStatus.bind(this, schoolId)}
-                        aria-label={schoolId}
-                      /></div>
-                  )
-                }
                 <Grid container>
 
                   <Grid item xs={12} sm={8} md={6} >
                     <Grid item xs={12}>
+                        {
+                          checkUserAccess && (
+                            <div>Publish / Unpublish <Switch
+                                checked={isPublish}
+                                onChange={this.handlePublishStatus.bind(this, schoolId)}
+                                aria-label={schoolId}
+                              /></div>
+                          )
+                        }
                         <Typography type="p"> About {schoolData.name} </Typography>
                         <Typography type="caption"> {schoolData.aboutHtml && ReactHtmlParser(schoolData.aboutHtml)} </Typography>
                     </Grid>
@@ -137,33 +142,52 @@ export default function() {
                     </Grid>
                   </Grid>
                   <Grid item xs={12} sm={4} md={3}>
-                    <div className="card-content" id="google-map" style={{height:'200px'}}>
+                    <div className="card-content" id="schoolLocationMap" style={{height: '100%', minHeight: 250}}>
                     </div>
                   </Grid>
                   <Grid item xs={12} sm={12} md={3}>
                     <Grid container style={{textAlign: "center"}}>
                       <Grid item xs={12} sm={6} md={12} >
-                        {
-                         schoolLocation.map((data, index) => {
-                           return (
-                            <div key={index}>
-                             <div className="btn-info address-bar-box">
-                               <h4><i className="fa fa-map-marker"></i>&nbsp;{data.title}</h4>
-                             </div>
-                             <div className="school-view-adress card-content">
-                              <p>{data.address}<br/>
-                                {data.city},{data.state} - {data.zip}<br/>
-                                {data.country}
-                              </p>
-                              </div>
-                             </div>
-                           )
-                         })
-                        }
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={12}>
-                        <Typography type="p">Monthly Package from ......</Typography>
-                        <Typography type="p">Monthly Package from .....</Typography>
+                        <Card className={classes.card}>
+                          {
+                            this.state.bestPriceDetails ? (
+                              <Fragment>
+                                <CardContent className={classes.content}>
+                                  <Grid>
+                                    { 
+                                      this.state.bestPriceDetails.bestMonthlyPrice && (
+                                        <Typography component="p">
+                                          Monthly Packages from {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}$ per Month
+                                        </Typography>
+                                      )
+                                    }
+                                    { 
+                                      this.state.bestPriceDetails.bestClassPrice && (
+                                        <Typography component="p">
+                                          Class Packages from {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}$ per Class
+                                        </Typography>
+                                      )
+                                    }
+                                    </Grid>
+                                </CardContent>
+                                <CardActions>
+                                  <Grid container>
+                                    <Grid item xs={12} sm={6}>
+                                      <Button onClick={this.scrollToTop.bind(this, this.schoolCalendar)} color="primary" style={{width: '100%'}} dense raised>
+                                        Schedule
+                                      </Button>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                      <Button onClick={this.scrollToTop.bind(this, this.schoolPrice)} color="accent" style={{width: '100%'}} dense raised>
+                                        Pricing
+                                      </Button>
+                                    </Grid>
+                                  </Grid>
+                                </CardActions>
+                              </Fragment>
+                            ) : <ContainerLoader/>
+                          }
+                        </Card>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -211,7 +235,7 @@ export default function() {
           </Grid>
         </Grid>
         <Grid container className={classes.content}>
-          <Grid item xs={12}>
+          <Grid ref={(el) => { this.schoolCalendar = el; }} item xs={12}>
             <Card className={classes.content}>
               {<MyCalender {...this.props}/>}
             </Card>
@@ -234,7 +258,178 @@ export default function() {
             </Card>
           </Grid>
         </Grid>
-
+        <Grid ref={(el) => { this.schoolPrice = el; }} container className={classes.content}>
+          <Grid item xs={12}>
+            <Card className={classes.content}>
+              <div className="content-list-heading ">
+                <h2 style={{textAlign: 'center'}}>Prices
+                  <figure>
+                    <img style={{maxWidth: "100%"}} src="/images/heading-line.png"/>
+                  </figure>
+                </h2>
+              </div>
+              <Grid container>
+                <Grid item xs={12} sm={2}>
+                  <Grid item xs={12}>
+                    <Typography align="center" type="headline">
+                      Enrollment Fee
+                    </Typography>
+                  </Grid>
+                  <Grid container>
+                    {
+                      enrollmentFee && enrollmentFee.map((enrollmentFee, index)=> {
+                        return (
+                          <Grid key={index} item xs={12} sm={12}>
+                            <Card  className={`${classes.card} price-card-container`}>
+                              <CardContent className={classes.content}>
+                                <Typography align="center" type="headline">
+                                  {enrollmentFee.name}
+                                </Typography>
+                                <br></br>
+                                <Typography component="p">
+                                    Cost: {enrollmentFee.cost}$
+                                </Typography>
+                                <br></br>
+                                <Typography component="p">
+                                  Covers: {
+                                    _.isEmpty(enrollmentFee.selectedClassType) ? "None" :
+                                    enrollmentFee.selectedClassType.map((classType) => {
+                                      return <span>{classType.name} </span>
+                                    })
+                                  }
+                                </Typography>
+                              </CardContent>
+                              <CardActions>
+                                <Button onClick={this.handlePurcasePackage.bind(this, "EP", enrollmentFee._id, schoolId)} color="primary" style={{width: '100%'}} dense raised>
+                                  Perchase
+                               </Button>
+                              </CardActions>
+                            </Card>
+                          </Grid>
+                        )
+                      })
+                    }
+                  </Grid>
+                </Grid>
+                
+                <Grid item xs={12} sm={4}>
+                  <Grid item xs={12}>
+                    <Typography align="center" type="headline">
+                      Per Class Package
+                    </Typography>
+                  </Grid>
+                  <Grid container>
+                    {
+                      classPricing && classPricing.map((classPrice, index)=> {
+                        return (
+                          <Grid key={index} item xs={12} sm={6}>
+                            <Card className={`${classes.card} price-card-container`}>
+                              <CardContent className={classes.content}>
+                                <Typography align="center" type="headline">
+                                  {classPrice.packageName}
+                                </Typography>
+                                 <br></br>
+                                <Typography component="p">
+                                  {classPrice.cost}$  for {classPrice.noClasses} class
+                                </Typography>
+                                 <br></br>
+                                <Typography component="p">
+                                  Expiration: {(classPrice.expDuration && classPrice.expPeriod) ? `${classPrice.expDuration} ${classPrice.expPeriod}` : "None"}
+                                </Typography>
+                                 <br></br>
+                                <Typography component="p">
+                                  Covers: {
+                                    _.isEmpty(classPrice.selectedClassType) ? "None" :
+                                    classPrice.selectedClassType.map((classType) => {
+                                      return <span>{classType.name} </span>
+                                    })
+                                  }
+                                </Typography>
+                              </CardContent>
+                              <CardActions>
+                                <Button onClick={this.handlePurcasePackage.bind(this, "CP", classPrice._id, schoolId)} color="primary" style={{width: '100%'}} dense raised>
+                                  Perchase
+                               </Button>
+                              </CardActions>
+                            </Card>
+                          </Grid>
+                        )
+                      })
+                    }
+                  
+                  </Grid>
+                </Grid>
+                
+                <Grid item xs={12} sm={6}>
+                  <Grid item xs={12}>
+                    <Typography align="center" type="headline">
+                      Monthly Packages
+                    </Typography>
+                  </Grid>
+                  <Grid container>
+                    {
+                      monthlyPricing && monthlyPricing.map((monthPrice, index)=> {
+                        return (
+                          <Card style={{maxWidth: 285, margin:5}} key={index} className={`${classes.card} price-card-container`}>
+                            <CardContent className={classes.content}>
+                              <Typography align="center" type="headline">
+                                {monthPrice.packageName}
+                              </Typography>
+                              <br></br>
+                              <Typography component="p">
+                                Payment Method: {monthPrice.pymtMethod}
+                              </Typography>
+                              <br></br>
+                              {
+                                monthPrice.pymtType && (
+                                  <Fragment>
+                                    <Typography component="p">
+                                      Payment Type: {monthPrice.pymtType}
+                                    </Typography>
+                                    <br></br>
+                                  </Fragment>
+                                )
+                              }
+                              <Typography component="p">
+                                Covers: {
+                                  _.isEmpty(monthPrice.selectedClassType) ? "None" :
+                                  monthPrice.selectedClassType.map((classType) => {
+                                    return <span>{classType.name} </span>
+                                  })
+                                }
+                              </Typography>
+                              <br></br>
+                              {
+                                _.isEmpty(monthPrice.pymtDetails) ? "None" :
+                                monthPrice.pymtDetails.map((payment) => {
+                                  return <Grid container>
+                                    <Grid item xs={12} sm={7}>
+                                      <Typography component="p">
+                                        {payment.cost}$ per month for {payment.month} months
+                                      </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={5}>
+                                      <Button onClick={this.handlePurcasePackage.bind(this, "MP", monthPrice._id, schoolId)} color="primary" style={{width: '100%'}} dense raised>
+                                        Perchase
+                                      </Button>
+                                    </Grid>
+                                    <br></br>
+                                    <br></br>
+                                    <Divider />
+                                  </Grid>
+                                })
+                              }
+                            </CardContent>
+                          </Card>
+                        )
+                      })
+                    }
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Card>
+          </Grid>
+        </Grid>
 
 
         {/*<div className="card">

@@ -32,6 +32,35 @@ function infoSchool({school}) {
     return
 }
 
+export function createMarkersOnMap(mapId, locationData) {
+    let map = new google.maps.Map(document.getElementById(mapId), {zoom: 5});
+    let i = 0;
+    for(let obj of locationData) {
+        // console.log("createMarkersOnMap obj-->>",obj)
+        if(obj.loc && obj.loc[0] && obj.loc[1]) {
+            let geolocate = new google.maps.LatLng(obj.loc[0], obj.loc[1])
+            let marker = new google.maps.Marker({
+                position: geolocate,
+                map: map
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+                const address = `<div id="address-content">
+                 ${obj.address}, ${obj.city}, ${obj.country}
+                </div>`
+                let infowindow = new google.maps.InfoWindow();
+                infowindow.setContent(address);
+                infowindow.open(map, marker);
+            });
+
+            if(i=== 0) {
+                map.setCenter(geolocate);
+            }
+            i++;
+        }
+    }
+    
+}
+
 export function reCenterMap(map, center) {
     // console.log("reCenterMap center -->>",center)
     map.panTo(new google.maps.LatLng(center[0], center[1]));

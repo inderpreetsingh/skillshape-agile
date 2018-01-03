@@ -2,6 +2,8 @@ import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import SchoolViewBase from './schoolViewBase';
 import SchoolViewRender from './schoolViewRender';
+import styles from "./style";
+import { withStyles } from "/imports/util";
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
@@ -9,8 +11,7 @@ import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import School from "/imports/api/school/fields";
-import styles from "./style";
-import { withStyles } from "/imports/util";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 
 class SchoolView extends SchoolViewBase {
 
@@ -18,6 +19,7 @@ class SchoolView extends SchoolViewBase {
         super(props);
         this.state = {
             isPublish: true,
+            bestPriceDetails: null,
         }
     }
     render() {
@@ -32,6 +34,7 @@ export default createContainer(props => {
     let monthlyPricing;
     let schoolLocation;
     let classType;
+    let enrollmentFee;
 
     if (slug) {
         Meteor.subscribe("UserSchoolbySlug", slug);
@@ -49,23 +52,27 @@ export default createContainer(props => {
         Meteor.subscribe("classTypeBySchool", schoolId);
         Meteor.subscribe("classPricing.getClassPricing", { schoolId })
         Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId })
-
+        Meteor.subscribe("enrollmentFee.getEnrollmentFee", {schoolId});
+    
         schoolData = School.findOne({ _id: schoolId })
         classPricing = ClassPricing.find({ schoolId: schoolId }).fetch()
         monthlyPricing = MonthlyPricing.find({ schoolId: schoolId }).fetch()
         schoolLocation = SLocation.find({ schoolId: schoolId }).fetch()
         classType = ClassType.find({ schoolId: schoolId }).fetch();
+        enrollmentFee = EnrollmentFees.find({schoolId}).fetch();
     }
 
-    console.log("SchoolView schoolData--->>", schoolData)
-    console.log("SchoolView classType--->>", classType)
-    console.log("SchoolView classPricing--->>", classPricing)
-    console.log("SchoolView monthlyPricing--->>", monthlyPricing)
+    // console.log("SchoolView schoolData--->>", schoolData)
+    // console.log("SchoolView classType--->>", classType)
+    // console.log("SchoolView classPricing--->>", classPricing)
+    // console.log("SchoolView monthlyPricing--->>", monthlyPricing)
+    // console.log("SchoolView schoolLocation--->>", schoolLocation)
     return { ...props,
         schoolData,
         classPricing,
         monthlyPricing,
         schoolLocation,
+        enrollmentFee,
         classType,
         schoolId,
     };
