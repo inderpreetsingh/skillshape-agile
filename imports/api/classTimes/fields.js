@@ -1,4 +1,5 @@
 import config from "/imports/config"
+import SLocation from "/imports/api/sLocation/fields";
 
 const ClassTimes = new Mongo.Collection(config.collections.classTimes);
 /**
@@ -59,6 +60,7 @@ ClassTimes.attachSchema(new SimpleSchema({
     },
 }));
 
+ClassTimes.join(SLocation, "locationId", "selectedLocation", ["rooms"]);
 
 Meteor.startup(function() {
     if (Meteor.isServer) {

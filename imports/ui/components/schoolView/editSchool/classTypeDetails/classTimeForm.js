@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { ContainerLoader } from '/imports/ui/loading/container';
-import SelectArrayInput from '/imports/startup/client/material-ui-chip-input/selectArrayInput';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import config from '/imports/config';
@@ -16,134 +15,135 @@ import Dialog, {
   withMobileDialog,
 } from 'material-ui/Dialog';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import ResponsiveTabs from '/imports/util/responsiveTabs';
+import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
+import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
+import { WeekDaysRow } from './weekDaysRow';
 import '/imports/api/sLocation/methods';
 
-const formId = "classTypeForm";
+const formId = "classTimeForm";
 
 const styles = theme => {
-  	return {
-	    button: {
-	        margin: 5,
-	        width: 150
-	    },
-	    classtypeInputContainer: {
-		    alignItems: 'center',
-		    textAlign: 'left'
-		}
+    return {
+      button: {
+          margin: 5,
+          width: 150
+      },
+      classtypeInputContainer: {
+        alignItems: 'center',
+        textAlign: 'left'
+    }
     }
 }
 
 class ClassTimeForm extends React.Component {
 
-	constructor(props){
-	    super(props);
-	    this.state = this.initializeFields();
-	    // this.onUpdateSkillCategoryInput = _.debounce(this.onUpdateSkillCategoryInput, 500);
-  	}
-
-  	initializeFields = () => {
-  		const { data, locationData } = this.props;
-  		// console.log("initializeFields data -->>",data)
-  		let state = {
-  			gender: "Any",
-	      	skillCategoryData: [],
-	      	skillSubjectData: [],
-	      	skillCategoryId: null,
-	      	selectedSkillSubject: null,
-	      	selectedLocation: null,
-	      	searchSkillCategoryText: "",
-	    }
-  		if(data  && _.size(data) > 0) {
-  			if(data.selectedSkillCategory && _.size(data.selectedSkillCategory) > 0) {
-  				state.searchSkillCategoryText = data.selectedSkillCategory.name;
-  			}
-  			
-  			return {
-  				...state, 
-  				...data, 
-  				skillCategoryData: [data.selectedSkillCategory],
-  				location: data.locationId,
-  				selectedLocation: locationData && _.find(locationData, function(location) { return data.locationId === location._id })
-  			}
-  		}
-  		return state
-  	}
-
-
-  	onSkillSubjectChange = (values)=> this.setState({selectedSkillSubject: values})
-  	
-  	onSkillCategoryChange = (values)=> {
-
-  		const selectedSkillSubject = this.state.selectedSkillSubject && this.state.selectedSkillSubject.filter((data) => {
-  			return findIndex(values, {_id: data.skillCategoryId}) > -1
-  		})
-  		console.log("selectedSkillSubject -->>",selectedSkillSubject)
-  		this.setState({selectedSkillCategory: values, selectedSkillSubject});
-  	}
-
-    handleInputChange = (fieldName, event) => this.setState({[fieldName]: event.target.value})
-    	
-    handleSelectChange = (fieldName, event, index, value) => this.setState({[fieldName]: value})
-    
-    handleSkillCategoryInputChange = (value) => {
-    	console.log("handleSkillCategoryInputChange -->>",value)
-    	Meteor.call("getSkillCategory",{textSearch: value}, (err,res) => {
-    	    console.log("getSkillCategory res -->>",res)
-    	    if(res) {
-	    	    this.setState({
-	    	      skillCategoryData: res || [],
-	    	    })
-    	    }
-        })
+    constructor(props){
+      super(props);
+      this.state = this.initializeFields();
     }
 
-    handleSkillSubjectInputChange = (value) => {
-    	console.log("handleSkillSubjectInputChange -->>",value)
-    	if(!_.isEmpty(this.state.selectedSkillCategory)) {
-	    	let skillCategoryIds = this.state.selectedSkillCategory.map((data) => data._id)
-	    	Meteor.call("getSkillSubjectBySkillCategory",{skillCategoryIds: skillCategoryIds, textSearch: value}, (err,res) => {
-	    	    if(res) {
-		    	    this.setState({
-		    	      skillSubjectData: res || [],
-		    	    })
-	    	    }
-	        })
-    	} else {
-    		toastr.error("Please select skill category first","Error");
-    	}
+    initializeFields = () => {
+        const { data, locationData, parentData } = this.props;
+        console.log("initializeFields data -->>",this.props)
+        let state = {
+            roomData: [],
+        }
+
+        if(!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {
+            state.roomData = parentData.selectedLocation.rooms;
+            state.locationId = parentData.selectedLocation._id;
+        }
+
+        if(!_.isEmpty(data)) {
+            if(data.scheduleType === "oneTime") {
+                state.tabValue = 0
+            } else if(data.scheduleType === "recurring") {
+                state.tabValue = 1
+            } else if(data.scheduleType === "onGoing") {
+                state.tabValue = 2
+            }
+
+            state.startDate = data.startDate;
+            state.startTime = data.startTime;
+            state.endDate = data.endDate;
+            state.duration = data.duration;
+            state.roomId = data.roomId;
+        }
+      // if(!_.isEmpty(data)) {
+        
+      //   return {
+      //     ...state, 
+      //     ...data, 
+      //     location: data.locationId,
+      //     selectedLocation: locationData && _.find(locationData, function(location) { return data.locationId === location._id })
+      //   }
+      // }
+      console.log("Final state -->>",state)
+      return state
+    }
+
+    onTabChange = (tabValue) => {
+        console.log("onTabChange state -->>",tabValue)
+        this.setState({tabValue})
+    }
+
+    handleChangeDate = (fieldName, event, date) => {
+        console.log("handleChangeDate -->>",fieldName, date)
+        this.setState({[fieldName]: date})
     }
 
     onSubmit = (event) => {
-    	console.log("--------------------- ClassType from submit----------------")
-    	event.preventDefault()
-    	console.log("onSubmit state -->>",this.state);
-    	const { schoolId, data } = this.props;
-    	
-    	const payload = {
-    		schoolId: schoolId,
-    		name: this.classTypeName.value,
-    		desc: this.desc.value,
-    		skillCategoryId: this.state.selectedSkillCategory && this.state.selectedSkillCategory.map(data => data._id),
-    		skillSubject: this.state.selectedSkillSubject && this.state.selectedSkillSubject.map(data => data._id),
-    		gender: this.state.gender,
-    		experienceLevel: this.state.experienceLevel,
-    		ageMin: this.ageMin.value,
-    		ageMax: this.ageMax.value,
-    		locationId: this.state.location,
-    	}
+       console.log("--------------------- ClassTimes from submit----------------")
+        event.preventDefault()
+        // console.log("onSubmit state -->>",this.state);
+        const { schoolId, data, parentKey, } = this.props;
+        const { tabValue, locationId } = this.state;
 
-    	if(data && data._id) {
-            this.handleSubmit({ methodName: "classType.editClassType", doc: payload, doc_id: data._id })
-        } else {
-            this.handleSubmit({ methodName: "classType.addClassType", doc: payload })
+        const payload = {
+            schoolId: schoolId,
+            classTypeId: parentKey,
+            name: this.classTimeName.value,
+            desc: this.desc.value,
+            locationId: locationId,
         }
-    	
+        if(tabValue === 0) {
+            
+            payload.scheduleType = "oneTime";
+            payload.roomId = this.state.roomId;
+            payload.startDate = this.state.startDate;
+            payload.startTime = this.state.startTime;
+            payload.duration = this.duration.value && parseInt(this.duration.value);
+
+        } else if(tabValue === 1) {
+            
+            payload.scheduleType = "recurring";
+            payload.startDate = this.state.startDate;
+            payload.endDate = this.state.endDate;
+            payload.scheduleDetails = this.refs.weekDaysRow.getRowData();
+        
+        } else if(tabValue === 2) {
+            
+            payload.scheduleType = "onGoing"
+            payload.startDate = new Date();
+            payload.scheduleDetails = this.refs.weekDaysRow.getRowData();
+        
+        }
+        console.log("ClassTimes submit -->>",payload)
+        
+        if(data && data._id) {
+            this.handleSubmit({ methodName: "classTimes.editClassTimes", doc: payload, doc_id: data._id })
+        } else {
+            this.handleSubmit({ methodName: "classTimes.addClassTimes", doc: payload })
+        }
+      
     }
 
     handleSubmit = ({ methodName, doc, doc_id })=> {
-    	console.log("handleSubmit methodName-->>",methodName)
+        console.log("handleSubmit methodName-->>",methodName)
         console.log("handleSubmit doc-->>",doc)
         console.log("handleSubmit doc_id-->>",doc_id)
+        this.setState({isBusy: true});
         Meteor.call(methodName, { doc, doc_id }, (error, result) => {
             if (error) {
               console.error("error", error);
@@ -155,24 +155,175 @@ class ClassTimeForm extends React.Component {
         });
     }
 
-	render() {
-		const { fullScreen, data, classes, locationData } = this.props;
-		const { skillCategoryData, skillSubjectData } = this.state;
-
-		return (
-			<div>
-				<Dialog
-		          open={this.props.open}
-		          onClose={this.props.onClose}
-		          aria-labelledby="form-dialog-title"
-		          fullScreen={fullScreen}
-		        >
-		        	<DialogTitle id="form-dialog-title">Add and edit Class Times functionality not yet implemented!!!!</DialogTitle>
-		        	
-		        </Dialog>
-			</div>
-		)
-	}
+  render() {
+    const { fullScreen, data, classes, locationData } = this.props;
+    const { skillCategoryData, skillSubjectData } = this.state;
+    console.log("ClassTimeForm state -->>",this.state);
+    return (
+      <div>
+        <Dialog
+            open={this.props.open}
+            onClose={this.props.onClose}
+            aria-labelledby="form-dialog-title"
+            fullScreen={fullScreen}
+        >
+              <DialogTitle id="form-dialog-title">Add Class Times</DialogTitle>
+                    { this.state.isBusy && <ContainerLoader/>}
+                    { 
+                        this.state.showConfirmationModal && <ConfirmationModal
+                            open={this.state.showConfirmationModal}
+                            submitBtnLabel="Yes, Delete"
+                            cancelBtnLabel="Cancel"
+                            message="You will delete this Class Times, Are you sure?"
+                            onSubmit={() => this.handleSubmit({ methodName: "classTimes.removeClassTimes", doc: data})}
+                            onClose={() => this.setState({showConfirmationModal: false})}
+                        />
+                    }
+                    { 
+                        this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
+                            <DialogContent>
+                                <form id={formId} onSubmit={this.onSubmit}>
+                                    <TextField
+                                        required={true}
+                                        defaultValue={data && data.name}
+                                        margin="dense"
+                                        inputRef={(ref)=> this.classTimeName = ref}
+                                        label="Class Time Name"
+                                        type="text"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        defaultValue={data && data.desc}
+                                        margin="dense"
+                                        inputRef={(ref)=> this.desc = ref}
+                                        label="Brief Description"
+                                        type="text"
+                                        fullWidth
+                                    />
+                                    <ResponsiveTabs
+                                        defaultValue={this.state.tabValue}
+                                        tabs={["One Time","Repeating with Start/End","Ongoing"]}
+                                        color= "primary"
+                                        onTabChange={this.onTabChange}
+                                    />
+                                    {
+                                        this.state.tabValue === 0 && (
+                                            <div style={{border: '3px solid blue', padding: 10}}>
+                                                <Grid container>
+                                                    <Grid item sm={6} xs={12}>
+                                                        <MaterialDatePicker
+                                                            required={true}
+                                                            hintText={"Start Date"}
+                                                            floatingLabelText={"Start Date *"}
+                                                            value={this.state.startDate}
+                                                            onChange={this.handleChangeDate.bind(this, "startDate")} 
+                                                            fullWidth={true}
+                                                        />
+                                                    </Grid>
+                                                    <Grid item sm={6} xs={12}>
+                                                        <MaterialTimePicker
+                                                            required={true}
+                                                            format={"ampm"}
+                                                            value={this.state.startTime}
+                                                            floatingLabelText={"Start Time *"} 
+                                                            hintText={"Start Time"}
+                                                            onChange={this.handleChangeDate.bind(this, "startTime")}
+                                                            fullWidth={true}
+                                                        />
+                                                    </Grid>
+                                                    <Grid item sm={6} xs={12}>    
+                                                        <TextField
+                                                            required={true}
+                                                            defaultValue={data && data.duration}
+                                                            margin="dense"
+                                                            inputRef={(ref)=> this.duration = ref}
+                                                            label="Length"
+                                                            type="number"
+                                                            fullWidth
+                                                        />
+                                                    </Grid>
+                                                    <Grid item sm={6} xs={12}>    
+                                                        <Select
+                                                            native
+                                                            margin="dense"
+                                                            style={{padding: 11, maxWidth: '90%'}}
+                                                            input={<Input id="roomId"/>}
+                                                            value={this.state.roomId}
+                                                            onChange={(event) => this.setState({ roomId: event.target.value })}
+                                                            fullWidth
+                                                        >
+                                                            <option value={null}>{"Select Room"}</option>
+                                                            {
+                                                                this.state.roomData.map((data, index)=> {
+                                                                    return <option key={index} value={data.id}>{data.name}</option>
+                                                                })
+                                                            }
+                                                        </Select>
+                                                    </Grid>
+                                                </Grid>
+                                            </div>    
+                                        )
+                                    }
+                                    {
+                                        (this.state.tabValue === 1 || this.state.tabValue === 2) && (
+                                            <div style={{border: '3px solid blue', padding: 10}}>
+                                                {
+                                                    this.state.tabValue === 1 && (
+                                                        <Grid container>
+                                                            <Grid item sm={6} xs={12}>
+                                                                <MaterialDatePicker
+                                                                    required={true}
+                                                                    hintText={"Start Date"}
+                                                                    floatingLabelText={"Start Date *"}
+                                                                    value={this.state.startDate}
+                                                                    onChange={this.handleChangeDate.bind(this, "startDate")} 
+                                                                    fullWidth={true}
+                                                                />
+                                                            </Grid>
+                                                            <Grid item sm={6} xs={12}>
+                                                                <MaterialDatePicker
+                                                                    required={true}
+                                                                    hintText={"End Date"}
+                                                                    floatingLabelText={"End Date *"}
+                                                                    value={this.state.endDate}
+                                                                    onChange={this.handleChangeDate.bind(this, "endDate")} 
+                                                                    fullWidth={true}
+                                                                />
+                                                            </Grid>
+                                                        </Grid> 
+                                                    )
+                                                }
+                                                <WeekDaysRow
+                                                    ref="weekDaysRow"
+                                                    data={data && data.scheduleDetails}
+                                                    roomData={this.state.roomData}
+                                                />
+                                            </div>
+                                        )
+                                    }        
+                                </form>
+                            </DialogContent>
+                        )
+                    }
+                    <DialogActions>
+                    {
+                        data && (
+                            <Button onClick={() => this.setState({showConfirmationModal: true})} color="accent">
+                                Delete
+                            </Button>
+                        )
+                    }
+                    <Button onClick={() => this.props.onClose()} color="primary">
+                      Cancel
+                    </Button>
+                    <Button type="submit" form={formId} color="primary">
+                      { data ? "Save" : "Submit" } 
+                    </Button>
+                </DialogActions>
+            </Dialog>
+      </div>
+    )
+  }
 }  
 
 export default withStyles(styles)(withMobileDialog()(ClassTimeForm));

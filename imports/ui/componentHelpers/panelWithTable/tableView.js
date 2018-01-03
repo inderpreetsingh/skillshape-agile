@@ -3,7 +3,7 @@ import methods from '/imports/ui/modal/formBuilderMethods';
 import {cutString} from '/imports/util';
 
 export default function (props) {
-	console.log("panel with table props -->>",props)
+	// console.log("panel with table props -->>",props)
 	const { 
 		settings, 
 		mainTableData, 

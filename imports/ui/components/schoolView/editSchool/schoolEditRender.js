@@ -15,8 +15,8 @@ import MediaDetails from './mediaDetails';
 
 
 export default function (props) {
-    console.log("school edit render state -->>",this.state);
-    console.log("school edit render props -->>",this.props);
+    // console.log("school edit render state -->>",this.state);
+    // console.log("school edit render props -->>",this.props);
     const {
         selecetdView,
         formBuilderModal,

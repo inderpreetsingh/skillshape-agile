@@ -4,7 +4,7 @@ import PanelWithTableRender from './panelWithTableRender';
 import { withStyles } from 'material-ui/styles';
 
 const styles = theme => {
-      console.log("theme", theme);
+      // console.log("theme", theme);
       return {
         input: {
             display: 'none',

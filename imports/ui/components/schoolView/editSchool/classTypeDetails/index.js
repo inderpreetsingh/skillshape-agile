@@ -85,7 +85,7 @@ export default createContainer(props => {
         classTimesData = ClassTimes.find({ schoolId },{sort: {_id: -1}}).fetch();
     }
 
-    console.log("classTimesData -->>",classTimesData)
+    // console.log("classTimesData -->>",classTimesData)
     /*Find skills to make this container reactive on skill
     other wise skills are joined with collections using package
     perak:joins */

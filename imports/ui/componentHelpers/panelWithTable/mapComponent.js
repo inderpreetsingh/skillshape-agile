@@ -12,7 +12,7 @@ export default class MapComponent extends React.Component {
   	}
 
 	render() {
-		console.log("MapComponent props -->>",this.props);
+		// console.log("MapComponent props -->>",this.props);
 		const { mapData } = this.props;
 		return (
 			<div style={{height: '100%', minHeight: 250}} id={`goolge-map-${mapData._id}`}>
