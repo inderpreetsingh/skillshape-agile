@@ -29,15 +29,15 @@ const styles = theme => {
     image: {
       verticalAlign: 'middle',
       width: 'auto',
-      height: 250,
+      height: 200,
     },
     imageContainer: {
-      backgroundColor: theme.palette.grey[100],
+      backgroundColor: '#000',
       display: 'inline-flex',
       alignItems: 'center',
       color: '#fff',
       width: '100%',
-      minHeight: 250,
+      minHeight: 200,
       justifyContent: 'center',
       backgroundSize: 'auto',
     },
@@ -127,7 +127,7 @@ class ClassDetailModal extends React.Component{
             { error && <div style={{color: 'red'}}>{error}</div> }
             { !isLoading && !error && (
                     <Card>
-                        <CardMedia style={{height:250}}>
+                        <CardMedia style={{height:200}}>
                             <div className={classes.imageContainer}>
                                 <div style={{position: "absolute", top: 10, right: 10}}>
                                     {

@@ -1,5 +1,9 @@
 import ClassType from "/imports/api/classType/fields";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import ClassPricing from "/imports/api/classPricing/fields";
+import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "./fields";
+import {sendPackagePurchaseEmail} from "/imports/api/email";
 
 Meteor.methods({
 	editSchool: function (id, data) {
@@ -47,5 +51,34 @@ Meteor.methods({
     "school.publishSchool": function (schoolId, is_publish) {
 
         return School.update({ _id: schoolId }, { $set: { "is_publish": is_publish } });
+    },
+    'school.purchasePackage': function({typeOfTable, tableId, schoolId}) {
+        // Do validation
+        let PricingTable = "";
+        if (!typeOfTable || !tableId || !schoolId) {
+            throw new Meteor.Error("Some fields missing!", "Error while purchasing");
+        }
+        if(typeOfTable == 'MP') {
+            PricingTable = MonthlyPricing;
+        } else if (typeOfTable == 'CP') {
+            PricingTable = ClassPricing;
+        } else if (typeOfTable == 'EP') {
+            PricingTable = EnrollmentFees;
+        }
+        let packageData = PricingTable.findOne(tableId);
+        const packageName = typeOfTable == 'EP' ? packageData.name : packageData.packageName;
+        // if Email exists then send Email to School.
+        let school = School.findOne(schoolId);
+        let currentUser = Meteor.users.findOne(this.userId);
+        let emailAddress = school && school.email;
+        if (!emailAddress) {
+            let adminUser = Meteor.users.findOne({'profile.schoolId': schoolId});
+            emailAddress = adminUser.emails[0].address;
+        }
+        if(emailAddress) {
+            sendPackagePurchaseEmail({packageName, to: emailAddress, buyer:currentUser.emails[0].address})
+            return {emailSent: true}
+        }
+        return {emailSent: false};
     }
 })
