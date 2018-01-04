@@ -52,15 +52,30 @@ export default function () {
                   <Typography type="Subheading"> School Info  </Typography>
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                    <TextField
-                        required={true}
-                        defaultValue={schoolData && schoolData.website}
-                        inputRef={(ref)=> this.website = ref}
-                        label="Website"
-                        type="text"
-                        fullWidth
-                        onChange={(event)=> {this.setState({website:event.target.value})}}
-                    />
+                    <Grid container>
+                      <Grid item xs={12}>
+                        <TextField
+                              required={true}
+                              defaultValue={schoolData && schoolData.name}
+                              inputRef={(ref)=> this.name = ref}
+                              label="School Name"
+                              type="text"
+                              fullWidth
+                              onChange={(event)=> {this.setState({name:event.target.value})}}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                              required={true}
+                              defaultValue={schoolData && schoolData.website}
+                              inputRef={(ref)=> this.website = ref}
+                              label="Website"
+                              type="text"
+                              fullWidth
+                              onChange={(event)=> {this.setState({website:event.target.value})}}
+                          />
+                      </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                 </Grid>
