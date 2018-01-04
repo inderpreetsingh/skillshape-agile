@@ -64,12 +64,8 @@ export default function () {
 	        	}
 	       	</div>
 	        <div className="pull-right">
-            	<input type="button" onClick={()=> {moveTab("embed_codes")}} className="btn btn-next btn-fill btn-success btn-wd" name="next" id="nxt" value="Next" disabled/>
             	<input type="button" className="btn btn-finish btn-fill btn-rose btn-wd" name="finish" value="Finish" style={{display: 'none'}}/>
         	</div>
-	        <div className="pull-left">
-	            <input type="button" onClick={()=> {moveTab("media_details")}} className="btn btn-previous btn-fill btn-warning btn-wd" name="previous" value="Previous" id="prv"/>
-	        </div>
         	<div className="clearfix"></div>
     	</div>
 	)

@@ -18,7 +18,7 @@ export default function() {
 				collectionData.length && (
 					<Grid container>
 						<Grid item xs={12} style={{display: 'inline-flex',justifyContent: 'center'}}>
-							<div style={{maxWidth: 650}}>
+							<div style={{width: "100%", maxWidth: 650}}>
 								<ImageGalleryView
 									mediaSubscriptionReady={this.props.mediaSubscriptionReady}
 									changeLimit = {this.props.changeLimit}
