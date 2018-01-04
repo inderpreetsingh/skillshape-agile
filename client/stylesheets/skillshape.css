@@ -25,3 +25,25 @@ body {
 .public-DraftEditor-content {
   min-height: 150px
 }
+
+.custom-overlay {
+  pointer-events: all !important;
+  height: auto !important;
+}
+
+.tile-icon-bar {
+  display: none !important;
+}
+
+.tile-viewport {
+  background: #000;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  max-width: 400px;
+  width: auto !important;
+}
+.tile-viewport img {
+  height: auto !important;
+  max-width: 400px;
+}

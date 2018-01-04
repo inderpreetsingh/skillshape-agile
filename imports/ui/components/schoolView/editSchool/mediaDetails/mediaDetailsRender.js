@@ -3,17 +3,20 @@ import Grid from 'material-ui/Grid';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import FileUpload from 'material-ui-icons/FileUpload';
+import Switch from 'material-ui/Switch';
+import { FormControlLabel, FormGroup } from 'material-ui/Form';
 
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import MediaFilter from './filter';
 import MediaList from './mediaList';
+import ImageGridGallery from './gridGallery/gridGalleryView.js';
 import CreateMedia from './createMedia';
 
 export default function () {
 
-	const { showCreateMediaModal, mediaFormData, filterStatus, limit } = this.state;
+	const { showCreateMediaModal, mediaFormData, filterStatus, limit , isGalleryView} = this.state;
 	const { schoolId, mediaData, classes, fullScreen, schoolView  } = this.props;
-	console.log("<<<<media details state --->>",this.state);
+	console.log("<<<<media details state --->>",this.props);
 	return (
 		<div>
 			{
@@ -41,7 +44,22 @@ export default function () {
 				<Grid item xs={12}>
 					{!schoolView && <Card>
 						<Grid container>
-							<Grid item xs={12}>
+							<Grid item xs={6}>
+								<FormGroup>
+							        <FormControlLabel
+							          style={{paddingLeft:13}}
+							          control={
+							            <Switch
+								          checked={isGalleryView}
+								          onChange={!isGalleryView ? ()=> this.setState({isGalleryView:true}): ()=> this.setState({isGalleryView:false})}
+								          aria-label="galleryViewTrue"
+								        />
+							          }
+							          label="Switch to Gallery view"
+							        />
+							    </FormGroup>
+							</Grid>
+							<Grid item xs={6}>
 								<div style={{textAlign:"right",padding: 8}}>
 									<Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
 							          	Upload Media <FileUpload />
@@ -49,7 +67,13 @@ export default function () {
 						        </div>
 				        	</Grid>
 				        	<Grid item xs={12}>
-						        <MediaList
+				        		{/*if isGalleryView true then need to show gallery view*/}
+				        		{isGalleryView ? <ImageGridGallery
+				        			filters={{schoolId}}
+				        			onDelete={this.onDeleteMedia}
+									openEditMediaForm={this.openEditMediaForm}
+
+				        			/> : <MediaList
 						        	changeLimit = {this.changeLimit}
 						        	limit= {limit || 0}
 									mediaData={mediaData}
@@ -58,7 +82,7 @@ export default function () {
 									openEditMediaForm={this.openEditMediaForm}
 									showEditButton={true}
 									{...this.state}
-								/>
+								/>}
 				        	</Grid>
 				        </Grid>
 					</Card>}
