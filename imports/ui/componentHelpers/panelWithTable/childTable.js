@@ -48,6 +48,12 @@ const styles = theme => {
         classtypeInputContainer: {
             alignItems: 'center',
             textAlign: 'left'
+        },
+        childTableSubData: {
+            marginBottom: theme.spacing.unit,
+            backgroundColor: theme.palette.grey[100],
+            borderRadius: 5,
+            padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 4}px`
         }
     }
 }

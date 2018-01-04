@@ -18,6 +18,8 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import '/imports/api/sLocation/methods';
+import { FormControl } from 'material-ui/Form';
+import { MenuItem } from 'material-ui/Menu';
 
 const formId = "classTypeForm";
 
@@ -47,6 +49,8 @@ class ClassTypeForm extends React.Component {
   		// console.log("initializeFields data -->>",data)
   		let state = {
   			gender: "Any",
+  			experienceLevel: "All",
+  			location:"",
 	      	skillCategoryData: [],
 	      	skillSubjectData: [],
 	      	skillCategoryId: null,
@@ -222,28 +226,23 @@ class ClassTypeForm extends React.Component {
 		      							choices={skillSubjectData} 
 		      						/>
 		      						<Grid container className={classes.classtypeInputContainer}>
-		      							<Grid  item xs={4} sm={2}>
-					                      <div>Gender</div>
-					                    </Grid>
-					                    <Grid  item xs={8} sm={3}>
-					                    	<Select
-	                                            native
-	                                            required={true}
-	                                            margin="dense"
-	                                            input={<Input id="gender"/>}
-	                                            value={this.state.gender}
-	                                            onChange={(event) => this.setState({ gender: event.target.value })}
-	                                            fullWidth
-	                                        >
-		                                        {
-		                                        	config.gender.map((data, index)=> {
-		                                        		return <option key={index} value={data.label}>{data.value}</option>
-		                                        	})
-		                                        }
-                                            </Select>
-					                    </Grid>
-					                    <Grid  item xs={2} sm={1} style={{textAlign: 'left'}}>
-					                      <div>Age</div>
+					                    <Grid  item xs={8} sm={6}>
+					                    	<FormControl fullWidth margin='dense'>
+						                    	<InputLabel htmlFor="gender">Gender</InputLabel>
+						                    	<Select
+		                                            required={true}
+		                                            input={<Input id="gender"/>}
+		                                            value={this.state.gender}
+		                                            onChange={(event) => this.setState({ gender: event.target.value })}
+		                                            fullWidth
+		                                        >
+			                                        {
+			                                        	config.gender.map((data, index)=> {
+			                                        		return <MenuItem key={index} value={data.label}>{data.value}</MenuItem>
+			                                        	})
+			                                        }
+	                                            </Select>
+                                            </FormControl>
 					                    </Grid>
 					                    <Grid  item xs={12} sm={6}>
 					                    	<div style={{display: 'flex', alignItems: 'center'}}>
@@ -260,9 +259,6 @@ class ClassTypeForm extends React.Component {
 							                            backgroundColor: "#fff",
 							                        }}
 									            />
-						                        <Grid  item xs={6} sm={1} style={{textAlign: 'left'}}>
-							                      <div> to: </div>
-							                    </Grid>
 						                        <TextField
 									            	defaultValue={data && data.ageMax}
 									                margin="dense"
@@ -281,38 +277,40 @@ class ClassTypeForm extends React.Component {
 		      						</Grid>
 		      						<Grid container>
 		      							<Grid  item xs={12} sm={6}>
-					                        <Select
-	                                            native
-	                                            required={true}
-	                                            margin="dense"
-	                                            input={<Input id="experienceLevel"/>}
-	                                            value={this.state.experienceLevel}
-	                                            onChange={(event) => this.setState({ experienceLevel: event.target.value })}
-	                                            fullWidth
-	                                        >
-		                                        {
-		                                        	config.experienceLevel.map((data, index)=> {
-		                                        		return <option key={index} value={data.label}>{data.value}</option>
-		                                        	})
-		                                        }
-                                            </Select>
+					                        <FormControl fullWidth margin='dense'>
+						                    	<InputLabel htmlFor="experienceLevel">Experience Level</InputLabel>
+						                        <Select
+		                                            required={true}
+		                                            input={<Input id="experienceLevel"/>}
+		                                            value={this.state.experienceLevel}
+		                                            onChange={(event) => this.setState({ experienceLevel: event.target.value })}
+		                                            fullWidth
+		                                        >
+			                                        {
+			                                        	config.experienceLevel.map((data, index)=> {
+			                                        		return <MenuItem key={index} value={data.label}>{data.value}</MenuItem>
+			                                        	})
+			                                        }
+	                                            </Select>
+                                            </FormControl>
 					                    </Grid>
 					                    <Grid  item xs={12} sm={6}>
-					                      <Select
-	                                            native
-	                                            required={true}
-	                                            margin="dense"
-	                                            input={<Input id="experienceLevel"/>}
-	                                            value={this.state.location}
-	                                            onChange={(event) => this.setState({ location: event.target.value })}
-	                                            fullWidth
-	                                        >
-		                                        {
-		                                        	locationData.map((data, index)=> {
-		                                        		return <option key={index} value={data._id}>{`${data.address}, ${data.city}, ${data.country}`}</option>
-		                                        	})
-		                                        }
-                                            </Select>
+					                    	<FormControl fullWidth margin='dense'>
+						                    	<InputLabel htmlFor="location">Location</InputLabel>
+						                      	<Select
+		                                            required={true}
+		                                            input={<Input id="location"/>}
+		                                            value={this.state.location}
+		                                            onChange={(event) => this.setState({ location: event.target.value })}
+		                                            fullWidth
+		                                        >
+			                                        {
+			                                        	locationData.map((data, index)=> {
+			                                        		return <MenuItem key={index} value={data._id}>{`${data.address}, ${data.city}, ${data.country}`}</MenuItem>
+			                                        	})
+			                                        }
+	                                            </Select>
+                                            </FormControl>
 					                    </Grid>
 		      						</Grid>
 				        		</form>

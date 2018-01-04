@@ -95,7 +95,7 @@ ClassType.join(SkillCategory, "skillCategoryId", "selectedSkillCategory", ["name
 
 ClassType.join(SkillSubject, "skillSubject", "selectedSkillSubject", ["name"]);
 
-ClassType.join(SLocation, "locationId", "selectedLocation", ["rooms"]);
+ClassType.join(SLocation, "locationId", "selectedLocation", ["rooms", "address", "city", "country"]);
 
 Meteor.startup(function() {
     if (Meteor.isServer) {
