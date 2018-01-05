@@ -62,12 +62,12 @@ export default function () {
 	              	<Grid  style={{display: 'inline-flex',alignItems: 'center', padding: 0}} item md={2} sm={3} xs={12}>
 	              		<div style={{display: 'inline-flex'}} >
 		                	<Icon className="material-icons" style={{marginRight: 5, lineHeight: "45px"}}>{settings.mainPanelHeader.leftIcon}</Icon>
-		                	<Typography style={{lineHeight: "45px"}} className={classes.headerText} >{settings.mainPanelHeader.title}</Typography>
+		                	<Typography style={{lineHeight: "45px"}} className={classes.headerText} >{settings.mainPanelHeader.title || ""}</Typography>
 	              		</div>
 	              	</Grid>
 	              	<Grid style={{margin: '10px 0'}} item sm={6} md={8} xs={12}>
 		                <Typography className={classes.headerText} type="caption" >
-		                	{settings.mainPanelHeader.notes}
+		                	{settings.mainPanelHeader.notes || ""}
 		                </Typography>
 	            	</Grid>
 	              	<Grid  style={{display: 'inline-flex',alignItems: 'center'}} item sm={3} md={2} xs={12}>
@@ -84,11 +84,11 @@ export default function () {
 						let childTableData = this.props.getChildTableData && this.props.getChildTableData(tableData);
 	          			// console.log("childTableData -->>",childTableData);
 	          			return (
-		          				<ExpansionPanel key={index}>
+		          				<ExpansionPanel key={index} className={classes.expansionPanel} key={index}>
 			          				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
-
+			          				
 			              				<div style={{marginLeft: 15}}>
-			                				<Typography className={classes.secondaryHeading}>{tableData[settings.mainPanelHeader.titleKey]}</Typography>
+			                				<Typography className={classes.secondaryHeading}>{tableData[settings.mainPanelHeader.titleKey] || ""}</Typography>
 			              				</div>
 			            			</ExpansionPanelSummary>
 			            			<ExpansionPanelDetails className={classes.details}>
@@ -100,7 +100,7 @@ export default function () {
 			            								settings.mainTable && settings.mainTable.tableFields.map((field, index) => {
 					            							// console.log("test1 Name -->>",test1);
 					            							return (
-					            								<Fragment>
+					            								<Fragment key={index}>
 														            <Grid item xs={12} sm={field.labelSm ? field.labelSm : 12} md={field.lableMd ? field.lableMd : 3}>
 														                <div> {field.label} </div>
 														            </Grid>

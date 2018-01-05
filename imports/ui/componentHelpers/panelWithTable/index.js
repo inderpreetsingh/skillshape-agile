@@ -40,6 +40,9 @@ const styles = theme => {
         classtypeInputContainer: {
             alignItems: 'center',
             textAlign: 'left'
+        },
+        expansionPanel : {
+            marginTop: theme.spacing.unit,
         }
     }
 }

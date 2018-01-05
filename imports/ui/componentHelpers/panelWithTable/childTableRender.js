@@ -72,57 +72,16 @@ export default function (props) {
 									                        	<div> {field.label} </div>
 									                        </Grid>
 									                        <Grid  item xs={12} sm={field.valueSm ? field.valueSm : 9} md={field.valueMd ? field.valueMd : 9}>
+								                         		
 								                         		{ 
 								                         			field.nestedObjectOfArray ? (
-								                         				tableData[field.key] && Object.keys(tableData[field.key]).map((itemkey, index) => {
+								                         				tableData[field.key] ? (Object.keys(tableData[field.key]).map((itemkey, index) => {
 								                         					const itemData = tableData[field.key][itemkey];
 								                         					// console.log("itemData -->>",itemData)
-								                         					return itemData.map((x) => {
-								                         						// console.log("itemData x-->>",x)
-								                         						return (
-								                         							<div className={classes.childTableSubData}>
-									                         							<Grid className={classes.classtypeInputContainer} container>
-										                         							<Grid  item xs={12} sm={3} md={2}>
-																	                        	<div>Day</div>
-																	                        </Grid>
-																	                        <Grid  item xs={12} sm={9} md={4}>
-											                         							<div className={classes.inputDisableBox}>
-											                         								<span>{itemkey}</span>
-											                         							</div>
-										                         							</Grid>
-										                         							<Grid  item xs={12} sm={3} md={2}>
-																	                        	<div>Start Time</div>
-																	                        </Grid>
-																	                        <Grid  item xs={12} sm={9} md={4}>
-											                         							<div className={classes.inputDisableBox}>
-											                         								<span>{x.startTime && moment(new Date(x.startTime)).format('LT')}</span>
-											                         							</div>
-																	                        </Grid>
-									                         							</Grid>
-									                         							
-									                         							<Grid className={classes.classtypeInputContainer} container>
-										                         							<Grid  item xs={12} sm={3} md={2}>
-																	                        	<div>Duration</div>
-																	                        </Grid>
-																	                        <Grid  item xs={12} sm={9} md={4}>
-											                         							<div className={classes.inputDisableBox}>
-											                         								<span>{x.duration}</span>
-											                         							</div>
-																	                        </Grid>
-									                         								<Grid  item xs={12} sm={3} md={2}>
-																	                        	<div>Room</div>
-																	                        </Grid>
-																	                        <Grid  item xs={12} sm={9} md={4}>
-											                         							<div className={classes.inputDisableBox}>
-											                         								<span>{x.roomId}</span>
-											                         							</div>
-																	                        </Grid>
-									                         							</Grid>
-									                         							
-								                         							</div>
-								                         						)
-								                         					})	
-								                         				})
+								                         					return this.renderScheduleTypeData(classes, parentData, itemData, [{label: "Day", value: itemkey}, { label: "Start Time", key: "startTime" }, {label: "Duration", key: "duration"}, {label: "Room", key: "roomId"}])
+								                         					
+								                         				})) :  ((tableData["scheduleType"] === "oneTime") && this.renderScheduleTypeData(classes, parentData, [tableData], [{label: "Start Date", key: "startDate"}, { label: "Start Time", key: "startTime" }, {label: "Duration", key: "duration"}, {label: "Room", key: "roomId"}]))	
+								                         				
 								                         			)
 								                         			:(<div className={classes.inputDisableBox}>
 								                         				<span>{tableData[field.key]}</span>

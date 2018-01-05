@@ -10,6 +10,7 @@ import Dialog, {
   DialogActions,
   withMobileDialog,
 } from 'material-ui/Dialog';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import '/imports/api/sLocation/methods';
 
 const formId = "RoomForm";
@@ -63,32 +64,6 @@ class RoomForm extends React.Component {
         });
     }
 
-    getActionButtons = (data)=> {
-        if(data) {
-            return (
-                <DialogActions>
-                    <Button type="submit" form={formId} color="primary">
-                      Edit Location
-                    </Button>
-                    <Button onClick={() => this.handleSubmit({ methodName: "location.roomRemove", data: data, locationId: this.props.parentKey})} color="primary">
-                      Delete
-                    </Button>
-                </DialogActions>
-            )
-        } else {
-            return (
-                <DialogActions>
-                    <Button type="submit" form={formId} color="primary">
-                      Submit
-                    </Button>
-                    <Button onClick={() => this.props.onClose()} color="primary">
-                      Cancel
-                    </Button>
-                </DialogActions>
-            )
-        }
-    }
-
     render() {
         console.log("RoomForm render props -->>>",this.props);
         console.log("RoomForm render state -->>>",this.state);
@@ -103,6 +78,16 @@ class RoomForm extends React.Component {
                 >
                     <DialogTitle id="form-dialog-title">Add Room</DialogTitle>
                     { this.state.isBusy && <ContainerLoader/>}
+                    { 
+                        this.state.showConfirmationModal && <ConfirmationModal
+                            open={this.state.showConfirmationModal}
+                            submitBtnLabel="Yes, Delete"
+                            cancelBtnLabel="Cancel"
+                            message="You will delete this room, Are you sure?"
+                            onSubmit={() => this.handleSubmit({ methodName: "location.roomRemove", data: data, locationId: this.props.parentKey})}
+                            onClose={() => this.setState({showConfirmationModal: false})}
+                        />
+                    }
                     { 
                         this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
                             <DialogContent>
@@ -128,8 +113,21 @@ class RoomForm extends React.Component {
                             </DialogContent>
                         )
                     }
-                   
-                    {this.getActionButtons(data)}
+                    <DialogActions>
+                    {
+                        data && (
+                            <Button onClick={() => this.setState({showConfirmationModal: true})} color="accent">
+                                Delete
+                            </Button>
+                        )
+                    }
+                    <Button onClick={() => this.props.onClose()} color="primary">
+                      Cancel
+                    </Button>
+                    <Button type="submit" form={formId} color="primary">
+                      { data ? "Save" : "Submit" } 
+                    </Button>
+                </DialogActions>
                 </Dialog>
             </div>
         )
