@@ -69,7 +69,7 @@ class SchoolDetails extends React.Component {
         toastr.error("Oops! something went wrong.",error.message);
       }
       if (result) {
-          toastr.success("School details editing successfull!!!!!!","Success");
+          toastr.success("School details editing successful.","Success");
       }
       // Stop loading on completion of editing school details.
       this.setState({isLoading: false});
