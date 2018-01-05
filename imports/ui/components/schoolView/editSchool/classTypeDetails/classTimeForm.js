@@ -19,6 +19,8 @@ import ResponsiveTabs from '/imports/util/responsiveTabs';
 import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
 import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
 import { WeekDaysRow } from './weekDaysRow';
+import { FormControl } from 'material-ui/Form';
+import { MenuItem } from 'material-ui/Menu';
 import '/imports/api/sLocation/methods';
 
 const formId = "classTimeForm";
@@ -48,6 +50,7 @@ class ClassTimeForm extends React.Component {
         console.log("initializeFields data -->>",this.props)
         let state = {
             roomData: [],
+            roomId: "",
         }
 
         if(!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {
@@ -70,17 +73,8 @@ class ClassTimeForm extends React.Component {
             state.duration = data.duration;
             state.roomId = data.roomId;
         }
-      // if(!_.isEmpty(data)) {
-        
-      //   return {
-      //     ...state, 
-      //     ...data, 
-      //     location: data.locationId,
-      //     selectedLocation: locationData && _.find(locationData, function(location) { return data.locationId === location._id })
-      //   }
-      // }
-      console.log("Final state -->>",state)
-      return state
+        console.log("Final state -->>",state)
+        return state
     }
 
     onTabChange = (tabValue) => {
@@ -243,22 +237,21 @@ class ClassTimeForm extends React.Component {
                                                         />
                                                     </Grid>
                                                     <Grid item sm={6} xs={12}>    
-                                                        <Select
-                                                            native
-                                                            margin="dense"
-                                                            style={{padding: 11, maxWidth: '90%'}}
-                                                            input={<Input id="roomId"/>}
-                                                            value={this.state.roomId}
-                                                            onChange={(event) => this.setState({ roomId: event.target.value })}
-                                                            fullWidth
-                                                        >
-                                                            <option value={null}>{"Select Room"}</option>
-                                                            {
-                                                                this.state.roomData.map((data, index)=> {
-                                                                    return <option key={index} value={data.id}>{data.name}</option>
-                                                                })
-                                                            }
-                                                        </Select>
+                                                        <FormControl fullWidth margin='dense'>
+                                                            <InputLabel htmlFor="roomId">Room</InputLabel>
+                                                            <Select
+                                                                input={<Input id="roomId"/>}
+                                                                value={this.state.roomId}
+                                                                onChange={(event) => this.setState({ roomId: event.target.value })}
+                                                                fullWidth
+                                                            >
+                                                                {
+                                                                    this.state.roomData.map((data, index)=> {
+                                                                        return <MenuItem key={index} value={data.id}>{data.name}</MenuItem>
+                                                                    })
+                                                                }
+                                                            </Select>
+                                                        </FormControl>
                                                     </Grid>
                                                 </Grid>
                                             </div>    

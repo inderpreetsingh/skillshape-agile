@@ -1,4 +1,5 @@
-import React from "react";
+import React, {Fragment} from "react";
+import SelectArrayInput from '/imports/startup/client/material-ui-chip-input/selectArrayInput';
 import methods from '/imports/ui/modal/formBuilderMethods';
 import ChildTable from './childTable';
 import {cutString} from '/imports/util';
@@ -81,7 +82,7 @@ export default function () {
 	          		_.isArray(mainTableData) &&  mainTableData.map((tableData, index) => {
 	          			// console.log("tableData -->>",tableData);
 						let childTableData = this.props.getChildTableData && this.props.getChildTableData(tableData);
-	          			console.log("childTableData -->>",childTableData);
+	          			// console.log("childTableData -->>",childTableData);
 	          			return (
 		          				<ExpansionPanel key={index}>
 			          				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
@@ -94,21 +95,45 @@ export default function () {
 			            				<Grid container>
 			            					<Grid  item md={(settings.mainPanelHeader.showImageUpload || settings.mainPanelHeader.showAddressOnMap) ? 8 : 12} sm={(settings.mainPanelHeader.showImageUpload || settings.mainPanelHeader.showAddressOnMap) ? 6 : 12} xs={12}>
 			            						<div className={classes.classtypeForm}>
+		            								<Grid  container className={classes.classtypeInputContainer}>
 			            							{
 			            								settings.mainTable && settings.mainTable.tableFields.map((field, index) => {
-					            							// console.log("Field Name -->>",field);
+					            							// console.log("test1 Name -->>",test1);
 					            							return (
-					            								<Grid key={index} container className={classes.classtypeInputContainer}>
-														            <Grid item xs={12} sm={12} md={5} lg={3}>
+					            								<Fragment>
+														            <Grid item xs={12} sm={field.labelSm ? field.labelSm : 12} md={field.lableMd ? field.lableMd : 3}>
 														                <div> {field.label} </div>
 														            </Grid>
-														            <Grid item xs={12} sm={12} md={7} md={9}>
-														                <div className={classes.inputDisableBox}> <span>{tableData[field.key]}</span> </div>
+														            <Grid item xs={12} sm={field.valueSm ? field.valueSm : 12} md={field.valueMd ? field.valueMd : 9}>
+																        <div className={classes.inputDisableBox}> 
+														            	{
+														            		field.chipInput ? (
+														            			<div style={{display: 'inline-flex', flexWrap: "wrap"}}>
+															            			{
+																            				tableData[field.key] && tableData[field.key].map((chipData, index)=>{ 
+															            					return <Chip
+															            						key={index}
+															            						style={{marginRight: 5}} 
+															            						label={chipData[field.childKey]} 
+															            						className={classes.chip}
+															            					/>
+															            				})
+															            			}
+													            				</div>
+														            		)
+														            		: (
+																                	<span>
+																                		{ this.displayFieldValue(field, tableData)}
+																                	</span> 
+														            		)
+														            	}
+																        </div>
 														            </Grid>
-														        </Grid>
+														        </Fragment>    
 			            									)
 			            								})
 			            							}
+													</Grid>
 				            						<Grid  item xs={12} sm={12} style={{textAlign: 'right'}}>
 					            						<Button style={{margin: 15}} onClick={() => this.setState({showForm: true, formData:tableData})} color="accent" raised dense>
 								                        <Edit style = {{marginRight: 2}} />

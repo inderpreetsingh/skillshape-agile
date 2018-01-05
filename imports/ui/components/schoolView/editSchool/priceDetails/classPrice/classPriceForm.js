@@ -17,6 +17,7 @@ import Dialog, {
   DialogActions,
   withMobileDialog,
 } from 'material-ui/Dialog';
+import { FormControl } from 'material-ui/Form';
 import '/imports/api/classPricing/methods';
 
 const formId = "ClassPriceForm";
@@ -156,20 +157,20 @@ class ClassPriceForm extends React.Component {
                                         />
                                     </Grid>
                                     <Grid  item xs={12} sm={6}>
-                                        <InputLabel htmlFor="age-native-simple">Expiration Period</InputLabel>
-                                        <Select
-                                            native
-                                            required={true}
-                                            margin="dense"
-                                            input={<Input id="age-native-simple" />}
-                                            value={this.state.expPeriod}
-                                            onChange={(event) => this.setState({ expPeriod: event.target.value })}
-                                            fullWidth
-                                        >
-                                            <option value={"Days"}>Days</option>
-                                            <option value={"Month"}>Month</option>
-                                            <option value={"Year"}>Year</option>
-                                        </Select>
+                                        <FormControl fullWidth margin='dense'>
+                                            <InputLabel htmlFor="expiration-period">Expiration Period</InputLabel>
+                                            <Select
+                                                required={true}
+                                                input={<Input id="expiration-period" />}
+                                                value={this.state.expPeriod}
+                                                onChange={(event) => this.setState({ expPeriod: event.target.value })}
+                                                fullWidth
+                                            >
+                                                <MenuItem value={"Days"}>Days</MenuItem>
+                                                <MenuItem value={"Month"}>Month</MenuItem>
+                                                <MenuItem value={"Year"}>Year</MenuItem>
+                                            </Select>
+                                        </FormControl>
                                     </Grid>
                                 </Grid>
                                 <TextField

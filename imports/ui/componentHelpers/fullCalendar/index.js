@@ -106,16 +106,19 @@ class FullCalendar extends React.Component {
                     sevent.scheduleDetails = classTime.scheduleDetails;
                     sevent.endDate = classTime.endDate && moment(classTime.endDate)
                     for (let key in scheduleData) {
-                        let temp = {...sevent};
-                        temp.dow = [scheduleData[key].day];
-                        temp.eventStartTime = moment(scheduleData[key].startTime).format("hh:mm");
-                        temp.eventEndTime = moment(new Date(scheduleData[key].startTime)).add(scheduleData[key].duration, "minutes").format("hh:mm");
-                        temp.title = classTime.name + " " + temp.eventStartTime + " to " + temp.eventEndTime;
-                        temp.roomId = scheduleData[key].roomId;
-                        sevents.push(temp);
+                        // const dayData = scheduleData[key];
+                        for(let obj of scheduleData[key]) {
+                            let temp = {...sevent};
+                            temp.dow = [obj.day];
+                            temp.eventStartTime = moment(obj.startTime).format("hh:mm");
+                            temp.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
+                            temp.title = classTime.name + " " + temp.eventStartTime + " to " + temp.eventEndTime;
+                            temp.roomId = obj.roomId;
+                            sevents.push(temp);
+                        }
                     }
                 }
-
+                // console.warn("<<< dayData sevents>>>>",sevents);
             } catch (err) {
                 console.error("Error -->>", err);
             }
