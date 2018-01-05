@@ -43,11 +43,11 @@ class PanelHeader extends Component {
                             {cpation}
                         </Typography>
                     </Grid>
-                    <Grid  style={{display: 'inline-flex',alignItems: 'center'}} item sm={3} md={2} xs={12}>
+                    {btnText && <Grid  style={{display: 'inline-flex',alignItems: 'center'}} item sm={3} md={2} xs={12}>
                         <Button className={classes.headerBtn} onClick={onAddButtonClicked}>
                             {btnText}
                         </Button>
-                    </Grid>
+                    </Grid>}
                 </Grid>
             </Paper>
     }

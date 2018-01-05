@@ -3,6 +3,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import Card, {CardContent} from 'material-ui/Card';
+import PanelHeader from '/imports/ui/components/schoolView/editSchool/priceDetails/panelHeader';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import embedCodeSettings from './embedCodeSettings';
@@ -11,6 +12,9 @@ export default function () {
 	const { schoolData, moveTab } = this.props;
 	return (
 		<div className="tab-pane active" id="tab_default_10">
+			<PanelHeader cpation="These codes will allow you to put your classes, prices, calendar, and images on your site.
+				Simply copy the code and paste it into the text area or code area of any page on your website. Let us know if there are any issues!
+				notices@SkillShape.com" icon="code" />
 	        <div className="col-md-12">
 	        	{
 	        		embedCodeSettings.map((setting, index) => {
