@@ -146,10 +146,11 @@ class Upload extends React.Component {
             <div className={classes.media}>
               <img className={classes.image} src={this.state.files && this.state.files.file} />
             </div>
-            {this.state.files && this.state.files.file &&
+            {
+             /* this.state.files && this.state.files.file &&
               <Button onClick={this.clearSelectedImage} fab color="primary"  aria-label="clear" className={classes.button}>
                 <Clear />
-              </Button>
+              </Button>*/
             }
           </CardContent>
           <CardActions style={{paddingBottom: 26}}>

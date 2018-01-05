@@ -128,7 +128,7 @@ class EnrollmentFeeForm extends React.Component {
                                 />
                                 <SelectArrayInput
                                     disabled={false}
-                                    floatingLabelText="Class Type"  
+                                    floatingLabelText="Class Types"  
                                     optionValue="_id" 
                                     optionText="name" 
                                     input={{ value: this.state.selectedClassType ,onChange: this.onClassTypeChange}} 

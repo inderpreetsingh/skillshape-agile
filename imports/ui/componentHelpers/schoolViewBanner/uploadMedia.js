@@ -85,7 +85,7 @@ class UploadMedia extends React.Component {
   	}
 
     render() {
-    	let { mediaFormData, fullScreen, showCreateMediaModal, onClose } = this.props;
+    	let { mediaFormData, fullScreen, showCreateMediaModal, onClose, imageType } = this.props;
     	console.log("UploadMedia props -->>",this.props)
     	console.log("UploadMedia state -->>",this.state)
 	    return (
@@ -104,7 +104,7 @@ class UploadMedia extends React.Component {
 			        				fullScreen={fullScreen}
 			        				width={275}
 			        				onChange={this.handleChange}
-			        				data={mediaFormData && {file: mediaFormData.sourcePath, isUrl: true}}
+			        				data={mediaFormData && {file: mediaFormData[imageType], isUrl: true}}
 			        				showVideoOption={false}
 			        			/>
 			        		</Grid>

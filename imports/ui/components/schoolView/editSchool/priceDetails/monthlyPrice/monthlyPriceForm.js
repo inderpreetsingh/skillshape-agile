@@ -2,7 +2,7 @@ import React from 'react';
 import { get } from 'lodash';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import SelectArrayInput from '/imports/startup/client/material-ui-chip-input/selectArrayInput';
-import { withStyles } from 'material-ui/styles';
+import { withStyles, toastrModal } from "/imports/util";
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
@@ -64,7 +64,9 @@ class MonthlyPriceForm extends React.Component {
     onSubmit = (event) => {
         event.preventDefault();
         const { selectedClassType, pymtType, tabValue } = this.state;
-        const { data, schoolId } = this.props;
+        const { data, schoolId, toastr } = this.props;
+        // console.log("pymtType -->>",pymtType)
+        // console.log("tabValue -->>",tabValue)
         const payload = {
             schoolId: schoolId,
             packageName: this.packageName.value,
@@ -72,14 +74,18 @@ class MonthlyPriceForm extends React.Component {
             pymtMethod: "Pay Up Front",
             pymtDetails: this.refs.AddRow.getRowData(),
         }
-        
+
         if(tabValue === 0) {
+            if(!pymtType) {
+                toastr.error("Please select any payment type.","Error");
+                return
+            }
             payload.pymtType = pymtType;
             payload.pymtMethod = "Pay Each Month";
         }
 
         this.setState({isBusy: true});
-        
+
         if(data && data._id) {
             this.handleSubmit({ methodName: "monthlyPricing.editMonthlyPricing", doc: payload, doc_id: data._id})
         } else {
@@ -120,10 +126,10 @@ class MonthlyPriceForm extends React.Component {
     }
 
     handleCheckBox = (key, disableKey, pymtType, event, isInputChecked) => {
-        this.setState({ 
-            [key]: isInputChecked, 
-            [disableKey]: false, 
-            pymtType, 
+        this.setState({
+            [key]: isInputChecked,
+            [disableKey]: false,
+            pymtType: isInputChecked ? pymtType : null,
         })
     }
 
@@ -144,7 +150,7 @@ class MonthlyPriceForm extends React.Component {
                 >
                     <DialogTitle id="form-dialog-title">Add Monthly Pricing</DialogTitle>
                     { this.state.isBusy && <ContainerLoader/>}
-                    { 
+                    {
                         this.state.showConfirmationModal && <ConfirmationModal
                             open={this.state.showConfirmationModal}
                             submitBtnLabel="Yes, Delete"
@@ -154,7 +160,7 @@ class MonthlyPriceForm extends React.Component {
                             onClose={this.cancelConfirmationModal}
                         />
                     }
-                    { 
+                    {
                         this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
                             <DialogContent>
                                 <form id={formId} onSubmit={this.onSubmit}>
@@ -169,14 +175,14 @@ class MonthlyPriceForm extends React.Component {
                                     />
                                     <SelectArrayInput
                                         disabled={false}
-                                        floatingLabelText="Class Type *"  
-                                        optionValue="_id" 
-                                        optionText="name" 
-                                        input={{ value: this.state.selectedClassType ,onChange: this.onClassTypeChange}} 
-                                        onChange={this.onClassTypeChange} 
+                                        floatingLabelText="Class Types"
+                                        optionValue="_id"
+                                        optionText="name"
+                                        input={{ value: this.state.selectedClassType ,onChange: this.onClassTypeChange}}
+                                        onChange={this.onClassTypeChange}
                                         setFilter={this.handleClassTypeInputChange}
-                                        dataSourceConfig={{ text: 'name', value: '_id' }} 
-                                        choices={classTypeData} 
+                                        dataSourceConfig={{ text: 'name', value: '_id' }}
+                                        choices={classTypeData}
                                     />
                                     <div className="responsive-tab">
                                         <div style={{display: "inline-flex",flexWrap: 'wrap',justifyContent: 'center'}}>
@@ -207,7 +213,7 @@ class MonthlyPriceForm extends React.Component {
                                                           label="Automatic Withdrawal"
                                                         />
 
-                                                    </Grid>    
+                                                    </Grid>
                                                     <Grid  item xs={12} sm={6}>
                                                         <FormControlLabel
                                                           control={
@@ -222,16 +228,16 @@ class MonthlyPriceForm extends React.Component {
                                                           }
                                                           label="Pay To You Go"
                                                         />
-                                                    </Grid>    
+                                                    </Grid>
                                                 </Grid>
                                             )
                                         }
                                         <AddRow ref="AddRow" rowData={pymtDetails} classes={classes}/>
                                     </div>
-                                        
+
                                 </form>
                             </DialogContent>
-                        
+
                         )
                     }
                     <DialogActions>
@@ -246,13 +252,13 @@ class MonthlyPriceForm extends React.Component {
                           Cancel
                         </Button>
                         <Button type="submit" form={formId} color="primary">
-                          { data ? "Save" : "Submit" } 
+                          { data ? "Save" : "Submit" }
                         </Button>
                     </DialogActions>
                 </Dialog>
             </div>
         )
     }
-}  
+}
 
-export default withStyles(styles)(withMobileDialog()(MonthlyPriceForm));
+export default withStyles(styles)(withMobileDialog()(toastrModal(MonthlyPriceForm)));

@@ -7,9 +7,7 @@ import EnrollmentFeeRender from './enrollmentFeeRender';
 const styles = theme => {
     return {
         card: {
-            minWidth: 275,
-            maxWidth: 275,
-            margin: 15,
+            margin: 5,
           },
         bullet: {
             display: 'inline-block',
@@ -61,11 +59,11 @@ class EnrollmentFee extends Component {
         this.state = {
             open: false,
             showForm: false,
-        }  
+        }
     }
 
     handleFormModal = ()=> this.setState({showForm: false, formData: null})
-    
+
     render() {
         return EnrollmentFeeRender.call(this, this.props, this.state)
     }

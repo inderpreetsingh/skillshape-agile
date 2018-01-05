@@ -6,9 +6,7 @@ import MonthlyPriceRender from './monthlyPriceRender';
 const styles = theme => {
     return {
         card: {
-            minWidth: 275,
-            maxWidth: 275,
-            margin: 15,
+            margin: 5,
           },
         bullet: {
             display: 'inline-block',
@@ -60,11 +58,11 @@ class MonthlyPrice extends Component {
         this.state = {
             open: false,
             showForm: false,
-        }  
+        }
     }
 
     handleFormModal = ()=> this.setState({showForm: false, formData: null})
-    
+
     render() {
         return MonthlyPriceRender.call(this, this.props, this.state)
     }

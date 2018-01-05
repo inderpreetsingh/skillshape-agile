@@ -29,10 +29,11 @@ export default function () {
           	}
           	<PanelHeader btnText="Add Enrollment Fee" title="Enrollment Fee Cost" cpation="" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
-          	<div style={{display: 'inline-flex', flexWrap: 'wrap'}}>
+          	<Grid container>
 	          	{
 	          		enrollmentFeeData && enrollmentFeeData.map((enrollmentFee, index)=> {
 	          			return (
+	          				<Grid item xs={12} md={3} sm={4}>
 	          				<Card key={index} className={`${classes.card} price-card-container`}>
 	          					<CardContent className={classes.content}>
 	             					<Typography align="center" type="headline">
@@ -40,11 +41,11 @@ export default function () {
 	             					</Typography>
 	             					<br></br>
 	                                <Typography component="p">
-	                                    Cost: {enrollmentFee.cost}$
+	                                    <b>Cost:</b> {enrollmentFee.cost}$
 	                                </Typography>
 	                                <br></br>
 	          						<Typography component="p">
-	          							Covers: {
+	          							<b>Covers:</b> {
 	          								_.isEmpty(enrollmentFee.selectedClassType) ? "None" :
 	          								enrollmentFee.selectedClassType.map((classType) => {
 	          									return <span>{classType.name} </span>
@@ -58,10 +59,11 @@ export default function () {
 						            </Button>
 						        </CardActions>
 	          				</Card>
+	          				</Grid>
 	          			)
 	          		})
 	          	}
-          	</div>
+          	</Grid>
 		</div>
 	)
 }

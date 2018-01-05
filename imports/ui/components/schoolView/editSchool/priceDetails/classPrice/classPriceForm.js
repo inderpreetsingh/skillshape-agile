@@ -135,7 +135,7 @@ class ClassPriceForm extends React.Component {
                                 />
                                 <SelectArrayInput
                                     disabled={false}
-                                    floatingLabelText="Class Type"  
+                                    floatingLabelText="Class Types"  
                                     optionValue="_id" 
                                     optionText="name" 
                                     input={{ value: this.state.selectedClassType ,onChange: this.onClassTypeChange}} 
@@ -167,7 +167,7 @@ class ClassPriceForm extends React.Component {
                                                 fullWidth
                                             >
                                                 <MenuItem value={"Days"}>Days</MenuItem>
-                                                <MenuItem value={"Month"}>Month</MenuItem>
+                                                <MenuItem value={"Months"}>Months</MenuItem>
                                                 <MenuItem value={"Year"}>Year</MenuItem>
                                             </Select>
                                         </FormControl>

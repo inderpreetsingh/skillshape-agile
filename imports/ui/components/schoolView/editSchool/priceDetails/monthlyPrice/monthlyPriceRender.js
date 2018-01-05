@@ -29,63 +29,64 @@ export default function () {
           	}
                <PanelHeader btnText="Add Per Month Package" title="Per Month Packages" cpation="" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
-
-               <div style={{display: 'inline-flex', flexWrap: 'wrap'}}>
+               <Grid container>
                	{
                		monthlyPricingData && monthlyPricingData.map((monthPrice, index)=> {
-               			console.log("monthPrice -->>",monthPrice)
+               			// console.log("monthPrice -->>",monthPrice)
                			return (
-               				<Card key={index} className={`${classes.card} price-card-container`}>
-               					<CardContent className={classes.content}>
-                      					<Typography align="center" type="headline">
-                      						{monthPrice.packageName}
-                      					</Typography>
-                                             <br></br>
-                                             <Typography component="p">
-                                                 Payment Method: {monthPrice.pymtMethod}
-                                             </Typography>
-                                             <br></br>
-                                             {
-                                                  monthPrice.pymtType && (
-                                                       <Fragment>
-                                                            <Typography component="p">
-                                                                Payment Type: {monthPrice.pymtType}
-                                                            </Typography>
-                                                            <br></br>
-                                                       </Fragment>
-                                                  )
-                                             }
-               						<Typography component="p">
-               							Covers: {
-               								_.isEmpty(monthPrice.selectedClassType) ? "None" :
-               								monthPrice.selectedClassType.map((classType) => {
-               									return <span>{classType.name} </span>
-               								})
-               							}
-               						</Typography>
-                                             <br></br>
-                                             {
-                                                  _.isEmpty(monthPrice.pymtDetails) ? "None" :
-                                                  monthPrice.pymtDetails.map((payment) => {
-                                                       return <Fragment>
-                                                            <Typography component="p">
-                                                                 {payment.cost}$ per month for {payment.month} months
-                                                            </Typography>
-                                                            <br></br>
-                                                       </Fragment>
-                                                  })
-                                             }
-                                        </CardContent>
-          						<CardActions>
-						               <Button onClick={() => this.setState({showForm: true, formData: monthPrice})} color="primary" style={{width: '100%'}} dense>
-                                                  Edit
-                                             </Button>
-						          </CardActions>
-               				</Card>
+                                   <Grid item xs={12} md={3} sm={4}>
+                    				<Card key={index} className={classes.card}>
+                    					<CardContent className={classes.content}>
+                           					<Typography align="center" type="headline">
+                           						{monthPrice.packageName}
+                           					</Typography>
+                                                  <br></br>
+                                                  <Typography component="p">
+                                                      <b>Payment Method:</b> {monthPrice.pymtMethod}
+                                                  </Typography>
+                                                  <br></br>
+                                                  {
+                                                       monthPrice.pymtType && (
+                                                            <Fragment>
+                                                                 <Typography component="p">
+                                                                     <b>Payment Type:</b> {monthPrice.pymtType}
+                                                                 </Typography>
+                                                                 <br></br>
+                                                            </Fragment>
+                                                       )
+                                                  }
+                    						<Typography component="p">
+                    							<b>Covers:</b> {
+                    								_.isEmpty(monthPrice.selectedClassType) ? "None" :
+                    								monthPrice.selectedClassType.map((classType) => {
+                    									return <span>{classType.name} </span>
+                    								})
+                    							}
+                    						</Typography>
+                                                  <br></br>
+                                                  {
+                                                       _.isEmpty(monthPrice.pymtDetails) ? "None" :
+                                                       monthPrice.pymtDetails.map((payment) => {
+                                                            return <Fragment>
+                                                                 <Typography component="p">
+                                                                      {payment.cost}$ per month for {payment.month} months
+                                                                 </Typography>
+                                                                 <br></br>
+                                                            </Fragment>
+                                                       })
+                                                  }
+                                             </CardContent>
+               						<CardActions>
+     						               <Button onClick={() => this.setState({showForm: true, formData: monthPrice})} color="primary" style={{width: '100%'}} dense>
+                                                       Edit
+                                                  </Button>
+     						          </CardActions>
+                    				</Card>
+                                   </Grid>
                			)
                		})
                	}
-               </div>
+               </Grid>
 		</div>
 	)
 }

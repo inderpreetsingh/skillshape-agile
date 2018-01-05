@@ -30,43 +30,45 @@ export default function () {
           	}
                <PanelHeader btnText="Add Per Class Package" title="Per Class Packages" cpation="" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
-               <div style={{display: 'inline-flex', flexWrap: 'wrap'}}>
+               <Grid container>
                	{
                		classPricingData && classPricingData.map((classPrice, index)=> {
                			return (
-               				<Card key={index} className={`${classes.card} price-card-container`}>
-               					<CardContent className={classes.content}>
-                      					<Typography align="center" type="headline">
-                      						{classPrice.packageName}
-                      					</Typography>
-                                             <br></br>
-               						<Typography component="p">
-               							{classPrice.cost}$  for {classPrice.noClasses} class
-               						</Typography>
-                                             <br></br>
-               						<Typography component="p">
-               							Expiration: {(classPrice.expDuration && classPrice.expPeriod) ? `${classPrice.expDuration} ${classPrice.expPeriod}` : "None"}
-               						</Typography>
-                                             <br></br>
-               						<Typography component="p">
-               							Covers: {
-               								_.isEmpty(classPrice.selectedClassType) ? "None" :
-               								classPrice.selectedClassType.map((classType) => {
-               									return <span>{classType.name} </span>
-               								})
-               							}
-               						</Typography>
-                                        </CardContent>
-          						<CardActions>
-						              <Button onClick={() => this.setState({showForm: true, formData: classPrice})} color="primary" style={{width: '100%'}} dense>
-                                             Edit
-                                            </Button>
-						          </CardActions>
-               				</Card>
+                                   <Grid item xs={12} md={3} sm={4}>
+                    				<Card key={index} className={`${classes.card} price-card-container`}>
+                    					<CardContent className={classes.content}>
+                           					<Typography align="center" type="headline">
+                           						{classPrice.packageName}
+                           					</Typography>
+                                                  <br></br>
+                    						<Typography component="p">
+                    							{classPrice.cost}$ for {classPrice.noClasses} class
+                    						</Typography>
+                                                  <br></br>
+                    						<Typography component="p">
+                    							<b>Expiration:</b> {(classPrice.expDuration && classPrice.expPeriod) ? `${classPrice.expDuration} ${classPrice.expPeriod}` : "None"}
+                    						</Typography>
+                                                  <br></br>
+                    						<Typography component="p">
+                    							<b>Covers:</b> {
+                    								_.isEmpty(classPrice.selectedClassType) ? "None" :
+                    								classPrice.selectedClassType.map((classType) => {
+                    									return <span>{classType.name} </span>
+                    								})
+                    							}
+                    						</Typography>
+                                             </CardContent>
+               						<CardActions>
+     						              <Button onClick={() => this.setState({showForm: true, formData: classPrice})} color="primary" style={{width: '100%'}} dense>
+                                                  Edit
+                                                 </Button>
+     						          </CardActions>
+                    				</Card>
+                                   </Grid>
                			)
                		})
                	}
-               </div>
+               </Grid>
 		</div>
 	)
 }

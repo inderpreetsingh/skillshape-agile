@@ -62,15 +62,15 @@ class ClassDetailModal extends React.Component{
   }
 
   componentWillMount() {
-    console.log("classTimes.getClassTimes calling start -->>",this.props);
+    // console.log("classTimes.getClassTimes calling start -->>",this.props);
     if(this.props.eventData) {
         const {schoolId, classTypeId, classTimeId, locationId} = this.props.eventData;
         this.setState({
             isLoading: true,
         })
         Meteor.call("classTimes.getClassTimes", {schoolId, classTypeId, classTimeId, locationId}, (error, {school, classTimes, classType, location}) => {
-            console.log("classTimes.getClassTimes res -->>");
-            console.log("classTimes.getClassTimes error -->>",error);
+            // console.log("classTimes.getClassTimes res -->>");
+            // console.log("classTimes.getClassTimes error -->>",error);
             this.setState({
                 isLoading: false,
                 school,
@@ -111,9 +111,19 @@ class ClassDetailModal extends React.Component{
     })
   }
 
+  renderdaySchedule = (data)=> {
+    const result = data.map((item, index)=> {
+        const { startTime, duration} = item;
+        const eventStartTime = moment(startTime).format("hh:mm");
+        const eventEndTime = moment(new Date(startTime)).add(duration, "minutes").format("hh:mm");
+        return `${eventStartTime} to ${eventEndTime} `
+    })
+    return result.toString();
+  }
+
   render() {
-    console.log("ClassDetailModal render props -->>", this.props);
-    console.log("ClassDetailModal render state -->>", this.state);
+    // console.log("ClassDetailModal render props -->>", this.props);
+    // console.log("ClassDetailModal render state -->>", this.state);
     const { isLoading, error, school, classType, classTimes, location } = this.state;
     const { eventData, fullScreen, classes } = this.props;
     return (
@@ -260,14 +270,14 @@ class ClassDetailModal extends React.Component{
                                     </Typography>
                                     {
                                         Object.keys(eventData.scheduleDetails).map((day, index) => {
-                                            const { startTime, duration} = eventData.scheduleDetails[day];
-                                            const eventStartTime = moment(startTime).format("hh:mm");
-                                            const eventEndTime = moment(new Date(startTime)).add(duration, "minutes").format("hh:mm");
+
                                             return (
                                                 <Typography type="caption" >
-                                                        {day} - {`${eventStartTime} to ${eventEndTime}`}
+                                                    {day} - { this.renderdaySchedule(eventData.scheduleDetails[day])}
                                                 </Typography>
-                                        ) })
+                                            )
+                                            
+                                        })
                                     }
                                     </Fragment>
                                 )
