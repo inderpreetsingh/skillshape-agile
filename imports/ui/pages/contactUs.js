@@ -116,28 +116,34 @@ class ContactUs extends React.Component {
                         <Grid container className={classes.container}>
                             <Grid item xs={12} sm={12} md={7}>
                                 <form id="sendfeedback" onSubmit={this.submit} >
-                                    <Grid container>
+                                    <Grid container className={classes.container}>
                                         <Grid item xs={6}>
-                                            <TextField
-                                                type="text"
-                                                id="name"
-                                                required={true}
-                                                className={classes.textField}
-                                                name="text"
-                                                inputRef={(ref)=> this.name = ref}
-                                                placeholder="Name"
-                                                margin="normal"
-                                            />
-                                            <TextField
-                                                type="email"
-                                                id="email"
-                                                required={true}
-                                                className={classes.textField}
-                                                name="email"
-                                                inputRef={(ref)=> this.email = ref}
-                                                placeholder="E-mail"
-                                                margin="normal"
-                                            />
+                                          <Grid container>
+                                              <Grid xs={12} sm={12}>
+                                                <TextField
+                                                    type="text"
+                                                    id="name"
+                                                    required={true}
+                                                    className={classes.textField}
+                                                    name="text"
+                                                    inputRef={(ref)=> this.name = ref}
+                                                    placeholder="Name"
+                                                    margin="normal"
+                                                />
+                                              </Grid>
+                                              <Grid xs={12} sm={12}>
+                                                <TextField
+                                                    type="email"
+                                                    id="email"
+                                                    required={true}
+                                                    className={classes.textField}
+                                                    name="email"
+                                                    inputRef={(ref)=> this.email = ref}
+                                                    placeholder="E-mail"
+                                                    margin="normal"
+                                                />
+                                              </Grid>
+                                          </Grid>
                                         </Grid>
                                         <Grid item xs={6}>
                                             <FormControl component="fieldset" required className={classes.formControl}>

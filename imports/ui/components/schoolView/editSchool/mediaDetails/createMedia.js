@@ -27,6 +27,9 @@ class CreateMedia extends React.Component {
         	isBusy: false,
         }
     }
+    componentWillReceiveProps() {
+        this.setState({fileUploadError: false});
+    }
   	getFileType = (file , mediaFormData) => {
   		if(file) {
 	  		if (file.type.match('image/*')) {
