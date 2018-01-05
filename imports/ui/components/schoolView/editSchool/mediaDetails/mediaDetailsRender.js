@@ -55,7 +55,7 @@ export default function () {
 								          aria-label="galleryViewTrue"
 								        />
 							          }
-							          label="Switch to Gallery view"
+							          label="Switch to Carousel view"
 							        />
 							    </FormGroup>
 							</Grid>
@@ -67,8 +67,8 @@ export default function () {
 						        </div>
 				        	</Grid>
 				        	<Grid item xs={12}>
-				        		{/*if isGalleryView true then need to show gallery view*/}
-				        		{isGalleryView ? <ImageGridGallery
+				        		{/*By default we need to show gallery view*/}
+				        		{!isGalleryView ? <ImageGridGallery
 				        			filters={{schoolId}}
 				        			onDelete={this.onDeleteMedia}
 									openEditMediaForm={this.openEditMediaForm}
