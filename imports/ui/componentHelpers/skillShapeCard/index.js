@@ -55,7 +55,7 @@ export class SkillShapeCard extends Component {
         const { fullScreen } = this.props;
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
-                    <Card onMouseLeave={() => this.closeDetails()} style={{maxWidth: 320, position:'relative',margin: 8}}>
+                    <Card onMouseLeave={() => this.closeDetails()} style={{position:'relative',margin: 8}}>
                         <CardMedia>
                            <IconButton style={{position: "absolute", top: 6,textAlign:'center', right: 6, minWidth:"auto", maxWidth: "auto", width: 'auto'}}> <ActionFavorite style={{color:"#D50000",height: 24}}/> </IconButton>
 

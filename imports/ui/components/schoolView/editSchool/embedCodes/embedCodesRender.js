@@ -14,7 +14,8 @@ export default function () {
 		<div className="tab-pane active" id="tab_default_10">
 			<PanelHeader cpation="These codes will allow you to put your classes, prices, calendar, and images on your site.
 				Simply copy the code and paste it into the text area or code area of any page on your website. Let us know if there are any issues!
-				notices@SkillShape.com" icon="code" />
+				notices@SkillShape.com" icon="code"
+			/>
 	        <div className="col-md-12">
 	        	{
 	        		embedCodeSettings.map((setting, index) => {

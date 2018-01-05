@@ -38,8 +38,9 @@ class SchoolViewBanner extends React.Component {
 		return(
 			<Grid container className={classes.schoolHeaderContainer}>
 	            <Grid item xs={12}  style={{paddingTop: 0}}>
-	                <Card className={classes.card}>
-	                    <CardMedia image={ schoolData.mainImage || config.defaultSchoolImage } style={{position: "relative", height:320, textAlign: 'center',backgroundSize: "cover"}} >
+
+	                    <CardMedia  className={classes.cardMedia} >
+	                        {schoolData.mainImage && <img style={{maxHeight: 320, maxWidth:'100%', marginBottom: 64 }} src={ schoolData.mainImage || config.defaultSchoolImage } />}
 	                        <div className={classes.imageHeader}>
 	                        	{isEdit &&
 	                        		<Button raised dense color="accent" className={classes.bgEditButton1}  onClick={() => this.setState({ showBackgroundUpload: true, imageType: "mainImage"})}>
@@ -53,7 +54,7 @@ class SchoolViewBanner extends React.Component {
 	                                <Grid item xs={12} sm={4} md={3}>
 	                                    <div style={{height: '100%',textAlign: 'left'}}>
 		                                    <div className={classes.imageLogoContainer}>
-		                                        <img className={classes.logo} src={ schoolData.logoImg || config.defaultSchoolLogo }/>
+		                                        {schoolData.logoImg && <img className={classes.logo} src={ schoolData.logoImg || config.defaultSchoolLogo }/>}
 		                                    </div>
 		                                    { isEdit &&
 			                                    <Button raised dense color="accent" className={classes.logoEditButton}  onClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})}>
@@ -110,7 +111,7 @@ class SchoolViewBanner extends React.Component {
 	                            }
 	                        </div>
 	                    </CardMedia>
-	                </Card>
+
 	            </Grid>
 	        </Grid>
 		)

@@ -2,6 +2,14 @@ export default styles = theme => {
   return {
     schoolHeaderContainer: {
       position: "relative",
+      backgroundColor: theme.palette.primary[500],
+    },
+    cardMedia: {
+      backgroundColor: theme.palette.primary[500],
+      position: "relative",
+      minHeight:146,
+      textAlign: 'center',
+      backgroundSize: "cover"
     },
     imageHeader: {
       top: 0,
@@ -13,8 +21,7 @@ export default styles = theme => {
     imageFooter: {
       position: "absolute",
       bottom: 0,
-      width: "100%",
-      backgroundColor: theme.palette.primary.rgba
+      width: "100%"
     },
     card:{
       width :'100%'

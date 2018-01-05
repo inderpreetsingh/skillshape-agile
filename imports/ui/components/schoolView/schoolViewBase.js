@@ -8,6 +8,7 @@ import { browserHistory, Link } from 'react-router';
 import ClassType from "/imports/api/classType/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import SLocation from "/imports/api/sLocation/fields";
+import { Loading } from '/imports/ui/loading';
 
 export default class SchoolViewBase extends React.Component {
 
@@ -48,7 +49,7 @@ export default class SchoolViewBase extends React.Component {
               if(currentUser.profile && currentUser.profile.schoolId && currentUser.profile.schoolId.length > 1) {
                 toastr.error("You already manage a school. You cannot claim another School. Please contact admin for more details","Error");
               } else {
-                
+
                 let claimRequest = ClaimRequest.find().fetch()
                 if(claimRequest && claimRequest.length> 0) {
                   toastr.info("We are in the process of resolving your claim. We will contact you as soon as we reach a verdict or need more information. Thanks for your patience.","");
@@ -140,9 +141,9 @@ export default class SchoolViewBase extends React.Component {
           let size = 1;
           let imageList = []
           let return_list = []
-          
+
           if(type == "Image") {
-            mediaList.map((a) => { 
+            mediaList.map((a) => {
               if(a && a.mediaType) {
 
                 if(a.mediaType.toLowerCase() == "Image".toLowerCase()) {
@@ -151,7 +152,7 @@ export default class SchoolViewBase extends React.Component {
               }
             })
           } else {
-            mediaList.map((a) => { 
+            mediaList.map((a) => {
               if(a && a.mediaType) {
 
                 if(a.mediaType.toLowerCase() != "Image".toLowerCase()) {
@@ -209,7 +210,7 @@ export default class SchoolViewBase extends React.Component {
 
     modalClose = () => {
         this.setState({
-          claimRequestModal: false, 
+          claimRequestModal: false,
           claimSchoolModal: false,
           successModal: false
         })
@@ -218,9 +219,9 @@ export default class SchoolViewBase extends React.Component {
     modalSubmit = () => {
         const { claimSchoolModal,claimRequestModal, successModal } = this.state;
         const { currentUser, schoolId, schoolData } = this.props;
-        
+
         if(claimSchoolModal && currentUser && currentUser._id && schoolId) {
-          
+
           Meteor.call("school.claimSchool", currentUser._id, schoolId, (error, result) => {
             if(error) {
               console.error("error", error);
@@ -231,7 +232,7 @@ export default class SchoolViewBase extends React.Component {
             }
           })
         } else if(claimRequestModal && currentUser && currentUser._id && schoolId && schoolData) {
-          
+
           const payload = {
             userId: currentUser._id,
             schoolId: schoolId,
@@ -239,7 +240,7 @@ export default class SchoolViewBase extends React.Component {
             schoolName: schoolData.name,
             Status:"new"
           }
-          
+
           Meteor.call("addClaimRequest", payload, (error, result) => {
            console.log(e);
             if(error) {
@@ -273,8 +274,39 @@ export default class SchoolViewBase extends React.Component {
         node.scrollIntoView({ behavior: "smooth"});
     }
 
-    handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
-        console.log(typeOfTable, tableId, schoolId);
-        alert("Purchase functionality is not yet implemented!!!")
+// This is used to send purchase request email when user wants to purchase a package.
+handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
+  // Start loading
+  this.setState({ isLoading: true });
+  console.log(typeOfTable, tableId, schoolId);
+  const { toastr } = this.props;
+  let self = this;
+  Meteor.call(
+    "school.purchasePackage",
+    {
+      typeOfTable: typeOfTable,
+      tableId: tableId,
+      schoolId: schoolId
+    },
+    (err, res) => {
+      if (err) {
+      } else {
+        // Stop loading
+        self.setState({ isLoading: false });
+        // Show confirmation to user that purchase request has been created.
+        if (res.emailSent) {
+          toastr.success(
+            "Your request has been created. We will assist you soon. :)",
+            "Success"
+          );
+        } else {
+          toastr.error(
+            "Something went wrong!",
+            "Error"
+          );
+        }
+      }
     }
+  );
+};
 }

@@ -12,6 +12,7 @@ import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import School from "/imports/api/school/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import { toastrModal } from '/imports/util';
 
 class SchoolView extends SchoolViewBase {
 
@@ -20,6 +21,7 @@ class SchoolView extends SchoolViewBase {
         this.state = {
             isPublish: true,
             bestPriceDetails: null,
+            isLoading:false
         }
     }
     render() {
@@ -53,7 +55,7 @@ export default createContainer(props => {
         Meteor.subscribe("classPricing.getClassPricing", { schoolId })
         Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId })
         Meteor.subscribe("enrollmentFee.getEnrollmentFee", {schoolId});
-    
+
         schoolData = School.findOne({ _id: schoolId })
         classPricing = ClassPricing.find({ schoolId: schoolId }).fetch()
         monthlyPricing = MonthlyPricing.find({ schoolId: schoolId }).fetch()
@@ -76,4 +78,4 @@ export default createContainer(props => {
         classType,
         schoolId,
     };
-}, withStyles(styles)(SchoolView));
+},withStyles(styles)(toastrModal(SchoolView)))

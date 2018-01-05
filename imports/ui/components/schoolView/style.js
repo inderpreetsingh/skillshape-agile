@@ -8,13 +8,15 @@ export default styles = theme => {
       width: '100%',
       height: '100%'
     },
+    themeSpacing: {
+      padding: theme.spacing.unit
+    },
     schoolHeaderContainer: {
       position: "relative",
       padding: theme.spacing.unit * 2
     },
     content: {
-      position: "relative",
-      padding: theme.spacing.unit * 2
+      position: "relative"
     },
     image: {
       verticalAlign: 'middle',
