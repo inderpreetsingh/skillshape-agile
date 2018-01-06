@@ -121,60 +121,62 @@ class ChildTable extends React.Component {
                     return obj.name;
                 }
             }
-        }  
+        }
         return
     }
 
     renderScheduleTypeData = (classes, parentData, itemData, field) => {
-        return itemData.map((x, index) => {
-            return (
-                <div key={index} className={classes.childTableSubData}>
-                    <Grid className={classes.classtypeInputContainer} container>
-                        <Grid  item xs={12} sm={3} md={2}>
-                            <div>{field[0].label}</div>
+        if(_.isArray(itemData)) {
+            return itemData.map((x, index) => {
+                return (
+                    <div key={index} className={classes.childTableSubData}>
+                        <Grid className={classes.classtypeInputContainer} container>
+                            <Grid  item xs={12} sm={3} md={2}>
+                                <div>{field[0].label}</div>
+                            </Grid>
+                            <Grid  item xs={12} sm={9} md={4}>
+                                <div className={classes.inputDisableBox}>
+                                    <span>
+                                        {
+                                            field[0].value ? field[0].value
+                                            : (x[field[0]["key"]] && moment(new Date(x[field[0]["key"]])).format('L'))
+                                        }
+                                    </span>
+                                </div>
+                            </Grid>
+                            <Grid  item xs={12} sm={3} md={2}>
+                                <div>{field[1].label}</div>
+                            </Grid>
+                            <Grid  item xs={12} sm={9} md={4}>
+                                <div className={classes.inputDisableBox}>
+                                    <span>{x[field[1]["key"]] && moment(new Date(x[field[1]["key"]])).format('LT')}</span>
+                                </div>
+                            </Grid>
                         </Grid>
-                        <Grid  item xs={12} sm={9} md={4}>
-                            <div className={classes.inputDisableBox}>
-                                <span>
-                                    {
-                                        field[0].value ? field[0].value 
-                                        : (x[field[0]["key"]] && moment(new Date(x[field[0]["key"]])).format('L')) 
-                                    }
-                                </span>
-                            </div>
+
+                        <Grid className={classes.classtypeInputContainer} container>
+                            <Grid  item xs={12} sm={3} md={2}>
+                                <div>{field[2].label}</div>
+                            </Grid>
+                            <Grid  item xs={12} sm={9} md={4}>
+                                <div className={classes.inputDisableBox}>
+                                    <span>{x[field[2]["key"]]}</span>
+                                </div>
+                            </Grid>
+                            <Grid  item xs={12} sm={3} md={2}>
+                                <div>{field[3].label}</div>
+                            </Grid>
+                            <Grid  item xs={12} sm={9} md={4}>
+                                <div className={classes.inputDisableBox}>
+                                    <span>{ x[field[3]["key"]] && this.getRoomName(x[field[3]["key"]], parentData)}</span>
+                                </div>
+                            </Grid>
                         </Grid>
-                        <Grid  item xs={12} sm={3} md={2}>
-                            <div>{field[1].label}</div>
-                        </Grid>
-                        <Grid  item xs={12} sm={9} md={4}>
-                            <div className={classes.inputDisableBox}>
-                                <span>{x[field[1]["key"]] && moment(new Date(x[field[1]["key"]])).format('LT')}</span>
-                            </div>
-                        </Grid>
-                    </Grid>
-                    
-                    <Grid className={classes.classtypeInputContainer} container>
-                        <Grid  item xs={12} sm={3} md={2}>
-                            <div>{field[2].label}</div>
-                        </Grid>
-                        <Grid  item xs={12} sm={9} md={4}>
-                            <div className={classes.inputDisableBox}>
-                                <span>{x[field[2]["key"]]}</span>
-                            </div>
-                        </Grid>
-                        <Grid  item xs={12} sm={3} md={2}>
-                            <div>{field[3].label}</div>
-                        </Grid>
-                        <Grid  item xs={12} sm={9} md={4}>
-                            <div className={classes.inputDisableBox}>
-                                <span>{ x[field[3]["key"]] && this.getRoomName(x[field[3]["key"]], parentData)}</span>
-                            </div>
-                        </Grid>
-                    </Grid>
-                    
-                </div>
-            )
-        })  
+
+                    </div>
+                )
+            })
+        }
     }
 
     render() {

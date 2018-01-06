@@ -72,23 +72,23 @@ export default function (props) {
 									                        	<div> {field.label} </div>
 									                        </Grid>
 									                        <Grid  item xs={12} sm={field.valueSm ? field.valueSm : 9} md={field.valueMd ? field.valueMd : 9}>
-								                         		
-								                         		{ 
+
+								                         		{
 								                         			field.nestedObjectOfArray ? (
 								                         				tableData[field.key] ? (Object.keys(tableData[field.key]).map((itemkey, index) => {
 								                         					const itemData = tableData[field.key][itemkey];
-								                         					// console.log("itemData -->>",itemData)
+								                         					console.log("renderScheduleTypeData itemData -->>",itemData)
 								                         					return this.renderScheduleTypeData(classes, parentData, itemData, [{label: "Day", value: itemkey}, { label: "Start Time", key: "startTime" }, {label: "Duration", key: "duration"}, {label: "Room", key: "roomId"}])
-								                         					
-								                         				})) :  ((tableData["scheduleType"] === "oneTime") && this.renderScheduleTypeData(classes, parentData, [tableData], [{label: "Start Date", key: "startDate"}, { label: "Start Time", key: "startTime" }, {label: "Duration", key: "duration"}, {label: "Room", key: "roomId"}]))	
-								                         				
+
+								                         				})) :  ((tableData["scheduleType"] === "oneTime") && this.renderScheduleTypeData(classes, parentData, [tableData], [{label: "Start Date", key: "startDate"}, { label: "Start Time", key: "startTime" }, {label: "Duration", key: "duration"}, {label: "Room", key: "roomId"}]))
+
 								                         			)
 								                         			:(<div className={classes.inputDisableBox}>
 								                         				<span>{tableData[field.key]}</span>
 								                         			</div>)
-								                         		} 
+								                         		}
 									                        </Grid>
-									                    </Fragment>    
+									                    </Fragment>
 													)
 												})
 				    						}
