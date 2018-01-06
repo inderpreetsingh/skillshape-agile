@@ -1,5 +1,6 @@
 // Run this when the meteor app is started
 import '../imports/startup/client';
+import 'react-widgets/dist/css/react-widgets.css';
 import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom';
 import React from 'react';

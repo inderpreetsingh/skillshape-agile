@@ -8,6 +8,7 @@ import MainLayout from '/imports/ui/layout/mainLayout';
 
 //components
 import Home from '/imports/ui/components/home';
+import Landing from '/imports/ui/components/landing/index.jsx';
 import ResetPassword from '/imports/ui/components/account/resetPassword';
 import MyProfile from '/imports/ui/components/users/myProfile';
 import SchoolView from '/imports/ui/components/schoolView';
@@ -41,6 +42,7 @@ export default Routes = () => (
         <Route path="/schools/:slug" component={SchoolView} />
         <Route path="/MyCalendar" component={ManageMyCalendar} />
       </Route>
+      <Route exact path="/landing" component={Landing} />
     </Router>
   </MuiThemeProvider>
 );

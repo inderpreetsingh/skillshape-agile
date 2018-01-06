@@ -1,0 +1,9 @@
+// React Widgets//
+$font-path: "{}/node_modules/react-widgets/lib/fonts";
+$img-path:  "{}/node_modules/react-widgets/lib/img";
+$input-box-shadow:none;
+$input-focus-box-shadow:none;
+$border-radius: 0px;
+$border-radius-sm: 0px;
+
+@import '{}/imports/ui/components/landing/components/jss/reactWidgets.scss';
