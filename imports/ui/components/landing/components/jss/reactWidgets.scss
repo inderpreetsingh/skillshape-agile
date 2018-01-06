@@ -1,14 +1,5 @@
 // @import "/node_modules/react-widgets/lib/scss/react-widgets";
 $multiselect-tag-border: black;
-
-@font-face {
-    font-family: ‘rw-widgets’;
-    src: url(‘/landing/landing_fonts/rw-widgets.eot’);
-    src: url(‘/landing/landing_fonts/rw-widgets.woff’);
-    src: url(‘/landing/landing_fonts/rw-widgets.woff2’);
-    src: url(‘/landing/landing_fonts/rw-widgets.ttf’) format(‘truetype’),
-}
-
 .rw-widget-container {
     border:none;
     border-bottom: 1px solid $multiselect-tag-border;

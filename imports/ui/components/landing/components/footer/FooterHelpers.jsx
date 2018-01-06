@@ -25,8 +25,9 @@ const FooterText = styled.p`
 const FooterLink = styled.a`
     color: ${helpers.lightTextColor};
     text-decoration: none;
-    padding: ${helpers.rhythmDiv} 0;
+    padding: ${helpers.rhythmDiv}px 0;
     font-size: ${helpers.baseFontSize * 0.75}px;
+    cursor: pointer;
 
     &:first-of-type {
         padding-top: 0;
