@@ -1,6 +1,6 @@
 export const
-    logoSrc = 'landing/images/logo.png',
-    coverSrc = 'landing/images/covergb.jpg',
-    cardImgSrc = 'landing/images/3.jpg',
+    logoSrc = '/images/landing/logo.png',
+    coverSrc = '/images/landing/covergb.jpg',
+    cardImgSrc = '/images/landing/3.jpg',
     brandText = 'SkillShape',
     brandTagline = 'your path revealed';
