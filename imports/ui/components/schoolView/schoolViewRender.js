@@ -223,7 +223,7 @@ export default function() {
                 </h2>
               </div>
               <Grid container className={classes.themeSpacing}>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12}>
                     <Typography align="center" type="headline" className={classes.themeSpacing}>
                       Enrollment Fee
                     </Typography>
@@ -231,7 +231,7 @@ export default function() {
                       {
                         enrollmentFee && enrollmentFee.map((enrollmentFee, index)=> {
                           return (
-                            <Grid key={index} item xs={12} md={12}>
+                            <Grid key={index} item xs={12} md={3} sm={4}>
                               <Card  className={`${classes.card} price-card-container`}>
                                 <CardContent>
                                   <Typography align="center" type="title">
@@ -263,8 +263,8 @@ export default function() {
                       }
                     </Grid>
                 </Grid>
-
-                <Grid item xs={12} sm={4}>
+              <Grid container className={classes.themeSpacing}>
+                <Grid item xs={12}>
                     <Typography align="center" type="headline" className={classes.themeSpacing}>
                       Per Class Package
                     </Typography>
@@ -272,7 +272,7 @@ export default function() {
                       {
                         classPricing && classPricing.map((classPrice, index)=> {
                           return (
-                            <Grid key={index} item xs={12} md={6}>
+                            <Grid key={index} item xs={12} md={3} sm={4}>
                               <Card className={`${classes.card} price-card-container`}>
                                 <CardContent className={classes.content}>
                                   <Typography align="center" type="title">
@@ -309,8 +309,9 @@ export default function() {
 
                     </Grid>
                 </Grid>
-
-                <Grid item xs={12} sm={5}>
+              </Grid>
+              <Grid container className={classes.themeSpacing}>
+                <Grid item xs={12} >
                     <Typography align="center" type="headline" className={classes.themeSpacing}>
                       Monthly Packages
                     </Typography>
@@ -318,7 +319,7 @@ export default function() {
                       {
                         monthlyPricing && monthlyPricing.map((monthPrice, index)=> {
                           return (
-                            <Grid key={index} item xs={12} md={6}>
+                            <Grid key={index} item xs={12} md={3} sm={4} >
                               <Card className={`${classes.card} price-card-container`}>
                                 <CardContent className={classes.content}>
                                   <Typography align="center" type="title">
@@ -376,6 +377,7 @@ export default function() {
                       }
                     </Grid>
                 </Grid>
+              </Grid>
               </Grid>
             </Card>
           </Grid>

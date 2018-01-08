@@ -63,12 +63,13 @@ class ClassPriceForm extends React.Component {
         event.preventDefault();
         const { selectedClassType, expPeriod } = this.state;
         const { data, schoolId } = this.props;
+        const expDuration = this.expDuration.value && parseInt(this.expDuration.value);
         const payload = {
             schoolId: schoolId,
             packageName: this.packageName.value,
             classTypeId: selectedClassType && selectedClassType.map(data => data._id),
-            expDuration: this.expDuration.value && parseInt(this.expDuration.value),
-            expPeriod: expPeriod,
+            expDuration: expDuration,
+            expPeriod: expDuration && expDuration > 1 ? expPeriod : expPeriod.replace('s',''),
             noClasses: this.noClasses.value && parseInt(this.noClasses.value),
             cost: this.classPriceCost.value && parseInt(this.classPriceCost.value),
 
