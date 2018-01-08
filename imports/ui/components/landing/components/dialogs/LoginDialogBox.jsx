@@ -7,6 +7,8 @@ import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import TextField from 'material-ui/TextField';
 import styled from 'styled-components';
+import Input, { InputLabel } from 'material-ui/Input';
+import { FormControl, FormHelperText } from 'material-ui/Form';
 
 import { MuiThemeProvider} from 'material-ui/styles';
 import * as helpers from '../jss/helpers.js';
@@ -18,6 +20,8 @@ import Dialog , {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
+
+import { ContainerLoader } from '/imports/ui/loading/container';
 
 const Link = styled.a`
   color:${helpers.textColor};
@@ -31,6 +35,10 @@ const DialogTitleWrapper = styled.div`
   width: 100%;
 `;
 
+const ErrorWrapper = styled.span`
+ color: red;
+ float: right;
+`;
 
 const LoginDialog = (props) => (
   <Dialog
@@ -39,37 +47,47 @@ const LoginDialog = (props) => (
     onRequestClose={props.onModalClose}
     aria-labelledby="login"
   >
+  { props.loading && <ContainerLoader/>}
   <MuiThemeProvider theme={muiTheme}>
     <DialogTitle>
       <DialogTitleWrapper>
           Log In
-          
+
           <IconButton color="primary" onClick={props.onModalClose}>
-            <ClearIcon/> 
-          </IconButton > 
-        </DialogTitleWrapper> 
+            <ClearIcon/>
+          </IconButton >
+        </DialogTitleWrapper>
     </DialogTitle>
     <DialogContent>
-        <TextField
+        <FormControl error={props.error.email} margin="dense" fullWidth aria-describedby="email-error-text">
+          <InputLabel htmlFor="email">Email Address</InputLabel>
+          <Input
             autoFocus
-            margin="dense"
             id="email"
-            label="Email Address"
             type="email"
+            value={props.email}
+            onChange={props.handleInputChange.bind(this, "email")}
             fullWidth
-          />
+           />
+           {
+                props.error.email && <FormHelperText id="email-error-text">Invalid email address</FormHelperText>
+           }
+        </FormControl>
         <TextField
           margin="dense"
           id="password"
           label="Password"
           type="password"
-           helperText={<Link href="#" onClick={props.onForgetPasswordLinkClick}> Forgot Password? </Link>}
+          value={props.password}
+          onChange={props.handleInputChange.bind(this, "password")}
+          helperText={<Link href="#" onClick={props.onForgetPasswordLinkClick}> Forgot Password? </Link>}
           fullWidth
         />
+        {props.error.message && <ErrorWrapper>{props.error.message}</ErrorWrapper>}
     </DialogContent>
     <DialogActions>
        <Button color="primary" onClick={props.onSignUpButtonClick}> Sign Up</Button>
-       <PrimaryButton label="Sign In" onClick={props.onSignInButtonClick}/>
+       <PrimaryButton disabled={props.error.email} label="Sign In" onClick={props.onSignInButtonClick}/>
     </DialogActions>
     </MuiThemeProvider>
   </Dialog>

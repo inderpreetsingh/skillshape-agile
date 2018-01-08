@@ -18,7 +18,7 @@ const NavBarWrapper = styled.div`
   z-index:1299;
   position:fixed;
   background:white;
-  
+
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-bottom: ${helpers.rhythmDiv};
   }
@@ -31,24 +31,24 @@ const ActionArea = styled.div`
 const ButtonsWrapper = styled.div`
   ${helpers.flexCenter}
   @media screen and (max-width : ${helpers.tablet}px) {
-    ${helpers.hide}   
+    ${helpers.hide}
   }
 `;
 
 const BrandBar = (props) => (
     <NavBarWrapper>
       {props.logoArea ? props.logoArea : <Logo />}
-    
+
       <ActionArea>
-        {props.barButton ? props.barButton 
-        : 
+        {props.barButton ? props.barButton
+        :
         (<ButtonsWrapper>
           <AddSchoolButton />
-          <LoginButton icon={true}/>
+          <LoginButton icon={true} {...props}/>
         </ButtonsWrapper>)}
-        {props.menuButton ? props.menuButton : <SideNav /> }
+        {props.menuButton ? props.menuButton : <SideNav {...props}/> }
       </ActionArea>
-      
+
     </NavBarWrapper>
 );
 

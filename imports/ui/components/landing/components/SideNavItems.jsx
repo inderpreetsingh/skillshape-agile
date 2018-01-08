@@ -35,14 +35,14 @@ const SideNavItem = (props) => {
     return(
     <ListItem button={props.button ? props.button : false} onClick={props.onClick}>
       {
-       props.children ? props.children : 
+       props.children ? props.children :
        <Fragment>
             <ListItemIcon>
                 <Icon>{props.iconName}</Icon>
             </ListItemIcon>
             <ListItemText classes={{text: props.menuListItemText}} primary={props.name} />
         </Fragment>}
-    </ListItem>    
+    </ListItem>
     );
 }
 
@@ -50,14 +50,19 @@ const SideNavItems = (props) => (
     <Drawer open={props.open} anchor="right" onRequestClose={props.handleDrawer}>
         <List className={props.classes.drawerList}>
             <DrawerHeader handleDrawer={props.handleDrawer} drawerHeader={props.classes.drawerHeader}/>
-            <Divider />    
+            <Divider />
             <SideNavItem button menuListItemText={props.classes.menuListItemText} name="Home" iconName="home" />
             <SideNavItem button menuListItemText={props.classes.menuListItemText} name="Student Sign Up" iconName="assignment_ind" />
             <SideNavItem button menuListItemText={props.classes.menuListItemText} onClick={props.handleSignUpDialogBox} name="Register" iconName="school" />
             <SideNavItem button menuListItemText={props.classes.menuListItemText} name="Claim A School" iconName="check_circle" />
             <SideNavItem button menuListItemText={props.classes.menuListItemText} name="Contact Us" iconName="email" />
             <SideNavItem >
-                <LoginButton fullWidth={true} icon={true} iconName="fingerprint" label="Log In" />
+                <LoginButton
+                    fullWidth={true}
+                    icon={true}
+                    iconName="location_on"
+                    currentUser={props.currentUser}
+                />
             </SideNavItem>
         </List>
     </Drawer>

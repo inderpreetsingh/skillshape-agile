@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import {Element, scroller } from 'react-scroll'
 
@@ -52,10 +53,12 @@ const SwitchViewWrapper = styled.div`
 `;
 
 class Landing extends Component {
+
     state = {
       mapView: false,
       cardsDataList : [cardsData,cardsData1]
     }
+
     toggleMapView = () => {
       this.setState({
         mapView: !this.state.mapView
@@ -63,6 +66,7 @@ class Landing extends Component {
 
       this.scrollTo();
     }
+
     scrollTo(name) {
       scroller.scrollTo(('content-container'|| name),{
         duration: 800,
@@ -70,16 +74,12 @@ class Landing extends Component {
         smooth: 'easeInOutQuart'
       })
     }
+
     render() {
         return(
-            <main>
-                <header>
-                    <BrandBar/>
-                    <Cover>  <SearchArea /> </Cover>
-                </header>
-
+            <div>
+              <Cover>  <SearchArea /> </Cover>
                  <FilterPanel />
-
                  <Element name="content-container" className="element">
                   <MainContentWrapper>
                     {this.state.mapView ?
@@ -98,12 +98,9 @@ class Landing extends Component {
                 <SwitchViewWrapper>
                   <SwitchIconButton onClick={this.toggleMapView}/>
                 </SwitchViewWrapper>
-
-                <Footer />
-            </main>
+            </div>
         )
     }
 }
-
 
 export default Landing;

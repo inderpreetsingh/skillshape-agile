@@ -12,30 +12,32 @@ class SideNav extends Component {
         signUpDialogBox: false,
     }
     handleDrawerState = (state) => {
-      this.setState({open: state}); 
+      this.setState({open: state});
     }
     handleSignUpDialogBoxState = (state) => {
-        this.setState({signUpDialogBox: state});  
+        this.setState({signUpDialogBox: state});
     }
     toggleDrawerState = () => {
       this.setState({open: !this.state.open});
     }
     render() {
+        const { currentUser } = this.props;
         return (
             <Fragment>
-                {this.state.signUpDialogBox && 
-                    <SignUpDialogBox 
+                {!currentUser && this.state.signUpDialogBox &&
+                    <SignUpDialogBox
                     open={this.state.signUpDialogBox}
                     onModalClose={() => this.handleSignUpDialogBoxState(false)} />
                 }
                 <MenuIconButton handleClick={this.toggleDrawerState} />
-                <SideNavItems 
-                    open={this.state.open} 
+                <SideNavItems
+                    open={this.state.open}
                     handleDrawer={() => this.handleDrawerState(false)}
                     handleSignUpDialogBox={() => this.handleSignUpDialogBoxState(true)}
+                    {...this.props}
                     />
             </Fragment>
-        )  
+        )
     }
 }
 

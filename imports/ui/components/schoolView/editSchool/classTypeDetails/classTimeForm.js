@@ -102,7 +102,7 @@ class ClassTimeForm extends React.Component {
             locationId: locationId,
         }
         if(tabValue === 0) {
-            
+
             payload.scheduleType = "oneTime";
             payload.roomId = this.state.roomId;
             payload.startDate = this.state.startDate;
@@ -110,27 +110,27 @@ class ClassTimeForm extends React.Component {
             payload.duration = this.duration.value && parseInt(this.duration.value);
 
         } else if(tabValue === 1) {
-            
+
             payload.scheduleType = "recurring";
             payload.startDate = this.state.startDate;
             payload.endDate = this.state.endDate;
             payload.scheduleDetails = this.refs.weekDaysRow.getRowData();
-        
+
         } else if(tabValue === 2) {
-            
+
             payload.scheduleType = "onGoing"
             payload.startDate = new Date();
             payload.scheduleDetails = this.refs.weekDaysRow.getRowData();
-        
+
         }
         console.log("ClassTimes submit -->>",payload)
-        
+
         if(data && data._id) {
             this.handleSubmit({ methodName: "classTimes.editClassTimes", doc: payload, doc_id: data._id })
         } else {
             this.handleSubmit({ methodName: "classTimes.addClassTimes", doc: payload })
         }
-      
+
     }
 
     handleSubmit = ({ methodName, doc, doc_id })=> {
@@ -163,7 +163,7 @@ class ClassTimeForm extends React.Component {
         >
               <DialogTitle id="form-dialog-title">Add Class Times</DialogTitle>
                     { this.state.isBusy && <ContainerLoader/>}
-                    { 
+                    {
                         this.state.showConfirmationModal && <ConfirmationModal
                             open={this.state.showConfirmationModal}
                             submitBtnLabel="Yes, Delete"
@@ -173,7 +173,7 @@ class ClassTimeForm extends React.Component {
                             onClose={() => this.setState({showConfirmationModal: false})}
                         />
                     }
-                    { 
+                    {
                         this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
                             <DialogContent>
                                 <form id={formId} onSubmit={this.onSubmit}>
@@ -210,7 +210,7 @@ class ClassTimeForm extends React.Component {
                                                             hintText={"Start Date"}
                                                             floatingLabelText={"Start Date *"}
                                                             value={this.state.startDate}
-                                                            onChange={this.handleChangeDate.bind(this, "startDate")} 
+                                                            onChange={this.handleChangeDate.bind(this, "startDate")}
                                                             fullWidth={true}
                                                         />
                                                     </Grid>
@@ -219,13 +219,13 @@ class ClassTimeForm extends React.Component {
                                                             required={true}
                                                             format={"ampm"}
                                                             value={this.state.startTime}
-                                                            floatingLabelText={"Start Time *"} 
+                                                            floatingLabelText={"Start Time *"}
                                                             hintText={"Start Time"}
                                                             onChange={this.handleChangeDate.bind(this, "startTime")}
                                                             fullWidth={true}
                                                         />
                                                     </Grid>
-                                                    <Grid item sm={6} xs={12}>    
+                                                    <Grid item sm={6} xs={12}>
                                                         <TextField
                                                             required={true}
                                                             defaultValue={data && data.duration}
@@ -236,7 +236,7 @@ class ClassTimeForm extends React.Component {
                                                             fullWidth
                                                         />
                                                     </Grid>
-                                                    <Grid item sm={6} xs={12}>    
+                                                    <Grid item sm={6} xs={12}>
                                                         <FormControl fullWidth margin='dense'>
                                                             <InputLabel htmlFor="roomId">Room</InputLabel>
                                                             <Select
@@ -254,7 +254,7 @@ class ClassTimeForm extends React.Component {
                                                         </FormControl>
                                                     </Grid>
                                                 </Grid>
-                                            </div>    
+                                            </div>
                                         )
                                     }
                                     {
@@ -269,7 +269,7 @@ class ClassTimeForm extends React.Component {
                                                                     hintText={"Start Date"}
                                                                     floatingLabelText={"Start Date *"}
                                                                     value={this.state.startDate}
-                                                                    onChange={this.handleChangeDate.bind(this, "startDate")} 
+                                                                    onChange={this.handleChangeDate.bind(this, "startDate")}
                                                                     fullWidth={true}
                                                                 />
                                                             </Grid>
@@ -279,11 +279,11 @@ class ClassTimeForm extends React.Component {
                                                                     hintText={"End Date"}
                                                                     floatingLabelText={"End Date *"}
                                                                     value={this.state.endDate}
-                                                                    onChange={this.handleChangeDate.bind(this, "endDate")} 
+                                                                    onChange={this.handleChangeDate.bind(this, "endDate")}
                                                                     fullWidth={true}
                                                                 />
                                                             </Grid>
-                                                        </Grid> 
+                                                        </Grid>
                                                     )
                                                 }
                                                 <WeekDaysRow
@@ -293,7 +293,7 @@ class ClassTimeForm extends React.Component {
                                                 />
                                             </div>
                                         )
-                                    }        
+                                    }
                                 </form>
                             </DialogContent>
                         )
@@ -310,13 +310,13 @@ class ClassTimeForm extends React.Component {
                       Cancel
                     </Button>
                     <Button type="submit" form={formId} color="primary">
-                      { data ? "Save" : "Submit" } 
+                      { data ? "Save" : "Submit" }
                     </Button>
                 </DialogActions>
             </Dialog>
       </div>
     )
   }
-}  
+}
 
 export default withStyles(styles)(withMobileDialog()(ClassTimeForm));

@@ -24,15 +24,15 @@ import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
 
 import { material_ui_next_theme } from '/imports/util';
-console.log("material_ui_next_theme", material_ui_next_theme)
+// console.log("material_ui_next_theme", material_ui_next_theme)
 
 const theme = createMuiTheme({...material_ui_next_theme});
-console.log("theme", theme);
+// console.log("theme", theme);
 export default Routes = () => (
   <MuiThemeProvider theme={theme}>
     <Router history={browserHistory}>
       <Route path="/" component={MainLayout} >
-        <IndexRoute component={Home} />
+        <IndexRoute component={Landing} />
         <Route path="/Aboutus" component={AboutUs} />
         <Route path="/Contactus" component={ContactUs} />
       	<Route path="/reset-password/:token" component={ResetPassword}/>
@@ -42,7 +42,6 @@ export default Routes = () => (
         <Route path="/schools/:slug" component={SchoolView} />
         <Route path="/MyCalendar" component={ManageMyCalendar} />
       </Route>
-      <Route exact path="/landing" component={Landing} />
     </Router>
   </MuiThemeProvider>
 );

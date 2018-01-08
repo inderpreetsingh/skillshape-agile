@@ -29,7 +29,7 @@ const styles = {
   },
   primaryButtonIcon: {
     display: 'inline-block',
-    marginRight: '5px', 
+    marginRight: '5px',
     fontSize: 'inherit'
   },
   ['@media (max-width:'+helpers.mobile+'px)']: {
@@ -43,18 +43,22 @@ const styles = {
 const PrimaryButton = (props) => {
   let rootClass = ``;
   if(props.fullWidth) {
-    rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth}`;  
+    rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth}`;
   }else{
     rootClass = props.classes.primaryButton;
   }
 
   return (
-    <Button classes={{
-      root: rootClass,
-      label: props.classes.primaryButtonLabel
-      }} onClick={props.onClick}>
+    <Button
+      classes={{
+        root: rootClass,
+        label: props.classes.primaryButtonLabel
+      }}
+      onClick={props.onClick}
+      disabled={props.disabled}
+    >
         {props.icon && <Icon className={props.classes.primaryButtonIcon}>{props.iconName}</Icon>}
-        
+
         {props.label ? props.label : 'Submit'}
     </Button>
   )
@@ -66,9 +70,10 @@ PrimaryButton.propTypes = {
     iconName: PropTypes.string,
     label: PropTypes.string,
     fullWidth: PropTypes.bool,
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    disabled: PropTypes.bool,
 }
-        
+
 export default withStyles(styles)(PrimaryButton);
 
 

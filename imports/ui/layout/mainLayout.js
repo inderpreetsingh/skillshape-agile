@@ -1,10 +1,12 @@
 import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import Header from '/imports/ui/components/header';
-import Footer from '/imports/ui/components/footer';
+// import Footer from '/imports/ui/components/footer';
 import MVPSideBar from '/imports/ui/components/MVPSideBar';
 import SideBar from '/imports/ui/components/sideBar';
 import Grid from 'material-ui/Grid';
+import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
+import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
 
 import { checkDemoUser, withStyles } from '/imports/util';
 // import { initializeLayout } from '/imports/util/initializeLayout';
@@ -63,16 +65,15 @@ class MainLayout extends React.Component {
       className.id = "UserMainPanel";
     }
     return (
-        <div>
-            { false && currentUser && this.showSideBar(currentUser)}
-            <div ref={(ref)=> {this.mainPanelRef = ref}} className={className.mainClass} id={className.id}>
-             {/* <Header {...this.props}/>*/}
-              <div className={className.contentClass}>
+        <div ref={(ref)=> {this.mainPanelRef = ref}} className={className.mainClass} id={className.id}>
+            <BrandBar {...this.props}/>
+              {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
+              {/* <Header {...this.props}/>*/}
+              {/*<div className={className.contentClass}>
                     <main className={classes.content}>
                         {
                           this.checkEmailVerification(currentUser) ? (
                             <div >
-                                {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
                             </div>
                           ) : (
                             <p>
@@ -85,9 +86,9 @@ class MainLayout extends React.Component {
                         }
                     </main>
 
-              </div>
+              </div>*/}
               {/*<Footer/>*/}
-            </div>
+          <Footer />
         </div>
     )
   }
