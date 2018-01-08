@@ -4,6 +4,8 @@ import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import Grid from 'material-ui/Grid';
 import Radio, { RadioGroup } from 'material-ui/Radio';
+import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
+import { FormControl } from 'material-ui/Form';
 
 export default class AddRow extends React.Component {
 
@@ -59,21 +61,27 @@ export default class AddRow extends React.Component {
 			                        />
 			                    </Grid>
 			                    <Grid  item xs={12} sm={4}>
-			                        <TextField
-			                        	required={true}
-			                            defaultValue={data && data.cost}
-			                            onChange={this.onChangeInput.bind(this, "cost", index)}
-			                            margin="dense"
-			                            label="Cost"
-			                            type="number"
-			                            fullWidth
-			                        />
+			                        <FormControl
+                                  		margin="dense"
+                                  		required={true}
+                                  		fullWidth
+                                	>
+	                                    <InputLabel htmlFor="amount">Cost</InputLabel>
+				                        <Input
+				                            defaultValue={data && data.cost}
+				                            onChange={this.onChangeInput.bind(this, "cost", index)}
+				                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+				                            label="Cost"
+				                            type="number"
+				                            fullWidth
+				                        />
+			                        </FormControl>
 			                    </Grid>
 			                    <Grid  item xs={12} sm={4}>
 			                        <Button className={classes.button} onClick={this.removeRow.bind(this, index)} raised color="accent" >
 			                            Delete
 			                        </Button>
-			                    </Grid>  
+			                    </Grid>
 			                </Grid>
 						)
 					})
@@ -84,4 +92,4 @@ export default class AddRow extends React.Component {
             </div>
 		)
 	}
-} 
+}

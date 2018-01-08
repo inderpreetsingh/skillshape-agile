@@ -15,10 +15,11 @@ import Dialog, {
   withMobileDialog,
 } from 'material-ui/Dialog';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
+import { FormControl } from 'material-ui/Form';
 import '/imports/api/enrollmentFee/methods';
 
 const formId = "ClassPriceForm";
-
 
 const styles = theme => {
     return {
@@ -89,9 +90,9 @@ class EnrollmentFeeForm extends React.Component {
     }
 
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
-	
+
     render() {
-		const { fullScreen, data } = this.props;
+		const { fullScreen, data, classes } = this.props;
         const { classTypeData } = this.state;
         console.log("enrollmentFee form state -->>",this.state);
 		return (
@@ -102,7 +103,7 @@ class EnrollmentFeeForm extends React.Component {
                 fullScreen={fullScreen}
             >
             	<DialogTitle id="form-dialog-title">Add Enrollment Fee</DialogTitle>
-            	{ 
+            	{
                     this.state.showConfirmationModal && <ConfirmationModal
                         open={this.state.showConfirmationModal}
                         submitBtnLabel="Yes, Delete"
@@ -113,7 +114,7 @@ class EnrollmentFeeForm extends React.Component {
                     />
                 }
                 { this.state.isBusy && <ContainerLoader/>}
-            	{ 
+            	{
                     this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
                         <DialogContent>
                             <form id={formId} onSubmit={this.onSubmit}>
@@ -128,24 +129,30 @@ class EnrollmentFeeForm extends React.Component {
                                 />
                                 <SelectArrayInput
                                     disabled={false}
-                                    floatingLabelText="Class Types"  
-                                    optionValue="_id" 
-                                    optionText="name" 
-                                    input={{ value: this.state.selectedClassType ,onChange: this.onClassTypeChange}} 
-                                    onChange={this.onClassTypeChange} 
+                                    floatingLabelText="Class Types"
+                                    optionValue="_id"
+                                    optionText="name"
+                                    input={{ value: this.state.selectedClassType ,onChange: this.onClassTypeChange}}
+                                    onChange={this.onClassTypeChange}
                                     setFilter={this.handleClassTypeInputChange}
-                                    dataSourceConfig={{ text: 'name', value: '_id' }} 
-                                    choices={classTypeData} 
+                                    dataSourceConfig={{ text: 'name', value: '_id' }}
+                                    choices={classTypeData}
                                 />
-                                <TextField
-                                    required={true}
-                                    defaultValue={data && data.cost}
+                                <FormControl
                                     margin="dense"
-                                    inputRef={(ref)=> this.enrollmentCost = ref}
-                                    label="Cost"
-                                    type="number"
+                                    required={true}
                                     fullWidth
-                                />
+                                >
+                                    <InputLabel htmlFor="amount">Cost</InputLabel>
+                                    <Input
+                                        defaultValue={data && data.cost}
+                                        inputRef={(ref)=> this.enrollmentCost = ref}
+                                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                        label="Cost"
+                                        type="number"
+                                        fullWidth
+                                    />
+                                </FormControl>
                             </form>
                         </DialogContent>
                     )
@@ -162,7 +169,7 @@ class EnrollmentFeeForm extends React.Component {
                       Cancel
                     </Button>
                     <Button type="submit" form={formId} color="primary">
-                      { data ? "Save" : "Submit" } 
+                      { data ? "Save" : "Submit" }
                     </Button>
                 </DialogActions>
             </Dialog>
