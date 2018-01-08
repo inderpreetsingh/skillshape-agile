@@ -62,12 +62,13 @@ class ClassPriceForm extends React.Component {
         event.preventDefault();
         const { selectedClassType, expPeriod } = this.state;
         const { data, schoolId } = this.props;
+        const expDuration = this.expDuration.value && parseInt(this.expDuration.value);
         const payload = {
             schoolId: schoolId,
             packageName: this.packageName.value,
             classTypeId: selectedClassType && selectedClassType.map(data => data._id),
-            expDuration: this.expDuration.value && parseInt(this.expDuration.value),
-            expPeriod: expPeriod,
+            expDuration: expDuration,
+            expPeriod: expDuration && expDuration > 1 ? expPeriod : expPeriod.replace('s',''),
             noClasses: this.noClasses.value && parseInt(this.noClasses.value),
             cost: this.classPriceCost.value && parseInt(this.classPriceCost.value),
 
@@ -109,7 +110,7 @@ class ClassPriceForm extends React.Component {
                 fullScreen={fullScreen}
             >
             	<DialogTitle id="form-dialog-title">Add Class Package</DialogTitle>
-            	{ 
+            	{
                     this.state.showConfirmationModal && <ConfirmationModal
                         open={this.state.showConfirmationModal}
                         submitBtnLabel="Yes, Delete"
@@ -120,7 +121,7 @@ class ClassPriceForm extends React.Component {
                     />
                 }
                 { this.state.isBusy && <ContainerLoader/>}
-            	{ 
+            	{
                     this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
                         <DialogContent>
                             <form id={formId} onSubmit={this.onSubmit}>
@@ -135,14 +136,14 @@ class ClassPriceForm extends React.Component {
                                 />
                                 <SelectArrayInput
                                     disabled={false}
-                                    floatingLabelText="Class Types"  
-                                    optionValue="_id" 
-                                    optionText="name" 
-                                    input={{ value: this.state.selectedClassType ,onChange: this.onClassTypeChange}} 
-                                    onChange={this.onClassTypeChange} 
+                                    floatingLabelText="Class Types"
+                                    optionValue="_id"
+                                    optionText="name"
+                                    input={{ value: this.state.selectedClassType ,onChange: this.onClassTypeChange}}
+                                    onChange={this.onClassTypeChange}
                                     setFilter={this.handleClassTypeInputChange}
-                                    dataSourceConfig={{ text: 'name', value: '_id' }} 
-                                    choices={classTypeData} 
+                                    dataSourceConfig={{ text: 'name', value: '_id' }}
+                                    choices={classTypeData}
                                 />
                                 <Grid container>
                                     <Grid  item xs={12} sm={6}>
@@ -207,7 +208,7 @@ class ClassPriceForm extends React.Component {
                       Cancel
                     </Button>
                     <Button type="submit" form={formId} color="primary">
-                      { data ? "Save" : "Submit" } 
+                      { data ? "Save" : "Submit" }
                     </Button>
                 </DialogActions>
             </Dialog>

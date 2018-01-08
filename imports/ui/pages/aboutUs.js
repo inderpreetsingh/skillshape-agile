@@ -3,11 +3,16 @@ import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
-import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'material-ui/Form';
+import {FormControl, FormControlLabel} from 'material-ui/Form';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import { withStyles } from "material-ui/styles";
+import { browserHistory } from 'react-router';
+
+import { toastrModal } from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
+
+
 
 const styles = theme => ({
   boxShadow: {
@@ -33,13 +38,60 @@ class AboutUs extends React.Component{
 
   constructor(props){
     super(props);
+    this.state = {
+      optionsRadios:'',
+      isLoading:false
+    }
   }
-
+  /*Set radio button values into state in order to set `value` attribute for radio button
+  Please note that `value` is needed so that user can select radio buttons*/
+  handleChange = (event) => {
+    this.setState({ optionsRadios: event.target.value });
+  };
+  // Send feedback to admin
+  submit = (event) => {
+      event.preventDefault();
+      const { toastr } = this.props;
+      console.log("this", this);
+      const name = this.name.value;
+      const email = this.email.value;
+      const message = this.yourMessage.value;
+      const selectedOption = this.state.optionsRadios;
+      const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+      if (!email) {
+          toastr.error('Please enter your email.', 'Error');
+          return false;
+      } else if (!emailReg.test(email)) {
+          toastr.error("Please enter valid email address", "Error");
+          return false;
+      } else if (!message) {
+          toastr.error("Please enter a message.", "Error");
+          return false;
+      } else {
+          // Start loading
+          this.setState({ isLoading: true });
+          console.log("sendfeedbackToAdmin")
+          Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
+              if (error) {
+                  console.log("error", error);
+              } else {
+                  toastr.success("Thanks for providing your feedback", "Success");
+                  setTimeout(() => {
+                      browserHistory.push(`/`);
+                  }, 200);
+              }
+              this.setState({ isLoading: false });
+          });
+      }
+  };
   render(){
     const { classes } = this.props;
     return(
       <div>
         <Grid container>
+          {
+            this.state.isLoading && <ContainerLoader />
+          }
           <Grid item xs={12} sm={8}>
             <Paper>
               <div className={classes.paddingProp}>
@@ -56,7 +108,7 @@ class AboutUs extends React.Component{
             <Paper style={{padding: '12px'}}>
               <Grid container>
                 <Grid item xs={12} sm={12}>
-                    <form id="sendfeedback">
+                    <form id="sendfeedback" onSubmit={this.submit}>
                         <Grid container>
                             <Grid item xs={5} sm={6}>
                                 <TextField
@@ -88,8 +140,8 @@ class AboutUs extends React.Component{
                                         aria-label="gender"
                                         name="optionsRadios"
                                         className=''
-                                        value=''
-                                        onChange=''
+                                        value={this.state.optionsRadios}
+                                        onChange={this.handleChange}
                                        >
                                         <FormControlLabel value="Feature Request" control={<Radio />} label="Feature Request" />
                                         <FormControlLabel value="Something is broken" control={<Radio />} label="Something is broken" />
@@ -169,4 +221,4 @@ class AboutUs extends React.Component{
   }
 }
 
-export default withStyles(styles)(AboutUs);
+export default withStyles(styles)(toastrModal(AboutUs));
