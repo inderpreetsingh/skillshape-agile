@@ -7,7 +7,7 @@ import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import Grid from 'material-ui/Grid';
 import Select from 'material-ui/Select';
-import Input, { InputLabel } from 'material-ui/Input';
+import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import Dialog, {
@@ -18,6 +18,7 @@ import Dialog, {
   withMobileDialog,
 } from 'material-ui/Dialog';
 import { FormControl } from 'material-ui/Form';
+import Icon from 'material-ui/Icon';
 import '/imports/api/classPricing/methods';
 
 const formId = "ClassPriceForm";
@@ -98,7 +99,7 @@ class ClassPriceForm extends React.Component {
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
 	render() {
-		const { fullScreen, data } = this.props;
+		const { fullScreen, data, classes } = this.props;
         const { classTypeData } = this.state;
 
 		return (
@@ -109,7 +110,7 @@ class ClassPriceForm extends React.Component {
                 fullScreen={fullScreen}
             >
             	<DialogTitle id="form-dialog-title">Add Class Package</DialogTitle>
-            	{ 
+            	{
                     this.state.showConfirmationModal && <ConfirmationModal
                         open={this.state.showConfirmationModal}
                         submitBtnLabel="Yes, Delete"
@@ -120,7 +121,7 @@ class ClassPriceForm extends React.Component {
                     />
                 }
                 { this.state.isBusy && <ContainerLoader/>}
-            	{ 
+            	{
                     this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
                         <DialogContent>
                             <form id={formId} onSubmit={this.onSubmit}>
@@ -135,14 +136,14 @@ class ClassPriceForm extends React.Component {
                                 />
                                 <SelectArrayInput
                                     disabled={false}
-                                    floatingLabelText="Class Types"  
-                                    optionValue="_id" 
-                                    optionText="name" 
-                                    input={{ value: this.state.selectedClassType ,onChange: this.onClassTypeChange}} 
-                                    onChange={this.onClassTypeChange} 
+                                    floatingLabelText="Class Types"
+                                    optionValue="_id"
+                                    optionText="name"
+                                    input={{ value: this.state.selectedClassType ,onChange: this.onClassTypeChange}}
+                                    onChange={this.onClassTypeChange}
                                     setFilter={this.handleClassTypeInputChange}
-                                    dataSourceConfig={{ text: 'name', value: '_id' }} 
-                                    choices={classTypeData} 
+                                    dataSourceConfig={{ text: 'name', value: '_id' }}
+                                    choices={classTypeData}
                                 />
                                 <Grid container>
                                     <Grid  item xs={12} sm={6}>
@@ -180,17 +181,24 @@ class ClassPriceForm extends React.Component {
                                     inputRef={(ref)=> this.noClasses = ref}
                                     label="Number of Classes"
                                     type="number"
-                                    fullWidth
-                                />
-                                <TextField
-                                    required={true}
-                                    defaultValue={data && data.cost}
                                     margin="dense"
-                                    inputRef={(ref)=> this.classPriceCost = ref}
-                                    label="Cost"
-                                    type="number"
                                     fullWidth
                                 />
+                                <FormControl
+                                  required={true}
+                                  fullWidth
+                                >
+                                    <InputLabel htmlFor="amount">Cost</InputLabel>
+                                    <Input
+                                        id="class-cost"
+                                        defaultValue={data && data.cost}
+                                        inputRef={(ref)=> this.classPriceCost = ref}
+                                        label="Cost"
+                                        type="number"
+                                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                        fullWidth
+                                    />
+                                </FormControl>
                             </form>
                         </DialogContent>
                     )
@@ -207,7 +215,7 @@ class ClassPriceForm extends React.Component {
                       Cancel
                     </Button>
                     <Button type="submit" form={formId} color="primary">
-                      { data ? "Save" : "Submit" } 
+                      { data ? "Save" : "Submit" }
                     </Button>
                 </DialogActions>
             </Dialog>
