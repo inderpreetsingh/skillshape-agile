@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 
 import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
-import BottomNavigation, { BottomNavigationButton } from 'material-ui/BottomNavigation';
+import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
 import Videocam from 'material-ui-icons/Videocam';
 import FileUpload from 'material-ui-icons/FileUpload';
 import Link from 'material-ui-icons/Link';
@@ -167,9 +167,9 @@ class Upload extends React.Component {
               value={this.state.value}
               onChange={this.handleChange}
             >
-              	<BottomNavigationButton label="Upload From Computer" icon={<FileUpload />} />
-            	<BottomNavigationButton onClick={this.handleClickOpen} label="Image URL" icon={<Link />} />
-              	{ this.props.showVideoOption && <BottomNavigationButton label="Video URL" icon={<Videocam />} />}
+              	<BottomNavigationAction label="Upload From Computer" icon={<FileUpload />} />
+            	<BottomNavigationAction onClick={this.handleClickOpen} label="Image URL" icon={<Link />} />
+              	{ this.props.showVideoOption && <BottomNavigationAction label="Video URL" icon={<Videocam />} />}
             </BottomNavigation>
           </CardActions>
         </Card>
