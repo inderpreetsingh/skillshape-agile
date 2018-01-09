@@ -13,19 +13,20 @@ import * as helpers from './jss/helpers.js';
 /*Search Bar requires inline styles because of limitations of it using material-ui
 rather than material ui next */
 
-const SearchBarStyled = (props) => (
-  <SearchBar
+const SearchBarStyled = (props) => {
+  console.log("SearchBarStyled-->>",props)
+  return <SearchBar
     style={{
       fontFamily: helpers.specialFont,
       fontSize: helpers.baseFontSize*2+'px',
       margin: '0 auto',
     }}
-    onChange={props.onChange ? props.onChange : () => console.log("changed")}
-    onRequestSearch={props.onRequestSearch ? props.onRequestSearch : () =>  console.log("search")}
+    onChange={props.onSearch}
+    onRequestSearch={props.onSearch}
     className = 'is-search-bar'
     hintText ='Yoga in Delhi...'
     />
-)
+  }
 
 
 const SearchAreaPanel = styled.div`
@@ -85,7 +86,7 @@ const BottomSectionContent = () => (
 const SearchArea = (props) => (
   <SearchAreaPanel width={props.width} textAlign={props.textAlign}>
     {props.topSection ? props.topSection : <TaglineWrapper />}
-    {props.middleSection ? props.middleSection : <SearchBarStyled />}
+    {props.middleSection ? props.middleSection : <SearchBarStyled onSearch = {props.onSearch}/>}
     {props.bottomSection ? props.bottomSection : <BottomSectionContent /> }
   </SearchAreaPanel>
 );
@@ -95,7 +96,8 @@ SearchArea.propTypes = {
     topSection: PropTypes.element,
     middleSection: PropTypes.element,
     middleSectionText: PropTypes.string,
-    bottomSection: PropTypes.element
+    bottomSection: PropTypes.element,
+    onSearch: PropTypes.function,
 }
 
 SearchAreaPanel.defaultProps = {

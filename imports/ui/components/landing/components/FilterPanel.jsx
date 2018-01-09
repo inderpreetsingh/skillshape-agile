@@ -26,7 +26,7 @@ import muiTheme from './jss/muitheme.jsx';
 import PrimaryButton from './buttons/PrimaryButton.jsx';
 import Hidden from 'material-ui/Hidden';
 
-import {dataSourceCategories, dataSourceSkills} from '../constants/filtersData.js';
+import {dataSourceSkills} from '../constants/filtersData.js';
 
 const FilterPanelContainer = styled.div`
     max-width:1000px;
@@ -76,11 +76,51 @@ const CenterCapsule = styled.div`
 class FilterPanel extends Component {
     state = {
         showMoreFilters: false,
+        skillCategoryData:[],
+        skillSubjectData:[],
+        filter: {
+            skillCategoryIds:[],
+            skillSubjectIds:null
+        }
+    }
+    componentWillMount() {
+        const dataSourceCategories = Meteor.call('getAllSkillCategories', (err,result) => {
+            console.log(result,'result');
+            this.setState({skillCategoryData:result})
+        });
+    }
+    componentWillRecieveProps() {
+        console.log("componentWillRecieveProps",componentWillRecieveProps)
     }
     handleShowFilterState = (state) => {
         this.setState({
             showMoreFilters: state
         });
+    }
+
+    inputFromUser = (text) => {
+        // Do db call on the basis of text entered by user
+        console.log("text -->>",this.state.filter.skillCategoryIds);
+        let skillCategoryIds = this.state.filter.skillCategoryIds && this.state.filter.skillCategoryIds.map((data) => data._id)
+            Meteor.call("getSkillSubjectBySkillCategory",{skillCategoryIds: skillCategoryIds, textSearch: text}, (err,res) => {
+                if(res) {
+                    console.log("result",res)
+                    this.setState({skillSubjectData: res || []});
+                }
+            })
+    }
+
+    collectSelectedSkillCategories = (text) => {
+        // Get selected categories first
+        let oldFilter = {...this.state.filter}
+        oldFilter.skillCategoryIds = text;
+        this.setState({filter:oldFilter});
+    }
+    selectSkillSubject = (text) => {
+        console.log("this",this)
+        let oldFilter = {...this.state.filter}
+        oldFilter.skillSubjectIds = text;
+        this.setState({filter:oldFilter});
     }
     conditionalRender = () => {
         const { showMoreFilters}  = this.state;
@@ -91,22 +131,28 @@ class FilterPanel extends Component {
 
                 <Hidden xsUp>
                     <Grid item xs={11} sm = {5}>
-            	       <Multiselect data={["All","Beginner", "Intermediate", "Advance", "Expert"]}  placeholder="Skill Level" />
+                       <Multiselect data={["All","Beginner", "Intermediate", "Advance", "Expert"]}  placeholder="Skill Level" />
                     </Grid>
                 </Hidden>
 
                 <Grid item xs={11} sm = {11}>
-            	   <Multiselect data={dataSourceSkills} placeholder="Choose Skills" />
+                   <Multiselect
+                        data={this.state.skillSubjectData}
+                        placeholder="Choose Skills"
+                        textField={"name"}
+                        onSearch={this.inputFromUser}
+                        onChange ={this.selectSkillSubject}
+                    />
                 </Grid>
 
                  <Grid item xs={11} sm={6} >
-            	   <SliderControl labelText={"Price Per Class"} onChange={() => console.log('changing')} max={100} min={1} defaultValue={[0,45]}/>
-            	</Grid>
+                   <SliderControl labelText={"Price Per Class"} onChange={() => console.log('changing')} max={100} min={1} defaultValue={[0,45]}/>
+                </Grid>
 
 
-            	<Grid item xs={11} sm={5} >
-            	   <SliderControl labelText={"Price Per Month"} max={100} min={1} defaultValue={[1,30]} />
-            	</Grid>
+                <Grid item xs={11} sm={5} >
+                   <SliderControl labelText={"Price Per Month"} max={100} min={1} defaultValue={[1,30]} />
+                </Grid>
 
                 <Grid item xs={11} sm={3}>
                     <IconInput iconName='location_on' labelText="Location"  />
@@ -118,15 +164,15 @@ class FilterPanel extends Component {
                 </Grid>
 
                 <Grid item xs={6} sm={3}>
-                	<IconSelect labelText="Gender" inputId="gender" iconName="people">
-                	  <MenuItem value=""> Gender</MenuItem>
+                    <IconSelect labelText="Gender" inputId="gender" iconName="people">
+                      <MenuItem value=""> Gender</MenuItem>
                       <MenuItem value={"male"}> Male </MenuItem>
                       <MenuItem value={"female"}> Female </MenuItem>
                       <MenuItem value={"others"}> Others </MenuItem>
                     </IconSelect>
                 </Grid>
 
-            	  <Grid item xs={5} sm={2}>
+                  <Grid item xs={5} sm={2}>
                     <IconInput iconName='star' labelText="Age"  />
                 </Grid>
 
@@ -141,6 +187,7 @@ class FilterPanel extends Component {
     }
     render() {
         const { showMoreFilters } = this.state;
+        console.log("this.state",this.state)
 
         return (<MuiThemeProvider theme={muiTheme}>
             <FilterPanelContainer>
@@ -152,7 +199,13 @@ class FilterPanel extends Component {
                     <Grid container spacing="24">
 
                         <Grid item xs={9} sm = {6}>
-            	           <Multiselect data={dataSourceCategories} placeholder="Skill category"  />
+            	           <Multiselect
+                                textField={"name"}
+                                valueField={"_id"}
+                                data={this.state.skillCategoryData}
+                                placeholder="Skill category"
+                                onChange={this.collectSelectedSkillCategories}
+                            />
 
                         </Grid>
                         <Hidden xsDown>
