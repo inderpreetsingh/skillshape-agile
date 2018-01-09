@@ -16,8 +16,10 @@ import withWidth from 'material-ui/utils/withWidth';
 const styles = theme => ({
   content: {
     backgroundColor: theme.palette.background.default,
+    paddingTop: 50,
     [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing.unit * 3,
+      paddingLeft: theme.spacing.unit,
+      paddingRight: theme.spacing.unit,
     },
   }
 });
@@ -65,9 +67,13 @@ class MainLayout extends React.Component {
       className.id = "UserMainPanel";
     }
     return (
-        <div ref={(ref)=> {this.mainPanelRef = ref}} className={className.mainClass} id={className.id}>
+        <div className={className.mainClass} id={className.id}>
             <BrandBar {...this.props}/>
+            <div ref={(ref)=> {this.mainPanelRef = ref}}>
+               <main className={classes.content}>
               {React.cloneElement(this.props.children, {"getMainPanelRef": this.getMainPanelRef.bind(this), currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
+              </main>
+            </div>
               {/* <Header {...this.props}/>*/}
               {/*<div className={className.contentClass}>
                     <main className={classes.content}>
