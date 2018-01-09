@@ -1,5 +1,6 @@
 import React , {Fragment,Component} from 'react';
 import ReactStars from 'react-stars';
+import { get, isEmpty } from 'lodash';
 import { MuiThemeProvider} from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
@@ -17,6 +18,7 @@ import ClassTypeCardBody from './ClassTypeCardBody.jsx';
 import ClassTypeCardDescription from './ClassTypeCardDescription.jsx';
 
 import classTimesData from '../../constants/classTimesData';
+import ClassTimes from "/imports/api/classTimes/fields";
 
 class ClassTypeCard extends Component {
     state = {
@@ -29,27 +31,35 @@ class ClassTypeCard extends Component {
             dialogOpen: state
         });
     }
-    render() {
 
+    getClassTimes = (classTypeId) => {
+        if(classTypeId)
+            return ClassTimes.find({classTypeId}).fetch();
+    }
+
+    render() {
+        // console.log("ClassTypeCard props --->>",this.props);
+        const classTimesData = this.getClassTimes(get(this.props, "_id", null))
         return(
             <Fragment>
-            {this.state.dialogOpen && 
-            <ClassTimesDialogBox 
+            {this.state.dialogOpen &&
+            <ClassTimesDialogBox
                 classesData={classTimesData}
-                open={this.state.dialogOpen} 
+                open={this.state.dialogOpen}
                 onModalClose={this.handleDialogState(false)} />}
-            <CardsReveal {...this.props} 
-                body={    
-                <ClassTypeCardBody 
-                    ratings={this.props.ratings} 
-                    reviews={this.props.reviews} 
+            <CardsReveal {...this.props}
+                body={
+                <ClassTypeCardBody
+                    ratings={this.props.ratings}
+                    reviews={this.props.reviews}
                     onJoinClassButtonClick={this.handleDialogState(true)} />
                 }
                 descriptionContent={
-                <ClassTypeCardDescription 
+                <ClassTypeCardDescription
+                    classTimeCheck={!isEmpty(classTimesData)}
                     ratings={this.props.ratings}
                     reviews={this.props.reviews}
-                    description={this.props.description}
+                    description={this.props.desc}
                     onClassTimeButtonClick={this.handleDialogState(true)}/>
                 } />
             </Fragment>
@@ -58,4 +68,3 @@ class ClassTypeCard extends Component {
 }
 
 export default ClassTypeCard;
-    

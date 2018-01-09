@@ -39,8 +39,8 @@ const ClassTypeCardBody = (props) =>(
             </div>
             <Reviews href="#" onClick={handleReviewsClick}>{props.reviews} Reviews</Reviews>
         </ReviewsWrapper>
-        
-        <Grid container spacing={8}>   
+
+        <Grid container spacing={8}>
             <Grid item xs={12} sm= {8} >
                 <SecondaryButton icon iconName="add_circle_outline" fullWidth label="Join Class" onClick={props.onJoinClassButtonClick}/>
              </Grid>

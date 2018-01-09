@@ -89,28 +89,29 @@ Meteor.publish("school.getSchoolClasses", function({ is_map_view, schoolId, user
     }
 })
 
-Meteor.publish("school.getClassTypesByCategory", function({ 
-    is_map_view, 
-    schoolId, 
-    user_id, 
-    coords, 
-    NEPoint, 
-    SWPoint, 
-    skill, 
-    _classPrice, 
-    _monthPrice, 
-    textSearch, 
-    limit, 
-    skillCategoryIds, 
+Meteor.publish("school.getClassTypesByCategory", function({
+    is_map_view,
+    schoolId,
+    user_id,
+    coords,
+    NEPoint,
+    SWPoint,
+    skill,
+    _classPrice,
+    _monthPrice,
+    textSearch,
+    limit,
+    skillCategoryIds,
     skillSubjectIds,
     gender,
     age,
-    experienceLevel, 
+    experienceLevel,
+    skillCategoryClassLimit
 }) {
     console.log("schoolId-->>", schoolId)
     // console.log("is_map_view-->>", is_map_view)
     // console.log("_monthPrice", _monthPrice);
-    // console.log("coords", coords);
+    console.log("coords", coords);
     // console.log("NEPoint", NEPoint);
     console.log("skillCategoryIds", skillCategoryIds);
     const classfilter = {};
@@ -121,7 +122,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
     if (textSearch) {
         classfilter["$text"] = { $search: textSearch };
     }
-    if (false && coords && !NEPoint && !SWPoint) {
+    if (coords && !NEPoint && !SWPoint) {
         // place variable will have all the information you are looking for.
         var maxDistance = 50;
         // we need to convert the distance to radians
@@ -185,12 +186,14 @@ Meteor.publish("school.getClassTypesByCategory", function({
     let schoolIds = [];
     let skillCategoryCursor = SkillCategory.find(skillCategoryFilter,{limit});
     cursors.push(skillCategoryCursor);
+    skillCategoryClassLimit ? skillCategoryClassLimit : {};
 
     skillCategoryCursor.forEach((skillCategory) => {
         console.log("skillCategory data -->>",skillCategory)
         classfilter["skillCategoryId"] = skillCategory._id;
+        let limit =  (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory._id]) || 4
         // console.log("class type filters -->>",classfilter)
-        let classTypeCursor = ClassType.find(classfilter, { limit: is_map_view ? undefined : 4 });
+        let classTypeCursor = ClassType.find(classfilter, { limit: is_map_view ? undefined : limit });
         classTypeCursor.forEach((classTypeData) => {
             // console.log("classTypeData --->>",classTypeData)
             classTypeIds.push(classTypeData._id);

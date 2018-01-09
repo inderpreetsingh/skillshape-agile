@@ -1,4 +1,5 @@
 import SLocation from "./fields";
+import ClassType from "/imports/api/classType/fields";
 
 Meteor.methods({
     "location.getLocationBySchoolId": function({ schoolId }) {
@@ -21,6 +22,7 @@ Meteor.methods({
         console.log("location.editModule methods called!!!", doc_id, doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })) {
             console.log(doc);
+            ClassType.update({ locationId: doc_id }, { $set: {"filters.location": doc.loc} }, {multi: true});
             return SLocation.update({ _id: doc_id }, { $set: doc });
         } else {
             throw new Meteor.Error("Permission denied!!");
@@ -30,6 +32,7 @@ Meteor.methods({
         const user = Meteor.users.findOne(this.userId);
         console.log("location.removeModule methods called!!!", doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })) {
+            ClassType.update({ locationId: doc._id }, { $set: { locationId: null, "filters.location": null} }, {multi: true});
             return SLocation.remove({ _id: doc._id });
         } else {
             throw new Meteor.Error("Permission denied!!");

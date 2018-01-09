@@ -39,7 +39,7 @@ const styles = {
   },
   chipLabel: {
     color: helpers.textColor,
-    fontSize: helpers.baseFontSize * 0.75 
+    fontSize: helpers.baseFontSize * 0.75
   }
 };
 
@@ -60,7 +60,7 @@ const ClassContainerHeader = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: ${helpers.rhythmDiv}px;
-  
+
   @media screen and (max-width: ${helpers.mobile}px) {
     flex-direction: column;
     align-items: flex-start;
@@ -97,28 +97,28 @@ const ClassTimesDialogBox = (props) => (
             <DialogTitleWrapper>
                 Class Times
               <IconButton color="primary" onClick={props.onModalClose}>
-                <ClearIcon/> 
-              </IconButton > 
+                <ClearIcon/>
+              </IconButton >
             </DialogTitleWrapper>
         </DialogTitle>
-    
-        
+
+
         <DialogContent>
             {props.classesData.map(data => (
               <ClassContainer>
-                
+
                 <ClassContainerHeader>
-                  
+
                   <ClassTimings>
-                    {data.timing} 
+                    {data.timing}
                   </ClassTimings>
-                  
-                  <Chip label={data.classStatus} classes={{root: props.classes.chip, label: props.classes.chipLabel}}/>
-                </ClassContainerHeader>  
+
+                  <Chip label={data.scheduleType} classes={{root: props.classes.chip, label: props.classes.chipLabel}}/>
+                </ClassContainerHeader>
                 <Typography>
-                  {data.description}     
+                  {data.desc}
                 </Typography>
-                  
+
                 <CalenderButtonWrapper>
                     {data.addToCalender ? (<SecondaryButton icon iconName="delete" label="Remove from my Calender" />) : (<PrimaryButton icon iconName="perm_contact_calendar" label="Add to my Calender" />)}
                 </CalenderButtonWrapper>
@@ -135,9 +135,9 @@ ClassTimesDialogBox.propTypes = {
   open: PropTypes.bool,
   classesData : PropTypes.arrayOf({
     timing: PropTypes.string,
-    description: PropTypes.string,
+    desc: PropTypes.string,
     addToCalender: PropTypes.bool,
-    classStatus: PropTypes.string,
+    scheduleType: PropTypes.string,
   })
 }
 

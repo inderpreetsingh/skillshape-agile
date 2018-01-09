@@ -147,7 +147,7 @@ class CardsReveal extends Component {
     console.info("The error is this...",error, info);
   }
   render() {
-    const { name, imgSrc, descriptionContent, body, classes } = this.props;
+    const { name, classTypeImg, descriptionContent, body, classes } = this.props;
 
     //console.log(ShowDetails,"adsljfj")
     return (
@@ -155,7 +155,7 @@ class CardsReveal extends Component {
 
         <div onClick={this.revealCardContent}>
           <CardImageWrapper ref={(div) => this.imgContainer = div} style={{height: this.state.imageContainerHeight}}>
-            <CardImage src={imgSrc} alt="card img" />
+            <CardImage src={classTypeImg || cardImgSrc} alt="card img" />
           </CardImageWrapper>
 
           <CardContent>
@@ -193,7 +193,7 @@ CardDescription.propTypes = {
 
 CardsReveal.propTypes = {
     name: PropTypes.string,
-    imgSrc: PropTypes.string,
+    classTypeImg: PropTypes.string,
     height: PropTypes.number,
     classes: PropTypes.object.isRequired,
     descriptionContent: PropTypes.element,
@@ -202,7 +202,7 @@ CardsReveal.propTypes = {
 }
 
 CardsReveal.defaultProps = {
-   imgSrc: cardImgSrc,
+   classTypeImg: cardImgSrc,
    name: 'Card Title'
 }
 

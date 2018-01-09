@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 
 const CardStructure = PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
     reviews: PropTypes.number,
     ratings: PropTypes.number,
-    imgSrc: PropTypes.string,
+    classTypeImg: PropTypes.string,
     name: PropTypes.string,
-    description: PropTypes.string
+    desc: PropTypes.string
 });
 
 export default CardStructure;

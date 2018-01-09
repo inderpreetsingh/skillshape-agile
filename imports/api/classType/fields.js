@@ -56,11 +56,11 @@ ClassType.attachSchema(new SimpleSchema({
     },
     skillCategoryId: {
        type:[String],
-       optional:true 
+       optional:true
     },
     skillSubject: {
        type: [String],
-       optional:true 
+       optional:true
     },
     locationId: {
         type: String,

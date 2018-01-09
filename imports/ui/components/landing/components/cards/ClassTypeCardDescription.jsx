@@ -16,7 +16,9 @@ import Grid from 'material-ui/Grid'
 const Reviews = styled.a`
     color: ${helpers.primaryColor};
 `;
-
+const NoFoundResultWapper = styled.div`
+    text-align: center;
+`
 
 const ClassTypeCardDescription = (props) => (
     <MuiThemeProvider theme={MuiTheme}>
@@ -27,7 +29,7 @@ const ClassTypeCardDescription = (props) => (
                     <Typography>{props.reviews} Reviews</Typography>
                 </Reviews>
             </div>
-            
+
             <div className="description">
              <Grid container spacing={8}>
              <Grid item xs={12}>
@@ -40,12 +42,15 @@ const ClassTypeCardDescription = (props) => (
                     <SecondaryButton fullWidth label="View School" />
                 </Grid>
                 <Grid item xs={12}>
-                    <PrimaryButton label="View Class Times" fullWidth onClick={props.onClassTimeButtonClick}/>
+                    {
+                        props.classTimeCheck ? <PrimaryButton label="View Class Times" fullWidth onClick={props.onClassTimeButtonClick}/>
+                        : <NoFoundResultWapper>No Class Time Found</NoFoundResultWapper>
+                    }
                 </Grid>
                 </Grid>
             </div>
         </Fragment>
-    </MuiThemeProvider>    
+    </MuiThemeProvider>
 );
 
 ClassTypeCardDescription.propTypes = {

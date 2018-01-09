@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Grid from 'material-ui/Grid';
 
 import ClassTypeCard from './ClassTypeCard.jsx';
-import CardStructure from '../../constants/structure/card.js'; 
+import CardStructure from '../../constants/structure/card.js';
 import SecondaryButton from '../buttons/SecondaryButton.jsx';
 
 import * as helpers from '../jss/helpers.js';
@@ -32,7 +32,7 @@ const CardsListTitle = styled.h2`
     font-family: ${helpers.specialFont};
     margin-top:${helpers.rhythmDiv}*2;
     margin-bottom:${helpers.rhythmDiv};
-    
+
     @media screen and (min-width: 0) and (max-width: ${helpers.tablet}px) {
         padding-left: 0;
         text-align: center;
@@ -44,9 +44,9 @@ const CardsList = ({ title, cardsData, mapView}) => (
         <CardsListTitle>{title} </CardsListTitle>
         <CardsListGridWrapper>
             <Grid container spacing={24}>
-                {cardsData.map(card => {
+                {cardsData.map((card, index) => {
                     return (
-                        <Grid item key={card.id} md={4} sm={6} lg={3} xs={12}>
+                        <Grid key={card._id} item md={4} sm={6} lg={3} xs={12}>
                             <ClassTypeCard {...card}/>
                         </Grid>
                     );
