@@ -83,28 +83,34 @@ class Landing extends Component {
         smooth: 'easeInOutQuart'
       })
     }
-
+    applyFilters = (newfilters, locationName) => {
+      let filters = this.state.filters || {};
+      this.setState({filters: newfilters, locationName})
+    }
     getMyCurrentLocation = () => {
         if(navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
                 let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 let geocoder = new google.maps.Geocoder();
-                let coords = [];
-                coords[0] = position.coords.latitude || config.defaultLocation[0];
-                coords[1] = position.coords.longitude || config.defaultLocation[1];
+                let coords = {};
+                // coords[0] = position.coords.latitude || config.defaultLocation[0];
+                // coords[1] = position.coords.longitude || config.defaultLocation[1];
                 geocoder.geocode({'latLng': latlng}, (results, status) => {
                     let sLocation = "near by me";
                     let oldFilters = {...this.state.filters};
-                    oldFilters["coords"] = coords;
                     if (status == google.maps.GeocoderStatus.OK) {
-                      if (results[1]) {
+                      if (results[0]) {
+                        let place = results[0];
+                        coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
+                        coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
                         sLocation = results[0].formatted_address
+                        oldFilters["coords"] = coords;
                       }
                     }
                     this.setState({
                       filters: oldFilters,
-                      currentAddress: sLocation,
+                      locationName: "your_location",
                       isLoading: false,
                     })
                 });
@@ -121,9 +127,10 @@ class Landing extends Component {
                 <Cover>
                     <SearchArea/>
                 </Cover>
-                <FilterPanel />
+                <FilterPanel currentAddress={this.state.currentAddress} applyFilters={this.applyFilters} filters={this.state.filters} />
                 <Element name="content-container" className="element">
                     <ClassTypeList
+                        locationName={this.state.locationName}
                         mapView={this.state.mapView}
                         filters={this.state.filters}
                     />

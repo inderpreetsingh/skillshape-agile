@@ -88,6 +88,10 @@ ClassType.attachSchema(new SimpleSchema({
     "filters.schoolName": {
         type: String,
         optional: true,
+    },
+    "filters.state": {
+        type: String,
+        optional: true,
     }
 }));
 

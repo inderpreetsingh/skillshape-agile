@@ -15,17 +15,17 @@ const IconSelect = (props) => (
               <InputLabel htmlFor={props.inputId}>{props.labelText}</InputLabel>
               <Select
                 autoWidth
-                value={''}
+                value={props.value || ''}
                 onChange={props.onChange}
-                input={<Input 
+                input={<Input
                           name={props.inputId}
-                            id={props.inputId} 
+                            id={props.inputId}
                           endAdornment={
                               <InputAdornment position="end">
                                 <Icon color="disabled">{props.iconName}</Icon>
                                </InputAdornment>
                           }/>
-                  
+
                 }>
                 {props.children}
               </Select>

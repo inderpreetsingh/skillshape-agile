@@ -129,7 +129,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
         // the raduis of Earth is approximately 6371 kilometers
         maxDistance /= 63;
         classfilter["filters.location"] = {
-            "$geoWithin": { "$center": [coords, maxDistance] }
+            // "$geoWithin": { "$center": [coords, maxDistance] }
+            "$geoWithin": { $box: [coords.NEPoint, coords.SWPoint] }
         }
     } else if (NEPoint && SWPoint) {
         classfilter["filters.location"] = { $geoWithin: { $box: [NEPoint, SWPoint] } }
@@ -158,16 +159,16 @@ Meteor.publish("school.getClassTypesByCategory", function({
     }
 
     if(age) {
-        classfilter["filters.ageMin"] = { $gte: age };
-        classfilter["filters.ageMax"] = { $lt: age };
+        classfilter["ageMin"] = { $lte: age };
+        classfilter["ageMax"] = { $gte: age };
     }
 
-    if(skillSubjectIds) {
+    if(skillSubjectIds && skillSubjectIds.length > 0) {
         classfilter["skillSubject"] = skillSubjectIds;
     }
 
-    if(experienceLevel) {
-        classfilter["experienceLevel"] = experienceLevel;
+    if(experienceLevel && experienceLevel.length > 0) {
+        classfilter["experienceLevel"] = {$in: experienceLevel};
     }
 
     if(!_.isEmpty(skillCategoryIds)) {
@@ -184,16 +185,19 @@ Meteor.publish("school.getClassTypesByCategory", function({
     let cursors = []
     let classTypeIds = [];
     let schoolIds = [];
-    let skillCategoryCursor = SkillCategory.find(skillCategoryFilter,{limit});
+    // let skillCategoryCursor = SkillCategory.find(skillCategoryFilter,{limit});
+    let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
     cursors.push(skillCategoryCursor);
     skillCategoryClassLimit ? skillCategoryClassLimit : {};
+        // console.log("filters -->>",classfilter)
 
     skillCategoryCursor.forEach((skillCategory) => {
         console.log("skillCategory data -->>",skillCategory)
-        classfilter["skillCategoryId"] = skillCategory._id;
+        classfilter["skillCategoryId"] = {$in: [skillCategory._id]};
         let limit =  (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory._id]) || 4
-        // console.log("class type filters -->>",classfilter)
+        console.log("class type filters -->>",classfilter)
         let classTypeCursor = ClassType.find(classfilter, { limit: is_map_view ? undefined : limit });
+        // console.log("classTypeCursor", classfilter, classTypeCursor.fetch());
         classTypeCursor.forEach((classTypeData) => {
             // console.log("classTypeData --->>",classTypeData)
             classTypeIds.push(classTypeData._id);
@@ -206,8 +210,9 @@ Meteor.publish("school.getClassTypesByCategory", function({
     classTimesCursor.map((classData) => {
         locationIds.push(classData.locationId);
     })
-    // console.log("skillCategoryCursor -->>",skillCategoryCursor);
     if ((is_map_view && schoolId) || !is_map_view) {
+    console.log("tes>>>>>>>>>",classTypeIds);
+
         return [
             classTimesCursor,
             ClassType.find({ _id: { $in: classTypeIds } }),
