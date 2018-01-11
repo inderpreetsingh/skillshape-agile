@@ -38,8 +38,8 @@ class ClassTypeCard extends Component {
     }
 
     render() {
-        // console.log("ClassTypeCard props --->>",this.props);
-        const classTimesData = this.getClassTimes(get(this.props, "_id", null))
+        console.log("ClassTypeCard props --->>",this.props);
+        const classTimesData = this.getClassTimes(get(this.props, "classTypeData._id", null))
         return(
             <Fragment>
             {this.state.dialogOpen &&

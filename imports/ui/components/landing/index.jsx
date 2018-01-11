@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { debounce } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import {Element, scroller } from 'react-scroll'
@@ -56,12 +57,16 @@ const SwitchViewWrapper = styled.div`
 
 class Landing extends Component {
 
-    state = {
-      mapView: false,
-      cardsDataList : [cardsData,cardsData1],
-      filters: {
-        coords: config.defaultLocation,
-      },
+    constructor(props) {
+        super(props)
+        this.state = {
+          mapView: false,
+          cardsDataList : [cardsData,cardsData1],
+          filters: {
+            coords: config.defaultLocation,
+          },
+        }
+        this.onSearch = debounce(this.onSearch, 1000);
     }
 
     componentWillMount() {
@@ -83,10 +88,12 @@ class Landing extends Component {
         smooth: 'easeInOutQuart'
       })
     }
+
     applyFilters = (newfilters, locationName) => {
       let filters = this.state.filters || {};
       this.setState({filters: newfilters, locationName})
     }
+
     getMyCurrentLocation = () => {
         if(navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -120,12 +127,22 @@ class Landing extends Component {
         }
     }
 
+    onSearch = (value) => {
+        // const text = value.split(" ")
+        // console.log("onSearch -->>",text[0])
+        let oldFilters = {...this.state.filters};
+        oldFilters.mainSearchText = value;
+        this.setState({
+            filters: oldFilters
+        })
+    }
+
     render() {
         console.log("Landing state -->>",this.state);
         return(
             <div>
                 <Cover>
-                    <SearchArea/>
+                    <SearchArea onSearch={this.onSearch}/>
                 </Cover>
                 <FilterPanel currentAddress={this.state.currentAddress} applyFilters={this.applyFilters} filters={this.state.filters} />
                 <Element name="content-container" className="element">
