@@ -42,6 +42,7 @@ export default Routes = () => (
         <Route path="/schools/:slug" component={SchoolView} />
         <Route path="/MyCalendar" component={ManageMyCalendar} />
       </Route>
+      <Route path="/landing" component={Landing} />
     </Router>
   </MuiThemeProvider>
 );

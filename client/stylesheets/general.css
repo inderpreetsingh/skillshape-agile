@@ -62,7 +62,7 @@ material ui search bar */
 }
 
 /*
-  Cards Reveal Animation 
+  Cards Reveal Animation
 */
 
 .reveal-card-enter {
@@ -107,7 +107,7 @@ material ui search bar */
 
 
 /**
-  SOCIAL ICONS 
+  SOCIAL ICONS
 **/
 
 .social-container:hover > .social-icon {
@@ -122,7 +122,7 @@ material ui search bar */
   .is-show-on-small {
     display: inline-block;
   }
-  
+
   .is-hide-on-small {
     display: none;
     height: 0;
@@ -136,8 +136,24 @@ material ui search bar */
     height: 0;
     width: 0;
   }
-  
+
   .is-hide-on-small {
     display: inline-block;
   }
+}
+
+/*
+    LANDING PAGE - FILTER PANEL
+*/
+
+.filter-panel-wrapper {
+  position: relative;
+  z-index: 100;
+  bottom: 10px;
+}
+
+.filter-panel-sticked {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
 }

@@ -16,11 +16,16 @@ rather than material ui next */
 const SearchBarStyled = (props) => {
   console.log("SearchBarStyled-->>",props)
   return <SearchBar
-    style={{
-      fontFamily: helpers.specialFont,
-      fontSize: helpers.baseFontSize*2+'px',
-      margin: '0 auto',
-    }}
+      style={{
+        root: {
+          fontFamily: helpers.specialFont,
+          fontSize: helpers.baseFontSize*2+'px',
+          margin: '0 auto',
+        },
+        input: {
+          padding: '7px 0 14px'
+        }
+      }}
     onChange={props.onSearch}
     onRequestSearch={props.onSearch}
     className = 'is-search-bar'
@@ -58,6 +63,7 @@ const Tagline = styled.h2`
 
 const TaglineText = styled.p`
   font-family : ${helpers.commonFont};
+  font-size: ${helpers.baseFontSize}px;
   color: ${helpers.textColor};
   margin-top: ${helpers.rhythmDiv};
 `;

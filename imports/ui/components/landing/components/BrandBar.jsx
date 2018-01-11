@@ -13,12 +13,12 @@ import * as helpers from './jss/helpers.js';
 const NavBarWrapper = styled.div`
   display : flex;
   justify-content: space-between;
-  padding: ${helpers.rhythmDiv};
-  width:100%;
-  z-index:1299;
-  position:fixed;
-  background:white;
-
+  padding: ${helpers.rhythmDiv}px;
+  width: 100%;
+  z-index: 1299;
+  position: absolute;
+  background: white;
+  top: 0;
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-bottom: ${helpers.rhythmDiv};
   }
