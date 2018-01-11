@@ -47,7 +47,7 @@ const CardsList = ({ title, cardsData, mapView,handleSeeMore,name,classInterestD
                 {cardsData.map((card, index) => {
                     return (
                         <Grid key={card._id} item md={4} sm={6} lg={3} xs={12}>
-                            <ClassTypeCard classInterestData={classInterestData} classTypeData={card}/>
+                            <ClassTypeCard classInterestData={classInterestData} {...card}/>
                         </Grid>
                     );
                 })}
