@@ -78,13 +78,13 @@ class CardsList extends Component {
                        if(mapView) {
                          return (
                            <Grid item key={card.id} md={6} sm={12} lg={6} xs={12}>
-                               <ClassTypeCard {...card}/>
+                               <ClassTypeCard classInterestData={classInterestData} {...card}/>
                            </Grid>
                          )
                        }else {
                          return (
                            <Grid item key={card.id} md={4} sm={6} lg={3} xs={12}>
-                               <ClassTypeCard {...card}/>
+                               <ClassTypeCard classInterestData={classInterestData} {...card}/>
                            </Grid>
                          )
                        }
