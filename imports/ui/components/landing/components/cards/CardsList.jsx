@@ -30,9 +30,8 @@ const CardsListTitle = styled.h2`
     font-size: ${helpers.baseFontSize * 2}px;
     font-weight: 600;
     font-family: ${helpers.specialFont};
-    margin-top:${helpers.rhythmDiv}*2;
-    margin-bottom:${helpers.rhythmDiv};
-
+    margin-bottom: ${helpers.rhythmDiv}px;
+    margin-top: 0;
     @media screen and (min-width: 0) and (max-width: ${helpers.tablet}px) {
         padding-left: 0;
         text-align: center;
