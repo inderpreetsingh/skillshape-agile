@@ -15,7 +15,7 @@ const CardsListWrapper = styled.div`
 `;
 
 const CardsListGridWrapper = styled.div`
-    padding: 24px;
+    padding: ${props => props.mapView ? '8px' : '24px'};
 `;
 
 const More = styled.div`
