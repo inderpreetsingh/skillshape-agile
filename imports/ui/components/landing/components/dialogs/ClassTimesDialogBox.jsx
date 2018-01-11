@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { isEmpty } from 'lodash';
+import { createContainer } from 'meteor/react-meteor-data';
 
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
@@ -25,6 +27,7 @@ import Dialog , {
   withMobileDialog
 } from 'material-ui/Dialog';
 
+import ClassInterest from "/imports/api/classInterest/fields";
 
 const styles = {
   dialog: {
@@ -83,51 +86,105 @@ const DescriptionContainer = styled.div`
   display: flex;
 `;
 
+class ClassTimesDialogBox extends React.Component {
 
-const ClassTimesDialogBox = (props) => (
-  <Dialog
-    fullScreen={props.fullScreen}
-    open={props.open}
-    onClose={props.onModalClose}
-    aria-labelledby="modal"
-    classes={{root: props.classes.dialog, paper: props.classes.dialogPaper}}
-  >
-    <MuiThemeProvider theme={muiTheme}>
-        <DialogTitle>
-            <DialogTitleWrapper>
-                Class Times
-              <IconButton color="primary" onClick={props.onModalClose}>
-                <ClearIcon/>
-              </IconButton >
-            </DialogTitleWrapper>
-        </DialogTitle>
+    checkForAddToCalender = (data) => {
+        const userId = Meteor.userId()
+        if(isEmpty(data) || isEmpty(userId)) {
+            return true;
+        } else {
+            return isEmpty(ClassInterest.find({classTimeId: data._id, userId}).fetch());
+        }
+    }
 
+    addToMyCalender = (data) => {
+        // check for user login or not
+        const userId = Meteor.userId()
+        if(!isEmpty(userId)) {
+            const doc = {
+                classTimeId: data._id,
+                classTypeId: data.classTypeId,
+                schoolId: data.schoolId,
+                userId,
+            }
+            this.handleClassInterest({
+                methodName:"classInterest.addClassInterest",
+                data: {doc}
+            })
+        } else {
+            alert("Please login !!!!")
+        }
+    }
 
-        <DialogContent>
-            {props.classesData.map(data => (
-              <ClassContainer>
+    handleClassInterest = ({methodName, data}) => {
+        Meteor.call(methodName, data, (err, res) => {
+            console.log(res,err);
+        })
+    }
 
-                <ClassContainerHeader>
+    render() {
 
-                  <ClassTimings>
-                    {data.timing}
-                  </ClassTimings>
+        console.log("ClassTimesDialogBox props--->>",this.props)
+        return (
+            <Dialog
+                fullScreen={this.props.fullScreen}
+                open={this.props.open}
+                onClose={this.props.onModalClose}
+                aria-labelledby="modal"
+                classes={{root: this.props.classes.dialog, paper: this.props.classes.dialogPaper}}
+            >
+            <MuiThemeProvider theme={muiTheme}>
+                <DialogTitle>
+                    <DialogTitleWrapper>
+                        Class Times
+                      <IconButton color="primary" onClick={this.props.onModalClose}>
+                        <ClearIcon/>
+                      </IconButton>
+                    </DialogTitleWrapper>
+                </DialogTitle>
+                <DialogContent>
+                    {
+                        this.props.classesData.map(data => {
+                            const addToCalender  = this.checkForAddToCalender(data);
+                            return <ClassContainer>
 
-                  <Chip label={data.scheduleType} classes={{root: props.classes.chip, label: props.classes.chipLabel}}/>
-                </ClassContainerHeader>
-                <Typography>
-                  {data.desc}
-                </Typography>
+                                <ClassContainerHeader>
 
-                <CalenderButtonWrapper>
-                    {data.addToCalender ? (<SecondaryButton icon iconName="delete" label="Remove from my Calender" />) : (<PrimaryButton icon iconName="perm_contact_calendar" label="Add to my Calender" />)}
-                </CalenderButtonWrapper>
-              </ClassContainer>
-            ))}
-        </DialogContent>
-    </MuiThemeProvider>
-  </Dialog>
-);
+                                    <ClassTimings>
+                                        {data.timing}
+                                    </ClassTimings>
+
+                                    <Chip label={data.scheduleType} classes={{root: this.props.classes.chip, label: this.props.classes.chipLabel}}/>
+                                </ClassContainerHeader>
+                                    <Typography>
+                                      {data.desc}
+                                    </Typography>
+
+                                <CalenderButtonWrapper>
+                                    {
+                                        addToCalender ?  <PrimaryButton
+                                            icon
+                                            onClick={() => this.addToMyCalender(data)}
+                                            iconName="perm_contact_calendar"
+                                            label="Add to my Calender"
+                                        />
+                                        : <SecondaryButton
+                                            icon
+                                            onClick={() => this.handleClassInterest({methodName: "classInterest.removeClassInterestByClassTimeId", data: {classTimeId: data._id} })}
+                                            iconName="delete"
+                                            label="Remove from my Calender"
+                                        />
+                                    }
+                                </CalenderButtonWrapper>
+                            </ClassContainer>
+                        })
+                    }
+                </DialogContent>
+            </MuiThemeProvider>
+          </Dialog>
+        )
+    }
+}
 
 ClassTimesDialogBox.propTypes = {
   onModalClose: PropTypes.func,

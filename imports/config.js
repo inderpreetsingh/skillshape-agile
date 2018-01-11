@@ -42,5 +42,6 @@ export default config = Object.freeze({
 		{ label: "Advanced", value: "advanced"},
 		{ label: "Beginner plus intermediate", value: "beginner plus intermediate"},
 		{ label: "Intermediate plus advanced", value: "intermediate plus advanced"},
-	]
+	],
+	seeMoreCount: 4
 })

@@ -79,8 +79,12 @@ class FilterPanel extends Component {
         skillCategoryData:[],
         skillSubjectData:[],
         filter: {
-            skillCategoryIds:[],
-            skillSubjectIds:null
+            skillSubjectIds:null,
+            perClassPrice:[],
+            pricePerMonth:[],
+            gender:null,
+            schoolName:null,
+            age:null
         }
     }
     componentWillMount() {
@@ -89,19 +93,15 @@ class FilterPanel extends Component {
             this.setState({skillCategoryData:result})
         });
     }
-    componentWillRecieveProps() {
-        console.log("componentWillRecieveProps",componentWillRecieveProps)
-    }
     handleShowFilterState = (state) => {
         this.setState({
             showMoreFilters: state
         });
     }
-
+    // This is used to get subjects on the basis of subject category.
     inputFromUser = (text) => {
         // Do db call on the basis of text entered by user
-        console.log("text -->>",this.state.filter.skillCategoryIds);
-        let skillCategoryIds = this.state.filter.skillCategoryIds && this.state.filter.skillCategoryIds.map((data) => data._id)
+        let skillCategoryIds = this.props.filters.skillCategoryIds;
             Meteor.call("getSkillSubjectBySkillCategory",{skillCategoryIds: skillCategoryIds, textSearch: text}, (err,res) => {
                 if(res) {
                     console.log("result",res)
@@ -109,36 +109,79 @@ class FilterPanel extends Component {
                 }
             })
     }
-
+    // This is used to collect selected skill categories
     collectSelectedSkillCategories = (text) => {
-        // Get selected categories first
-        let oldFilter = {...this.state.filter}
-        oldFilter.skillCategoryIds = text;
-        this.setState({filter:oldFilter});
+        let oldFilter = {...this.props.filters}
+        let skillCategoryIds = text.map((ele) => ele._id);
+        oldFilter.skillCategoryIds = skillCategoryIds;
+        this.props.applyFilters(oldFilter);
     }
+    // This is used to filter on the basis of skill subject
     selectSkillSubject = (text) => {
-        console.log("this",this)
-        let oldFilter = {...this.state.filter}
-        oldFilter.skillSubjectIds = text;
-        this.setState({filter:oldFilter});
+        let oldFilter = {...this.props.filters}
+        let skillSubjectIds = text.map((ele) => ele._id);
+        oldFilter.skillSubjectIds = skillSubjectIds;
+        this.state.filter = oldFilter;
+    }
+    // Filter on the basis of skill level
+    skillLevelFilter = (text) => {
+        let oldFilter = {...this.props.filters}
+        oldFilter.experienceLevel = text;
+        this.props.applyFilters(oldFilter);
+    }
+    // Per class price filtering
+    perClassPriceFilter = (text) => {
+        console.log("change price per class",text);
+        this.state.filter.pricePerMonth = text;
+    }
+    // Filter on the basis of price per month
+    pricePerMonthFilter = (text) => {
+        console.log("change price per class",text);
+        this.state.filter.perClassPrice = text;
+    }
+    // This is used to filter gender.
+    filterGender = (event) => {
+        let oldFilter = {...this.state.filter};
+        oldFilter.gender = event.target.value;
+        this.setState({filter:oldFilter})
+    }
+    // Append age into state for filtering purpose.
+    filterAge =(event) => {
+        this.state.filter.age = event.target.value;
+    }
+    // Append School Name into state for filtering purpose
+    fliterSchoolName =(event) => {
+        console.log("filterGender",event.target.value);
+        this.state.filter.schoolName = event.target.value;
+    }
+    // Run filter method
+    applyFilters = (event) => {
+        let filters = {...this.props.filters,...this.state.filter};
+        console.log("filters",filters);
+        this.props.applyFilters(filters, this.state.locationName);
+    }
+    onLocationChange = (location) => {
+        console.log("location",location);
+        this.state.filter['coords'] = location.coords;
+        this.state.locationName = location.name;
     }
     conditionalRender = () => {
-        const { showMoreFilters}  = this.state;
-
+        const { showMoreFilters }  = this.state;
+        console.log("currentAddress", this.props.currentAddress)
         if(showMoreFilters) {
           return (
             <Grid container spacing={24}>
 
                 <Hidden xsUp>
                     <Grid item xs={11} sm = {5}>
-                       <Multiselect data={["All","Beginner", "Intermediate", "Advance", "Expert"]}  placeholder="Skill Level" />
+                       <Multiselect data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}  placeholder="Skill Level" />
                     </Grid>
                 </Hidden>
 
                 <Grid item xs={11} sm = {11}>
                    <Multiselect
                         data={this.state.skillSubjectData}
-                        placeholder="Choose Skills"
+                        placeholder="Type to search skills"
                         textField={"name"}
                         onSearch={this.inputFromUser}
                         onChange ={this.selectSkillSubject}
@@ -146,39 +189,39 @@ class FilterPanel extends Component {
                 </Grid>
 
                  <Grid item xs={11} sm={6} >
-                   <SliderControl labelText={"Price Per Class"} onChange={() => console.log('changing')} max={100} min={1} defaultValue={[0,45]}/>
+                   <SliderControl labelText={"Price Per Class"} onChange={this.perClassPriceFilter} max={100} min={1} defaultValue={[0,45]}/>
                 </Grid>
 
 
                 <Grid item xs={11} sm={5} >
-                   <SliderControl labelText={"Price Per Month"} max={100} min={1} defaultValue={[1,30]} />
+                   <SliderControl labelText={"Price Per Month"} onChange={this.pricePerMonthFilter} max={100} min={1} defaultValue={[1,30]} />
                 </Grid>
 
                 <Grid item xs={11} sm={3}>
-                    <IconInput iconName='location_on' labelText="Location"  />
+                    <IconInput iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
                 </Grid>
 
 
                 <Grid item xs={11} sm={3}>
-                    <IconInput iconName='school' labelText="School Name"  />
+                    <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
                 </Grid>
 
                 <Grid item xs={6} sm={3}>
-                    <IconSelect labelText="Gender" inputId="gender" iconName="people">
+                    <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.state.filter.gender} onChange={this.filterGender}>
                       <MenuItem value=""> Gender</MenuItem>
-                      <MenuItem value={"male"}> Male </MenuItem>
-                      <MenuItem value={"female"}> Female </MenuItem>
-                      <MenuItem value={"others"}> Others </MenuItem>
+                      <MenuItem value={"Male"}> Male </MenuItem>
+                      <MenuItem value={"Female"}> Female </MenuItem>
+                      <MenuItem value={"Any"}> Any </MenuItem>
                     </IconSelect>
                 </Grid>
 
                   <Grid item xs={5} sm={2}>
-                    <IconInput iconName='star' labelText="Age"  />
+                    <IconInput onChange={this.filterAge} iconName='star' labelText="Age"  />
                 </Grid>
 
                 <Grid item xs={11} sm={6} >
                  <FilterPanelAction>
-                    <PrimaryButton fullWidth label="Apply filters & Search" icon={true} iconName="search"/>
+                    <PrimaryButton fullWidth label="Apply filters & Search" icon={true} iconName="search" onClick={this.applyFilters}/>
                 </FilterPanelAction>
               </Grid>
             </Grid>
@@ -210,7 +253,7 @@ class FilterPanel extends Component {
                         </Grid>
                         <Hidden xsDown>
                         <Grid item xs={11} sm = {5}>
-            	            <Multiselect data={["All","Beginner", "Intermediate", "Advance", "Expert"]}  placeholder="Skill Level" />
+            	            <Multiselect onChange={this.skillLevelFilter} data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}  placeholder="Skill Level" />
 
                         </Grid>
                         </Hidden>

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { debounce } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import {Element, scroller } from 'react-scroll'
@@ -56,12 +57,17 @@ const SwitchViewWrapper = styled.div`
 
 class Landing extends Component {
 
-    state = {
-      mapView: false,
-      cardsDataList : [cardsData,cardsData1],
-      filters: {
-        coords: config.defaultLocation,
-      },
+    constructor(props) {
+        super(props)
+        this.state = {
+            mapView: false,
+            cardsDataList: [cardsData, cardsData1],
+            filters: {
+                coords: config.defaultLocation,
+                skillCategoryClassLimit: {}
+            },
+        }
+        this.onSearch = debounce(this.onSearch, 1000);
     }
 
     componentWillMount() {
@@ -84,6 +90,11 @@ class Landing extends Component {
       })
     }
 
+    applyFilters = (newfilters, locationName) => {
+      let filters = this.state.filters || {};
+      this.setState({filters: newfilters, locationName})
+    }
+
     getMyCurrentLocation = () => {
         if(navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -96,15 +107,18 @@ class Landing extends Component {
                 geocoder.geocode({'latLng': latlng}, (results, status) => {
                     let sLocation = "near by me";
                     let oldFilters = {...this.state.filters};
-                    oldFilters["coords"] = coords;
                     if (status == google.maps.GeocoderStatus.OK) {
-                      if (results[1]) {
+                      if (results[0]) {
+                        let place = results[0];
+                        // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
+                        // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
                         sLocation = results[0].formatted_address
+                        oldFilters["coords"] = coords;
                       }
                     }
                     this.setState({
                       filters: oldFilters,
-                      currentAddress: sLocation,
+                      locationName: "your_location",
                       isLoading: false,
                     })
                 });
@@ -113,19 +127,39 @@ class Landing extends Component {
             })
         }
     }
+    handleSeeMore = (categoyName) => {
+      // Attach count with skill cateory name so that see more functionlity can work properly.
+      let oldFilter = {...this.state.filters};
+      let categoryFilter = oldFilter.skillCategoryClassLimit || {};
+      categoryFilter[categoyName] = categoryFilter[categoyName] && categoryFilter[categoyName] + config.seeMoreCount || 2 * config.seeMoreCount;
+      oldFilter.skillCategoryClassLimit = categoryFilter;
+      this.setState({filters:oldFilter})
+    }
+
+    onSearch = (value) => {
+        // const text = value.split(" ")
+        // console.log("onSearch -->>",text[0])
+        let oldFilters = {...this.state.filters};
+        oldFilters.mainSearchText = value;
+        this.setState({
+            filters: oldFilters
+        })
+    }
 
     render() {
         console.log("Landing state -->>",this.state);
         return(
             <div>
                 <Cover>
-                    <SearchArea/>
+                    <SearchArea onSearch={this.onSearch}/>
                 </Cover>
-                <FilterPanel />
+                <FilterPanel currentAddress={this.state.currentAddress} applyFilters={this.applyFilters} filters={this.state.filters} />
                 <Element name="content-container" className="element">
                     <ClassTypeList
+                        locationName={this.state.locationName}
                         mapView={this.state.mapView}
                         filters={this.state.filters}
+                        handleSeeMore={this.handleSeeMore}
                     />
                 </Element>
                 <SwitchViewWrapper>

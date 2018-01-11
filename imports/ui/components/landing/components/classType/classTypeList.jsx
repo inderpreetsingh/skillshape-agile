@@ -14,6 +14,7 @@ import SLocation from "/imports/api/sLocation/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
+import ClassInterest from "/imports/api/classInterest/fields";
 
 const MainContentWrapper = styled.div`
   display: flex;
@@ -54,18 +55,26 @@ class ClassTypeList extends Component {
   	}
 
   	showClassTypes = ({classType}) => {
-  		// console.log("showClassTypes classType -->>>",classType)
+  		console.log("showClassTypes classType -->>>",classType, this.props)
   		if(!isEmpty(classType)) {
+            return Object.keys(classType).map((key, index)=> {
 
-  			return Object.keys(classType).map((key, index)=> {
-
+                let title = key;
+                if(this.props.locationName == "your_location") {
+                    title = `${key} in your location`
+                } else if(this.props.locationName) {
+                    title = `${key} in ${this.props.locationName}`
+                }
   				if(!isEmpty(classType[key])) {
   					return <CardsList
   						key={index}
                 		mapView={this.props.mapView}
-                		title={key}
+                		title={title}
                 		name={key}
                 		cardsData={classType[key]}
+                		classInterestData={this.props.classInterestData}
+                        locationName={this.props.locationName}
+                        handleSeeMore={this.props.handleSeeMore}
                 	/>
   				}
   			})
@@ -75,7 +84,7 @@ class ClassTypeList extends Component {
 	render() {
 		console.log("ClassTypeList props -->>",this.props);
 		const { mapView, classTypeData, skillCategoryData } = this.props;
-
+        console.log("classTypeData -->>",classTypeData,skillCategoryData);
 		return (
 			<MainContentWrapper>
 				{
@@ -110,25 +119,30 @@ export default createContainer(props => {
 	let schoolData = [];
 	let skillCategoryData = [];
 	let classTimesData = [];
+	let classInterestData = [];
+
 	Meteor.subscribe("school.getClassTypesByCategory", props.filters);
+	Meteor.subscribe("classInterest.getClassInterest");
 
 	classTypeData = ClassType.find().fetch();
 	schoolData = School.find().fetch();
   	skillCategoryData = SkillCategory.find().fetch();
   	classTimesData = ClassTimes.find().fetch();
+  	classInterestData = ClassInterest.find().fetch();
 
 	/*Find SkillCategory,SkillSubject and SLocation to make this container reactive on these collection
   	other wise skills are joined with collections using package
   	perak:joins */
   	SkillSubject.find().fetch();
   	SLocation.find().fetch();
-
+  	console.log("classInterestData --->>",classInterestData)
   	return {
   		...props,
   		classTypeData,
   		schoolData,
   		skillCategoryData,
   		classTimesData,
+  		classInterestData,
   	};
 
 }, ClassTypeList);

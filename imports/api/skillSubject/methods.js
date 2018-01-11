@@ -2,8 +2,12 @@ import SkillSubject from "./fields";
 
 Meteor.methods({
 	"getSkillSubjectBySkillCategory": function({skillCategoryIds, textSearch}) {
-		console.log("getSkillSubjectBySkillCategory -->>",skillCategoryIds, textSearch)
-		return SkillSubject.find({skillCategoryId: { $in: skillCategoryIds}, name: { $regex: new RegExp(textSearch, 'mi') }},{limit: 10}).fetch();
+		let filter = {};
+        if(skillCategoryIds && skillCategoryIds.length > 0) {
+            filter = {skillCategoryId: { $in: skillCategoryIds}}
+        }
+        filter = {...filter, name: { $regex: new RegExp(textSearch, 'mi') }}
+		return SkillSubject.find(filter,{limit: 10}).fetch();
 	},
     "getSkillSubject": function({textSearch}) {
     	let filter = { $text: { $search: textSearch } }

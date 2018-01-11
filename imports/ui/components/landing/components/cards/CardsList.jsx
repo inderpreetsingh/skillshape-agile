@@ -39,7 +39,7 @@ const CardsListTitle = styled.h2`
     }
 `;
 
-const CardsList = ({ title, cardsData, mapView}) => (
+const CardsList = ({ title, cardsData, mapView,handleSeeMore,name,classInterestData}) => (
     <CardsListWrapper>
         <CardsListTitle>{title} </CardsListTitle>
         <CardsListGridWrapper>
@@ -47,14 +47,14 @@ const CardsList = ({ title, cardsData, mapView}) => (
                 {cardsData.map((card, index) => {
                     return (
                         <Grid key={card._id} item md={4} sm={6} lg={3} xs={12}>
-                            <ClassTypeCard {...card}/>
+                            <ClassTypeCard classInterestData={classInterestData} {...card}/>
                         </Grid>
                     );
                 })}
             </Grid>
         </CardsListGridWrapper>
         <More>
-         <SecondaryButton label="See More"/>
+         <SecondaryButton label="See More" onClick={() => {handleSeeMore(name)}}/>
         </More>
     </CardsListWrapper>
 );

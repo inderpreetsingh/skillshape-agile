@@ -1,14 +1,15 @@
 import ClassType from "./fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
+import SLocation from "/imports/api/sLocation/fields";
 
 Meteor.methods({
     "classType.getClassType": function({schoolId}) {
-        
+
         return ClassType.find({schoolId}).fetch();
     },
     "classType.getClassTypeByTextSearch": function({schoolId, textSearch}) {
-        
+
         return ClassType.find({schoolId: schoolId, name: { $regex: new RegExp(textSearch, 'mi') }},{limit: 10,fields:{name:1}}).fetch();
     },
     "classType.addClassType": function({doc}) {
@@ -16,7 +17,14 @@ Meteor.methods({
         // console.log("classType.addClassType methods called!!!");
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
             // doc.remoteIP = this.connection.clientAddress;
+            if(doc.locationId) {
+                location = SLocation.findOne(doc.locationId);
+                doc.filters =  doc.filters ? doc.filters : {};
+                doc.filters["location"] = location.loc;
+                doc.filters["state"] = location.state;
+            }
             doc.createdAt = new Date();
+
             return ClassType.insert(doc);
         } else {
             throw new Meteor.Error("Permission denied!!");
@@ -26,6 +34,12 @@ Meteor.methods({
         const user = Meteor.users.findOne(this.userId);
         console.log("classType.editClassType methods called!!!",doc_id, doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
+            if(doc.locationId) {
+                location = SLocation.findOne(doc.locationId);
+                doc.filters =  doc.filters ? doc.filters : {};
+                doc.filters["location"] = location.loc;
+                doc.filters["state"] = location.state;
+            }
             return ClassType.update({ _id: doc_id }, { $set: doc });
         } else {
             throw new Meteor.Error("Permission denied!!");
