@@ -61,7 +61,9 @@ class Landing extends Component {
       cardsDataList : [cardsData,cardsData1],
       filters: {
         coords: config.defaultLocation,
-      },
+        skillCategoryClassLimit:{}
+
+      }
     }
 
     componentWillMount() {
@@ -93,17 +95,17 @@ class Landing extends Component {
                 let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 let geocoder = new google.maps.Geocoder();
-                let coords = {};
-                // coords[0] = position.coords.latitude || config.defaultLocation[0];
-                // coords[1] = position.coords.longitude || config.defaultLocation[1];
+                let coords = [];
+                coords[0] = position.coords.latitude || config.defaultLocation[0];
+                coords[1] = position.coords.longitude || config.defaultLocation[1];
                 geocoder.geocode({'latLng': latlng}, (results, status) => {
                     let sLocation = "near by me";
                     let oldFilters = {...this.state.filters};
                     if (status == google.maps.GeocoderStatus.OK) {
                       if (results[0]) {
                         let place = results[0];
-                        coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
-                        coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
+                        // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
+                        // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
                         sLocation = results[0].formatted_address
                         oldFilters["coords"] = coords;
                       }
@@ -119,7 +121,14 @@ class Landing extends Component {
             })
         }
     }
-
+    handleSeeMore = (categoyName) => {
+      // Attach count with skill cateory name so that see more functionlity can work properly.
+      let oldFilter = {...this.state.filters};
+      let categoryFilter = oldFilter.skillCategoryClassLimit || {};
+      categoryFilter[categoyName] = categoryFilter[categoyName] && categoryFilter[categoyName] + config.seeMoreCount || 2 * config.seeMoreCount;
+      oldFilter.skillCategoryClassLimit = categoryFilter;
+      this.setState({filters:oldFilter})
+    }
     render() {
         console.log("Landing state -->>",this.state);
         return(
@@ -133,6 +142,7 @@ class Landing extends Component {
                         locationName={this.state.locationName}
                         mapView={this.state.mapView}
                         filters={this.state.filters}
+                        handleSeeMore={this.handleSeeMore}
                     />
                 </Element>
                 <SwitchViewWrapper>

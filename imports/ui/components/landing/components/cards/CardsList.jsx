@@ -39,7 +39,7 @@ const CardsListTitle = styled.h2`
     }
 `;
 
-const CardsList = ({ title, cardsData, mapView}) => (
+const CardsList = ({ title, cardsData, mapView,handleSeeMore,name}) => (
     <CardsListWrapper>
         <CardsListTitle>{title} </CardsListTitle>
         <CardsListGridWrapper>
@@ -54,7 +54,7 @@ const CardsList = ({ title, cardsData, mapView}) => (
             </Grid>
         </CardsListGridWrapper>
         <More>
-         <SecondaryButton label="See More"/>
+         <SecondaryButton label="See More" onClick={() => {handleSeeMore(name)}}/>
         </More>
     </CardsListWrapper>
 );

@@ -54,7 +54,7 @@ class ClassTypeList extends Component {
   	}
 
   	showClassTypes = ({classType}) => {
-  		// console.log("showClassTypes classType -->>>",classType, this.props.locationName)
+  		console.log("showClassTypes classType -->>>",classType, this.props)
   		if(!isEmpty(classType)) {
             return Object.keys(classType).map((key, index)=> {
 
@@ -72,6 +72,7 @@ class ClassTypeList extends Component {
                 		name={key}
                 		cardsData={classType[key]}
                         locationName={this.props.locationName}
+                        handleSeeMore={this.props.handleSeeMore}
                 	/>
   				}
   			})
@@ -81,7 +82,7 @@ class ClassTypeList extends Component {
 	render() {
 		console.log("ClassTypeList props -->>",this.props);
 		const { mapView, classTypeData, skillCategoryData } = this.props;
-
+        console.log("classTypeData -->>",classTypeData,skillCategoryData);
 		return (
 			<MainContentWrapper>
 				{

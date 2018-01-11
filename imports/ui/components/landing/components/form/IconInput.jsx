@@ -18,13 +18,14 @@ const IconInput = (props) => {
   if(props.googlelocation) {
     setTimeout(()=> {
       let options ={strictBounds:true}
+      // Google's API
       let autocomplete = new google.maps.places.Autocomplete(inputRef,options);
+      // This runs when user changes location.
       autocomplete.addListener('place_changed', () => {
         let place = autocomplete.getPlace();
-        let coords = {};
-        coords.NEPoint = [place.geometry.viewport.b.b, place.geometry.viewport.b.f];
-        coords.SWPoint = [place.geometry.viewport.f.b,place.geometry.viewport.f.f];
-        // coords[1] = place.geometry['location'].lng();
+        let coords = [];
+        coords[0] = place.geometry['location'].lat();
+        coords[1] =place.geometry['location'].lng();;
         props.onLocationChange({name: place.name, coords })
       })
     },2000)
