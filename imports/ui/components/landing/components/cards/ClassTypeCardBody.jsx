@@ -41,10 +41,10 @@ const ClassTypeCardBody = (props) =>(
         </ReviewsWrapper>
 
         <Grid container spacing={8}>
-            <Grid item xs={12} sm= {8} >
+            <Grid item xs={12} sm={7} >
                 <SecondaryButton icon iconName="add_circle_outline" fullWidth label="Join Class" onClick={props.onJoinClassButtonClick}/>
              </Grid>
-            <Grid item xs={12} sm= {4} >
+            <Grid item xs={12} sm={5} >
                 <SecondaryButton fullWidth label="Details" />
             </Grid>
         </Grid>

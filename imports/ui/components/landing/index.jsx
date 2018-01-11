@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+import React, {Component,Fragment} from 'react';
 import { debounce } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import {Element, scroller } from 'react-scroll'
+import Sticky from 'react-sticky-el';
 
 import Cover from './components/Cover.jsx';
 import BrandBar from './components/BrandBar.jsx';
@@ -20,12 +21,14 @@ import config from '/imports/config';
 
 const MainContentWrapper = styled.div`
   display: flex;
+  position: relative;
 `;
 
 const FilterBarWrapper = styled.div`
   width: calc(20% - 20px);
-  margin: 10px;
+  margin: ${helpers.rhythmDiv}px;
 `;
+
 
 // const CardsDisplaySectionWrapper = styled.section`
 //   width: calc(100% - ${helpers.rhythmDiv}px);
@@ -38,9 +41,35 @@ const FilterBarWrapper = styled.div`
 //   }
 // `;
 
+const MapOuterContainer = styled.div`
+  width: 40%;
+  display: block;
+  position: relative;
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    width: 100%;
+  }
+`;
+
 const MapContainer = styled.div`
-  width: 100%;
+  width: auto;
   height: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
+
+const WithMapCardsContainer = styled.div`
+  width: 60%;
+  padding: ${helpers.rhythmDiv * 2}px;
+  padding-top: 0;
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 `;
 
 const CardsContainer = styled.div`
@@ -55,12 +84,47 @@ const SwitchViewWrapper = styled.div`
   z-index: 20;
 `;
 
+const FooterOuterWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  @media screen and (max-width : ${helpers.tablet + 100}px) {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+`;
+
+const FooterWrapper = styled.div`
+  width: 60%;
+`;
+
+
+const CenterCapsule = styled.div`
+   font-size:12px;
+   line-height:${helpers.baseFontSize}px;
+   background:white;
+   border-radius:400px;
+   max-width:200px;
+   color:${helpers.textColor};
+   background:${helpers.panelColor};
+   margin:auto;
+   transform: translateY(-50%);
+   text-transform:uppercase;
+   letter-spacing:1px;
+   box-shadow:2px 2px 3px rgba(0,0,0,0.1);
+   text-align:center;
+   padding:4px;
+ `;
+
+
 class Landing extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
             mapView: false,
+            sticky: false,
             cardsDataList: [cardsData, cardsData1],
             filters: {
                 coords: config.defaultLocation,
@@ -74,7 +138,18 @@ class Landing extends Component {
         this.getMyCurrentLocation()
     }
 
-    toggleMapView = () => {
+    handleFixedToggle = (defaultPosition) => {
+       const stickyPosition = !defaultPosition;
+       console.log(this.state.sticky, defaultPosition);
+       if(this.state.sticky != stickyPosition) {
+         this.setState({
+           sticky: stickyPosition
+         });
+       }
+
+     }
+
+    handleToggleMapView = () => {
       this.setState({
         mapView: !this.state.mapView
       });
@@ -151,9 +226,25 @@ class Landing extends Component {
         return(
             <div>
                 <Cover>
+                    <BrandBar/>
                     <SearchArea onSearch={this.onSearch}/>
                 </Cover>
-                <FilterPanel currentAddress={this.state.currentAddress} applyFilters={this.applyFilters} filters={this.state.filters} />
+
+                <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
+
+                 <div>
+                   <Sticky stickyClassName={"filter-panel-sticked"} onFixedToggle={this.handleFixedToggle}>
+                     <FilterPanel
+                     currentAddress={this.state.currentAddress}
+                     applyFilters={this.applyFilters}
+                     filters={this.state.filters}
+                     stickyPosition={this.state.sticky}
+                     />
+                   </Sticky>
+                 </div>
+
+
+                {/*
                 <Element name="content-container" className="element">
                     <ClassTypeList
                         locationName={this.state.locationName}
@@ -162,8 +253,43 @@ class Landing extends Component {
                         handleSeeMore={this.handleSeeMore}
                     />
                 </Element>
+                */}
+                   <Element name="content-container" className="element">
+                    <MainContentWrapper>
+                      {this.state.mapView ?
+                        (
+                          <Fragment>
+                            <MapOuterContainer>
+                             <Sticky topOffset={-100} stickyStyle={{height: 'calc(100vh - 100px)', transform: 'translateY(100px)', height: 'calc(100% - 100px)'}}>
+                                <ClassMap isMarkerShown />
+                              </Sticky>
+                            </MapOuterContainer>
+                           <WithMapCardsContainer>
+                               <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
+                               <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
+                           </WithMapCardsContainer>
+                         </Fragment>
+                       ) :
+                     (<CardsContainer>
+                         <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
+                         <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
+                     </CardsContainer>)}
+                   </MainContentWrapper>
+                 </Element>
+
+                 {this.state.mapView ?
+                    (<FooterOuterWrapper>
+                      <FooterWrapper>
+                        <Footer mapView={this.state.mapView}/>
+                      </FooterWrapper>
+                    </FooterOuterWrapper>
+                    )
+                    :
+                    <Footer mapView={this.state.mapView}/>
+                }
+
                 <SwitchViewWrapper>
-                    <SwitchIconButton onClick={this.toggleMapView}/>
+                    <SwitchIconButton onClick={this.handleToggleMapView}/>
                 </SwitchViewWrapper>
             </div>
         )

@@ -30,7 +30,9 @@ import {dataSourceSkills} from '../constants/filtersData.js';
 
 const FilterPanelContainer = styled.div`
     max-width:1000px;
-    margin:auto;
+    max-width: ${props => props.stickyPosition ? '100%' : '1000px'};
+    background: ${props => props.stickyPosition ? '#ffffff' : '1000px'};
+    margin: auto;
     flex-grow: 1;
 `;
 
@@ -56,22 +58,6 @@ const FilterButtonArea = styled.div`
     margin-top:-24px;
 `;
 
-const CenterCapsule = styled.div`
-    font-size:12px;
-    line-height:${helpers.baseFontSize}px;
-    background:white;
-    border-radius:400px;
-    max-width:200px;
-    color:${helpers.textColor};
-    background:${helpers.panelColor};
-    margin:auto;
-    transform: translateY(-50%);
-    text-transform:uppercase;
-    letter-spacing:1px;
-    box-shadow:2px 2px 3px rgba(0,0,0,0.1);
-    text-align:center;
-    padding:4px;
-`;
 
 class FilterPanel extends Component {
     state = {
@@ -230,11 +216,11 @@ class FilterPanel extends Component {
     }
     render() {
         const { showMoreFilters } = this.state;
-        console.log("this.state",this.state)
+        console.log(this.state);
+        const { stickyPosition } = this.props;
 
         return (<MuiThemeProvider theme={muiTheme}>
-            <FilterPanelContainer>
-                <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
+            <FilterPanelContainer stickyPosition={stickyPosition}>
 
                 <FilterPanelContent>
                  <form noValidate autoComplete="off">
