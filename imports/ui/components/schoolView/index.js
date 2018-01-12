@@ -13,6 +13,8 @@ import SLocation from "/imports/api/sLocation/fields";
 import School from "/imports/api/school/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import { toastrModal } from '/imports/util';
+import config from '/imports/config';
+
 
 class SchoolView extends SchoolViewBase {
 
@@ -21,8 +23,16 @@ class SchoolView extends SchoolViewBase {
         this.state = {
             isPublish: true,
             bestPriceDetails: null,
-            isLoading:false
+            isLoading:false,
+            seeMoreCount:4
         }
+    }
+
+    handleSeeMore = () => {
+      // Attach count with skill cateory name so that see more functionlity can work properly.
+      console.log("handleSeeMore");
+      let currentCount = this.state.seeMoreCount;
+      this.setState({seeMoreCount:(config.seeMoreCount + currentCount)})
     }
     render() {
         return SchoolViewRender.call(this, this.props, this.state);

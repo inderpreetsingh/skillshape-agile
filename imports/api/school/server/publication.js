@@ -12,6 +12,12 @@ Meteor.publish("UserSchoolbySlug", function(slug) {
     return School.find({ slug: slug });
 });
 
+Meteor.publish("classTypeBySchool", function({ schoolId, limit }) {
+    return [
+        ClassType.find({ schoolId: schoolId }, { limit: limit ? limit : 4 })
+    ]
+});
+
 Meteor.publish("school.getSchoolClasses", function({ is_map_view, schoolId, user_id, coords, NEPoint, SWPoint, skill, _classPrice, _monthPrice, textSearch, limit, selectedTag }) {
     console.log("schoolId-->>", schoolId)
     console.log("is_map_view-->>", is_map_view)

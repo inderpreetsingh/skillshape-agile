@@ -2,13 +2,10 @@ import React, {Component} from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import { findIndex, isEmpty } from 'lodash';
-import Typography from 'material-ui/Typography';
 
 import ClassMap from '../map/ClassMap.jsx';
 import CardsList from '../cards/CardsList.jsx';
 import { cardsData, cardsData1} from '../../constants/cardsData.js';
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import { Loading } from '/imports/ui/loading';
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
@@ -30,10 +27,6 @@ const MapContainer = styled.div`
 
 const CardsContainer = styled.div`
   width: 100%;
-`;
-
-const NoResultContainer = styled.div`
-  text-align: center;
 `;
 
 class ClassTypeList extends Component {
@@ -88,31 +81,9 @@ class ClassTypeList extends Component {
   		}
   	}
 
-    getNoResultMsg = (isLoading, filters, classTypeData) => {
-        if(isLoading) {
-
-            return <Loading/>
-
-        } else if(!isEmpty(filters.coords) && this.props.defaultLocation && isEmpty(classTypeData)) {
-
-            return <NoResultContainer>
-                <span style={{padding: 8}}>
-                    <b>No Results Found</b>
-                </span>
-                <PrimaryButton
-                    label="Want to explore in other location"
-                    icon={true}
-                    iconName="search"
-                    onClick={this.props.clearDefaultLocation}
-                />
-            </NoResultContainer>
-
-        }
-    }
-
 	render() {
 		console.log("ClassTypeList props -->>",this.props);
-		const { mapView, classTypeData, skillCategoryData, filters, isLoading } = this.props;
+		const { mapView, classTypeData, skillCategoryData,splitByCategory } = this.props;
         console.log("classTypeData -->>",classTypeData,skillCategoryData);
 		return (
 			<MainContentWrapper>
@@ -124,13 +95,23 @@ class ClassTypeList extends Component {
 					) : (
 						<CardsContainer>
 							{
-								this.showClassTypes({
+								splitByCategory ? this.showClassTypes({
 									classType: this.makeCategorization({classTypeData: classTypeData, skillCategoryData: skillCategoryData})
-								})
+								}) :
+                  ( <CardsList
+                      mapView={this.props.mapView}
+                      cardsData={classTypeData}
+                      classInterestData={this.props.classInterestData}
+                      handleSeeMore={this.props.handleSeeMore}
+                    />
+                  )
 							}
-                            {
-                                this.getNoResultMsg(isLoading, filters, classTypeData)
-                            }
+                        	{/*<CardsList
+                        		mapView={mapView}
+                        		title={'Yoga in Delhi'}
+                        		name={'yoga-in-delhi'}
+                        		cardsData={cardsData}
+                        	/>*/}
 						</CardsContainer>
 					)
 				}
@@ -146,8 +127,13 @@ export default createContainer(props => {
 	let skillCategoryData = [];
 	let classTimesData = [];
 	let classInterestData = [];
-    let isLoading = true;
-	const subscription = Meteor.subscribe("school.getClassTypesByCategory", props.filters);
+
+  // This is used to grab `ClassTypes` on the basis of `schoolId`
+  if(!props.splitByCategory) {
+    Meteor.subscribe(props.classTypeBySchool, props.filters);
+  } else {
+    Meteor.subscribe("school.getClassTypesByCategory", props.filters);
+  }
 	Meteor.subscribe("classInterest.getClassInterest");
 
 	classTypeData = ClassType.find().fetch();
@@ -161,10 +147,6 @@ export default createContainer(props => {
   	perak:joins */
   	SkillSubject.find().fetch();
   	SLocation.find().fetch();
-
-    if(subscription.ready()) {
-        isLoading = false
-    }
   	console.log("classInterestData --->>",classInterestData)
   	return {
   		...props,
@@ -173,7 +155,6 @@ export default createContainer(props => {
   		skillCategoryData,
   		classTimesData,
   		classInterestData,
-        isLoading,
   	};
 
 }, ClassTypeList);
