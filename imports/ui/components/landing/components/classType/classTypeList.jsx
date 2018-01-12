@@ -102,6 +102,7 @@ class ClassTypeList extends Component {
                       mapView={this.props.mapView}
                       cardsData={classTypeData}
                       classInterestData={this.props.classInterestData}
+                      handleSeeMore={this.props.handleSeeMore}
                     />
                   )
 							}

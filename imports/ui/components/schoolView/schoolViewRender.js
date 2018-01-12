@@ -160,7 +160,8 @@ export default function() {
               mapView={false}
               filters={{schoolId: schoolId,limit:this.state.seeMoreCount}}
               splitByCategory={false}
-              classTypeBySchool= 'classTypeBySchool'
+              classTypeBySchool='classTypeBySchool'
+              handleSeeMore={this.handleSeeMore}
             />
         </Grid>
         </Grid>

@@ -13,9 +13,8 @@ Meteor.publish("UserSchoolbySlug", function(slug) {
 });
 
 Meteor.publish("classTypeBySchool", function({ schoolId, limit }) {
-    let classTypeCursor = ClassType.find({ schoolId: schoolId });
     return [
-        ClassType.find({ schoolId: schoolId })
+        ClassType.find({ schoolId: schoolId }, { limit: limit ? limit : 4 })
     ]
 });
 
