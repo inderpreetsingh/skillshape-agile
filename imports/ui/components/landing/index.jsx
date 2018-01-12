@@ -134,10 +134,6 @@ class Landing extends Component {
         this.onSearch = debounce(this.onSearch, 1000);
     }
 
-    componentWillMount() {
-        this.getMyCurrentLocation()
-    }
-
     handleFixedToggle = (defaultPosition) => {
        const stickyPosition = !defaultPosition;
        console.log(this.state.sticky, defaultPosition);
@@ -193,7 +189,8 @@ class Landing extends Component {
                     }
                     this.setState({
                       filters: oldFilters,
-                      locationName: "your_location",
+                      locationName: `your location`,
+                      defaultLocation: sLocation,
                       isLoading: false,
                     })
                 });
@@ -202,6 +199,7 @@ class Landing extends Component {
             })
         }
     }
+
     handleSeeMore = (categoyName) => {
       // Attach count with skill cateory name so that see more functionlity can work properly.
       let oldFilter = {...this.state.filters};
@@ -211,9 +209,13 @@ class Landing extends Component {
       this.setState({filters:oldFilter})
     }
 
+    clearDefaultLocation = () => {
+        let oldFilter = {...this.state.filters};
+        oldFilter.coords = null;
+        this.setState({defaultLocation: null,locationName: null, filters: oldFilter });
+    }
+
     onSearch = (value) => {
-        // const text = value.split(" ")
-        // console.log("onSearch -->>",text[0])
         let oldFilters = {...this.state.filters};
         oldFilters.mainSearchText = value;
         this.setState({
@@ -227,22 +229,39 @@ class Landing extends Component {
             <div>
                 <Cover>
                     <BrandBar/>
-                    <SearchArea onSearch={this.onSearch}/>
+                    <SearchArea
+                        onSearch={this.onSearch}
+                        getMyCurrentLocation={this.getMyCurrentLocation}
+                    />
                 </Cover>
 
                 <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
 
                  <div>
-                   <Sticky stickyClassName={"filter-panel-sticked"} onFixedToggle={this.handleFixedToggle}>
-                     <FilterPanel
-                     currentAddress={this.state.currentAddress}
-                     applyFilters={this.applyFilters}
-                     filters={this.state.filters}
-                     stickyPosition={this.state.sticky}
-                     />
+                    <Sticky stickyClassName={"filter-panel-sticked"} onFixedToggle={this.handleFixedToggle}>
+                        <FilterPanel
+                            clearDefaultLocation={this.clearDefaultLocation}
+                            currentAddress={this.state.defaultLocation || this.state.locationName}
+                            applyFilters={this.applyFilters}
+                            filters={this.state.filters}
+                            stickyPosition={this.state.sticky}
+                        />
                    </Sticky>
                  </div>
-                   <Element name="content-container" className="element">
+
+
+                <Element name="content-container" className="element">
+                    <ClassTypeList
+                        locationName={this.state.locationName}
+                        mapView={this.state.mapView}
+                        filters={this.state.filters}
+                        handleSeeMore={this.handleSeeMore}
+                        defaultLocation={this.state.defaultLocation}
+                        clearDefaultLocation={this.clearDefaultLocation}
+                    />
+                </Element>
+
+                   {/*<Element name="content-container" className="element">
                     <MainContentWrapper>
                       {this.state.mapView ?
                         (
@@ -268,7 +287,7 @@ class Landing extends Component {
                         />
                      </CardsContainer>)}
                    </MainContentWrapper>
-                 </Element>
+                 </Element>*/}
 
                  {this.state.mapView ?
                     (<FooterOuterWrapper>

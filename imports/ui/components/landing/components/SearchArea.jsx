@@ -82,10 +82,10 @@ const TaglineWrapper = () => (
   </TaglineArea>
 );
 
-const BottomSectionContent = () => (
+const BottomSectionContent = (props) => (
   <div>
    <TaglineText>SkillShape helps you find and attend classes on your subject of interest, in your location, and at your price</TaglineText>
-  <PrimaryButton icon iconName="room" label="Browse classes near you" />  <SecondaryButton icon iconName="domain" label="Add your school"/>
+  <PrimaryButton onClick={props.getMyCurrentLocation} icon iconName="room" label="Browse classes near you" />  <SecondaryButton icon iconName="domain" label="Add your school"/>
   </div>
 );
 
@@ -93,7 +93,7 @@ const SearchArea = (props) => (
   <SearchAreaPanel width={props.width} textAlign={props.textAlign}>
     {props.topSection ? props.topSection : <TaglineWrapper />}
     {props.middleSection ? props.middleSection : <SearchBarStyled onSearch = {props.onSearch}/>}
-    {props.bottomSection ? props.bottomSection : <BottomSectionContent /> }
+    {props.bottomSection ? props.bottomSection : <BottomSectionContent getMyCurrentLocation={props.getMyCurrentLocation} /> }
   </SearchAreaPanel>
 );
 

@@ -2,6 +2,7 @@ import School from "../fields";
 import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
+import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 
 Meteor.publish("UserSchool", function(schoolId) {
@@ -112,7 +113,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
     gender,
     age,
     experienceLevel,
-    skillCategoryClassLimit
+    skillCategoryClassLimit,
+    mainSearchText,
 }) {
     console.log("schoolId-->>", schoolId)
     // console.log("is_map_view-->>", is_map_view)
@@ -181,6 +183,29 @@ Meteor.publish("school.getClassTypesByCategory", function({
         skillCategoryFilter["_id"] = { $in: skillCategoryIds };
     }
 
+    if(!_.isEmpty(mainSearchText)) {
+        skillCategoryFilter["$or"] = [];
+        const skillSubjectData = SkillSubject.find({ "$text" : { $search: mainSearchText } }).fetch();
+
+        if(!_.isEmpty(skillSubjectData)) {
+            const skillCategoryIds = skillSubjectData.map((data) => data.skillCategoryId);
+            skillCategoryFilter["$or"].push({ _id: { $in: skillCategoryIds } })
+        }
+
+        skillCategoryFilter["$or"].push({ "$text": { $search: mainSearchText } })
+        classfilter["$text"] = { $search: mainSearchText };
+
+        const classTypeExitWithLocationFilter = ClassType.findOne(classfilter);
+
+        if(!classTypeExitWithLocationFilter) {
+            delete classfilter["$text"];
+        }
+
+        if(!_.isEmpty(classfilter["filters.location"])) {
+            delete classfilter["filters.location"];
+        }
+
+    }
     console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", JSON.stringify(classfilter, null, "  "));
     console.log("<<<<<<<<<<<<<<<<skillCategoryFilter>>>>>>>>>>>>>>>", JSON.stringify(skillCategoryFilter, null, "  "));
     // console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", SLocation.find({loc: classfilter["filters.location"]}, { limit: limit || 10 }).fetch());

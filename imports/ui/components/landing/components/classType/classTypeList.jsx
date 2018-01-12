@@ -60,7 +60,7 @@ class ClassTypeList extends Component {
             return Object.keys(classType).map((key, index)=> {
 
                 let title = key;
-                if(this.props.locationName == "your_location") {
+                if(this.props.locationName == "your location") {
                     title = `${key} in your location`
                 } else if(this.props.locationName) {
                     title = `${key} in ${this.props.locationName}`

@@ -63,6 +63,8 @@ class CardsList extends Component {
        return true;
      }else if(this.props.cardsData.length !== nextProps.cardsData.length) {
        return true;
+     }else if(this.props.classInterestData.length !== nextProps.classInterestData.length) {
+       return true;
      }else {
        return this._compareCardsData(this.props.cardsData,nextProps.cardsData);
      }

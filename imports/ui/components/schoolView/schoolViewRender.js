@@ -78,7 +78,7 @@ export default function() {
               <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
             </div>*/}
             <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
-            <Grid container style={{backgroundColor: "#fff"}}>
+            <Grid container className={classes.schoolInfo} >
 
               <Grid item xs={12} sm={8} md={6} >
                 <Grid item xs={12}>

@@ -13,7 +13,6 @@ export default styles = theme => {
     },
     schoolHeaderContainer: {
       position: "relative",
-      padding: theme.spacing.unit * 2
     },
     content: {
       position: "relative"
@@ -48,7 +47,10 @@ export default styles = theme => {
     },
     typographyRoot: {
       padding: '10px'
+    },
+    schoolInfo: {
+      padding: theme.spacing.unit,
+      backgroundColor: '#fff'
     }
-
   }
 }

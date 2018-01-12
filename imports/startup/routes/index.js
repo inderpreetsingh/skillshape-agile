@@ -5,6 +5,8 @@ import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
 import green from "material-ui/colors/green";
 //layout
 import MainLayout from '/imports/ui/layout/mainLayout';
+import AdminLayout from '/imports/ui/layout/adminLayout';
+import PublicLayout from '/imports/ui/layout/publicLayout';
 
 //components
 import Home from '/imports/ui/components/home';
@@ -27,28 +29,26 @@ import { material_ui_next_theme } from '/imports/util';
 // console.log("material_ui_next_theme", material_ui_next_theme)
 
 const theme = createMuiTheme({...material_ui_next_theme});
-// console.log("theme", theme);
+
 export default Routes = () => (
   <MuiThemeProvider theme={theme}>
     <Router history={browserHistory}>
       <Route path="/" component={MainLayout} >
         <IndexRoute component={Landing} />
-        <Route path="/Aboutus" component={AboutUs} />
-        <Route path="/Contactus" component={ContactUs} />
-      	<Route path="/reset-password/:token" component={ResetPassword}/>
-        <Route path="/profile/:id" component={MyProfile} />
-        <Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />
-        <Route path="/SchoolUpload" component={SchoolUpload} />
-        <Route path="/schools/:slug" component={SchoolView} />
-        <Route path="/MyCalendar" component={ManageMyCalendar} />
+        <Route path="/" component={PublicLayout}>
+          <Route path="/Aboutus" component={AboutUs} />
+          <Route path="/Contactus" component={ContactUs} />
+          <Route path="/profile/:id" component={MyProfile} />
+          <Route path="/schools/:slug" component={SchoolView} />
+          <Route path="/MyCalendar" component={ManageMyCalendar} />
+          <Route path="/reset-password/:token" component={ResetPassword}/>
+        </Route>
+
+        <Route path="/" component={AdminLayout}>
+          <Route path="/SchoolUpload" component={SchoolUpload} />
+          <Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />
+        </Route>
       </Route>
-      <Route path="/landing" component={Landing} />
     </Router>
   </MuiThemeProvider>
 );
-  // <MuiThemeProvider>
-  // </MuiThemeProvider>
-      // <Route path="/embed/schools/:slug/pricing" component={SchoolPriceView} />
-        // <Route path="/embed/schools/:slug/calendar" component={MyCalender} />
-        // <Route path="/claimSchool" component={ClaimSchool} />
-        // <Route path="/schoolAdmin/:schoolId" component={SchoolView} />
