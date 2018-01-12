@@ -21,7 +21,8 @@ Meteor.methods({
                 location = SLocation.findOne(doc.locationId);
                 doc.filters =  doc.filters ? doc.filters : {};
                 doc.filters["location"] = location.loc;
-                doc.filters["state"] = location.state;
+                // doc.filters["state"] = location.state;
+                doc.filters["locationTitle"] = `${location.state}, ${location.city}, ${location.country}`;
             }
             doc.createdAt = new Date();
 
@@ -39,7 +40,8 @@ Meteor.methods({
                 const location = SLocation.findOne(temp.locationId);
                 temp.filters =  temp.filters ? temp.filters : {};
                 temp.filters["location"] = location.loc;
-                temp.filters["state"] = location.state;
+                // temp.filters["state"] = location.state;
+                temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${location.country}`;
             }
             return ClassType.update({ _id: doc_id }, { $set: temp });
         } else {

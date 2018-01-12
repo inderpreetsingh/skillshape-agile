@@ -2,6 +2,7 @@ import School from "../fields";
 import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
+import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 
 Meteor.publish("UserSchool", function(schoolId) {
@@ -112,7 +113,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
     gender,
     age,
     experienceLevel,
-    skillCategoryClassLimit
+    skillCategoryClassLimit,
+    mainSearchText,
 }) {
     console.log("schoolId-->>", schoolId)
     // console.log("is_map_view-->>", is_map_view)
@@ -181,6 +183,29 @@ Meteor.publish("school.getClassTypesByCategory", function({
         skillCategoryFilter["_id"] = { $in: skillCategoryIds };
     }
 
+    if(!_.isEmpty(mainSearchText)) {
+        skillCategoryFilter["$or"] = [];
+        const skillSubjectData = SkillSubject.find({ "$text" : { $search: mainSearchText } }).fetch();
+
+        if(!_.isEmpty(skillSubjectData)) {
+            const skillCategoryIds = skillSubjectData.map((data) => data.skillCategoryId);
+            skillCategoryFilter["$or"].push({ _id: { $in: skillCategoryIds } })
+        }
+
+        skillCategoryFilter["$or"].push({ "$text": { $search: mainSearchText } })
+        classfilter["$text"] = { $search: mainSearchText };
+
+        const classTypeExitWithLocationFilter = ClassType.findOne(classfilter);
+
+        if(!classTypeExitWithLocationFilter) {
+            delete classfilter["$text"];
+        }
+
+        if(!_.isEmpty(classfilter["filters.location"])) {
+            delete classfilter["filters.location"];
+        }
+
+    }
     console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", JSON.stringify(classfilter, null, "  "));
     console.log("<<<<<<<<<<<<<<<<skillCategoryFilter>>>>>>>>>>>>>>>", JSON.stringify(skillCategoryFilter, null, "  "));
     // console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", SLocation.find({loc: classfilter["filters.location"]}, { limit: limit || 10 }).fetch());
@@ -195,15 +220,15 @@ Meteor.publish("school.getClassTypesByCategory", function({
     let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
     cursors.push(skillCategoryCursor);
 
-    console.log("skillCategoryClassLimit",skillCategoryClassLimit)
+    // console.log("skillCategoryClassLimit",skillCategoryClassLimit)
     skillCategoryClassLimit ? skillCategoryClassLimit : {};
         // console.log("filters -->>",classfilter)
 
     skillCategoryCursor.forEach((skillCategory) => {
-        console.log("skillCategory data -->>",skillCategory)
+        // console.log("skillCategory data -->>",skillCategory)
         classfilter["skillCategoryId"] = {$in: [skillCategory._id]};
         let limit =  (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory.name]) || 4
-        console.log("class type filters -->>",classfilter)
+        // console.log("class type filters -->>",classfilter)
         let classTypeCursor = ClassType.find(classfilter, { limit: is_map_view ? undefined : limit });
         // console.log("classTypeCursor", classfilter, classTypeCursor.fetch());
         classTypeCursor.forEach((classTypeData) => {
@@ -219,7 +244,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
         locationIds.push(classData.locationId);
     })
     if ((is_map_view && schoolId) || !is_map_view) {
-    console.log("tes>>>>>>>>>",classTypeIds);
+    // console.log("tes>>>>>>>>>",classTypeIds);
 
         return [
             classTimesCursor,

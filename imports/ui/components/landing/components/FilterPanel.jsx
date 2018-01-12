@@ -150,6 +150,16 @@ class FilterPanel extends Component {
         console.log("location",location);
         this.state.filter['coords'] = location.coords;
         this.state.locationName = location.name;
+        this.state.defaultLocation = null;
+        this.props.clearDefaultLocation();
+    }
+    locationInputChanged = (event) => {
+        console.log("locationInputChanged", event.target.value);
+         if(!event.target.value) {
+            this.state.filter['coords'] = null;
+            this.state.locationName = null;
+            this.props.clearDefaultLocation();
+        }
     }
     conditionalRender = () => {
         const { showMoreFilters }  = this.state;
@@ -184,7 +194,7 @@ class FilterPanel extends Component {
                 </Grid>
 
                 <Grid item xs={11} sm={3}>
-                    <IconInput iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
+                    <IconInput onChange={this.locationInputChanged} iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
                 </Grid>
 
 
@@ -214,6 +224,7 @@ class FilterPanel extends Component {
             )
         }
     }
+
     render() {
         const { showMoreFilters } = this.state;
         console.log(this.state);
