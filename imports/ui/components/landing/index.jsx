@@ -242,18 +242,6 @@ class Landing extends Component {
                      />
                    </Sticky>
                  </div>
-
-
-                {/*
-                <Element name="content-container" className="element">
-                    <ClassTypeList
-                        locationName={this.state.locationName}
-                        mapView={this.state.mapView}
-                        filters={this.state.filters}
-                        handleSeeMore={this.handleSeeMore}
-                    />
-                </Element>
-                */}
                    <Element name="content-container" className="element">
                     <MainContentWrapper>
                       {this.state.mapView ?
@@ -271,8 +259,13 @@ class Landing extends Component {
                          </Fragment>
                        ) :
                      (<CardsContainer>
-                         <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
-                         <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
+                        <ClassTypeList
+                            locationName={this.state.locationName}
+                            mapView={this.state.mapView}
+                            filters={this.state.filters}
+                            handleSeeMore={this.handleSeeMore}
+                            splitByCategory={true}
+                        />
                      </CardsContainer>)}
                    </MainContentWrapper>
                  </Element>

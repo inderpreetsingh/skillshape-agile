@@ -21,6 +21,7 @@ import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDeta
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
 import { ContainerLoader } from '/imports/ui/loading/container';
+import ClassTypeList from '/imports/ui/components/landing/components/classType/classTypeList.jsx';
 
 export default function() {
 
@@ -154,39 +155,14 @@ export default function() {
         </Grid>
         <Grid container className={classes.content}>
           <Grid item xs={12}>
-            <Grid container className={classes.content}>
-              <Grid item xs={12} sm={6} md={4} lg={3} >
-                <SkillShapeCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3} >
-                <SkillShapeCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3} >
-                <SkillShapeCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3} >
-                <SkillShapeCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3} >
-                <SkillShapeCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3} >
-                <SkillShapeCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3} >
-                <SkillShapeCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3} >
-                <SkillShapeCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3} >
-                <SkillShapeCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3} >
-                <SkillShapeCard />
-              </Grid>
-            </Grid>
-          </Grid>
+            <ClassTypeList
+              locationName={null}
+              mapView={false}
+              filters={{schoolId: schoolId,limit:this.state.seeMoreCount}}
+              splitByCategory={false}
+              classTypeBySchool= 'classTypeBySchool'
+            />
+        </Grid>
         </Grid>
         <Grid container className={classes.content}>
           <Grid ref={(el) => { this.schoolCalendar = el; }} item xs={12}>
