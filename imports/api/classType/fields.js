@@ -103,7 +103,7 @@ ClassType.join(SLocation, "locationId", "selectedLocation", ["rooms", "address",
 
 Meteor.startup(function() {
     if (Meteor.isServer) {
-        ClassType._ensureIndex({ name:"text",desc:"text", "filters.locationTitle": "text" });
+        // ClassType._ensureIndex({ name:"text",desc:"text", "filters.locationTitle": "text" });
     }
 });
 

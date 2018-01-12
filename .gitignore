@@ -1,2 +1,4 @@
+.deploy/
+.deployment/
 node_modules/
 meteor.sh
