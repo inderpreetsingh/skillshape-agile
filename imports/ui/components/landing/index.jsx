@@ -127,7 +127,7 @@ class Landing extends Component {
             sticky: false,
             cardsDataList: [cardsData, cardsData1],
             filters: {
-                coords: config.defaultLocation,
+                coords: null,
                 skillCategoryClassLimit: {}
             },
         }
@@ -258,6 +258,7 @@ class Landing extends Component {
                         handleSeeMore={this.handleSeeMore}
                         defaultLocation={this.state.defaultLocation}
                         clearDefaultLocation={this.clearDefaultLocation}
+                        splitByCategory={true}
                     />
                 </Element>
 

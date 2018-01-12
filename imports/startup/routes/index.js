@@ -1,8 +1,5 @@
 import React from 'react';
 import { Router, Route, browserHistory, DefaultRoute, IndexRoute } from 'react-router';
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
-import green from "material-ui/colors/green";
 //layout
 import MainLayout from '/imports/ui/layout/mainLayout';
 import AdminLayout from '/imports/ui/layout/adminLayout';
@@ -25,30 +22,23 @@ import SchoolUpload from '/imports/ui/components/schoolUpload';
 import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
 
-import { material_ui_next_theme } from '/imports/util';
-// console.log("material_ui_next_theme", material_ui_next_theme)
-
-const theme = createMuiTheme({...material_ui_next_theme});
-
 export default Routes = () => (
-  <MuiThemeProvider theme={theme}>
-    <Router history={browserHistory}>
-      <Route path="/" component={MainLayout} >
-        <IndexRoute component={Landing} />
-        <Route path="/" component={PublicLayout}>
-          <Route path="/Aboutus" component={AboutUs} />
-          <Route path="/Contactus" component={ContactUs} />
-          <Route path="/profile/:id" component={MyProfile} />
-          <Route path="/schools/:slug" component={SchoolView} />
-          <Route path="/MyCalendar" component={ManageMyCalendar} />
-          <Route path="/reset-password/:token" component={ResetPassword}/>
-        </Route>
-
-        <Route path="/" component={AdminLayout}>
-          <Route path="/SchoolUpload" component={SchoolUpload} />
-          <Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />
-        </Route>
+  <Router history={browserHistory}>
+    <Route path="/" component={MainLayout} >
+      <IndexRoute component={Landing} />
+      <Route path="/" component={PublicLayout}>
+        <Route path="/Aboutus" component={AboutUs} />
+        <Route path="/Contactus" component={ContactUs} />
+        <Route path="/profile/:id" component={MyProfile} />
+        <Route path="/schools/:slug" component={SchoolView} />
+        <Route path="/MyCalendar" component={ManageMyCalendar} />
+        <Route path="/reset-password/:token" component={ResetPassword}/>
       </Route>
-    </Router>
-  </MuiThemeProvider>
+
+      <Route path="/" component={AdminLayout}>
+        <Route path="/SchoolUpload" component={SchoolUpload} />
+        <Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />
+      </Route>
+    </Route>
+  </Router>
 );

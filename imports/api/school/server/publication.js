@@ -220,15 +220,15 @@ Meteor.publish("school.getClassTypesByCategory", function({
     let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
     cursors.push(skillCategoryCursor);
 
-    console.log("skillCategoryClassLimit",skillCategoryClassLimit)
+    // console.log("skillCategoryClassLimit",skillCategoryClassLimit)
     skillCategoryClassLimit ? skillCategoryClassLimit : {};
         // console.log("filters -->>",classfilter)
 
     skillCategoryCursor.forEach((skillCategory) => {
-        console.log("skillCategory data -->>",skillCategory)
+        // console.log("skillCategory data -->>",skillCategory)
         classfilter["skillCategoryId"] = {$in: [skillCategory._id]};
         let limit =  (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory.name]) || 4
-        console.log("class type filters -->>",classfilter)
+        // console.log("class type filters -->>",classfilter)
         let classTypeCursor = ClassType.find(classfilter, { limit: is_map_view ? undefined : limit });
         // console.log("classTypeCursor", classfilter, classTypeCursor.fetch());
         classTypeCursor.forEach((classTypeData) => {
@@ -244,7 +244,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
         locationIds.push(classData.locationId);
     })
     if ((is_map_view && schoolId) || !is_map_view) {
-    console.log("tes>>>>>>>>>",classTypeIds);
+    // console.log("tes>>>>>>>>>",classTypeIds);
 
         return [
             classTimesCursor,

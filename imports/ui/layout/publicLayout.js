@@ -1,7 +1,11 @@
 import React from 'react';
+import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
+
 import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
-import { withStyles } from '/imports/util';
+import { withStyles, material_ui_next_theme } from '/imports/util';
+
+const theme = createMuiTheme({...material_ui_next_theme});
 
 const styles = theme => ({
   content: {
@@ -35,6 +39,7 @@ class PublicLayout extends React.Component {
       className.id = "UserMainPanel";
     }
     return (
+      <MuiThemeProvider theme={theme}>
         <div className={className.mainClass} id={className.id}>
             <BrandBar {...this.props}/>
             <div ref={(ref)=> {this.mainPanelRef = ref}}>
@@ -44,6 +49,7 @@ class PublicLayout extends React.Component {
             </div>
           <Footer />
         </div>
+      </MuiThemeProvider>
     )
   }
 }
