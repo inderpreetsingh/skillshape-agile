@@ -250,7 +250,7 @@ class Landing extends Component {
                  </div>
 
 
-                <Element name="content-container" className="element">
+                {/*<Element name="content-container" className="element">
                     <ClassTypeList
                         locationName={this.state.locationName}
                         mapView={this.state.mapView}
@@ -260,46 +260,42 @@ class Landing extends Component {
                         clearDefaultLocation={this.clearDefaultLocation}
                         splitByCategory={true}
                     />
-                </Element>
+                </Element>*/}
 
-                   {/*<Element name="content-container" className="element">
-                    <MainContentWrapper>
-                      {this.state.mapView ?
-                        (
-                          <Fragment>
-                            <MapOuterContainer>
-                             <Sticky topOffset={-100} stickyStyle={{height: 'calc(100vh - 100px)', transform: 'translateY(100px)', height: 'calc(100% - 100px)'}}>
-                                <ClassMap isMarkerShown />
-                              </Sticky>
-                            </MapOuterContainer>
-                           <WithMapCardsContainer>
-                               <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
-                               <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
-                           </WithMapCardsContainer>
-                         </Fragment>
-                       ) :
-                     (<CardsContainer>
-                        <ClassTypeList
-                            locationName={this.state.locationName}
-                            mapView={this.state.mapView}
-                            filters={this.state.filters}
-                            handleSeeMore={this.handleSeeMore}
-                            splitByCategory={true}
-                        />
-                     </CardsContainer>)}
-                   </MainContentWrapper>
-                 </Element>*/}
+                 <Element name="content-container" className="element">
+                  <MainContentWrapper>
+                    {this.state.mapView ?
+                      (
+                        <Fragment>
+                          <MapOuterContainer>
+                           <Sticky topOffset={-100} className="map-holder" stickyStyle={{transform: 'translateY(80px)', height: 'calc(100vh - 50px)'}}>
+                              <ClassMap isMarkerShown />
+                            </Sticky>
+                          </MapOuterContainer>
+                         <WithMapCardsContainer>
+                             <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
+                             <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
+                         </WithMapCardsContainer>
+                       </Fragment>
+                     ) :
+                   (<CardsContainer>
 
-                 {this.state.mapView ?
-                    (<FooterOuterWrapper>
-                      <FooterWrapper>
-                        <Footer mapView={this.state.mapView}/>
-                      </FooterWrapper>
-                    </FooterOuterWrapper>
-                    )
-                    :
-                    <Footer mapView={this.state.mapView}/>
-                }
+                      <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
+                      <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
+                   </CardsContainer>)}
+                 </MainContentWrapper>
+               </Element>
+
+               {this.state.mapView ?
+                  (<FooterOuterWrapper>
+                    <FooterWrapper>
+                      <Footer mapView={this.state.mapView}/>
+                    </FooterWrapper>
+                  </FooterOuterWrapper>
+                  )
+                  :
+                  <Footer mapView={this.state.mapView}/>
+              }
 
                 <SwitchViewWrapper>
                     <SwitchIconButton onClick={this.handleToggleMapView}/>

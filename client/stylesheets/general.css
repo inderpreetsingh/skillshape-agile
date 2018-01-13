@@ -182,3 +182,12 @@ material ui search bar */
     padding: 16px;
   }
 }
+
+
+/*
+  MAP - HOLDER COMPONENT
+*/
+
+.map-holder {
+  height: calc(100vh - 60px);
+}

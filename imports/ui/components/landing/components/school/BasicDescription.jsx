@@ -31,6 +31,7 @@ const BasicDescription = (props) => (
 
 BasicDescription.propTypes = {
   title: PropTypes.string.isRequired,
+  button: PropTypes.bool,
 }
 
 export default BasicDescription;
