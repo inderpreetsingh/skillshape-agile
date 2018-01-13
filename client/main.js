@@ -1,4 +1,5 @@
-// React widgets
+// Node Modules Css imports
+import "react-image-gallery/styles/css/image-gallery.css";
 import 'react-widgets/dist/css/react-widgets.css';
 
 // Run this when the meteor app is started

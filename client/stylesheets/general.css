@@ -157,3 +157,28 @@ material ui search bar */
   top: 0;
   z-index: 1000;
 }
+
+/*
+  IMG - SLIDER
+*/
+
+#app .image-gallery {
+  margin: 0 auto;
+  width: 65%;
+  transition: all 1s ease;
+}
+
+#app .image-gallery-image img {
+  width: 100% !important;
+}
+
+.image-slider-thumbnail-img img{
+  height: 75px;
+}
+
+@media screen and (max-width : 900px) {
+  #app .image-gallery {
+    width: 100%;
+    padding: 16px;
+  }
+}
