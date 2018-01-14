@@ -1,12 +1,13 @@
 import React from 'react';
-import { compose, withProps } from "recompose"
+import PropTypes from 'prop-types';
+import { compose, withProps } from "recompose";
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
 const ClassMap = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-     containerElement: <div style={{ height: `calc(100vh - 100px)` }} />,
+    containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
   withScriptjs,
@@ -18,6 +19,6 @@ const ClassMap = compose(
   >
     {props.isMarkerShown && <Marker position={{ lat: -34.397, lng: 150.644 }} />}
   </GoogleMap>
-)
+);
 
 export default ClassMap;

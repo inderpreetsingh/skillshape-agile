@@ -37,7 +37,7 @@ const FilterPanelContainer = styled.div`
 `;
 
 const FilterPanelContent = styled.div`
-    padding:24px;
+    padding: ${props => props.stickyPosition ? '16px' : '24px'};
     margin:auto;
 `;
 
@@ -232,8 +232,7 @@ class FilterPanel extends Component {
 
         return (<MuiThemeProvider theme={muiTheme}>
             <FilterPanelContainer stickyPosition={stickyPosition}>
-
-                <FilterPanelContent>
+                <FilterPanelContent stickyPosition={stickyPosition}>
                  <form noValidate autoComplete="off">
 
                     <Grid container spacing="24">
