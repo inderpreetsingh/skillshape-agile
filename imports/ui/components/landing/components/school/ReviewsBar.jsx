@@ -41,12 +41,11 @@ const Average = styled.div`
 
 const ReviewsBar = (props) => (
   <Wrapper>
-
     <ReviewsStats>
       <Total>Reviews: {props.totalReviews} total</Total>
       <Average>
-           <p>Average</p>
-           <ReactStars size={25} value={props.averageRatings} edit={false} half={true}/>
+         <p>Average</p>
+         <ReactStars size={25} value={props.averageRatings} edit={false} half={true}/>
       </Average>
     </ReviewsStats>
 

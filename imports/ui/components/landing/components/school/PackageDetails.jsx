@@ -11,7 +11,6 @@ import * as helpers from '../jss/helpers.js';
 const Wrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
-  border: 1px solid ${helpers.darkBgColor};
   margin: ${helpers.rhythmDiv} 0;
   padding: ${helpers.rhythmDiv}px;
 `;

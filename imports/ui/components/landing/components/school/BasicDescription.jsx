@@ -9,7 +9,7 @@ import * as helpers from '../jss/helpers.js';
 
 const Wrapper = styled.div`
   ${helpers.flexDirectionColumn}
-  border: 1px solid ${helpers.darkBgColor};
+  padding: ${helpers.rhythmDiv}px;
 `;
 
 const Title = styled.h3`

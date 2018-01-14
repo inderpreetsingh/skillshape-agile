@@ -25,7 +25,6 @@ const images = [
   }
 ]
 
-
 class ImgSlider extends React.Component {
   render() {
     const {images, sliderClass} = this.props;
