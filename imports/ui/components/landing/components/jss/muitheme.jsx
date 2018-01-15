@@ -164,28 +164,28 @@ const muiTheme = createMuiTheme({
     "subheading": {
       "fontSize": "1rem",
       "fontWeight": 400,
-      "fontFamily": "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
+      "fontFamily": "\"Open Sans\", \"Helvetica\", \"Arial\", sans-serif",
       "lineHeight": "1.5em",
       "color": "rgba(0, 0, 0, 0.87)"
     },
     "body2": {
       "fontSize": "0.875rem",
       "fontWeight": 500,
-      "fontFamily": "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
+      "fontFamily": "\"Open Sans\", \"Helvetica\", \"Arial\", sans-serif",
       "lineHeight": "1.71429em",
       "color": "rgba(0, 0, 0, 0.87)"
     },
     "body1": {
       "fontSize": "0.875rem",
       "fontWeight": 400,
-      "fontFamily": "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
+      "fontFamily": "\"Open Sans\", \"Helvetica\", \"Arial\", sans-serif",
       "lineHeight": "1.46429em",
       "color": "rgba(0, 0, 0, 0.87)"
     },
     "caption": {
       "fontSize": "0.75rem",
       "fontWeight": 400,
-      "fontFamily": "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
+      "fontFamily": "\"Open Sans\", \"Helvetica\", \"Arial\", sans-serif",
       "lineHeight": "1.375em",
       "color": "rgba(0, 0, 0, 0.54)"
     },
@@ -193,7 +193,7 @@ const muiTheme = createMuiTheme({
       "fontSize": "0.875rem",
       "textTransform": "uppercase",
       "fontWeight": 500,
-      "fontFamily": "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif"
+      "fontFamily": "\"Open Sans\", \"Helvetica\", \"Arial\", sans-serif"
     }
   },
   "mixins": {

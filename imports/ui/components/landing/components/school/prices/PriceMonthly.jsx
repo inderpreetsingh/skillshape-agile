@@ -12,13 +12,14 @@ import * as helpers from '../../jss/helpers.js';
 
 const Price = styled.article`
   ${helpers.flexDirectionColumn}
-  padding: 0 ${helpers.rhythmDiv}px;
+  padding: ${helpers.rhythmDiv}px;
   border: 1px solid ${helpers.panelColor};
 `;
 
-const Title = styled.h3`
+const Title = styled.h2`
   font-family: ${helpers.specialFont};
   text-align: center;
+  font-weight: 400;
 `;
 
 const Body = styled.section`
@@ -27,6 +28,7 @@ const Body = styled.section`
 
 const ListWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
+  flex-direction: column;
   border: 1px solid ${helpers.panelColor};
   border-right: 0;
   border-left: 0;
@@ -38,6 +40,12 @@ const ListWrapper = styled.div`
   }
 `;
 
+const PriceListWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: ${helpers.rhythmDiv}px 0;
+`;
+
 const PriceListItem = (props) => (
   <ListWrapper key={props.amount + props.currency + props.noOfMonths}>
     <Typography>{props.currency} {props.amount} for {props.noOfMonths}</Typography>
@@ -46,16 +54,16 @@ const PriceListItem = (props) => (
 );
 
 const PriceMonthly = (props) => (
-  <MuiThemeProvider>
-    <Price>
-      <Title>{props.title}</Title>
-      <Body>
-        <Typography>{props.paymentType}</Typography>
-        <Typography>{props.classTypesCovered}</Typography>
+  <Price>
+    <Title>{props.title}</Title>
+    <Body>
+      <Typography>{props.paymentType}</Typography>
+      <Typography>{props.classTypesCovered}</Typography>
+      <PriceListWrapper>
         {props.packages.map((data) => <PriceListItem {...data}/>)}
-      </Body>
-    </Price>
-  </MuiThemeProvider>
+      </PriceListWrapper>
+    </Body>
+  </Price>
 );
 
 PriceMonthly.propTypes = {

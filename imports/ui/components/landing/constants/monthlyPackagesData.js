@@ -1,5 +1,9 @@
+import uuidv4 from 'uuid/v4';
+
 const monthlyPackagesData = [
   {
+    _id: uuidv4(),
+    title: 'Monthly Package Name',
     paymentType: 'monthly direct deposit',
     classTypesCovered: 'karate, yoga',
     packages: [
@@ -26,6 +30,8 @@ const monthlyPackagesData = [
     ]
   },
   {
+    _id: uuidv4(),
+    title: 'Monthly Package Name',
     paymentType: 'monthly deposit with installments',
     classTypesCovered: 'all class types covered',
     packages: [

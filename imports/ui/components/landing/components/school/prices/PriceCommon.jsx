@@ -18,7 +18,7 @@ const Price = styled.article`
 
 const Title = styled.h2`
   font-family: ${helpers.specialFont};
-  font-weight: 500;
+  font-weight: 400;
   text-align: center;
 `;
 
@@ -32,28 +32,26 @@ const Footer = styled.footer`
 `;
 
 const PriceCommon = (props) => (
-  <MuiThemeProvider>
-    <Price>
-      <Title>{props.title}</Title>
-      <Body>
-        <Typography>{props.currency} {props.amount} {props.packagePerClass && `for ${props.noOfClasses} classes`}</Typography>
-        {props.packagePerClass && <Typography>Expiration: {props.expirationTime || 'Contact School for Details'}</Typography>}
-        <Typography>Covers: {props.classTypesCovered}</Typography>
-      </Body>
-      <Footer>
-        {props.footerButton || <PrimaryButton label="Purchase" onClick={props.onPurchaseButtonClick} />}
-      </Footer>
-    </Price>
-  </MuiThemeProvider>
+  <Price>
+    <Title>{props.title}</Title>
+    <Body>
+      <Typography>{props.currency} {props.amount} {props.perClassPackage && `for ${props.noOfClasses} classes`}</Typography>
+      {props.perClassPackage && <Typography>Expiration: {props.expirationTime || 'Contact School for Details'}</Typography>}
+      <Typography>Covers: {props.classTypesCovered}</Typography>
+    </Body>
+    <Footer>
+      {props.footerButton || <PrimaryButton label="Purchase" onClick={props.onPurchaseButtonClick} />}
+    </Footer>
+  </Price>
 );
 
 PriceCommon.propTypes = {
-  title: PropTypes.sting,
+  title: PropTypes.string,
   amount: PropTypes.number,
   currency: PropTypes.string,
   noOfClasses: PropTypes.number,
   classTypesCovered: PropTypes.string,
-  packagePerClass: PropTypes.bool,
+  perClassPackage: PropTypes.bool,
   footerButton: PropTypes.element
 }
 

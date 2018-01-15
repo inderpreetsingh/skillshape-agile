@@ -15,17 +15,27 @@ import * as helpers from '../jss/helpers.js';
 
 const Wrapper = styled.div`
   ${helpers.flexDirectionColumn}
-  padding: ${helpers.rhythmDiv*2}px;
+  padding: ${helpers.rhythmDiv}px;
 `;
 
 const ReviewsStats = styled.div`
   display: flex;
+  align-items: center;
+  margin-bottom: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     ${helpers.flexDirectionColumn}
     align-items: center;
   }
 `;
+
+const ReviewsStatsText = styled.h3`
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize * 1.25}px;
+  font-weight: 400;
+  margin: 0;
+`;
+
 const Total = styled.p`
   color: ${helpers.headingColor};
 `;
@@ -37,14 +47,14 @@ const ReviewsContainer = styled.div`
 const Average = styled.div`
   ${helpers.flexCenter}
   margin-left: ${helpers.rhythmDiv}px;
-`
+`;
 
 const ReviewsBar = (props) => (
   <Wrapper>
     <ReviewsStats>
-      <Total>Reviews: {props.totalReviews} total</Total>
+      <ReviewsStatsText>Reviews: {props.totalReviews} total,</ReviewsStatsText>
       <Average>
-         <p>Average</p>
+         <ReviewsStatsText>Average</ReviewsStatsText>
          <ReactStars size={25} value={props.averageRatings} edit={false} half={true}/>
       </Average>
     </ReviewsStats>

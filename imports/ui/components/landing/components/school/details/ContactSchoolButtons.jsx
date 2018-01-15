@@ -2,12 +2,12 @@ import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import PrimaryButton from '../buttons/PrimaryButton';
-import SecondaryButton from '../buttons/SecondaryButton';
+import PrimaryButton from '../../buttons/PrimaryButton';
+import SecondaryButton from '../../buttons/SecondaryButton';
 
 const Wrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 `;
 
 const ContactSchoolButtons = (props) => (
