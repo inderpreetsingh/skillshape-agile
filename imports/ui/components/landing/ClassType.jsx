@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography';
 
 import BasicDescription from './components/school/BasicDescription';
 import ReviewsBar from './components/school/ReviewsBar';
-import SchoolDetails from './components/school/SchoolDetails';
+import SchoolDetails from './components/school/details/SchoolDetails';
 import ImgSlider from './components/school/ImgSlider';
 import PackagesList from './components/school/prices/PackagesList';
 import SchoolOfferings from './components/school/SchoolOfferings';
@@ -88,6 +88,12 @@ const PricesSection = styled.div`
   width: 100%;
 `;
 
+const SectionHeader = styled.h1`
+  font-family: ${helpers.specialFont};
+  font-weight: 500;
+  text-align: center;
+  font-size: ${helpers.baseFontSize * 1.5}px;
+`;
 
 const DescriptionText = styled.p`
   font-family: ${helpers.commonFont};
@@ -98,7 +104,7 @@ class ClassType extends Component {
     return (
       <MuiThemeProvider theme={muiTheme}>
         <Wrapper>
-          <BrandBar />
+          <BrandBar positionFixed={true}/>
 
           <PageContentWrapper>
             {/* Top Section After Brandbar */}
@@ -142,10 +148,12 @@ class ClassType extends Component {
             </SectionsWrapper>
 
             <MediaSection>
+              <SectionHeader>Media</SectionHeader>
               <ImgSlider />
             </MediaSection>
 
             <PricesSection>
+              <SectionHeader>Prices</SectionHeader>
               <PackagesList monthlyPackagesData={monthlyPackagesData} perClassPackagesData={perClassPackagesData}/>
             </PricesSection>
           </PageContentWrapper>

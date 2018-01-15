@@ -4,11 +4,11 @@ import styled from 'styled-components';
 
 import Typography from 'material-ui/Typography';
 
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import SecondaryButton from '../buttons/SecondaryButton.jsx';
+import PrimaryButton from '../../buttons/PrimaryButton.jsx';
+import SecondaryButton from '../../buttons/SecondaryButton.jsx';
 
 //TODO: Automatic imports depending upon variables used - intellij
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '../../jss/helpers.js';
 
 const DetailsWrapper = styled.div`
   ${helpers.flexCenter}
@@ -24,7 +24,7 @@ const ButtonsWrapper = styled.div`
     padding: ${helpers.rhythmDiv}px;
 `;
 
-const PackageDetails = (props) => (
+const ClassPackageDetails = (props) => (
     <DetailsWrapper>
       <Typography>Monthly Packages from ${props.monthlyCharges} per Month</Typography>
       <Typography>Class Packages from ${props.perClassCharges} per Class</Typography>
@@ -35,16 +35,16 @@ const PackageDetails = (props) => (
     </DetailsWrapper>
 );
 
-PackageDetails.propTypes = {
+ClassPackageDetails.propTypes = {
     monthlyCharges: PropTypes.number,
     perClassCharges: PropTypes.number,
     onScheduleButtonClick: PropTypes.func,
     onPricingButtonClick: PropTypes.func,
 }
 
-PackageDetails.defaultProps = {
+ClassPackageDetails.defaultProps = {
     monthlyCharges: 100,
     perClassCharges: 10,
 }
 
-export default PackageDetails;
+export default ClassPackageDetails;

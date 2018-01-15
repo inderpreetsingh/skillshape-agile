@@ -20,15 +20,31 @@ const MainText = styled.h2`
   margin: ${helpers.rhythmDiv}px 0;
 `;
 
+const Bold = styled.span`
+  font-weight: 600;
+`;
+
 const SchoolOfferings = (props) => (
   <Wrapper>
     <MainText>{props.classTypeName}</MainText>
     <Typography>at</Typography>
     <MainText>{props.schoolName}</MainText>
-    <Typography>Subjects: {props.subjects}</Typography>
-    <Typography>Age Range: {props.ageRange}</Typography>
-    <Typography>Gender: {props.gender}</Typography>
-    <Typography>Experience Level: {props.experienceLevel}</Typography>
+    <Typography>
+      <Bold>Subjects :</Bold>
+      {props.subjects}
+    </Typography>
+    <Typography>
+      <Bold>Age Range :</Bold>
+      {props.ageRange}
+    </Typography>
+    <Typography>
+      <Bold>Gender :</Bold>
+      {props.gender}
+    </Typography>
+    <Typography>
+      <Bold>Experience Level : </Bold>
+      {props.experienceLevel}
+    </Typography>
     {props.isAdmin && <PrimaryButton label={`Edit ${helpers.classTypeName}`} onClick={props.onEditClassTypeBtnClick}/>}
   </Wrapper>
 );
@@ -44,7 +60,11 @@ SchoolOfferings.propTypes = {
 
 SchoolOfferings.defaultProps = {
   classTypeName: 'Class Type Name',
-  schoolName: 'Gracia University'
+  schoolName: 'Gracia University',
+  subjects: 'yoga, karate',
+  ageRange: '2 - 14',
+  gender: 'all',
+  experienceLevel: 'all'
 }
 
 export default SchoolOfferings;

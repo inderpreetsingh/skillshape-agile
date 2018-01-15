@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Typography from 'material-ui/Typography';
 
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '../../jss/helpers.js';
 
 const Wrapper = styled.div`
   ${helpers.flexDirectionColumn}

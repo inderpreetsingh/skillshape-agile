@@ -16,7 +16,7 @@ const NavBarWrapper = styled.div`
   padding: ${helpers.rhythmDiv}px;
   width: 100%;
   z-index: 1299;
-  position: absolute;
+  position: ${props => props.positionFixed ? 'fixed': 'absolute'};
   background: white;
   top: 0;
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -36,7 +36,7 @@ const ButtonsWrapper = styled.div`
 `;
 
 const BrandBar = (props) => (
-    <NavBarWrapper>
+    <NavBarWrapper positionFixed={props.positionFixed}>
       {props.logoArea ? props.logoArea : <Logo />}
 
       <ActionArea>
@@ -53,10 +53,14 @@ const BrandBar = (props) => (
 );
 
 BrandBar.propTypes = {
+  positionFixed: PropTypes.bool,
   logoArea: PropTypes.element,
   barButton: PropTypes.element,
   menuButton: PropTypes.element,
 }
 
+BrandBar.defaultProps = {
+  positionFixed: false
+}
 
 export default BrandBar;

@@ -12,7 +12,7 @@ import * as helpers from '../../jss/helpers.js';
 
 const Price = styled.article`
   ${helpers.flexDirectionColumn}
-  padding: 0 ${helpers.rhythmDiv}px;
+  padding: ${helpers.rhythmDiv}px;
   border: 1px solid ${helpers.panelColor};
 `;
 
@@ -28,6 +28,7 @@ const Body = styled.section`
 
 const ListWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
+  flex-direction: column;
   border: 1px solid ${helpers.panelColor};
   border-right: 0;
   border-left: 0;
@@ -37,6 +38,12 @@ const ListWrapper = styled.div`
   @media screen and (max-width: ${helpers.mobile}px) {
     flex-direction: column;
   }
+`;
+
+const PriceListWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: ${helpers.rhythmDiv}px 0;
 `;
 
 const PriceListItem = (props) => (
@@ -52,7 +59,9 @@ const PriceMonthly = (props) => (
     <Body>
       <Typography>{props.paymentType}</Typography>
       <Typography>{props.classTypesCovered}</Typography>
-      {props.packages.map((data) => <PriceListItem {...data}/>)}
+      <PriceListWrapper>
+        {props.packages.map((data) => <PriceListItem {...data}/>)}
+      </PriceListWrapper>
     </Body>
   </Price>
 );

@@ -28,7 +28,7 @@ const ClassContainer = styled.div`
   border-radius: ${helpers.rhythmDiv}px;
   ${helpers.flexDirectionColumn}
   justify-content: space-between;
-  background: ${helpers.panelColor};
+  border: 1px solid ${helpers.panelColor};
 `;
 
 const ClassContainerHeader = styled.div`

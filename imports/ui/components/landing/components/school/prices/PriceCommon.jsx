@@ -35,8 +35,8 @@ const PriceCommon = (props) => (
   <Price>
     <Title>{props.title}</Title>
     <Body>
-      <Typography>{props.currency} {props.amount} {props.packagePerClass && `for ${props.noOfClasses} classes`}</Typography>
-      {props.packagePerClass && <Typography>Expiration: {props.expirationTime || 'Contact School for Details'}</Typography>}
+      <Typography>{props.currency} {props.amount} {props.perClassPackage && `for ${props.noOfClasses} classes`}</Typography>
+      {props.perClassPackage && <Typography>Expiration: {props.expirationTime || 'Contact School for Details'}</Typography>}
       <Typography>Covers: {props.classTypesCovered}</Typography>
     </Body>
     <Footer>
@@ -46,12 +46,12 @@ const PriceCommon = (props) => (
 );
 
 PriceCommon.propTypes = {
-  title: PropTypes.sting,
+  title: PropTypes.string,
   amount: PropTypes.number,
   currency: PropTypes.string,
   noOfClasses: PropTypes.number,
   classTypesCovered: PropTypes.string,
-  packagePerClass: PropTypes.bool,
+  perClassPackage: PropTypes.bool,
   footerButton: PropTypes.element
 }
 
