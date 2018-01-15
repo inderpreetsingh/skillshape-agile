@@ -41,7 +41,6 @@ const Comment = styled.div`
 `;
 
 const Review = (props) => (
-  <MuiThemeProvider>
     <Wrapper>
 
       <Person>
@@ -60,7 +59,6 @@ const Review = (props) => (
       </Comment>
 
     </Wrapper>
-  </MuiThemeProvider>
 );
 
 Review.propTypes = {

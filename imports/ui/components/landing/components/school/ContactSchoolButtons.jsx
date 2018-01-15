@@ -7,7 +7,7 @@ import SecondaryButton from '../buttons/SecondaryButton';
 
 const Wrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 `;
 
 const ContactSchoolButtons = (props) => (

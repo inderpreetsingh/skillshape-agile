@@ -16,6 +16,8 @@ const Title = styled.h3`
   font-family: ${helpers.specialFont};
   font-weight: 400;
   color: ${helpers.headingColor};
+  font-size: ${helpers.baseFontSize * 1.25}px;
+  margin-top: 0;
 `;
 
 const Description = styled.div`

@@ -2,23 +2,38 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import Typography from 'material-ui/Typography';
+
 import * as helpers from '../jss/helpers.js';
 
 const Wrapper = styled.div`
-    ${helpers.flexCenter}
-    flex-direction: column;
-    margin: ${helpers.rhythmDiv} 0;
-    padding: ${helpers.rhythmDiv}px;
+  ${helpers.flexDirectionColumn}
+  margin: ${helpers.rhythmDiv} 0;
+  padding: ${helpers.rhythmDiv}px;
 
-    @media screen and (max-width: ${helpers.tablet}px) {
-        margin: 0;
-    }
+  @media screen and (max-width: ${helpers.tablet}px) {
+      margin: 0;
+  }
+`;
+
+const Title = styled.h3`
+  font-family: ${helpers.specialFont};
+  font-weight: 400;
+  color: ${helpers.headingColor};
+  font-size: ${helpers.baseFontSize * 1.25}px;
+`;
+
+const TextWrapper = styled.div`
+  text-align: center;
 `;
 
 const SchoolAddress = (props) => (
   <Wrapper>
-    {props.site && <p>{props.site}</p>}
-    <p>{props.address}</p>
+    <Title>Address</Title>
+    <TextWrapper>
+      {props.site && <Typography>{props.site}</Typography>}
+      <Typography>{props.address}</Typography>
+    </TextWrapper>
   </Wrapper>
 );
 

@@ -1,20 +1,30 @@
 import React from 'react';
 import styled from 'styled-components';
+
+import { MuiThemeProvider } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
-import { MuiThemeProvider} from 'material-ui/styles';
 
 import PackageDetails from './PackageDetails';
 import ContactSchoolButtons from './ContactSchoolButtons';
 import SchoolAddress from './SchoolAddress';
 import BasicDescription from './BasicDescription';
 
+import * as helpers from '../jss/helpers.js';
+import muiTheme from '../jss/muitheme.jsx';
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
+const Text = styled.p`
+  font-family: ${helpers.commonFont};
+  margin-top: 0;
+  color: ${helpers.textColor};
+`;
+
 const SchoolDetails = () => (
-  <MuiThemeProvider>
+  <MuiThemeProvider theme={muiTheme}>
     <Wrapper>
       <ContactSchoolButtons />
 

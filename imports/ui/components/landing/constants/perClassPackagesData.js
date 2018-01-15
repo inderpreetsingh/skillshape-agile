@@ -1,5 +1,8 @@
+import uuidv4 from 'uuid/v4';
+
 const perClassPackagesData = [
   {
+    _id: uuidv4(),
     title: 'per class package name',
     currency: '$',
     amount: 120,
@@ -8,6 +11,7 @@ const perClassPackagesData = [
     classTypesCovered: 'karate, yoga'
   },
   {
+    _id: uuidv4(),
     title: 'per class package name',
     currency: 'Eu',
     amount: 15,
@@ -16,6 +20,7 @@ const perClassPackagesData = [
     classTypesCovered: 'karate, yoga'
   },
   {
+    _id: uuidv4(),
     title: 'per class package name',
     currency: '$',
     amount: 18,
@@ -24,6 +29,7 @@ const perClassPackagesData = [
     classTypesCovered: 'all classTypes covered'
   },
   {
+    _id: uuidv4(),
     title: 'per class package name',
     currency: 'Eu',
     amount: 120,

@@ -16,9 +16,10 @@ const Price = styled.article`
   border: 1px solid ${helpers.panelColor};
 `;
 
-const Title = styled.h3`
+const Title = styled.h2`
   font-family: ${helpers.specialFont};
   text-align: center;
+  font-weight: 400;
 `;
 
 const Body = styled.section`
@@ -46,16 +47,14 @@ const PriceListItem = (props) => (
 );
 
 const PriceMonthly = (props) => (
-  <MuiThemeProvider>
-    <Price>
-      <Title>{props.title}</Title>
-      <Body>
-        <Typography>{props.paymentType}</Typography>
-        <Typography>{props.classTypesCovered}</Typography>
-        {props.packages.map((data) => <PriceListItem {...data}/>)}
-      </Body>
-    </Price>
-  </MuiThemeProvider>
+  <Price>
+    <Title>{props.title}</Title>
+    <Body>
+      <Typography>{props.paymentType}</Typography>
+      <Typography>{props.classTypesCovered}</Typography>
+      {props.packages.map((data) => <PriceListItem {...data}/>)}
+    </Body>
+  </Price>
 );
 
 PriceMonthly.propTypes = {

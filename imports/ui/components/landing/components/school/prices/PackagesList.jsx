@@ -1,10 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
 import Grid from 'material-ui/Grid';
+import Typography from 'material-ui/Typography';
 
 import PriceCommon from './PriceCommon';
 import PriceMonthly from './PriceMonthly';
+
+import monthlyPackage from '../../../constants/structure/monthlyPackage.js';
+import perClassPackage from '../../../constants/structure/perClassPackage.js';
 
 import * as helpers from '../../jss/helpers.js';
 
@@ -37,6 +42,7 @@ const Title = styled.h2`
   color: ${helpers.headingColor};
   font-family: ${helpers.specialFont};
   text-align: center;
+  font-weight: 500;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
@@ -49,11 +55,16 @@ const PackagesList = (props) => {
           <Title>Enrollment Packages</Title>
           <Container>
             <Grid container>
-              {props.enrollMentPackagesData && props.enrollMentPackagesData.map(data => (
+              {props.enrollMentPackagesData ? props.enrollMentPackagesData.map(data => (
                 <Grid item sm={6} md={6} xs={12}>
                   <PriceCommon {...data} />
                 </Grid>
-              ))}
+              ))
+              :
+              (<Grid item xs={12}>
+                <Typography> No package details currently </Typography>
+              </Grid>)
+            }
             </Grid>
           </Container>
         </PackageContainer>
@@ -65,7 +76,7 @@ const PackagesList = (props) => {
             <Container>
               <Grid container>
                 {props.perClassPackagesData.map(data => (
-                  <Grid item sm={6} md={6} xs={12}>
+                  <Grid key={data._id} item sm={6} md={6} xs={12}>
                     <PriceCommon packagePerClass={true} {...data} />
                   </Grid>
                 ))}
@@ -80,7 +91,7 @@ const PackagesList = (props) => {
             <Container>
               <Grid container>
                   {props.monthlyPackagesData.map(data => (
-                    <Grid item sm={6} md={6} xs={12}>
+                    <Grid key={data._id} item sm={6} md={6} xs={12}>
                       <PriceMonthly {...data} />
                     </Grid>
                   ))}
@@ -94,8 +105,10 @@ const PackagesList = (props) => {
 }
 
 PackagesList.propTypes = {
+  title: PropTypes.string,
   priceComponent: PropTypes.element,
-  title: PropTypes.string
+  perClassPackagesData: PropTypes.arrayOf(perClassPackage),
+  monthlyPackagesData: PropTypes.arrayOf(monthlyPackage),
 }
 
 export default PackagesList;
