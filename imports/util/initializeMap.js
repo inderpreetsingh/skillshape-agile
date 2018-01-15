@@ -1,10 +1,13 @@
+import React from 'react';
+import Events from '/imports/util/events';
 import ClassPricing from "/imports/api/classPricing/fields";
 import { browserHistory } from 'react-router';
 import ClassType from "/imports/api/classType/fields";
 import {cutString} from '/imports/util';
-import Events from '/imports/util/events';
 import config from '/imports/config';
+import { isEmpty } from 'lodash';
 import { MarkerClusterer } from '/imports/ui/components/landing/components/jss/markerclusterer';
+
 let mc;
 let googleMarkers = [];
 let locations = [];
@@ -16,16 +19,24 @@ const mapOptions = {
     center: { lat: -25.363, lng: 131.044 }
 };
 
-function infoSchool({school}) {
+function infoSchool({school, classTypes}) {
     if(school) {
         // console.log("<< --infoSchool -->>")
         let backgroundUrl = school.mainImage || "images/SkillShape-Whitesmoke.png";
-        const schoolName = school ? cutString(school.name, 20) : "";
-
+        const schoolName = school ? cutString(school.name, 30) : "";
         Events.trigger("getSeletedSchoolData",{school});
         const view = `<div id="content">
-            <h3>${schoolName}</h3>
             <img src=${backgroundUrl} width="250" height="200">
+            <h3>${schoolName}</h3>
+            <h4>Class Types Available</h4>
+            ${
+                isEmpty(classTypes) ? "No Class Type Found" : (
+                    classTypes.map(data => {
+                        console.log('data is as',data);
+                        return `<span>${data.name}</span>`
+                    })
+                )
+            }
         </div>`
         return view;
     }
