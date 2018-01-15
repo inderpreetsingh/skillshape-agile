@@ -14,7 +14,7 @@ import * as helpers from './jss/helpers.js';
 rather than material ui next */
 
 const SearchBarStyled = (props) => {
-  console.log("SearchBarStyled-->>",props)
+  // console.log("SearchBarStyled-->>",props)
   return <SearchBar
       style={{
         root: {

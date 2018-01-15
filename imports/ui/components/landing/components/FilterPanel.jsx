@@ -163,7 +163,7 @@ class FilterPanel extends Component {
     }
     conditionalRender = () => {
         const { showMoreFilters }  = this.state;
-        console.log("currentAddress", this.props.currentAddress)
+        // console.log("currentAddress", this.props.currentAddress)
         if(showMoreFilters) {
           return (
             <Grid container spacing={24}>
@@ -227,7 +227,7 @@ class FilterPanel extends Component {
 
     render() {
         const { showMoreFilters } = this.state;
-        console.log(this.state);
+        // console.log(this.state);
         const { stickyPosition } = this.props;
 
         return (<MuiThemeProvider theme={muiTheme}>

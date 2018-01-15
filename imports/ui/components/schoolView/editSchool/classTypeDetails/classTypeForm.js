@@ -46,7 +46,7 @@ class ClassTypeForm extends React.Component {
 
   	initializeFields = () => {
   		const { data, locationData } = this.props;
-  		// console.log("initializeFields data -->>",data)
+  		console.log("initializeFields data -->>",data)
   		let state = {
   			gender: "Any",
   			experienceLevel: "All",
@@ -62,12 +62,12 @@ class ClassTypeForm extends React.Component {
   			if(data.selectedSkillCategory && _.size(data.selectedSkillCategory) > 0) {
   				state.searchSkillCategoryText = data.selectedSkillCategory.name;
   			}
-  			
+
   			return {
-  				...state, 
-  				...data, 
+  				...state,
+  				...data,
   				skillCategoryData: [data.selectedSkillCategory],
-  				location: data.locationId,
+  				location: data.locationId || "",
   				selectedLocation: locationData && _.find(locationData, function(location) { return data.locationId === location._id })
   			}
   		}
@@ -76,7 +76,7 @@ class ClassTypeForm extends React.Component {
 
 
   	onSkillSubjectChange = (values)=> this.setState({selectedSkillSubject: values})
-  	
+
   	onSkillCategoryChange = (values)=> {
 
   		const selectedSkillSubject = this.state.selectedSkillSubject && this.state.selectedSkillSubject.filter((data) => {
@@ -87,9 +87,9 @@ class ClassTypeForm extends React.Component {
   	}
 
     handleInputChange = (fieldName, event) => this.setState({[fieldName]: event.target.value})
-    	
+
     handleSelectChange = (fieldName, event, index, value) => this.setState({[fieldName]: value})
-    
+
     handleSkillCategoryInputChange = (value) => {
     	console.log("handleSkillCategoryInputChange -->>",value)
     	Meteor.call("getSkillCategory",{textSearch: value}, (err,res) => {
@@ -123,7 +123,7 @@ class ClassTypeForm extends React.Component {
     	event.preventDefault()
     	console.log("onSubmit state -->>",this.state);
     	const { schoolId, data } = this.props;
-    	
+
     	const payload = {
     		schoolId: schoolId,
     		name: this.classTypeName.value,
@@ -142,7 +142,7 @@ class ClassTypeForm extends React.Component {
         } else {
             this.handleSubmit({ methodName: "classType.addClassType", doc: payload })
         }
-    	
+
     }
 
     handleSubmit = ({ methodName, doc, doc_id })=> {
@@ -163,7 +163,7 @@ class ClassTypeForm extends React.Component {
 	render() {
 		const { fullScreen, data, classes, locationData } = this.props;
 		const { skillCategoryData, skillSubjectData } = this.state;
-
+		// console.log("ClassTypeForm state -->>",this.state);
 		return (
 			<div>
 				<Dialog
@@ -174,7 +174,7 @@ class ClassTypeForm extends React.Component {
 		        >
 		        	<DialogTitle id="form-dialog-title">Add Class Type</DialogTitle>
 		        	{ this.state.isBusy && <ContainerLoader/>}
-		        	{ 
+		        	{
 	                    this.state.showConfirmationModal && <ConfirmationModal
 	                        open={this.state.showConfirmationModal}
 	                        submitBtnLabel="Yes, Delete"
@@ -184,7 +184,7 @@ class ClassTypeForm extends React.Component {
 	                        onClose={() => this.setState({showConfirmationModal: false})}
 	                    />
 	                }
-		        	{ 
+		        	{
                         this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
 				        	<DialogContent>
 				        		<form id={formId} onSubmit={this.onSubmit}>
@@ -206,24 +206,24 @@ class ClassTypeForm extends React.Component {
 						                fullWidth
 						            />
 						            <SelectArrayInput
-		      							floatingLabelText="Skill Category"  
-		      							optionValue="_id" 
-		      							optionText="name" 
-		      							input={{ value: this.state.selectedSkillCategory ,onChange: this.onSkillCategoryChange}} 
-		      							onChange={this.onSkillCategoryChange} 
+		      							floatingLabelText="Skill Category"
+		      							optionValue="_id"
+		      							optionText="name"
+		      							input={{ value: this.state.selectedSkillCategory ,onChange: this.onSkillCategoryChange}}
+		      							onChange={this.onSkillCategoryChange}
 		      							setFilter={this.handleSkillCategoryInputChange}
-		      							dataSourceConfig={{ text: 'name', value: '_id' }} 
-		      							choices={skillCategoryData} 
+		      							dataSourceConfig={{ text: 'name', value: '_id' }}
+		      							choices={skillCategoryData}
 		      						/>
 		      						<SelectArrayInput
-		      							floatingLabelText="Skill Subject"  
-		      							optionValue="_id" 
-		      							optionText="name" 
-		      							input={{ value: this.state.selectedSkillSubject ,onChange: this.onSkillSubjectChange}} 
-		      							onChange={this.onSkillSubjectChange} 
+		      							floatingLabelText="Skill Subject"
+		      							optionValue="_id"
+		      							optionText="name"
+		      							input={{ value: this.state.selectedSkillSubject ,onChange: this.onSkillSubjectChange}}
+		      							onChange={this.onSkillSubjectChange}
 		      							setFilter={this.handleSkillSubjectInputChange}
-		      							dataSourceConfig={{ text: 'name', value: '_id' }} 
-		      							choices={skillSubjectData} 
+		      							dataSourceConfig={{ text: 'name', value: '_id' }}
+		      							choices={skillSubjectData}
 		      						/>
 		      						<Grid container className={classes.classtypeInputContainer}>
 					                    <Grid  item xs={8} sm={6}>
@@ -315,7 +315,7 @@ class ClassTypeForm extends React.Component {
 		      						</Grid>
 				        		</form>
 				        	</DialogContent>
-                        
+
                         )
                     }
 	        		<DialogActions>
@@ -330,13 +330,13 @@ class ClassTypeForm extends React.Component {
                       Cancel
                     </Button>
                     <Button type="submit" form={formId} color="primary">
-                      { data ? "Save" : "Submit" } 
+                      { data ? "Save" : "Submit" }
                     </Button>
                 </DialogActions>
 		        </Dialog>
 			</div>
 		)
 	}
-}  
+}
 
 export default withStyles(styles)(withMobileDialog()(ClassTypeForm));

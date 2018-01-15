@@ -86,7 +86,7 @@ export default function () {
 	          			return (
 		          				<ExpansionPanel key={index} className={classes.expansionPanel} key={index}>
 			          				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
-			          				
+
 			              				<div style={{marginLeft: 15}}>
 			                				<Typography className={classes.secondaryHeading}>{tableData[settings.mainPanelHeader.titleKey] || ""}</Typography>
 			              				</div>
@@ -105,16 +105,16 @@ export default function () {
 														                <div> {field.label} </div>
 														            </Grid>
 														            <Grid item xs={12} sm={field.valueSm ? field.valueSm : 12} md={field.valueMd ? field.valueMd : 9}>
-																        <div className={classes.inputDisableBox}> 
+																        <div className={classes.inputDisableBox}>
 														            	{
 														            		field.chipInput ? (
 														            			<div style={{display: 'inline-flex', flexWrap: "wrap"}}>
 															            			{
-																            				tableData[field.key] && tableData[field.key].map((chipData, index)=>{ 
+																            				tableData[field.key] && tableData[field.key].map((chipData, index)=>{
 															            					return <Chip
 															            						key={index}
-															            						style={{marginRight: 5}} 
-															            						label={chipData[field.childKey]} 
+															            						style={{marginRight: 5}}
+															            						label={chipData[field.childKey]}
 															            						className={classes.chip}
 															            					/>
 															            				})
@@ -124,12 +124,12 @@ export default function () {
 														            		: (
 																                	<span>
 																                		{ this.displayFieldValue(field, tableData)}
-																                	</span> 
+																                	</span>
 														            		)
 														            	}
 																        </div>
 														            </Grid>
-														        </Fragment>    
+														        </Fragment>
 			            									)
 			            								})
 			            							}

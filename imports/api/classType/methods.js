@@ -17,16 +17,17 @@ Meteor.methods({
         // console.log("classType.addClassType methods called!!!");
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
             // doc.remoteIP = this.connection.clientAddress;
-            if(doc.locationId) {
-                location = SLocation.findOne(doc.locationId);
-                doc.filters =  doc.filters ? doc.filters : {};
-                doc.filters["location"] = location.loc;
+            const temp = {...doc};
+            if(temp.locationId) {
+                const location = SLocation.findOne(doc.locationId);
+                temp.filters =  temp.filters ? temp.filters : {};
+                temp.filters["location"] = location.loc;
                 // doc.filters["state"] = location.state;
-                doc.filters["locationTitle"] = `${location.state}, ${location.city}, ${location.country}`;
+                temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${location.country}`;
             }
-            doc.createdAt = new Date();
+            temp.createdAt = new Date();
 
-            return ClassType.insert(doc);
+            return ClassType.insert(temp);
         } else {
             throw new Meteor.Error("Permission denied!!");
         }

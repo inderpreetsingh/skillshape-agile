@@ -4,13 +4,13 @@ import ClassType from "/imports/api/classType/fields";
 import {cutString} from '/imports/util';
 import Events from '/imports/util/events';
 import config from '/imports/config';
-
+import { MarkerClusterer } from '/imports/ui/components/landing/components/jss/markerclusterer';
 let mc;
 let googleMarkers = [];
 let locations = [];
 
 const mapOptions = {
-    zoom: 15,
+    zoom: 8,
     scrollwheel: true,
     minZoom: 1,
     center: { lat: -25.363, lng: 131.044 }
@@ -21,7 +21,7 @@ function infoSchool({school}) {
         // console.log("<< --infoSchool -->>")
         let backgroundUrl = school.mainImage || "images/SkillShape-Whitesmoke.png";
         const schoolName = school ? cutString(school.name, 20) : "";
-        
+
         Events.trigger("getSeletedSchoolData",{school});
         const view = `<div id="content">
             <h3>${schoolName}</h3>
@@ -58,7 +58,7 @@ export function createMarkersOnMap(mapId, locationData) {
             i++;
         }
     }
-    
+
 }
 
 export function reCenterMap(map, center) {
@@ -73,7 +73,7 @@ export function initializeSchoolEditLocationMap(location) {
         document.getElementById(mapId).innerHTML = ""
         let geolocate;
         let map = new google.maps.Map(document.getElementById(mapId), mapOptions);
-        
+
         geolocate = new google.maps.LatLng(location.loc[0], location.loc[1])
         map.setCenter(geolocate);
 
@@ -81,7 +81,7 @@ export function initializeSchoolEditLocationMap(location) {
             position: geolocate,
             map: map
         });
-    }    
+    }
 }
 
 export function initializeMap(center) {
@@ -89,7 +89,7 @@ export function initializeMap(center) {
         document.getElementById('google-map').innerHTML = ""
         let geolocate;
         let map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
-        
+
         geolocate = new google.maps.LatLng(center[0], center[1])
         map.setCenter(geolocate);
         // if (!!navigator.geolocation) {
@@ -135,7 +135,7 @@ export function setMarkersOnMap(map, SLocation) {
         // mc.clearMarkers(googleMarkers);
         googleMarkers = [];
     }
-    
+
     for (let i = 0; i < SLocation.length; i++) {
         locations.push(SLocation[i]._id);
 
