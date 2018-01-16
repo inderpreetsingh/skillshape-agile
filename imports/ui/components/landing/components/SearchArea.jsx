@@ -92,8 +92,6 @@ const BottomSectionContent = (props) => (
     icon
     iconName="room"
     label="Browse classes near you"
-    itemScope
-    itemType="http://schema.org/FindAction"
     />
    <SecondaryButton icon iconName="domain" label="Add your school"/>
   </div>
