@@ -117,20 +117,23 @@ Meteor.publish("school.getClassTypesByCategory", function({
     mainSearchText,
 }) {
     console.log("schoolId-->>", schoolId)
-    // console.log("is_map_view-->>", is_map_view)
+    console.log("is_map_view-->>", is_map_view)
     // console.log("_monthPrice", _monthPrice);
     console.log("coords", coords);
-    // console.log("NEPoint", NEPoint);
+    console.log("NEPoint", NEPoint);
     console.log("skillCategoryIds", skillCategoryIds);
     const classfilter = {};
     const skillCategoryFilter = {};
+
     if (is_map_view && schoolId) {
         classfilter["schoolId"] = schoolId;
     }
+
     if (textSearch) {
         classfilter["$text"] = { $search: textSearch };
     }
-    if (coords && !NEPoint && !SWPoint) {
+
+    if (coords && !is_map_view) {
         // place variable will have all the information you are looking for.
         var maxDistance = 50;
         // we need to convert the distance to radians
@@ -140,8 +143,12 @@ Meteor.publish("school.getClassTypesByCategory", function({
             "$geoWithin": { "$center": [coords, 30/111.12] }
             // "$geoWithin": { $box: [coords.NEPoint, coords.SWPoint] }
         }
-    } else if (NEPoint && SWPoint) {
+    }
+
+    if (NEPoint && SWPoint && is_map_view) {
         classfilter["filters.location"] = { $geoWithin: { $box: [NEPoint, SWPoint] } }
+    } else if(!NEPoint && !SWPoint && is_map_view) {
+        return [];
     }
 
     if (_classPrice) {
@@ -172,7 +179,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
     }
 
     if(skillSubjectIds && skillSubjectIds.length > 0) {
-        classfilter["skillSubject"] = skillSubjectIds;
+        classfilter["skillSubject"] = {$in: skillSubjectIds};
     }
 
     if(experienceLevel && experienceLevel.length > 0) {
@@ -180,7 +187,11 @@ Meteor.publish("school.getClassTypesByCategory", function({
     }
 
     if(!_.isEmpty(skillCategoryIds)) {
-        skillCategoryFilter["_id"] = { $in: skillCategoryIds };
+        if(is_map_view) {
+            classfilter["skillCategoryId"] = { $in: skillCategoryIds };
+        } else {
+            skillCategoryFilter["_id"] = { $in: skillCategoryIds };
+        }
     }
 
     if(!_.isEmpty(mainSearchText)) {
@@ -213,51 +224,68 @@ Meteor.publish("school.getClassTypesByCategory", function({
 
 
 
-    let cursors = []
+    // let cursors = []
     let classTypeIds = [];
     let schoolIds = [];
+    let locationIds = [];
+    let classTypeCursor;
+    let skillCategoryCursor;
     // let skillCategoryCursor = SkillCategory.find(skillCategoryFilter,{limit});
-    let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
-    cursors.push(skillCategoryCursor);
+    if(is_map_view) {
 
-    // console.log("skillCategoryClassLimit",skillCategoryClassLimit)
-    skillCategoryClassLimit ? skillCategoryClassLimit : {};
-        // console.log("filters -->>",classfilter)
-
-    skillCategoryCursor.forEach((skillCategory) => {
-        // console.log("skillCategory data -->>",skillCategory)
-        classfilter["skillCategoryId"] = {$in: [skillCategory._id]};
-        let limit =  (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory.name]) || 4
-        // console.log("class type filters -->>",classfilter)
-        let classTypeCursor = ClassType.find(classfilter, { limit: is_map_view ? undefined : limit });
-        // console.log("classTypeCursor", classfilter, classTypeCursor.fetch());
+        classTypeCursor = ClassType.find(classfilter, { limit: undefined });
+            // console.log("classTypeCursor", classfilter, classTypeCursor.fetch());
+        console.log("classTypes count --->>",classTypeCursor.count())
         classTypeCursor.forEach((classTypeData) => {
-            // console.log("classTypeData --->>",classTypeData)
+            locationIds.push(classTypeData.locationId);
             classTypeIds.push(classTypeData._id);
             schoolIds.push(classTypeData.schoolId);
         })
-    })
 
-    let classTimesCursor = ClassTimes.find({ classTypeId: { $in: classTypeIds } });
-    let locationIds = [];
-    classTimesCursor.map((classData) => {
-        locationIds.push(classData.locationId);
-    })
-    if ((is_map_view && schoolId) || !is_map_view) {
-    // console.log("tes>>>>>>>>>",classTypeIds);
-
-        return [
-            classTimesCursor,
-            ClassType.find({ _id: { $in: classTypeIds } }),
-            SLocation.find({ _id: { $in: locationIds } }),
-            School.find({ _id: { $in: schoolIds } }),
-            skillCategoryCursor,
-        ];
     } else {
-        return [
-            SLocation.find({ _id: { $in: locationIds } })
-        ]
+        skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
+        // cursors.push(skillCategoryCursor);
+
+        // console.log("skillCategoryClassLimit",skillCategoryClassLimit)
+        skillCategoryClassLimit ? skillCategoryClassLimit : {};
+            // console.log("filters -->>",classfilter)
+
+        skillCategoryCursor.forEach((skillCategory) => {
+            // console.log("skillCategory data -->>",skillCategory)
+            classfilter["skillCategoryId"] = {$in: [skillCategory._id]};
+            let limit =  (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory.name]) || 4
+            // console.log("class type filters -->>",classfilter)
+            classTypeCursor = ClassType.find(classfilter, { limit: is_map_view ? undefined : limit });
+            // console.log("classTypeCursor", classfilter, classTypeCursor.fetch());
+            classTypeCursor.forEach((classTypeData) => {
+                // console.log("classTypeData --->>",classTypeData)
+                locationIds.push(classTypeData.locationId);
+                classTypeIds.push(classTypeData._id);
+                schoolIds.push(classTypeData.schoolId);
+            })
+        })
+
     }
+
+    let cursors = [
+        ClassType.find({ _id: { $in: classTypeIds } }),
+        SLocation.find({ _id: { $in: locationIds } }),
+        School.find({ _id: { $in: schoolIds } }),
+        ClassTimes.find({ classTypeId: { $in: classTypeIds } }),
+    ];
+
+    if(skillCategoryCursor) {
+        cursors.push(skillCategoryCursor)
+    }
+
+    return cursors;
+    // if ((is_map_view && schoolId) || !is_map_view) {
+
+    // } else {
+    //     return [
+    //         SLocation.find({ _id: { $in: locationIds } })
+    //     ]
+    // }
 })
 
 Meteor.publish("ClaimSchoolFilter", function ({phone, website, name, coords, cskill, role, limit}) {

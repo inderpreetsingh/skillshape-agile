@@ -87,19 +87,19 @@ class PanelWithTable extends React.Component {
         });
     };
 
-    displayFieldValue = (field, tableData) => { 
+    displayFieldValue = (field, tableData) => {
         if(field.childKeys) {
             let str = ""
             for(key of field.childKeys) {
-                str = str + tableData[field.key][key]+ " ";
+                if(tableData[field.key][key]) {
+                    str = str + tableData[field.key][key]+ " ";
+                }
             }
             return str
         } else {
             return tableData[field.key]
         }
     }
-
-    
 
     render() {
         return PanelWithTableRender.call(this, this.props, this.state)

@@ -1,14 +1,17 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import { findIndex, isEmpty } from 'lodash';
 import Typography from 'material-ui/Typography';
+import Sticky from 'react-sticky-el';
 
 import ClassMap from '../map/ClassMap.jsx';
+import MapView from '../map/mapView.jsx';
 import CardsList from '../cards/CardsList.jsx';
 import { cardsData, cardsData1} from '../../constants/cardsData.js';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import { Loading } from '/imports/ui/loading';
+import * as helpers from '../jss/helpers.js';
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
@@ -34,6 +37,26 @@ const CardsContainer = styled.div`
 
 const NoResultContainer = styled.div`
   text-align: center;
+`;
+
+const MapOuterContainer = styled.div`
+  width: 40%;
+  display: block;
+  position: relative;
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    width: 100%;
+  }
+`;
+
+const WithMapCardsContainer = styled.div`
+  width: 60%;
+  padding: ${helpers.rhythmDiv * 2}px;
+  padding-top: 0;
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 `;
 
 class ClassTypeList extends Component {
@@ -113,14 +136,26 @@ class ClassTypeList extends Component {
 	render() {
 		console.log("ClassTypeList props -->>",this.props);
 		const { mapView, classTypeData, skillCategoryData, splitByCategory, filters, isLoading } = this.props;
-        console.log("classTypeData -->>",classTypeData,skillCategoryData);
 		return (
 			<MainContentWrapper>
 				{
 					mapView ? (
-						<MapContainer>
-                            <ClassMap isMarkerShown />
-                        </MapContainer>
+                        <Fragment>
+                            <MapOuterContainer>
+                                <Sticky topOffset={-100} className="map-holder" stickyStyle={{transform: 'translateY(80px)', height: 'calc(100vh - 50px)'}}>
+                                    {/*<ClassMap isMarkerShown />*/}
+                                    <MapView {...this.props}/>
+                                </Sticky>
+                            </MapOuterContainer>
+                            <WithMapCardsContainer>
+                                <CardsList
+                                  mapView={this.props.mapView}
+                                  cardsData={classTypeData}
+                                  classInterestData={this.props.classInterestData}
+                                  handleSeeMore={this.props.handleSeeMore}
+                                />
+                            </WithMapCardsContainer>
+                        </Fragment>
 					) : (
 						<CardsContainer>
 							{
@@ -157,11 +192,21 @@ export default createContainer(props => {
 	let skillCategoryData = [];
 	let classTimesData = [];
 	let classInterestData = [];
+    let sLocationData = [];
     let isLoading = true;
     let subscription;
+    let filters = props.filters ? props.filters : {};
+
+    if(props.mapView) {
+        const query = props.location && props.location.query;
+        if(query && query.NEPoint && query.SWPoint) {
+          filters.NEPoint = query.NEPoint.split(",").map(Number)
+          filters.SWPoint = query.SWPoint.split(",").map(Number)
+        }
+    }
 
     if(props.splitByCategory) {
-        subscription = Meteor.subscribe("school.getClassTypesByCategory", props.filters);
+        subscription = Meteor.subscribe("school.getClassTypesByCategory", filters);
     } else {
         // This is used to grab `ClassTypes` on the basis of `schoolId`
         subscription = Meteor.subscribe(props.classTypeBySchool, props.filters);
@@ -174,12 +219,12 @@ export default createContainer(props => {
   	skillCategoryData = SkillCategory.find().fetch();
   	classTimesData = ClassTimes.find().fetch();
   	classInterestData = ClassInterest.find().fetch();
+  	sLocationData = SLocation.find().fetch();
 
-	/*Find SkillCategory,SkillSubject and SLocation to make this container reactive on these collection
-  	other wise skills are joined with collections using package
-  	perak:joins */
-  	SkillSubject.find().fetch();
-  	SLocation.find().fetch();
+    /*Find SkillCategory,SkillSubject and SLocation to make this container reactive on these collection
+    other wise skills are joined with collections using package
+    perak:joins */
+    SkillSubject.find().fetch();
 
     if(subscription.ready()) {
         isLoading = false
@@ -192,6 +237,7 @@ export default createContainer(props => {
   		skillCategoryData,
   		classTimesData,
   		classInterestData,
+        sLocationData,
         isLoading,
   	};
 
