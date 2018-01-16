@@ -17,7 +17,7 @@ import FacebookIconButton from '../buttons/FacebookIconButton.jsx';
 
 import IconInput from '../form/IconInput.jsx';
 import * as helpers from '../jss/helpers.js';
-// import muiTheme from '../jss/muitheme.jsx';
+import muiTheme from '../jss/muitheme.jsx';
 
 import Dialog , {
   DialogActions,
@@ -120,7 +120,7 @@ class SignUpDialogBox extends Component {
       aria-labelledby="sign-up"
       classes={{paper: classes.dialogPaper}}
     >
-
+    <MuiThemeProvider theme={muiTheme}>
       <DialogTitle>
         <DialogTitleWrapper>
           Sign Up
@@ -187,7 +187,7 @@ class SignUpDialogBox extends Component {
         </DialogActionWrapper>
       </DialogActions>
 
-
+      </MuiThemeProvider>
     </Dialog>)
   }
 }

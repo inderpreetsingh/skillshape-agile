@@ -8,7 +8,7 @@ const muiTheme = createMuiTheme({
   "palette": {
     "primary": colors.green,
     "secondary":colors.blue,
-    "error": colors.error,
+    "error": colors.red,
     "grey": colors.grey,
     "shades": {
       "dark": {
