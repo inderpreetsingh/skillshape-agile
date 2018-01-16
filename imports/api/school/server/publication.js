@@ -147,6 +147,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
 
     if (NEPoint && SWPoint && is_map_view) {
         classfilter["filters.location"] = { $geoWithin: { $box: [NEPoint, SWPoint] } }
+    } else if(!NEPoint && !SWPoint && is_map_view) {
+        return [];
     }
 
     if (_classPrice) {
@@ -233,8 +235,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
 
         classTypeCursor = ClassType.find(classfilter, { limit: undefined });
             // console.log("classTypeCursor", classfilter, classTypeCursor.fetch());
+        console.log("classTypes count --->>",classTypeCursor.count())
         classTypeCursor.forEach((classTypeData) => {
-            // console.log("classTypeData --->>",classTypeData)
             locationIds.push(classTypeData.locationId);
             classTypeIds.push(classTypeData._id);
             schoolIds.push(classTypeData.schoolId);
