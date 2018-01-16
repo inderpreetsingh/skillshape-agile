@@ -228,7 +228,9 @@ class Landing extends Component {
         return(
             <div>
                 <Cover>
-                    <BrandBar/>
+                    <BrandBar
+                      currentUser={this.props.currentUser}
+                    />
                     <SearchArea
                         onSearch={this.onSearch}
                         getMyCurrentLocation={this.getMyCurrentLocation}
