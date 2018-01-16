@@ -119,7 +119,7 @@ export function initializeMap(center) {
             icon: '/images/bluecircle.png',
             map: map
         });
-
+        let countDebounce = 0;
         google.maps.event.addListener(map, "bounds_changed", function() {
             _.debounce(()=> {
                 bounds = map.getBounds();
@@ -129,7 +129,8 @@ export function initializeMap(center) {
                   pathname: '',
                   search: `?zoom=${map.getZoom()}&SWPoint=${SWPoint}&NEPoint=${NEPoint}`
                 })
-            },3000)();
+            },countDebounce)();
+            countDebounce = 3000;
         });
         return map;
     }
