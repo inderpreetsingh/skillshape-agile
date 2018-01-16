@@ -65,11 +65,11 @@ const LogoImage = styled.img`
 `;
 
 const Logo = ({brandText, brandTagline, logoSrc}) => (
-    <BrandArea>
+    <BrandArea itemScope itemType="http://schema.org/Brand">
         <LogoWrapper>
-          <LogoImage src={logoSrc}/>
+          <LogoImage src={logoSrc} itemProp="logo"/>
         </LogoWrapper>
-        <BrandText> {brandText},
+        <BrandText itemProp="name"> {brandText},
           <BrandTagline> {brandTagline}. </BrandTagline>
         </BrandText>
     </BrandArea>

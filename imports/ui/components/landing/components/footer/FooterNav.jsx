@@ -11,15 +11,22 @@ const FooterNavWrapper = styled.div`
 `;
 
 const FooterNav = () => (
-    <FooterNavWrapper>
+    <FooterNavWrapper itemScope itemType="http://www.schema.org/SiteNavigationElement">
         <FooterSectionHeader>Links</FooterSectionHeader>
-                    
-        <FooterLink to="/about">About</FooterLink>
-        <FooterLink to="/faq">FAQ</FooterLink>
-        <FooterLink to="/contact">Contact</FooterLink>
-        <FooterLink to="/claim-school">Claim School</FooterLink>
+
+        <FooterLink itemProp="url" to="/about">
+          <span itemProp="name">About</span>
+        </FooterLink>
+        <FooterLink itemProp="url" to="/faq">
+          <span itemProp="name">FAQ</span>
+        </FooterLink>
+        <FooterLink itemProp="url" to="/contact">
+          <span itemProp="name">Contact</span>
+        </FooterLink>
+        <FooterLink itemProp="url" to="/claim-school">
+          <span itemProp="name">Claim School</span>
+        </FooterLink>
     </FooterNavWrapper>
 );
 
 export default FooterNav;
-

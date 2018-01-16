@@ -151,7 +151,7 @@ class CardsReveal extends Component {
 
     //console.log(ShowDetails,"adsljfj")
     return (
-      <Paper className={classes.cardWrapper}>
+      <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
 
         <div onClick={this.revealCardContent}>
           <CardImageWrapper ref={(div) => this.imgContainer = div} style={{height: this.state.imageContainerHeight}}>
@@ -160,7 +160,7 @@ class CardsReveal extends Component {
 
           <CardContent>
             <CardContentHeader>
-              <CardContentTitle>{name}</CardContentTitle>
+              <CardContentTitle itemProp="name">{name}</CardContentTitle>
               <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
                 <MoreVert />
               </IconButton>

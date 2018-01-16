@@ -48,7 +48,26 @@ const PrimaryButton = (props) => {
     rootClass = props.classes.primaryButton;
   }
 
+  if(props.itemScope && props.itemType) {
+    return(<Button
+      classes={{
+        root: rootClass,
+        label: props.classes.primaryButtonLabel
+      }}
+      onClick={props.onClick}
+      disabled={props.disabled}
+      itemScope
+      itemType={props.itemType}
+    >
+        {props.icon && <Icon className={props.classes.primaryButtonIcon}>{props.iconName}</Icon>}
+
+        {props.label ? props.label : 'Submit'}
+      </Button>
+    )
+  }
+
   return (
+
     <Button
       classes={{
         root: rootClass,
@@ -72,8 +91,8 @@ PrimaryButton.propTypes = {
     fullWidth: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
+    itemScope: PropTypes.string,
+    itemType: PropTypes.string
 }
 
 export default withStyles(styles)(PrimaryButton);
-
-

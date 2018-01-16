@@ -43,18 +43,35 @@ const styles = {
 const SecondaryButton = (props) => {
   let rootClass = ``;
   if(props.fullWidth) {
-    rootClass = `${props.classes.secondaryButton} ${props.classes.fullWidth}`;  
+    rootClass = `${props.classes.secondaryButton} ${props.classes.fullWidth}`;
   }else{
     rootClass = props.classes.secondaryButton;
   }
 
+  if(props.itemScope && props.itemType) {
+    return (
+      <Button classes={{
+        root: rootClass,
+        label: props.classes.secondaryButtonLabel
+        }}
+        onClick={props.onClick}
+        itemScope
+        itemType={props.itemType}
+        >
+          {props.icon && <Icon className={props.classes.secondaryButtonIcon}>{props.iconName}</Icon>}
+
+          {props.label ? props.label : 'Submit'}
+      </Button>
+    )
+  }
   return (
+
     <Button classes={{
       root: rootClass,
       label: props.classes.secondaryButtonLabel
       }} onClick={props.onClick}>
         {props.icon && <Icon className={props.classes.secondaryButtonIcon}>{props.iconName}</Icon>}
-        
+
         {props.label ? props.label : 'Submit'}
     </Button>
   )
@@ -66,9 +83,9 @@ SecondaryButton.propTypes = {
     iconName: PropTypes.string,
     label: PropTypes.string,
     fullWidth: PropTypes.bool,
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    itemScope: PropTypes.string,
+    itemProp: PropTypes.string
 }
-        
+
 export default withStyles(styles)(SecondaryButton);
-
-

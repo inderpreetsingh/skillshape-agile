@@ -19,7 +19,7 @@ const Container = styled.div`
 `;
 
 const Footer = (props) => (
-    <Container>
+    <Container itemScope itemType="http://schema.org/Organization">
       {!props.mapView ?
         (<Grid container spacing={16} justify="space-between" alignItems="flex-start">
             <Grid item md={3} sm={6} xs={12}>

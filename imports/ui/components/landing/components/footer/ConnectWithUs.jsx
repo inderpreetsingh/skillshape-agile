@@ -15,7 +15,6 @@ const socialIconStyles = {
     marginRight: 10,
 }
 
-
 const ConnectWithUsWrapper = styled.div`
     display: flex;
     flex-direction: column;
