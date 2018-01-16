@@ -1,29 +1,29 @@
 body {
   margin: 0;
-  font-family: 'Roboto',serif;
+  font-family: "Roboto", serif;
   font-size: 13px;
   font-weight: 100;
 }
 
 /*svg {
-	height: 16px !important;
+  height: 16px !important;
 }*/
 .price-card-container {
-	display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .event-azure {
-	background-color: "#FFC107"
+  background-color: "#FFC107";
 }
 
 .event-green {
-	background-color: "#9E9E9E"
+  background-color: "#9E9E9E";
 }
 
 .public-DraftEditor-content {
-  min-height: 150px
+  min-height: 150px;
 }
 
 .custom-overlay {
@@ -46,4 +46,20 @@ body {
 .tile-viewport img {
   height: auto !important;
   max-width: 400px;
+}
+
+#info-box-wrap {
+  background-color: #fff;
+}
+
+#info-box-text-wrap {
+  overflow: auto;
+  font-size: 13px;
+  line-height: 18px;
+  padding: 15px 25px 20px;
+  height: 100px;
+}
+
+.info-box-classtype-name {
+  text-align: center;
 }
