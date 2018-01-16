@@ -17,7 +17,7 @@ import FacebookIconButton from '../buttons/FacebookIconButton.jsx';
 
 import IconInput from '../form/IconInput.jsx';
 import * as helpers from '../jss/helpers.js';
-import muiTheme from '../jss/muitheme.jsx';
+// import muiTheme from '../jss/muitheme.jsx';
 
 import Dialog , {
   DialogActions,
@@ -62,7 +62,7 @@ const DialogTitleWrapper = styled.div`
 const DialogActionWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   width: 100%;
-  
+
   @media screen and (max-width: ${helpers.mobile}px) {
     flex-direction: column;
   }
@@ -100,7 +100,7 @@ class SignUpDialogBox extends Component {
       ...state,
       [checkBoxName]: currentValue
     }
-  )); 
+  ));
   }
   render() {
 
@@ -120,14 +120,14 @@ class SignUpDialogBox extends Component {
       aria-labelledby="sign-up"
       classes={{paper: classes.dialogPaper}}
     >
-    <MuiThemeProvider theme={muiTheme}>
+
       <DialogTitle>
         <DialogTitleWrapper>
           Sign Up
-          
+
           <IconButton color="primary" onClick={onModalClose}>
-            <ClearIcon/> 
-          </IconButton > 
+            <ClearIcon/>
+          </IconButton >
         </DialogTitleWrapper>
       </DialogTitle>
 
@@ -159,7 +159,7 @@ class SignUpDialogBox extends Component {
                   checked={emailOption}
                   value="emailOption"
                 />
-                
+
               }
               onChange={this.handleCheckBoxChange('emailOption')}
               label="I would like to recieve new, surveys, and updates via email about SkillShape and it's participating schools"
@@ -187,7 +187,7 @@ class SignUpDialogBox extends Component {
         </DialogActionWrapper>
       </DialogActions>
 
-      </MuiThemeProvider>
+
     </Dialog>)
   }
 }
