@@ -27,7 +27,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 
 
-
+console.log("findDOMNode --->>>",findDOMNode,BottomNavigationAction,BottomNavigation)
 
 
 const styles = theme => {
@@ -119,21 +119,25 @@ class Upload extends React.Component {
     };
 
     componentDidMount() {
+        console.log("componentDidMount Befor node find")
         findDOMNode(this.uploadInput)
             .addEventListener(
                 'change',
                 this.onInputChange,
                 false
             );
+        console.log("componentDidMount After node find")
     };
 
     componentWillUnmount() {
+      console.log("componentWillUnmount Before node find")
         findDOMNode(this.uploadInput)
             .removeEventListener(
                 'change',
                 this.onInputChange,
                 false
             );
+      console.log("componentWillUnmount After node find")
     };
 
   render() {
