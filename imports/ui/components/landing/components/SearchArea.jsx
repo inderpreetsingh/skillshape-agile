@@ -28,6 +28,8 @@ const SearchBarStyled = (props) => {
       }}
     onChange={props.onSearch}
     onRequestSearch={props.onSearch}
+    itemScope
+    itemType="http://schema.org/SearchAction"
     className = 'is-search-bar'
     hintText ='Yoga in Delhi...'
     />
@@ -84,13 +86,19 @@ const TaglineWrapper = () => (
 
 const BottomSectionContent = (props) => (
   <div>
-   <TaglineText>SkillShape helps you find and attend classes on your subject of interest, in your location, and at your price</TaglineText>
-  <PrimaryButton onClick={props.getMyCurrentLocation} icon iconName="room" label="Browse classes near you" />  <SecondaryButton icon iconName="domain" label="Add your school"/>
+   <TaglineText>SkillShape helps you find and attend <span itemProp="object">classes</span> on your subject of interest, in your location, and at your price</TaglineText>
+   <PrimaryButton
+    onClick={props.getMyCurrentLocation}
+    icon
+    iconName="room"
+    label="Browse classes near you"
+    />
+   <SecondaryButton icon iconName="domain" label="Add your school"/>
   </div>
 );
 
 const SearchArea = (props) => (
-  <SearchAreaPanel width={props.width} textAlign={props.textAlign}>
+  <SearchAreaPanel width={props.width} textAlign={props.textAlign} itemScope itemType="http://schema.org/SearchAction">
     {props.topSection ? props.topSection : <TaglineWrapper />}
     {props.middleSection ? props.middleSection : <SearchBarStyled onSearch = {props.onSearch}/>}
     {props.bottomSection ? props.bottomSection : <BottomSectionContent getMyCurrentLocation={props.getMyCurrentLocation} /> }
