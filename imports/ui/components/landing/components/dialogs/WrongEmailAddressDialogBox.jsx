@@ -52,32 +52,44 @@ const WrongEmailAddressDialogBox = (props) => (
     onRequestClose={props.onModalClose}
     aria-labelledby="terms-of-service"
     classes={{paper: props.classes.dialogPaper}}
+    itemScope
+    itemType="http://schema.org/ConfirmAction"
   >
   <MuiThemeProvider theme={muiTheme}>
-    
+
     <DialogTitle>
       <DialogTitleWrapper>
-        Wrong Email !
-        
+        <span itemProp="name">Wrong Email</span> !
+
         <IconButton color="primary" onClick={props.onModalClose}>
-          <ClearIcon/> 
-        </IconButton > 
+          <ClearIcon/>
+        </IconButton >
       </DialogTitleWrapper>
     </DialogTitle>
-    
+
     <DialogContent className={props.classes.dialogContent}>
       <Typography>
         We will look into the issue and contact the school phone. In the meantime do you want to start the listing from scratch or claim for existing listing ?
       </Typography>
     </DialogContent>
-    
+
     <DialogActions classes={{root: props.classes.dialogAction}}>
       <ButtonsWrapper>
-        <PrimaryButton label="I will start new listing" onClick={props.onAgreeButtonClick}></PrimaryButton>
-        <Button color="primary" onClick={props.onDisAgreeButtonClick}> I can wait for confirmation</Button>
+        <PrimaryButton
+          label="I will start new listing"
+          onClick={props.onAgreeButtonClick}
+          itemScope
+          itemType="http://schema.org/AgreeAction"
+          ></PrimaryButton>
+        <Button
+          color="primary"
+          onClick={props.onDisAgreeButtonClick}
+          itemScope
+          itemType="http://schema.org/DisagreeAction"
+          > I can wait for confirmation</Button>
       </ButtonsWrapper>
     </DialogActions>
-    
+
     </MuiThemeProvider>
   </Dialog>
 );
