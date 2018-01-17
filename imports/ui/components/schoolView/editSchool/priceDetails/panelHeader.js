@@ -9,6 +9,9 @@ import Typography from 'material-ui/Typography';
 
 const styles = theme => {
     return {
+       headerContainer: {
+        marginBottom: theme.spacing.unit + theme.spacing.unit/2
+       },
        classtypeHeader: {
             backgroundColor: theme.palette.primary[500],
             padding: "0 20px",
@@ -30,7 +33,7 @@ class PanelHeader extends Component {
 
     render() {
     const {classes, settings, onAddButtonClicked, title, btnText, cpation, icon } = this.props;
-        return <Paper elevation={1}>
+        return <Paper elevation={1} className={classes.headerContainer}>
                 <Grid container className={classes.classtypeHeader}>
                     <Grid  style={{display: 'inline-flex',alignItems: 'center', padding: 0}} item md={2} sm={3} xs={12}>
                         <div style={{display: 'inline-flex'}} >

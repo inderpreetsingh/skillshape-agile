@@ -40,7 +40,7 @@ class SchoolViewBanner extends React.Component {
 	            <Grid item xs={12}  style={{paddingTop: 0}}>
 
 	                    <CardMedia  className={classes.cardMedia} >
-	                        {schoolData.mainImage && <img style={{maxHeight: 320, maxWidth:'100%', marginBottom: 64 }} src={ schoolData.mainImage || config.defaultSchoolImage } />}
+	                        {schoolData.mainImage && <div className={classes.imageContainer} style={{backgroundImage: `url(${ schoolData.mainImage || config.defaultSchoolImage })`}}> </div>}
 	                        <div className={classes.imageHeader}>
 	                        	{isEdit &&
 	                        		<Button raised dense color="accent" className={classes.bgEditButton1}  onClick={() => this.setState({ showBackgroundUpload: true, imageType: "mainImage"})}>

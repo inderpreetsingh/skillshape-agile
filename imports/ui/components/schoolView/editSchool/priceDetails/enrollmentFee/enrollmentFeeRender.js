@@ -29,19 +29,19 @@ export default function () {
           	}
           	<PanelHeader btnText="Add Enrollment Fee" title="Enrollment Fee Cost" cpation="" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
-          	<Grid container>
+          	<Grid container className={classes.enrollmentFeeContainer}>
 	          	{
 	          		enrollmentFeeData && enrollmentFeeData.map((enrollmentFee, index)=> {
 	          			return (
-	          				<Grid item xs={12} md={3} sm={4}>
-	          				<Card key={index} className={`${classes.card} price-card-container`}>
+	          				<Grid item xs={12} md={3} sm={4} className={classes.paddingTopAndBottom}>
+	          				<Card key={index} style ={{height:'100%'}} className={`${classes.card} price-card-container`}>
 	          					<CardContent className={classes.content}>
 	             					<Typography align="center" type="headline">
 	             						{enrollmentFee.name}
 	             					</Typography>
 	             					<br></br>
 	                                <Typography component="p">
-	                                    <b>Cost:</b> {enrollmentFee.cost}$
+	                                    <b>Cost:</b> ${enrollmentFee.cost}
 	                                </Typography>
 	                                <br></br>
 	          						<Typography component="p">

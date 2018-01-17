@@ -30,19 +30,19 @@ export default function () {
           	}
                <PanelHeader btnText="Add Per Class Package" title="Per Class Packages" cpation="" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
-               <Grid container>
+               <Grid container className={classes.paddingLeft}>
                	{
                		classPricingData && classPricingData.map((classPrice, index)=> {
                			return (
-                                   <Grid item xs={12} md={3} sm={4}>
-                    				<Card key={index} className={`${classes.card} price-card-container`}>
+                                   <Grid item xs={12} md={3} sm={4} className={classes.paddingTopAndBottom}>
+                    				<Card key={index} style ={{height:'100%'}} className={`${classes.card} price-card-container`}>
                     					<CardContent className={classes.content}>
                            					<Typography align="center" type="headline">
                            						{classPrice.packageName}
                            					</Typography>
                                                   <br></br>
                     						<Typography component="p">
-                    							{classPrice.cost}$ for {classPrice.noClasses} class
+                    							${classPrice.cost} for {classPrice.noClasses} class
                     						</Typography>
                                                   <br></br>
                     						<Typography component="p">

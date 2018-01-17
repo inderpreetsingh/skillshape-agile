@@ -7,7 +7,6 @@ import EnrollmentFeeRender from './enrollmentFeeRender';
 const styles = theme => {
     return {
         card: {
-            margin: 5,
           },
         bullet: {
             display: 'inline-block',
@@ -48,6 +47,14 @@ const styles = theme => {
         classtypeInputContainer: {
             alignItems: 'center',
             textAlign: 'left'
+        },
+        paddingTopAndBottom: {
+            paddingTop: '16px',
+            paddingBottom: '16px'
+        },
+        enrollmentFeeContainer: {
+            marginBottom: '12px',
+            paddingLeft: theme.spacing.unit * 2
         }
     }
 }
