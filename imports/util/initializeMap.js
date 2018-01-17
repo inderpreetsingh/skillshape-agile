@@ -37,7 +37,7 @@ const ibOptions = {
     enableEventPropagation: false
 };
 
-const infobox = new InfoBox(ibOptions);
+let infobox;
 
 function infoSchool({school, classTypes}) {
     if(school) {
@@ -149,9 +149,9 @@ export function setMarkersOnMap(map, SLocation) {
     let previousLocation = [...locations];
     let newMakers = [];
     let deleteMakers = [];
-    locations = [];
     let infoBoxes = [];
-
+    locations = [];
+    infobox = new InfoBox(ibOptions);
     if(mc && googleMarkers.length > 0) {
         // console.log("Old googleMarkers --->>",googleMarkers)
         // mc.clearMarkers(googleMarkers);
@@ -177,7 +177,6 @@ export function setMarkersOnMap(map, SLocation) {
 
 
             google.maps.event.addListener(marker, 'click', function() {
-                event.preventDefault();
                 Meteor.call("getClassesForMap",{schoolId: SLocation[i].schoolId},(err,result)=> {
                     if(result) {
                         infobox.setContent(infoSchool(result))
