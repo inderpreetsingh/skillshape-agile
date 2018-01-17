@@ -135,22 +135,24 @@ class Landing extends Component {
     }
 
     handleFixedToggle = (defaultPosition) => {
-       const stickyPosition = !defaultPosition;
-       console.log(this.state.sticky, defaultPosition);
-       if(this.state.sticky != stickyPosition) {
-         this.setState({
-           sticky: stickyPosition
-         });
-       }
-
-     }
+        const stickyPosition = !defaultPosition;
+        console.log(this.state.sticky, defaultPosition);
+        if(this.state.sticky != stickyPosition) {
+            this.setState({
+               sticky: stickyPosition
+            });
+        }
+    }
 
     handleToggleMapView = () => {
-      this.setState({
-        mapView: !this.state.mapView
-      });
+        let oldFilter = {...this.state.filters};
+        oldFilter.is_map_view = !this.state.mapView;
+        this.setState({
+            mapView: !this.state.mapView,
+            filters: oldFilter,
+        });
 
-      this.scrollTo();
+        this.scrollTo();
     }
 
     scrollTo(name) {
@@ -223,8 +225,15 @@ class Landing extends Component {
         })
     }
 
+    setSchoolIdFilter = ({schoolId}) => {
+        let oldFilters = {...this.state.filters};
+        oldFilters.schoolId = schoolId;
+        this.setState({filters: oldFilters})
+    }
+
     render() {
-        console.log("Landing state -->>",this.state);
+        // console.log("Landing state -->>",this.state);
+        console.log("Landing props -->>",this.props);
         return(
             <div>
                 <Cover>
@@ -252,7 +261,7 @@ class Landing extends Component {
                  </div>
 
 
-                {/*<Element name="content-container" className="element">
+                <Element name="content-container" className="element">
                     <ClassTypeList
                         locationName={this.state.locationName}
                         mapView={this.state.mapView}
@@ -261,10 +270,12 @@ class Landing extends Component {
                         defaultLocation={this.state.defaultLocation}
                         clearDefaultLocation={this.clearDefaultLocation}
                         splitByCategory={true}
+                        setSchoolIdFilter={this.setSchoolIdFilter}
+                        {...this.props}
                     />
-                </Element>*/}
+                </Element>
 
-                 <Element name="content-container" className="element">
+                 {/*<Element name="content-container" className="element">
                   <MainContentWrapper>
                     {this.state.mapView ?
                       (
@@ -286,7 +297,7 @@ class Landing extends Component {
                       <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
                    </CardsContainer>)}
                  </MainContentWrapper>
-               </Element>
+               </Element>*/}
 
                {this.state.mapView ?
                   (<FooterOuterWrapper>

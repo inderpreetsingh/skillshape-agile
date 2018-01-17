@@ -144,7 +144,8 @@ class ClassTimesDialogBox extends React.Component {
                 </DialogTitle>
                 <DialogContent>
                     {
-                        this.props.classesData.map(data => {
+                        isEmpty(this.props.classesData) ? <ClassContainer>No Class Time Found</ClassContainer>
+                        : this.props.classesData.map(data => {
                             const addToCalender  = this.checkForAddToCalender(data);
                             return <ClassContainer>
 

@@ -1,32 +1,51 @@
+import React from 'react';
+import Events from '/imports/util/events';
 import ClassPricing from "/imports/api/classPricing/fields";
 import { browserHistory } from 'react-router';
 import ClassType from "/imports/api/classType/fields";
 import {cutString} from '/imports/util';
-import Events from '/imports/util/events';
 import config from '/imports/config';
+import { isEmpty } from 'lodash';
+import { MarkerClusterer } from '/imports/ui/components/landing/components/jss/markerclusterer';
 
 let mc;
 let googleMarkers = [];
 let locations = [];
 
 const mapOptions = {
-    zoom: 15,
+    zoom: 8,
     scrollwheel: true,
     minZoom: 1,
     center: { lat: -25.363, lng: 131.044 }
 };
 
-function infoSchool({school}) {
+const ibOptions = {
+    content: '',
+    disableAutoPan: false,
+    maxWidth: 0,
+    zIndex: null,
+    boxStyle: {
+        padding: "0px 0px 0px 0px",
+        width: "300px",
+        height: "325px"
+    },
+    pixelOffset: new google.maps.Size(-140, 0),
+    closeBoxURL: "",
+    infoBoxClearance: new google.maps.Size(1, 1),
+    isHidden: false,
+    pane: "floatPane",
+    enableEventPropagation: false
+};
+
+const infobox = new InfoBox(ibOptions);
+
+function infoSchool({school, classTypes}) {
     if(school) {
         // console.log("<< --infoSchool -->>")
         let backgroundUrl = school.mainImage || "images/SkillShape-Whitesmoke.png";
-        const schoolName = school ? cutString(school.name, 20) : "";
-        
+        const schoolName = school ? cutString(school.name, 30) : "";
         Events.trigger("getSeletedSchoolData",{school});
-        const view = `<div id="content">
-            <h3>${schoolName}</h3>
-            <img src=${backgroundUrl} width="250" height="200">
-        </div>`
+        const view = getSchoolViewOnMap(classTypes, backgroundUrl, schoolName);
         return view;
     }
     return
@@ -58,7 +77,7 @@ export function createMarkersOnMap(mapId, locationData) {
             i++;
         }
     }
-    
+
 }
 
 export function reCenterMap(map, center) {
@@ -73,7 +92,7 @@ export function initializeSchoolEditLocationMap(location) {
         document.getElementById(mapId).innerHTML = ""
         let geolocate;
         let map = new google.maps.Map(document.getElementById(mapId), mapOptions);
-        
+
         geolocate = new google.maps.LatLng(location.loc[0], location.loc[1])
         map.setCenter(geolocate);
 
@@ -81,7 +100,7 @@ export function initializeSchoolEditLocationMap(location) {
             position: geolocate,
             map: map
         });
-    }    
+    }
 }
 
 export function initializeMap(center) {
@@ -89,7 +108,7 @@ export function initializeMap(center) {
         document.getElementById('google-map').innerHTML = ""
         let geolocate;
         let map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
-        
+
         geolocate = new google.maps.LatLng(center[0], center[1])
         map.setCenter(geolocate);
         // if (!!navigator.geolocation) {
@@ -108,8 +127,9 @@ export function initializeMap(center) {
             icon: '/images/bluecircle.png',
             map: map
         });
-
+        let countDebounce = 0;
         google.maps.event.addListener(map, "bounds_changed", function() {
+            console.log("this", this)
             _.debounce(()=> {
                 bounds = map.getBounds();
                 NEPoint = [bounds.getNorthEast().lat(),bounds.getNorthEast().lng()];
@@ -118,7 +138,8 @@ export function initializeMap(center) {
                   pathname: '',
                   search: `?zoom=${map.getZoom()}&SWPoint=${SWPoint}&NEPoint=${NEPoint}`
                 })
-            },3000)();
+            },countDebounce)();
+            countDebounce = 3000;
         });
         return map;
     }
@@ -129,13 +150,16 @@ export function setMarkersOnMap(map, SLocation) {
     let newMakers = [];
     let deleteMakers = [];
     locations = [];
+    let infoBoxes = [];
 
     if(mc && googleMarkers.length > 0) {
         // console.log("Old googleMarkers --->>",googleMarkers)
         // mc.clearMarkers(googleMarkers);
         googleMarkers = [];
     }
-    
+    google.maps.event.addListener(map, 'click', function() {
+        infobox.close();
+    });
     for (let i = 0; i < SLocation.length; i++) {
         locations.push(SLocation[i]._id);
 
@@ -151,13 +175,17 @@ export function setMarkersOnMap(map, SLocation) {
                 _id: SLocation[i]._id,
             });
 
+
             google.maps.event.addListener(marker, 'click', function() {
+                event.preventDefault();
                 Meteor.call("getClassesForMap",{schoolId: SLocation[i].schoolId},(err,result)=> {
                     if(result) {
-                        console.log("getClassesForMap result", result);
-                        let infowindow = new google.maps.InfoWindow();
-                        infowindow.setContent(infoSchool(result));
-                        infowindow.open(map, marker);
+                        infobox.setContent(infoSchool(result))
+                        if(infobox) {
+                            infobox.close();
+                        }
+                        infobox.open(map, marker);
+                        map.panTo(infobox.getPosition());
                     }
                 })
             });
@@ -183,4 +211,26 @@ export function setMarkersOnMap(map, SLocation) {
     }
 
     return
+}
+
+function getSchoolViewOnMap(classTypes,backgroundUrl,schoolName) {
+    let className = "";
+    classTypes.forEach(data => {
+        console.log('data is as',data);
+        className +=  `<div class="info-box-classtype-name"><a href="">${data.name}</a></div>`
+    })
+    return (
+        `<div id="info-box-wrap">
+            <div style="height: 156px; margin: auto;">
+                <img src=${backgroundUrl} style="width: 100%;height: 100%;">
+            </div>
+            <div style="padding-left:10px">
+            <p style="font-size: 24px; font-weight: 300; font-family: 'Zilla Slab',serif;">${schoolName}</p>
+            <p style="font-size: 18px; font-weight: 300; font-family: 'Zilla Slab',serif;">Class Types Available</p>
+            </div>
+            <div id="info-box-text-wrap">
+                ${className}
+            </div>
+        </div>`
+    )
 }
