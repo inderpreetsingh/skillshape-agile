@@ -6,7 +6,6 @@ import MonthlyPriceRender from './monthlyPriceRender';
 const styles = theme => {
     return {
         card: {
-            margin: 5,
           },
         bullet: {
             display: 'inline-block',
@@ -47,6 +46,9 @@ const styles = theme => {
         classtypeInputContainer: {
             alignItems: 'center',
             textAlign: 'left'
+        },
+        monthlyPriceContainer: {
+            paddingLeft: theme.spacing.unit * 2
         }
     }
 }

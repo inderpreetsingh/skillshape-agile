@@ -6,7 +6,7 @@ import ClassPriceRender from './classPriceRender';
 const styles = theme => {
     return {
         card: {
-            margin: 5,
+
           },
         bullet: {
             display: 'inline-block',
@@ -47,6 +47,13 @@ const styles = theme => {
         classtypeInputContainer: {
             alignItems: 'center',
             textAlign: 'left'
+        },
+        paddingTopAndBottom: {
+            paddingTop: '16px',
+            paddingBottom: '16px'
+        },
+        paddingLeft: {
+            paddingLeft: theme.spacing.unit * 2
         }
     }
 }

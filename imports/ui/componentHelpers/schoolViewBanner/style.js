@@ -2,7 +2,6 @@ export default styles = theme => {
   return {
     schoolHeaderContainer: {
       position: "relative",
-      backgroundColor: theme.palette.primary[500],
     },
     cardMedia: {
       backgroundColor: theme.palette.primary[500],
@@ -53,5 +52,12 @@ export default styles = theme => {
     imageFooterBtnContainer: {
       justifyContent: "space-around",
     },
+    imageContainer: {
+      backgroundRepeat: 'no-repeat !important',
+      backgroundSize: 'cover !important',
+      backgroundPosition: '50% 50% !important',
+      height: '320px !important',
+      cursor: 'pointer !important'
+    }
   }
 }
