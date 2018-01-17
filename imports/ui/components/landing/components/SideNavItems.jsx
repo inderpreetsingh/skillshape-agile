@@ -1,6 +1,8 @@
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import  { withStyles } from 'material-ui/styles';
+import { browserHistory } from 'react-router';
+import { get } from 'lodash';
 
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
@@ -10,6 +12,8 @@ import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
 import LoginButton from './buttons/LoginButton.jsx';
 import {specialFont} from './jss/helpers.js';
+import { checkSuperAdmin, getUserSchool } from '/imports/util';
+import NestedNavItems from './NestedNavItems';
 
 const styles = {
     drawerList : {
@@ -22,7 +26,10 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         padding: '0 8px',
-    }
+    },
+    nested: {
+        paddingLeft: 35,
+    },
 }
 
 const DrawerHeader = (props) => (
@@ -46,27 +53,211 @@ const SideNavItem = (props) => {
     );
 }
 
-const SideNavItems = (props) => (
-    <Drawer open={props.open} anchor="right" onRequestClose={props.handleDrawer}>
-        <List className={props.classes.drawerList}>
-            <DrawerHeader handleDrawer={props.handleDrawer} drawerHeader={props.classes.drawerHeader}/>
-            <Divider />
-            <SideNavItem button menuListItemText={props.classes.menuListItemText} name="Home" iconName="home" />
-            <SideNavItem button menuListItemText={props.classes.menuListItemText} name="Student Sign Up" iconName="assignment_ind" />
-            <SideNavItem button menuListItemText={props.classes.menuListItemText} onClick={props.handleSignUpDialogBox} name="Register" iconName="school" />
-            <SideNavItem button menuListItemText={props.classes.menuListItemText} name="Claim A School" iconName="check_circle" />
-            <SideNavItem button menuListItemText={props.classes.menuListItemText} name="Contact Us" iconName="email" />
-            <SideNavItem >
-                <LoginButton
-                    fullWidth={true}
-                    icon={true}
-                    iconName="location_on"
-                    currentUser={props.currentUser}
-                />
-            </SideNavItem>
-        </List>
-    </Drawer>
-);
+const LogOutUserSideNav = (props) => (
+    <Fragment>
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Home"
+            iconName="home"
+        />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Student Sign Up"
+            iconName="assignment_ind"
+        />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            onClick={props.handleSignUpDialogBox}
+            name="Register"
+            iconName="school"
+        />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Claim A School"
+            iconName="check_circle"
+        />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Contact Us"
+            iconName="email"
+        />
+    </Fragment>
+)
+
+const LoginUserSideNav = (props) => (
+    <Fragment>
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="My Profile"
+            iconName="account_box"
+            onClick={() => browserHistory.push(`/profile/${Meteor.userId()}`)}
+        />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="My Calendar"
+            iconName="perm_contact_calendar"
+            onClick={() => browserHistory.push('/MyCalendar')}
+        />
+        <NestedNavItems
+            button
+            name="Manage my School"
+            classes={props.classes}
+            iconName="school"
+            childData={props.mySchool}
+            onClick={props.childItemOnClick}
+        />
+        <NestedNavItems
+            button
+            name="Classes Attending"
+            classes={props.classes}
+            iconName="account_balance"
+            childData={props.connectedSchool}
+            onClick={props.childItemOnClick}
+        />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Find a School"
+            iconName="find_in_page"
+            onClick={() => browserHistory.push('/')}
+        />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Claim a School"
+            iconName="assignment"
+            onClick={() => browserHistory.push('/claimSchool')}
+        />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Send us feedback"
+            iconName="message"
+            onClick={() => browserHistory.push('/ContactUs')}
+        />
+        {
+            checkSuperAdmin(props.currentUser) && (<Fragment>
+                    <SideNavItem
+                        button
+                        menuListItemText={props.classes.menuListItemText}
+                        name="Add Schools"
+                        iconName="add_box"
+                        onClick={() => browserHistory.push('/')}
+                    />
+                    <SideNavItem
+                        button
+                        menuListItemText={props.classes.menuListItemText}
+                        name="Upload Schools"
+                        iconName="file_upload"
+                        onClick={() => browserHistory.push('/SchoolUpload')}
+                    />
+                </Fragment>
+            )
+        }
+    </Fragment>
+)
+
+class SideNavItems extends React.Component {
+
+    state = {
+        mySchool: [],
+        connectedSchool: [],
+    }
+
+    componentWillMount() {
+        if(Meteor.userId()) {
+            this.loadConnectedSchool();
+            this.loadMySchool();
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { currentUser } = this.props;
+        if(currentUser !== nextProps.currentUser) {
+            this.loadConnectedSchool();
+            this.loadMySchool();
+        }
+    }
+
+    loadConnectedSchool = () => {
+        Meteor.call("school.getConnectedSchool", Meteor.userId(), (error, result) => {
+            if(error){
+              console.log("error", error);
+            }
+            if(result){
+                const connectedSchool = result.map((school, index) => {
+                return {
+                    name: school.name,
+                    link: `/schools/${school.slug}`,
+                    iconName: null,
+                }
+            })
+            this.setState({connectedSchool: connectedSchool})
+          }
+        });
+    }
+
+    loadMySchool = () => {
+        let schoolId = get(Meteor.user(), "profile.schoolId", null);
+        if(schoolId) {
+            Meteor.call("school.getMySchool", schoolId, Meteor.userId(), (error, result) => {
+                if(error){
+                    console.log("error", error);
+                }
+                if(result){
+                    const mySchool = result.map((school, index) => {
+                        return {
+                            name: school.name,
+                            link: `/schools/${school.slug}`,
+                            iconName: null,
+                        }
+                    })
+                    this.setState({mySchool: mySchool})
+                }
+            });
+        }
+    }
+
+    handleChildItemOnClick = (link)=> {
+        browserHistory.push(link);
+    }
+
+    render() {
+        return (
+            <Drawer open={this.props.open} anchor="right" onRequestClose={this.props.handleDrawer}>
+                <List className={this.props.classes.drawerList}>
+                    <DrawerHeader handleDrawer={this.props.handleDrawer} drawerHeader={this.props.classes.drawerHeader}/>
+                    <Divider />
+                    {
+                        this.props.currentUser ? <LoginUserSideNav
+                            mySchool={this.state.mySchool}
+                            connectedSchool={this.state.connectedSchool}
+                            childItemOnClick={this.handleChildItemOnClick}
+                            {...this.props}
+                        />
+                        : <LogOutUserSideNav {...this.props}/>
+                    }
+                    <SideNavItem >
+                        <LoginButton
+                            fullWidth={true}
+                            icon={true}
+                            iconName="location_on"
+                            currentUser={this.props.currentUser}
+                        />
+                    </SideNavItem>
+                </List>
+            </Drawer>
+        )
+    }
+}
+
 
 DrawerHeader.propTypes = {
     drawerHeader: PropTypes.string,

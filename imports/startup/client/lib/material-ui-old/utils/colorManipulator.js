@@ -107,7 +107,6 @@ function convertHexToRGB(color) {
  * @returns {{type: string, values: number[]}} A MUI color object
  */
 function decomposeColor(color) {
-  console.log("decomposeColor -->>",color, typeof color)
   if (color && color.charAt(0) === '#') {
     return decomposeColor(convertHexToRGB(color));
   }
