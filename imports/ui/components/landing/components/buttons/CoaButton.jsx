@@ -26,25 +26,42 @@ const styles = {
   },
   coaButtonIcon:{
     display: 'inline-block',
-    marginRight: '8px' 
+    marginRight: '8px'
   }
 };
 
-const CoaButton = (props) => (
-    <Button classes={{
-        root: props.classes.coaButton, 
-        label: props.classes.coaButtonLabel,
-      }} color="contrast" onClick={props.onClick}>
-      <Icon className={props.classes.coaButtonIcon}>{props.icon ? props.icon : 'face'} </Icon>
-      {props.label ? props.label : 'Submit'}
-    </Button>
-)
+const CoaButton = (props) => {
+    if(props.itemScope && props.itemType) {
+      <Button classes={{
+          root: props.classes.coaButton,
+          label: props.classes.coaButtonLabel,
+        }} color="contrast" onClick={props.onClick}
+        itemScope
+        itemProps={props.findAction}
+        >
+        <Icon className={props.classes.coaButtonIcon}>{props.icon ? props.icon : 'face'} </Icon>
+        {props.label ? props.label : 'Submit'}
+      </Button>
+    }
+
+    return(
+      <Button classes={{
+          root: props.classes.coaButton,
+          label: props.classes.coaButtonLabel,
+        }} color="contrast" onClick={props.onClick}>
+        <Icon className={props.classes.coaButtonIcon}>{props.icon ? props.icon : 'face'} </Icon>
+        {props.label ? props.label : 'Submit'}
+      </Button>
+    )
+}
 
 CoaButton.propTypes = {
   children: PropTypes.node,
   classes: PropTypes.object.isRequired,
   label:PropTypes.string,
   icon:PropTypes.string,
+  itemScope: PropTypes.bool,
+  itemType: PropTypes.string,
   onClick: PropTypes.func
 };
 

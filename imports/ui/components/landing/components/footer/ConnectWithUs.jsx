@@ -26,26 +26,26 @@ const SocialIconsWrapper = styled.div`
 
 const ConnectWithUs = () => (
     <ConnectWithUsWrapper>
-        <FooterSectionHeader>
-           Connect with Us
+        <FooterSectionHeader itemScope itemType="http://schema.org/Thing">
+           <span itemProp="description">Connect with Us</span>
         </FooterSectionHeader>
-        <SocialIconsWrapper>
-            <SocialIconLink to="https://www.facebook.com">
+        <SocialIconsWrapper >
+            <SocialIconLink itemProp="url" to="https://www.facebook.com">
                 <div className="social-container">
                     <SocialIcon network="facebook" style={socialIconStyles} color={helpers.lightTextColor}/>
                 </div>
             </SocialIconLink>
-            <SocialIconLink to="https://plus.google.com">
+            <SocialIconLink itemProp="url" to="https://plus.google.com">
                 <div className="social-container">
                     <SocialIcon network="google" style={socialIconStyles} color={helpers.lightTextColor}/>
                 </div>
             </SocialIconLink>
-            <SocialIconLink to="https://www.twitter.com">
+            <SocialIconLink itemProp="url" to="https://www.twitter.com">
                 <div className="social-container">
                     <SocialIcon network="twitter" style={socialIconStyles} color={helpers.lightTextColor}/>
                 </div>
             </SocialIconLink>
-            <SocialIconLink to="https://www.instagram.com">
+            <SocialIconLink itemProp="url" to="https://www.instagram.com">
                 <div className="social-container">
                     <SocialIcon network="instagram" style={socialIconStyles} color={helpers.lightTextColor}/>
                 </div>

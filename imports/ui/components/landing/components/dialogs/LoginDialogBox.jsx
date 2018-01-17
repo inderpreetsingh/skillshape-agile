@@ -46,12 +46,14 @@ const LoginDialog = (props) => (
     onClose={props.onModalClose}
     onRequestClose={props.onModalClose}
     aria-labelledby="login"
+    itemScope
+    itemType="http://schema.org/CheckInAction"
   >
   { props.loading && <ContainerLoader/>}
   <MuiThemeProvider theme={muiTheme}>
     <DialogTitle>
       <DialogTitleWrapper>
-          Log In
+          <span itemProp="name">Log In</span>
 
           <IconButton color="primary" onClick={props.onModalClose}>
             <ClearIcon/>
@@ -86,8 +88,8 @@ const LoginDialog = (props) => (
         {props.error.message && <ErrorWrapper>{props.error.message}</ErrorWrapper>}
     </DialogContent>
     <DialogActions>
-       <Button color="primary" onClick={props.onSignUpButtonClick}> Sign Up</Button>
-       <PrimaryButton disabled={props.error.email} label="Sign In" onClick={props.onSignInButtonClick}/>
+       <Button color="primary" onClick={props.onSignUpButtonClick} itemScope itemType="http://schema.org/AgreeAction"> Sign Up</Button>
+       <PrimaryButton disabled={props.error.email} label="Sign In" onClick={props.onSignInButtonClick} itemScope itemType="http://schema.org/DisagreeAction"/>
     </DialogActions>
     </MuiThemeProvider>
   </Dialog>

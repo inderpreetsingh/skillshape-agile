@@ -37,7 +37,10 @@ const ClassTypeCardBody = (props) =>(
             <div onClick={handleStarsClick}>
                 <ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount" />
             </div>
-            <Reviews href="#" onClick={handleReviewsClick}><span itemProp="reviewCount">{props.reviews}</span> Reviews</Reviews>
+            <Reviews
+              href="#"
+              onClick={handleReviewsClick}>
+              <span itemProp="reviewCount">{props.reviews}</span> Reviews</Reviews>
         </ReviewsWrapper>
 
         <Grid container spacing={8}>
