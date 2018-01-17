@@ -54,30 +54,30 @@ const WrongEmailAddressDialogBox = (props) => (
     classes={{paper: props.classes.dialogPaper}}
   >
   <MuiThemeProvider theme={muiTheme}>
-    
+
     <DialogTitle>
       <DialogTitleWrapper>
         Wrong Email !
-        
+
         <IconButton color="primary" onClick={props.onModalClose}>
-          <ClearIcon/> 
-        </IconButton > 
+          <ClearIcon/>
+        </IconButton >
       </DialogTitleWrapper>
     </DialogTitle>
-    
+
     <DialogContent className={props.classes.dialogContent}>
       <Typography>
         We will look into the issue and contact the school phone. In the meantime do you want to start the listing from scratch or claim for existing listing ?
       </Typography>
     </DialogContent>
-    
+
     <DialogActions classes={{root: props.classes.dialogAction}}>
       <ButtonsWrapper>
         <PrimaryButton label="I will start new listing" onClick={props.onAgreeButtonClick}></PrimaryButton>
         <Button color="primary" onClick={props.onDisAgreeButtonClick}> I can wait for confirmation</Button>
       </ButtonsWrapper>
     </DialogActions>
-    
+
     </MuiThemeProvider>
   </Dialog>
 );

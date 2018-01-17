@@ -75,6 +75,7 @@ const PrimaryButton = (props) => {
       }}
       onClick={props.onClick}
       disabled={props.disabled}
+      type={props.type}
     >
         {props.icon && <Icon className={props.classes.primaryButtonIcon}>{props.iconName}</Icon>}
 
