@@ -44,11 +44,11 @@ class IsNavBar extends Component {
                         }}
                       />*/}
                       <p className="or" style={{color: red[900]}}> Or </p>
-                      <FindLocationButton />
+                      <FindLocationButton itemScope itemType="http://schema.org/DiscoverAction"/>
                     </div>
                 </div>
                 </header>
-                <FilterCards />                
+                <FilterCards />
             </div>
         )
     }

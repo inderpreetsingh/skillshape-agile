@@ -44,7 +44,7 @@ const DialogTitleWrapper = styled.div`
 
 const ButtonsWrapper = styled.div`
   display: flex;
-  
+
   @media screen and (max-width : ${helpers.mobile}px) {
     display: flex;
     flex-direction: column;
@@ -58,32 +58,34 @@ const EmailConfirmationDialogBox = (props) => (
     onRequestClose={props.onModalClose}
     aria-labelledby="terms-of-service"
     classes={{paper: props.classes.dialogPaper}}
+    itemScope
+    itemType="http://schema.org/ConfirmAction"
   >
   <MuiThemeProvider theme={muiTheme}>
-    
+
     <DialogTitle>
       <DialogTitleWrapper>
-        Email Confirmation
-        
+        <span itemProp="name"Email Confirmation</span>
+
         <IconButton color="primary" onClick={props.onModalClose}>
-          <ClearIcon/> 
-        </IconButton > 
+          <ClearIcon/>
+        </IconButton >
       </DialogTitleWrapper>
     </DialogTitle>
-    
+
     <DialogContent className={props.classes.dialogContent}>
       <Typography>
-        You will be sent to {props.schoolEmail} to confirm. is this correct ?
+        <span itemProp="description">You will be sent to {props.schoolEmail} to confirm. is this correct ?</span>
       </Typography>
     </DialogContent>
-    
+
     <DialogActions classes={{root: props.classes.dialogAction}}>
       <ButtonsWrapper>
-        <PrimaryButton label="Yes" onClick={props.onAgreeButtonClick}></PrimaryButton>
-        <Button color="primary" onClick={props.onDisAgreeButtonClick}> No, address is wrong!</Button>
+        <PrimaryButton label="Yes" onClick={props.onAgreeButtonClick} itemScope itemType="http://schema.org/AgreeAction"></PrimaryButton>
+        <Button color="primary" onClick={props.onDisAgreeButtonClick} itemScope itemType="http://schema.org/DisagreeAction"> No, address is wrong!</Button>
       </ButtonsWrapper>
     </DialogActions>
-    
+
     </MuiThemeProvider>
   </Dialog>
 );

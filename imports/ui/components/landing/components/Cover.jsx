@@ -16,30 +16,44 @@ const Polythene = styled.div`
     min-height:400px;
     height:${helpers.coverHeight};
     padding: ${helpers.rhythmDiv};
-    background: ${props => props.gradient ? 
+    background: ${props => props.gradient ?
     `linear-gradient(to ${props.gradientDirection}, rgba(${props.gradientRGB},1) 64px, rgba(${props.gradientRGB},0.96) 21%,rgba(${props.gradientRGB},0) 55%, rgba(${props.gradientRGB},0) 100%)`
     : 'none'};
     ${helpers.flexCenter}
 `;
 
-const Cover = (props) => (
-    <CoverDiv coverSrc={props.coverSrc}> 
-        <Polythene gradient={props.gradient} gradientDirection={props.gradientDirection} gradientRGB={props.gradientRGB}> 
-            {props.children}
+const Cover = (props) => {
+    if(props.itemScope && props.itemType) {
+        return(
+          <CoverDiv coverSrc={props.coverSrc} itemScope itemType={props.itemType}>
+              <Polythene gradient={props.gradient} gradientDirection={props.gradientDirection} gradientRGB={props.gradientRGB}>
+                  {props.children}
+              </Polythene>
+          </CoverDiv >
+        )
+    }
+    return(
+      <CoverDiv coverSrc={props.coverSrc}>
+        <Polythene gradient={props.gradient} gradientDirection={props.gradientDirection} gradientRGB={props.gradientRGB}>
+          {props.children}
         </Polythene>
-    </CoverDiv >)
-    
+      </CoverDiv >
+    )
+  }
+
 Cover.propTypes = {
     children: PropTypes.node,
     coverSrc: PropTypes.string,
     gradientDirection: PropTypes.string,
     gradientRGB: PropTypes.string,
-}    
-    
+    itemScope: PropTypes.bool,
+    itemType: PropTypes.string
+}
+
 Polythene.defaultProps = {
     gradientDirection:helpers.gradientDirection,
     gradientRGB:helpers.gradientRGB,
     gradient: true,
-}    
+}
 
 export default Cover;

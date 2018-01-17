@@ -23,31 +23,42 @@ const NoFoundResultWapper = styled.div`
 const ClassTypeCardDescription = (props) => (
     <MuiThemeProvider theme={MuiTheme}>
         <Fragment>
-            <div>
-                <ReactStars size={15} value={props.ratings} edit={false}/>
+            <div itemScope itemType="http://schema.org/AggregateRating">
+                <ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount"/>
                 <Reviews href="#">
-                    <Typography>{props.reviews} Reviews</Typography>
+                    <Typography> <span itemProp="reviewCount">{props.reviews}</span> Reviews</Typography>
                 </Reviews>
             </div>
 
             <div className="description">
              <Grid container spacing={8}>
-             <Grid item xs={12}>
-                <Typography>{props.description}</Typography>
-              </Grid>
+               <Grid item xs={12}>
+                  <Typography>{props.description}</Typography>
+               </Grid>
                <Grid item xs={12} sm={6}>
-                    <SecondaryButton fullWidth label="View Details"/>
+                    <SecondaryButton
+                      fullWidth
+                      label="View Details"/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <SecondaryButton fullWidth label="View School" />
+                    <SecondaryButton
+                      fullWidth
+                      label="View School" />
                 </Grid>
                 <Grid item xs={12}>
                     {
-                        props.classTimeCheck ? <PrimaryButton label="View Class Times" fullWidth onClick={props.onClassTimeButtonClick}/>
+                        props.classTimeCheck ?
+                        <PrimaryButton
+                          label="View Class Times"
+                          fullWidth
+                          onClick={props.onClassTimeButtonClick}
+                          itemScope
+                          itemType="http://schema.org/ViewAction"
+                          />
                         : <NoFoundResultWapper>No Class Time Found</NoFoundResultWapper>
                     }
                 </Grid>
-                </Grid>
+              </Grid>
             </div>
         </Fragment>
     </MuiThemeProvider>
@@ -61,5 +72,3 @@ ClassTypeCardDescription.propTypes = {
 };
 
 export default ClassTypeCardDescription;
-
-

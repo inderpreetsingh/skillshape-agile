@@ -6,14 +6,22 @@ const askLocationPermission = () => {
 //     // do more here
 //   });
   const success = () => {
-      
+
   }
   const error = () => {
-      
+
   }
   navigator.geolocation.getCurrentPosition(success, error);
 }
 
-const NearByClassesButton = () => <CoaButton onClick={askLocationPermission} icon="location_searching" label="Find classes nearby" />
+const NearByClassesButton = () => (
+  <CoaButton
+    onClick={askLocationPermission}
+    icon="location_searching"
+    label="Find classes nearby"
+    itemScope
+    itemType="http://schema.org/FindAction"
+    />
+)
 
 export default NearByClassesButton;

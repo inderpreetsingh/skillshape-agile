@@ -236,7 +236,7 @@ class Landing extends Component {
         console.log("Landing props -->>",this.props);
         return(
             <div>
-                <Cover>
+                <Cover itemScope itemType="http://schema.org/WPHeader">
                     <BrandBar
                       currentUser={this.props.currentUser}
                     />
