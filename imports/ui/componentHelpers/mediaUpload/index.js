@@ -137,7 +137,8 @@ class Upload extends React.Component {
     };
 
   render() {
-  	// console.log("media index state>>>>> ", this.state)
+    console.log("Upload props>>>>> ", this.props)
+  	console.log("Upload state>>>>> ", this.state)
     const { classes, fullScreen, loading } = this.props;
     return (
       <div>
