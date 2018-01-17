@@ -128,7 +128,7 @@ export function initializeMap(center) {
             map: map
         });
         let countDebounce = 0;
-        google.maps.event.addListener(map, "bounds_changed", function() {
+        google.maps.event.addListener(map, "idle", function() {
             console.log("this", this)
             _.debounce(()=> {
                 bounds = map.getBounds();
@@ -139,7 +139,7 @@ export function initializeMap(center) {
                   search: `?zoom=${map.getZoom()}&SWPoint=${SWPoint}&NEPoint=${NEPoint}`
                 })
             },countDebounce)();
-            countDebounce = 3000;
+            countDebounce = 1000;
         });
         return map;
     }
@@ -151,7 +151,6 @@ export function setMarkersOnMap(map, SLocation) {
     let deleteMakers = [];
     let infoBoxes = [];
     locations = [];
-    infobox = new InfoBox(ibOptions);
     if(mc && googleMarkers.length > 0) {
         // console.log("Old googleMarkers --->>",googleMarkers)
         // mc.clearMarkers(googleMarkers);
@@ -179,6 +178,7 @@ export function setMarkersOnMap(map, SLocation) {
             google.maps.event.addListener(marker, 'click', function() {
                 Meteor.call("getClassesForMap",{schoolId: SLocation[i].schoolId},(err,result)=> {
                     if(result) {
+                        infobox = new InfoBox(ibOptions);
                         infobox.setContent(infoSchool(result))
                         if(infobox) {
                             infobox.close();
