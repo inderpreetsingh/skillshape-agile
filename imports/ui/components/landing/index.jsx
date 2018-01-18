@@ -3,7 +3,6 @@ import { debounce } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import {Element, scroller } from 'react-scroll'
-// import Sticky from 'react-sticky-el';
 import Sticky from 'react-stickynode';
 
 import Cover from './components/Cover.jsx';
@@ -29,18 +28,6 @@ const FilterBarWrapper = styled.div`
   width: calc(20% - 20px);
   margin: ${helpers.rhythmDiv}px;
 `;
-
-
-// const CardsDisplaySectionWrapper = styled.section`
-//   width: calc(100% - ${helpers.rhythmDiv}px);
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: space-between;
-
-//   @media screen and (min-width : 0) and (max-width: ${helpers.tablet}px) {
-//     width: 100%;
-//   }
-// `;
 
 const MapOuterContainer = styled.div`
   width: 40%;
@@ -132,16 +119,6 @@ class Landing extends Component {
             },
         }
         this.onSearch = debounce(this.onSearch, 1000);
-    }
-
-    handleFixedToggle = (defaultPosition) => {
-        const stickyPosition = !defaultPosition;
-        console.log(this.state.sticky, defaultPosition);
-        if(this.state.sticky != stickyPosition) {
-            this.setState({
-               sticky: stickyPosition
-            });
-        }
     }
 
     handleStickyStateChange = (status) => {
