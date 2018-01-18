@@ -30,14 +30,16 @@ import {dataSourceSkills} from '../constants/filtersData.js';
 
 const FilterPanelContainer = styled.div`
     max-width:1000px;
-    max-width: ${props => props.stickyPosition ? '100%' : '1000px'};
-    background: ${props => props.stickyPosition ? '#ffffff' : '1000px'};
+    max-width: ${props => (props.stickyPosition || props.mapView) ? '100%' : '1000px'};
+    background: ${props => (props.stickyPosition || props.mapView) ? '#ffffff' : '1000px'};
     margin: auto;
     flex-grow: 1;
+    position: ${props => props.mapView ? 'fixed' : 'initial'};
+    z-index: 100;
 `;
 
 const FilterPanelContent = styled.div`
-    padding: ${props => props.stickyPosition ? '16px' : '24px'};
+    padding: ${props => (props.stickyPosition || props.mapView) ? '16px' : '24px'};
     margin:auto;
 `;
 
@@ -83,6 +85,10 @@ class FilterPanel extends Component {
         this.setState({
             showMoreFilters: state
         });
+        // It's Needed since sticky position is adding
+        // a min-height to the div.
+        if(!this.props.stickyPosition && this.state.showMoreFilters && !state)
+          window.scrollBy(0,1);
     }
     // This is used to get subjects on the basis of subject category.
     inputFromUser = (text) => {
@@ -224,15 +230,14 @@ class FilterPanel extends Component {
             )
         }
     }
-
     render() {
         const { showMoreFilters } = this.state;
         // console.log(this.state);
-        const { stickyPosition } = this.props;
+        const { stickyPosition, mapView } = this.props;
 
         return (<MuiThemeProvider theme={muiTheme}>
-            <FilterPanelContainer stickyPosition={stickyPosition}>
-                <FilterPanelContent stickyPosition={stickyPosition}>
+            <FilterPanelContainer stickyPosition={stickyPosition} mapView={mapView}>
+                <FilterPanelContent stickyPosition={stickyPosition} mapView={mapView}>
                  <form noValidate autoComplete="off">
 
                     <Grid container spacing="24">

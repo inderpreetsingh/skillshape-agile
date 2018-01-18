@@ -8,7 +8,7 @@ import * as helpers from '../jss/helpers.js';
 
 const FooterSectionHeader = styled.h2`
     font-family: ${helpers.specialFont};
-    font-size: ${helpers.baseFontSize * 1.25};
+    font-size: ${helpers.baseFontSize * 1.25}px;
     color: ${helpers.lightTextColor};
     margin-top: 0;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
