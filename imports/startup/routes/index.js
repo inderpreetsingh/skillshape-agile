@@ -12,7 +12,7 @@ import ClassType from '/imports/ui/components/landing/ClassType.jsx';
 import ResetPassword from '/imports/ui/components/account/resetPassword';
 import MyProfile from '/imports/ui/components/users/myProfile';
 import SchoolView from '/imports/ui/components/schoolView';
-// import ClaimSchool from '/imports/ui/components/claimSchool';
+import ClaimSchool from '/imports/ui/components/claimSchool';
 import SchoolEditView from '/imports/ui/components/schoolView/editSchool';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
 // import MyCalender from '/imports/ui/components/users/myCalender';
@@ -36,6 +36,7 @@ export default Routes = () => (
         <Route path="/schools/:slug" component={SchoolView} />
         <Route path="/MyCalendar" component={ManageMyCalendar} />
         <Route path="/reset-password/:token" component={ResetPassword}/>
+        <Route path="/claimSchool" component={ClaimSchool}/>
       </Route>
 
       <Route path="/" component={AdminLayout}>

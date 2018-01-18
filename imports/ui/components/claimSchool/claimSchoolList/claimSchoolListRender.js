@@ -1,56 +1,25 @@
 import React from "react";
 import {cutString} from '/imports/util';
 import { InfiniteScroll } from '/imports/util';
-import { Loading } from '/imports/ui/loading';
 import { browserHistory, Link } from 'react-router';
+import Grid from 'material-ui/Grid';
+import SchoolCard from "/imports/ui/components/landing/components/cards/schoolCard"
 
 export default function (props) {
   let schools = this.props.collectionData || [];
   return (
       <div>
-        <div className="clearfix"></div>
-        <div className="col-md-12">
-          <h3 style={{margin: '0 0 0 0'}}>Is your school one of these schools?</h3>
-        </div>
-        <div className="clearfix"></div>
-        <div className="nopaadding">
+        <Grid container style={{paddingLeft:'16px',paddingRight:'16px'}}>
           {
             schools.map((school, index) => {
               return (
-                  <div key={index} className="col-md-3 col-sm-6 npding">
-                    <div className="card card-profile">
-                      <a href="">
-                        <h4 className="card-title" title={school.name}>{cutString(school.name, 27)}</h4>
-                        <div className="card-content">
-                          <div>
-                            <div className="thumb" style={{
-                              backgroundImage: `url(${school.mainImage})`,
-                              height: '155px',
-                              width: '100%',
-                              cursor: 'pointer'
-                            }}></div>
-                          </div>
-                        </div>
-                      </a>
-                      <div className="card-footer">
-                        <div className="row">
-                          <Link to={`/schoolAdmin/${school._id}`} className="btn btn-rose" data-id="">View
-                            <div className="ripple-container"></div>
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                   <Grid item key={index} md={4} sm={6} lg={3} xs={12}>
+                       <SchoolCard schoolCardData={school}/>
+                   </Grid>
               )
             })
           }
-          <div className="col-md-12">
-            <h3> No none of these are my school. Please let me start a new listing.</h3>
-            <a href="#" className="btn btn-rose btn_claim">Start New School
-              <div className="ripple-container"/>
-            </a>
-          </div>
-        </div>
+        </Grid>
       </div>
   )
 }
