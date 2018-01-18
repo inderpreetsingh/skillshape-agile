@@ -7,6 +7,7 @@ import {cutString} from '/imports/util';
 import config from '/imports/config';
 import { isEmpty } from 'lodash';
 import { MarkerClusterer } from '/imports/ui/components/landing/components/jss/markerclusterer';
+import { InfoBox } from '/imports/ui/components/landing/components/jss/infoBox';
 
 let mc;
 let googleMarkers = [];
@@ -37,7 +38,7 @@ const ibOptions = {
     enableEventPropagation: false
 };
 
-const infobox = new InfoBox(ibOptions);
+let infobox;
 
 function infoSchool({school, classTypes}) {
     if(school) {
@@ -128,7 +129,7 @@ export function initializeMap(center) {
             map: map
         });
         let countDebounce = 0;
-        google.maps.event.addListener(map, "bounds_changed", function() {
+        google.maps.event.addListener(map, "idle", function() {
             console.log("this", this)
             _.debounce(()=> {
                 bounds = map.getBounds();
@@ -139,7 +140,7 @@ export function initializeMap(center) {
                   search: `?zoom=${map.getZoom()}&SWPoint=${SWPoint}&NEPoint=${NEPoint}`
                 })
             },countDebounce)();
-            countDebounce = 3000;
+            countDebounce = 1000;
         });
         return map;
     }
@@ -149,9 +150,8 @@ export function setMarkersOnMap(map, SLocation) {
     let previousLocation = [...locations];
     let newMakers = [];
     let deleteMakers = [];
-    locations = [];
     let infoBoxes = [];
-
+    locations = [];
     if(mc && googleMarkers.length > 0) {
         // console.log("Old googleMarkers --->>",googleMarkers)
         // mc.clearMarkers(googleMarkers);
@@ -171,19 +171,18 @@ export function setMarkersOnMap(map, SLocation) {
                 position: latLng,
                 title: SLocation[i].title,
                 schoolId: SLocation[i].schoolId,
-                map: map,
                 _id: SLocation[i]._id,
             });
 
 
             google.maps.event.addListener(marker, 'click', function() {
-                event.preventDefault();
                 Meteor.call("getClassesForMap",{schoolId: SLocation[i].schoolId},(err,result)=> {
                     if(result) {
-                        infobox.setContent(infoSchool(result))
                         if(infobox) {
                             infobox.close();
                         }
+                        infobox = new InfoBox(ibOptions);
+                        infobox.setContent(infoSchool(result))
                         infobox.open(map, marker);
                         map.panTo(infobox.getPosition());
                     }

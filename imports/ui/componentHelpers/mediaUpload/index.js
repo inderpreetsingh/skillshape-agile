@@ -3,9 +3,8 @@ import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 
-
 import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
-import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
+import BottomNavigation, { BottomNavigationButton } from 'material-ui/BottomNavigation';
 import Videocam from 'material-ui-icons/Videocam';
 import FileUpload from 'material-ui-icons/FileUpload';
 import Link from 'material-ui-icons/Link';
@@ -26,9 +25,7 @@ import Dialog, {
   withMobileDialog,
 } from 'material-ui/Dialog';
 
-
-
-
+console.log("Upload mi-version:-26 BottomNavigationButton-->>",BottomNavigationButton);
 
 const styles = theme => {
   // console.log("theme", theme);
@@ -137,7 +134,8 @@ class Upload extends React.Component {
     };
 
   render() {
-  	// console.log("media index state>>>>> ", this.state)
+    // console.log("Upload props>>>>> ", this.props)
+  	// console.log("Upload state>>>>> ", this.state)
     const { classes, fullScreen, loading } = this.props;
     return (
       <div>
@@ -167,9 +165,9 @@ class Upload extends React.Component {
               value={this.state.value}
               onChange={this.handleChange}
             >
-              	<BottomNavigationAction label="Upload From Computer" icon={<FileUpload />} />
-            	<BottomNavigationAction onClick={this.handleClickOpen} label="Image URL" icon={<Link />} />
-              	{ this.props.showVideoOption && <BottomNavigationAction label="Video URL" icon={<Videocam />} />}
+              	<BottomNavigationButton label="Upload From Computer" icon={<FileUpload />} />
+            	<BottomNavigationButton onClick={this.handleClickOpen} label="Image URL" icon={<Link />} />
+              	{ this.props.showVideoOption && <BottomNavigationButton label="Video URL" icon={<Videocam />} />}
             </BottomNavigation>
           </CardActions>
         </Card>

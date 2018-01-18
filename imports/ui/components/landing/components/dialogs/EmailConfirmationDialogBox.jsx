@@ -59,12 +59,14 @@ const EmailConfirmationDialogBox = (props) => (
     onRequestClose={props.onModalClose}
     aria-labelledby="terms-of-service"
     classes={{paper: props.classes.dialogPaper}}
+    itemScope
+    itemType="http://schema.org/ConfirmAction"
   >
   <MuiThemeProvider theme={muiTheme}>
     { props.isLoading && <ContainerLoader/>}
     <DialogTitle>
       <DialogTitleWrapper>
-        Email Confirmation
+       <span itemProp="name"Email Confirmation</span>
 
         <IconButton color="primary" onClick={props.onModalClose}>
           <ClearIcon/>
@@ -74,14 +76,14 @@ const EmailConfirmationDialogBox = (props) => (
 
     <DialogContent className={props.classes.dialogContent}>
       <Typography>
-        You will be sent to <b>{props.schoolEmail}</b> to confirm. is this correct ?
+        <span itemProp="description">You will be sent to {props.schoolEmail} to confirm. is this correct ?</span>
       </Typography>
     </DialogContent>
 
     <DialogActions classes={{root: props.classes.dialogAction}}>
       <ButtonsWrapper>
-        <PrimaryButton label="Yes" onClick={props.onAgreeButtonClick}></PrimaryButton>
-        <Button color="primary" onClick={props.onDisAgreeButtonClick}> No, address is wrong!</Button>
+        <PrimaryButton label="Yes" onClick={props.onAgreeButtonClick} itemScope itemType="http://schema.org/AgreeAction"></PrimaryButton>
+        <Button color="primary" onClick={props.onDisAgreeButtonClick} itemScope itemType="http://schema.org/DisagreeAction"> No, address is wrong!</Button>
       </ButtonsWrapper>
     </DialogActions>
 

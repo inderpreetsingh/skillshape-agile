@@ -40,14 +40,14 @@ const DrawerHeader = (props) => (
 
 const SideNavItem = (props) => {
     return(
-    <ListItem button={props.button ? props.button : false} onClick={props.onClick}>
+    <ListItem button={props.button ? props.button : false} onClick={props.onClick} itemScope itemType={props.itemType}>
       {
        props.children ? props.children :
        <Fragment>
             <ListItemIcon>
                 <Icon>{props.iconName}</Icon>
             </ListItemIcon>
-            <ListItemText classes={{text: props.menuListItemText}} primary={props.name} />
+            <ListItemText classes={{text: props.menuListItemText}} primary={props.name} itemProp={props.itemProp}/>
         </Fragment>}
     </ListItem>
     );
@@ -67,6 +67,7 @@ const LogOutUserSideNav = (props) => (
             onClick={() => props.handleSignUpDialogBox(true, "Student")}
             name="Student Sign Up"
             iconName="assignment_ind"
+            itemType="http://schema.org/RegisterAction"
         />
         <SideNavItem
             button
@@ -74,6 +75,7 @@ const LogOutUserSideNav = (props) => (
             onClick={() => props.handleSignUpDialogBox(true, "School")}
             name="Register a School"
             iconName="school"
+            itemType="http://schema.org/RegisterAction"
         />
         <SideNavItem
             button
@@ -232,7 +234,7 @@ class SideNavItems extends React.Component {
 
     render() {
         return (
-            <Drawer open={this.props.open} anchor="right" onRequestClose={this.props.handleDrawer}>
+            <Drawer open={this.props.open} anchor="right" onRequestClose={this.props.handleDrawer} itemScope itemType="http://schema.org/WPSideBar">
                 <List className={this.props.classes.drawerList}>
                     <DrawerHeader handleDrawer={this.props.handleDrawer} drawerHeader={this.props.classes.drawerHeader}/>
                     <Divider />
@@ -271,7 +273,14 @@ SideNavItem.propTypes = {
     button: PropTypes.bool,
     children: PropTypes.element,
     menuListItemText: PropTypes.string,
+    itemType: PropTypes.string,
+    itemProp: PropTypes.string,
     onClick: PropTypes.func,
+}
+
+SideNavItems.defaultProps = {
+  itemType: "Thing",
+  itemProp: "name",
 }
 
 SideNavItems.propTypes = {

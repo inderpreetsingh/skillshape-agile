@@ -29,31 +29,31 @@ export default function () {
           	}
                <PanelHeader btnText="Add Per Month Package" title="Per Month Packages" cpation="" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
-               <Grid container>
+               <Grid container className={classes.monthlyPriceContainer}>
                	{
                		monthlyPricingData && monthlyPricingData.map((monthPrice, index)=> {
                			// console.log("monthPrice -->>",monthPrice)
                			return (
                                    <Grid item xs={12} md={3} sm={4}>
-                    				<Card key={index} className={classes.card}>
+                    				<Card key={index} style ={{height:'100%'}} className={classes.card}>
                     					<CardContent className={classes.content}>
                            					<Typography align="center" type="headline">
                            						{monthPrice.packageName}
                            					</Typography>
                                                   <br></br>
                                                   <Typography component="p">
-                                                      <b>Payment Method:</b> {monthPrice.pymtMethod}
+                                                      <b>Payment Type:</b> {monthPrice.pymtMethod == 'Pay Each Month' ? monthPrice.pymtType : monthPrice.pymtMethod }
                                                   </Typography>
                                                   <br></br>
                                                   {
-                                                       monthPrice.pymtType && (
+                                                       /*monthPrice.pymtType && (
                                                             <Fragment>
                                                                  <Typography component="p">
                                                                      <b>Payment Type:</b> {monthPrice.pymtType}
                                                                  </Typography>
                                                                  <br></br>
                                                             </Fragment>
-                                                       )
+                                                       )*/
                                                   }
                     						<Typography component="p">
                     							<b>Covers:</b> {
@@ -69,7 +69,7 @@ export default function () {
                                                        monthPrice.pymtDetails.map((payment) => {
                                                             return <Fragment>
                                                                  <Typography component="p">
-                                                                      {payment.cost}$ per month for {payment.month} months
+                                                                      ${payment.cost} per month for {payment.month} months
                                                                  </Typography>
                                                                  <br></br>
                                                             </Fragment>

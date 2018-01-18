@@ -152,7 +152,7 @@ class ContactUs extends React.Component {
                                                    >
                                                     <FormControlLabel value="Feature Request" control={<Radio />} label="Feature Request" />
                                                     <FormControlLabel value="Something is broken" control={<Radio />} label="Something is broken" />
-                                                    <FormControlLabel value="I Love This" control={<Radio />} label="I Love This" />
+                                                    <FormControlLabel value="I Love This" control={<Radio />} label="I Love This!" />
                                                   </RadioGroup>
                                             </FormControl>
                                         </Grid>

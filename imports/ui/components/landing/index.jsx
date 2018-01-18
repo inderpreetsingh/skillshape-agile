@@ -236,7 +236,9 @@ class Landing extends Component {
         console.log("Landing props -->>",this.props);
         return(
             <div>
-                <Cover>
+                {!this.state.mapView && (
+                  <Fragment>
+                  <Cover itemScope itemType="http://schema.org/WPHeader">
                     <BrandBar
                       currentUser={this.props.currentUser}
                     />
@@ -245,8 +247,11 @@ class Landing extends Component {
                         getMyCurrentLocation={this.getMyCurrentLocation}
                     />
                 </Cover>
-
                 <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
+                </Fragment>
+              )}
+
+
 
                  <div>
                     <Sticky stickyClassName={"filter-panel-sticked"} onFixedToggle={this.handleFixedToggle}>
