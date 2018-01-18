@@ -16,6 +16,7 @@ import Grid from 'material-ui/Grid'
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
+import { cutString } from '/imports/util';
 
 const styles = {
   cardWrapper: {
@@ -148,9 +149,9 @@ class SchoolCard extends Component {
             </CardContentHeader>
 
             <CardContentBody>
-                <Typography>Address:{schoolCardData.website}</Typography>
-                <Typography>Email:{schoolCardData.email}</Typography>
-                <Typography>Phone:{schoolCardData.phone}</Typography>
+                <Typography><b>Website:</b>:{cutString(schoolCardData.website, 20)}</Typography>
+                <Typography><b>Email:</b>{schoolCardData.email}</Typography>
+                <Typography><b>Phone:</b>{schoolCardData.phone}</Typography>
             </CardContentBody>
             <Grid container>
                 <Grid item xs={6} sm={6} className={classes.marginAuto}>
