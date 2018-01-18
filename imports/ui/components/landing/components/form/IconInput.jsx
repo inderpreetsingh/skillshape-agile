@@ -32,7 +32,7 @@ const IconInput = (props) => {
   }
 
   return (
-    <FormControl fullWidth>
+    <FormControl error={props.error} fullWidth aria-describedby="error-text">
       <InputLabel htmlFor={props.inputId}>{props.labelText}</InputLabel>
       <Input
         inputRef={(ref)=> inputRef = ref}
@@ -42,6 +42,9 @@ const IconInput = (props) => {
         onChange={props.onChange}
         endAdornment={<InputAdornment position="end"><InputIcon iconName={props.iconName}/></InputAdornment>}
       />
+      {
+        props.error && <FormHelperText id="error-text">{props.errorText}</FormHelperText>
+      }
     </FormControl>
   )
 };
@@ -55,7 +58,9 @@ IconInput.propTypes = {
   placeHolder: PropTypes.string,
   labelText: PropTypes.string,
   onChange: PropTypes.func,
-  googlelocation:PropTypes.boolean
+  googlelocation: PropTypes.boolean,
+  error: PropTypes.boolean,
+  errorText: PropTypes.string,
 }
 
 IconInput.defaultProps = {

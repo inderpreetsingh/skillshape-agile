@@ -18,7 +18,7 @@ import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
 // import MyCalender from '/imports/ui/components/users/myCalender';
 import SchoolUpload from '/imports/ui/components/schoolUpload';
 // import SchoolPriceView from '/imports/ui/components/embed/schoolPriceView';
-
+import VerifyEmail from '/imports/ui/components/account/verifyEmail';
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
@@ -36,6 +36,7 @@ export default Routes = () => (
         <Route path="/schools/:slug" component={SchoolView} />
         <Route path="/MyCalendar" component={ManageMyCalendar} />
         <Route path="/reset-password/:token" component={ResetPassword}/>
+        <Route path="/verify-email/:token" component={VerifyEmail}/>
       </Route>
 
       <Route path="/" component={AdminLayout}>
