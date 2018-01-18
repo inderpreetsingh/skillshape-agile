@@ -16,7 +16,10 @@ import Grid from 'material-ui/Grid'
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
+<<<<<<< HEAD
 import { cutString } from '/imports/util';
+=======
+>>>>>>> Show listing of schools on claim school page
 
 const styles = {
   cardWrapper: {
