@@ -149,7 +149,7 @@ class SchoolCard extends Component {
             </CardContentHeader>
 
             <CardContentBody>
-                <Typography><b>Website:</b>:{cutString(schoolCardData.website, 20)}</Typography>
+                <Typography><b>Website:</b>{cutString(schoolCardData.website, 20)}</Typography>
                 <Typography><b>Email:</b>{schoolCardData.email}</Typography>
                 <Typography><b>Phone:</b>{schoolCardData.phone}</Typography>
             </CardContentBody>
