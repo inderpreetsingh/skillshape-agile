@@ -7,6 +7,7 @@ import {cutString} from '/imports/util';
 import config from '/imports/config';
 import { isEmpty } from 'lodash';
 import { MarkerClusterer } from '/imports/ui/components/landing/components/jss/markerclusterer';
+import { InfoBox } from '/imports/ui/components/landing/components/jss/infoBox';
 
 let mc;
 let googleMarkers = [];
@@ -170,7 +171,6 @@ export function setMarkersOnMap(map, SLocation) {
                 position: latLng,
                 title: SLocation[i].title,
                 schoolId: SLocation[i].schoolId,
-                map: map,
                 _id: SLocation[i]._id,
             });
 
@@ -178,11 +178,11 @@ export function setMarkersOnMap(map, SLocation) {
             google.maps.event.addListener(marker, 'click', function() {
                 Meteor.call("getClassesForMap",{schoolId: SLocation[i].schoolId},(err,result)=> {
                     if(result) {
-                        infobox = new InfoBox(ibOptions);
-                        infobox.setContent(infoSchool(result))
                         if(infobox) {
                             infobox.close();
                         }
+                        infobox = new InfoBox(ibOptions);
+                        infobox.setContent(infoSchool(result))
                         infobox.open(map, marker);
                         map.panTo(infobox.getPosition());
                     }
