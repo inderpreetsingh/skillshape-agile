@@ -84,6 +84,11 @@ const InputWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
+const ErrorWrapper = styled.span`
+    color: red;
+    float: right;
+`;
+
 class SignUpDialogBox extends Component {
   state = {
     name: "",
@@ -199,7 +204,10 @@ class SignUpDialogBox extends Component {
                                 />
                             </FormGroup>
                         </FormControl>
-
+                        {
+                            this.props.errorText &&
+                            <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
+                        }
                     </DialogContent>
 
                     <DialogActions classes={{root : classes.dialogAction, action: classes.dialogAction}}>
@@ -223,6 +231,7 @@ SignUpDialogBox.propTypes = {
   onSignUpWithFacebookButtonClick: PropTypes.func,
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool,
+  errorText: PropTypes.string,
 }
 
 export default withMobileDialog()(withStyles(styles)(SignUpDialogBox));

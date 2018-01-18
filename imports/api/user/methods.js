@@ -1,27 +1,35 @@
 import isEmpty from 'lodash/isEmpty';
+import generator from 'generate-password';
+
+import './fields.js';
 
 Meteor.methods({
 	"user.createUser": function({ name, email, userType}) {
 		if(!isEmpty(name) && !isEmpty(email) ) {
 
-			//Create user first
-			const id = Accounts.createUser({
+			var password = generator.generate({
+			    length: 10,
+			    numbers: true
+			});
+			const userId = Accounts.createUser({
 	            email: email,
-	            // TODO: Check if this gets hashed.
 	            password: password,
 	            profile: {
-	               role: userType || 'Normal',
-	               name: name
-	            }
+	                name: name,
+	            	passwordSetByUser: false,
+	            },
 	        });
-			console.log("user.createUser id-->>",id);
-
-			//Then create token
-			var token = Accounts._generateStampedLoginToken()
-            Accounts._insertLoginToken(user.userId, token);
-
-            let userId = this.userId;
-            Accounts.sendVerificationEmail( userId );
+	        Accounts.sendVerificationEmail(userId);
+		} else {
+			throw new Meteor.Error("Cannot process due to lack of information");
+		}
+	},
+	"user.setPassword": function({password}) {
+		if(this.userId) {
+			Meteor.users.update({ _id: this.userId},{ $set: { "profile.passwordSetByUser": true } });
+			return Accounts.setPassword(this.userId, password)
+		} else {
+			throw new Meteor.Error("User not found!!");
 		}
 	}
 })

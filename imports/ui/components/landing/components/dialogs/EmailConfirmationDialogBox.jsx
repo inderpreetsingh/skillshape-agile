@@ -13,6 +13,7 @@ import { MuiThemeProvider} from 'material-ui/styles';
 import PrimaryButton from '../buttons/PrimaryButton';
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
+import { ContainerLoader } from '/imports/ui/loading/container';
 
 import Dialog , {
   DialogActions,
@@ -44,7 +45,7 @@ const DialogTitleWrapper = styled.div`
 
 const ButtonsWrapper = styled.div`
   display: flex;
-  
+
   @media screen and (max-width : ${helpers.mobile}px) {
     display: flex;
     flex-direction: column;
@@ -60,30 +61,30 @@ const EmailConfirmationDialogBox = (props) => (
     classes={{paper: props.classes.dialogPaper}}
   >
   <MuiThemeProvider theme={muiTheme}>
-    
+    { props.isLoading && <ContainerLoader/>}
     <DialogTitle>
       <DialogTitleWrapper>
         Email Confirmation
-        
+
         <IconButton color="primary" onClick={props.onModalClose}>
-          <ClearIcon/> 
-        </IconButton > 
+          <ClearIcon/>
+        </IconButton >
       </DialogTitleWrapper>
     </DialogTitle>
-    
+
     <DialogContent className={props.classes.dialogContent}>
       <Typography>
-        You will be sent to {props.schoolEmail} to confirm. is this correct ?
+        You will be sent to <b>{props.schoolEmail}</b> to confirm. is this correct ?
       </Typography>
     </DialogContent>
-    
+
     <DialogActions classes={{root: props.classes.dialogAction}}>
       <ButtonsWrapper>
         <PrimaryButton label="Yes" onClick={props.onAgreeButtonClick}></PrimaryButton>
         <Button color="primary" onClick={props.onDisAgreeButtonClick}> No, address is wrong!</Button>
       </ButtonsWrapper>
     </DialogActions>
-    
+
     </MuiThemeProvider>
   </Dialog>
 );
@@ -95,10 +96,12 @@ EmailConfirmationDialogBox.propTypes = {
   schoolEmail: PropTypes.string,
   onAgreeButtonClick: PropTypes.func,
   onDisAgreeButtonClick: PropTypes.func,
+  isLoading: PropTypes.bool,
 }
 
 EmailConfirmationDialogBox.defaultProps = {
-    schoolEmail: 'school@abc.com'
+    schoolEmail: 'school@abc.com',
+    isLoading: false,
 }
 
 export default withStyles(styles)(EmailConfirmationDialogBox);

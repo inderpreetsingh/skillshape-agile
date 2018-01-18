@@ -16,6 +16,7 @@ class SideNav extends Component {
         termsOfServiceDialogBox: false,
         emailConfirmationDialogBox: false,
         userData: {},
+        isBusy:false,
     }
     handleDrawerState = (state) => {
         this.setState({open: state});
@@ -39,8 +40,26 @@ class SideNav extends Component {
             userData: {...this.state.userData, ...payload}
         });
     }
-    handleAgreementSubmit = () => {
+    handleServiceAgreementSubmit = () => {
         this.setState({emailConfirmationDialogBox: true});
+    }
+    handleEmailConfirmationSubmit = () => {
+        this.setState({isBusy: true})
+        Meteor.call("user.createUser", {...this.state.userData}, (err, res) => {
+            console.log("user.createUser err res -->>",err,res)
+            let modalObj = {
+                open: false,
+                signUpDialogBox: false,
+                termsOfServiceDialogBox: false,
+                emailConfirmationDialogBox: false,
+                isBusy: false,
+            }
+            if(err) {
+                modalObj.errorText = err.reason || err.message;
+                modalObj.signUpDialogBox = true;
+            }
+            this.setState(modalObj)
+        })
     }
     render() {
         const { currentUser } = this.props;
@@ -52,6 +71,7 @@ class SideNav extends Component {
                         open={this.state.signUpDialogBox}
                         onModalClose={() => this.handleSignUpDialogBoxState(false)}
                         onSubmit={this.handleSignUpSubmit}
+                        errorText={this.state.errorText}
                     />
                 }
                 {
@@ -59,7 +79,7 @@ class SideNav extends Component {
                     <TermsOfServiceDialogBox
                         open={this.state.termsOfServiceDialogBox}
                         onModalClose={() => this.handleTermsOfServiceDialogBoxState(false)}
-                        onAgreeButtonClick={this.handleAgreementSubmit}
+                        onAgreeButtonClick={this.handleServiceAgreementSubmit}
                     />
                 }
                 {
@@ -69,6 +89,8 @@ class SideNav extends Component {
                         schoolEmail={get(this.state, "userData.email")}
                         onModalClose={() => this.handleEmailConfirmationDialogBoxState(false)}
                         onDisAgreeButtonClick={() => this.handleEmailConfirmationDialogBoxState(false)}
+                        onAgreeButtonClick={this.handleEmailConfirmationSubmit}
+                        isLoading={this.state.isBusy}
                     />
                 }
                 <MenuIconButton handleClick={this.toggleDrawerState} />
