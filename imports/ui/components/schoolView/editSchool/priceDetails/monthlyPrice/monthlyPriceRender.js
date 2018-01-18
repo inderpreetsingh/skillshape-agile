@@ -14,8 +14,7 @@ import PanelHeader from '../panelHeader';
 
 export default function () {
 
-	console.log("monthlyPrice render props -->>",this.props)
-	const { classes, schoolId, monthlyPricingData } = this.props;
+     const { classes, schoolId, monthlyPricingData } = this.props;
 
 	return (
 		<div className="class-price-details">
@@ -32,17 +31,28 @@ export default function () {
                <Grid container className={classes.monthlyPriceContainer}>
                	{
                		monthlyPricingData && monthlyPricingData.map((monthPrice, index)=> {
-               			// console.log("monthPrice -->>",monthPrice)
+                              let paymentType = '';
+                                   if(monthPrice.pymtType['autoWithDraw'] && monthPrice.pymtType['payAsYouGo']) {
+                                        paymentType += 'Automatic Withdrawal and Pay As You Go';
+                                   } else if(monthPrice.pymtType['autoWithDraw']) {
+                                        paymentType += 'Automatic Withdrawal';
+
+                                   }else if(monthPrice.pymtType['payAsYouGo']) {
+                                        paymentType += 'Pay As You Go';
+
+                                   } else if(monthPrice.pymtType['payUpFront']) {
+                                        paymentType += 'Pay Up Front';
+                                   }
                			return (
                                    <Grid item xs={12} md={3} sm={4}>
-                    				<Card key={index} style ={{height:'100%'}} className={classes.card}>
+                    				<Card key={index} className={classes.card}>
                     					<CardContent className={classes.content}>
                            					<Typography align="center" type="headline">
                            						{monthPrice.packageName}
                            					</Typography>
                                                   <br></br>
                                                   <Typography component="p">
-                                                      <b>Payment Type:</b> {monthPrice.pymtMethod == 'Pay Each Month' ? monthPrice.pymtType : monthPrice.pymtMethod }
+                                                      <b>Payment Type:</b> {paymentType}
                                                   </Typography>
                                                   <br></br>
                                                   {
