@@ -3,11 +3,13 @@ import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import { findIndex, isEmpty } from 'lodash';
 import Typography from 'material-ui/Typography';
-import Sticky from 'react-sticky-el';
+//import Sticky from 'react-sticky-el';
+import Sticky from 'react-stickynode';
 
 import ClassMap from '../map/ClassMap.jsx';
 import MapView from '../map/mapView.jsx';
 import CardsList from '../cards/CardsList.jsx';
+import Footer from '../footer/index.jsx';
 import { cardsData, cardsData1} from '../../constants/cardsData.js';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import { Loading } from '/imports/ui/loading';
@@ -24,11 +26,6 @@ import ClassInterest from "/imports/api/classInterest/fields";
 
 const MainContentWrapper = styled.div`
   display: flex;
-`;
-
-const MapContainer = styled.div`
-  width: 100%;
-  height: 100%;
 `;
 
 const CardsContainer = styled.div`
@@ -48,16 +45,43 @@ const MapOuterContainer = styled.div`
   }
 `;
 
+const MapContainer = styled.div`
+  transform: translateY(75px);
+  height: calc(100vh - 80px);
+`;
+
 const WithMapCardsContainer = styled.div`
   width: 60%;
-  padding: ${helpers.rhythmDiv * 2}px;
+  padding:${helpers.rhythmDiv * 2}px;
   padding-top: 0;
+
+  ${helpers.flexDirectionColumn}
+  justify-content: space-between;
+  transform: translateY(80px);
+
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     display: none;
     width: 0;
     height: 0;
   }
 `;
+
+const FooterOuterWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+
+  @media screen and (max-width : ${helpers.tablet + 100}px) {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+`;
+
+const FooterWrapper = styled.div`
+  width: 100%;
+`;
+
 
 class ClassTypeList extends Component {
 
@@ -136,26 +160,37 @@ class ClassTypeList extends Component {
 	render() {
 		console.log("ClassTypeList props -->>",this.props);
 		const { mapView, classTypeData, skillCategoryData, splitByCategory, filters, isLoading } = this.props;
-		return (
+    console.log(classTypeData ,"class type data ---->///")
+    return (
 			<MainContentWrapper>
 				{
 					mapView ? (
-                        <Fragment>
-                            <MapOuterContainer>
-                                <Sticky topOffset={-100} className="map-holder" stickyStyle={{transform: 'translateY(80px)', height: 'calc(100vh - 50px)'}}>
-                                    {/*<ClassMap isMarkerShown />*/}
-                                    <MapView {...this.props}/>
-                                </Sticky>
-                            </MapOuterContainer>
-                            <WithMapCardsContainer>
-                                <CardsList
-                                  mapView={this.props.mapView}
-                                  cardsData={classTypeData}
-                                  classInterestData={this.props.classInterestData}
-                                  handleSeeMore={this.props.handleSeeMore}
-                                />
-                            </WithMapCardsContainer>
-                        </Fragment>
+              <Fragment>
+                  <MapOuterContainer>
+                    <Sticky top={0}>
+                      <MapContainer>
+                        <ClassMap isMarkerShown />
+                      </MapContainer>
+                    </Sticky>
+                  </MapOuterContainer>
+
+                  <WithMapCardsContainer>
+                      <div>
+                        <CardsList
+                          mapView={this.props.mapView}
+                          cardsData={classTypeData}
+                          classInterestData={this.props.classInterestData}
+                          handleSeeMore={this.props.handleSeeMore}
+                        />
+                      </div>
+
+                      <FooterOuterWrapper>
+                        <FooterWrapper>
+                          <Footer mapView={this.props.mapView}/>
+                        </FooterWrapper>
+                      </FooterOuterWrapper>
+                  </WithMapCardsContainer>
+              </Fragment>
 					) : (
 						<CardsContainer>
 							{

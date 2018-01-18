@@ -30,12 +30,12 @@ const ibOptions = {
         width: "300px",
         height: "325px"
     },
-    pixelOffset: new google.maps.Size(-140, 0),
     closeBoxURL: "",
-    infoBoxClearance: new google.maps.Size(1, 1),
-    isHidden: false,
     pane: "floatPane",
-    enableEventPropagation: false
+    isHidden: false,
+    enableEventPropagation: false,
+    pixelOffset: new google.maps.Size(-140, 0),
+    infoBoxClearance: new google.maps.Size(1, 1),
 };
 
 let infobox;

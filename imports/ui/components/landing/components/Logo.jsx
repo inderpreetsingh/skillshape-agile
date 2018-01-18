@@ -16,11 +16,11 @@ const BrandArea = styled.div`
 `;
 
 const BrandText = styled.h1`
-  font-size: ${helpers.baseFontSize*2}px;
+  font-size: ${props => props.smallBrandText ? helpers.baseFontSize*1.5 : helpers.baseFontSize*2}px;
   margin:0;
   font-weight: 600;
   text-align:center;
-  line-height:${helpers.brandBarHeight}px;
+  line-height:${props => props.smallBrandText ? 'inherit' : helpers.brandBarHeight+'px'};
   color: ${helpers.focalColor};
 
   @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
@@ -31,8 +31,8 @@ const BrandText = styled.h1`
 
 const BrandTagline = styled.span`
   font-weight:300;
-  font-size:${helpers.baseFontSize*1.5}px;
-  line-height:${helpers.brandBarHeight}px;
+  font-size:${props => props.smallBrandText ? (helpers.baseFontSize) : helpers.baseFontSize*1.5}px;
+  line-height:${props => props.smallBrandText ? 'inherit' : helpers.brandBarHeight+'px'};
   color: ${helpers.textColor};
 
   @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
@@ -53,6 +53,7 @@ const LogoImage = styled.img`
   margin-right: ${helpers.oneRow/2}px;
   transition: transform 1s ease-in-out;
   cursor: pointer;
+
   &:hover {
     transform: rotate(360deg);
   }
@@ -64,27 +65,30 @@ const LogoImage = styled.img`
   }
 `;
 
-const Logo = ({brandText, brandTagline, logoSrc}) => (
+const Logo = ({smallBrandText, brandText, brandTagline, logoSrc}) => (
     <BrandArea itemScope itemType="http://schema.org/Brand">
         <LogoWrapper>
           <LogoImage src={logoSrc} itemProp="logo"/>
         </LogoWrapper>
-        <BrandText itemProp="name"> {brandText},
-          <BrandTagline> {brandTagline}. </BrandTagline>
+        <BrandText itemProp="name" smallBrandText={smallBrandText} className={smallBrandText && 'flex-column'}>
+          {brandText},
+          <BrandTagline smallBrandText={smallBrandText}> {brandTagline}. </BrandTagline>
         </BrandText>
     </BrandArea>
 );
+Logo.propTypes = {
+  brandText: PropTypes.string,
+  brandTagline: PropTypes.string,
+  logoSrc: PropTypes.string,
+  smallBrandText: PropTypes.bool
+}
 
 Logo.defaultProps = {
+  smallBrandText: false,
   brandText: settings.brandText,
   brandTagline: settings.brandTagline,
   logoSrc: settings.logoSrc
 }
 
-Logo.propTypes = {
-  brandText: PropTypes.string,
-  brandTagline: PropTypes.string,
-  logoSrc: PropTypes.string
-}
 
 export default Logo;
