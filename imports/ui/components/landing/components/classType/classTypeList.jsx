@@ -169,7 +169,7 @@ class ClassTypeList extends Component {
                   <MapOuterContainer>
                     <Sticky top={0}>
                       <MapContainer>
-                        <ClassMap isMarkerShown />
+                        <MapView {...this.props} />
                       </MapContainer>
                     </Sticky>
                   </MapOuterContainer>
