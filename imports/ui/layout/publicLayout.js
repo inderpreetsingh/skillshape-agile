@@ -59,10 +59,9 @@ class PublicLayout extends React.Component {
                     if (err) {
                         errorMessage = err.reason || err.message
                     } else {
-                        browserHistory.push('/');
+                        browserHistory.push('/claimSchool');
                     }
                     this.setState({ showSetPasswordDialogBox : false, isBusy : false })
-
                 });
             }
         }

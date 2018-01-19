@@ -4,22 +4,30 @@ import generator from 'generate-password';
 import './fields.js';
 
 Meteor.methods({
-	"user.createUser": function({ name, email, userType}) {
+	"user.createUser": function({ name, email, userType, sendMeSkillShapeNotification}) {
 		if(!isEmpty(name) && !isEmpty(email) ) {
 
-			var password = generator.generate({
+			const password = generator.generate({
 			    length: 10,
 			    numbers: true
 			});
+
+			const accessType = userType || "Anonymous";
+
 			const userId = Accounts.createUser({
 	            email: email,
 	            password: password,
 	            profile: {
 	                name: name,
 	            	passwordSetByUser: false,
+	            	userType: accessType,
+	            	sendMeSkillShapeNotification: sendMeSkillShapeNotification,
 	            },
 	        });
+
+            Roles.addUsersToRoles(userId, accessType);
 	        Accounts.sendVerificationEmail(userId);
+
 		} else {
 			throw new Meteor.Error("Cannot process due to lack of information");
 		}

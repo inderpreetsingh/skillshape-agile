@@ -43,5 +43,6 @@ export default config = Object.freeze({
 		{ label: "Beginner plus intermediate", value: "beginner plus intermediate"},
 		{ label: "Intermediate plus advanced", value: "intermediate plus advanced"},
 	],
-	seeMoreCount: 4
+	seeMoreCount: 4,
+	CAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", //test key
 })
