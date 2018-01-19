@@ -66,7 +66,7 @@ const EmailConfirmationDialogBox = (props) => (
     { props.isLoading && <ContainerLoader/>}
     <DialogTitle>
       <DialogTitleWrapper>
-       <span itemProp="name"Email Confirmation</span>
+       <span itemProp="name"> Email Confirmation</span>
 
         <IconButton color="primary" onClick={props.onModalClose}>
           <ClearIcon/>
