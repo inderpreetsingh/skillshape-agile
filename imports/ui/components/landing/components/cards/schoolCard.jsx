@@ -12,11 +12,13 @@ import Clear from 'material-ui-icons/Clear';
 import MoreVert from 'material-ui-icons/MoreVert';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid'
+import { Link } from 'react-router';
 
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
 import { cutString } from '/imports/util';
+
 
 const styles = {
   cardWrapper: {
@@ -129,8 +131,11 @@ class SchoolCard extends Component {
     console.info("The error is this...",error, info);
   }
   render() {
-    const { schoolCardData, body, classes } = this.props;
-
+    console.log("this.props checkUserAccess",this.props)
+    const {
+        classes,
+        schoolCardData,
+      } = this.props;
     //console.log(ShowDetails,"adsljfj")
     return (
       <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
@@ -142,26 +147,24 @@ class SchoolCard extends Component {
 
           <CardContent>
             <CardContentHeader>
-              <CardContentTitle itemProp="name">{schoolCardData.name}</CardContentTitle>
+              <CardContentTitle itemProp="name">{cutString(schoolCardData.name, 25)}</CardContentTitle>
              {/* <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
                 <MoreVert />
               </IconButton>*/}
             </CardContentHeader>
 
             <CardContentBody>
-                <Typography><b>Website:</b>{cutString(schoolCardData.website, 20)}</Typography>
-                <Typography><b>Email:</b>{schoolCardData.email}</Typography>
-                <Typography><b>Phone:</b>{schoolCardData.phone}</Typography>
+                <Typography><b>Website: </b><a href={schoolCardData.website} target='_blank'>{cutString(schoolCardData.website, 20)}</a></Typography>
+                {schoolCardData.email && (<Typography><b>Email: </b>{schoolCardData.email}</Typography>)}
+                <Typography><b>Phone: </b>{schoolCardData.phone}</Typography>
             </CardContentBody>
             <Grid container>
                 <Grid item xs={6} sm={6} className={classes.marginAuto}>
-                    {
-                        <PrimaryButton
-                          label="Claim"
-                          fullWidth
-                          itemScope
-                        />
-                    }
+                  {
+                      <Link to={`/schools/${schoolCardData.slug}`}>
+                        <PrimaryButton fullWidth label="View"/>
+                      </Link>
+                  }
                 </Grid>
             </Grid>
           </CardContent>

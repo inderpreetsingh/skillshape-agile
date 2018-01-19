@@ -38,6 +38,7 @@ export default Routes = () => (
         <Route path="/reset-password/:token" component={ResetPassword}/>
         <Route path="/claimSchool" component={ClaimSchool}/>
         <Route path="/verify-email/:token" component={VerifyEmail}/>
+        <Route path="/claimSchool" component={ClaimSchool}/>
       </Route>
 
       <Route path="/" component={AdminLayout}>

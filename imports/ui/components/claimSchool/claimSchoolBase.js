@@ -1,37 +1,85 @@
-import React from 'react';
-var ReactDOM = require('react-dom');
+import React from "react";
+var ReactDOM = require("react-dom");
 export default class ClaimSchoolBase extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      filters: {}
-    }
+      filters: {},
+      sticky: false
+    };
   }
+  handleFixedToggle = defaultPosition => {
+    console.log("handleFixedToggle", defaultPosition);
+    const stickyPosition = !defaultPosition;
+    console.log(this.state.sticky, defaultPosition);
+    if (this.state.sticky != stickyPosition) {
+      this.setState({
+        sticky: stickyPosition
+      });
+    }
+  };
+
+  onLocationChange = location => {
+    console.log("location", location);
+    let oldFilter = this.state.filters;
+    // Append location in filters.
+    oldFilter.coords = location.coords;
+    console.log("oldFilter==>", oldFilter);
+    this.setState({
+      filters: oldFilter
+    });
+  };
+  /*When user empties the location filter then need to update state
+  so that no data is available on the basis of location filter*/
+  locationInputChanged = event => {
+    console.log("event.target.value",event.target.value)
+    if (!event.target.value) {
+      let oldFilter = this.state.filters;
+      oldFilter.coords = null;
+      this.setState({
+        filters:oldFilter
+      })
+    }
+  };
+
+  // Filter that works when user starts typing school name
+  handleSchoolNameChange = event => {
+    console.log("schoolName change", event.target.value);
+    let oldFilter = this.state.filters;
+    // Append School name in filters.
+    oldFilter.schoolName = event.target.value;
+    console.log("oldFilter==>", oldFilter);
+    this.setState({
+      filters: oldFilter
+    });
+  };
 
   componentDidMount() {
-    $(window).off('scroll');
-    $('.main-panel').off('scroll');
-    $('#UserMainPanel').off('scroll');
+    $(window).off("scroll");
+    $(".main-panel").off("scroll");
+    $("#UserMainPanel").off("scroll");
     $(window).scroll(this.fixedHeader);
-    $('#UserMainPanel').scroll(this.fixedHeader)
-    $('.main-panel').scroll(this.fixedHeader);
+    $("#UserMainPanel").scroll(this.fixedHeader);
+    $(".main-panel").scroll(this.fixedHeader);
   }
 
   fixedHeader = () => {
-    if (window.innerWidth>767){
+    if (window.innerWidth > 767) {
       if ($("#UserMainPanel").scrollTop() >= 200) {
-        $('#scr_affix').addClass('fixed-header');
-        if($('.sidebar').length > 0)
-          $('#scr_affix').css({'position': 'relative', 'top': ($("#UserMainPanel").scrollTop() - 100)+'px'});
+        $("#scr_affix").addClass("fixed-header");
+        if ($(".sidebar").length > 0)
+          $("#scr_affix").css({
+            position: "relative",
+            top: $("#UserMainPanel").scrollTop() - 100 + "px"
+          });
       } else {
-        $('#scr_affix').removeClass('fixed-header');
-        $('#scr_affix').attr('style','')
+        $("#scr_affix").removeClass("fixed-header");
+        $("#scr_affix").attr("style", "");
       }
     }
-  }
+  };
 
-  resetFilter = (filterRef) => {
+  resetFilter = filterRef => {
     filterRef.schoolName.value = "";
     filterRef.website.value = "";
     filterRef.phoneNumber.value = "";
@@ -41,21 +89,20 @@ export default class ClaimSchoolBase extends React.Component {
     this.setState({
       filters: {}
     });
-  }
+  };
 
-  onSearch = (filterRef) => {
-    let cskill = filterRef.typeOfSkill.value;
-    if(filterRef.typeOfSkill.value == "Type Of Skills")
-      cskill = ""
-    this.setState({
-      filters: {
-        phone : filterRef.phoneNumber.value,
-        website: filterRef.website.value,
-        name: filterRef.schoolName.value,
-        coords: filterRef.claimcoords,
-        cskill: cskill,
-      }
+  handleSkillCategoryChange = filterRef => {
+    console.log("onSearch", filterRef);
+    let skillCategoryName = filterRef.map(skillCat => {
+      return skillCat._id;
     });
-  }
-
+    console.log("skillCtaegoryName", skillCategoryName);
+    let oldFilter = this.state.filters;
+    // This is skill category filter.
+    oldFilter.skillCat = skillCategoryName;
+    console.log("oldFilter==>", oldFilter);
+    this.setState({
+      filters: oldFilter
+    });
+  };
 }
