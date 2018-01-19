@@ -234,7 +234,7 @@ class SideNavItems extends React.Component {
 
     render() {
         return (
-            <Drawer open={this.props.open} anchor="right" onRequestClose={this.props.handleDrawer} itemScope itemType="http://schema.org/WPSideBar">
+            <Drawer open={this.props.open} anchor="right" onClose={this.props.handleDrawer} itemScope itemType="http://schema.org/WPSideBar">
                 <List className={this.props.classes.drawerList}>
                     <DrawerHeader handleDrawer={this.props.handleDrawer} drawerHeader={this.props.classes.drawerHeader}/>
                     <Divider />

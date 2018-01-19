@@ -129,6 +129,7 @@ class ClassTypeList extends Component {
                 		classInterestData={this.props.classInterestData}
                         locationName={this.props.locationName}
                         handleSeeMore={this.props.handleSeeMore}
+                        filters={this.props.filters}
                 	/>
   				}
   			})
@@ -181,6 +182,7 @@ class ClassTypeList extends Component {
                           cardsData={classTypeData}
                           classInterestData={this.props.classInterestData}
                           handleSeeMore={this.props.handleSeeMore}
+                          filters={this.props.filters}
                         />
                       </div>
 
@@ -201,6 +203,7 @@ class ClassTypeList extends Component {
                                   cardsData={classTypeData}
                                   classInterestData={this.props.classInterestData}
                                   handleSeeMore={this.props.handleSeeMore}
+                                  filters={this.props.filters}
                                 />)
 							}
                             {
