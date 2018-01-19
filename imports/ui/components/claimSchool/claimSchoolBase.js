@@ -5,8 +5,33 @@ export default class ClaimSchoolBase extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      filters: {}
+      filters: {},
+      sticky: false,
     }
+  }
+  handleFixedToggle = (defaultPosition) => {
+      console.log("handleFixedToggle", defaultPosition)
+      const stickyPosition = !defaultPosition;
+      console.log(this.state.sticky, defaultPosition);
+      if (this.state.sticky != stickyPosition) {
+          this.setState({
+              sticky: stickyPosition
+          });
+      }
+  }
+
+  onLocationChange = (location) => {
+        console.log("location",location);
+        // this.state.filter['coords'] = location.coords;
+        // this.state.locationName = location.name;
+  }
+  locationInputChanged = (event) => {
+      console.log("locationInputChanged", event.target.value);
+      //  if(!event.target.value) {
+      //     this.state.filter['coords'] = null;
+      //     this.state.locationName = null;
+      //     this.props.clearDefaultLocation();
+      // }
   }
 
   componentDidMount() {
@@ -45,6 +70,7 @@ export default class ClaimSchoolBase extends React.Component {
 
   onSearch = (filterRef) => {
     let cskill = filterRef.typeOfSkill.value;
+    console.log("onSearch")
     if(filterRef.typeOfSkill.value == "Type Of Skills")
       cskill = ""
     this.setState({

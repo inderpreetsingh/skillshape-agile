@@ -6,9 +6,9 @@ import ClaimSchoolRender from "./claimSchoolRender";
 
 class ClaimSchool extends ClaimSchoolBase {
 
-  render() {
-    return ClaimSchoolRender.call(this, this.props, this.state)
-  }
+    render() {
+        return ClaimSchoolRender.call(this, this.props, this.state)
+    }
 
 }
 
