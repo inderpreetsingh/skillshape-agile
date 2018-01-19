@@ -64,6 +64,7 @@ const LogOutUserSideNav = (props) => (
         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
+            onClick={() => props.handleSignUpDialogBox(true, "Student")}
             name="Student Sign Up"
             iconName="assignment_ind"
             itemType="http://schema.org/RegisterAction"
@@ -71,8 +72,8 @@ const LogOutUserSideNav = (props) => (
         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
-            onClick={props.handleSignUpDialogBox}
-            name="Register"
+            onClick={() => props.handleSignUpDialogBox(true, "School")}
+            name="Register a School"
             iconName="school"
             itemType="http://schema.org/RegisterAction"
         />

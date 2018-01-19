@@ -14,6 +14,7 @@ import SchoolOfferings from './components/school/SchoolOfferings';
 import MyCalendar from './components/MyCalendar';
 
 import BrandBar from './components/BrandBar';
+import TopSearchBar from './components/TopSearchBar';
 import Footer from './components/footer/index.jsx';
 import ClassMap from './components/map/ClassMap';
 import ClassTimesBar from './components/classTimes/ClassTimesBar';
@@ -104,7 +105,7 @@ class ClassType extends Component {
     return (
       <MuiThemeProvider theme={muiTheme}>
         <Wrapper>
-          <BrandBar positionFixed={true}/>
+          <TopSearchBar positionFixed={true}/>
 
           <PageContentWrapper>
             {/* Top Section After Brandbar */}
