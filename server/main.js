@@ -59,7 +59,7 @@ if (Meteor.isServer) {
             // Roles.addUsersToRoles(user._id,'admin')
             // console.log(Roles.userIsInRole(Meteor.userId(),'admin'));
         } else {
-            user.profile = options.profile
+            user.profile = options.profile;
         }
         user.profile = _.extend(user.profile, { "user_type": "C" });
         if (options.preverfiedUser) {

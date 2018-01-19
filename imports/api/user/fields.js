@@ -83,9 +83,17 @@ Schema.UserProfile = new SimpleSchema({
         type: String,
         optional: true
     },
-    passwordSetByUser : {
+    passwordSetByUser: {
         type: Boolean
     },
+    sendMeSkillShapeNotification: {
+        type: Boolean,
+        optional: true
+    },
+    userType: {
+        type: String,
+        optional: true
+    }
 });
 
 Schema.User = new SimpleSchema({

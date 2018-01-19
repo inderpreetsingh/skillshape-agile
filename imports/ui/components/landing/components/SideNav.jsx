@@ -10,6 +10,7 @@ import TermsOfServiceDialogBox from './dialogs/TermsOfServiceDialogBox.jsx';
 import EmailConfirmationDialogBox from './dialogs/EmailConfirmationDialogBox';
 
 class SideNav extends Component {
+
     state = {
         open: false,
         signUpDialogBox: false,
@@ -17,32 +18,51 @@ class SideNav extends Component {
         emailConfirmationDialogBox: false,
         userData: {},
         isBusy:false,
+        errorText: null,
     }
+
     handleDrawerState = (state) => {
         this.setState({open: state});
     }
+
+    unsetError = () =>  this.setState({errorText: null});
+
     handleSignUpDialogBoxState = (state, userType) => {
-        this.setState({signUpDialogBox: state, userData: { userType: userType}});
+        this.setState({signUpDialogBox: state, userData: { userType: userType}, errorText: null});
     }
+
     handleTermsOfServiceDialogBoxState = (state) => {
         this.setState({termsOfServiceDialogBox: state});
     }
+
     handleEmailConfirmationDialogBoxState = (state) => {
         this.setState({emailConfirmationDialogBox: state});
     }
+
     toggleDrawerState = () => {
         this.setState({open: !this.state.open});
     }
+
     handleSignUpSubmit = (payload, event) => {
         event.preventDefault();
-        this.setState({
-            termsOfServiceDialogBox: true,
-            userData: {...this.state.userData, ...payload}
-        });
+        console.log("handleSignUpSubmit -->>",payload);
+        let obj = {};
+        if(!payload.name || !payload.email) {
+            obj.errorText = "* fields are mandatory";
+        } else if(!payload.captchaValue) {
+            obj.errorText = "You can't leave Captcha empty";
+        } else {
+            obj.errorText = null;
+            obj.termsOfServiceDialogBox = true;
+            obj.userData = {...this.state.userData, ...payload};
+        }
+        this.setState(obj);
     }
+
     handleServiceAgreementSubmit = () => {
         this.setState({emailConfirmationDialogBox: true});
     }
+
     handleEmailConfirmationSubmit = () => {
         this.setState({isBusy: true})
         Meteor.call("user.createUser", {...this.state.userData}, (err, res) => {
@@ -61,6 +81,7 @@ class SideNav extends Component {
             this.setState(modalObj)
         })
     }
+
     render() {
         const { currentUser } = this.props;
         console.log("SideNav state -->>>",this.state);
@@ -72,6 +93,7 @@ class SideNav extends Component {
                         onModalClose={() => this.handleSignUpDialogBoxState(false)}
                         onSubmit={this.handleSignUpSubmit}
                         errorText={this.state.errorText}
+                        unsetError={this.unsetError}
                     />
                 }
                 {
