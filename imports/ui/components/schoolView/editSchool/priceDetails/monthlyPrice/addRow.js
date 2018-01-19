@@ -11,11 +11,18 @@ export default class AddRow extends React.Component {
 
 	constructor(props) {
         super(props);
-        this.state = {
-            row: get(this.props, "rowData", [{month: null, cost: null}])
+            this.state = {
+                row: get(this.props, "rowData", [{month: null, cost: null}])
+            }
+    }
+    componentWillReceiveProps(props) {
+        // Change row data only if payment method changes
+        if(this.props.tabValue != props.tabValue) {
+            this.setState({
+                row: get(props, "rowData", [{month: null, cost: null}])
+            })
         }
     }
-
     addNewRow = ()=> {
     	const oldRow = [...this.state.row];
     	oldRow.push({ month: null, cost: null });
@@ -41,14 +48,13 @@ export default class AddRow extends React.Component {
     }
 
 	render() {
-		// console.log("Add row state -->>",this.state);
-		const { classes } = this.props;
+        const { classes, tabValue } = this.props;
 		return (
 			<div style={{border: '1px solid black', margin: 2, padding: 5, backgroundColor: 'antiquewhite'}}>
 				{
 					this.state.row.map((data, index) => {
 						return (
-			                <Grid key={index} container>
+			                <Grid key={tabValue + index} container>
 			                    <Grid  item xs={12} sm={4}>
 			                        <TextField
 			                        	required={true}

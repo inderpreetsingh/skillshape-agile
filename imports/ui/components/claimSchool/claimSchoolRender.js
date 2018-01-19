@@ -5,7 +5,7 @@ export default function () {
   console.log("claim school render ==",this.props);
    return (
        <div>
-         <ClaimSchoolFilter ref="ClaimSchoolFilter" {...this.props} resetFilter={this.resetFilter} onSearch={this.onSearch}/>
+         {/*<ClaimSchoolFilter ref="ClaimSchoolFilter" {...this.props} resetFilter={this.resetFilter} onSearch={this.onSearch}/>*/}
          <ClaimSchoolList filters={this.state.filters} />
        </div>
    )

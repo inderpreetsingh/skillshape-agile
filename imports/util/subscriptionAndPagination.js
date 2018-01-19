@@ -42,7 +42,7 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
         pageStart:0,
         loadMore: (pageToLoad)=>{loadMore(pageToLoad)},
         threshold:100,
-        loader: (<ContainerLoader />)
+        loader: (<Loading />)
       };
     }, InfiniteScroll);
 

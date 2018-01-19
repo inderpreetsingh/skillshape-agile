@@ -6,7 +6,11 @@ import MonthlyPriceRender from './monthlyPriceRender';
 const styles = theme => {
     return {
         card: {
-          },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            height:'100%'
+        },
         bullet: {
             display: 'inline-block',
             margin: '0 2px',

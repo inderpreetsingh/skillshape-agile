@@ -52,9 +52,10 @@ class MonthlyPriceForm extends React.Component {
             pymtType: pymtType,
             selectedClassType: get(this.props, 'data.selectedClassType', null),
             tabValue: 0,
-            autoWithDraw: pymtType === "Automatic Withdrawal",
-            payToGo: pymtType === "Pay To You Go",
-            pymtDetails: get(this.props, 'data.pymtDetails', [ { month: null, cost: null} ])
+            autoWithDraw: pymtType && pymtType['autoWithDraw'],
+            payAsYouGo: pymtType && pymtType['payAsYouGo'],
+            pymtDetails: get(this.props, 'data.pymtDetails', [ { month: null, cost: null} ]),
+            pymtMethod: pymtMethod
         }
         if(pymtMethod && pymtMethod === "Pay Up Front")
             state.tabValue = 1;
@@ -74,16 +75,20 @@ class MonthlyPriceForm extends React.Component {
             pymtMethod: "Pay Up Front",
             pymtDetails: this.refs.AddRow.getRowData(),
         }
-
         if(tabValue === 0) {
-            if(!pymtType) {
+            // No option is selected for making payment then need to show this `Please select any payment type`.
+            if(pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo) {
                 toastr.error("Please select any payment type.","Error");
                 return
             }
+            if(pymtType && pymtType.payUpFront) {
+                delete pymtType.payUpFront;
+            }
             payload.pymtType = pymtType;
             payload.pymtMethod = "Pay Each Month";
+        } else {
+            payload.pymtType ={payUpFront:true};
         }
-
         this.setState({isBusy: true});
 
         if(data && data._id) {
@@ -108,10 +113,6 @@ class MonthlyPriceForm extends React.Component {
         });
     }
 
-    handleSelectOnChange = event => {
-        this.setState({ pymtType: event.target.value });
-    }
-
     handleClassTypeInputChange = (value) => {
         Meteor.call("classType.getClassTypeByTextSearch",{schoolId:this.props.schoolId, textSearch: value}, (err,res) => {
             console.log("classType.getClassTypeByTextSearch res -->>",res)
@@ -126,10 +127,11 @@ class MonthlyPriceForm extends React.Component {
     }
 
     handleCheckBox = (key, disableKey, pymtType, event, isInputChecked) => {
+        let oldPayment = this.state.pymtType || {};
+        oldPayment[pymtType] = isInputChecked;
         this.setState({
             [key]: isInputChecked,
-            [disableKey]: false,
-            pymtType: isInputChecked ? pymtType : null,
+            pymtType: oldPayment,
         })
     }
 
@@ -139,7 +141,8 @@ class MonthlyPriceForm extends React.Component {
         console.log("MonthlyPriceForm render props -->>>",this.props);
         console.log("MonthlyPriceForm render state -->>>",this.state);
         const { fullScreen, data, classes } = this.props;
-        const { classTypeData, pymtDetails } = this.state;
+        const { classTypeData, pymtMethod, pymtDetails } = this.state;
+        const tabValue = this.state.tabValue == 0 ? 'Pay Each Month' : 'Pay Up Front';
         return (
             <div>
                 <Dialog
@@ -203,7 +206,7 @@ class MonthlyPriceForm extends React.Component {
                                                           control={
                                                             <Checkbox
                                                               checked={this.state.autoWithDraw}
-                                                              onChange={this.handleCheckBox.bind(this, "autoWithDraw", "payToGo", "Automatic Withdrawal")}
+                                                              onChange={this.handleCheckBox.bind(this, "autoWithDraw", "payAsYouGo", "autoWithDraw")}
                                                               value={"autoWithDraw"}
                                                               classes={{
                                                                 checked: classes.checked,
@@ -218,21 +221,21 @@ class MonthlyPriceForm extends React.Component {
                                                         <FormControlLabel
                                                           control={
                                                             <Checkbox
-                                                              checked={this.state.payToGo}
-                                                              onChange={this.handleCheckBox.bind(this, "payToGo", "autoWithDraw", "Pay To You Go")}
-                                                              value={"payToGo"}
+                                                              checked={this.state.payAsYouGo}
+                                                              onChange={this.handleCheckBox.bind(this, "payAsYouGo", "autoWithDraw", "payAsYouGo")}
+                                                              value={"payAsYouGo"}
                                                               classes={{
                                                                 checked: classes.checked,
                                                               }}
                                                             />
                                                           }
-                                                          label="Pay To You Go"
+                                                          label="Pay As You Go"
                                                         />
                                                     </Grid>
                                                 </Grid>
                                             )
                                         }
-                                        <AddRow ref="AddRow" rowData={pymtDetails} classes={classes}/>
+                                        <AddRow ref="AddRow"  tabValue={tabValue} rowData={(tabValue !== pymtMethod) ? [ { month: null, cost: null} ] :  pymtDetails} classes={classes}/>
                                     </div>
 
                                 </form>

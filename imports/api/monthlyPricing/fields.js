@@ -21,8 +21,9 @@ MonthlyPricing.attachSchema(new SimpleSchema({
         optional: true
     },
     pymtType: {
-        type: String,
-        optional: true
+        type: Object,
+        optional: true,
+        blackbox: true
     },
     pymtMethod: {
         type: String,
