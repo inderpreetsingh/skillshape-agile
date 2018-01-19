@@ -288,22 +288,15 @@ Meteor.publish("school.getClassTypesByCategory", function({
     // }
 })
 
-Meteor.publish("ClaimSchoolFilter", function ({phone, website, name, coords, cskill, role, limit}) {
+Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, role, limit}) {
     filter = {}
     limit = { limit: limit }
     schoolList = School.find({ is_publish: 'N' }).fetch();
-    // UnPublishSchoolIds = schoolList.map(function (a) { return a._id });
-    if (phone) {
-      filter.phone = { '$regex': '' + phone + '', '$options': '-i' };
-    }
-    if (website) {
-      filter.website = { '$regex': '' + website + '', '$options': '-i' };
-    }
-    if (name) {
-      filter.name = { '$regex': '' + name + '', '$options': '-i' };
+    if (schoolName) {
+      filter.name = { '$regex': '' + schoolName + '', '$options': '-i' };
     }
     AllSchoolIds = []
-    console.log(coords);
+    console.log("coords",coords);
     if (coords) {
       // place variable will have all the information you are looking for.
       var maxDistance = 50;
@@ -323,8 +316,10 @@ Meteor.publish("ClaimSchoolFilter", function ({phone, website, name, coords, csk
       filter._id = { $in: schoolIds };
       AllSchoolIds = schoolIds;
     }
-    if (cskill) {
-      class_type = ClassType.find({ skillTypeId: cskill }).fetch()
+    console.log("cskill===>",skillCat)
+    if (skillCat && skillCat.length > 0) {
+      class_type = ClassType.find({ skillCategoryId: { $in: skillCat } }).fetch()
+      console.log("class_type",class_type)
       schoolIds = class_type.map(function (a) {
         return a.schoolId;
       });
