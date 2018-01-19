@@ -32,17 +32,19 @@ export default function () {
                	{
                		monthlyPricingData && monthlyPricingData.map((monthPrice, index)=> {
                               let paymentType = '';
+                              if(monthPrice.pymtType) {
                                    if(monthPrice.pymtType['autoWithDraw'] && monthPrice.pymtType['payAsYouGo']) {
                                         paymentType += 'Automatic Withdrawal and Pay As You Go';
                                    } else if(monthPrice.pymtType['autoWithDraw']) {
                                         paymentType += 'Automatic Withdrawal';
 
-                                   }else if(monthPrice.pymtType['payAsYouGo']) {
+                                   } else if(monthPrice.pymtType['payAsYouGo']) {
                                         paymentType += 'Pay As You Go';
 
                                    } else if(monthPrice.pymtType['payUpFront']) {
                                         paymentType += 'Pay Up Front';
                                    }
+                              }
                			return (
                                    <Grid item xs={12} md={3} sm={4}>
                     				<Card key={index} className={classes.card}>
