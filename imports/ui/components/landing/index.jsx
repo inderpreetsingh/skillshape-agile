@@ -3,7 +3,7 @@ import { debounce } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import {Element, scroller } from 'react-scroll'
-import Sticky from 'react-sticky-el';
+import Sticky from 'react-stickynode';
 
 import Cover from './components/Cover.jsx';
 import BrandBar from './components/BrandBar.jsx';
@@ -29,18 +29,6 @@ const FilterBarWrapper = styled.div`
   margin: ${helpers.rhythmDiv}px;
 `;
 
-
-// const CardsDisplaySectionWrapper = styled.section`
-//   width: calc(100% - ${helpers.rhythmDiv}px);
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: space-between;
-
-//   @media screen and (min-width : 0) and (max-width: ${helpers.tablet}px) {
-//     width: 100%;
-//   }
-// `;
-
 const MapOuterContainer = styled.div`
   width: 40%;
   display: block;
@@ -51,20 +39,19 @@ const MapOuterContainer = styled.div`
 `;
 
 const MapContainer = styled.div`
-  width: auto;
-  height: 100%;
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  transform: translateY(75px);
+  height: calc(100vh - 80px);
 `;
 
 const WithMapCardsContainer = styled.div`
   width: 60%;
-  padding: ${helpers.rhythmDiv * 2}px;
+  padding:${helpers.rhythmDiv * 2}px;
   padding-top: 0;
+
+  ${helpers.flexDirectionColumn}
+  justify-content: space-between;
+  transform: translateY(80px);
+
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     display: none;
     width: 0;
@@ -88,6 +75,7 @@ const FooterOuterWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 100%;
+
   @media screen and (max-width : ${helpers.tablet + 100}px) {
     display: none;
     width: 0;
@@ -96,7 +84,7 @@ const FooterOuterWrapper = styled.div`
 `;
 
 const FooterWrapper = styled.div`
-  width: 60%;
+  width: 100%;
 `;
 
 
@@ -117,7 +105,6 @@ const CenterCapsule = styled.div`
    padding:4px;
  `;
 
-
 class Landing extends Component {
 
     constructor(props) {
@@ -134,14 +121,17 @@ class Landing extends Component {
         this.onSearch = debounce(this.onSearch, 1000);
     }
 
-    handleFixedToggle = (defaultPosition) => {
-        const stickyPosition = !defaultPosition;
-        console.log(this.state.sticky, defaultPosition);
-        if(this.state.sticky != stickyPosition) {
-            this.setState({
-               sticky: stickyPosition
-            });
-        }
+    handleStickyStateChange = (status) => {
+      console.log(status,"status..")
+      if (status.status === 2) {
+        this.setState({
+           sticky: true
+        });
+      }else if(status.status === 0) {
+        this.setState({
+           sticky: false
+        });
+      }
     }
 
     handleToggleMapView = () => {
@@ -234,9 +224,11 @@ class Landing extends Component {
     render() {
         // console.log("Landing state -->>",this.state);
         console.log("Landing props -->>",this.props);
+        console.log('this.state.cardsList',this.state.cardsDataList[0]);
         return(
             <div>
-                {!this.state.mapView && (
+                {!this.state.mapView &&
+                  (
                   <Fragment>
                   <Cover itemScope itemType="http://schema.org/WPHeader">
                     <BrandBar
@@ -246,23 +238,33 @@ class Landing extends Component {
                         onSearch={this.onSearch}
                         getMyCurrentLocation={this.getMyCurrentLocation}
                     />
-                </Cover>
+                    </Cover>
                 <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
                 </Fragment>
               )}
 
-
-
                  <div>
-                    <Sticky stickyClassName={"filter-panel-sticked"} onFixedToggle={this.handleFixedToggle}>
-                        <FilterPanel
-                            clearDefaultLocation={this.clearDefaultLocation}
-                            currentAddress={this.state.defaultLocation || this.state.locationName}
-                            applyFilters={this.applyFilters}
-                            filters={this.state.filters}
-                            stickyPosition={this.state.sticky}
-                        />
-                   </Sticky>
+                    {!this.state.mapView ?
+                      (<Sticky innerZ={10} onStateChange={this.handleStickyStateChange} >
+                      <FilterPanel
+                          clearDefaultLocation={this.clearDefaultLocation}
+                          currentAddress={this.state.defaultLocation || this.state.locationName}
+                          applyFilters={this.applyFilters}
+                          filters={this.state.filters}
+                          stickyPosition={this.state.sticky}
+                      />
+                    </Sticky>)
+                    : (
+
+                      <FilterPanel
+                          clearDefaultLocation={this.clearDefaultLocation}
+                          currentAddress={this.state.defaultLocation || this.state.locationName}
+                          applyFilters={this.applyFilters}
+                          mapView={this.state.mapView}
+                          filters={this.state.filters}
+                          stickyPosition={this.state.sticky}
+                      />
+                    )}
                  </div>
 
 
@@ -277,22 +279,34 @@ class Landing extends Component {
                         splitByCategory={true}
                         setSchoolIdFilter={this.setSchoolIdFilter}
                         {...this.props}
+
                     />
                 </Element>
 
-                 {/*<Element name="content-container" className="element">
+
+                {/*
+                 <Element name="content-container" className="element">
                   <MainContentWrapper>
                     {this.state.mapView ?
                       (
                         <Fragment>
                           <MapOuterContainer>
-                           <Sticky topOffset={-100} className="map-holder" stickyStyle={{transform: 'translateY(80px)', height: 'calc(100vh - 50px)'}}>
-                              <ClassMap isMarkerShown />
+                            <Sticky top={0}>
+                              <MapContainer>
+                                <ClassMap isMarkerShown />
+                              </MapContainer>
                             </Sticky>
                           </MapOuterContainer>
                          <WithMapCardsContainer>
-                             <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
-                             <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
+                            <div>
+                            <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
+                            <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
+                            </div>
+                            <FooterOuterWrapper>
+                              <FooterWrapper>
+                                <Footer mapView={this.state.mapView}/>
+                              </FooterWrapper>
+                            </FooterOuterWrapper>
                          </WithMapCardsContainer>
                        </Fragment>
                      ) :
@@ -304,16 +318,7 @@ class Landing extends Component {
                  </MainContentWrapper>
                </Element>*/}
 
-               {this.state.mapView ?
-                  (<FooterOuterWrapper>
-                    <FooterWrapper>
-                      <Footer mapView={this.state.mapView}/>
-                    </FooterWrapper>
-                  </FooterOuterWrapper>
-                  )
-                  :
-                  <Footer mapView={this.state.mapView}/>
-              }
+               {!this.state.mapView && <Footer mapView={this.state.mapView}/>}
 
                 <SwitchViewWrapper>
                     <SwitchIconButton onClick={this.handleToggleMapView}/>
@@ -322,4 +327,6 @@ class Landing extends Component {
         )
     }
 }
+
+
 export default Landing;

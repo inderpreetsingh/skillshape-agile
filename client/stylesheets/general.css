@@ -191,3 +191,12 @@ material ui search bar */
 .map-holder {
   height: calc(100vh - 60px);
 }
+
+/*
+  FLEX RULES
+*/
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}

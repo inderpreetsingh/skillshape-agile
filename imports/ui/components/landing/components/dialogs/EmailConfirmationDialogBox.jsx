@@ -13,6 +13,7 @@ import { MuiThemeProvider} from 'material-ui/styles';
 import PrimaryButton from '../buttons/PrimaryButton';
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
+import { ContainerLoader } from '/imports/ui/loading/container';
 
 import Dialog , {
   DialogActions,
@@ -62,10 +63,10 @@ const EmailConfirmationDialogBox = (props) => (
     itemType="http://schema.org/ConfirmAction"
   >
   <MuiThemeProvider theme={muiTheme}>
-
+    { props.isLoading && <ContainerLoader/>}
     <DialogTitle>
       <DialogTitleWrapper>
-        <span itemProp="name"Email Confirmation</span>
+       <span itemProp="name"> Email Confirmation</span>
 
         <IconButton color="primary" onClick={props.onModalClose}>
           <ClearIcon/>
@@ -97,10 +98,12 @@ EmailConfirmationDialogBox.propTypes = {
   schoolEmail: PropTypes.string,
   onAgreeButtonClick: PropTypes.func,
   onDisAgreeButtonClick: PropTypes.func,
+  isLoading: PropTypes.bool,
 }
 
 EmailConfirmationDialogBox.defaultProps = {
-    schoolEmail: 'school@abc.com'
+    schoolEmail: 'school@abc.com',
+    isLoading: false,
 }
 
 export default withStyles(styles)(EmailConfirmationDialogBox);

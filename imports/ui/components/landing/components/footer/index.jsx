@@ -41,13 +41,13 @@ const Footer = (props) => (
         :
         (
           <Grid container spacing={24} justify="space-between" alignItems="flex-start">
-              <Grid item md={6} sm={6}>
+              <Grid item md={7} sm={7}>
                   {props.thirdSection ? props.thirdSection:
                   <Subscribe
                       onEmailFieldChange={props.onEmailFieldChange}
                       onConnectUsButtonClick={props.onConnectUsButtonClick} />}
               </Grid>
-              <Grid item md={6} sm={6}>
+              <Grid item md={5} sm={5}>
                   {props.fourthSection ? props.fourthSection: <ConnectWithUs />}
               </Grid>
           </Grid>

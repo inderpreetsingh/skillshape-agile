@@ -9,8 +9,12 @@ import { isEmpty } from 'lodash';
 import { MarkerClusterer } from '/imports/ui/components/landing/components/jss/markerclusterer';
 
 let mc;
+let infobox;
+let ibOptions;
 let googleMarkers = [];
 let locations = [];
+
+let InfoBoxInstance;
 
 const mapOptions = {
     zoom: 8,
@@ -19,25 +23,6 @@ const mapOptions = {
     center: { lat: -25.363, lng: 131.044 }
 };
 
-const ibOptions = {
-    content: '',
-    disableAutoPan: false,
-    maxWidth: 0,
-    zIndex: null,
-    boxStyle: {
-        padding: "0px 0px 0px 0px",
-        width: "300px",
-        height: "325px"
-    },
-    pixelOffset: new google.maps.Size(-140, 0),
-    closeBoxURL: "",
-    infoBoxClearance: new google.maps.Size(1, 1),
-    isHidden: false,
-    pane: "floatPane",
-    enableEventPropagation: false
-};
-
-let infobox;
 
 function infoSchool({school, classTypes}) {
     if(school) {
@@ -105,12 +90,35 @@ export function initializeSchoolEditLocationMap(location) {
 
 export function initializeMap(center) {
     if (document.getElementById('google-map')) {
+        import('/imports/ui/components/landing/components/jss/infoBox').then(InfoBox => {
+            InfoBoxInstance = InfoBox.InfoBox;
+
+            ibOptions = {
+                content: '',
+                disableAutoPan: false,
+                maxWidth: 0,
+                zIndex: null,
+                boxStyle: {
+                    padding: "0px 0px 0px 0px",
+                    width: "300px",
+                    height: "325px"
+                },
+                closeBoxURL: "",
+                pane: "floatPane",
+                isHidden: false,
+                enableEventPropagation: false,
+                pixelOffset: new google.maps.Size(-140, 0),
+                infoBoxClearance: new google.maps.Size(1, 1),
+            };
+        });
         document.getElementById('google-map').innerHTML = ""
         let geolocate;
         let map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
 
         geolocate = new google.maps.LatLng(center[0], center[1])
         map.setCenter(geolocate);
+        let mcOptions = {  maxZoom: 12 };
+        mc = new MarkerClusterer(map, [], mcOptions);
         // if (!!navigator.geolocation) {
         //     navigator.geolocation.getCurrentPosition(function(position) {
         //         geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -139,7 +147,7 @@ export function initializeMap(center) {
                   search: `?zoom=${map.getZoom()}&SWPoint=${SWPoint}&NEPoint=${NEPoint}`
                 })
             },countDebounce)();
-            countDebounce = 1000;
+            countDebounce = 2000;
         });
         return map;
     }
@@ -150,6 +158,8 @@ export function setMarkersOnMap(map, SLocation) {
     let newMakers = [];
     let deleteMakers = [];
     let infoBoxes = [];
+    let oldMarkers = mc.getMarkers() || [];
+    let oldMarkersLocationsIdObj = mc.getMarkers() || [];
     locations = [];
     if(mc && googleMarkers.length > 0) {
         // console.log("Old googleMarkers --->>",googleMarkers)
@@ -159,17 +169,23 @@ export function setMarkersOnMap(map, SLocation) {
     google.maps.event.addListener(map, 'click', function() {
         infobox.close();
     });
+    for(let j=0; j<oldMarkers.length; j++ ) {
+        oldMarkersLocationsIdObj[oldMarkers[j].locationId] = true
+    }
     for (let i = 0; i < SLocation.length; i++) {
-        locations.push(SLocation[i]._id);
+        let markerAlreadyExist = false;
+        if(oldMarkersLocationsIdObj[SLocation[i]._id]) {
+            markerAlreadyExist = true;
 
-        let index = previousLocation.indexOf(SLocation[i]._id);
-        if(index < 0) {
+        }
+        if(!markerAlreadyExist) {
 
             let latLng = new google.maps.LatLng(eval(SLocation[i].geoLat),eval(SLocation[i].geoLong));
             let marker = new google.maps.Marker({
                 position: latLng,
                 title: SLocation[i].title,
                 schoolId: SLocation[i].schoolId,
+                locationId: SLocation[i]._id,
                 map: map,
                 _id: SLocation[i]._id,
             });
@@ -178,37 +194,20 @@ export function setMarkersOnMap(map, SLocation) {
             google.maps.event.addListener(marker, 'click', function() {
                 Meteor.call("getClassesForMap",{schoolId: SLocation[i].schoolId},(err,result)=> {
                     if(result) {
-                        infobox = new InfoBox(ibOptions);
-                        infobox.setContent(infoSchool(result))
                         if(infobox) {
                             infobox.close();
                         }
+                        infobox = new InfoBoxInstance(ibOptions);
+                        infobox.setContent(infoSchool(result))
                         infobox.open(map, marker);
                         map.panTo(infobox.getPosition());
                     }
                 })
             });
-            googleMarkers.push(marker);
             newMakers.push(marker);
         }
     }
-
-    for(let j=0; j<googleMarkers.length; j++ ) {
-        if(locations.indexOf(googleMarkers[j]._id) != -1) {
-            deleteMakers.push(googleMarkers[j]);
-        }
-    }
-    // console.log("deleteMakers --->>",deleteMakers);
-    if(mc && deleteMakers.length > 0) {
-        mc.clearMarkers(deleteMakers);
-    }
-    let mcOptions = {  maxZoom: 12 };
-    if(mc) {
-        mc.addMarkers(newMakers)
-    } else {
-        mc = new MarkerClusterer(map, newMakers, mcOptions);
-    }
-
+    mc.addMarkers(newMakers)
     return
 }
 
