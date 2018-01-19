@@ -7,11 +7,12 @@ import {cutString} from '/imports/util';
 import config from '/imports/config';
 import { isEmpty } from 'lodash';
 import { MarkerClusterer } from '/imports/ui/components/landing/components/jss/markerclusterer';
-import { InfoBox } from '/imports/ui/components/landing/components/jss/infoBox';
 
 let mc;
 let googleMarkers = [];
 let locations = [];
+
+let InfoBoxInstance;
 
 const mapOptions = {
     zoom: 8,
@@ -105,6 +106,10 @@ export function initializeSchoolEditLocationMap(location) {
 }
 
 export function initializeMap(center) {
+    import('/imports/ui/components/landing/components/jss/infoBox').then(InfoBox => {
+        InfoBoxInstance = InfoBox.InfoBox;
+        console.log("InfoBoxInfoBoxInfoBox", InfoBoxInstance)
+    });
     if (document.getElementById('google-map')) {
         document.getElementById('google-map').innerHTML = ""
         let geolocate;
@@ -140,7 +145,7 @@ export function initializeMap(center) {
                   search: `?zoom=${map.getZoom()}&SWPoint=${SWPoint}&NEPoint=${NEPoint}`
                 })
             },countDebounce)();
-            countDebounce = 1000;
+            countDebounce = 3000;
         });
         return map;
     }
@@ -160,8 +165,9 @@ export function setMarkersOnMap(map, SLocation) {
     google.maps.event.addListener(map, 'click', function() {
         infobox.close();
     });
+    console.log("SLocation", SLocation);
+    console.log("previousLocation", previousLocation);
     for (let i = 0; i < SLocation.length; i++) {
-        locations.push(SLocation[i]._id);
 
         let index = previousLocation.indexOf(SLocation[i]._id);
         if(index < 0) {
@@ -171,6 +177,7 @@ export function setMarkersOnMap(map, SLocation) {
                 position: latLng,
                 title: SLocation[i].title,
                 schoolId: SLocation[i].schoolId,
+                map: map,
                 _id: SLocation[i]._id,
             });
 
@@ -181,7 +188,7 @@ export function setMarkersOnMap(map, SLocation) {
                         if(infobox) {
                             infobox.close();
                         }
-                        infobox = new InfoBox(ibOptions);
+                        infobox = new InfoBoxInstance(ibOptions);
                         infobox.setContent(infoSchool(result))
                         infobox.open(map, marker);
                         map.panTo(infobox.getPosition());
@@ -191,10 +198,11 @@ export function setMarkersOnMap(map, SLocation) {
             googleMarkers.push(marker);
             newMakers.push(marker);
         }
+        locations.push(SLocation[i]._id);
     }
-
     for(let j=0; j<googleMarkers.length; j++ ) {
         if(locations.indexOf(googleMarkers[j]._id) != -1) {
+            console.log("deleteMakers", deleteMakers)
             deleteMakers.push(googleMarkers[j]);
         }
     }
@@ -208,7 +216,7 @@ export function setMarkersOnMap(map, SLocation) {
     } else {
         mc = new MarkerClusterer(map, newMakers, mcOptions);
     }
-
+    console.log("before return");
     return
 }
 
