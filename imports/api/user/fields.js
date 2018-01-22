@@ -84,7 +84,8 @@ Schema.UserProfile = new SimpleSchema({
         optional: true
     },
     passwordSetByUser: {
-        type: Boolean
+        type: Boolean,
+        optional: true
     },
     sendMeSkillShapeNotification: {
         type: Boolean,

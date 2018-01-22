@@ -1,3 +1,6 @@
+// oath services
+import "./oauth.js"
+
 // All methods imported over here
 
 import "/imports/api/modules/methods";

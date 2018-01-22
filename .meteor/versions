@@ -1,4 +1,7 @@
 accounts-base@1.3.6
+accounts-facebook@1.2.1
+accounts-google@1.2.0
+accounts-oauth@1.1.15
 accounts-password@1.4.2
 alanning:roles@1.2.16
 aldeed:autoform@4.2.2
@@ -55,9 +58,11 @@ ecmascript-runtime-server@0.4.1
 ejson@1.0.14
 email@1.2.3
 es5-shim@4.6.15
+facebook-oauth@1.3.2
 fastclick@1.0.13
 fourseven:scss@4.5.4
 geojson-utils@1.0.10
+google-oauth@1.2.5
 harrison:papa-parse@1.1.7
 hot-code-push@1.0.4
 html-tools@1.0.11
@@ -91,6 +96,8 @@ mongo-livedata@1.0.12
 msavin:mongol@4.0.1
 npm-bcrypt@0.9.3
 npm-mongo@2.2.30
+oauth@1.1.13
+oauth2@1.1.11
 observe-sequence@1.0.16
 ordered-dict@1.0.9
 promise@0.9.0
