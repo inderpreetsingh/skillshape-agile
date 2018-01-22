@@ -15,18 +15,20 @@ export const sendPackagePurchaseEmail = function({to, buyer, packageName }) {
     });
 }
 
+// Send Email to school admin when user wants to join a class.
 export const sendJoinClassEmail = function({classTypeData}) {
-    var user = Meteor.users.findOne(classTypeData.userId);
+    let user = Meteor.users.findOne(classTypeData.userId);
     let school = School.findOne(classTypeData.schoolId);
     let classTimes = ClassTimes.findOne(classTypeData.classTimeId);
     let classType = ClassType.findOne(classTypeData.classTypeId);
     let studentName = user.profile && user.profile.firstName;
+    let schoolAdminRec = Meteor.users.findOne(school.userId);
     if (Meteor.isServer) {
         Email.send({
-            to: 'sam@skillshape.com',
+            to: schoolAdminRec.emails[0].address,
             from: config.fromEmailForJoiningClass,
             subject: 'Join Class Request Recieved',
-            html: `<b>${studentName}</b> has showed interest in joining your : <b>${classType.name}</b> at <b>${classTimes.name}</b>.`
+            html: `Hi ${schoolAdminRec.profile.firstName}, <br/><b>${studentName}</b> has showed interest in joining your : <b>${classType.name}</b> at <b>${classTimes.name}</b>.`
         });
     }
 }
