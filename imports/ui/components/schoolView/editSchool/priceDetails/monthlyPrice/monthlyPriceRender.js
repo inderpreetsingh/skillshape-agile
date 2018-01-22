@@ -26,7 +26,7 @@ export default function () {
           			onClose={this.handleFormModal}
           		/>
           	}
-               <PanelHeader btnText="Add Per Month Package" title="Per Month Packages" cpation="" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
+               <PanelHeader btnText="Add Per Month Package" title="Per Month Packages" caption="Different Payment Packages can cover different payment methods, Class Types, or Durations" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
                <Grid container className={classes.monthlyPriceContainer}>
                	{

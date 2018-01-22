@@ -3,6 +3,7 @@ export default config = Object.freeze({
 	defaultSchoolImage: "/images/new-logo.png",
 	defaultSchoolLogo: "/images/new-logo.png",
 	fromEmailForPurchasePackage: "Notices@SkillShape.com",
+	fromEmailForJoiningClass: "Notices@SkillShape.com",
 	themeColor: {
 		yellow: '#E9B942',
 		green: '#9DC161',

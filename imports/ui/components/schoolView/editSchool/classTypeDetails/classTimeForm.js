@@ -246,7 +246,7 @@ class ClassTimeForm extends React.Component {
                                                                 fullWidth
                                                             >
                                                                 {
-                                                                    this.state.roomData.map((data, index)=> {
+                                                                    this.state.roomData && this.state.roomData.map((data, index)=> {
                                                                         return <MenuItem key={index} value={data.id}>{data.name}</MenuItem>
                                                                     })
                                                                 }

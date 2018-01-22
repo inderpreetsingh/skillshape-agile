@@ -25,6 +25,7 @@ const styles = theme => {
         },
         headerText: {
             color: "#fff",
+            textAlign:'center'
         },
     }
 }
@@ -32,7 +33,7 @@ const styles = theme => {
 class PanelHeader extends Component {
 
     render() {
-    const {classes, settings, onAddButtonClicked, title, btnText, cpation, icon } = this.props;
+    const {classes, settings, onAddButtonClicked, title, btnText, caption, icon } = this.props;
         return <Paper elevation={1} className={classes.headerContainer}>
                 <Grid container className={classes.classtypeHeader}>
                     <Grid  style={{display: 'inline-flex',alignItems: 'center', padding: 0}} item md={2} sm={3} xs={12}>
@@ -43,7 +44,7 @@ class PanelHeader extends Component {
                     </Grid>
                     <Grid style={{margin: '10px 0'}} item sm={6} md={8} xs={12}>
                         <Typography className={classes.headerText} type="caption" >
-                            {cpation}
+                            {caption}
                         </Typography>
                     </Grid>
                     {btnText && <Grid  style={{display: 'inline-flex',alignItems: 'center'}} item sm={3} md={2} xs={12}>
