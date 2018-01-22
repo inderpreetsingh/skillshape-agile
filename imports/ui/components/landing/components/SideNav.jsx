@@ -81,7 +81,58 @@ class SideNav extends Component {
             this.setState(modalObj)
         })
     }
+    handleLoginGoogle = () => {
+        let self = this;
+        Meteor.loginWithGoogle({}, function(err,result) {
 
+            let modalObj = {
+                open: false,
+                signUpDialogBox: false,
+                termsOfServiceDialogBox: false,
+                emailConfirmationDialogBox: false,
+                isBusy: false,
+            }
+            if(err) {
+                modalObj.errorText = err.reason || err.message;
+                modalObj.signUpDialogBox = true;
+            } else {
+                Meteor.call("user.onSocialSignUp", {...self.state.userData}, (err, res) => {
+                    if(err) {
+                        modalObj.errorText = err.reason || err.message;
+                        modalObj.signUpDialogBox = true;
+                    }
+                })
+            }
+            self.setState(modalObj)
+        });
+    }
+    handleLoginFacebook = () => {
+        let self = this;
+        Meteor.loginWithFacebook({
+            requestPermissions: ['user_friends', 'public_profile', 'email']
+        }, function(err, result) {
+
+            let modalObj = {
+                open: false,
+                signUpDialogBox: false,
+                termsOfServiceDialogBox: false,
+                emailConfirmationDialogBox: false,
+                isBusy: false,
+            }
+            if (err) {
+                modalObj.errorText = err.reason || err.message;
+                modalObj.signUpDialogBox = true;
+            } else {
+                Meteor.call("user.onSocialSignUp", { ...self.state.userData }, (err, res) => {
+                    if (err) {
+                        modalObj.errorText = err.reason || err.message;
+                        modalObj.signUpDialogBox = true;
+                    }
+                })
+            }
+            self.setState(modalObj)
+        });
+    }
     render() {
         const { currentUser } = this.props;
         console.log("SideNav state -->>>",this.state);
@@ -94,6 +145,9 @@ class SideNav extends Component {
                         onSubmit={this.handleSignUpSubmit}
                         errorText={this.state.errorText}
                         unsetError={this.unsetError}
+                        onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
+                        onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
+
                     />
                 }
                 {

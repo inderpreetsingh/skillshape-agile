@@ -32,6 +32,22 @@ Meteor.methods({
 			throw new Meteor.Error("Cannot process due to lack of information");
 		}
 	},
+	"user.onSocialSignUp": function({ name, email, userType, sendMeSkillShapeNotification }) {
+	    console.log("this.userId", this.userId);
+	    if (this.userId) {
+	        const accessType = userType || "Anonymous";
+
+	        Meteor.users.update({
+	            _id: this.userId
+	        }, {
+	            $set: {
+	                'profile.userType': accessType,
+	            }
+	        });
+
+	        Roles.addUsersToRoles(this.userId, accessType);
+	    }
+	},
 	"user.setPassword": function({password}) {
 		if(this.userId) {
 			Meteor.users.update({ _id: this.userId},{ $set: { "profile.passwordSetByUser": true } });
