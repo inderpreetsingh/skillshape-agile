@@ -1,9 +1,13 @@
 import ClassInterest from "./fields";
+import {sendJoinClassEmail} from "/imports/api/email";
+
 
 Meteor.methods({
     "classInterest.addClassInterest": function({doc}) {
         doc.createdAt = new Date();
-        return ClassInterest.insert(doc);
+        return ClassInterest.insert(doc,()=> {
+            sendJoinClassEmail({classTypeData:doc});
+        });
     },
     "classInterest.editClassInterest": function({doc_id, doc}) {
         if (this.userId === doc.userId) {

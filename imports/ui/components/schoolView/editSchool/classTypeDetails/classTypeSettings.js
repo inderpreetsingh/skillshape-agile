@@ -12,7 +12,8 @@ export default classTypeSettings = {
             component: ClassTypeForm,
             buttonTitle: "ADD CLASS TYPE",
             title: "Class Type",
-        }
+        },
+        notes:'Class Types are a group of one or more Class Times where similar or related material is taught to students, possibly grouped by age, skill level, or gender. If you separate classes by age, gender, skill level or material, separate Class Types should be created.'
     },
     mainTable: {
         title: "Class Type",
@@ -36,9 +37,11 @@ export default classTypeSettings = {
     },
     childPanelHeader: {
         leftIcon: "business",
-        title: "ClassTimes",
+        // title: "ClassTimes",
         havingImage: false,
-        notes: "ClassTimes with this ClassType",
+        title: "ClassTimes with this ClassType",
+        notes: `If it is required that students come to more than one class as a group, add the additionall class here.
+Unless attendance to another class is required, a separate Class Times should be created for each class.`,
         actions: {
             component: ClassTimeForm,
             buttonTitle: "Add ClassTime",

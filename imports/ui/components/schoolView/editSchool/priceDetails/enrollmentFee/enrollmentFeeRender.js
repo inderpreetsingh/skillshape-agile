@@ -27,7 +27,7 @@ export default function () {
           			onClose={this.handleFormModal}
           		/>
           	}
-          	<PanelHeader btnText="Add Enrollment Fee" title="Enrollment Fee Cost" cpation="" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
+          	<PanelHeader btnText="Add Enrollment Fee" title="Enrollment Fee Cost" caption="Cost of Enrollment" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
           	<Grid container className={classes.enrollmentFeeContainer}>
 	          	{
