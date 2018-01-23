@@ -17,7 +17,7 @@ import { Link } from 'react-router';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
-import { cutString } from '/imports/util';
+import { cutString, toastrModal } from '/imports/util';
 
 
 const styles = {
@@ -130,6 +130,26 @@ class SchoolCard extends Component {
     // You can also log the error to an error reporting service
     console.info("The error is this...",error, info);
   }
+  handleClaimASchool = (event) => {
+    console.log("claimASchool called",Meteor.user(),this);
+    const { toastr, schoolCardData } = this.props;
+    const user = Meteor.user();
+    if(!user) {
+      // Need to show error in toaster
+      toastr.error('You must be signed in to claim a school. [Sign In] or [Sign Up]', 'Error');
+    } else {
+      const payload ={
+        schoolId: schoolCardData._id,
+        schoolName:schoolCardData.name,
+        userId: user._id,
+        userEmail:user.emails[0].address,
+        userName: user.profile.firstName
+      }
+      Meteor.call('school.claimSchoolRequest',payload,(err, result)=> {
+        console.log("result",result)
+      })
+    }
+  }
   render() {
     console.log("this.props checkUserAccess",this.props)
     const {
@@ -142,7 +162,9 @@ class SchoolCard extends Component {
 
         <div>
           <CardImageWrapper ref={(div) => this.imgContainer = div} style={{height: this.state.imageContainerHeight}}>
-            <CardImage src={schoolCardData.mainImage || cardImgSrc} alt="card img" />
+             <Link to={`/schools/${schoolCardData.slug}`}>
+                <CardImage src={schoolCardData.mainImage || cardImgSrc} alt="card img" />
+              </Link>
           </CardImageWrapper>
 
           <CardContent>
@@ -161,9 +183,7 @@ class SchoolCard extends Component {
             <Grid container>
                 <Grid item xs={6} sm={6} className={classes.marginAuto}>
                   {
-                      <Link to={`/schools/${schoolCardData.slug}`}>
-                        <PrimaryButton fullWidth label="View"/>
-                      </Link>
+                    <PrimaryButton fullWidth label="Claim" onClick={this.handleClaimASchool}/>
                   }
                 </Grid>
             </Grid>
@@ -183,4 +203,4 @@ SchoolCard.defaultProps = {
    classTypeImg: cardImgSrc,
 }
 
-export default withStyles(styles)(SchoolCard);
+export default withStyles(styles)(toastrModal(SchoolCard));

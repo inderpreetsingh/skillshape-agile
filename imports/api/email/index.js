@@ -25,10 +25,26 @@ export const sendJoinClassEmail = function({classTypeData}) {
     let schoolAdminRec = Meteor.users.findOne(school.userId);
     if (Meteor.isServer) {
         Email.send({
-            to: schoolAdminRec.emails[0].address,
+            to: 'sam@skillshape.com',
             from: config.fromEmailForJoiningClass,
             subject: 'Join Class Request Recieved',
             html: `Hi ${schoolAdminRec.profile.firstName}, <br/><b>${studentName}</b> has showed interest in joining your : <b>${classType.name}</b> at <b>${classTimes.name}</b>.`
+        });
+    }
+}
+
+// Send Email to school admin when user claim for a school.
+export const sendClaimASchoolEmail = function(claimSchoolData) {
+    console.log("claimSchoolData",claimSchoolData)
+    // let user = Meteor.users.findOne(claimSchoolData.userId);
+    let school = School.findOne(claimSchoolData.schoolId);
+    let schoolAdminRec = Meteor.users.findOne(school.userId);
+    if (Meteor.isServer) {
+        Email.send({
+            to: 'rajat.rastogi@daffodilsw.com',
+            from: config.fromEmailForJoiningClass,
+            subject: 'Claim A school request received',
+            html: `Hi ${schoolAdminRec.profile.firstName}, <br/><b>${claimSchoolData.userName}</b> has sent claim request for : <b>${school.name}</b> at <b>${claimSchoolData.createdAt}</b>.`
         });
     }
 }

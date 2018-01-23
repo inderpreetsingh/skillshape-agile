@@ -138,7 +138,7 @@ export default function() {
                                   </Button>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                  <Button onClick={this.scrollToTop.bind(this, this.schoolPrice)} color="accent" style={{width: '100%'}} dense raised>
+                                  <Button onClick={this.scrollToTop.bind(this, this.schoolPrice)} style={{width: '100%',backgroundColor:'#4caf50'}} dense raised>
                                     Pricing
                                   </Button>
                                 </Grid>
@@ -205,7 +205,7 @@ export default function() {
                       {enrollmentFee && enrollmentFee.length > 0 ?
                       <Grid item xs={12}>
                           <Typography align="center" type="headline" className={classes.themeSpacing}>
-                            Enrollment Fee
+                            ________________Enrollment Fee_____________
                           </Typography>
                           <Grid container>
                             {
@@ -247,7 +247,7 @@ export default function() {
                       {classPricing && classPricing.length > 0 ?
                         <Grid item xs={12}>
                           <Typography align="center" type="headline" className={classes.themeSpacing}>
-                            Per Class Package
+                            ________________Per Class Package_____________
                           </Typography>
                           <Grid container>
                             {
@@ -297,7 +297,7 @@ export default function() {
                       {monthlyPricing && monthlyPricing.length > 0 ?
                         <Grid item xs={12} >
                           <Typography align="center" type="headline" className={classes.themeSpacing}>
-                            Monthly Packages
+                            ________________Monthly Packages_____________
                           </Typography>
                           <Grid container>
                             {
