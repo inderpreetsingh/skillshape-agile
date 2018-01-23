@@ -10,7 +10,8 @@ import * as helpers from '../jss/helpers.js';
 const iconStyles = {
     height: 25,
     width : 25,
-    marginRight: helpers.rhythmDiv,
+    overflow: 'visible',
+    margin: `0 ${helpers.rhythmDiv * 2}px`
 }
 
 const facebookButtonColor = helpers.facebookButtonColor;
@@ -18,13 +19,18 @@ const facebookButtonColor = helpers.facebookButtonColor;
 const styles = {
     facebookButton: {
         background: facebookButtonColor,
+        width: '100%',
+        padding: '8px 0',
+        textAlign: 'left',
+
         '&:hover': {
             background: facebookButtonColor
         }
     },
     label: {
         textTransform: 'none',
-        color: helpers.lightTextColor
+        color: helpers.lightTextColor,
+        display: 'block'
     }
 }
 

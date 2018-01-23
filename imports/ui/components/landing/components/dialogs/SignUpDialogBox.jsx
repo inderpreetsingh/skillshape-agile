@@ -16,12 +16,13 @@ import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import GoogleIconButton from '../buttons/GoogleIconButton.jsx';
 import FacebookIconButton from '../buttons/FacebookIconButton.jsx';
 import LoginButton from '../buttons/LoginButton.jsx';
-
 import IconInput from '../form/IconInput.jsx';
+
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
 import { emailRegex } from '/imports/util';
 import config from '/imports/config';
+import { logoSrc } from '../../site-settings.js';
 
 import Dialog , {
   DialogActions,
@@ -43,13 +44,32 @@ const styles = {
   dialogPaper: {
     padding: `${helpers.rhythmDiv * 2}px`
   },
+  dialogTitleRoot: {
+    display: 'flex',
+    fontFamily: `${helpers.specialFont}`
+  },
   dialogContent :  {
     '@media screen and (max-width : 500px)': {
       minHeight: '150px',
     }
   },
   dialogAction: {
-    width: '100%'
+    width: '100%',
+    margin: 0
+  },
+  dialogActionsRoot: {
+    width: '100%',
+    padding: `0 ${helpers.rhythmDiv * 3}px`,
+    margin: 0,
+    '@media screen and (max-width : 500px)': {
+      padding: `0 ${helpers.rhythmDiv * 3}px`
+    }
+  },
+  iconButton: {
+    height: 'auto'
+  },
+  formControlRoot: {
+    marginBottom: `${helpers.rhythmDiv * 2}px`
   }
 }
 
@@ -58,13 +78,27 @@ const DialogBoxHeaderText = styled.p`
   color: ${helpers.textColor};
 `;
 
-const DialogTitleWrapper = styled.div`
-  ${helpers.flexHorizontalSpaceBetween}
+const DialogTitleContainer = styled.div`
+  ${helpers.flexCenter};
+  margin: 0 0 ${helpers.rhythmDiv * 2}px 0;
+`;
+
+const DialogTitleWrapper = styled.h1`
+  ${helpers.flexCenter};
+  font-family: ${helpers.specialFont};
+  font-weight: 500;
   width: 100%;
+  margin: 0;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    font-size: ${helpers.baseFontSize * 1.25}px;
+  }
 `;
 
 const DialogActionWrapper = styled.div`
-  ${helpers.flexHorizontalSpaceBetween}
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   width: 100%;
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -72,14 +106,36 @@ const DialogActionWrapper = styled.div`
   }
 `;
 
+const DialogActionButtonsWrapper = styled.div`
+  ${helpers.flexHorizontalSpaceBetween};
+  width: 100%;
 
-const ButtonWrapper = styled.div`
-  width: calc(50% - ${helpers.rhythmDiv * 2}px);
-  padding: ${helpers.rhythmDiv};
-  text-align: center;
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+  }
+`;
+
+const LoginButtonWrapper = styled.div`
+  display: inline-block;
+  margin-left: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     width: 100%;
+    margin-left: 0;
+    margin-top: ${helpers.rhythmDiv}px;
+    padding-right: ${helpers.rhythmDiv}px;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  width: calc(50% - ${helpers.rhythmDiv}px);
+  padding: ${helpers.rhythmDiv};
+  text-align: ${props => props.facebook ? 'right' : 'left'};
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: 100%;
+    text-align: center;
+    margin-bottom: ${props => props.facebook ? '0' : helpers.rhythmDiv}px;
   }
 `;
 
@@ -88,8 +144,20 @@ const InputWrapper = styled.div`
 `;
 
 const ErrorWrapper = styled.span`
-    color: red;
-    float: right;
+  color: red;
+  float: right;
+`;
+
+const LogoImg = styled.img`
+  width: 40px;
+  height: 40px;
+  margin-right: ${helpers.rhythmDiv}px;
+  cursor: pointer;
+  
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: 30px;
+    height: 30px;
+  }
 `;
 
 class SignUpDialogBox extends Component {
@@ -175,24 +243,27 @@ class SignUpDialogBox extends Component {
             >
                 <MuiThemeProvider theme={muiTheme}>
                     <form onSubmit={this.props.onSubmit.bind(this, {name, email, captchaValue, sendMeSkillShapeNotification})}>
-                        <DialogTitle>
-                            <DialogTitleWrapper>
-                                Sign Up
-                                <IconButton color="primary" onClick={onModalClose}>
-                                    <ClearIcon/>
-                                </IconButton >
-                            </DialogTitleWrapper>
-                        </DialogTitle>
-                        <DialogActions classes={{root : classes.dialogAction, action: classes.dialogAction}}>
-                            <DialogActionWrapper>
-                                <ButtonWrapper>
-                                  <GoogleIconButton onClick={onSignUpWithGoogleButtonClick}/>
-                                </ButtonWrapper>
-                                <ButtonWrapper>
-                                  <FacebookIconButton onClick={onSignUpWithFacebookButtonClick}/>
-                                </ButtonWrapper>
-                            </DialogActionWrapper>
-                        </DialogActions>
+
+                      <DialogTitleContainer>
+                        <DialogTitleWrapper>
+                          <LogoImg src={logoSrc}/>
+                          <span>Sign Up For SkillShape</span>
+                        </DialogTitleWrapper>
+                        <IconButton color="primary" onClick={onModalClose} classes={{root: classes.iconButton}}>
+                            <ClearIcon/>
+                        </IconButton >
+                      </DialogTitleContainer>
+
+                      <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
+                          <DialogActionButtonsWrapper>
+                              <ButtonWrapper>
+                                <GoogleIconButton onClick={onSignUpWithGoogleButtonClick}/>
+                              </ButtonWrapper>
+                              <ButtonWrapper facebook>
+                                <FacebookIconButton onClick={onSignUpWithFacebookButtonClick}/>
+                              </ButtonWrapper>
+                          </DialogActionButtonsWrapper>
+                      </DialogActions>
 
                         <DialogContent className={classes.dialogContent}>
 
@@ -214,9 +285,7 @@ class SignUpDialogBox extends Component {
                                 />
                             </InputWrapper>
 
-                            <PrimaryButton type="submit" fullWidth label="Sign Up" onClick={onSignUpButtonClick}></PrimaryButton>
-
-                            <FormControl component="fieldset">
+                            <FormControl component="fieldset" classes={{root: classes.formControlRoot}}>
                                 <FormGroup>
                                     <FormControlLabel
                                       control={
@@ -244,10 +313,13 @@ class SignUpDialogBox extends Component {
                             }
                         </DialogContent>
 
-                        <DialogActions classes={{root : classes.dialogAction, action: classes.dialogAction}}>
+                        <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
                             <DialogActionWrapper>
                                 <Typography> Already a Skill Shape Member ?</Typography>
-                                <LoginButton />
+                                <LoginButtonWrapper>
+                                  <LoginButton />
+                                </LoginButtonWrapper>
+                                <PrimaryButton type="submit" label="Sign Up" onClick={onSignUpButtonClick}></PrimaryButton>
                             </DialogActionWrapper>
                         </DialogActions>
                     </form>

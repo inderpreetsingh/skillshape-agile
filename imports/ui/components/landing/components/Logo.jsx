@@ -8,7 +8,9 @@ import * as settings from '../site-settings.js';
 
 const BrandArea = styled.div`
   display: flex;
-  font-family:${helpers.specialFont};
+  align-items: ${props => props.smallBrandText ? 'center' : 'flex-start'};
+
+  font-family: ${helpers.specialFont};
 
   &:hover .is-logo-area img {
     transform: rotate(360deg)
@@ -19,8 +21,7 @@ const BrandText = styled.h1`
   font-size: ${props => props.smallBrandText ? helpers.baseFontSize*1.5 : helpers.baseFontSize*2}px;
   margin:0;
   font-weight: 600;
-  text-align:center;
-  line-height:${props => props.smallBrandText ? 'inherit' : helpers.brandBarHeight+'px'};
+  line-height:${props => props.smallBrandText ? helpers.baseFontSize * 1.25 : helpers.brandBarHeight}px;
   color: ${helpers.focalColor};
 
   @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
@@ -66,7 +67,7 @@ const LogoImage = styled.img`
 `;
 
 const Logo = ({smallBrandText, brandText, brandTagline, logoSrc}) => (
-    <BrandArea itemScope itemType="http://schema.org/Brand">
+    <BrandArea itemScope itemType="http://schema.org/Brand" smallBrandText={smallBrandText}>
         <LogoWrapper>
           <LogoImage src={logoSrc} itemProp="logo"/>
         </LogoWrapper>
