@@ -8,6 +8,7 @@ import Radio, { RadioGroup } from 'material-ui/Radio';
 import Button from 'material-ui/Button';
 import { withStyles } from "material-ui/styles";
 import { browserHistory } from 'react-router';
+import Card, {CardContent} from 'material-ui/Card';
 
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
@@ -16,12 +17,13 @@ import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 const styles = theme => ({
   boxShadow: {
-    backgroundColor: '#fff',
-    boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)',
-    marginTop:'20px'
+    maxWidth:'1196px !important',
+    margin: 'auto !important',
+    width: 'auto !important'
   },
   paddingProp: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing.unit * 2,
+    paddingTop: theme.spacing.unit * 4
   },
   exactPadding: {
     padding: theme.spacing.unit
@@ -31,6 +33,15 @@ const styles = theme => ({
     fontWeight: 400,
     margin: '0 0 20px',
     paddingLeft: theme.spacing.unit * 3
+  },
+  aboutUsContainer: {
+    maxWidth:'1196px !important',
+    margin: 'auto !important',
+    width: 'auto !important'
+  },
+  contactUsText: {
+    fontWeight: '400',
+    fontSize: '1.0rem',
   }
 });
 
@@ -88,11 +99,11 @@ class AboutUs extends React.Component{
     const { classes } = this.props;
     return(
       <div>
-        <Grid container>
+        <Grid container className={classes.aboutUsContainer}>
           {
             this.state.isLoading && <ContainerLoader />
           }
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={7}>
             <Paper>
               <div className={classes.paddingProp}>
                 <Typography className={classes.typo}>Hi, and welcome to SkillShape!</Typography>
@@ -104,8 +115,13 @@ class AboutUs extends React.Component{
               </div>
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <Paper style={{padding: '12px'}}>
+          <Grid item xs={12} sm={5}>
+            <Card style={{padding: '16px',height: '100%'}}>
+              <CardContent style={{paddingLeft:0}}>
+                <Typography className={classes.contactUsText}>
+                  Please contact us about any questions, concerns or feedback!
+                </Typography>
+              </CardContent>
               <Grid container>
                 <Grid item xs={12} sm={12}>
                     <form id="sendfeedback" onSubmit={this.submit}>
@@ -164,14 +180,16 @@ class AboutUs extends React.Component{
                               />
                             </Grid>
                         </Grid>
-                        <Grid container className="resbtn">
+                        <Grid container className="resbtn" style={{marginTop: '12px'}}>
                           <Grid item sm={12} xs={12}>
                                 <Button
                                     type="submit"
                                     className="btn"
                                     form = "sendfeedback"
                                     raised
-                                    color="accent">
+                                    color="accent"
+                                    style={{boxShadow: 'none'}}
+                                  >
                                     Send
                                 </Button>
                             </Grid>
@@ -179,7 +197,7 @@ class AboutUs extends React.Component{
                     </form>
                 </Grid>
               </Grid>
-            </Paper>
+            </Card>
           </Grid>
         </Grid>
         <Grid container sm={12} md={8} className={classes.boxShadow}>
@@ -202,7 +220,7 @@ class AboutUs extends React.Component{
               </Paper>
           </Grid>
           <Grid item xs={12} sm={8}>
-            <Paper>
+            <Paper style={{height: '100%'}}>
               <div className={classes.exactPadding}>
                 <h3 className="card-title cttb" style={{color:'green'}}>Manage your school</h3>
                 <Typography className={`${classes.typo} ${classes.paddingLeft}`}>Manage Your Curriculum</Typography>
