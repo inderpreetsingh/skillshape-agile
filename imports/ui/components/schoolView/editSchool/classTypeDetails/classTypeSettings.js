@@ -40,8 +40,7 @@ export default classTypeSettings = {
         // title: "ClassTimes",
         havingImage: false,
         title: "ClassTimes with this ClassType",
-        notes: `If it is required that students come to more than one class as a group, add the additionall class here.
-Unless attendance to another class is required, a separate Class Times should be created for each class.`,
+        notes: "Upcoming classes within this class type",
         actions: {
             component: ClassTimeForm,
             buttonTitle: "Add ClassTime",

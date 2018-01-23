@@ -8,18 +8,25 @@ import { browserHistory } from 'react-router';
 
 class LoginButton extends Component {
 
-    state = {
-        loginModal : false,
-        error: {},
-        email: "",
-        password: "",
-        loading: false,
+    constructor(props){
+        super(props);
+        this.state = this.initializeState();
+    }
+
+    initializeState = ()=> {
+        return {
+            loginModal : false,
+            error: {},
+            email: "",
+            password: "",
+            loading: false,
+        }
     }
 
     handleLoginModalState = (state) => {
-        this.setState({
-            loginModal: state
-        })
+        let stateObj = this.initializeState();
+        stateObj.loginModal = state;
+        this.setState(stateObj)
     }
 
     handleInputChange = (inputName, event) => {
@@ -65,6 +72,48 @@ class LoginButton extends Component {
         }
     }
 
+    handleLoginGoogle = () => {
+        let self = this;
+        this.setState({loading: true});
+        Meteor.loginWithGoogle({}, function(err,result) {
+
+            let modalObj = {
+                loginModal: false,
+                loading: false,
+                error: {},
+            }
+            if(err) {
+                modalObj.error.message = err.reason || err.message;
+                modalObj.loginModal = true;
+            }
+            self.setState(modalObj)
+        });
+    }
+
+    handleLoginFacebook = () => {
+        let self = this;
+        this.setState({loading: true});
+        Meteor.loginWithFacebook({
+            requestPermissions: ['user_friends', 'public_profile', 'email']
+        }, function(err, result) {
+
+            let modalObj = {
+                loginModal: false,
+                loading: false,
+                error: {},
+            }
+            if(err) {
+                modalObj.error.message = err.reason || err.message;
+                modalObj.loginModal = true;
+            }
+            self.setState(modalObj)
+        });
+    }
+
+    handleSignUpModal = ()=> {
+        console.log("handleSignUpModal!!!")
+    }
+
     render() {
         const {loginModal,error,isBusy} = this.state;
         const {icon,fullWidth,iconName,currentUser} = this.props;
@@ -87,6 +136,9 @@ class LoginButton extends Component {
                         onModalClose={() => this.handleLoginModalState(false)}
                         handleInputChange={this.handleInputChange}
                         onSignInButtonClick={this.onSignInButtonClick}
+                        onSignUpButtonClick={this.handleSignUpModal}
+                        onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
+                        onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
                     />
                 }
             </Fragment>

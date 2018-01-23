@@ -11,8 +11,13 @@ import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 
 import { MuiThemeProvider} from 'material-ui/styles';
+import {withStyles} from 'material-ui/styles';
+
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
+
+import GoogleIconButton from '../buttons/GoogleIconButton.jsx';
+import FacebookIconButton from '../buttons/FacebookIconButton.jsx';
 
 import Dialog , {
   DialogActions,
@@ -22,6 +27,18 @@ import Dialog , {
 } from 'material-ui/Dialog';
 
 import { ContainerLoader } from '/imports/ui/loading/container';
+
+const styles = theme => {
+  return {
+      googleButton: {
+      width: "90%",
+      marginBottom: theme.spacing.unit
+    },
+    facebookButton: {
+      width: "90%"
+    }
+  }
+}
 
 const Link = styled.a`
   color:${helpers.textColor};
@@ -38,6 +55,25 @@ const DialogTitleWrapper = styled.div`
 const ErrorWrapper = styled.span`
  color: red;
  float: right;
+`;
+
+const DialogActionWrapper = styled.div`
+  ${helpers.flexHorizontalSpaceBetween}
+  width: 100%;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  width: calc(100% - ${helpers.rhythmDiv * 2}px);
+  padding: ${helpers.rhythmDiv};
+  text-align: center;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: 100%;
+  }
 `;
 
 const LoginDialog = (props) => (
@@ -60,6 +96,16 @@ const LoginDialog = (props) => (
           </IconButton >
         </DialogTitleWrapper>
     </DialogTitle>
+      <DialogActionWrapper>
+        <ButtonWrapper>
+          <GoogleIconButton onClick={props.onSignUpWithGoogleButtonClick} label="Login With Google" classes={props.classes}/>
+        </ButtonWrapper>
+      </DialogActionWrapper>
+      <DialogActionWrapper>
+        <ButtonWrapper>
+          <FacebookIconButton onClick={props.onSignUpWithFacebookButtonClick} label="Login With Facebook" classes={props.classes} />
+        </ButtonWrapper>
+      </DialogActionWrapper>
     <DialogContent>
         <FormControl error={props.error.email} margin="dense" fullWidth aria-describedby="email-error-text">
           <InputLabel htmlFor="email">Email Address</InputLabel>
@@ -99,6 +145,7 @@ LoginDialog.propTypes = {
   onSignInButtonClick: PropTypes.func,
   onSignInButtonClick: PropTypes.func,
   onModalClose: PropTypes.func,
+  loading: PropTypes.bool,
 }
 
-export default LoginDialog;
+export default withStyles(styles)(LoginDialog);

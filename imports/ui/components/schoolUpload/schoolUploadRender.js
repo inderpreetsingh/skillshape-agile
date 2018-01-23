@@ -16,9 +16,9 @@ const style = {
     fileUploadStyle: {
     	opacity: 0,
 	    position: 'absolute',
-	    top: 32,
-	    padding: 13,
-        right: 10,
+	    top: 80,
+	    padding: 10,
+        right: 25,
         cursor: 'pointer'
     },
     uploadFloat:{

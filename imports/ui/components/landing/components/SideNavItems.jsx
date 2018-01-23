@@ -60,6 +60,7 @@ const LogOutUserSideNav = (props) => (
             menuListItemText={props.classes.menuListItemText}
             name="Home"
             iconName="home"
+            onClick={() => browserHistory.push('/')}
         />
         <SideNavItem
             button
@@ -82,12 +83,14 @@ const LogOutUserSideNav = (props) => (
             menuListItemText={props.classes.menuListItemText}
             name="Claim A School"
             iconName="check_circle"
+            onClick={() => browserHistory.push('/claimSchool')}
         />
         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
             name="Contact Us"
             iconName="email"
+            onClick={() => browserHistory.push('/ContactUs')}
         />
     </Fragment>
 )

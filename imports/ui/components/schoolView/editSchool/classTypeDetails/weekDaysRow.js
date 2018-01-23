@@ -7,6 +7,7 @@ import Input, { InputLabel } from 'material-ui/Input';
 import Button from 'material-ui/Button';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
+import Typography from 'material-ui/Typography';
 
 const scheduleDetails = [
 	"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
@@ -67,7 +68,7 @@ export class WeekDaysRow extends React.Component {
     	const oldRow = [...this.state.row];
     	// console.log("handleSelectInputChange -->>",event.target.value)
     	oldRow[index][fieldName] = event.target.value
-        
+
         if(fieldName === "key") {
             oldRow[index].day = 1+scheduleDetails.indexOf(event.target.value);
         }
@@ -114,18 +115,18 @@ export class WeekDaysRow extends React.Component {
     								</Select>
                                 </FormControl>
 		                	</Grid>
-		                	<Grid item sm={6} xs={12}>    
+		                	<Grid item sm={6} xs={12}>
 		                		<MaterialTimePicker
                                     required={true}
                                     format={"ampm"}
                                     value={data && data.startTime}
-                                    floatingLabelText={"Start Time *"} 
+                                    floatingLabelText={"Start Time *"}
                                     hintText={"Start Time"}
                                     onChange={this.handleChangeDate.bind(this, index, "startTime")}
                                     fullWidth={true}
                                 />
 		                	</Grid>
-		                	<Grid item sm={6} xs={12}>    
+		                	<Grid item sm={6} xs={12}>
 		                		<TextField
 		                		    defaultValue={data && data.duration}
                                     margin="dense"
@@ -135,7 +136,7 @@ export class WeekDaysRow extends React.Component {
                                     fullWidth
                                 />
 		                	</Grid>
-		                	<Grid item sm={6} xs={12}>    
+		                	<Grid item sm={6} xs={12}>
 		                		<FormControl fullWidth margin='dense'>
                                     <InputLabel htmlFor="roomId">Room</InputLabel>
                                     <Select
@@ -145,7 +146,7 @@ export class WeekDaysRow extends React.Component {
     								    fullWidth
     								>
     								    {
-                                            this.props.roomData.map((data, index)=> {
+                                            this.props.roomData && this.props.roomData.map((data, index)=> {
                                                 return <MenuItem key={index} value={data.id}>{data.name}</MenuItem>
                                             })
                                         }
@@ -156,14 +157,20 @@ export class WeekDaysRow extends React.Component {
 		                        <Button onClick={this.removeRow.bind(this, index)} raised color="accent" >
 		                            Delete
 		                        </Button>
-		                    </Grid>  
-		                </Grid>)    
+		                    </Grid>
+		                </Grid>)
         			})
         		}
-        		<Button onClick={this.addNewRow} style={{width: 162}} raised color="secondary" >
-                    Add Another Time
-                </Button>
-        	</div> 
+                <div>
+                    <Typography type="caption">
+                        If it is required that students come to more than one class as a group, add the additional class here.
+                        Unless attendance to another class is required, a separate Class Times should be created for each class.
+                    </Typography>
+            		<Button onClick={this.addNewRow} style={{width: 162}} raised color="secondary" >
+                        Add Another Time
+                    </Button>
+                </div>
+        	</div>
         )
     }
 }
