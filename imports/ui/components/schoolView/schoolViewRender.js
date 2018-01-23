@@ -189,203 +189,202 @@ export default function() {
             </Card>
           </Grid>
         </Grid>
-        {(enrollmentFee && enrollmentFee.length > 0 || classPricing && classPricing.length > 0 || monthlyPricing && monthlyPricing.length > 0 )
-          ?
-          <Grid ref={(el) => { this.schoolPrice = el; }} container className={classes.content}>
-            <Grid item xs={12} sm={12}>
-              <Card className={classes.content}>
-                <div className="content-list-heading ">
-                  <h2 style={{textAlign: 'center',paddingTop: 8}}>Prices
-                    <figure>
-                      <img style={{maxWidth: "100%"}} src="/images/heading-line.png"/>
-                    </figure>
-                  </h2>
-                </div>
-                <Grid container className={classes.themeSpacing}>
-                  {enrollmentFee && enrollmentFee.length > 0 ?
-                  <Grid item xs={12}>
-                      <Typography align="center" type="headline" className={classes.themeSpacing}>
-                        Enrollment Fee
-                      </Typography>
-                      <Grid container>
-                        {
-                          enrollmentFee && enrollmentFee.map((enrollmentFee, index)=> {
-                            return (
-                              <Grid key={index} item xs={12} md={3} sm={4}>
-                                <Card  style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
-                                  <CardContent>
-                                    <Typography align="center" type="title">
-                                      {enrollmentFee.name}
-                                    </Typography>
-                                    <br></br>
-                                    <Typography component="p">
-                                        <b>Cost:</b> ${enrollmentFee.cost}
-                                    </Typography>
-                                    <br></br>
-                                    <Typography component="p">
-                                      <b>Covers:</b> {
-                                        _.isEmpty(enrollmentFee.selectedClassType) ? "None" :
-                                        enrollmentFee.selectedClassType.map((classType) => {
-                                          return <span>{classType.name} </span>
-                                        })
-                                      }
-                                    </Typography>
-                                  </CardContent>
-                                  <CardActions>
-                                    <Button onClick={this.handlePurcasePackage.bind(this, "EP", enrollmentFee._id, schoolId)} color="accent" style={{width: '100%'}} dense raised>
-                                      Purchase
-                                   </Button>
-                                  </CardActions>
-                                </Card>
-                              </Grid>
-                            )
-                          })
-                        }
-                      </Grid>
-                  </Grid> : ''}
-                <Grid container className={classes.themeSpacing}>
-                  {classPricing && classPricing.length > 0 ?
-                    <Grid item xs={12}>
-                      <Typography align="center" type="headline" className={classes.themeSpacing}>
-                        Per Class Package
-                      </Typography>
-                      <Grid container>
-                        {
-                          classPricing && classPricing.map((classPrice, index)=> {
-                            return (
-                              <Grid key={index} item xs={12} md={3} sm={4}>
-                                <Card style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
-                                  <CardContent className={classes.content}>
-                                    <Typography align="center" type="title">
-                                      {classPrice.packageName}
-                                    </Typography>
-                                     <br></br>
-                                    <Typography component="p">
-                                      ${classPrice.cost}  for {classPrice.noClasses} class
-                                    </Typography>
-                                     <br></br>
-                                    <Typography component="p">
-                                      <b>Expiration:</b> {(classPrice.expDuration && classPrice.expPeriod) ? `${classPrice.expDuration} ${classPrice.expPeriod}` : "None"}
-                                    </Typography>
-                                     <br></br>
-                                    <Typography component="p">
-                                      <b>Covers:</b> {
-                                        _.isEmpty(classPrice.selectedClassType) ? "None" :
-                                        classPrice.selectedClassType.map((classType) => {
-                                          return <span>{classType.name} </span>
-                                        })
-                                      }
-                                    </Typography>
-                                  </CardContent>
-                                  <CardActions>
-                                    <Button onClick={this.handlePurcasePackage.bind(this, "CP", classPrice._id, schoolId)} color="accent" style={{width: '100%'}} dense raised>
-                                      Purchase
-                                   </Button>
-                                  </CardActions>
-                                </Card>
-                              </Grid>
-                            )
-                          })
-                        }
-
-                      </Grid>
-                    </Grid> :
-                    ''
-                  }
-                </Grid>
-                <Grid container className={classes.themeSpacing}>
-                  {monthlyPricing && monthlyPricing.length > 0 ?
-                    <Grid item xs={12} >
-                      <Typography align="center" type="headline" className={classes.themeSpacing}>
-                        Monthly Packages
-                      </Typography>
-                      <Grid container>
-                        {
-                          monthlyPricing && monthlyPricing.map((monthPrice, index)=> {
-                            let paymentType = '';
-                            if(monthPrice.pymtType) {
-                              if(monthPrice.pymtType['autoWithDraw'] && monthPrice.pymtType['payAsYouGo']) {
-                                paymentType += 'Automatic Withdrawal and Pay As You Go';
-                              } else if(monthPrice.pymtType['autoWithDraw']) {
-                                paymentType += 'Automatic Withdrawal';
-
-                              } else if(monthPrice.pymtType['payAsYouGo']) {
-                                paymentType += 'Pay As You Go';
-
-                              } else if(monthPrice.pymtType['payUpFront']) {
-                                paymentType += 'Pay Up Front';
-                              }
+        <div ref={(el) => { this.schoolPrice = el; }}>
+          {(enrollmentFee && enrollmentFee.length > 0 || classPricing && classPricing.length > 0 || monthlyPricing && monthlyPricing.length > 0 ) && (
+              <Grid container className={classes.content}>
+                <Grid item xs={12} sm={12}>
+                  <Card className={classes.content}>
+                    <div className="content-list-heading ">
+                      <h2 style={{textAlign: 'center',paddingTop: 8}}>Prices
+                        <figure>
+                          <img style={{maxWidth: "100%"}} src="/images/heading-line.png"/>
+                        </figure>
+                      </h2>
+                    </div>
+                    <Grid container className={classes.themeSpacing}>
+                      {enrollmentFee && enrollmentFee.length > 0 ?
+                      <Grid item xs={12}>
+                          <Typography align="center" type="headline" className={classes.themeSpacing}>
+                            Enrollment Fee
+                          </Typography>
+                          <Grid container>
+                            {
+                              enrollmentFee && enrollmentFee.map((enrollmentFee, index)=> {
+                                return (
+                                  <Grid key={index} item xs={12} md={3} sm={4}>
+                                    <Card  style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
+                                      <CardContent>
+                                        <Typography align="center" type="title">
+                                          {enrollmentFee.name}
+                                        </Typography>
+                                        <br></br>
+                                        <Typography component="p">
+                                            <b>Cost:</b> ${enrollmentFee.cost}
+                                        </Typography>
+                                        <br></br>
+                                        <Typography component="p">
+                                          <b>Covers:</b> {
+                                            _.isEmpty(enrollmentFee.selectedClassType) ? "None" :
+                                            enrollmentFee.selectedClassType.map((classType) => {
+                                              return <span>{classType.name} </span>
+                                            })
+                                          }
+                                        </Typography>
+                                      </CardContent>
+                                      <CardActions>
+                                        <Button onClick={this.handlePurcasePackage.bind(this, "EP", enrollmentFee._id, schoolId)} color="accent" style={{width: '100%'}} dense raised>
+                                          Purchase
+                                       </Button>
+                                      </CardActions>
+                                    </Card>
+                                  </Grid>
+                                )
+                              })
                             }
-                            return (
-                              <Grid key={index} item xs={12} md={3} sm={4} >
-                                <Card style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
-                                  <CardContent className={classes.content}>
-                                    <Typography align="center" type="title">
-                                      {monthPrice.packageName}
-                                    </Typography>
-                                    <br></br>
-                                    <Typography component="p">
-                                      <b>Payment Method:</b> {monthPrice.pymtMethod}
-                                    </Typography>
-                                    <br></br>
-                                    {
-                                      monthPrice.pymtType && (
-                                        <Fragment>
-                                          <Typography component="p">
-                                            <b>Payment Type:</b> {paymentType}
-                                          </Typography>
-                                          <br></br>
-                                        </Fragment>
-                                      )
-                                    }
-                                    <Typography component="p">
-                                      <b>Covers:</b> {
-                                        _.isEmpty(monthPrice.selectedClassType) ? "None" :
-                                        monthPrice.selectedClassType.map((classType) => {
-                                          return <span>{classType.name} </span>
-                                        })
-                                      }
-                                    </Typography>
-                                    <br></br>
-                                    {
-                                      _.isEmpty(monthPrice.pymtDetails) ? "None" :
-                                      monthPrice.pymtDetails.map((payment) => {
-                                        return <Grid container>
-                                          <Grid item xs={12} sm={7}>
-                                            <Typography component="p">
-                                              ${payment.cost} per month for {payment.month} months
-                                            </Typography>
-                                          </Grid>
-                                          <Grid item xs={12} sm={5}>
-                                            <Button onClick={this.handlePurcasePackage.bind(this, "MP", monthPrice._id, schoolId)} color="accent" style={{width: '100%'}} dense raised>
-                                              Purchase
-                                            </Button>
-                                          </Grid>
-                                          <br></br>
-                                          <br></br>
-                                          <Divider />
-                                        </Grid>
-                                      })
-                                    }
-                                  </CardContent>
-                                </Card>
-                              </Grid>
-                            )
-                          })
-                        }
-                      </Grid>
-                    </Grid> :
-                    ''
-                  }
-                </Grid>
-                </Grid>
-              </Card>
-            </Grid>
-          </Grid>
+                          </Grid>
+                      </Grid> : ''}
+                    <Grid container className={classes.themeSpacing}>
+                      {classPricing && classPricing.length > 0 ?
+                        <Grid item xs={12}>
+                          <Typography align="center" type="headline" className={classes.themeSpacing}>
+                            Per Class Package
+                          </Typography>
+                          <Grid container>
+                            {
+                              classPricing && classPricing.map((classPrice, index)=> {
+                                return (
+                                  <Grid key={index} item xs={12} md={3} sm={4}>
+                                    <Card style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
+                                      <CardContent className={classes.content}>
+                                        <Typography align="center" type="title">
+                                          {classPrice.packageName}
+                                        </Typography>
+                                         <br></br>
+                                        <Typography component="p">
+                                          ${classPrice.cost}  for {classPrice.noClasses} class
+                                        </Typography>
+                                         <br></br>
+                                        <Typography component="p">
+                                          <b>Expiration:</b> {(classPrice.expDuration && classPrice.expPeriod) ? `${classPrice.expDuration} ${classPrice.expPeriod}` : "None"}
+                                        </Typography>
+                                         <br></br>
+                                        <Typography component="p">
+                                          <b>Covers:</b> {
+                                            _.isEmpty(classPrice.selectedClassType) ? "None" :
+                                            classPrice.selectedClassType.map((classType) => {
+                                              return <span>{classType.name} </span>
+                                            })
+                                          }
+                                        </Typography>
+                                      </CardContent>
+                                      <CardActions>
+                                        <Button onClick={this.handlePurcasePackage.bind(this, "CP", classPrice._id, schoolId)} color="accent" style={{width: '100%'}} dense raised>
+                                          Purchase
+                                       </Button>
+                                      </CardActions>
+                                    </Card>
+                                  </Grid>
+                                )
+                              })
+                            }
 
-           : ''
-        }
+                          </Grid>
+                        </Grid> :
+                        ''
+                      }
+                    </Grid>
+                    <Grid container className={classes.themeSpacing}>
+                      {monthlyPricing && monthlyPricing.length > 0 ?
+                        <Grid item xs={12} >
+                          <Typography align="center" type="headline" className={classes.themeSpacing}>
+                            Monthly Packages
+                          </Typography>
+                          <Grid container>
+                            {
+                              monthlyPricing && monthlyPricing.map((monthPrice, index)=> {
+                                let paymentType = '';
+                                if(monthPrice.pymtType) {
+                                  if(monthPrice.pymtType['autoWithDraw'] && monthPrice.pymtType['payAsYouGo']) {
+                                    paymentType += 'Automatic Withdrawal and Pay As You Go';
+                                  } else if(monthPrice.pymtType['autoWithDraw']) {
+                                    paymentType += 'Automatic Withdrawal';
 
+                                  } else if(monthPrice.pymtType['payAsYouGo']) {
+                                    paymentType += 'Pay As You Go';
+
+                                  } else if(monthPrice.pymtType['payUpFront']) {
+                                    paymentType += 'Pay Up Front';
+                                  }
+                                }
+                                return (
+                                  <Grid key={index} item xs={12} md={3} sm={4} >
+                                    <Card style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
+                                      <CardContent className={classes.content}>
+                                        <Typography align="center" type="title">
+                                          {monthPrice.packageName}
+                                        </Typography>
+                                        <br></br>
+                                        <Typography component="p">
+                                          <b>Payment Method:</b> {monthPrice.pymtMethod}
+                                        </Typography>
+                                        <br></br>
+                                        {
+                                          monthPrice.pymtType && (
+                                            <Fragment>
+                                              <Typography component="p">
+                                                <b>Payment Type:</b> {paymentType}
+                                              </Typography>
+                                              <br></br>
+                                            </Fragment>
+                                          )
+                                        }
+                                        <Typography component="p">
+                                          <b>Covers:</b> {
+                                            _.isEmpty(monthPrice.selectedClassType) ? "None" :
+                                            monthPrice.selectedClassType.map((classType) => {
+                                              return <span>{classType.name} </span>
+                                            })
+                                          }
+                                        </Typography>
+                                        <br></br>
+                                        {
+                                          _.isEmpty(monthPrice.pymtDetails) ? "None" :
+                                          monthPrice.pymtDetails.map((payment) => {
+                                            return <Grid container>
+                                              <Grid item xs={12} sm={7}>
+                                                <Typography component="p">
+                                                  ${payment.cost} per month for {payment.month} months
+                                                </Typography>
+                                              </Grid>
+                                              <Grid item xs={12} sm={5}>
+                                                <Button onClick={this.handlePurcasePackage.bind(this, "MP", monthPrice._id, schoolId)} color="accent" style={{width: '100%'}} dense raised>
+                                                  Purchase
+                                                </Button>
+                                              </Grid>
+                                              <br></br>
+                                              <br></br>
+                                              <Divider />
+                                            </Grid>
+                                          })
+                                        }
+                                      </CardContent>
+                                    </Card>
+                                  </Grid>
+                                )
+                              })
+                            }
+                          </Grid>
+                        </Grid> :
+                        ''
+                      }
+                    </Grid>
+                    </Grid>
+                  </Card>
+                </Grid>
+              </Grid>
+            )
+          }
+        </div>
 
         {/*<div className="card">
           <div className="col-md-12 media-heading-box">

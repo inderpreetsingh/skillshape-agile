@@ -97,7 +97,7 @@ class SignUpDialogBox extends Component {
     state = {
         name: "",
         email: "",
-        sendMeSkillShapeNotification: false,
+        sendMeSkillShapeNotification: true,
         robotOption: false,
         errorEmail: false,
         captchaValue: null,

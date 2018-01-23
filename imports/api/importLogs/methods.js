@@ -1,8 +1,10 @@
 import ImportLogs from "./fields";
 import SLocation from "../sLocation/fields";
 import SkillCategory from "../skillCategory/fields";
+import SkillSubject from "../skillSubject/fields";
 import ClassType from "../classType/fields";
 import ClassTimes from "../classTimes/fields";
+import School from "../school/fields";
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,8}$/;
 
 Meteor.methods({
@@ -15,7 +17,9 @@ Meteor.methods({
 	            header: true
 	        });
 	        const csvdata = results.data;
+	        // csvdata.splice(-1,1)
 	        const csvLength = csvdata.length;
+	        console.log("csvLength>>>> ", csvLength)
 	        console.log("csvData>>>> ", JSON.stringify(csvdata, null, 2))
 	        const csvLogId = ImportLogs.insert({
 	        	fileName: fileName
@@ -108,39 +112,69 @@ Meteor.methods({
 		                        locationId = SLocation.insert(sLocationDoc);
 		                    }
 		                }
-		                let classTypeObject = {}
+		                let skillCategoryIds = [];
+		                let	skillSubjectIds = [];
+		                let classTypeObject = {
+		                	filters: {
+		                		location: sLocationDoc.loc,
+		                		locationTitle: `${sLocationDoc.state}, ${sLocationDoc.city}, ${sLocationDoc.country}`
+		                	}
+		                };
+
 		                classTypeObject.schoolId = schoolId;
-		                classTypeObject.name = csvdata[i].classTypeName
-		                skill = csvdata[i].skillType
-		                if (skill) {
-		                    skill = skill.split(",")
-		                    skill = skill[0].trim();
+		                classTypeObject.name = csvdata[i].classTypeName;
+		                let skillCategory = csvdata[i].skillCategory;
+		                let skillSubject = csvdata[i].skillSubject;
+		                if (skillCategory) {
+		                    skillCategory = skillCategory.split(",")
+		                    for(let skill of skillCategory) {
+		                		let skillCategoryId;
+		                		let skillCategoryObject = SkillCategory.findOne({ name: skill.trim() });
+
+				                if (skillCategoryObject){
+				                	skillCategoryId = skillCategoryObject._id;
+				                } else {
+				                    if (csvdata[i].classTypeName) {
+				                        skillCategoryId = SkillCategory.insert({ name: skill.trim() })
+				                    }
+				                }
+
+				                if(skillCategoryId) {
+				                	skillCategoryIds.push(skillCategoryId);
+				                }
+		                    }
 		                }
-		                let skillCategoryObject = SkillCategory.findOne({ name: skill });
-		                let skillCategoryId = null;
-		                if (skillCategoryObject){
-		                	skillCategoryId = skillCategoryObject._id;
-		                } else {
-		                    if (csvdata[i].classTypeName) {
-		                        skillCategoryId = SkillCategory.insert({ name: skill })
+		                if (skillSubject) {
+		                    skillSubject = skillSubject.split(",")
+		                    for(let skill of skillSubject) {
+		                    	let skillSubjectId;
+		                    	let skillSubjectObject = SkillSubject.findOne({ name: skill.trim() });
+
+		                    	if (skillSubjectObject){
+				                	skillSubjectId = skillSubjectObject._id;
+				                } else {
+				                	if (csvdata[i].classTypeName) {
+				                        skillSubjectId = SkillSubject.insert({ name: skill.trim() })
+				                    }
+				                }
+
+				                if(skillSubjectId) {
+				                	skillSubjectIds.push(skillSubjectId);
+				                }
 		                    }
 		                }
 
 		                classTypeObject.desc = csvdata[i].classTypeDesc
 		                classTypeObject.classTypeImg = csvdata[i].classTypeImg
 
-		                let classtype = ClassType.findOne({ schoolId: schoolId, $or:[{name: csvdata[i].classTypeName},{desc: csvdata[i].classTypeDesc},{skillTypeId: skill}] });
 		                let classTypeId = null;
-		                if (classtype) {
-		                    classTypeId = classtype._id
-		                    ClassType.update({ _id: classTypeId }, { $set: classTypeObject, $addToSet:{'skillCategoryId':skillCategoryId}});
-		                } else {
-		                    if (classTypeObject.name) {
-		                    	classTypeObject.skillCategoryId = [skillCategoryId]
-		                        classTypeId = ClassType.insert(classTypeObject);
-		                    }
-		                }
-
+	                    classTypeObject.skillCategoryId = skillCategoryIds;
+                		classTypeObject.skillSubject = skillSubjectIds;
+                    	console.log("ClassTypeObject Data-->>",classTypeObject);
+	                    if (classTypeObject.name) {
+		                	ClassType.update({ schoolId: schoolId, name: csvdata[i].classTypeName, desc: csvdata[i].classTypeDesc },{ $set: classTypeObject},{upsert: true});
+	                    }
+		                console.log("--------------- Done with ClassType ----------------------")
 		                let classTime = ClassTimes.findOne({ name: csvdata[i].className, schoolId: schoolId });
 		                const classTimeObject = {
 		                	name: csvdata[i].className,
@@ -298,19 +332,40 @@ Meteor.methods({
 })
 
 function CreateNewUser(email, name, firstName, lastName) {
-        if (typeof email !== "undefined" && emailRegex.test(email)) {
-            let _user = Accounts.findUserByEmail(email)
-            if (!_user) {
-                return Accounts.createUser({
-                    email: email,
-                    password: email,
-                    profile: { firstName: firstName, lastName: lastName },
-                    roles: "Admin",
-                    preverfiedUser: true
-                });
-            } else {
-                return _user._id;
-            }
+	console.log("CreateNewUser -->>",email, name, firstName, lastName)
+    if (typeof email !== "undefined" && emailRegex.test(email)) {
+        let _user = Accounts.findUserByEmail(email)
+        if (!_user) {
+            return Accounts.createUser({
+                email: email,
+                password: email,
+                profile: { firstName: firstName, lastName: lastName },
+                roles: "Admin",
+                preverfiedUser: true
+            });
+        } else {
+            return _user._id;
         }
-        return false;
     }
+    return false;
+}
+
+function findUrl(text) {
+    var source = (text || '').toString();
+    var urlArray = [];
+    var url;
+    var matchArray;
+    // Regular expression to find FTP, HTTP(S) and email URLs.
+    var regexToken = /(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g;
+    // Iterate through any URLs in the text.
+    while ((matchArray = regexToken.exec(source)) !== null) {
+      var token = matchArray[0];
+      return token;
+    }
+    return '';
+}
+
+function getLocationTitle(locationData) {
+
+	return `${locationData.state}, ${locationData.city}, ${locationData.country}`
+}
