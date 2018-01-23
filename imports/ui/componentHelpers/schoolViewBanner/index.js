@@ -42,12 +42,23 @@ class SchoolViewBanner extends React.Component {
 	                    <CardMedia  className={classes.cardMedia} >
 	                        {schoolData.mainImage && <div className={classes.imageContainer} style={{backgroundImage: `url(${ schoolData.mainImage || config.defaultSchoolImage })`}}> </div>}
 	                        <div className={classes.imageHeader}>
-	                        	{isEdit &&
+	                        	{isEdit ?
 	                        		<Button raised dense color="accent" className={classes.bgEditButton1}  onClick={() => this.setState({ showBackgroundUpload: true, imageType: "mainImage"})}>
 					                              <Edit className={classes.ImageFooterIcon} />
 					                              Background
 					                </Button>
-	                        		}
+	                        		: (
+
+			                          	checkUserAccess && (
+				                            <Link className={classes.ImageFooterbutton}  to={`/SchoolAdmin/${schoolData._id}/edit`}>
+				                              <Button raised color="accent">
+				                                Edit
+				                              </Button>
+				                            </Link>
+			                          	)
+
+	                        	)}
+
 	                        </div>
 	                        <div className={classes.imageFooter}>
 	                            <Grid container style={{padding: 10}}>
@@ -72,7 +83,7 @@ class SchoolViewBanner extends React.Component {
 					                       {
 					                        !checkUserAccess &&
 					                          <Fragment>
-					                            <Button className={classes.ImageFooterbutton} raised color="accent">
+					                            <Button className={classes.ImageFooterbutton} raised color="primary">
 					                              <Phone className={classes.ImageFooterIcon} />
 					                              Call Us
 					                            </Button>
@@ -82,20 +93,12 @@ class SchoolViewBanner extends React.Component {
 					                            </Button>
 					                          </Fragment>
 					                        }
-					                        {
-					                          checkUserAccess && (
-					                            <Link className={classes.ImageFooterbutton}  to={`/SchoolAdmin/${schoolData._id}/edit`}>
-					                              <Button raised color="accent">
-					                                Edit
-					                              </Button>
-					                            </Link>
-					                          )
-					                        }
-					                        { this.checkClaim(currentUser, schoolId) && (
+
+					                        { /*this.checkClaim(currentUser, schoolId) && (
 					                          <Button className={classes.ImageFooterbutton} onClick={this.claimASchool && this.claimASchool.bind(this,currentUser,schoolData)} raised color="accent">
 					                            Claim
 					                          </Button>
-					                          )
+					                          )*/
 					                        }
 					                    </div>}
 	                                </Grid>
