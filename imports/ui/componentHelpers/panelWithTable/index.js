@@ -101,6 +101,12 @@ class PanelWithTable extends React.Component {
         }
     }
 
+    handleExpansionPanelRightBtn = (data) => {
+        Meteor.call("classType.notifyToStudentForClassTimes", {schoolId: data.schoolId, classTypeId: data._id, classTypeName: data.name}, (error, result)=> {
+            console.log("classType.notifyToStudentForClassTimes",error, result)
+        })
+    }
+
     render() {
         return PanelWithTableRender.call(this, this.props, this.state)
   }

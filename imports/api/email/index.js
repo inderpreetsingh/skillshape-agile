@@ -48,3 +48,27 @@ export const sendClaimASchoolEmail = function(claimSchoolData) {
         });
     }
 }
+
+export const sendClassTimesRequest = function({to, subject, text}) {
+
+    if (Meteor.isServer) {
+        Email.send({
+            to: 'sam@skillshape.com',
+            from: "Notices@SkillShape.com",
+            replyTo: "Notices@SkillShape.com",
+            subject: subject,
+            text: text,
+        });
+    }
+}
+
+export const sendEmailToStudentForClassTimeUpdate = function({ to, subject, text }) {
+    if (Meteor.isServer) {
+        Email.send({
+            to: 'ramesh.bansal@daffodilsw.com',
+            from: "Notices@SkillShape.com",
+            subject: subject,
+            text: text,
+        });
+    }
+}

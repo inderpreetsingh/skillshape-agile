@@ -30,7 +30,8 @@ export default config = Object.freeze({
 		classInterest: "ClassInterest",
 		importLogs: "ImportLogs",
 		enrollmentFees: "EnrollmentFees",
-		claimSchoolRequest:"ClaimSchoolRequest",
+		claimSchoolRequest: "ClaimSchoolRequest",
+		classTimesRequest: "ClassTimesRequest"
 	},
 	gender : [
 		{ label: "Any", value: "Any"},

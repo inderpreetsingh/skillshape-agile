@@ -1,7 +1,12 @@
+import isEmpty from "lodash/isEmpty";
+import get from "lodash/get";
 import ClassType from "./fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import SLocation from "/imports/api/sLocation/fields";
+import School from "/imports/api/school/fields";
+import ClassTimesRequest from "/imports/api/classTimesRequest/fields";
+import { sendEmailToStudentForClassTimeUpdate } from "/imports/api/email";
 
 Meteor.methods({
     "classType.getClassType": function({schoolId}) {
@@ -56,6 +61,30 @@ Meteor.methods({
             ClassTimes.remove({classTypeId: doc._id})
             ClassInterest.remove({classTypeId: doc._id})
             return ClassType.remove({ _id: doc._id });
+        } else {
+            throw new Meteor.Error("Permission denied!!");
+        }
+    },
+    "classType.notifyToStudentForClassTimes": function({schoolId, classTypeId, classTypeName}) {
+        if(this.userId) {
+            const classTimesRequestData = ClassTimesRequest.find({schoolId,classTypeId,notification: true}).fetch()
+            if(!isEmpty(classTimesRequestData)) {
+                for(let obj of classTimesRequestData) {
+                    let emailObj = {};
+                    const userData = Meteor.users.findOne({_id: obj.userId});
+                    const schoolData = School.findOne({_id: obj.schoolId})
+
+                    if(userData) {
+                        const userName = get(userData, "profile.name") || `${get(userData, "profile.firstName")} ${get(userData, "profile.lastName")}`;
+                        emailObj.to = userData.emails[0].address;
+                        emailObj.subject = "School Updated";
+                        emailObj.text = `${userName} \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(`schools/${schoolData.slug}`)} to view their new information and join the class! \n\nThanks, \n\nEveryone from SkillShape.com`;
+                        ClassTimesRequest.update({ _id: obj._id }, { $set: {notification: false} })
+                        sendEmailToStudentForClassTimeUpdate({...emailObj})
+
+                    }
+                }
+            }
         } else {
             throw new Meteor.Error("Permission denied!!");
         }

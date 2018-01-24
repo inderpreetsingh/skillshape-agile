@@ -86,6 +86,11 @@ const DescriptionContainer = styled.div`
   display: flex;
 `;
 
+const ErrorWrapper = styled.span`
+ color: red;
+ float: right;
+`;
+
 class ClassTimesDialogBox extends React.Component {
 
     checkForAddToCalender = (data) => {
@@ -144,7 +149,21 @@ class ClassTimesDialogBox extends React.Component {
                 </DialogTitle>
                 <DialogContent>
                     {
-                        isEmpty(this.props.classesData) ? <ClassContainer>No Class Time Found</ClassContainer>
+                        isEmpty(this.props.classesData) ? (
+                            <ClassContainer>
+                                <Typography caption="p">
+                                    No class times have been given by the school. Please click this button to request the school complete their listing
+                                </Typography>
+                                <br>
+                                </br>
+                                <PrimaryButton
+                                    icon
+                                    onClick={this.props.handleClassTimeRequest}
+                                    iconName="perm_contact_calendar"
+                                    label="REQUEST CLASS TIMES"
+                                />
+                            </ClassContainer>
+                        )
                         : this.props.classesData.map(data => {
                             const addToCalender  = this.checkForAddToCalender(data);
                             return <ClassContainer>
@@ -180,6 +199,9 @@ class ClassTimesDialogBox extends React.Component {
                             </ClassContainer>
                         })
                     }
+                    {
+                      this.props.errorText && <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
+                    }
                 </DialogContent>
             </MuiThemeProvider>
           </Dialog>
@@ -196,7 +218,8 @@ ClassTimesDialogBox.propTypes = {
     desc: PropTypes.string,
     addToCalender: PropTypes.bool,
     scheduleType: PropTypes.string,
-  })
+  }),
+  errorText: PropTypes.string,
 }
 
 export default withMobileDialog()(withStyles(styles)(ClassTimesDialogBox));

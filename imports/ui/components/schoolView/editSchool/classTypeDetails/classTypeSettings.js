@@ -1,6 +1,7 @@
 import React from "react";
 import ClassTypeForm from './classTypeForm';
 import ClassTimeForm from './classTimeForm';
+import ClassTypeDetails from './index';
 
 export default classTypeSettings = {
     mainPanelHeader: {
@@ -13,7 +14,8 @@ export default classTypeSettings = {
             buttonTitle: "ADD CLASS TYPE",
             title: "Class Type",
         },
-        notes:'Class Types are a group of one or more Class Times where similar or related material is taught to students, possibly grouped by age, skill level, or gender. If you separate classes by age, gender, skill level or material, separate Class Types should be created.'
+        notes:'Class Types are a group of one or more Class Times where similar or related material is taught to students, possibly grouped by age, skill level, or gender. If you separate classes by age, gender, skill level or material, separate Class Types should be created.',
+        expansionPanelRightBtnTitle: "Update Student",
     },
     mainTable: {
         title: "Class Type",

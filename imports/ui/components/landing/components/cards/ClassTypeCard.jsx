@@ -28,7 +28,8 @@ class ClassTypeCard extends Component {
         e.stopPropagation();
         console.log(e,e.stopPropagation(),"clickced");
         this.setState({
-            dialogOpen: state
+            dialogOpen: state,
+            classTimesDialogBoxError: null,
         });
     }
 
@@ -37,16 +38,42 @@ class ClassTypeCard extends Component {
             return ClassTimes.find({classTypeId}).fetch();
     }
 
+    handleClassTimeRequest = (schoolId, classTypeId, classTypeName) => {
+        console.log("handleClassTimeRequest --->>",schoolId, classTypeId)
+        if(Meteor.userId()) {
+            Meteor.call("classTimesRequest.notifyToSchool", {schoolId, classTypeId, classTypeName}, (err, res) => {
+                console.log("err -->>",err);
+                console.log("handleClassTimeRequest res -->>",res);
+                let modalObj = {
+                    dialogOpen: false
+                }
+
+                if(res && res.message) {
+                    modalObj.classTimesDialogBoxError = res.message;
+                    modalObj.dialogOpen = true
+                }
+                this.setState(modalObj)
+            })
+        } else {
+            alert("Please login !!!!")
+        }
+    }
+
     render() {
         console.log("ClassTypeCard props --->>",this.props);
         const classTimesData = this.getClassTimes(get(this.props, "_id", null))
         return(
             <Fragment>
-            {this.state.dialogOpen &&
-            <ClassTimesDialogBox
-                classesData={classTimesData}
-                open={this.state.dialogOpen}
-                onModalClose={this.handleDialogState(false)} />}
+            {
+                this.state.dialogOpen &&
+                <ClassTimesDialogBox
+                    classesData={classTimesData}
+                    open={this.state.dialogOpen}
+                    onModalClose={this.handleDialogState(false)}
+                    handleClassTimeRequest={this.handleClassTimeRequest.bind(this, this.props.schoolId, this.props._id, this.props.name)}
+                    errorText={this.state.classTimesDialogBoxError}
+                />
+            }
             <CardsReveal {...this.props}
                 body={
                 <ClassTypeCardBody
