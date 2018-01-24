@@ -138,16 +138,26 @@ class SchoolCard extends Component {
       // Need to show error in toaster
       toastr.error('You must be signed in to claim a school. [Sign In] or [Sign Up]', 'Error');
     } else {
-      const payload ={
-        schoolId: schoolCardData._id,
-        schoolName:schoolCardData.name,
-        userId: user._id,
-        userEmail:user.emails[0].address,
-        userName: user.profile.firstName
-      }
-      Meteor.call('school.claimSchoolRequest',payload,(err, result)=> {
-        console.log("result",result)
-      })
+        const payload ={
+          schoolId: schoolCardData._id,
+          schoolName:schoolCardData.name,
+          userId: user._id,
+          userEmail:user.emails[0].address,
+          userName: user.profile.firstName,
+          schoolEmail:schoolCardData.email
+        }
+        Meteor.call('school.claimSchoolRequest',payload,(err, result)=> {
+          console.log("result",result);
+          if(result.rejectedClaimRequest) {
+            toastr.error('Your request has been rejected to manage this school by school Admin', 'Error');
+          }else if(result.pendingRequest) {
+            toastr.error("We are in the process of resolving your claim. We will contact you as soon as we reach a verdict or need more information. Thanks for your patience.",'Error');
+          } else if(result.alreadyManage) {
+            toastr.success("You already manage a school. You cannot claim another School. Please contact admin for more details",'success');
+          } else if(result.onlyOneRequestAllowed) {
+            toastr.error(`You are not allowed to do more than one request as you have already created request for School Name \n:${result.schoolName}`,'Error');
+          }
+        });
     }
   }
   render() {

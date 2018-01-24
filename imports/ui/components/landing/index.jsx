@@ -121,6 +121,24 @@ class Landing extends Component {
         this.onSearch = debounce(this.onSearch, 1000);
     }
 
+    componentDidMount() {
+      console.log("this.props.location.query in componentDidMount",this.props.location.query)
+      if(this.props.location.query && this.props.location.query.claimRequest) {
+
+        if(this.props.location.query.type != 'reject') {
+          Meteor.call('approveSchoolClaimRequest',this.props.location.query.claimRequest);
+        } else if(this.props.location.query.schoolRegister) {
+            Meteor.call('approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
+              Events.trigger("registerAsSchool",{userType: "School"})
+            });
+        } else if(this.props.location.query.redirectUrl) {
+            Meteor.call('approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
+                // redirect from here
+            });
+        }
+      }
+    }
+
     handleStickyStateChange = (status) => {
       console.log(status,"status..")
       if (status.status === 2) {
