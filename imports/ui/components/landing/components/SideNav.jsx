@@ -8,6 +8,7 @@ import MenuIconButton from './buttons/MenuIconButton.jsx';
 import SideNavItems from './SideNavItems.jsx';
 import TermsOfServiceDialogBox from './dialogs/TermsOfServiceDialogBox.jsx';
 import EmailConfirmationDialogBox from './dialogs/EmailConfirmationDialogBox';
+import Events from '/imports/util/events';
 
 class SideNav extends Component {
 
@@ -19,6 +20,13 @@ class SideNav extends Component {
         userData: {},
         isBusy:false,
         errorText: null,
+    }
+
+    componentWillMount() {
+        Events.on("registerAsSchool", "123456",(data) => {
+          let {userType} = data;
+          this.handleSignUpDialogBoxState(true, userType);
+        })
     }
 
     handleDrawerState = (state) => {
