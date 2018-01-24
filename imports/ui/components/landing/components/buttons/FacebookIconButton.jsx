@@ -31,19 +31,32 @@ const styles = {
         textTransform: 'none',
         color: helpers.lightTextColor,
         display: 'block'
+    },
+    textCenter: {
+      textAlign: 'center'
     }
 }
 
-const FacebookIconButton = (props) => (
-    <Button color={facebookButtonColor} onClick={props.onClick} classes={{root: props.classes.facebookButton, label: props.classes.label}}>
-        <SocialIcon network="facebook" style={iconStyles} color={helpers.lightTextColor}/>
-        {props.label}
+const FacebookIconButton = (props) => {
+  let rootClass = '';
+  if(props.textCenter) {
+    rootClass = `${props.classes.facebookButton} ${props.classes.textCenter}`;
+  }else {
+    rootClass = props.classes.facebookButton;
+  }
+
+  return(
+    <Button color={facebookButtonColor} onClick={props.onClick} classes={{root: rootClass, label: props.classes.label}}>
+      <SocialIcon network="facebook" style={iconStyles} color={helpers.lightTextColor}/>
+      {props.label}
     </Button>
-);
+  )
+}
 
 FacebookIconButton.propTypes = {
     onClick: PropTypes.func,
-    label: PropTypes.string
+    label: PropTypes.string,
+    textCenter: PropTypes.bool
 }
 
 FacebookIconButton.defaultProps = {

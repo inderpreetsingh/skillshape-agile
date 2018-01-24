@@ -27,6 +27,9 @@ const styles = {
   fullWidth: {
     width: '100%'
   },
+  noMarginBottom: {
+    marginBottom: 0
+  },
   primaryButtonIcon: {
     display: 'inline-block',
     marginRight: '5px',
@@ -42,9 +45,14 @@ const styles = {
 
 const PrimaryButton = (props) => {
   let rootClass = ``;
-  if(props.fullWidth) {
+  if(props.fullWidth && props.noMarginBottom) {
+    rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth} ${props.classes.noMarginBottom}`;
+  }else if(props.fullWidth) {
     rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth}`;
-  }else{
+  }else if(props.noMarginBottom) {
+    rootClass = `${props.classes.primaryButton} ${props.classes.noMarginBottom}`;
+  }
+  else{
     rootClass = props.classes.primaryButton;
   }
 
@@ -90,6 +98,7 @@ PrimaryButton.propTypes = {
     iconName: PropTypes.string,
     label: PropTypes.string,
     fullWidth: PropTypes.bool,
+    noMarginBottom: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
     itemScope: PropTypes.string,

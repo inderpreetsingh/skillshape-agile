@@ -1,0 +1,19 @@
+.rw-widget-input, .rw-widget-picker, .rw-widget-container {
+  border: none;
+  border-bottom: 1px solid $primary-color;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: $base-font-size;
+  &:hover {
+    box-shadow: none;
+  }
+}
+
+.rw-state-focus > .rw-widget-container,.rw-state-focus > .rw-widget-container:hover {
+  box-shadow: none;
+  border-color: $primary-color;
+}
+
+.rw-list-option.rw-state-focus, .rw-list-option.rw-state-focus:hover {
+  border: 1px solid $primary-color;
+}

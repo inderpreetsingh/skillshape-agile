@@ -1,6 +1,9 @@
-$font-path: "{}/node_modules/react-widgets/lib/fonts";
-$img-path:  "{}/node_modules/react-widgets/lib/img";
-$input-box-shadow:none;
-$input-focus-box-shadow:none;
-$border-radius: 0px;
-$border-radius-sm: 0px;
+$primary-color : rgb(76, 175, 80);
+$base-font-size: 16px;
+
+$input-height: 2.429em;
+$input-border-width: 1px;
+$multiselect-gutter-pt: 0.115;
+$multiselect-tag-height-pt: 1 - ($multiselect-gutter-pt * 2);
+$multiselect-tag-gutter-fallback: $input-height * $multiselect-gutter-pt;
+$multiselect-tag-gutter: calc(#{$multiselect-tag-gutter-fallback} - #{$input-border-width});
