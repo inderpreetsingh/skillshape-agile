@@ -86,11 +86,19 @@ export default function () {
 	          			return (
 		          				<ExpansionPanel key={index} className={classes.expansionPanel} key={index}>
 			          				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
-
 			              				<div style={{marginLeft: 15}}>
 			                				<Typography className={classes.secondaryHeading}>{tableData[settings.mainPanelHeader.titleKey] || ""}</Typography>
 			              				</div>
 			            			</ExpansionPanelSummary>
+			            			{
+			            				settings.mainPanelHeader.expansionPanelRightBtnTitle && (
+				              				<div style={{textAlign: 'right',marginRight: 25}}>
+					          					<Button onClick={() => this.handleExpansionPanelRightBtn(tableData)} color="accent" raised dense>
+					          					 	Notify to Student
+					          					</Button>
+				              				</div>
+			            				)
+			            			}
 			            			<ExpansionPanelDetails className={classes.details}>
 			            				<Grid container>
 			            					<Grid  item md={(settings.mainPanelHeader.showImageUpload || settings.mainPanelHeader.showAddressOnMap) ? 8 : 12} sm={(settings.mainPanelHeader.showImageUpload || settings.mainPanelHeader.showAddressOnMap) ? 6 : 12} xs={12}>

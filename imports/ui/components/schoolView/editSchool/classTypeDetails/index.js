@@ -12,16 +12,16 @@ class ClassTypeDetails extends React.Component {
 
     constructor(props) {
     	super(props);
-        this.state = { 
+        this.state = {
            file: null,
-        }  
+        }
     }
 
     getChildTableData(parentData) {
         console.log("getChildTableData -->>", parentData._id)
   		return ClassTimes.find({classTypeId: parentData._id}).fetch();
     }
-  	
+
   	handleImageChange = (file)=> {
         this.setState({file})
   	}
@@ -38,7 +38,7 @@ class ClassTypeDetails extends React.Component {
                 console.error("err ",err);
             }
             if(res) {
-                doc.classTypeImg = res.secure_url; 
+                doc.classTypeImg = res.secure_url;
                 this.editClassType({ doc_id: classTypeId, doc})
             }
         })
@@ -54,21 +54,21 @@ class ClassTypeDetails extends React.Component {
   	}
 
     editClassType = ({ doc, doc_id })=> {
-        
+
         Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
             if (error) {
               console.error("error", error);
             }
             if (result) {
-                
+
             }
         });
     }
-  	
+
     render() {
     	return ClassTypeDetailsRender.call(this, this.props, this.state)
     }
-}  
+}
 
 export default createContainer(props => {
     const { schoolId } = props;
@@ -76,11 +76,11 @@ export default createContainer(props => {
     let classTypeData = [];
 
     let subscription = Meteor.subscribe("classType.getclassType", {schoolId});
-    
+
     if(subscription.ready()) {
         classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
         let classTypeIds = classTypeData && classTypeData.map((data) => data._id);
-        
+
         Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {schoolId, classTypeIds});
         classTimesData = ClassTimes.find({ schoolId },{sort: {_id: -1}}).fetch();
     }
