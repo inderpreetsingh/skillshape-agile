@@ -7,9 +7,7 @@ import * as helpers from './jss/helpers.js';
 import * as settings from '../site-settings.js';
 
 const BrandArea = styled.div`
-  display: flex;
-  align-items: ${props => props.smallBrandText ? 'center' : 'flex-start'};
-
+  ${helpers.flexCenter}
   font-family: ${helpers.specialFont};
 
   &:hover .is-logo-area img {
@@ -26,7 +24,16 @@ const BrandText = styled.h1`
 
   @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
     text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     font-size: ${helpers.baseFontSize * 1.5}px;
+  }
+`;
+
+const MainText = styled.span`
+  @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
+    line-height: ${helpers.baseFontSize}px;
   }
 `;
 
@@ -37,8 +44,7 @@ const BrandTagline = styled.span`
   color: ${helpers.textColor};
 
   @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
-    display: block;
-    line-height: 0;
+    line-height: ${helpers.baseFontSize}px;
     font-size: ${helpers.baseFontSize}px;
   }
 `;
@@ -72,7 +78,7 @@ const Logo = ({smallBrandText, brandText, brandTagline, logoSrc}) => (
           <LogoImage src={logoSrc} itemProp="logo"/>
         </LogoWrapper>
         <BrandText itemProp="name" smallBrandText={smallBrandText} className={smallBrandText && 'flex-column'}>
-          {brandText},
+          <MainText>{brandText},</MainText>
           <BrandTagline smallBrandText={smallBrandText}> {brandTagline}. </BrandTagline>
         </BrandText>
     </BrandArea>

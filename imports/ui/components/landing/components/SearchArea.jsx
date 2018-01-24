@@ -41,15 +41,15 @@ const SearchAreaPanel = styled.div`
   max-width: 431px;
   margin: auto;
   text-align: center;
+
    @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
      max-width:300px;
   }
 `;
 
 const TaglineArea = styled.div`
+  
 `;
-
-
 
 const Tagline = styled.h2`
   font-family : ${helpers.specialFont};
@@ -67,7 +67,7 @@ const TaglineText = styled.p`
   font-family : ${helpers.commonFont};
   font-size: ${helpers.baseFontSize}px;
   color: ${helpers.textColor};
-  margin-top: ${helpers.rhythmDiv};
+  margin: ${helpers.rhythmDiv}px 0;
 `;
 
 

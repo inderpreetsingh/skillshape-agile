@@ -122,6 +122,7 @@ class LoginButton extends Component {
         return(
             <Fragment>
                 <SecondaryButton
+                    noMarginBottom
                     fullWidth={fullWidth}
                     icon={currentUser ? false : true}
                     iconName={iconName}

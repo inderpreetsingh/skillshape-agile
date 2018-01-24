@@ -31,19 +31,31 @@ const styles = {
         textTransform: 'none',
         color: helpers.lightTextColor,
         display: 'block'
+    },
+    textCenter: {
+      textAlign: 'center'
     }
 }
 
-const GoogleIconButton = (props) => (
-    <Button color={googleButtonColor} onClick={props.onClick} classes={{root: props.classes.googleButton, label: props.classes.label}}>
+const GoogleIconButton = (props) => {
+    let rootClass = '';
+    if(props.textCenter) {
+      rootClass = `${props.classes.googleButton} ${props.classes.textCenter}`;
+    }else {
+      rootClass = props.classes.googleButton;
+    }
+    return(
+      <Button color={googleButtonColor} onClick={props.onClick} classes={{root: rootClass, label: props.classes.label}}>
         <SocialIcon network="google" style={iconStyles} color={helpers.lightTextColor}/>
         {props.label}
-    </Button>
-);
+      </Button>
+    )
+}
 
 GoogleIconButton.propTypes = {
     onClick: PropTypes.func,
-    label: PropTypes.string
+    label: PropTypes.string,
+    textCenter: PropTypes.bool
 }
 
 GoogleIconButton.defaultProps = {

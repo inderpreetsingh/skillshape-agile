@@ -81,7 +81,7 @@ const CardDescriptionWrapper = styled.div`
   position: absolute;
   background-color: white;
   width: 100%;
-  z-index: 10;
+  z-index: 9;
   top: 0;
   right: 0;
   left: 0;

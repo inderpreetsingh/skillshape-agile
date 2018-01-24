@@ -65,8 +65,17 @@ const styles = {
       padding: `0 ${helpers.rhythmDiv * 3}px`
     }
   },
+  dialogActionsRootButtons: {
+    width: '100%',
+    padding: `0 ${helpers.rhythmDiv}px`,
+    margin: 0,
+    '@media screen and (max-width : 500px)': {
+      padding: `0 ${helpers.rhythmDiv}px`
+    }
+  },
   iconButton: {
-    height: 'auto'
+    height: 'auto',
+    width: 'auto'
   },
   formControlRoot: {
     marginBottom: `${helpers.rhythmDiv * 2}px`
@@ -81,6 +90,7 @@ const DialogBoxHeaderText = styled.p`
 const DialogTitleContainer = styled.div`
   ${helpers.flexCenter};
   margin: 0 0 ${helpers.rhythmDiv * 2}px 0;
+  padding: 0 ${helpers.rhythmDiv * 3}px;
 `;
 
 const DialogTitleWrapper = styled.h1`
@@ -122,7 +132,7 @@ const LoginButtonWrapper = styled.div`
   @media screen and (max-width: ${helpers.mobile}px) {
     width: 100%;
     margin-left: 0;
-    margin-top: ${helpers.rhythmDiv}px;
+    margin-bottom: ${helpers.rhythmDiv}px;
     padding-right: ${helpers.rhythmDiv}px;
   }
 `;
@@ -153,7 +163,7 @@ const LogoImg = styled.img`
   height: 40px;
   margin-right: ${helpers.rhythmDiv}px;
   cursor: pointer;
-  
+
   @media screen and (max-width: ${helpers.mobile}px) {
     width: 30px;
     height: 30px;
@@ -313,13 +323,13 @@ class SignUpDialogBox extends Component {
                             }
                         </DialogContent>
 
-                        <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
+                        <DialogActions classes={{root : classes.dialogActionsRootButtons, action: classes.dialogAction}}>
                             <DialogActionWrapper>
                                 <Typography> Already a Skill Shape Member ?</Typography>
                                 <LoginButtonWrapper>
                                   <LoginButton />
                                 </LoginButtonWrapper>
-                                <PrimaryButton type="submit" label="Sign Up" onClick={onSignUpButtonClick}></PrimaryButton>
+                                <PrimaryButton type="submit" label="Sign Up" onClick={onSignUpButtonClick} noMarginBottom />
                             </DialogActionWrapper>
                         </DialogActions>
                     </form>

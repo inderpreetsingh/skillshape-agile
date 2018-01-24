@@ -24,18 +24,39 @@ import Dialog , {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  withMobileDialog,
 } from 'material-ui/Dialog';
 
 import { ContainerLoader } from '/imports/ui/loading/container';
 
 const styles = theme => {
   return {
-      googleButton: {
-      width: "90%",
-      marginBottom: theme.spacing.unit
+    dialogTitleRoot: {
+      padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+      marginBottom: `${helpers.rhythmDiv * 2}px`,
+      '@media screen and (max-width : 500px)': {
+        padding: `0 ${helpers.rhythmDiv * 3}px`
+      }
+    },
+    dialogContent: {
+      padding: `0 ${helpers.rhythmDiv * 3}px`,
+      '@media screen and (max-width : 500px)': {
+        minHeight: '150px'
+      }
+    },
+    dialogActions: {
+      padding: '0 8px',
+    },
+    googleButton: {
+      width: "100%",
+      marginBottom: theme.spacing.unit,
     },
     facebookButton: {
-      width: "90%"
+      width: "100%",
+    },
+    iconButton: {
+      height: 'auto',
+      width: 'auto'
     }
   }
 }
@@ -58,26 +79,28 @@ const ErrorWrapper = styled.span`
 `;
 
 const DialogActionWrapper = styled.div`
-  ${helpers.flexHorizontalSpaceBetween}
+  display: flex;
+  flex-direction: column;
+  padding: 0 ${helpers.rhythmDiv * 3}px;
+  margin: 0;
+  margin-top: ${helpers.rhythmDiv}px;
   width: 100%;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     flex-direction: column;
+    min-height: 100px
   }
 `;
 
 const ButtonWrapper = styled.div`
-  width: calc(100% - ${helpers.rhythmDiv * 2}px);
-  padding: ${helpers.rhythmDiv};
+  width: 100%;
   text-align: center;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    width: 100%;
-  }
+  margin-bottom: ${props => props.facebook ? '0' : helpers.rhythmDiv+'px'};
 `;
 
 const LoginDialog = (props) => (
   <Dialog
+    fullScreen={props.fullScreen}
     open={props.open}
     onClose={props.onModalClose}
     onRequestClose={props.onModalClose}
@@ -87,26 +110,27 @@ const LoginDialog = (props) => (
   >
   { props.loading && <ContainerLoader/>}
   <MuiThemeProvider theme={muiTheme}>
-    <DialogTitle>
+    <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
       <DialogTitleWrapper>
           <span itemProp="name">Log In</span>
 
-          <IconButton color="primary" onClick={props.onModalClose}>
+          <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
             <ClearIcon/>
           </IconButton >
         </DialogTitleWrapper>
     </DialogTitle>
-      <DialogActionWrapper>
-        <ButtonWrapper>
-          <GoogleIconButton onClick={props.onSignUpWithGoogleButtonClick} label="Login With Google" classes={props.classes}/>
-        </ButtonWrapper>
-      </DialogActionWrapper>
-      <DialogActionWrapper>
-        <ButtonWrapper>
-          <FacebookIconButton onClick={props.onSignUpWithFacebookButtonClick} label="Login With Facebook" classes={props.classes} />
-        </ButtonWrapper>
-      </DialogActionWrapper>
-    <DialogContent>
+
+    <DialogActionWrapper>
+      <ButtonWrapper>
+        <GoogleIconButton onClick={props.onSignUpWithGoogleButtonClick} label="Login With Google" classes={props.classes.googleButton} textCenter/>
+      </ButtonWrapper>
+      <ButtonWrapper facebook>
+        <FacebookIconButton onClick={props.onSignUpWithFacebookButtonClick} label="Login With Facebook" classes={props.classes.facebookButton} textCenter/>
+      </ButtonWrapper>
+
+    </DialogActionWrapper>
+
+    <DialogContent classes={{root : props.classes.dialogContent}}>
         <FormControl error={props.error.email} margin="dense" fullWidth aria-describedby="email-error-text">
           <InputLabel htmlFor="email">Email Address</InputLabel>
           <Input
@@ -133,7 +157,8 @@ const LoginDialog = (props) => (
         />
         {props.error.message && <ErrorWrapper>{props.error.message}</ErrorWrapper>}
     </DialogContent>
-    <DialogActions>
+
+    <DialogActions classes={{root: props.classes.dialogActions}}>
        <Button color="primary" onClick={props.onSignUpButtonClick} itemScope itemType="http://schema.org/AgreeAction"> Sign Up</Button>
        <PrimaryButton disabled={props.error.email} label="Sign In" onClick={props.onSignInButtonClick} itemScope itemType="http://schema.org/DisagreeAction"/>
     </DialogActions>
@@ -148,4 +173,4 @@ LoginDialog.propTypes = {
   loading: PropTypes.bool,
 }
 
-export default withStyles(styles)(LoginDialog);
+export default withMobileDialog()(withStyles(styles)(LoginDialog));

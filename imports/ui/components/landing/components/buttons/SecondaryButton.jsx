@@ -27,6 +27,9 @@ const styles = {
   fullWidth: {
     width: '100%'
   },
+  noMarginBottom: {
+    marginBottom: 0
+  },
   secondaryButtonIcon: {
     display: 'inline-block',
     marginRight: '5px',
@@ -42,9 +45,14 @@ const styles = {
 
 const SecondaryButton = (props) => {
   let rootClass = ``;
-  if(props.fullWidth) {
+  if(props.fullWidth && props.noMarginBottom) {
+    rootClass = `${props.classes.secondaryButton} ${props.classes.fullWidth} ${props.classes.noMarginBottom}`;
+  }else if(props.fullWidth) {
     rootClass = `${props.classes.secondaryButton} ${props.classes.fullWidth}`;
-  }else{
+  }else if(props.noMarginBottom) {
+    rootClass = `${props.classes.secondaryButton} ${props.classes.noMarginBottom}`;
+  }
+  else{
     rootClass = props.classes.secondaryButton;
   }
 
@@ -83,6 +91,7 @@ SecondaryButton.propTypes = {
     iconName: PropTypes.string,
     label: PropTypes.string,
     fullWidth: PropTypes.bool,
+    noMarginBottom: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     itemScope: PropTypes.string,
     itemProp: PropTypes.string
