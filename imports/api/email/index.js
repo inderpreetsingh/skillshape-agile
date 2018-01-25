@@ -119,4 +119,3 @@ export const sendEmailToStudentForClassTimeUpdate = function(userData, schoolDat
         });
     }
 }
-
