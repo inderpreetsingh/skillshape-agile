@@ -29,10 +29,9 @@ const styles = theme => ({
     padding: theme.spacing.unit
   },
   typo: {
-    fontSize: 'larger',
     fontWeight: 400,
     margin: '0 0 20px',
-    paddingLeft: theme.spacing.unit * 3
+    listStyle: 'disc'
   },
   aboutUsContainer: {
     maxWidth:'1196px !important',
@@ -42,6 +41,10 @@ const styles = theme => ({
   contactUsText: {
     fontWeight: '400',
     fontSize: '1.0rem',
+  },
+  headingStyle: {
+  	color:'green',
+  	paddingLeft: '22px'
   }
 });
 
@@ -204,32 +207,38 @@ class AboutUs extends React.Component{
           <Grid item xs={12} sm={4}>
               <Paper>
                 <div className={classes.exactPadding}>
-                  <h3 style={{color:'green'}}>Open a Student Account</h3>
-                  <Typography className={classes.typo}>Join Schools</Typography>
-                  <Typography className={classes.typo}>Track your progress</Typography>
-                  <Typography className={classes.typo}>Share milestones and Videos</Typography>
+                  <h3 className={classes.headingStyle}>Open a Student Account</h3>
+                  <ul>
+	                  <li className={classes.typo}><Typography> Join Schools</Typography></li>
+	                  <li className={classes.typo}> <Typography>Track your progress</Typography></li>
+	                  <li className={classes.typo}> <Typography>Share milestones and Videos</Typography></li>
+                  </ul>
                 </div>
               </Paper>
               <Paper>
                 <div style={{marginTop:'10px'}} className={classes.exactPadding}>
-                  <h3 style={{color:'green'}}>Upload your Local Listing</h3>
-                  <Typography className={classes.typo}>Update your Listing</Typography>
-                  <Typography className={classes.typo}>Present your expertise</Typography>
-                  <Typography className={classes.typo}>Bring in Students</Typography>
+                  <h3 className={classes.headingStyle}>Upload your Local Listing</h3>
+                  <ul>
+	                  <li className={classes.typo}> <Typography>Update your Listing</Typography></li>
+	                  <li className={classes.typo}> <Typography>Present your expertise</Typography></li>
+	                  <li className={classes.typo}> <Typography>Bring in Students</Typography></li>
+                  </ul>
                 </div>
               </Paper>
           </Grid>
           <Grid item xs={12} sm={8}>
             <Paper style={{height: '100%'}}>
               <div className={classes.exactPadding}>
-                <h3 className="card-title cttb" style={{color:'green'}}>Manage your school</h3>
-                <Typography className={`${classes.typo} ${classes.paddingLeft}`}>Manage Your Curriculum</Typography>
-                  <Typography className={classes.typo}>* Create clear guidelines and hel students stay excited by seeing where they are going</Typography>
-                  <Typography className={classes.typo}>* Monitor Student Exposure,Progress, and Safety</Typography>
-                  <Typography className={classes.typo}>* Credit students for attending, evaluate on the fly, track safety issues, and build classes based on what is needed for the students that are present.
-                  Stay Connected With Your Students.</Typography>
-                  <Typography className={classes.typo}>* Stay connected with Your Students</Typography>
-                  <Typography className={classes.typo}>* Provide a way for your student to engage anf connect with your curriculum and community, even when yhey are not in className.</Typography>
+                <h3 className={classes.headingStyle}>Manage your school</h3>
+              	<ul>
+                  <li className={`${classes.typo} ${classes.paddingLeft}`}><Typography>Manage Your Curriculum</Typography></li>
+	              <li className={classes.typo}> <Typography>Create clear guidelines and hel students stay excited by seeing where they are going</Typography></li>
+	              <li className={classes.typo}> <Typography>Monitor Student Exposure,Progress, and Safety</Typography></li>
+	              <li className={classes.typo}> <Typography>Credit students for attending, evaluate on the fly, track safety issues, and build classes based on what is needed for the students that are present.
+	              Stay Connected With Your Students.</Typography></li>
+	              <li className={classes.typo}> <Typography>Stay connected with Your Students</Typography></li>
+	              <li className={classes.typo}> <Typography>Provide a way for your student to engage anf connect with your curriculum and community, even when they are not in class.</Typography></li>
+              	</ul>
               </div>
             </Paper>
           </Grid>

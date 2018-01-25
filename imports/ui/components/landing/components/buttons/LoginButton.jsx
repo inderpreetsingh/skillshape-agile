@@ -13,6 +13,12 @@ class LoginButton extends Component {
         this.state = this.initializeState();
     }
 
+    componentWillMount() {
+        Events.on("loginAsSchoolAdmin", "123456", (data) => {
+            this.handleLoginModalState(true, data);
+        })
+    }
+
     initializeState = ()=> {
         return {
             loginModal : false,
@@ -23,9 +29,12 @@ class LoginButton extends Component {
         }
     }
 
-    handleLoginModalState = (state) => {
+    handleLoginModalState = (state, data) => {
         let stateObj = this.initializeState();
         stateObj.loginModal = state;
+        if(data) {
+            stateObj.redirectUrl = data.redirectUrl;
+        }
         this.setState(stateObj)
     }
 
@@ -44,17 +53,27 @@ class LoginButton extends Component {
     }
 
     onSignInButtonClick = () => {
-        this.setState({loading: true})
+        let redirectUrl;
+        if (this.state.redirectUrl) {
+            redirectUrl = this.state.redirectUrl;
+        }
+        this.setState({ loading: true })
         Meteor.loginWithPassword(this.state.email, this.state.password, (err, res) => {
-            let stateObj = {...this.state};
-            console.log("login response -->>",res);
+            let stateObj = { ...this.state };
+            console.log("login response -->>", res);
             stateObj.loading = false;
-            if(err) {
+            if (err) {
                 stateObj.error.message = err.reason || err.message
             } else {
                 stateObj.error = {};
                 stateObj.loginModal = false;
-                browserHistory.push('/');
+                /*Admin of school was not login while clicking on `No, I will manage the school`
+                so in this case we need to redirect to school admin page that we are getting in query params*/
+                if (redirectUrl) {
+                    browserHistory.push(redirectUrl);
+                } else {
+                    browserHistory.push('/');
+                }
             }
             this.setState(stateObj)
         })
