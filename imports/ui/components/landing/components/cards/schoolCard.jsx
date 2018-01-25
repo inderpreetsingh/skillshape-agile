@@ -18,6 +18,8 @@ import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
 import { cutString, toastrModal } from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
+
 
 
 const styles = {
@@ -109,7 +111,8 @@ const CardDescriptionActionArea = styled.div`
 class SchoolCard extends Component {
   state = {
     imageContainerHeight: '250px',
-    revealCard: false
+    revealCard: false,
+    isLoading:false
   };
   updateDimensions = () => {
     const container = ReactDOM.findDOMNode(this.imgContainer);
@@ -146,16 +149,20 @@ class SchoolCard extends Component {
           userName: user.profile.firstName,
           schoolEmail:schoolCardData.email
         }
+        this.setState({isLoading:true});
         Meteor.call('school.claimSchoolRequest',payload,(err, result)=> {
           console.log("result",result);
-          if(result.rejectedClaimRequest) {
+          this.setState({isLoading:false});
+          if(result.alreadyRejected) {
             toastr.error('Your request has been rejected to manage this school by school Admin', 'Error');
           }else if(result.pendingRequest) {
             toastr.error("We are in the process of resolving your claim. We will contact you as soon as we reach a verdict or need more information. Thanks for your patience.",'Error');
           } else if(result.alreadyManage) {
             toastr.success("You already manage a school. You cannot claim another School. Please contact admin for more details",'success');
           } else if(result.onlyOneRequestAllowed) {
-            toastr.error(`You are not allowed to do more than one request as you have already created request for School Name \n:${result.schoolName}`,'Error');
+            toastr.error(`You are not allowed to do more than one request as you have already created request for School Name:${result.schoolName}`,'Error');
+          }else if(result.emailSuccess) {
+            toastr.error("We have sent your request to school admin. We will assist you soon :)",'success');
           }
         });
     }
@@ -169,7 +176,9 @@ class SchoolCard extends Component {
     //console.log(ShowDetails,"adsljfj")
     return (
       <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
-
+        {
+          this.state.isLoading && <ContainerLoader />
+        }
         <div>
           <CardImageWrapper ref={(div) => this.imgContainer = div} style={{height: this.state.imageContainerHeight}}>
              <Link to={`/schools/${schoolCardData.slug}`}>
