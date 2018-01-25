@@ -1,225 +1,245 @@
 import React from 'react';
+import get from 'lodash/get';
+import styled from 'styled-components';
+import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import IconButton from 'material-ui/IconButton';
+import classnames from 'classnames';
+import Grid from 'material-ui/Grid';
+import Typography from 'material-ui/Typography';
+import Input, { InputLabel } from 'material-ui/Input';
+import Select from 'material-ui/Select';
+import Collapse from 'material-ui/transitions/Collapse';
+import { FormControl } from 'material-ui/Form';
+import { MenuItem } from 'material-ui/Menu';
+import Button from 'material-ui/Button';
+import Edit from 'material-ui-icons/Edit';
+import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
 import { validateImage } from '/imports/util';
 import { Loading } from '/imports/ui/loading';
-import DatePicker from 'react-datepicker';
+import config from '/imports/config';
+import { ContainerLoader } from '/imports/ui/loading/container';
+
+import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
+import IconInput from '/imports/ui/components/landing/components/form/IconInput';
+
+const SaveBtnWrapper = styled.div`
+    margin: 10px;
+    float: right;
+`;
+
+const ErrorWrapper = styled.span`
+    color: red;
+    float: right;
+`;
 
 export default function() {
-	let { currentUser } = this.props;
+  console.log("My Profile Props -->>>",this.props);
+  console.log("My Profile State -->>>",this.state);
+	let { currentUser, classes, isUserSubsReady } = this.props;
 	let {
 		firstName,
 		nickame,
 		lastName,
 		dob,
 		phone,
-		address
+		address,
+        email,
+        about,
 	} = this.state;
 
-	if(!currentUser)
+	if(!isUserSubsReady)
 		return <Loading/>
 
-	return (
-    <div className="content">
-      <div className="container-fluid">
-        <div className="card">
-          <div className="row">
-            <div className="card-header card-header-icon" data-background-color="blue">
-              <i className="material-icons">perm_identity</i>
-            </div>
-          </div>
-          <div className="col-md-3 text-center" style={{paddingTop: '20px'}}>
-            <div className="fileinput fileinput-new card-button text-center" data-provides="fileinput">
-              <div className="fileinput-new card-button thumbnail">
-                <img className="" src={validateImage(currentUser)} alt="Profile Image" id="pic"/>
-              </div>
-              <div className="fileinput-preview fileinput-exists thumbnail"></div>
-                <div>
-                  <span className="btn btn-warning btn-sm btn-file">
-                  	<span className="fileinput-new">Upload New Image</span>
-                  	<span className="fileinput-exists">Change</span>
-                  	<input type="hidden"/>
-                  	<input type="file" name="..." accept="image/*" id="ProfileImage" ref="ProfileImage"/>
-                  </span>
-                  <a href="#" className="btn btn-danger  fileinput-exists" data-dismiss="fileinput">
-                  	<i className="fa fa-times"></i>
-                  		Remove
-                  </a>
-                </div>
-             	</div>
-           	</div>
-           	<div className="col-md-8 right txtwar">
-              <div className="form-group row">
-               	<label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>
-               		First Name
-               	</label>
-               	<div className="col-md-10">
-                  <input
-                  	className="form-control"
-                  	type="text"
-                  	id="firstName"
-                  	ref="firstName"
-                  	value={firstName}
-                  	onChange={(e) => this.setState({firstName: e.target.value})}
-                  />
-                </div>
-              </div>
-              <div className="form-group row">
-              	<label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>
-              		Nickname
-              	</label>
-              <div className="col-md-10">
-                <input
-                	className="form-control"
-                	type="text"
-                	id="nickame"
-                	ref="nickame"
-                	value={nickame}
-                	onChange={(e) => this.setState({nickame: e.target.value})}
-                />
-              </div>
-            </div>
-            <div className="form-group row">
-              <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>Last Name</label>
-              <div className="col-md-10">
-                <input
-                	className="form-control"
-                	type="text"
-                	id="lastName"
-                	ref="lastName"
-                	value={lastName}
-                	onChange={(e) => this.setState({lastName: e.target.value})}
-                />
-                <small >Your public profile only shows your first name and nickname. When you join a school, your instructors will see your first and last name.</small>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>I AM</label>
-              <div className="col-md-10">
-                <select
-                	className="custom-select mb-2 mr-sm-2 mb-sm-0"
-                	id="gender"
-                	ref="gender"
-                	value={this.state.gender}
-                	onChange={(e) => this.setState({gender: e.target.value})}
-                >
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-                <br/>
-                <small>We use this data for analysis and never shared it with other users.</small>
-              </div>
+    if(!currentUser) {
+        return  <Typography type="display2" gutterBottom align="center">
+            User not found!!!
+        </Typography>
+    }
 
-            </div>
-            <div className="form-group row">
-              <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>Birth Date</label>
-              <div className="col-md-10">
-                <DatePicker
-                  className="form-control react-datepicker-text-field"
-                  selected={this.state.dob}
-                  onChange={(date)=> this.setState({dob: date})}
-                />
-                <small>The wonderful day you took your first breath. We use this data for analysis and never share it wuth other users.</small>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>Email</label>
-              <div className="col-md-10">
-                <input
-                	className="form-control"
-                	type="text"
-                	id="example-text-input"
-                	value={currentUser.emails.length > 0 && (currentUser.emails[0].address || "")}
-                	readOnly="true"
-                />
-                <small>We won't share your private email address with other Members.</small>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>Phone</label>
-              <div className="col-md-10">
-                <input
-                	className="form-control"
-                	type="text"
-                	id="phone"
-                	ref="phone"
-                	value={phone}
-                	onChange={(e) => this.setState({phone: e.target.value})}
-                />
-                <small>This is only shared with Administrators of school you have enrolled in.</small>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label for="example-text-input" className="col-md-2 col-form-label" style={{textAlign: 'right'}}>Address</label>
-              <div className="col-md-10">
-                <input
-                	className="form-control"
-                	type="text"
-                	id="address"
-                	ref="address"
-                	value={address}
-                	onChange={(e) => this.setState({address: e.target.value})}
-                />
-                <small>Please enter your address, including zip code and country. We only use this to help you find classes in your area and do not share it.</small>
-              </div>
-            </div>
-            <div className="row form-group right">
-              <button
-              	onClick={this.updateUser}
-              	type='button'
-              	className='btn btn-md btn-rose'
-              	id="btn_update_user"
-              > Save
-              </button>
-            </div>
-          </div>
-        </div>
+    if(this.validateUser()) {
+    	return (
+            <Grid container>
+                { this.state.isBusy && <ContainerLoader/>}
+                <Grid item xs={12} sm={8}>
+                    <Card className={classes.card}>
+                        <CardHeader
+                            title="My Profile"
+                            action={
+                                <IconButton
+                                  className={classnames(classes.expand, {
+                                    [classes.expandOpen]: this.state.profileExpanded,
+                                  })}
+                                  onClick={this.handleExpandClick.bind(this, "profileExpanded")}
+                                  aria-expanded={this.state.profileExpanded}
+                                  aria-label="Show more"
+                                >
+                                  <ExpandMoreIcon />
+                                </IconButton>
+                            }
+                        />
+                        <Collapse in={this.state.profileExpanded} timeout="auto" unmountOnExit>
+                            <CardContent>
+                                <Grid container>
+                                    <Grid item xs={12} sm={4}>
+                                        <MediaUpload
+                                            fullScreen={false}
+                                            width={250}
+                                            onChange={this.handleUserImageChange}
+                                            data={currentUser.profile && currentUser.profile.pic && {file: currentUser.profile.pic, isUrl: true}}
+                                            showVideoOption={false}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={8}>
+                                        <form onSubmit={this.submitUserDetails}>
+                                            <IconInput
+                                                labelText="First Name"
+                                                value={firstName}
+                                                onChange={this.handleTextChange.bind(this, "firstName")}
+                                            />
+                                            <IconInput
+                                                labelText="Last Name"
+                                                value={lastName}
+                                                onChange={this.handleTextChange.bind(this, "lastName")}
+                                            />
+                                            <Typography className={classes.inputCaption} type="caption">
+                                                Your public porfile only shows first name. When you join
+                                                a school, your instructors will see your first and last name.
+                                            </Typography>
+                                            <FormControl fullWidth margin='dense'>
+                                                <InputLabel htmlFor="gender">I Am</InputLabel>
+                                                <Select
+                                                    input={<Input id="gender"/>}
+                                                    value={this.state.gender}
+                                                    onChange={(event) => this.setState({ gender: event.target.value })}
+                                                    fullWidth
+                                                >
+                                                    {
+                                                        config.gender.map((data, index)=> {
+                                                            return <MenuItem
+                                                                key={`${index}-${data.value}`}
+                                                                value={data.value}>
+                                                                {data.label}
+                                                            </MenuItem>
+                                                        })
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                            <Typography className={classes.inputCaption} type="caption">
+                                                We use this data for analysis and never share it with other users.
+                                            </Typography>
+                                            <FormControl fullWidth margin='dense'>
+                                                <MaterialDatePicker
+                                                    floatingLabelText={"Birth Date"}
+                                                    value={dob}
+                                                    onChange={(event, date) => this.setState({ dob: date})}
+                                                    fullWidth={true}
+                                                />
+                                            </FormControl>
+                                            <Typography className={classes.inputCaption} type="caption">
+                                                The wonderful day you took your first breath. We use this data to help you find classes and never share ti with other users.
+                                            </Typography>
+                                            <IconInput
+                                                type="email"
+                                                disabled={true}
+                                                value={email}
+                                                labelText="Email Address"
+                                                iconName="email"
+                                            />
+                                            <Typography className={classes.inputCaption} type="caption">
+                                                We won't be share your private email address with others Members.
+                                            </Typography>
+                                            <IconInput
+                                                type="tel"
+                                                labelText="Phone Number"
+                                                iconName="contact_phone"
+                                                value={phone}
+                                                onChange={this.handleTextChange.bind(this, "phone")}
+                                            />
+                                            <Typography className={classes.inputCaption} type="caption">
+                                                This is only shared with Administrators odf a school you have enrolled in.
+                                            </Typography>
+                                            <FormControl fullWidth margin='dense'>
+                                                <InputLabel htmlFor="currency">Preferred Currency</InputLabel>
+                                                <Select
+                                                    input={<Input id="currency"/>}
+                                                    value={this.state.currency}
+                                                    onChange={(event) => this.setState({ currency: event.target.value })}
+                                                    fullWidth
+                                                >
+                                                    {
+                                                        config.currency.map((data, index)=> {
+                                                            return <MenuItem
+                                                                key={`${index}-${data.value}`}
+                                                                value={data.value}>
+                                                                {data.label}
+                                                            </MenuItem>
+                                                        })
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                            <IconInput
+                                                onChange={this.locationInputChanged}
+                                                iconName='location_on'
+                                                googlelocation={true}
+                                                labelText="Where You Live"
+                                                value={address}
+                                                onLocationChange={this.onLocationChange}
+                                            />
+                                            <IconInput
+                                                type="text"
+                                                multiline={true}
+                                                labelText="About You"
+                                                defaultValue={about}
+                                                value={about}
+                                                onChange={this.handleTextChange.bind(this, "about")}
+                                            />
+                                            <SaveBtnWrapper>
+                                                <Button type="submit" color="accent" raised dense>
+                                                    Save
+                                                </Button>
+                                            </SaveBtnWrapper>
+                                            {
+                                                this.state.errorText && <ErrorWrapper>{this.state.errorText}</ErrorWrapper>
+                                            }
+                                        </form>
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+                        </Collapse>
+                    </Card>
+                </Grid>
 
-        <div className="card">
-          <div className="card-header" style={{height: '70px', backgroundColor: '#348CC0'}}>
-            <p className="change-pass-header-txt">Change Your Password</p>
-          </div>
-          <div className="row" style={{padding: '35px'}}>
-            <div className="form-group row">
-              <label for="example-text-input" className="col-md-2 col-form-label" >Current Password</label>
-              <div className="col-md-10">
-                <input
-                  className="form-control"
-                  type="text"
-                  ref="currentPassword"
-                />
-              </div>
-            </div>
-            <div className="form-group row">
-              <label for="example-text-input" className="col-md-2 col-form-label" >New Password</label>
-              <div className="col-md-10">
-                <input
-                  className="form-control"
-                  type="text"
-                  ref="newPassword"
-                />
-              </div>
-            </div>
-            <div className="form-group row">
-              <label for="example-text-input" className="col-md-2 col-form-label" >Confirm Password</label>
-              <div className="col-md-10">
-                <input
-                  className="form-control"
-                  type="text"
-                  ref="confirmPassword"
-                />
-              </div>
-            </div>
-            <div className="row form-group right">
-              <button
-                onClick={this.changePassword}
-                type='button'
-                className='btn btn-md btn-rose'
-                id="btn_update_user"
-              > Change Password
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+                <Grid item xs={12} sm={4}>
+                    <Card className={classes.card}>
+                        <CardHeader
+                            title="Media Settings"
+                            action={
+                                <IconButton
+                                  className={classnames(classes.expand, {
+                                    [classes.expandOpen]: this.state.mediaExpanded,
+                                  })}
+                                  onClick={this.handleExpandClick.bind(this, "mediaExpanded")}
+                                  aria-expanded={this.state.mediaExpanded}
+                                  aria-label="Show more"
+                                >
+                                  <ExpandMoreIcon />
+                                </IconButton>
+                            }
+                        />
+                        <Collapse in={this.state.mediaExpanded} timeout="auto" unmountOnExit>
+                            <CardContent>
+                                No setting found
+                            </CardContent>
+                        </Collapse>
+                    </Card>
+                </Grid>
+
+            </Grid>
+        )
+    } else {
+        return  <Typography type="display2" gutterBottom align="center">
+            Access Denied!!!
+        </Typography>
+    }
 }

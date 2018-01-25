@@ -29,7 +29,7 @@ Schema.UserProfile = new SimpleSchema({
     },
     dob: {
         optional: true,
-        type: String
+        type: Date
     },
     address: {
         optional: true,
@@ -93,6 +93,14 @@ Schema.UserProfile = new SimpleSchema({
         optional: true
     },
     userType: {
+        type: String,
+        optional: true
+    },
+    about: {
+        type: String,
+        optional: true
+    },
+    currency: {
         type: String,
         optional: true
     }
