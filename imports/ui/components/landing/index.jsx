@@ -4,6 +4,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import {Element, scroller } from 'react-scroll'
 import Sticky from 'react-stickynode';
+import { browserHistory } from 'react-router';
 
 import Cover from './components/Cover.jsx';
 import BrandBar from './components/BrandBar.jsx';
@@ -18,6 +19,7 @@ import Footer from './components/footer/index.jsx';
 import * as helpers from './components/jss/helpers.js';
 import { cardsData, cardsData1} from './constants/cardsData.js';
 import config from '/imports/config';
+import Events from '/imports/util/events';
 
 const MainContentWrapper = styled.div`
   display: flex;
@@ -133,7 +135,12 @@ class Landing extends Component {
             });
         } else if(this.props.location.query.redirectUrl) {
             Meteor.call('approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
-                // redirect from here
+                if(!this.props.currentUser) {
+                  // Let the admin user login if user is not login.
+                  Events.trigger("loginAsSchoolAdmin",{redirectUrl: this.props.location.query.redirectUrl});
+                } else { // Otherwise redirect to school admin page
+                  browserHistory.push(this.props.location.query.redirectUrl)
+                }
             });
         }
       }
