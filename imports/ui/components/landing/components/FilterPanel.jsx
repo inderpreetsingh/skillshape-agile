@@ -60,6 +60,9 @@ const FilterButtonArea = styled.div`
     margin-top:-24px;
 `;
 
+const MaterialInputWrapper = styled.div`
+  transform: translateY(-${props => props.select ? (helpers.rhythmDiv + 2) : helpers.rhythmDiv}px);
+`;
 
 class FilterPanel extends Component {
     state = {
@@ -174,11 +177,23 @@ class FilterPanel extends Component {
           return (
             <Grid container spacing={24}>
 
-                <Hidden xsUp>
-                    <Grid item xs={11} sm = {5}>
-                       <Multiselect data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}  placeholder="Skill Level" />
-                    </Grid>
-                </Hidden>
+                <Grid item xs={11} sm = {3} hidden={{ smUp: true }}>
+                  <MaterialInputWrapper>
+                    <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
+                  </MaterialInputWrapper>
+                </Grid>
+
+                <Grid item xs={11} sm = {5} hidden={{ smUp: true }}>
+                  <Multiselect
+                  textField={"name"}
+                  valueField={"_id"}
+                  data={this.state.skillCategoryData}
+                  placeholder="Skill category"
+                  onChange={this.collectSelectedSkillCategories}
+                  />
+
+                </Grid>
+
 
                 <Grid item xs={11} sm = {11}>
                    <Multiselect
@@ -190,42 +205,47 @@ class FilterPanel extends Component {
                     />
                 </Grid>
 
-                 <Grid item xs={11} sm={6} >
-                   <SliderControl labelText={"Price Per Class"} onChange={this.perClassPriceFilter} max={100} min={1} defaultValue={[0,45]}/>
+
+                <Grid item xs={11} sm={6}>
+                    <Multiselect onChange={this.skillLevelFilter} data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}  placeholder="Skill Level" />
+                </Grid>
+
+                <Grid item xs={6} sm={3}>
+                    <MaterialInputWrapper select>
+                      <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.state.filter.gender} onChange={this.filterGender}>
+                        <MenuItem value=""> Gender</MenuItem>
+                        <MenuItem value={"Male"}> Male </MenuItem>
+                        <MenuItem value={"Female"}> Female </MenuItem>
+                        <MenuItem value={"Any"}> Any </MenuItem>
+                      </IconSelect>
+                    </MaterialInputWrapper>
+                </Grid>
+
+                  <Grid item xs={5} sm={2}>
+                    <MaterialInputWrapper>
+                      <IconInput onChange={this.filterAge} iconName='star' labelText="Age"  />
+                    </MaterialInputWrapper>
+                </Grid>
+
+                <Grid item xs={11} sm={6} >
+                  <SliderControl labelText={"Price Per Class"} onChange={this.perClassPriceFilter} max={100} min={1} defaultValue={[0,45]}/>
                 </Grid>
 
 
                 <Grid item xs={11} sm={5} >
-                   <SliderControl labelText={"Price Per Month"} onChange={this.pricePerMonthFilter} max={100} min={1} defaultValue={[1,30]} />
-                </Grid>
-
-                <Grid item xs={11} sm={3}>
-                    <IconInput onChange={this.locationInputChanged} iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
+                  <SliderControl labelText={"Price Per Month"} onChange={this.pricePerMonthFilter} max={100} min={1} defaultValue={[1,30]} />
                 </Grid>
 
 
-                <Grid item xs={11} sm={3}>
-                    <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
+                <Grid item xs={11} sm={6} hidden={{smDown: true}}>
+
                 </Grid>
 
-                <Grid item xs={6} sm={3}>
-                    <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.state.filter.gender} onChange={this.filterGender}>
-                      <MenuItem value=""> Gender</MenuItem>
-                      <MenuItem value={"Male"}> Male </MenuItem>
-                      <MenuItem value={"Female"}> Female </MenuItem>
-                      <MenuItem value={"Any"}> Any </MenuItem>
-                    </IconSelect>
-                </Grid>
-
-                  <Grid item xs={5} sm={2}>
-                    <IconInput onChange={this.filterAge} iconName='star' labelText="Age"  />
-                </Grid>
-
-                <Grid item xs={11} sm={6} >
+                <Grid item xs={11} sm={5} >
                  <FilterPanelAction>
                     <PrimaryButton fullWidth label="Apply filters & Search" icon={true} iconName="search" onClick={this.applyFilters}/>
-                </FilterPanelAction>
-              </Grid>
+                  </FilterPanelAction>
+                </Grid>
             </Grid>
             )
         }
@@ -240,35 +260,42 @@ class FilterPanel extends Component {
                 <FilterPanelContent stickyPosition={stickyPosition} mapView={mapView}>
                  <form noValidate autoComplete="off">
 
-                    <Grid container spacing="24">
+                    <Grid container spacing={24}>
 
-                        <Grid item xs={9} sm = {6}>
-            	           <Multiselect
-                                textField={"name"}
-                                valueField={"_id"}
-                                data={this.state.skillCategoryData}
-                                placeholder="Skill category"
-                                onChange={this.collectSelectedSkillCategories}
-                            />
+                      <Grid item xs={9} sm = {3}>
+                        <MaterialInputWrapper>
+                          <IconInput onChange={this.locationInputChanged} iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
+                        </MaterialInputWrapper>
+                      </Grid>
 
+                      <Hidden xsDown>
+                        <Grid item xs={11} sm = {3}>
+                          <MaterialInputWrapper>
+                            <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
+                          </MaterialInputWrapper>
                         </Grid>
-                        <Hidden xsDown>
                         <Grid item xs={11} sm = {5}>
-            	            <Multiselect onChange={this.skillLevelFilter} data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}  placeholder="Skill Level" />
+                          <Multiselect
+                          textField={"name"}
+                          valueField={"_id"}
+                          data={this.state.skillCategoryData}
+                          placeholder="Skill category"
+                          onChange={this.collectSelectedSkillCategories}
+                          />
 
                         </Grid>
-                        </Hidden>
+                      </Hidden>
 
                     	<Grid item xs={3} sm={1}>
                     	   <FilterButtonArea>
                 	           	    <FilterPanelAction>
                     	       { showMoreFilters ?
                         	    <Button fab  mini className="show-more-filter-button" zDepth={0} onClick={() => this.handleShowFilterState(false)} >
-                                    <Icon>close</Icon>
-                                </Button>
+                                <Icon>close</Icon>
+                              </Button>
                         	    :
                         	    <Button fab mini onClick={() => this.handleShowFilterState(true)}>
-                        	    <Icon>tune </Icon>
+                        	     <Icon>tune </Icon>
                         	   </Button>
 
                     	       }
