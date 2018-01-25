@@ -70,18 +70,12 @@ Meteor.methods({
             const classTimesRequestData = ClassTimesRequest.find({schoolId,classTypeId,notification: true}).fetch()
             if(!isEmpty(classTimesRequestData)) {
                 for(let obj of classTimesRequestData) {
-                    let emailObj = {};
                     const userData = Meteor.users.findOne({_id: obj.userId});
                     const schoolData = School.findOne({_id: obj.schoolId})
 
-                    if(userData) {
-                        const userName = get(userData, "profile.name") || `${get(userData, "profile.firstName")} ${get(userData, "profile.lastName")}`;
-                        emailObj.to = userData.emails[0].address;
-                        emailObj.subject = "School Updated";
-                        emailObj.text = `${userName} \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(`schools/${schoolData.slug}`)} to view their new information and join the class! \n\nThanks, \n\nEveryone from SkillShape.com`;
+                    if(userData && schoolData) {
                         ClassTimesRequest.update({ _id: obj._id }, { $set: {notification: false} })
-                        sendEmailToStudentForClassTimeUpdate({...emailObj})
-
+                        sendEmailToStudentForClassTimeUpdate(userData, schoolData, classTypeName)
                     }
                 }
             }

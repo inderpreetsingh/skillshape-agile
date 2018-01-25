@@ -1,5 +1,5 @@
 import config from "/imports/config";
-
+import get from "lodash/get";
 import ClassType from "/imports/api/classType/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
@@ -79,26 +79,39 @@ export const sendConfirmationEmail = function(claimSchoolData) {
     }
 }
 
-export const sendClassTimesRequest = function({to, subject, text}) {
+export const sendClassTimesRequest = function({currentUserData, schoolOwnerData, superAdminData, schoolId, classTypeName}) {
 
+    let emailObj = {};
+    if(schoolOwnerData && currentUserData) {
+        const schoolOwnerName = get(schoolOwnerData, "profile.name") || `${get(schoolOwnerData, "profile.firstName")} ${get(schoolOwnerData, "profile.lastName")}`;
+        const userName = get(currentUserData, "profile.name") || `${get(currentUserData, "profile.firstName")} ${get(currentUserData, "profile.lastName")}`;
+        emailObj.to = schoolOwnerData.emails[0].address;
+        emailObj.subject = "Class Interest";
+        emailObj.text = `Hi ${schoolOwnerName}, \n${userName} is interested in learning more about your ${classTypeName} class. \nPlease click this link to update your listing: \n${Meteor.absoluteUrl(`SchoolAdmin/${schoolId}/edit`)} \n\nThanks, \n\nEveryone from SkillShape.com`;
+    } else {
+        emailObj.to = superAdminData.emails[0].address;
+        emailObj.subject = "School Admin not found",
+        emailObj.text = `Hi SuperAdmin, \nCorresponding to this schoolId ${schoolId} there is no admin assign yet \n\nThanks, \n\nEveryone from SkillShape.com`;
+    }
     if (Meteor.isServer) {
         Email.send({
-            to: 'sam@skillshape.com',
+            to: 'sam@skillshape.com', //emailObj.to
             from: "Notices@SkillShape.com",
             replyTo: "Notices@SkillShape.com",
-            subject: subject,
-            text: text,
+            subject: emailObj.subject,
+            text: emailObj.text,
         });
     }
 }
 
-export const sendEmailToStudentForClassTimeUpdate = function({ to, subject, text }) {
+export const sendEmailToStudentForClassTimeUpdate = function(userData, schoolData, classTypeName) {
     if (Meteor.isServer) {
+        const userName = get(userData, "profile.name") || `${get(userData, "profile.firstName")} ${get(userData, "profile.lastName")}`;
         Email.send({
-            to: 'ramesh.bansal@daffodilsw.com',
+            to: 'sam@skillshape.com', //userData.emails[0].address;,
             from: "Notices@SkillShape.com",
-            subject: subject,
-            text: text,
+            subject: "School Updated",
+            text: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(`schools/${schoolData.slug}`)} to view their new information and join the class! \n\nThanks, \n\nEveryone from SkillShape.com`,
         });
     }
 }
