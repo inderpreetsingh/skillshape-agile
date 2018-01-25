@@ -14,6 +14,7 @@ import ClassMap from './components/map/ClassMap.jsx';
 import FilterPanel from './components/FilterPanel.jsx';
 import ClassTypeList from './components/classType/classTypeList.jsx';
 import SwitchIconButton from './components/buttons/SwitchIconButton.jsx';
+import FloatingMapButton from './components/buttons/FloatingMapButton.jsx';
 import Footer from './components/footer/index.jsx';
 
 import * as helpers from './components/jss/helpers.js';
@@ -71,6 +72,25 @@ const SwitchViewWrapper = styled.div`
   right: 0;
   bottom: 0;
   z-index: 20;
+
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    display: ${props => props.mapView ? 'none' : 'block'};
+  }
+`;
+
+const FloatingMapButtonWrapper = styled.div`
+  padding: ${helpers.rhythmDiv}px;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  z-index: 20;
+  display: none;
+
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const FooterOuterWrapper = styled.div`
@@ -249,6 +269,7 @@ class Landing extends Component {
     render() {
         // console.log("Landing state -->>",this.state);
         console.log("Landing props -->>",this.props);
+        console.log('Map view,,',this.state.mapView);
         console.log('this.state.cardsList',this.state.cardsDataList[0]);
         return(
             <div>
@@ -345,7 +366,14 @@ class Landing extends Component {
 
                {!this.state.mapView && <Footer mapView={this.state.mapView}/>}
 
-                <SwitchViewWrapper>
+               {this.state.mapView && <FloatingMapButtonWrapper>
+                  <FloatingMapButton
+                    onListButtonClick={this.handleToggleMapView}
+                    
+                  />
+               </FloatingMapButtonWrapper>}
+
+                <SwitchViewWrapper mapView={this.state.mapView}>
                     <SwitchIconButton onClick={this.handleToggleMapView}/>
                 </SwitchViewWrapper>
             </div>

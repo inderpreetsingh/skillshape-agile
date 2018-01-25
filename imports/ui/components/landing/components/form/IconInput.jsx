@@ -1,10 +1,10 @@
 import React, {Fragment} from 'react';
+import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 
 import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 
-import { withStyles } from 'material-ui/styles';
 import Icon from 'material-ui/Icon';
 import TextField from 'material-ui/TextField';
 import * as helpers from '../jss/helpers.js';
@@ -12,6 +12,11 @@ import { findDOMNode } from 'react-dom'
 
 const InputIcon = (props) => (<Icon color="disabled">{props.iconName}</Icon>);
 
+const styles = {
+  label : {
+    color: helpers.defaultInputColor
+  }
+}
 
 class IconInput extends React.Component {
   state = { inputFocused : false}
@@ -45,7 +50,7 @@ class IconInput extends React.Component {
     return (
       <Fragment>
       {!props.skillShapeInput ? <FormControl error={props.error} fullWidth aria-describedby="error-text">
-        <InputLabel htmlFor={props.inputId}>{props.labelText}</InputLabel>
+        <InputLabel htmlFor={props.inputId} classes={{root: props.classes.label}}>{props.labelText}</InputLabel>
         <Input
           inputRef={(ref)=> inputRef = ref}
           value={props.value}
@@ -103,6 +108,7 @@ IconInput.propTypes = {
   errorText: PropTypes.string,
   disabled: PropTypes.boolean,
   multiline: PropTypes.boolean,
+  classes: PropTypes.object,
 }
 
 IconInput.defaultProps = {
@@ -111,4 +117,4 @@ IconInput.defaultProps = {
   multiline: false,
   value: "",
 }
-export default IconInput;
+export default withStyles(styles)(IconInput);

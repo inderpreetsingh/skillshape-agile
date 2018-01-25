@@ -5,12 +5,19 @@ import { initializeMap, setMarkersOnMap, reCenterMap } from '/imports/util';
 import Events from '/imports/util/events';
 import config from '/imports/config';
 
+import * as helpers from "../jss/helpers.js";
+
 import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
 
+// fixed height causing slight issues in rendering
 const MapContainer = styled.div`
-    height: 595px;
+    height: 100%;
     margin-left: 10px;
+
+    @media screen and (max-width: ${helpers.tablet + 100}px) {
+      margin-left: 0;
+    }
 `;
 
 class MapView extends React.Component {

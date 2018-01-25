@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import SecondaryButton from '../buttons/SecondaryButton';
 import PrimaryButton from '../buttons/PrimaryButton';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
@@ -40,12 +41,21 @@ const styles = theme => {
     },
     dialogContent: {
       padding: `0 ${helpers.rhythmDiv * 3}px`,
+      flexShrink: 0,
       '@media screen and (max-width : 500px)': {
         minHeight: '150px'
       }
     },
-    dialogActions: {
+    dialogActionsRoot: {
       padding: '0 8px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      justifyContent: 'flex-start'
+    },
+    dialogActions: {
+      width: '100%',
+      paddingLeft: `${helpers.rhythmDiv * 2}px`
     },
     googleButton: {
       width: "100%",
@@ -70,6 +80,7 @@ const Link = styled.a`
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
+  font-family: ${helpers.specialFont};
   width: 100%;
 `;
 
@@ -85,6 +96,7 @@ const DialogActionWrapper = styled.div`
   margin: 0;
   margin-top: ${helpers.rhythmDiv}px;
   width: 100%;
+  flex-shrink: 0;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     flex-direction: column;
@@ -96,6 +108,22 @@ const ButtonWrapper = styled.div`
   width: 100%;
   text-align: center;
   margin-bottom: ${props => props.facebook ? '0' : helpers.rhythmDiv+'px'};
+`;
+
+const LoginButtonWrapper = styled.div`
+  margin: ${helpers.rhythmDiv}px 0;
+`;
+
+const DialogActionText = styled.p`
+  margin: 0;
+  margin-right: ${helpers.rhythmDiv}px;
+  flex-shrink: 0;
+`;
+
+const ActionWrapper = styled.div`
+  width: 100%;
+  ${helpers.flexCenter}
+  justify-content: flex-end;
 `;
 
 const LoginDialog = (props) => (
@@ -112,7 +140,7 @@ const LoginDialog = (props) => (
   <MuiThemeProvider theme={muiTheme}>
     <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
       <DialogTitleWrapper>
-          <span itemProp="name">Log In</span>
+          <span itemProp="name">Log In to SkillShape</span>
 
           <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
             <ClearIcon/>
@@ -152,22 +180,38 @@ const LoginDialog = (props) => (
           type="password"
           value={props.password}
           onChange={props.handleInputChange.bind(this, "password")}
-          helperText={<Link href="#" onClick={props.onForgetPasswordLinkClick}> Forgot Password? </Link>}
           fullWidth
         />
         {props.error.message && <ErrorWrapper>{props.error.message}</ErrorWrapper>}
+
+        <LoginButtonWrapper>
+          <PrimaryButton disabled={props.error.email} label="Login" onClick={props.onSignInButtonClick} noMarginBottom/>
+        </LoginButtonWrapper>
     </DialogContent>
 
-    <DialogActions classes={{root: props.classes.dialogActions}}>
-       <Button color="primary" onClick={props.onSignUpButtonClick} itemScope itemType="http://schema.org/AgreeAction"> Sign Up</Button>
-       <PrimaryButton disabled={props.error.email} label="Sign In" onClick={props.onSignInButtonClick} itemScope itemType="http://schema.org/DisagreeAction"/>
+    <DialogActions classes={{root: props.classes.dialogActionsRoot, action: props.classes.dialogActions}}>
+        <ActionWrapper>
+          <DialogActionText>
+            Lost your password?
+          </DialogActionText>
+
+          <SecondaryButton label="Recover Password" onClick={props.onRecoverPasswordButtonClick} />
+        </ActionWrapper>
+        <ActionWrapper>
+          <DialogActionText>
+            Not A member yet?
+          </DialogActionText>
+
+          <SecondaryButton label="Join Now!" onClick={props.onSignUpButtonClick} itemScope itemType="http://schema.org/AgreeAction" />
+        </ActionWrapper>
     </DialogActions>
     </MuiThemeProvider>
   </Dialog>
 );
 
 LoginDialog.propTypes = {
-  onSignInButtonClick: PropTypes.func,
+  onRecoverPasswordButtonClick: PropTypes.func,
+  onSignUpButtonClick: PropTypes.func,
   onSignInButtonClick: PropTypes.func,
   onModalClose: PropTypes.func,
   loading: PropTypes.bool,
