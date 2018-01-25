@@ -55,5 +55,12 @@ Meteor.methods({
 		} else {
 			throw new Meteor.Error("User not found!!");
 		}
-	}
+	},
+	"user.editUser": function({ doc, docId}) {
+     	if(this.userId === docId){
+       		return Meteor.users.update({_id: docId},{$set:doc});
+     	} else {
+     		return new Meteor.Error("Permission Denied!!");
+     	}
+    },
 })

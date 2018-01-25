@@ -32,10 +32,11 @@ class IconInput extends React.Component {
         // This runs when user changes location.
         autocomplete.addListener('place_changed', () => {
           let place = autocomplete.getPlace();
+          // console.log("place -->>",place)
           let coords = [];
           coords[0] = place.geometry['location'].lat();
           coords[1] =place.geometry['location'].lng();;
-          props.onLocationChange({name: place.name, coords })
+          props.onLocationChange({name: place.name, coords, fullAddress: place.formatted_address })
         })
       },2000)
     }
@@ -47,6 +48,9 @@ class IconInput extends React.Component {
         <InputLabel htmlFor={props.inputId}>{props.labelText}</InputLabel>
         <Input
           inputRef={(ref)=> inputRef = ref}
+          value={props.value}
+          disabled={props.disabled}
+          multiline={props.multiline}
           type={props.type}
           defaultValue={props.defaultValue}
           id={props.inputId}
@@ -62,6 +66,8 @@ class IconInput extends React.Component {
               <div style={{display: 'inline-flex', alignItems: 'center', paddingRight: 10}}>
                 <input
                   ref={(ref)=> inputRef = ref}
+                  disabled={props.disabled}
+                  multiline={props.multiline}
                   type={props.type}
                   defaultValue={props.defaultValue}
                   id={props.inputId}
@@ -95,9 +101,14 @@ IconInput.propTypes = {
   googlelocation: PropTypes.boolean,
   error: PropTypes.boolean,
   errorText: PropTypes.string,
+  disabled: PropTypes.boolean,
+  multiline: PropTypes.boolean,
 }
 
 IconInput.defaultProps = {
-  type: 'text'
+  type: 'text',
+  disabled: false,
+  multiline: false,
+  value: "",
 }
 export default IconInput;

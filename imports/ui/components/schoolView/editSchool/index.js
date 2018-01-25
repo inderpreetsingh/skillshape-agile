@@ -21,12 +21,17 @@ class SchoolEditView extends React.Component {
     };
   }
   checkSchoolAccess = (currentUser, schoolId) => {
-    if(!currentUser || !schoolId)
+    if(!currentUser || !schoolId) {
       browserHistory.push("/")
-    else if(checkMyAccess({user: currentUser,schoolId}))
-      return
-    else if(currentUser.profile && currentUser.profile.schoolId && (currentUser.profile.schoolId != schoolId) || !currentUser.profile || !currentUser.profile.schoolId)
+      return false;
+    }
+    else if(checkMyAccess({user: currentUser,schoolId})) {
+      return true
+    }
+    else if(currentUser.profile && currentUser.profile.schoolId && (currentUser.profile.schoolId != schoolId) || !currentUser.profile || !currentUser.profile.schoolId) {
       browserHistory.push("/")
+      return false;
+    }
   }
 
   moveTab = (tabId) => this.refs[tabId].click();
