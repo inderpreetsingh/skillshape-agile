@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import Star from './Star.jsx';
+import Star from './icons/Star.jsx';
 import * as helpers from './jss/helpers.js';
 
 const StarsWrapper = styled.div`

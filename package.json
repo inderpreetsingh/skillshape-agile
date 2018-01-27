@@ -52,6 +52,7 @@
     "react-stars": "^2.2.5",
     "react-sticky-el": "^1.0.16",
     "react-stickynode": "^1.4.0",
+    "react-svg-inline": "^2.1.0",
     "react-transition-group": "^1.2.1",
     "react-widgets": "^4.1.1",
     "simple-assign": "^0.1.0",
