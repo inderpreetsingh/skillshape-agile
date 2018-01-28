@@ -9,8 +9,7 @@ import ClassTime from './ClassTime.jsx';
 import * as helpers from '../jss/helpers.js';
 
 const Wrapper = styled.div`
-  ${helpers.flexDirectionColumn}
-  padding: ${helpers.rhythmDiv}px;
+  width: 100%;
 `;
 
 const ClassTimesWrapper = styled.div`
@@ -21,23 +20,20 @@ const Title = styled.h3`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize * 1.25}px;
   font-weight: 400;
+  font-style: italic;
   margin: 0;
-  margin-bottom: ${helpers.rhythmDiv}px;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const ClassTimesBar = (props) => (
   <Wrapper>
-     <Title>Class Time for {props.classTypeName}</Title>
+     <Title>Class Timings for {props.classTypeName}</Title>
      <ClassTimesWrapper>
-     <Grid container>
+      <Grid container>
         {props.classTimesData.map(classTimeObj => (
-            <Grid item xs={12} sm={12} md={6} >
-              <ClassTime
-                addToCalender={classTimeObj.addToCalender}
-                timing={classTimeObj.timing}
-                description={classTimeObj.description}
-                scheduleType={classTimeObj.scheduleType} />
-            </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <ClassTime {...classTimeObj} />
+          </Grid>
         ))}
       </Grid>
      </ClassTimesWrapper>

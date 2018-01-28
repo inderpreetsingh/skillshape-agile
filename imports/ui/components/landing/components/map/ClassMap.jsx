@@ -8,7 +8,7 @@ const ClassMap = compose(
     googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `100%` }} />,
-    mapElement: <div style={{ height: `100%` }} />,
+    mapElement: <div style={{ height: `100%`, borderRadius: '5px'}} />,
   }),
   withScriptjs,
   withGoogleMap
@@ -20,5 +20,9 @@ const ClassMap = compose(
     {props.isMarkerShown && <Marker position={{ lat: -34.397, lng: 150.644 }} />}
   </GoogleMap>
 );
+
+ClassMap.defaultProps = {
+  isMarkerShown: PropTypes.bool,
+}
 
 export default ClassMap;

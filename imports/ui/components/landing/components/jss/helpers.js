@@ -19,6 +19,7 @@ export const
     brandBarHeightMobile = rhythmDiv * 6, //(16/2 * 6 ),
     coverHeight = "95vh",
     cardsListWrapperWidth = rhythmDiv * 150,
+    maxContainerWidth = 1400,
 
     /*******BASIC COLORS*********/
     textColor = colors.grey[800],
@@ -33,6 +34,13 @@ export const
     panelColor = colors.grey[100],
     darkBgColor = colors.grey[800],
     inputErrorColor = '#ff1744',
+
+    caution = '#E9B942',
+    action = '#9DC161',
+    danger = '#D84B47',
+    cancel = '#989797',
+    information = '#348CC0',
+    black = '#292828',
 
     /*******BREAKPOINTS*********/
     watch = 320,

@@ -35,6 +35,10 @@ const styles = {
     marginRight: '5px',
     fontSize: 'inherit'
   },
+  primaryButtonCustomIcon: {
+    display: 'inline-block',
+    fontSize: 'inherit'
+  },
   ['@media (max-width:'+helpers.mobile+'px)']: {
     primaryButton: {
       width: '100%'
@@ -42,9 +46,20 @@ const styles = {
   }
 };
 
+const getIconForButton = (props) => {
+  const CustomIcon = props.customIcon;
+  if(CustomIcon && props.icon) {
+    return <CustomIcon className={props.classes.primaryButtonCustomIcon} />
+  }else if (props.icon) {
+    return <Icon className={props.classes.primaryButtonIcon}>{props.iconName}</Icon>
+  }
+
+  return '';
+}
 
 const PrimaryButton = (props) => {
   let rootClass = ``;
+  // console.log(CustomIcon,"Custom Icon")
   if(props.fullWidth && props.noMarginBottom) {
     rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth} ${props.classes.noMarginBottom}`;
   }else if(props.fullWidth) {
@@ -67,7 +82,7 @@ const PrimaryButton = (props) => {
       itemScope
       itemType={props.itemType}
     >
-        {props.icon && <Icon className={props.classes.primaryButtonIcon}>{props.iconName}</Icon>}
+        {getIconForButton(props)}
 
         {props.label ? props.label : 'Submit'}
       </Button>
@@ -85,7 +100,7 @@ const PrimaryButton = (props) => {
       disabled={props.disabled}
       type={props.type}
     >
-        {props.icon && <Icon className={props.classes.primaryButtonIcon}>{props.iconName}</Icon>}
+        {getIconForButton(props)}
 
         {props.label ? props.label : 'Submit'}
     </Button>
@@ -95,6 +110,7 @@ const PrimaryButton = (props) => {
 PrimaryButton.propTypes = {
     onClick: PropTypes.func,
     icon: PropTypes.bool,
+    customIcon: PropTypes.element,
     iconName: PropTypes.string,
     label: PropTypes.string,
     fullWidth: PropTypes.bool,

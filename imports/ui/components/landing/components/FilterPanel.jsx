@@ -177,23 +177,24 @@ class FilterPanel extends Component {
           return (
             <Grid container spacing={24}>
 
-                <Grid item xs={11} sm = {3} hidden={{ smUp: true }}>
-                  <MaterialInputWrapper>
-                    <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
-                  </MaterialInputWrapper>
-                </Grid>
+                <Hidden smUp>
+                  <Grid item xs={11} sm = {3}>
+                    <MaterialInputWrapper>
+                      <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
+                    </MaterialInputWrapper>
+                  </Grid>
 
-                <Grid item xs={11} sm = {5} hidden={{ smUp: true }}>
-                  <Multiselect
-                  textField={"name"}
-                  valueField={"_id"}
-                  data={this.state.skillCategoryData}
-                  placeholder="Skill category"
-                  onChange={this.collectSelectedSkillCategories}
-                  />
+                  <Grid item xs={11} sm = {5}>
+                    <Multiselect
+                    textField={"name"}
+                    valueField={"_id"}
+                    data={this.state.skillCategoryData}
+                    placeholder="Skill category"
+                    onChange={this.collectSelectedSkillCategories}
+                    />
 
-                </Grid>
-
+                  </Grid>
+                </Hidden>
 
                 <Grid item xs={11} sm = {11}>
                    <Multiselect
@@ -269,12 +270,13 @@ class FilterPanel extends Component {
                       </Grid>
 
                       <Hidden xsDown>
-                        <Grid item xs={11} sm = {3}>
+                        <Grid item xs={1} sm = {3}>
                           <MaterialInputWrapper>
                             <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
                           </MaterialInputWrapper>
                         </Grid>
-                        <Grid item xs={11} sm = {5}>
+
+                        <Grid item xs={1} sm = {5}>
                           <Multiselect
                           textField={"name"}
                           valueField={"_id"}

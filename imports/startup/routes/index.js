@@ -8,6 +8,8 @@ import PublicLayout from '/imports/ui/layout/publicLayout';
 //components
 import Home from '/imports/ui/components/home';
 import Landing from '/imports/ui/components/landing/index.jsx';
+import NoResults from '/imports/ui/components/landing/components/NoResults';
+
 import ClassType from '/imports/ui/components/landing/ClassType.jsx';
 import ResetPassword from '/imports/ui/components/account/resetPassword';
 import MyProfile from '/imports/ui/components/users/myProfile';
@@ -28,6 +30,7 @@ export default Routes = () => (
     <Route path="/" component={MainLayout} >
       <IndexRoute component={Landing} />
       <Route path="/school" component={ClassType} />
+      <Route path="/no-results" component={NoResults} />
 
       <Route path="/" component={PublicLayout}>
         <Route path="/Aboutus" component={AboutUs} />

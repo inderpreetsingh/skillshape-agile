@@ -34,6 +34,7 @@ const CardsContainer = styled.div`
 
 const NoResultContainer = styled.div`
   text-align: center;
+  width: 100%;
 `;
 
 const MapOuterContainer = styled.div`
@@ -143,7 +144,8 @@ class ClassTypeList extends Component {
 
         } else if(!isEmpty(filters.coords) && this.props.defaultLocation && isEmpty(classTypeData)) {
 
-            return <NoResultContainer>
+            return
+              <NoResultContainer>
                 <span style={{padding: 8}}>
                     <b>No Results Found</b>
                 </span>
@@ -154,7 +156,6 @@ class ClassTypeList extends Component {
                     onClick={this.props.clearDefaultLocation}
                 />
             </NoResultContainer>
-
         }
     }
 
@@ -185,7 +186,7 @@ class ClassTypeList extends Component {
                           filters={this.props.filters}
                         />
                       </div>
-
+                      
                       <FooterOuterWrapper>
                         <FooterWrapper>
                           <Footer mapView={this.props.mapView}/>
