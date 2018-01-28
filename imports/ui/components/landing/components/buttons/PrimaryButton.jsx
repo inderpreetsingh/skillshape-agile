@@ -37,8 +37,6 @@ const styles = {
   },
   primaryButtonCustomIcon: {
     display: 'inline-block',
-    marginLeft: '5px',
-    position: 'relative',
     fontSize: 'inherit'
   },
   ['@media (max-width:'+helpers.mobile+'px)']: {

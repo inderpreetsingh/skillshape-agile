@@ -13,7 +13,6 @@ import Footer from '../footer/index.jsx';
 import { cardsData, cardsData1} from '../../constants/cardsData.js';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import { Loading } from '/imports/ui/loading';
-import NoResults from '../NoResults.jsx';
 import * as helpers from '../jss/helpers.js';
 
 // import collection definition over here
@@ -146,8 +145,8 @@ class ClassTypeList extends Component {
         } else if(!isEmpty(filters.coords) && this.props.defaultLocation && isEmpty(classTypeData)) {
 
             return
-              (<NoResultContainer>
-                {/*<span style={{padding: 8}}>
+              <NoResultContainer>
+                <span style={{padding: 8}}>
                     <b>No Results Found</b>
                 </span>
                 <PrimaryButton
@@ -155,9 +154,8 @@ class ClassTypeList extends Component {
                     icon={true}
                     iconName="search"
                     onClick={this.props.clearDefaultLocation}
-                />*/}
-                <NoResults />
-            </NoResultContainer>)
+                />
+            </NoResultContainer>
         }
     }
 
@@ -188,9 +186,7 @@ class ClassTypeList extends Component {
                           filters={this.props.filters}
                         />
                       </div>
-
-                      <NoResults />
-
+                      
                       <FooterOuterWrapper>
                         <FooterWrapper>
                           <Footer mapView={this.props.mapView}/>
@@ -211,7 +207,6 @@ class ClassTypeList extends Component {
                                   filters={this.props.filters}
                                 />)
 							}
-              <NoResults />
                             {
                                 this.getNoResultMsg(isLoading, filters, classTypeData)
                             }
