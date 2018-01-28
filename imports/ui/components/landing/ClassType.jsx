@@ -25,7 +25,7 @@ import ClassMap from './components/map/ClassMap';
 import ClassTimesBar from './components/classTimes/ClassTimesBar';
 
 import reviewsData from './constants/reviewsData.js';
-import classTimesData from './constants/classTimesData.js';
+import classTimesBarData from './constants/classTimesBarData.js';
 import perClassPackagesData from './constants/perClassPackagesData.js';
 import monthlyPackagesData from './constants/monthlyPackagesData.js';
 
@@ -157,6 +157,13 @@ const ClassTypeInfoWrapper = styled.div`
 
 const ReviewsWrapper = styled.div`
   max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+`;
+
+const ClassTimeBarWrapper = styled.div`
+  max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
 `;
 
@@ -208,6 +215,10 @@ class ClassType extends Component {
                 <ReviewsSlider reviewsData={reviewsData}/>
                 <ReviewsBar />
               </ReviewsWrapper>
+
+              <ClassTimeBarWrapper>
+                <ClassTimesBar classTimesData={classTimesBarData}/>
+              </ClassTimeBarWrapper>
             </MainInner>
           </Main>
 

@@ -2,91 +2,200 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import Chip from 'material-ui/Chip';
-import Typography from 'material-ui/Typography';
-import {withStyles} from 'material-ui/styles';
+import Badge from '../icons/Badge.jsx';
 
 import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
 
 import * as helpers from '../jss/helpers.js';
 
-const styles = {
-  chip: {
-    background: helpers.lightTextColor,
-    marginRight: helpers.rhythmDiv
-  },
-  chipLabel: {
-    color: helpers.textColor,
-    fontSize: helpers.baseFontSize * 0.75
-  }
-};
-
 const ClassContainer = styled.div`
+  min-height: 400px;
   padding: ${helpers.rhythmDiv}px;
-  margin: ${helpers.rhythmDiv}px;
-  border-radius: ${helpers.rhythmDiv}px;
-  ${helpers.flexDirectionColumn}
-  justify-content: space-between;
-  border: 1px solid ${helpers.panelColor};
-`;
-
-const ClassContainerHeader = styled.div`
+  padding: ${helpers.rhythmDiv * 2}px;
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: ${helpers.rhythmDiv}px;
+  position: relative;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
-    flex-direction: column;
-    align-items: flex-start;
+  &:after {
+    content: '';
+    position: absolute;
+    background-color: ${props => props.onGoing ? helpers.primaryColor : helpers.panelColor};
+    top: 0;
+    bottom: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: ${props => props.onGoing ? 0.1 : 0.5};
   }
 `;
 
-const ClassTimings = styled.p`
-  margin: 0 ${helpers.rhythmDiv}px 0 0;
-  font-weight: 600;
-  color: ${helpers.headingColor};
-`;
-
-const CalenderButtonWrapper = styled.div`
-  margin: ${helpers.rhythmDiv} 0 0 0;
+const ClockOuterWrapper = styled.div`
   ${helpers.flexCenter}
-  justify-content: flex-end;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const ClassTime = (props) => (
-  <ClassContainer>
+const ClockWrapper = styled.div`
+  ${helpers.flexCenter}
+  flex-direction: column;
+  width: 100px;
+  height: 100px;
+  font-family: ${helpers.specialFont};
+  border: 2px solid ${props => props.onGoing ? helpers.primaryColor : helpers.cancel};
+  border-radius: 50%;
+  color: ${helpers.primaryColor};
+  opacity: ${props => props.onGoing ? 1 : 0.8};
+`;
 
-      <ClassContainerHeader>
+const TimeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-top: 10px;
+`;
 
-          <ClassTimings>
-              {props.timing}
-          </ClassTimings>
+const ClassScheduleWrapper = styled.div`
+  ${helpers.flexCenter}
+  margin-bottom: ${helpers.marginBottom}px;
+`;
 
-          <Chip label={props.scheduleType} classes={{root: props.classes.chip, label: props.classes.chipLabel}}/>
-      </ClassContainerHeader>
+const Time = styled.p`
+  margin: 0;
+  font-size: ${helpers.baseFontSize * 2}px;
+`;
 
-      <Typography>
-        {props.description}
-      </Typography>
+const TimePeriod = styled.span`
+  display: inline-block;
+  font-family: ${helpers.commonFont};
+  font-size: ${helpers.baseFontSize}px;
+  transform: translateY(-10px);
+`;
 
-      <CalenderButtonWrapper>
-          {props.addToCalender ?
-            <PrimaryButton
-              icon
-              onClick={props.onAddToMyCalenderButtonClick}
-              iconName="perm_contact_calendar"
-              label="Add to my Calender"
-            />
-          : <SecondaryButton
-              icon
-              onClick={props.onRemoveFromCalenderButtonClick}
-              iconName="delete"
-              label="Remove from my Calender"
-            />
-          }
-      </CalenderButtonWrapper>
-  </ClassContainer>
+const Text = styled.p`
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
+  font-weight: 600;
+`;
+
+const Seperator = styled.p`
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const Description = styled.p`
+  margin: 0;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 400;
+`;
+
+const TrendingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: -16px;
+  left: auto;
+`;
+
+const TrendingText = styled.div`
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 600;
+  font-style: italic;
+  color: ${helpers.primaryColor};
+  margin-top: 2px;
+`;
+
+const isClassOnGoing = (scheduleType) => scheduleType == 'on-going';
+
+const ClassTimeClock = (props) => (
+  <ClockOuterWrapper>
+    <ClockWrapper onGoing={props.onGoing}>
+      <TimeContainer>
+        <Time>{props.time}</Time>
+        <TimePeriod>{props.timePeriod}</TimePeriod>
+      </TimeContainer>
+    </ClockWrapper>
+  </ClockOuterWrapper>
 );
 
-export default withStyles(styles)(ClassTime);
+const ClassSchedule = (props) => (
+  <ClassScheduleWrapper>
+    <Text>{props.classDays}</Text>
+    <Text>|</Text>
+    <Text>{props.schedule}</Text>
+  </ClassScheduleWrapper>
+);
+
+const Trending = () => {
+  return (
+    <TrendingWrapper>
+      <TrendingText>#Trending</TrendingText>
+      <Badge />
+    </TrendingWrapper>
+  )
+}
+
+const getCalenderButton = (props) => {
+  if(isClassOnGoing(props.scheduleType) && props.addToCalender) {
+    return (
+      <PrimaryButton
+      icon
+      onClick={props.onAddToMyCalenderButtonClick}
+      iconName="perm_contact_calendar"
+      label="Add to my Calender"
+    />);
+  }else if(isClassOnGoing(props.scheduleType) && !props.addToCalender) {
+    return (<PrimaryButton
+        icon
+        onClick={props.onRemoveFromCalenderButtonClick}
+        iconName="delete"
+        label="Remove from Calender"
+      />)
+  }
+  else if(props.addToCalender) {
+    return (
+      <SecondaryButton
+          icon
+          onClick={props.onAddToMyCalenderButtonClick}
+          iconName="perm_contact_calendar"
+          label="Add to my Calender"
+        />
+    )
+  }
+
+  return (
+    <SecondaryButton
+        icon
+        onClick={props.onRemoveFromCalenderButtonClick}
+        iconName="delete"
+        label="Remove from Calender"
+      />
+  )
+}
+
+const ClassTime = (props) => {
+  console.log(" classtime props ------------> ",props);
+  return (<ClassContainer onGoing={isClassOnGoing(props.scheduleType)}>
+    <div>
+      <ClassTimeClock time={props.time} timePeriod={props.timePeriod} onGoing={isClassOnGoing(props.scheduleType)}/>
+
+      <ClassSchedule classDays={props.days} schedule={props.scheduleType} />
+
+      <Description>
+        {props.description}
+      </Description>
+    </div>
+
+    {getCalenderButton(props)}
+
+    {props.isTrending && <Trending />}
+  </ClassContainer>);
+}
+
+export default ClassTime;
