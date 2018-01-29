@@ -16,7 +16,7 @@ import MediaDetails from './mediaDetails';
 
 
 export default function (props) {
-    // console.log("school edit render state -->>",this.state);
+    console.log("school edit render state -->>",this.state);
     // console.log("school edit render props -->>",this.props);
     const {
         selecetdView,
@@ -48,6 +48,7 @@ export default function (props) {
                       tabs={["School Details","Location Details","Class Details", "Prices", "Media", "Embed Codes"]}
                       color= "primary"
                       onTabChange={this.onTabChange}
+                      tabValue={this.state.tabValue}
                   />
             		<div>
                       {

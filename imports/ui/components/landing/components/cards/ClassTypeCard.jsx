@@ -61,6 +61,14 @@ class ClassTypeCard extends Component {
 
     render() {
         console.log("ClassTypeCard props --->>",this.props);
+        const cardRevealData = {
+                        ageMin:this.props.ageMin,
+                        ageMax:this.props.ageMax,
+                        gender:this.props.gender,
+                        experienceLevel:this.props.experienceLevel,
+                        description:this.props.desc,
+                        name:this.props.name,
+                    }
         const classTimesData = this.getClassTimes(get(this.props, "_id", null))
         return(
             <Fragment>
@@ -87,7 +95,9 @@ class ClassTypeCard extends Component {
                     ratings={this.props.ratings}
                     reviews={this.props.reviews}
                     description={this.props.desc}
-                    onClassTimeButtonClick={this.handleDialogState(true)}/>
+                    onClassTimeButtonClick={this.handleDialogState(true)}
+                    cardRevealInfo={cardRevealData}
+                    />
                 } />
             </Fragment>
             )
