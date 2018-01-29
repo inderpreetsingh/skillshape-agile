@@ -21,6 +21,7 @@ import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-pic
 import { WeekDaysRow } from './weekDaysRow';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
+import { OneTimeRow } from './oneTimeRow';
 import '/imports/api/sLocation/methods';
 
 const formId = "classTimeForm";
@@ -88,7 +89,7 @@ class ClassTimeForm extends React.Component {
     }
 
     onSubmit = (event) => {
-       console.log("--------------------- ClassTimes from submit----------------")
+        console.log("--------------------- ClassTimes from submit----------------")
         event.preventDefault()
         // console.log("onSubmit state -->>",this.state);
         const { schoolId, data, parentKey, } = this.props;
@@ -101,13 +102,11 @@ class ClassTimeForm extends React.Component {
             desc: this.desc.value,
             locationId: locationId,
         }
+
         if(tabValue === 0) {
 
             payload.scheduleType = "oneTime";
-            payload.roomId = this.state.roomId;
-            payload.startDate = this.state.startDate;
-            payload.startTime = this.state.startTime;
-            payload.duration = this.duration.value && parseInt(this.duration.value);
+            payload.scheduleDetails = { oneTime: this.refs.oneTimeRow.getRowData()};
 
         } else if(tabValue === 1) {
 
@@ -203,57 +202,11 @@ class ClassTimeForm extends React.Component {
                                     {
                                         this.state.tabValue === 0 && (
                                             <div style={{border: '3px solid blue', padding: 10}}>
-                                                <Grid container>
-                                                    <Grid item sm={6} xs={12}>
-                                                        <MaterialDatePicker
-                                                            required={true}
-                                                            hintText={"Start Date"}
-                                                            floatingLabelText={"Start Date *"}
-                                                            value={this.state.startDate}
-                                                            onChange={this.handleChangeDate.bind(this, "startDate")}
-                                                            fullWidth={true}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item sm={6} xs={12}>
-                                                        <MaterialTimePicker
-                                                            required={true}
-                                                            format={"ampm"}
-                                                            value={this.state.startTime}
-                                                            floatingLabelText={"Start Time *"}
-                                                            hintText={"Start Time"}
-                                                            onChange={this.handleChangeDate.bind(this, "startTime")}
-                                                            fullWidth={true}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item sm={6} xs={12}>
-                                                        <TextField
-                                                            required={true}
-                                                            defaultValue={data && data.duration}
-                                                            margin="dense"
-                                                            inputRef={(ref)=> this.duration = ref}
-                                                            label="Length"
-                                                            type="number"
-                                                            fullWidth
-                                                        />
-                                                    </Grid>
-                                                    <Grid item sm={6} xs={12}>
-                                                        <FormControl fullWidth margin='dense'>
-                                                            <InputLabel htmlFor="roomId">Room</InputLabel>
-                                                            <Select
-                                                                input={<Input id="roomId"/>}
-                                                                value={this.state.roomId}
-                                                                onChange={(event) => this.setState({ roomId: event.target.value })}
-                                                                fullWidth
-                                                            >
-                                                                {
-                                                                    this.state.roomData && this.state.roomData.map((data, index)=> {
-                                                                        return <MenuItem key={index} value={data.id}>{data.name}</MenuItem>
-                                                                    })
-                                                                }
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
-                                                </Grid>
+                                                <OneTimeRow
+                                                    ref="oneTimeRow"
+                                                    data={data && data.scheduleDetails && data.scheduleDetails.oneTime}
+                                                    roomData={this.state.roomData}
+                                                />
                                             </div>
                                         )
                                     }
