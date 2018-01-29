@@ -26,18 +26,18 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, calend
     let school = School.findOne({ $or: [{ _id: schoolId }, { slug: schoolId }] });
     let condition = {
         '$or': [
-            { scheduleType: "oneTime", startDate: { '$gte': startDate } },
+            { scheduleType: "oneTime", "scheduleDetails.oneTime": {"$exists": true}, "scheduleDetails.oneTime.startDate": { '$gte': startDate } },
             { scheduleType: "onGoing", startDate: { '$lte': endDate } },
             { scheduleType: "recurring", endDate: { '$gte': startDate } },
-        ],  
-        schoolId: school && school._id 
+        ],
+        schoolId: school && school._id
     };
     if(view === "schoolCalendar") {
         if (school) {
             console.log("classTimes.getclassTimesForCalendar condition --->>", condition)
             result.push(ClassTimes.find(condition));
             // result.push(ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this));
-        } 
+        }
     }
 
     if(view === "myCalendar" && this.userId) {

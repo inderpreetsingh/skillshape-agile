@@ -75,12 +75,20 @@ export default function (props) {
 
 								                         		{
 								                         			field.nestedObjectOfArray ? (
-								                         				tableData[field.key] ? (Object.keys(tableData[field.key]).map((itemkey, index) => {
+								                         				tableData[field.key] && (Object.keys(tableData[field.key]).map((itemkey, index) => {
 								                         					const itemData = tableData[field.key][itemkey];
-								                         					console.log("renderScheduleTypeData itemData -->>",itemData)
-								                         					return this.renderScheduleTypeData(classes, parentData, itemData, [{label: "Day", value: itemkey}, { label: "Start Time", key: "startTime" }, {label: "Duration", key: "duration"}, {label: "Room", key: "roomId"}])
-
-								                         				})) :  ((tableData["scheduleType"] === "oneTime") && this.renderScheduleTypeData(classes, parentData, [tableData], [{label: "Start Date", key: "startDate"}, { label: "Start Time", key: "startTime" }, {label: "Duration", key: "duration"}, {label: "Room", key: "roomId"}]))
+								                         					let fields = [
+								                         						{label: "Start Time", key: "startTime" },
+								                         						{label: "Duration", key: "duration"},
+								                         						{label: "Room", key: "roomId"}
+								                         					]
+								                         					if(itemkey === "oneTime") {
+								                         						fields.unshift({label: "Start Date", key: "startDate"})
+								                         					} else {
+								                         						fields.unshift({label: "Day", value: itemkey})
+								                         					}
+								                         					return this.renderScheduleTypeData(classes, parentData, itemData, fields)
+							                         					}))
 
 								                         			)
 								                         			:(<div className={classes.inputDisableBox}>

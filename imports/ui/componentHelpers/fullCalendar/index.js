@@ -46,17 +46,17 @@ class FullCalendar extends React.Component {
                         return true
                     }
                     case "recurring": {
-                        if((moment(event.start).format("YYYY-MM-DD") >= moment(event.startDate).format("YYYY-MM-DD")) && (moment(event.start).format("YYYY-MM-DD") <= moment(event.endDate).format("YYYY-MM-DD"))) 
+                        if((moment(event.start).format("YYYY-MM-DD") >= moment(event.startDate).format("YYYY-MM-DD")) && (moment(event.start).format("YYYY-MM-DD") <= moment(event.endDate).format("YYYY-MM-DD")))
                             return true;
                         return false;
                     }
                     case "onGoing": {
-                        if(moment(event.start).format("YYYY-MM-DD") >= moment(event.startDate).format("YYYY-MM-DD")) 
+                        if(moment(event.start).format("YYYY-MM-DD") >= moment(event.startDate).format("YYYY-MM-DD"))
                             return true;
                         return false;
                     }
                 }
-              
+
             },
             eventClick: (event) => {
                 // console.log("eventClick -->>",event)
@@ -76,7 +76,7 @@ class FullCalendar extends React.Component {
             let classTime = classTimesData[i];
 
             try {
-             
+
                 let sevent = {
                     classTimeId: classTime._id,
                     classTypeId: classTime.classTypeId,
@@ -85,20 +85,25 @@ class FullCalendar extends React.Component {
                     startDate: moment(classTime.startDate),
                     scheduleType: classTime.scheduleType,
                 };
+
                 if (myClassTimesIds.indexOf(classTime._id) > -1) {
                     sevent.className = "event-green";
                     sevent.attending = true;
                 } else {
                     sevent.className = "event-azure";
                     sevent.attending = false;
-                } 
+                }
+
                 if (classTime.scheduleType === "oneTime") {
-                    sevent.start = sevent.startDate;
-                    sevent.roomId = classTime.roomId;
-                    sevent.eventStartTime = moment(classTime.startTime).format("hh:mm");
-                    sevent.eventEndTime = moment(new Date(classTime.startTime)).add(classTime.duration, "minutes").format("hh:mm");
-                    sevent.title = classTime.name + " " + sevent.eventStartTime + " to " + sevent.eventEndTime;
-                    sevents.push(sevent)
+                    let scheduleData = [...classTime.scheduleDetails.oneTime];
+                    for(let obj of scheduleData) {
+                        sevent.start = obj.startDate;
+                        sevent.roomId = obj.roomId;
+                        sevent.eventStartTime = moment(obj.startTime).format("hh:mm");
+                        sevent.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
+                        sevent.title = classTime.name + " " + sevent.eventStartTime + " to " + sevent.eventEndTime;
+                        sevents.push(sevent)
+                    }
                 }
 
                 if(classTime.scheduleDetails && (classTime.scheduleType === "recurring" || classTime.scheduleType === "onGoing")) {
@@ -141,7 +146,7 @@ export default createContainer(props => {
     let { schoolId, slug } = props.params;
     let classTimesData = [];
     let classInterestData = [];
-    
+
     if (!schoolId && !slug) {
         schoolId = currentUser && currentUser.profile && currentUser.profile.schoolId;
     }
@@ -152,8 +157,8 @@ export default createContainer(props => {
         let classInterestFilter = {};
         if(subscription.ready()) {
             if(manageMyCalendar) {
-                classTimesFilter = { _id: { $in: manageMyCalendarFilter.classTimesIds } } 
-                classInterestFilter = { classTimeId: { $in: manageMyCalendarFilter.classTimesIdsForCI } } 
+                classTimesFilter = { _id: { $in: manageMyCalendarFilter.classTimesIds } }
+                classInterestFilter = { classTimeId: { $in: manageMyCalendarFilter.classTimesIdsForCI } }
             }
         }
         // console.log("classTimesFilter -->>",classTimesFilter)
@@ -162,7 +167,7 @@ export default createContainer(props => {
         classInterestData = ClassInterest.find(classInterestFilter).fetch();
     }
 
-    
+
 
     // console.log("FullCalendar createContainer classTimesData-->>", classTimesData)
     // console.log("FullCalendar createContainer classInterestData-->>",classInterestData)

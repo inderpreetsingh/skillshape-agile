@@ -87,7 +87,7 @@ export const sendClassTimesRequest = function({currentUserData, schoolOwnerData,
 
     let emailObj = {};
     if(schoolOwnerData && currentUserData) {
-        const schoolOwnerName = get(schoolOwnerData, "profile.name") || `${get(schoolOwnerData, "profile.firstName")} ${get(schoolOwnerData, "profile.lastName")}`;
+        const schoolOwnerName = get(schoolOwnerData, "profile.name") || `${get(schoolOwnerData, "profile.firstName", "")} ${get(schoolOwnerData, "profile.lastName", "")}`;
         const userName = get(currentUserData, "profile.name") || `${get(currentUserData, "profile.firstName")} ${get(currentUserData, "profile.lastName")}`;
         emailObj.to = schoolOwnerData.emails[0].address;
         emailObj.subject = "Class Interest";
@@ -110,7 +110,7 @@ export const sendClassTimesRequest = function({currentUserData, schoolOwnerData,
 
 export const sendEmailToStudentForClassTimeUpdate = function(userData, schoolData, classTypeName) {
     if (Meteor.isServer) {
-        const userName = get(userData, "profile.name") || `${get(userData, "profile.firstName")} ${get(userData, "profile.lastName")}`;
+        const userName = get(userData, "profile.name") || `${get(userData, "profile.firstName", "")} ${get(userData, "profile.lastName", "")}`;
         Email.send({
             to: 'sam@skillshape.com', //userData.emails[0].address;,
             from: "Notices@SkillShape.com",
