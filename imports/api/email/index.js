@@ -115,7 +115,7 @@ export const sendEmailToStudentForClassTimeUpdate = function(userData, schoolDat
             to: 'sam@skillshape.com', //userData.emails[0].address;,
             from: "Notices@SkillShape.com",
             subject: "School Updated",
-            text: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(`schools/${schoolData.slug}`)} to view their new information and join the class! \n\nThanks, \n\nEveryone from SkillShape.com`,
+            text: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(`SchoolAdmin/${schoolData._id}/edit?tabValue=2`)} to view their new information and join the class! \n\nThanks, \n\nEveryone from SkillShape.com`,
         });
     }
 }
