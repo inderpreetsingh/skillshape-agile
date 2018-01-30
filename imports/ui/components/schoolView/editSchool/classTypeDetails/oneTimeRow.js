@@ -81,7 +81,7 @@ export class OneTimeRow extends React.Component {
 				{
 					row.map((data, index) => {
 						return (
-		                    <Grid key={index} container>
+		                    <Grid style={{border: '1px solid black', marginBottom: 15,padding: 5, backgroundColor: 'antiquewhite'}} key={index} container>
 		                        <Grid item sm={6} xs={12}>
 		                            <MaterialDatePicker
 		                                required={true}

@@ -57,6 +57,11 @@ const styles = theme => {
             backgroundColor: theme.palette.grey[100],
             borderRadius: 5,
             padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 4}px`
+        },
+        details: {
+            margin: 5,
+            border: '2px solid #bdbdbd',
+            boxShadow: '5px 5px 5px 1px #bdbdbd'
         }
     }
 }

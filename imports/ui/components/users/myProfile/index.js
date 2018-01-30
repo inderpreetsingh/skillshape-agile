@@ -4,8 +4,7 @@ import { browserHistory } from 'react-router';
 import moment from 'moment';
 import { createContainer } from 'meteor/react-meteor-data';
 import MyProfileRender from './myProfileRender';
-import { withStyles, imageRegex } from '/imports/util';
-import { emailRegex } from '/imports/util';
+import { withStyles, imageRegex, emailRegex, toastrModal } from '/imports/util';
 
 const style = theme => {
 	return {
@@ -154,19 +153,19 @@ class MyProfile extends React.Component {
   	}
 
     editUserCall = (userData) => {
-	  	const { currentUser } = this.props;
+	  	const { currentUser, toastr } = this.props;
 	    // console.log("editUserCall -->>",this.state.dob)
 
 	  	Meteor.call("user.editUser", {doc: userData, docId: currentUser._id}, (error, result) => {
 	      let state = {isBusy: false}
 	      if(error) {
-	        console.error("error", error);
 	      	state.errorText = err.reason || err.message;
+	      	toastr.error(state.errorText,"Error");
+	      }
+	      if(result) {
+	      	toastr.success("Successfully edit your profile.","Success");
 	      }
 	      this.setState(state);
-	      if(result) {
-	        browserHistory.push('/');
-	      }
 	    });
     }
 
@@ -204,4 +203,4 @@ class MyProfile extends React.Component {
 
 }
 
-export default withStyles(style)(MyProfile);
+export default withStyles(style)(toastrModal(MyProfile));

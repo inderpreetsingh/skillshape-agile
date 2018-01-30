@@ -19,6 +19,7 @@ import muiTheme from '../jss/muitheme.jsx';
 
 import GoogleIconButton from '../buttons/GoogleIconButton.jsx';
 import FacebookIconButton from '../buttons/FacebookIconButton.jsx';
+import JoinButton from '../buttons/JoinButton.jsx';
 
 import Dialog , {
   DialogActions,
@@ -201,8 +202,7 @@ const LoginDialog = (props) => (
           <DialogActionText>
             Not A member yet?
           </DialogActionText>
-
-          <SecondaryButton label="Join Now!" onClick={props.onSignUpButtonClick} itemScope itemType="http://schema.org/AgreeAction" />
+          <JoinButton label="Join Now!"/>
         </ActionWrapper>
     </DialogActions>
     </MuiThemeProvider>

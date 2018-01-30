@@ -23,7 +23,7 @@ class SideNav extends Component {
     }
 
     componentWillMount() {
-        Events.on("registerAsSchool", "123456",(data) => {
+        Events.on("registerAsSchool", "123#567",(data) => {
           let {userType} = data;
           this.handleSignUpDialogBoxState(true, userType);
         })

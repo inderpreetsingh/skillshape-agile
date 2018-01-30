@@ -90,7 +90,7 @@ export default function () {
 	                </Grid>
 	            </Grid>
           	</Paper>
-          	<div style={{marginTop: 10, width: '100%'}}>
+          	<div className={classes.expansionPanelContainer}>
 	          	{
 	          		_.isArray(mainTableData) &&  mainTableData.map((tableData, index) => {
 	          			// console.log("tableData -->>",tableData);

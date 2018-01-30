@@ -12,7 +12,7 @@ const styles = theme => {
         classtypeHeader: {
             backgroundColor: theme.palette.primary[500],
             padding: "0 20px",
-            color: "#fff"
+            color: "#fff",
         },
         headerBtn: {
             color: "#fff",
@@ -43,6 +43,10 @@ const styles = theme => {
         },
         expansionPanel : {
             marginTop: theme.spacing.unit,
+        },
+        expansionPanelContainer: {
+            padding: theme.spacing.unit,
+            width: '100%',
         },
         notifyExplanation: {
             display: 'flex',

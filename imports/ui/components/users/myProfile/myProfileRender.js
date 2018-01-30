@@ -81,16 +81,16 @@ export default function() {
                         <Collapse in={this.state.profileExpanded} timeout="auto" unmountOnExit>
                             <CardContent>
                                 <Grid container>
-                                    <Grid item xs={12} sm={4}>
+                                    <Grid item xs={12} sm={12} md={4}>
                                         <MediaUpload
                                             fullScreen={false}
-                                            width={250}
                                             onChange={this.handleUserImageChange}
+                                            minWidth={201}
                                             data={currentUser.profile && currentUser.profile.pic && {file: currentUser.profile.pic, isUrl: true}}
                                             showVideoOption={false}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={8}>
+                                    <Grid item xs={12} sm={12} md={8}>
                                         <form onSubmit={this.submitUserDetails}>
                                             <IconInput
                                                 labelText="First Name"
@@ -103,7 +103,7 @@ export default function() {
                                                 onChange={this.handleTextChange.bind(this, "lastName")}
                                             />
                                             <Typography className={classes.inputCaption} type="caption">
-                                                Your public porfile only shows first name. When you join
+                                                Your public profile only shows first name. When you join
                                                 a school, your instructors will see your first and last name.
                                             </Typography>
                                             <FormControl fullWidth margin='dense'>

@@ -136,10 +136,20 @@ class Upload extends React.Component {
   render() {
     // console.log("Upload props>>>>> ", this.props)
   	// console.log("Upload state>>>>> ", this.state)
-    const { classes, fullScreen, loading } = this.props;
+    const { classes, fullScreen, loading, minWidth } = this.props;
+    let style = {
+      position: 'relative'
+    }
+
+    if(minWidth) {
+      style.minWidth = minWidth;
+    } else {
+      style.width = this.props.width || 300;
+    }
+
     return (
       <div>
-        <Card style={{width: this.props.width || 300, position: 'relative'}}>
+        <Card style={style}>
           <CardContent>
             <div className={classes.media}>
               <img className={classes.image} src={this.state.files && this.state.files.file} />
