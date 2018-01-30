@@ -20,7 +20,7 @@ const createStars = (noOfStars) => {
   const totalStars = Math.ceil(noOfStars);
   for(i = 0; i < totalStars; ++i) {
     stars.push(
-      <StarWrapper>
+      <StarWrapper key={i}>
         <Star />
       </StarWrapper>
     )

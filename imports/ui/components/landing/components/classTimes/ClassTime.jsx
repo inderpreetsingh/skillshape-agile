@@ -1,16 +1,21 @@
-import React from 'react';
-import styled from 'styled-components';
+import React,{Component} from 'react';
+import styled, {keyframes} from 'styled-components';
 import PropTypes from 'prop-types';
+import { CSSTransitionGroup, TransitionGroup } from 'react-transition-group';
 
-import Badge from '../icons/Badge.jsx';
+import TrendingIcon from '../icons/Trending.jsx';
 
 import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
+import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
 
 import * as helpers from '../jss/helpers.js';
 
+const ON_GOING_SCHEDULE = 'Ongoing';
+
 const ClassContainer = styled.div`
-  min-height: 400px;
+  width: 250px;
+  min-height: 350px;
   padding: ${helpers.rhythmDiv}px;
   padding: ${helpers.rhythmDiv * 2}px;
   display: flex;
@@ -18,11 +23,13 @@ const ClassContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   position: relative;
+  transition: .8s all;
+  animation: fade 1s linear;
 
   &:after {
     content: '';
     position: absolute;
-    background-color: ${props => props.onGoing ? helpers.primaryColor : helpers.panelColor};
+    background-color: ${props => (props.addToCalendar && props.scheduleTypeOnGoing) ? helpers.primaryColor : helpers.panelColor};
     top: 0;
     bottom: 0;
     left: 0;
@@ -30,7 +37,7 @@ const ClassContainer = styled.div`
     width: 100%;
     height: 100%;
     z-index: -1;
-    opacity: ${props => props.onGoing ? 0.1 : 0.5};
+    opacity: ${props => (props.addToCalendar && props.scheduleTypeOnGoing) ? 0.2 : 1};
   }
 `;
 
@@ -45,10 +52,10 @@ const ClockWrapper = styled.div`
   width: 100px;
   height: 100px;
   font-family: ${helpers.specialFont};
-  border: 2px solid ${props => props.onGoing ? helpers.primaryColor : helpers.cancel};
+  border: 2px solid ${props => (props.addToCalendar && props.scheduleTypeOnGoing) ? helpers.primaryColor : helpers.cancel};
   border-radius: 50%;
-  color: ${helpers.primaryColor};
-  opacity: ${props => props.onGoing ? 1 : 0.8};
+  background: white;
+  color: ${props => (props.addToCalendar && props.scheduleTypeOnGoing) ? helpers.primaryColor : helpers.cancel};
 `;
 
 const TimeContainer = styled.div`
@@ -60,7 +67,7 @@ const TimeContainer = styled.div`
 
 const ClassScheduleWrapper = styled.div`
   ${helpers.flexCenter}
-  margin-bottom: ${helpers.marginBottom}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const Time = styled.p`
@@ -70,20 +77,23 @@ const Time = styled.p`
 
 const TimePeriod = styled.span`
   display: inline-block;
-  font-family: ${helpers.commonFont};
+  font-weight: 400;
   font-size: ${helpers.baseFontSize}px;
   transform: translateY(-10px);
 `;
 
 const Text = styled.p`
   margin: 0;
-  margin-bottom: ${helpers.rhythmDiv}px;
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
   font-weight: 600;
 `;
 
 const Seperator = styled.p`
-  margin: 0;
-  margin-bottom: ${helpers.rhythmDiv}px;
+  margin: 0 ${helpers.rhythmDiv/2}px;
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 600;
 `;
 
 const Description = styled.p`
@@ -98,24 +108,23 @@ const TrendingWrapper = styled.div`
   justify-content: center;
   position: absolute;
   top: 0;
-  right: -16px;
+  right: -${helpers.rhythmDiv * 2}px;
   left: auto;
 `;
 
 const TrendingText = styled.div`
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize}px;
-  font-weight: 600;
-  font-style: italic;
+  ${helpers.flexCenter}
+  font-size: 14px;
   color: ${helpers.primaryColor};
-  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 1px solid ${helpers.primaryColor};
+  border-radius: 20px;
 `;
-
-const isClassOnGoing = (scheduleType) => scheduleType == 'on-going';
 
 const ClassTimeClock = (props) => (
   <ClockOuterWrapper>
-    <ClockWrapper onGoing={props.onGoing}>
+    <ClockWrapper addToCalendar={props.addToCalendar} scheduleTypeOnGoing={props.scheduleTypeOnGoing}>
       <TimeContainer>
         <Time>{props.time}</Time>
         <TimePeriod>{props.timePeriod}</TimePeriod>
@@ -127,7 +136,7 @@ const ClassTimeClock = (props) => (
 const ClassSchedule = (props) => (
   <ClassScheduleWrapper>
     <Text>{props.classDays}</Text>
-    <Text>|</Text>
+    <Seperator> | </Seperator>
     <Text>{props.schedule}</Text>
   </ClassScheduleWrapper>
 );
@@ -135,8 +144,7 @@ const ClassSchedule = (props) => (
 const Trending = () => {
   return (
     <TrendingWrapper>
-      <TrendingText>#Trending</TrendingText>
-      <Badge />
+      <TrendingIcon />
     </TrendingWrapper>
   )
 }
@@ -179,23 +187,120 @@ const getCalenderButton = (props) => {
   )
 }
 
-const ClassTime = (props) => {
-  console.log(" classtime props ------------> ",props);
-  return (<ClassContainer onGoing={isClassOnGoing(props.scheduleType)}>
-    <div>
-      <ClassTimeClock time={props.time} timePeriod={props.timePeriod} onGoing={isClassOnGoing(props.scheduleType)}/>
 
-      <ClassSchedule classDays={props.days} schedule={props.scheduleType} />
+_isClassOnGoing = (scheduleType) => scheduleType == ON_GOING_SCHEDULE;
 
-      <Description>
-        {props.description}
-      </Description>
-    </div>
+class ClassTime extends Component {
 
-    {getCalenderButton(props)}
+  state = {
+    addToCalendar : this.props.addToCalendar,
+    scheduleTypeOnGoing: _isClassOnGoing(this.props.scheduleType)
+  }
 
-    {props.isTrending && <Trending />}
-  </ClassContainer>);
+  handleToggleAddToCalendar = () => {
+    this.setState({
+      addToCalendar: !this.state.addToCalendar
+    });
+  }
+
+  handleAddToMyCalendarButtonClick = () => {
+
+    this.setState({
+      addToCalendar: false
+    });
+
+
+    if(this.props.onAddToMyCalendarButtonClick) {
+      this.props.onAddToMyCalendarButtonClick();
+    }
+  }
+
+  handleRemoveFromCalendarButtonClick = () => {
+
+    if(this.state.scheduleTypeOnGoing) {
+      this.setState({
+        addToCalendar: true
+      });
+    }
+
+    if(this.props.onRemoveFromCalendarButtonClick) {
+      this.props.onRemoveFromCalendarButtonClick();
+    }
+  }
+
+  componentWillAppear = (done) => {
+    console.log('done appear',done);
+  }
+
+  componentWillEnter = (done) => {
+    console.log('enter appear',done);
+  }
+
+  componentWillLeave = (done) => {
+    console.log('leave appear',done);
+  }
+
+
+  render() {
+    console.log(this.state.addToCalendar);
+    return (
+        <CSSTransitionGroup
+          transitionName="fade-anim"
+          transitionAppear={true}
+          transitionAppearTimeout={900}
+          transitionEnterTimeout={900}
+          transitionLeaveTimeout={900}
+          in
+          >
+          <ClassContainer key={this.props._id} addToCalendar={this.state.addToCalendar} scheduleTypeOnGoing={this.state.scheduleTypeOnGoing}>
+            <div>
+              <ClassTimeClock
+                time={this.props.time}
+                timePeriod={this.props.timePeriod}
+                addToCalendar={this.state.addToCalendar}
+                scheduleTypeOnGoing={this.state.scheduleTypeOnGoing}
+                />
+
+              <ClassSchedule
+                classDays={this.props.days}
+                schedule={this.props.scheduleType}
+                />
+
+              <Description>
+                {this.props.description}
+              </Description>
+            </div>
+
+            {(this.state.addToCalendar && this.state.scheduleTypeOnGoing) ?
+              (<ClassTimeButton
+                icon
+                onClick={this.handleAddToMyCalendarButtonClick}
+                iconName="perm_contact_calendar"
+                label="Add to my Calendar"
+                />) :
+                (<ClassTimeButton
+                  ghost
+                  icon
+                  onClick={this.handleRemoveFromCalendarButtonClick}
+                  iconName="delete"
+                  label="Remove from Calendar"
+                />)
+              }
+            {this.props.isTrending && <Trending />}
+            </ClassContainer>
+          </CSSTransitionGroup>
+        );
+    }
+}
+
+ClassTime.propTypes = {
+  time: PropTypes.string.isRequired,
+  timePeriod: PropTypes.string.isRequired,
+  days: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  addToCalendar: PropTypes.bool.isRequired,
+  scheduleType: PropTypes.string.isRequired,
+  isTrending: PropTypes.bool
 }
 
 export default ClassTime;

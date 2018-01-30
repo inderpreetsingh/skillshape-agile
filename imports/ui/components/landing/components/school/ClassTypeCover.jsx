@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import ClassMap from '../map/ClassMap.jsx';
-
 import * as helpers from '../jss/helpers.js';
 import { classTypeImgSrc } from '../../site-settings.js';
 

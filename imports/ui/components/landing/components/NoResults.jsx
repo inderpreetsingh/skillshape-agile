@@ -17,6 +17,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   max-width: ${helpers.baseFontSize * 30}px;
   margin: 0 auto;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Title = styled.h1`

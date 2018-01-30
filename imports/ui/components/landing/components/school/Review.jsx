@@ -28,7 +28,7 @@ const Person = styled.div`
   margin-top: ${helpers.rhythmDiv/2}px;
 `;
 
-const ProfilePicCont = styled.div`
+const ProfilePicContainer = styled.div`
   width: 40px;
   height: 40px;
 `;
@@ -96,9 +96,9 @@ const Review = (props) => (
           <Name>{props.name}</Name>
         </Container>
 
-        <ProfilePicCont>
+        <ProfilePicContainer>
           <ProfilePic imgSrc={props.imgSrc} />
-        </ProfilePicCont>
+        </ProfilePicContainer>
       </Person>
 
     </Wrapper>
@@ -108,6 +108,7 @@ Review.propTypes = {
   imgSrc: PropTypes.string,
   name: PropTypes.string,
   comment: PropTypes.string,
+  ratings: PropTypes.number
 };
 
 Review.defaultProps = {
