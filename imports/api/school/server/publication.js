@@ -295,6 +295,10 @@ Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, rol
     if (schoolName) {
       filter.name = { '$regex': '' + schoolName + '', '$options': '-i' };
     }
+    let currentUser = Meteor.users.findOne(this.userId);
+    if(currentUser) {
+        filter = { $and: [ { userId: { $ne: this.userId } }, { email: { $ne: currentUser.emails.address } } ] };
+    }
     AllSchoolIds = []
     console.log("coords",coords);
     if (coords) {
@@ -341,7 +345,7 @@ Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, rol
       filter.is_publish = { $ne: 'N' }
     }
     /*filter.claimed = { $ne : 'Y' }*/
-    console.log(filter);
+    console.log("filter",filter);
     return School.find(filter, limit);
 
 

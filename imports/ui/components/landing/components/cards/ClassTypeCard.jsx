@@ -19,10 +19,13 @@ import ClassTypeCardDescription from './ClassTypeCardDescription.jsx';
 
 import classTimesData from '../../constants/classTimesData';
 import ClassTimes from "/imports/api/classTimes/fields";
+import { toastrModal } from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 class ClassTypeCard extends Component {
     state = {
         dialogOpen: false,
+        isLoading:false
     }
     handleDialogState = (state) => (e) => {
         e.stopPropagation();
@@ -39,19 +42,25 @@ class ClassTypeCard extends Component {
     }
 
     handleClassTimeRequest = (schoolId, classTypeId, classTypeName) => {
-        console.log("handleClassTimeRequest --->>",schoolId, classTypeId)
+        console.log("handleClassTimeRequest --->>",schoolId, classTypeId);
+        this.setState({isLoading:true});
         if(Meteor.userId()) {
+            const { toastr } = this.props;
             Meteor.call("classTimesRequest.notifyToSchool", {schoolId, classTypeId, classTypeName}, (err, res) => {
                 console.log("err -->>",err);
                 console.log("handleClassTimeRequest res -->>",res);
                 let modalObj = {
                     dialogOpen: false
                 }
-
+                if(res && res.emailSuccess) {
+                    // Need to show message to user when email is send successfully.
+                  toastr.success("Your email has been sent. We will assist you soon.", "Success");
+                }
                 if(res && res.message) {
                     modalObj.classTimesDialogBoxError = res.message;
                     modalObj.dialogOpen = true
                 }
+                this.setState({isLoading:false});
                 this.setState(modalObj)
             })
         } else {
@@ -61,6 +70,14 @@ class ClassTypeCard extends Component {
 
     render() {
         console.log("ClassTypeCard props --->>",this.props);
+        const cardRevealData = {
+                        ageMin:this.props.ageMin,
+                        ageMax:this.props.ageMax,
+                        gender:this.props.gender,
+                        experienceLevel:this.props.experienceLevel,
+                        description:this.props.desc,
+                        name:this.props.name,
+                    }
         const classTimesData = this.getClassTimes(get(this.props, "_id", null))
         return(
             <Fragment>
@@ -73,6 +90,9 @@ class ClassTypeCard extends Component {
                     handleClassTimeRequest={this.handleClassTimeRequest.bind(this, this.props.schoolId, this.props._id, this.props.name)}
                     errorText={this.state.classTimesDialogBoxError}
                 />
+            }
+            {
+                this.state.isLoading && <ContainerLoader />
             }
             <CardsReveal {...this.props}
                 body={
@@ -87,11 +107,13 @@ class ClassTypeCard extends Component {
                     ratings={this.props.ratings}
                     reviews={this.props.reviews}
                     description={this.props.desc}
-                    onClassTimeButtonClick={this.handleDialogState(true)}/>
+                    onClassTimeButtonClick={this.handleDialogState(true)}
+                    cardRevealInfo={cardRevealData}
+                    />
                 } />
             </Fragment>
             )
         }
 }
 
-export default ClassTypeCard;
+export default (toastrModal(ClassTypeCard));

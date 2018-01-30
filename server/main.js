@@ -66,29 +66,8 @@ if (Meteor.isServer) {
             user.emails[0].verified = true;
             return user;
         }
-        try {
-            userRegistration(user, options.password)
-        } catch (e) {
-            console.log(e)
-        }
         return user;
     });
-
-    var userRegistration = function(user, pass) {
-        var fromEmail = "Notices@SkillShape.com";
-        var toEmail = user.emails[0].address;
-        Email.send({
-            from: fromEmail,
-            to: toEmail,
-            replyTo: fromEmail,
-            subject: "skillshape Registration",
-            text: "Hi " + user.emails[0].address + ",\nYour Email: " + user.emails[0].address + " has been registered." +
-                "\nYour password is : " + pass + "\n\n" +
-                "Thank you.\n" +
-                "The skillshape Team.\n" + Meteor.absoluteUrl() + "\n"
-            // + "http://www.graphical.io/assets/img/Graphical-IO.png"
-        });
-    }
 
     var userFeedBack = function(user, email, message, request) {
         var fromEmail = "Notices@SkillShape.com";

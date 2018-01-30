@@ -47,6 +47,14 @@ const styles = theme => {
         expansionPanelContainer: {
             padding: theme.spacing.unit,
             width: '100%',
+        },
+        notifyExplanation: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            margin: '24px',
+            padding: '10px',
+            border: '1px solid rgb(221, 221, 221)',
+            alignItems: 'center'
         }
     }
 }
@@ -63,6 +71,7 @@ class PanelWithTable extends React.Component {
             value: '',
             showForm: false,
             showEditForm: false,
+            currentTableData:null
         }
     }
 
@@ -106,10 +115,22 @@ class PanelWithTable extends React.Component {
     }
 
     handleExpansionPanelRightBtn = (data) => {
+        // Show `UpdateClassTimeDialog` as a popup when user click on "Notify Student"
         Meteor.call("classType.notifyToStudentForClassTimes", {schoolId: data.schoolId, classTypeId: data._id, classTypeName: data.name}, (error, result)=> {
             console.log("classType.notifyToStudentForClassTimes",error, result)
+            this.setState({showConfirmationModal: false});
         })
     }
+
+    // This is done so that we can show confirmation modal.
+    handleNotifyClassTime =(tableData) => {
+        this.setState({
+            showConfirmationModal: true,
+            currentTableData:tableData
+        });
+    }
+
+    cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
     render() {
         return PanelWithTableRender.call(this, this.props, this.state)

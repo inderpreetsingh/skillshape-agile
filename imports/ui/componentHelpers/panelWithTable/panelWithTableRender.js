@@ -36,16 +36,29 @@ import Dialog, {
 import MapComponent from './mapComponent';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+
 
 export default function () {
 
 	const { classes, className, settings, mainTableData, schoolId, fullScreen } = this.props;
 	const FormComponent = settings.mainPanelHeader.actions.component;
 	// const EditForm = settings.mainTable.actions.edit.component;
-	console.log("Panel with table props -->>",this.props);
+	console.log("Panel with table props -->>",this.state);
+	const {currentTableData} = this.state;
 	// console.log("Panel with table state -->>",this.state);
 	return (
 		<div className={`${className} panel-table`}>
+          	{
+              this.state.showConfirmationModal && <ConfirmationModal
+                  open={this.state.showConfirmationModal}
+                  submitBtnLabel="Yes"
+                  cancelBtnLabel="Cancel"
+                  message="This will email all attending and interested students of the time change. Are you sure?"
+                  onSubmit={()=>{this.handleExpansionPanelRightBtn(currentTableData)}}
+                  onClose={this.cancelConfirmationModal}
+              />
+          	}
           	{
           		this.state.showForm && <FormComponent
           			schoolId={schoolId}
@@ -85,20 +98,22 @@ export default function () {
 	          			// console.log("childTableData -->>",childTableData);
 	          			return (
 		          				<ExpansionPanel key={index} className={classes.expansionPanel} key={index}>
-			          				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
+			          				<ExpansionPanelSummary style={{boxShadow: '0 1px 0 rgba(0,0,0,.1)'}} expandIcon={<ExpandMoreIcon />} >
 			              				<div style={{marginLeft: 15}}>
 			                				<Typography className={classes.secondaryHeading}>{tableData[settings.mainPanelHeader.titleKey] || ""}</Typography>
 			              				</div>
 			            			</ExpansionPanelSummary>
 			            			{
 			            				settings.mainPanelHeader.expansionPanelRightBtnTitle && (
-				              				<div style={{textAlign: 'right',marginRight: 25}}>
-					          					<Button onClick={() => this.handleExpansionPanelRightBtn(tableData)} color="accent" raised dense>
-					          					 	Notify to Student
+				              				<div className={classes.notifyExplanation}>
+					          					<Typography type="caption">Pressing this button will inform students who are enrolled or interested in this class of any schedule changes. Please do not abuse this button.</Typography>
+					          					<Button onClick={() => this.handleNotifyClassTime(tableData)} color="accent" raised dense>
+					          					 	Notify Students of Time Change
 					          					</Button>
-				              				</div>
+				          					</div>
 			            				)
 			            			}
+
 			            			<ExpansionPanelDetails className={classes.details}>
 			            				<Grid container>
 			            					<Grid  item md={(settings.mainPanelHeader.showImageUpload || settings.mainPanelHeader.showAddressOnMap) ? 8 : 12} sm={(settings.mainPanelHeader.showImageUpload || settings.mainPanelHeader.showAddressOnMap) ? 6 : 12} xs={12}>
