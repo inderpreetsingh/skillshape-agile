@@ -32,12 +32,11 @@ class ResponsiveTabs extends React.Component {
       tabValue: defaultValue || 0
     };
   }
-  componentWillReceiveProps() {
+  componentWillReceiveProps(props) {
     // Listen for `?classDetails=true` so that we can click on tab.
-    console.log("this.props.location.query.type != 'rejec",this.props)
-    if(this.props.tabValue) {
+    if(this.props.queryTabValue && this.props.tabValue == props.tabValue) {
       // We should set state for class details tab so that it opens automatically.
-      this.setState({tabValue:this.props.tabValue})
+      this.setState({tabValue:this.props.queryTabValue})
     }
   }
   componentDidMount() {

@@ -18,6 +18,7 @@ class SchoolEditView extends React.Component {
     super(props);
     this.state = {
     	selecetdView : "school_details",
+      queryTabValue: null
     };
   }
   componentWillMount() {
@@ -25,7 +26,7 @@ class SchoolEditView extends React.Component {
     console.log("this.props.location.query.type != 'rejec",this.props.location.query.tabValue)
     if(this.props.location.query.tabValue) {
       // We should set state for class details tab so that it opens automatically.
-      this.setState({tabValue:this.props.location.query.tabValue})
+      this.setState({queryTabValue:this.props.location.query.tabValue})
     }
   }
   checkSchoolAccess = (currentUser, schoolId) => {

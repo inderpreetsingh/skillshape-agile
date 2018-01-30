@@ -49,6 +49,7 @@ export default function (props) {
                       color= "primary"
                       onTabChange={this.onTabChange}
                       tabValue={this.state.tabValue}
+                      queryTabValue = {this.state.queryTabValue}
                   />
             		<div>
                       {
