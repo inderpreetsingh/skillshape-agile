@@ -1,4 +1,5 @@
 import React,{ Component } from 'react';
+import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import styled from 'styled-components';
 
@@ -16,6 +17,7 @@ import ClassTypeDescription from './components/school/ClassTypeDescription.jsx';
 import ClassTypeInfo from './components/school/ClassTypeInfo.jsx';
 import StarsBar from './components/StarsBar.jsx';
 import ReviewsSlider from './components/school/ReviewsSlider.jsx';
+import ClassTimesSlider from './components/classTimes/ClassTimesSlider.jsx';
 import MyCalendar from './components/MyCalendar';
 
 import BrandBar from './components/BrandBar';
@@ -54,48 +56,6 @@ const PageContentWrapper = styled.div`
   overflow: hidden;
   margin-top: ${(helpers.oneRow * 3) - helpers.rhythmDiv}px;
   width: 100%;
-`;
-
-const SectionsWrapper = styled.div`
-  width: 100%;
-  display: flex;
-
-  @media screen and ( max-width: ${helpers.mobile + 100}px) {
-    flex-direction: column-reverse;
-  }
-`;
-
-const MainSection = styled.div`
-  width: 66.66%;
-  padding: ${helpers.rhythmDiv}px;
-
-  @media screen and ( max-width: ${helpers.mobile + 100}px) {
-    width: 100%;
-  }
-`;
-
-const SideSection = styled.div`
-  width: 33.34%;
-  padding: ${helpers.rhythmDiv}px;
-
-  @media screen and ( max-width: ${helpers.mobile + 100}px) {
-    width: 100%;
-  }
-`;
-
-const MediaSection = styled.div`
-  width: 100%;
-`;
-
-const PricesSection = styled.div`
-  width: 100%;
-`;
-
-const SectionHeader = styled.h1`
-  font-family: ${helpers.specialFont};
-  font-weight: 500;
-  text-align: center;
-  font-size: ${helpers.baseFontSize * 1.5}px;
 `;
 
 const DescriptionText = styled.p`
@@ -159,12 +119,22 @@ const ReviewsWrapper = styled.div`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+  margin-bottom: ${helpers.rhythmDiv * 8}px;
 `;
 
-const ClassTimeBarWrapper = styled.div`
-  max-width: 1100px;
+const ClassTimesWrapper = styled.div`
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+`;
+
+const ClassTimesTitle = styled.h2`
+  text-align: center;
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  font-style: italic;
+  margin-bottom: ${helpers.rhythmDiv * 3}px;
 `;
 
 const Main = styled.div`
@@ -175,6 +145,11 @@ const Main = styled.div`
 
 const MainInner = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
+  overflow: hidden;
+
+  @media screen and (max-width : ${helpers.mobile}) {
+    padding: ${helpers.rhythmDiv}px;
+  }
 `;
 
 class ClassType extends Component {
@@ -193,7 +168,7 @@ class ClassType extends Component {
                     <ClassMap mapLocation={this.props.mapLocation}/>
                   </MapContainer>
 
-                  <ClassTypeDescription/>
+                  <ClassTypeDescription />
                 </ContentSection>
 
                 <ContentSection>
@@ -212,13 +187,14 @@ class ClassType extends Component {
           <Main>
             <MainInner>
               <ReviewsWrapper>
-                <ReviewsSlider reviewsData={reviewsData}/>
-                <ReviewsBar />
+                <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv}/>
               </ReviewsWrapper>
 
-              <ClassTimeBarWrapper>
-                <ClassTimesBar classTimesData={classTimesBarData}/>
-              </ClassTimeBarWrapper>
+              <ClassTimesWrapper>
+                <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
+                <ClassTimesBar classTimesData={classTimesBarData} />
+              </ClassTimesWrapper>
+
             </MainInner>
           </Main>
 
@@ -226,6 +202,14 @@ class ClassType extends Component {
       </MuiThemeProvider>
     );
   }
+}
+
+ClassType.propsTypes = {
+  className: PropTypes.string
+}
+
+ClassType.defaultProps = {
+  className: 'naam yoga'
 }
 
 export default ClassType;

@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import Typography from 'material-ui/Typography';
-
 //TODO: Automatic imports depending upon variables used - intellij
 import * as helpers from '../jss/helpers.js';
 

@@ -1,5 +1,4 @@
 import uuidv4 from 'uuid/v4';
-import classTimesData from './classTimesData.js';
 
 export const cardsData = [{
     id: uuidv4(),

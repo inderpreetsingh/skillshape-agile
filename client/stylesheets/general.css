@@ -87,13 +87,22 @@ material ui search bar */
   FADE ANIMATION -- used in show more filters
 */
 
+.fade-anim {
+  opacity: 0.01;
+}
+
+.fade-anim.fade-anim-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
 .fade-anim-enter {
   opacity: 0.01;
 }
 
 .fade-anim-enter.fade-anim-enter-active {
   opacity: 1;
-  transition: opacity 500ms ease-in-out;
+  transition: opacity 800ms ease-in-out;
 }
 
 .fade-anim-leave {
@@ -102,7 +111,7 @@ material ui search bar */
 
 .fade-anim-leave.fade-anim-leave-active {
   opacity: 0.01;
-  transition: opacity 300ms ease-in-out;
+  transition: opacity 800ms ease-in-out;
 }
 
 
@@ -202,6 +211,11 @@ material ui search bar */
 }
 
 
-.rc-anchor-alert {
-  color: rgba(0, 0, 0, 0.87) !important;
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
