@@ -81,41 +81,94 @@ export const sendConfirmationEmail = function(userRec, school) {
                    ${signature}`
         });
     }
-}
+};
 
-export const sendClassTimesRequest = function({currentUserData, schoolOwnerData, superAdminData, schoolId, classTypeName}) {
-
+export const sendClassTimesRequest = function({
+    currentUserData,
+    schoolOwnerData,
+    superAdminData,
+    schoolId,
+    classTypeName
+}) {
     let emailObj = {};
-    if(schoolOwnerData && currentUserData) {
-        const schoolOwnerName = get(schoolOwnerData, "profile.name") || `${get(schoolOwnerData, "profile.firstName", "")} ${get(schoolOwnerData, "profile.lastName", "")}`;
-        const userName = get(currentUserData, "profile.name") || `${get(currentUserData, "profile.firstName")} ${get(currentUserData, "profile.lastName")}`;
+    if (schoolOwnerData && currentUserData) {
+        const schoolOwnerName =
+            get(schoolOwnerData, "profile.name") ||
+            `${get(schoolOwnerData, "profile.firstName")} ${get(
+                schoolOwnerData,
+                "profile.lastName"
+            )}`;
+        const userName =
+            get(currentUserData, "profile.name") ||
+            `${get(currentUserData, "profile.firstName")} ${get(
+                currentUserData,
+                "profile.lastName"
+            )}`;
         emailObj.to = schoolOwnerData.emails[0].address;
         emailObj.subject = "Class Interest";
-        emailObj.text = `Hi ${schoolOwnerName}, \n${userName} is interested in learning more about your ${classTypeName} class. \nPlease click this link to update your listing: \n${Meteor.absoluteUrl(`SchoolAdmin/${schoolId}/edit`)} \n\nThanks, \n\nEveryone from SkillShape.com`;
+        emailObj.text = `Hi ${schoolOwnerName}, \n${userName} is interested in learning more about your ${classTypeName} class. \nPlease click this link to update your listing: \n${Meteor.absoluteUrl(
+            `SchoolAdmin/${schoolId}/edit`
+        )} \n\nThanks, \n\nEveryone from SkillShape.com`;
     } else {
         emailObj.to = superAdminData.emails[0].address;
-        emailObj.subject = "School Admin not found",
-        emailObj.text = `Hi SuperAdmin, \nCorresponding to this schoolId ${schoolId} there is no admin assign yet \n\nThanks, \n\nEveryone from SkillShape.com`;
+        (emailObj.subject = "School Admin not found"),
+            (emailObj.text = `Hi SuperAdmin, \nCorresponding to this schoolId ${schoolId} there is no admin assign yet \n\nThanks, \n\nEveryone from SkillShape.com`);
     }
     if (Meteor.isServer) {
         Email.send({
-            to: 'sam@skillshape.com', //emailObj.to
+            to: "sam@skillshape.com", //emailObj.to
             from: "Notices@SkillShape.com",
             replyTo: "Notices@SkillShape.com",
             subject: emailObj.subject,
-            text: emailObj.text,
+            text: emailObj.text
         });
     }
-}
+};
 
-export const sendEmailToStudentForClassTimeUpdate = function(userData, schoolData, classTypeName) {
+export const sendEmailToStudentForClassTimeUpdate = function(
+    userData,
+    schoolData,
+    classTypeName
+) {
     if (Meteor.isServer) {
-        const userName = get(userData, "profile.name") || `${get(userData, "profile.firstName", "")} ${get(userData, "profile.lastName", "")}`;
+        const userName =
+            get(userData, "profile.name") ||
+            `${get(userData, "profile.firstName")} ${get(
+                userData,
+                "profile.lastName"
+            )}`;
         Email.send({
-            to: 'sam@skillshape.com', //userData.emails[0].address;,
+            to: "sam@skillshape.com", //userData.emails[0].address;,
             from: "Notices@SkillShape.com",
             subject: "School Updated",
-            text: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(`schools/${schoolData.slug}`)} to view their new information and join the class! \n\nThanks, \n\nEveryone from SkillShape.com`,
+            text: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(
+                `SchoolAdmin/${schoolData._id}/edit?tabValue=2`
+            )} to view their new information and join the class! \n\nThanks, \n\nEveryone from SkillShape.com`
         });
     }
-}
+};
+
+// This function is used to send user registration email and email verification link together.
+export const userRegistrationAndVerifyEmail = function(
+    user,
+    verificationToken,
+    passwd,
+    fromEmail,
+    toEmail
+) {
+    Email.send({
+        from: fromEmail,
+        to: toEmail,
+        replyTo: fromEmail,
+        subject: "skillshape Registration",
+        text: `Hi ${user.profile.name},
+            Your Email: ${user.emails[0].address} has been registered.
+            click on the following link to verify your email address:\n
+            ${verificationToken}\n
+            Your temporary password is  : ${passwd}
+            You will be asked to make your own when you click the link above.
+            Thank you.
+            The skillshape Team.
+            ${Meteor.absoluteUrl()}`
+    });
+};

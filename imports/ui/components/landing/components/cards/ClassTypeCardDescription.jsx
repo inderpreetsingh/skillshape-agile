@@ -20,7 +20,11 @@ const NoFoundResultWapper = styled.div`
     text-align: center;
 `
 
-const ClassTypeCardDescription = (props) => (
+const ClassTypeCardDescription = (props) => {
+
+  const {cardRevealInfo} = props;
+  console.log("props in ClassTypeCardDescription",cardRevealInfo);
+  return(
     <MuiThemeProvider theme={MuiTheme}>
         <Fragment>
             <div itemScope itemType="http://schema.org/AggregateRating">
@@ -32,8 +36,15 @@ const ClassTypeCardDescription = (props) => (
 
             <div className="description">
              <Grid container spacing={8}>
+               <Grid item xs={12} style={{marginTop: '22px',marginBottom: '22px',border: '1px solid #ddd'}}>
+                  {cardRevealInfo.ageMax &&<Typography>Max Age: {cardRevealInfo.ageMax}</Typography>}
+                  {cardRevealInfo.ageMin && <Typography>Min Age: {cardRevealInfo.ageMin}</Typography>}
+                  {cardRevealInfo.gender && <Typography>Gender: {cardRevealInfo.gender}</Typography>}
+                  {cardRevealInfo.experienceLevel && <Typography>Skill Level: {cardRevealInfo.experienceLevel}</Typography>}
                <Grid item xs={12}>
-                  <Typography>{props.description}</Typography>
+                  <Typography style={{marginTop: '15px',fontSize: '17px',fontWeight: 500}}>{cardRevealInfo.name} Description</Typography>
+                  {cardRevealInfo.description && <Typography>{cardRevealInfo.description}</Typography>}
+               </Grid>
                </Grid>
                <Grid item xs={12} sm={6}>
                     <SecondaryButton
@@ -62,7 +73,8 @@ const ClassTypeCardDescription = (props) => (
             </div>
         </Fragment>
     </MuiThemeProvider>
-);
+)
+};
 
 ClassTypeCardDescription.propTypes = {
     ratings : PropTypes.number,

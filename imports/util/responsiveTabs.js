@@ -24,7 +24,7 @@ const styles = theme => {
 
 
 class ResponsiveTabs extends React.Component {
-  
+
   constructor(props){
     super(props);
     let { defaultValue } = this.props;
@@ -32,7 +32,14 @@ class ResponsiveTabs extends React.Component {
       tabValue: defaultValue || 0
     };
   }
-  
+  componentWillReceiveProps() {
+    // Listen for `?classDetails=true` so that we can click on tab.
+    console.log("this.props.location.query.type != 'rejec",this.props)
+    if(this.props.tabValue) {
+      // We should set state for class details tab so that it opens automatically.
+      this.setState({tabValue:this.props.tabValue})
+    }
+  }
   componentDidMount() {
     let { defaultValue } = this.props;
     this.props.onTabChange(defaultValue || 0);
