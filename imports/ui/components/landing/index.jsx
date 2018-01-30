@@ -328,8 +328,6 @@ class Landing extends Component {
 
                     />
                 </Element>
-
-
                 {/*
                  <Element name="content-container" className="element">
                   <MainContentWrapper>
@@ -362,14 +360,14 @@ class Landing extends Component {
                       <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
                    </CardsContainer>)}
                  </MainContentWrapper>
-               </Element>*/}
+               </Element> */}
 
                {!this.state.mapView && <Footer mapView={this.state.mapView}/>}
 
                {this.state.mapView && <FloatingMapButtonWrapper>
                   <FloatingMapButton
                     onListButtonClick={this.handleToggleMapView}
-                    
+
                   />
                </FloatingMapButtonWrapper>}
 

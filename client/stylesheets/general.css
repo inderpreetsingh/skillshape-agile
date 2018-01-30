@@ -74,11 +74,11 @@ material ui search bar */
   transition: transform 250ms linear;
 }
 
-.reveal-card-leave {
+.reveal-card-exit {
   transform: scaleY(1);
 }
 
-.reveal-card-leave.reveal-card-leave-active {
+.reveal-card-exit.reveal-card-exit-active {
   transform: scaleY(0);
   transition: transform 250ms linear;
 }

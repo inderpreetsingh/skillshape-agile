@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { CSSTransitionGroup } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import { withStyles } from 'material-ui/styles';
@@ -170,7 +170,8 @@ class CardsReveal extends Component {
           </CardContent>
         </div>
 
-        <CSSTransitionGroup transitionName="reveal-card" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
+        <CSSTransition
+          classNames="reveal-card" timeout={200}>
           {this.state.revealCard && (
             <CardDescription
               descriptionContent={descriptionContent}
@@ -179,7 +180,7 @@ class CardsReveal extends Component {
               classes={classes}
             />
           )}
-        </CSSTransitionGroup>
+        </CSSTransition>
       </Paper>
     );
   }
