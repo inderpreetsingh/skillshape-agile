@@ -228,31 +228,9 @@ class ClassTime extends Component {
     }
   }
 
-  componentWillAppear = (done) => {
-    console.log('done appear',done);
-  }
-
-  componentWillEnter = (done) => {
-    console.log('enter appear',done);
-  }
-
-  componentWillLeave = (done) => {
-    console.log('leave appear',done);
-  }
-
-
   render() {
     console.log(this.state.addToCalendar);
-    return (
-        <CSSTransitionGroup
-          transitionName="fade-anim"
-          transitionAppear={true}
-          transitionAppearTimeout={900}
-          transitionEnterTimeout={900}
-          transitionLeaveTimeout={900}
-          in
-          >
-          <ClassContainer key={this.props._id} addToCalendar={this.state.addToCalendar} scheduleTypeOnGoing={this.state.scheduleTypeOnGoing}>
+    return (<ClassContainer key={this.props._id} addToCalendar={this.state.addToCalendar} scheduleTypeOnGoing={this.state.scheduleTypeOnGoing}>
             <div>
               <ClassTimeClock
                 time={this.props.time}
@@ -288,7 +266,6 @@ class ClassTime extends Component {
               }
             {this.props.isTrending && <Trending />}
             </ClassContainer>
-          </CSSTransitionGroup>
         );
     }
 }
