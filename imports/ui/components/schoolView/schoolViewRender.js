@@ -14,7 +14,7 @@ import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 
 import { Loading } from '/imports/ui/loading';
-import { checkSuperAdmin } from '/imports/util';
+import { checkSuperAdmin, cutString } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
@@ -80,30 +80,32 @@ export default function() {
             <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
             <Grid container className={classes.schoolInfo} >
 
-              <Grid item xs={12} sm={8} md={6} >
-                <Grid item xs={12}>
-                    {
-                      checkUserAccess && (
-                        <div>Publish / Unpublish <Switch
-                            checked={isPublish}
-                            onChange={this.handlePublishStatus.bind(this, schoolId)}
-                            aria-label={schoolId}
-                          /></div>
-                      )
-                    }
-                    <Typography type="p"> About {schoolData.name} </Typography>
-                    <Typography type="caption"> {schoolData.aboutHtml && ReactHtmlParser(schoolData.aboutHtml)} </Typography>
+                <Grid item xs={12} sm={8} md={6} >
+                    <Card className={`${classes.card} ${classes.schoolInfo}`}>
+                        <Grid item xs={12}>
+                            {
+                              checkUserAccess && (
+                                <div>Publish / Unpublish <Switch
+                                    checked={isPublish}
+                                    onChange={this.handlePublishStatus.bind(this, schoolId)}
+                                    aria-label={schoolId}
+                                  /></div>
+                              )
+                            }
+                            <Typography type="title"> About {schoolData.name} </Typography>
+                            <Typography type="caption"> {schoolData.aboutHtml && ReactHtmlParser(schoolData.aboutHtml)} </Typography>
+                        </Grid>
+                        <Grid item xs={12} >
+                          <Typography type="title">Notes for student of {schoolData.name} <br/> </Typography>
+                          <Typography type="caption"> {schoolData.studentNotesHtml && ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
+                        </Grid>
+                    </Card>
                 </Grid>
-                <Grid item xs={12} >
-                  <Typography type="p">Notes for student of  {schoolData.name} <br/> <br/> </Typography>
-                  <Typography type="caption"> {schoolData.notesHtml && ReactHtmlParser(schoolData.notesHtml)} </Typography>
+                <Grid item xs={12} sm={4} md={3}>
+                    <div className="card-content" id="schoolLocationMap" style={{height: '100%', minHeight: 250}}>
+                    </div>
                 </Grid>
-              </Grid>
-              <Grid item xs={12} sm={4} md={3}>
-                <div className="card-content" id="schoolLocationMap" style={{height: '100%', minHeight: 250}}>
-                </div>
-              </Grid>
-              <Grid item xs={12} sm={12} md={3}>
+                <Grid item xs={12} sm={12} md={3}>
                 <Grid container style={{textAlign: "center"}}>
                   <Grid item xs={12} sm={6} md={12} >
                     <Card className={classes.card}>

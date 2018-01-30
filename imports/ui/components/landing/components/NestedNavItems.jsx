@@ -18,20 +18,21 @@ class NestedNavItems extends Component {
   		const { classes, childData } = this.props;
   		return (
   			<Fragment>
-  				<ListItem onClick={this.handleClick}>
-			        {
-				       this.props.children ? this.props.children :
-				       <Fragment>
-				            <ListItemIcon>
-				                <Icon>{this.props.iconName}</Icon>
-				            </ListItemIcon>
-				            <ListItemText classes={{text: classes.menuListItemText}} primary={this.props.name} />
-				        </Fragment>
-			        }
-			        { this.state.open ? <ExpandLess /> : <ExpandMore /> }
-			    </ListItem>
-			    {
-			    	!isEmpty(childData) && (
+  				{
+  					!isEmpty(childData) &&
+  					<Fragment>
+		  				<ListItem onClick={this.handleClick}>
+					        {
+						       this.props.children ? this.props.children :
+						       <Fragment>
+						            <ListItemIcon>
+						                <Icon>{this.props.iconName}</Icon>
+						            </ListItemIcon>
+						            <ListItemText classes={{text: classes.menuListItemText}} primary={this.props.name} />
+						        </Fragment>
+					        }
+					        { this.state.open ? <ExpandLess /> : <ExpandMore /> }
+					    </ListItem>
 				        <Collapse component="li" in={this.state.open} timeout="auto" unmountOnExit>
 				            <List disablePadding>
 					    		{
@@ -48,8 +49,8 @@ class NestedNavItems extends Component {
 					    		}
 				            </List>
 				        </Collapse>
-			    	)
-			    }
+  					</Fragment>
+  				}
   			</Fragment>
   		)
   	}

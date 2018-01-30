@@ -57,7 +57,7 @@ export default function (props) {
 	                </Grid>
             	</ExpansionPanelSummary>
 				{
-					_.isArray(childTableData) && childTableData.map((tableData, index)=>{
+					_.isArray(childTableData) && childTableData.map((tableData, index) => {
 						return (
 							<ExpansionPanelDetails key={index} className={classes.details}>
 								<div className={classes.classtimeFormOuter}>
