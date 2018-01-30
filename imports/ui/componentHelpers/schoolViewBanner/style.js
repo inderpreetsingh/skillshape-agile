@@ -56,7 +56,7 @@ export default styles = theme => {
       backgroundRepeat: 'no-repeat !important',
       backgroundSize: 'cover !important',
       backgroundPosition: '50% 50% !important',
-      height: '320px !important',
+      height: '60.66vh !important',
       cursor: 'pointer !important',
       '@media screen and (min-height : 1000px)': {
          height: '568px !important',

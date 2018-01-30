@@ -28,8 +28,9 @@ Meteor.methods({
 				if(!schoolOwnerData) {
 	    			superAdminData = Meteor.users.findOne({"roles": "Superadmin"});
 				}
-	    		return sendClassTimesRequest({currentUserData, schoolOwnerData, superAdminData, schoolId, classTypeName});
-    		}
+	    		sendClassTimesRequest({currentUserData, schoolOwnerData, superAdminData, schoolId, classTypeName});
+    		    return {emailSuccess:true};
+            }
 
     	} else {
 			throw new Meteor.Error("Permission denied!!");

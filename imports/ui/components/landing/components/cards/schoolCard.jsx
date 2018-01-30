@@ -19,6 +19,8 @@ import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
 import { cutString, toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+
 
 
 
@@ -133,51 +135,91 @@ class SchoolCard extends Component {
     // You can also log the error to an error reporting service
     console.info("The error is this...",error, info);
   }
-  handleClaimASchool = (event) => {
+
+  showConfirmationModal =() => {
     console.log("claimASchool called",Meteor.user(),this);
-    const { toastr, schoolCardData } = this.props;
     const user = Meteor.user();
     if(!user) {
       // Need to show error in toaster
       toastr.error('You must be signed in to claim a school. [Sign In] or [Sign Up]', 'Error');
     } else {
-        const payload ={
-          schoolId: schoolCardData._id,
-          schoolName:schoolCardData.name,
-          userId: user._id,
-          userEmail:user.emails[0].address,
-          userName: user.profile.firstName,
-          schoolEmail:schoolCardData.email
-        }
-        this.setState({isLoading:true});
-        Meteor.call('school.claimSchoolRequest',payload,(err, result)=> {
-          console.log("result",result);
-          this.setState({isLoading:false});
-          if(result.alreadyRejected) {
-            toastr.error('Your request has been rejected to manage this school by school Admin', 'Error');
-          }else if(result.pendingRequest) {
-            toastr.error("We are in the process of resolving your claim. We will contact you as soon as we reach a verdict or need more information. Thanks for your patience.",'Error');
-          } else if(result.alreadyManage) {
-            toastr.success("You already manage a school. You cannot claim another School. Please contact admin for more details",'success');
-          } else if(result.onlyOneRequestAllowed) {
-            toastr.error(`You are not allowed to do more than one request as you have already created request for School Name:${result.schoolName}`,'Error');
-          }else if(result.emailSuccess) {
-            toastr.error("We have sent your request to school admin. We will assist you soon :)",'success');
-          }
+        // Show confirmation Modal before claiming a school.
+        this.setState({
+            showConfirmationModal: true,
         });
     }
   }
+
+  cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
+
+handleClaimASchool = event => {
+  console.log("claimASchool called", Meteor.user(), this);
+  const { toastr, schoolCardData } = this.props;
+  const user = Meteor.user();
+  const payload = {
+    schoolId: schoolCardData._id,
+    schoolName: schoolCardData.name,
+    userId: user._id,
+    userEmail: user.emails[0].address,
+    userName: user.profile.firstName,
+    schoolEmail: schoolCardData.email
+  };
+  this.setState({ isLoading: true, showConfirmationModal: false });
+  Meteor.call("school.claimSchoolRequest", payload, (err, result) => {
+    console.log("result", result);
+    this.setState({ isLoading: false });
+    if (result.alreadyRejected) {
+      toastr.error(
+        "Your request has been rejected to manage this school by school Admin",
+        "Error"
+      );
+    } else if (result.pendingRequest) {
+      toastr.error(
+        "We are in the process of resolving your claim. We will contact you as soon as we reach a verdict or need more information. Thanks for your patience.",
+        "Error"
+      );
+    } else if (result.alreadyManage) {
+      toastr.success(
+        "You already manage a school. You cannot claim another School. Please contact admin for more details",
+        "success"
+      );
+    } else if (result.onlyOneRequestAllowed) {
+      toastr.error(
+        `You are not allowed to do more than one request as you have already created request for School Name:${result.schoolName}`,
+        "Error"
+      );
+    } else if (result.emailSuccess) {
+      toastr.error(
+        "We have sent your request to school admin. We will assist you soon :)",
+        "success"
+      );
+    }
+  });
+};
   render() {
     console.log("this.props checkUserAccess",this.props)
     const {
         classes,
         schoolCardData,
+        toastr
       } = this.props;
     //console.log(ShowDetails,"adsljfj")
     return (
       <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
         {
           this.state.isLoading && <ContainerLoader />
+        }
+        {
+          this.state.showConfirmationModal && <ConfirmationModal
+              open={this.state.showConfirmationModal}
+              submitBtnLabel="Yes"
+              cancelBtnLabel="Cancel"
+              message="Are you sure?"
+              onSubmit={()=>{this.handleClaimASchool(schoolCardData)}}
+              onClose={this.cancelConfirmationModal}
+              toastr = {toastr}
+              schoolCardData= {schoolCardData}
+          />
         }
         <div>
           <CardImageWrapper ref={(div) => this.imgContainer = div} style={{height: this.state.imageContainerHeight}}>
@@ -202,7 +244,7 @@ class SchoolCard extends Component {
             <Grid container>
                 <Grid item xs={6} sm={6} className={classes.marginAuto}>
                   {
-                    <PrimaryButton fullWidth label="Claim" onClick={this.handleClaimASchool}/>
+                    <PrimaryButton fullWidth label="Claim" onClick={this.showConfirmationModal}/>
                   }
                 </Grid>
             </Grid>
