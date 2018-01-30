@@ -2,6 +2,8 @@ import isEmpty from 'lodash/isEmpty';
 import generator from 'generate-password';
 
 import './fields.js';
+import { userRegistrationAndVerifyEmail } from "/imports/api/email";
+
 
 Meteor.methods({
 	"user.createUser": function({ name, email, userType, sendMeSkillShapeNotification}) {
@@ -11,7 +13,6 @@ Meteor.methods({
 			    length: 10,
 			    numbers: true
 			});
-
 			const accessType = userType || "Anonymous";
 
 			const userId = Accounts.createUser({
@@ -24,9 +25,12 @@ Meteor.methods({
 	            	sendMeSkillShapeNotification: sendMeSkillShapeNotification,
 	            },
 	        });
-
             Roles.addUsersToRoles(userId, accessType);
-	        Accounts.sendVerificationEmail(userId);
+            const userRec = Accounts.generateVerificationToken(userId);
+	        let urlToken = `${Meteor.absoluteUrl()}verify-email/${userRec.token}`;
+	        let user = Meteor.users.findOne(userId);
+	        let fromEmail = "Notices@SkillShape.com";
+	        userRegistrationAndVerifyEmail(user,urlToken, password,fromEmail, email);
 
 		} else {
 			throw new Meteor.Error("Cannot process due to lack of information");
