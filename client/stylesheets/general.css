@@ -10,10 +10,6 @@ html, body, #app {
     padding: 0;
 }
 
-li {
-    list-style: none;
-}
-
 .material-icons {
     font-family: 'Material Icons','serif';
 }

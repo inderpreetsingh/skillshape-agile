@@ -64,7 +64,13 @@ body {
   text-align: center;
 }
 
+/*Used for remove "Powered by google" on location input drop-down */
 .pac-container:after {
   background-image: none !important;
   height: 0px;
+}
+
+li {
+  display: list-item;
+  list-style-position: inside;
 }

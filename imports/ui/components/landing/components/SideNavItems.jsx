@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import  { withStyles } from 'material-ui/styles';
 import { browserHistory } from 'react-router';
-import { get } from 'lodash';
+import { get, isEmpty, size } from 'lodash';
 
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
@@ -14,6 +14,7 @@ import LoginButton from './buttons/LoginButton.jsx';
 import {specialFont} from './jss/helpers.js';
 import { checkSuperAdmin, getUserSchool } from '/imports/util';
 import NestedNavItems from './NestedNavItems';
+import SchoolSubMenu from './schoolSubMenu';
 
 const styles = {
     drawerList : {
@@ -111,14 +112,14 @@ const LoginUserSideNav = (props) => (
             iconName="perm_contact_calendar"
             onClick={() => browserHistory.push('/MyCalendar')}
         />
-        <NestedNavItems
-            button
-            name="Manage my School"
-            classes={props.classes}
-            iconName="school"
-            childData={props.mySchool}
-            onClick={props.childItemOnClick}
-        />
+        {
+            !isEmpty(props.mySchool) && <SchoolSubMenu
+                data={props.mySchool}
+                classes={props.classes}
+                onClick={props.childItemOnClick}
+            />
+        }
+
         <NestedNavItems
             button
             name="Classes Attending"

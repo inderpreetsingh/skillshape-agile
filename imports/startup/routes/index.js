@@ -21,6 +21,7 @@ import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
 import SchoolUpload from '/imports/ui/components/schoolUpload';
 // import SchoolPriceView from '/imports/ui/components/embed/schoolPriceView';
 import VerifyEmail from '/imports/ui/components/account/verifyEmail';
+import SkillShapeSchool from '/imports/ui/components/skillshape-school';
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
@@ -42,6 +43,7 @@ export default Routes = () => (
         <Route path="/claimSchool" component={ClaimSchool}/>
         <Route path="/verify-email/:token" component={VerifyEmail}/>
         <Route path="/claimSchool" component={ClaimSchool}/>
+        <Route path="/skillShape-school" component={SkillShapeSchool}/>
       </Route>
 
       <Route path="/" component={AdminLayout}>
