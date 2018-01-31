@@ -292,12 +292,12 @@ Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, rol
     filter = {}
     limit = { limit: limit }
     schoolList = School.find({ is_publish: 'N' }).fetch();
-    if (schoolName) {
-      filter.name = { '$regex': '' + schoolName + '', '$options': '-i' };
-    }
     let currentUser = Meteor.users.findOne(this.userId);
     if(currentUser) {
-        filter = { $and: [ { userId: { $ne: this.userId } }, { email: { $ne: currentUser.emails.address } } ] };
+        filter = { $and: [ { userId: { $ne: this.userId } }, { email: { $ne: `currentUser.emails[0].address` } } ] };
+    }
+    if (schoolName) {
+      filter.name = { '$regex': '' + schoolName + '', '$options': '-i' };
     }
     AllSchoolIds = []
     console.log("coords",coords);
