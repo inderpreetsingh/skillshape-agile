@@ -14,7 +14,7 @@ export default function (props) {
             schools.map((school, index) => {
               return (
                    <Grid item key={index} md={4} sm={6} lg={3} xs={12}>
-                       <SchoolCard schoolCardData={school}/>
+                       <SchoolCard schoolCardData={school} handleClaimASchool={this.props.handleClaimASchool}/>
                    </Grid>
               )
             })

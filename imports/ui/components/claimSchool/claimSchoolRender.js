@@ -16,7 +16,10 @@ export default function () {
                 locationInputChanged={this.locationInputChanged}
              />
         </Sticky>
-         <ClaimSchoolList filters={this.state.filters} />
+         <ClaimSchoolList
+            filters={this.state.filters}
+            handleClaimASchool={this.handleClaimASchool}
+           />
        </div>
    )
  }
