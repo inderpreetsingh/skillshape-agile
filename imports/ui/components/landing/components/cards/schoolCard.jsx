@@ -139,6 +139,7 @@ class SchoolCard extends Component {
   showConfirmationModal =() => {
     console.log("claimASchool called",Meteor.user(),this);
     const user = Meteor.user();
+    const { toastr} = this.props;
     if(!user) {
       // Need to show error in toaster
       toastr.error('You must be signed in to claim a school. [Sign In] or [Sign Up]', 'Error');
