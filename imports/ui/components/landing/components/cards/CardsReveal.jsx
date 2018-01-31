@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { CSSTransition } from 'react-transition-group';
+import { CSSTransition, Transition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import { withStyles } from 'material-ui/styles';
@@ -99,8 +99,8 @@ const CardDescriptionActionArea = styled.div`
   padding: 5px;
 `;
 
-const CardDescription = ({ classes, name, hideCardContent, descriptionContent }) => (
-  <CardDescriptionWrapper>
+const CardDescription = ({ key, classes, className, name, hideCardContent, descriptionContent }) => (
+  <CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
 
     <CardDescriptionHeader>
       <CardContentTitle>{name}</CardContentTitle>
@@ -113,6 +113,19 @@ const CardDescription = ({ classes, name, hideCardContent, descriptionContent })
     {descriptionContent}
   </CardDescriptionWrapper>
 );
+
+const Reveal = ({children, ...props}) => {
+  console.log(props,"props..");
+  return (
+    <CSSTransition
+      {...props}
+      classNames="reveal-card"
+      timeout={500}
+    >
+    {children}
+    </CSSTransition>
+  );
+}
 
 class CardsReveal extends Component {
   state = {
@@ -140,12 +153,6 @@ class CardsReveal extends Component {
   componentWillUnMount() {
     window.addEventListener("resize", this.updateDimensions);
   }
-  componentDidCatch(error, info) {
-    // Display fallback UI
-    // this.setState({ hasError: true });
-    // You can also log the error to an error reporting service
-    console.info("The error is this...",error, info);
-  }
   render() {
     const { name, classTypeImg, descriptionContent, body, classes } = this.props;
 
@@ -169,18 +176,18 @@ class CardsReveal extends Component {
             <CardContentBody>{body}</CardContentBody>
           </CardContent>
         </div>
+        {console.log(this.state.revealCard,"changing state...")}
 
-        <CSSTransition
-          classNames="reveal-card" timeout={200}>
-          {this.state.revealCard && (
-            <CardDescription
+        <Transition timeout={{enter : 0, exit: 0}} in={this.state.revealCard}>
+          {(state) => (<CardDescription
               descriptionContent={descriptionContent}
               hideCardContent={this.hideCardContent}
               name={name}
               classes={classes}
-            />
-          )}
-        </CSSTransition>
+              className={state}
+              key={this.props._id}
+            />)}
+        </Transition>
       </Paper>
     );
   }

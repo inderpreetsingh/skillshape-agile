@@ -1,0 +1,30 @@
+/*
+  FADE ANIMATION FOR CARDS TIME BOX
+*/
+
+.class-time-transition {
+  transition: background-color .250s linear, color .250s linear;
+}
+
+.class-time-after-transition:after {
+  transition: background-color .200s linear;
+}
+
+.add-to-calendar:after {
+  background-color: rgba($primary-color, 0.2);
+}
+
+.add-to-calendar-clock {
+  border: 2px solid $primary-color;
+  color: $primary-color;
+}
+
+.remove-from-calendar:after {
+  background-color: $focal-color;
+  opacity: 1;
+}
+
+.remove-from-calendar-clock {
+  border: 2px solid $seconday-dark-color;
+  color: $seconday-dark-color;
+}

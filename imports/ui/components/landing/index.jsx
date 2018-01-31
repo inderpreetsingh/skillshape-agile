@@ -313,7 +313,7 @@ class Landing extends Component {
                     )}
                  </div>
 
-
+               
                 <Element name="content-container" className="element">
                     <ClassTypeList
                         locationName={this.state.locationName}
@@ -328,6 +328,8 @@ class Landing extends Component {
 
                     />
                 </Element>
+
+
                 {/*
                  <Element name="content-container" className="element">
                   <MainContentWrapper>

@@ -30,7 +30,7 @@ const withSlider = (WrappedComponent,sliderConfig) => (props) => {
     responsive: [{ breakpoint: helpers.tablet, settings: { slidesToShow: sliderConfig.tablet } }, { breakpoint: helpers.mobile, settings: { slidesToShow: sliderConfig.mobile }}]
   };
 
-  console.log('Props...',props,WrappedComponent);
+  // console.log('Props...',props,WrappedComponent);
   return (
     <Container>
       <Slider {...settings}>
