@@ -148,13 +148,13 @@ class Landing extends Component {
       if(this.props.location.query && this.props.location.query.claimRequest) {
 
         if(this.props.location.query.type != 'reject') {
-          Meteor.call('approveSchoolClaimRequest',this.props.location.query.claimRequest);
+          Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest);
         } else if(this.props.location.query.schoolRegister) {
-            Meteor.call('approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
+            Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
               Events.trigger("registerAsSchool",{userType: "School"})
             });
         } else if(this.props.location.query.redirectUrl) {
-            Meteor.call('approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
+            Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
                 if(!this.props.currentUser) {
                   // Let the admin user login if user is not login.
                   Events.trigger("loginAsSchoolAdmin",{redirectUrl: this.props.location.query.redirectUrl});

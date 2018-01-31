@@ -153,50 +153,7 @@ class SchoolCard extends Component {
 
   cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
-handleClaimASchool = event => {
-  console.log("claimASchool called", Meteor.user(), this);
-  const { toastr, schoolCardData } = this.props;
-  const user = Meteor.user();
-  const payload = {
-    schoolId: schoolCardData._id,
-    schoolName: schoolCardData.name,
-    userId: user._id,
-    userEmail: user.emails[0].address,
-    userName: user.profile.firstName,
-    schoolEmail: schoolCardData.email
-  };
-  this.setState({ isLoading: true, showConfirmationModal: false });
-  Meteor.call("school.claimSchoolRequest", payload, (err, result) => {
-    console.log("result", result);
-    this.setState({ isLoading: false });
-    if (result.alreadyRejected) {
-      toastr.error(
-        "Your request has been rejected to manage this school by school Admin",
-        "Error"
-      );
-    } else if (result.pendingRequest) {
-      toastr.error(
-        "We are in the process of resolving your claim. We will contact you as soon as we reach a verdict or need more information. Thanks for your patience.",
-        "Error"
-      );
-    } else if (result.alreadyManage) {
-      toastr.success(
-        "You already manage a school. You cannot claim another School. Please contact admin for more details",
-        "success"
-      );
-    } else if (result.onlyOneRequestAllowed) {
-      toastr.error(
-        `You are not allowed to do more than one request as you have already created request for School Name:${result.schoolName}`,
-        "Error"
-      );
-    } else if (result.emailSuccess) {
-      toastr.error(
-        "We have sent your request to school admin. We will assist you soon :)",
-        "success"
-      );
-    }
-  });
-};
+
   render() {
     console.log("this.props checkUserAccess",this.props)
     const {
@@ -215,8 +172,8 @@ handleClaimASchool = event => {
               open={this.state.showConfirmationModal}
               submitBtnLabel="Yes"
               cancelBtnLabel="Cancel"
-              message="Are you sure?"
-              onSubmit={()=>{this.handleClaimASchool(schoolCardData)}}
+              message="Do you really want to claim this school ?"
+              onSubmit={()=>{this.props.handleClaimASchool(schoolCardData, this)}}
               onClose={this.cancelConfirmationModal}
               toastr = {toastr}
               schoolCardData= {schoolCardData}
