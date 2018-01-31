@@ -73,6 +73,7 @@ const NoOfClasses = styled.p`
 
 const AddToCartSection = styled.div`
   margin-left: ${helpers.rhythmDiv * 2}px;
+  cursor: pointer;
 `;
 
 const RightSection = styled.div`
@@ -95,8 +96,8 @@ const Package = (props) => (
           <NoOfClasses>for {props.noOfClasses} classes</NoOfClasses>
         </PriceSection>
 
-        <AddToCartSection>
-          <Cart onClick={props.onAddToCartIconButtonClick}/>
+        <AddToCartSection >
+          <Cart onClick={props.onAddToCartIconButtonClick} />
         </AddToCartSection>
       </RightSection>
     </Wrapper>

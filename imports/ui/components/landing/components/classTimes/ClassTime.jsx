@@ -36,7 +36,7 @@ const ClassContainer = styled.div`
     z-index: -1;
   }
 
-  @media screen and (max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
     width: 100%;
   }
 `;

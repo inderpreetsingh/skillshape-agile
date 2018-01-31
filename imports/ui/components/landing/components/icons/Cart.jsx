@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import * as helpers from '../jss/helpers.js';
 
 const Cart = (props) => (
-  <SVGInline className={props.className} height={props.height} width={props.width} svg={`<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+  <SVGInline onClick={props.onClick} className={props.className} height={props.height} width={props.width} svg={`<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	   viewBox="0 0 384 384" style="enable-background:new 0 0 384 384;" xml:space="preserve">
      <circle style="fill:#E05B49;" cx="192" cy="192" r="192"/>
      <path style="opacity:0.1;enable-background:new    ;" d="M383.767,201.205l-83.926-83.927c-0.044-0.044-0.088-0.089-0.132-0.132
@@ -53,6 +53,7 @@ Cart.propTypes = {
   height: PropTypes.string,
   width: PropTypes.string,
   className: PropTypes.string,
+  onClick: PropTypes.func
 }
 
 Cart.defaultProps = {

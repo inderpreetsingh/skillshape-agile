@@ -6,9 +6,7 @@ import styled from 'styled-components';
 import { MuiThemeProvider } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
-import BasicDescription from './components/school/BasicDescription';
 import ReviewsBar from './components/school/ReviewsBar';
-import SchoolDetails from './components/school/details/SchoolDetails';
 import ClassTypeCover from './components/school/ClassTypeCover';
 import PackagesList from './components/school/packages/PackagesList'
 import ImgSlider from './components/school/ImgSlider';
