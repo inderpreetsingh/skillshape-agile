@@ -181,14 +181,6 @@ export const sendPriceInfoRequestEmail = function({
     ownerName,
     currentUserName
 }) {
-    console.log(
-        toEmail,
-        fromEmail,
-        updatePriceLink,
-        ownerName,
-        currentUserName,
-        "wdddddddddddd"
-    );
     if (Meteor.isServer) {
         Email.send({
             to: toEmail, //emailObj.to
