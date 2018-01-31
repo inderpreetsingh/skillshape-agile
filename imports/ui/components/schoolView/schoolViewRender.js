@@ -22,6 +22,7 @@ import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTypeList from '/imports/ui/components/landing/components/classType/classTypeList.jsx';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 
 export default function() {
 
@@ -60,6 +61,17 @@ export default function() {
 		<div className="content">
       {
         this.state.isLoading && <ContainerLoader />
+      }
+
+      {
+        this.state.showConfirmationModal && <ConfirmationModal
+            open={this.state.showConfirmationModal}
+            submitBtnLabel="REQUEST PRICING"
+            cancelBtnLabel="Cancel"
+            message="No prices have been added by the school. Please click this button to request the school complete their pricing info?"
+            onSubmit={()=>{this.requestPricingInfo(schoolData)}}
+            onClose={this.cancelConfirmationModal}
+        />
       }
 			{ (claimSchoolModal || claimRequestModal || successModal) && <CustomModal
           className={successModal ? "success-modal" : "info-modal" }
@@ -192,7 +204,6 @@ export default function() {
           </Grid>
         </Grid>
         <div ref={(el) => { this.schoolPrice = el; }}>
-          {(enrollmentFee && enrollmentFee.length > 0 || classPricing && classPricing.length > 0 || monthlyPricing && monthlyPricing.length > 0 ) && (
               <Grid container className={classes.content}>
                 <Grid item xs={12} sm={12}>
                   <Card className={classes.content}>
@@ -203,6 +214,13 @@ export default function() {
                         </figure>
                       </h2>
                     </div>
+                    {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
+                      <div style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
+                        <Button onClick={this.handlePricingInfoRequestModal} color="primary"  dense raised>
+                            Request Pricing Info
+                        </Button>
+                      </div> : ''
+                    }
                     <Grid container className={classes.themeSpacing}>
                       {enrollmentFee && enrollmentFee.length > 0 ?
                       <Grid item xs={12}>
@@ -385,7 +403,6 @@ export default function() {
                 </Grid>
               </Grid>
             )
-          }
         </div>
 
         {/*<div className="card">

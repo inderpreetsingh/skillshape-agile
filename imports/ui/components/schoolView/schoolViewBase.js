@@ -274,6 +274,33 @@ export default class SchoolViewBase extends React.Component {
         node.scrollIntoView({ behavior: "smooth"});
     }
 
+    // This function is used to Open pricing info request Modal
+    handlePricingInfoRequestModal = () => {
+      console.log("handlePricingInfoRequestModal")
+        // Set state for opening Price info Request Modal.
+        this.setState({
+            showConfirmationModal: true,
+        });
+    }
+
+    cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
+
+
+    // Request Pricing info using this function
+    requestPricingInfo = (schoolData) => {
+      // Close Modal and Do request for pricing info.
+      this.setState({showConfirmationModal: false});
+      const { toastr } = this.props;
+      Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
+        // Check sucess method in response and send confirmation to user using a toastr.
+        if(res.emailSent) {
+          toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
+        } else if(!res.login) {
+          toastr.success('Please login or sign up before creating request','success')
+        }
+      });
+    }
+
 // This is used to send purchase request email when user wants to purchase a package.
 handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
   // Start loading

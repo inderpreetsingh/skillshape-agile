@@ -172,3 +172,54 @@ export const userRegistrationAndVerifyEmail = function(
             ${Meteor.absoluteUrl()}`
     });
 };
+
+
+export const sendPriceInfoRequestEmail = function({
+    toEmail,
+    fromEmail,
+    updatePriceLink,
+    ownerName,
+    currentUserName
+}) {
+    console.log(
+        toEmail,
+        fromEmail,
+        updatePriceLink,
+        ownerName,
+        currentUserName,
+        "wdddddddddddd"
+    );
+    if (Meteor.isServer) {
+        Email.send({
+            to: toEmail, //emailObj.to
+            from: fromEmail,
+            replyTo: "Notices@SkillShape.com",
+            subject: "Pricing info request received",
+            text: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
+            \n\nThanks, \n\nEveryone from SkillShape.com`
+        });
+    }
+};
+
+export const sendEmailToStudentForPriceInfoUpdate = function(
+    userData,
+    schoolData,
+    classTypeName
+) {
+    if (Meteor.isServer) {
+        const userName =
+            get(userData, "profile.name") ||
+            `${get(userData, "profile.firstName")} ${get(
+                userData,
+                "profile.lastName"
+            )}`;
+        Email.send({
+            to: "sam@skillshape.com", //userData.emails[0].address;,
+            from: "Notices@SkillShape.com",
+            subject: "School Updated",
+            text: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(
+                `SchoolAdmin/${schoolData._id}/edit?tabValue=2`
+            )} to view their new information and join the class! \n\nThanks, \n\nEveryone from SkillShape.com`
+        });
+    }
+};

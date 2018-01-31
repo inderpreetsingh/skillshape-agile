@@ -5,8 +5,10 @@ import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "./fields";
 import { sendPackagePurchaseEmail } from "/imports/api/email";
 import ClaimSchoolRequest from "/imports/api/claimSchoolRequest/fields.js";
+import PriceInfoRequest from "/imports/api/priceInfoRequest/fields.js";
 import { sendClaimASchoolEmail } from "/imports/api/email";
 import { sendConfirmationEmail } from "/imports/api/email";
+import { sendPriceInfoRequestEmail } from "/imports/api/email";
 
 Meteor.methods({
     editSchool: function(id, data) {
@@ -229,6 +231,61 @@ Meteor.methods({
                 }
             );
             return true;
+        }
+    },
+    "school.requestPricingInfo": function(schoolData) {
+        if (this.userId && schoolData._id) {
+            console.log("classTimesRequest.notifyToSchool -->>", schoolData._id)
+            const schoolId = schoolData._id;
+            // Check if reuest for this user already exist in DB then just update `notification` and send Email.
+            const priceInfoRequest = PriceInfoRequest.findOne({schoolId, userId: this.userId });
+            console.log("priceInfoRequest -->>",priceInfoRequest)
+            if(priceInfoRequest) {
+                // Update `notification: false` in `PriceInfoRequest` so that duplicate entries not created for `PriceInfoRequest`;
+                PriceInfoRequest.update({_id:priceInfoRequest._id},{$set:{notification: true}});
+            } else {
+                const requestObj = {
+                    schoolId,
+                    createdAt: new Date(),
+                    notification: true,
+                    userId: this.userId,
+                }
+                PriceInfoRequest.insert(requestObj);
+
+                let superAdminData;
+                const currentUserData = Meteor.users.findOne({_id: this.userId});
+                const schoolOwnerData = Meteor.users.findOne({"profile.schoolId": schoolId});
+
+                if(!schoolOwnerData) {
+                    superAdminData = Meteor.users.findOne({"roles": "Superadmin"});
+                }
+            }
+            // Send Email to Admin of School if admin available
+            const toEmail = 'sam@skillshape.com'; // Needs to replace by Admin of School
+            const fromEmail = 'Notices@SkillShape.com';
+            const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
+            let ownerName;
+            if(schoolData && schoolData.userId) {
+                // Get Admin of School As school Owner
+                let currentUser = Meteor.users.findOne(schoolData.userId);
+                ownerName= currentUser.profile.firstName;
+            }
+            if(!ownerName) {
+                // Owner Name will be Sam
+                ownerName = 'Sam'
+            }
+            let currentUser = Meteor.users.findOne(this.userId);
+            console.log("currentUser===>",currentUser);
+            if(currentUser) {
+                let currentUserName = currentUser.profile.firstName;
+                sendPriceInfoRequestEmail({toEmail,fromEmail,updatePriceLink, ownerName, currentUserName});
+                return {emailSent:true}
+            } else {
+                return {login:false}
+            }
+
+        } else {
+            throw new Meteor.Error("Permission denied!!");
         }
     }
 });
