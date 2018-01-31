@@ -61,6 +61,25 @@ material ui search bar */
   Cards Reveal Animation
 */
 
+
+.reveal-card {
+  transform: scaleY(0);
+  transition: transform 250ms ease-in;
+}
+
+.reveal-card-entered {
+  transform: scaleY(1);
+}
+
+.reveal-card-exiting {
+  transform: scaleY(1);
+}
+
+.reveal-card-exited {
+  transform: scaleY(0);
+}
+
+
 .reveal-card-enter {
   transform: scaleY(0);
 }
@@ -209,9 +228,24 @@ material ui search bar */
 
 @keyframes fade {
   from {
-    opacity: 0;
+    background-color: green;
   }
   to {
-    opacity: 1;
+    background-color: gray;
+  }
+}
+
+
+/*
+  CLASS TIME BOX
+*/
+
+@keyframes add-to-calender {
+  from {
+    background-color: rgb(76, 175, 80);
+    opacity: 0.2;
+  }
+  to {
+    background-color: gray;
   }
 }

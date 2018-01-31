@@ -6,20 +6,18 @@ import styled from 'styled-components';
 import { MuiThemeProvider } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
-import BasicDescription from './components/school/BasicDescription';
 import ReviewsBar from './components/school/ReviewsBar';
-import SchoolDetails from './components/school/details/SchoolDetails';
 import ClassTypeCover from './components/school/ClassTypeCover';
+import PackagesList from './components/school/packages/PackagesList'
 import ImgSlider from './components/school/ImgSlider';
-import PackagesList from './components/school/prices/PackagesList';
+import ReviewsSlider from './components/school/ReviewsSlider.jsx';
 import SchoolOfferings from './components/school/SchoolOfferings';
 import ClassTypeDescription from './components/school/ClassTypeDescription.jsx';
 import ClassTypeInfo from './components/school/ClassTypeInfo.jsx';
+
 import StarsBar from './components/StarsBar.jsx';
-import ReviewsSlider from './components/school/ReviewsSlider.jsx';
 import ClassTimesSlider from './components/classTimes/ClassTimesSlider.jsx';
 import MyCalendar from './components/MyCalendar';
-
 import BrandBar from './components/BrandBar';
 import TopSearchBar from './components/TopSearchBar';
 import Footer from './components/footer/index.jsx';
@@ -152,6 +150,20 @@ const MainInner = styled.div`
   }
 `;
 
+const PackagesWrapper = styled.div`
+  ${helpers.flexDirectionColumn}
+  width: 100%;
+`;
+
+const PackagesTitle = styled.h2`
+  text-align: center;
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  font-style: italic;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
 class ClassType extends Component {
   render() {
 
@@ -194,8 +206,15 @@ class ClassType extends Component {
                 <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
                 <ClassTimesBar classTimesData={classTimesBarData} />
               </ClassTimesWrapper>
-
             </MainInner>
+
+            <PackagesWrapper>
+              <PackagesTitle>Pay only for what you need</PackagesTitle>
+              <PackagesList
+                perClassPackagesData={perClassPackagesData}
+                monthlyPackagesData={monthlyPackagesData}
+              />
+            </PackagesWrapper>
           </Main>
 
         </Wrapper>

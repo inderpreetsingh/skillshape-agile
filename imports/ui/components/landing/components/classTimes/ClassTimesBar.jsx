@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { CSSTransitionGroup } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
@@ -23,6 +23,16 @@ const ClassTimesWrapper = styled.div`
 const TransitionHandler = styled.div`
   transition: all .8s linear;
 `;
+
+const Fade = ({ children, ...props }) => (
+  <CSSTransition
+    {...props}
+    timeout={1000}
+    classNames="fade"
+  >
+    {children}
+  </CSSTransition>
+);
 
 const ClassTimesBar = (props) => (
   <Wrapper>

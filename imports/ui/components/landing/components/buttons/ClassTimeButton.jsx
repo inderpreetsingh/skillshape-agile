@@ -16,6 +16,7 @@ const styles = {
     padding: '0 16px',
     backgroundColor: helpers.primaryColor,
     height: 32,
+    minHeight: 'auto',
     '&:hover': {
       backgroundColor: helpers.primaryColor,
     },
@@ -35,12 +36,10 @@ const styles = {
   },
   classTimeButtonLabel: {
     color: helpers.lightTextColor,
-    lineHeight: 2,
     textTransform: 'none',
   },
   classTimeButtonGhostLabel: {
     color: helpers.cancel,
-    lineHeight: 2,
     textTransform: 'none',
     '&:hover': {
       color: helpers.lightTextColor,
