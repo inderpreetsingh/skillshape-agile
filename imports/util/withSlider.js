@@ -48,8 +48,4 @@ const withSlider = (WrappedComponent,sliderConfig) => (props) => {
   )
 }
 
-withSlider.defaultProps = {
-  padding: helpers.rhythmDiv * 2
-}
-
 export default withSlider;
