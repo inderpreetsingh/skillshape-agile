@@ -83,7 +83,7 @@ export default function (props) {
 								                         						{label: "Room", key: "roomId"}
 								                         					]
 								                         					if(itemkey === "oneTime") {
-								                         						fields.unshift({label: "Start Date", key: "startDate"})
+								                         						fields.unshift({label: "Date", key: "startDate"})
 								                         					} else {
 								                         						fields.unshift({label: "Day", value: itemkey})
 								                         					}

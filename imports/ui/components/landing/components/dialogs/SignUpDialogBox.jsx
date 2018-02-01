@@ -73,6 +73,14 @@ const styles = {
       padding: `0 ${helpers.rhythmDiv}px`
     }
   },
+  dialogActionsRootSubmitButton: {
+    width: '100%',
+    padding: `0 ${helpers.rhythmDiv * 3}px`,
+    margin: 0,
+    '@media screen and (max-width : 500px)': {
+      padding: `0 ${helpers.rhythmDiv * 3}px`
+    }
+  },
   iconButton: {
     height: 'auto',
     width: 'auto'
@@ -322,14 +330,15 @@ class SignUpDialogBox extends Component {
                                 <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
                             }
                         </DialogContent>
-
+                        <DialogActions classes={{root : classes.dialogActionsRootSubmitButton, action: classes.dialogAction}}>
+                            <PrimaryButton type="submit" label="Sign Up" onClick={onSignUpButtonClick} noMarginBottom />
+                        </DialogActions>
                         <DialogActions classes={{root : classes.dialogActionsRootButtons, action: classes.dialogAction}}>
                             <DialogActionWrapper>
                                 <Typography> Already a Skill Shape Member ?</Typography>
                                 <LoginButtonWrapper>
                                   <LoginButton />
                                 </LoginButtonWrapper>
-                                <PrimaryButton type="submit" label="Sign Up" onClick={onSignUpButtonClick} noMarginBottom />
                             </DialogActionWrapper>
                         </DialogActions>
                     </form>

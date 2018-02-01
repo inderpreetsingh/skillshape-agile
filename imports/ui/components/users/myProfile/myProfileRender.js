@@ -211,28 +211,7 @@ export default function() {
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
-                    <Card className={classes.card}>
-                        <CardHeader
-                            title="Media Settings"
-                            action={
-                                <IconButton
-                                  className={classnames(classes.expand, {
-                                    [classes.expandOpen]: this.state.mediaExpanded,
-                                  })}
-                                  onClick={this.handleExpandClick.bind(this, "mediaExpanded")}
-                                  aria-expanded={this.state.mediaExpanded}
-                                  aria-label="Show more"
-                                >
-                                  <ExpandMoreIcon />
-                                </IconButton>
-                            }
-                        />
-                        <Collapse in={this.state.mediaExpanded} timeout="auto" unmountOnExit>
-                            <CardContent>
-                                No setting found
-                            </CardContent>
-                        </Collapse>
-                    </Card>
+
                 </Grid>
 
             </Grid>

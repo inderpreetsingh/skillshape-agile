@@ -86,7 +86,7 @@ export class OneTimeRow extends React.Component {
 		                            <MaterialDatePicker
 		                                required={true}
 		                                hintText={"Start Date"}
-		                                floatingLabelText={"Start Date *"}
+		                                floatingLabelText={"Date *"}
 		                                value={data ? data.startDate: ""}
 		                                onChange={this.handleChangeDate.bind(this, index, "startDate")}
 		                                fullWidth={true}
