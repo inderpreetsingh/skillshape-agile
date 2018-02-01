@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '/imports/util';
 import ClassPriceRender from './classPriceRender';
+import { toastrModal } from '/imports/util';
+
 
 const styles = theme => {
     return {
@@ -54,6 +56,14 @@ const styles = theme => {
         },
         paddingLeft: {
             paddingLeft: theme.spacing.unit * 2
+        },
+        notifyExplanation: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            margin: '24px',
+            padding: '10px',
+            border: '1px solid rgb(221, 221, 221)',
+            alignItems: 'center'
         }
     }
 }
@@ -68,7 +78,18 @@ class ClassPrice extends Component {
         }
     }
 
-    handleFormModal = ()=> this.setState({showForm: false, formData: null})
+    handleFormModal = ()=> this.setState({showForm: false, formData: null});
+
+    // Update Class time from prices page.
+    handleUpdateClassTime = () => {
+        const {schoolId, toastr} = this.props;
+        // Send Email to Students for update.
+        Meteor.call('classPricing.notifyStudentForPricingUpdate',{schoolId}, (err, res)=> {
+            if(res && res.emailSent) {
+                toastr.success('Your Email regarding pricing info update has been sent successfully', 'success');
+            }
+        });
+    }
 
     render() {
         return ClassPriceRender.call(this, this.props, this.state)
@@ -79,4 +100,4 @@ ClassPrice.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ClassPrice);
+export default withStyles(styles)(toastrModal(ClassPrice));

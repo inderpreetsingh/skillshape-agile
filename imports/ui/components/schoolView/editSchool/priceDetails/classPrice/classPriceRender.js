@@ -14,7 +14,7 @@ import PanelHeader from '../panelHeader';
 
 export default function () {
 
-	console.log("classPrice render props -->>",this.props)
+	console.log("classPrice render props -->>",this)
 	const { classes, schoolId, classPricingData } = this.props;
 	console.log("classPrice classes -->>",classes)
 
@@ -28,6 +28,12 @@ export default function () {
           			onClose={this.handleFormModal}
           		/>
           	}
+               <div className={classes.notifyExplanation}>
+                    <Typography type="caption">Click here to notify students and potential students of your updates to prices!</Typography>
+                    <Button onClick={() => this.handleUpdateClassTime()} color="accent" raised dense>
+                         Update Students
+                    </Button>
+               </div>
                <PanelHeader btnText="Add Per Class Package" title="Per Class Packages" caption="Different Payment Packages can cover different payment methods, Class Types, or Durations" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
                <Grid container className={classes.paddingLeft}>

@@ -195,8 +195,7 @@ export const sendPriceInfoRequestEmail = function({
 
 export const sendEmailToStudentForPriceInfoUpdate = function(
     userData,
-    schoolData,
-    classTypeName
+    schoolData
 ) {
     if (Meteor.isServer) {
         const userName =
@@ -206,12 +205,11 @@ export const sendEmailToStudentForPriceInfoUpdate = function(
                 "profile.lastName"
             )}`;
         Email.send({
-            to: "sam@skillshape.com", //userData.emails[0].address;,
+            to: "sam@skillshape.com", // Needs to replace this with requester's Email.
             from: "Notices@SkillShape.com",
-            subject: "School Updated",
-            text: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(
-                `SchoolAdmin/${schoolData._id}/edit?tabValue=2`
-            )} to view their new information and join the class! \n\nThanks, \n\nEveryone from SkillShape.com`
-        });
+            subject: "School has updated pricing info",
+            text: `Hi ${userName}, \n${schoolData.name} has updated their prices. Please go to \n ${Meteor.absoluteUrl(
+                `SchoolAdmin/${schoolData._id}/edit`)} to view their new information! \n\nThanks, \n\nEveryone from SkillShape.com`
+            });
     }
 };

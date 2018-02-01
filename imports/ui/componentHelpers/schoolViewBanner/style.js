@@ -4,7 +4,6 @@ export default styles = theme => {
       position: "relative",
     },
     cardMedia: {
-      backgroundColor: theme.palette.primary[500],
       position: "relative",
       minHeight:146,
       textAlign: 'center',

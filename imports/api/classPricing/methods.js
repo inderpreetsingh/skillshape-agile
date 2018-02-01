@@ -1,5 +1,12 @@
+import isEmpty from "lodash/isEmpty";
+
 import ClassPricing from "./fields";
 import ClassType from "/imports/api/classType/fields";
+import PriceInfoRequest from "/imports/api/priceInfoRequest/fields";
+import School from "/imports/api/school/fields";
+import { sendEmailToStudentForPriceInfoUpdate } from "/imports/api/email";
+
+
 
 Meteor.methods({
     "classPricing.addClassPricing": function({doc}) {
@@ -57,6 +64,24 @@ Meteor.methods({
             }
 
             return ClassPricing.remove({ _id: doc._id });
+        } else {
+            throw new Meteor.Error("Permission denied!!");
+        }
+    },
+    "classPricing.notifyStudentForPricingUpdate": function({schoolId}) {
+        if(this.userId) {
+            const priceInfoRequestData = PriceInfoRequest.find({schoolId,notification: true}).fetch()
+            if(!isEmpty(priceInfoRequestData)) {
+                for(let obj of priceInfoRequestData) {
+                    const userData = Meteor.users.findOne({_id: obj.userId});
+                    const schoolData = School.findOne({_id: obj.schoolId})
+                    if(userData && schoolData) {
+                        PriceInfoRequest.update({ _id: obj._id }, { $set: {notification: false} })
+                        sendEmailToStudentForPriceInfoUpdate(userData, schoolData)
+                    }
+                }
+                return {emailSent:true};
+            }
         } else {
             throw new Meteor.Error("Permission denied!!");
         }
