@@ -26,7 +26,9 @@ import SkillShapeSchool from '/imports/ui/components/skillshape-school';
 import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
 
-export default Routes = () => (
+import {componentLoader} from "/imports/util";
+
+export default Routes = componentLoader((props) => (
   <Router history={browserHistory}>
     <Route path="/" component={MainLayout} >
       <IndexRoute component={Landing} />
@@ -37,6 +39,17 @@ export default Routes = () => (
         <Route path="/Aboutus" component={AboutUs} />
         <Route path="/Contactus" component={ContactUs} />
         <Route path="/profile/:id" component={MyProfile} />
+        <Route path="/schoolAdmin/:schoolId/edit" getComponent={(nextState, cb) => {
+          //set loading:true
+          console.log("props",props)
+          props.isLoading.show();
+          import('/imports/ui/components/schoolView/editSchool').then((SchoolEditView) => {
+              console.log("SchoolEditView",SchoolEditView)
+              // set loading false
+              props.isLoading.hide();
+              cb(null, SchoolEditView.default);
+            });
+        }} />
         <Route path="/schools/:slug" component={SchoolView} />
         <Route path="/MyCalendar" component={ManageMyCalendar} />
         <Route path="/reset-password/:token" component={ResetPassword}/>
@@ -48,8 +61,8 @@ export default Routes = () => (
 
       <Route path="/" component={AdminLayout}>
         <Route path="/SchoolUpload" component={SchoolUpload} />
-        <Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />
+        {/*<Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />*/}
       </Route>
     </Route>
   </Router>
-);
+));
