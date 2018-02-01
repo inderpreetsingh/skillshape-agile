@@ -29,14 +29,24 @@ import Hidden from 'material-ui/Hidden';
 import {dataSourceSkills} from '../constants/filtersData.js';
 
 const FilterPanelContainer = styled.div`
-    max-width: 1000%;
-    background: '#ffffff';
-    margin:auto;
+    max-width:1000px;
+    max-width: ${props => (props.stickyPosition || props.mapView) ? '100%' : '1000px'};
+    background: ${props => (props.stickyPosition || props.mapView) ? '#ffffff' : 'transparent'};
+    margin: auto;
+    flex-grow: 1;
+    position: ${props => props.mapView ? 'fixed' : 'initial'};
+    z-index: 100;
 `;
 
 const FilterPanelContent = styled.div`
-    padding: ${helpers.rhythmDiv * 2}px;
-    margin: auto;
+    padding: ${props => (props.stickyPosition || props.mapView) ? '16px' : '24px'};
+    margin:auto;
+`;
+
+const FilterPanelInnerContent = styled.div`
+    max-width:1000px;
+    overflow: hidden;
+    margin:auto;
 `;
 
 const FilterPanelAction = styled.div`
@@ -248,83 +258,58 @@ class FilterPanel extends Component {
 
       return (
           <MuiThemeProvider theme={muiTheme}>
-            <FilterPanelContainer mapView={mapView}>
-                <FilterPanelContent mapView={mapView}>
+            <FilterPanelContainer stickyPosition={stickyPosition} mapView={mapView}>
+                <FilterPanelContent stickyPosition={stickyPosition} mapView={mapView}>
                  <form noValidate autoComplete="off">
+
                     <Grid container spacing={24}>
-                        {/* 1rst Row */}
-                        <Grid item xs={12} sm={6}>
-                          <MaterialInputWrapper>
-                            <IconInput onChange={this.locationInputChanged} iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
-                          </MaterialInputWrapper>
-                        </Grid>
 
+                      <Grid item xs={9} sm = {3}>
+                        <MaterialInputWrapper>
+                          <IconInput onChange={this.locationInputChanged} iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
+                        </MaterialInputWrapper>
+                      </Grid>
 
-                        <Grid item xs={12} sm={6}>
+                      <Hidden xsDown>
+                        <Grid item xs={1} sm = {3}>
                           <MaterialInputWrapper>
                             <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
                           </MaterialInputWrapper>
                         </Grid>
 
-                        {/* 2nd Row */}
-                        <Grid item xs={12} sm = {6}>
+                        <Grid item xs={1} sm = {5}>
                           <Multiselect
-                            textField={"name"}
-                            valueField={"_id"}
-                            data={this.state.skillCategoryData}
-                            placeholder="Skill category"
-                            onChange={this.collectSelectedSkillCategories}
+                          textField={"name"}
+                          valueField={"_id"}
+                          data={this.state.skillCategoryData}
+                          placeholder="Skill category"
+                          onChange={this.collectSelectedSkillCategories}
                           />
-                        </Grid>
 
-                        <Grid item xs={12} sm={6}>
-                           <Multiselect
-                              data={this.state.skillSubjectData}
-                              placeholder="Type to search skills"
-                              textField={"name"}
-                              onSearch={this.inputFromUser}
-                              onChange ={this.selectSkillSubject}
-                            />
                         </Grid>
+                      </Hidden>
 
-                        {/* 3rd Row */}
-                        <Grid item xs={12} sm={6}>
-                            <Multiselect onChange={this.skillLevelFilter} data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}  placeholder="Skill Level" />
-                        </Grid>
+                    	<Grid item xs={3} sm={1}>
+                    	   <FilterButtonArea>
+                	           	    <FilterPanelAction>
+                    	       { showMoreFilters ?
+                        	    <Button fab  mini className="show-more-filter-button" zDepth={0} onClick={() => this.handleShowFilterState(false)} >
+                                <Icon>close</Icon>
+                              </Button>
+                        	    :
+                        	    <Button fab mini onClick={() => this.handleShowFilterState(true)}>
+                        	     <Icon>tune </Icon>
+                        	   </Button>
 
-                        <Grid item xs={12} sm={3}>
-                            <MaterialInputWrapper select>
-                              <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.state.filter.gender} onChange={this.filterGender}>
-                                <MenuItem value=""> Gender</MenuItem>
-                                <MenuItem value={"Male"}> Male </MenuItem>
-                                <MenuItem value={"Female"}> Female </MenuItem>
-                                <MenuItem value={"Any"}> Any </MenuItem>
-                              </IconSelect>
-                            </MaterialInputWrapper>
-                        </Grid>
-
-                        <Grid item xs={12} sm={3}>
-                            <MaterialInputWrapper>
-                              <IconInput onChange={this.filterAge} iconName='star' labelText="Age"  />
-                            </MaterialInputWrapper>
-                        </Grid>
-
-                        {/* Price Per Class And Per Month Section */}
-                        <Grid item xs={12} sm={6} >
-                          <SliderControl labelText={"Price Per Class"} onChange={this.perClassPriceFilter} max={100} min={1} defaultValue={[0,45]}/>
-                        </Grid>
+                    	       }
+                    	         </FilterPanelAction>
+                	       </FilterButtonArea>
+                    	</Grid>
+                    </Grid>
 
 
-                        <Grid item xs={12} sm={6} >
-                          <SliderControl labelText={"Price Per Month"} onChange={this.pricePerMonthFilter} max={100} min={1} defaultValue={[1,30]} />
-                        </Grid>
+                    {this.conditionalRender()}
 
-                        <Grid item xs={12} sm={12} >
-                         <FilterPanelAction>
-                            <PrimaryButton fullWidth label="Apply filters & Search" icon={true} iconName="search" onClick={this.applyFilters}/>
-                          </FilterPanelAction>
-                        </Grid>
-                      </Grid>
                     </form>
                 </FilterPanelContent>
             </FilterPanelContainer>

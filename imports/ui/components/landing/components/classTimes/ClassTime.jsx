@@ -13,7 +13,7 @@ import * as helpers from '../jss/helpers.js';
 
 const ON_GOING_SCHEDULE = 'Ongoing';
 
-const ClassContainer = styled.div`
+const ClassTimeContainer = styled.div`
   width: 250px;
   min-height: 350px;
   padding: ${helpers.rhythmDiv}px;
@@ -37,8 +37,11 @@ const ClassContainer = styled.div`
   }
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
+    max-width: 250px;
     width: 100%;
+    margin: 0 auto;
   }
+
 `;
 
 const ClockOuterWrapper = styled.div`
@@ -220,7 +223,7 @@ class ClassTime extends Component {
     console.log(this.state.addToCalendar);
     return (<Transition timeout={{enter : 0, exit: 0}} in={this.state.addToCalendar}>
         {(state) =>
-          (<ClassContainer
+          (<ClassTimeContainer
             className={`class-time-after-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
             key={this.props._id}
             >
@@ -244,7 +247,7 @@ class ClassTime extends Component {
             {this._getCalenderButton(this.state.addToCalendar, this.state.scheduleTypeOnGoing)}
 
             {this.props.isTrending && <Trending />}
-            </ClassContainer>)
+            </ClassTimeContainer>)
           }
       </Transition>
       );

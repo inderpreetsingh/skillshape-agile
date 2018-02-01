@@ -135,7 +135,11 @@ const ClassTimesTitle = styled.h2`
   margin-bottom: ${helpers.rhythmDiv * 3}px;
 `;
 
-const Main = styled.div`
+const Main = styled.main`
+  width: 100%;
+`;
+
+const MainInnerFixedContainer = styled.div`
   max-width: ${helpers.maxContainerWidth}px;
   width: 100%;
   margin: 0 auto;
@@ -197,16 +201,18 @@ class ClassType extends Component {
           </ClassTypeCover>
 
           <Main>
-            <MainInner>
-              <ReviewsWrapper>
-                <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv}/>
-              </ReviewsWrapper>
+            <MainInnerFixedContainer>
+              <MainInner>
+                <ReviewsWrapper>
+                  <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv}/>
+                </ReviewsWrapper>
 
-              <ClassTimesWrapper>
-                <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
-                <ClassTimesBar classTimesData={classTimesBarData} />
-              </ClassTimesWrapper>
-            </MainInner>
+                <ClassTimesWrapper>
+                  <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
+                  <ClassTimesBar classTimesData={classTimesBarData} />
+                </ClassTimesWrapper>
+              </MainInner>
+            </MainInnerFixedContainer>
 
             <PackagesWrapper>
               <PackagesTitle>Pay only for what you need</PackagesTitle>

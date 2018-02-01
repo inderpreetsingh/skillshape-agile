@@ -249,3 +249,11 @@ material ui search bar */
     background-color: gray;
   }
 }
+
+.search-bar-fixed {
+  z-index: 100;
+}
+
+.search-bar-sticky {
+  height: 0 !important;
+}

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {Fragment} from 'react';
+import Sticky from 'react-stickynode';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import SearchBar from 'material-ui-search-bar';
+import SearchBarStyled from './SearchBarStyled.jsx';
 import NearByClassesButton from './buttons/NearByClassesButton';
-
 import PrimaryButton from './buttons/PrimaryButton';
 import SecondaryButton from './buttons/SecondaryButton';
 
@@ -12,28 +12,6 @@ import * as helpers from './jss/helpers.js';
 
 /*Search Bar requires inline styles because of limitations of it using material-ui
 rather than material ui next */
-
-const SearchBarStyled = (props) => {
-  // console.log("SearchBarStyled-->>",props)
-  return <SearchBar
-      style={{
-        root: {
-          fontFamily: helpers.specialFont,
-          fontSize: helpers.baseFontSize*2+'px',
-          margin: '0 auto',
-        },
-        input: {
-          padding: '7px 0 14px'
-        }
-      }}
-    onChange={props.onSearch}
-    onRequestSearch={props.onSearch}
-    itemScope
-    itemType="http://schema.org/SearchAction"
-    className = 'is-search-bar'
-    hintText ='Yoga in Delhi...'
-    />
-  }
 
 
 const SearchAreaPanel = styled.div`
@@ -48,7 +26,7 @@ const SearchAreaPanel = styled.div`
 `;
 
 const TaglineArea = styled.div`
-  
+
 `;
 
 const Tagline = styled.h2`
@@ -108,7 +86,12 @@ const BottomSectionContent = (props) => (
 const SearchArea = (props) => (
   <SearchAreaPanel width={props.width} textAlign={props.textAlign} itemScope itemType="http://schema.org/SearchAction">
     {props.topSection ? props.topSection : <TaglineWrapper />}
-    {props.middleSection ? props.middleSection : <SearchBarStyled onSearch = {props.onSearch}/>}
+    {props.middleSection ? props.middleSection :
+        (
+          <Sticky top={10} innerZ={100}>
+            <SearchBarStyled onSearch={props.onSearch} onFiltersButtonClick={props.onFiltersButtonClick}/>
+          </Sticky>
+        )}
     {props.bottomSection ? props.bottomSection : <BottomSectionContent getMyCurrentLocation={props.getMyCurrentLocation} /> }
   </SearchAreaPanel>
 );
@@ -119,7 +102,8 @@ SearchArea.propTypes = {
     middleSection: PropTypes.element,
     middleSectionText: PropTypes.string,
     bottomSection: PropTypes.element,
-    onSearch: PropTypes.function,
+    onSearch: PropTypes.func,
+    onFiltersButtonClick: PropTypes.func
 }
 
 SearchAreaPanel.defaultProps = {

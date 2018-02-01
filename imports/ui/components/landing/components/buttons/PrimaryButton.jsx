@@ -39,6 +39,9 @@ const styles = {
     display: 'inline-block',
     fontSize: 'inherit'
   },
+  searchBarHeight: {
+    height: 48
+  },
   ['@media (max-width:'+helpers.mobile+'px)']: {
     primaryButton: {
       width: '100%'
@@ -69,6 +72,10 @@ const PrimaryButton = (props) => {
   }
   else{
     rootClass = props.classes.primaryButton;
+  }
+
+  if(props.increaseHeight) {
+    rootClass = rootClass + ' ' + props.classes.searchBarHeight;
   }
 
   if(props.itemScope && props.itemType) {
@@ -115,9 +122,10 @@ PrimaryButton.propTypes = {
     label: PropTypes.string,
     fullWidth: PropTypes.bool,
     noMarginBottom: PropTypes.bool,
+    increaseHeight: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
-    itemScope: PropTypes.string,
+    itemScope: PropTypes.bool,
     itemType: PropTypes.string
 }
 
