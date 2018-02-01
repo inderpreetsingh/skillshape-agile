@@ -3,12 +3,14 @@ import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import { findIndex, isEmpty } from 'lodash';
 import Typography from 'material-ui/Typography';
-//import Sticky from 'react-sticky-el';
+//import `Sticky` from 'react-sticky-el';
 import Sticky from 'react-stickynode';
 
+import NoResults from '../NoResults.jsx';
 import ClassMap from '../map/ClassMap.jsx';
 import MapView from '../map/mapView.jsx';
 import CardsList from '../cards/CardsList.jsx';
+import SearchBarStyled from '../SearchBarStyled.jsx';
 import Footer from '../footer/index.jsx';
 import { cardsData, cardsData1} from '../../constants/cardsData.js';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
@@ -25,7 +27,23 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 
 const MainContentWrapper = styled.div`
+
+`;
+
+const ContentContainer = styled.div`
   display: flex;
+  flex-direction: column;
+`;
+
+const MapContentContainer = styled.div`
+  display: flex;
+`;
+
+const SearchBarWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const CardsContainer = styled.div`
@@ -47,7 +65,7 @@ const MapOuterContainer = styled.div`
 `;
 
 const MapContainer = styled.div`
-  transform: translateY(75px);
+  transform: translateY(70px);
   height: calc(100vh - 80px);
 `;
 
@@ -146,15 +164,7 @@ class ClassTypeList extends Component {
 
             return
               <NoResultContainer>
-                <span style={{padding: 8}}>
-                    <b>No Results Found</b>
-                </span>
-                <PrimaryButton
-                    label="Want to explore in other location"
-                    icon={true}
-                    iconName="search"
-                    onClick={this.props.clearDefaultLocation}
-                />
+                <NoResults />
             </NoResultContainer>
         }
     }
@@ -167,33 +177,41 @@ class ClassTypeList extends Component {
 			<MainContentWrapper>
 				{
 					mapView ? (
-              <Fragment>
-                  <MapOuterContainer>
-                    <Sticky top={0}>
-                      <MapContainer>
-                        <MapView {...this.props} />
-                      </MapContainer>
+                <ContentContainer>
+                    <Sticky top={10} innerZ={50} activeClass="search-bar-sticky">
+                      <SearchBarWrapper>
+                        <SearchBarStyled />
+                      </SearchBarWrapper>
                     </Sticky>
-                  </MapOuterContainer>
 
-                  <WithMapCardsContainer>
-                      <div>
-                        <CardsList
-                          mapView={this.props.mapView}
-                          cardsData={classTypeData}
-                          classInterestData={this.props.classInterestData}
-                          handleSeeMore={this.props.handleSeeMore}
-                          filters={this.props.filters}
-                        />
-                      </div>
-                      
-                      <FooterOuterWrapper>
-                        <FooterWrapper>
-                          <Footer mapView={this.props.mapView}/>
-                        </FooterWrapper>
-                      </FooterOuterWrapper>
-                  </WithMapCardsContainer>
-              </Fragment>
+                    <MapContentContainer>
+                      <MapOuterContainer>
+                        <Sticky top={-10}>
+                          <MapContainer>
+                            <MapView {...this.props} />
+                          </MapContainer>
+                        </Sticky>
+                      </MapOuterContainer>
+
+                      <WithMapCardsContainer>
+                          <div>
+                            <CardsList
+                              mapView={this.props.mapView}
+                              cardsData={classTypeData}
+                              classInterestData={this.props.classInterestData}
+                              handleSeeMore={this.props.handleSeeMore}
+                              filters={this.props.filters}
+                            />
+                          </div>
+
+                          <FooterOuterWrapper>
+                            <FooterWrapper>
+                              <Footer mapView={this.props.mapView}/>
+                            </FooterWrapper>
+                          </FooterOuterWrapper>
+                      </WithMapCardsContainer>
+                    </MapContentContainer>
+                </ContentContainer>
 					) : (
 						<CardsContainer>
 							{
@@ -207,6 +225,7 @@ class ClassTypeList extends Component {
                                   filters={this.props.filters}
                                 />)
 							}
+              <NoResults />
                             {
                                 this.getNoResultMsg(isLoading, filters, classTypeData)
                             }

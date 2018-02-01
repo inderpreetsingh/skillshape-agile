@@ -12,15 +12,28 @@ import * as helpers from '../../jss/helpers.js';
 const Wrapper = styled.div`
   ${helpers.flexCenter}
   justify-content: space-between;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+  }
 `;
 
 const OuterWrapper = styled.div`
   background-color: white;
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
   padding-right: ${helpers.rhythmDiv * 2}px;
-  border-radius: 100px;
+  border-radius: ${helpers.rhythmDiv * 6}px;
   width: 100%;
   color: ${helpers.textColor};
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    border-radius: ${helpers.rhythmDiv}px;
+
+    max-width: 320px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
 `;
 
 const Title = styled.h2`
@@ -31,6 +44,10 @@ const Title = styled.h2`
   text-transform: uppercase;
   margin: 0;
   color: rgba(0,0,0,1);
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    text-align: center;
+  }
 `;
 
 const Body = styled.section`
@@ -40,6 +57,10 @@ const Body = styled.section`
 const ClassDetailsSection = styled.div`
   ${helpers.flexDirectionColumn}
   max-width: 65%;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    max-width: 100%;
+  }
 `;
 
 const ClassDetailsText = styled.p`
@@ -47,6 +68,11 @@ const ClassDetailsText = styled.p`
   font-size: 14px;
   font-family: ${helpers.specialFont};
   font-weight: 400;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    text-align: center;
+    margin-bottom: ${helpers.rhythmDiv}px;
+  }
 `;
 
 const PriceSection = styled.div`
@@ -58,7 +84,7 @@ const PriceSection = styled.div`
 const Price = styled.p`
   margin: 0;
   font-family: ${helpers.specialFont};
-  font-weight: 500;
+  font-weight: 300;
   color: ${helpers.primaryColor};
   font-size: 28px;
 `;
@@ -78,7 +104,6 @@ const AddToCartSection = styled.div`
 
 const RightSection = styled.div`
   ${helpers.flexCenter}
-  align-items: flex-end;
 `;
 
 const Package = (props) => (

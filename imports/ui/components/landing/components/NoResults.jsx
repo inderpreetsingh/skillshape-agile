@@ -16,8 +16,7 @@ const Wrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
   max-width: ${helpers.baseFontSize * 30}px;
-  margin: 0 auto;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  margin: ${helpers.rhythmDiv * 4}px auto;
 `;
 
 const Title = styled.h1`
@@ -58,10 +57,10 @@ const NoResultsImg = styled.div`
 `;
 
 const OrText = styled.p`
-  font-weight: 500;
+  font-weight: 400;
   font-style: italic;
   font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize * 1.5}px;
+  font-size: 28px;
   margin: 0 ${helpers.rhythmDiv * 2}px 0 ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {

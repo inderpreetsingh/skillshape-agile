@@ -12,7 +12,7 @@ import * as helpers from '../jss/helpers.js';
 const styles = {
   classTimeButton: {
     fontFamily: helpers.specialFont,
-    fontSize: helpers.baseFontSize,
+    fontSize: 14,
     padding: '0 16px',
     backgroundColor: helpers.primaryColor,
     height: 32,

@@ -17,6 +17,10 @@ import SwitchIconButton from './components/buttons/SwitchIconButton.jsx';
 import FloatingMapButton from './components/buttons/FloatingMapButton.jsx';
 import Footer from './components/footer/index.jsx';
 
+import PrimaryButton from './components/buttons/PrimaryButton.jsx';
+import FiltersDialogBox from './components/dialogs/FiltersDialogBox.jsx';
+
+
 import * as helpers from './components/jss/helpers.js';
 import { cardsData, cardsData1} from './constants/cardsData.js';
 import config from '/imports/config';
@@ -134,6 +138,7 @@ class Landing extends Component {
         this.state = {
             mapView: false,
             sticky: false,
+            filterPanelDialogBox: false,
             cardsDataList: [cardsData, cardsData1],
             filters: {
                 coords: null,
@@ -266,6 +271,12 @@ class Landing extends Component {
         this.setState({filters: oldFilters})
     }
 
+    handleFiltersDialogBoxState = (state) => {
+      this.setState({
+          filterPanelDialogBox: state
+      })
+    }
+
     render() {
         // console.log("Landing state -->>",this.state);
         console.log("Landing props -->>",this.props);
@@ -273,6 +284,19 @@ class Landing extends Component {
         console.log('this.state.cardsList',this.state.cardsDataList[0]);
         return(
             <div>
+                {this.state.filterPanelDialogBox && <FiltersDialogBox
+                  open={this.state.filterPanelDialogBox}
+                  onModalClose={() => this.handleFiltersDialogBoxState(false)}
+                  filterPanelProps={{
+                    clearDefaultLocation: this.clearDefaultLocation,
+                    currentAddress: (this.state.defaultLocation || this.state.locationName),
+                    applyFilters: this.applyFilters,
+                    filters: this.state.filters,
+                    stickyPosition: this.state.sticky
+                  }}
+                  />
+                }
+
                 {!this.state.mapView &&
                   (
                   <Fragment>
@@ -282,13 +306,14 @@ class Landing extends Component {
                     />
                     <SearchArea
                         onSearch={this.onSearch}
+                        onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
                         getMyCurrentLocation={this.getMyCurrentLocation}
                     />
                     </Cover>
-                <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
+
                 </Fragment>
               )}
-
+                {/*
                  <div>
                     {!this.state.mapView ?
                       (<Sticky innerZ={10} onStateChange={this.handleStickyStateChange} >
@@ -312,8 +337,9 @@ class Landing extends Component {
                       />
                     )}
                  </div>
+                 */}
 
-               
+
                 <Element name="content-container" className="element">
                     <ClassTypeList
                         locationName={this.state.locationName}

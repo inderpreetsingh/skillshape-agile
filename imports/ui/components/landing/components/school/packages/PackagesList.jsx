@@ -7,6 +7,16 @@ import PackageStructure from '../../../constants/structure/package.js';
 
 import * as helpers from '../../jss/helpers.js';
 
+const Wrapper = styled.div`
+  width: 100%;
+  ${helpers.flexCenter}
+  align-items: stretch;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    ${helpers.flexDirectionColumn}
+  }
+`;
+
 const PackagesListWrapper = styled.section`
   ${helpers.flexDirectionColumn}
   width: 50%;
@@ -29,20 +39,9 @@ const PackagesListWrapper = styled.section`
   @media screen and (max-width: ${helpers.tablet}px) {
     width: 100%;
     align-items: center;
-    padding: ${helpers.rhythmDiv}px;
   }
 `;
 
-const Wrapper = styled.div`
-  width: 100%;
-  ${helpers.flexCenter}
-  align-items: stretch;
-
-  @media screen and (max-width: ${helpers.tablet}px) {
-    ${helpers.flexDirectionColumn}
-    padding: ${helpers.rhythmDiv}px;
-  }
-`;
 
 const PackageWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
@@ -51,22 +50,25 @@ const PackageWrapper = styled.div`
 
 const PackagesWrapper = styled.div`
   max-width: 500px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: ${props => props.classPackages ? 'flex-end' : 'flex-start'};
   padding-right: ${props => props.classPackages ? helpers.rhythmDiv * 2 : 0}px;
   padding-left: ${props => props.classPackages ? 0 : helpers.rhythmDiv * 2}px;
 
-  @media screen and (max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
     max-width: 100%;
-    min-width: 500px;
     padding: ${helpers.rhythmDiv}px;
     align-items: center;
   }
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     max-width: 500px;
-    min-width: auto;
+    width: 100%;
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
   }
 
 `;

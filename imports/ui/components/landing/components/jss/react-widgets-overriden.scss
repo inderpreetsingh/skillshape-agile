@@ -4,9 +4,15 @@
   border-radius: 0;
   box-shadow: none;
   font-size: $base-font-size;
+
   &:hover {
     box-shadow: none;
+    border-bottom: 2px solid $dark-border-color; 
   }
+}
+
+.rw-widget-picker {
+  display: block;
 }
 
 .rw-state-focus > .rw-widget-container,.rw-state-focus > .rw-widget-container:hover {
