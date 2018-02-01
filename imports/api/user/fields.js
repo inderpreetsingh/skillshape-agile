@@ -81,7 +81,7 @@ Schema.UserProfile = new SimpleSchema({
         optional: true
     },
     schoolId: {
-        type: String,
+        type: [String],
         optional: true
     },
     passwordSetByUser: {

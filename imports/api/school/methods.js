@@ -9,7 +9,8 @@ import PriceInfoRequest from "/imports/api/priceInfoRequest/fields.js";
 import { sendClaimASchoolEmail } from "/imports/api/email";
 import { sendConfirmationEmail } from "/imports/api/email";
 import { sendPriceInfoRequestEmail } from "/imports/api/email";
-
+import { getUserFullName } from '/imports/util/getUserData';
+// console.log("getUserFullName -->>",getUserFullName)
 Meteor.methods({
     editSchool: function(id, data) {
         console.log("editSchool >>> ", data, id);
@@ -48,17 +49,10 @@ Meteor.methods({
         }
         return School.find({ _id: { $in: schoolList } }).fetch();
     },
-    "school.getMySchool": function(school_id, userId) {
-        console.log("school.getMySchool -->>", school_id);
-        school = School.findOne({ _id: school_id });
-        if (school) {
-        } else {
-            Meteor.users.update(
-                { _id: userId },
-                { $set: { "profile.schoolId": " " } }
-            );
+    "school.getMySchool": function() {
+        if(this.userId) {
+            return School.find({ admins: { $in: [this.userId] } }).fetch();
         }
-        return School.find({ _id: school_id }).fetch();
     },
     "school.claimSchool": function(userId, schoolId) {
         const data = {};
@@ -126,11 +120,12 @@ Meteor.methods({
         let schoolData = School.findOne(doc.schoolId);
         console.log("schoolData", schoolData);
         // User's claim requests exists already in DB then need to send this message to user.
-        let pendingClaimRequest = ClaimSchoolRequest.findOne({
+        const pendingClaimRequest = ClaimSchoolRequest.findOne({
             userId: doc.userId,
-            status: "pending"
+            status: "pending",
+            schoolId: doc.schoolId
         });
-        let rejectedClaimRequest = ClaimSchoolRequest.findOne({
+        const rejectedClaimRequest = ClaimSchoolRequest.findOne({
             userId: doc.userId,
             status: "rejected",
             schoolId: doc.schoolId
@@ -139,45 +134,42 @@ Meteor.methods({
         console.log("rejectedClaimRequest", rejectedClaimRequest);
         // Claim request status is pending
         if (pendingClaimRequest) {
-            if (pendingClaimRequest.schoolId == doc.schoolId) {
-                // User's request is already pending for this school
-                return { pendingRequest: true };
-            } else {
-                // Users can not do more than one claim request.
-                return {
-                    onlyOneRequestAllowed: true,
-                    schoolName: pendingClaimRequest.schoolName
-                };
-            }
+            return { pendingRequest: true };
         } else if (rejectedClaimRequest) {
             return { alreadyRejected: true };
-        } else if (currentUser.profile && currentUser.profile.schoolId) {
+        } /*else if (currentUser.profile && currentUser.profile.schoolId) {
             return { alreadyManage: true };
-        }
+        }*/
+        console.log("doc===>",doc)
         // No school email exists then just Make the user Admin of that school by System.
-        if (!doc.schoolEmail) {
-            let schoolEmail = currentUser.emails[0].address;
+        if (!schoolData.email && !schoolData.superAdmin) {
             let data = {};
-            data.userId = this.userId;
+            let schoolEmail = currentUser.emails[0].address;
+
+            data.admins = [this.userId];
+            data.superAdmin = this.userId
             data.claimed = "Y";
             data.email = schoolEmail;
             doc.schoolEmail = schoolEmail;
             School.update({ _id: schoolData._id }, { $set: data });
-            Meteor.users.update(
+            console.log("====After School update ===")
+
+            let x = Meteor.users.update(
                 { _id: doc.userId },
                 {
-                    $set: {
-                        "profile.schoolId": doc.schoolId,
-                        "profile.acess_type": "school"
+                    $addToSet: {
+                        "profile.schoolId": { $each: [doc.schoolId] },
                     }
                 }
             );
+            console.log("xxxxxxxxxxxxxxx",x)
             doc.status = "approved";
             doc.approvedBy = "superadmin";
             doc.createdAt = new Date();
             ClaimSchoolRequest.insert(doc);
             return { claimRequestApproved: true };
         } else {
+            doc.userName = getUserFullName(currentUser);
             doc.createdAt = new Date();
             doc.status = "pending";
             let claimRequestId = ClaimSchoolRequest.insert(doc);
@@ -211,16 +203,28 @@ Meteor.methods({
             data.userId = claimRequestRec.userId;
             data.claimed = "Y";
             data.email = claimRequestRec.schoolEmail;
-            School.update({ _id: claimRequestRec.schoolId }, { $set: data });
-            Meteor.users.update(
-                { _id: data.userId },
-                {
-                    $set: {
-                        "profile.schoolId": claimRequestRec.schoolId,
-                        "profile.acess_type": "school"
+            /*We do not got status rejected here so needs to update
+            multiple admins in `school` and a User can have multiple school ids.*/
+            if(!status) {
+                console.log("claimRequestRec.schoolId",claimRequestRec.schoolId)
+
+                School.update(
+                    { _id: claimRequestRec.schoolId },
+                    {
+                        $addToSet: {
+                            "admins": { $each: [claimRequestRec.userId] },
+                        }
                     }
-                }
-            );
+                );
+                Meteor.users.update(
+                    { _id: data.userId },
+                    {
+                        $addToSet: {
+                                "profile.schoolId": { $each: [claimRequestRec.schoolId] },
+                        }
+                    }
+                );
+            }
             ClaimSchoolRequest.update(
                 { _id: claimRequestId },
                 {

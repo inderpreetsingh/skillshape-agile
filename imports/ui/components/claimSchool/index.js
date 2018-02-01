@@ -20,12 +20,13 @@ handleClaimASchool = (schoolCardData, confirmThis) => {
         schoolName: schoolCardData.name,
         userId: user._id,
         userEmail: user.emails[0].address,
-        userName: user.profile.firstName,
+        userName: user.profile.firstName || user.profile.name,
         schoolEmail: schoolCardData.email
     };
-    this.setState({ isLoading: true, showConfirmationModal: false });
+    // Start loading
+    this.setState({ isLoading: true });
     Meteor.call("school.claimSchoolRequest", payload, (err, result) => {
-        console.log("result", result);
+        // Stop Loading
         this.setState({ isLoading: false });
         if (result.alreadyRejected) {
             toastr.error(

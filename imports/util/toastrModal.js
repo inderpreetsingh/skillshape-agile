@@ -11,8 +11,6 @@ import Dialog, {
 import '/imports/api/enrollmentFee/methods';
 import Typography from 'material-ui/Typography';
 
-
-
 const styles = theme => {
     return {
         button: {

@@ -55,7 +55,7 @@ export default function() {
   const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
   let isPublish = this.getPublishStatus(schoolData.is_publish)
 	// console.log("State  -->>",this.state)
-  console.log("SchoolView render classPricing -->>",classPricing)
+  console.log("SchoolView render  schoolData-->>",schoolData)
   console.log("SchoolView render monthlyPricing -->>",monthlyPricing)
   return (
 		<div className="content">
@@ -104,13 +104,23 @@ export default function() {
                                   /></div>
                               )
                             }
-                            <Typography type="title"> About {schoolData.name} </Typography>
-                            <Typography type="caption"> {schoolData.aboutHtml && ReactHtmlParser(schoolData.aboutHtml)} </Typography>
+                            {
+                              this.checkForHtmlCode(schoolData.aboutHtml) && (
+                                <Fragment>
+                                    <Typography type="title"> About {schoolData.name} </Typography>
+                                    <Typography type="caption"> {ReactHtmlParser(schoolData.aboutHtml)} </Typography>
+                                </Fragment>
+                              )
+                            }
                         </Grid>
-                        <Grid item xs={12} >
-                          <Typography type="title">Notes for student of {schoolData.name} <br/> </Typography>
-                          <Typography type="caption"> {schoolData.studentNotesHtml && ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
-                        </Grid>
+                        {
+                            this.checkForHtmlCode(schoolData.studentNotesHtml) && (
+                                <Grid item xs={12}>
+                                  <Typography type="title">Notes for student of {schoolData.name} <br/> </Typography>
+                                  <Typography type="caption"> {ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
+                                </Grid>
+                            )
+                        }
                     </Card>
                 </Grid>
                 <Grid item xs={12} sm={4} md={3}>

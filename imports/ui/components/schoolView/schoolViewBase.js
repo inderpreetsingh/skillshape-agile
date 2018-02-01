@@ -301,39 +301,44 @@ export default class SchoolViewBase extends React.Component {
       });
     }
 
-// This is used to send purchase request email when user wants to purchase a package.
-handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
-  // Start loading
-  this.setState({ isLoading: true });
-  console.log(typeOfTable, tableId, schoolId);
-  const { toastr } = this.props;
-  let self = this;
-  Meteor.call(
-    "school.purchasePackage",
-    {
-      typeOfTable: typeOfTable,
-      tableId: tableId,
-      schoolId: schoolId
-    },
-    (err, res) => {
-      if (err) {
-      } else {
-        // Stop loading
-        self.setState({ isLoading: false });
-        // Show confirmation to user that purchase request has been created.
-        if (res.emailSent) {
-          toastr.success(
-            "Your request has been created. We will assist you soon. :)",
-            "Success"
-          );
-        } else {
-          toastr.error(
-            "Something went wrong!",
-            "Error"
-          );
-        }
-      }
+    // This is used to send purchase request email when user wants to purchase a package.
+    handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
+        // Start loading
+        this.setState({ isLoading: true });
+        console.log(typeOfTable, tableId, schoolId);
+        const { toastr } = this.props;
+        let self = this;
+        Meteor.call(
+            "school.purchasePackage", {
+                typeOfTable: typeOfTable,
+                tableId: tableId,
+                schoolId: schoolId
+            },
+            (err, res) => {
+                if (err) {} else {
+                    // Stop loading
+                    self.setState({ isLoading: false });
+                    // Show confirmation to user that purchase request has been created.
+                    if (res.emailSent) {
+                        toastr.success(
+                            "Your request has been created. We will assist you soon. :)",
+                            "Success"
+                        );
+                    } else {
+                        toastr.error(
+                            "Something went wrong!",
+                            "Error"
+                        );
+                    }
+                }
+            }
+        );
     }
-  );
-};
+
+    checkForHtmlCode = (data) => {
+        if (data && data != '<p><br></p>') {
+            return true
+        }
+        return false;
+    }
 }

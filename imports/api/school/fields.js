@@ -126,6 +126,14 @@ School.attachSchema(new SimpleSchema({
   lastName:{
     type: String,
     optional: true
+  },
+  admins: {
+    type: [String],
+    optional: true
+  },
+  superAdmin: {
+    type: String,
+    optional: true
   }
 }));
 

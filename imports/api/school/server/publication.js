@@ -294,7 +294,7 @@ Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, rol
     schoolList = School.find({ is_publish: 'N' }).fetch();
     let currentUser = Meteor.users.findOne(this.userId);
     if(currentUser) {
-        filter = { $and: [ { userId: { $ne: this.userId } }, { email: { $ne: `currentUser.emails[0].address` } } ] };
+        filter = { $and: [ { admins: { $ne: this.userId } }  ] };
     }
     if (schoolName) {
       filter.name = { '$regex': '' + schoolName + '', '$options': '-i' };
