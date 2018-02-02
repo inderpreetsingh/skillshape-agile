@@ -94,17 +94,26 @@ const CardDescriptionHeader = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+const CardImageContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 52px;
+  width: 72px;
+  flex: 0 0 auto;
+`;
 
 const CardDescriptionActionArea = styled.div`
   padding: 5px;
 `;
 
-const CardDescription = ({ key, classes, className, name, hideCardContent, descriptionContent }) => (
+const CardDescription = ({ key, classes, className, name, hideCardContent, descriptionContent, classTypeImg}) => (
   <CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
-
     <CardDescriptionHeader>
+      <CardImageContainer>
+        <avatar style={{backgroundImage: `url(${classTypeImg})`,backgroundSize: 'cover',borderRadius: '50%',height:'40px',width:'40px'}}></avatar>
+      </CardImageContainer>
       <CardContentTitle>{name}</CardContentTitle>
-
       <CardDescriptionActionArea>
         <IconButton className={classes.cardIcon} color="primary" onClick={hideCardContent}> <Clear /> </IconButton>
       </CardDescriptionActionArea>
@@ -186,6 +195,7 @@ class CardsReveal extends Component {
               classes={classes}
               className={state}
               key={this.props._id}
+              classTypeImg={classTypeImg || cardImgSrc}
             />)}
         </Transition>
       </Paper>
