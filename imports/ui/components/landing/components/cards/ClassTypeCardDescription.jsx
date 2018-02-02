@@ -38,10 +38,10 @@ const ClassTypeCardDescription = (props) => {
              <Grid container spacing={8}>
                <Grid item xs={12} style={{marginTop: '22px',marginBottom: '22px',border: '1px solid #ddd'}}>
                   {cardRevealInfo.ageMin && <Typography>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Typography>}
-                  {cardRevealInfo.gender && <Typography>{cardRevealInfo.gender && (cardRevealInfo.gender === "All") ? "All are welcome" : `${cardRevealInfo.gender} only`}</Typography>}
-                  {cardRevealInfo.experienceLevel && <Typography>{cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Typography>}
+                  {cardRevealInfo.gender && <Typography>{cardRevealInfo.gender && (cardRevealInfo.gender === "Any") ? "All are welcome" : `${cardRevealInfo.gender} only`}</Typography>}
+                  {cardRevealInfo.experienceLevel && <Typography>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Typography>}
                <Grid item xs={12}>
-                  <Typography style={{marginTop: '15px',fontSize: '17px',fontWeight: 500}}>{cardRevealInfo.name} Description</Typography>
+                  <Typography style={{marginTop: '15px',fontSize: '17px',fontWeight: 500}}>Class Description: </Typography>
                   {cardRevealInfo.description && <Typography>{cardRevealInfo.description}</Typography>}
                </Grid>
                </Grid>
