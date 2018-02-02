@@ -15,22 +15,28 @@ import {specialFont} from './jss/helpers.js';
 import { checkSuperAdmin, getUserSchool } from '/imports/util';
 import NestedNavItems from './NestedNavItems';
 import SchoolSubMenu from './schoolSubMenu';
+import { getUserFullName } from '/imports/util/getUserData';
 
-const styles = {
-    drawerList : {
-        width : '300px',
-    },
-    menuListItemText: {
-        fontFamily: specialFont
-    },
-    drawerHeader: {
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 8px',
-    },
-    nested: {
-        paddingLeft: 35,
-    },
+const styles = theme => {
+    return {
+        drawerList : {
+            width : '300px',
+        },
+        menuListItemText: {
+            fontFamily: specialFont
+        },
+        drawerHeader: {
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 8px',
+        },
+        nested: {
+            paddingLeft: theme.spacing.unit * 8,
+        },
+        nestedLevel2: {
+            paddingLeft: theme.spacing.unit * 5,
+        },
+    }
 }
 
 const DrawerHeader = (props) => (
@@ -98,12 +104,24 @@ const LogOutUserSideNav = (props) => (
 
 const LoginUserSideNav = (props) => (
     <Fragment>
-        <SideNavItem
+        <NestedNavItems
             button
-            menuListItemText={props.classes.menuListItemText}
-            name="My Profile"
-            iconName="account_box"
-            onClick={() => browserHistory.push(`/profile/${Meteor.userId()}`)}
+            name={getUserFullName(props.currentUser)}
+            classes={props.classes}
+            iconName="person"
+            childData={[
+                {
+                    name: "My Profile",
+                    link: `/profile/${Meteor.userId()}`,
+                    iconName: "account_circle",
+                },
+                {
+                    name: "My Media",
+                    link: "/",
+                    iconName: "collections",
+                }
+            ]}
+            onClick={props.childItemOnClick}
         />
         <SideNavItem
             button
@@ -203,7 +221,8 @@ class SideNavItems extends React.Component {
                 return {
                     name: school.name,
                     link: `/schools/${school.slug}`,
-                    iconName: null,
+                    iconName: "school",
+                    nameLimit: 17,
                 }
             })
             this.setState({connectedSchool: connectedSchool})
@@ -222,7 +241,7 @@ class SideNavItems extends React.Component {
                         return {
                             name: school.name,
                             link: `/schools/${school.slug}`,
-                            iconName: null,
+                            iconName: "school",
                         }
                     })
                     this.setState({mySchool: mySchool})

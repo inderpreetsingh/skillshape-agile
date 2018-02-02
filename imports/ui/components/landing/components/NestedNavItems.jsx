@@ -6,6 +6,7 @@ import ExpandLess from 'material-ui-icons/ExpandLess';
 import ExpandMore from 'material-ui-icons/ExpandMore';
 import Icon from 'material-ui/Icon';
 import { isEmpty } from 'lodash';
+import { cutString } from '/imports/util';
 
 class NestedNavItems extends Component {
 	state = { open: false };
@@ -28,7 +29,7 @@ class NestedNavItems extends Component {
 						            <ListItemIcon>
 						                <Icon>{this.props.iconName}</Icon>
 						            </ListItemIcon>
-						            <ListItemText classes={{text: classes.menuListItemText}} primary={this.props.name} />
+						            <ListItemText classes={{text: classes.menuListItemText}} primary={this.props.nameLimit ? cutString(this.props.name, this.props.nameLimit): this.props.name } title={this.props.name}/>
 						        </Fragment>
 					        }
 					        { this.state.open ? <ExpandLess /> : <ExpandMore /> }
@@ -38,11 +39,11 @@ class NestedNavItems extends Component {
 					    		{
 					    			childData.map((data, index) => {
 						    			return (
-								            <ListItem button={this.props.button ? this.props.button : false} onClick={() => this.props.onClick(data.link)}>
+								            <ListItem className={classes.nested} button={this.props.button ? this.props.button : false} onClick={() => this.props.onClick(data.link)}>
 								                <ListItemIcon>
 								                	<Icon>{data.iconName}</Icon>
 								              	</ListItemIcon>
-								                <ListItemText classes={{text: classes.menuListItemText}} primary={data.name} />
+								                <ListItemText classes={{text: classes.menuListItemText}} primary={data.nameLimit ?  cutString(data.name, data.nameLimit): data.name} title={data.name}/>
 								            </ListItem>
 									    )
 						    		})

@@ -30,13 +30,14 @@ class SchoolSubMenu extends React.Component {
 	                            key={`${school.name}-${index}`}
 	                            button
 	                            name={school.name}
+	                            nameLimit={22}
 	                            classes={classes}
 	                            iconName="school"
 	                            childData={[
 	                            	{
 								        name: "Home Page",
 								        link: school.link,
-								        iconName: null,
+								        iconName: "home",
 								    }
 	                            ]}
 	                            onClick={this.props.onClick}
@@ -47,25 +48,27 @@ class SchoolSubMenu extends React.Component {
                         	<Fragment>
                         		<ListItem onClick={this.handleClick}>
                         			<ListItemIcon>
-					                	<Icon>school</Icon>
+					                	<Icon>dashboard</Icon>
 					           		 </ListItemIcon>
 					            	<ListItemText classes={{text: classes.menuListItemText}} primary={"School You Manage"} />
                         			{ this.state.open ? <ExpandLess /> : <ExpandMore /> }
                         		</ListItem>
 		                        <Collapse component="li" in={this.state.open} timeout="auto" unmountOnExit>
-				            		<List disablePadding>
+				            		<List className={classes.nestedLevel2} disablePadding>
 			                        {
 						    			data.map((school, index) => {
 							    			return  <NestedNavItems
 					                            key={`${school.name}-${index}`}
 					                            button
 					                            name={school.name}
+					                            nameLimit={13}
+					                            iconName="school"
 					                            classes={classes}
 					                            childData={[
 					                            	{
 												        name: "Home Page",
 												        link: school.link,
-												        iconName: null,
+												        iconName: "home",
 												    }
 					                            ]}
 					                            onClick={this.props.onClick}

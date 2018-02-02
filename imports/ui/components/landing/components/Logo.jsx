@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { browserHistory } from 'react-router';
 
 //TODO: Automatic imports depending upon variables used - intellij
 import * as helpers from './jss/helpers.js';
 import * as settings from '../site-settings.js';
 
 const BrandArea = styled.div`
+  cursor: pointer;
   ${helpers.flexCenter}
   font-family: ${helpers.specialFont};
 
@@ -73,7 +75,7 @@ const LogoImage = styled.img`
 `;
 
 const Logo = ({smallBrandText, brandText, brandTagline, logoSrc}) => (
-    <BrandArea itemScope itemType="http://schema.org/Brand" smallBrandText={smallBrandText}>
+    <BrandArea onClick={() => browserHistory.push('/') } itemScope itemType="http://schema.org/Brand" smallBrandText={smallBrandText}>
         <LogoWrapper>
           <LogoImage src={logoSrc} itemProp="logo"/>
         </LogoWrapper>
