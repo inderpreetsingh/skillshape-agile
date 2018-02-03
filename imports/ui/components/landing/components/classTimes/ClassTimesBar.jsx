@@ -39,7 +39,7 @@ const ClassTimesBar = (props) => (
      <ClassTimesWrapper>
       <Grid container spacing={24}>
         {props.classTimesData.map(classTimeObj => (
-          <Grid key={classTimeObj._id} item xs={12} sm={4} md={4} lg={3}>
+          <Grid key={classTimeObj._id} item xs={12} sm={6} md={4} lg={3}>
             <ClassTime {...classTimeObj} />
           </Grid>
         ))}

@@ -20,6 +20,10 @@ const styles = {
     '&:hover': {
       backgroundColor: helpers.primaryColor,
     },
+
+    '@media screen and (max-width: 800px)': {
+      fontSize: 12
+    }
   },
   classTimeButtonGhost: {
     border: `2px solid ${helpers.cancel}`,
@@ -27,7 +31,6 @@ const styles = {
     backgroundColor: 'transparent',
     transition: 'all 0.3s linear',
     '&:hover': {
-      border: `none`,
       backgroundColor: helpers.cancel,
     },
     '&:hover > span': {

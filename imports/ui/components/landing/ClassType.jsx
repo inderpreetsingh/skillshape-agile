@@ -14,10 +14,10 @@ import ReviewsSlider from './components/school/ReviewsSlider.jsx';
 import SchoolOfferings from './components/school/SchoolOfferings';
 import ClassTypeDescription from './components/school/ClassTypeDescription.jsx';
 import ClassTypeInfo from './components/school/ClassTypeInfo.jsx';
+import MyCalendar from '../users/myCalender';
 
 import StarsBar from './components/StarsBar.jsx';
 import ClassTimesSlider from './components/classTimes/ClassTimesSlider.jsx';
-import MyCalendar from './components/MyCalendar';
 import BrandBar from './components/BrandBar';
 import TopSearchBar from './components/TopSearchBar';
 import Footer from './components/footer/index.jsx';
@@ -140,7 +140,7 @@ const Main = styled.main`
 `;
 
 const MainInnerFixedContainer = styled.div`
-  max-width: ${helpers.maxContainerWidth}px;
+  max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
   width: 100%;
   margin: 0 auto;
 `;
@@ -149,8 +149,8 @@ const MainInner = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
   overflow: hidden;
 
-  @media screen and (max-width : ${helpers.mobile}) {
-    padding: ${helpers.rhythmDiv}px;
+  @media screen and (max-width : ${helpers.mobile}px) {
+    padding: ${props => props.smallPadding ? props.smallPadding : helpers.rhythmDiv}px;
   }
 `;
 
@@ -166,6 +166,11 @@ const PackagesTitle = styled.h2`
   font-weight: 300;
   font-style: italic;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+const CalendarWrapper = styled.div`
+   _box-shadow: 0px 0px 5px 1px rgba(221,221,221,1);
+   border: 1px solid rgba(221,221,221,1);
 `;
 
 class ClassType extends Component {
@@ -221,8 +226,16 @@ class ClassType extends Component {
                 monthlyPackagesData={monthlyPackagesData}
               />
             </PackagesWrapper>
-          </Main>
 
+            <MainInnerFixedContainer fixedWidth="1100">
+              <MainInner smallPadding="0">
+                <CalendarWrapper>
+                  <MyCalendar />
+                </CalendarWrapper>
+              </MainInner>
+            </MainInnerFixedContainer>
+
+            </Main>
         </Wrapper>
       </MuiThemeProvider>
     );

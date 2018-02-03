@@ -13,7 +13,6 @@ import SLocation from "/imports/api/sLocation/fields";
 // fixed height causing slight issues in rendering
 const MapContainer = styled.div`
     height: 100%;
-    margin-left: 10px;
 
     @media screen and (max-width: ${helpers.tablet + 100}px) {
       margin-left: 0;
@@ -38,8 +37,8 @@ class MapView extends React.Component {
 	}
 
 	componentDidMount() {
-      	this.map = initializeMap(this.props.filters.coords || config.defaultLocation)
-	}
+      this.map = initializeMap(this.props.filters.coords || config.defaultLocation);
+  }
 
 	componentWillReceiveProps(nextProps) {
 		let locationDiff = _.difference(this.props.filters.coords, nextProps.filters.coords);

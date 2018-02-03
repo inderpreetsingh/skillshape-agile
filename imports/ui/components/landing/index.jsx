@@ -310,35 +310,35 @@ class Landing extends Component {
                         getMyCurrentLocation={this.getMyCurrentLocation}
                     />
                     </Cover>
-
+                     <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
                 </Fragment>
               )}
-                {/*
-                 <div>
-                    {!this.state.mapView ?
-                      (<Sticky innerZ={10} onStateChange={this.handleStickyStateChange} >
-                      <FilterPanel
-                          clearDefaultLocation={this.clearDefaultLocation}
-                          currentAddress={this.state.defaultLocation || this.state.locationName}
-                          applyFilters={this.applyFilters}
-                          filters={this.state.filters}
-                          stickyPosition={this.state.sticky}
-                      />
-                    </Sticky>)
-                    : (
 
-                      <FilterPanel
-                          clearDefaultLocation={this.clearDefaultLocation}
-                          currentAddress={this.state.defaultLocation || this.state.locationName}
-                          applyFilters={this.applyFilters}
-                          mapView={this.state.mapView}
-                          filters={this.state.filters}
-                          stickyPosition={this.state.sticky}
-                      />
-                    )}
-                 </div>
-                 */}
+               <div>
+                  {!this.state.mapView ?
+                    (<Sticky innerZ={10} onStateChange={this.handleStickyStateChange} >
+                    <FilterPanel
+                        clearDefaultLocation={this.clearDefaultLocation}
+                        currentAddress={this.state.defaultLocation || this.state.locationName}
+                        applyFilters={this.applyFilters}
+                        filters={this.state.filters}
+                        stickyPosition={this.state.sticky}
+                        handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+                    />
+                  </Sticky>)
+                  : (
 
+                    <FilterPanel
+                        clearDefaultLocation={this.clearDefaultLocation}
+                        currentAddress={this.state.defaultLocation || this.state.locationName}
+                        applyFilters={this.applyFilters}
+                        mapView={this.state.mapView}
+                        filters={this.state.filters}
+                        stickyPosition={this.state.sticky}
+                        handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+                    />
+                  )}
+               </div>
 
                 <Element name="content-container" className="element">
                     <ClassTypeList

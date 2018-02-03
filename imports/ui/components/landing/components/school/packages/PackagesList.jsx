@@ -84,30 +84,32 @@ const Title = styled.h1`
   width: 100%;
 `;
 
+const PackageList = (props) => (
+  <PackagesListWrapper classPackages={props.classPackages}>
+    <PackagesWrapper classPackages={props.classPackages}>
+      <Title>{props.packageListName}</Title>
+      {console.log(props,"packages list....")}
+      {props.packagesData && props.packagesData.map(packageData => (
+        <PackageWrapper key={packageData._id}>
+          <Package {...packageData} />
+        </PackageWrapper>
+      ))}
+    </PackagesWrapper>
+  </PackagesListWrapper>
+);
+
 const PackagesList = (props) => {
   return (
     <Wrapper>
-      <PackagesListWrapper classPackages>
-        <PackagesWrapper classPackages>
-          <Title>Class Packages</Title>
-          {props.perClassPackagesData.map(packageData => (
-            <PackageWrapper>
-              <Package {...packageData} />
-            </PackageWrapper>
-          ))}
-        </PackagesWrapper>
-      </PackagesListWrapper>
 
-      <PackagesListWrapper>
-        <PackagesWrapper>
-        <Title>Monthly Packages</Title>
-          {props.monthlyPackagesData.map(packageData => (
-            <PackageWrapper>
-              <Package {...packageData} />
-            </PackageWrapper>
-          ))}
-        </PackagesWrapper>
-      </PackagesListWrapper>
+      <PackageList
+        classPackages
+        packageListName='Class Packages'
+        packagesData={props.perClassPackagesData} />
+
+      <PackageList
+        packageListName='Monthly Packages'
+        packagesData={props.monthlyPackagesData} />
     </Wrapper>
   )
 }

@@ -40,7 +40,14 @@ const SearchBarStyled = (props) => {
         hintText ='Yoga in Delhi...'
         />
         <FilterButtonWrapper>
-          <PrimaryButton label="Filters" icon iconName="tune" increaseHeight noMarginBottom onClick={props.onFiltersButtonClick} />
+          <PrimaryButton
+          label="Filters"
+          icon
+          iconName="tune"
+          increaseHeight
+          boxShadow
+          noMarginBottom
+          onClick={props.onFiltersButtonClick} />
         </FilterButtonWrapper>
       </SearchBarWrapper>
   )

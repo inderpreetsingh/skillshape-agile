@@ -178,15 +178,9 @@ class ClassTypeList extends Component {
 				{
 					mapView ? (
                 <ContentContainer>
-                    <Sticky top={10} innerZ={50} activeClass="search-bar-sticky">
-                      <SearchBarWrapper>
-                        <SearchBarStyled />
-                      </SearchBarWrapper>
-                    </Sticky>
-
                     <MapContentContainer>
                       <MapOuterContainer>
-                        <Sticky top={-10}>
+                        <Sticky top={10}>
                           <MapContainer>
                             <MapView {...this.props} />
                           </MapContainer>
@@ -225,7 +219,7 @@ class ClassTypeList extends Component {
                                   filters={this.props.filters}
                                 />)
 							}
-              <NoResults />
+
                             {
                                 this.getNoResultMsg(isLoading, filters, classTypeData)
                             }

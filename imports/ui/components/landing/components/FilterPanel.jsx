@@ -29,18 +29,25 @@ import Hidden from 'material-ui/Hidden';
 import {dataSourceSkills} from '../constants/filtersData.js';
 
 const FilterPanelContainer = styled.div`
-    max-width: 1000%;
-    background: '#ffffff';
-    margin:auto;
+    max-width: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView) ? '100%' : '1000px'};
+    background: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView) ? '#ffffff' : 'transparent'};
+    margin: auto;
+    position: ${props => props.mapView ? 'fixed' : 'initial'};
+    z-index: 100;
 `;
 
 const FilterPanelContent = styled.div`
-    padding: ${helpers.rhythmDiv * 2}px;
-    margin: auto;
+    padding: ${props => (props.stickyPosition || props.mapView || props.filtersInDialogBox) ? (helpers.rhythmDiv * 2) : (helpers.rhythmDiv * 3)}px;
+    margin:auto;
 `;
 
 const FilterPanelAction = styled.div`
     padding:${helpers.rhythmDiv*2}px 0px;
+`;
+
+const FilterPanelActionText = styled.p`
+  margin: 0;
+  margin-top: ${helpers.rhythmDiv}px;
 `;
 
 const FilterButtonArea = styled.div`
@@ -160,6 +167,125 @@ class FilterPanel extends Component {
             this.props.clearDefaultLocation();
         }
     }
+    renderFilterBar = () => {
+      return (<Grid container spacing={24}>
+        <Grid item xs={11} sm = {3}>
+          <MaterialInputWrapper>
+            <IconInput onChange={this.locationInputChanged} iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
+          </MaterialInputWrapper>
+        </Grid>
+
+        <Hidden xsDown>
+          <Grid item xs={1} sm = {3}>
+            <MaterialInputWrapper>
+              <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
+            </MaterialInputWrapper>
+          </Grid>
+
+          <Grid item xs={1} sm = {5}>
+            <Multiselect
+            textField={"name"}
+            valueField={"_id"}
+            data={this.state.skillCategoryData}
+            placeholder="Skill category"
+            onChange={this.collectSelectedSkillCategories}
+            />
+
+          </Grid>
+        </Hidden>
+
+        <Grid item xs={1} sm={1}>
+           <FilterButtonArea>
+              <FilterPanelAction>
+                <Button fab mini onClick={this.props.handleShowMoreFiltersButtonClick}>
+                   <Icon>tune </Icon>
+                </Button>
+
+              </FilterPanelAction>
+           </FilterButtonArea>
+        </Grid>
+      </Grid>);
+    }
+
+    renderFiltersForDialogBox = () => {
+      return (
+        <Grid container spacing={24}>
+            {/* 1rst Row */}
+            <Grid item xs={12} sm={6}>
+              <MaterialInputWrapper>
+                <IconInput onChange={this.locationInputChanged} iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
+              </MaterialInputWrapper>
+            </Grid>
+
+
+            <Grid item xs={12} sm={6}>
+              <MaterialInputWrapper>
+                <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
+              </MaterialInputWrapper>
+            </Grid>
+
+            {/* 2nd Row */}
+            <Grid item xs={12} sm = {6}>
+              <Multiselect
+                textField={"name"}
+                valueField={"_id"}
+                data={this.state.skillCategoryData}
+                placeholder="Skill category"
+                onChange={this.collectSelectedSkillCategories}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+               <Multiselect
+                  data={this.state.skillSubjectData}
+                  placeholder="Type to search skills"
+                  textField={"name"}
+                  onSearch={this.inputFromUser}
+                  onChange ={this.selectSkillSubject}
+                />
+            </Grid>
+
+            {/* 3rd Row */}
+            <Grid item xs={12} sm={6}>
+                <Multiselect onChange={this.skillLevelFilter} data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}  placeholder="Skill Level" />
+            </Grid>
+
+            <Grid item xs={12} sm={3}>
+                <MaterialInputWrapper select>
+                  <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.state.filter.gender} onChange={this.filterGender}>
+                    <MenuItem value=""> Gender</MenuItem>
+                    <MenuItem value={"Male"}> Male </MenuItem>
+                    <MenuItem value={"Female"}> Female </MenuItem>
+                    <MenuItem value={"Any"}> Any </MenuItem>
+                  </IconSelect>
+                </MaterialInputWrapper>
+            </Grid>
+
+            <Grid item xs={12} sm={3}>
+                <MaterialInputWrapper>
+                  <IconInput onChange={this.filterAge} iconName='star' labelText="Age"  />
+                </MaterialInputWrapper>
+            </Grid>
+
+            {/* Price Per Class And Per Month Section */}
+            <Grid item xs={12} sm={6} >
+              <SliderControl labelText={"Price Per Class"} onChange={this.perClassPriceFilter} max={100} min={1} defaultValue={[0,45]}/>
+            </Grid>
+
+
+            <Grid item xs={12} sm={6} >
+              <SliderControl labelText={"Price Per Month"} onChange={this.pricePerMonthFilter} max={100} min={1} defaultValue={[1,30]} />
+            </Grid>
+
+            <Grid item xs={12} sm={12} >
+             <FilterPanelAction>
+                <PrimaryButton fullWidth label="Apply filters & Search" icon={true} iconName="search" onClick={this.applyFilters}/>
+              </FilterPanelAction>
+            </Grid>
+          </Grid>
+      )
+    }
+
     conditionalRender = () => {
         const { showMoreFilters }  = this.state;
         // console.log("currentAddress", this.props.currentAddress)
@@ -244,88 +370,15 @@ class FilterPanel extends Component {
     render() {
       const { showMoreFilters } = this.state;
         // console.log(this.state);
-      const { stickyPosition, mapView } = this.props;
+      const { stickyPosition, mapView, filtersInDialogBox } = this.props;
 
       return (
           <MuiThemeProvider theme={muiTheme}>
-            <FilterPanelContainer mapView={mapView}>
-                <FilterPanelContent mapView={mapView}>
+            <FilterPanelContainer mapView={mapView} stickyPosition={stickyPosition} filtersInDialogBox={filtersInDialogBox}>
+                <FilterPanelContent mapView={mapView} stickyPosition={stickyPosition} filtersInDialogBox={filtersInDialogBox}>
                  <form noValidate autoComplete="off">
-                    <Grid container spacing={24}>
-                        {/* 1rst Row */}
-                        <Grid item xs={12} sm={6}>
-                          <MaterialInputWrapper>
-                            <IconInput onChange={this.locationInputChanged} iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
-                          </MaterialInputWrapper>
-                        </Grid>
-
-
-                        <Grid item xs={12} sm={6}>
-                          <MaterialInputWrapper>
-                            <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
-                          </MaterialInputWrapper>
-                        </Grid>
-
-                        {/* 2nd Row */}
-                        <Grid item xs={12} sm = {6}>
-                          <Multiselect
-                            textField={"name"}
-                            valueField={"_id"}
-                            data={this.state.skillCategoryData}
-                            placeholder="Skill category"
-                            onChange={this.collectSelectedSkillCategories}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                           <Multiselect
-                              data={this.state.skillSubjectData}
-                              placeholder="Type to search skills"
-                              textField={"name"}
-                              onSearch={this.inputFromUser}
-                              onChange ={this.selectSkillSubject}
-                            />
-                        </Grid>
-
-                        {/* 3rd Row */}
-                        <Grid item xs={12} sm={6}>
-                            <Multiselect onChange={this.skillLevelFilter} data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}  placeholder="Skill Level" />
-                        </Grid>
-
-                        <Grid item xs={12} sm={3}>
-                            <MaterialInputWrapper select>
-                              <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.state.filter.gender} onChange={this.filterGender}>
-                                <MenuItem value=""> Gender</MenuItem>
-                                <MenuItem value={"Male"}> Male </MenuItem>
-                                <MenuItem value={"Female"}> Female </MenuItem>
-                                <MenuItem value={"Any"}> Any </MenuItem>
-                              </IconSelect>
-                            </MaterialInputWrapper>
-                        </Grid>
-
-                        <Grid item xs={12} sm={3}>
-                            <MaterialInputWrapper>
-                              <IconInput onChange={this.filterAge} iconName='star' labelText="Age"  />
-                            </MaterialInputWrapper>
-                        </Grid>
-
-                        {/* Price Per Class And Per Month Section */}
-                        <Grid item xs={12} sm={6} >
-                          <SliderControl labelText={"Price Per Class"} onChange={this.perClassPriceFilter} max={100} min={1} defaultValue={[0,45]}/>
-                        </Grid>
-
-
-                        <Grid item xs={12} sm={6} >
-                          <SliderControl labelText={"Price Per Month"} onChange={this.pricePerMonthFilter} max={100} min={1} defaultValue={[1,30]} />
-                        </Grid>
-
-                        <Grid item xs={12} sm={12} >
-                         <FilterPanelAction>
-                            <PrimaryButton fullWidth label="Apply filters & Search" icon={true} iconName="search" onClick={this.applyFilters}/>
-                          </FilterPanelAction>
-                        </Grid>
-                      </Grid>
-                    </form>
+                    {filtersInDialogBox ? this.renderFiltersForDialogBox() : this.renderFilterBar()}
+                  </form>
                 </FilterPanelContent>
             </FilterPanelContainer>
           </MuiThemeProvider>
@@ -338,5 +391,14 @@ const CssTransitionGroupWrapperGrid = (props) => (
         {props.children}
     </Grid>
 );
+
+FilterPanel.propTypes = {
+  handleShowMoreFiltersButtonClick: PropTypes.func,
+  filtersInDialogBox: PropTypes.bool
+}
+
+FilterPanel.defaultProps = {
+  filtersInDialogBox: false
+}
 
 export default FilterPanel;
