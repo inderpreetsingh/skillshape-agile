@@ -21,13 +21,15 @@ const InfoCapsule = styled.div`
   font-size: ${helpers.baseFontSize}px;
   margin-right: ${helpers.rhythmDiv}px;
   margin-top: ${helpers.rhythmDiv}px;
+  height: ${helpers.rhythmDiv * 4}px;
 `;
 
 const CapsuleHead = styled.span`
+  line-height: 1;
 `;
 
 const CapsuleText = styled.span`
-
+  line-height: 1;
 `;
 
 const ClassTypeInfo = (props) => (

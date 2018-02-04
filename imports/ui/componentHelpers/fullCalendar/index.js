@@ -143,7 +143,7 @@ export default createContainer(props => {
     console.log("props FullCalendarContainer = ", props);
     const { startDate, endDate, manageMyCalendar, isUserSubsReady, currentUser, manageMyCalendarFilter } = props;
     let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
-    let { schoolId, slug } = props.params;
+    let { schoolId, slug } = props.params || {};
     let classTimesData = [];
     let classInterestData = [];
 

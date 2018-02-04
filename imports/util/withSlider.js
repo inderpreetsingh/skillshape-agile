@@ -36,8 +36,8 @@ const withSlider = (WrappedComponent,sliderConfig) => (props) => {
       <Slider {...settings}>
       {props.data && props.data.map(obj => {
         return (
-          <OuterWrapper padding={props.padding}>
-            <Wrapper key={obj._id} >
+          <OuterWrapper padding={props.padding} key={obj._id}>
+            <Wrapper >
               <WrappedComponent {...obj} />
             </Wrapper>
           </OuterWrapper>

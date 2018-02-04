@@ -188,12 +188,12 @@ material ui search bar */
 
 #app .image-gallery {
   margin: 0 auto;
-  width: 65%;
+  width: 100%;
   transition: all 1s ease;
 }
 
 #app .image-gallery-image img {
-  width: 100% !important;
+  object-fit: cover;
 }
 
 .image-slider-thumbnail-img img{

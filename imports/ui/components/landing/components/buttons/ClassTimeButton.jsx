@@ -17,8 +17,25 @@ const styles = {
     backgroundColor: helpers.primaryColor,
     height: 32,
     minHeight: 'auto',
+    marginRight: helpers.rhythmDiv,
     '&:hover': {
       backgroundColor: helpers.primaryColor,
+    },
+
+    '@media screen and (max-width: 800px)': {
+      fontSize: 12
+    }
+  },
+  classTimeSecondaryButton: {
+    fontSize: 14,
+    padding: '0 16px',
+    height: 32,
+    minHeight: 'auto',
+    fontFamily: helpers.specialFont,
+    backgroundColor: helpers.panelColor,
+    textTransform: 'none',
+    '&:hover': {
+      backgroundColor: helpers.lightTextColor,
     },
   },
   classTimeButtonGhost: {
@@ -27,7 +44,6 @@ const styles = {
     backgroundColor: 'transparent',
     transition: 'all 0.3s linear',
     '&:hover': {
-      border: `none`,
       backgroundColor: helpers.cancel,
     },
     '&:hover > span': {
@@ -36,6 +52,10 @@ const styles = {
   },
   classTimeButtonLabel: {
     color: helpers.lightTextColor,
+    textTransform: 'none',
+  },
+  classTimeSecondaryButtonLabel: {
+    color: helpers.textColor,
     textTransform: 'none',
   },
   classTimeButtonGhostLabel: {
@@ -96,6 +116,11 @@ const ClassTimeButton = (props) => {
   if(props.ghost) {
     rootClass = rootClass +' '+ props.classes.classTimeButtonGhost;
     labelClass = props.classes.classTimeButtonGhostLabel;
+  }
+
+  if(props.secondary) {
+    rootClass = rootClass +' '+ props.classes.classTimeSecondaryButton;
+    labelClass = props.classes.classTimeSecondaryButton;
   }
 
   if(props.itemScope && props.itemType) {

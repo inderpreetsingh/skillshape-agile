@@ -37,7 +37,7 @@ import {
 const styles = {
   dialogPaper: {
     padding: `${helpers.rhythmDiv * 2}px`,
-    paddingBottom: `${helpers.rhythmDiv * 2}px`
+    paddingBottom: `${helpers.rhythmDiv}px`
   },
   dialogTitleRoot: {
     display: 'flex',
@@ -132,7 +132,7 @@ class FiltersDialogBox extends Component {
                   </DialogTitleContainer>
 
                   <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
-                    <FilterPanel {...filterPanelProps} />
+                    <FilterPanel {...filterPanelProps} filtersInDialogBox/>
                   </DialogActions>
 
                 </MuiThemeProvider>

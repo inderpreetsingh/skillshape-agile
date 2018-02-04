@@ -14,15 +14,16 @@ import ReviewsSlider from './components/school/ReviewsSlider.jsx';
 import SchoolOfferings from './components/school/SchoolOfferings';
 import ClassTypeDescription from './components/school/ClassTypeDescription.jsx';
 import ClassTypeInfo from './components/school/ClassTypeInfo.jsx';
+import MyCalendar from '../users/myCalender';
 
 import StarsBar from './components/StarsBar.jsx';
 import ClassTimesSlider from './components/classTimes/ClassTimesSlider.jsx';
-import MyCalendar from './components/MyCalendar';
 import BrandBar from './components/BrandBar';
 import TopSearchBar from './components/TopSearchBar';
 import Footer from './components/footer/index.jsx';
 import ClassMap from './components/map/ClassMap';
 import ClassTimesBar from './components/classTimes/ClassTimesBar';
+import ClassTimeButton from './components/buttons/ClassTimeButton.jsx';
 
 import reviewsData from './constants/reviewsData.js';
 import classTimesBarData from './constants/classTimesBarData.js';
@@ -91,6 +92,7 @@ const ClassTypeForegroundImage = styled.div`
   height: 480px;
   border-radius: 5px;
   flex-grow: 1;
+  position: relative;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     display: none;
@@ -140,7 +142,7 @@ const Main = styled.main`
 `;
 
 const MainInnerFixedContainer = styled.div`
-  max-width: ${helpers.maxContainerWidth}px;
+  max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
   width: 100%;
   margin: 0 auto;
 `;
@@ -149,8 +151,8 @@ const MainInner = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
   overflow: hidden;
 
-  @media screen and (max-width : ${helpers.mobile}) {
-    padding: ${helpers.rhythmDiv}px;
+  @media screen and (max-width : ${helpers.mobile}px) {
+    padding: ${props => props.smallPadding ? props.smallPadding : helpers.rhythmDiv}px;
   }
 `;
 
@@ -166,6 +168,20 @@ const PackagesTitle = styled.h2`
   font-weight: 300;
   font-style: italic;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+const CalendarWrapper = styled.div`
+   _box-shadow: 0px 0px 5px 1px rgba(221,221,221,1);
+   border: 1px solid rgba(221,221,221,1);
+   margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const ActionButtonsWrapper = styled.div`
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  right: auto;
+  ${helpers.flexCenter}
 `;
 
 class ClassType extends Component {
@@ -188,7 +204,14 @@ class ClassType extends Component {
                 </ContentSection>
 
                 <ContentSection>
-                  <ClassTypeForegroundImage coverSrc={settings.classTypeImgSrc} />
+                  <ClassTypeForegroundImage coverSrc={settings.classTypeImgSrc} >
+
+                    <ActionButtonsWrapper>
+                      <ClassTimeButton icon iconName='phone' noMarginBottom label="Call Us" onClick={this.props.onCallUsButtonClick}/>
+                      <ClassTimeButton secondary noMarginBottom label="Class Times" onClick={this.props.onClassTimesButtonClick}/>
+                    </ActionButtonsWrapper>
+
+                  </ClassTypeForegroundImage>
 
                   <ClassTypeInfoWrapper>
                     <ClassTypeInfo />
@@ -221,8 +244,18 @@ class ClassType extends Component {
                 monthlyPackagesData={monthlyPackagesData}
               />
             </PackagesWrapper>
-          </Main>
 
+            <MainInnerFixedContainer fixedWidth="1100">
+              <MainInner smallPadding="0">
+                <CalendarWrapper>
+                  <MyCalendar />
+                </CalendarWrapper>
+
+                <ImgSlider />
+              </MainInner>
+
+            </MainInnerFixedContainer>
+          </Main>
         </Wrapper>
       </MuiThemeProvider>
     );

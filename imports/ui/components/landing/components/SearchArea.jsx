@@ -88,9 +88,7 @@ const SearchArea = (props) => (
     {props.topSection ? props.topSection : <TaglineWrapper />}
     {props.middleSection ? props.middleSection :
         (
-          <Sticky top={10} innerZ={100}>
             <SearchBarStyled onSearch={props.onSearch} onFiltersButtonClick={props.onFiltersButtonClick}/>
-          </Sticky>
         )}
     {props.bottomSection ? props.bottomSection : <BottomSectionContent getMyCurrentLocation={props.getMyCurrentLocation} /> }
   </SearchAreaPanel>
