@@ -37,12 +37,12 @@ const ClassTimeContainer = styled.div`
   }
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
+    max-width: 250px;
     width: 100%;
     margin: 0 auto;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    max-width: 250px;
   }
 `;
 

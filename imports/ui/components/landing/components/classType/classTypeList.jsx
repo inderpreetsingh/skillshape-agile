@@ -164,6 +164,16 @@ class ClassTypeList extends Component {
 
             return
               <NoResultContainer>
+              {/*  
+              <span style={{padding: 8}}>
+                  <b>No Results Found</b>
+              </span>
+              <PrimaryButton
+                  label="Want to explore in other location"
+                  icon={true}
+                  iconName="search"
+                  onClick={this.props.clearDefaultLocation}
+              />*/}
                 <NoResults />
             </NoResultContainer>
         }

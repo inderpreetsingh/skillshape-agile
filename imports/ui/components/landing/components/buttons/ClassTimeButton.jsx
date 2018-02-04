@@ -17,6 +17,7 @@ const styles = {
     backgroundColor: helpers.primaryColor,
     height: 32,
     minHeight: 'auto',
+    marginRight: helpers.rhythmDiv,
     '&:hover': {
       backgroundColor: helpers.primaryColor,
     },
@@ -24,6 +25,18 @@ const styles = {
     '@media screen and (max-width: 800px)': {
       fontSize: 12
     }
+  },
+  classTimeSecondaryButton: {
+    fontSize: 14,
+    padding: '0 16px',
+    height: 32,
+    minHeight: 'auto',
+    fontFamily: helpers.specialFont,
+    backgroundColor: helpers.panelColor,
+    textTransform: 'none',
+    '&:hover': {
+      backgroundColor: helpers.lightTextColor,
+    },
   },
   classTimeButtonGhost: {
     border: `2px solid ${helpers.cancel}`,
@@ -39,6 +52,10 @@ const styles = {
   },
   classTimeButtonLabel: {
     color: helpers.lightTextColor,
+    textTransform: 'none',
+  },
+  classTimeSecondaryButtonLabel: {
+    color: helpers.textColor,
     textTransform: 'none',
   },
   classTimeButtonGhostLabel: {
@@ -99,6 +116,11 @@ const ClassTimeButton = (props) => {
   if(props.ghost) {
     rootClass = rootClass +' '+ props.classes.classTimeButtonGhost;
     labelClass = props.classes.classTimeButtonGhostLabel;
+  }
+
+  if(props.secondary) {
+    rootClass = rootClass +' '+ props.classes.classTimeSecondaryButton;
+    labelClass = props.classes.classTimeSecondaryButton;
   }
 
   if(props.itemScope && props.itemType) {

@@ -23,6 +23,7 @@ import TopSearchBar from './components/TopSearchBar';
 import Footer from './components/footer/index.jsx';
 import ClassMap from './components/map/ClassMap';
 import ClassTimesBar from './components/classTimes/ClassTimesBar';
+import ClassTimeButton from './components/buttons/ClassTimeButton.jsx';
 
 import reviewsData from './constants/reviewsData.js';
 import classTimesBarData from './constants/classTimesBarData.js';
@@ -91,6 +92,7 @@ const ClassTypeForegroundImage = styled.div`
   height: 480px;
   border-radius: 5px;
   flex-grow: 1;
+  position: relative;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     display: none;
@@ -171,6 +173,15 @@ const PackagesTitle = styled.h2`
 const CalendarWrapper = styled.div`
    _box-shadow: 0px 0px 5px 1px rgba(221,221,221,1);
    border: 1px solid rgba(221,221,221,1);
+   margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const ActionButtonsWrapper = styled.div`
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  right: auto;
+  ${helpers.flexCenter}
 `;
 
 class ClassType extends Component {
@@ -193,7 +204,14 @@ class ClassType extends Component {
                 </ContentSection>
 
                 <ContentSection>
-                  <ClassTypeForegroundImage coverSrc={settings.classTypeImgSrc} />
+                  <ClassTypeForegroundImage coverSrc={settings.classTypeImgSrc} >
+
+                    <ActionButtonsWrapper>
+                      <ClassTimeButton icon iconName='phone' noMarginBottom label="Call Us" onClick={this.props.onCallUsButtonClick}/>
+                      <ClassTimeButton secondary noMarginBottom label="Class Times" onClick={this.props.onClassTimesButtonClick}/>
+                    </ActionButtonsWrapper>
+
+                  </ClassTypeForegroundImage>
 
                   <ClassTypeInfoWrapper>
                     <ClassTypeInfo />
@@ -232,10 +250,12 @@ class ClassType extends Component {
                 <CalendarWrapper>
                   <MyCalendar />
                 </CalendarWrapper>
-              </MainInner>
-            </MainInnerFixedContainer>
 
-            </Main>
+                <ImgSlider />
+              </MainInner>
+
+            </MainInnerFixedContainer>
+          </Main>
         </Wrapper>
       </MuiThemeProvider>
     );
