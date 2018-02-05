@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: ${helpers.rhythmDiv}px;
-  
+
   @media screen and (max-width: ${helpers.tablet}px) {
     ${helpers.flexDirectionColumn}
     align-items: center;
@@ -20,6 +20,7 @@ const Wrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     padding: ${helpers.rhythmDiv}px;
+    padding-bottom: 0;
   }
 
 `;
