@@ -66,13 +66,14 @@ class FilterPanel extends Component {
         showMoreFilters: false,
         skillCategoryData:[],
         skillSubjectData:[],
+        locationName: '',
         filter: {
-            skillSubjectIds:null,
-            perClassPrice:[],
-            pricePerMonth:[],
-            gender:null,
-            schoolName:null,
-            age:null
+            skillSubjectIds: null,
+            perClassPrice: [],
+            pricePerMonth: [],
+            gender: null,
+            schoolName: null,
+            age: null
         }
     }
     componentWillMount() {
@@ -85,10 +86,6 @@ class FilterPanel extends Component {
         this.setState({
             showMoreFilters: state
         });
-        // It's Needed since sticky position is adding
-        // a min-height to the div.
-        if(!this.props.stickyPosition && this.state.showMoreFilters && !state)
-          window.scrollBy(0,1);
     }
     // This is used to get subjects on the basis of subject category.
     inputFromUser = (text) => {
@@ -144,7 +141,13 @@ class FilterPanel extends Component {
     // Append School Name into state for filtering purpose
     fliterSchoolName =(event) => {
         console.log("filterGender",event.target.value);
-        this.state.filter.schoolName = event.target.value;
+
+        // This was causing issue when the filter dialog box is opened.
+        //this.state.filter.schoolName = event.target.value;
+
+        let oldFilter = {...this.state.filter};
+        oldFilter.name = event.target.value;
+        this.setState({ filter : oldFilter});
     }
     // Run filter method
     applyFilters = (event) => {
@@ -161,7 +164,13 @@ class FilterPanel extends Component {
     }
     locationInputChanged = (event) => {
         console.log("locationInputChanged", event.target.value);
-         if(!event.target.value) {
+
+        // the location input seems blocked, otherwise.
+        this.setState({
+          locationName: event.target.value
+        })
+
+        if(!event.target.value) {
             this.state.filter['coords'] = null;
             this.state.locationName = null;
             this.props.clearDefaultLocation();
@@ -171,14 +180,25 @@ class FilterPanel extends Component {
       return (<Grid container spacing={24}>
         <Grid item xs={11} sm = {3}>
           <MaterialInputWrapper>
-            <IconInput onChange={this.locationInputChanged} iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
+            <IconInput
+            value={this.state.locationName}
+            onChange={this.locationInputChanged}
+            iconName='location_on'
+            defaultValue={this.props.currentAddress}
+            googlelocation={true}
+            labelText="Location"
+            onLocationChange={this.onLocationChange} />
           </MaterialInputWrapper>
         </Grid>
 
         <Hidden xsDown>
           <Grid item xs={1} sm = {3}>
             <MaterialInputWrapper>
-              <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
+              <IconInput
+              iconName='school'
+              value={this.state.filter.schoolName}
+              onChange={this.fliterSchoolName}
+              labelText="School Name"  />
             </MaterialInputWrapper>
           </Grid>
 
@@ -200,7 +220,6 @@ class FilterPanel extends Component {
                 <Button fab mini onClick={this.props.handleShowMoreFiltersButtonClick}>
                    <Icon>tune </Icon>
                 </Button>
-
               </FilterPanelAction>
            </FilterButtonArea>
         </Grid>
@@ -212,15 +231,26 @@ class FilterPanel extends Component {
         <Grid container spacing={24}>
             {/* 1rst Row */}
             <Grid item xs={12} sm={6}>
-              <MaterialInputWrapper>
-                <IconInput onChange={this.locationInputChanged} iconName='location_on' defaultValue={this.props.currentAddress} googlelocation={true} labelText="Location" onLocationChange={this.onLocationChange} />
-              </MaterialInputWrapper>
+            <MaterialInputWrapper>
+              <IconInput
+              value={this.state.locationName}
+              onChange={this.locationInputChanged}
+              iconName='location_on'
+              defaultValue={this.props.currentAddress}
+              googlelocation={true}
+              labelText="Location"
+              onLocationChange={this.onLocationChange} />
+            </MaterialInputWrapper>
             </Grid>
 
 
             <Grid item xs={12} sm={6}>
               <MaterialInputWrapper>
-                <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
+                <IconInput
+                value={this.state.filter.schoolName}
+                iconName='school'
+                onChange={this.fliterSchoolName}
+                labelText="School Name"  />
               </MaterialInputWrapper>
             </Grid>
 
@@ -263,7 +293,9 @@ class FilterPanel extends Component {
 
             <Grid item xs={12} sm={3}>
                 <MaterialInputWrapper>
-                  <IconInput onChange={this.filterAge} iconName='star' labelText="Age"  />
+                  <IconInput
+                  value={this.state.filter.age}
+                  onChange={this.filterAge} iconName='star' labelText="Age"  />
                 </MaterialInputWrapper>
             </Grid>
 
@@ -285,91 +317,9 @@ class FilterPanel extends Component {
           </Grid>
       )
     }
-
-    conditionalRender = () => {
-        const { showMoreFilters }  = this.state;
-        // console.log("currentAddress", this.props.currentAddress)
-        if(showMoreFilters) {
-          return (
-            <Grid container spacing={24}>
-
-                <Hidden smUp>
-                  <Grid item xs={11} sm = {3}>
-                    <MaterialInputWrapper>
-                      <IconInput iconName='school' onChange={this.fliterSchoolName} labelText="School Name"  />
-                    </MaterialInputWrapper>
-                  </Grid>
-
-                  <Grid item xs={11} sm = {5}>
-                    <Multiselect
-                    textField={"name"}
-                    valueField={"_id"}
-                    data={this.state.skillCategoryData}
-                    placeholder="Skill category"
-                    onChange={this.collectSelectedSkillCategories}
-                    />
-
-                  </Grid>
-                </Hidden>
-
-                <Grid item xs={11} sm = {11}>
-                   <Multiselect
-                        data={this.state.skillSubjectData}
-                        placeholder="Type to search skills"
-                        textField={"name"}
-                        onSearch={this.inputFromUser}
-                        onChange ={this.selectSkillSubject}
-                    />
-                </Grid>
-
-
-                <Grid item xs={11} sm={6}>
-                    <Multiselect onChange={this.skillLevelFilter} data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}  placeholder="Skill Level" />
-                </Grid>
-
-                <Grid item xs={6} sm={3}>
-                    <MaterialInputWrapper select>
-                      <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.state.filter.gender} onChange={this.filterGender}>
-                        <MenuItem value=""> Gender</MenuItem>
-                        <MenuItem value={"Male"}> Male </MenuItem>
-                        <MenuItem value={"Female"}> Female </MenuItem>
-                        <MenuItem value={"Any"}> Any </MenuItem>
-                      </IconSelect>
-                    </MaterialInputWrapper>
-                </Grid>
-
-                  <Grid item xs={5} sm={2}>
-                    <MaterialInputWrapper>
-                      <IconInput onChange={this.filterAge} iconName='star' labelText="Age"  />
-                    </MaterialInputWrapper>
-                </Grid>
-
-                <Grid item xs={11} sm={6} >
-                  <SliderControl labelText={"Price Per Class"} onChange={this.perClassPriceFilter} max={100} min={1} defaultValue={[0,45]}/>
-                </Grid>
-
-
-                <Grid item xs={11} sm={5} >
-                  <SliderControl labelText={"Price Per Month"} onChange={this.pricePerMonthFilter} max={100} min={1} defaultValue={[1,30]} />
-                </Grid>
-
-
-                <Grid item xs={11} sm={6} hidden={{smDown: true}}>
-
-                </Grid>
-
-                <Grid item xs={11} sm={5} >
-                 <FilterPanelAction>
-                    <PrimaryButton fullWidth label="Apply filters & Search" icon={true} iconName="search" onClick={this.applyFilters}/>
-                  </FilterPanelAction>
-                </Grid>
-            </Grid>
-            )
-        }
-    }
     render() {
       const { showMoreFilters } = this.state;
-        // console.log(this.state);
+      console.log(this.state);
       const { stickyPosition, mapView, filtersInDialogBox } = this.props;
 
       return (

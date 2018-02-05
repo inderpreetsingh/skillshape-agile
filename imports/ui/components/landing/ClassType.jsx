@@ -6,12 +6,12 @@ import styled from 'styled-components';
 import { MuiThemeProvider } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
-import ReviewsBar from './components/school/ReviewsBar';
-import ClassTypeCover from './components/school/ClassTypeCover';
-import PackagesList from './components/school/packages/PackagesList'
-import ImgSlider from './components/school/ImgSlider';
+import ReviewsBar from './components/school/ReviewsBar.jsx';
+import ClassTypeCover from './components/school/ClassTypeCover.jsx';
+import PackagesList from './components/school/packages/PackagesList.jsx';
+import ImgSlider from './components/school/ImgSlider.jsx';
+import SchoolDetails from './components/school/details/SchoolDetails.jsx';
 import ReviewsSlider from './components/school/ReviewsSlider.jsx';
-import SchoolOfferings from './components/school/SchoolOfferings';
 import ClassTypeDescription from './components/school/ClassTypeDescription.jsx';
 import ClassTypeInfo from './components/school/ClassTypeInfo.jsx';
 import MyCalendar from '../users/myCalender';
@@ -29,6 +29,9 @@ import reviewsData from './constants/reviewsData.js';
 import classTimesBarData from './constants/classTimesBarData.js';
 import perClassPackagesData from './constants/perClassPackagesData.js';
 import monthlyPackagesData from './constants/monthlyPackagesData.js';
+import schoolImages from './constants/schoolImgSliderData.js';
+import schoolDetails from './constants/schoolDetailsData.js';
+import classTypeData from './constants/classTypeData.js';
 
 import * as helpers from './components/jss/helpers.js';
 import * as settings from './site-settings.js';
@@ -113,18 +116,6 @@ const ContentSection = styled.div`
 
 const ClassTypeInfoWrapper = styled.div`
 
-`;
-
-const ReviewsWrapper = styled.div`
-  max-width: 1200px;
-  width: 100%;
-  overflow: hidden;
-  margin: 0 auto;
-  margin-bottom: ${helpers.rhythmDiv * 8}px;
-
-`;
-
-const ClassTimesWrapper = styled.div`
 `;
 
 const ClassWrapper = styled.div`
@@ -218,7 +209,13 @@ class ClassType extends Component {
                     <ClassMap mapLocation={this.props.mapLocation}/>
                   </MapContainer>
 
-                  <ClassTypeDescription />
+                  <ClassTypeDescription
+                    schoolName={schoolDetails.schoolName}
+                    description={schoolDetails.fullDescription}
+                    classTypeName={schoolDetails.classTypeName}
+                    noOfStars={schoolDetails.noOfStars}
+                    noOfReviews={schoolDetails.noOfReviews}
+                  />
                 </ContentSection>
 
                 <ContentSection>
@@ -234,7 +231,12 @@ class ClassType extends Component {
                   </ClassTypeForegroundImage>
 
                   <ClassTypeInfoWrapper>
-                    <ClassTypeInfo />
+                    <ClassTypeInfo
+                      ageRange={classTypeData.ageRange}
+                      gender={classTypeData.gender}
+                      experience={classTypeData.experience}
+                      subjects={classTypeData.subjects}
+                    />
                   </ClassTypeInfoWrapper>
 
                 </ContentSection>
@@ -246,7 +248,7 @@ class ClassType extends Component {
           <Main>
             <MainInnerFixedContainer>
               <MainInner reviews largePadding="24" smallPadding="24">
-                <ClassWrapper>
+                <ClassWrapper reviews>
                   <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv}/>
                 </ClassWrapper>
 
@@ -266,15 +268,20 @@ class ClassType extends Component {
             </PackagesWrapper>
 
             <MainInnerFixedContainer fixedWidth="1100">
-              <MainInner smallPadding="0">
+              <MainInner smallPadding="0" largePadding="8">
+                <SchoolDetails
+                  images={schoolImages}
+                  schoolName={schoolDetails.schoolName}
+                  notes={schoolDetails.notes}
+                  description={schoolDetails.description}
+                />
                 <CalendarWrapper>
                   <MyCalendar />
                 </CalendarWrapper>
 
-                <ImgSlider />
               </MainInner>
-
             </MainInnerFixedContainer>
+
           </Main>
         </Wrapper>
       </MuiThemeProvider>
