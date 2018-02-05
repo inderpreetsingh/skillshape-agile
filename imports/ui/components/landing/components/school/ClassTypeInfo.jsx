@@ -22,6 +22,7 @@ const InfoCapsule = styled.div`
   margin-right: ${helpers.rhythmDiv}px;
   margin-top: ${helpers.rhythmDiv}px;
   height: ${helpers.rhythmDiv * 4}px;
+  line-height: 1;
 `;
 
 const CapsuleHead = styled.span`
@@ -34,25 +35,25 @@ const CapsuleText = styled.span`
 
 const ClassTypeInfo = (props) => (
   <Wrapper>
-    <InfoCapsule>
+    {props.ageRange && <InfoCapsule>
       <CapsuleHead>Age Range:</CapsuleHead>
       <CapsuleText> {props.ageRange}</CapsuleText>
-    </InfoCapsule>
+    </InfoCapsule>}
 
-    <InfoCapsule>
+    {props.gender && <InfoCapsule>
       <CapsuleHead>Gender:</CapsuleHead>
       <CapsuleText> {props.gender}</CapsuleText>
-    </InfoCapsule>
+    </InfoCapsule>}
 
-    <InfoCapsule>
+    {props.experience && <InfoCapsule>
       <CapsuleHead>Experience:</CapsuleHead>
       <CapsuleText> {props.experience}</CapsuleText>
-    </InfoCapsule>
+    </InfoCapsule>}
 
-    <InfoCapsule>
+    {props.subjects && <InfoCapsule>
       <CapsuleHead>Subjects:</CapsuleHead>
       <CapsuleText>  {props.subjects}</CapsuleText>
-    </InfoCapsule>
+    </InfoCapsule>}
   </Wrapper>
 );
 

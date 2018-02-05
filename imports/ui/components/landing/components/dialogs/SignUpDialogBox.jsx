@@ -201,6 +201,12 @@ class SignUpDialogBox extends Component {
         }
     }
 
+    handleTextOnChange = (inputName) => (e) => {
+      this.setState({
+        [inputName] : e.target.value
+      })
+    }
+
     handleCheckBoxChange = (checkBoxName) => (e) => {
         const currentValue = e.target.checked;
         this.setState((state) => (
@@ -249,7 +255,7 @@ class SignUpDialogBox extends Component {
         } = this.state;
 
         console.log('SignUpDialogBox state -->>',this.state);
-        console.log('SignUpDialogBox props -->>',this.props);
+        //console.log('SignUpDialogBox props -->>',this.props);
         return(
             <Dialog
               fullScreen={fullScreen}
@@ -290,15 +296,15 @@ class SignUpDialogBox extends Component {
                                     labelText="Name *"
                                     iconName="person"
                                     value={name}
-                                    onChange={this.handleTextChange.bind(this, "name")}
+                                    onChange={this.handleTextChange.bind(this,'name')}
                                 />
                                 <IconInput
                                     type="email"
                                     labelText="Email Address *"
                                     value={email}
                                     iconName="email"
-                                    onChange={this.handleTextChange.bind(this, "email")}
                                     error={errorEmail}
+                                    onChange={this.handleTextChange.bind(this,'email')}
                                     errorText={errorEmail && "Invalid Email Address"}
                                 />
                             </InputWrapper>

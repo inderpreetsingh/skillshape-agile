@@ -12,4 +12,8 @@ const config = {
   mobile: 1
 }
 
-export default withSlider(ClassTime,config);
+const breakPoints = {
+  mobile: 600,
+}
+
+export default withSlider(ClassTime,config,breakPoints);

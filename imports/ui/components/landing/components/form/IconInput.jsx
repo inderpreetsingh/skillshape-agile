@@ -19,7 +19,9 @@ const styles = {
 }
 
 class IconInput extends React.Component {
-  state = { inputFocused : false}
+  state = {
+    inputFocused : false,
+  }
   onFocus = ()=> {
       this.setState({inputFocused: true})
   }
@@ -71,6 +73,7 @@ class IconInput extends React.Component {
               <div style={{display: 'inline-flex', alignItems: 'center', paddingRight: 10}}>
                 <input
                   ref={(ref)=> inputRef = ref}
+                  value={props.value}
                   disabled={props.disabled}
                   multiline={props.multiline}
                   type={props.type}

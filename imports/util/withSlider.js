@@ -17,7 +17,15 @@ const Container = styled.div`
 
 `;
 
-const withSlider = (WrappedComponent,sliderConfig) => (props) => {
+
+const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) => {
+  console.log(sliderBreakPoints,"slider breakPoints");
+  console.log(sliderConfig,"slider config");
+  const breakPoints = {
+    mobile: (sliderBreakPoints && sliderBreakPoints.mobile) || helpers.mobile,
+    tablet: (sliderBreakPoints && sliderBreakPoints.tablet) || helpers.tablet
+  }
+
   const settings = {
     dots: true,
     infinite: true,
@@ -27,7 +35,7 @@ const withSlider = (WrappedComponent,sliderConfig) => (props) => {
     autoplay: true,
     infinite: true,
     slidesToShow: sliderConfig.desktop,
-    responsive: [{ breakpoint: helpers.tablet, settings: { slidesToShow: sliderConfig.tablet } }, { breakpoint: helpers.mobile, settings: { slidesToShow: sliderConfig.mobile }}]
+    responsive: [{ breakpoint: breakPoints.mobile, settings: { slidesToShow: sliderConfig.mobile } }, { breakpoint: breakPoints.tablet, settings: { slidesToShow: sliderConfig.tablet }}]
   };
 
   // console.log('Props...',props,WrappedComponent);

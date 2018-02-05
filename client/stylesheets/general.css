@@ -190,6 +190,29 @@ material ui search bar */
   margin: 0 auto;
   width: 100%;
   transition: all 1s ease;
+  cursor: pointer;
+}
+.image-gallery-left-nav, .image-gallery-right-nav {
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+#app .image-gallery-left-nav::before, #app .image-gallery-right-nav::before {
+  color: #4caf50;
+}
+
+.image-gallery:hover  .image-gallery-left-nav {
+  opacity: 1;
+}
+
+.image-gallery:hover  .image-gallery-right-nav {
+  opacity: 1;
+}
+
+
+#app .image-gallery-image {
+  background-color: transparent;
+  height: 310px;
 }
 
 #app .image-gallery-image img {
@@ -200,10 +223,13 @@ material ui search bar */
   height: 75px;
 }
 
+.image-gallery-thumbnails-wrapper, .image-gallery-fullscreen-button {
+  display: none;
+}
+
 @media screen and (max-width : 900px) {
   #app .image-gallery {
     width: 100%;
-    padding: 16px;
   }
 }
 
@@ -237,23 +263,20 @@ material ui search bar */
 
 
 /*
-  CLASS TIME BOX
+  Sticky
 */
-
-@keyframes add-to-calender {
-  from {
-    background-color: rgb(76, 175, 80);
-    opacity: 0.2;
-  }
-  to {
-    background-color: gray;
-  }
-}
-
 .search-bar-fixed {
   z-index: 100;
 }
 
 .search-bar-sticky {
   height: 0 !important;
+}
+
+/*
+  Location Search Results..
+*/
+
+.pac-container {
+  z-index: 1400
 }

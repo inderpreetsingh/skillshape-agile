@@ -68,12 +68,7 @@ const ClassTypeDescription = (props) => {
       </ReviewsWrapper>
 
       <Description>
-        {props.description ? props.description :
-        <Fragment>
-          One who calls himself to be a disciple of the Guru should rise from down & meditate on the Lord's Name.
-          During the early hours, he should rise and bathe, cleansing his soul in a tank of nectar, while he repeats the Name the
-          Guru has spoken to him. Meditate on the Lord's Name; embrace and enshrine the comtemplative remembrance of the Naam.
-        </Fragment>}
+        {props.description}
       </Description>
     </Wrapper>
   )
@@ -82,15 +77,9 @@ const ClassTypeDescription = (props) => {
 ClassTypeDescription.propTypes = {
   classTypeName: PropTypes.string,
   schoolName: PropTypes.string,
+  description: PropTypes.string,
   noOfReviews: PropTypes.number,
   noOfStars: PropTypes.number
-}
-
-ClassTypeDescription.defaultProps = {
-  classTypeName: 'Learn Naam Yoga',
-  schoolName: 'Guru Ramdas Academy',
-  noOfStars: 3.85,
-  noOfReviews: 13
 }
 
 export default ClassTypeDescription;
