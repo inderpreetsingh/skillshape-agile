@@ -74,3 +74,15 @@ li {
   display: list-item;
   list-style-position: inside;
 }
+
+.bg-stretch {
+  background-size: cover;
+  background-position: 50% 50%;
+  background-color:#0288d1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  filter: opacity(.2);
+}
