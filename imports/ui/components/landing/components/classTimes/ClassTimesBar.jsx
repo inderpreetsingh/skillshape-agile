@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
@@ -9,7 +9,6 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 
 import ClassTime from './ClassTime.jsx';
-
 import classTime from '../../constants/structure/classTime.js';
 
 import * as helpers from '../jss/helpers.js';
@@ -19,25 +18,20 @@ const Wrapper = styled.div`
 `;
 
 const ClassTimesWrapper = styled.div`
-  padding: ${helpers.rhythmDiv * 3}px;
-  max-width: 1096px;
+  max-width: 1072px;
   margin: 0 auto;
 
-  @media screen and (max-width: 1280px) {
-    max-width: 822px;
+  @media screen and (max-width: 1279px) {
+    max-width: 798px;
   }
 
-  @media screen and (max-width: 960px) {
-    max-width: 548px;
+  @media screen and (max-width: 959px) {
+    max-width: 524px;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 599px) {
     max-width: 274px;
   }
-`;
-
-const TransitionHandler = styled.div`
-  transition: all .8s linear;
 `;
 
 const styles = {
@@ -46,16 +40,6 @@ const styles = {
     justifyContent: 'center'
   }
 }
-
-const Fade = ({ children, ...props }) => (
-  <CSSTransition
-    {...props}
-    timeout={1000}
-    classNames="fade"
-  >
-    {children}
-  </CSSTransition>
-);
 
 const ClassTimesBar = (props) => (
   <Wrapper>
@@ -73,7 +57,6 @@ const ClassTimesBar = (props) => (
 
 ClassTimesBar.propTypes = {
   classTimesData: PropTypes.arrayOf(classTime),
-
 }
 
 export default withStyles(styles)(ClassTimesBar);

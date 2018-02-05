@@ -192,6 +192,10 @@ material ui search bar */
   transition: all 1s ease;
 }
 
+#app .image-gallery-image {
+  background-color: #f5f5f5;
+}
+
 #app .image-gallery-image img {
   object-fit: cover;
 }
@@ -203,7 +207,6 @@ material ui search bar */
 @media screen and (max-width : 900px) {
   #app .image-gallery {
     width: 100%;
-    padding: 16px;
   }
 }
 

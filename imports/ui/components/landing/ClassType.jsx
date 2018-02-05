@@ -22,7 +22,7 @@ import BrandBar from './components/BrandBar';
 import TopSearchBar from './components/TopSearchBar';
 import Footer from './components/footer/index.jsx';
 import ClassMap from './components/map/ClassMap';
-import ClassTimesBar from './components/classTimes/ClassTimesBar';
+import ClassTimesBoxes from './components/classTimes/ClassTimesBoxes';
 import ClassTimeButton from './components/buttons/ClassTimeButton.jsx';
 
 import reviewsData from './constants/reviewsData.js';
@@ -118,14 +118,20 @@ const ClassTypeInfoWrapper = styled.div`
 const ReviewsWrapper = styled.div`
   max-width: 1200px;
   width: 100%;
+  overflow: hidden;
   margin: 0 auto;
   margin-bottom: ${helpers.rhythmDiv * 8}px;
+
 `;
 
 const ClassTimesWrapper = styled.div`
+`;
+
+const ClassWrapper = styled.div`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+  margin-bottom: ${props => props.reviews ? helpers.rhythmDiv * 8 : 0}px;
 `;
 
 const ClassTimesTitle = styled.h2`
@@ -148,8 +154,8 @@ const MainInnerFixedContainer = styled.div`
 `;
 
 const MainInner = styled.div`
-  padding: ${helpers.rhythmDiv * 2}px;
-  overflow: hidden;
+  padding: ${props => props.largePadding ? props.largePadding : helpers.rhythmDiv * 2}px;
+  overflow: ${props => (props.reviews || props.classTimes) ? 'hidden' : 'initial' };
 
   @media screen and (max-width : ${helpers.mobile}px) {
     padding: ${props => props.smallPadding ? props.smallPadding : helpers.rhythmDiv}px;
@@ -182,6 +188,18 @@ const ActionButtonsWrapper = styled.div`
   bottom: 8px;
   right: auto;
   ${helpers.flexCenter}
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+`;
+
+const CallUsButtonWrapper = styled.div`
+  @media screen and (max-width: ${helpers.tablet}px) {
+    margin-bottom: ${helpers.rhythmDiv}px;
+  }
 `;
 
 class ClassType extends Component {
@@ -207,7 +225,9 @@ class ClassType extends Component {
                   <ClassTypeForegroundImage coverSrc={settings.classTypeImgSrc} >
 
                     <ActionButtonsWrapper>
-                      <ClassTimeButton icon iconName='phone' noMarginBottom label="Call Us" onClick={this.props.onCallUsButtonClick}/>
+                      <CallUsButtonWrapper>
+                        <ClassTimeButton icon iconName='phone' label="Call Us" onClick={this.props.onCallUsButtonClick}/>
+                      </CallUsButtonWrapper>
                       <ClassTimeButton secondary noMarginBottom label="Class Times" onClick={this.props.onClassTimesButtonClick}/>
                     </ActionButtonsWrapper>
 
@@ -225,15 +245,15 @@ class ClassType extends Component {
 
           <Main>
             <MainInnerFixedContainer>
-              <MainInner>
-                <ReviewsWrapper>
+              <MainInner reviews largePadding="24" smallPadding="24">
+                <ClassWrapper>
                   <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv}/>
-                </ReviewsWrapper>
+                </ClassWrapper>
 
-                <ClassTimesWrapper>
+                <ClassWrapper>
                   <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
-                  <ClassTimesBar classTimesData={classTimesBarData} />
-                </ClassTimesWrapper>
+                  <ClassTimesBoxes classTimesData={classTimesBarData} />
+                </ClassWrapper>
               </MainInner>
             </MainInnerFixedContainer>
 

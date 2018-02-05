@@ -22,6 +22,7 @@ const InfoCapsule = styled.div`
   margin-right: ${helpers.rhythmDiv}px;
   margin-top: ${helpers.rhythmDiv}px;
   height: ${helpers.rhythmDiv * 4}px;
+  line-height: 1;
 `;
 
 const CapsuleHead = styled.span`

@@ -61,7 +61,8 @@
     "warning": "^3.0.0"
   },
   "devDependencies": {
-    "babel-plugin-transform-class-properties": "^6.24.1"
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "bcrypt": "^1.0.3"
   },
   "babel": {
     "plugins": [
