@@ -35,8 +35,6 @@ const style = theme => {
 		  color: '#fff',
 		  backgroundSize: 'cover',
 		  backgroundPosition: '50% 50%',
-		  backgroundColor:'#28b0ce;',
-		  background: 'rgba(253, 184, 59, 0.8)',
 		  zIndex: 1
 		},
 		problemsDiv: {
@@ -118,7 +116,7 @@ const SkillShapeSchool = (props) => {
 	return (
 		<MainContainer>
 			<MainContentWrapper className={props.classes.aboutUs}>
-				<div className="bg-stretch" style={{backgroundImage: 'url(images/Media,602835,en.jpg)'}}>
+				<div className="bg-stretch" style={{backgroundImage: 'url(images/img10.jpg)',filter: 'none'}}>
 				</div>
 				<div style={{textAlign: 'center',padding: '100px 16px',position: 'absolute',top: 0,left: 0,bottom: 0,right: 0}}>
 					<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif'}}>
