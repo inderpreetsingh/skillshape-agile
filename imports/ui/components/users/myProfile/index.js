@@ -104,6 +104,10 @@ class MyProfile extends React.Component {
     }
 
     locationInputChanged = (event) => {
+        // Need to update address otherwise we can not edit location.
+        this.setState({
+          address: event.target.value
+        })
          if(!event.target.value) {
             this.setState({
 		        loc: null,
@@ -159,7 +163,7 @@ class MyProfile extends React.Component {
 	  	Meteor.call("user.editUser", {doc: userData, docId: currentUser._id}, (error, result) => {
 	      let state = {isBusy: false}
 	      if(error) {
-	      	state.errorText = err.reason || err.message;
+	      	state.errorText = error.reason || error.message;
 	      	toastr.error(state.errorText,"Error");
 	      }
 	      if(result) {

@@ -184,6 +184,7 @@ export default function() {
                                                 googlelocation={true}
                                                 labelText="Where You Live"
                                                 value={address}
+                                                defaultValue={address}
                                                 onLocationChange={this.onLocationChange}
                                             />
                                             <IconInput
