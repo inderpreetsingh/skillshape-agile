@@ -14,6 +14,7 @@ const Title = styled.h3`
   font-weight: 600;
   font-family: ${helpers.specialFont};
   margin: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
   line-height: 1;
   font-size: ${helpers.baseFontSize}px;
 `;
@@ -24,15 +25,11 @@ const Notes = styled.ul`
 `;
 
 const Note = styled.li`
-  list-style: none;
+  list-style: dot;
   font-size: ${helpers.baseFontSize}px;
   font-family: ${helpers.specialFont};
   line-height: 1;
-
-  &:before {
-    content: '*';
-    margin-right: ${helpers.rhythmDiv}px;
-  }
+  margin-bottom: ${helpers.rhythmDiv/2}px;
 `;
 
 const StudentNotes = (props) => (

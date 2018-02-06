@@ -131,7 +131,7 @@ const ClassTimesTitle = styled.h2`
   font-family: ${helpers.specialFont};
   font-weight: 300;
   font-style: italic;
-  margin-bottom: ${helpers.rhythmDiv * 3}px;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Main = styled.main`
@@ -142,6 +142,7 @@ const MainInnerFixedContainer = styled.div`
   max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
   width: 100%;
   margin: 0 auto;
+  margin-bottom: ${helpers.rhythmDiv * 3}px;
 `;
 
 const MainInner = styled.div`
@@ -156,6 +157,7 @@ const MainInner = styled.div`
 const PackagesWrapper = styled.div`
   ${helpers.flexDirectionColumn}
   width: 100%;
+  margin-bottom: ${helpers.rhythmDiv * 3}px;
 `;
 
 const PackagesTitle = styled.h2`
@@ -164,6 +166,7 @@ const PackagesTitle = styled.h2`
   font-family: ${helpers.specialFont};
   font-weight: 300;
   font-style: italic;
+  margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
@@ -187,7 +190,7 @@ const ActionButtonsWrapper = styled.div`
   }
 `;
 
-const CallUsButtonWrapper = styled.div`
+const ActionButton = styled.div`
   @media screen and (max-width: ${helpers.tablet}px) {
     margin-bottom: ${helpers.rhythmDiv}px;
   }
@@ -201,6 +204,7 @@ class ClassType extends Component {
         <Wrapper>
           {/*<TopSearchBar positionFixed={true}/> */}
 
+          {/* Class Type Cover includes description, map, foreground image, then class type information*/}
           <ClassTypeCover>
             <CoverContentWrapper>
               <CoverContent>
@@ -222,9 +226,12 @@ class ClassType extends Component {
                   <ClassTypeForegroundImage coverSrc={settings.classTypeImgSrc} >
 
                     <ActionButtonsWrapper>
-                      <CallUsButtonWrapper>
+                      <ActionButton>
                         <ClassTimeButton icon iconName='phone' label="Call Us" onClick={this.props.onCallUsButtonClick}/>
-                      </CallUsButtonWrapper>
+                      </ActionButton>
+                      <ActionButton>
+                        <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={this.props.onEmailButtonClick} />
+                      </ActionButton>
                       <ClassTimeButton secondary noMarginBottom label="Class Times" onClick={this.props.onClassTimesButtonClick}/>
                     </ActionButtonsWrapper>
 
@@ -245,6 +252,7 @@ class ClassType extends Component {
             </CoverContentWrapper>
           </ClassTypeCover>
 
+          {/* Main section includes reviews slider, class timing boxes(+ slider), pricing section, about school section, calendar */}
           <Main>
             <MainInnerFixedContainer>
               <MainInner reviews largePadding="24" smallPadding="24">
@@ -270,17 +278,20 @@ class ClassType extends Component {
             <MainInnerFixedContainer fixedWidth="1100">
               <MainInner smallPadding="0" largePadding="8">
                 <SchoolDetails
+                  website={schoolDetails.website}
+                  address={schoolDetails.address}
                   images={schoolImages}
                   schoolName={schoolDetails.schoolName}
                   notes={schoolDetails.notes}
-                  description={schoolDetails.description}
+                  description={schoolDetails.fullDescription}
                 />
                 <CalendarWrapper>
                   <MyCalendar />
                 </CalendarWrapper>
-
               </MainInner>
             </MainInnerFixedContainer>
+
+            <Footer />
 
           </Main>
         </Wrapper>

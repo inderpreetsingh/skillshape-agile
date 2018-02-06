@@ -11,7 +11,7 @@ import * as helpers from '../../jss/helpers.js';
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: ${helpers.rhythmDiv}px;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     ${helpers.flexDirectionColumn}
@@ -48,6 +48,8 @@ const SchoolDetails = (props) => (
   <Wrapper>
     <SchoolSection>
       <AboutSchool
+        website={props.website}
+        address={props.address}
         title={props.schoolName}
         description={props.description}/>
       <StudentNotes notes={props.notes}/>
