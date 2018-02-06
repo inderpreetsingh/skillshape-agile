@@ -10,6 +10,8 @@ import { sendClaimASchoolEmail } from "/imports/api/email";
 import { sendConfirmationEmail } from "/imports/api/email";
 import { sendPriceInfoRequestEmail } from "/imports/api/email";
 import { getUserFullName } from '/imports/util/getUserData';
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
+
 // console.log("getUserFullName -->>",getUserFullName)
 Meteor.methods({
     editSchool: function(id, data) {
@@ -290,6 +292,15 @@ Meteor.methods({
 
         } else {
             throw new Meteor.Error("Permission denied!!");
+        }
+    },
+    // This function is used to add a school member in `School`.
+    "school.addNewMemebr" : function(doc) {
+        // Validations
+        // Only school admin can add a new Memeber.
+        const superAdminData = Meteor.users.findOne({_id:this.userId, "roles": "Superadmin"});
+        if(superAdminData) {
+            SchoolMemberDetails.inser(doc);
         }
     }
 });

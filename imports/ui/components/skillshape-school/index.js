@@ -10,13 +10,13 @@ import { withStyles } from '/imports/util';
 const style = theme => {
 	return {
 		card: {
-			margin: theme.spacing.unit,
-			display: 'flex',
+			margin:theme.spacing.unit,
             flexDirection: 'column',
-            justifyContent: 'space-between',
-            height: '100%'
+            height: '80%',
+            borderRadius: theme.spacing.unit - 2
 		},
 		actions: {
+			paddingTop: theme.spacing.unit * 2 - 4
 		},
 		typoText: {
 			font: '400 18px/1.4 "Open Sans", sans-serif',
@@ -94,6 +94,30 @@ const style = theme => {
 		  backgroundColor:'#58409e;',
 		  background: 'linear-gradient(to right, #3fc49c 0%, #3ac6ae 24%, #2acde5 78%, #25cff6 100%)',
 		  content: '',
+		},
+		pricingBlocks: {
+			padding: '15px',
+			textAlign: 'center',
+			borderBottomWidth: '1px',
+			borderBottomStyle: 'solid',
+			borderColor: '#e0e0e0'
+		},
+		letsHandleIt: {
+		    borderRadius: '50px',
+		    fontSize: '16px',
+		    lineHeight: '1.8em',
+		    paddingLeft: '30px',
+		    paddingRight: '30px',
+		    paddingTop: '10px',
+		    paddingBottom: '10px',
+		    borderColor: '#081452',
+		    background: '#081452',
+		    color: '#fff',
+		    borderWidth: '1px',
+		    borderStyle: 'solid',
+		    fontWeight: 700,
+		    margin: 'auto',
+		    minWidth: '8em'
 		}
 	}
 }
@@ -233,106 +257,176 @@ const SkillShapeSchool = (props) => {
 						</div>
 			</MainContentWrapper>
 			<MainContentWrapper>
-				<Grid container>
+				<Grid container style={{margin: 'auto',maxWidth: '1000px'}}>
 					<Grid item md={4} sm={4} xs={12}>
+						<div style={{textAlign:'center'}}>
+							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-free.svg"/>
+						</div>
 						<Card className={props.classes.card}>
 							<CardHeader
-					            title="Free:"
+					            title="Free"
+					            style={{textAlign:'center'}}
 					        />
-					        <CardContent>
-								<ul>
-									<li>
-										Chat Group,
-									</li>
-									<li>
-										Media,
-									</li>
-									<li>
-										Management,
-									</li>
-									<li>
-										Frames,
-									</li>
-									<li>
-										Directory,
-									</li>
-									<li>
-										Students,
-									</li>
-									<li>
+				        	<div className={props.classes.pricingBlocks}>
+					        	<div>
+									<Typography>
+										Chat Group
+									</Typography>
+					        	</div>
+				        	</div>
+				        	<div className={props.classes.pricingBlocks}>
+				        		<div>
+									<Typography>
+										Media
+									</Typography>
+				        		</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Management
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Frames
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Directory
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks} className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Students
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
 										Enrollment and Notes,
-									</li>
-									<li>
-										Social Sharing.
-									</li>
-								</ul>
-					        </CardContent>
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Social Sharing
+									</Typography>
+								</div>
+							</div>
 					        <CardActions className={props.classes.actions}>
-					            <Button color="accent" style={{width: '100%'}} dense>
-					            	Coming Soon!
+					            <Button color="accent" className={props.classes.letsHandleIt} dense onClick={this.doSignUp}>
+					            	Let's handle it!
 					            </Button>
 					        </CardActions>
 						</Card>
 					</Grid>
 
 					<Grid item md={4} sm={4} xs={12}>
+						<div style={{textAlign:'center'}}>
+							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-pro.svg"/>
+						</div>
 						<Card className={props.classes.card}>
 							<CardHeader
-					            title="Fundamental:"
+					            title="Fundamental"
 					            subheader="All FREE Features, PLUS"
+					            style={{textAlign:'center'}}
 					        />
-							<CardContent>
-								<ul>
-									<li>
-										Attendance Tracking,
-									</li>
-									<li>
-										Payments Gateway,
-									</li>
-									<li>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Attendance Tracking
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Payments Gateway
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
 										Incident Accident Citation and Recommendations to Students,
-									</li>
-									<li>
-										Skill Inventory.
-									</li>
-								</ul>
-					        </CardContent>
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Skill Inventory
+									</Typography>
+								</div>
+							</div>
+
+
 					        <CardActions className={props.classes.actions}>
 					            <Button color="accent" style={{width: '100%'}} dense>
-					            	Coming Soon!
+					            	Coming Soon
 					            </Button>
 					        </CardActions>
 						</Card>
 					</Grid>
 
 					<Grid item md={4} sm={4} xs={12}>
+						<div style={{textAlign:'center'}}>
+							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-pro.svg"/>
+						</div>
 						<Card className={props.classes.card}>
 							<CardHeader
-					            title="Full-Featured:"
+					            title="Full-Featured"
 					            subheader="All Fundamental Features, PLUS"
+					            style={{textAlign:'center'}}
 					        />
-							<CardContent>
-								<ul>
-									<li>
-										Premium Advanced Training,
-									</li>
-									<li>
-										Progress Tracking for Students,
-									</li>
-									<li>
-										eMail Marketing System,
-									</li>
-									<li>
-										Merchandise and Inventory,
-									</li>
-									<li>
-										Private School Apps for iPhone and Android.
-									</li>
-								</ul>
-					        </CardContent>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Premium Advanced Training
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Progress Tracking for Students
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										eMail Marketing System
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Merchandise and Inventory
+									</Typography>
+								</div>
+							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Private School Apps for iPhone and Android
+									</Typography>
+								</div>
+							</div>
 					        <CardActions className={props.classes.actions}>
 					            <Button color="accent" style={{width: '100%'}} dense>
-					            	Coming Soon!
+					            	Coming Soon
 					            </Button>
 					        </CardActions>
 						</Card>

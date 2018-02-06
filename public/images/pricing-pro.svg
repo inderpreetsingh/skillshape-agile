@@ -1,0 +1,27 @@
+<svg width="148" height="148" viewBox="0 0 148 148" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>
+        Slice
+    </title>
+    <defs>
+        <path id="a" d="M22.91 13.258l1.903 1.896 5.032-7.2-5.032-2.456z"/>
+    </defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(25 16)">
+            <path d="M.906 77.12c0 9.91 8.07 17.94 18.023 17.94S36.95 87.03 36.95 77.12" fill="#FF5A6E"/>
+            <path fill="#71D1DC" d="M76.63 130.47l34.155-34.387H76.63"/>
+            <path fill="#FFE697" d="M.653 67.928L105.2 37.564 38.098.37"/>
+            <ellipse stroke="#FFB199" stroke-width="14.017" cx="93.487" cy="74.295" rx="14.99" ry="14.886"/>
+            <ellipse fill="#FFCF59" cx="57.253" cy="111.064" rx="19.466" ry="19.364"/>
+            <path stroke="#5C6AE6" stroke-width="15.753" d="M29.27 102.69v19.963H9.476V102.69z"/>
+        </g>
+        <g id="people">
+            <g id="shape" transform="matrix(-1 0 0 1 31.007 73.52)">
+                <use fill="#FFF" fill-rule="evenodd" xlink:href="#a"/>
+                <path stroke="#081452" stroke-width="1.549" d="M23.766 13.018l.94.937 3.985-5.702-3.354-1.638-1.57 6.403z"/>
+            </g>
+            <path id="shape" fill="#081452" d="M13.248 147.462l6.1-20.76-6.1-17.14V90.5l9.412-4.895 7.737-11.626h-2.423l-7.128 8.953L3.913 92.34l-2.566 16.197 2.566 2.477L7 147.462h1.8l1.708-31.55 3.715 12.633-3.015 18.917z"/>
+        </g>
+        <path id="shape" fill="#081452" d="M147.507 147.233l-3.376-22.663V70.18l-2.25 2.265v8.67l-1.124 7.194h-5.626l-10.127-5.666-3.376-11.332h-2.25l3.376 12.465 10.126 7.932v15.863l-2.25 16.997v22.663h2.25l2.25-22.663 3.375-11.33 1.126 11.33 5.627 22.663z"/>
+        <path d="M140.876 86.402h-2.62l.915-7.367 3.944.794-2.238 6.572z" stroke="#081452" stroke-width="1.549"/>
+    </g>
+</svg>

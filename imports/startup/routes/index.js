@@ -14,6 +14,7 @@ import ClassType from '/imports/ui/components/landing/ClassType.jsx';
 import ResetPassword from '/imports/ui/components/account/resetPassword';
 import MyProfile from '/imports/ui/components/users/myProfile';
 import SchoolView from '/imports/ui/components/schoolView';
+import DashView from '/imports/ui/components/schoolMembers';
 import ClaimSchool from '/imports/ui/components/claimSchool';
 import SchoolEditView from '/imports/ui/components/schoolView/editSchool';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
@@ -51,6 +52,7 @@ export default Routes = componentLoader((props) => (
             });
         }} />
         <Route path="/schools/:slug" component={SchoolView} />
+        <Route path="/school/:slug/members" component={DashView} />
         <Route path="/MyCalendar" component={ManageMyCalendar} />
         <Route path="/reset-password/:token" component={ResetPassword}/>
         <Route path="/claimSchool" component={ClaimSchool}/>
