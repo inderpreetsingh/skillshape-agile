@@ -6,5 +6,7 @@ export default schoolDetailsData = {
     classTypeName: 'Learn Naam Yoga',
     noOfStars: 3.85,
     noOfReviews: 13,
+    website: 'www.example.com',
+    address: '123, anywhere, San Diego, CA, USA',
     notes: ["One who calls himself to be a disciple", "Guru should rise from down & medidate on the Lord's Name", "During the early hours, he should rise and bathe."]
   }

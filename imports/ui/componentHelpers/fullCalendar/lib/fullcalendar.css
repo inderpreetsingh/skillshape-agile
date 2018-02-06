@@ -142,6 +142,7 @@ NOTE: use percentage font sizes or else old IE chokes
   font-weight: 400;
   letter-spacing: 0;
   will-change: box-shadow, transform;
+  outline: none;
   transition: box-shadow 0.2s cubic-bezier(0.4, 0, 1, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
   .fc button::-moz-focus-inner {
     border: 0; }
@@ -1281,3 +1282,17 @@ be a descendant of the grid when it is being dragged.
   border-bottom: 0; }
 .card-calendar .fc .fc-body .fc-widget-content {
   border-bottom: 0; }
+
+  /*
+    Override the styles
+  */
+
+  .fc button, .fc button.btn-primary {
+    box-shadow: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .fc button:focus, .fc button:hover, .fc button.btn-primary:focus, .fc button.btn-primary:hover {
+    box-shadow: none;
+  }

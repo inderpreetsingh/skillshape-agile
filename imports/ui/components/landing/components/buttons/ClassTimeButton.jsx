@@ -120,7 +120,7 @@ const ClassTimeButton = (props) => {
 
   if(props.secondary) {
     rootClass = rootClass +' '+ props.classes.classTimeSecondaryButton;
-    labelClass = props.classes.classTimeSecondaryButton;
+    labelClass = props.classes.classTimeSecondaryButtonLabel;
   }
 
   if(props.itemScope && props.itemType) {
