@@ -270,42 +270,42 @@ const SkillShapeSchool = (props) => {
 				        	<div className={props.classes.pricingBlocks}>
 					        	<div>
 									<Typography>
-										Chat Group,
+										Chat Group
 									</Typography>
 					        	</div>
 				        	</div>
 				        	<div className={props.classes.pricingBlocks}>
 				        		<div>
 									<Typography>
-										Media,
+										Media
 									</Typography>
 				        		</div>
 							</div>
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Management,
+										Management
 									</Typography>
 								</div>
 							</div>
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Frames,
+										Frames
 									</Typography>
 								</div>
 							</div>
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Directory,
+										Directory
 									</Typography>
 								</div>
 							</div>
 							<div className={props.classes.pricingBlocks} className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Students,
+										Students
 									</Typography>
 								</div>
 							</div>
@@ -319,7 +319,7 @@ const SkillShapeSchool = (props) => {
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Social Sharing.
+										Social Sharing
 									</Typography>
 								</div>
 							</div>
@@ -365,7 +365,7 @@ const SkillShapeSchool = (props) => {
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Skill Inventory.
+										Skill Inventory
 									</Typography>
 								</div>
 							</div>
@@ -392,35 +392,35 @@ const SkillShapeSchool = (props) => {
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Premium Advanced Training,
+										Premium Advanced Training
 									</Typography>
 								</div>
 							</div>
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Progress Tracking for Students,
+										Progress Tracking for Students
 									</Typography>
 								</div>
 							</div>
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										eMail Marketing System,
+										eMail Marketing System
 									</Typography>
 								</div>
 							</div>
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Merchandise and Inventory,
+										Merchandise and Inventory
 									</Typography>
 								</div>
 							</div>
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Private School Apps for iPhone and Android.
+										Private School Apps for iPhone and Android
 									</Typography>
 								</div>
 							</div>
