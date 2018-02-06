@@ -8,15 +8,50 @@ const SchoolMemberDetails = new Mongo.Collection(config.collections.schoolMember
  * See: https://github.com/aldeed/meteor-autoform#affieldinput
  */
 SchoolMemberDetails.attachSchema(new SimpleSchema({
-    packageName: {
+    name: {
+        type: String,// Required
+    },
+    firstName: {
+        optional: true,
         type: String,
-        optional: true
     },
-    classTypeId: {
-        type: [String],
-        optional: true
+    lastName: {
+        optional: true,
+        type: String
     },
-    classTypeName: {
+    phone: {
+        optional: true,
+        type: Number
+    },
+    pic: {
+        optional: true,
+        type: String
+    },
+    dob: {
+        optional: true,
+        type: Date
+    },
+    address: {
+        optional: true,
+        type: String
+    },
+    gender: {
+        optional: true,
+        type: String
+    },
+    expertise: {
+        optional: true,
+        type: String
+    },
+    state: {
+        optional: true,
+        type: String
+    },
+    role: {
+        optional: true,
+        type: String
+    },
+    classTypeIds: {
         type: [String],
         optional: true
     },
@@ -24,16 +59,24 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
         type: [String],
         optional: true
     },
-    memberName: {
+    sendMeSkillShapeNotification: {
+        type: Boolean,
+        optional: true
+    },
+    notes: {
+        type: String,
+        optional: true
+    },
+    createdBy: { // Memeber who created an entry for new member.
+        type: String,
+    },
+    email: {
         type: String,
         optional:true
     },
-    memberEmail: {
+    packageName: { // Students can have package name.
         type: String,
-        optional:true
-    },
-    createdBy: {
-        type: String // This should be a user who created school member.
+        optional: true
     }
 }));
 
