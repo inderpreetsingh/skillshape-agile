@@ -27,7 +27,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 
 const MainContentWrapper = styled.div`
-
+  padding-top: ${helpers.rhythmDiv * 3}px;
 `;
 
 const ContentContainer = styled.div`
@@ -164,7 +164,7 @@ class ClassTypeList extends Component {
 
             return
               <NoResultContainer>
-              {/*  
+              {/*
               <span style={{padding: 8}}>
                   <b>No Results Found</b>
               </span>

@@ -23,7 +23,7 @@ const CoverDiv = styled.div`
       height: 100%;
       background-color: white;
       opacity: 0.9;
-      z-index: 15;
+      z-index: 0;
     }
 `;
 

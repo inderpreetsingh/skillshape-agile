@@ -1,4 +1,4 @@
-import React,{ Component } from 'react';
+import React,{ Component,Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import styled from 'styled-components';
@@ -48,6 +48,7 @@ const SchoolImg = styled.img`
 
 const Wrapper = styled.div`
   width: 100%;
+  margin-top: 66px;
 `;
 
 const ClassTypeDetailsWrapper = styled.div`
@@ -203,6 +204,7 @@ class ClassType extends Component {
       <MuiThemeProvider theme={muiTheme}>
         <Wrapper>
           {/*<TopSearchBar positionFixed={true}/> */}
+          <BrandBar barButton={<Fragment></Fragment>} />
 
           {/* Class Type Cover includes description, map, foreground image, then class type information*/}
           <ClassTypeCover>
@@ -232,7 +234,7 @@ class ClassType extends Component {
                       <ActionButton>
                         <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={this.props.onEmailButtonClick} />
                       </ActionButton>
-                      <ClassTimeButton secondary noMarginBottom label="Class Times" onClick={this.props.onClassTimesButtonClick}/>
+                      <ClassTimeButton secondary noMarginBottom label="Pricing" onClick={this.props.onPricingButtonClick}/>
                     </ActionButtonsWrapper>
 
                   </ClassTypeForegroundImage>

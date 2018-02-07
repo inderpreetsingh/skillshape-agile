@@ -28,11 +28,17 @@ import Hidden from 'material-ui/Hidden';
 
 import {dataSourceSkills} from '../constants/filtersData.js';
 
+const FilterPanelOuterContainer = styled.div`
+  width: 100%;
+  border-bottom: ${props => props.mapView ? 'none' : `2px solid ${helpers.panelColor}`};
+`;
+
 const FilterPanelContainer = styled.div`
     max-width: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView) ? '100%' : '1000px'};
     background: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView) ? '#ffffff' : 'transparent'};
     margin: auto;
     position: ${props => props.mapView ? 'fixed' : 'initial'};
+    border-bottom: ${props => props.mapView ? `2px solid ${helpers.panelColor}`: 'none' };
     z-index: 100;
 `;
 
@@ -324,13 +330,15 @@ class FilterPanel extends Component {
 
       return (
           <MuiThemeProvider theme={muiTheme}>
-            <FilterPanelContainer mapView={mapView} stickyPosition={stickyPosition} filtersInDialogBox={filtersInDialogBox}>
-                <FilterPanelContent mapView={mapView} stickyPosition={stickyPosition} filtersInDialogBox={filtersInDialogBox}>
-                 <form noValidate autoComplete="off">
-                    {filtersInDialogBox ? this.renderFiltersForDialogBox() : this.renderFilterBar()}
-                  </form>
-                </FilterPanelContent>
-            </FilterPanelContainer>
+            <FilterPanelOuterContainer mapView={mapView}>
+              <FilterPanelContainer mapView={mapView} stickyPosition={stickyPosition} filtersInDialogBox={filtersInDialogBox}>
+                  <FilterPanelContent mapView={mapView} stickyPosition={stickyPosition} filtersInDialogBox={filtersInDialogBox}>
+                   <form noValidate autoComplete="off">
+                      {filtersInDialogBox ? this.renderFiltersForDialogBox() : this.renderFilterBar()}
+                    </form>
+                  </FilterPanelContent>
+              </FilterPanelContainer>
+            </FilterPanelOuterContainer>
           </MuiThemeProvider>
         )
     }
