@@ -59,6 +59,8 @@ const themeYellow = {
 };
 
 lightBlue.rgba = 'rgba(3, 169, 244, 0.34)'
+lightBlue.main = lightBlue.A700;
+lightBlue.default = lightBlue.A700;
 
 export const material_ui_next_theme = {
     palette: {

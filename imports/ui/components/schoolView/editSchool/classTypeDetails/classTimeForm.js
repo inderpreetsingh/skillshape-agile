@@ -16,8 +16,8 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import ResponsiveTabs from '/imports/util/responsiveTabs';
-import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
-import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
+import { MaterialDateTimePicker } from '/imports/startup/client/material-ui-datetime-picker';
+// import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
 import { WeekDaysRow } from './weekDaysRow';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
@@ -217,7 +217,7 @@ class ClassTimeForm extends React.Component {
                                                     this.state.tabValue === 1 && (
                                                         <Grid container>
                                                             <Grid item sm={6} xs={12}>
-                                                                <MaterialDatePicker
+                                                                <MaterialDateTimePicker
                                                                     required={true}
                                                                     hintText={"Start Date"}
                                                                     floatingLabelText={"Start Date *"}
@@ -227,7 +227,7 @@ class ClassTimeForm extends React.Component {
                                                                 />
                                                             </Grid>
                                                             <Grid item sm={6} xs={12}>
-                                                                <MaterialDatePicker
+                                                                <MaterialDateTimePicker
                                                                     required={true}
                                                                     hintText={"End Date"}
                                                                     floatingLabelText={"End Date *"}
