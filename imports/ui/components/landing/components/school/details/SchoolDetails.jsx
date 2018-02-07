@@ -19,7 +19,6 @@ const Wrapper = styled.div`
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    padding: ${helpers.rhythmDiv}px;
     padding-bottom: 0;
   }
 
@@ -35,6 +34,10 @@ const SchoolSection = styled.div`
   @media screen and (max-width: ${helpers.tablet}px) {
     margin-bottom: ${helpers.rhythmDiv}px;
     margin-right: 0;
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding: ${helpers.rhythmDiv * 2}px;
   }
 `;
 

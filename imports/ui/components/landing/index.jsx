@@ -16,10 +16,10 @@ import ClassTypeList from './components/classType/classTypeList.jsx';
 import SwitchIconButton from './components/buttons/SwitchIconButton.jsx';
 import FloatingMapButton from './components/buttons/FloatingMapButton.jsx';
 import Footer from './components/footer/index.jsx';
+import NoResults from './components/NoResults.jsx';
 
 import PrimaryButton from './components/buttons/PrimaryButton.jsx';
 import FiltersDialogBox from './components/dialogs/FiltersDialogBox.jsx';
-
 
 import * as helpers from './components/jss/helpers.js';
 import { cardsData, cardsData1} from './constants/cardsData.js';
@@ -316,7 +316,7 @@ class Landing extends Component {
 
                <div>
                   {!this.state.mapView ?
-                    (<Sticky innerZ={10} onStateChange={this.handleStickyStateChange} >
+                  (<Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
                     <FilterPanel
                         clearDefaultLocation={this.clearDefaultLocation}
                         currentAddress={this.state.defaultLocation || this.state.locationName}

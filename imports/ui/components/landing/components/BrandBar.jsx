@@ -31,7 +31,7 @@ const ActionArea = styled.div`
 
 const ButtonsWrapper = styled.div`
   ${helpers.flexCenter}
-  @media screen and (max-width : ${helpers.tablet}px) {
+  @media screen and (max-width : ${helpers.tablet + 100}px) {
     ${helpers.hide}
   }
 `;
