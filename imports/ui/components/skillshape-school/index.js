@@ -16,7 +16,6 @@ const style = theme => {
             borderRadius: theme.spacing.unit - 2
 		},
 		actions: {
-			paddingTop: theme.spacing.unit * 2 - 4
 		},
 		typoText: {
 			font: '400 18px/1.4 "Open Sans", sans-serif',
@@ -78,7 +77,9 @@ const style = theme => {
 		  backgroundSize: 'cover',
 		  backgroundPosition: '50% 50%',
 		  backgroundColor:'rgba(253, 184, 59, 0.8)',
-		  background: 'rgba(253, 184, 59, 0.8)',
+		  background: 'linear-gradient(#28b0ce 0%, #28b0ce 13%, #2fa9cd 27%, #389fce 41%, #5a7bcb 80%, #666fcb 100%)',
+
+		  // background: 'rgba(253, 184, 59, 0.8)',
 		},
 		manageAdministration: {
 		  width: '100%',
@@ -108,16 +109,19 @@ const style = theme => {
 		    lineHeight: '1.8em',
 		    paddingLeft: '30px',
 		    paddingRight: '30px',
-		    paddingTop: '10px',
-		    paddingBottom: '10px',
 		    borderColor: '#081452',
 		    background: '#081452',
 		    color: '#fff',
 		    borderWidth: '1px',
 		    borderStyle: 'solid',
-		    fontWeight: 700,
 		    margin: 'auto',
 		    minWidth: '8em'
+		},
+		styleGrid: {
+			padding: '8px',
+			display: 'table',
+			height: 'inherit',
+			width: 'inherit'
 		}
 	}
 }
@@ -152,7 +156,7 @@ const SkillShapeSchool = (props) => {
 				</div>
 			</MainContentWrapper>
 			<MainContentWrapper className={props.classes.problemsDiv}>
-				<div className="bg-stretch" style={{backgroundImage: 'url(images/school-problems.jpg)'}}/>
+				<div className="bg-stretch" style={{backgroundImage: 'url(images/img14.jpg)',filter: 'opacity(0.6)'}}/>
 				<div style={{margin:'auto', zIndex: 1}}>
 					<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif',textAlign:'center'}}>
 				        As a school, you face 3 main problems
@@ -199,26 +203,26 @@ const SkillShapeSchool = (props) => {
 				</div>
 			</MainContentWrapper>
 			<MainContentWrapper className={props.classes.keepStudentEngaged}>
-					<div className="bg-stretch"  style={{ backgroundImage: 'url(images/engaged.jpg)'}}/>
+					<div className="bg-stretch"  style={{ backgroundImage: 'url(images/img11.jpg)',filter: 'opacity(0.1)'}}/>
 					<div style={{margin:'auto', zIndex: 1}}>
-						<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif',textAlign:'center'}}>
+						<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif',textAlign:'center',color:'#fff'}}>
 					        Keeping students engaged and excited about your school
 					    </h1>
-						<Typography style={{color: '#655454fc',textAlign: 'center'}}>SkillShape offers a few ways to keep your students engaged and excited.</Typography>
+						<Typography style={{color: '#655454fc',textAlign: 'center', color:'#fff'}}>SkillShape offers a few ways to keep your students engaged and excited.</Typography>
 						<ul type="a" style={{margin: 'auto',marginTop: '24px',maxWidth: '743px', color:'#655454fc'}}>
-							<li className={props.classes.typoFont}>
+							<li className={props.classes.typoText}>
 								One of the best things about learning with actual people in actual schools is the potential for camaraderie and fellowship. Schools that encourage this community do better. Students feel better about the school and will encourage their friends and family to join. If you choose to enable it, SkillShape offers a Class Chat. Students enrolled in a class can chat with each other to plan outings after class or organize transportation or special events. This same function allows you to inform students when the teacher will be late or classes are cancelled.
 							</li>
 							<br></br>
-							<li className={props.classes.typoFont}>
+							<li className={props.classes.typoText}>
 								When students join online, they get access to a training materials area that you can easily create with your phone. In this area, you can list all of the skills and techniques you cover, and provide text and/or media overviews of therefor all your students, and, if you like, advanced trainings for an extra fee.
 							</li>
 							<br></br>
-							<li className={props.classes.typoFont}>
+							<li className={props.classes.typoText}>
 								SkillShape can keep track of attendance inform you when a student drops off attendance. SkillShape can also send an email to the student from you, checking in and seeing if they need anything to help them continue training.
 							</li>
 							<br></br>
-							<li className={props.classes.typoFont}>
+							<li className={props.classes.typoText}>
 								If you enable SkillShape’s Class Progression System, easily plan classes based on the skills or techniques you will cover, and track each student’s exposure when they attend classes.Combined with formal or on-the-fly evaluations, you can see the level of students in a class, teach based on the needs of the students in that class, and help students plan their progression to the next level.
 							</li>
 						</ul>
@@ -258,7 +262,7 @@ const SkillShapeSchool = (props) => {
 			</MainContentWrapper>
 			<MainContentWrapper>
 				<Grid container style={{margin: 'auto',maxWidth: '1000px'}}>
-					<Grid item md={4} sm={4} xs={12}>
+					<Grid item md={4} sm={4} xs={12} className={props.classes.styleGrid}>
 						<div style={{textAlign:'center'}}>
 							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-free.svg"/>
 						</div>
@@ -331,7 +335,7 @@ const SkillShapeSchool = (props) => {
 						</Card>
 					</Grid>
 
-					<Grid item md={4} sm={4} xs={12}>
+					<Grid item md={4} sm={4} xs={12} className={props.classes.styleGrid}>
 						<div style={{textAlign:'center'}}>
 							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-pro.svg"/>
 						</div>
@@ -379,7 +383,7 @@ const SkillShapeSchool = (props) => {
 						</Card>
 					</Grid>
 
-					<Grid item md={4} sm={4} xs={12}>
+					<Grid item md={4} sm={4} xs={12} className={props.classes.styleGrid}>
 						<div style={{textAlign:'center'}}>
 							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-pro.svg"/>
 						</div>
