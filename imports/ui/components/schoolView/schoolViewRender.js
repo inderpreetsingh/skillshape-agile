@@ -233,16 +233,16 @@ export default function() {
                     }
                     <Grid container className={classes.themeSpacing}>
                       {enrollmentFee && enrollmentFee.length > 0 ?
-                      <Grid item xs={12}>
+                      <Grid item xs={12} sm={4} md={4} style={{backgroundColor: '#dddd'}}>
                           <Typography align="center" type="headline" className={classes.themeSpacing}>
-                            ________________Enrollment Fee_____________
+                            Enrollment Fee
                           </Typography>
                           <Grid container>
                             {
                               enrollmentFee && enrollmentFee.map((enrollmentFee, index)=> {
                                 return (
                                   <Grid key={index} item xs={12} md={3} sm={4}>
-                                    <Card  style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
+                                    <Card  style= {{height:'100%'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
                                       <CardContent>
                                         <Typography align="center" type="title">
                                           {enrollmentFee.name}
@@ -273,18 +273,18 @@ export default function() {
                             }
                           </Grid>
                       </Grid> : ''}
-                    <Grid container className={classes.themeSpacing}>
+
                       {classPricing && classPricing.length > 0 ?
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={4} md={4} style={{backgroundColor: 'aliceblue'}}>
                           <Typography align="center" type="headline" className={classes.themeSpacing}>
-                            ________________Per Class Package_____________
+                            Per Class Package
                           </Typography>
                           <Grid container>
                             {
                               classPricing && classPricing.map((classPrice, index)=> {
                                 return (
                                   <Grid key={index} item xs={12} md={3} sm={4}>
-                                    <Card style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
+                                    <Card style= {{height:'100%'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
                                       <CardContent className={classes.content}>
                                         <Typography align="center" type="title">
                                           {classPrice.packageName}
@@ -322,12 +322,11 @@ export default function() {
                         </Grid> :
                         ''
                       }
-                    </Grid>
-                    <Grid container className={classes.themeSpacing}>
+
                       {monthlyPricing && monthlyPricing.length > 0 ?
-                        <Grid item xs={12} >
+                        <Grid item xs={12} sm={4} md={4} style={{backgroundColor: '#dddd'}} >
                           <Typography align="center" type="headline" className={classes.themeSpacing}>
-                            ________________Monthly Packages_____________
+                            Monthly Packages
                           </Typography>
                           <Grid container>
                             {
@@ -348,7 +347,7 @@ export default function() {
                                 }
                                 return (
                                   <Grid key={index} item xs={12} md={3} sm={4} >
-                                    <Card style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
+                                    <Card style= {{height:'100%'}} className={`${classes.card} price-card-container ${classes.roundPapers}`}>
                                       <CardContent className={classes.content}>
                                         <Typography align="center" type="title">
                                           {monthPrice.packageName}
@@ -407,7 +406,6 @@ export default function() {
                         </Grid> :
                         ''
                       }
-                    </Grid>
                     </Grid>
                   </Card>
                 </Grid>
