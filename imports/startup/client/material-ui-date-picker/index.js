@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { DatePicker } from 'material-ui-pickers';
+import TextField from 'material-ui/TextField';
+
 
 export class MaterialDatePicker extends Component {
 
@@ -13,6 +15,17 @@ export class MaterialDatePicker extends Component {
                 value={value}
                 onChange={this.props.onChange}
                 fullWidth={fullWidth}
+                TextFieldComponent={(props)=> {
+                return (
+                        <TextField
+                            id="key"
+                            label={hintText}
+                            margin="normal"
+                            {...this.props}
+                            {...props}
+                        />
+                    )
+                }}
             />
 		)
 	}

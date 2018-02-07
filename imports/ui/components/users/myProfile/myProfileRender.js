@@ -14,7 +14,7 @@ import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
 import Edit from 'material-ui-icons/Edit';
-import { MaterialDateTimePicker } from '/imports/startup/client/material-ui-datetime-picker';
+import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
 import { validateImage } from '/imports/util';
 import { Loading } from '/imports/ui/loading';
 import config from '/imports/config';
@@ -129,8 +129,9 @@ export default function() {
                                                 We use this data for analysis and never share it with other users.
                                             </Typography>
                                             <FormControl fullWidth margin='dense'>
-                                                <MaterialDateTimePicker
+                                                <MaterialDatePicker
                                                     floatingLabelText={"Birth Date"}
+                                                    hintText={"Birth Date"}
                                                     value={dob}
                                                     onChange={(date) => this.setState({ dob: date})}
                                                     fullWidth={true}

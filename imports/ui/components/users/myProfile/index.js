@@ -125,7 +125,7 @@ class MyProfile extends React.Component {
 		  		"profile.lastName": this.state.lastName,
 		  		"profile.phone": this.state.phone,
 		  		"profile.gender": this.state.gender,
-		  		"profile.dob": this.state.dob && this.state.dob.toISOString(),
+		  		"profile.dob": this.state.dob && new Date(this.state.dob),
 		  		"profile.address": this.state.address,
 		  		"profile.currency": this.state.currency,
 		  		"profile.about": this.state.about,
