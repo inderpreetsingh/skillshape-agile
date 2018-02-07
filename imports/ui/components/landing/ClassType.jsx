@@ -133,6 +133,7 @@ const ClassTimesTitle = styled.h2`
   font-weight: 300;
   font-style: italic;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv}px;
 `;
 
 const Main = styled.main`
@@ -169,6 +170,7 @@ const PackagesTitle = styled.h2`
   font-style: italic;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv * 2}px;
 `;
 
 const CalendarWrapper = styled.div`
@@ -278,19 +280,17 @@ class ClassType extends Component {
             </PackagesWrapper>
 
             <MainInnerFixedContainer fixedWidth="1100">
-              <MainInner smallPadding="0" largePadding="8">
-                <SchoolDetails
-                  website={schoolDetails.website}
-                  address={schoolDetails.address}
-                  images={schoolImages}
-                  schoolName={schoolDetails.schoolName}
-                  notes={schoolDetails.notes}
-                  description={schoolDetails.fullDescription}
-                />
-                <CalendarWrapper>
-                  <MyCalendar />
-                </CalendarWrapper>
-              </MainInner>
+              <SchoolDetails
+                website={schoolDetails.website}
+                address={schoolDetails.address}
+                images={schoolImages}
+                schoolName={schoolDetails.schoolName}
+                notes={schoolDetails.notes}
+                description={schoolDetails.fullDescription}
+              />
+              <CalendarWrapper>
+                <MyCalendar />
+              </CalendarWrapper>
             </MainInnerFixedContainer>
 
             <Footer />

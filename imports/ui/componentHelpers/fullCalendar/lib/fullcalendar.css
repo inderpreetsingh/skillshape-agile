@@ -791,18 +791,15 @@ a.fc-more:hover {
 
   @media screen and (max-width: 400px) {
     .fc-left {
-      margin-bottom: 8px;
+
     }
 
     .fc-right {
-      margin-bottom: 8px;
       width: 100%;
       display: flex;
-      justify-content: center;
     }
 
     .fc-right .fc-button-group {
-      width: 80%;
       display: flex;
       justify-content: space-between;
     }
@@ -1287,6 +1284,73 @@ be a descendant of the grid when it is being dragged.
     Override the styles
   */
 
+  .fc button {
+    text-transform: capitalize;
+    font-family: 'Open Sans';
+  }
+
+  .fc-toolbar {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    margin-bottom: 64px;
+  }
+
+  .fc-toolbar .fc-center {
+    position: absolute;
+    margin-top: 48px;
+  }
+
+  .fc-toolbar .fc-right {
+    float: none;
+  }
+
+  .fc-toolbar .fc-left {
+    float: none;
+  }
+
+  .fc-left .fc-button-group {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 56px;
+  }
+
+  .fc .fc-left button.fc-prev-button,
+  .fc .fc-left button.fc-next-button {
+    background-color: white;
+    color: #4caf50;
+  }
+
+  .fc .fc-left button.fc-next-button {
+    right: 0;
+    position: absolute;
+    left: auto;
+  }
+
+  .fc button:hover .fc-prev-button,
+  .fc button:hover .fc-next-button
+  {
+    background-color: white;
+    color: #4caf50;
+  }
+
+  .fc .fc-left  button .fc-icon {
+    font-size: 32px;
+    line-height: 32px;
+    font-family: 'Zilla slab';
+    height: auto;
+  }
+
+  .fc .fc-icon-right-single-arrow::after , .fc .fc-icon-left-single-arrow::after {
+    font-weight: 100;
+  }
+
+
+  .fc-today-button {
+    margin-right: 2px;
+  }
+
   .fc button, .fc button.btn-primary {
     box-shadow: none;
     border-radius: 5px;
@@ -1295,4 +1359,19 @@ be a descendant of the grid when it is being dragged.
 
   .fc button:focus, .fc button:hover, .fc button.btn-primary:focus, .fc button.btn-primary:hover {
     box-shadow: none;
+  }
+
+  @media screen and (max-width: 500px) {
+    .fc-left .fc-button-group {
+      top: 72px;
+    }
+
+    .fc-toolbar {
+      margin-bottom: 100px;
+    }
+
+    .fc-toolbar .fc-center {
+      margin-top: 64px;
+    }
+
   }
