@@ -131,8 +131,9 @@ export default function() {
                                             <FormControl fullWidth margin='dense'>
                                                 <MaterialDatePicker
                                                     floatingLabelText={"Birth Date"}
+                                                    hintText={"Birth Date"}
                                                     value={dob}
-                                                    onChange={(event, date) => this.setState({ dob: date})}
+                                                    onChange={(date) => this.setState({ dob: date})}
                                                     fullWidth={true}
                                                 />
                                             </FormControl>

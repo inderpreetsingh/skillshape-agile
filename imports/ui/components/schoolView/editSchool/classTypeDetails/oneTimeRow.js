@@ -52,9 +52,10 @@ export class OneTimeRow extends React.Component {
     	this.setState({ row: oldRow });
     }
 
-    handleChangeDate = (index, fieldName, event, date) => {
+    handleChangeDate = (index, fieldName, date) => {
         const oldRow = [...this.state.row];
-        oldRow[index][fieldName] = date;
+        console.log("date",date.toISOString())
+        oldRow[index][fieldName] = date.toISOString();
         this.setState({ row: oldRow });
     }
 
@@ -95,7 +96,6 @@ export class OneTimeRow extends React.Component {
 		                        <Grid item sm={6} xs={12}>
 		                            <MaterialTimePicker
 		                                required={true}
-		                                format={"ampm"}
 		                                value={data ? data.startTime: ""}
 		                                floatingLabelText={"Start Time *"}
 		                                hintText={"Start Time"}

@@ -17,7 +17,7 @@ import Dialog, {
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import ResponsiveTabs from '/imports/util/responsiveTabs';
 import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
-import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
+// import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
 import { WeekDaysRow } from './weekDaysRow';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
@@ -83,9 +83,9 @@ class ClassTimeForm extends React.Component {
         this.setState({tabValue})
     }
 
-    handleChangeDate = (fieldName, event, date) => {
+    handleChangeDate = (fieldName, date) => {
         console.log("handleChangeDate -->>",fieldName, date)
-        this.setState({[fieldName]: date})
+        this.setState({[fieldName]: new Date(date)})
     }
 
     onSubmit = (event) => {
@@ -219,7 +219,7 @@ class ClassTimeForm extends React.Component {
                                                             <Grid item sm={6} xs={12}>
                                                                 <MaterialDatePicker
                                                                     required={true}
-                                                                    hintText={"Start Date"}
+                                                                    label={"Start Date"}
                                                                     floatingLabelText={"Start Date *"}
                                                                     value={this.state.startDate}
                                                                     onChange={this.handleChangeDate.bind(this, "startDate")}
@@ -229,7 +229,7 @@ class ClassTimeForm extends React.Component {
                                                             <Grid item sm={6} xs={12}>
                                                                 <MaterialDatePicker
                                                                     required={true}
-                                                                    hintText={"End Date"}
+                                                                    label={"End Date"}
                                                                     floatingLabelText={"End Date *"}
                                                                     value={this.state.endDate}
                                                                     onChange={this.handleChangeDate.bind(this, "endDate")}

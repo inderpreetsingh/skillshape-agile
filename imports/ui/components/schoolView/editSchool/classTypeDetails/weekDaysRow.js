@@ -45,10 +45,10 @@ export class WeekDaysRow extends React.Component {
     	return state;
     }
 
-    handleChangeDate = (index, fieldName, event, date) => {
-        // console.log("handleChangeDate -->>", fieldName, date)
+    handleChangeDate = (index, fieldName, date) => {
         const oldRow = [...this.state.row];
-       	oldRow[index][fieldName] = date;
+        oldRow[index][fieldName] = new Date(date);
+        console.log("handleChangeDate -->>", fieldName, new Date(date))
        	this.setState({ row: oldRow });
     }
 
@@ -82,6 +82,7 @@ export class WeekDaysRow extends React.Component {
 
     getRowData = ()=> {
         let rowData  = this.state.row.filter((data) => { return data.key})
+        console.log("rowData===>",this.state.row)
         const grouped = _.groupBy(rowData, function(item) {
             return item.key;
         });
@@ -118,7 +119,6 @@ export class WeekDaysRow extends React.Component {
 		                	<Grid item sm={6} xs={12}>
 		                		<MaterialTimePicker
                                     required={true}
-                                    format={"ampm"}
                                     value={data && data.startTime}
                                     floatingLabelText={"Start Time *"}
                                     hintText={"Start Time"}
