@@ -29,9 +29,9 @@ const Description = styled.p`
 `;
 
 const SchoolWrapper = styled.div`
-display: flex;
-flex-direction: column;
-margin-bottom: ${helpers.rhythmDiv}px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const Address = styled.address`
