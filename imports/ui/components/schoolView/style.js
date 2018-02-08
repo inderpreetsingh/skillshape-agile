@@ -73,7 +73,7 @@ export default styles = theme => {
       fontSize: 'x-large',
       fontWeight: 700,
       lineHeight: '44px',
-      textAlign: 'center'
+      paddingLeft: theme.spacing.unit * 2
     }
   }
 }

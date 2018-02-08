@@ -259,9 +259,9 @@ export default function() {
                                       <Grid item xs={3} sm={3} className={classes.content}>
                                         <Typography className={classes.dollarStyles}>
                                             ${enrollmentFee.cost}
-                                        </Typography>
-                                        <Typography  style={{color: '#7f7f7f'}}>
-                                          &nbsp;for enrollment.
+                                            <Typography  style={{color: '#7f7f7f'}}>
+                                              &nbsp;for enrollment.
+                                            </Typography>
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={3} sm={3} className={classes.content} style={{textAlign: 'end'}}>
@@ -381,10 +381,12 @@ export default function() {
                                           monthPrice.pymtDetails.map((payment) => {
                                             return (
                                               <Grid item xs={4} sm={4}>
-                                                <Typography align='center'>
-                                                  <Typography className={classes.dollarStyles}>${payment.cost}</Typography>
-                                                  <Typography style={{color: '#7f7f7f'}}>per month for</Typography>
-                                                  <Typography style={{color: '#7f7f7f'}}> {payment.month} months</Typography>
+                                                <Typography>
+                                                  <Typography className={classes.dollarStyles}>
+                                                  ${payment.cost}
+                                                    <Typography style={{color: '#7f7f7f'}}>per month for</Typography>
+                                                    <Typography style={{color: '#7f7f7f'}}> {payment.month} months</Typography>
+                                                  </Typography>
                                                 </Typography>
                                               </Grid>
                                             )
