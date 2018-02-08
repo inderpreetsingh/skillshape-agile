@@ -6,6 +6,8 @@ import { Transition } from 'react-transition-group';
 import TrendingIcon from '../icons/Trending.jsx';
 import ShowMore from '../icons/ShowMore.jsx';
 
+import withShowMoreText from '../../../../../util/withShowMoreText.js';
+
 import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
 import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
@@ -108,8 +110,8 @@ const Description = styled.p`
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
 
-  height: ${props => props.fullTextState ? '120px' : '140px'};
-  overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
+  max-height: 140px;
+  overflow-y: ${props => props.fullTextState ? 'scroll' : 'visible'};
 `;
 
 const TrendingWrapper = styled.div`
@@ -160,34 +162,12 @@ class ClassTime extends Component {
   state = {
     addToCalendar : this.props.addToCalendar,
     scheduleTypeOnGoing: _isClassOnGoing(this.props.scheduleType),
-    fullText: this.props.description,
-    text: this.props.description,
-    maxStringCharsToShow: 150,
-    showReadMore: false,
-    fullTextState: false
-  }
-
-  componentWillMount = () => {
-    console.info('////////// component will mount ',this.state);
-    const text = this._getLessCharsDescription(this.state.fullText);
-    console.info('less char string',text);
-    if(text != this.state.fullText) {
-      this.setState({
-        text: text,
-        showReadMore: true
-      });
-    }
+    fullTextState: this.props.fullTextState,
+    showReadMore: this.props.showReadMore
   }
 
   componentDidMount = () => {
     console.info('Show me state',this.state);
-  }
-
-  handleToggleFullTextState = () => {
-    console.log('click on this handleToggleFullTextState');
-    this.setState({
-      fullTextState: !this.state.fullTextState
-    });
   }
 
   handleToggleAddToCalendar = () => {
@@ -219,33 +199,14 @@ class ClassTime extends Component {
     }
   }
 
-  getDescriptionText = () => {
-    if(this.state.showReadMore) {
-      if(this.state.fullTextState) {
-        return this.state.fullText;
-      }
+  componentWillReceiveProps = (newProps) => {
+    console.log("componentWillRecieveProps new Props",newProps);
+    if(this.state.fullTextState !== newProps.fullTextState) {
+      this.setState({
+        fullTextState: newProps.fullTextState
+      });
     }
-
-    return this.state.text;
   }
-
-  getShowMoreText = () => {
-    if(this.state.showReadMore) {
-      if(this.state.fullTextState) {
-        return <Read onClick={this.handleToggleFullTextState}> ...read less</Read>
-      }else {
-        return <Read onClick={this.handleToggleFullTextState}> ...read more</Read>
-      }
-    }
-
-    return <span></span>
-  }
-
-  getShowLessText = () => {
-    return <Read onClick={this.handleToggleFullTextState}> ...read less</Read>
-  }
-
-  _getLessCharsDescription = (text) => text.substr(0, this.state.maxStringCharsToShow);
 
   _getWrapperClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar' : 'remove-from-calendar';
 
@@ -301,10 +262,15 @@ class ClassTime extends Component {
                 schedule={this.props.scheduleType}
                 />
 
-              <Description className="class-time-description" fullTextState={this.state.fullTextState}>
-                {this.getDescriptionText()}
-                {this.getShowMoreText()}
-              </Description>
+              {this.props.showReadMore ?
+                <Description fullTextState={this.state.fullTextState}>
+                  {this.props.getDescriptionText()}
+                  {this.props.getShowMoreText()}
+                </Description>
+                :
+                <Description>
+                  {this.props.fullText}
+                </Description>}
             </div>
 
             {this._getCalenderButton(this.state.addToCalendar, this.state.scheduleTypeOnGoing)}
@@ -324,4 +290,4 @@ ClassTime.propTypes = {
   isTrending: PropTypes.bool
 }
 
-export default ClassTime;
+export default withShowMoreText(ClassTime);

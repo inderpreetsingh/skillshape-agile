@@ -8,7 +8,7 @@ import * as helpers from '../jss/helpers.js';
 
 const ActionButtonsWrapper = styled.div`
   position: absolute;
-  left: ${helpers.rhythmDiv}px;
+  left: ${helpers.rhythmDiv * 2}px;
   bottom: ${helpers.rhythmDiv * 2}px;
   right: auto;
   ${helpers.flexCenter}
@@ -29,12 +29,15 @@ const ActionButtonsWrapper = styled.div`
 `;
 
 const ActionButton = styled.div`
+  margin-right: ${helpers.rhythmDiv}px;
+
   @media screen and (max-width: ${helpers.tablet}px) {
+    margin-right: 0;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    margin-right: ${helpers.rhythmDiv * 2}px;
+    margin-right: ${helpers.rhythmDiv}px;
   }
 `;
 

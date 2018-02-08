@@ -17,20 +17,26 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
+const CARD_WIDTH = 250;
+
+const getContainerMaxWidth = (spacing, noOfCards) => {
+  return (spacing * noOfCards) + (CARD_WIDTH * noOfCards);
+}
+
 const ClassTimesWrapper = styled.div`
-  max-width: 1144px;
+  width: ${props => getContainerMaxWidth(props.spacing,4)}px;
   margin: 0 auto;
 
-  @media screen and (max-width : 1191px) {
-    max-width: 858px;
+  @media screen and (max-width : 1280px) {
+    width: ${props => getContainerMaxWidth(props.spacing,3)}px;
   }
 
-  @media screen and (max-width : 910px) {
-    max-width: 572px;
+  @media screen and (max-width : 960px) {
+    width: ${props => getContainerMaxWidth(props.spacing,2)}px;
   }
 
-  @media screen and (max-width: 627px) {
-    max-width: 286px;
+  @media screen and (max-width : 600px) {
+    width: ${props => getContainerMaxWidth(props.spacing,1)}px;
   }
 `;
 
@@ -53,7 +59,7 @@ const GridItem = styled.div`
 
 const ClassTimesBar = (props) => (
   <Wrapper>
-     <ClassTimesWrapper>
+     <ClassTimesWrapper spacing={32}>
       <GridContainer>
         {props.classTimesData.map(classTimeObj => (
           <GridItem key={classTimeObj._id} spacing={32}>

@@ -49,7 +49,6 @@ const SchoolImg = styled.img`
 
 const Wrapper = styled.div`
   width: 100%;
-  margin-top: 66px;
 `;
 
 const ClassTypeDetailsWrapper = styled.div`
@@ -121,7 +120,22 @@ const ClassWrapper = styled.div`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  margin-bottom: ${props => props.reviews ? helpers.rhythmDiv * 8 : 0}px;
+
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
+    padding-bottom: ${props => props.paddingBottom ? props.paddingBottom: 0}px;
+  }
+`;
+
+const ClassTimesWrapper = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
+    padding-bottom: ${props => props.paddingBottom ? props.paddingBottom: 0}px;
+    margin-bottom: 0;
+  }
 `;
 
 const ClassTimesTitle = styled.h2`
@@ -195,7 +209,7 @@ class ClassType extends Component {
       <MuiThemeProvider theme={muiTheme}>
         <Wrapper>
           {/*<TopSearchBar positionFixed={true}/> */}
-          <BrandBar barButton={<Fragment></Fragment>} />
+          <BrandBar positionStatic barButton={<Fragment></Fragment>} />
 
           {/* Class Type Cover includes description, map, foreground image, then class type information*/}
           <ClassTypeCover>
@@ -252,18 +266,23 @@ class ClassType extends Component {
 
           {/* Main section includes reviews slider, class timing boxes(+ slider), pricing section, about school section, calendar */}
           <Main>
-            <MainInnerFixedContainer marginBottom="16">
+            <MainInnerFixedContainer marginBottom="32">
               <MainInner reviews largePadding="32" smallPadding="32">
                 <ClassWrapper reviews>
                   <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv}/>
                 </ClassWrapper>
-
-                <ClassWrapper>
-                  <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
-                  <ClassTimesBoxes classTimesData={classTimesBarData} />
-                </ClassWrapper>
               </MainInner>
             </MainInnerFixedContainer>
+
+          <MainInnerFixedContainer marginBottom="16">
+              <MainInner reviews largePadding="0" smallPadding="32">
+                <ClassTimesWrapper paddingBottom="48">
+                  <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
+                  <ClassTimesBoxes classTimesData={classTimesBarData} />
+                </ClassTimesWrapper>
+              </MainInner>
+          </MainInnerFixedContainer>
+
 
             <PackagesWrapper>
               <PackagesTitle>Pay only for what you need</PackagesTitle>
