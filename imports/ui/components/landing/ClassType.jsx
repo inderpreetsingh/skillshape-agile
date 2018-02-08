@@ -136,6 +136,10 @@ const ClassTimesWrapper = styled.div`
     padding-bottom: ${props => props.paddingBottom ? props.paddingBottom: 0}px;
     margin-bottom: 0;
   }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding-bottom: 16px;
+  }
 `;
 
 const ClassTimesTitle = styled.h2`
