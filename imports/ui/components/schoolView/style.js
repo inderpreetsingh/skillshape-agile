@@ -15,7 +15,8 @@ export default styles = theme => {
       position: "relative",
     },
     content: {
-      position: "relative"
+      position: "relative",
+      padding: 0
     },
     image: {
       verticalAlign: 'middle',
@@ -54,10 +55,25 @@ export default styles = theme => {
     },
     roundPapers: {
       height: '100%',
-      borderRadius: '43px 46px',
-      padding: '20px',
-      width: '388px',
-      height: '107px'
+      borderRadius: theme.spacing.unit * 5,
+      padding: theme.spacing.unit * 2,
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    purchaseBtn: {
+      width: '50px',
+      boxShadow: 'none',
+      borderRadius: '50%',
+      height: '60px',
+      backgroundColor: '#d94b47',
+      color: '#fff'
+    },
+    dollarStyles: {
+      color: '#78c687',
+      fontSize: 'x-large',
+      fontWeight: 700,
+      lineHeight: '44px',
+      textAlign: 'center'
     }
   }
 }
