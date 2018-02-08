@@ -11,7 +11,7 @@ import * as helpers from '../../jss/helpers.js';
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 8}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     ${helpers.flexDirectionColumn}

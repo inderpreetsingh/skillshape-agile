@@ -29,8 +29,8 @@ TrendingIcon.propTypes = {
 }
 
 TrendingIcon.defaultProps = {
-  height: '32px',
-  width: '32px',
+  height: (helpers.baseFontSize * 2) + 'px',
+  width: (helpers.baseFontSize * 2) + 'px',
 }
 
 export default TrendingIcon;

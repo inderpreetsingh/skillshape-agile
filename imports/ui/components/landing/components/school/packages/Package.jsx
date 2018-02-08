@@ -44,6 +44,7 @@ const Title = styled.h2`
   text-transform: uppercase;
   margin: 0;
   color: rgba(0,0,0,1);
+  line-height: 1;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     text-align: center;
@@ -68,6 +69,7 @@ const ClassDetailsText = styled.p`
   font-size: 14px;
   font-family: ${helpers.specialFont};
   font-weight: 400;
+  line-height: 1;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     text-align: center;
@@ -87,6 +89,7 @@ const Price = styled.p`
   font-weight: 300;
   color: ${helpers.primaryColor};
   font-size: 28px;
+  line-height: 1;
 `;
 
 const NoOfClasses = styled.p`
@@ -95,6 +98,7 @@ const NoOfClasses = styled.p`
   font-weight: 400;
   font-size: 14px;
   margin: 0;
+  line-height: 1;
 `;
 
 const AddToCartSection = styled.div`

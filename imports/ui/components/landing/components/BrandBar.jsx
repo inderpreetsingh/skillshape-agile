@@ -17,7 +17,7 @@ const NavBarWrapper = styled.div`
   padding: ${helpers.rhythmDiv}px;
   width: 100%;
   z-index: 1299;
-  position: ${props => props.positionFixed ? 'fixed': 'absolute'};
+  position: ${props => props.positionStatic ? 'static': 'absolute'};
   background: white;
   top: 0;
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -37,8 +37,8 @@ const ButtonsWrapper = styled.div`
 `;
 
 const BrandBar = (props) => (
-    <NavBarWrapper positionFixed={props.positionFixed}>
-      {props.logoArea ? props.logoArea : <Logo />}
+    <NavBarWrapper positionStatic={props.positionStatic}>
+      {props.logoArea ? props.logoArea : <Logo {...props.logoProps} />}
 
       <ActionArea>
         {props.barButton ? props.barButton
@@ -48,21 +48,22 @@ const BrandBar = (props) => (
           <JoinButton label="Sign Up" {...props}/>
           <LoginButton icon={true} {...props}/>
         </ButtonsWrapper>)}
-        {props.menuButton ? props.menuButton : <SideNav {...props}/> }
+        {props.menuButton ? props.menuButton : <SideNav {...props} {...props.menuButton}/> }
       </ActionArea>
 
     </NavBarWrapper>
 );
 
 BrandBar.propTypes = {
-  positionFixed: PropTypes.bool,
+  positionStatic: PropTypes.bool,
   logoArea: PropTypes.element,
+  logoProps: PropTypes.object,
   barButton: PropTypes.element,
   menuButton: PropTypes.element,
 }
 
 BrandBar.defaultProps = {
-  positionFixed: false
+  positionStatic: false
 }
 
 export default BrandBar;

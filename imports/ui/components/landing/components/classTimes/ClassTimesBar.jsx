@@ -17,20 +17,26 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
+const CARD_WIDTH = 250;
+
+const getContainerMaxWidth = (spacing, noOfCards) => {
+  return (spacing * noOfCards) + (CARD_WIDTH * noOfCards);
+}
+
 const ClassTimesWrapper = styled.div`
-  max-width: 1072px;
+  width: ${props => getContainerMaxWidth(props.spacing,4)}px;
   margin: 0 auto;
 
-  @media screen and (max-width: 1279px) {
-    max-width: 798px;
+  @media screen and (max-width : 1280px) {
+    width: ${props => getContainerMaxWidth(props.spacing,3)}px;
   }
 
-  @media screen and (max-width: 959px) {
-    max-width: 524px;
+  @media screen and (max-width : 960px) {
+    width: ${props => getContainerMaxWidth(props.spacing,2)}px;
   }
 
-  @media screen and (max-width: 599px) {
-    max-width: 274px;
+  @media screen and (max-width : 600px) {
+    width: ${props => getContainerMaxWidth(props.spacing,1)}px;
   }
 `;
 
@@ -41,16 +47,26 @@ const styles = {
   }
 }
 
+const GridContainer = styled.div`
+  ${helpers.flexCenter}
+  justify-content: flex-start;
+  flex-wrap: wrap;
+`;
+
+const GridItem = styled.div`
+  padding: ${props => props.spacing ? props.spacing/2 : '16'}px;
+`;
+
 const ClassTimesBar = (props) => (
   <Wrapper>
-     <ClassTimesWrapper>
-      <Grid container spacing={24} justify-content='center' alignItems="center" alignContent='center'>
+     <ClassTimesWrapper spacing={32}>
+      <GridContainer>
         {props.classTimesData.map(classTimeObj => (
-          <Grid key={classTimeObj._id} item xs={12} sm={6} md={4} lg={3} className={props.classes.typeItem}>
+          <GridItem key={classTimeObj._id} spacing={32}>
             <ClassTime {...classTimeObj} />
-          </Grid>
+          </GridItem>
         ))}
-      </Grid>
+      </GridContainer>
      </ClassTimesWrapper>
   </Wrapper>
 );

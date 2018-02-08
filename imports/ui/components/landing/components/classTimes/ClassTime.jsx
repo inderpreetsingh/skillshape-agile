@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import { Transition } from 'react-transition-group';
 
 import TrendingIcon from '../icons/Trending.jsx';
+import ShowMore from '../icons/ShowMore.jsx';
+
+import withShowMoreText from '../../../../../util/withShowMoreText.js';
 
 import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
@@ -106,6 +109,9 @@ const Description = styled.p`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
+
+  max-height: 140px;
+  overflow-y: ${props => props.fullTextState ? 'scroll' : 'visible'};
 `;
 
 const TrendingWrapper = styled.div`
@@ -144,6 +150,10 @@ const Trending = () => {
   )
 }
 
+const Read = styled.span`
+  font-style: italic;
+  cursor: pointer;
+`;
 
 _isClassOnGoing = (scheduleType) => scheduleType == ON_GOING_SCHEDULE;
 
@@ -151,7 +161,13 @@ class ClassTime extends Component {
 
   state = {
     addToCalendar : this.props.addToCalendar,
-    scheduleTypeOnGoing: _isClassOnGoing(this.props.scheduleType)
+    scheduleTypeOnGoing: _isClassOnGoing(this.props.scheduleType),
+    fullTextState: this.props.fullTextState,
+    showReadMore: this.props.showReadMore
+  }
+
+  componentDidMount = () => {
+    console.info('Show me state',this.state);
   }
 
   handleToggleAddToCalendar = () => {
@@ -180,6 +196,15 @@ class ClassTime extends Component {
 
     if(this.props.onRemoveFromCalendarButtonClick) {
       this.props.onRemoveFromCalendarButtonClick();
+    }
+  }
+
+  componentWillReceiveProps = (newProps) => {
+    console.log("componentWillRecieveProps new Props",newProps);
+    if(this.state.fullTextState !== newProps.fullTextState) {
+      this.setState({
+        fullTextState: newProps.fullTextState
+      });
     }
   }
 
@@ -223,12 +248,8 @@ class ClassTime extends Component {
 
   render() {
     console.log(this.state.addToCalendar);
-    return (<Transition timeout={{enter : 0, exit: 0}} in={this.state.addToCalendar}>
-        {(state) =>
-          (<ClassTimeContainer
-            className={`class-time-after-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
-            key={this.props._id}
-            >
+    return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
+            key={this.props._id} >
             <div>
               <ClassTimeClock
                 time={this.props.time}
@@ -241,18 +262,21 @@ class ClassTime extends Component {
                 schedule={this.props.scheduleType}
                 />
 
-              <Description>
-                {this.props.description}
-              </Description>
+              {this.props.showReadMore ?
+                <Description fullTextState={this.state.fullTextState}>
+                  {this.props.getDescriptionText()}
+                  {this.props.getShowMoreText()}
+                </Description>
+                :
+                <Description>
+                  {this.props.fullText}
+                </Description>}
             </div>
 
             {this._getCalenderButton(this.state.addToCalendar, this.state.scheduleTypeOnGoing)}
 
             {this.props.isTrending && <Trending />}
-            </ClassTimeContainer>)
-          }
-      </Transition>
-      );
+        </ClassTimeContainer>)
     }
 }
 
@@ -266,4 +290,4 @@ ClassTime.propTypes = {
   isTrending: PropTypes.bool
 }
 
-export default ClassTime;
+export default withShowMoreText(ClassTime);

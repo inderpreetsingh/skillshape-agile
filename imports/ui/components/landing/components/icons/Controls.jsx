@@ -30,8 +30,8 @@ Controls.propTypes = {
 }
 
 Controls.defaultProps = {
-  height: '16px',
-  width: '16px'
+  height: helpers.baseFontSize + 'px',
+  width: helpers.baseFontSize + 'px'
 }
 
 export default Controls;
