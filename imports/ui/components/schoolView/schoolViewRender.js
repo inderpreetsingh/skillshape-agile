@@ -327,7 +327,7 @@ export default function() {
                       }
 
                       {monthlyPricing && monthlyPricing.length > 0 ?
-                        <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: '#dddd'}} >
+                        <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: '#fafafa'}} >
                           <Typography align='justify' type="headline" className={classes.themeSpacing}>
                             Monthly Packages
                           </Typography>
