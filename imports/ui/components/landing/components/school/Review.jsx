@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import ReactStars from 'react-stars';
 import PropTypes from 'prop-types';
+import ReactStars from 'react-stars';
 
 import StarsBar from '../StarsBar.jsx';
 

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Transition } from 'react-transition-group';
 
 import TrendingIcon from '../icons/Trending.jsx';
+import ShowMore from '../icons/ShowMore.jsx';
 
 import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
@@ -106,6 +107,9 @@ const Description = styled.p`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
+
+  height: ${props => props.fullTextState ? '200px' : 'auto'};
+  overflowY: ${props => props.fullTextState ? 'auto' : 'visible'};
 `;
 
 const TrendingWrapper = styled.div`
@@ -144,6 +148,10 @@ const Trending = () => {
   )
 }
 
+const Read = styled.span`
+  font-style: italic;
+  cursor: pointer;
+`;
 
 _isClassOnGoing = (scheduleType) => scheduleType == ON_GOING_SCHEDULE;
 
@@ -151,7 +159,27 @@ class ClassTime extends Component {
 
   state = {
     addToCalendar : this.props.addToCalendar,
-    scheduleTypeOnGoing: _isClassOnGoing(this.props.scheduleType)
+    scheduleTypeOnGoing: _isClassOnGoing(this.props.scheduleType),
+    fullText: this.props.description,
+    text: this.props.description,
+    maxStringCharsToShow: 150,
+    showReadMore: false,
+    fullTextState: false
+  }
+
+  componentWillMount = () => {
+    console.info(' ////////// component will mount ',this.state);
+    const text = this._getLessCharsDescription(this.state.fullText);
+    if(text != this.state.fullText) {
+      this.setState({
+        text: lessCharsText,
+        showReadMore: true
+      });
+    }
+  }
+
+  handleToggleFullTextState = () => {
+
   }
 
   handleToggleAddToCalendar = () => {
@@ -182,6 +210,30 @@ class ClassTime extends Component {
       this.props.onRemoveFromCalendarButtonClick();
     }
   }
+
+  getDescriptionText = () => {
+    if(this.state.showReadMore) {
+      if(!this.state.fullTextState) {
+        return this.state.fullText;
+      }
+    }
+
+    return this.state.text;
+  }
+
+  getShowMoreText = () => {
+    if(this.state.showReadMore) {
+      if(this.state.fullTextState) {
+        return <Read onClick={this.handleToggleRFullTextState}>...read less</Read>
+      }else {
+        return <Read onClick={this.handleToggleRFullTextState}>...read more</Read>
+      }
+    }
+
+    return <span></span>
+  }
+
+  _getLessCharsDescription = (text) => text.substr(0, this.state.maxStringCharsToShow);
 
   _getWrapperClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar' : 'remove-from-calendar';
 
@@ -241,8 +293,9 @@ class ClassTime extends Component {
                 schedule={this.props.scheduleType}
                 />
 
-              <Description>
-                {this.props.description}
+              <Description fullTextState={this.state.fullTextState}>
+                {this.getDescriptionText()}
+                {this.getShowMoreText()}
               </Description>
             </div>
 

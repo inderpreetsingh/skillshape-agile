@@ -18,7 +18,7 @@ const Wrapper = styled.div`
 `;
 
 const ClassTimesWrapper = styled.div`
-  max-width: 1072px;
+  max-width: 1144px;
   width: 100%;
   margin: 0 auto;
 `;
@@ -30,16 +30,26 @@ const styles = {
   }
 }
 
+const GridContainer = styled.div`
+  ${helpers.flexCenter}
+  justify-content: flex-start;
+  flex-wrap: wrap;
+`;
+
+const GridItem = styled.div`
+  padding: ${props => props.spacing ? props.spacing/2 : '16'}px;
+`;
+
 const ClassTimesBar = (props) => (
   <Wrapper>
      <ClassTimesWrapper>
-      <Grid container spacing={24} justify-content='center' alignItems="center" alignContent='center'>
+      <GridContainer>
         {props.classTimesData.map(classTimeObj => (
-          <Grid key={classTimeObj._id} item xs={12} sm={6} md={4} lg={3} className={props.classes.typeItem}>
+          <GridItem key={classTimeObj._id} spacing={32}>
             <ClassTime {...classTimeObj} />
-          </Grid>
+          </GridItem>
         ))}
-      </Grid>
+      </GridContainer>
      </ClassTimesWrapper>
   </Wrapper>
 );

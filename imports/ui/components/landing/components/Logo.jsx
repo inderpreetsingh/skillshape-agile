@@ -52,8 +52,8 @@ const BrandTagline = styled.span`
 `;
 
 const LogoWrapper = styled.div`
-  width: 50px;
-  height: 50px;
+  width: ${props => props.height ? props.height : '50'}px;
+  height: ${props => props.width ? props.width : '50'}px;
 `;
 
 const LogoImage = styled.img`
@@ -74,26 +74,28 @@ const LogoImage = styled.img`
   }
 `;
 
-const Logo = ({smallBrandText, brandText, brandTagline, logoSrc}) => (
+const Logo = ({height, width ,brandTextShown, smallBrandText, brandText, brandTagline, logoSrc}) => (
     <BrandArea onClick={() => browserHistory.push('/') } itemScope itemType="http://schema.org/Brand" smallBrandText={smallBrandText}>
-        <LogoWrapper>
+        <LogoWrapper width={width} height={height}>
           <LogoImage src={logoSrc} itemProp="logo"/>
         </LogoWrapper>
-        <BrandText itemProp="name" smallBrandText={smallBrandText} className={smallBrandText && 'flex-column'}>
+        {brandTextShown && <BrandText itemProp="name" smallBrandText={smallBrandText} className={smallBrandText && 'flex-column'}>
           <MainText>{brandText},</MainText>
           <BrandTagline smallBrandText={smallBrandText}> {brandTagline}. </BrandTagline>
-        </BrandText>
+        </BrandText>}
     </BrandArea>
 );
 Logo.propTypes = {
   brandText: PropTypes.string,
   brandTagline: PropTypes.string,
+  brandText: PropTypes.string,
   logoSrc: PropTypes.string,
   smallBrandText: PropTypes.bool
 }
 
 Logo.defaultProps = {
   smallBrandText: false,
+  brandTextShown: true,
   brandText: settings.brandText,
   brandTagline: settings.brandTagline,
   logoSrc: settings.logoSrc
