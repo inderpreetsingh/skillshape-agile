@@ -26,39 +26,39 @@ import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 
 export default function() {
 
-	const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
-	const {
-		schoolData,
-		classPricing,
-		monthlyPricing,
-		schoolLocation,
-		classType,
-		currentUser,
+    const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
+    const {
+        schoolData,
+        classPricing,
+        monthlyPricing,
+        schoolLocation,
+        classType,
+        currentUser,
     schoolId,
     classes,
     enrollmentFee,
-	} = this.props;
+    } = this.props;
 
-	const {
-		claimSchoolModal,
+    const {
+        claimSchoolModal,
     claimRequestModal,
     successModal,
-	} = this.state;
+    } = this.state;
 
-	if(!schoolData) {
-		return <Loading/>
-	}
+    if(!schoolData) {
+        return <Loading/>
+    }
 
   const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
   const claimBtnCSS = this.claimBtnCSS(currentUser, schoolData.claimed);
   const imageMediaList = this.getImageMediaList(schoolData.mediaList, "Image");
   const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
   let isPublish = this.getPublishStatus(schoolData.is_publish)
-	// console.log("State  -->>",this.state)
+    // console.log("State  -->>",this.state)
   console.log("SchoolView render  schoolData-->>",schoolData)
   console.log("SchoolView render monthlyPricing -->>",monthlyPricing)
   return (
-		<div className="content">
+        <div className="content">
       {
         this.state.isLoading && <ContainerLoader />
       }
@@ -73,7 +73,7 @@ export default function() {
             onClose={this.cancelConfirmationModal}
         />
       }
-			{ (claimSchoolModal || claimRequestModal || successModal) && <CustomModal
+            { (claimSchoolModal || claimRequestModal || successModal) && <CustomModal
           className={successModal ? "success-modal" : "info-modal" }
           title={this.getClaimSchoolModalTitle()}
           message={successModal && `You are now owner of ${schoolData.name} Would you like to edit ?`}
@@ -233,26 +233,21 @@ export default function() {
                     }
                     <Grid container className={classes.themeSpacing}>
                       {enrollmentFee && enrollmentFee.length > 0 ?
-                      <Grid item xs={12}>
+                      <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: '#dddd'}}>
                           <Typography align="center" type="headline" className={classes.themeSpacing}>
-                            ________________Enrollment Fee_____________
+                            Enrollment Fee
                           </Typography>
-                          <Grid container>
+                          <Grid container style={{display: 'inline-table'}}>
                             {
                               enrollmentFee && enrollmentFee.map((enrollmentFee, index)=> {
                                 return (
-                                  <Grid key={index} item xs={12} md={3} sm={4}>
-                                    <Card  style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
-                                      <CardContent>
-                                        <Typography align="center" type="title">
+                                    <Grid key={index} item xs={12} md={8} sm={12}  style= {{height:'100%', maxWidth: '100%', boxShadow: 'none'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
+                                      <Card style= {{height:'100%',boxShadow: 'none'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
+                                      <Grid item xs={6} sm={6} className={classes.content}>
+                                        <Typography align="justify" type="title">
                                           {enrollmentFee.name}
                                         </Typography>
-                                        <br></br>
-                                        <Typography component="p">
-                                            <b>Cost:</b> ${enrollmentFee.cost}
-                                        </Typography>
-                                        <br></br>
-                                        <Typography component="p">
+                                        <Typography component="p" style={{color: '#7f7f7f'}}>
                                           <b>Covers:</b> {
                                             _.isEmpty(enrollmentFee.selectedClassType) ? "None" :
                                             enrollmentFee.selectedClassType.map((classType) => {
@@ -260,45 +255,47 @@ export default function() {
                                             })
                                           }
                                         </Typography>
-                                      </CardContent>
-                                      <CardActions>
-                                        <Button onClick={this.handlePurcasePackage.bind(this, "EP", enrollmentFee._id, schoolId)} color="accent" style={{width: '100%'}} dense raised>
-                                          Purchase
+                                      </Grid>
+                                      <Grid item xs={3} sm={3} className={classes.content}>
+                                        <Typography className={classes.dollarStyles}>
+                                            ${enrollmentFee.cost}
+                                            <Typography  style={{color: '#7f7f7f'}}>
+                                              &nbsp;for enrollment.
+                                            </Typography>
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item xs={3} sm={3} className={classes.content} style={{textAlign: 'end'}}>
+                                        <Button className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, "EP", enrollmentFee._id, schoolId)} color="accent" style={{ boxShadow: 'none'}} dense raised>
+                                          <i class="material-icons">add_shopping_cart</i>
                                        </Button>
-                                      </CardActions>
+                                      </Grid>
                                     </Card>
-                                  </Grid>
+                                    </Grid>
                                 )
                               })
                             }
                           </Grid>
                       </Grid> : ''}
-                    <Grid container className={classes.themeSpacing}>
+
                       {classPricing && classPricing.length > 0 ?
-                        <Grid item xs={12}>
-                          <Typography align="center" type="headline" className={classes.themeSpacing}>
-                            ________________Per Class Package_____________
+                        <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: 'aliceblue'}}>
+                          <Typography align="center" type="headline" style={{color: '#7f7f7f'}} className={classes.themeSpacing}>
+                            Class Packages
                           </Typography>
-                          <Grid container>
+                          <Grid container style={{display: 'inline-table'}}>
                             {
                               classPricing && classPricing.map((classPrice, index)=> {
                                 return (
-                                  <Grid key={index} item xs={12} md={3} sm={4}>
-                                    <Card style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
-                                      <CardContent className={classes.content}>
-                                        <Typography align="center" type="title">
+                                  <Grid key={index} item xs={12} md={8} sm={12} style={{maxWidth: '100%'}}>
+                                    <Card style= {{height:'100%',boxShadow: 'none'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
+                                      <Grid item xs={6} sm={6} className={classes.content}>
+                                        <Typography align='justify' type="title">
                                           {classPrice.packageName}
                                         </Typography>
-                                         <br></br>
-                                        <Typography component="p">
-                                          ${classPrice.cost}  for {classPrice.noClasses} class
-                                        </Typography>
-                                         <br></br>
-                                        <Typography component="p">
+                                        <Typography component="p" style={{color: '#7f7f7f'}}>
                                           <b>Expiration:</b> {(classPrice.expDuration && classPrice.expPeriod) ? `${classPrice.expDuration} ${classPrice.expPeriod}` : "None"}
                                         </Typography>
-                                         <br></br>
-                                        <Typography component="p">
+                                        <Typography component="p" style={{color: '#7f7f7f'}}>
                                           <b>Covers:</b> {
                                             _.isEmpty(classPrice.selectedClassType) ? "None" :
                                             classPrice.selectedClassType.map((classType) => {
@@ -306,12 +303,18 @@ export default function() {
                                             })
                                           }
                                         </Typography>
-                                      </CardContent>
-                                      <CardActions>
-                                        <Button onClick={this.handlePurcasePackage.bind(this, "CP", classPrice._id, schoolId)} color="accent" style={{width: '100%'}} dense raised>
-                                          Purchase
+                                      </Grid>
+                                      <Grid item xs={3} sm={3} className={classes.content}>
+                                        <Typography className={classes.dollarStyles} component="p">
+                                          ${classPrice.cost}
+                                          <Typography style={{color: '#7f7f7f'}}>for {classPrice.noClasses > 1 ? `${classPrice.noClasses} classes`: `${classPrice.noClasses} class` } </Typography>
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item xs={3} sm={3} className={classes.content} style={{textAlign: 'end'}}>
+                                        <Button  className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, "CP", classPrice._id, schoolId)} color="accent" className={classes.purchaseBtn} dense raised>
+                                          <i class="material-icons">add_shopping_cart</i>
                                        </Button>
-                                      </CardActions>
+                                      </Grid>
                                     </Card>
                                   </Grid>
                                 )
@@ -322,14 +325,13 @@ export default function() {
                         </Grid> :
                         ''
                       }
-                    </Grid>
-                    <Grid container className={classes.themeSpacing}>
+
                       {monthlyPricing && monthlyPricing.length > 0 ?
-                        <Grid item xs={12} >
-                          <Typography align="center" type="headline" className={classes.themeSpacing}>
-                            ________________Monthly Packages_____________
+                        <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: '#fafafa'}} >
+                          <Typography align='justify' type="headline" className={classes.themeSpacing}>
+                            Monthly Packages
                           </Typography>
-                          <Grid container>
+                          <Grid container style={{display: 'inline-table'}}>
                             {
                               monthlyPricing && monthlyPricing.map((monthPrice, index)=> {
                                 let paymentType = '';
@@ -347,57 +349,54 @@ export default function() {
                                   }
                                 }
                                 return (
-                                  <Grid key={index} item xs={12} md={3} sm={4} >
-                                    <Card style= {{height:'100%'}} className={`${classes.card} price-card-container`}>
-                                      <CardContent className={classes.content}>
-                                        <Typography align="center" type="title">
-                                          {monthPrice.packageName}
-                                        </Typography>
-                                        <br></br>
-                                        <Typography component="p">
-                                          <b>Payment Method:</b> {monthPrice.pymtMethod}
-                                        </Typography>
-                                        <br></br>
-                                        {
-                                          monthPrice.pymtType && (
-                                            <Fragment>
-                                              <Typography component="p">
-                                                <b>Payment Type:</b> {paymentType}
-                                              </Typography>
-                                              <br></br>
-                                            </Fragment>
-                                          )
-                                        }
-                                        <Typography component="p">
-                                          <b>Covers:</b> {
-                                            _.isEmpty(monthPrice.selectedClassType) ? "None" :
-                                            monthPrice.selectedClassType.map((classType) => {
-                                              return <span>{classType.name} </span>
-                                            })
-                                          }
-                                        </Typography>
-                                        <br></br>
+                                  <Grid key={index} item xs={12} md={8} sm={12} style={{maxWidth: '100%'}}>
+                                    <Card style= {{height:'100%',boxShadow: 'none'}} className={`${classes.card} price-card-container ${classes.roundPapers}`}>
+                                        <Grid item xs={5} sm={5} className={classes.content}>
+                                            <Typography align='justify' type="title">
+                                              {monthPrice.packageName}
+                                            </Typography>
+                                            <Typography component="p" style={{color: '#7f7f7f'}}>
+                                              <b>Payment Method:</b> {monthPrice.pymtMethod}
+                                            </Typography>
+                                            {
+                                              monthPrice.pymtType && (
+                                                <Fragment>
+                                                  <Typography component="p" style={{color: '#7f7f7f'}}>
+                                                    <b>Payment Type:</b> {paymentType}
+                                                  </Typography>
+                                                </Fragment>
+                                              )
+                                            }
+                                            <Typography component="p" style={{color: '#7f7f7f'}}>
+                                              <b>Covers:</b> {
+                                                _.isEmpty(monthPrice.selectedClassType) ? "None" :
+                                                monthPrice.selectedClassType.map((classType) => {
+                                                  return <span>{classType.name} </span>
+                                                })
+                                              }
+                                            </Typography>
+                                        </Grid>
                                         {
                                           _.isEmpty(monthPrice.pymtDetails) ? "None" :
                                           monthPrice.pymtDetails.map((payment) => {
-                                            return <Grid container>
-                                              <Grid item xs={12} sm={7}>
-                                                <Typography component="p">
-                                                  ${payment.cost} per month for {payment.month} months
+                                            return (
+                                              <Grid item xs={4} sm={4}>
+                                                <Typography>
+                                                  <Typography className={classes.dollarStyles}>
+                                                  ${payment.cost}
+                                                    <Typography style={{color: '#7f7f7f'}}>per month for</Typography>
+                                                    <Typography style={{color: '#7f7f7f'}}> {payment.month} months</Typography>
+                                                  </Typography>
                                                 </Typography>
                                               </Grid>
-                                              <Grid item xs={12} sm={5}>
-                                                <Button onClick={this.handlePurcasePackage.bind(this, "MP", monthPrice._id, schoolId)} color="accent" style={{width: '100%'}} dense raised>
-                                                  Purchase
-                                                </Button>
-                                              </Grid>
-                                              <br></br>
-                                              <br></br>
-                                              <Divider />
-                                            </Grid>
+                                            )
                                           })
                                         }
-                                      </CardContent>
+                                        <Grid item xs={3} sm={3} style={{textAlign: 'end'}}>
+                                          <Button className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, "MP", monthPrice._id, schoolId)} color="accent" style={{boxShadow: 'none'}} dense raised>
+                                            <i class="material-icons">add_shopping_cart</i>
+                                          </Button>
+                                        </Grid>
                                     </Card>
                                   </Grid>
                                 )
@@ -407,7 +406,6 @@ export default function() {
                         </Grid> :
                         ''
                       }
-                    </Grid>
                     </Grid>
                   </Card>
                 </Grid>
@@ -546,18 +544,18 @@ export default function() {
                          </thead>
                          <tbody>
                          </tbody>
-             						</table>
-             					</div>
-             				</div>
-             			</div>
-								)
-							}
-							{
-								false && classPricing && classPricing.length > 0 && (
-									<div className="col-md-12">
-                 		<div className="card-content table-grey-box ">
-                 			<h4 className="card-title border-line-text line-bottom" >Class Costs</h4>
-                     	<div className="card-content table-responsive clascost school-view-price" style={{overflowX:'auto !important'}}>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                                )
+                            }
+                            {
+                                false && classPricing && classPricing.length > 0 && (
+                                    <div className="col-md-12">
+                        <div className="card-content table-grey-box ">
+                            <h4 className="card-title border-line-text line-bottom" >Class Costs</h4>
+                        <div className="card-content table-responsive clascost school-view-price" style={{overflowX:'auto !important'}}>
                         <table className="table">
                           <thead className="">
                             <tr>
@@ -574,18 +572,18 @@ export default function() {
                       </div>
                     </div>
                   </div>
-								)
-							}
-						</div>
-				</div>*/}
+                                )
+                            }
+                        </div>
+                </div>*/}
 
-				<div className="row">
-        	<div className="col-sm-12">
-    				<div className="card">
-        			<div className="card-content">
-            		<div className="">
-                	<div className="thumb about-school-top">
-	        					<figure className="about-head-image">
+                <div className="row">
+            <div className="col-sm-12">
+                    <div className="card">
+                    <div className="card-content">
+                    <div className="">
+                    <div className="thumb about-school-top">
+                                <figure className="about-head-image">
                       <div className="overlay-box"></div>
                       {/*<img src={ schoolData.mainImage || defaultSchoolImage }/>*/}
                     </figure>
@@ -598,16 +596,16 @@ export default function() {
 
                     </div>
 
-        					</div>
-        				</div>
-        			</div>
-        			<div className="card-footer">
-            		<div className="col-sm-12">
-            		</div>
-        			</div>
-        		</div>
-        	</div>
-        	{/*<div className="col-sm-12">
+                            </div>
+                        </div>
+                    </div>
+                    <div className="card-footer">
+                    <div className="col-sm-12">
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {/*<div className="col-sm-12">
                       <div className="clearfix card" >
                          <div className="col-sm-9">
                            <div className="">
@@ -648,26 +646,26 @@ export default function() {
                          </div>
                       </div>
                     </div>*/}
-        	{/*
-        		schoolData.descHtml && (
-		        	<div className="row  card">
-		            <div className="col-md-12">
-		              <div className="">
-			              <div className="card-content">
-			                <div className="content-list-heading">
-				             	  <h2 className="card-title text-center">Description
-				             	 	  <figure><img src="/images/heading-line.png"/></figure>
-				             	  </h2>
-			                  {schoolData.descHtml}
-			                </div>
-			             	</div>
-		             	</div>
-		            </div>
-		          </div>
-        		)
+            {/*
+                schoolData.descHtml && (
+                    <div className="row  card">
+                    <div className="col-md-12">
+                      <div className="">
+                          <div className="card-content">
+                            <div className="content-list-heading">
+                                  <h2 className="card-title text-center">Description
+                                      <figure><img src="/images/heading-line.png"/></figure>
+                                  </h2>
+                              {schoolData.descHtml}
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                )
             */
-        	}
-        	{/*<div className="row  card">
+            }
+            {/*<div className="row  card">
                       <div className="col-sm-12 text-left">
                         <div className="content-list-heading ">
                            <h2 className="text-center">{schoolData.name} offers the following class types
@@ -992,7 +990,7 @@ export default function() {
                       </div>
                     </div>*/}
         </div>
-			</div>
-		</div>
-	)
+            </div>
+        </div>
+    )
 }
