@@ -24,6 +24,7 @@ import Footer from './components/footer/index.jsx';
 import ClassMap from './components/map/ClassMap';
 import ClassTimesBoxes from './components/classTimes/ClassTimesBoxes';
 import ClassTimeButton from './components/buttons/ClassTimeButton.jsx';
+import SkillShapeButton from './components/buttons/SkillShapeButton.jsx';
 
 import reviewsData from './constants/reviewsData.js';
 import classTimesBarData from './constants/classTimesBarData.js';
@@ -55,14 +56,10 @@ const ClassTypeDetailsWrapper = styled.div`
   ${helpers.flexDirectionColumn}
 `;
 
-const PageContentWrapper = styled.div`
-  overflow: hidden;
-  margin-top: ${(helpers.oneRow * 3) - helpers.rhythmDiv}px;
-  width: 100%;
-`;
-
 const DescriptionText = styled.p`
   font-family: ${helpers.commonFont};
+  font-size: ${helpers.baseFontSize}px;
+  line-height: 1;
 `;
 
 const CoverContent = styled.div`
@@ -85,7 +82,7 @@ const CoverContentWrapper = styled.div`
 const MapContainer = styled.div`
   height: 320px;
   max-width: 496px;
-  margin-bottom: ${helpers.rhythmDiv}px;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
   border-radius: 5px;
 `;
 
@@ -132,8 +129,10 @@ const ClassTimesTitle = styled.h2`
   font-family: ${helpers.specialFont};
   font-weight: 300;
   font-style: italic;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-  padding: ${helpers.rhythmDiv}px;
+  line-height: 1;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  padding: 0;
 `;
 
 const Main = styled.main`
@@ -144,7 +143,7 @@ const MainInnerFixedContainer = styled.div`
   max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
   width: 100%;
   margin: 0 auto;
-  margin-bottom: ${helpers.rhythmDiv * 3}px;
+  margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 2}px;
 `;
 
 const MainInner = styled.div`
@@ -152,14 +151,14 @@ const MainInner = styled.div`
   overflow: ${props => (props.reviews || props.classTimes) ? 'hidden' : 'initial' };
 
   @media screen and (max-width : ${helpers.mobile}px) {
-    padding: ${props => props.smallPadding ? props.smallPadding : helpers.rhythmDiv}px;
+    padding: ${props => props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
   }
 `;
 
 const PackagesWrapper = styled.div`
   ${helpers.flexDirectionColumn}
   width: 100%;
-  margin-bottom: ${helpers.rhythmDiv * 3}px;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
 const PackagesTitle = styled.h2`
@@ -169,20 +168,20 @@ const PackagesTitle = styled.h2`
   font-weight: 300;
   font-style: italic;
   margin: 0;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-  padding: ${helpers.rhythmDiv * 2}px;
+  line-height: 1;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
 const CalendarWrapper = styled.div`
    _box-shadow: 0px 0px 5px 1px rgba(221,221,221,1);
    border: 1px solid rgba(221,221,221,1);
-   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const ActionButtonsWrapper = styled.div`
   position: absolute;
-  left: 8px;
-  bottom: 8px;
+  left: ${helpers.rhythmDiv}px;
+  bottom: ${helpers.rhythmDiv * 2}px;
   right: auto;
   ${helpers.flexCenter}
 
@@ -195,7 +194,7 @@ const ActionButtonsWrapper = styled.div`
 
 const ActionButton = styled.div`
   @media screen and (max-width: ${helpers.tablet}px) {
-    margin-bottom: ${helpers.rhythmDiv}px;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
   }
 `;
 
@@ -230,13 +229,17 @@ class ClassType extends Component {
                   <ClassTypeForegroundImage coverSrc={settings.classTypeImgSrc} >
 
                     <ActionButtonsWrapper>
+
                       <ActionButton>
                         <ClassTimeButton icon iconName='phone' label="Call Us" onClick={this.props.onCallUsButtonClick}/>
                       </ActionButton>
+
                       <ActionButton>
                         <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={this.props.onEmailButtonClick} />
                       </ActionButton>
-                      <ClassTimeButton secondary noMarginBottom label="Pricing" onClick={this.props.onPricingButtonClick}/>
+
+                        <ClassTimeButton secondary noMarginBottom label="Pricing" onClick={this.props.onPricingButtonClick} />
+
                     </ActionButtonsWrapper>
 
                   </ClassTypeForegroundImage>
@@ -258,8 +261,8 @@ class ClassType extends Component {
 
           {/* Main section includes reviews slider, class timing boxes(+ slider), pricing section, about school section, calendar */}
           <Main>
-            <MainInnerFixedContainer>
-              <MainInner reviews largePadding="24" smallPadding="24">
+            <MainInnerFixedContainer marginBottom="0">
+              <MainInner reviews largePadding="32" smallPadding="32">
                 <ClassWrapper reviews>
                   <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv}/>
                 </ClassWrapper>
@@ -279,7 +282,7 @@ class ClassType extends Component {
               />
             </PackagesWrapper>
 
-            <MainInnerFixedContainer fixedWidth="1100">
+            <MainInnerFixedContainer fixedWidth="1100" marginBottom="32">
               <SchoolDetails
                 website={schoolDetails.website}
                 address={schoolDetails.address}

@@ -258,8 +258,8 @@ Plant.propTypes = {
 }
 
 Plant.defaultProps = {
-  height: `${helpers.rhythmDiv * 24}px`,
-  width: `${helpers.rhythmDiv * 24}px`
+  height: (helpers.baseFontSize * 12) + 'px',
+  width: (helpers.baseFontSize * 12) + 'px'
 }
 
 export default Plant;

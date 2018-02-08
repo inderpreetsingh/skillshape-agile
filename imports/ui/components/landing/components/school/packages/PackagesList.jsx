@@ -78,8 +78,9 @@ const Title = styled.h1`
   font-weight: 300;
   text-align: center;
   font-style: italic;
+  line-height: 1;
   font-size: ${helpers.baseFontSize * 1.5}px;
-  margin: ${helpers.rhythmDiv * 4}px 0 ${helpers.rhythmDiv * 3}px 0;
+  margin: ${helpers.rhythmDiv * 4}px 0;
   color: ${helpers.textColor};
   width: 100%;
 `;

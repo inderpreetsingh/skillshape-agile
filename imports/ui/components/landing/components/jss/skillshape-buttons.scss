@@ -1,0 +1,23 @@
+.caution-button {
+    @include getColor('caution','darkText');
+}
+
+.action-button {
+    @include getColor('action');
+}
+
+.information-button {
+    @include getColor('information');
+}
+
+.cancel-button {
+    @include getColor('cancel');
+}
+
+.danger-button {
+    @include getColor('danger');
+}
+
+.black-button {
+    @include getColor('black');
+}

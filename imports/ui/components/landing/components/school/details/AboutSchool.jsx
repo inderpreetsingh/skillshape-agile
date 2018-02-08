@@ -16,7 +16,6 @@ const Title = styled.h2`
   font-family: ${helpers.specialFont};
   color: ${helpers.primaryColor};
   margin: 0;
-  margin-bottom: ${helpers.rhythmDiv/2}px;
   font-weight: 300;
   line-height: 1;
 `;
@@ -31,7 +30,7 @@ const Description = styled.p`
 const SchoolWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: ${helpers.rhythmDiv}px;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Address = styled.address`

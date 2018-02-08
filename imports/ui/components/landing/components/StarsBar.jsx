@@ -12,6 +12,7 @@ const StarsWrapper = styled.div`
 `;
 
 const StarWrapper = styled.div`
+  height: ${helpers.baseFontSize}px;
   margin-right: ${helpers.rhythmDiv/2}px;
 `;
 

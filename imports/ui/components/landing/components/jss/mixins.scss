@@ -1,0 +1,4 @@
+@mixin getColor($color, $textColor: 'lightText') {
+  background-color: map-get($colors, $color);
+  color: map-get($colors, $textColor);
+}
