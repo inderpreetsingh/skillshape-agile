@@ -1,7 +1,7 @@
 const classTimesData = [
 {
     timing: 'Sat 6pm - 7pm',
-    description: 'The Swimming class is practiced under Mr Alex who is silver medalist in common wealth games',
+    description: 'The Swimming class is practiced under Mr Alex who is silver medalist in common wealth games. His immmense experience in this field makes him really great instructor.',
     addToCalender: false,
     scheduleType: 'on-going'
 },

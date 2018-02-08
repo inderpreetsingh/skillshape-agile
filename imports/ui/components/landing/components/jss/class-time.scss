@@ -6,7 +6,7 @@
   transition: background-color .250s linear, color .250s linear;
 }
 
-.class-time-after-transition:after {
+.class-time-bg-transition:after {
   transition: background-color .200s linear;
 }
 
@@ -27,4 +27,8 @@
 .remove-from-calendar-clock {
   border: 2px solid $seconday-dark-color;
   color: $seconday-dark-color;
+}
+
+.class-time-description {
+  transition: height .250s linear;
 }

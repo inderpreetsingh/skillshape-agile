@@ -16,7 +16,7 @@ const classTimesBarData = [
     time: '09:00',
     timePeriod: 'am',
     days: 'Mo-Th-Fr',
-    description: 'The karate class is practiced under Miss Jen who is black belt in Karate and have immense knowledge in TaekWondo as well.',
+    description: 'The karate class is practiced under Miss Jen who is black belt in Karate and have immense knowledge in TaekWondo as well. Her immense experience in this field make her really great instructor.',
     addToCalendar: true,
     scheduleType: 'Finished',
     isTrending: false
@@ -35,7 +35,7 @@ const classTimesBarData = [
     time: '09:00',
     timePeriod: 'am',
     days: 'Mo-Th-Fr',
-    description: 'The karate class is practiced under Miss Jen who is black belt in Karate and have immense knowledge in TaekWondo as well.',
+    description: 'The karate class is practiced under Miss Jen who is black belt in Karate and have immense knowledge in TaekWondo as well. Her immense experience in this field make her really great instructor.',
     addToCalendar: false,
     scheduleType: 'Finished',
 },
@@ -44,7 +44,7 @@ const classTimesBarData = [
     time: '07:00',
     timePeriod: 'pm',
     days: 'Mo-Th-Fr',
-    description: 'This class is taught by Mr. Surnaam Singh, who is head of naam yoga festival foundation celebration in New York and Los Angeles',
+    description: 'This class is taught by Mr. Surnaam Singh, who is head of naam yoga festival foundation celebration in New York and Los Angeles.',
     addToCalendar: false,
     scheduleType: 'Ongoing'
 },
@@ -53,7 +53,7 @@ const classTimesBarData = [
     time: '09:00',
     timePeriod: 'am',
     days: 'Mo-Th-Fr',
-    description: 'The karate class is practiced under Miss Jen who is black belt in Karate and have immense knowledge in TaekWondo as well.',
+    description: 'The karate class is practiced under Miss Jen who is black belt in Karate and have immense knowledge in TaekWondo as well. Her immense experience in this field make her really great instructor.',
     addToCalendar: false,
     scheduleType: 'Finished',
 }

@@ -19,8 +19,19 @@ const Wrapper = styled.div`
 
 const ClassTimesWrapper = styled.div`
   max-width: 1144px;
-  width: 100%;
   margin: 0 auto;
+
+  @media screen and (max-width : 1191px) {
+    max-width: 858px;
+  }
+
+  @media screen and (max-width : 910px) {
+    max-width: 572px;
+  }
+
+  @media screen and (max-width: 627px) {
+    max-width: 286px;
+  }
 `;
 
 const styles = {

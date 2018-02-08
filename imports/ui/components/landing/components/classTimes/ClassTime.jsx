@@ -108,8 +108,8 @@ const Description = styled.p`
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
 
-  height: ${props => props.fullTextState ? '200px' : 'auto'};
-  overflowY: ${props => props.fullTextState ? 'auto' : 'visible'};
+  height: ${props => props.fullTextState ? '120px' : '140px'};
+  overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
 
 const TrendingWrapper = styled.div`
@@ -168,18 +168,26 @@ class ClassTime extends Component {
   }
 
   componentWillMount = () => {
-    console.info(' ////////// component will mount ',this.state);
+    console.info('////////// component will mount ',this.state);
     const text = this._getLessCharsDescription(this.state.fullText);
+    console.info('less char string',text);
     if(text != this.state.fullText) {
       this.setState({
-        text: lessCharsText,
+        text: text,
         showReadMore: true
       });
     }
   }
 
-  handleToggleFullTextState = () => {
+  componentDidMount = () => {
+    console.info('Show me state',this.state);
+  }
 
+  handleToggleFullTextState = () => {
+    console.log('click on this handleToggleFullTextState');
+    this.setState({
+      fullTextState: !this.state.fullTextState
+    });
   }
 
   handleToggleAddToCalendar = () => {
@@ -213,7 +221,7 @@ class ClassTime extends Component {
 
   getDescriptionText = () => {
     if(this.state.showReadMore) {
-      if(!this.state.fullTextState) {
+      if(this.state.fullTextState) {
         return this.state.fullText;
       }
     }
@@ -224,13 +232,17 @@ class ClassTime extends Component {
   getShowMoreText = () => {
     if(this.state.showReadMore) {
       if(this.state.fullTextState) {
-        return <Read onClick={this.handleToggleRFullTextState}>...read less</Read>
+        return <Read onClick={this.handleToggleFullTextState}> ...read less</Read>
       }else {
-        return <Read onClick={this.handleToggleRFullTextState}>...read more</Read>
+        return <Read onClick={this.handleToggleFullTextState}> ...read more</Read>
       }
     }
 
     return <span></span>
+  }
+
+  getShowLessText = () => {
+    return <Read onClick={this.handleToggleFullTextState}> ...read less</Read>
   }
 
   _getLessCharsDescription = (text) => text.substr(0, this.state.maxStringCharsToShow);
@@ -275,12 +287,8 @@ class ClassTime extends Component {
 
   render() {
     console.log(this.state.addToCalendar);
-    return (<Transition timeout={{enter : 0, exit: 0}} in={this.state.addToCalendar}>
-        {(state) =>
-          (<ClassTimeContainer
-            className={`class-time-after-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
-            key={this.props._id}
-            >
+    return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
+            key={this.props._id} >
             <div>
               <ClassTimeClock
                 time={this.props.time}
@@ -293,7 +301,7 @@ class ClassTime extends Component {
                 schedule={this.props.scheduleType}
                 />
 
-              <Description fullTextState={this.state.fullTextState}>
+              <Description className="class-time-description" fullTextState={this.state.fullTextState}>
                 {this.getDescriptionText()}
                 {this.getShowMoreText()}
               </Description>
@@ -302,10 +310,7 @@ class ClassTime extends Component {
             {this._getCalenderButton(this.state.addToCalendar, this.state.scheduleTypeOnGoing)}
 
             {this.props.isTrending && <Trending />}
-            </ClassTimeContainer>)
-          }
-      </Transition>
-      );
+        </ClassTimeContainer>)
     }
 }
 
