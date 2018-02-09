@@ -61,20 +61,18 @@ Meteor.methods({
 		                        lastName: csvdata[i].lName
 		                    }
 		                    schoolId = School.insert(schoolInsertDoc)
+		                    let newUser = CreateNewUser(csvdata[i].email, csvdata[i].schoolName, csvdata[i].fName, csvdata[i].lName, schoolId);
+		                    if (newUser) {
+		                    	School.update(
+				                    { _id: schoolId },
+				                    {
+				                        $set: {
+				                            "superAdmin": newUser,
+				                        }
+				                    }
+				                );
+		                    }
 		                }
-	                    let newUser = CreateNewUser(csvdata[i].email, csvdata[i].schoolName, csvdata[i].fName, csvdata[i].lName, schoolId);
-	                    if (newUser) {
-	                        // Needs to update School with multiple admins.
-	                    	School.update(
-			                    { _id: schoolId },
-			                    {
-			                        $addToSet: {
-			                            "admins": newUser,
-			                            // "userId": newUser // This is not used now. `admins` refers to `userId` from now.
-			                        }
-			                    }
-			                );
-	                    }
 
 		                const slocation = SLocation.findOne({ schoolId: schoolId, zip: csvdata[i].zip, $or: [ {title: csvdata[i].LocationTitle}, {address: csvdata[i].address} ] })
 		                const sLocationDoc = {
