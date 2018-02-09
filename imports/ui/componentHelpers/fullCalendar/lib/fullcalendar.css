@@ -1287,6 +1287,7 @@ be a descendant of the grid when it is being dragged.
 .fc button {
   text-transform: capitalize;
   font-family: 'Open Sans';
+  height: 32px;
 }
 
 .fc-toolbar {
@@ -1357,13 +1358,30 @@ be a descendant of the grid when it is being dragged.
 }
 
 .fc .fc-toolbar .fc-state-active {
-  cursor: default;
-    background-color: #b5b2b2;
-    border-color: #b5b2b2;
+  cursor: pointer;
+  background-color: #b5b2b2; /* Otherwise the color of bg green appears */
+  border-color: #b5b2b2;
 }
 
-.fc button:focus, .fc button:hover, .fc button.btn-primary:focus, .fc button.btn-primary:hover {
+.fc button:active,
+.fc button.btn-primary:active,
+.fc button:focus,
+.fc button:hover,
+.fc button.btn-primary:focus,
+.fc button.btn-primary:hover {
   box-shadow: none;
+  background-color: #5b985d;
+}
+
+.fc .fc-toolbar button.fc-state-active:active,
+.fc .fc-toolbar button.fc-state-active:focus
+{
+  background-color: #b5b2b2;
+  border-color: #b5b2b2;
+}
+
+.fc .fc-toolbar button.fc-state-active:hover {
+  background-color: #ccccce;
 }
 
 @media screen and (max-width: 500px) {

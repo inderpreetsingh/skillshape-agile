@@ -138,7 +138,17 @@ const ClassTimesWrapper = styled.div`
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    padding-bottom: 16px;
+    padding-bottom: 32px;
+  }
+`;
+
+const ClassTimesInnerWrapper = styled.div`
+  padding: 0px;
+  overflow: hidden;
+
+  @media screen and (max-width : ${helpers.mobile}px) {
+    padding: ${props => props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
+    padding-top: 0;
   }
 `;
 
@@ -152,6 +162,10 @@ const ClassTimesTitle = styled.h2`
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   padding: 0;
+
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
+    margin-bottom: ${helpers.rhythmDiv * 4}px;
+  }
 `;
 
 const Main = styled.main`
@@ -279,12 +293,12 @@ class ClassType extends Component {
             </MainInnerFixedContainer>
 
           <MainInnerFixedContainer marginBottom="16">
-              <MainInner reviews largePadding="0" smallPadding="32">
+              <ClassTimesInnerWrapper>
                 <ClassTimesWrapper paddingBottom="48">
                   <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
                   <ClassTimesBoxes classTimesData={classTimesBarData} />
                 </ClassTimesWrapper>
-              </MainInner>
+              </ClassTimesInnerWrapper>
           </MainInnerFixedContainer>
 
 

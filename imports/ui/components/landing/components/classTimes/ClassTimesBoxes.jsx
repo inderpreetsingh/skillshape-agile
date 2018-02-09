@@ -15,7 +15,7 @@ class ClassTimesBoxes extends Component {
   }
   handleSliderToggle = () => {
     console.log(window.innerWidth," resize, this.handleSliderToggle");
-    if(window.innerWidth < 600) {
+    if(window.innerWidth <= 600) {
       if(!this.state.slider) {
           this.setState({
             slider: true
