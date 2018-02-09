@@ -70,7 +70,7 @@ Meteor.methods({
 			                    {
 			                        $addToSet: {
 			                            "admins": newUser,
-			                            "userId": newUser
+			                            // "userId": newUser // This is not used now. `admins` refers to `userId` from now.
 			                        }
 			                    }
 			                );
