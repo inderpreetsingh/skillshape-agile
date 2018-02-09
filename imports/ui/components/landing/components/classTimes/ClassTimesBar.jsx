@@ -27,7 +27,7 @@ const ClassTimesWrapper = styled.div`
   max-width: ${props => getContainerMaxWidth(props.spacing,4)}px;
   margin: 0 auto;
 
-  @media screen and (max-width : 1280px) {
+  @media screen and (max-width : 1200px) {
     max-width: ${props => getContainerMaxWidth(props.spacing,3)}px;
   }
 

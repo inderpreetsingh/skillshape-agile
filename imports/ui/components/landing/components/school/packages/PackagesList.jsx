@@ -22,6 +22,7 @@ const PackagesListWrapper = styled.section`
   width: 50%;
   position: relative;
   align-items: ${props => props.classPackages ? 'flex-end' : 'flex-start'};
+  padding: ${helpers.rhythmDiv * 4}px 0;
 
   &:after {
     content: '';
@@ -54,8 +55,7 @@ const PackagesWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: ${props => props.classPackages ? 'flex-end' : 'flex-start'};
-  padding-right: ${props => props.classPackages ? helpers.rhythmDiv * 2 : 0}px;
-  padding-left: ${props => props.classPackages ? 0 : helpers.rhythmDiv * 2}px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     max-width: 100%;
@@ -80,7 +80,8 @@ const Title = styled.h1`
   font-style: italic;
   line-height: 1;
   font-size: ${helpers.baseFontSize * 1.5}px;
-  margin: ${helpers.rhythmDiv * 4}px 0;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
   color: ${helpers.textColor};
   width: 100%;
 `;

@@ -25,6 +25,7 @@ import Footer from './components/footer/index.jsx';
 import ClassMap from './components/map/ClassMap';
 import ClassTimesBoxes from './components/classTimes/ClassTimesBoxes';
 import ClassTimeButton from './components/buttons/ClassTimeButton.jsx';
+import TestTheme from './TestTheme.jsx';
 
 import reviewsData from './constants/reviewsData.js';
 import classTimesBarData from './constants/classTimesBarData.js';
@@ -49,6 +50,30 @@ const SchoolImg = styled.img`
 
 const Wrapper = styled.div`
   width: 100%;
+`;
+
+const Main = styled.main`
+  width: 100%;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    overflow: hidden;
+  }
+`;
+
+const MainInnerFixedContainer = styled.div`
+  max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 2}px;
+`;
+
+const MainInner = styled.div`
+  padding: ${props => props.largePadding ? props.largePadding : helpers.rhythmDiv * 2}px;
+  overflow: ${props => (props.reviews || props.classTimes) ? 'hidden' : 'initial' };
+
+  @media screen and (max-width : ${helpers.mobile}px) {
+    padding: ${props => props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
+  }
 `;
 
 const ClassTypeDetailsWrapper = styled.div`
@@ -89,7 +114,7 @@ const MapContainer = styled.div`
 const ClassTypeForegroundImage = styled.div`
   ${helpers.coverBg}
   background-position: center center;
-  background-image: url('${props => props.coverSrc}');
+  background-image: url('${props => props.coverSrc ? props.coverSrc : settings.classTypeImgSrc}');
   height: 480px;
   border-radius: 5px;
   flex-grow: 1;
@@ -168,26 +193,6 @@ const ClassTimesTitle = styled.h2`
   }
 `;
 
-const Main = styled.main`
-  width: 100%;
-`;
-
-const MainInnerFixedContainer = styled.div`
-  max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
-  width: 100%;
-  margin: 0 auto;
-  margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 2}px;
-`;
-
-const MainInner = styled.div`
-  padding: ${props => props.largePadding ? props.largePadding : helpers.rhythmDiv * 2}px;
-  overflow: ${props => (props.reviews || props.classTimes) ? 'hidden' : 'initial' };
-
-  @media screen and (max-width : ${helpers.mobile}px) {
-    padding: ${props => props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
-  }
-`;
-
 const PackagesWrapper = styled.div`
   ${helpers.flexDirectionColumn}
   width: 100%;
@@ -226,11 +231,11 @@ class ClassType extends Component {
     return (
       <MuiThemeProvider theme={muiTheme}>
         <Wrapper>
-          {/*<TopSearchBar positionFixed={true}/> */}
-          <BrandBar positionStatic barButton={<Fragment></Fragment>} />
+          <TopSearchBar />
+          {/*<BrandBar positionStatic barButton={<Fragment></Fragment>} />*/}
 
           {/* Class Type Cover includes description, map, foreground image, then class type information*/}
-          <ClassTypeCover>
+          <ClassTypeCover coverSrc={this.props.coverSrc}>
             <CoverContentWrapper>
               <CoverContent>
                 <ContentSection leftSection>
@@ -248,14 +253,12 @@ class ClassType extends Component {
                 </ContentSection>
 
                 <ContentSection>
-                  <ClassTypeForegroundImage coverSrc={settings.classTypeImgSrc} >
-
-                  <ActionButtons
-                    onCallUsButtonClick={this.props.onCallUsButtonClick}
-                    onEmailButtonClick={this.props.onEmailButtonClick}
-                    onPricingButtonClick={this.props.onPricingButtonClick}
-                    />
-
+                  <ClassTypeForegroundImage coverSrc={this.props.coverSrc} >
+                    <ActionButtons
+                      onCallUsButtonClick={this.props.onCallUsButtonClick}
+                      onEmailButtonClick={this.props.onEmailButtonClick}
+                      onPricingButtonClick={this.props.onPricingButtonClick}
+                      />
                   </ClassTypeForegroundImage>
 
                   <ClassTypeInfoWrapper>
@@ -287,7 +290,7 @@ class ClassType extends Component {
             <MainInnerFixedContainer marginBottom="32">
               <MainInner reviews largePadding="32" smallPadding="32">
                 <ClassWrapper reviews>
-                  <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv}/>
+                  <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
                 </ClassWrapper>
               </MainInner>
             </MainInnerFixedContainer>
@@ -324,6 +327,7 @@ class ClassType extends Component {
               </CalendarWrapper>
             </MainInnerFixedContainer>
 
+            <TestTheme />
             <Footer />
 
           </Main>

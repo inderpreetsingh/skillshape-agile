@@ -21,15 +21,15 @@ const withShowMoreText = function(WrappedComponent,showMoreTextConfig) {
     state = {
       fullText: this.props.description,
       text: this.props.description,
-      maxStringCharsToShow: config.maxChars || 150 ,
+      maxStringCharsToShow: config.maxChars || 135 ,
       showReadMore: false,
       fullTextState: false
     }
 
     componentWillMount = () => {
-      console.info('////////// component will mount ',this.state);
+      // console.info('////////// component will mount ',this.state);
       const text = this._getLessCharsDescription(this.state.fullText);
-      console.info('less char string',text);
+      // console.info('less char string',text);
       if(text != this.state.fullText) {
         this.setState({
           text: text,
@@ -62,16 +62,34 @@ const withShowMoreText = function(WrappedComponent,showMoreTextConfig) {
     getShowMoreText = () => {
       if(this.state.showReadMore) {
         if(this.state.fullTextState) {
-          return <Read onClick={this.handleToggleFullTextState}> ...read less</Read>
+          return <Read onClick={this.handleToggleFullTextState}> ... Read Less</Read>
         }else {
-          return <Read onClick={this.handleToggleFullTextState}> ...read more</Read>
+          return <Read onClick={this.handleToggleFullTextState}> ... Read More</Read>
         }
       }
 
       return <span></span>
     }
 
-    _getLessCharsDescription = (text) => text.substr(0, this.state.maxStringCharsToShow);
+    _getLessCharsDescription = (text) => {
+      const maxLimit = this.state.maxStringCharsToShow;
+      let count = 0;
+
+      const words = text.split(' ');
+      for(let i = 0; i < words.length; ++i) {
+        count += words[i].length + 1;
+        if(count > maxLimit) {
+          count -= (words[i].length + 1);
+          break;
+        }else if( count == maxLimit) {
+          break;
+        }
+      }
+
+      const newMaxCharLimit = count;
+
+      text.substr(0, newMaxCharLimit);
+    }
 
     render() {
       //console.log('this. state , this. props',this.state,this.props);

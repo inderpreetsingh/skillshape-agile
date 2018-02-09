@@ -1286,7 +1286,7 @@ be a descendant of the grid when it is being dragged.
 
 .fc button {
   text-transform: capitalize;
-  font-family: 'Open Sans';
+  font-family: 'Zilla Slab',serif;
   height: 32px;
 }
 
@@ -1359,8 +1359,8 @@ be a descendant of the grid when it is being dragged.
 
 .fc .fc-toolbar .fc-state-active {
   cursor: pointer;
-  background-color: #b5b2b2; /* Otherwise the color of bg green appears */
-  border-color: #b5b2b2;
+  background-color: #BBB8B9; /* Otherwise the color of bg green appears */
+  border-color: #BBB8B9;
 }
 
 .fc button:active,

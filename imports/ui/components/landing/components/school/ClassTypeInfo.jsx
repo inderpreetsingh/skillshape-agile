@@ -7,7 +7,6 @@ import * as helpers from '../jss/helpers.js';
 const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  height: 100%;
 `;
 
 const InfoCapsule = styled.div`

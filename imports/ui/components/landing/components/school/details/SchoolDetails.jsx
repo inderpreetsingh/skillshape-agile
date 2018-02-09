@@ -11,11 +11,13 @@ import * as helpers from '../../jss/helpers.js';
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv * 8}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     ${helpers.flexDirectionColumn}
     align-items: center;
+    padding: 0;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -25,24 +27,23 @@ const Wrapper = styled.div`
 `;
 
 const SchoolSection = styled.div`
-  max-width: 476px;
+  max-width: 474px;
   width: 100%;
   display: flex;
   flex-direction: column;
   margin-right: ${helpers.rhythmDiv * 3}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    margin-bottom: ${helpers.rhythmDiv}px;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
     margin-right: 0;
-  }
-
-  @media screen and (max-width: ${helpers.mobile}px) {
     padding: ${helpers.rhythmDiv * 2}px;
+    padding-top: 0;
   }
 `;
 
+// Max-width of image slider is 2px added to remove the half pixel render on large screens
 const ImgSliderSection = styled.div`
-  max-width: 500px;
+  max-width: 502px;
   max-height: 500px;
   width: 100%;
 `;
