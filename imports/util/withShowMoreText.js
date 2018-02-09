@@ -14,6 +14,22 @@ const Read = styled.span`
   cursor: pointer;
 `;
 
+const getMaxCharLimit = (words,maxLimit) => {
+  let count = 0;
+
+  for(let i = 0; i < words.length; ++i) {
+    count += words[i].length + 1;
+    if(count > maxLimit) {
+      count -= (words[i].length + 1);
+      break;
+    }else if( count == maxLimit) {
+      break;
+    }
+  }
+
+  return count;
+}
+
 const withShowMoreText = function(WrappedComponent,showMoreTextConfig) {
   let config = showMoreTextConfig || {};
 
@@ -73,22 +89,10 @@ const withShowMoreText = function(WrappedComponent,showMoreTextConfig) {
 
     _getLessCharsDescription = (text) => {
       const maxLimit = this.state.maxStringCharsToShow;
-      let count = 0;
-
       const words = text.split(' ');
-      for(let i = 0; i < words.length; ++i) {
-        count += words[i].length + 1;
-        if(count > maxLimit) {
-          count -= (words[i].length + 1);
-          break;
-        }else if( count == maxLimit) {
-          break;
-        }
-      }
-
-      const newMaxCharLimit = count;
-
-      text.substr(0, newMaxCharLimit);
+      const newMaxCharLimit = getMaxCharLimit(words,maxLimit);
+      console.log(newMaxCharLimit)
+      return text.substr(0, newMaxCharLimit);
     }
 
     render() {

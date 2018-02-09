@@ -27,8 +27,7 @@ const SearchBarStyled = (props) => {
       onRequestSearch={props.onSearch}
       itemScope
       itemType="http://schema.org/SearchAction"
-      className = 'is-search-bar"
-    />
+      className="is-search-bar" />
     </MySearchBarWrapper>)
 }
 
