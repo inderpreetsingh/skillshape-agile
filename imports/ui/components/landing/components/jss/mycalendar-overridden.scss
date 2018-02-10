@@ -37,14 +37,6 @@ $calendar-button-active-color: #BBB8B9;
   top: map-get($sizes,'rhythm-div') * 7px;
 }
 
-.fc .fc-left .fc-button-group button,
-.fc .fc-left .fc-button-group button:active:hover,
-.fc .fc-left button:active
- {
-  background-color: white;
-  color: map-get($colors,'primary');
-}
-
 .fc .fc-left button.fc-next-button {
   right: 0;
   position: absolute;
@@ -85,26 +77,41 @@ $calendar-button-active-color: #BBB8B9;
   border-color: $calendar-button-active-color;
 }
 
-.fc button:active,
-.fc button.btn-primary:active,
-.fc button:focus,
-.fc button:hover,
-.fc button.btn-primary:focus,
-.fc button.btn-primary:hover {
+.fc .fc-toolbar button:active,
+.fc .fc-toolbar button.btn-primary:active,
+.fc .fc-toolbar button:focus,
+.fc .fc-toolbar button:hover,
+.fc .fc-toolbar button.btn-primary:focus,
+.fc .fc-toolbar button.btn-primary:hover {
   box-shadow: none;
   background-color: darken(map-get($colors,'primary'),5%);
 }
 
+.fc .fc-toolbar button[disabled] {
+  background-color: #999999;
+  border-color: #999999
+}
+
 .fc .fc-toolbar button.fc-state-active:active,
-.fc .fc-toolbar button.fc-state-active:focus
+.fc .fc-toolbar button.fc-state-active:focus,
+.fc .fc-toolbar button.fc-state-active:hover
 {
   background-color: $calendar-button-active-color;
   border-color: $calendar-button-active-color;
 }
 
-.fc .fc-toolbar button.fc-state-active:hover {
+.fc .fc-toolbar button.fc-state-active:hover, .fc .fc-toolbar button[disabled]:focus, .fc .fc-toolbar button[disabled]:hover {
   background-color: lighten($calendar-button-active-color,10%);
 }
+
+.fc .fc-left .fc-button-group button,
+.fc .fc-left .fc-button-group button:active,
+.fc .fc-left .fc-button-group button:active:hover,
+ {
+  background-color: white;
+  color: map-get($colors,'primary');
+}
+
 
 @media screen and (max-width: 500px) {
   .fc-left .fc-button-group {
