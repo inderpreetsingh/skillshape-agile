@@ -32,14 +32,18 @@ const Note = styled.li`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
-const StudentNotes = (props) => (
-  <Wrapper>
+const conditionalRender = (props) => {
+  return (props.notes ? (<Wrapper>
     <Title>Student Notes</Title>
     <Notes>
       {props.notes.map(note => <Note>{note}</Note>)}
     </Notes>
-  </Wrapper>
-);
+  </Wrapper>) : <span></span>);
+}
+
+const StudentNotes = (props) => {
+  return conditionalRender(props);
+}
 
 StudentNotes.propTypes = {
   notes: PropTypes.arrayOf(PropTypes.String)

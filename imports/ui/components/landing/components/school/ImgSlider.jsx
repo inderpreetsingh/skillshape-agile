@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component,Fragment} from 'react';
 import PropTypes from 'prop-types';
 import ImageGallery from 'react-image-gallery';
 
@@ -10,6 +10,8 @@ class ImgSlider extends React.Component {
         showPlayButton={false}
         showBullets={true}
         items={images}
+        showThumbnails={false}
+        showFullscreenButton={false}
         />
     );
   }

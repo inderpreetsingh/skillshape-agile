@@ -1,20 +1,17 @@
 import React,{ Component,Fragment } from 'react';
 import PropTypes from 'prop-types';
-import Grid from 'material-ui/Grid';
 import styled from 'styled-components';
 
 import { MuiThemeProvider } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
 import ReviewsBar from './components/school/ReviewsBar.jsx';
-import ActionButtons from './components/school/ActionButtons.jsx';
 import ClassTypeCover from './components/school/ClassTypeCover.jsx';
 import PackagesList from './components/school/packages/PackagesList.jsx';
 import ImgSlider from './components/school/ImgSlider.jsx';
 import SchoolDetails from './components/school/details/SchoolDetails.jsx';
 import ReviewsSlider from './components/school/ReviewsSlider.jsx';
-import ClassTypeDescription from './components/school/ClassTypeDescription.jsx';
-import ClassTypeInfo from './components/school/ClassTypeInfo.jsx';
+import ClassTypeCoverContent from './components/school/ClassTypeCoverContent.jsx';
 import MyCalendar from '../users/myCalender';
 
 import StarsBar from './components/StarsBar.jsx';
@@ -22,7 +19,6 @@ import ClassTimesSlider from './components/classTimes/ClassTimesSlider.jsx';
 import BrandBar from './components/BrandBar';
 import TopSearchBar from './components/TopSearchBar';
 import Footer from './components/footer/index.jsx';
-import ClassMap from './components/map/ClassMap';
 import ClassTimesBoxes from './components/classTimes/ClassTimesBoxes';
 import ClassTimeButton from './components/buttons/ClassTimeButton.jsx';
 import TestTheme from './TestTheme.jsx';
@@ -84,61 +80,6 @@ const DescriptionText = styled.p`
   font-family: ${helpers.commonFont};
   font-size: ${helpers.baseFontSize}px;
   line-height: 1;
-`;
-
-const CoverContent = styled.div`
-  display: flex;
-  padding: ${helpers.rhythmDiv * 2}px;
-  position: relative;
-  z-index: 16;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    flex-direction: column;
-    padding-bottom: 0;
-  }
-`;
-
-const CoverContentWrapper = styled.div`
-  max-width: ${helpers.maxContainerWidth}px;
-  width: 100%;
-  margin: 0 auto;
-`;
-
-const MapContainer = styled.div`
-  height: 320px;
-  max-width: 496px;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-  border-radius: 5px;
-`;
-
-const ClassTypeForegroundImage = styled.div`
-  ${helpers.coverBg}
-  background-position: center center;
-  background-image: url('${props => props.coverSrc ? props.coverSrc : settings.classTypeImgSrc}');
-  height: 480px;
-  border-radius: 5px;
-  flex-grow: 1;
-  position: relative;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    display: none;
-  }
-`;
-
-const ContentSection = styled.div`
-  margin-right:${props => props.leftSection ? `${helpers.rhythmDiv * 2}px` : 0 };
-  flex-grow: ${props => props.leftSection ? 0 : 1 };
-  display: flex;
-  flex-direction: column;
-  align-items: ${props => props.leftSection ? 'initial' : 'stretch' };
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    margin-right: 0;
-  }
-`;
-
-const ClassTypeInfoWrapper = styled.div`
-
 `;
 
 const ClassWrapper = styled.div`
@@ -216,15 +157,6 @@ const CalendarWrapper = styled.div`
    border: 1px solid rgba(221,221,221,1);
 `;
 
-const ShowOnMobile = styled.div`
-  display: none;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    display: block;
-    margin-top: ${helpers.rhythmDiv * 2}px;
-  }
-`;
-
 class ClassType extends Component {
   render() {
     return (<Wrapper className="classtype-page">
@@ -232,53 +164,14 @@ class ClassType extends Component {
 
         {/* Class Type Cover includes description, map, foreground image, then class type information*/}
         <ClassTypeCover coverSrc={this.props.coverSrc}>
-          <CoverContentWrapper>
-            <CoverContent>
-              <ContentSection leftSection>
-                <MapContainer>
-                  <ClassMap mapLocation={this.props.mapLocation}/>
-                </MapContainer>
-
-                <ClassTypeDescription
-                  schoolName={schoolDetails.schoolName}
-                  description={schoolDetails.fullDescription}
-                  classTypeName={schoolDetails.classTypeName}
-                  noOfStars={schoolDetails.noOfStars}
-                  noOfReviews={schoolDetails.noOfReviews}
-                />
-              </ContentSection>
-
-              <ContentSection>
-                <ClassTypeForegroundImage coverSrc={this.props.coverSrc} >
-                  <ActionButtons
-                    onCallUsButtonClick={this.props.onCallUsButtonClick}
-                    onEmailButtonClick={this.props.onEmailButtonClick}
-                    onPricingButtonClick={this.props.onPricingButtonClick}
-                    />
-                </ClassTypeForegroundImage>
-
-                <ClassTypeInfoWrapper>
-                  <ClassTypeInfo
-                    ageRange={classTypeData.ageRange}
-                    gender={classTypeData.gender}
-                    experience={classTypeData.experience}
-                    subjects={classTypeData.subjects}
-                  />
-
-                  <ShowOnMobile>
-                    <ActionButtons
-                      onCallUsButtonClick={this.props.onCallUsButtonClick}
-                      onEmailButtonClick={this.props.onEmailButtonClick}
-                      onPricingButtonClick={this.props.onPricingButtonClick}
-                      />
-                  </ShowOnMobile>
-
-                </ClassTypeInfoWrapper>
-
-              </ContentSection>
-
-            </CoverContent>
-          </CoverContentWrapper>
+          <ClassTypeCoverContent
+            schoolDetails={{...schoolDetailsData}}
+            classTypeData={{...classTypeData}}
+            onCallUsButtonClick={this.props.onCallUsButtonClick}
+            onEmailButtonClick={this.props.onEmailButtonClick}
+            onPricingButtonClick={this.props.onPricingButtonClick}
+            mapLocation={this.props.mapLocation}
+          />
         </ClassTypeCover>
 
         {/* Main section includes reviews slider, class timing boxes(+ slider), pricing section, about school section, calendar */}

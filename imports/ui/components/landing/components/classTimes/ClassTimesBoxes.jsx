@@ -6,15 +6,12 @@ import ClassTimesBar from './ClassTimesBar.jsx';
 
 import classTime from '../../constants/structure/classTime.js';
 
-import * as helpers from '../jss/helpers.js';
-
-
 class ClassTimesBoxes extends Component {
   state = {
     slider: false
   }
   handleSliderToggle = () => {
-    console.log(window.innerWidth," resize, this.handleSliderToggle");
+    // console.log(window.innerWidth," resize, this.handleSliderToggle");
     if(window.innerWidth <= 600) {
       if(!this.state.slider) {
           this.setState({

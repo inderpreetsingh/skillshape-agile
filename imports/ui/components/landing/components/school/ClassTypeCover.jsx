@@ -31,7 +31,7 @@ const ClassTypeCover = (props) => {
     if(props.itemScope && props.itemType) {
         return(
           <CoverDiv coverSrc={props.coverSrc} itemScope itemType={props.itemType}>
-
+            {props.children}
           </CoverDiv >
         )
     }

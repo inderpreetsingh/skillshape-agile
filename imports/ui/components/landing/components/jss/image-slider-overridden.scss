@@ -37,15 +37,6 @@
   opacity: 1;
 }
 
-
-.image-slider-thumbnail-img img{
-  height: 75px;
-}
-
-.classtype-page .image-gallery-thumbnails-wrapper, .image-gallery-fullscreen-button {
-  display: none;
-}
-
 @media screen and (max-width : 900px) {
   #app .image-gallery {
     width: 100%;
