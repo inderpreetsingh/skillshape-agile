@@ -14,7 +14,7 @@ import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
 
 import * as helpers from '../jss/helpers.js';
 
-const ON_GOING_SCHEDULE = 'Ongoing';
+const ON_GOING_SCHEDULE = 'ongoing';
 
 const ClassTimeContainer = styled.div`
   width: 250px;
@@ -155,7 +155,8 @@ const Read = styled.span`
     cursor: pointer;
 `;
 
-_isClassOnGoing = (scheduleType) => scheduleType == ON_GOING_SCHEDULE;
+// This can be changed according to the data
+_isClassOnGoing = (scheduleType) => scheduleType.toLowerCase().replace(/\-/) === ON_GOING_SCHEDULE;
 
 class ClassTime extends Component {
 
