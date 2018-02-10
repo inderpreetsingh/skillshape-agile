@@ -209,7 +209,6 @@ class ClassType extends Component {
             </CalendarWrapper>
           </MainInnerFixedContainer>
 
-          <TestTheme />
           <Footer />
 
         </Main>
