@@ -7,7 +7,7 @@ const muiThemeObj = {
   direction: "ltr",
   palette: {
     common: {
-      black: "#000",
+      black: "#292828",
       white: "#fff",
       transparent: "rgba(0, 0, 0, 0)",
       fullBlack: "rgba(0, 0, 0, 1)",
@@ -28,7 +28,7 @@ const muiThemeObj = {
       "200": "#ef9a9a",
       "300": "#e57373",
       "400": "#ef5350",
-      "500": "#f44336",
+      "500": "#D84B47",
       "600": "#e53935",
       "700": "#d32f2f",
       "800": "#c62828",
@@ -45,7 +45,7 @@ const muiThemeObj = {
       "200": "#eeeeee",
       "300": "#e0e0e0",
       "400": "#bdbdbd",
-      "500": "#9e9e9e",
+      "500": "#989797",
       "600": "#757575",
       "700": "#616161",
       "800": "#424242",
