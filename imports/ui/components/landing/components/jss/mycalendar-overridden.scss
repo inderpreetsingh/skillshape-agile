@@ -37,8 +37,10 @@ $calendar-button-active-color: #BBB8B9;
   top: map-get($sizes,'rhythm-div') * 7px;
 }
 
-.fc .fc-left button.fc-prev-button,
-.fc .fc-left button.fc-next-button {
+.fc .fc-left .fc-button-group button,
+.fc .fc-left .fc-button-group button:active:hover,
+.fc .fc-left button:active
+ {
   background-color: white;
   color: map-get($colors,'primary');
 }
