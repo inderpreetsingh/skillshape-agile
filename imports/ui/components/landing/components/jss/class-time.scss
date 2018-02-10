@@ -11,20 +11,20 @@
 }
 
 .add-to-calendar:after {
-  background-color: rgba($primary-color, 0.1);
+  background-color: rgba(map-get($colors,'primary'), 0.1);
 }
 
 .add-to-calendar-clock {
-  border: 2px solid $primary-color;
-  color: $primary-color;
+  border: 2px solid map-get($colors,'primary');
+  color: map-get($colors,'primary');
 }
 
 .remove-from-calendar:after {
-  background-color: $focal-color;
+  background-color: map-get($colors,'focal');
   opacity: 1;
 }
 
 .remove-from-calendar-clock {
-  border: 2px solid $seconday-dark-color;
-  color: $seconday-dark-color;
+  border: 2px solid map-get($colors,'secondary-dark');
+  color: map-get($colors,'secondary-dark');
 }

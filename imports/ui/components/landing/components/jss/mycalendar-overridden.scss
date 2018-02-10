@@ -1,0 +1,119 @@
+/*
+  Override the styles
+*/
+
+$calendar-button-active-color: #BBB8B9;
+
+.fc .fc-toolbar button {
+  text-transform: capitalize;
+  font-family: map-get($fonts,'special');
+  height: map-get($sizes,'rhythm-div') * 4px;
+}
+
+.fc .fc-toolbar {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  margin-bottom: map-get($sizes,'rhythm-div') * 8px;
+}
+
+.fc .fc-toolbar .fc-center {
+  position: absolute;
+  margin-top: map-get($sizes,'rhythm-div') * 6px;
+}
+
+.fc .fc-toolbar .fc-right {
+  float: none;
+}
+
+.fc .fc-toolbar .fc-left {
+  float: none;
+}
+
+.fc .fc-left .fc-button-group {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: map-get($sizes,'rhythm-div') * 7px;
+}
+
+.fc .fc-left button.fc-prev-button,
+.fc .fc-left button.fc-next-button {
+  background-color: white;
+  color: map-get($colors,'primary');
+}
+
+.fc .fc-left button.fc-next-button {
+  right: 0;
+  position: absolute;
+  left: auto;
+}
+
+.fc button:hover .fc-prev-button,
+.fc button:hover .fc-next-button
+{
+  background-color: white;
+  color: map-get($colors,'primary');
+}
+
+.fc .fc-left  button .fc-icon {
+  font-size: $base-font-size * 2px;
+  line-height: $base-font-size * 2px;
+  font-family: map-get($fonts,'special');
+  height: auto;
+}
+
+.fc .fc-icon-right-single-arrow::after , .fc .fc-icon-left-single-arrow::after {
+  font-weight: 100;
+}
+
+.fc-today-button {
+  margin-right: 2px;
+}
+
+.fc button, .fc button.btn-primary {
+  box-shadow: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.fc .fc-toolbar .fc-state-active {
+  cursor: pointer;
+  background-color: $calendar-button-active-color; /* Otherwise the color of bg green appears */
+  border-color: $calendar-button-active-color;
+}
+
+.fc button:active,
+.fc button.btn-primary:active,
+.fc button:focus,
+.fc button:hover,
+.fc button.btn-primary:focus,
+.fc button.btn-primary:hover {
+  box-shadow: none;
+  background-color: darken(map-get($colors,'primary'),5%);
+}
+
+.fc .fc-toolbar button.fc-state-active:active,
+.fc .fc-toolbar button.fc-state-active:focus
+{
+  background-color: $calendar-button-active-color;
+  border-color: $calendar-button-active-color;
+}
+
+.fc .fc-toolbar button.fc-state-active:hover {
+  background-color: lighten($calendar-button-active-color,10%);
+}
+
+@media screen and (max-width: 500px) {
+  .fc-left .fc-button-group {
+    top: map-get($sizes,'rhythm-div') * 9px;
+  }
+
+  .fc-toolbar {
+    margin-bottom: map-get($sizes,'rhythm-div') * 12px;
+  }
+
+  .fc-toolbar .fc-center {
+    margin-top: map-get($sizes,'rhythm-div') * 8px;
+  }
+}

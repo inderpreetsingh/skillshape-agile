@@ -227,112 +227,107 @@ const ShowOnMobile = styled.div`
 
 class ClassType extends Component {
   render() {
+    return (<Wrapper className="classtype-page">
+        <TopSearchBar />
 
-    return (
-      <MuiThemeProvider theme={muiTheme}>
-        <Wrapper>
-          <TopSearchBar />
-          {/*<BrandBar positionStatic barButton={<Fragment></Fragment>} />*/}
+        {/* Class Type Cover includes description, map, foreground image, then class type information*/}
+        <ClassTypeCover coverSrc={this.props.coverSrc}>
+          <CoverContentWrapper>
+            <CoverContent>
+              <ContentSection leftSection>
+                <MapContainer>
+                  <ClassMap mapLocation={this.props.mapLocation}/>
+                </MapContainer>
 
-          {/* Class Type Cover includes description, map, foreground image, then class type information*/}
-          <ClassTypeCover coverSrc={this.props.coverSrc}>
-            <CoverContentWrapper>
-              <CoverContent>
-                <ContentSection leftSection>
-                  <MapContainer>
-                    <ClassMap mapLocation={this.props.mapLocation}/>
-                  </MapContainer>
+                <ClassTypeDescription
+                  schoolName={schoolDetails.schoolName}
+                  description={schoolDetails.fullDescription}
+                  classTypeName={schoolDetails.classTypeName}
+                  noOfStars={schoolDetails.noOfStars}
+                  noOfReviews={schoolDetails.noOfReviews}
+                />
+              </ContentSection>
 
-                  <ClassTypeDescription
-                    schoolName={schoolDetails.schoolName}
-                    description={schoolDetails.fullDescription}
-                    classTypeName={schoolDetails.classTypeName}
-                    noOfStars={schoolDetails.noOfStars}
-                    noOfReviews={schoolDetails.noOfReviews}
+              <ContentSection>
+                <ClassTypeForegroundImage coverSrc={this.props.coverSrc} >
+                  <ActionButtons
+                    onCallUsButtonClick={this.props.onCallUsButtonClick}
+                    onEmailButtonClick={this.props.onEmailButtonClick}
+                    onPricingButtonClick={this.props.onPricingButtonClick}
+                    />
+                </ClassTypeForegroundImage>
+
+                <ClassTypeInfoWrapper>
+                  <ClassTypeInfo
+                    ageRange={classTypeData.ageRange}
+                    gender={classTypeData.gender}
+                    experience={classTypeData.experience}
+                    subjects={classTypeData.subjects}
                   />
-                </ContentSection>
 
-                <ContentSection>
-                  <ClassTypeForegroundImage coverSrc={this.props.coverSrc} >
+                  <ShowOnMobile>
                     <ActionButtons
                       onCallUsButtonClick={this.props.onCallUsButtonClick}
                       onEmailButtonClick={this.props.onEmailButtonClick}
                       onPricingButtonClick={this.props.onPricingButtonClick}
                       />
-                  </ClassTypeForegroundImage>
+                  </ShowOnMobile>
 
-                  <ClassTypeInfoWrapper>
-                    <ClassTypeInfo
-                      ageRange={classTypeData.ageRange}
-                      gender={classTypeData.gender}
-                      experience={classTypeData.experience}
-                      subjects={classTypeData.subjects}
-                    />
+                </ClassTypeInfoWrapper>
 
-                    <ShowOnMobile>
-                      <ActionButtons
-                        onCallUsButtonClick={this.props.onCallUsButtonClick}
-                        onEmailButtonClick={this.props.onEmailButtonClick}
-                        onPricingButtonClick={this.props.onPricingButtonClick}
-                        />
-                    </ShowOnMobile>
+              </ContentSection>
 
-                  </ClassTypeInfoWrapper>
+            </CoverContent>
+          </CoverContentWrapper>
+        </ClassTypeCover>
 
-                </ContentSection>
-
-              </CoverContent>
-            </CoverContentWrapper>
-          </ClassTypeCover>
-
-          {/* Main section includes reviews slider, class timing boxes(+ slider), pricing section, about school section, calendar */}
-          <Main>
-            <MainInnerFixedContainer marginBottom="32">
-              <MainInner reviews largePadding="32" smallPadding="32">
-                <ClassWrapper reviews>
-                  <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
-                </ClassWrapper>
-              </MainInner>
-            </MainInnerFixedContainer>
-
-          <MainInnerFixedContainer marginBottom="16">
-              <ClassTimesInnerWrapper>
-                <ClassTimesWrapper paddingBottom="48">
-                  <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
-                  <ClassTimesBoxes classTimesData={classTimesBarData} />
-                </ClassTimesWrapper>
-              </ClassTimesInnerWrapper>
+        {/* Main section includes reviews slider, class timing boxes(+ slider), pricing section, about school section, calendar */}
+        <Main>
+          <MainInnerFixedContainer marginBottom="32">
+            <MainInner reviews largePadding="32" smallPadding="32">
+              <ClassWrapper reviews>
+                <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
+              </ClassWrapper>
+            </MainInner>
           </MainInnerFixedContainer>
 
+        <MainInnerFixedContainer marginBottom="16">
+            <ClassTimesInnerWrapper>
+              <ClassTimesWrapper paddingBottom="48">
+                <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
+                <ClassTimesBoxes classTimesData={classTimesBarData} />
+              </ClassTimesWrapper>
+            </ClassTimesInnerWrapper>
+        </MainInnerFixedContainer>
 
-            <PackagesWrapper>
-              <PackagesTitle>Pay only for what you need</PackagesTitle>
-              <PackagesList
-                perClassPackagesData={perClassPackagesData}
-                monthlyPackagesData={monthlyPackagesData}
-              />
-            </PackagesWrapper>
 
-            <MainInnerFixedContainer fixedWidth="1100" marginBottom="64">
-              <SchoolDetails
-                website={schoolDetails.website}
-                address={schoolDetails.address}
-                images={schoolImages}
-                schoolName={schoolDetails.schoolName}
-                notes={schoolDetails.notes}
-                description={schoolDetails.fullDescription}
-              />
-              <CalendarWrapper>
-                <MyCalendar />
-              </CalendarWrapper>
-            </MainInnerFixedContainer>
+          <PackagesWrapper>
+            <PackagesTitle>Pay only for what you need</PackagesTitle>
+            <PackagesList
+              perClassPackagesData={perClassPackagesData}
+              monthlyPackagesData={monthlyPackagesData}
+            />
+          </PackagesWrapper>
 
-            <TestTheme />
-            <Footer />
+          <MainInnerFixedContainer fixedWidth="1100" marginBottom="64">
+            <SchoolDetails
+              website={schoolDetails.website}
+              address={schoolDetails.address}
+              images={schoolImages}
+              schoolName={schoolDetails.schoolName}
+              notes={schoolDetails.notes}
+              description={schoolDetails.fullDescription}
+            />
+            <CalendarWrapper>
+              <MyCalendar />
+            </CalendarWrapper>
+          </MainInnerFixedContainer>
 
-          </Main>
-        </Wrapper>
-      </MuiThemeProvider>
+          <TestTheme />
+          <Footer />
+
+        </Main>
+      </Wrapper>
     );
   }
 }

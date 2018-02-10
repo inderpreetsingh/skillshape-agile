@@ -1,3 +1,6 @@
+$base-font-size: 16;
+$rhythm-inc: 0.5;
+
 $colors: (
   caution : #E9B942,
   action : #9DC161,
@@ -5,19 +8,26 @@ $colors: (
   cancel : #989797,
   information : #348CC0,
   black : #292828,
-  lightText: #fafafa,
-  darkText: #424242
+  light-text: #fafafa,
+  dark-text: #424242,
+  primary: #4caf50,
+  seconday-dark: #989797,
+  focal: #f5f5f5,
 );
 
-$primary-color: #4caf50;
-$seconday-dark-color: #989797;
-$focal-color: #f5f5f5;
-$input-font-color: rgba(0, 0, 0, 0.42);
+$fonts: (
+  special: "'Zilla Slab',serif",
+  common: "'Open Sans', sans-serif"
+);
 
+$sizes: (
+  one-row: $base-font-size + ($base-font-size * $rhythm-inc),
+  rhythm-div: $rhythm-inc * $base-font-size
+);
+
+$input-font-color: rgba(0, 0, 0, 0.42);
 $default-border-color: $input-font-color;
 $dark-border-color: rgba(0, 0, 0, 0.87);
-
-$base-font-size: 16px;
 
 $input-height: 2.429em;
 $input-border-width: 1px;
