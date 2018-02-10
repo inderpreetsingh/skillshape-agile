@@ -16,8 +16,8 @@ $colors: (
 );
 
 $fonts: (
-  special: "'Zilla Slab',serif",
-  common: "'Open Sans', sans-serif"
+  special: ("Zilla Slab", serif),
+  common: ("Open Sans", sans-serif)
 );
 
 $sizes: (

@@ -59,6 +59,7 @@ $calendar-button-active-color: #BBB8B9;
 
 .fc .fc-icon-right-single-arrow::after , .fc .fc-icon-left-single-arrow::after {
   font-weight: 100;
+  font-family: map-get($fonts,'special');
 }
 
 .fc-today-button {
