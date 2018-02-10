@@ -17,7 +17,6 @@ import TopSearchBar from './components/TopSearchBar';
 import Footer from './components/footer/index.jsx';
 import ClassTimesBoxes from './components/classTimes/ClassTimesBoxes';
 import ClassTimeButton from './components/buttons/ClassTimeButton.jsx';
-import TestTheme from './TestTheme.jsx';
 
 import reviewsData from './constants/reviewsData.js';
 import classTimesBarData from './constants/classTimesBarData.js';
