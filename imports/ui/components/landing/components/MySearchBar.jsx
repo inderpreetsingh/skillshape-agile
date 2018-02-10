@@ -164,9 +164,7 @@ MySearchBar.defaultProps = {
 }
 
 MySearchBar.propTypes = {
-  /** Override the close icon. */
   closeIcon: PropTypes.node,
-  /** Disables text field. */
   disabled: PropTypes.bool,
   /** Sets placeholder for the embedded text field. */
   placeholder: PropTypes.string,
@@ -174,11 +172,7 @@ MySearchBar.propTypes = {
   onChange: PropTypes.func,
   /** Fired when the search icon is clicked. */
   onRequestSearch: PropTypes.func.isRequired,
-  /** Override the search icon. */
   searchIcon: PropTypes.node,
-  /** Override the inline-styles of the root element. */
-  style: PropTypes.object,
-  /** The value of the text field. */
   value: PropTypes.string,
 }
 

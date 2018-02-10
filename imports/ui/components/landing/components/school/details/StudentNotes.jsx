@@ -36,7 +36,7 @@ const conditionalRender = (props) => {
   return (props.notes ? (<Wrapper>
     <Title>Student Notes</Title>
     <Notes>
-      {props.notes.map(note => <Note>{note}</Note>)}
+      {props.notes.map((note,index) => <Note key={index}>{note}</Note>)}
     </Notes>
   </Wrapper>) : <span></span>);
 }

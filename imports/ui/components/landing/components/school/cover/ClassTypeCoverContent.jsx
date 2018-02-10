@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import ClassMap from '../map/ClassMap';
-import ClassTypeDescription from './ClassTypeDescription.jsx';
-import ClassTypeInfo from './ClassTypeInfo.jsx';
-import ActionButtons from './ActionButtons.jsx';
+import ClassMap from '../../map/ClassMap';
+import ClassTypeDescription from '../ClassTypeDescription.jsx';
+import ClassTypeInfo from '../ClassTypeInfo.jsx';
+import ActionButtons from '../ActionButtons.jsx';
 
-import * as helpers from '../jss/helpers.js';
-import * as settings from '../../site-settings.js';
+import * as helpers from '../../jss/helpers.js';
+import * as settings from '../../../site-settings.js';
 
 const CoverContent = styled.div`
   display: flex;
@@ -77,49 +77,51 @@ const ShowOnMobile = styled.div`
 `;
 
 const ClassTypeCoverContent = (props) => (
-  <CoverContent>
-    <ContentSection leftSection>
-      <MapContainer>
-        {props.map || <ClassMap mapLocation={props.mapLocation}/>}
-      </MapContainer>
+  <CoverContentWrapper>
+    <CoverContent>
+      <ContentSection leftSection>
+        <MapContainer>
+          {props.map || <ClassMap mapLocation={props.mapLocation}/>}
+        </MapContainer>
 
-      {props.classDescription || <ClassTypeDescription
-        schoolName={props.schoolDetails.schoolName}
-        description={props.schoolDetails.fullDescription}
-        classTypeName={props.schoolDetails.classTypeName}
-        noOfStars={props.schoolDetails.noOfStars}
-        noOfReviews={props.schoolDetails.noOfReviews}
-      />}
-    </ContentSection>
-
-    <ContentSection>
-      <ClassTypeForegroundImage coverSrc={props.coverSrc} >
-        {props.actionButtons || <ActionButtons
-          onCallUsButtonClick={props.onCallUsButtonClick}
-          onEmailButtonClick={props.onEmailButtonClick}
-          onPricingButtonClick={props.onPricingButtonClick}
-          />}
-      </ClassTypeForegroundImage>
-
-      <ClassTypeInfoWrapper>
-        {props.classTypeMetaInfo || <ClassTypeInfo
-          ageRange={props.classTypeData.ageRange}
-          gender={props.classTypeData.gender}
-          experience={props.classTypeData.experience}
-          subjects={props.classTypeData.subjects}
+        {props.classDescription || <ClassTypeDescription
+          schoolName={props.schoolDetails.schoolName}
+          description={props.schoolDetails.fullDescription}
+          classTypeName={props.schoolDetails.classTypeName}
+          noOfStars={props.schoolDetails.noOfStars}
+          noOfReviews={props.schoolDetails.noOfReviews}
         />}
+      </ContentSection>
 
-        <ShowOnMobile>
+      <ContentSection>
+        <ClassTypeForegroundImage coverSrc={props.coverSrc} >
           {props.actionButtons || <ActionButtons
             onCallUsButtonClick={props.onCallUsButtonClick}
             onEmailButtonClick={props.onEmailButtonClick}
             onPricingButtonClick={props.onPricingButtonClick}
             />}
-        </ShowOnMobile>
+        </ClassTypeForegroundImage>
 
-      </ClassTypeInfoWrapper>
-    </ContentSection>
-  </CoverContent>
+        <ClassTypeInfoWrapper>
+          {props.classTypeMetaInfo || <ClassTypeInfo
+            ageRange={props.classTypeData.ageRange}
+            gender={props.classTypeData.gender}
+            experience={props.classTypeData.experience}
+            subjects={props.classTypeData.subjects}
+          />}
+
+          <ShowOnMobile>
+            {props.actionButtons || <ActionButtons
+              onCallUsButtonClick={props.onCallUsButtonClick}
+              onEmailButtonClick={props.onEmailButtonClick}
+              onPricingButtonClick={props.onPricingButtonClick}
+              />}
+          </ShowOnMobile>
+
+        </ClassTypeInfoWrapper>
+      </ContentSection>
+    </CoverContent>
+  </CoverContentWrapper>
 );
 
 ClassTypeCoverContent.propTypes = {

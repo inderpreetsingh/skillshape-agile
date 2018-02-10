@@ -5,6 +5,7 @@ import ClassTimesSlider from './ClassTimesSlider.jsx';
 import ClassTimesBar from './ClassTimesBar.jsx';
 
 import classTime from '../../constants/structure/classTime.js';
+import * as helpers from '../jss/helpers.js';
 
 class ClassTimesBoxes extends Component {
   state = {

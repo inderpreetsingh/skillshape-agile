@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import SearchBar from 'material-ui-search-bar';
+import {browserHistory} from 'react-router';
 import MySearchBar from './MySearchBar.jsx';
 
 import Logo from './Logo.jsx';
@@ -19,7 +20,7 @@ const MySearchBarWrapper = styled.div`
   height: ${helpers.rhythmDiv * 4}px;
 `;
 
-const SearchBarStyled = (props) => {
+const MySearchBarStyled = (props) => {
   // console.log("SearchBarStyled-->>",props)
   return (<MySearchBarWrapper>
     <MySearchBar
@@ -27,7 +28,8 @@ const SearchBarStyled = (props) => {
       onRequestSearch={props.onSearch}
       itemScope
       itemType="http://schema.org/SearchAction"
-      className="is-search-bar" />
+      className="is-search-bar"
+      {...props} />
     </MySearchBarWrapper>)
 }
 
@@ -39,7 +41,6 @@ const NavBarWrapper = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
   width: 100%;
   background: white;
-
 `;
 
 const ActionArea = styled.div`
@@ -92,14 +93,14 @@ const TopSearchBar = (props) => (
     <LogoSearchSection>
       {props.logoArea ? props.logoArea :
       <Logo brandTextShown={false} width={32} height={32} />}
-      <SearchBarStyled {...props.searchBar}/>
+      <MySearchBarStyled {...props.searchBar}/>
     </LogoSearchSection>
 
     <NavRightSection>
       <LinksWrapper>
-        <TopBarLink>SkillShape For Schools</TopBarLink>
-        <TopBarLink>Sign Up</TopBarLink>
-        <TopBarLink>Log In</TopBarLink>
+        <TopBarLink onClick={props.onSkillShapeForSchoolsClick}>SkillShape For Schools</TopBarLink>
+        <TopBarLink onClick={props.onSignUpLinkClick}>Sign Up</TopBarLink>
+        <TopBarLink onClick={props.onLoginLinkClick}>Log In</TopBarLink>
       </LinksWrapper>
       <SideNavWrapper>
         <SideNav {...props} smallSize={true}/>
@@ -111,11 +112,14 @@ const TopSearchBar = (props) => (
 TopSearchBar.propTypes = {
   logoArea: PropTypes.element,
   menuButton: PropTypes.element,
-  searbBar: PropTypes.object,
+  searchBar: PropTypes.object,
+  onSignUpLinkClick: PropTypes.func,
+  onLoginLinkClick: PropTypes.func,
+  onSkillShapeForSchoolsClick: PropTypes.func
 }
 
 TopSearchBar.defaultProps = {
-
+  onSkillShapeForSchoolsClick: () => browserHistory.push('skillshape-school')
 }
 
 export default TopSearchBar;

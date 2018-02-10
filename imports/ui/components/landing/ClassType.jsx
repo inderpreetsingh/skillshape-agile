@@ -2,16 +2,12 @@ import React,{ Component,Fragment } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { MuiThemeProvider } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-
 import ReviewsBar from './components/school/ReviewsBar.jsx';
-import ClassTypeCover from './components/school/ClassTypeCover.jsx';
+import ClassTypeCover from './components/school/cover/ClassTypeCover.jsx';
 import PackagesList from './components/school/packages/PackagesList.jsx';
-import ImgSlider from './components/school/ImgSlider.jsx';
 import SchoolDetails from './components/school/details/SchoolDetails.jsx';
 import ReviewsSlider from './components/school/ReviewsSlider.jsx';
-import ClassTypeCoverContent from './components/school/ClassTypeCoverContent.jsx';
+import ClassTypeCoverContent from './components/school/cover/ClassTypeCoverContent.jsx';
 import MyCalendar from '../users/myCalender';
 
 import StarsBar from './components/StarsBar.jsx';
@@ -93,9 +89,6 @@ const ClassWrapper = styled.div`
 `;
 
 const ClassTimesWrapper = styled.div`
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
   margin-bottom: ${helpers.rhythmDiv * 4}px;
 
   @media screen and (max-width: ${helpers.mobile + 100}px) {
@@ -104,7 +97,7 @@ const ClassTimesWrapper = styled.div`
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    padding-bottom: 32px;
+    padding-bottom: ${helpers.rhythmDiv * 4}px;
   }
 `;
 

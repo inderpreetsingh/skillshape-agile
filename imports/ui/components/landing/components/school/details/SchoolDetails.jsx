@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import StudentNotes from './StudentNotes.jsx';
 import AboutSchool from './AboutSchool.jsx';
-import ImgSlider from '../ImgSlider.jsx';
+import ClassTypeImgSlider from '../ClassTypeImgSlider.jsx';
 
 import * as helpers from '../../jss/helpers.js';
 
@@ -41,7 +41,7 @@ const SchoolSection = styled.div`
   }
 `;
 
-// Max-width of image slider is 2px added to remove the half pixel render on large screens
+// Max-width of image slider is 2px added to remove the half pixel render issue on large screens
 const ImgSliderSection = styled.div`
   max-width: 502px;
   max-height: 500px;
@@ -59,7 +59,7 @@ const SchoolDetails = (props) => (
       <StudentNotes notes={props.notes}/>
     </SchoolSection>
     <ImgSliderSection>
-      <ImgSlider images={props.images} />
+      <ClassTypeImgSlider images={props.images} />
     </ImgSliderSection>
   </Wrapper>
 );
@@ -69,7 +69,6 @@ SchoolDetails.propTypes = {
   description: PropTypes.string,
   images: PropTypes.arrayOf({
     original: PropTypes.string,
-    thumbnail: PropTypes.string
   }),
   notes: PropTypes.oneOfType([PropTypes.string,PropTypes.element]),
 }
