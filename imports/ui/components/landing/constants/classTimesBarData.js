@@ -28,7 +28,7 @@ const classTimesBarData = [
     days: 'Mo-Th-Fr',
     description: 'This class is taught by Mr. Surnaam Singh, who is head of naam yoga festival foundation celebration in New York and Los Angeles',
     addToCalendar: false,
-    scheduleType: 'Ongoing'
+    scheduleType: 'Ongoing',
 },
 {
     _id: uuidv4(),

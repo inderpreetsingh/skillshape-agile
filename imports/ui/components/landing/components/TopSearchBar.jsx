@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import SearchBar from 'material-ui-search-bar';
+// import SearchBar from 'material-ui-search-bar';
+import {browserHistory} from 'react-router';
+import MySearchBar from './MySearchBar.jsx';
 
 import Logo from './Logo.jsx';
 import SideNav from './SideNav.jsx';
@@ -13,48 +15,32 @@ import * as helpers from './jss/helpers.js';
 
 /*Search Bar requires inline styles because of limitations of it using material-ui
 rather than material ui next */
+const MySearchBarWrapper = styled.div`
+  margin-left: ${helpers.rhythmDiv}px;
+  height: ${helpers.rhythmDiv * 4}px;
+`;
 
-const SearchBarStyled = (props) => {
+const MySearchBarStyled = (props) => {
   // console.log("SearchBarStyled-->>",props)
-  return <SearchBar
-      style={{
-        root: {
-          fontFamily: helpers.specialFont,
-          fontSize: helpers.baseFontSize*2+'px',
-          borderRadius: '50px',
-          margin: '0 auto',
-        },
-        input: {
-          padding: '7px 0 14px'
-        }
-      }}
-    style={
-      {
-        borderRadius: '50px'
-      }
-    }
-    onChange={props.onSearch}
-    onRequestSearch={props.onSearch}
-    itemScope
-    itemType="http://schema.org/SearchAction"
-    className = 'is-search-bar'
-    hintText ='Yoga in Delhi...'
-    />
-  }
+  return (<MySearchBarWrapper>
+    <MySearchBar
+      onChange={props.onSearch}
+      onRequestSearch={props.onSearch}
+      itemScope
+      itemType="http://schema.org/SearchAction"
+      className="is-search-bar"
+      {...props} />
+    </MySearchBarWrapper>)
+}
 
 
 const NavBarWrapper = styled.div`
   display : flex;
   justify-content: space-between;
-  padding: ${helpers.rhythmDiv}px;
+  align-items: center;
+  padding: ${helpers.rhythmDiv * 2}px;
   width: 100%;
-  z-index: 1299;
-  position: ${props => props.positionFixed ? 'fixed': 'absolute'};
   background: white;
-  top: 0;
-  @media screen and (max-width: ${helpers.mobile}px) {
-    margin-bottom: ${helpers.rhythmDiv};
-  }
 `;
 
 const ActionArea = styled.div`
@@ -68,25 +54,72 @@ const ButtonsWrapper = styled.div`
   }
 `;
 
-const BrandBar = (props) => (
-    <NavBarWrapper positionFixed={props.positionFixed}>
-      {props.logoArea ? props.logoArea : <Logo smallBrandText />}
+const LogoSearchSection = styled.div`
+  ${helpers.flexCenter}
+`;
 
-      <SearchBarStyled />
+const SideNavWrapper = styled.div`
+  margin-left: ${helpers.rhythmDiv}px;
+`;
 
-      {props.menuButton ? props.menuButton : <SideNav {...props}/> }
-    </NavBarWrapper>
+const NavRightSection = styled.div`
+  ${helpers.flexCenter}
+`;
+
+const LinksWrapper = styled.div`
+  ${helpers.flexCenter}
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: none;
+  }
+`;
+
+const TopBarLink = styled.a`
+  display: inline-block;
+  margin-right: ${helpers.rhythmDiv * 2}px;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize}px;
+  color: ${helpers.primaryColor};
+  cursor: pointer;
+  transition: color .1s linear;
+
+  &:hover {
+    color: ${helpers.textColor};
+  }
+`;
+
+const TopSearchBar = (props) => (
+  <NavBarWrapper >
+    <LogoSearchSection>
+      {props.logoArea ? props.logoArea :
+      <Logo brandTextShown={false} width={32} height={32} />}
+      <MySearchBarStyled {...props.searchBar}/>
+    </LogoSearchSection>
+
+    <NavRightSection>
+      <LinksWrapper>
+        <TopBarLink onClick={props.onSkillShapeForSchoolsClick}>SkillShape For Schools</TopBarLink>
+        <TopBarLink onClick={props.onSignUpLinkClick}>Sign Up</TopBarLink>
+        <TopBarLink onClick={props.onLoginLinkClick}>Log In</TopBarLink>
+      </LinksWrapper>
+      <SideNavWrapper>
+        <SideNav {...props} smallSize={true}/>
+      </SideNavWrapper>
+    </NavRightSection>
+  </NavBarWrapper>
 );
 
-BrandBar.propTypes = {
-  positionFixed: PropTypes.bool,
+TopSearchBar.propTypes = {
   logoArea: PropTypes.element,
-  barButton: PropTypes.element,
   menuButton: PropTypes.element,
+  searchBar: PropTypes.object,
+  onSignUpLinkClick: PropTypes.func,
+  onLoginLinkClick: PropTypes.func,
+  onSkillShapeForSchoolsClick: PropTypes.func
 }
 
-BrandBar.defaultProps = {
-  positionFixed: false
+TopSearchBar.defaultProps = {
+  onSkillShapeForSchoolsClick: () => browserHistory.push('skillshape-school')
 }
 
-export default BrandBar;
+export default TopSearchBar;

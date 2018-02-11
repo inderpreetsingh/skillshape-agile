@@ -14,7 +14,7 @@ import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
 
 import * as helpers from '../jss/helpers.js';
 
-const ON_GOING_SCHEDULE = 'Ongoing';
+const ON_GOING_SCHEDULE = 'ongoing';
 
 const ClassTimeContainer = styled.div`
   width: 250px;
@@ -111,7 +111,7 @@ const Description = styled.p`
   font-weight: 400;
 
   max-height: 140px;
-  overflow-y: ${props => props.fullTextState ? 'scroll' : 'visible'};
+  overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
 
 const TrendingWrapper = styled.div`
@@ -119,7 +119,7 @@ const TrendingWrapper = styled.div`
   justify-content: center;
   position: absolute;
   top: 0;
-  right: -${helpers.rhythmDiv * 2}px;
+  right: ${helpers.rhythmDiv * 2}px;
   left: auto;
 `;
 
@@ -151,11 +151,12 @@ const Trending = () => {
 }
 
 const Read = styled.span`
-  font-style: italic;
-  cursor: pointer;
+    font-style: italic;
+    cursor: pointer;
 `;
 
-_isClassOnGoing = (scheduleType) => scheduleType == ON_GOING_SCHEDULE;
+// This can be changed according to the data
+_isClassOnGoing = (scheduleType) => scheduleType.toLowerCase().replace(/\-/) === ON_GOING_SCHEDULE;
 
 class ClassTime extends Component {
 
@@ -167,7 +168,7 @@ class ClassTime extends Component {
   }
 
   componentDidMount = () => {
-    console.info('Show me state',this.state);
+    // console.info('Show me state',this.state);
   }
 
   handleToggleAddToCalendar = () => {
@@ -200,7 +201,6 @@ class ClassTime extends Component {
   }
 
   componentWillReceiveProps = (newProps) => {
-    console.log("componentWillRecieveProps new Props",newProps);
     if(this.state.fullTextState !== newProps.fullTextState) {
       this.setState({
         fullTextState: newProps.fullTextState
@@ -215,11 +215,11 @@ class ClassTime extends Component {
   _getCalenderButton = (addToCalender,scheduleTypeOnGoing) => {
     if(scheduleTypeOnGoing && addToCalender) {
       return (<ClassTimeButton
-          icon
-          onClick={this.handleAddToMyCalendarButtonClick}
-          iconName="perm_contact_calendar"
-          label="Add to my Calendar"
-          />);
+        icon
+        onClick={this.handleAddToMyCalendarButtonClick}
+        iconName="perm_contact_calendar"
+        label="Add to my Calendar"
+      />);
     }else if(scheduleTypeOnGoing && !addToCalender) {
       return (<ClassTimeButton
         ghost

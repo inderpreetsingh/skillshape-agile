@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import * as helpers from '../jss/helpers.js';
-import { classTypeImgSrc } from '../../site-settings.js';
+import * as helpers from '../../jss/helpers.js';
+import { classTypeImgSrc } from '../../../site-settings.js';
 
 const CoverDiv = styled.div`
     ${helpers.coverBg}
@@ -31,7 +31,7 @@ const ClassTypeCover = (props) => {
     if(props.itemScope && props.itemType) {
         return(
           <CoverDiv coverSrc={props.coverSrc} itemScope itemType={props.itemType}>
-
+            {props.children}
           </CoverDiv >
         )
     }

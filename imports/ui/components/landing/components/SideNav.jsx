@@ -177,7 +177,7 @@ class SideNav extends Component {
                         isLoading={this.state.isBusy}
                     />
                 }
-                <MenuIconButton handleClick={this.toggleDrawerState} />
+                <MenuIconButton handleClick={this.toggleDrawerState} smallSize={this.props.smallSize}/>
                 <SideNavItems
                     open={this.state.open}
                     handleDrawer={() => this.handleDrawerState(false)}

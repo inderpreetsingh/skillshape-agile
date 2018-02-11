@@ -40,9 +40,9 @@ const MainText = styled.span`
 `;
 
 const BrandTagline = styled.span`
-  font-weight:300;
-  font-size:${props => props.smallBrandText ? (helpers.baseFontSize) : helpers.baseFontSize*1.5}px;
-  line-height:${props => props.smallBrandText ? 'inherit' : helpers.brandBarHeight+'px'};
+  font-weight: 300;
+  font-size: ${props => props.smallBrandText ? (helpers.baseFontSize) : helpers.baseFontSize*1.5}px;
+  line-height: ${props => props.smallBrandText ? '1' : helpers.brandBarHeight+'px'};
   color: ${helpers.textColor};
 
   @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
@@ -68,16 +68,16 @@ const LogoImage = styled.img`
   }
 
   @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
-    margin-right: 5px;
-    height: ${helpers.brandBarHeightMobile}px;
+    margin-right: ${props => props.brandTextShown ? '5' : '0'}px;
+    height: ${props => props.height ? props.height : helpers.brandBarHeightMobile}px;
     font-size: ${helpers.baseFontSize}px;
   }
 `;
 
 const Logo = ({height, width ,brandTextShown, smallBrandText, brandText, brandTagline, logoSrc}) => (
     <BrandArea onClick={() => browserHistory.push('/') } itemScope itemType="http://schema.org/Brand" smallBrandText={smallBrandText}>
-        <LogoWrapper width={width} height={height}>
-          <LogoImage src={logoSrc} itemProp="logo"/>
+        <LogoWrapper brandTextShown={brandTextShown} width={width} height={height}>
+          <LogoImage src={logoSrc} itemProp="logo" brandTextShown={brandTextShown} height={height}/>
         </LogoWrapper>
         {brandTextShown && <BrandText itemProp="name" smallBrandText={smallBrandText} className={smallBrandText && 'flex-column'}>
           <MainText>{brandText},</MainText>

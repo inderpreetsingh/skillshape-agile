@@ -54,9 +54,9 @@ const Name = styled.p`
 
 const CommentWrapper = styled.div`
   width: 100%;
-  padding: ${helpers.rhythmDiv}px;
+  padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
-  min-height: ${helpers.rhythmDiv * 7}px;
+  min-height: ${helpers.rhythmDiv * 8}px;
 
   &:after {
     content: '';

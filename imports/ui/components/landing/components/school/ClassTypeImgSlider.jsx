@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, {Component,Fragment} from 'react';
 import PropTypes from 'prop-types';
 import ImageGallery from 'react-image-gallery';
 
-class ImgSlider extends React.Component {
+class ClassTypeImgSlider extends React.Component {
   render() {
     const {images, sliderClass} = this.props;
     return (
@@ -10,16 +10,15 @@ class ImgSlider extends React.Component {
         showPlayButton={false}
         showBullets={true}
         items={images}
+        showThumbnails={false}
+        showFullscreenButton={false}
         />
     );
   }
 }
 
-ImgSlider.propTypes = {
-  images: PropTypes.arrayOf({
-    original: PropTypes.string,
-    thumbnail: PropTypes.string
-  }),
+ClassTypeImgSlider.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.Object),
 }
 
-export default ImgSlider;
+export default ClassTypeImgSlider;

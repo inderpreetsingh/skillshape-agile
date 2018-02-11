@@ -64,10 +64,10 @@ const ClassTypeDescription = (props) => {
       <Title>{props.classTypeName} in {props.schoolName}</Title>
 
       <ReviewsWrapper>
-        <StarsBar noOfStars={props.noOfStars} />
+        {props.noOfStars && <StarsBar noOfStars={props.noOfStars} />}
 
         <NoOfReviews>
-          <Reviews href="#">({props.noOfReviews} Reviews)</Reviews>
+          {props.noOfReviews && <Reviews href="#">({props.noOfReviews} Reviews)</Reviews>}
         </NoOfReviews>
       </ReviewsWrapper>
 
@@ -79,8 +79,8 @@ const ClassTypeDescription = (props) => {
 }
 
 ClassTypeDescription.propTypes = {
-  classTypeName: PropTypes.string,
-  schoolName: PropTypes.string,
+  classTypeName: PropTypes.string.isRequired,
+  schoolName: PropTypes.string.isRequired,
   description: PropTypes.string,
   noOfReviews: PropTypes.number,
   noOfStars: PropTypes.number

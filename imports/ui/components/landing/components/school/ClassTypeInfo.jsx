@@ -7,7 +7,6 @@ import * as helpers from '../jss/helpers.js';
 const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  height: 100%;
 `;
 
 const InfoCapsule = styled.div`
@@ -32,27 +31,22 @@ const CapsuleText = styled.span`
   line-height: 1;
 `;
 
+const MetaInfo = (props) => (
+  <InfoCapsule>
+    <CapsuleHead>{props.title}</CapsuleHead>
+    <CapsuleText> {props.data}</CapsuleText>
+  </InfoCapsule>
+)
+
 const ClassTypeInfo = (props) => (
   <Wrapper>
-    {props.ageRange && <InfoCapsule>
-      <CapsuleHead>Age Range:</CapsuleHead>
-      <CapsuleText> {props.ageRange}</CapsuleText>
-    </InfoCapsule>}
+    {props.ageRange && <MetaInfo data={props.ageRange} title='Age Range:' />}
 
-    {props.gender && <InfoCapsule>
-      <CapsuleHead>Gender:</CapsuleHead>
-      <CapsuleText> {props.gender}</CapsuleText>
-    </InfoCapsule>}
+    {props.gender && <MetaInfo data={props.gender} title='Gender:' />}
 
-    {props.experience && <InfoCapsule>
-      <CapsuleHead>Experience:</CapsuleHead>
-      <CapsuleText> {props.experience}</CapsuleText>
-    </InfoCapsule>}
+    {props.experience && <MetaInfo data={props.experience} title='Experience:' />}
 
-    {props.subjects && <InfoCapsule>
-      <CapsuleHead>Subjects:</CapsuleHead>
-      <CapsuleText>  {props.subjects}</CapsuleText>
-    </InfoCapsule>}
+    {props.subjects && <MetaInfo data={props.subjects} title='Subjects:' />}
   </Wrapper>
 );
 
@@ -61,13 +55,6 @@ ClassTypeInfo.propTypes = {
   gender: PropTypes.string,
   experience: PropTypes.string,
   subjects: PropTypes.string,
-}
-
-ClassTypeInfo.defaultProps = {
-  ageRange: '2 - 4',
-  gender: 'Any',
-  experience: 'Any',
-  subjects: 'Yoga, Meditation',
 }
 
 export default ClassTypeInfo;

@@ -24,19 +24,19 @@ const getContainerMaxWidth = (spacing, noOfCards) => {
 }
 
 const ClassTimesWrapper = styled.div`
-  width: ${props => getContainerMaxWidth(props.spacing,4)}px;
+  max-width: ${props => getContainerMaxWidth(props.spacing,4)}px;
   margin: 0 auto;
 
-  @media screen and (max-width : 1280px) {
-    width: ${props => getContainerMaxWidth(props.spacing,3)}px;
+  @media screen and (max-width : 1200px) {
+    max-width: ${props => getContainerMaxWidth(props.spacing,3)}px;
   }
 
   @media screen and (max-width : 960px) {
-    width: ${props => getContainerMaxWidth(props.spacing,2)}px;
+    max-width: ${props => getContainerMaxWidth(props.spacing,2)}px;
   }
 
   @media screen and (max-width : 600px) {
-    width: ${props => getContainerMaxWidth(props.spacing,1)}px;
+    max-width: ${props => getContainerMaxWidth(props.spacing,1)}px;
   }
 `;
 

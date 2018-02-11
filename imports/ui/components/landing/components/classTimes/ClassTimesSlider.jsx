@@ -13,7 +13,7 @@ const config = {
 }
 
 const breakPoints = {
-  mobile: 600,
+  mobile: 601,
 }
 
 export default withSlider(ClassTime,config,breakPoints);
