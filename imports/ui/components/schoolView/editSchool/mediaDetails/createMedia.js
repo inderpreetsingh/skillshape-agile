@@ -136,7 +136,7 @@ class CreateMedia extends React.Component {
 				        Save
 				    </Button>
 				    <Button color="primary" onClick={onClose} >
-				        Close
+				        Cancel
 				    </Button>
 				    </div>
 	        	</DialogActions>

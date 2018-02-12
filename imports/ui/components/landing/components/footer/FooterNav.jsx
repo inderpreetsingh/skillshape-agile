@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { browserHistory } from 'react-router';
 
 import * as helpers from '../jss/helpers.js';
 
@@ -13,17 +14,16 @@ const FooterNavWrapper = styled.div`
 const FooterNav = () => (
     <FooterNavWrapper itemScope itemType="http://www.schema.org/SiteNavigationElement">
         <FooterSectionHeader>Links</FooterSectionHeader>
-
-        <FooterLink itemProp="url" to="/about">
+        <FooterLink itemProp="url" onClick={() => browserHistory.push('/Aboutus') }>
           <span itemProp="name">About</span>
         </FooterLink>
-        <FooterLink itemProp="url" to="/faq">
+        <FooterLink itemProp="url" onClick={() => browserHistory.push('/faq') }>
           <span itemProp="name">FAQ</span>
         </FooterLink>
-        <FooterLink itemProp="url" to="/contact">
+        <FooterLink itemProp="url" onClick={() => browserHistory.push('/ContactUs') }>
           <span itemProp="name">Contact</span>
         </FooterLink>
-        <FooterLink itemProp="url" to="/claim-school">
+        <FooterLink itemProp="url" onClick={() => browserHistory.push('/claimSchool') }>
           <span itemProp="name">Claim School</span>
         </FooterLink>
     </FooterNavWrapper>
