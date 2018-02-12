@@ -7,17 +7,26 @@ $colors: (
   danger : #D84B47,
   cancel : #989797,
   information : #348CC0,
-  black : #292828,
+  my-black : #292828,
   light-text: #fafafa,
   dark-text: #424242,
   primary: #4caf50,
+  secondary: #fafafa,
   secondary-dark: #989797,
   focal: #f5f5f5,
 );
 
 $fonts: (
   special: ("Zilla Slab", serif),
-  common: ("Open Sans", sans-serif)
+  common: ("Open Sans", sans-serif),
+  icon-font: ('Material Icons',serif)
+);
+
+$breakpoints: (
+  watch: 320,
+  mobile: 500,
+  tablet: 800,
+  desktop: 1400
 );
 
 $sizes: (
