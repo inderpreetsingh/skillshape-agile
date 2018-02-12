@@ -58,7 +58,7 @@ class CardsList extends Component {
     }
 
     shouldComponentUpdate = (nextProps) => {
-        console.log(nextProps, 'saljf')
+        // console.log(nextProps, 'saljf')
         if (this.props.title !== nextProps.title) {
             return true;
         } else if (this.props.mapView !== nextProps.mapView) {
@@ -89,7 +89,7 @@ class CardsList extends Component {
 
     render() {
         const { title, cardsData, mapView,handleSeeMore,name,classInterestData, filters} = this.props;
-        console.log("CardsList cardsData-->>",this.props);
+        // console.log("CardsList cardsData-->>",this.props);
         return(
           <CardsListWrapper>
               <CardsListTitle>{title} </CardsListTitle>

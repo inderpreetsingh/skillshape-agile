@@ -128,7 +128,7 @@ class ClassTypeList extends Component {
   	}
 
   	showClassTypes = ({classType}) => {
-  		console.log("showClassTypes classType -->>>",classType, this.props)
+  		// console.log("showClassTypes classType -->>>",classType, this.props)
   		if(!isEmpty(classType)) {
             return Object.keys(classType).map((key, index)=> {
 
@@ -180,9 +180,9 @@ class ClassTypeList extends Component {
     }
 
 	render() {
-		console.log("ClassTypeList props -->>",this.props);
+		// console.log("ClassTypeList props -->>",this.props);
 		const { mapView, classTypeData, skillCategoryData, splitByCategory, filters, isLoading } = this.props;
-    console.log(classTypeData ,"class type data ---->///")
+    // console.log(classTypeData ,"class type data ---->///")
     return (
 			<MainContentWrapper>
 				{
@@ -248,7 +248,7 @@ class ClassTypeList extends Component {
 }
 
 export default createContainer(props => {
-	console.log("ClassTypeList createContainer -->>",props)
+	// console.log("ClassTypeList createContainer -->>",props)
 	let classTypeData = [];
 	let schoolData = [];
 	let skillCategoryData = [];
@@ -291,7 +291,7 @@ export default createContainer(props => {
     if(subscription.ready()) {
         isLoading = false
     }
-  	console.log("classInterestData --->>",classInterestData)
+  	// console.log("classInterestData --->>",classInterestData)
   	return {
   		...props,
   		classTypeData,

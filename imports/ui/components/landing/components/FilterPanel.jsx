@@ -1,5 +1,6 @@
 import React ,{Component, Fragment} from 'react';
 import { CSSTransitionGroup } from 'react-transition-group';
+import get from 'lodash/get';
 
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
@@ -157,9 +158,10 @@ class FilterPanel extends Component {
     }
     // Run filter method
     applyFilters = (event) => {
-        let filters = {...this.props.filters,...this.state.filter};
-        console.log("filters",filters);
-        this.props.applyFilters(filters, this.state.locationName);
+        // let filters = {...this.props.filters,...this.state.filter};
+        // console.log("filters",filters);
+        // this.props.applyFilters(filters, this.state.locationName);
+        this.props.onModalClose()
     }
     onLocationChange = (location) => {
         console.log("location",location);
@@ -169,7 +171,7 @@ class FilterPanel extends Component {
         this.props.clearDefaultLocation();
     }
     locationInputChanged = (event) => {
-        console.log("locationInputChanged", event.target.value);
+        console.log("----- locationInputChanged ----", event.target.value);
 
         // the location input seems blocked, otherwise.
         this.setState({
@@ -187,13 +189,13 @@ class FilterPanel extends Component {
         <Grid item xs={11} sm = {3}>
           <MaterialInputWrapper>
             <IconInput
-            value={this.state.locationName}
-            onChange={this.locationInputChanged}
+            value={this.props.locationName}
+            onChange={this.props.locationInputChanged}
             iconName='location_on'
             defaultValue={this.props.currentAddress}
             googlelocation={true}
             labelText="Location"
-            onLocationChange={this.onLocationChange} />
+            onLocationChange={this.props.onLocationChange} />
           </MaterialInputWrapper>
         </Grid>
 
@@ -201,10 +203,11 @@ class FilterPanel extends Component {
           <Grid item xs={1} sm = {3}>
             <MaterialInputWrapper>
               <IconInput
-              iconName='school'
-              value={this.state.filter.schoolName}
-              onChange={this.fliterSchoolName}
-              labelText="School Name"  />
+                value={get(this.props, "filters.schoolName", "")}
+                iconName='school'
+                onChange={this.props.fliterSchoolName}
+                labelText="School Name"
+              />
             </MaterialInputWrapper>
           </Grid>
 
@@ -233,19 +236,20 @@ class FilterPanel extends Component {
     }
 
     renderFiltersForDialogBox = () => {
+      console.log("------ renderFiltersForDialogBox -----",this.props)
       return (
         <Grid container spacing={24}>
             {/* 1rst Row */}
             <Grid item xs={12} sm={6}>
             <MaterialInputWrapper>
               <IconInput
-              value={this.state.locationName}
-              onChange={this.locationInputChanged}
+              value={this.props.locationName}
+              onChange={this.props.locationInputChanged}
               iconName='location_on'
               defaultValue={this.props.currentAddress}
               googlelocation={true}
               labelText="Location"
-              onLocationChange={this.onLocationChange} />
+              onLocationChange={this.props.onLocationChange} />
             </MaterialInputWrapper>
             </Grid>
 
@@ -253,10 +257,11 @@ class FilterPanel extends Component {
             <Grid item xs={12} sm={6}>
               <MaterialInputWrapper>
                 <IconInput
-                value={this.state.filter.schoolName}
-                iconName='school'
-                onChange={this.fliterSchoolName}
-                labelText="School Name"  />
+                  value={get(this.props, "filters.schoolName", "")}
+                  iconName='school'
+                  onChange={this.props.fliterSchoolName}
+                  labelText="School Name"
+                />
               </MaterialInputWrapper>
             </Grid>
 
@@ -288,7 +293,7 @@ class FilterPanel extends Component {
 
             <Grid item xs={12} sm={3}>
                 <MaterialInputWrapper select>
-                  <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.state.filter.gender} onChange={this.filterGender}>
+                  <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.props.filters.gender} onChange={this.props.filterGender}>
                     <MenuItem value=""> Gender</MenuItem>
                     <MenuItem value={"Male"}> Male </MenuItem>
                     <MenuItem value={"Female"}> Female </MenuItem>
@@ -300,19 +305,37 @@ class FilterPanel extends Component {
             <Grid item xs={12} sm={3}>
                 <MaterialInputWrapper>
                   <IconInput
-                  value={this.state.filter.age}
-                  onChange={this.filterAge} iconName='star' labelText="Age"  />
+                    type="number"
+                    min={5}
+                    max={60}
+                    value={this.props.filters.age || ""}
+                    onChange={this.props.filterAge}
+                    iconName='star'
+                    labelText="Ages"
+                  />
                 </MaterialInputWrapper>
             </Grid>
 
             {/* Price Per Class And Per Month Section */}
             <Grid item xs={12} sm={6} >
-              <SliderControl labelText={"Price Per Class"} onChange={this.perClassPriceFilter} max={100} min={1} defaultValue={[0,45]}/>
+              <SliderControl
+                labelText={"Price Per Class"}
+                onChange={this.props.perClassPriceFilter}
+                max={100}
+                min={1}
+                defaultValue={[0,45]}
+              />
             </Grid>
 
 
             <Grid item xs={12} sm={6} >
-              <SliderControl labelText={"Price Per Month"} onChange={this.pricePerMonthFilter} max={100} min={1} defaultValue={[1,30]} />
+              <SliderControl
+                labelText={"Price Per Month"}
+                onChange={this.props.pricePerMonthFilter}
+                max={100}
+                min={1}
+                defaultValue={[1,30]}
+              />
             </Grid>
 
             <Grid item xs={12} sm={12} >
@@ -325,9 +348,9 @@ class FilterPanel extends Component {
     }
     render() {
       const { showMoreFilters } = this.state;
-      console.log(this.state);
       const { stickyPosition, mapView, filtersInDialogBox } = this.props;
-
+      console.log("FilterPanel props  -->>",this.props);
+      console.log("FilterPanel state  -->>",this.state);
       return (
           <MuiThemeProvider theme={muiTheme}>
             <FilterPanelOuterContainer mapView={mapView}>

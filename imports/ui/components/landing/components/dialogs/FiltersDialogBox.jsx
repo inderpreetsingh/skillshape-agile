@@ -103,7 +103,7 @@ const DialogTitleWrapper = styled.h1`
 class FiltersDialogBox extends Component {
 
     render() {
-
+        console.log("FiltersDialogBox props--->>",this.props);
         const {
             classes,
             open,
@@ -132,7 +132,7 @@ class FiltersDialogBox extends Component {
                   </DialogTitleContainer>
 
                   <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
-                    <FilterPanel {...filterPanelProps} filtersInDialogBox/>
+                    <FilterPanel onModalClose={onModalClose}  {...filterPanelProps} filtersInDialogBox/>
                   </DialogActions>
 
                 </MuiThemeProvider>
