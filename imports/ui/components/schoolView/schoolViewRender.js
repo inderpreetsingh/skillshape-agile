@@ -242,7 +242,7 @@ export default function() {
                               enrollmentFee && enrollmentFee.map((enrollmentFee, index)=> {
                                 return (
                                     <Grid key={index} item xs={12} md={8} sm={12}  style= {{height:'100%', maxWidth: '100%', boxShadow: 'none'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
-                                      <Card style= {{height:'100%',boxShadow: 'none'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
+                                      <Card style= {{height:'100%',boxShadow: 'none',border: '1px solid rgb(217, 205, 205)'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
                                       <Grid item xs={6} sm={6} className={classes.content}>
                                         <Typography align="justify" type="title">
                                           {enrollmentFee.name}
@@ -264,7 +264,7 @@ export default function() {
                                             </Typography>
                                         </Typography>
                                       </Grid>
-                                      <Grid item xs={3} sm={3} className={classes.content} style={{textAlign: 'end'}}>
+                                      <Grid item xs={3} sm={3} className={classes.content} style={{textAlign: 'end',margin:'auto'}}>
                                         <Button className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, "EP", enrollmentFee._id, schoolId)} color="accent" style={{ boxShadow: 'none'}} dense raised>
                                           <i class="material-icons">add_shopping_cart</i>
                                        </Button>
@@ -287,7 +287,7 @@ export default function() {
                               classPricing && classPricing.map((classPrice, index)=> {
                                 return (
                                   <Grid key={index} item xs={12} md={8} sm={12} style={{maxWidth: '100%'}}>
-                                    <Card style= {{height:'100%',boxShadow: 'none'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
+                                    <Card style= {{height:'100%',boxShadow: 'none',border: '1px solid rgb(217, 205, 205)'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
                                       <Grid item xs={6} sm={6} className={classes.content}>
                                         <Typography align='justify' type="title">
                                           {classPrice.packageName}
@@ -310,7 +310,7 @@ export default function() {
                                           <Typography style={{color: '#7f7f7f'}}>for {classPrice.noClasses > 1 ? `${classPrice.noClasses} classes`: `${classPrice.noClasses} class` } </Typography>
                                         </Typography>
                                       </Grid>
-                                      <Grid item xs={3} sm={3} className={classes.content} style={{textAlign: 'end'}}>
+                                      <Grid item xs={3} sm={3} className={classes.content} style={{textAlign: 'end',margin:'auto'}}>
                                         <Button  className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, "CP", classPrice._id, schoolId)} color="accent" className={classes.purchaseBtn} dense raised>
                                           <i class="material-icons">add_shopping_cart</i>
                                        </Button>
@@ -350,7 +350,7 @@ export default function() {
                                 }
                                 return (
                                   <Grid key={index} item xs={12} md={8} sm={12} style={{maxWidth: '100%'}}>
-                                    <Card style= {{height:'100%',boxShadow: 'none'}} className={`${classes.card} price-card-container ${classes.roundPapers}`}>
+                                    <Card style= {{height:'100%',boxShadow: 'none',border: '1px solid rgb(217, 205, 205)'}} className={`${classes.card} price-card-container ${classes.roundPapers}`}>
                                         <Grid item xs={5} sm={5} className={classes.content}>
                                             <Typography align='justify' type="title">
                                               {monthPrice.packageName}
@@ -392,7 +392,7 @@ export default function() {
                                             )
                                           })
                                         }
-                                        <Grid item xs={3} sm={3} style={{textAlign: 'end'}}>
+                                        <Grid item xs={3} sm={3} style={{textAlign: 'end',margin:'auto'}}>
                                           <Button className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, "MP", monthPrice._id, schoolId)} color="accent" style={{boxShadow: 'none'}} dense raised>
                                             <i class="material-icons">add_shopping_cart</i>
                                           </Button>

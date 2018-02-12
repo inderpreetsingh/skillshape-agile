@@ -152,12 +152,12 @@ class Landing extends Component {
       console.log("this.props.location.query in componentDidMount",this.props.location.query)
       if(this.props.location.query && this.props.location.query.claimRequest) {
 
-        if(this.props.location.query.type != 'reject') {
-          Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest);
-        } else if(this.props.location.query.schoolRegister) {
+        if(this.props.location.query.schoolRegister) {
             Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
               Events.trigger("registerAsSchool",{userType: "School"})
             });
+        } else if(this.props.location.query.approve) {
+            Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest);
         } else if(this.props.location.query.redirectUrl) {
             Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
                 if(!this.props.currentUser) {
@@ -166,6 +166,15 @@ class Landing extends Component {
                 } else { // Otherwise redirect to school admin page
                   browserHistory.push(this.props.location.query.redirectUrl)
                 }
+            });
+        } else if(this.props.location.query.keepMeSuperAdmin) { // Handle Keep me Super Admin case
+           Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{keepMeSuperAdmin: true},()=> {
+            });
+        } else if(this.props.location.query.makeRequesterSuperAdmin) { // Handle make requester Super Admin
+             Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{makeRequesterSuperAdmin: true},()=> {
+            });
+        } else if(this.props.location.query.removeMeAsAdmin) { // Remove me as Super Admin
+             Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{removeMeAsAdmin: true},()=> {
             });
         }
       }

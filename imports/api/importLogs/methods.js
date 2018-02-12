@@ -33,6 +33,7 @@ Meteor.methods({
 		                let school = School.findOne({ name: csvdata[i].schoolName, website: csvdata[i].website, email: csvdata[i].email });
 		                let locationId = ""
 		                let schoolId = null;
+		                // School already exists then need to update school info and  update `userId` with an array as a School can be managed by multiple admins.
 		                if (school) {
 		                    schoolId = school._id
 		                    const schoolUpdateDoc = {
@@ -59,11 +60,18 @@ Meteor.methods({
 		                        firstName: csvdata[i].fName,
 		                        lastName: csvdata[i].lName
 		                    }
-		                    let newUser = CreateNewUser(csvdata[i].email, csvdata[i].schoolName, csvdata[i].fName, csvdata[i].lName);
-		                    if (newUser) {
-		                        schoolInsertDoc["userId"] = newUser;
-		                    }
 		                    schoolId = School.insert(schoolInsertDoc)
+		                    let newUser = CreateNewUser(csvdata[i].email, csvdata[i].schoolName, csvdata[i].fName, csvdata[i].lName, schoolId);
+		                    if (newUser) {
+		                    	School.update(
+				                    { _id: schoolId },
+				                    {
+				                        $set: {
+				                            "superAdmin": newUser,
+				                        }
+				                    }
+				                );
+		                    }
 		                }
 
 		                const slocation = SLocation.findOne({ schoolId: schoolId, zip: csvdata[i].zip, $or: [ {title: csvdata[i].LocationTitle}, {address: csvdata[i].address} ] })
@@ -331,7 +339,7 @@ Meteor.methods({
     }
 })
 
-function CreateNewUser(email, name, firstName, lastName) {
+function CreateNewUser(email, name, firstName, lastName, schoolId) {
 	console.log("CreateNewUser -->>",email, name, firstName, lastName)
     if (typeof email !== "undefined" && emailRegex.test(email)) {
         let _user = Accounts.findUserByEmail(email)
@@ -339,11 +347,20 @@ function CreateNewUser(email, name, firstName, lastName) {
             return Accounts.createUser({
                 email: email,
                 password: email,
-                profile: { firstName: firstName, lastName: lastName },
+                profile: { firstName: firstName, lastName: lastName, schoolId:[schoolId] },
                 roles: "Admin",
                 preverfiedUser: true
             });
         } else {
+        	// Update `schoolId` in `Users` rec.
+        	Meteor.users.update(
+                    { _id: _user._id },
+                    {
+                        $addToSet: {
+                                "profile.schoolId": schoolId
+                        }
+                    }
+            );
             return _user._id;
         }
     }

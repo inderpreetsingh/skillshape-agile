@@ -69,11 +69,12 @@ export default styles = theme => {
       color: '#fff'
     },
     dollarStyles: {
+      fontSize:'x-large',
       color: '#78c687',
-      fontSize: 'x-large',
       fontWeight: 700,
       lineHeight: '44px',
-      paddingLeft: theme.spacing.unit * 2
+      paddingLeft: theme.spacing.unit * 2,
+      font: '100 3vw/3vh cookie, cursive',
     }
   }
 }
