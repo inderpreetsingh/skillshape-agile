@@ -9,32 +9,21 @@ import SendIcon from 'material-ui-icons/Send';
 import MailIcon from 'material-ui-icons/Mail';
 import DeleteIcon from 'material-ui-icons/Delete';
 import ReportIcon from 'material-ui-icons/Report';
+import Avatar from 'material-ui/Avatar';
+import Chip from 'material-ui/Chip';
 
+import studentsData from './studentsData.js';
+
+console.log("studentsData===>",studentsData);
 export const mailFolderListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <InboxIcon />
-      </ListItemIcon>
-      <ListItemText primary="Inbox" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <StarIcon />
-      </ListItemIcon>
-      <ListItemText primary="Starred" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <SendIcon />
-      </ListItemIcon>
-      <ListItemText primary="Send mail" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <DraftsIcon />
-      </ListItemIcon>
-      <ListItemText primary="Drafts" />
-    </ListItem>
-  </div>
-);
+  studentsData.map((item)=>{
+    return (
+        <div>
+          <Chip
+          avatar={<Avatar src="/images/avatar.jpg"/>}
+          label={item.name}
+        />
+      </div>
+      )
+  })
+)
