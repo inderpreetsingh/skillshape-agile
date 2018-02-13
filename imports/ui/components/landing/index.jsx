@@ -351,6 +351,8 @@ class Landing extends Component {
         this.setState({filters:oldFilter})
     }
 
+    removeAllFilters = ()=> this.setState({filters: {}, locationName:"" })
+
     render() {
         // console.log("Landing state -->>",this.state);
         console.log("Landing state -->>",this.state);
@@ -448,8 +450,8 @@ class Landing extends Component {
                         clearDefaultLocation={this.clearDefaultLocation}
                         splitByCategory={true}
                         setSchoolIdFilter={this.setSchoolIdFilter}
+                        removeAllFilters={this.removeAllFilters}
                         {...this.props}
-
                     />
                 </Element>
 

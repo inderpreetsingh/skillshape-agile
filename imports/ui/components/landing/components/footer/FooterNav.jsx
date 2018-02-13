@@ -17,7 +17,7 @@ const FooterNav = () => (
         <FooterLink itemProp="url" onClick={() => browserHistory.push('/Aboutus') }>
           <span itemProp="name">About</span>
         </FooterLink>
-        <FooterLink itemProp="url" onClick={() => browserHistory.push('/faq') }>
+        <FooterLink itemProp="url" onClick={() => browserHistory.push('/') }>
           <span itemProp="name">FAQ</span>
         </FooterLink>
         <FooterLink itemProp="url" onClick={() => browserHistory.push('/ContactUs') }>

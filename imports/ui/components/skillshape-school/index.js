@@ -25,7 +25,7 @@ const style = theme => {
 			font: '400 18px/1.4 "Open Sans", sans-serif',
 		},
 		aboutUs: {
-		  height: '465px',
+		  height: '520px',
 		  width: '100%',
 		  display: 'flex',
 		  overflow: 'hidden',
@@ -34,10 +34,11 @@ const style = theme => {
 		  color: '#fff',
 		  backgroundSize: 'cover',
 		  backgroundPosition: '50% 50%',
-		  zIndex: 1
+		  zIndex: 1,
+		  opacity: 0.8,
 		},
 		problemsDiv: {
-		  height: '465px',
+		  height: '520px',
 		  width: '100%',
 		  display: 'flex',
 		  background: '#58409e',
@@ -144,8 +145,7 @@ const SkillShapeSchool = (props) => {
 	return (
 		<MainContainer>
 			<MainContentWrapper className={props.classes.aboutUs}>
-				<div className="bg-stretch" style={{backgroundImage: 'url(images/img10.jpg)',filter: 'none'}}>
-				</div>
+				<div className="bg-stretch" style={{backgroundImage: 'linear-gradient(to right,grey 50%,yellow 100%),url(images/aboutUs/ballet.jpg)',backgroundBlendMode: 'darken',filter: 'none'}}/>
 				<div style={{textAlign: 'center',padding: '100px 16px',position: 'absolute',top: 0,left: 0,bottom: 0,right: 0}}>
 					<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif'}}>
 						This is your school
@@ -156,7 +156,7 @@ const SkillShapeSchool = (props) => {
 				</div>
 			</MainContentWrapper>
 			<MainContentWrapper className={props.classes.problemsDiv}>
-				<div className="bg-stretch" style={{backgroundImage: 'url(images/img14.jpg)',filter: 'opacity(0.6)'}}/>
+				<div className="bg-stretch" style={{backgroundImage: 'url(images/aboutUs/Continuing-Wisdom.jpg)',filter: 'opacity(0.6)'}}/>
 				<div style={{margin:'auto', zIndex: 1}}>
 					<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif',textAlign:'center'}}>
 				        As a school, you face 3 main problems
@@ -178,7 +178,7 @@ const SkillShapeSchool = (props) => {
 			    </div>
 			</MainContentWrapper>
 			<MainContentWrapper className={props.classes.bringPeopleIn}>
-				<div className="bg-stretch" style={{backgroundImage: 'url(images/bring-people-in.jpg)'}}/>
+				<div className="bg-stretch" style={{backgroundImage: 'url(images/aboutUs/karate.jpg)'}}/>
 				<div style={{margin:'auto',zIndex: 1}}>
 					<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif',textAlign:'center'}}>
 				        Bringing People In
@@ -203,7 +203,7 @@ const SkillShapeSchool = (props) => {
 				</div>
 			</MainContentWrapper>
 			<MainContentWrapper className={props.classes.keepStudentEngaged}>
-					<div className="bg-stretch"  style={{ backgroundImage: 'url(images/img11.jpg)',filter: 'opacity(0.1)'}}/>
+					<div className="bg-stretch"  style={{ backgroundImage: 'url(images/aboutUs/Gold-Co.jpg)',filter: 'opacity(0.1)'}}/>
 					<div style={{margin:'auto', zIndex: 1}}>
 						<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif',textAlign:'center',color:'#fff'}}>
 					        Keeping students engaged and excited about your school
@@ -229,7 +229,7 @@ const SkillShapeSchool = (props) => {
 					</div>
 			</MainContentWrapper>
 			<MainContentWrapper className={props.classes.manageAdministration}>
-				<div className="bg-stretch"  style={{backgroundImage: 'url(images/school-admin.jpg)'}}/>
+				<div className="bg-stretch"  style={{backgroundImage: 'url(images//aboutUs/quickorder.jpg)'}}/>
 					<div style={{margin:'auto', zIndex: 1}}>
 						<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif',textAlign:'center'}}>
 					        Managing School Administration

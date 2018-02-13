@@ -10,7 +10,6 @@ class MainLayout extends React.Component {
   }
 
   render( ) {
-    console.log("Main layout props -->>",this.props);
     const { currentUser, isUserSubsReady, classes} = this.props;
     return (
         <div>

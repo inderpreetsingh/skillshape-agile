@@ -8,11 +8,16 @@ import { withStyles, material_ui_next_theme } from '/imports/util';
 const theme = createMuiTheme({...material_ui_next_theme});
 
 const styles = theme => ({
-  content: {
-    backgroundColor: theme.palette.background.default,
-    paddingTop: theme.spacing.unit*10,
-    overflow: 'hidden',
-  }
+    wrapper : {
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    content: {
+        backgroundColor: theme.palette.background.default,
+        paddingTop: theme.spacing.unit*10,
+        overflow: 'hidden',
+    },
 });
 
 class AdminLayout extends React.Component {
@@ -26,7 +31,7 @@ class AdminLayout extends React.Component {
   }
 
   render( ) {
-    console.log("Admin layout props -->>",this.props);
+    // console.log("Admin layout props -->>",this.props);
     const { currentUser, classes, isUserSubsReady} = this.props;
     let className = {
       mainClass: "wrapper perfectScroll main_wrapper",
@@ -40,9 +45,9 @@ class AdminLayout extends React.Component {
     }
     return (
       <MuiThemeProvider theme={theme}>
-        <div className={className.mainClass} id={className.id}>
+        <div className={`${className.mainClass} ${classes.wrapper}`} id={className.id}>
             <BrandBar {...this.props}/>
-            <div ref={(ref)=> {this.mainPanelRef = ref}}>
+            <div style={{flex: 1}} ref={(ref)=> {this.mainPanelRef = ref}}>
                <main className={classes.content}>
                 {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
                </main>

@@ -160,27 +160,21 @@ class ClassTypeList extends Component {
 
             return <Loading/>
 
-        } else if(!isEmpty(filters.coords) && this.props.defaultLocation && isEmpty(classTypeData)) {
+        } else if(isEmpty(classTypeData)) {
 
-            return
-              <NoResultContainer>
-              {/*
-              <span style={{padding: 8}}>
-                  <b>No Results Found</b>
-              </span>
-              <PrimaryButton
-                  label="Want to explore in other location"
-                  icon={true}
-                  iconName="search"
-                  onClick={this.props.clearDefaultLocation}
-              />*/}
-                <NoResults />
+            return <NoResultContainer>
+               <span style={{padding: 8}}>
+                  <b>Your search yielded no results. Try changing your search?</b>
+               </span>
+                <NoResults
+                    removeAllFiltersButtonClick={this.props.removeAllFilters}
+                />
             </NoResultContainer>
         }
     }
 
 	render() {
-		// console.log("ClassTypeList props -->>",this.props);
+		console.log("ClassTypeList props -->>",this.props);
 		const { mapView, classTypeData, skillCategoryData, splitByCategory, filters, isLoading } = this.props;
     // console.log(classTypeData ,"class type data ---->///")
     return (
