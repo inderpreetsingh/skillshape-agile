@@ -52,7 +52,6 @@ export default Routes = componentLoader((props) => (
             });
         }} />
         <Route path="/schools/:slug" component={SchoolView} />
-        <Route path="/school/:slug/members" component={DashView} />
         <Route path="/MyCalendar" component={ManageMyCalendar} />
         <Route path="/reset-password/:token" component={ResetPassword}/>
         <Route path="/claimSchool" component={ClaimSchool}/>
@@ -63,6 +62,7 @@ export default Routes = componentLoader((props) => (
 
       <Route path="/" component={AdminLayout}>
         <Route path="/SchoolUpload" component={SchoolUpload} />
+        <Route path="/schools/:slug/members" component={DashView} />
         {/*<Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />*/}
       </Route>
     </Route>
