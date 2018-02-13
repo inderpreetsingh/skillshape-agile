@@ -53,7 +53,7 @@ export default function DashViewRender() {
                     filters: this.state.filters,
                     stickyPosition: this.state.sticky
                   }}
-                  renderFiltersForDialogBox = {this.renderFiltersForDialogBox}
+                  renderStudentAddModal = {this.renderStudentAddModal}
                   />
             }
           </form>

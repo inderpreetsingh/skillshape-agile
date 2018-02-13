@@ -112,7 +112,7 @@ class MemberDialogBox extends Component {
             fullScreen,
             onModalClose,
             filterPanelProps,
-            renderFiltersForDialogBox
+            renderStudentAddModal
         } = this.props;
 
         return(
@@ -135,7 +135,7 @@ class MemberDialogBox extends Component {
                   </DialogTitleContainer>
 
                   <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
-                    <AddSchoolMember renderStudentModal={open} renderFiltersForDialogBox={renderFiltersForDialogBox}/>
+                    <AddSchoolMember renderStudentModal={open} renderStudentAddModal={renderStudentAddModal}/>
                   </DialogActions>
 
                 </MuiThemeProvider>
