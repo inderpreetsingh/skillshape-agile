@@ -14,19 +14,19 @@ import {Fragment} from 'react';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 
-import { mailFolderListItems } from './tileData';
+import MailFolderListItems from './tileData';
 import  SchoolMemberFilter  from "./filter";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 
 
 export default function DashViewRender() {
   console.log("ahahaaaaaa",this.props)
-  const { classes, theme } = this.props;
+  const { classes, theme, schoolMemberDetails} = this.props;
   const { renderStudentModal } = this.state;
 
   const drawer = (
       <div>
-        <List>{mailFolderListItems}</List>
+        <List><MailFolderListItems schoolMemberDetails={schoolMemberDetails} /></List>
         <Divider />
       </div>
     );
@@ -43,11 +43,13 @@ export default function DashViewRender() {
               locationInputChanged={this.locationInputChanged}
           />
           <form noValidate autoComplete="off">
-            {renderStudentModal && <MemberDialogBox
-                  open={renderStudentModal}
-                  onModalClose={() => this.handleMemberDialogBoxState(false)}
-                  renderStudentAddModal = {this.renderStudentAddModal}
-                  />
+            {
+              renderStudentModal &&
+              <MemberDialogBox
+                open={renderStudentModal}
+                onModalClose={() => this.handleMemberDialogBoxState(false)}
+                renderStudentAddModal = {this.renderStudentAddModal}
+              />
             }
           </form>
           <Grid item sm={12} xs={12} md={12} style={{float:'right'}}>
@@ -55,7 +57,7 @@ export default function DashViewRender() {
               Add New Student
             </Button>
           </Grid>
-          <Grid item sm={4} xs={12} md={4}>
+          <Grid item sm={12} xs={12} md={12}>
             <div>
               <Hidden mdUp>
                   {drawer}

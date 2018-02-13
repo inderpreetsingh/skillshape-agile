@@ -9,6 +9,7 @@ import Multiselect from 'react-widgets/lib/Multiselect'
 
 
 import ClassType from "/imports/api/classType/fields";
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import DashViewRender from './dashViewRender';
 import School from "/imports/api/school/fields";
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
@@ -52,6 +53,7 @@ class DashView extends React.Component {
             <Grid item xs={12} sm={6}>
                 <TextField
                   id="email"
+                  type="email"
                   label="Email"
                   margin="normal"
                   fullWidth
@@ -67,6 +69,7 @@ class DashView extends React.Component {
                   fullWidth
                   inputRef = {(ref) => {this.phone = ref}}
                   required={true}
+                  type="number"
                 />
             </Grid>
 
@@ -99,6 +102,10 @@ class DashView extends React.Component {
     addNewMember = () => {
         console.log("Add addNewMember",this)
         let payload = {};
+        if(this.email.value == '' || this.firstName.value == '') {
+            alert("email and name is required");
+            return;
+        }
         payload.firstName = this.firstName.value;
         payload.lastName = this.lastName.value;
         payload.email = this.email.value;
@@ -134,11 +141,8 @@ class DashView extends React.Component {
 export default createContainer(props => {
     let { schoolId, slug } = props.params
     let schoolData;
-    let classPricing;
-    let monthlyPricing;
-    let schoolLocation;
     let classType;
-    let enrollmentFee;
+    let schoolMemberDetails;
 
     if (slug) {
         Meteor.subscribe("UserSchoolbySlug", slug);
@@ -148,14 +152,17 @@ export default createContainer(props => {
 
     if (schoolId) {
         Meteor.subscribe("UserSchool", schoolId);
+        Meteor.subscribe("membersBySchool", {schoolId});
         // Get class types
         Meteor.subscribe("classTypeBySchool", {schoolId});
         schoolData = School.findOne({ _id: schoolId })
         classType = ClassType.find({ schoolId: schoolId }).fetch();
-        console.log("classType================>",classType,schoolId)
+        schoolMemberDetails = SchoolMemberDetails.find({schoolId:schoolId}).fetch();
+        console.log("classType================>",schoolMemberDetails,schoolId)
     }
     return { ...props,
         schoolData,
-        classType
+        classType,
+        schoolMemberDetails
     };
 },DashView);

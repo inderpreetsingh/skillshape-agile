@@ -1,29 +1,29 @@
-// This file is shared across the demos.
-
 import React from 'react';
-import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import InboxIcon from 'material-ui-icons/MoveToInbox';
-import DraftsIcon from 'material-ui-icons/Drafts';
-import StarIcon from 'material-ui-icons/Star';
-import SendIcon from 'material-ui-icons/Send';
-import MailIcon from 'material-ui-icons/Mail';
-import DeleteIcon from 'material-ui-icons/Delete';
-import ReportIcon from 'material-ui-icons/Report';
 import Avatar from 'material-ui/Avatar';
-import Chip from 'material-ui/Chip';
-
+import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
 import studentsData from './studentsData.js';
 
-console.log("studentsData===>",studentsData);
-export const mailFolderListItems = (
-  studentsData.map((item)=>{
-    return (
-        <div>
-          <Chip
-          avatar={<Avatar src="/images/avatar.jpg"/>}
-          label={item.name}
-        />
-      </div>
-      )
-  })
-)
+class MailFolderListItems extends React.Component {
+
+  constructor(props) {
+        super(props);
+  }
+
+  render() {
+    console.log("mailFolderListItems",this.props)
+    const {schoolMemberDetails} = this.props;
+    return (<div>
+      <List>
+          {schoolMemberDetails && schoolMemberDetails.map(value => (
+            <ListItem key={value} dense button>
+              <Avatar alt="Remy Sharp" src="/images/avatar.jpg"/>
+              <ListItemText primary={`${value.firstName}`} />
+            </ListItem>
+          ))}
+      </List>
+
+    </div>)
+  }
+}
+
+export default MailFolderListItems;

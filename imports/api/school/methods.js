@@ -358,9 +358,11 @@ Meteor.methods({
         // Validations
         // Only school admin can add a new Memeber.
         console.log("school.addNewMember",doc)
+        doc.createdBy = this.userId;
+
         const superAdminData = Meteor.users.findOne({_id:this.userId, "roles": "Superadmin"});
-        // if(superAdminData) {
-        //     SchoolMemberDetails.inser(doc);
-        // }
+        if(superAdminData) {
+            SchoolMemberDetails.insert(doc);
+        }
     }
 });
