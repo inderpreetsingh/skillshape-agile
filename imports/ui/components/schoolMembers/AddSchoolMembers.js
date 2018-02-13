@@ -87,7 +87,7 @@ class AddSchoolMember extends React.Component {
         const { renderStudentModal } = this.props;
         return (
           <form noValidate autoComplete="off">
-            {renderStudentModal && this.props.renderFiltersForDialogBox()}
+            {renderStudentModal && this.props.renderStudentAddModal()}
           </form>
         )
     }

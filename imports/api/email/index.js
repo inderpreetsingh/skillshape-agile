@@ -4,20 +4,17 @@ import ClassType from "/imports/api/classType/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import School from "/imports/api/school/fields";
-
-const signature = `<div style="
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-"><img style="height: 50px;" src="https://skillshape2.herokuapp.com/images/landing/logo.png">
-<span style="margin-top: 21px;"><b>Thanks</b><br><b>The SkillShape Team</b></span></div>`;
+import EmailSignature from './signature.js';
 
 export const sendPackagePurchaseEmail = function({ to, buyer, packageName }) {
     Email.send({
         to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
         from: config.fromEmailForPurchasePackage,
         subject: "Package Purchase Request Recieved",
-        html: `<b>${buyer}</b> has requested this package : <b>${packageName}</b>`
+        html: `<b>${buyer}</b> has requested this package : <b>${packageName}</b>
+            <br/><br/>
+            <br/><br/>
+            ${EmailSignature}`
     });
 };
 
@@ -37,7 +34,8 @@ export const sendJoinClassEmail = function({ classTypeData }) {
             html: `Hi ${schoolAdminRec.profile
                 .firstName}, <br/><b>${studentName}</b> has showed interest in joining your : <b>${classType.name}</b> at <b>${classTimes.name}</b>.
                 <br/><br/>
-                ${signature}`
+                <br/><br/>
+                ${EmailSignature}`
         });
     }
 };
@@ -67,7 +65,8 @@ export const sendClaimASchoolEmail = function(
                        <a href=${ROOT_URL}&approve=true style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">I have no idea what this is about.</a><br/>
                    </div>
                    <br/><br/>
-                   ${signature}`
+                   <br/><br/>
+                   ${EmailSignature}`
         });
     }
 };
@@ -80,8 +79,10 @@ export const sendConfirmationEmail = function(userRec, school) {
             subject:
                 "Confirmation regarding your school claim request received",
             html: `Hi ${(userRec && userRec.profile.firstName) || ""},<br/>
-                   We have sent your request to the email on file for ${school.name}. We will resolve this as soon as possible.<br/><br/>
-                   ${signature}`
+                We have sent your request to the email on file for ${school.name}. We will resolve this as soon as possible.
+                <br/><br/>
+                <br/><br/>
+                ${EmailSignature}`
         });
     }
 };
@@ -111,11 +112,11 @@ export const sendClassTimesRequest = function({
         emailObj.subject = "Class Interest";
         emailObj.text = `Hi ${schoolOwnerName}, \n${userName} is interested in learning more about your ${classTypeName} class. \nPlease click this link to update your listing: \n${Meteor.absoluteUrl(
             `SchoolAdmin/${schoolId}/edit`
-        )} \n\nThanks, \n\nEveryone from SkillShape.com`;
+        )} \n\nThanks, \n\n${EmailSignature}`;
     } else {
         emailObj.to = superAdminData.emails[0].address;
         (emailObj.subject = "School Admin not found"),
-            (emailObj.text = `Hi SuperAdmin, \nCorresponding to this schoolId ${schoolId} there is no admin assign yet \n\nThanks, \n\nEveryone from SkillShape.com`);
+            (emailObj.text = `Hi SuperAdmin, \nCorresponding to this schoolId ${schoolId} there is no admin assign yet \n\nThanks, \n\n${EmailSignature}`);
     }
     if (Meteor.isServer) {
         Email.send({
@@ -146,7 +147,7 @@ export const sendEmailToStudentForClassTimeUpdate = function(
             subject: "School Updated",
             text: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(
                 `SchoolAdmin/${schoolData._id}/edit?tabValue=2`
-            )} to view their new information and join the class! \n\nThanks, \n\nEveryone from SkillShape.com`
+            )} to view their new information and join the class! \n\nThanks, \n\n${EmailSignature}`
         });
     }
 };
@@ -169,10 +170,9 @@ export const userRegistrationAndVerifyEmail = function(
             click on the following link to verify your email address:\n
             ${verificationToken}\n
             Your temporary password is  : ${passwd}
+            ${Meteor.absoluteUrl()}
             You will be asked to make your own when you click the link above.
-            Thank you.
-            The skillshape Team.
-            ${Meteor.absoluteUrl()}`
+            \n\nThanks, \n\n${EmailSignature}`
     });
 };
 
@@ -191,7 +191,7 @@ export const sendPriceInfoRequestEmail = function({
             replyTo: "Notices@SkillShape.com",
             subject: "Pricing info request received",
             text: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
-            \n\nThanks, \n\nEveryone from SkillShape.com`
+            \n\nThanks, \n\n${EmailSignature}`
         });
     }
 };
@@ -212,7 +212,7 @@ export const sendEmailToStudentForPriceInfoUpdate = function(
             from: "Notices@SkillShape.com",
             subject: "School has updated pricing info",
             text: `Hi ${userName}, \n${schoolData.name} has updated their prices. Please go to \n ${Meteor.absoluteUrl(
-                `SchoolAdmin/${schoolData._id}/edit`)} to view their new information! \n\nThanks, \n\nEveryone from SkillShape.com`
+                `SchoolAdmin/${schoolData._id}/edit`)} to view their new information! \n\nThanks, \n\n${EmailSignature}`
             });
     }
 };

@@ -68,7 +68,7 @@ export default function () {
                                                        )*/
                                                   }
                     						<Typography component="p">
-                    							<b>Covers:</b> {
+                    							<b>Class Types Covered:</b> {
                     								_.isEmpty(monthPrice.selectedClassType) ? "None" :
                     								monthPrice.selectedClassType.map((classType) => {
                     									return <span>{classType.name} </span>

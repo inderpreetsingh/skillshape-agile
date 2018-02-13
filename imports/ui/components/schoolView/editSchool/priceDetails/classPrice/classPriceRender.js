@@ -56,7 +56,7 @@ export default function () {
                     						</Typography>
                                                   <br></br>
                     						<Typography component="p">
-                    							<b>Covers:</b> {
+                    							<b>Class Types Covered:</b> {
                     								_.isEmpty(classPrice.selectedClassType) ? "None" :
                     								classPrice.selectedClassType.map((classType) => {
                     									return <span>{classType.name} </span>

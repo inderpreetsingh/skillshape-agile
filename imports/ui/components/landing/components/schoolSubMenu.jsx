@@ -69,6 +69,11 @@ class SchoolSubMenu extends React.Component {
 												        name: "Home Page",
 												        link: school.link,
 												        iconName: "home",
+												    },
+												    {
+												        name: "Members",
+												        link: `${school.link}/members`,
+												        iconName: "home",
 												    }
 					                            ]}
 					                            onClick={this.props.onClick}

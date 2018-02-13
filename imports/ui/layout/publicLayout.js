@@ -11,6 +11,11 @@ import { browserHistory } from 'react-router';
 const theme = createMuiTheme({...material_ui_next_theme});
 
 const styles = theme => ({
+    wrapper : {
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+    },
     content: {
         backgroundColor: theme.palette.background.default,
         paddingTop: theme.spacing.unit*10 - theme.spacing.unit/2,
@@ -69,22 +74,24 @@ class PublicLayout extends React.Component {
     }
 
     render( ) {
-        console.log("PublicLayout  props -->>",this.props);
-        console.log("PublicLayout  state -->>",this.state);
+        // console.log("PublicLayout  props -->>",this.props);
+        // console.log("PublicLayout  state -->>",this.state);
         const { currentUser, classes, isUserSubsReady} = this.props;
         let className = {
-          mainClass: "wrapper perfectScroll main_wrapper",
-          contentClass: "content",
-          id: "UserMainPanel",
+            mainClass: "wrapper perfectScroll main_wrapper",
+            contentClass: "content",
+            id: "UserMainPanel",
         }
+
         if(currentUser) {
-          className.mainClass = "main-panel";
-          className.contentClass = "content no-padding";
-          className.id = "UserMainPanel";
+            className.mainClass = "main-panel";
+            className.contentClass = "content no-padding";
+            className.id = "UserMainPanel";
         }
+
         return (
           <MuiThemeProvider theme={theme}>
-                <div className={className.mainClass} id={className.id}>
+                <div className={`${className.mainClass} ${classes.wrapper}`} id={className.id}>
                     <BrandBar {...this.props}/>
                     <SetPasswordDialogBox
                         open={this.state.showSetPasswordDialogBox}
@@ -93,7 +100,7 @@ class PublicLayout extends React.Component {
                         errorText={this.state.errorMessage}
                         isLoading={this.state.isBusy}
                     />
-                    <div ref={(ref)=> {this.mainPanelRef = ref}}>
+                    <div style={{flex: 1}} ref={(ref)=> {this.mainPanelRef = ref}}>
                         <main className={classes.content}>
                             {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
                         </main>
