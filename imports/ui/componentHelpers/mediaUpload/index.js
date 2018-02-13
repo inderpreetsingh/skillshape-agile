@@ -34,7 +34,7 @@ const styles = theme => {
         maxWidth: 300,
       },
       media: {
-        border: '2px dotted black',
+        border: '2px solid black',
         backgroundColor: theme.palette.grey[100],
         display: 'inline-flex',
         alignItems: 'center',

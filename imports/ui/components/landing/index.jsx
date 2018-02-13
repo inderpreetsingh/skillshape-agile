@@ -286,14 +286,77 @@ class Landing extends Component {
       })
     }
 
+    onLocationChange = (location) => {
+        console.log("Landing location",location);
+        let oldFilters = {...this.state.filters};
+        oldFilters['coords'] = location.coords;
+        this.setState({
+            filters: oldFilters,
+            locationName: location.fullAddress,
+        })
+        // this.state.locationName = location.name;
+        // this.state.defaultLocation = null;
+        // this.props.clearDefaultLocation();
+    }
+
+    locationInputChanged = (event) => {
+        console.log("Landing locationInputChanged ----", event.target.value);
+
+        // the location input seems blocked, otherwise.
+        this.setState({
+          locationName: event.target.value
+        })
+
+        // if(!event.target.value) {
+        //     this.state.filter['coords'] = null;
+        //     this.state.locationName = null;
+        //     // this.props.clearDefaultLocation();
+        // }
+    }
+
+    fliterSchoolName = (event) => {
+        let oldFilter = {...this.state.filters};
+        oldFilter.schoolName = event.target.value;
+        this.setState({ filters : oldFilter});
+    }
+
+    filterAge =(event) => {
+        let oldFilter = {...this.state.filters};
+        oldFilter.age = event.target.value;
+        this.setState({ filters : oldFilter});
+    }
+
+    filterGender = (event) => {
+        console.log("filterGender -->>",event);
+        let oldFilter = {...this.state.filters};
+        oldFilter.gender = event.target.value;
+        this.setState({filters:oldFilter})
+    }
+
+    skillLevelFilter = (text) => {
+        let oldFilter = {...this.props.filters}
+        oldFilter.experienceLevel = text;
+        this.setState({filters:oldFilter})
+    }
+
+    perClassPriceFilter = (text) => {
+        let oldFilter = {...this.props.filters}
+        oldFilter._classPrice = text;
+        this.setState({filters:oldFilter})
+    }
+
+    pricePerMonthFilter = (text) => {
+        let oldFilter = {...this.props.filters}
+        oldFilter._monthPrice = text;
+        this.setState({filters:oldFilter})
+    }
+
     render() {
         // console.log("Landing state -->>",this.state);
-        console.log("Landing props -->>",this.props);
-        console.log('Map view,,',this.state.mapView);
-        console.log('this.state.cardsList',this.state.cardsDataList[0]);
+        console.log("Landing state -->>",this.state);
         return(
             <div>
-                {this.state.filterPanelDialogBox && <FiltersDialogBox
+                <FiltersDialogBox
                   open={this.state.filterPanelDialogBox}
                   onModalClose={() => this.handleFiltersDialogBoxState(false)}
                   filterPanelProps={{
@@ -301,10 +364,18 @@ class Landing extends Component {
                     currentAddress: (this.state.defaultLocation || this.state.locationName),
                     applyFilters: this.applyFilters,
                     filters: this.state.filters,
-                    stickyPosition: this.state.sticky
+                    stickyPosition: this.state.sticky,
+                    onLocationChange: this.onLocationChange,
+                    locationName: this.state.locationName,
+                    locationInputChanged: this.locationInputChanged,
+                    fliterSchoolName: this.fliterSchoolName,
+                    filterAge: this.filterAge,
+                    filterGender: this.filterGender,
+                    skillLevelFilter: this.skillLevelFilter,
+                    perClassPriceFilter: this.perClassPriceFilter,
+                    pricePerMonthFilter: this.pricePerMonthFilter,
                   }}
                   />
-                }
 
                 {!this.state.mapView &&
                   (
@@ -333,6 +404,15 @@ class Landing extends Component {
                         filters={this.state.filters}
                         stickyPosition={this.state.sticky}
                         handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+                        onLocationChange={this.onLocationChange}
+                        locationName={this.state.locationName}
+                        locationInputChanged={this.locationInputChanged}
+                        fliterSchoolName={this.fliterSchoolName}
+                        filterAge={this.filterAge}
+                        filterGender={this.filterGender}
+                        skillLevelFilter={this.skillLevelFilter}
+                        perClassPriceFilter={this.perClassPriceFilter}
+                        pricePerMonthFilter={this.pricePerMonthFilter}
                     />
                   </Sticky>)
                   : (
@@ -345,6 +425,15 @@ class Landing extends Component {
                         filters={this.state.filters}
                         stickyPosition={this.state.sticky}
                         handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+                        onLocationChange={this.onLocationChange}
+                        locationName={this.state.locationName}
+                        locationInputChanged={this.locationInputChanged}
+                        fliterSchoolName={this.fliterSchoolName}
+                        filterAge={this.filterAge}
+                        filterGender={this.filterGender}
+                        skillLevelFilter={this.skillLevelFilter}
+                        perClassPriceFilter={this.perClassPriceFilter}
+                        pricePerMonthFilter={this.pricePerMonthFilter}
                     />
                   )}
                </div>

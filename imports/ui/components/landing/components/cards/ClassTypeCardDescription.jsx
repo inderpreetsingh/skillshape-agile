@@ -23,7 +23,7 @@ const NoFoundResultWapper = styled.div`
 const ClassTypeCardDescription = (props) => {
 
   const {cardRevealInfo} = props;
-  console.log("props in ClassTypeCardDescription",cardRevealInfo);
+  // console.log("props in ClassTypeCardDescription",cardRevealInfo);
   return(
     <MuiThemeProvider theme={MuiTheme}>
         <Fragment>

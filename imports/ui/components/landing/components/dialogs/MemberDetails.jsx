@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Recaptcha from 'react-recaptcha';
@@ -12,6 +13,7 @@ import { MuiThemeProvider} from 'material-ui/styles';
 
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import FilterPanel from '../FilterPanel.jsx';
+import AddSchoolMember from '/imports/ui/components/schoolMembers/AddSchoolMembers.js';
 import IconInput from '../form/IconInput.jsx';
 
 import * as helpers from '../jss/helpers.js';
@@ -100,16 +102,17 @@ const DialogTitleWrapper = styled.h1`
   }
 `;
 
-class FiltersDialogBox extends Component {
+class MemberDialogBox extends Component {
 
     render() {
-        console.log("FiltersDialogBox props--->>",this.props);
+
         const {
             classes,
             open,
             fullScreen,
             onModalClose,
-            filterPanelProps
+            filterPanelProps,
+            renderFiltersForDialogBox
         } = this.props;
 
         return(
@@ -124,7 +127,7 @@ class FiltersDialogBox extends Component {
                 <MuiThemeProvider theme={muiTheme}>
                   <DialogTitleContainer>
                     <DialogTitleWrapper>
-                      Filter  Content
+                      Add New Member
                     </DialogTitleWrapper>
                     <IconButton color="primary" onClick={onModalClose} classes={{root: classes.iconButton}}>
                         <ClearIcon/>
@@ -132,7 +135,7 @@ class FiltersDialogBox extends Component {
                   </DialogTitleContainer>
 
                   <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
-                    <FilterPanel onModalClose={onModalClose}  {...filterPanelProps} filtersInDialogBox/>
+                    <AddSchoolMember renderStudentModal={open} renderFiltersForDialogBox={renderFiltersForDialogBox}/>
                   </DialogActions>
 
                 </MuiThemeProvider>
@@ -141,7 +144,7 @@ class FiltersDialogBox extends Component {
     }
 }
 
-FiltersDialogBox.propTypes = {
+MemberDialogBox.propTypes = {
   onModalClose: PropTypes.func,
   classes: PropTypes.object.isRequired,
   filterPanelProps: PropTypes.object,
@@ -150,4 +153,4 @@ FiltersDialogBox.propTypes = {
   unsetError: PropTypes.func,
 }
 
-export default withMobileDialog()(withStyles(styles)(FiltersDialogBox));
+export default withMobileDialog()(withStyles(styles)(MemberDialogBox));

@@ -124,7 +124,7 @@ const CardDescription = ({ key, classes, className, name, hideCardContent, descr
 );
 
 const Reveal = ({children, ...props}) => {
-  console.log(props,"props..");
+  // console.log(props,"props..");
   return (
     <CSSTransition
       {...props}
@@ -185,7 +185,6 @@ class CardsReveal extends Component {
             <CardContentBody>{body}</CardContentBody>
           </CardContent>
         </div>
-        {console.log(this.state.revealCard,"changing state...")}
 
         <Transition timeout={{enter : 0, exit: 0}} in={this.state.revealCard}>
           {(state) => (<CardDescription

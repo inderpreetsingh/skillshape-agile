@@ -55,7 +55,7 @@ export default function () {
 								          aria-label="galleryViewTrue"
 								        />
 							          }
-							          label="Switch to Carousel view"
+							          label={isGalleryView ? "Switch to Gallery view": "Switch to Carousel view"}
 							        />
 							    </FormGroup>
 							</Grid>

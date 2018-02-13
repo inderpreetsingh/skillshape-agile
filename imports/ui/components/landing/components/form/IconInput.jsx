@@ -63,6 +63,10 @@ class IconInput extends React.Component {
           id={props.inputId}
           onChange={props.onChange}
           endAdornment={<InputAdornment position="end"><InputIcon iconName={props.iconName}/></InputAdornment>}
+          inputProps={{
+            min: props.min,
+            max: props.max
+          }}
         />
         {
           props.error && <FormHelperText id="error-text">{props.errorText}</FormHelperText>
@@ -82,9 +86,13 @@ class IconInput extends React.Component {
                   onChange={props.onChange}
                   placeholder={props.placeholder}
                   className="rw-input-reset"
-                   style={{width: "100%"}}
+                  style={{width: "100%"}}
                   onFocus={this.onFocus}
                   onBlur={this.onBlur}
+                  inputProps={{
+                    min: props.min,
+                    max: props.max
+                  }}
                 />
                 <InputIcon iconName={props.iconName}/>
               </div>
@@ -112,6 +120,8 @@ IconInput.propTypes = {
   disabled: PropTypes.boolean,
   multiline: PropTypes.boolean,
   classes: PropTypes.object,
+  min: PropTypes.number,
+  max: PropTypes.number,
 }
 
 IconInput.defaultProps = {
