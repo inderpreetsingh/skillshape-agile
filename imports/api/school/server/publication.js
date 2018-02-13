@@ -4,6 +4,7 @@ import SLocation from "/imports/api/sLocation/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
 Meteor.publish("UserSchool", function(schoolId) {
     return School.find({ _id: schoolId });
@@ -350,3 +351,10 @@ Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, rol
 
 
   });
+
+
+Meteor.publish("membersBySchool", function({ schoolId, limit }) {
+    return [
+        SchoolMemberDetails.find({ schoolId: schoolId }, { limit: limit ? limit : 4 })
+    ]
+});

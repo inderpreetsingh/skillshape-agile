@@ -354,12 +354,13 @@ Meteor.methods({
         }
     },
     // This function is used to add a school member in `School`.
-    "school.addNewMemebr" : function(doc) {
+    "school.addNewMember" : function(doc) {
         // Validations
         // Only school admin can add a new Memeber.
+        console.log("school.addNewMember",doc)
         const superAdminData = Meteor.users.findOne({_id:this.userId, "roles": "Superadmin"});
-        if(superAdminData) {
-            SchoolMemberDetails.inser(doc);
-        }
+        // if(superAdminData) {
+        //     SchoolMemberDetails.inser(doc);
+        // }
     }
 });

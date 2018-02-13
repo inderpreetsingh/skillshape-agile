@@ -46,13 +46,6 @@ export default function DashViewRender() {
             {renderStudentModal && <MemberDialogBox
                   open={renderStudentModal}
                   onModalClose={() => this.handleMemberDialogBoxState(false)}
-                  filterPanelProps={{
-                    clearDefaultLocation: this.clearDefaultLocation,
-                    currentAddress: (this.state.defaultLocation || this.state.locationName),
-                    applyFilters: this.applyFilters,
-                    filters: this.state.filters,
-                    stickyPosition: this.state.sticky
-                  }}
                   renderStudentAddModal = {this.renderStudentAddModal}
                   />
             }
