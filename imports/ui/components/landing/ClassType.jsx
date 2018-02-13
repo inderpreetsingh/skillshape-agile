@@ -2,6 +2,9 @@ import React,{ Component,Fragment } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+// Testing
+import SkillShapeButtonsCollection from './SkillShapeButtonsCollection.jsx';
+
 import ReviewsBar from './components/school/ReviewsBar.jsx';
 import ClassTypeCover from './components/school/cover/ClassTypeCover.jsx';
 import PackagesList from './components/school/packages/PackagesList.jsx';
@@ -209,7 +212,6 @@ class ClassType extends Component {
           </MainInnerFixedContainer>
 
           <Footer />
-
         </Main>
       </Wrapper>
     );
