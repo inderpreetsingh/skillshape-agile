@@ -229,7 +229,7 @@ const SkillShapeSchool = (props) => {
 					</div>
 			</MainContentWrapper>
 			<MainContentWrapper className={props.classes.manageAdministration}>
-				<div className="bg-stretch"  style={{backgroundImage: 'url(images//aboutUs/quickorder.jpg)'}}/>
+				<div className="bg-stretch"  style={{backgroundImage: 'url(images/aboutUs/quickorder.jpg)'}}/>
 					<div style={{margin:'auto', zIndex: 1}}>
 						<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif',textAlign:'center'}}>
 					        Managing School Administration
