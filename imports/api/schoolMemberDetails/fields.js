@@ -8,9 +8,6 @@ const SchoolMemberDetails = new Mongo.Collection(config.collections.schoolMember
  * See: https://github.com/aldeed/meteor-autoform#affieldinput
  */
 SchoolMemberDetails.attachSchema(new SimpleSchema({
-    name: {
-        type: String,// Required
-    },
     firstName: {
         optional: true,
         type: String,
@@ -56,7 +53,7 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
         optional: true
     },
     schoolId: {
-        type: [String],
+        type: String,
         optional: true
     },
     sendMeSkillShapeNotification: {
