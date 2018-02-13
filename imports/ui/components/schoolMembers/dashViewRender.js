@@ -57,16 +57,18 @@ export default function DashViewRender() {
               Add New Student
             </Button>
           </Grid>
-          <Grid item sm={12} xs={12} md={12}>
-            <div>
-              <Hidden mdUp>
-                  {drawer}
-              </Hidden>
-              <Hidden smDown>
-                  {drawer}
-              </Hidden>
-            </div>
-          </Grid>
+          {schoolMemberDetails && schoolMemberDetails.length > 0 ?
+            <Grid item sm={12} xs={12} md={12}>
+              <div>
+                <Hidden mdUp>
+                    {drawer}
+                </Hidden>
+                <Hidden smDown>
+                    {drawer}
+                </Hidden>
+              </div>
+            </Grid> : ''
+          }
         </Grid>
         <Grid item sm={8} xs={12} md={8} className="rightPanel">
           <Grid container className="userInfoPanel" style={{display: 'flex',background: '#9cd1ff'}}>
