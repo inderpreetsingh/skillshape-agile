@@ -42,10 +42,12 @@ const styles = theme => {
             textAlign: 'left'
         },
         expansionPanel : {
-            marginTop: theme.spacing.unit,
+            margin: 5,
+            border: '2px solid #bdbdbd',
+            boxShadow: '5px 5px 5px 1px #bdbdbd'
         },
         expansionPanelContainer: {
-            padding: theme.spacing.unit,
+            padding: `${theme.spacing.unit * 2}px`,
             width: '100%',
         },
         notifyExplanation: {

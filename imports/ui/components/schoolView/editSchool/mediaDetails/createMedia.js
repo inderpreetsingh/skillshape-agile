@@ -11,7 +11,7 @@ import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 
-
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { withStyles, imageRegex } from "/imports/util";
 import '/imports/api/media/methods';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
@@ -132,11 +132,11 @@ class CreateMedia extends React.Component {
 				        	*Image is required
 				      	</Typography>
 				  	}
-	        		<Button color="primary" type="submit" form={formId} >
-				        Save
-				    </Button>
-				    <Button color="primary" onClick={onClose} >
+				    <Button style={{ color: helpers.cancel}} onClick={onClose} >
 				        Cancel
+				    </Button>
+	        		<Button style={{ color: helpers.action}} type="submit" form={formId} >
+				        Save
 				    </Button>
 				    </div>
 	        	</DialogActions>
