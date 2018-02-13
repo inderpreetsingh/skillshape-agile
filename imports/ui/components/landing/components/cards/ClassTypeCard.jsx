@@ -22,6 +22,10 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
+const CardsRevealWrapper = styled.div`
+  max-width: 320px;
+`;
+
 class ClassTypeCard extends Component {
     state = {
         dialogOpen: false,
@@ -71,13 +75,13 @@ class ClassTypeCard extends Component {
     render() {
         console.log("ClassTypeCard props --->>",this.props);
         const cardRevealData = {
-                        ageMin:this.props.ageMin,
-                        ageMax:this.props.ageMax,
-                        gender:this.props.gender,
-                        experienceLevel:this.props.experienceLevel,
-                        description:this.props.desc,
-                        name:this.props.name,
-                    }
+          ageMin:this.props.ageMin,
+          ageMax:this.props.ageMax,
+          gender:this.props.gender,
+          experienceLevel:this.props.experienceLevel,
+          description:this.props.desc,
+          name:this.props.name,
+        }
         const classTimesData = this.getClassTimes(get(this.props, "_id", null))
         return(
             <Fragment>
@@ -94,23 +98,25 @@ class ClassTypeCard extends Component {
             {
                 this.state.isLoading && <ContainerLoader />
             }
-            <CardsReveal {...this.props}
-                body={
-                <ClassTypeCardBody
-                    ratings={this.props.ratings}
-                    reviews={this.props.reviews}
-                    onJoinClassButtonClick={this.handleDialogState(true)} />
-                }
-                descriptionContent={
-                <ClassTypeCardDescription
-                    classTimeCheck={!isEmpty(classTimesData)}
-                    ratings={this.props.ratings}
-                    reviews={this.props.reviews}
-                    description={this.props.desc}
-                    onClassTimeButtonClick={this.handleDialogState(true)}
-                    cardRevealInfo={cardRevealData}
-                    />
-                } />
+            <CardsRevealWrapper>
+              <CardsReveal {...this.props}
+                  body={
+                  <ClassTypeCardBody
+                      ratings={this.props.ratings}
+                      reviews={this.props.reviews}
+                      onJoinClassButtonClick={this.handleDialogState(true)} />
+                  }
+                  descriptionContent={
+                  <ClassTypeCardDescription
+                      classTimeCheck={!isEmpty(classTimesData)}
+                      ratings={this.props.ratings}
+                      reviews={this.props.reviews}
+                      description={this.props.desc}
+                      onClassTimeButtonClick={this.handleDialogState(true)}
+                      cardRevealInfo={cardRevealData}
+                      />
+                  } />
+                </CardsRevealWrapper>
             </Fragment>
             )
         }

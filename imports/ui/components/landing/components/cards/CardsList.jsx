@@ -10,14 +10,34 @@ import ClassTypeCard from './ClassTypeCard.jsx';
 import CardStructure from '../../constants/structure/card.js';
 import SecondaryButton from '../buttons/SecondaryButton.jsx';
 
+import {getContainerMaxWidth} from '../../../../../util/cards.js';
+
 import * as helpers from '../jss/helpers.js';
 
 const CardsListWrapper = styled.div`
     padding: 0;
 `;
 
+const SPACING = helpers.rhythmDiv * 3;
+const SPACING_MAPVIEW = helpers.rhythmDiv;
+const CARD_WIDTH = 320;
+
 const CardsListGridWrapper = styled.div`
-    padding: ${props => props.mapView ? '8px' : '24px'};
+    padding: ${props => props.mapView ? SPACING_MAPVIEW : SPACING}px;
+    margin: 0 auto;
+    max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING_MAPVIEW,2) + 8 : getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
+
+    @media screen and (max-width: 1279px) {
+      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3)  + 24}px;
+    }
+
+    @media screen and (max-width: 959px) {
+      max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING_MAPVIEW,1) + 8 : getContainerMaxWidth(CARD_WIDTH,SPACING,2)  + 24}px;
+    }
+
+    @media screen and (max-width: 600px) {
+      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1)  + 24}px;
+    }
 `;
 
 const More = styled.div`
@@ -94,23 +114,23 @@ class CardsList extends Component {
           <CardsListWrapper>
               <CardsListTitle>{title} </CardsListTitle>
               <CardsListGridWrapper mapView={mapView}>
-                   <Grid container spacing={24}>
-                       {cardsData.map(card => {
-                           if(mapView) {
-                             return (
-                               <Grid item key={card.id} md={6} sm={12} lg={6} xs={12}>
-                                   <ClassTypeCard classInterestData={classInterestData} {...card}/>
-                               </Grid>
-                             )
-                           }else {
-                             return (
-                               <Grid item key={card.id} md={4} sm={6} lg={3} xs={12}>
-                                   <ClassTypeCard classInterestData={classInterestData} {...card}/>
-                               </Grid>
-                             )
-                           }
-                       })}
-                   </Grid>
+                 <Grid container spacing={24}>
+                     {cardsData.map(card => {
+                         if(mapView) {
+                           return (
+                             <Grid item key={card.id} md={6} sm={12} lg={6} xs={12}>
+                                 <ClassTypeCard classInterestData={classInterestData} {...card}/>
+                             </Grid>
+                           )
+                         }else {
+                           return (
+                             <Grid item key={card.id} md={4} sm={6} lg={3} xs={12}>
+                                 <ClassTypeCard classInterestData={classInterestData} {...card}/>
+                             </Grid>
+                           )
+                         }
+                     })}
+                 </Grid>
               </CardsListGridWrapper>
               {
                 this.seeMoreStatus(cardsData, filters) && (

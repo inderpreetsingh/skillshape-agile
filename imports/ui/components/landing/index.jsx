@@ -406,6 +406,7 @@ class Landing extends Component {
                         filters={this.state.filters}
                         stickyPosition={this.state.sticky}
                         handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+                        handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
                         onLocationChange={this.onLocationChange}
                         locationName={this.state.locationName}
                         locationInputChanged={this.locationInputChanged}
@@ -427,6 +428,7 @@ class Landing extends Component {
                         filters={this.state.filters}
                         stickyPosition={this.state.sticky}
                         handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+                        handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
                         onLocationChange={this.onLocationChange}
                         locationName={this.state.locationName}
                         locationInputChanged={this.locationInputChanged}

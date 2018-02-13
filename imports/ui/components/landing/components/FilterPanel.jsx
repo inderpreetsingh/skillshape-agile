@@ -8,7 +8,7 @@ import Menu, { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 // import ChipInput from 'material-ui-chip-input';
-import Multiselect from 'react-widgets/lib/Multiselect'
+import Multiselect from 'react-widgets/lib/Multiselect';
 import { withStyles } from 'material-ui/styles';
 import styled from 'styled-components';
 //import './jss/reactWidgets.scss';
@@ -16,6 +16,7 @@ import styled from 'styled-components';
 import IconInput from './form/IconInput.jsx';
 import IconSelect from './form/IconSelect.jsx';
 import SliderControl from './form/SliderControl.jsx';
+import MyMultiSelect from './form/multiSelect/MyMultiSelect.jsx';
 import IconButton from 'material-ui/IconButton';
 import {FormHelperText } from 'material-ui/Form';
 
@@ -36,6 +37,7 @@ const FilterPanelOuterContainer = styled.div`
 
 const FilterPanelContainer = styled.div`
     max-width: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView) ? '100%' : '1000px'};
+    width: ${props => props.mapView ? '100%' : 'auto'};
     background: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView) ? '#ffffff' : 'transparent'};
     margin: auto;
     position: ${props => props.mapView ? 'fixed' : 'initial'};
@@ -212,14 +214,16 @@ class FilterPanel extends Component {
           </Grid>
 
           <Grid item xs={1} sm = {5}>
-            <Multiselect
-            textField={"name"}
-            valueField={"_id"}
-            data={this.state.skillCategoryData}
-            placeholder="Skill category"
-            onChange={this.collectSelectedSkillCategories}
-            />
-
+            <div className="homepage-filter">
+              <MyMultiSelect
+                textField={"name"}
+                valueField={"_id"}
+                data={this.state.skillCategoryData}
+                placeholder="Skill category"
+                onChange={this.collectSelectedSkillCategories}
+                onNoOfFiltersClick={this.props.handleNoOfFiltersClick}
+              />
+            </div>
           </Grid>
         </Hidden>
 
@@ -266,32 +270,42 @@ class FilterPanel extends Component {
             </Grid>
 
             {/* 2nd Row */}
-            <Grid item xs={12} sm = {6}>
-              <Multiselect
-                textField={"name"}
-                valueField={"_id"}
-                data={this.state.skillCategoryData}
-                placeholder="Skill category"
-                onChange={this.collectSelectedSkillCategories}
-              />
+            <Grid item xs={12} sm = {12}>
+              <div className="filters-dialog">
+                <Multiselect
+                  textField={"name"}
+                  valueField={"_id"}
+                  data={this.state.skillCategoryData}
+                  placeholder="Skill category"
+                  onChange={this.collectSelectedSkillCategories}
+                />
+              </div>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-               <Multiselect
-                  data={this.state.skillSubjectData}
-                  placeholder="Type to search skills"
-                  textField={"name"}
-                  onSearch={this.inputFromUser}
-                  onChange ={this.selectSkillSubject}
-                />
+            <Grid item xs={12} sm={12}>
+              <div className="filters-dialog">
+                 <Multiselect
+                    data={this.state.skillSubjectData}
+                    defaultValue={this.state.skillSubjectData}
+                    placeholder="Type to search skills"
+                    textField={"name"}
+                    onSearch={this.inputFromUser}
+                    onChange ={this.selectSkillSubject}
+                  />
+                </div>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <div className="filters-dialog">
+                <Multiselect
+                  onChange={this.skillLevelFilter}
+                  data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}
+                  placeholder="Skill Level" />
+              </div>
             </Grid>
 
             {/* 3rd Row */}
-            <Grid item xs={12} sm={6}>
-                <Multiselect onChange={this.skillLevelFilter} data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}  placeholder="Skill Level" />
-            </Grid>
 
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={6}>
                 <MaterialInputWrapper select>
                   <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.props.filters.gender} onChange={this.props.filterGender}>
                     <MenuItem value=""> Gender</MenuItem>
@@ -302,7 +316,7 @@ class FilterPanel extends Component {
                 </MaterialInputWrapper>
             </Grid>
 
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={6}>
                 <MaterialInputWrapper>
                   <IconInput
                     type="number"

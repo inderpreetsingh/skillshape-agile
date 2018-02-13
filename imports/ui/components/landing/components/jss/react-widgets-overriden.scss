@@ -15,6 +15,40 @@
   display: block;
 }
 
+.filters-dialog .rw-widget-picker {
+  height: auto;
+  display: flex;
+  align-items: flex-end;
+  overflow: visible;
+}
+
+.filters-dialog, .homepage-filter {
+  .rw-multiselect .rw-widget-picker > div {
+    max-width: 90%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .rw-widget-chip {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.homepage-filter {
+  .rw-multiselect .rw-widget-picker > div {
+    max-width: 100%;
+  }
+}
+
+.filter-tags {
+  margin: 0;
+  margin-bottom: map-get($sizes,'rhythm-div') * 1px;
+  margin-right: map-get($sizes,'rhythm-div') * 1px;
+}
+
 .rw-state-focus > .rw-widget-container,.rw-state-focus > .rw-widget-container:hover {
   box-shadow: none;
   border-color: map-get($colors,'primary');
@@ -27,5 +61,15 @@
 .rw-multiselect .rw-input-reset, .rw-multiselect .rw-input, .rw-multiselect .rw-filter-input {
   color: $input-font-color;
   font-weight: 100;
-  padding: ($base-font-size/2) 0 0 0;
+  padding: ($base-font-size/2)* 1px 0 0 0;
+}
+
+.rw-multiselect .rw-multiselect-taglist {
+  max-width: 80%;
+  margin-right: map-get($sizes,'rhythm-div') * 1px; 
+  margin-bottom: map-get($sizes,'rhythm-div') * 1px;
+}
+
+.homepage-filter .rw-input-reset {
+  max-width: 60%;
 }

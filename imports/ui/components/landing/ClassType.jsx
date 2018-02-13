@@ -211,7 +211,6 @@ class ClassType extends Component {
             </CalendarWrapper>
           </MainInnerFixedContainer>
 
-          <SkillShapeButtonsCollection />
           <Footer />
         </Main>
       </Wrapper>
