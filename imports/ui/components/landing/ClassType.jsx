@@ -5,12 +5,12 @@ import styled from 'styled-components';
 // Testing
 import SkillShapeButtonsCollection from './SkillShapeButtonsCollection.jsx';
 
-import ReviewsBar from './components/school/ReviewsBar.jsx';
-import ClassTypeCover from './components/school/cover/ClassTypeCover.jsx';
-import PackagesList from './components/school/packages/PackagesList.jsx';
-import SchoolDetails from './components/school/details/SchoolDetails.jsx';
-import ReviewsSlider from './components/school/ReviewsSlider.jsx';
-import ClassTypeCoverContent from './components/school/cover/ClassTypeCoverContent.jsx';
+import ReviewsBar from './components/class/ReviewsBar.jsx';
+import ClassTypeCover from './components/class/cover/ClassTypeCover.jsx';
+import PackagesList from './components/class/packages/PackagesList.jsx';
+import SchoolDetails from './components/class/details/SchoolDetails.jsx';
+import ReviewsSlider from './components/class/ReviewsSlider.jsx';
+import ClassTypeCoverContent from './components/class/cover/ClassTypeCoverContent.jsx';
 import MyCalendar from '../users/myCalender';
 
 import StarsBar from './components/StarsBar.jsx';
@@ -31,7 +31,6 @@ import classTypeData from './constants/classTypeData.js';
 
 import * as helpers from './components/jss/helpers.js';
 import * as settings from './site-settings.js';
-import muiTheme from './components/jss/muitheme.jsx';
 
 const SchoolImgWrapper = styled.div`
   height: 400px;

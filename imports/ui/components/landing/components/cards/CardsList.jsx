@@ -24,7 +24,8 @@ const CARD_WIDTH = 320;
 
 const CardsListGridWrapper = styled.div`
     padding: ${props => props.mapView ? SPACING_MAPVIEW : SPACING}px;
-    margin: 0 auto;
+    margin: 0;
+    margin-right: auto;
     max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING_MAPVIEW,2) + 8 : getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
 
     @media screen and (max-width: 1279px) {

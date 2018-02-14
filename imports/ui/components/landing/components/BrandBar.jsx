@@ -16,9 +16,10 @@ const NavBarWrapper = styled.div`
   justify-content: space-between;
   padding: ${helpers.rhythmDiv}px;
   width: 100%;
+  height: ${props => props.navBarHeight ? props.navBarHeight + 'px' : 'auto'};
   z-index: 1299;
   position: ${props => props.positionStatic ? 'static': 'absolute'};
-  background: white;
+  background: ${props => props.navBgColor};
   top: 0;
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-bottom: ${helpers.rhythmDiv};
@@ -37,7 +38,7 @@ const ButtonsWrapper = styled.div`
 `;
 
 const BrandBar = (props) => (
-    <NavBarWrapper positionStatic={props.positionStatic}>
+    <NavBarWrapper positionStatic={props.positionStatic} navBarHeight={props.navBarHeight} navBgColor={props.navBgColor}>
       {props.logoArea ? props.logoArea : <Logo {...props.logoProps} />}
 
       <ActionArea>
@@ -60,10 +61,13 @@ BrandBar.propTypes = {
   logoProps: PropTypes.object,
   barButton: PropTypes.element,
   menuButton: PropTypes.element,
+  navBarHeight: PropTypes.string,
 }
 
 BrandBar.defaultProps = {
-  positionStatic: false
+  positionStatic: false,
+  navBgColor: 'white',
+  navBarHeight: 'auto'
 }
 
 export default BrandBar;
