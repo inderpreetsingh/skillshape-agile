@@ -11,7 +11,7 @@ class MailFolderListItems extends React.Component {
 
   render() {
     console.log("mailFolderListItems",this.props)
-    const {membersByName} = this.props;
+    const {membersByName , src} = this.props;
     return (<div>
       <List>
           {
@@ -22,7 +22,7 @@ class MailFolderListItems extends React.Component {
                 members && members.people.map((data) => {
                   // console.log("data>>>>>>>>>>", members.people, data)
                    return (<ListItem key={members._id} dense button>
-                              <Avatar alt="Remy Sharp" src="/images/avatar.jpg"/>
+                              <Avatar alt="Remy Sharp" src={src ? src : ''}>{members._id}</Avatar>
                               <ListItemText primary={data.name} />
                           </ListItem>)
                  })
