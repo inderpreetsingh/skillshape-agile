@@ -52,7 +52,7 @@ export default function DashViewRender() {
               />
             }
           </form>
-          <Grid item sm={12} xs={12} md={12} style={{float:'right'}}>
+          <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse'}}>
             <Button raised color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
               Add New Student
             </Button>
