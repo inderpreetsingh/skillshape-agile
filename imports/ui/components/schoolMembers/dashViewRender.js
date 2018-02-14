@@ -21,12 +21,12 @@ import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/M
 
 export default function DashViewRender() {
   console.log("ahahaaaaaa",this.props)
-  const { classes, theme, schoolMemberDetails} = this.props;
+  const { classes, theme, schoolMemberDetails,membersByName} = this.props;
   const { renderStudentModal } = this.state;
 
   const drawer = (
       <div>
-        <List><MailFolderListItems schoolMemberDetails={schoolMemberDetails} /></List>
+        <List><MailFolderListItems membersByName={membersByName} /></List>
         <Divider />
       </div>
     );
@@ -57,7 +57,7 @@ export default function DashViewRender() {
               Add New Student
             </Button>
           </Grid>
-          {schoolMemberDetails && schoolMemberDetails.length > 0 ?
+          {membersByName && membersByName.length > 0 ?
             <Grid item sm={12} xs={12} md={12}>
               <div>
                 <Hidden mdUp>
