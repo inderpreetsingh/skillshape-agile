@@ -1,10 +1,11 @@
 import React, {Component,Fragment} from 'react';
-import { debounce } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import {Element, scroller } from 'react-scroll'
 import Sticky from 'react-stickynode';
 import { browserHistory } from 'react-router';
+import ip from 'ip';
 
 import Cover from './components/Cover.jsx';
 import BrandBar from './components/BrandBar.jsx';
@@ -144,8 +145,21 @@ class Landing extends Component {
                 coords: null,
                 skillCategoryClassLimit: {}
             },
+            tempFilters: {},
         }
         this.onSearch = debounce(this.onSearch, 1000);
+    }
+
+    componentWillMount() {
+        let url = `https://freegeoip.net/json/${ip.address()}`
+        Meteor.http.get(url, (err, res)=> {
+            console.log("freegeoip response -->>",res)
+            if(res && !isEmpty(res.data)) {
+                let oldFilters = {...this.state.filters};
+                oldFilters.coords = [ res.data.latitude, res.data.longitude];
+                this.setState({filters: oldFilters})
+            }
+        })
     }
 
     componentDidMount() {
@@ -212,11 +226,6 @@ class Landing extends Component {
       })
     }
 
-    applyFilters = (newfilters, locationName) => {
-      let filters = this.state.filters || {};
-      this.setState({filters: newfilters, locationName})
-    }
-
     getMyCurrentLocation = () => {
         if(navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -260,12 +269,6 @@ class Landing extends Component {
       this.setState({filters:oldFilter})
     }
 
-    clearDefaultLocation = () => {
-        let oldFilter = {...this.state.filters};
-        oldFilter.coords = null;
-        this.setState({defaultLocation: null,locationName: null, filters: oldFilter });
-    }
-
     onSearch = (value) => {
         let oldFilters = {...this.state.filters};
         oldFilters.mainSearchText = value;
@@ -281,77 +284,117 @@ class Landing extends Component {
     }
 
     handleFiltersDialogBoxState = (state) => {
-      this.setState({
-          filterPanelDialogBox: state
-      })
+        this.setState({
+            filterPanelDialogBox: state
+        })
     }
 
-    onLocationChange = (location) => {
-        console.log("Landing location",location);
-        let oldFilters = {...this.state.filters};
+    onLocationChange = (location, updateKey) => {
+        let oldFilters = {...this.state[updateKey]};
         oldFilters['coords'] = location.coords;
+        oldFilters.locationName = location.fullAddress;
         this.setState({
-            filters: oldFilters,
-            locationName: location.fullAddress,
+            [updateKey]: oldFilters
         })
-        // this.state.locationName = location.name;
-        // this.state.defaultLocation = null;
-        // this.props.clearDefaultLocation();
     }
 
-    locationInputChanged = (event) => {
-        console.log("Landing locationInputChanged ----", event.target.value);
-
-        // the location input seems blocked, otherwise.
+    locationInputChanged = (event, updateKey) => {
+        let oldFilters = {...this.state[updateKey]};
+        oldFilters.locationName = event.target.value;
         this.setState({
-          locationName: event.target.value
+            [updateKey]: oldFilters
         })
-
-        // if(!event.target.value) {
-        //     this.state.filter['coords'] = null;
-        //     this.state.locationName = null;
-        //     // this.props.clearDefaultLocation();
-        // }
     }
 
-    fliterSchoolName = (event) => {
-        let oldFilter = {...this.state.filters};
-        oldFilter.schoolName = event.target.value;
-        this.setState({ filters : oldFilter});
+    fliterSchoolName = (event, updateKey) => {
+        let oldFilters = {...this.state[updateKey]};
+        oldFilters.schoolName = event.target.value;
+        this.setState({
+            [updateKey]: oldFilters
+        })
     }
 
-    filterAge =(event) => {
-        let oldFilter = {...this.state.filters};
-        oldFilter.age = event.target.value;
-        this.setState({ filters : oldFilter});
+    collectSelectedSkillCategories = (text, updateKey) => {
+        let oldFilters = {...this.state[updateKey]};
+        oldFilters.skillCategoryIds = text.map((ele) => ele._id);
+        oldFilters.defaultSkillCategories = text;
+        this.setState({
+            [updateKey]: oldFilters
+        })
     }
 
-    filterGender = (event) => {
-        console.log("filterGender -->>",event);
-        let oldFilter = {...this.state.filters};
-        oldFilter.gender = event.target.value;
-        this.setState({filters:oldFilter})
+    collectSelectedSkillSubject = (text) => {
+        let oldFilter = {...this.state.tempFilters}
+        oldFilter.skillSubjectIds = text.map((ele) => ele._id);
+        oldFilter.defaultSkillSubject = text
+        this.setState({ tempFilters: oldFilter})
     }
 
     skillLevelFilter = (text) => {
-        let oldFilter = {...this.props.filters}
+        let oldFilter = {...this.props.tempFilters}
         oldFilter.experienceLevel = text;
-        this.setState({filters:oldFilter})
+        this.setState({tempFilters:oldFilter})
+    }
+
+
+    filterGender = (event) => {
+        let oldFilter = {...this.state.tempFilters};
+        oldFilter.gender = event.target.value;
+        this.setState({tempFilters:oldFilter})
+    }
+
+    filterAge =(event) => {
+        let oldFilter = {...this.state.tempFilters};
+        oldFilter.age = parseInt(event.target.value);
+        this.setState({ tempFilters: oldFilter });
     }
 
     perClassPriceFilter = (text) => {
-        let oldFilter = {...this.props.filters}
+        let oldFilter = {...this.state.tempFilters}
         oldFilter._classPrice = text;
-        this.setState({filters:oldFilter})
+        this.setState({ tempFilters: oldFilter })
     }
 
     pricePerMonthFilter = (text) => {
-        let oldFilter = {...this.props.filters}
+        let oldFilter = {...this.state.tempFilters}
         oldFilter._monthPrice = text;
-        this.setState({filters:oldFilter})
+        this.setState({ tempFilters: oldFilter })
     }
 
-    removeAllFilters = ()=> this.setState({filters: {}, locationName:"" })
+    applyFilters = () => {
+        this.setState({filters: { ...this.state.filters, ...this.state.tempFilters}})
+    }
+
+    removeAllFilters = ()=> {
+        this.setState({
+            filters: {},
+            tempFilters: {},
+        })
+    }
+
+    renderFilterPanel = () => {
+        return <FilterPanel
+            currentAddress={this.state.defaultLocation || this.state.locationName}
+            applyFilters={this.applyFilters}
+            mapView={this.state.mapView}
+            filters={this.state.filters}
+            tempFilters={this.state.tempFilters}
+            stickyPosition={this.state.sticky}
+            handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+            handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
+            onLocationChange={this.onLocationChange}
+            locationName={this.state.locationName}
+            locationInputChanged={this.locationInputChanged}
+            fliterSchoolName={this.fliterSchoolName}
+            filterAge={this.filterAge}
+            filterGender={this.filterGender}
+            skillLevelFilter={this.skillLevelFilter}
+            perClassPriceFilter={this.perClassPriceFilter}
+            pricePerMonthFilter={this.pricePerMonthFilter}
+            collectSelectedSkillCategories={this.collectSelectedSkillCategories}
+            collectSelectedSkillSubject={this.collectSelectedSkillSubject}
+        />
+    }
 
     render() {
         // console.log("Landing state -->>",this.state);
@@ -359,25 +402,27 @@ class Landing extends Component {
         return(
             <div>
                 <FiltersDialogBox
-                  open={this.state.filterPanelDialogBox}
-                  onModalClose={() => this.handleFiltersDialogBoxState(false)}
-                  filterPanelProps={{
-                    clearDefaultLocation: this.clearDefaultLocation,
-                    currentAddress: (this.state.defaultLocation || this.state.locationName),
-                    applyFilters: this.applyFilters,
-                    filters: this.state.filters,
-                    stickyPosition: this.state.sticky,
-                    onLocationChange: this.onLocationChange,
-                    locationName: this.state.locationName,
-                    locationInputChanged: this.locationInputChanged,
-                    fliterSchoolName: this.fliterSchoolName,
-                    filterAge: this.filterAge,
-                    filterGender: this.filterGender,
-                    skillLevelFilter: this.skillLevelFilter,
-                    perClassPriceFilter: this.perClassPriceFilter,
-                    pricePerMonthFilter: this.pricePerMonthFilter,
-                  }}
-                  />
+                    open={this.state.filterPanelDialogBox}
+                    onModalClose={() => this.handleFiltersDialogBoxState(false)}
+                    filterPanelProps={{
+                        currentAddress: (this.state.defaultLocation || this.state.locationName),
+                        applyFilters: this.applyFilters,
+                        filters: this.state.filters,
+                        tempFilters: this.state.tempFilters,
+                        stickyPosition: this.state.sticky,
+                        onLocationChange: this.onLocationChange,
+                        locationName: this.state.locationName,
+                        locationInputChanged: this.locationInputChanged,
+                        fliterSchoolName: this.fliterSchoolName,
+                        filterAge: this.filterAge,
+                        filterGender: this.filterGender,
+                        skillLevelFilter: this.skillLevelFilter,
+                        perClassPriceFilter: this.perClassPriceFilter,
+                        pricePerMonthFilter: this.pricePerMonthFilter,
+                        collectSelectedSkillCategories: this.collectSelectedSkillCategories,
+                        collectSelectedSkillSubject: this.collectSelectedSkillSubject,
+                    }}
+                />
 
                 {!this.state.mapView &&
                   (
@@ -397,49 +442,13 @@ class Landing extends Component {
               )}
 
                <div>
-                  {!this.state.mapView ?
-                  (<Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
-                    <FilterPanel
-                        clearDefaultLocation={this.clearDefaultLocation}
-                        currentAddress={this.state.defaultLocation || this.state.locationName}
-                        applyFilters={this.applyFilters}
-                        filters={this.state.filters}
-                        stickyPosition={this.state.sticky}
-                        handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
-                        handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
-                        onLocationChange={this.onLocationChange}
-                        locationName={this.state.locationName}
-                        locationInputChanged={this.locationInputChanged}
-                        fliterSchoolName={this.fliterSchoolName}
-                        filterAge={this.filterAge}
-                        filterGender={this.filterGender}
-                        skillLevelFilter={this.skillLevelFilter}
-                        perClassPriceFilter={this.perClassPriceFilter}
-                        pricePerMonthFilter={this.pricePerMonthFilter}
-                    />
-                  </Sticky>)
-                  : (
-
-                    <FilterPanel
-                        clearDefaultLocation={this.clearDefaultLocation}
-                        currentAddress={this.state.defaultLocation || this.state.locationName}
-                        applyFilters={this.applyFilters}
-                        mapView={this.state.mapView}
-                        filters={this.state.filters}
-                        stickyPosition={this.state.sticky}
-                        handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
-                        handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
-                        onLocationChange={this.onLocationChange}
-                        locationName={this.state.locationName}
-                        locationInputChanged={this.locationInputChanged}
-                        fliterSchoolName={this.fliterSchoolName}
-                        filterAge={this.filterAge}
-                        filterGender={this.filterGender}
-                        skillLevelFilter={this.skillLevelFilter}
-                        perClassPriceFilter={this.perClassPriceFilter}
-                        pricePerMonthFilter={this.pricePerMonthFilter}
-                    />
-                  )}
+                   {
+                        !this.state.mapView ?
+                            <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
+                                {this.renderFilterPanel()}
+                            </Sticky>
+                        : this.renderFilterPanel()
+                   }
                </div>
 
                 <Element name="content-container" className="element">

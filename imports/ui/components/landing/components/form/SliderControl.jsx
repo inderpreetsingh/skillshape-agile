@@ -32,36 +32,32 @@ class SliderControl extends Component {
     }
   }
 
-  handleOnBeforeChange = () => {
-    //console.log('Change event started');
-    const value = this.state.value;
-    if(this.props.onBeforeChange) {
-        this.props.onBeforeChange(value);
-    }
-  };
-
   handleChange = value => {
-    this.setState({
-      value: value
-    })
 
     if(this.props.onChange) {
         this.props.onChange(value);
     }
   };
 
-  handleOnAfterChange = () => {
-    //console.log('Change event completed');
-    const value = this.state.value;
+  handleOnBeforeChange = () => {
+    // console.log('Change event started');
+    // const value = this.state.value;
+    // if(this.props.onBeforeChange) {
+    //     this.props.onBeforeChange(value);
+    // }
+  };
 
-    if(this.props.onAfterChange) {
-        this.props.onAfterChange(value);
-    }
+  handleOnAfterChange = () => {
+    // console.log('Change event completed');
+    // const value = this.state.value;
+
+    // if(this.props.onAfterChange) {
+    //     this.props.onAfterChange(value);
+    // }
   };
 
   render () {
-    const { value } = this.state;
-    const { labelText, defaultRange, min, max, step } = this.props;
+    const { value, labelText, defaultRange, min, max, step } = this.props;
     const currentMinValue = value[0];
     const currentMaxValue = value[1];
     const valueRange = `${currentMinValue} - ${currentMaxValue}`;

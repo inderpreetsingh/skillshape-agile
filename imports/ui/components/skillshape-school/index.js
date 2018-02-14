@@ -281,21 +281,14 @@ const SkillShapeSchool = (props) => {
 				        	<div className={props.classes.pricingBlocks}>
 				        		<div>
 									<Typography>
-										Media
+										Media Management
 									</Typography>
 				        		</div>
 							</div>
 							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
-										Management
-									</Typography>
-								</div>
-							</div>
-							<div className={props.classes.pricingBlocks}>
-								<div>
-									<Typography>
-										Frames
+										Web Frames
 									</Typography>
 								</div>
 							</div>
@@ -306,21 +299,14 @@ const SkillShapeSchool = (props) => {
 									</Typography>
 								</div>
 							</div>
+							<div className={props.classes.pricingBlocks}>
+								<div>
+									<Typography>
+										Student Enrollment and Notes
+									</Typography>
+								</div>
+							</div>
 							<div className={props.classes.pricingBlocks} className={props.classes.pricingBlocks}>
-								<div>
-									<Typography>
-										Students
-									</Typography>
-								</div>
-							</div>
-							<div className={props.classes.pricingBlocks}>
-								<div>
-									<Typography>
-										Enrollment and Notes,
-									</Typography>
-								</div>
-							</div>
-							<div className={props.classes.pricingBlocks}>
 								<div>
 									<Typography>
 										Social Sharing

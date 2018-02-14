@@ -91,11 +91,7 @@ class FilterPanel extends Component {
             this.setState({skillCategoryData:result})
         });
     }
-    handleShowFilterState = (state) => {
-        this.setState({
-            showMoreFilters: state
-        });
-    }
+
     // This is used to get subjects on the basis of subject category.
     inputFromUser = (text) => {
         // Do db call on the basis of text entered by user
@@ -107,124 +103,48 @@ class FilterPanel extends Component {
                 }
             })
     }
-    // This is used to collect selected skill categories
-    collectSelectedSkillCategories = (text) => {
-        let oldFilter = {...this.props.filters}
-        let skillCategoryIds = text.map((ele) => ele._id);
-        oldFilter.skillCategoryIds = skillCategoryIds;
-        this.props.applyFilters(oldFilter);
-    }
-    // This is used to filter on the basis of skill subject
-    selectSkillSubject = (text) => {
-        let oldFilter = {...this.props.filters}
-        let skillSubjectIds = text.map((ele) => ele._id);
-        oldFilter.skillSubjectIds = skillSubjectIds;
-        this.state.filter = oldFilter;
-    }
-    // Filter on the basis of skill level
-    skillLevelFilter = (text) => {
-        let oldFilter = {...this.props.filters}
-        oldFilter.experienceLevel = text;
-        this.props.applyFilters(oldFilter);
-    }
-    // Per class price filtering
-    perClassPriceFilter = (text) => {
-        console.log("change price per class",text);
-        this.state.filter.pricePerMonth = text;
-    }
-    // Filter on the basis of price per month
-    pricePerMonthFilter = (text) => {
-        console.log("change price per class",text);
-        this.state.filter.perClassPrice = text;
-    }
-    // This is used to filter gender.
-    filterGender = (event) => {
-        let oldFilter = {...this.state.filter};
-        oldFilter.gender = event.target.value;
-        this.setState({filter:oldFilter})
-    }
-    // Append age into state for filtering purpose.
-    filterAge =(event) => {
-        this.state.filter.age = event.target.value;
-    }
-    // Append School Name into state for filtering purpose
-    fliterSchoolName =(event) => {
-        console.log("filterGender",event.target.value);
 
-        // This was causing issue when the filter dialog box is opened.
-        //this.state.filter.schoolName = event.target.value;
-
-        let oldFilter = {...this.state.filter};
-        oldFilter.name = event.target.value;
-        this.setState({ filter : oldFilter});
-    }
-    // Run filter method
-    applyFilters = (event) => {
-        // let filters = {...this.props.filters,...this.state.filter};
-        // console.log("filters",filters);
-        // this.props.applyFilters(filters, this.state.locationName);
-        this.props.onModalClose()
-    }
-    onLocationChange = (location) => {
-        console.log("location",location);
-        this.state.filter['coords'] = location.coords;
-        this.state.locationName = location.name;
-        this.state.defaultLocation = null;
-        this.props.clearDefaultLocation();
-    }
-    locationInputChanged = (event) => {
-        console.log("----- locationInputChanged ----", event.target.value);
-
-        // the location input seems blocked, otherwise.
-        this.setState({
-          locationName: event.target.value
-        })
-
-        if(!event.target.value) {
-            this.state.filter['coords'] = null;
-            this.state.locationName = null;
-            this.props.clearDefaultLocation();
-        }
-    }
     renderFilterBar = () => {
       return (<Grid container spacing={24}>
         <Grid item xs={11} sm = {3}>
-          <MaterialInputWrapper>
-            <IconInput
-            value={this.props.locationName}
-            onChange={this.props.locationInputChanged}
-            iconName='location_on'
-            defaultValue={this.props.currentAddress}
-            googlelocation={true}
-            labelText="Location"
-            onLocationChange={this.props.onLocationChange} />
-          </MaterialInputWrapper>
+            <MaterialInputWrapper>
+                <IconInput
+                    value={get(this.props, "filters.locationName", "")}
+                    onChange={(event)=> this.props.locationInputChanged(event, "filters")}
+                    iconName='location_on'
+                    defaultValue={this.props.currentAddress}
+                    googlelocation={true}
+                    labelText="Location"
+                    onLocationChange={(event) => this.props.onLocationChange(event, "filters")}
+                />
+            </MaterialInputWrapper>
         </Grid>
 
         <Hidden xsDown>
-          <Grid item xs={1} sm = {3}>
-            <MaterialInputWrapper>
-              <IconInput
-                value={get(this.props, "filters.schoolName", "")}
-                iconName='school'
-                onChange={this.props.fliterSchoolName}
-                labelText="School Name"
-              />
-            </MaterialInputWrapper>
-          </Grid>
+            <Grid item xs={1} sm = {3}>
+                <MaterialInputWrapper>
+                    <IconInput
+                        value={get(this.props, "filters.schoolName", "")}
+                        iconName='school'
+                        onChange={(event)=> this.props.fliterSchoolName(event, "filters")}
+                        labelText="School Name"
+                   />
+                </MaterialInputWrapper>
+            </Grid>
 
-          <Grid item xs={1} sm = {5}>
-            <div className="homepage-filter">
-              <MyMultiSelect
-                textField={"name"}
-                valueField={"_id"}
-                data={this.state.skillCategoryData}
-                placeholder="Skill category"
-                onChange={this.collectSelectedSkillCategories}
-                onNoOfFiltersClick={this.props.handleNoOfFiltersClick}
-              />
-            </div>
-          </Grid>
+            <Grid item xs={1} sm = {5}>
+                <div className="homepage-filter">
+                    <MyMultiSelect
+                        textField={"name"}
+                        valueField={"_id"}
+                        data={this.state.skillCategoryData}
+                        placeholder="Skill category"
+                        defaultValue={get(this.props, "filters.defaultSkillCategories", [])}
+                        onChange={(event)=> this.props.collectSelectedSkillCategories(event, "filters")}
+                        onNoOfFiltersClick={this.props.handleNoOfFiltersClick}
+                    />
+                </div>
+            </Grid>
         </Hidden>
 
         <Grid item xs={1} sm={1}>
@@ -246,58 +166,61 @@ class FilterPanel extends Component {
             {/* 1rst Row */}
             <Grid item xs={12} sm={6}>
             <MaterialInputWrapper>
-              <IconInput
-              value={this.props.locationName}
-              onChange={this.props.locationInputChanged}
-              iconName='location_on'
-              defaultValue={this.props.currentAddress}
-              googlelocation={true}
-              labelText="Location"
-              onLocationChange={this.props.onLocationChange} />
+                <IconInput
+                    value={get(this.props, "tempFilters.locationName", "")}
+                    onChange={(event)=> this.props.locationInputChanged(event, "tempFilters")}
+                    iconName='location_on'
+                    defaultValue={this.props.currentAddress}
+                    googlelocation={true}
+                    labelText="Location"
+                    onLocationChange={(event) => this.props.onLocationChange(event, "tempFilters")}
+               />
             </MaterialInputWrapper>
             </Grid>
 
 
             <Grid item xs={12} sm={6}>
-              <MaterialInputWrapper>
-                <IconInput
-                  value={get(this.props, "filters.schoolName", "")}
-                  iconName='school'
-                  onChange={this.props.fliterSchoolName}
-                  labelText="School Name"
-                />
-              </MaterialInputWrapper>
+                <MaterialInputWrapper>
+                    <IconInput
+                        value={get(this.props, "tempFilters.schoolName", "")}
+                        iconName='school'
+                        onChange={(event)=> this.props.fliterSchoolName(event, "tempFilters")}
+                        labelText="School Name"
+                    />
+                </MaterialInputWrapper>
             </Grid>
 
             {/* 2nd Row */}
             <Grid item xs={12} sm = {12}>
-              <div className="filters-dialog">
-                <Multiselect
-                  textField={"name"}
-                  valueField={"_id"}
-                  data={this.state.skillCategoryData}
-                  placeholder="Skill category"
-                  onChange={this.collectSelectedSkillCategories}
-                />
-              </div>
+                <div className="filters-dialog">
+                    <Multiselect
+                        textField={"name"}
+                        valueField={"_id"}
+                        data={this.state.skillCategoryData}
+                        defaultValue={get(this.props, "tempFilters.defaultSkillCategories", [])}
+                        placeholder="Skill category"
+                        onChange={(event)=> this.props.collectSelectedSkillCategories(event, "tempFilters")}
+                    />
+                </div>
             </Grid>
 
             <Grid item xs={12} sm={12}>
               <div className="filters-dialog">
                  <Multiselect
                     data={this.state.skillSubjectData}
-                    defaultValue={this.state.skillSubjectData}
+                    defaultValue={get(this.props, "tempFilters.defaultSkillSubject", [])}
                     placeholder="Type to search skills"
                     textField={"name"}
                     onSearch={this.inputFromUser}
-                    onChange ={this.selectSkillSubject}
+                    onChange ={this.props.collectSelectedSkillSubject}
                   />
                 </div>
             </Grid>
             <Grid item xs={12} sm={12}>
               <div className="filters-dialog">
                 <Multiselect
-                  onChange={this.skillLevelFilter}
+                  onChange={this.props.skillLevelFilter}
+                  defaultValue={get(this.props, "tempFilters.experienceLevel", [])}
                   data={["All","Beginner", "Intermediate", "Advanced", "Expert"]}
                   placeholder="Skill Level" />
               </div>
@@ -307,7 +230,7 @@ class FilterPanel extends Component {
 
             <Grid item xs={12} sm={6}>
                 <MaterialInputWrapper select>
-                  <IconSelect labelText="Gender" inputId="gender" iconName="people" value={this.props.filters.gender} onChange={this.props.filterGender}>
+                  <IconSelect labelText="Gender" inputId="gender" iconName="people" value={get(this.props, "tempFilters.gender", "")} onChange={this.props.filterGender}>
                     <MenuItem value=""> Gender</MenuItem>
                     <MenuItem value={"Male"}> Male </MenuItem>
                     <MenuItem value={"Female"}> Female </MenuItem>
@@ -322,7 +245,7 @@ class FilterPanel extends Component {
                     type="number"
                     min={5}
                     max={60}
-                    value={this.props.filters.age || ""}
+                    value={get(this.props, "tempFilters.age", "")}
                     onChange={this.props.filterAge}
                     iconName='star'
                     labelText="Ages"
@@ -334,10 +257,11 @@ class FilterPanel extends Component {
             <Grid item xs={12} sm={6} >
               <SliderControl
                 labelText={"Price Per Class"}
+                defaultRange={get(this.props, "tempFilters._classPrice", [10,50])}
+                value={get(this.props, "tempFilters._classPrice", [10,50])}
                 onChange={this.props.perClassPriceFilter}
                 max={100}
-                min={1}
-                defaultValue={[0,45]}
+                min={0}
               />
             </Grid>
 
@@ -345,16 +269,22 @@ class FilterPanel extends Component {
             <Grid item xs={12} sm={6} >
               <SliderControl
                 labelText={"Price Per Month"}
+                defaultRange={get(this.props, "tempFilters._monthPrice", [10,50])}
+                value={get(this.props, "tempFilters._monthPrice", [10,50])}
                 onChange={this.props.pricePerMonthFilter}
                 max={100}
-                min={1}
-                defaultValue={[1,30]}
+                min={0}
               />
             </Grid>
 
             <Grid item xs={12} sm={12} >
              <FilterPanelAction>
-                <PrimaryButton fullWidth label="Apply filters & Search" icon={true} iconName="search" onClick={this.applyFilters}/>
+                <PrimaryButton
+                    fullWidth
+                    label="Apply filters & Search"
+                    icon={true}
+                    iconName="search"
+                    onClick={() => {this.props.onModalClose();this.props.applyFilters();}}/>
               </FilterPanelAction>
             </Grid>
           </Grid>
