@@ -19,7 +19,7 @@ handleClaimASchool = (schoolCardData, confirmThis) => {
         schoolId: schoolCardData._id,
         schoolName: schoolCardData.name,
         userId: user._id,
-        userEmail: user.emails[0].address,
+        userEmail: user.emails ? user.emails[0].address : user.services.google.email,
         userName: user.profile.firstName || user.profile.name,
         schoolEmail: schoolCardData.email
     };
