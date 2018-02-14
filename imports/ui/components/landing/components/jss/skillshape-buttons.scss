@@ -8,6 +8,7 @@
   cursor: pointer;
   outline: none;
   border: 0px;
+  border-radius: 2px;
   position: relative;
   user-select: none;
   display: inline-flex;
@@ -17,7 +18,7 @@
   font-weight: 300;
   position: relative;
   text-transform: none;
-  min-height: 36px;
+  min-height: 32px;
   line-height: 1;
   overflow: hidden;
 

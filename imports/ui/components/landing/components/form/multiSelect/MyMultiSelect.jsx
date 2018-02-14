@@ -11,6 +11,8 @@ import Select from 'react-widgets/lib/Select.js';
 import Popup from 'react-widgets/lib/Popup.js';
 import MultiselectInput from 'react-widgets/lib/MultiselectInput.js';
 import TagList from 'react-widgets/lib/MultiselectTagList.js';
+import MyTagList from './MyMultiSelectTagList.jsx';
+
 import List from 'react-widgets/lib/List.js';
 import AddToListOption from 'react-widgets/lib/AddToListOption.js';
 
@@ -41,6 +43,8 @@ const InputWrapper = styled.div`
 
 const IconChipWrapper = styled.div`
   display: flex;
+  align-items: flex-end;
+  min-width: 0;
 `;
 
 let propTypes = {
@@ -495,10 +499,21 @@ class Multiselect extends React.Component {
     let Component = this.props.tagComponent;
 
     console.log('messages...',messages);
-    return (
-      <p className="filter-tags rw-multiselect-tag" onClick={onNoOfFiltersClick}>
-        {dataItems.length} Filters
-      </p>
+    return (<MyTagList
+         onNoOfFiltersClick={this.props.onNoOfFiltersClick}
+         ref='tagList'
+         id={this.tagsId}
+         activeId={this.activeTagId}
+         textAccessor={this.accessors.text}
+         valueAccessor={this.accessors.value}
+         label={messages.tagsLabel()}
+         value={dataItems}
+         readOnly={readOnly}
+         disabled={this.isDisabled()}
+         focusedItem={focusedTag}
+         onDelete={this.handleDelete}
+         valueComponent={Component}
+       />
     )
   }
 

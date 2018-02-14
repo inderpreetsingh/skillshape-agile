@@ -15,6 +15,7 @@ const styles = {
     marginBottom:helpers.rhythmDiv,
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
+    fontWeight: 400,
     backgroundColor:helpers.primaryColor,
     '&:hover': {
       backgroundColor: helpers.primaryColor,
