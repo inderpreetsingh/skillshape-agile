@@ -5,7 +5,8 @@ import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
-
+// import { buildAggregator } from 'meteor/lamoglia:publish-aggregation';
+// import ClientReports from '/imports/startup/client';
 Meteor.publish("UserSchool", function(schoolId) {
     return School.find({ _id: schoolId });
 });
@@ -353,8 +354,30 @@ Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, rol
   });
 
 
+// Categorise students on the basis of their first Name
 Meteor.publish("membersBySchool", function({ schoolId, limit }) {
-    return [
-        SchoolMemberDetails.find({ schoolId: schoolId }, { limit: limit ? limit : 4 })
-    ]
+    // console.log("this====>",this)
+    const SchoolMemberDetailsRaw = SchoolMemberDetails.rawCollection()
+    let SchoolMemberDetailsAggregateQuery = Meteor.wrapAsync(SchoolMemberDetailsRaw.aggregate, SchoolMemberDetailsRaw);
+    let SchoolMemberDetailsAggregateResult = SchoolMemberDetailsAggregateQuery([{
+            $match: { schoolId: schoolId }
+        },
+        { $group: {_id: { $toUpper: { $substr: ['$firstName', 0, 1] } }, people: { $push: { name: "$firstName" } }, schoolId: { $push: "$schoolId" } } },
+        { $out: 'MembersByName' }
+    ]);
+    // console.log("SchoolMemberDetailsAggregateResult", SchoolMemberDetailsAggregateResult);
+    // return SchoolMemberDetailsAggregateResult;
+    /*console.log("ReactiveAggregate");
+        ReactiveAggregate(this, SchoolMemberDetails, [{
+                $match: { schoolId: schoolId }
+            },
+            { $group: { _id: { $toUpper: { $substr: ['$firstName', 0, 1] } }, people: { $push: { name: "$firstName" } } } }
+        ], { clientCollection: ClientReports });*/
+    //}
+});
+
+Meteor.publish("membersByName", function({ schoolId, limit }) {
+    console.log("inserted into member");
+    let schoolMemberDetails = SchoolMemberDetails.find({});
+    return MembersByName.find({schoolId: { $in: [schoolId] }},{sort: {_id: 1}});
 });

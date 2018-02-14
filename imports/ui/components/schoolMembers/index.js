@@ -114,7 +114,9 @@ class DashView extends React.Component {
         payload.classTypeIds = this.state.selectedClassTypes;
         // Add a new member in School.
         console.log("payload===>",payload)
-        Meteor.call('school.addNewMember',payload);
+        Meteor.call('school.addNewMember',payload , ()=> {
+            this.setState({renderStudentModal:false})
+        });
     }
     handleMemberDialogBoxState = () => {
         this.setState({renderStudentModal:false})
@@ -143,6 +145,7 @@ export default createContainer(props => {
     let schoolData;
     let classType;
     let schoolMemberDetails;
+    let membersByName;
 
     if (slug) {
         Meteor.subscribe("UserSchoolbySlug", slug);
@@ -152,17 +155,22 @@ export default createContainer(props => {
 
     if (schoolId) {
         Meteor.subscribe("UserSchool", schoolId);
-        Meteor.subscribe("membersBySchool", {schoolId});
+        Meteor.subscribe("membersByName", {schoolId});
+        if (Meteor.isClient) {
+            Meteor.subscribe("membersBySchool", {schoolId});
+        }
         // Get class types
         Meteor.subscribe("classTypeBySchool", {schoolId});
         schoolData = School.findOne({ _id: schoolId })
         classType = ClassType.find({ schoolId: schoolId }).fetch();
         schoolMemberDetails = SchoolMemberDetails.find({schoolId:schoolId}).fetch();
-        console.log("classType================>",schoolMemberDetails,schoolId)
+        membersByName = MembersByName.find({}).fetch();
+        console.log("membersByName================>",membersByName,schoolId)
     }
     return { ...props,
         schoolData,
         classType,
-        schoolMemberDetails
+        schoolMemberDetails,
+        membersByName
     };
 },DashView);
