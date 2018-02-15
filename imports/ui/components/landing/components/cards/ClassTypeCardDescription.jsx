@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
+import { browserHistory } from 'react-router';
 import ReactStars from 'react-stars';
 import PropTypes from 'prop-types';
 import { MuiThemeProvider} from 'material-ui/styles';
@@ -23,7 +24,7 @@ const NoFoundResultWapper = styled.div`
 const ClassTypeCardDescription = (props) => {
 
   const {cardRevealInfo} = props;
-  // console.log("props in ClassTypeCardDescription",cardRevealInfo);
+  // console.log("ClassTypeCardDescription props-->>",props);
   return(
     <MuiThemeProvider theme={MuiTheme}>
         <Fragment>
@@ -48,6 +49,7 @@ const ClassTypeCardDescription = (props) => {
                <Grid item xs={12} sm={6}>
                     <SecondaryButton
                       fullWidth
+                      onClick={() => browserHistory.push(`classType/${cardRevealInfo._id}`)}
                       label="View Details"/>
                 </Grid>
                 <Grid item xs={12} sm={6}>

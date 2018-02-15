@@ -35,15 +35,15 @@ const withShowMoreText = function(WrappedComponent,showMoreTextConfig) {
 
   return class extends React.Component {
     state = {
-      fullText: this.props.description,
-      text: this.props.description,
+      fullText: this.props[config.description] || "",
+      text: this.props[config.description] || "",
       maxStringCharsToShow: config.maxChars || 135 ,
       showReadMore: false,
       fullTextState: false
     }
 
     componentWillMount = () => {
-      // console.info('////////// component will mount ',this.state);
+      // console.info('////////// component will mount ',this.props);
       const text = this._getLessCharsDescription(this.state.fullText);
       // console.info('less char string',text);
       if(text != this.state.fullText) {

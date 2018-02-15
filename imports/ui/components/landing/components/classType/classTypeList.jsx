@@ -14,7 +14,7 @@ import SearchBarStyled from '../SearchBarStyled.jsx';
 import Footer from '../footer/index.jsx';
 import { cardsData, cardsData1} from '../../constants/cardsData.js';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import { Loading } from '/imports/ui/loading';
+import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import * as helpers from '../jss/helpers.js';
 
 // import collection definition over here
@@ -158,7 +158,7 @@ class ClassTypeList extends Component {
     getNoResultMsg = (isLoading, filters, classTypeData) => {
         if(isLoading) {
 
-            return <Loading/>
+            return <Preloader/>
 
         } else if(isEmpty(classTypeData)) {
 

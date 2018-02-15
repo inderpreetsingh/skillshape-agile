@@ -39,8 +39,8 @@ function infoSchool({school, classTypes}) {
 export function createMarkersOnMap(mapId, locationData) {
     let map = new google.maps.Map(document.getElementById(mapId), {zoom: 5});
     let i = 0;
+    // console.log("createMarkersOnMap locationData-->>",locationData)
     for(let obj of locationData) {
-        // console.log("createMarkersOnMap obj-->>",obj)
         if(obj.loc && obj.loc[0] && obj.loc[1]) {
             let geolocate = new google.maps.LatLng(obj.loc[0], obj.loc[1])
             let marker = new google.maps.Marker({

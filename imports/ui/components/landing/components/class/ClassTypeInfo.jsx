@@ -40,13 +40,16 @@ const MetaInfo = (props) => (
 
 const ClassTypeInfo = (props) => (
   <Wrapper>
+    {props.categories && <MetaInfo data={props.categories} title='Categories:' />}
+
+    {props.subjects && <MetaInfo data={props.subjects} title='Subjects:' />}
+
     {props.ageRange && <MetaInfo data={props.ageRange} title='Age Range:' />}
 
     {props.gender && <MetaInfo data={props.gender} title='Gender:' />}
 
     {props.experience && <MetaInfo data={props.experience} title='Experience:' />}
 
-    {props.subjects && <MetaInfo data={props.subjects} title='Subjects:' />}
   </Wrapper>
 );
 

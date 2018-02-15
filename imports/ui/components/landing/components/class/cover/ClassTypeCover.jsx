@@ -32,13 +32,13 @@ const ClassTypeCover = (props) => {
         return(
           <CoverDiv coverSrc={props.coverSrc} itemScope itemType={props.itemType}>
             {props.children}
-          </CoverDiv >
+          </CoverDiv>
         )
     }
     return(
       <CoverDiv coverSrc={props.coverSrc}>
         {props.children}
-      </CoverDiv >
+      </CoverDiv>
     )
   }
 

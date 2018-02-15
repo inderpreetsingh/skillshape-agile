@@ -247,7 +247,7 @@ class ClassTime extends Component {
   }
 
   render() {
-    console.log(this.state.addToCalendar);
+    console.log("ClassTime props -->>",this.props);
     return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
             key={this.props._id} >
             <div>
@@ -290,4 +290,4 @@ ClassTime.propTypes = {
   isTrending: PropTypes.bool
 }
 
-export default withShowMoreText(ClassTime);
+export default withShowMoreText(ClassTime, { description: "desc"});

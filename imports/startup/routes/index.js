@@ -9,7 +9,7 @@ import PublicLayout from '/imports/ui/layout/publicLayout';
 import Home from '/imports/ui/components/home';
 import Landing from '/imports/ui/components/landing/index.jsx';
 import NoResults from '/imports/ui/components/landing/components/NoResults';
-import ClassType from '/imports/ui/components/landing/ClassType.jsx';
+import ClassTypeView from '/imports/ui/components/classTypeView';
 import School from '/imports/ui/components/landing/School.jsx';
 
 import ResetPassword from '/imports/ui/components/account/resetPassword';
@@ -34,7 +34,7 @@ export default Routes = componentLoader((props) => (
   <Router history={browserHistory}>
     <Route path="/" component={MainLayout} >
       <IndexRoute component={Landing} />
-      <Route path="/classtype" component={ClassType} />
+      <Route path="/classType/:classTypeId" component={ClassTypeView} />
       <Route path="/school" component={School} />
       <Route path="/no-results" component={NoResults} />
 

@@ -37,6 +37,7 @@ class ClassTimesBoxes extends Component {
   render() {
     const { slider } = this.state;
     const { classTimesData} = this.props;
+    // console.log("ClassTimesBoxes props-->>",this.props, slider);
     return (<Fragment>
       {slider ?
         <ClassTimesSlider data={classTimesData} padding={helpers.rhythmDiv} />

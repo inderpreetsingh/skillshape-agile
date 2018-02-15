@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import ReactHtmlParser from 'react-html-parser';
 
 import StarsBar from '../StarsBar.jsx';
 import * as helpers from '../jss/helpers.js';
@@ -72,7 +73,7 @@ const ClassTypeDescription = (props) => {
       </ReviewsWrapper>
 
       <Description>
-        {props.description}
+        {props.description && ReactHtmlParser(props.description)}
       </Description>
     </Wrapper>
   )

@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import isEmpty from 'lodash/isEmpty';
+import Typography from 'material-ui/Typography';
+
+import { createMarkersOnMap } from '/imports/util';
 
 import ClassMap from '../../map/ClassMap';
 import ClassTypeDescription from '../ClassTypeDescription.jsx';
@@ -37,8 +41,16 @@ const ClassTypeInfoWrapper = styled.div`
 const MapContainer = styled.div`
   height: 320px;
   max-width: 496px;
+  min-width: 496px;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   border-radius: 5px;
+  background-color: #e0e0e0;
+`;
+
+const LocationNotFound = styled.div`
+  display: flex;
+  align-items: center;
+  height: 100%;
 `;
 
 const ClassTypeForegroundImage = styled.div`
@@ -76,53 +88,90 @@ const ShowOnMobile = styled.div`
   }
 `;
 
-const ClassTypeCoverContent = (props) => (
-  <CoverContentWrapper>
-    <CoverContent>
-      <ContentSection leftSection>
-        <MapContainer>
-          {props.map || <ClassMap mapLocation={props.mapLocation}/>}
-        </MapContainer>
+class ClassTypeCoverContent extends React.Component {
 
-        {props.classDescription || <ClassTypeDescription
-          schoolName={props.schoolDetails.schoolName}
-          description={props.schoolDetails.fullDescription}
-          classTypeName={props.schoolDetails.classTypeName}
-          noOfStars={props.schoolDetails.noOfStars}
-          noOfReviews={props.schoolDetails.noOfReviews}
-        />}
-      </ContentSection>
+  componentWillReceiveProps(nextProps) {
+    if(nextProps && !isEmpty(nextProps.classTypeData.selectedLocation)) {
+      createMarkersOnMap("classTypeLocationMap", [nextProps.classTypeData.selectedLocation])
+    }
+  }
 
-      <ContentSection>
-        <ClassTypeForegroundImage coverSrc={props.coverSrc} >
-          {props.actionButtons || <ActionButtons
-            onCallUsButtonClick={props.onCallUsButtonClick}
-            onEmailButtonClick={props.onEmailButtonClick}
-            onPricingButtonClick={props.onPricingButtonClick}
-            />}
-        </ClassTypeForegroundImage>
+  componentDidMount() {
+    const { classTypeData } = this.props;
+    if(!isEmpty(classTypeData.selectedLocation)) {
+      createMarkersOnMap("classTypeLocationMap", [classTypeData.selectedLocation])
+    }
+  }
 
-        <ClassTypeInfoWrapper>
-          {props.classTypeMetaInfo || <ClassTypeInfo
-            ageRange={props.classTypeData.ageRange}
-            gender={props.classTypeData.gender}
-            experience={props.classTypeData.experience}
-            subjects={props.classTypeData.subjects}
-          />}
+  getSkillValues = (data)=> {
+    let str = "";
+    if(!isEmpty(data)) {
+      str = data.map(skill=> skill.name);
+      str = str.join(", ");
+    }
+    console.log("str -->>",str)
+    return str;
+  }
 
-          <ShowOnMobile>
-            {props.actionButtons || <ActionButtons
-              onCallUsButtonClick={props.onCallUsButtonClick}
-              onEmailButtonClick={props.onEmailButtonClick}
-              onPricingButtonClick={props.onPricingButtonClick}
+  render() {
+    let props = this.props;
+    return(
+        <CoverContentWrapper>
+          <CoverContent>
+            <ContentSection leftSection>
+              <MapContainer>
+                  {
+                    isEmpty(props.classTypeData.selectedLocation) ? (
+                      <LocationNotFound>
+                        <Typography type="display1" gutterBottom align="center">
+                          Their is no location data available for class type
+                        </Typography>
+                      </LocationNotFound>
+                    ) :<div id="classTypeLocationMap" style={{height: '100%', minHeight: 320}}/>
+                  }
+              </MapContainer>
+              {props.classDescription || <ClassTypeDescription
+                schoolName={props.schoolDetails.name}
+                description={props.schoolDetails.aboutHtml}
+                classTypeName={props.classTypeData.name}
+                noOfStars={props.schoolDetails.noOfStars}
+                noOfReviews={props.schoolDetails.noOfReviews}
               />}
-          </ShowOnMobile>
+            </ContentSection>
 
-        </ClassTypeInfoWrapper>
-      </ContentSection>
-    </CoverContent>
-  </CoverContentWrapper>
-);
+            <ContentSection>
+              <ClassTypeForegroundImage coverSrc={props.coverSrc} >
+                {props.actionButtons || <ActionButtons
+                  onCallUsButtonClick={props.onCallUsButtonClick}
+                  onEmailButtonClick={props.onEmailButtonClick}
+                  onPricingButtonClick={props.onPricingButtonClick}
+                  />}
+              </ClassTypeForegroundImage>
+
+              <ClassTypeInfoWrapper>
+                {props.classTypeMetaInfo || <ClassTypeInfo
+                  ageRange={props.classTypeData.ageMin && props.classTypeData.ageMax && `${props.classTypeData.ageMin} - ${props.classTypeData.ageMax}`}
+                  gender={props.classTypeData.gender}
+                  experience={props.classTypeData.experienceLevel}
+                  subjects={this.getSkillValues(props.classTypeData.selectedSkillSubject)}
+                  categories={this.getSkillValues(props.classTypeData.selectedSkillCategory)}
+                />}
+
+                <ShowOnMobile>
+                  {props.actionButtons || <ActionButtons
+                    onCallUsButtonClick={props.onCallUsButtonClick}
+                    onEmailButtonClick={props.onEmailButtonClick}
+                    onPricingButtonClick={props.onPricingButtonClick}
+                    />}
+                </ShowOnMobile>
+
+              </ClassTypeInfoWrapper>
+            </ContentSection>
+          </CoverContent>
+        </CoverContentWrapper>
+    )
+  }
+}
 
 ClassTypeCoverContent.propTypes = {
   actionButtons: PropTypes.element,
