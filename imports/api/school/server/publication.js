@@ -356,5 +356,7 @@ Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, rol
 
 // Categorise students on the basis of their first Name
 Meteor.publish("membersBySchool", function({ schoolId, limit }) {
-    return SchoolMemberDetails.find({schoolId: schoolId},/*{ limit: limit ? limit : 4 },*/{sort: {firstName: 1}});
+    console.log("SchoolMemberDetails called",limit,schoolId)
+    console.log("MembersRec",SchoolMemberDetails.find({schoolId: schoolId},{ limit: limit ? limit : 4 },{sort: {firstName: 1}}).fetch());
+    return SchoolMemberDetails.find({schoolId: schoolId},{ limit: limit ? limit : 4 },{sort: {firstName: 1}});
 });

@@ -1,21 +1,32 @@
 import React from 'react';
 import Avatar from 'material-ui/Avatar';
-import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
-import studentsData from './studentsData.js';
+import List, { ListItem, ListItemText } from 'material-ui/List';
+import { withSubscriptionAndPagination } from '/imports/util';
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
-class MailFolderListItems extends React.Component {
+
+class SchoolMemberListItems extends React.Component {
 
   constructor(props) {
-        super(props);
+    super(props);
+  }
+
+  state = {
+    selectedMember: false,
+  };
+
+  showMemberDetailsToRightPanel = (memberId) => {
+    console.log("handleListingUsers",memberId);
+    // From here we will handle listing of School member in right panel.
+    // We Just need to update some state from here so that Parent component
+    // will know what to render in right panel ok?
+    this.setState({selectedMember:memberId});
   }
 
   render() {
-    console.log("mailFolderListItems",this.props)
-    const {membersByName , src} = this.props;
-    /*membersByName && Object.keys(membersByName).map((key) => {
-      console.log("key===>",key);
-    })
-    membersByName = _.sortBy(membersByName, key);*/
+    console.log("mailFolderListItems",this)
+    const {src, collectionData} = this.props;
+    const membersByName = _.groupBy(collectionData, function(item){ return item.firstName[0].toUpperCase() });
     return (<div>
       <List>
           {
@@ -24,11 +35,17 @@ class MailFolderListItems extends React.Component {
                 [
                 <ListItem style={{borderBottom: 'solid 1px #dddd'}} key={key} dense button><b>{key}</b><hr/></ListItem>,
                 membersByName[key] && membersByName[key].map((data) => {
-                  // console.log("data>>>>>>>>>>", members.people, data)
-                   return (<ListItem key={data._id} dense button>
-                              <Avatar alt="Remy Sharp" src={src ? src : ''}>{key}</Avatar>
-                              <ListItemText primary={data.firstName} />
-                          </ListItem>)
+                 return (
+                  <ListItem
+                    key={data._id}
+                    dense
+                    button
+                    onClick={()=> this.props.handleMemberDetailsToRightPanel(data._id)}
+                  >
+                    <Avatar alt="Remy Sharp" src={src ? src : ''}>{key}</Avatar>
+                    <ListItemText primary={data.firstName} />
+                  </ListItem>
+                  )
                  })
                 ]
              )
@@ -40,4 +57,4 @@ class MailFolderListItems extends React.Component {
   }
 }
 
-export default MailFolderListItems;
+export default withSubscriptionAndPagination(SchoolMemberListItems, {collection: SchoolMemberDetails, subscriptionName: "membersBySchool", recordLimit: 10});

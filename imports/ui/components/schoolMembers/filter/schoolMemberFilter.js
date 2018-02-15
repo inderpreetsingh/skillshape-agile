@@ -53,6 +53,15 @@ export default function (props) {
                   margin="normal"
                   onChange={this.props.handleSchoolNameChange}
                   skillShapeInput={true}
+                  iconName='search'
+                  placeholder="Search Members"
+                />
+                <IconInput
+                  id="search"
+                  type="text"
+                  margin="normal"
+                  onChange={this.props.handleSchoolNameChange}
+                  skillShapeInput={true}
                   iconName='school'
                   placeholder="Member Name"
                 />

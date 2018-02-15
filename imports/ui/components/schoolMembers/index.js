@@ -9,11 +9,11 @@ import Multiselect from 'react-widgets/lib/Multiselect'
 
 
 import ClassType from "/imports/api/classType/fields";
-import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import DashViewRender from './dashViewRender';
 import School from "/imports/api/school/fields";
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
 class DashView extends React.Component {
 
@@ -93,19 +93,17 @@ class DashView extends React.Component {
               />
             </Grid>
             <Grid item sm={12} xs={12} md={12} style={{float:'right'}}>
-                <PrimaryButton fullWidth label="Add a New Member" onClick={this.addNewMember}/>
+                <PrimaryButton formId="addUser" type="submit" fullWidth label="Add a New Member"/>
           </Grid>
           </Grid>
       )
     }
 
-    addNewMember = () => {
+    addNewMember = (event) => {
         console.log("Add addNewMember",this)
+        event.preventDefault();
+        this.setState({isLoading:true});
         let payload = {};
-        if(this.email.value == '' || this.firstName.value == '') {
-            alert("email and name is required");
-            return;
-        }
         payload.firstName = this.firstName.value;
         payload.lastName = this.lastName.value;
         payload.email = this.email.value;
@@ -113,9 +111,10 @@ class DashView extends React.Component {
         payload.schoolId = this.props.schoolData._id;
         payload.classTypeIds = this.state.selectedClassTypes;
         // Add a new member in School.
-        console.log("payload===>",payload)
         Meteor.call('school.addNewMember',payload , ()=> {
-            this.setState({renderStudentModal:false})
+            this.setState({renderStudentModal:false});
+            // Stop Loading
+            this.setState({isLoading:false})
         });
     }
     handleMemberDialogBoxState = () => {
@@ -132,6 +131,20 @@ class DashView extends React.Component {
         let classTypeIds = data.map((item) => {return item._id})
         this.setState({selectedClassTypes:classTypeIds})
     }
+    handleMemberDetailsToRightPanel = (memberId) => {
+        console.log("handleMemberDetailsToRightPanel===>",memberId);
+        let memberInfo = SchoolMemberDetails.findOne(memberId);
+        console.log("memberInfo===>",memberInfo)
+        this.setState(
+            {   memberInfo:
+                    {
+                        name:memberInfo.email,
+                        phone:memberInfo.phone,
+                        email:memberInfo.email,
+                    }
+            }
+        )
+    }
     // Return Dash view from here
     render() {
         console.log("111111111111",this)
@@ -144,8 +157,6 @@ export default createContainer(props => {
     let { schoolId, slug } = props.params
     let schoolData;
     let classType;
-    let schoolMemberDetails;
-    let membersByName;
 
     if (slug) {
         Meteor.subscribe("UserSchoolbySlug", slug);
@@ -154,20 +165,11 @@ export default createContainer(props => {
     }
 
     if (schoolId) {
-        Meteor.subscribe("UserSchool", schoolId);
-        Meteor.subscribe("membersBySchool", {schoolId});
-        // Get class types
         Meteor.subscribe("classTypeBySchool", {schoolId});
-        schoolData = School.findOne({ _id: schoolId })
         classType = ClassType.find({ schoolId: schoolId }).fetch();
-        schoolMemberDetails = SchoolMemberDetails.find({schoolId:schoolId}).fetch();
-        membersByName = _.groupBy(schoolMemberDetails, function(item){ return item.firstName[0].toUpperCase() });
-        console.log("membersByName===>",membersByName);
     }
     return { ...props,
         schoolData,
         classType,
-        schoolMemberDetails,
-        membersByName
     };
 },DashView);

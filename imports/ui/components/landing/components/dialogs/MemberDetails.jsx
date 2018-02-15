@@ -135,7 +135,7 @@ class MemberDialogBox extends Component {
                   </DialogTitleContainer>
 
                   <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
-                    <AddSchoolMember renderStudentModal={open} renderStudentAddModal={renderStudentAddModal}/>
+                    <AddSchoolMember addNewMember={this.props.addNewMember} renderStudentModal={open} renderStudentAddModal={renderStudentAddModal}/>
                   </DialogActions>
 
                 </MuiThemeProvider>
