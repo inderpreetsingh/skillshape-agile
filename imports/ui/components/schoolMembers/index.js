@@ -155,17 +155,14 @@ export default createContainer(props => {
 
     if (schoolId) {
         Meteor.subscribe("UserSchool", schoolId);
-        Meteor.subscribe("membersByName", {schoolId});
-        if (Meteor.isClient) {
-            Meteor.subscribe("membersBySchool", {schoolId});
-        }
+        Meteor.subscribe("membersBySchool", {schoolId});
         // Get class types
         Meteor.subscribe("classTypeBySchool", {schoolId});
         schoolData = School.findOne({ _id: schoolId })
         classType = ClassType.find({ schoolId: schoolId }).fetch();
         schoolMemberDetails = SchoolMemberDetails.find({schoolId:schoolId}).fetch();
-        membersByName = MembersByName.find({}).fetch();
-        console.log("membersByName================>",membersByName,schoolId)
+        membersByName = _.groupBy(schoolMemberDetails, function(item){ return item.firstName[0].toUpperCase() });
+        console.log("membersByName===>",membersByName);
     }
     return { ...props,
         schoolData,

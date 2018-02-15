@@ -23,7 +23,7 @@ export default function DashViewRender() {
   console.log("ahahaaaaaa",this.props)
   const { classes, theme, schoolMemberDetails,membersByName} = this.props;
   const { renderStudentModal } = this.state;
-
+  console.log("membersByName111111111111",membersByName)
   const drawer = (
       <div>
         <List><MailFolderListItems membersByName={membersByName} /></List>
@@ -57,14 +57,20 @@ export default function DashViewRender() {
               Add New Student
             </Button>
           </Grid>
-          {membersByName && membersByName.length > 0 ?
+          {membersByName ?
             <Grid item sm={12} xs={12} md={12}>
               <div>
                 <Hidden mdUp>
-                    {drawer}
+                    <div>
+                      <List><MailFolderListItems membersByName={membersByName} /></List>
+                      <Divider />
+                    </div>
                 </Hidden>
                 <Hidden smDown>
-                    {drawer}
+                    <div>
+                      <List><MailFolderListItems membersByName={membersByName} /></List>
+                      <Divider />
+                    </div>
                 </Hidden>
               </div>
             </Grid> : ''

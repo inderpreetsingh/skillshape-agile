@@ -12,18 +12,22 @@ class MailFolderListItems extends React.Component {
   render() {
     console.log("mailFolderListItems",this.props)
     const {membersByName , src} = this.props;
+    /*membersByName && Object.keys(membersByName).map((key) => {
+      console.log("key===>",key);
+    })
+    membersByName = _.sortBy(membersByName, key);*/
     return (<div>
       <List>
           {
-            membersByName && membersByName.map((members) => {
+            membersByName && Object.keys(membersByName).sort().map((key) => {
               return (
                 [
-                <ListItem style={{borderBottom: 'solid 1px #dddd'}} key={members._id} dense button><b>{members._id}</b><hr/></ListItem>,
-                members && members.people.map((data) => {
+                <ListItem style={{borderBottom: 'solid 1px #dddd'}} key={key} dense button><b>{key}</b><hr/></ListItem>,
+                membersByName[key] && membersByName[key].map((data) => {
                   // console.log("data>>>>>>>>>>", members.people, data)
-                   return (<ListItem key={members._id} dense button>
-                              <Avatar alt="Remy Sharp" src={src ? src : ''}>{members._id}</Avatar>
-                              <ListItemText primary={data.name} />
+                   return (<ListItem key={data._id} dense button>
+                              <Avatar alt="Remy Sharp" src={src ? src : ''}>{key}</Avatar>
+                              <ListItemText primary={data.firstName} />
                           </ListItem>)
                  })
                 ]
