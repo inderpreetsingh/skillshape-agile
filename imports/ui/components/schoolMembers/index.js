@@ -9,7 +9,6 @@ import Multiselect from 'react-widgets/lib/Multiselect'
 
 
 import ClassType from "/imports/api/classType/fields";
-import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import DashViewRender from './dashViewRender';
 import School from "/imports/api/school/fields";
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
@@ -144,8 +143,6 @@ export default createContainer(props => {
     let { schoolId, slug } = props.params
     let schoolData;
     let classType;
-    let schoolMemberDetails;
-    let membersByName;
 
     if (slug) {
         Meteor.subscribe("UserSchoolbySlug", slug);
@@ -154,20 +151,11 @@ export default createContainer(props => {
     }
 
     if (schoolId) {
-        Meteor.subscribe("UserSchool", schoolId);
-        Meteor.subscribe("membersBySchool", {schoolId});
-        // Get class types
         Meteor.subscribe("classTypeBySchool", {schoolId});
-        schoolData = School.findOne({ _id: schoolId })
         classType = ClassType.find({ schoolId: schoolId }).fetch();
-        schoolMemberDetails = SchoolMemberDetails.find({schoolId:schoolId}).fetch();
-        membersByName = _.groupBy(schoolMemberDetails, function(item){ return item.firstName[0].toUpperCase() });
-        console.log("membersByName===>",membersByName);
     }
     return { ...props,
         schoolData,
         classType,
-        schoolMemberDetails,
-        membersByName
     };
 },DashView);

@@ -14,19 +14,19 @@ import {Fragment} from 'react';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 
-import MailFolderListItems from './tileData';
+import SchoolMemberListItems from './tileData';
 import  SchoolMemberFilter  from "./filter";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 
 
 export default function DashViewRender() {
   console.log("ahahaaaaaa",this.props)
-  const { classes, theme, schoolMemberDetails,membersByName} = this.props;
+  const { classes, theme, schoolMemberDetails,membersByName, schoolData} = this.props;
   const { renderStudentModal } = this.state;
   console.log("membersByName111111111111",membersByName)
   const drawer = (
-      <div>
-        <List><MailFolderListItems membersByName={membersByName} /></List>
+      <div style={{width:'100%'}}>
+        <List><SchoolMemberListItems membersByName={membersByName} filters={schoolData && {schoolId:schoolData._id}}/></List>
         <Divider />
       </div>
     );
@@ -57,24 +57,17 @@ export default function DashViewRender() {
               Add New Student
             </Button>
           </Grid>
-          {membersByName ?
-            <Grid item sm={12} xs={12} md={12}>
               <div>
-                <Hidden mdUp>
-                    <div>
-                      <List><MailFolderListItems membersByName={membersByName} /></List>
-                      <Divider />
-                    </div>
-                </Hidden>
-                <Hidden smDown>
-                    <div>
-                      <List><MailFolderListItems membersByName={membersByName} /></List>
-                      <Divider />
-                    </div>
-                </Hidden>
+                <Grid container style={{minWidth: '230px',fontSize: '12px',overflowY: 'scroll',height: '300px'}}>
+                  Students
+                  <Hidden mdUp>
+                      {drawer}
+                  </Hidden>
+                  <Hidden smDown>
+                      {drawer}
+                  </Hidden>
+                </Grid>
               </div>
-            </Grid> : ''
-          }
         </Grid>
         <Grid item sm={8} xs={12} md={8} className="rightPanel">
           <Grid container className="userInfoPanel" style={{display: 'flex',background: '#9cd1ff'}}>
