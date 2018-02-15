@@ -13,6 +13,7 @@ import DashViewRender from './dashViewRender';
 import School from "/imports/api/school/fields";
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
 class DashView extends React.Component {
 
@@ -92,19 +93,17 @@ class DashView extends React.Component {
               />
             </Grid>
             <Grid item sm={12} xs={12} md={12} style={{float:'right'}}>
-                <PrimaryButton fullWidth label="Add a New Member" onClick={this.addNewMember}/>
+                <PrimaryButton formId="addUser" type="submit" fullWidth label="Add a New Member"/>
           </Grid>
           </Grid>
       )
     }
 
-    addNewMember = () => {
+    addNewMember = (event) => {
         console.log("Add addNewMember",this)
+        event.preventDefault();
+        this.setState({isLoading:true});
         let payload = {};
-        if(this.email.value == '' || this.firstName.value == '') {
-            alert("email and name is required");
-            return;
-        }
         payload.firstName = this.firstName.value;
         payload.lastName = this.lastName.value;
         payload.email = this.email.value;
@@ -112,9 +111,10 @@ class DashView extends React.Component {
         payload.schoolId = this.props.schoolData._id;
         payload.classTypeIds = this.state.selectedClassTypes;
         // Add a new member in School.
-        console.log("payload===>",payload)
         Meteor.call('school.addNewMember',payload , ()=> {
-            this.setState({renderStudentModal:false})
+            this.setState({renderStudentModal:false});
+            // Stop Loading
+            this.setState({isLoading:false})
         });
     }
     handleMemberDialogBoxState = () => {
@@ -130,6 +130,20 @@ class DashView extends React.Component {
         console.log("collectSelectedClassTypes",data);
         let classTypeIds = data.map((item) => {return item._id})
         this.setState({selectedClassTypes:classTypeIds})
+    }
+    handleMemberDetailsToRightPanel = (memberId) => {
+        console.log("handleMemberDetailsToRightPanel===>",memberId);
+        let memberInfo = SchoolMemberDetails.findOne(memberId);
+        console.log("memberInfo===>",memberInfo)
+        this.setState(
+            {   memberInfo:
+                    {
+                        name:memberInfo.email,
+                        phone:memberInfo.phone,
+                        email:memberInfo.email,
+                    }
+            }
+        )
     }
     // Return Dash view from here
     render() {

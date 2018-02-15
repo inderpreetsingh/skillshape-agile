@@ -83,10 +83,10 @@ class AddSchoolMember extends React.Component {
     }
     // Return Dash view from here
     render() {
-      console.log("renderStudentModal===>",this)
+      console.log("renderStudentModal===>",this.props)
         const { renderStudentModal } = this.props;
         return (
-          <form noValidate autoComplete="off">
+          <form id="addUser" onSubmit={this.props.addNewMember}>
             {renderStudentModal && this.props.renderStudentAddModal()}
           </form>
         )

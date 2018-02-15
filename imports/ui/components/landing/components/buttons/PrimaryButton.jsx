@@ -97,6 +97,7 @@ const PrimaryButton = (props) => {
       disabled={props.disabled}
       itemScope
       itemType={props.itemType}
+      type={props.type}
     >
         {getIconForButton(props)}
 
@@ -115,6 +116,7 @@ const PrimaryButton = (props) => {
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
+      formId={props.formId}
     >
         {getIconForButton(props)}
 
