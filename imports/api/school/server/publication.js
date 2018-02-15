@@ -356,28 +356,5 @@ Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, rol
 
 // Categorise students on the basis of their first Name
 Meteor.publish("membersBySchool", function({ schoolId, limit }) {
-    // console.log("this====>",this)
-    const SchoolMemberDetailsRaw = SchoolMemberDetails.rawCollection()
-    let SchoolMemberDetailsAggregateQuery = Meteor.wrapAsync(SchoolMemberDetailsRaw.aggregate, SchoolMemberDetailsRaw);
-    let SchoolMemberDetailsAggregateResult = SchoolMemberDetailsAggregateQuery([{
-            $match: { schoolId: schoolId }
-        },
-        { $group: {_id: { $toUpper: { $substr: ['$firstName', 0, 1] } }, people: { $push: { name: "$firstName" } }, schoolId: { $push: "$schoolId" } } },
-        { $out: 'MembersByName' }
-    ]);
-    // console.log("SchoolMemberDetailsAggregateResult", SchoolMemberDetailsAggregateResult);
-    // return SchoolMemberDetailsAggregateResult;
-    /*console.log("ReactiveAggregate");
-        ReactiveAggregate(this, SchoolMemberDetails, [{
-                $match: { schoolId: schoolId }
-            },
-            { $group: { _id: { $toUpper: { $substr: ['$firstName', 0, 1] } }, people: { $push: { name: "$firstName" } } } }
-        ], { clientCollection: ClientReports });*/
-    //}
-});
-
-Meteor.publish("membersByName", function({ schoolId, limit }) {
-    console.log("inserted into member");
-    let schoolMemberDetails = SchoolMemberDetails.find({});
-    return MembersByName.find({schoolId: { $in: [schoolId] }},{sort: {_id: 1}});
+    return SchoolMemberDetails.find({schoolId: schoolId},/*{ limit: limit ? limit : 4 },*/{sort: {firstName: 1}});
 });
