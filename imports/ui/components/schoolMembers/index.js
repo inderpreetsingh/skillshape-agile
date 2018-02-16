@@ -1,12 +1,10 @@
 import React from 'react';
-import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import { createContainer } from 'meteor/react-meteor-data';
-import Multiselect from 'react-widgets/lib/Multiselect'
-
-
+import Multiselect from 'react-widgets/lib/Multiselect';
+import { withStyles } from "material-ui/styles";
 
 import ClassType from "/imports/api/classType/fields";
 import DashViewRender from './dashViewRender';
@@ -15,6 +13,18 @@ import PrimaryButton from '/imports/ui/components/landing/components/buttons/Pri
 import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    maxWidth: 752,
+  },
+  demo: {
+    backgroundColor: theme.palette.background.paper,
+  },
+  title: {
+    padding: theme.spacing.unit * 2
+  },
+});
 class DashView extends React.Component {
 
     constructor(props) {
@@ -197,4 +207,6 @@ export default createContainer(props => {
         schoolData,
         classType,
     };
-},DashView);
+},withStyles(styles)(DashView));
+
+// export default withStyles(styles)(toastrModal(ContactUs))
