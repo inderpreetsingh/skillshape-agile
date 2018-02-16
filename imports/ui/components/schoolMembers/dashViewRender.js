@@ -14,6 +14,8 @@ import {Fragment} from 'react';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import Input from 'material-ui/Input';
+import isEmpty from "lodash/isEmpty";
+
 
 
 import SchoolMemberListItems from './tileData';
@@ -23,18 +25,16 @@ import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 
 export default function DashViewRender() {
-  console.log("ahahaaaaaa",this.props)
-  const { classes, theme, schoolMemberDetails,membersByName, schoolData} = this.props;
-  const { renderStudentModal } = this.state;
-  console.log("membersByName111111111111",membersByName)
+  console.log("DashViewRender",this)
+  const { classes, theme, schoolMemberDetails, schoolData} = this.props;
+  const { renderStudentModal,memberInfo } = this.state;
   const drawer = (
-      <div style={{width:'100%'}}>
-        <List><SchoolMemberListItems membersByName={membersByName} filters={schoolData && {schoolId:schoolData._id}} handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}/></List>
-        <Divider />
+      <div>
+        <List><SchoolMemberListItems filters={schoolData && {schoolId:schoolData._id}} handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}/></List>
       </div>
     );
   return (
-      <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff'}}>
+      <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff',height:'100vh'}}>
         {
         this.state.isLoading && <ContainerLoader />
         }
@@ -45,7 +45,7 @@ export default function DashViewRender() {
               {...this.props}
               handleSkillCategoryChange={this.handleSkillCategoryChange}
               onLocationChange={this.onLocationChange}
-              handleSchoolNameChange={this.handleSchoolNameChange}
+              handleMemberNameChange={this.handleMemberNameChange}
               locationInputChanged={this.locationInputChanged}
           />
           <form noValidate autoComplete="off">
@@ -65,38 +65,38 @@ export default function DashViewRender() {
             </Button>
           </Grid>
               <div>
-                <Grid container style={{minWidth: '230px',fontSize: '12px',overflowY: 'scroll',height: '300px'}}>
-                  Students
-                  <Hidden mdUp>
-                      {drawer}
-                  </Hidden>
-                  <Hidden smDown>
-                      {drawer}
-                  </Hidden>
-                </Grid>
+                <Hidden mdUp>
+                  {drawer}
+                </Hidden>
+                <Hidden smDown>
+                    {drawer}
+                </Hidden>
               </div>
         </Grid>
         <Grid item sm={8} xs={12} md={8} className="rightPanel">
-          {this.state.memberInfo &&
+          { !isEmpty(memberInfo) &&
             <Fragment>
               <Grid container className="userInfoPanel" style={{display: 'flex',background: '#9cd1ff'}}>
                 <Grid item sm={4} xs={12} md={4}>
                   <div className="avtar">
                     <img src="/images/avatar.jpg"/>
                   </div>
-                  <Typography>{this.state.memberInfo.name}</Typography>
-                  <Typography>{this.state.memberInfo.phone}</Typography>
-                  <Typography>{this.state.memberInfo.email}</Typography>
+                  <Typography>{ memberInfo.name }</Typography>
+                  <Typography>{ memberInfo.phone }</Typography>
+                  <Typography>{ memberInfo.email }</Typography>
                 </Grid>
                 <Grid item sm={4} xs={12} md={4} >
                   <div className="notes">
-                    Notes:
+                    Admin Notes:
                   </div>
                   <Input
-                    rows={4}
+                    onBlur={this.saveAdminNotesInMembers}
+                    value={memberInfo.adminNotes || ""}
+                    onChange={this.handleInput}
                     fullWidth
-                    multiline
                     style={{border: '1px solid',backgroundColor: '#fff'}}
+                    multiline
+                    rows={4}
                   />
                 </Grid>
               </Grid>

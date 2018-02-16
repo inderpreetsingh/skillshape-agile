@@ -1,12 +1,10 @@
 import React from 'react';
-import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import { createContainer } from 'meteor/react-meteor-data';
-import Multiselect from 'react-widgets/lib/Multiselect'
-
-
+import Multiselect from 'react-widgets/lib/Multiselect';
+import { withStyles } from "material-ui/styles";
 
 import ClassType from "/imports/api/classType/fields";
 import DashViewRender from './dashViewRender';
@@ -15,6 +13,18 @@ import PrimaryButton from '/imports/ui/components/landing/components/buttons/Pri
 import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    maxWidth: 752,
+  },
+  demo: {
+    backgroundColor: theme.palette.background.paper,
+  },
+  title: {
+    padding: theme.spacing.unit * 2
+  },
+});
 class DashView extends React.Component {
 
     constructor(props) {
@@ -24,7 +34,8 @@ class DashView extends React.Component {
     state = {
         renderStudentModal: false,
         startDate: new Date(),
-        selectedClassTypes: null
+        selectedClassTypes: null,
+        memberInfo:{}
     };
 
     renderStudentAddModal = () => {
@@ -134,16 +145,40 @@ class DashView extends React.Component {
     handleMemberDetailsToRightPanel = (memberId) => {
         console.log("handleMemberDetailsToRightPanel===>",memberId);
         let memberInfo = SchoolMemberDetails.findOne(memberId);
-        console.log("memberInfo===>",memberInfo)
+        // memberInfo = this.state.memberInfo
+        console.log("memberInfo before===>",memberInfo)
         this.setState(
             {   memberInfo:
                     {
-                        name:memberInfo.email,
+                        memberId:memberInfo._id,
+                        name:memberInfo.firstName,
                         phone:memberInfo.phone,
                         email:memberInfo.email,
+                        adminNotes:memberInfo.adminNotes
                     }
             }
         )
+        console.log("memberInfo after===>",this);
+    }
+    // This is used to save admin notes in `Members` information.
+    saveAdminNotesInMembers = (event) => {
+        console.log("saveAdminNotesInMembers",event.target.value);
+        let memberInfo = this.state.memberInfo;
+        memberInfo.adminNotes = event.target.value;
+        memberInfo.schoolId = this.props.schoolData && this.props.schoolData._id;
+        Meteor.call('school.saveAdminNotesToMember', memberInfo, (err,res) => {
+            if(res) {
+                console.log("Upadted School Notes",res);
+            }
+        });
+    }
+
+    handleInput = (event) => {
+        console.log("oldMemberInfo",event.target.value)
+        // this.setState({adminNotes:event.target.value});
+        let oldMemberInfo = {...this.state.memberInfo};
+        oldMemberInfo.adminNotes = event.target.value;
+        this.setState({memberInfo:oldMemberInfo});
     }
     // Return Dash view from here
     render() {
@@ -172,4 +207,6 @@ export default createContainer(props => {
         schoolData,
         classType,
     };
-},DashView);
+},withStyles(styles)(DashView));
+
+// export default withStyles(styles)(toastrModal(ContactUs))

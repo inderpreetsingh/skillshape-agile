@@ -366,5 +366,18 @@ Meteor.methods({
         }
         SchoolMemberDetails.insert(doc);
         return {addedNewMember:true};
+    },
+    // This is used to save admin notes in School Members.
+    "school.saveAdminNotesToMember" : function(doc) {
+        // Validations
+        // Only school admin can add a new Memeber.
+        console.log("saveAdminNotesToMember",doc)
+        doc.updatedBy = this.userId;
+        const schoolAdminRec = Meteor.users.findOne({"profile.schoolId": doc.schoolId});
+        if(!schoolAdminRec) {
+            return {accessDenied:true};
+        }
+        SchoolMemberDetails.update({_id:doc.memberId},{$set:{adminNotes:doc.adminNotes}});
+        return {updatedNotes:true};
     }
 });
