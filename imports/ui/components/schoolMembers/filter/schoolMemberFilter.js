@@ -51,10 +51,11 @@ export default function (props) {
                   id="search"
                   type="text"
                   margin="normal"
-                  onChange={this.props.handleSchoolNameChange}
+                  onChange={this.handleMemberNameChange}
                   skillShapeInput={true}
                   iconName='search'
                   placeholder="Search Members"
+                  value={this.state.memberName || ''}
                 />
                 <IconInput
                   id="search"

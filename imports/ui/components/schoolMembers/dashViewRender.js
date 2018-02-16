@@ -45,7 +45,7 @@ export default function DashViewRender() {
               {...this.props}
               handleSkillCategoryChange={this.handleSkillCategoryChange}
               onLocationChange={this.onLocationChange}
-              handleSchoolNameChange={this.handleSchoolNameChange}
+              handleMemberNameChange={this.handleMemberNameChange}
               locationInputChanged={this.locationInputChanged}
           />
           <form noValidate autoComplete="off">
