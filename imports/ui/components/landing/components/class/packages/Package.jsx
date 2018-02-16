@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
+import isEmpty from 'lodash/isEmpty';
 import Cart from '../../icons/Cart.jsx';
 
 import PrimaryButton from '../../buttons/PrimaryButton';
@@ -110,20 +110,73 @@ const RightSection = styled.div`
   ${helpers.flexCenter}
 `;
 
+function getCovers(data) {
+  let str = ""
+  if(!isEmpty(data)) {
+    str = data.map(classType => classType.name);
+    str = str.join(", ");
+  }
+  return str;
+}
+
+function getPaymentType(payment) {
+  let paymentType = "";
+  if(payment) {
+    if(payment['autoWithDraw'] && payment['payAsYouGo']) {
+      paymentType += 'Automatic Withdrawal and Pay As You Go';
+    } else if(payment['autoWithDraw']) {
+      paymentType += 'Automatic Withdrawal';
+
+    } else if(payment['payAsYouGo']) {
+      paymentType += 'Pay As You Go';
+
+    } else if(payment['payUpFront']) {
+      paymentType += 'Pay Up Front';
+    }
+  }
+  return paymentType
+}
+
 const Package = (props) => (
   <OuterWrapper>
     <Wrapper>
       <ClassDetailsSection>
-        <Title>{props.title}</Title>
-        <ClassDetailsText>Expiration: {props.expiration}</ClassDetailsText>
-        <ClassDetailsText>Covers: {props.classesCovered}</ClassDetailsText>
+        <Title>{props.packageName}</Title>
+        {
+          props.classPackages ? (
+            <ClassDetailsText>Expiration: {(props.expDuration && props.expPeriod) ? `${props.expDuration} ${props.expPeriod}` : "None"}</ClassDetailsText>
+          ) : (
+            <Fragment>
+              <ClassDetailsText>
+                Payment Method: {props.pymtMethod || "NA"}
+              </ClassDetailsText>
+              <ClassDetailsText>
+                Payment Type: {getPaymentType(props.pymtType) || "NA"}
+              </ClassDetailsText>
+            </Fragment>
+          )
+        }
+        <ClassDetailsText>Covers: {getCovers(props.selectedClassType)}</ClassDetailsText>
       </ClassDetailsSection>
 
       <RightSection>
-        <PriceSection>
-          <Price>{props.price}</Price>
-          <NoOfClasses>for {props.noOfClasses} classes</NoOfClasses>
-        </PriceSection>
+        {
+          props.classPackages ? (
+            <PriceSection>
+              <Price>{props.cost && `${props.cost}$`}</Price>
+              <NoOfClasses>{props.noClasses && `for ${props.noClasses} classes`}</NoOfClasses>
+            </PriceSection>
+          ) : (
+            !isEmpty(props.pymtDetails) && (
+              props.pymtDetails.map((payment, index)=> {
+                return <PriceSection key={`${payment.cost}-${index}`}>
+                    <Price>{payment.cost && `${payment.cost}$`}</Price>
+                    <NoOfClasses>{payment.month && `per month for ${payment.month} months`}</NoOfClasses>
+                  </PriceSection>
+              })
+            )
+          )
+        }
 
         <AddToCartSection >
           <Cart onClick={props.onAddToCartIconButtonClick} />
@@ -143,11 +196,7 @@ Package.propTypes = {
 }
 
 Package.defaultProps = {
-  expiration: '29th May, 2018',
-  classes: 'Karatey, Yoga, Meditation',
   packagePerClass: false,
-  noOfClasses: 2,
-  price: '$620',
   onAddToCartIconButtonClick: () => console.log('cart Icon Clicked')
 }
 

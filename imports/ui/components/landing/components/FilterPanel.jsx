@@ -110,12 +110,12 @@ class FilterPanel extends Component {
             <MaterialInputWrapper>
                 <IconInput
                     value={get(this.props, "filters.locationName", "")}
-                    onChange={(event)=> this.props.locationInputChanged(event, "filters")}
+                    onChange={(event)=> this.props.locationInputChanged(event, "filters", "tempFilters")}
                     iconName='location_on'
                     defaultValue={this.props.currentAddress}
                     googlelocation={true}
                     labelText="Location"
-                    onLocationChange={(event) => this.props.onLocationChange(event, "filters")}
+                    onLocationChange={(event) => this.props.onLocationChange(event, "filters", "tempFilters")}
                 />
             </MaterialInputWrapper>
         </Grid>
@@ -126,7 +126,7 @@ class FilterPanel extends Component {
                     <IconInput
                         value={get(this.props, "filters.schoolName", "")}
                         iconName='school'
-                        onChange={(event)=> this.props.fliterSchoolName(event, "filters")}
+                        onChange={(event)=> this.props.fliterSchoolName(event, "filters", "tempFilters")}
                         labelText="School Name"
                    />
                 </MaterialInputWrapper>
@@ -140,7 +140,7 @@ class FilterPanel extends Component {
                         data={this.state.skillCategoryData}
                         placeholder="Skill category"
                         defaultValue={get(this.props, "filters.defaultSkillCategories", [])}
-                        onChange={(event)=> this.props.collectSelectedSkillCategories(event, "filters")}
+                        onChange={(event)=> this.props.collectSelectedSkillCategories(event, "filters", "tempFilters")}
                         onNoOfFiltersClick={this.props.handleNoOfFiltersClick}
                     />
                 </div>

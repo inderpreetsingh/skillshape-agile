@@ -10,6 +10,9 @@ import ClassTypeContent from './ClassTypeContent';
 import School from "/imports/api/school/fields";
 import ClassType from "/imports/api/classType/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
+import ClassPricing from "/imports/api/classPricing/fields";
+import MonthlyPricing from "/imports/api/monthlyPricing/fields";
+import Media from "/imports/api/media/fields";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -53,16 +56,24 @@ export default createContainer(props => {
     let classTypeData = ClassType.findOne({ _id: classTypeId});
     let schoolData = School.findOne();
     let classTimesData = ClassTimes.find().fetch();
+    let classPricingData = ClassPricing.find().fetch();
+    let monthlyPricingData = MonthlyPricing.find().fetch();
+    let mediaData = Media.find().fetch();
 
   	console.log("ClassType classTypeData -->>>",classTypeData)
     console.log("ClassType classTimesData -->>>",classTimesData)
-  	console.log("ClassType schoolData -->>>",schoolData)
+    console.log("ClassType schoolData -->>>",schoolData)
+    console.log("ClassType classPricingData -->>>",classPricingData)
+  	console.log("ClassType monthlyPricingData -->>>",monthlyPricingData)
 	return {
   		...props,
   		isLoading,
   		classTypeData,
   		classTimesData,
         schoolData,
+        classPricingData,
+        monthlyPricingData,
+        mediaData,
   	}
 
 }, ClassTypeView);

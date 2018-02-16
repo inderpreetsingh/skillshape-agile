@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
-import { findIndex, isEmpty } from 'lodash';
+import { findIndex, isEmpty, find } from 'lodash';
 import Typography from 'material-ui/Typography';
 //import `Sticky` from 'react-sticky-el';
 import Sticky from 'react-stickynode';
@@ -138,9 +138,11 @@ class ClassTypeList extends Component {
                 } else if(this.props.locationName) {
                     title = `${key} in ${this.props.locationName}`
                 }
+
   				if(!isEmpty(classType[key])) {
   					return <CardsList
   						key={index}
+                        schoolData={this.props.schoolData && find(this.props.schoolData, { _id: classType[key][0]["schoolId"]}) }
                 		mapView={this.props.mapView}
                 		title={title}
                 		name={key}
@@ -174,7 +176,7 @@ class ClassTypeList extends Component {
     }
 
 	render() {
-		console.log("ClassTypeList props -->>",this.props);
+		// console.log("ClassTypeList props -->>",this.props);
 		const { mapView, classTypeData, skillCategoryData, splitByCategory, filters, isLoading } = this.props;
     // console.log(classTypeData ,"class type data ---->///")
     return (
@@ -194,6 +196,7 @@ class ClassTypeList extends Component {
                       <WithMapCardsContainer>
                           <div>
                             <CardsList
+                              schoolData={this.props.schoolData}
                               mapView={this.props.mapView}
                               cardsData={classTypeData}
                               classInterestData={this.props.classInterestData}

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ReactStars from 'react-stars';
 import PropTypes from 'prop-types';
+import ReactHtmlParser from 'react-html-parser';
 
 import * as helpers from '../../jss/helpers.js';
 
@@ -67,7 +68,7 @@ const AboutSchool = (props) => (
         {props.website && <Website href={addHttpProtocol(props.website)} target="_blank"> {props.website} </Website>}
       </Address>
     </SchoolWrapper>
-    <Description>{props.description}</Description>
+    <Description>{props.description && ReactHtmlParser(props.description)}</Description>
   </Wrapper>
 );
 

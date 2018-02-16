@@ -20,10 +20,16 @@ const Reviews = styled.a`
 const NoFoundResultWapper = styled.div`
     text-align: center;
 `
+function goToSchoolPage(school) {
+  if(school && school.slug) {
+    browserHistory.push(`schools/${school.slug}`)
+  }
+  return
+}
 
 const ClassTypeCardDescription = (props) => {
 
-  const {cardRevealInfo} = props;
+  const {cardRevealInfo, schoolData} = props;
   // console.log("ClassTypeCardDescription props-->>",props);
   return(
     <MuiThemeProvider theme={MuiTheme}>
@@ -55,7 +61,9 @@ const ClassTypeCardDescription = (props) => {
                 <Grid item xs={12} sm={6}>
                     <SecondaryButton
                       fullWidth
-                      label="View School" />
+                      label="View School"
+                      onClick={() => goToSchoolPage(schoolData)}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     {
