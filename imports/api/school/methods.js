@@ -146,7 +146,7 @@ Meteor.methods({
         // No school email exists then just Make the user Admin of that school by System.
         if (!schoolData.email && !schoolData.superAdmin) {
             let data = {};
-            let schoolEmail = currentUser.emails[0].address;
+            let schoolEmail = currentUser.emails ? currentUser.emails[0].address : currentUser.services.google.email ;
 
             data.admins = [this.userId];
             data.superAdmin = this.userId
