@@ -60,7 +60,7 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
         type: Boolean,
         optional: true
     },
-    notes: {
+    adminNotes: {
         type: String,
         optional: true
     },

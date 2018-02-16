@@ -24,7 +24,8 @@ class DashView extends React.Component {
     state = {
         renderStudentModal: false,
         startDate: new Date(),
-        selectedClassTypes: null
+        selectedClassTypes: null,
+        memberInfo:{}
     };
 
     renderStudentAddModal = () => {
@@ -134,16 +135,40 @@ class DashView extends React.Component {
     handleMemberDetailsToRightPanel = (memberId) => {
         console.log("handleMemberDetailsToRightPanel===>",memberId);
         let memberInfo = SchoolMemberDetails.findOne(memberId);
-        console.log("memberInfo===>",memberInfo)
+        // memberInfo = this.state.memberInfo
+        console.log("memberInfo before===>",memberInfo)
         this.setState(
             {   memberInfo:
                     {
-                        name:memberInfo.email,
+                        memberId:memberInfo._id,
+                        name:memberInfo.firstName,
                         phone:memberInfo.phone,
                         email:memberInfo.email,
+                        adminNotes:memberInfo.adminNotes
                     }
             }
         )
+        console.log("memberInfo after===>",this);
+    }
+    // This is used to save admin notes in `Members` information.
+    saveAdminNotesInMembers = (event) => {
+        console.log("saveAdminNotesInMembers",event.target.value);
+        let memberInfo = this.state.memberInfo;
+        memberInfo.adminNotes = event.target.value;
+        memberInfo.schoolId = this.props.schoolData && this.props.schoolData._id;
+        Meteor.call('school.saveAdminNotesToMember', memberInfo, (err,res) => {
+            if(res) {
+                console.log("Upadted School Notes",res);
+            }
+        });
+    }
+
+    handleInput = (event) => {
+        console.log("oldMemberInfo",event.target.value)
+        // this.setState({adminNotes:event.target.value});
+        let oldMemberInfo = {...this.state.memberInfo};
+        oldMemberInfo.adminNotes = event.target.value;
+        this.setState({memberInfo:oldMemberInfo});
     }
     // Return Dash view from here
     render() {

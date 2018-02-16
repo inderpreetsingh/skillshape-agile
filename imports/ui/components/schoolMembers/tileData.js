@@ -1,6 +1,7 @@
 import React from 'react';
 import Avatar from 'material-ui/Avatar';
 import List, { ListItem, ListItemText } from 'material-ui/List';
+
 import { withSubscriptionAndPagination } from '/imports/util';
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
@@ -9,18 +10,6 @@ class SchoolMemberListItems extends React.Component {
 
   constructor(props) {
     super(props);
-  }
-
-  state = {
-    selectedMember: false,
-  };
-
-  showMemberDetailsToRightPanel = (memberId) => {
-    console.log("handleListingUsers",memberId);
-    // From here we will handle listing of School member in right panel.
-    // We Just need to update some state from here so that Parent component
-    // will know what to render in right panel ok?
-    this.setState({selectedMember:memberId});
   }
 
   render() {
