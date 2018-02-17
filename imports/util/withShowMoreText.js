@@ -35,8 +35,8 @@ const withShowMoreText = function(WrappedComponent,showMoreTextConfig) {
 
   return class extends React.Component {
     state = {
-      fullText: this.props.description || "",
-      text: this.props.description || "",
+      fullText: this.props[config.description] || "",
+      text: this.props[config.description] || "",
       maxStringCharsToShow: config.maxChars || 135 ,
       showReadMore: false,
       fullTextState: false
