@@ -43,8 +43,8 @@ export const
     black = '#292828',
 
     /********** SPECIFIC COLORS **************/
-    schoolPageColor= '#f2f2f2',
-    
+    schoolPageColor = '#f2f2f2',
+
     /*******BREAKPOINTS*********/
     watch = 320,
     mobile = 500,

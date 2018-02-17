@@ -4,7 +4,7 @@
   border-radius: 0;
   box-shadow: none;
   font-size: $base-font-size * 1px;
-
+  font-family: map-get($fonts,'common');
   &:hover {
     box-shadow: none;
     border-bottom: 2px solid $dark-border-color;
@@ -29,7 +29,6 @@
     display: flex;
     align-items: flex-end;
   }
-
 }
 
 .homepage-filter {
@@ -64,13 +63,6 @@
     display: flex;
     align-items: center;
   }
-}
-
-.filter-tags {
-  display: flex;
-  margin: 0;
-  margin-bottom: map-get($sizes,'rhythm-div') * 1px;
-  margin-right: map-get($sizes,'rhythm-div') * 1px;
 }
 
 .rw-state-focus > .rw-widget-container,.rw-state-focus > .rw-widget-container:hover {

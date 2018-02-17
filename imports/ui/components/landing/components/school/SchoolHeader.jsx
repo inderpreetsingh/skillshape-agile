@@ -3,8 +3,35 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
+import {withStyles} from 'material-ui/styles';
+import TextField from 'material-ui/TextField';
+
 import * as helpers from '../jss/helpers.js';
 import { schoolDoorImg } from '../../site-settings.js';
+
+const styles = {
+    formControl: {
+      width: 250,
+      height: helpers.rhythmDiv * 6,
+      'media screen and (max-width: 500px)': {
+        width: '100%'
+      }
+    },
+    userEmailInput : {
+        padding: `0 ${helpers.rhythmDiv}px`,
+        background: helpers.lightTextColor,
+        fontFamily: helpers.specialFont,
+        fontStyle: 'italic',
+        borderRadius: 3,
+        height: '100%'
+    },
+    userEmailInputInkBar: {
+        '&:after': {
+            backgroundColor: helpers.darkBgColor
+        }
+    }
+}
+
 
 const HeaderContent = styled.div`
   width: 500px;
@@ -26,6 +53,7 @@ const Content = styled.p`
   line-height: 1;
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize * 2}px;
+  font-style: italic;
   color: ${helpers.black};
   font-weight: 400;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
@@ -36,6 +64,31 @@ const HeaderContentWrapper = styled.div`
   justify-content: flex-start;
   height: 100%;
   position: relative;
+  z-index: 0;
+`;
+
+const OuterWrapper = styled.div`
+  background-color: ${helpers.schoolPageColor};
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    bottom: -${helpers.rhythmDiv * 4}px;
+    width: 100%;
+    height: ${helpers.rhythmDiv * 4}px;
+    background-color: inherit;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    background-color: inherit;
+    border-bottom: ${helpers.rhythmDiv * 8}px solid ${helpers.schoolPageColor};
+    border-radius: 100%;
+    bottom: -${helpers.rhythmDiv * 8}px;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -44,16 +97,18 @@ const Wrapper = styled.div`
   margin: 0 auto;
   background-image: url(${props => props.bgSrc});
   background-size: 500px;
-  background-position: 100% 100%;
+  background-position: 100% calc(100% + 40px);
   background-repeat: no-repeat;
+  position: relative;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    background-position: calc(100% + 125px) 100%;
+    background-position: calc(100% + 125px) calc(100% + 40px);
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    background-position: calc(100% + 250px) 100%;
+    background-position: calc(100% + 250px) calc(100% + 40px);
   }
+
 `;
 
 const HeaderOverlay = styled.div`
@@ -66,26 +121,70 @@ const HeaderOverlay = styled.div`
   left: 0;
   right: 0;
   background-color: rgba(255,255,255,0.5);
-  z-index: 0;
+  z-index: -1;
 
   @media screen and ( max-width: ${helpers.tablet}px) {
     display: block;
   }
 `;
 
-const SchoolHeader = (props) => (
-  <Wrapper bgSrc={props.schoolHeaderImgSrc}>
-    <HeaderContentWrapper>
-      <HeaderContent>
-        <Title>{props.title}</Title>
-        <Content>{props.content}</Content>
-        <PrimaryButton onClick={props.onGetStartedBtnClick} label="Get Started For Free"/>
-      </HeaderContent>
-      <HeaderOverlay>
+const InputWrapper = styled.div`
+  display: flex;
+  align-items: center;
 
-      </HeaderOverlay>
-    </HeaderContentWrapper>
-  </Wrapper>
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  margin-left: ${helpers.rhythmDiv}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: 100%;
+    margin-top: ${helpers.rhythmDiv}px;
+    margin-left: 0;
+  }
+`;
+
+const SchoolHeader = (props) => (
+  <OuterWrapper>
+    <Wrapper bgSrc={props.schoolHeaderImgSrc}>
+      <HeaderContentWrapper>
+        <HeaderContent>
+          <Title>{props.title}</Title>
+          <Content>{props.content}</Content>
+          <InputWrapper>
+            <TextField
+              id="user-email"
+              placeholder="Enter Your Email Id"
+              type="email"
+              color={helpers.lightTextColor}
+              InputProps={{
+                disableUnderline: true,
+                classes: {
+                    root: props.classes.formControl,
+                    input: props.classes.userEmailInput,
+                    inkbar: props.classes.userEmailInputInkBar
+                }
+              }}
+              onChange={props.onEmailFieldChange}/>
+              <ButtonWrapper>
+                <PrimaryButton
+                  label="Sign Up"
+                  increaseHeight
+                  noMarginBottom
+                  onClick={props.onSignUpBtnClick} />
+              </ButtonWrapper>
+            </InputWrapper>
+        </HeaderContent>
+
+        <HeaderOverlay>
+          {/* This div adds an overlay over the background in smaller sizes */}
+        </HeaderOverlay>
+      </HeaderContentWrapper>
+    </Wrapper>
+  </OuterWrapper>
 );
 
 SchoolHeader.propTypes = {
@@ -100,4 +199,4 @@ SchoolHeader.defaultProps = {
   schoolHeaderImgSrc: schoolDoorImg
 }
 
-export default SchoolHeader;
+export default withStyles(styles)(SchoolHeader);

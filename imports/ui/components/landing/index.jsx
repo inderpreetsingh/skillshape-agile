@@ -15,7 +15,7 @@ import ClassMap from './components/map/ClassMap.jsx';
 import FilterPanel from './components/FilterPanel.jsx';
 import ClassTypeList from './components/classType/classTypeList.jsx';
 import SwitchIconButton from './components/buttons/SwitchIconButton.jsx';
-import FloatingMapButton from './components/buttons/FloatingMapButton.jsx';
+import FloatingChangeViewButton from './components/buttons/FloatingChangeViewButton.jsx';
 import Footer from './components/footer/index.jsx';
 import NoResults from './components/NoResults.jsx';
 
@@ -77,10 +77,21 @@ const SwitchViewWrapper = styled.div`
   right: 0;
   bottom: 0;
   z-index: 20;
+  display: flex;
+  align-items: center;
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     display: ${props => props.mapView ? 'none' : 'block'};
   }
+`;
+
+const MapViewText = styled.p`
+  margin: 0;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize * 2}px;
+  margin-right: ${helpers.rhythmDiv}px;
+  color: ${helpers.primaryColor};
+  font-weight: 300;
 `;
 
 const FloatingMapButtonWrapper = styled.div`
@@ -504,14 +515,23 @@ class Landing extends Component {
                {!this.state.mapView && <Footer mapView={this.state.mapView}/>}
 
                {this.state.mapView && <FloatingMapButtonWrapper>
-                  <FloatingMapButton
+                  <FloatingChangeViewButton
                     onListButtonClick={this.handleToggleMapView}
-
                   />
                </FloatingMapButtonWrapper>}
 
                 <SwitchViewWrapper mapView={this.state.mapView}>
-                    <SwitchIconButton onClick={this.handleToggleMapView}/>
+                  {this.state.mapView ?
+                  (<FloatingChangeViewButton
+                      cardsView={true}
+                      onListButtonClick={this.handleToggleMapView} />)
+                    :
+                  (<FloatingChangeViewButton
+                    cardsView={true}
+                    label="MAP"
+                    iconName="map"
+                    onListButtonClick={this.handleToggleMapView} />)
+                  }
                 </SwitchViewWrapper>
             </div>
         )
