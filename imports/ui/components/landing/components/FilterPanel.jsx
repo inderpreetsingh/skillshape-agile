@@ -7,6 +7,7 @@ import Grid from 'material-ui/Grid';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
+import IconButton from 'material-ui/IconButton';
 // import ChipInput from 'material-ui-chip-input';
 import Multiselect from 'react-widgets/lib/Multiselect';
 import { withStyles } from 'material-ui/styles';
@@ -17,8 +18,10 @@ import IconInput from './form/IconInput.jsx';
 import IconSelect from './form/IconSelect.jsx';
 import SliderControl from './form/SliderControl.jsx';
 import MyMultiSelect from './form/multiSelect/MyMultiSelect.jsx';
-import IconButton from 'material-ui/IconButton';
+import FloatingChangeViewButton from './buttons/FloatingChangeViewButton.jsx';
+
 import {FormHelperText } from 'material-ui/Form';
+
 
 import {coverSrc} from '../site-settings.js';
 
@@ -70,6 +73,13 @@ const MaterialInputWrapper = styled.div`
   transform: translateY(-${props => props.select ? (helpers.rhythmDiv + 2) : helpers.rhythmDiv}px);
 `;
 
+const SwitchViewWrapper = styled.div`
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    display: ${props => props.mapView ? 'none' : 'block'};
+  }
+`;
+
+
 class FilterPanel extends Component {
     state = {
         showMoreFilters: false,
@@ -106,7 +116,7 @@ class FilterPanel extends Component {
 
     renderFilterBar = () => {
       return (<Grid container spacing={24}>
-        <Grid item xs={11} sm = {3}>
+        <Grid item xs={11} sm={3}>
             <MaterialInputWrapper>
                 <IconInput
                     value={get(this.props, "filters.locationName", "")}
@@ -121,7 +131,7 @@ class FilterPanel extends Component {
         </Grid>
 
         <Hidden xsDown>
-            <Grid item xs={1} sm = {3}>
+            <Grid item xs={1} sm={3}>
                 <MaterialInputWrapper>
                     <IconInput
                         value={get(this.props, "filters.schoolName", "")}
@@ -132,7 +142,7 @@ class FilterPanel extends Component {
                 </MaterialInputWrapper>
             </Grid>
 
-            <Grid item xs={1} sm = {5}>
+            <Grid item xs={1} sm={5}>
                 <div className="homepage-filter">
                     <MyMultiSelect
                         textField={"name"}

@@ -62,7 +62,7 @@ const Reviews = styled.a`
 const ClassTypeDescription = (props) => {
   return (
     <Wrapper>
-      <Title>{props.classTypeName} at {props.schoolName}</Title>
+      <Title>{props.classTypeName} {props.schoolName && props.classTypeName ? <span>in</span> : ''} {props.schoolName}</Title>
 
       <ReviewsWrapper>
         {props.noOfStars && <StarsBar noOfStars={props.noOfStars} />}

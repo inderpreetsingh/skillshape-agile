@@ -17,17 +17,21 @@ const Container = styled.div`
 
 `;
 
+const defaultPaging = (i) => <button>{i + 1}</button>
 
 const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) => {
   console.log(sliderBreakPoints,"slider breakPoints");
-  console.log(sliderConfig,"slider config");
+  console.log(sliderConfig,props,"slider config");
   const breakPoints = {
     mobile: (sliderBreakPoints && sliderBreakPoints.mobile) || helpers.mobile,
     tablet: (sliderBreakPoints && sliderBreakPoints.tablet) || helpers.tablet
   }
 
   const settings = {
-    dots: true,
+    dots: sliderConfig.dots || true,
+    dotsClass: sliderConfig.dotsClass || 'slick-dots',
+    customPaging: sliderConfig.customPaging ?  sliderConfig.customPaging : defaultPaging,
+    variableWidth: sliderConfig.variableWidth || false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -39,14 +43,15 @@ const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) 
   };
 
   // console.log('Props...',props,WrappedComponent);
+  const { componentProps } = props;
   return (
     <Container>
       <Slider {...settings}>
-      {props.data && props.data.map(obj => {
+      {props.data && props.data.map((obj,i) => {
         return (
-          <OuterWrapper padding={props.padding} key={obj._id}>
+          <OuterWrapper padding={props.padding} key={obj._id || i}>
             <Wrapper >
-              <WrappedComponent {...obj} />
+              <WrappedComponent {...obj} {...componentProps}/>
             </Wrapper>
           </OuterWrapper>
         );
