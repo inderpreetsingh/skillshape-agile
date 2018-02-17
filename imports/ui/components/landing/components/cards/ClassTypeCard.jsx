@@ -110,6 +110,7 @@ class ClassTypeCard extends Component {
                   }
                   descriptionContent={
                   <ClassTypeCardDescription
+                      schoolData={this.props.schoolData}
                       classTimeCheck={!isEmpty(classTimesData)}
                       ratings={this.props.ratings}
                       reviews={this.props.reviews}

@@ -117,6 +117,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
     experienceLevel,
     skillCategoryClassLimit,
     mainSearchText,
+    schoolName,
 }) {
     console.log("schoolId-->>", schoolId)
     console.log("is_map_view-->>", is_map_view)

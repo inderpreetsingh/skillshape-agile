@@ -10,6 +10,9 @@ import ClassTypeCoverContent from '/imports/ui/components/landing/components/cla
 import reviewsData from '/imports/ui/components/landing/constants/reviewsData.js';
 import ReviewsSlider from '/imports/ui/components/landing/components/class/ReviewsSlider.jsx';
 import ClassTimesBoxes from '/imports/ui/components/landing/components/classTimes/ClassTimesBoxes';
+import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
+import SchoolDetails from '/imports/ui/components/landing/components/class/details/SchoolDetails.jsx';
+import MyCalendar from '/imports/ui/components/users/myCalender';
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
@@ -139,6 +142,9 @@ class ClassTypeContent extends Component {
 			schoolData,
 			classTypeData,
 			classTimesData,
+            classPricingData,
+            monthlyPricingData,
+            mediaData,
 		} = this.props;
 
 		if(isLoading) {
@@ -181,6 +187,28 @@ class ClassTypeContent extends Component {
 			                </ClassTimesWrapper>
 			            </ClassTimesInnerWrapper>
 			        </MainInnerFixedContainer>
+
+                    <PackagesWrapper>
+                        <PackagesTitle>Pay only for what you need</PackagesTitle>
+                        <PackagesList
+                          perClassPackagesData={classPricingData}
+                          monthlyPackagesData={monthlyPricingData}
+                        />
+                    </PackagesWrapper>
+
+                    <MainInnerFixedContainer fixedWidth="1100" marginBottom="64">
+                        <SchoolDetails
+                          website={schoolData.website}
+                          address={schoolData.address}
+                          images={!isEmpty(mediaData) && mediaData.map((media)=>({original: media.sourcePath, thumbnail:media.sourcePath, media: media})) }
+                          schoolName={schoolData.name}
+                          notes={schoolData.studentNotesHtml}
+                          description={schoolData.aboutHtml}
+                        />
+                        <CalendarWrapper>
+                            <MyCalendar params={this.props.params}/>
+                        </CalendarWrapper>
+                    </MainInnerFixedContainer>
 
 		        </Main>
 			</Fragment>

@@ -38,14 +38,14 @@ class MapView extends React.Component {
 
 	componentDidMount() {
       this.map = initializeMap(this.props.filters.coords || config.defaultLocation);
-  }
+    }
 
 	componentWillReceiveProps(nextProps) {
 		let locationDiff = _.difference(this.props.filters.coords, nextProps.filters.coords);
 		if(locationDiff && locationDiff.length > 0) {
 			this.map = reCenterMap(this.map, nextProps.filters.coords)
 		}
-		setMarkersOnMap(this.map, this.props.sLocationData, nextProps.filters);
+		setMarkersOnMap(this.map, nextProps.sLocationData, nextProps.filters);
 	}
 
 	getSeletedSchoolData = ({school = {}}) => {

@@ -93,7 +93,7 @@ const PackageList = (props) => (
       {console.log(props,"packages list....")}
       {props.packagesData && props.packagesData.map(packageData => (
         <PackageWrapper key={packageData._id}>
-          <Package {...packageData} />
+          <Package classPackages={props.classPackages} {...packageData} />
         </PackageWrapper>
       ))}
     </PackagesWrapper>

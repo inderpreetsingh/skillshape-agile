@@ -60,7 +60,7 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
         type: Boolean,
         optional: true
     },
-    notes: {
+    adminNotes: {
         type: String,
         optional: true
     },
@@ -77,4 +77,10 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
     }
 }));
 
+Meteor.startup(function() {
+    // FTS on the basis of first name last name and class types.
+    if (Meteor.isServer) {
+        SchoolMemberDetails._ensureIndex({ firstName: "text", lastName: "text", classType:"text" });
+    }
+});
 export default SchoolMemberDetails;

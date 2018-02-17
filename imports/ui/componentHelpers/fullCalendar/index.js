@@ -143,7 +143,7 @@ export default createContainer(props => {
     console.log("props FullCalendarContainer = ", props);
     const { startDate, endDate, manageMyCalendar, isUserSubsReady, currentUser, manageMyCalendarFilter } = props;
     let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
-    let { schoolId, slug } = props.params || {};
+    let { schoolId, slug, classTypeId } = props.params || {};
     let classTimesData = [];
     let classInterestData = [];
 
@@ -152,7 +152,7 @@ export default createContainer(props => {
     }
 
     if (startDate && endDate) {
-        let subscription = Meteor.subscribe("classTimes.getclassTimesForCalendar", {schoolId: schoolId || slug, calendarStartDate: startDate, calendarEndDate: endDate, view})
+        let subscription = Meteor.subscribe("classTimes.getclassTimesForCalendar", {schoolId: schoolId || slug, classTypeId: classTypeId, calendarStartDate: startDate, calendarEndDate: endDate, view})
         let classTimesFilter = {};
         let classInterestFilter = {};
         if(subscription.ready()) {

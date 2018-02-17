@@ -300,38 +300,91 @@ class Landing extends Component {
         })
     }
 
-    onLocationChange = (location, updateKey) => {
-        let oldFilters = {...this.state[updateKey]};
-        oldFilters['coords'] = location.coords;
-        oldFilters.locationName = location.fullAddress;
-        this.setState({
-            [updateKey]: oldFilters
-        })
+    onLocationChange = (location, updateKey1, updateKey2) => {
+        let stateObj = {};
+
+        if(updateKey1) {
+            stateObj[updateKey1] = {
+                ...this.state[updateKey1],
+                coords: location.coords,
+                locationName: location.fullAddress
+            }
+        }
+
+        if(updateKey2) {
+            stateObj[updateKey2] = {
+                ...this.state[updateKey2],
+                coords: location.coords,
+                locationName: location.fullAddress
+            }
+        }
+
+        this.setState(stateObj);
     }
 
-    locationInputChanged = (event, updateKey) => {
-        let oldFilters = {...this.state[updateKey]};
-        oldFilters.locationName = event.target.value;
-        this.setState({
-            [updateKey]: oldFilters
-        })
+    locationInputChanged = (event, updateKey1, updateKey2) => {
+        let stateObj = {};
+
+        if(updateKey1) {
+            stateObj[updateKey1] = {
+                ...this.state[updateKey1],
+                locationName: event.target.value
+            }
+        }
+
+        if(updateKey2) {
+            stateObj[updateKey2] = {
+                ...this.state[updateKey2],
+                locationName: event.target.value
+            }
+        }
+
+        this.setState(stateObj);
+
     }
 
-    fliterSchoolName = (event, updateKey) => {
-        let oldFilters = {...this.state[updateKey]};
-        oldFilters.schoolName = event.target.value;
-        this.setState({
-            [updateKey]: oldFilters
-        })
+    fliterSchoolName = (event, updateKey1, updateKey2) => {
+        let stateObj = {};
+
+        if(updateKey1) {
+            stateObj[updateKey1] = {
+                ...this.state[updateKey1],
+                schoolName: event.target.value
+            }
+        }
+
+        if(updateKey2) {
+            stateObj[updateKey2] = {
+                ...this.state[updateKey2],
+                schoolName: event.target.value
+            }
+        }
+
+        this.setState(stateObj);
+
     }
 
-    collectSelectedSkillCategories = (text, updateKey) => {
-        let oldFilters = {...this.state[updateKey]};
-        oldFilters.skillCategoryIds = text.map((ele) => ele._id);
-        oldFilters.defaultSkillCategories = text;
-        this.setState({
-            [updateKey]: oldFilters
-        })
+    collectSelectedSkillCategories = (text, updateKey1, updateKey2) => {
+        let stateObj = {};
+
+        if(updateKey1) {
+            stateObj[updateKey1] = {
+                ...this.state[updateKey1],
+                skillCategoryIds: text.map((ele) => ele._id),
+                defaultSkillCategories: text
+            }
+        }
+
+        if(updateKey2) {
+            stateObj[updateKey2] = {
+                ...this.state[updateKey2],
+                skillCategoryIds: text.map((ele) => ele._id),
+                defaultSkillCategories: text
+            }
+        }
+
+        this.setState(stateObj);
+
     }
 
     collectSelectedSkillSubject = (text) => {
