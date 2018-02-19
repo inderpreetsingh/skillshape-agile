@@ -125,6 +125,18 @@ const FooterWrapper = styled.div`
   width: 100%;
 `;
 
+const CoverWrapper = styled.div`
+  position: relative;
+  clip-path: ellipse(94% 57% at 53% 43%);
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    clip-path: ellipse(112% 57% at 53% 43%);
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    clip-path: ellipse(116% 57% at 53% 43%);
+  }
+`;
 
 const CenterCapsule = styled.div`
    font-size:12px;
@@ -141,6 +153,10 @@ const CenterCapsule = styled.div`
    box-shadow:2px 2px 3px rgba(0,0,0,0.1);
    text-align:center;
    padding:4px;
+ `;
+
+ const FilterPanelWrapper = styled.div`
+  position: relative;
  `;
 
 class Landing extends Component {
@@ -492,8 +508,9 @@ class Landing extends Component {
 
                 {!this.state.mapView &&
                   (
-                  <Fragment>
-                  <Cover itemScope itemType="http://schema.org/WPHeader">
+               <Fragment>
+                 <CoverWrapper>
+                   <Cover itemScope itemType="http://schema.org/WPHeader">
                     <BrandBar
                       currentUser={this.props.currentUser}
                     />
@@ -503,11 +520,12 @@ class Landing extends Component {
                         getMyCurrentLocation={this.getMyCurrentLocation}
                     />
                     </Cover>
-                     <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
+                  </CoverWrapper>
+                  <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
                 </Fragment>
               )}
 
-               <div>
+               <FilterPanelWrapper>
                    {
                         !this.state.mapView ?
                             <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
@@ -515,7 +533,7 @@ class Landing extends Component {
                             </Sticky>
                         : this.renderFilterPanel()
                    }
-               </div>
+               </FilterPanelWrapper>
 
                 <Element name="content-container" className="element">
                     <ClassTypeList

@@ -1,22 +1,21 @@
-import React, {Fragment} from 'react';
-import Sticky from 'react-stickynode';
+import React, {Component,Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import SearchBarStyled from './SearchBarStyled.jsx';
+
+import IconInput from './form/IconInput.jsx';
+import MySearchBar './MySearchBar.jsx';
+
 import NearByClassesButton from './buttons/NearByClassesButton';
 import PrimaryButton from './buttons/PrimaryButton';
 import SecondaryButton from './buttons/SecondaryButton';
 
 import * as helpers from './jss/helpers.js';
 
-/*Search Bar requires inline styles because of limitations of it using material-ui
-rather than material ui next */
-
-
 const SearchAreaPanel = styled.div`
   padding: ${helpers.rhythmInc};
-  max-width: 431px;
+  max-width: 430px;
   margin: auto;
   text-align: center;
 
@@ -48,13 +47,54 @@ const TaglineText = styled.p`
   margin: ${helpers.rhythmDiv}px 0;
 `;
 
-
-const MiddleSection = styled.div`
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize*2}px;
-  color: ${helpers.focalColor};
-  margin: 0px;
+const In = styled.p`
+  font-family : ${helpers.specialFont};
+  font-weight: 100;
+  color: ${helpers.headingColor};
+  font-size:${helpers.baseFontSize*3}px;
+  margin: 0 ${helpers.rhythmDiv/2}px;
+  transform: translateY(10px);
+  line-height: 1;
+  text-align:center;
 `;
+
+const FilterButtonWrapper = styled.div`
+  width: 100px;
+`;
+
+const SearchInputsSectionWrapper = styled.div`
+  ${helpers.flexCenter}
+  align-items: baseline;
+`;
+
+
+const SearchInputsSection = (props) => (
+<SearchInputsSectionWrapper>
+  <IconInput
+    value={props.skillType}
+    onChange={props.onSkillTypeChange}
+    iconName='grade'
+    labelText="Skill Type"
+  />
+  <In>in</In>
+  <IconInput
+    value={props.location}
+    onChange={props.onLocationInputChange}
+    iconName='location_on'
+    googlelocation={true}
+    labelText="Location"
+ />
+ <FilterButtonWrapper>
+   <PrimaryButton
+   label="Filters"
+   icon
+   iconName="tune"
+   boxShadow
+   noMarginBottom
+   onClick={props.onFiltersButtonClick} />
+ </FilterButtonWrapper>
+</SearchInputsSectionWrapper>
+)
 
 const TaglineWrapper = () => (
   <TaglineArea>
@@ -83,16 +123,53 @@ const BottomSectionContent = (props) => (
   </div>
 );
 
-const SearchArea = (props) => (
-  <SearchAreaPanel width={props.width} textAlign={props.textAlign} itemScope itemType="http://schema.org/SearchAction">
-    {props.topSection ? props.topSection : <TaglineWrapper />}
-    {props.middleSection ? props.middleSection :
-        (
-            <SearchBarStyled onSearch={props.onSearch} onFiltersButtonClick={props.onFiltersButtonClick}/>
-        )}
-    {props.bottomSection ? props.bottomSection : <BottomSectionContent getMyCurrentLocation={props.getMyCurrentLocation} /> }
-  </SearchAreaPanel>
-);
+class SearchArea extends Component {
+  state = {
+    location: '',
+    skillType: ''
+  }
+
+  handleLocationInputChange = (e) => {
+    e.preventDefault();
+    this.setState({
+      location: e.target.value
+    });
+
+    if(this.props.onLocationInputChange) {
+      this.props.onLocationInputChange(e.target.value);
+    }
+  }
+
+  handleSkillTypeChange = (e) => {
+    e.preventDefault();
+    this.setState({
+      skillType: e.target.value
+    });
+
+    if(this.props.onSkillTypeChange) {
+      this.props.onSkillTypeChange(e.target.value);
+    }
+  }
+
+  render() {
+    return (
+      <SearchAreaPanel width={this.props.width} textAlign={this.props.textAlign} itemScope itemType="http://schema.org/SearchAction">
+        {this.props.topSection ? this.props.topSection : <TaglineWrapper />}
+        {this.props.middleSection ? this.props.middleSection :
+          (
+            <SearchInputsSection
+              location={this.state.location}
+              skillType={this.state.skillType}
+              onLocationInputChange={this.handleLocationInputChange}
+              onSkillTypeChange={this.handleSkillTypeChange}
+              onFiltersButtonClick={this.props.onFiltersButtonClick}
+            />
+          )}
+        {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} /> }
+      </SearchAreaPanel>
+    )
+  }
+}
 
 
 SearchArea.propTypes = {

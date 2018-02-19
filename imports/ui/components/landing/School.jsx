@@ -9,12 +9,17 @@ import SchoolContent from './components/school/SchoolContent.jsx';
 import * as helpers from './components/jss/helpers.js';
 
 const Wrapper = styled.div`
-  
+
 `;
 
 const School = () => (
   <Wrapper>
-    <BrandBar navBarHeight="70" navBgColor={helpers.schoolPageColor} barButton={<span></span>} positionStatic={true}/>
+    <BrandBar
+      navBarHeight="70"
+      positionStatic={true}
+      overlay={true} 
+      navBgColor={helpers.schoolPageColor}
+      barButton={<span></span>} />
     <SchoolHeader />
     <SchoolContent />
   </Wrapper>

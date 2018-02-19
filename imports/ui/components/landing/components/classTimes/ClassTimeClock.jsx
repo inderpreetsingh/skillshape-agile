@@ -8,6 +8,7 @@ const ClockOuterWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
   margin-bottom: ${helpers.rhythmDiv}px;
+  position: relative;
 `;
 
 const ClockWrapper = styled.div`
@@ -26,6 +27,9 @@ const TimeContainer = styled.div`
   flex-direction: column;
   align-items: flex-end;
   padding-top: 10px;
+  position: absolute;
+  opacity: ${props => props.visible ? 1 : 0};
+  transition: opacity .2s ease-out;
 `;
 
 const Time = styled.p`
@@ -35,10 +39,16 @@ const Time = styled.p`
 `;
 
 const DayOfWeek = styled.p`
+  display: inline-block;
   font-style: italic;
   font-size: ${helpers.baseFontSize}px;
   font-weight: 300;
   margin: 0;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  opacity: ${props => props.visible ? 1 : 0};
+  transition: opacity .2s ease-out;
 `;
 
 const TimePeriod = styled.span`
@@ -60,6 +70,12 @@ const Duration = styled.span`
   transform: translateY(10px);
 `;
 
+const DayOfWeekContainer = styled.div`
+  position: relative;
+  width: 100%;
+  min-width: 50px;
+`;
+
 // Assuming the duration in mins
 const convertDurationToHours = (duration) => {
   const hours = Math.floor(duration/60);
@@ -67,24 +83,30 @@ const convertDurationToHours = (duration) => {
   return `${hours}.${minsLeft} hr`;
 }
 
-const ClassTimeClock = (props) => (
+const ClassTimeClocks = (props) => (
   <ClockOuterWrapper>
     <ClockWrapper className={`class-time-transition ${props.className}`}>
-      <TimeContainer>
-        <Duration>{convertDurationToHours(props.duration)}</Duration>
-        <Time>{props.time}</Time>
-        <TimePeriod>{props.timePeriod}</TimePeriod>
-      </TimeContainer>
+      {props.data.map((obj, i) => (
+        <TimeContainer visible={props.visible === i}>
+          <Duration>{convertDurationToHours(obj.duration)}</Duration>
+          <Time>{obj.time}</Time>
+          <TimePeriod>{obj.timePeriod}</TimePeriod>
+        </TimeContainer>
+      ))}
     </ClockWrapper>
-    <DayOfWeek>{props.day}</DayOfWeek>
+    <DayOfWeekContainer>
+    {props.data.map((obj, i) => (
+      <DayOfWeek visible={props.visible === i}>{obj.day}</DayOfWeek>
+    ))}
+    </DayOfWeekContainer>
   </ClockOuterWrapper>
 );
 
-ClassTimeClock.propTypes = {
+ClassTimeClocks.propTypes = {
   time: PropTypes.string,
   timePeriod: PropTypes.string,
   duration: PropTypes.number,
   day: PropTypes.string,
 }
 
-export default ClassTimeClock;
+export default ClassTimeClocks;
