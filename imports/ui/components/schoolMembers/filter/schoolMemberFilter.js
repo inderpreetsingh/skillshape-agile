@@ -7,6 +7,8 @@ import { MuiThemeProvider} from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 import TextField from 'material-ui/TextField';
+import get from 'lodash/get';
+
 
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
@@ -51,11 +53,11 @@ export default function (props) {
                   id="search"
                   type="text"
                   margin="normal"
-                  onChange={this.handleMemberNameChange}
+                  onChange={this.props.handleMemberNameChange}
                   skillShapeInput={true}
                   iconName='search'
                   placeholder="Search Members"
-                  value={this.state.memberName || ''}
+                  value={get(this.props, "memberFilter.textSearch", "")}
                 />
                 <IconInput
                   id="search"

@@ -28,9 +28,11 @@ export default function DashViewRender() {
   console.log("DashViewRender",this)
   const { classes, theme, schoolMemberDetails, schoolData} = this.props;
   const { renderStudentModal,memberInfo } = this.state;
+  const { textSearch } = this.state.filters;
+  const memberFilter =  {schoolId:schoolData && schoolData._id,textSearch};
   const drawer = (
       <div>
-        <List><SchoolMemberListItems filters={schoolData && {schoolId:schoolData._id}} handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}/></List>
+        <List><SchoolMemberListItems filters={memberFilter} handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}/></List>
       </div>
     );
   return (
@@ -47,6 +49,7 @@ export default function DashViewRender() {
               onLocationChange={this.onLocationChange}
               handleMemberNameChange={this.handleMemberNameChange}
               locationInputChanged={this.locationInputChanged}
+              memberFilter = { memberFilter }
           />
           <form noValidate autoComplete="off">
             {

@@ -35,7 +35,10 @@ class DashView extends React.Component {
         renderStudentModal: false,
         startDate: new Date(),
         selectedClassTypes: null,
-        memberInfo:{}
+        memberInfo:{},
+        filters: {
+            textSearch:null
+        }
     };
 
     /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
@@ -187,6 +190,11 @@ class DashView extends React.Component {
         let oldMemberInfo = {...this.state.memberInfo};
         oldMemberInfo.adminNotes = event.target.value;
         this.setState({memberInfo:oldMemberInfo});
+    }
+
+    handleMemberNameChange = (event) => {
+        console.log("handleMemberNameChange",event.target.value,this);
+        this.setState({filters:{schoolId:this.props.schoolData._id,textSearch:event.target.value}});
     }
     // Return Dash view from here
     render() {
