@@ -31,6 +31,7 @@ class MediaDetails extends React.Component {
     }
 
     onAddMedia = ({data, fileData, isUrl}) => {
+      console.log("data====>",data)
       // console.log("onAddMedia data -->>",data, fileData);
       if(isUrl){
           this.meteorCall({type:"add", data})
@@ -134,4 +135,4 @@ const styles = theme => {
   return {}
 }
 
-export default  withStyles(styles)(MediaDetails);
+export default MediaDetails;

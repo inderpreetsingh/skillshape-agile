@@ -28,6 +28,10 @@ Media.attachSchema(new SimpleSchema({
     },
     createdAt: {
         type: Date,
+    },
+    memberId: { // If media uploads from School member page
+        type: String,
+        optional: true
     }
 }));
 

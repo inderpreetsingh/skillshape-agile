@@ -7,6 +7,8 @@ import { MuiThemeProvider} from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 import TextField from 'material-ui/TextField';
+import get from 'lodash/get';
+
 
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
@@ -51,32 +53,23 @@ export default function (props) {
                   id="search"
                   type="text"
                   margin="normal"
-                  onChange={this.handleMemberNameChange}
+                  onChange={this.props.handleMemberNameChange}
                   skillShapeInput={true}
                   iconName='search'
-                  placeholder="Search Members"
-                  value={this.state.memberName || ''}
-                />
-                <IconInput
-                  id="search"
-                  type="text"
-                  margin="normal"
-                  onChange={this.props.handleSchoolNameChange}
-                  skillShapeInput={true}
-                  iconName='school'
                   placeholder="Member Name"
+                  value={get(this.props, "memberNameFilter.textSearch", "")}
                 />
               </Grid>
               <Grid item xs={9} sm={12}>
                  <Multiselect
                     textField={"name"}
                     valueField={"_id"}
-                    placeholder="Class Type"
-                    data = {this.props && this.props.dataForSkillTypes}
-                    onChange={this.props.handleSkillCategoryChange}
+                    placeholder="Search Member by Class Type"
+                    data = {this.props && this.props.classTypeData}
+                    onChange={this.props.handleClassTypeDataChange}
                   />
               </Grid>
-              <Grid item xs={9} sm = {12}>
+              {/*<Grid item xs={9} sm = {12}>
                  <Multiselect
                     textField={"name"}
                     valueField={"_id"}
@@ -84,7 +77,7 @@ export default function (props) {
                     data = {this.props && this.props.dataForSkillTypes}
                     onChange={this.props.handleSkillCategoryChange}
                   />
-              </Grid>
+              </Grid>*/}
             </Grid>
           </form>
         </FilterPanelContent>

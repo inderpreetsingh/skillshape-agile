@@ -35,7 +35,10 @@ class DashView extends React.Component {
         renderStudentModal: false,
         startDate: new Date(),
         selectedClassTypes: null,
-        memberInfo:{}
+        memberInfo:{},
+        filters: {
+            textSearch:null
+        }
     };
 
     /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
@@ -106,7 +109,7 @@ class DashView extends React.Component {
               <Multiselect
                 textField={"name"}
                 valueField={"_id"}
-                data={this.props.classType}
+                data={this.props.classTypeData}
                 placeholder="Available Classes"
                 onChange={this.collectSelectedClassTypes}
               />
@@ -188,6 +191,21 @@ class DashView extends React.Component {
         oldMemberInfo.adminNotes = event.target.value;
         this.setState({memberInfo:oldMemberInfo});
     }
+
+    handleMemberNameChange = (event) => {
+        console.log("handleMemberNameChange",event.target.value,this);
+        this.setState({filters:{schoolId:this.props.schoolData._id,textSearch:event.target.value}});
+    }
+
+    handleClassTypeDataChange = (data) => {
+        console.log("handleClassTypeDataChange", data);
+        let classTypeIds = data.map((item) => {
+            return item._id;
+        })
+        let oldMemberFilter = {...this.state.filters};
+        oldMemberFilter.classTypeIds = classTypeIds;
+        this.setState({filters:oldMemberFilter});
+    }
     // Return Dash view from here
     render() {
         console.log("111111111111",this)
@@ -199,7 +217,7 @@ class DashView extends React.Component {
 export default createContainer(props => {
     let { schoolId, slug } = props.params
     let schoolData;
-    let classType;
+    let classTypeData;
 
     if (slug) {
         Meteor.subscribe("UserSchoolbySlug", slug);
@@ -209,11 +227,11 @@ export default createContainer(props => {
 
     if (schoolId) {
         Meteor.subscribe("classTypeBySchool", {schoolId});
-        classType = ClassType.find({ schoolId: schoolId }).fetch();
+        classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
     }
     return { ...props,
         schoolData,
-        classType,
+        classTypeData,
     };
 },withStyles(styles)(DashView));
 
