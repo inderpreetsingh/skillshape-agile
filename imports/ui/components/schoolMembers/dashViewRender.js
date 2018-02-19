@@ -26,10 +26,11 @@ import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 export default function DashViewRender() {
   console.log("DashViewRender",this)
-  const { classes, theme, schoolMemberDetails, schoolData} = this.props;
+  const { classes, theme, schoolMemberDetails, schoolData, classTypeData} = this.props;
   const { renderStudentModal,memberInfo } = this.state;
-  const { textSearch } = this.state.filters;
-  const memberFilter =  {schoolId:schoolData && schoolData._id,textSearch};
+  const { textSearch, classTypeIds } = this.state.filters;
+  console.log("classTypeIds===>",classTypeIds)
+  const memberFilter =  {schoolId:schoolData && schoolData._id, textSearch, classTypeIds};
   const drawer = (
       <div>
         <List><SchoolMemberListItems filters={memberFilter} handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}/></List>
@@ -45,11 +46,12 @@ export default function DashViewRender() {
               stickyPosition={this.state.sticky}
               ref="ClaimSchoolFilter"
               {...this.props}
-              handleSkillCategoryChange={this.handleSkillCategoryChange}
+              handleClassTypeDataChange={this.handleClassTypeDataChange}
               onLocationChange={this.onLocationChange}
               handleMemberNameChange={this.handleMemberNameChange}
               locationInputChanged={this.locationInputChanged}
-              memberFilter = { memberFilter }
+              memberNameFilter = { memberFilter }
+              classTypeData = { classTypeData }
           />
           <form noValidate autoComplete="off">
             {
