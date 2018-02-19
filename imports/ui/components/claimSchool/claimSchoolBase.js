@@ -20,35 +20,32 @@ export default class ClaimSchoolBase extends React.Component {
   };
 
   onLocationChange = location => {
-    console.log("location", location);
-    let oldFilter = this.state.filters;
-    // Append location in filters.
-    oldFilter.coords = location.coords;
-    console.log("oldFilter==>", oldFilter);
-    this.setState({
-      filters: oldFilter
-    });
+      this.setState({
+        filters: {
+          ...this.state.filters,
+          coords: location.coords,
+          locationName: location.fullAddress
+        }
+      })
   };
   /*When user empties the location filter then need to update state
   so that no data is available on the basis of location filter*/
   locationInputChanged = event => {
-    console.log("event.target.value",event.target.value)
-    if (!event.target.value) {
-      let oldFilter = this.state.filters;
-      oldFilter.coords = null;
-      this.setState({
-        filters:oldFilter
-      })
-    }
+    console.log("locationInputChanged -->>",event.target.value)
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        coords: null,
+        locationName: event.target.value
+      }
+    })
   };
 
   // Filter that works when user starts typing school name
   handleSchoolNameChange = event => {
-    console.log("schoolName change", event.target.value);
     let oldFilter = this.state.filters;
     // Append School name in filters.
     oldFilter.schoolName = event.target.value;
-    console.log("oldFilter==>", oldFilter);
     this.setState({
       filters: oldFilter
     });

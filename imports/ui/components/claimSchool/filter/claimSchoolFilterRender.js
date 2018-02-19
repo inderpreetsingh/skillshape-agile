@@ -43,7 +43,7 @@ const FilterButtonArea = styled.div`
     margin-top:-24px;
 `;
 export default function (props) {
-  console.log("props and this===>",props,this)
+  console.log("ClaimSchoolFilter props and this===>",props)
   const { stickyPosition } = props;
 
   return (
@@ -57,14 +57,22 @@ export default function (props) {
                   id="search"
                   type="text"
                   margin="normal"
-                  onChange={this.props.handleSchoolNameChange}
+                  value={props.filters.schoolName || ""}
+                  onChange={props.handleSchoolNameChange}
                   skillShapeInput={true}
                   iconName='school'
                   placeholder="Enter School Name"
                 />
               </Grid>
               <Grid item xs={9} sm={4}>
-                <IconInput skillShapeInput={true} onChange={this.props.locationInputChanged} iconName='location_on'  googlelocation={true} onLocationChange={this.props.onLocationChange} />
+                <IconInput
+                  skillShapeInput={true}
+                  onChange={props.locationInputChanged}
+                  iconName='location_on'
+                  googlelocation={true}
+                  onLocationChange={props.onLocationChange}
+                  value={props.filters.locationName || ""}
+                />
               </Grid>
               <Grid item xs={9} sm = {4}>
                  <Multiselect

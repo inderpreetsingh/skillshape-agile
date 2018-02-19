@@ -20,6 +20,7 @@ export default function () {
                 onLocationChange={this.onLocationChange}
                 handleSchoolNameChange={this.handleSchoolNameChange}
                 locationInputChanged={this.locationInputChanged}
+                filters={this.state.filters}
              />
         </Sticky>
          <ClaimSchoolList

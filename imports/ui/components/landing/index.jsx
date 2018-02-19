@@ -328,6 +328,7 @@ class Landing extends Component {
         if(updateKey1) {
             stateObj[updateKey1] = {
                 ...this.state[updateKey1],
+                coords: null,
                 locationName: event.target.value
             }
         }
@@ -335,6 +336,7 @@ class Landing extends Component {
         if(updateKey2) {
             stateObj[updateKey2] = {
                 ...this.state[updateKey2],
+                coords: null,
                 locationName: event.target.value
             }
         }

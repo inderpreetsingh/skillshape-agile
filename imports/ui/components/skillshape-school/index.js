@@ -161,7 +161,7 @@ const SkillShapeSchool = (props) => {
 					<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif',textAlign:'center'}}>
 				        As a school, you face 3 main problems
 				    </h1>
-				    <ul style={{justifySelf: 'center',maxWidth: '509px',margin: 'auto'}}>
+				    <ol style={{justifySelf: 'center',maxWidth: '609px',margin: 'auto'}}>
 				    	<li className={props.classes.typoText}>
 							Bringing people in.
 						</li>
@@ -171,7 +171,7 @@ const SkillShapeSchool = (props) => {
 						<li className={props.classes.typoText}>
 							Managing the administrative chores of the school.
 						</li>
-				    </ul>
+				    </ol>
 					<h2 style={{font: '"Open Sans", sans-serif', textAlign:'center'}}>
 			    		At SkillShape, we bring you solutions to all 3 of these challenges.
 				    </h2>
@@ -197,7 +197,7 @@ const SkillShapeSchool = (props) => {
 						</li>
 						<br></br>
 						<li className={props.classes.typoText}>
-							SkillShape’s SkillBoard platform allows you to pay a flat monthly fee for access to classes from any participating school. By joining SkillBoard you will see a steady flow of students who will become aware of and experience your classes, potentially signing on for long term enrollment in your school.
+							SkillShape’s SkillBoard platform allows students to pay a flat monthly fee for access to classes from any participating school. By joining SkillBoard you will see a steady flow of students who will become aware of and experience your classes, potentially signing on for long term enrollment in your school.
 						</li>
 					</ul>
 				</div>

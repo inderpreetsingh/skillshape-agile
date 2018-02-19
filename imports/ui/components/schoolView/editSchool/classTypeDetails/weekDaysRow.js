@@ -163,8 +163,7 @@ export class WeekDaysRow extends React.Component {
         		}
                 <div>
                     <Typography type="caption">
-                        If it is required that students come to more than one class as a group, add the additional class here.
-                        Unless attendance to another class is required, a separate Class Times should be created for each class.
+                        Unless attendance to more than one class is required, a separate Class Times should be created for each class. If it is required that students come to more than one class, add the additional class time here.
                     </Typography>
             		<Button onClick={this.addNewRow} style={{width: 162}} raised color="secondary" >
                         Add Another Time
