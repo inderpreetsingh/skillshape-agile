@@ -23,7 +23,7 @@ import  SchoolMemberFilter  from "./filter";
 import SchoolMemberDetails from "./schoolMemberDetails"
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 import { ContainerLoader } from '/imports/ui/loading/container.js';
-
+import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
 
 export default function DashViewRender() {
   console.log("DashViewRender",this)
@@ -70,17 +70,22 @@ export default function DashViewRender() {
               Add New Student
             </Button>
           </Grid>
-              <div>
-                <Hidden mdUp>
-                  {drawer}
-                </Hidden>
-                <Hidden smDown>
-                    {drawer}
-                </Hidden>
-              </div>
+          <div>
+            <Hidden mdUp>
+              {drawer}
+            </Hidden>
+            <Hidden smDown>
+                {drawer}
+            </Hidden>
+          </div>
         </Grid>
         <Grid item sm={8} xs={12} md={8} className="rightPanel">
-          { !isEmpty(memberInfo) && <SchoolMemberDetails memberInfo={memberInfo}/> }
+          { !isEmpty(memberInfo) &&
+            <Fragment>
+              <SchoolMemberDetails memberInfo={memberInfo}/>
+              <SchoolMemberMedia/>
+            </Fragment>
+          }
         </Grid>
       </Grid>
     )

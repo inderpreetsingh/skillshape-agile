@@ -109,7 +109,7 @@ class DashView extends React.Component {
               <Multiselect
                 textField={"name"}
                 valueField={"_id"}
-                data={this.props.classType}
+                data={this.props.classTypeData}
                 placeholder="Available Classes"
                 onChange={this.collectSelectedClassTypes}
               />
