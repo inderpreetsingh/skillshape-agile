@@ -83,7 +83,7 @@ export default function DashViewRender() {
           { !isEmpty(memberInfo) &&
             <Fragment>
               <SchoolMemberDetails memberInfo={memberInfo}/>
-              <SchoolMemberMedia/>
+              <SchoolMemberMedia schoolData={schoolData} memberInfo={memberInfo}/>
             </Fragment>
           }
         </Grid>
