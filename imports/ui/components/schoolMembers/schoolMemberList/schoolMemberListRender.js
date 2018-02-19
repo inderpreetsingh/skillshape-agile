@@ -5,19 +5,9 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 
 
-import { withSubscriptionAndPagination } from '/imports/util';
-import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
-
-
-class SchoolMemberListItems extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    console.log("mailFolderListItems",this)
-    const {src, collectionData} = this.props;
+export default function (props) {
+  console.log("mailFolderListItems",this)
+    const {src, collectionData} = props;
     const membersByName = _.groupBy(collectionData, function(item){ return item.firstName[0].toUpperCase() });
     return (<div>
       {(collectionData && collectionData.length > 0 ) ?
@@ -56,7 +46,4 @@ class SchoolMemberListItems extends React.Component {
       }
 
     </div>)
-  }
 }
-
-export default withSubscriptionAndPagination(SchoolMemberListItems, {collection: SchoolMemberDetails, subscriptionName: "membersBySchool", recordLimit: 10});

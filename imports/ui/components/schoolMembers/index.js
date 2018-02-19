@@ -38,6 +38,14 @@ class DashView extends React.Component {
         memberInfo:{}
     };
 
+    /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
+    so that right panel gets removed from UI*/
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.schoolData !== this.props.schoolData) {
+            this.setState({ memberInfo:{} })
+        }
+    }
+
     renderStudentAddModal = () => {
       return (
         <Grid container spacing={24}>
