@@ -18,7 +18,7 @@ import isEmpty from "lodash/isEmpty";
 
 
 
-import SchoolMemberListItems from './tileData';
+import SchoolMemberListItems from '/imports/ui/components/schoolMembers/schoolMemberList/index.js';
 import  SchoolMemberFilter  from "./filter";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 import { ContainerLoader } from '/imports/ui/loading/container.js';
@@ -34,7 +34,7 @@ export default function DashViewRender() {
       </div>
     );
   return (
-      <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff',height:'100vh'}}>
+      <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff'}}>
         {
         this.state.isLoading && <ContainerLoader />
         }
