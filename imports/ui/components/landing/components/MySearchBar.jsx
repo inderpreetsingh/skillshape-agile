@@ -27,6 +27,9 @@ const styles = {
     width: 32,
     transition: 'transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)'
   },
+  defaultBorderRadius: {
+    borderRadius: 2
+  },
   searchContainer: {
 
   },
@@ -117,10 +120,14 @@ class MySearchBar extends Component {
 
     let closeIconClass = classes.iconButtonRoot + ' ' + this._getCloseIconClassName(this.state.active,classes);
     let showIconClass = classes.iconButtonRoot + ' ' + this._getShowIconClassName(this.state.active,classes);
+    let rootClass = `${classes.root} `;
+    if(this.props.defaultBorderRadius) {
+      rootClass += `${classes.defaultBorderRadius}`;
+    }
 
     // console.log('clostIconClass',closeIconClass,showIconClass);
     return (
-      <Paper className={classes.root} >
+      <Paper className={rootClass} >
         <div>
           <Input
             {...inputProps}
@@ -160,7 +167,8 @@ MySearchBar.defaultProps = {
   placeholder: 'Search',
   searchIcon: <SearchIcon style={{ color: grey[500] }} />,
   style: null,
-  value: ''
+  value: '',
+  defaultBorderRadius: false
 }
 
 MySearchBar.propTypes = {

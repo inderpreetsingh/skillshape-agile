@@ -159,6 +159,11 @@ const CenterCapsule = styled.div`
   position: relative;
  `;
 
+ const FilterBarDisplayWrapper = styled.div`
+  display: ${props => props.sticky ? 'block' : 'none'};
+  width: 100%;
+ `;
+
 class Landing extends Component {
 
     constructor(props) {
@@ -529,7 +534,9 @@ class Landing extends Component {
                    {
                         !this.state.mapView ?
                             <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
-                                {this.renderFilterPanel()}
+                                <FilterBarDisplayWrapper sticky={this.state.sticky}>
+                                  {this.renderFilterPanel()}
+                                </FilterBarDisplayWrapper>
                             </Sticky>
                         : this.renderFilterPanel()
                    }

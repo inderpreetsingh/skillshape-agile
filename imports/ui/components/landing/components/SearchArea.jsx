@@ -5,11 +5,15 @@ import styled from 'styled-components';
 import SearchBarStyled from './SearchBarStyled.jsx';
 
 import IconInput from './form/IconInput.jsx';
-import MySearchBar './MySearchBar.jsx';
+import MySearchBar from './MySearchBar.jsx';
 
 import NearByClassesButton from './buttons/NearByClassesButton';
 import PrimaryButton from './buttons/PrimaryButton';
 import SecondaryButton from './buttons/SecondaryButton';
+
+import Grade from 'material-ui-icons/Grade';
+import Location from 'material-ui-icons/LocationOn';
+import { grey } from 'material-ui/colors';
 
 import * as helpers from './jss/helpers.js';
 
@@ -51,11 +55,12 @@ const In = styled.p`
   font-family : ${helpers.specialFont};
   font-weight: 100;
   color: ${helpers.headingColor};
-  font-size:${helpers.baseFontSize*3}px;
+  font-size:${helpers.baseFontSize*2}px;
   margin: 0 ${helpers.rhythmDiv/2}px;
   transform: translateY(10px);
   line-height: 1;
   text-align:center;
+  font-style: italic;
 `;
 
 const FilterButtonWrapper = styled.div`
@@ -64,26 +69,32 @@ const FilterButtonWrapper = styled.div`
 
 const SearchInputsSectionWrapper = styled.div`
   ${helpers.flexCenter}
-  align-items: baseline;
+`;
+
+const InputWrapper = styled.div`
+  height: 48px;
 `;
 
 
 const SearchInputsSection = (props) => (
 <SearchInputsSectionWrapper>
-  <IconInput
-    value={props.skillType}
-    onChange={props.onSkillTypeChange}
-    iconName='grade'
-    labelText="Skill Type"
-  />
+  <InputWrapper>
+    <MySearchBar
+      placeholder="skill type"
+      defaultBorderRadius
+      onChange={props.onSkillTypeChange}
+      searchIcon={<Grade style={{color: grey[500]}} />}
+    />
+  </InputWrapper>
   <In>in</In>
-  <IconInput
-    value={props.location}
-    onChange={props.onLocationInputChange}
-    iconName='location_on'
-    googlelocation={true}
-    labelText="Location"
- />
+  <InputWrapper>
+    <MySearchBar
+      placeholder="location"
+      defaultBorderRadius
+      onChange={props.onLocationInputChange}
+      searchIcon={<Location style={{ color: grey[500] }} />}
+    />
+  </InputWrapper>
  <FilterButtonWrapper>
    <PrimaryButton
    label="Filters"
@@ -91,6 +102,7 @@ const SearchInputsSection = (props) => (
    iconName="tune"
    boxShadow
    noMarginBottom
+   increaseHeight
    onClick={props.onFiltersButtonClick} />
  </FilterButtonWrapper>
 </SearchInputsSectionWrapper>
