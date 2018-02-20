@@ -528,7 +528,6 @@ class Landing extends Component {
                     />
                     </Cover>
                   </CoverWrapper>
-                  <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
                 </Fragment>
               )}
 

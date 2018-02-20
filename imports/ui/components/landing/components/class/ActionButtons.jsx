@@ -52,7 +52,7 @@ const ActionButtons = (props) => (
     </ActionButton>
 
     <ActionButton>
-      <ClassTimeButton secondary noMarginBottom label="Pricing" onClick={props.onPricingButtonClick} />
+      <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
     </ActionButton>
   </ActionButtonsWrapper>
 );

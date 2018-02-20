@@ -75,6 +75,7 @@ const HeaderContentWrapper = styled.div`
 const OuterWrapper = styled.div`
   background-color: ${helpers.schoolPageColor};
   position: relative;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
 
   &:after {
     content: "";
