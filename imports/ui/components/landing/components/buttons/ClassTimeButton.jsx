@@ -17,6 +17,7 @@ const styles = {
     backgroundColor: helpers.primaryColor,
     height: 32,
     minHeight: 'auto',
+    lineHeight: 1,
     marginRight: helpers.rhythmDiv,
     '&:hover': {
       backgroundColor: helpers.primaryColor,
@@ -34,6 +35,7 @@ const styles = {
     fontFamily: helpers.specialFont,
     backgroundColor: helpers.panelColor,
     textTransform: 'none',
+    lineHeight: 1,
     '&:hover': {
       backgroundColor: helpers.lightTextColor,
     },
@@ -43,6 +45,7 @@ const styles = {
     borderColor: helpers.cancel,
     backgroundColor: 'transparent',
     transition: 'all 0.3s linear',
+    lineHeight: 1,
     '&:hover': {
       backgroundColor: helpers.cancel,
     },
@@ -52,14 +55,17 @@ const styles = {
   },
   classTimeButtonLabel: {
     color: helpers.lightTextColor,
+    lineHeight: 1,
     textTransform: 'none',
   },
   classTimeSecondaryButtonLabel: {
     color: helpers.textColor,
+    lineHeight: 1,
     textTransform: 'none',
   },
   classTimeButtonGhostLabel: {
     color: helpers.cancel,
+    lineHeight: 1,
     textTransform: 'none',
     '&:hover': {
       color: helpers.lightTextColor,

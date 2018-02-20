@@ -127,14 +127,14 @@ const FooterWrapper = styled.div`
 
 const CoverWrapper = styled.div`
   position: relative;
-  clip-path: ellipse(94% 57% at 53% 43%);
+  clip-path: ellipse(94% 57% at 51% 43%);
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    clip-path: ellipse(112% 57% at 53% 43%);
+    clip-path: ellipse(112% 57% at 51% 43%);
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    clip-path: ellipse(116% 57% at 53% 43%);
+    clip-path: ellipse(116% 57% at 51% 43%);
   }
 `;
 

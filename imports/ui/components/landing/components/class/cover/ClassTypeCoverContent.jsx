@@ -20,7 +20,7 @@ const CoverContent = styled.div`
   position: relative;
   z-index: 16;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     flex-direction: column;
     padding-bottom: 0;
   }
@@ -41,10 +41,14 @@ const ClassTypeInfoWrapper = styled.div`
 const MapContainer = styled.div`
   height: 320px;
   max-width: 496px;
-  min-width: 496px;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   border-radius: 5px;
   background-color: #e0e0e0;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    max-width: 100%;
+    width: 100%;
+  }
 `;
 
 const LocationNotFound = styled.div`
@@ -62,7 +66,7 @@ const ClassTypeForegroundImage = styled.div`
   flex-grow: 1;
   position: relative;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     display: none;
   }
 `;
@@ -74,7 +78,7 @@ const ContentSection = styled.div`
   flex-direction: column;
   align-items: ${props => props.leftSection ? 'initial' : 'stretch' };
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     margin-right: 0;
   }
 `;
@@ -82,7 +86,7 @@ const ContentSection = styled.div`
 const ShowOnMobile = styled.div`
   display: none;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     display: block;
     margin-top: ${helpers.rhythmDiv * 2}px;
   }
