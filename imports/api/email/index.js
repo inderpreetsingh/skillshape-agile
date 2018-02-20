@@ -124,7 +124,7 @@ export const sendClassTimesRequest = function({
             from: "Notices@SkillShape.com",
             replyTo: "Notices@SkillShape.com",
             subject: emailObj.subject,
-            text: emailObj.text
+            html: emailObj.text
         });
     }
 };
@@ -145,7 +145,7 @@ export const sendEmailToStudentForClassTimeUpdate = function(
             to: "sam@skillshape.com", //userData.emails[0].address;,
             from: "Notices@SkillShape.com",
             subject: "School Updated",
-            text: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(
+            html: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(
                 `SchoolAdmin/${schoolData._id}/edit?tabValue=2`
             )} to view their new information and join the class! \n\nThanks, \n\n${EmailSignature}`
         });
@@ -165,7 +165,7 @@ export const userRegistrationAndVerifyEmail = function(
         to: toEmail,
         replyTo: fromEmail,
         subject: "skillshape Registration",
-        text: `Hi ${user.profile.name},
+        html: `Hi ${user.profile.name},
             Your Email: ${user.emails[0].address} has been registered.
             click on the following link to verify your email address:\n
             ${verificationToken}\n
@@ -190,7 +190,7 @@ export const sendPriceInfoRequestEmail = function({
             from: fromEmail,
             replyTo: "Notices@SkillShape.com",
             subject: "Pricing info request received",
-            text: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
+            html: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
             \n\nThanks, \n\n${EmailSignature}`
         });
     }
@@ -211,7 +211,7 @@ export const sendEmailToStudentForPriceInfoUpdate = function(
             to: "sam@skillshape.com", // Needs to replace this with requester's Email.
             from: "Notices@SkillShape.com",
             subject: "School has updated pricing info",
-            text: `Hi ${userName}, \n${schoolData.name} has updated their prices. Please go to \n ${Meteor.absoluteUrl(
+            html: `Hi ${userName}, \n${schoolData.name} has updated their prices. Please go to \n ${Meteor.absoluteUrl(
                 `SchoolAdmin/${schoolData._id}/edit`)} to view their new information! \n\nThanks, \n\n${EmailSignature}`
             });
     }

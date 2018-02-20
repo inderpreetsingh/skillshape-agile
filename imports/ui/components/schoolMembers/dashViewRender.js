@@ -87,7 +87,11 @@ export default function DashViewRender() {
                 handleInput={this.handleInput}
                 saveAdminNotesInMembers={this.saveAdminNotesInMembers}
               />
-              <SchoolMemberMedia schoolData={schoolData} memberInfo={memberInfo}/>
+              <SchoolMemberMedia
+                schoolData={schoolData}
+                memberInfo={memberInfo}
+                handleTaggingMembers={this.handleTaggingMembers}
+              />
             </Fragment>
           }
         </Grid>
