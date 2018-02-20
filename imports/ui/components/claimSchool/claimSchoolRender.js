@@ -1,7 +1,8 @@
 import React from "react";
 import  ClaimSchoolFilter  from "./filter";
 import ClaimSchoolList  from "./claimSchoolList";
-import Sticky from 'react-sticky-el';
+// import Sticky from 'react-sticky-el';
+import Sticky from 'react-stickynode';
 
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
@@ -11,7 +12,7 @@ export default function () {
         {
           this.state.isLoading && <ContainerLoader />
         }
-        <Sticky stickyClassName={"filter-panel-sticked"} onFixedToggle={this.handleFixedToggle}>
+        <Sticky activeClassName={"filter-panel-sticked"} onStateChange={this.handleFixedToggle}>
             <ClaimSchoolFilter
                 stickyPosition={this.state.sticky}
                 ref="ClaimSchoolFilter"
@@ -30,4 +31,3 @@ export default function () {
        </div>
    )
  }
-

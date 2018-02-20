@@ -139,20 +139,20 @@ const CoverWrapper = styled.div`
 `;
 
 const CenterCapsule = styled.div`
-   font-size:12px;
-   line-height:${helpers.baseFontSize}px;
-   background:white;
-   border-radius:400px;
-   max-width:200px;
-   color:${helpers.textColor};
-   background:${helpers.panelColor};
-   margin:auto;
+   font-size: 12px;
+   line-height: ${helpers.baseFontSize}px;
+   background: white;
+   border-radius: 400px;
+   max-width: 200px;
+   color: ${helpers.textColor};
+   background: ${helpers.panelColor};
+   margin: auto;
    transform: translateY(-50%);
-   text-transform:uppercase;
-   letter-spacing:1px;
-   box-shadow:2px 2px 3px rgba(0,0,0,0.1);
-   text-align:center;
-   padding:4px;
+   text-transform: uppercase;
+   letter-spacing: 1px;
+   box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
+   text-align: center;
+   padding: 4px;
  `;
 
  const FilterPanelWrapper = styled.div`
@@ -229,9 +229,11 @@ class Landing extends Component {
     handleStickyStateChange = (status) => {
       console.log(status,"status..")
       if (status.status === 2) {
-        this.setState({
-           sticky: true
-        });
+        if(!this.state.sticky) {
+          this.setState({
+            sticky: true
+          });
+        }
       }else if(status.status === 0) {
         this.setState({
            sticky: false
