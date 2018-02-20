@@ -11,7 +11,8 @@ import MediaFilter from './filter';
 import MediaList from './mediaList';
 import ImageGridGallery from './gridGallery/gridGalleryView.js';
 import CreateMedia from './createMedia';
-import Sticky from 'react-sticky-el';
+//import Sticky from 'react-sticky-el';
+import Sticky from 'react-stickynode';
 
 export default function () {
 
@@ -38,7 +39,7 @@ export default function () {
 							filterStatus={filterStatus}
 							showLoading = {this.showLoading}
 						/>
-						<Sticky stickyClassName={"filter-panel-sticked"} onFixedToggle={this.handleFixedToggle}>
+						<Sticky activeClassName={"filter-panel-sticked"} onStateChange={this.handleFixedToggle}>
 							<MediaFilter
 								stickyPosition={this.state.sticky}
 								onSearch={this.onSearch}

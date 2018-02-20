@@ -1,7 +1,8 @@
 import React from "react";
 import styled from 'styled-components';
 import Grid from 'material-ui/Grid';
-import Multiselect from 'react-widgets/lib/Multiselect'
+
+import Multiselect from 'react-widgets/lib/Multiselect';
 import Hidden from 'material-ui/Hidden';
 import { MuiThemeProvider} from 'material-ui/styles';
 import Button from 'material-ui/Button';
@@ -12,14 +13,16 @@ import TextField from 'material-ui/TextField';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import muiTheme from '/imports/ui/components/landing/components/jss/muitheme';
 import IconInput from '/imports/ui/components/landing/components/form/IconInput';
+import MyMultiSelect from '/imports/ui/components/landing/components/form/multiSelect/MyMultiSelect.jsx';
 
 const FilterPanelContainer = styled.div`
     max-width:1000px;
     max-width: ${props => props.stickyPosition ? '100%' : '1000px'};
-    background: ${props => props.stickyPosition ? '#ffffff' : '1000px'};
+    background: ${props => props.stickyPosition ? '#ffffff' : 'white'};
     margin: auto;
     flex-grow: 1;
-    padding:16px;
+    padding: 16px;
+    overflow: visible;
 `;
 
 const FilterPanelContent = styled.div`
@@ -28,7 +31,6 @@ const FilterPanelContent = styled.div`
 
 const FilterPanelInnerContent = styled.div`
     max-width:1000px;
-    overflow: hidden;
     margin:auto;
 `;
 
@@ -75,13 +77,15 @@ export default function (props) {
                 />
               </Grid>
               <Grid item xs={9} sm = {4}>
-                 <Multiselect
+                <div className="my-multi-select-filter">
+                 <MyMultiSelect
                     textField={"name"}
                     valueField={"_id"}
                     placeholder="Skill category"
                     data = {this.props && this.props.dataForSkillTypes}
                     onChange={this.props.handleSkillCategoryChange}
                   />
+                </div>
               </Grid>
             </Grid>
           </form>

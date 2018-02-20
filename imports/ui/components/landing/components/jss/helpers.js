@@ -45,6 +45,7 @@ export const
 
     /********** SPECIFIC COLORS **************/
     schoolPageColor = '#f2f2f2',
+    classTimeClockButtonColor = '152,151,151', // So that it can be used as rgba with varying opacity
 
     /*******BREAKPOINTS*********/
     watch = 320,

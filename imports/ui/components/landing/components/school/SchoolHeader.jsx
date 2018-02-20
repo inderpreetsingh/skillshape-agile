@@ -10,10 +10,15 @@ import * as helpers from '../jss/helpers.js';
 import { schoolDoorImg } from '../../site-settings.js';
 
 const styles = {
+    root: {
+      '@media screen and (max-width: 500px)': {
+        width: '100%'
+      }
+    },
     formControl: {
       width: 250,
       height: helpers.rhythmDiv * 6,
-      'media screen and (max-width: 500px)': {
+      '@media screen and (max-width: 500px)': {
         width: '100%'
       }
     },
@@ -70,15 +75,7 @@ const HeaderContentWrapper = styled.div`
 const OuterWrapper = styled.div`
   background-color: ${helpers.schoolPageColor};
   position: relative;
-
-  &:before {
-    content: '';
-    position: absolute;
-    bottom: -${helpers.rhythmDiv * 4}px;
-    width: 100%;
-    height: ${helpers.rhythmDiv * 4}px;
-    background-color: inherit;
-  }
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
 
   &:after {
     content: "";
@@ -88,6 +85,12 @@ const OuterWrapper = styled.div`
     border-bottom: ${helpers.rhythmDiv * 8}px solid ${helpers.schoolPageColor};
     border-radius: 100%;
     bottom: -${helpers.rhythmDiv * 8}px;
+    z-index: -1;
+    height: ${helpers.rhythmDiv * 8}px;
+
+    @media screen and (max-width: ${helpers.tablet}px) {
+      opacity: 0.5;
+    }
   }
 `;
 
@@ -160,6 +163,7 @@ const SchoolHeader = (props) => (
               placeholder="Enter Your Email Id"
               type="email"
               color={helpers.lightTextColor}
+              className={props.classes.root}
               InputProps={{
                 disableUnderline: true,
                 classes: {

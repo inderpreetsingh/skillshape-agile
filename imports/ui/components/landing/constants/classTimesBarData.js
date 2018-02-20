@@ -12,6 +12,12 @@ const classTimesBarData = [
         day: 'Monday'
       },
       {
+        time: '07:00',
+        timePeriod: 'am',
+        duration: 120,
+        day: 'Tuesday'
+      },
+      {
         time: '09:00',
         timePeriod: 'pm',
         duration: 200,

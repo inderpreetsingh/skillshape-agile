@@ -8,7 +8,7 @@ import ShowMore from '../icons/ShowMore.jsx';
 import withShowMoreText from '../../../../../util/withShowMoreText.js';
 
 import ClassTimeClock from './ClassTimeClock.jsx';
-import ClassTimeClockSlider from './ClassTimeClockSlider.jsx';
+import ClassTimeClockManager from './ClassTimeClockManager.jsx';
 
 import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
@@ -20,7 +20,7 @@ const ON_GOING_SCHEDULE = 'ongoing';
 
 const ClassTimeContainer = styled.div`
   width: 250px;
-  min-height: 380px;
+  min-height: 400px;
   padding: ${helpers.rhythmDiv}px;
   padding: ${helpers.rhythmDiv * 2}px;
   display: flex;
@@ -198,8 +198,7 @@ class ClassTime extends Component {
     return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
             key={this.props._id} >
             <div>
-              <ClassTimeClockSlider
-                automatic={true}
+              <ClassTimeClockManager
                 data={this.props.classTimes}
                 schedule={this.props.scheduleType}
                 clockProps={

@@ -143,7 +143,7 @@ class FilterPanel extends Component {
             </Grid>
 
             <Grid item xs={1} sm={5}>
-                <div className="homepage-filter">
+                <div className="my-multi-select-filter">
                     <MyMultiSelect
                         textField={"name"}
                         valueField={"_id"}

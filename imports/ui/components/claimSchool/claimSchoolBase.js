@@ -8,13 +8,25 @@ export default class ClaimSchoolBase extends React.Component {
       sticky: false
     };
   }
-  handleFixedToggle = defaultPosition => {
-    console.log("handleFixedToggle", defaultPosition);
-    const stickyPosition = !defaultPosition;
-    console.log(this.state.sticky, defaultPosition);
-    if (this.state.sticky != stickyPosition) {
+  handleFixedToggle = state => {
+    // console.log("handleFixedToggle", defaultPosition);
+    // const stickyPosition = !defaultPosition;
+    // console.log(this.state.sticky, defaultPosition);
+    // if (this.state.sticky != stickyPosition) {
+    //   this.setState({
+    //     sticky: stickyPosition
+    //   });
+    // }
+
+    if (status.status === 2) {
+      if(!this.state.sticky) {
+        this.setState({
+          sticky: true
+        });
+      }
+    }else if(status.status === 0) {
       this.setState({
-        sticky: stickyPosition
+         sticky: false
       });
     }
   };

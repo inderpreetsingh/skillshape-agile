@@ -4,25 +4,24 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import * as helpers from '../jss/helpers.js';
-import ClassTimeClock from './ClassTimeClock.jsx';
-
-const InnerWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  margin-left: ${helpers.rhythmDiv}px;
-  transition: transform .5s linear;
-  transform: translateX(-${props => props.transform}px);
-`;
+import ClassTimeClocks from './ClassTimeClock.jsx';
 
 const OuterWrapper = styled.div`
-  width: ${props => props.width || 200}px;
+  width: ${props => props.width || 250}px;
   overflow: hidden;
+`;
+const InnerWrapper = styled.div`
+  width: 100%;
+  min-height: 140px;
+  position: relative;
 `;
 
 const ClockWrapper = styled.div`
-  flex-basis: 100%;
-  flex-shrink: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 `;
+
 
 const ChangeSlide = styled.div`
   width: 100%;
@@ -35,8 +34,13 @@ const ScheduleSeperator = styled.span`
   margin: 0 ${helpers.rhythmDiv/2}px;
 `;
 
-const Schedule = styled.span`
-  font-weight: 600;
+const Schedule = styled.p`
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  margin-top: ${helpers.rhythmDiv}px;
+  font-weight: 400;
   font-size: ${helpers.baseFontSize}px;
 `;
 
@@ -45,23 +49,35 @@ const Days = styled.p`
   margin: 0;
 `;
 
-const Day = styled.span`
-  font-size: ${helpers.baseFontSize}px;
+const Day = styled.p`
+  ${helpers.flexCenter}
+  margin: 0;
+  margin-right: ${helpers.rhythmDiv/2}px;
+  font-size: 12px;
+  line-height: 1;
+  font-family: ${helpers.specialFont};
   font-weight: 400;
+  width: 28px;
+  height: 28px;
   text-transform: capitalize;
   cursor: pointer;
-  transition: all .1s linear;
-  text-shadow: ${props => props.active ? `0 0 .8px #333` : 'none'};
+  border-radius: 50%;
+  padding: ${helpers.rhythmDiv}px;
+  background-color: ${props => props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)` };
+  border: 1px solid ${props => props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)` };
+  color: ${helpers.lightTextColor};
+
+  &:last-of-type {
+    margin-right: 0;
+  }
 `;
 
 const Seperator = styled.span`
   font-weight: 400;
 `;
 
-class ClockTimesClockSlider extends Component {
+class ClassTimeClockManager extends Component {
   state = {
-    automatic: this.props.automatic,
-    slideTime: 4000,
     daysInWeek: ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'],
     originalData: this.props.data,
     sortedData: this.props.data,
@@ -137,51 +153,47 @@ class ClockTimesClockSlider extends Component {
 
   componentDidMount = () => {
     console.log(this.sliderContainer,"slider container");
-
-    if(this.state.automatic) {
-      this.startAutoMaticSlider();
-    }
   }
 
   render() {
     return (
       <Fragment>
+        {/*Clock Times*/}
         <OuterWrapper width={this.props.outerWidth}>
-          <InnerWrapper transform={this.state.currentIndex * (this.props.outerWidth || 200)} ref={(container) => {this.sliderContainer = container}}>
-            {this.state.sortedData && this.state.sortedData.map((obj,i) => (
-              <ClockWrapper key={i}>
-                <ClassTimeClock {...obj} {...this.props.clockProps}/>
-              </ClockWrapper>
-            ))}
+          <InnerWrapper>
+            <ClassTimeClocks data={this.state.sortedData} visible={this.state.currentIndex} {...this.props.clockProps}/>
           </InnerWrapper>
         </OuterWrapper>
+
         <ChangeSlide>
           <Days>
             {this.state.sortedData && this.state.sortedData.map((obj,i) => (
-              <Day active={i === this.state.currentIndex} onClick={this.handleDayClick(i)} key={i}>
+              <Day
+                key={i}
+                active={i === this.state.currentIndex}
+                onClick={this.handleDayClick(i)}>
                 {this._getDayInShortFormat(obj.day)}
-                <Seperator>{i === (this.props.data.length - 1) ? '' : '-'}</Seperator>
               </Day>
             ))}
           </Days>
-          <ScheduleSeperator> | </ScheduleSeperator>
-          <Schedule>{this.props.schedule}</Schedule>
         </ChangeSlide>
+
+        <Schedule>{this.props.schedule}</Schedule>
       </Fragment>
     )
   }
 }
 
-ClockTimesClockSlider.propTypes = {
+ClassTimeClockManager.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object),
   schedule: PropTypes.string,
   automatic: PropTypes.bool,
   slideTime: PropTypes.number
 }
 
-ClockTimesClockSlider.defaultProps = {
+ClassTimeClockManager.defaultProps = {
   automatic: true,
   slideTime: 4000
 }
 
-export default ClockTimesClockSlider;
+export default ClassTimeClockManager;

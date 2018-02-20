@@ -13,14 +13,14 @@ const ActionButtonsWrapper = styled.div`
   right: auto;
   ${helpers.flexCenter}
 
-  @media screen and (max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     bottom: 0;
   }
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     position: initial;
     align-items: center;
     flex-direction: row;
@@ -31,12 +31,12 @@ const ActionButtonsWrapper = styled.div`
 const ActionButton = styled.div`
   margin-right: ${helpers.rhythmDiv}px;
 
-  @media screen and (max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
     margin-right: 0;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
   }
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     margin-right: ${helpers.rhythmDiv}px;
   }
 `;
@@ -52,7 +52,7 @@ const ActionButtons = (props) => (
     </ActionButton>
 
     <ActionButton>
-      <ClassTimeButton secondary noMarginBottom label="Pricing" onClick={props.onPricingButtonClick} />
+      <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
     </ActionButton>
   </ActionButtonsWrapper>
 );
