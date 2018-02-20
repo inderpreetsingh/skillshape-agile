@@ -11,6 +11,7 @@ import MediaFilter from './filter';
 import MediaList from './mediaList';
 import ImageGridGallery from './gridGallery/gridGalleryView.js';
 import CreateMedia from './createMedia';
+import Sticky from 'react-sticky-el';
 
 export default function () {
 
@@ -34,12 +35,16 @@ export default function () {
 				filterStatus={filterStatus}
 				showLoading = {this.showLoading}
 			/>}
-			{/*<div className="row">
+			<Sticky stickyClassName={"filter-panel-sticked"} onFixedToggle={this.handleFixedToggle}>
 				<MediaFilter
+					stickyPosition={this.state.sticky}
 					onSearch={this.onSearch}
 					resetFilter={this.resetFilter}
+					filters={this.state.filters}
+					classes={classes}
+					{...this.props}
 				/>
-			</div>*/}
+			</Sticky>
 			<Grid container>
 				<Grid item xs={12}>
 					{!schoolView && <Card>
@@ -69,14 +74,13 @@ export default function () {
 				        	<Grid item xs={12}>
 				        		{/*By default we need to show gallery view*/}
 				        		{!isGalleryView ? <ImageGridGallery
-				        			filters={{schoolId}}
+				        			filters={this.state.filters}
 				        			onDelete={this.onDeleteMedia}
 									openEditMediaForm={this.openEditMediaForm}
 
 				        			/> : <MediaList
 						        	changeLimit = {this.changeLimit}
 						        	limit= {limit || 0}
-									mediaData={mediaData}
 									schoolId={schoolId}
 									onDelete={this.onDeleteMedia}
 									openEditMediaForm={this.openEditMediaForm}
@@ -93,7 +97,6 @@ export default function () {
 						        <MediaList
 						        	changeLimit = {this.changeLimit}
 						        	limit= {limit || 0}
-									mediaData={mediaData}
 									schoolId={schoolId}
 									onDelete={this.onDeleteMedia}
 									openEditMediaForm={this.openEditMediaForm}

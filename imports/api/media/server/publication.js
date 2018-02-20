@@ -1,13 +1,13 @@
 import Media from "../fields";
 
-Meteor.publish("media.getMedia", function({ schoolId, name, startDate, endDate, limit }) {
-	// console.log("<<<< media.getMedia called--->>>",schoolId, name, startDate, endDate)
+Meteor.publish("media.getMedia", function({ schoolId, memberId, mediaName, startDate, endDate, limit }) {
+	console.log("<<<< media.getMedia called--->>>",schoolId, memberId, mediaName, startDate, endDate)
 	let filters = {
 		schoolId: schoolId
 	};
 
-	if(name) {
-		filters["$text"] = { $search: name }
+	if(mediaName) {
+		filters["$text"] = { $search: mediaName }
 	}
 
 	if(startDate && endDate) {
@@ -15,6 +15,9 @@ Meteor.publish("media.getMedia", function({ schoolId, name, startDate, endDate, 
 			$gte: startDate,
         	$lt: endDate
 		}
+	}
+	if(memberId) {
+		filters.memberId = memberId;
 	}
 
 	let cursor = Media.find(filters, {limit: limit});

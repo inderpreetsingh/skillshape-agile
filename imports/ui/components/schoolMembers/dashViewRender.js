@@ -82,7 +82,11 @@ export default function DashViewRender() {
         <Grid item sm={8} xs={12} md={8} className="rightPanel">
           { !isEmpty(memberInfo) &&
             <Fragment>
-              <SchoolMemberDetails memberInfo={memberInfo}/>
+              <SchoolMemberDetails
+                memberInfo={memberInfo}
+                handleInput={this.handleInput}
+                saveAdminNotesInMembers={this.saveAdminNotesInMembers}
+              />
               <SchoolMemberMedia schoolData={schoolData} memberInfo={memberInfo}/>
             </Fragment>
           }

@@ -6,18 +6,14 @@ import Button from 'material-ui/Button';
 import CreateMedia from "/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia.js";
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import Thumbnail from '/imports/ui/components/schoolView/editSchool/mediaDetails/mediaList/thumbnail.js';
-import ImageGalleryView from "/imports/ui/componentHelpers/imageGalleryView";
-// import Thumbnail from './thumbnail';
-// import ImageGalleryView from "/imports/ui/componentHelpers/imageGalleryView";
+import MediaList from '/imports/ui/components/schoolView/editSchool/mediaDetails/mediaList';
 
 export default function() {
     console.log("this mediaDetails",this)
     const { showCreateMediaModal, mediaFormData, filterStatus, limit , isGalleryView} = this.state;
-    const { schoolId, mediaData, classes, fullScreen, schoolView  } = this.props;
-    const { collectionData, showEditButton, onDelete, openEditMediaForm } = this.props;
     console.log("media list render props -->>",this.props);
     console.log("media list render state -->>",this.state);
-    const { isHovering, thumbnailData, imgIndex } = this.state;
+    const { memberInfo } = this.props;
     return (
         <Card style={{marginTop:'42px',width: '850px'}}>
             <Grid container style={{display: 'flex', width: '100%',padding: '12px'}}>
@@ -46,8 +42,18 @@ export default function() {
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
+                    <MediaList
+                        changeLimit = {() => alert('changeLimit')}
+                        limit= {limit || 0}
+                        schoolId={this.props.schoolData._id}
+                        onDelete={() => alert('changeLimit')}
+                        openEditMediaForm={() => alert('changeLimit')}
+                        showEditButton={false}
+                        filters={{'memberId': memberInfo.memberId}}
+                        memberExists={true}
+                    />
                     {
-                    collectionData.length && (
+                    /*collectionData.length && (
                         <Grid container>
                             <Grid item xs={12} style={{display: 'inline-flex',justifyContent: 'center'}}>
                                 <div style={{width: "100%", maxWidth: 650}}>
@@ -62,7 +68,7 @@ export default function() {
                                     />
                                 </div>
                             </Grid>
-                        </Grid>)
+                        </Grid>)*/
                     }
                 </Grid>
             </Grid>
