@@ -1,12 +1,13 @@
 import React from "react";
 import Grid from 'material-ui/Grid';
+import Button from 'material-ui/Button';
 
 import Thumbnail from './thumbnail';
 import ImageGalleryView from "/imports/ui/componentHelpers/imageGalleryView";
 
 export default function() {
 
-	const { collectionData, showEditButton, onDelete, openEditMediaForm } = this.props;
+	const { collectionData, showEditButton, onDelete, openEditMediaForm, memberExists } = this.props;
 	console.log("media list render props -->>",this.props);
 	console.log("media list render state -->>",this.state);
 	const { isHovering, thumbnailData, imgIndex } = this.state;
@@ -27,6 +28,7 @@ export default function() {
 									openEditMediaForm={openEditMediaForm}
 									showEditButton={showEditButton}
 									images={collectionData.map((media)=>({original: media.sourcePath, thumbnail:media.sourcePath, media: media}))}
+									showTagButton = {memberExists}
 								/>
 							</div>
 						</Grid>
