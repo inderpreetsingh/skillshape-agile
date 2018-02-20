@@ -5,25 +5,41 @@ import Media from "/imports/api/media/fields";
 import '/imports/api/media/methods';
 import { withStyles } from "/imports/util";
 
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
 class MediaDetails extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
           open: false,
+          sticky: false,
           limit: 10,
           filters: {
             schoolId: this.props.schoolId
           }
         }
     }
+    handleFixedToggle = defaultPosition => {
+      console.log("handleFixedToggle", defaultPosition);
+      const stickyPosition = !defaultPosition;
+      console.log(this.state.sticky, defaultPosition);
+      if (this.state.sticky != stickyPosition) {
+        this.setState({
+          sticky: stickyPosition
+        });
+      }
+    }
+
     changeLimit = ()=>{
       let incerementFactor = 10;
       this.setState({limit: this.state.limit+incerementFactor})
     }
+
     closeMediaUpload = ()=>{
       this.setState({showCreateMediaModal: false, loading: false})
     }
+
     openEditMediaForm = (data) => this.setState({showCreateMediaModal: true, mediaFormData: data, filterStatus: false})
 
     showLoading = ()=>{
@@ -106,23 +122,20 @@ class MediaDetails extends React.Component {
 
     }
 
-    onSearch = (filterRef) => {
-      console.log("Media search filterRef  --->>",filterRef);
-      let filters = {...this.state.filters};
-      filters.name = filterRef.imageName.value
-      filters.startDate = filterRef.startDate
-      filters.endDate = filterRef.endDate
-      this.setState({filters, filterStatus: true})
+    onSearch = (filterObj) => {
+      this.setState({
+        filters: {
+          ...this.state.filters,
+          ...filterObj,
+        }
+      })
     }
 
-    resetFilter = (filterRef) => {
-      let filters = {...this.state.filters};
-      filterRef.imageName.value = null;
+    resetFilter = () => {
       this.setState({
         filters: {
             schoolId: this.props.schoolId
         },
-        filterStatus: true,
       });
     }
 
@@ -132,7 +145,19 @@ class MediaDetails extends React.Component {
 }
 
 const styles = theme => {
-  return {}
+  return {
+    searchBtn: {
+      padding: theme.spacing.unit * 3,
+      marginLeft: theme.spacing.unit * 3,
+      color: helpers.action,
+
+    },
+    resetBtn: {
+      padding: theme.spacing.unit * 3,
+      marginLeft: theme.spacing.unit * 3,
+      color: helpers.reset,
+    },
+  }
 }
 
-export default MediaDetails;
+export default withStyles(styles)(MediaDetails);

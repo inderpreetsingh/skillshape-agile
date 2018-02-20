@@ -315,7 +315,7 @@ const SkillShapeSchool = (props) => {
 							</div>
 					        <CardActions className={props.classes.actions}>
 					            <Button color="accent" className={props.classes.letsHandleIt} dense onClick={this.doSignUp}>
-					            	Let's handle it!
+					            	Start Fee Today!
 					            </Button>
 					        </CardActions>
 						</Card>

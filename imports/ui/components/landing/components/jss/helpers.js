@@ -39,6 +39,7 @@ export const
     action = '#9DC161',
     danger = '#D84B47',
     cancel = '#989797',
+    reset = '#989797',
     information = '#348CC0',
     black = '#292828',
 
