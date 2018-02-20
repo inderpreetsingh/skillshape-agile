@@ -49,7 +49,7 @@ export default function() {
                         onDelete={() => alert('changeLimit')}
                         openEditMediaForm={() => alert('changeLimit')}
                         showEditButton={false}
-                        memberId={memberInfo.memberId}
+                        filters={{'memberId': memberInfo.memberId}}
                         memberExists={true}
                     />
                     {
