@@ -206,6 +206,10 @@ class DashView extends React.Component {
         oldMemberFilter.classTypeIds = classTypeIds;
         this.setState({filters:oldMemberFilter});
     }
+
+    handleTaggingMembers = () => {
+        console.log("handleTaggingMembers")
+    }
     // Return Dash view from here
     render() {
         console.log("111111111111",this)

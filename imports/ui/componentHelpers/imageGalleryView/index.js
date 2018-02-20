@@ -4,8 +4,11 @@ import ImageGallery from 'react-image-gallery';
 import Button from 'material-ui/Button';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import DeleteIcon from 'material-ui-icons/Delete';
+import Multiselect from 'react-widgets/lib/Multiselect';
+import Icon from 'material-ui/Icon';
 
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import TaggedMemberDialogBox from '/imports/ui/components/landing/components/dialogs/TaggedMemberDialogBox.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { withStyles } from "/imports/util";
 import './gallery.css';
@@ -59,13 +62,19 @@ class ImageGalleryView extends React.Component {
   }
   _renderCustomControls = (events) => {
     if(this.props.showEditButton){
-  	 return (<div style={{position: 'absolute', zIndex: 5,top: '3%', left: '3%'}}>
+  	 return (<div style={{position: 'absolute', zIndex: 5,top: '3%', left: '3%',display:'flex'}}>
       <Button onClick={(e)=>{this.props.openEditMediaForm(this.props.images[this._imageGallery.getCurrentIndex()]['media'])}}  fab mini color="accent" aria-label="edit" className={this.props.classes.button}>
         <ModeEditIcon />
       </Button>
       <Button fab mini aria-label="delete" onClick={this.showConfirmationModal} className={this.props.classes.button}>
         <DeleteIcon />
-      </Button></div>)
+      </Button>
+      {this.props.showTagButton &&
+        <Button onClick={this.showTaggedMemberInfo} className={this.props.classes.infoButton}  style={{display: this.state.showListOfMembers ? 'none' : 'block'}}>
+          <i className="material-icons" style={{display: 'block'}}>info</i>
+        </Button>
+      }
+      </div>)
     }
     return;
   }
@@ -152,6 +161,7 @@ class ImageGalleryView extends React.Component {
   }
 
   _renderVideo(item) {
+    console.log("item===>",item)
     return (
       <div className='image-gallery-image'>
         {
@@ -191,7 +201,13 @@ class ImageGalleryView extends React.Component {
   }
   showConfirmationModal = () => this.setState({showConfirmationModal: true})
   cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
-
+  showTaggedMemberInfo = () => {
+    console.log("this====>",this);
+    const taggedMemberDetails = this.props.images[this._imageGallery.getCurrentIndex()]['media'];
+    this.setState({showListOfMembers:true, taggedMemberDetails: taggedMemberDetails });
+  }
+  handleTagPhoto = () => {
+  }
   render() {
     return (
         <div style={{position: "relative"}}>
@@ -203,6 +219,15 @@ class ImageGalleryView extends React.Component {
                   message="This will permanently delete this media. Are you sure? "
                   onSubmit={()=>{this.props.onDelete(this.props.images[this._imageGallery.getCurrentIndex()]['media']);this.setState({showConfirmationModal: false});}}
                   onClose={this.cancelConfirmationModal}
+              />
+          }
+          {
+            this.state.showListOfMembers &&
+              <TaggedMemberDialogBox
+                  open={this.state.showListOfMembers}
+                  onModalClose={() => this.setState({showListOfMembers:false})}
+                  taggedMemberDetails={this.state.taggedMemberDetails}
+
               />
           }
           {
@@ -240,5 +265,14 @@ const styles = theme => ({
     button: {
       margin: theme.spacing.unit,
     },
+    infoButton: {
+      display: 'block',
+      padding: '0',
+      minWidth: '47px',
+      boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12)',
+      borderRadius: '50%',
+      margin: theme.spacing.unit,
+      background: '#03a9f4'
+    }
   });
 export default withStyles(styles)(ImageGalleryView)

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Grid from 'material-ui/Grid';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
@@ -24,28 +24,34 @@ export default function () {
 			{
 				this.state.loading && <ContainerLoader />
 			}
-			 {!schoolView && <CreateMedia
-			 	showCreateMediaModal={showCreateMediaModal}
-			 	onClose = {this.closeMediaUpload}
-				formType={showCreateMediaModal}
-				schoolId={schoolId}
-				ref="createMedia"
-				onAdd={this.onAddMedia}
-				onEdit={this.onEditMedia}
-				mediaFormData={mediaFormData}
-				filterStatus={filterStatus}
-				showLoading = {this.showLoading}
-			/>}
-			<Sticky activeClassName={"filter-panel-sticked"} onFixedToggle={this.handleFixedToggle}>
-				<MediaFilter
-					stickyPosition={this.state.sticky}
-					onSearch={this.onSearch}
-					resetFilter={this.resetFilter}
-					filters={this.state.filters}
-					classes={classes}
-					{...this.props}
-				/>
-			</Sticky>
+			 {
+			 	!schoolView && (
+			 		<Fragment>
+					 	<CreateMedia
+						 	showCreateMediaModal={showCreateMediaModal}
+						 	onClose = {this.closeMediaUpload}
+							formType={showCreateMediaModal}
+							schoolId={schoolId}
+							ref="createMedia"
+							onAdd={this.onAddMedia}
+							onEdit={this.onEditMedia}
+							mediaFormData={mediaFormData}
+							filterStatus={filterStatus}
+							showLoading = {this.showLoading}
+						/>
+						<Sticky activeClassName={"filter-panel-sticked"} onStateChange={this.handleFixedToggle}>
+							<MediaFilter
+								stickyPosition={this.state.sticky}
+								onSearch={this.onSearch}
+								resetFilter={this.resetFilter}
+								filters={this.state.filters}
+								classes={classes}
+								{...this.props}
+							/>
+						</Sticky>
+			 		</Fragment>
+			 	)
+			}
 			<Grid container>
 				<Grid item xs={12}>
 					{!schoolView && <Card>

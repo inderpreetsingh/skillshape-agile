@@ -137,6 +137,7 @@ School.attachSchema(new SimpleSchema({
   }
 }));
 
+School.join(Meteor.users, "admins", "adminsData", ["profile"]);
 
 Meteor.startup(function() {
     if (Meteor.isServer) {
