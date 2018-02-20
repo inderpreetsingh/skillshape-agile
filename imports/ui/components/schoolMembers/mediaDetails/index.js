@@ -27,20 +27,5 @@ class SchoolMemberMedia extends MediaDetails {
 
 }
 
-export default createContainer(props => {
-  console.log("container props===>",props);
-    let { schoolId} = props.schoolData && props.schoolData._id;
-    let collectionData = [];
-    let mediaSubscription;
-    if (schoolId) {
-        mediaSubscription = Meteor.subscribe("media.getMedia", {schoolId, limit:limit});
-        collectionData = Media.find({schoolId}).fetch();
-    }
-  console.log("mediaSubscription===>",mediaSubscription);
-  console.log("collectionData===>",collectionData);
-    return { ...props,
-        collectionData,
-        mediaSubscriptionReady: mediaSubscription && mediaSubscription.ready()
-    };
-}, SchoolMemberMedia);
+export default SchoolMemberMedia;
 // export default SchoolMemberMedia;
