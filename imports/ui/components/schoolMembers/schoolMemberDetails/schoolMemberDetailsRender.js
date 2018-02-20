@@ -8,10 +8,11 @@ import isEmpty from "lodash/isEmpty";
 
 export default function (argument) {
     const { memberInfo } = this.props;
+    console.log("this===>",this)
     // body...
     return (
             <Fragment>
-              <Grid container className="userInfoPanel" style={{display: 'flex',background: '#9cd1ff'}}>
+              <Grid container className="userInfoPanel" style={{display: 'flex',background: '#ddd'}}>
                 <Grid item sm={4} xs={12} md={4}>
                   <div className="avtar">
                     <img src="/images/avatar.jpg"/>
@@ -25,9 +26,9 @@ export default function (argument) {
                     Admin Notes:
                   </div>
                   <Input
-                    onBlur={this.saveAdminNotesInMembers}
+                    onBlur={this.props.saveAdminNotesInMembers}
                     value={memberInfo.adminNotes || ""}
-                    onChange={this.handleInput}
+                    onChange={this.props.handleInput}
                     fullWidth
                     style={{border: '1px solid',backgroundColor: '#fff'}}
                     multiline
@@ -35,7 +36,7 @@ export default function (argument) {
                   />
                 </Grid>
               </Grid>
-              <Grid container style={{backgroundColor: 'rebeccapurple'}}>
+              <Grid container style={{backgroundColor: '#ddd'}}>
                 <Grid item>
                   <Fragment>
                     <Button raised color="primary" style={{margin: '5px'}}>
