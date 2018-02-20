@@ -3,9 +3,6 @@ import { createContainer } from 'meteor/react-meteor-data';
 import MediaDetailsRender from './mediaDetailsRender';
 import Media from "/imports/api/media/fields";
 import '/imports/api/media/methods';
-import { withStyles } from "/imports/util";
-
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 class MediaDetails extends React.Component {
 
@@ -144,20 +141,4 @@ class MediaDetails extends React.Component {
     }
 }
 
-const styles = theme => {
-  return {
-    searchBtn: {
-      padding: theme.spacing.unit * 3,
-      marginLeft: theme.spacing.unit * 3,
-      color: helpers.action,
-
-    },
-    resetBtn: {
-      padding: theme.spacing.unit * 3,
-      marginLeft: theme.spacing.unit * 3,
-      color: helpers.reset,
-    },
-  }
-}
-
-export default withStyles(styles)(MediaDetails);
+export default MediaDetails;
