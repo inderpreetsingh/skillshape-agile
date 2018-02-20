@@ -1,6 +1,6 @@
 import Media from "../fields";
 
-Meteor.publish("media.getMedia", function({ schoolId, name, startDate, endDate, limit }) {
+Meteor.publish("media.getMedia", function({ schoolId, memberId, name, startDate, endDate, limit }) {
 	// console.log("<<<< media.getMedia called--->>>",schoolId, name, startDate, endDate)
 	let filters = {
 		schoolId: schoolId
@@ -15,6 +15,9 @@ Meteor.publish("media.getMedia", function({ schoolId, name, startDate, endDate, 
 			$gte: startDate,
         	$lt: endDate
 		}
+	}
+	if(memberId) {
+		filters.memberId = memberId;
 	}
 
 	let cursor = Media.find(filters, {limit: limit});
