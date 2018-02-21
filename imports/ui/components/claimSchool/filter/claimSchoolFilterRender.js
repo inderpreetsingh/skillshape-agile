@@ -54,7 +54,7 @@ export default function (props) {
         <FilterPanelContent stickyPosition={stickyPosition}>
          <form noValidate autoComplete="off">
             <Grid container>
-              <Grid item xs={9} sm={4}>
+              <Grid item xs={12} sm={4}>
                 <IconInput
                   id="search"
                   type="text"
@@ -66,7 +66,7 @@ export default function (props) {
                   placeholder="Enter School Name"
                 />
               </Grid>
-              <Grid item xs={9} sm={4}>
+              <Grid item xs={12} sm={4}>
                 <IconInput
                   skillShapeInput={true}
                   onChange={props.locationInputChanged}
@@ -76,7 +76,7 @@ export default function (props) {
                   value={props.filters.locationName || ""}
                 />
               </Grid>
-              <Grid item xs={9} sm = {4}>
+              <Grid item xs={12} sm = {4}>
                 <div className="my-multi-select-filter">
                  <MyMultiSelect
                     textField={"name"}

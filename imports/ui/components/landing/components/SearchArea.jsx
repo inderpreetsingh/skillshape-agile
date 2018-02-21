@@ -52,15 +52,18 @@ const TaglineText = styled.p`
 `;
 
 const In = styled.p`
-  font-family : ${helpers.specialFont};
+  ${helpers.flexCenter}
+  font-family : ${helpers.commonFont};
   font-weight: 100;
-  color: ${helpers.headingColor};
-  font-size:${helpers.baseFontSize*2}px;
-  margin: 0 ${helpers.rhythmDiv/2}px;
-  transform: translateY(10px);
+  font-size: ${helpers.baseFontSize}px;
+  margin: 0;
   line-height: 1;
-  text-align:center;
-  font-style: italic;
+  height: ${helpers.rhythmDiv * 6}px;
+  background-color: white;
+  color: rgba(0,0,0,0.4);
+  padding: 0 8px;
+  position: relative;
+  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.1), 0px 2px 0px 0px rgba(0, 0, 0, 0.1), 0px 3px 1px -2px rgba(0, 0, 0, 0.05);
 `;
 
 const FilterButtonWrapper = styled.div`
@@ -83,7 +86,8 @@ const SearchInputsSection = (props) => (
       placeholder="skill type"
       defaultBorderRadius
       onChange={props.onSkillTypeChange}
-      searchIcon={<Grade style={{color: grey[500]}} />}
+      closeIcon={<span></span>}
+      searchIcon={<span></span>}
     />
   </InputWrapper>
   <In>in</In>
@@ -92,7 +96,6 @@ const SearchInputsSection = (props) => (
       placeholder="location"
       defaultBorderRadius
       onChange={props.onLocationInputChange}
-      searchIcon={<Location style={{ color: grey[500] }} />}
     />
   </InputWrapper>
  <FilterButtonWrapper>

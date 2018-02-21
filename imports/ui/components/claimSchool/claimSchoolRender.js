@@ -12,7 +12,7 @@ export default function () {
         {
           this.state.isLoading && <ContainerLoader />
         }
-        <Sticky activeClassName={"filter-panel-sticked"} onStateChange={this.handleFixedToggle}>
+        <Sticky activeClassName={"filter-panel-sticked"} innerZ={1} onStateChange={this.handleFixedToggle}>
             <ClaimSchoolFilter
                 stickyPosition={this.state.sticky}
                 ref="ClaimSchoolFilter"

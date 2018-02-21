@@ -469,6 +469,7 @@ class Landing extends Component {
             filters={this.state.filters}
             tempFilters={this.state.tempFilters}
             stickyPosition={this.state.sticky}
+            handleToggleMapView={this.handleToggleMapView}
             handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
             handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
             onLocationChange={this.onLocationChange}
@@ -543,7 +544,7 @@ class Landing extends Component {
                    }
                </FilterPanelWrapper>
 
-                <Element name="content-container" className="element">
+                <Element name="content-container" className="element homepage-content">
                     <ClassTypeList
                         locationName={this.state.locationName}
                         mapView={this.state.mapView}
@@ -601,6 +602,7 @@ class Landing extends Component {
                   />
                </FloatingMapButtonWrapper>}
 
+               {/*
                 <SwitchViewWrapper mapView={this.state.mapView}>
                   {this.state.mapView ?
                   (<FloatingChangeViewButton
@@ -614,6 +616,7 @@ class Landing extends Component {
                     onListButtonClick={this.handleToggleMapView} />)
                   }
                 </SwitchViewWrapper>
+              */}
             </div>
         )
     }

@@ -55,6 +55,7 @@ const FilterPanelContent = styled.div`
 
 const FilterPanelAction = styled.div`
     padding:${helpers.rhythmDiv*2}px 0px;
+    transform: translateY(${helpers.rhythmDiv}px);
 `;
 
 const FilterPanelActionText = styled.p`
@@ -79,6 +80,21 @@ const SwitchViewWrapper = styled.div`
   }
 `;
 
+const GridContainerWrapper = styled.div`
+  ${helpers.flexCenter}
+`;
+
+const MapChangeButtonWrapper = styled.div`
+  width: 130px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    margin-right: ${helpers.rhythmDiv}px;
+  }
+`;
+
+const ContainerWrapper = styled.div`
+  width: calc(100% - 130px);
+`;
 
 class FilterPanel extends Component {
     state = {
@@ -115,8 +131,16 @@ class FilterPanel extends Component {
     }
 
     renderFilterBar = () => {
-      return (<Grid container spacing={24}>
-        <Grid item xs={11} sm={3}>
+      return (<GridContainerWrapper>
+        <MapChangeButtonWrapper>
+          {this.props.mapView ?
+            <PrimaryButton noMarginBottom icon iconName="grid_on" label="List View" onClick={this.props.handleToggleMapView} />
+            :
+            <PrimaryButton noMarginBottom icon iconName="map" label="Map View" onClick={this.props.handleToggleMapView} />}
+      </MapChangeButtonWrapper>
+      <ContainerWrapper>
+      <Grid container spacing={24}>
+        <Grid item xs={9} sm={3}>
             <MaterialInputWrapper>
                 <IconInput
                     value={get(this.props, "filters.locationName", "")}
@@ -129,9 +153,8 @@ class FilterPanel extends Component {
                 />
             </MaterialInputWrapper>
         </Grid>
-
         <Hidden xsDown>
-            <Grid item xs={1} sm={3}>
+            <Grid item xs={1} sm={4}>
                 <MaterialInputWrapper>
                     <IconInput
                         value={get(this.props, "filters.schoolName", "")}
@@ -142,7 +165,7 @@ class FilterPanel extends Component {
                 </MaterialInputWrapper>
             </Grid>
 
-            <Grid item xs={1} sm={5}>
+            <Grid item xs={1} sm={4}>
                 <div className="my-multi-select-filter">
                     <MyMultiSelect
                         textField={"name"}
@@ -157,7 +180,7 @@ class FilterPanel extends Component {
             </Grid>
         </Hidden>
 
-        <Grid item xs={1} sm={1}>
+        <Grid item xs={3} sm={1}>
            <FilterButtonArea>
               <FilterPanelAction>
                 <Button fab mini onClick={this.props.handleShowMoreFiltersButtonClick}>
@@ -166,7 +189,10 @@ class FilterPanel extends Component {
               </FilterPanelAction>
            </FilterButtonArea>
         </Grid>
-      </Grid>);
+      </Grid>
+      </ContainerWrapper>
+      </GridContainerWrapper>
+    );
     }
 
     renderFiltersForDialogBox = () => {
