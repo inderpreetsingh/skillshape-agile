@@ -114,9 +114,10 @@ class DashView extends React.Component {
                 onChange={this.collectSelectedClassTypes}
               />
             </Grid>
-            <Grid item sm={12} xs={12} md={12} style={{float:'right'}}>
-                <PrimaryButton formId="addUser" type="submit" fullWidth label="Add a New Member"/>
-          </Grid>
+            <Grid item sm={12} xs={12} md={12} style={{display:'flex',justifyContent: 'flex-end'}}>
+                <PrimaryButton formId="addUser" type="submit" label="Add a New Member"/>
+                <PrimaryButton formId="cancelUser" label="Cancel" onClick={() => this.setState({renderStudentModal:false})}/>
+            </Grid>
           </Grid>
       )
     }
