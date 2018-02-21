@@ -59,7 +59,6 @@ export default function DashViewRender() {
               renderStudentModal &&
               <MemberDialogBox
                 open={renderStudentModal}
-                onModalClose={() => this.handleMemberDialogBoxState(false)}
                 renderStudentAddModal = {this.renderStudentAddModal}
                 addNewMember={this.addNewMember}
               />
