@@ -7,6 +7,7 @@ Meteor.methods({
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "media_CUD" })) {
             doc.createdAt = new Date();
             doc.createdBy = this.userId;
+            doc.taggedUserIds = [this.userId];
             // console.log("media doc ->",doc);
             return Media.insert(doc);
         } else {
