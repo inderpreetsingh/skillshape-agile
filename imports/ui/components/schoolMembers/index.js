@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField';
 import { createContainer } from 'meteor/react-meteor-data';
 import Multiselect from 'react-widgets/lib/Multiselect';
 import { withStyles } from "material-ui/styles";
+import Typography from 'material-ui/Typography';
 
 import ClassType from "/imports/api/classType/fields";
 import DashViewRender from './dashViewRender';
@@ -88,11 +89,16 @@ class DashView extends React.Component {
                   id="phone"
                   label="Phone"
                   margin="normal"
-                  fullWidth
                   inputRef = {(ref) => {this.phone = ref}}
+                  fullWidth
                   required={true}
-                  type="number"
+                  onBlur={this.handlePhoneChange}
                 />
+                {
+                    this.state.showErrorMessage && <Typography color="error" type="caption">
+                        Not a valid Phone number
+                    </Typography>
+                }
             </Grid>
 
             <Grid item sm={6} xs={12}>
@@ -125,7 +131,12 @@ class DashView extends React.Component {
     addNewMember = (event) => {
         console.log("Add addNewMember",this)
         event.preventDefault();
-        this.setState({isLoading:true});
+        let phoneRegex = /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g;
+        const inputPhoneNumber = this.phone.value;
+        if(!inputPhoneNumber.match(phoneRegex)) {
+            alert('invalid phone');
+            return;
+        }
         let payload = {};
         payload.firstName = this.firstName.value;
         payload.lastName = this.lastName.value;
@@ -133,6 +144,8 @@ class DashView extends React.Component {
         payload.phone = this.phone.value;
         payload.schoolId = this.props.schoolData._id;
         payload.classTypeIds = this.state.selectedClassTypes;
+        // Show Loading
+        this.setState({isLoading:true});
         // Add a new member in School.
         Meteor.call('school.addNewMember',payload , ()=> {
             this.setState({renderStudentModal:false});
@@ -147,6 +160,24 @@ class DashView extends React.Component {
     handleChangeDate = (fieldName, date) => {
         console.log("handleChangeDate -->>",fieldName, date)
         this.setState({[fieldName]: new Date(date)})
+    }
+
+    handlePhoneChange = (event) => {
+        const inputPhoneNumber = event.target.value;
+        let phoneRegex = /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g;
+        console.log("inputPhoneNumber.match(phoneRegex)",inputPhoneNumber.match(phoneRegex))
+        let showErrorMessage;
+        if(inputPhoneNumber.match(phoneRegex)) {
+            showErrorMessage = false;
+        } else {
+            showErrorMessage = true;
+        }
+        this.setState(
+            {
+              showErrorMessage:showErrorMessage
+            }
+        );
+
     }
 
     collectSelectedClassTypes = (data) => {
