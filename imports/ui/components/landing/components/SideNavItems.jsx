@@ -117,7 +117,7 @@ const LoginUserSideNav = (props) => (
                 },
                 {
                     name: "My Media",
-                    link: "/",
+                    link: `/media/${Meteor.userId()}`,
                     iconName: "collections",
                 }
             ]}

@@ -165,7 +165,12 @@ Schema.User = new SimpleSchema({
     heartbeat: {
         type: Date,
         optional: true
-    }
+    },
+    media_access_permission: {
+        type: Object,
+        optional: true,
+        blackbox: true
+    },
 });
 
 Meteor.users.attachSchema(Schema.User);

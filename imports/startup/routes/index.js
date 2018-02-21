@@ -15,6 +15,7 @@ import School from '/imports/ui/components/landing/School.jsx';
 
 import ResetPassword from '/imports/ui/components/account/resetPassword';
 import MyProfile from '/imports/ui/components/users/myProfile';
+import MyMedia from '/imports/ui/components/users/myMedia';
 import SchoolView from '/imports/ui/components/schoolView';
 import DashView from '/imports/ui/components/schoolMembers';
 import ClaimSchool from '/imports/ui/components/claimSchool';
@@ -45,6 +46,7 @@ export default Routes = componentLoader((props) => (
         <Route path="/Aboutus" component={AboutUs} />
         <Route path="/Contactus" component={ContactUs} />
         <Route path="/profile/:id" component={MyProfile} />
+        <Route path="/media/:id" component={MyMedia} />
         <Route path="/schoolAdmin/:schoolId/edit" getComponent={(nextState, cb) => {
           //set loading:true
           console.log("props",props)
