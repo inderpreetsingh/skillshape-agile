@@ -29,13 +29,20 @@ Media.attachSchema(new SimpleSchema({
     createdAt: {
         type: Date,
     },
-    memberId: { // If media uploads from School member page
+    memberId: { // Needs to delete this If media uploads from School member page
         type: String,
         optional: true
+    },
+    taggedUserIds: {
+        type: [String],
+        optional:true
     }
+
 }));
 
-Media.join(Meteor.users, "createdBy", "creator", ["profile"]);
+Media.join(Meteor.users, "taggedUserIds", "taggedUserData", ["profile"]);
+
+// Media.join(Meteor.users, "createdBy", "creator", ["profile"]);
 
 Meteor.startup(function() {
     if (Meteor.isServer) {
