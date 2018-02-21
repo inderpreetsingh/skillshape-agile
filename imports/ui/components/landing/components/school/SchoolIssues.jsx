@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   transform: translateY(64px);
   max-width: 1000px;
   margin: 0 auto;
-}`;
+`;
 
 const Header = styled.h2`
   font-family: ${helpers.specialFont};
@@ -53,7 +53,7 @@ class SchoolIssues extends Component {
           this.props.issues.map((issue,i) => (
             <IssueCard
               key={i}
-              active={this.state.active}
+              active={this.state.activeIssue === i}
               content={issue}
               onClick={this.handleActiveIssueState(i)}/>
           ))}
