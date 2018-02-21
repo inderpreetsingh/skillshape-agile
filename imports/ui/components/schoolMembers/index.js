@@ -92,7 +92,7 @@ class DashView extends React.Component {
                   inputRef = {(ref) => {this.phone = ref}}
                   fullWidth
                   required={true}
-                  onChange={this.handlePhoneChange}
+                  onBlur={this.handlePhoneChange}
                 />
                 {
                     this.state.showErrorMessage && <Typography color="error" type="caption">
@@ -131,8 +131,8 @@ class DashView extends React.Component {
     addNewMember = (event) => {
         console.log("Add addNewMember",this)
         event.preventDefault();
-        this.setState({isLoading:true});
         let phoneRegex = /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g;
+        const inputPhoneNumber = this.phone.value;
         if(!inputPhoneNumber.match(phoneRegex)) {
             alert('invalid phone');
             return;
@@ -144,6 +144,8 @@ class DashView extends React.Component {
         payload.phone = this.phone.value;
         payload.schoolId = this.props.schoolData._id;
         payload.classTypeIds = this.state.selectedClassTypes;
+        // Show Loading
+        this.setState({isLoading:true});
         // Add a new member in School.
         Meteor.call('school.addNewMember',payload , ()=> {
             this.setState({renderStudentModal:false});
