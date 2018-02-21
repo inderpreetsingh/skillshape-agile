@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
@@ -20,7 +21,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     position: 'relative',
-    boxShadow: `0px 1px 5px 0px rgba(0, 0, 0, 0.1), 0px 2px 2px 0px rgba(0, 0, 0, 0.1), 0px 3px 1px -2px rgba(0, 0, 0, 0.05);`
+    boxShadow: `0px 1px 0px 0px rgba(0, 0, 0, 0.1), 0px 2px 0px 0px rgba(0, 0, 0, 0.1), 0px 3px 1px -2px rgba(0, 0, 0, 0.05);`
   },
   iconButtonRoot : {
     height: 32,
@@ -50,6 +51,14 @@ const styles = {
 const iconTransitions = {
   transition: 'transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)'
 }
+
+const LeftSideInput = styled.div`
+  display: ${props => props.inputOnSide === 'left' ? 'block' : 'none'};
+`;
+
+const RightSideInput = styled.div`
+  display: ${props => props.inputOnSide === 'right' ? 'block' : 'none'};
+`;
 
 class MySearchBar extends Component {
   constructor (props) {
@@ -128,19 +137,19 @@ class MySearchBar extends Component {
     // console.log('clostIconClass',closeIconClass,showIconClass);
     return (
       <Paper className={rootClass} >
-        <div>
+        <LeftSideInput inputOnSide={this.props.inputOnSide}>
           <Input
-            {...inputProps}
-            onBlur={this.handleBlur}
-            value={value}
-            onChange={this.handleInput}
-            onKeyUp={this.handleKeyPressed}
-            onFocus={this.handleFocus}
-            fullWidth
-            disableUnderline={true}
-            disabled={disabled}
+          {...inputProps}
+          onBlur={this.handleBlur}
+          value={value}
+          onChange={this.handleInput}
+          onKeyUp={this.handleKeyPressed}
+          onFocus={this.handleFocus}
+          fullWidth
+          disableUnderline={true}
+          disabled={disabled}
           />
-        </div>
+        </LeftSideInput>
         <IconButton
           style={styles.iconTransitions}
           className={showIconClass}
@@ -156,6 +165,19 @@ class MySearchBar extends Component {
         >
           {React.cloneElement(closeIcon)}
         </IconButton>
+        <RightSideInput inputOnSide={this.props.inputOnSide}>
+          <Input
+          {...inputProps}
+          onBlur={this.handleBlur}
+          value={value}
+          onChange={this.handleInput}
+          onKeyUp={this.handleKeyPressed}
+          onFocus={this.handleFocus}
+          fullWidth
+          disableUnderline={true}
+          disabled={disabled}
+          />
+        </RightSideInput>
       </Paper>
     )
   }
@@ -168,11 +190,16 @@ MySearchBar.defaultProps = {
   searchIcon: <SearchIcon style={{ color: grey[500] }} />,
   style: null,
   value: '',
+  inputOnSide: 'left',
   defaultBorderRadius: false
 }
 
 MySearchBar.propTypes = {
+  // This specifies the side in the bar where there is input.
+  inputOnSide: PropTypes.string,
+
   closeIcon: PropTypes.node,
+
   disabled: PropTypes.bool,
   /** Sets placeholder for the embedded text field. */
   placeholder: PropTypes.string,

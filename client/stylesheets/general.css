@@ -242,3 +242,7 @@ material ui search bar */
 .pac-container {
   z-index: 1400
 }
+
+.homepage-content {
+  min-height: 100vh;
+}

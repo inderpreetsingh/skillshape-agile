@@ -43,7 +43,6 @@
 
   @include respond-to('mobile') {
     width: 100%;
-    margin-bottom: map-get($sizes, rhythm-div) * 1px;
     margin-right: 0;
 
     &:focus:not(:active)::after {
