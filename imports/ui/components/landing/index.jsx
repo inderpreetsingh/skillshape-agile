@@ -26,6 +26,8 @@ import * as helpers from './components/jss/helpers.js';
 import { cardsData, cardsData1} from './constants/cardsData.js';
 import config from '/imports/config';
 import Events from '/imports/util/events';
+import MemberInvitedDialogBox from '/imports/ui/components/landing/components/dialogs/MemberInvitedDialogBox.jsx';
+
 
 const MainContentWrapper = styled.div`
   display: flex;
@@ -193,6 +195,10 @@ class Landing extends Component {
                 this.setState({filters: oldFilters})
             }
         })
+        Events.on("acceptInvitationAsMember", "123#567",(data) => {
+          let {userType} = data;
+          this.handleMemberInvitedDialogBoxState(true, userType);
+        })
     }
 
     componentDidMount() {
@@ -226,7 +232,7 @@ class Landing extends Component {
         }
       }
       if(this.props.location.query && this.props.location.query.acceptInvite) {
-        // Events.trigger("acceptInvitationAsMember",{userData: this.props.location.query});
+        Events.trigger("acceptInvitationAsMember",{userData: this.props.location.query});
       }
     }
 
@@ -477,6 +483,38 @@ class Landing extends Component {
         })
     }
 
+    handleInvitationAgreeButton = () => {
+        console.log("handleInvitationAgreeButton",this);
+        const currentUser = Meteor.user();
+        // login user and no verification token.
+        if(currentUser && this.props.location.query && this.props.location.query.acceptInvite) {
+            // emailRec = ((currentUser.emails[0].address || currentUser.service.google.email) == memberRec.email);
+            // // Member's email and current user's email both are same.
+            // if(emailRec) {
+                // Accept the invitation by updating `inviteAccepted` in `SchoolMemberDetails`.
+                Meteor.call("school.updateInviteAcceptedToMemberRec",{...this.props.location.query},function(err,res) {
+                    console.log("res====>",res)
+                    if(res && res.inviteAccepted) {
+                        alert('You have accepted the invitation');
+                    }
+                    if(res && !res.memberLogin) {
+                        alert("Please login as a School Member");
+                    }
+                });
+            // } else {
+            //     alert("Please login with member's id");
+            // }
+        } else { // Not login then open login Modal.
+            Events.trigger("loginAsSchoolAdmin");
+            this.setState({memberInvitedDialogBox: false});
+        }
+        // login user and verified.
+    }
+
+    handleMemberInvitedDialogBoxState = (state) => {
+        this.setState({memberInvitedDialogBox: state});
+    }
+
     renderFilterPanel = () => {
         return <FilterPanel
             currentAddress={this.state.defaultLocation || this.state.locationName}
@@ -507,6 +545,14 @@ class Landing extends Component {
         console.log("Landing state -->>",this.state);
         return(
             <div>
+                {
+                    this.state.memberInvitedDialogBox &&
+                    <MemberInvitedDialogBox
+                        open={this.state.memberInvitedDialogBox}
+                        onModalClose={() => this.handleMemberInvitedDialogBoxState(false)}
+                        onAgreeButtonClick={this.handleInvitationAgreeButton}
+                    />
+                }
                 <FiltersDialogBox
                     open={this.state.filterPanelDialogBox}
                     onModalClose={() => this.handleFiltersDialogBoxState(false)}
