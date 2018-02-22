@@ -365,10 +365,7 @@ Meteor.methods({
         // Only school admin can add a new Memeber.
         const userRecExist = Meteor.users.findOne({ "emails.address": doc.email });
         const googleUserRec = Meteor.users.findOne({ "services.google.email": doc.email });
-        console.log("userRecExist", userRecExist);
-        console.log("googleUserRec", googleUserRec);
-        let insertMember, memberDetail, activeUserId,newlyCreatedUser;
-        console.log("doc data===>", doc);
+        let insertMember, memberDetail, newlyCreatedUser;
         // User is not an active user in skillshape then need to create user and add them as a member of a particular class of a School.
         if (!userRecExist && !googleUserRec) {
             doc.sendMeSkillShapeNotification = true;
@@ -440,6 +437,17 @@ Meteor.methods({
         } else {
             throw new Meteor.Error("Insufficient information!!");
         }
+    },
+    "school.updateInviteAcceptedToMemberRec": function({memberId,schoolId,acceptInvite}) {
+        let schoolMemberDetails = SchoolMemberDetails.find({_id:memberId,schoolId:schoolId});
+        let currentUser = Meteor.users.findOne(this.userId);
+        let email = (currentUser.emails && currentUser.emails[0].address) || currentUser.services.google.email;
+        if(this.userId && schoolMemberDetails.email == email) {
+            SchoolMemberDetails.update({_id:memberId},{$set:{inviteAccepted:true}});
+        } else {
+            return {memberLogin:false};
+        }
+        return {inviteAccepted:true};
     }
 });
 
