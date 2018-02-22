@@ -4,9 +4,9 @@ import Recaptcha from 'react-recaptcha';
 import styled from 'styled-components';
 import { SocialIcon } from 'react-social-icons';
 import Grid from 'material-ui/Grid';
-import Radio, { RadioGroup } from 'material-ui/Radio';
 import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
-
+import Radio, { RadioGroup } from 'material-ui/Radio';
+import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'material-ui/Form';
 
 
 import Button from 'material-ui/Button';
@@ -37,13 +37,6 @@ import Dialog , {
   withMobileDialog,
 } from 'material-ui/Dialog';
 
-import {
-  FormLabel,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  FormHelperText,
-} from 'material-ui/Form';
 
 const styles = {
   dialogPaper: {
@@ -95,7 +88,7 @@ const styles = {
   }
 }
 
-class TaggedMemberDialogBox extends Component {
+class EditTaggedMemberDialogBox extends Component {
 
     state = {
     }
@@ -122,7 +115,7 @@ class TaggedMemberDialogBox extends Component {
             sendMeSkillShapeNotification
         } = this.state;*/
 
-        console.log('TaggedMemberDialogBox state -->>',taggedMemberDetails);
+        console.log('EditTaggedMemberDialogBox state -->>',taggedMemberDetails);
         //console.log('SignUpDialogBox props -->>',this.props);
         return(
             <Dialog
@@ -136,35 +129,41 @@ class TaggedMemberDialogBox extends Component {
                 <MuiThemeProvider theme={muiTheme}>
                     <form /*onSubmit={this.props.onSubmit.bind(this, {name, email, captchaValue, sendMeSkillShapeNotification})}*/>
                       <Grid container>
-                        <Grid item md={12} sm={12} xs={12}>
-                        {taggedMemberDetails.name ? <Typography>Media Title:{taggedMemberDetails.name}</Typography>:''}
+                        <Grid item md={4} sm={4} xs={4}>
+                          <Typography>Media Title:</Typography>
                         </Grid>
-                        <Grid item md={12} sm={12} xs={12}>
-                        {taggedMemberDetails.name ? <Typography>School:{taggedMemberDetails.name}</Typography>:''}
+                        <Grid item md={8} sm={8} xs={8}>
+                          <Input
+                            type="text"
+                            inputRef={(ref) => (this.urlInput = ref)}
+                            defaultValue={taggedMemberDetails.name}
+                          />
                         </Grid>
-                        {
-                          (taggedMemberDetails.taggedUserData && taggedMemberDetails.taggedUserData.length > 0) &&
-                          <div>
-                            <Grid item md={4} sm={4} xs={4}>
-                              <Typography>Members:</Typography>
-                            </Grid>
-                            <Grid item md={8} sm={8} xs={8}>
-                              <div>
-                                {taggedMemberDetails.taggedUserData.map((item)=>{
-                                  return item && item.profile.name
-                                })}
-                              </div>
-                            </Grid>
-                          </div>
-                        }
-                        <Grid container>
-                          <Grid md={8} sm={8} xs={8} style={{ padding: 16}}>
-                            <Typography>You are tagged</Typography>
-                            <Button>Untag Me</Button>
-                          </Grid>
-                          <Grid md={12} sm={12} xs={12} style={{ padding: 16}} >
-                            <Typography>Permissions:</Typography>
-                            <FormControl component="fieldset" required >
+                        <Grid item md={4} sm={4} xs={4}>
+                          <Typography>Members:</Typography>
+                        </Grid>
+                        <Grid item md={8} sm={8} xs={8}>
+                          <Input
+                            type="text"
+                            inputRef={(ref) => (this.urlInput = ref)}
+                            defaultValue={(taggedMemberDetails.taggedUserData && taggedMemberDetails.taggedUserData.length > 0) ? taggedMemberDetails.taggedUserData[0].profile.name : ''}
+                          />
+                        </Grid>
+                        <Grid item md={4} sm={4} xs={4}>
+                          <Typography>School:</Typography>
+                        </Grid>
+                        <Grid item md={8} sm={8} xs={8}>
+                          <Input
+                            type="text"
+                            inputRef={(ref) => (this.urlInput = ref)}
+                            defaultValue={taggedMemberDetails.name}
+                          />
+                        </Grid>
+                        <Grid item md={4} sm={4} xs={4}>
+                          <Typography>Permissions:</Typography>
+                        </Grid>
+                        <Grid item md={8} sm={8} xs={8}>
+                          <FormControl component="fieldset" required >
                               <RadioGroup
                                   aria-label="mediaSetting"
                                   value={this.state.mediaDefaultValue}
@@ -175,8 +174,7 @@ class TaggedMemberDialogBox extends Component {
                                   <FormControlLabel value="public" control={<Radio />} label="Make media public so you can share them on social media." />
                                   <FormControlLabel value="member" control={<Radio />} label="Make media from a school only available to members of the school that posted it." />
                               </RadioGroup>
-                            </FormControl>
-                          </Grid>
+                          </FormControl>
                         </Grid>
                         <Grid item md={4} sm={4} xs={4}>
                           <Typography>Notes:</Typography>
@@ -192,8 +190,9 @@ class TaggedMemberDialogBox extends Component {
                           />
                         </Grid>
                         <Grid item>
-                          <Button>Report as inappropriate</Button>
-                          <Button onClick={this.props.openEditTaggedModal}>Edit</Button>
+                          <Button>Delete this image</Button>
+                          <Button>Cancel</Button>
+                          <Button>Save</Button>
                         </Grid>
                       </Grid>
                     </form>
@@ -203,7 +202,7 @@ class TaggedMemberDialogBox extends Component {
     }
 }
 
-TaggedMemberDialogBox.propTypes = {
+EditTaggedMemberDialogBox.propTypes = {
   onModalClose: PropTypes.func,
   onLoginButtonClick: PropTypes.func,
   onSignUpButtonClick: PropTypes.func,
@@ -215,4 +214,4 @@ TaggedMemberDialogBox.propTypes = {
   unsetError: PropTypes.func,
 }
 
-export default withMobileDialog()(withStyles(styles)(TaggedMemberDialogBox));
+export default withMobileDialog()(withStyles(styles)(EditTaggedMemberDialogBox));

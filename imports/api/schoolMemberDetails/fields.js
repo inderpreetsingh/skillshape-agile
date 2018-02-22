@@ -74,6 +74,12 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
     packageName: { // Students can have package name.
         type: String,
         optional: true
+    },
+    activeUserId: {
+        type: String
+    },
+    inviteAccepted: {
+        type: Boolean
     }
 }));
 

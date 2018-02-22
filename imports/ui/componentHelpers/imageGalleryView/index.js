@@ -9,6 +9,7 @@ import Icon from 'material-ui/Icon';
 
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import TaggedMemberDialogBox from '/imports/ui/components/landing/components/dialogs/TaggedMemberDialogBox.js';
+import EditTaggedMemberDialogBox from '/imports/ui/components/landing/components/dialogs/EditTaggedMemberDialogBox.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { withStyles } from "/imports/util";
 import './gallery.css';
@@ -161,7 +162,7 @@ class ImageGalleryView extends React.Component {
   }
 
   _renderVideo(item) {
-    console.log("item===>",item)
+
     return (
       <div className='image-gallery-image'>
         {
@@ -208,6 +209,16 @@ class ImageGalleryView extends React.Component {
   }
   handleTagPhoto = () => {
   }
+
+  openEditTaggedModal = () => {
+    console.log("openEditTaggedModal");
+    this.setState(
+      {
+        openEditTaggedModal:true,
+        showListOfMembers:false
+      }
+    )
+  }
   render() {
     return (
         <div style={{position: "relative"}}>
@@ -227,8 +238,17 @@ class ImageGalleryView extends React.Component {
                   open={this.state.showListOfMembers}
                   onModalClose={() => this.setState({showListOfMembers:false})}
                   taggedMemberDetails={this.state.taggedMemberDetails}
-
+                  openEditTaggedModal= {this.openEditTaggedModal}
               />
+          }
+          {
+            this.state.openEditTaggedModal &&
+            <EditTaggedMemberDialogBox
+                open={this.state.openEditTaggedModal}
+                onModalClose={() => this.setState({openEditTaggedModal:false})}
+                taggedMemberDetails={this.state.taggedMemberDetails}
+                openEditTaggedModal= {this.openEditTaggedModal}
+            />
           }
           {
             !this.props.mediaSubscriptionReady && <ContainerLoader />

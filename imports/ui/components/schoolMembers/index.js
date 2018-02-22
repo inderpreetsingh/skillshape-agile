@@ -147,10 +147,13 @@ class DashView extends React.Component {
         // Show Loading
         this.setState({isLoading:true});
         // Add a new member in School.
-        Meteor.call('school.addNewMember',payload , ()=> {
+        Meteor.call('school.addNewMember',payload , (err,res)=> {
             this.setState({renderStudentModal:false});
             // Stop Loading
             this.setState({isLoading:false})
+            if(res) {
+                console.log("result of school.addNewMember===>",res)
+            }
         });
     }
     handleMemberDialogBoxState = () => {
