@@ -83,17 +83,16 @@ const SearchInputsSection = (props) => (
 <SearchInputsSectionWrapper>
   <InputWrapper>
     <MySearchBar
-      placeholder="skill type"
+      placeholder="Skill Type"
       defaultBorderRadius
       onChange={props.onSkillTypeChange}
-      closeIcon={<span></span>}
-      searchIcon={<span></span>}
+      withIcon={false}
     />
   </InputWrapper>
   <In>in</In>
   <InputWrapper>
     <MySearchBar
-      placeholder="location"
+      placeholder="Location"
       defaultBorderRadius
       onChange={props.onLocationInputChange}
     />

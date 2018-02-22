@@ -256,6 +256,7 @@ class Landing extends Component {
         oldFilter.is_map_view = !this.state.mapView;
         this.setState({
             mapView: !this.state.mapView,
+            sticky: false,
             filters: oldFilter,
         });
 

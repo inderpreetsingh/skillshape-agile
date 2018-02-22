@@ -46,6 +46,7 @@
 
   .rw-multiselect-tag {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     overflow: hidden;
     max-width: initial;
@@ -53,6 +54,22 @@
     margin: 0;
     margin-right: 2px;
     border-radius: 2px;
+    font-size: 12px;
+    min-height: map-get($sizes,'rhythm-div') * 4px;
+    min-width: map-get($sizes,'rhythm-div') * 2px;
+
+    & > span {
+      line-height: 1;
+      min-width: 0;
+      max-width: 90%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    & > div {
+      flex-grow: 1;
+      flex-shrink: 0;
+    }
   }
 
   .rw-input-reset {

@@ -24,7 +24,6 @@ const FilterButtonWrapper = styled.div`
 `;
 
 class MyTagList extends React.Component {
-
   static propTypes ={
     id: PropTypes.string.isRequired,
     activeId: PropTypes.string.isRequired,
@@ -35,14 +34,17 @@ class MyTagList extends React.Component {
 
     valueAccessor: PropTypes.func.isRequired,
     textAccessor: PropTypes.func.isRequired,
-
     onDelete: PropTypes.func.isRequired,
     valueComponent: PropTypes.func,
-
     disabled: CustomPropTypes.disabled.acceptsArray,
   };
 
+  state = {
+    mobile: false
+  }
+
   handleDelete = (item, event) => {
+    // console.log('handling delete,',item);
     if (this.props.disabled !== true)
       this.props.onDelete(item, event)
   };
@@ -52,6 +54,23 @@ class MyTagList extends React.Component {
     console.log('click..');
     if(this.props.onNoOfFiltersClick)
       this.props.onNoOfFiltersClick();
+  }
+
+  handleUpdateDimensions = (e) => {
+    if(window.innerWidth < 500) {
+      if(!this.state.mobile) this.setState({ mobile: true });
+    }else {
+      if(this.state.mobile) this.setState({ mobile: false })
+    }
+  }
+
+  componentDidMount = () => {
+    this.handleUpdateDimensions();
+    window.addEventListener('resize',this.handleUpdateDimensions);
+  }
+
+  componentWillUnMount = () => {
+    window.addEventListener('resize',this.handleUpdateDimensions);
   }
 
   renderCustomList() {
@@ -75,9 +94,13 @@ class MyTagList extends React.Component {
           : <span>{textAccessor(item)}</span>
         }
       </MultiselectTag>
-      <li className="rw-multiselect-tag no-shrink">...</li>
       <FilterButtonWrapper>
-        <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+ ${noOfFilters} Filters`}</button>
+        {this.state.mobile ?
+        <div>
+          <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+ ${noOfFilters}`}</button>
+        </div>
+        :
+        <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+ ${noOfFilters} Filters`}</button>}
       </FilterButtonWrapper>
     </Fragment>
     );

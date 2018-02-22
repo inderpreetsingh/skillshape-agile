@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
@@ -150,7 +150,9 @@ class MySearchBar extends Component {
           disabled={disabled}
           />
         </LeftSideInput>
-        <IconButton
+        {this.props.withIcon &&
+        ( <Fragment>
+          <IconButton
           style={styles.iconTransitions}
           className={showIconClass}
           disabled={disabled}
@@ -164,7 +166,7 @@ class MySearchBar extends Component {
           disabled={disabled}
         >
           {React.cloneElement(closeIcon)}
-        </IconButton>
+        </IconButton></Fragment>)}
         <RightSideInput inputOnSide={this.props.inputOnSide}>
           <Input
           {...inputProps}
@@ -191,13 +193,15 @@ MySearchBar.defaultProps = {
   style: null,
   value: '',
   inputOnSide: 'left',
-  defaultBorderRadius: false
+  defaultBorderRadius: false,
+  withIcon: true
 }
 
 MySearchBar.propTypes = {
   // This specifies the side in the bar where there is input.
   inputOnSide: PropTypes.string,
-
+  // To specify whether we want closing/searching icon
+  withIcon: PropTypes.bool,
   closeIcon: PropTypes.node,
 
   disabled: PropTypes.bool,
