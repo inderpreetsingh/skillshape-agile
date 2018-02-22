@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
@@ -45,6 +45,9 @@ const styles = {
   },
   iconTransitions: {
     transition: 'transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)'
+  },
+  rightAlign: {
+    textAlign: 'right'
   }
 }
 
@@ -130,8 +133,14 @@ class MySearchBar extends Component {
     let closeIconClass = classes.iconButtonRoot + ' ' + this._getCloseIconClassName(this.state.active,classes);
     let showIconClass = classes.iconButtonRoot + ' ' + this._getShowIconClassName(this.state.active,classes);
     let rootClass = `${classes.root} `;
+    let inputClass = ``;
+
     if(this.props.defaultBorderRadius) {
       rootClass += `${classes.defaultBorderRadius}`;
+    }
+
+    if(this.props.rightAlign) {
+      inputClass = `${classes.rightAlign}`;
     }
 
     // console.log('clostIconClass',closeIconClass,showIconClass);
@@ -148,9 +157,12 @@ class MySearchBar extends Component {
           fullWidth
           disableUnderline={true}
           disabled={disabled}
+          classes={{input: inputClass}}
           />
         </LeftSideInput>
-        <IconButton
+        {this.props.withIcon &&
+        ( <Fragment>
+          <IconButton
           style={styles.iconTransitions}
           className={showIconClass}
           disabled={disabled}
@@ -164,7 +176,7 @@ class MySearchBar extends Component {
           disabled={disabled}
         >
           {React.cloneElement(closeIcon)}
-        </IconButton>
+        </IconButton></Fragment>)}
         <RightSideInput inputOnSide={this.props.inputOnSide}>
           <Input
           {...inputProps}
@@ -191,13 +203,16 @@ MySearchBar.defaultProps = {
   style: null,
   value: '',
   inputOnSide: 'left',
-  defaultBorderRadius: false
+  defaultBorderRadius: false,
+  withIcon: true,
+  rightAlign: false,
 }
 
 MySearchBar.propTypes = {
   // This specifies the side in the bar where there is input.
   inputOnSide: PropTypes.string,
-
+  // To specify whether we want closing/searching icon
+  withIcon: PropTypes.bool,
   closeIcon: PropTypes.node,
 
   disabled: PropTypes.bool,

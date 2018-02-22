@@ -24,7 +24,7 @@ const SearchAreaPanel = styled.div`
   text-align: center;
 
    @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
-     max-width:300px;
+     max-width: 500px;
   }
 `;
 
@@ -68,36 +68,51 @@ const In = styled.p`
 
 const FilterButtonWrapper = styled.div`
   width: 100px;
+
+  @media screen and (max-width : ${helpers.mobile}px) {
+    width: 100%;
+    margin-top: ${helpers.rhythmDiv}px;
+  }
 `;
 
 const SearchInputsSectionWrapper = styled.div`
   ${helpers.flexCenter}
+
+  @media screen and (max-width : ${helpers.mobile}px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const InputWrapper = styled.div`
   height: 48px;
 `;
 
+const InputsWrapper = styled.div`
+  ${helpers.flexCenter}
+`;
 
 const SearchInputsSection = (props) => (
 <SearchInputsSectionWrapper>
-  <InputWrapper>
-    <MySearchBar
-      placeholder="skill type"
-      defaultBorderRadius
-      onChange={props.onSkillTypeChange}
-      closeIcon={<span></span>}
-      searchIcon={<span></span>}
-    />
-  </InputWrapper>
-  <In>in</In>
-  <InputWrapper>
-    <MySearchBar
-      placeholder="location"
-      defaultBorderRadius
-      onChange={props.onLocationInputChange}
-    />
-  </InputWrapper>
+  <InputsWrapper>
+    <InputWrapper>
+      <MySearchBar
+        placeholder="Skill Type"
+        defaultBorderRadius
+        onChange={props.onSkillTypeChange}
+        withIcon={false}
+        rightAlign
+      />
+    </InputWrapper>
+    <In>in</In>
+    <InputWrapper>
+      <MySearchBar
+        placeholder="Location"
+        defaultBorderRadius
+        onChange={props.onLocationInputChange}
+      />
+    </InputWrapper>
+ </InputsWrapper>
  <FilterButtonWrapper>
    <PrimaryButton
    label="Filters"

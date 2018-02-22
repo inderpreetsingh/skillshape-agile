@@ -27,6 +27,10 @@ const Title = styled.h1`
   color: ${helpers.black};
   font-size: ${helpers.baseFontSize * 3}px;
   font-style: italic;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    font-size: ${helpers.baseFontSize * 2}px;
+  }
 `;
 
 const ButtonsWrapper = styled.div`
