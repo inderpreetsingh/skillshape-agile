@@ -94,7 +94,7 @@ class MySearchBar extends Component {
       active: e.target.value !== '' ? true : false
     });
 
-    this.props.onChange && this.props.onChange(e.target.value);
+    this.props.onChange && this.props.onChange(e);
   }
 
   handleCancel = () => {

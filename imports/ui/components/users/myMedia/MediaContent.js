@@ -1,9 +1,10 @@
 import React from 'react';
 import get from 'lodash/get';
+import { createContainer } from 'meteor/react-meteor-data';
 import isEmpty from 'lodash/isEmpty';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { createContainer } from 'meteor/react-meteor-data';
+import Typography from 'material-ui/Typography';
 
 import SchoolMemberMedia from '/imports/ui/components/schoolMembers/mediaDetails';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
@@ -26,7 +27,6 @@ class MediaContent extends React.Component {
     	if(email) {
 	    	this.setState({isLoading: true});
 	    	Meteor.call("school.getSchoolWithConnectedTagedMedia", {email}, (err, res) => {
-	    		console.log("Call res -->>",err,res)
 	    		let state = {
 	                isLoading: false,
 	            }
@@ -48,7 +48,11 @@ class MediaContent extends React.Component {
     		<div>
     			{this.state.isLoading && <Preloader/>}
     			{
-    				!isEmpty(schoolList) && schoolList.map((school, index)=> {
+    				isEmpty(schoolList) ? (
+                        <Typography type="display2" gutterBottom align="center">
+                            Media Data not found!!!
+                        </Typography>
+                        ) : schoolList.map((school, index)=> {
     					return  <SchoolMemberMedia
     						key={school._id}
 	                        schoolData={school}

@@ -144,25 +144,33 @@ class SearchArea extends Component {
     skillType: ''
   }
 
-  handleLocationInputChange = (e) => {
-    e.preventDefault();
+  handleLocationInputChange = (event) => {
+    let value = '';
+    if(event) {
+      event.preventDefault();
+      value = event.target.value
+    }
     this.setState({
-      location: e.target.value
+      location: value
     });
 
     if(this.props.onLocationInputChange) {
-      this.props.onLocationInputChange(e.target.value);
+      this.props.onLocationInputChange(value);
     }
   }
 
-  handleSkillTypeChange = (e) => {
-    e.preventDefault();
+  handleSkillTypeChange = (event) => {
+    let value = '';
+    if(event) {
+      event.preventDefault();
+      value = event.target.value
+    }
     this.setState({
-      skillType: e.target.value
+      skillType: value
     });
 
     if(this.props.onSkillTypeChange) {
-      this.props.onSkillTypeChange(e.target.value);
+      this.props.onSkillTypeChange(value);
     }
   }
 

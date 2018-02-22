@@ -179,7 +179,8 @@ class Landing extends Component {
             },
             tempFilters: {},
         }
-        this.onSearch = debounce(this.onSearch, 1000);
+        this.handleLocationSearch = debounce(this.handleLocationSearch, 1000);
+        this.handleSkillTypeSearch = debounce(this.handleSkillTypeSearch, 1000);
     }
 
     componentWillMount() {
@@ -303,11 +304,23 @@ class Landing extends Component {
       this.setState({filters:oldFilter})
     }
 
-    onSearch = (value) => {
-        let oldFilters = {...this.state.filters};
-        oldFilters.mainSearchText = value;
+    handleLocationSearch = (locationText) => {
+        // console.log("handleLocationSearch -->>",locationText)
         this.setState({
-            filters: oldFilters
+            filters: {
+                ...this.state.filters,
+                locationText
+            }
+        })
+    }
+
+    handleSkillTypeSearch = (skillTypeText) => {
+        // console.log("handleSkillTypeSearch -->>",skillTypeText);
+        this.setState({
+            filters: {
+                ...this.state.filters,
+                skillTypeText
+            }
         })
     }
 
@@ -523,7 +536,8 @@ class Landing extends Component {
                       currentUser={this.props.currentUser}
                     />
                     <SearchArea
-                        onSearch={this.onSearch}
+                        onLocationInputChange={this.handleLocationSearch}
+                        onSkillTypeChange={this.handleSkillTypeSearch}
                         onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
                         getMyCurrentLocation={this.getMyCurrentLocation}
                     />

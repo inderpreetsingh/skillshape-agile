@@ -118,9 +118,13 @@ Meteor.publish("school.getClassTypesByCategory", function({
     skillCategoryClassLimit,
     mainSearchText,
     schoolName,
+    skillTypeText,
+    locationText,
 }) {
     console.log("schoolId-->>", schoolId)
     console.log("is_map_view-->>", is_map_view)
+    console.log("skillTypeText-->>", skillTypeText)
+    console.log("locationText-->>", locationText)
     // console.log("_monthPrice", _monthPrice);
     console.log("coords", coords);
     console.log("NEPoint", NEPoint);
@@ -197,20 +201,23 @@ Meteor.publish("school.getClassTypesByCategory", function({
         }
     }
 
-    if(!_.isEmpty(mainSearchText)) {
+    if(skillTypeText) {
         skillCategoryFilter["$or"] = [];
-        const skillSubjectData = SkillSubject.find({ "$text" : { $search: mainSearchText } }).fetch();
+        const skillSubjectData = SkillSubject.find({ "$text" : { $search: skillTypeText } }).fetch();
 
         if(!_.isEmpty(skillSubjectData)) {
             const skillCategoryIds = skillSubjectData.map((data) => data.skillCategoryId);
             skillCategoryFilter["$or"].push({ _id: { $in: skillCategoryIds } })
         }
 
-        skillCategoryFilter["$or"].push({ "$text": { $search: mainSearchText } })
-        classfilter["$text"] = { $search: mainSearchText };
+        skillCategoryFilter["$or"].push({ "$text": { $search: skillTypeText } })
+
+    }
+
+    if(locationText) {
+        classfilter["$text"] = { $search: locationText };
 
         const classTypeExitWithLocationFilter = ClassType.findOne(classfilter);
-
         if(!classTypeExitWithLocationFilter) {
             delete classfilter["$text"];
         }
@@ -218,7 +225,6 @@ Meteor.publish("school.getClassTypesByCategory", function({
         if(!_.isEmpty(classfilter["filters.location"])) {
             delete classfilter["filters.location"];
         }
-
     }
     console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", JSON.stringify(classfilter, null, "  "));
     console.log("<<<<<<<<<<<<<<<<skillCategoryFilter>>>>>>>>>>>>>>>", JSON.stringify(skillCategoryFilter, null, "  "));
