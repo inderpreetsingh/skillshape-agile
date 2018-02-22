@@ -41,7 +41,7 @@ const ContentSection = styled.div`
 const IssueCard = (props) => (
   <Wrapper onClick={props.onClick} active={props.active}>
     <ContentSection active={props.active}>
-      {props.active && props.content}
+      {props.content}
     </ContentSection>
   </Wrapper>
 );
