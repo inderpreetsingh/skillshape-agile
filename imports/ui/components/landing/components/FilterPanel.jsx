@@ -82,18 +82,24 @@ const SwitchViewWrapper = styled.div`
 
 const GridContainerWrapper = styled.div`
   ${helpers.flexCenter}
+
 `;
 
 const MapChangeButtonWrapper = styled.div`
   width: 130px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    margin-right: ${helpers.rhythmDiv}px;
+    margin-right: ${helpers.rhythmDiv * 2}px;
+    width: 80px;
   }
 `;
 
 const ContainerWrapper = styled.div`
   width: calc(100% - 130px);
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: calc(100% - 80px);
+  }
 `;
 
 class FilterPanel extends Component {
@@ -102,6 +108,7 @@ class FilterPanel extends Component {
         skillCategoryData:[],
         skillSubjectData:[],
         locationName: '',
+        mobile: false,
         filter: {
             skillSubjectIds: null,
             perClassPrice: [],
@@ -111,6 +118,36 @@ class FilterPanel extends Component {
             age: null
         }
     }
+
+
+      handleChangeInScreenSize = () => {
+        if(window.innerWidth < 500) {
+          if(!this.state.mobile) {
+            this.setState({
+              ...this.state,
+              mobile: true,
+              ...this.state.filter
+            })
+          }
+        }else {
+          if(this.state.mobile) {
+            this.setState({
+              ...this.state,
+              mobile: false,
+              ...this.state.filter
+            })
+          }
+        }
+      }
+
+      componentDidMount = () => {
+        window.addEventListener("resize",this.handleChangeInScreenSize);
+      }
+      componentWillUnMount = () => {
+        window.removeEventListener("resize",this.handleChangeInScreenSize);
+      }
+
+
     componentWillMount() {
         const dataSourceCategories = Meteor.call('getAllSkillCategories', (err,result) => {
             console.log(result,'result');
@@ -133,11 +170,11 @@ class FilterPanel extends Component {
     renderFilterBar = () => {
       return (<GridContainerWrapper>
         <MapChangeButtonWrapper>
-          {this.props.mapView ?
-            <PrimaryButton noMarginBottom icon iconName="grid_on" label="List View" onClick={this.props.handleToggleMapView} />
-            :
-            <PrimaryButton noMarginBottom icon iconName="map" label="Map View" onClick={this.props.handleToggleMapView} />}
-      </MapChangeButtonWrapper>
+        {this.props.mapView ?
+          <PrimaryButton noMarginBottom icon iconName="grid_on" label={this.state.mobile ? "List" : "List View"} onClick={this.props.handleToggleMapView} />
+          :
+          <PrimaryButton noMarginBottom icon iconName="map" label={this.state.mobile ? "Map" : "Map View"} onClick={this.props.handleToggleMapView} />}
+        </MapChangeButtonWrapper>
       <ContainerWrapper>
       <Grid container spacing={24}>
         <Grid item xs={9} sm={3}>

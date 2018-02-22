@@ -45,6 +45,9 @@ const styles = {
   },
   iconTransitions: {
     transition: 'transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)'
+  },
+  rightAlign: {
+    textAlign: 'right'
   }
 }
 
@@ -130,8 +133,14 @@ class MySearchBar extends Component {
     let closeIconClass = classes.iconButtonRoot + ' ' + this._getCloseIconClassName(this.state.active,classes);
     let showIconClass = classes.iconButtonRoot + ' ' + this._getShowIconClassName(this.state.active,classes);
     let rootClass = `${classes.root} `;
+    let inputClass = ``;
+
     if(this.props.defaultBorderRadius) {
       rootClass += `${classes.defaultBorderRadius}`;
+    }
+
+    if(this.props.rightAlign) {
+      inputClass = `${classes.rightAlign}`;
     }
 
     // console.log('clostIconClass',closeIconClass,showIconClass);
@@ -148,6 +157,7 @@ class MySearchBar extends Component {
           fullWidth
           disableUnderline={true}
           disabled={disabled}
+          classes={{input: inputClass}}
           />
         </LeftSideInput>
         {this.props.withIcon &&
@@ -194,7 +204,8 @@ MySearchBar.defaultProps = {
   value: '',
   inputOnSide: 'left',
   defaultBorderRadius: false,
-  withIcon: true
+  withIcon: true,
+  rightAlign: false,
 }
 
 MySearchBar.propTypes = {

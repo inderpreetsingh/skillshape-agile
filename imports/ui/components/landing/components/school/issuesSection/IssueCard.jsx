@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   justify-content: flex-end;
   cursor: pointer;
   margin: 0 ${helpers.rhythmDiv * 2}px;
-  transition: max-width .2s ease-in;
+  transition: max-width .15s ease-in;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     max-width: ${props => props.active ? 250 : 100}px;
@@ -31,11 +31,9 @@ const ContentSection = styled.div`
   font-size: ${helpers.baseFontSize}px;
   line-height: 1;
   font-weight: 400;
-  transition: transform .2s ease-in, opacity .2s linear .1s;
   opacity: 1;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    transform: ${props => props.active ? 'scale(1,1)' : 'scale(0,0)'};
     opacity: ${props => props.active ? 1 : 0};
   }
 `;
@@ -43,7 +41,7 @@ const ContentSection = styled.div`
 const IssueCard = (props) => (
   <Wrapper onClick={props.onClick} active={props.active}>
     <ContentSection active={props.active}>
-      {props.content}
+      {props.active && props.content}
     </ContentSection>
   </Wrapper>
 );

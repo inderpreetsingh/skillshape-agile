@@ -65,64 +65,64 @@ const getIconForButton = (props) => {
 }
 
 const PrimaryButton = (props) => {
-  let rootClass = ``;
-  // console.log(CustomIcon,"Custom Icon")
-  if(props.fullWidth && props.noMarginBottom) {
-    rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth} ${props.classes.noMarginBottom}`;
-  }else if(props.fullWidth) {
-    rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth}`;
-  }else if(props.noMarginBottom) {
-    rootClass = `${props.classes.primaryButton} ${props.classes.noMarginBottom}`;
-  }
-  else{
-    rootClass = props.classes.primaryButton;
-  }
+    let rootClass = ``;
+    // console.log(CustomIcon,"Custom Icon")
+    if(props.fullWidth && props.noMarginBottom) {
+      rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth} ${props.classes.noMarginBottom}`;
+    }else if(props.fullWidth) {
+      rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth}`;
+    }else if(props.noMarginBottom) {
+      rootClass = `${props.classes.primaryButton} ${props.classes.noMarginBottom}`;
+    }
+    else{
+      rootClass = props.classes.primaryButton;
+    }
 
-  // These classes are very specific to the filter button in the searchBar
-  if(props.increaseHeight) {
-    rootClass = rootClass + ' ' + props.classes.searchBarHeight;
-  }
+    // These classes are very specific to the filter button in the searchBar
+    if(props.increaseHeight) {
+      rootClass = rootClass + ' ' + props.classes.searchBarHeight;
+    }
 
-  if(props.boxShadow) {
-    rootClass = rootClass + ' ' + props.classes.searchBarShadow;
-  }
+    if(props.boxShadow) {
+      rootClass = rootClass + ' ' + props.classes.searchBarShadow;
+    }
 
-  if(props.itemScope && props.itemType) {
-    return(<Button
-      classes={{
-        root: rootClass,
-        label: props.classes.primaryButtonLabel
-      }}
-      onClick={props.onClick}
-      disabled={props.disabled}
-      itemScope
-      itemType={props.itemType}
-      type={props.type}
-    >
-        {getIconForButton(props)}
+    if(props.itemScope && props.itemType) {
+      return(<Button
+        classes={{
+          root: rootClass,
+          label: props.classes.primaryButtonLabel
+        }}
+        onClick={props.onClick}
+        disabled={props.disabled}
+        itemScope
+        itemType={props.itemType}
+        type={props.type}
+      >
+          {getIconForButton(props)}
 
-        {props.label ? props.label : 'Submit'}
+          {props.label ? props.label : 'Submit'}
+        </Button>
+      )
+    }
+
+    return (
+
+      <Button
+        classes={{
+          root: rootClass,
+          label: props.classes.primaryButtonLabel
+        }}
+        onClick={props.onClick}
+        disabled={props.disabled}
+        type={props.type}
+        formId={props.formId}
+      >
+          {getIconForButton(props)}
+
+          {props.label ? props.label : 'Submit'}
       </Button>
     )
-  }
-
-  return (
-
-    <Button
-      classes={{
-        root: rootClass,
-        label: props.classes.primaryButtonLabel
-      }}
-      onClick={props.onClick}
-      disabled={props.disabled}
-      type={props.type}
-      formId={props.formId}
-    >
-        {getIconForButton(props)}
-
-        {props.label ? props.label : 'Submit'}
-    </Button>
-  )
 }
 
 PrimaryButton.propTypes = {
