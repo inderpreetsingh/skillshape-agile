@@ -216,3 +216,26 @@ export const sendEmailToStudentForPriceInfoUpdate = function(
             });
     }
 };
+
+
+export const sendEmailToStudentForClaimAsMember = function(
+    user,
+    passwd,
+    fromEmail,
+    toEmail,
+    ROOT_URL
+) {
+    if (Meteor.isServer) {
+        Email.send({
+            to: toEmail,
+            from: fromEmail,
+            subject: "School member invitation received",
+            html: `Hi ${user.profile.name},
+            {Admin Name} from {School Name} has invited you to claim your account.
+            Click on the following link to verify your email address:\n
+            ${ROOT_URL}
+            ${passwd ? `Your temporary password is  : ${passwd} You will be asked to make your own when you click the link above.`: ''}
+             \n\nThanks, \n\n${EmailSignature}`
+        });
+    }
+};

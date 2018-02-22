@@ -10,6 +10,7 @@ import PriceInfoRequest from "/imports/api/priceInfoRequest/fields.js";
 import { sendClaimASchoolEmail } from "/imports/api/email";
 import { sendConfirmationEmail } from "/imports/api/email";
 import { sendPriceInfoRequestEmail } from "/imports/api/email";
+import { sendEmailToStudentForClaimAsMember } from "/imports/api/email";
 import { getUserFullName } from '/imports/util/getUserData';
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
@@ -354,19 +355,66 @@ Meteor.methods({
             throw new Meteor.Error("Permission denied!!");
         }
     },
-    // This function is used to add a school member in `School`.
-    "school.addNewMember" : function(doc) {
+    /*** This function is used to add a school member in `School`.
+      * Here we check if user not exist then need to create new user and send invitation
+      * to this user so that it can become active member by clicking on it.
+      * if user is already a skillshape user then just make them as a member of School.
+    */
+    "school.addNewMember": function(doc) {
         // Validations
         // Only school admin can add a new Memeber.
-        console.log("school.addNewMember",doc)
-        doc.createdBy = this.userId;
-        const schoolAdminRec = Meteor.users.findOne({"profile.schoolId": doc.schoolId});
-        // You are not School Admin of this School so you can not add a New Member.
-        if(!schoolAdminRec) {
-            return {accessDenied:true};
+        const userRecExist = Meteor.users.findOne({ "emails.address": doc.email });
+        const googleUserRec = Meteor.users.findOne({ "services.google.email": doc.email });
+        console.log("userRecExist", userRecExist);
+        console.log("googleUserRec", googleUserRec);
+        let insertMember, memberDetail, activeUserId,newlyCreatedUser;
+        console.log("doc data===>", doc);
+        // User is not an active user in skillshape then need to create user and add them as a member of a particular class of a School.
+        if (!userRecExist && !googleUserRec) {
+            doc.sendMeSkillShapeNotification = true;
+            doc.name = doc.firstName;
+            newlyCreatedUser = Meteor.call("user.createUser", {...doc});
+            console.log("activeUserId===>",newlyCreatedUser)
+            doc.activeUserId = newlyCreatedUser.user._id;
+        } else {
+            // User is already a member in skillshape then need to make them as a School member if they are not member in a Class.
+            memberDetail = SchoolMemberDetails.findOne({email:doc.email,classIds:{$in:doc.classIds}});
+            if (!memberDetail) {
+                doc.activeUserId = userRecExist._id || googleUserRec._id;
+            } else {
+                insertMember = true;
+            }
         }
-        SchoolMemberDetails.insert(doc);
-        return {addedNewMember:true};
+        if (!insertMember) {
+            doc.createdBy = this.userId;
+            doc.inviteAccepted = false;
+            const schoolAdminRec = Meteor.users.findOne({ "profile.schoolId": doc.schoolId });
+
+            // You are not School Admin of this School so you can not add a New Member.
+            if (!schoolAdminRec) {
+                return { accessDenied: true };
+            }
+
+            // Create new member
+            let memberId = SchoolMemberDetails.insert(doc);
+
+            console.log("doc======>", doc)
+            let claimingMemberRec = Meteor.users.findOne({_id: doc.activeUserId });
+            let password = newlyCreatedUser ? newlyCreatedUser.password: null;
+            let fromEmail = "Notices@SkillShape.com";
+
+            console.log("claimingMemberRec",claimingMemberRec)
+            // To: can be from user's email OR from google services
+            let toEmail = claimingMemberRec && claimingMemberRec.emails[0].address || claimingMemberRec.google.services.email;
+
+            let ROOT_URL = `${Meteor.absoluteUrl()}?acceptInvite=${true}&memberId=${memberId}&schoolId=${doc.schoolId}`
+            /*Need to send Email to User so that they get confirmation that their account has been
+            linked as a member in School.*/
+            sendEmailToStudentForClaimAsMember(claimingMemberRec, password,fromEmail, toEmail, ROOT_URL);
+            return { addedNewMember: true };
+        } else {
+            return { memberAlreadyExist: true };
+        }
     },
     // This is used to save admin notes in School Members.
     "school.saveAdminNotesToMember" : function(doc) {
@@ -394,3 +442,6 @@ Meteor.methods({
         }
     }
 });
+
+
+/*name, email, userType, sendMeSkillShapeNotification*/

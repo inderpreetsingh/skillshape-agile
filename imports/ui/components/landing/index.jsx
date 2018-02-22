@@ -225,6 +225,9 @@ class Landing extends Component {
             });
         }
       }
+      if(this.props.location.query && this.props.location.query.acceptInvite) {
+        // Events.trigger("acceptInvitationAsMember",{userData: this.props.location.query});
+      }
     }
 
     handleStickyStateChange = (status) => {

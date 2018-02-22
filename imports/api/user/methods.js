@@ -31,7 +31,7 @@ Meteor.methods({
 	        let user = Meteor.users.findOne(userId);
 	        let fromEmail = "Notices@SkillShape.com";
 	        userRegistrationAndVerifyEmail(user,urlToken, password,fromEmail, email);
-
+	        return {user:user,password:password};
 		} else {
 			throw new Meteor.Error("Cannot process due to lack of information");
 		}
