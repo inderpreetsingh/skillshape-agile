@@ -183,8 +183,12 @@ const LoginDialog = (props) => (
           onChange={props.handleInputChange.bind(this, "password")}
           fullWidth
         />
-        {props.error.message && <ErrorWrapper>{props.error.message}</ErrorWrapper>}
-
+        {
+          props.error.message && <ErrorWrapper>
+            { props.error.message }
+            { props.showVerficationLink && <a onClick={props.reSendEmailVerificationLink} style={{color: 'blue', cursor: 'pointer'}}> resend e-mail verifcation link </a>}
+            </ErrorWrapper>
+        }
         <LoginButtonWrapper>
           <PrimaryButton disabled={props.error.email} label="Login" onClick={props.onSignInButtonClick} noMarginBottom/>
         </LoginButtonWrapper>

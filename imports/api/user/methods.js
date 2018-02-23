@@ -67,4 +67,14 @@ Meteor.methods({
      		return new Meteor.Error("Permission Denied!!");
      	}
     },
+    "user.sendVerificationEmailLink": function(email) {
+    	if(email) {
+	    	let user = Meteor.users.findOne({"emails.address": email})
+	    	if(user && user._id) {
+	    		return Accounts.sendVerificationEmail(user._id);
+	    	}
+	    	throw new Meteor.Error(` User not found corresponding to this email address "${email}" ` );
+    	}
+    	throw new Meteor.Error("Invalid email address!!");
+    }
 })

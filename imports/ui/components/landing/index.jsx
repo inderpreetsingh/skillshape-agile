@@ -443,7 +443,7 @@ class Landing extends Component {
     }
 
     skillLevelFilter = (text) => {
-        let oldFilter = {...this.props.tempFilters}
+        let oldFilter = {...this.state.tempFilters}
         oldFilter.experienceLevel = text;
         this.setState({tempFilters:oldFilter})
     }

@@ -58,7 +58,7 @@ class ClaimSchool extends ClaimSchoolBase {
                     );
                 } else if (result.claimRequestApproved) {
                     toastr.success(
-                       `You have successfully claimed for this school. Please click on the following button to manage this school.`,
+                       `You have successfully claimed this school. Please click the button to manage your school!`,
                        "success",
                         {
                             element: <div>

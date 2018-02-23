@@ -323,7 +323,7 @@ const SkillShapeSchool = (props) => {
 
 					<Grid item md={4} sm={4} xs={12} className={props.classes.styleGrid}>
 						<div style={{textAlign:'center'}}>
-							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-pro.svg"/>
+							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-free.svg"/>
 						</div>
 						<Card className={props.classes.card}>
 							<CardHeader
@@ -371,7 +371,7 @@ const SkillShapeSchool = (props) => {
 
 					<Grid item md={4} sm={4} xs={12} className={props.classes.styleGrid}>
 						<div style={{textAlign:'center'}}>
-							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-free.svg"/>
+							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-pro.svg"/>
 						</div>
 						<Card className={props.classes.card}>
 							<CardHeader

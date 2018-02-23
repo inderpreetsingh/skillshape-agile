@@ -1,9 +1,9 @@
 import React, {Component,Fragment} from 'react';
-import { isEmpty } from 'lodash';
+import { isEmpty, get } from 'lodash';
 import PropTypes from 'prop-types';
 import SecondaryButton from './SecondaryButton.jsx';
 import LoginDialogBox from '../dialogs/LoginDialogBox.jsx';
-import { emailRegex } from '/imports/util';
+import { emailRegex, toastrModal } from '/imports/util';
 import { browserHistory } from 'react-router';
 
 class LoginButton extends Component {
@@ -60,13 +60,21 @@ class LoginButton extends Component {
         this.setState({ loading: true })
         Meteor.loginWithPassword(this.state.email, this.state.password, (err, res) => {
             let stateObj = { ...this.state };
-            console.log("login response -->>", res);
+
             stateObj.loading = false;
             if (err) {
                 stateObj.error.message = err.reason || err.message
             } else {
                 stateObj.error = {};
-                stateObj.loginModal = false;
+                let emailVerificationStatus = get(Meteor.user(), "emails[0].verified", false)
+
+                if(!emailVerificationStatus) {
+                    Meteor.logout();
+                    stateObj.showVerficationLink = true;
+                    stateObj.error.message = "Please verify email first. ";
+                } else {
+                    stateObj.loginModal = false;
+                }
                 /*Admin of school was not login while clicking on `No, I will manage the school`
                 so in this case we need to redirect to school admin page that we are getting in query params*/
                 if (redirectUrl) {
@@ -133,11 +141,30 @@ class LoginButton extends Component {
         console.log("handleSignUpModal!!!")
     }
 
+    reSendEmailVerificationLink = ()=> {
+        Meteor.call("user.sendVerificationEmailLink", this.state.email, (err, res)=> {
+            if(err) {
+                let errText = err.reason || err.message;
+                toastr.error(errText, "Error");
+            }
+            if(res) {
+                this.setState({
+                    loginModal: false
+                }, () => {
+                    toastr.success(
+                        "We send a email verification link, Please check your inbox!!",
+                        "success"
+                    );
+                })
+            }
+        })
+    }
+
     render() {
         const {loginModal,error,isBusy} = this.state;
         const {icon,fullWidth,iconName,currentUser} = this.props;
         // console.log("LoginButton props -->>>",this.props);
-        // console.log("LoginButton state -->>>",this.state);
+        console.log("LoginButton state -->>>",this.state);
         return(
             <Fragment>
                 <SecondaryButton
@@ -159,6 +186,7 @@ class LoginButton extends Component {
                         onSignUpButtonClick={this.handleSignUpModal}
                         onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
                         onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
+                        reSendEmailVerificationLink={this.reSendEmailVerificationLink}
                     />
                 }
             </Fragment>
@@ -179,4 +207,4 @@ LoginButton.defaultProps = {
     iconName: "fingerprint"
 }
 
-export default LoginButton;
+export default toastrModal(LoginButton);
