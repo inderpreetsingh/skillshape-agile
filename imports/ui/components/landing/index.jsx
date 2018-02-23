@@ -1,5 +1,5 @@
 import React, {Component,Fragment} from 'react';
-import { debounce, isEmpty } from 'lodash';
+import { debounce, isEmpty, get } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
 import {Element, scroller } from 'react-scroll'
@@ -26,8 +26,7 @@ import * as helpers from './components/jss/helpers.js';
 import { cardsData, cardsData1} from './constants/cardsData.js';
 import config from '/imports/config';
 import Events from '/imports/util/events';
-import MemberInvitedDialogBox from '/imports/ui/components/landing/components/dialogs/MemberInvitedDialogBox.jsx';
-
+import { toastrModal } from '/imports/util';
 
 const MainContentWrapper = styled.div`
   display: flex;
@@ -180,6 +179,7 @@ class Landing extends Component {
                 skillCategoryClassLimit: {}
             },
             tempFilters: {},
+            memberInvitation: true,
         }
         this.handleLocationSearch = debounce(this.handleLocationSearch, 1000);
         this.handleSkillTypeSearch = debounce(this.handleSkillTypeSearch, 1000);
@@ -194,10 +194,6 @@ class Landing extends Component {
                 oldFilters.coords = [ res.data.latitude, res.data.longitude];
                 this.setState({filters: oldFilters})
             }
-        })
-        Events.on("acceptInvitationAsMember", "123#567",(data) => {
-          let {userType} = data;
-          this.handleMemberInvitedDialogBoxState(true, userType);
         })
     }
 
@@ -234,6 +230,37 @@ class Landing extends Component {
       if(this.props.location.query && this.props.location.query.acceptInvite) {
         Events.trigger("acceptInvitationAsMember",{userData: this.props.location.query});
       }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log("Landing componentWillReceiveProps",nextProps)
+        let invite = get(nextProps, "location.query.acceptInvite");
+        if(nextProps.currentUser && nextProps.isUserSubsReady && invite === "true" && this.state.memberInvitation) {
+            this.acceptMemberInvitation(nextProps.location.query)
+        }
+    }
+
+    acceptMemberInvitation = (invitationObj)=> {
+        const { toastr } = this.props;
+        console.log("Landing acceptMemberInvitation")
+        Meteor.call("schoolMemberDetails.acceptInvitation", invitationObj, (err, res) => {
+            console.log("acceptMemberInvitation res",res,err)
+            if(err) {
+                let errorText = err.error || err.reason || err.message;
+                this.setState({memberInvitation: false},()=> {
+                    toastr.error(errorText, "Error");
+                })
+            }
+
+            if(res) {
+                this.setState({memberInvitation: false},()=> {
+                    toastr.success(
+                        "You successfully accepted the invitation.",
+                        "success"
+                    );
+                })
+            }
+        })
     }
 
     handleStickyStateChange = (status) => {
@@ -484,34 +511,6 @@ class Landing extends Component {
         })
     }
 
-    handleInvitationAgreeButton = () => {
-        console.log("handleInvitationAgreeButton",this);
-        const currentUser = Meteor.user();
-        // login user and no verification token.
-        if(currentUser && this.props.location.query && this.props.location.query.acceptInvite) {
-            // emailRec = ((currentUser.emails[0].address || currentUser.service.google.email) == memberRec.email);
-            // // Member's email and current user's email both are same.
-            // if(emailRec) {
-                // Accept the invitation by updating `inviteAccepted` in `SchoolMemberDetails`.
-                Meteor.call("school.updateInviteAcceptedToMemberRec",{...this.props.location.query},function(err,res) {
-                    console.log("res====>",res)
-                    if(res && res.inviteAccepted) {
-                        alert('You have accepted the invitation');
-                    }
-                    if(res && !res.memberLogin) {
-                        alert("Please login as a School Member");
-                    }
-                });
-            // } else {
-            //     alert("Please login with member's id");
-            // }
-        } else { // Not login then open login Modal.
-            Events.trigger("loginAsSchoolAdmin");
-            this.setState({memberInvitedDialogBox: false});
-        }
-        // login user and verified.
-    }
-
     handleMemberInvitedDialogBoxState = (state) => {
         this.setState({memberInvitedDialogBox: state});
     }
@@ -546,14 +545,6 @@ class Landing extends Component {
         console.log("Landing state -->>",this.state);
         return(
             <div>
-                {
-                    this.state.memberInvitedDialogBox &&
-                    <MemberInvitedDialogBox
-                        open={this.state.memberInvitedDialogBox}
-                        onModalClose={() => this.handleMemberInvitedDialogBoxState(false)}
-                        onAgreeButtonClick={this.handleInvitationAgreeButton}
-                    />
-                }
                 <FiltersDialogBox
                     open={this.state.filterPanelDialogBox}
                     onModalClose={() => this.handleFiltersDialogBoxState(false)}
@@ -687,4 +678,4 @@ class Landing extends Component {
 }
 
 
-export default Landing;
+export default toastrModal(Landing);

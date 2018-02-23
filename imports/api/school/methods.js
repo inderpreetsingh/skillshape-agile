@@ -1,4 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
+import isArray from 'lodash/isArray';
+import get from 'lodash/get';
 import ClassType from "/imports/api/classType/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
@@ -363,9 +365,12 @@ Meteor.methods({
     "school.addNewMember": function(doc) {
         // Validations
         // Only school admin can add a new Memeber.
+        console.log("school.addNewMember doc -->>",doc)
         const userRecExist = Meteor.users.findOne({ "emails.address": doc.email });
         const googleUserRec = Meteor.users.findOne({ "services.google.email": doc.email });
         let insertMember, memberDetail, newlyCreatedUser;
+        console.log("userRecExist -->>",userRecExist)
+        console.log("googleUserRec -->>",googleUserRec)
         // User is not an active user in skillshape then need to create user and add them as a member of a particular class of a School.
         if (!userRecExist && !googleUserRec) {
             doc.sendMeSkillShapeNotification = true;
@@ -375,12 +380,20 @@ Meteor.methods({
             doc.activeUserId = newlyCreatedUser.user._id;
         } else {
             // User is already a member in skillshape then need to make them as a School member if they are not member in a Class.
-            memberDetail = SchoolMemberDetails.findOne({email:doc.email,classIds:{$in:doc.classIds}});
+            let filters = { email: doc.email };
+
+            if(isArray(doc.classIds)) {
+                filters.classIds = { $in:doc.classIds }
+            }
+
+            memberDetail = SchoolMemberDetails.findOne(filters);
+
             if (!memberDetail) {
-                doc.activeUserId = userRecExist._id || googleUserRec._id;
+                doc.activeUserId = (userRecExist && userRecExist._id) || (googleUserRec && googleUserRec._id);
             } else {
                 insertMember = true;
             }
+
         }
         if (!insertMember) {
             doc.createdBy = this.userId;
@@ -402,7 +415,7 @@ Meteor.methods({
 
             console.log("claimingMemberRec",claimingMemberRec)
             // To: can be from user's email OR from google services
-            let toEmail = claimingMemberRec && claimingMemberRec.emails[0].address || claimingMemberRec.google.services.email;
+            let toEmail = get(claimingMemberRec, "emails[0].address") || get(claimingMemberRec, "google.services.email");
 
             let ROOT_URL = `${Meteor.absoluteUrl()}?acceptInvite=${true}&memberId=${memberId}&schoolId=${doc.schoolId}`
             /*Need to send Email to User so that they get confirmation that their account has been

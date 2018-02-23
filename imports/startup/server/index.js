@@ -21,6 +21,7 @@ import "/imports/api/school/server/methods";
 import "/imports/api/user/methods";
 import "/imports/api/claimSchoolRequest/methods";
 import "/imports/api/classTimesRequest/methods";
+import "/imports/api/schoolMemberDetails/methods";
 
 // All publication imported over here
 
