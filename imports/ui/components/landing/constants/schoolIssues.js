@@ -1,4 +1,14 @@
 export default schoolIssuesData = [
-  'Bringing more people in your school.',
-  'Keeping students engaged and excited about school.',
-  'Managing the administrative chores of the school'];
+  {title: 'Bringing more people in your school.',
+  background: '/images/school/bring-people.svg',
+  bgColor: '#e2edf0'
+  },
+  {title: 'Keeping students engaged and excited about school.',
+  background: '/images/school/keeping-students.svg',
+  bgColor: '#fafdfe'
+  },
+  {title: 'Managing the administrative chores of the school',
+  background: '/images/school/manage.svg',
+  bgColor: '#cfeaf7'
+  }
+];
