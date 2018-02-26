@@ -48,7 +48,7 @@ export default function() {
                         schoolId={this.props.schoolData._id}
                         onDelete={() => alert('changeLimit')}
                         openEditMediaForm={() => alert('changeLimit')}
-                        showEditButton={false}
+                        showEditButton={true}
                         filters={{'memberId': memberInfo && memberInfo.memberId}}
                         memberExists={true}
                         handleTaggingMembers={this.props.handleTaggingMembers}
