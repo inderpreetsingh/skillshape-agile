@@ -41,12 +41,8 @@ class MyMedia extends React.Component {
   		let state = {
     		mediaExpanded: true,
     		isBusy: false,
-    		mediaDefaultValue: "",
+    		mediaDefaultValue: get(this.props, "currentUser.media_access_permission") || "",
     	};
-    	const mediaAccessType = get(this.props, "currentUser.media_access_permission");
-  		if(mediaAccessType) {
-  			state.mediaDefaultValue = (mediaAccessType["public"] &&  "public") || (mediaAccessType["member"] &&  "member") || "";
-  		}
   		return state;
   	}
 
@@ -54,7 +50,7 @@ class MyMedia extends React.Component {
 		const mediaAccessType = get(nextProps, "currentUser.media_access_permission");
   		if(mediaAccessType) {
   			this.setState({
-  				mediaDefaultValue: (mediaAccessType["public"] &&  "public") || (mediaAccessType["member"] &&  "member") || "",
+  				mediaDefaultValue: mediaAccessType  || "",
   			})
   		}
   	}
@@ -85,9 +81,7 @@ class MyMedia extends React.Component {
     		if(this.state.mediaDefaultValue) {
     			this.setState({ isBusy: true})
     			let userObj = {
-    				media_access_permission:{
-    					[this.state.mediaDefaultValue]: true
-    				}
+    				media_access_permission: this.state.mediaDefaultValue
     			}
 		    	Meteor.call("user.editUser", { doc: userObj , docId: currentUser._id}, (error, result) => {
 			      let state = {isBusy: false}

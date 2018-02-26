@@ -215,7 +215,7 @@ class ImageGalleryView extends React.Component {
   }
 
   openEditTaggedModal = () => {
-    console.log("openEditTaggedModal");
+    console.log("openEditTaggedModal",this);
     this.setState(
       {
         openEditTaggedModal:true,
@@ -250,8 +250,8 @@ class ImageGalleryView extends React.Component {
             <EditTaggedMemberDialogBox
                 open={this.state.openEditTaggedModal}
                 onModalClose={() => this.setState({openEditTaggedModal:false})}
-                taggedMemberDetails={this.state.taggedMemberDetails}
                 openEditTaggedModal= {this.openEditTaggedModal}
+                currentMediaData = {this.props.images[this._imageGallery.getCurrentIndex()]['media']}
             />
           }
           {

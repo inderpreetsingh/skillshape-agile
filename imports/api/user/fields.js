@@ -167,9 +167,8 @@ Schema.User = new SimpleSchema({
         optional: true
     },
     media_access_permission: {
-        type: Object,
+        type: String,
         optional: true,
-        blackbox: true
     },
 });
 

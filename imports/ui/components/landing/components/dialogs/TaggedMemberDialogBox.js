@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import get from 'lodash/get';
 import PropTypes from 'prop-types';
 import Recaptcha from 'react-recaptcha';
 import styled from 'styled-components';
@@ -98,9 +99,13 @@ const styles = {
 class TaggedMemberDialogBox extends Component {
 
     state = {
+      mediaDefaultValue: get(Meteor.user(),'media_access_permission', "public")
     }
 
+
     render() {
+
+      console.log("media_access_permission",Meteor.user());
 
         const {
             classes,
@@ -111,16 +116,6 @@ class TaggedMemberDialogBox extends Component {
             onEditButtonClick,
             taggedMemberDetails
         } = this.props;
-
-        /*const {
-            emailOption,
-            robotOption,
-            name,
-            email,
-            errorEmail,
-            captchaValue,
-            sendMeSkillShapeNotification
-        } = this.state;*/
 
         console.log('TaggedMemberDialogBox state -->>',taggedMemberDetails);
         //console.log('SignUpDialogBox props -->>',this.props);
@@ -154,10 +149,8 @@ class TaggedMemberDialogBox extends Component {
                         <Grid item md={8} sm={8} xs={8}>
                           <Typography>{taggedMemberDetails.name}</Typography>
                         </Grid>
-                        <Grid item md={4} sm={4} xs={4}>
+                        <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between',alignItems: 'center'}}>
                           <Typography>Permissions:</Typography>
-                        </Grid>
-                        <Grid item md={8} sm={8} xs={8}>
                           <FormControl component="fieldset" required >
                               <RadioGroup
                                   aria-label="mediaSetting"
@@ -165,9 +158,10 @@ class TaggedMemberDialogBox extends Component {
                                   name="mediaSetting"
                                   onChange={this.handleMediaSettingChange}
                                   defaultSelected="both"
+                                  style={{display: 'inline'}}
                               >
-                                  <FormControlLabel value="public" control={<Radio />} label="Make media public so you can share them on social media." />
-                                  <FormControlLabel value="member" control={<Radio />} label="Make media from a school only available to members of the school that posted it." />
+                                  <FormControlLabel value="public" control={<Radio />} label="Public" />
+                                  <FormControlLabel value="member" control={<Radio />} label="School only" />
                               </RadioGroup>
                           </FormControl>
                         </Grid>
@@ -186,7 +180,7 @@ class TaggedMemberDialogBox extends Component {
                         </Grid>
                         <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between'}}>
                           <Button style={{backgroundColor: '#ffd740'}}>Report as inappropriate</Button>
-                          <Button style={{backgroundColor: '#4caf50'}}>Edit</Button>
+                          <Button style={{backgroundColor: '#4caf50'}} onClick={this.props.openEditTaggedModal}>Edit</Button>
                         </Grid>
                       </Grid>
                     </form>
