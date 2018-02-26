@@ -1,4 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
+import get from 'lodash/get';
 import generator from 'generate-password';
 
 import './fields.js';
@@ -6,16 +7,17 @@ import { userRegistrationAndVerifyEmail } from "/imports/api/email";
 
 
 Meteor.methods({
-	"user.createUser": function({ name, email, userType, sendMeSkillShapeNotification}) {
+	"user.createUser": function({ name, email, userType, sendMeSkillShapeNotification, signUpType}) {
 		if(!isEmpty(name) && !isEmpty(email) ) {
 
 			const password = generator.generate({
 			    length: 10,
 			    numbers: true
 			});
+
 			const accessType = userType || "Anonymous";
 
-			const userId = Accounts.createUser({
+			const userObj = {
 	            email: email,
 	            password: password,
 	            profile: {
@@ -24,7 +26,15 @@ Meteor.methods({
 	            	userType: accessType,
 	            	sendMeSkillShapeNotification: sendMeSkillShapeNotification,
 	            },
-	        });
+	            sign_up_service: signUpType || 'Unknown',
+	        }
+
+	        if(signUpType && signUpType === 'skillshape-signup') {
+	        	userObj.term_cond_accepted = true;
+	        }
+
+			const userId = Accounts.createUser(userObj);
+
             Roles.addUsersToRoles(userId, accessType);
             const userRec = Accounts.generateVerificationToken(userId);
 	        let urlToken = `${Meteor.absoluteUrl()}verify-email/${userRec.token}`;
@@ -37,19 +47,25 @@ Meteor.methods({
 		}
 	},
 	"user.onSocialSignUp": function({ name, email, userType, sendMeSkillShapeNotification }) {
-	    console.log("this.userId", this.userId);
+	    console.log("user.onSocialSignUp userId", this.userId, userType);
 	    if (this.userId) {
 	        const accessType = userType || "Anonymous";
+	        let userData = Meteor.users.findOne({_id: this.userId});
+	        if(get(userData, "profile.userType")) {
+	        	return
+	        } else {
 
-	        Meteor.users.update({
-	            _id: this.userId
-	        }, {
-	            $set: {
-	                'profile.userType': accessType,
-	            }
-	        });
+		        Meteor.users.update({
+		            _id: this.userId
+		        }, {
+		            $set: {
+		                'profile.userType': accessType,
+		                'sign_up_service': 'social-signup',// this indicates social sign-up i.e facebook or google.
+		            }
+		        });
 
-	        Roles.addUsersToRoles(this.userId, accessType);
+		        Roles.addUsersToRoles(this.userId, accessType);
+	        }
 	    }
 	},
 	"user.setPassword": function({password}) {

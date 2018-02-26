@@ -179,7 +179,6 @@ class Landing extends Component {
                 skillCategoryClassLimit: {}
             },
             tempFilters: {},
-            memberInvitation: true,
         }
         this.handleLocationSearch = debounce(this.handleLocationSearch, 1000);
         this.handleSkillTypeSearch = debounce(this.handleSkillTypeSearch, 1000);
@@ -230,37 +229,6 @@ class Landing extends Component {
       if(this.props.location.query && this.props.location.query.acceptInvite) {
         Events.trigger("acceptInvitationAsMember",{userData: this.props.location.query});
       }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        console.log("Landing componentWillReceiveProps",nextProps)
-        let invite = get(nextProps, "location.query.acceptInvite");
-        if(nextProps.currentUser && nextProps.isUserSubsReady && invite === "true" && this.state.memberInvitation) {
-            this.acceptMemberInvitation(nextProps.location.query)
-        }
-    }
-
-    acceptMemberInvitation = (invitationObj)=> {
-        const { toastr } = this.props;
-        console.log("Landing acceptMemberInvitation")
-        Meteor.call("schoolMemberDetails.acceptInvitation", invitationObj, (err, res) => {
-            console.log("acceptMemberInvitation res",res,err)
-            if(err) {
-                let errorText = err.error || err.reason || err.message;
-                this.setState({memberInvitation: false},()=> {
-                    toastr.error(errorText, "Error");
-                })
-            }
-
-            if(res) {
-                this.setState({memberInvitation: false},()=> {
-                    toastr.success(
-                        "You successfully accepted the invitation.",
-                        "success"
-                    );
-                })
-            }
-        })
     }
 
     handleStickyStateChange = (status) => {
@@ -678,4 +646,4 @@ class Landing extends Component {
 }
 
 
-export default toastrModal(Landing);
+export default Landing;

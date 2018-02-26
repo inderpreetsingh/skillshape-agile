@@ -171,6 +171,15 @@ Schema.User = new SimpleSchema({
         optional: true,
         blackbox: true
     },
+    // this is used to know which service user have used for the sign-up process.
+    sign_up_service: {
+        type: String,
+        optional: true,
+    },
+    term_cond_accepted: {
+        type: Boolean,
+        optional: true,
+    }
 });
 
 Meteor.users.attachSchema(Schema.User);

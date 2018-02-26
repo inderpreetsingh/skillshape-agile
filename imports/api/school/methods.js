@@ -375,7 +375,7 @@ Meteor.methods({
         if (!userRecExist && !googleUserRec) {
             doc.sendMeSkillShapeNotification = true;
             doc.name = doc.firstName;
-            newlyCreatedUser = Meteor.call("user.createUser", {...doc});
+            newlyCreatedUser = Meteor.call("user.createUser", {...doc, signUpType: 'member-signup'});
             console.log("activeUserId===>",newlyCreatedUser)
             doc.activeUserId = newlyCreatedUser.user._id;
         } else {

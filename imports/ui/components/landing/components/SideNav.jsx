@@ -27,6 +27,11 @@ class SideNav extends Component {
           let {userType} = data;
           this.handleSignUpDialogBoxState(true, userType);
         })
+        // This will listen if terms and services not accepted by User.
+        Events.on("acceptTermsAndServices", "123#567",(data) => {
+          let {userType} = data;
+          this.handleTermsOfServiceDialogBoxState(true, userType);
+        })
     }
 
     handleDrawerState = (state) => {
@@ -53,7 +58,6 @@ class SideNav extends Component {
 
     handleSignUpSubmit = (payload, event) => {
         event.preventDefault();
-        console.log("handleSignUpSubmit -->>",payload);
         let obj = {};
         if(!payload.name || !payload.email) {
             obj.errorText = "* fields are mandatory";
@@ -73,7 +77,7 @@ class SideNav extends Component {
 
     handleEmailConfirmationSubmit = () => {
         this.setState({isBusy: true})
-        Meteor.call("user.createUser", {...this.state.userData}, (err, res) => {
+        Meteor.call("user.createUser", {...this.state.userData, signUpType: 'skillshape-signup'}, (err, res) => {
             console.log("user.createUser err res -->>",err,res)
             let modalObj = {
                 open: false,
@@ -92,7 +96,6 @@ class SideNav extends Component {
     handleLoginGoogle = () => {
         let self = this;
         Meteor.loginWithGoogle({}, function(err,result) {
-
             let modalObj = {
                 open: false,
                 signUpDialogBox: false,
