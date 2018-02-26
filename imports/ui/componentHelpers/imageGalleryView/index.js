@@ -70,12 +70,16 @@ class ImageGalleryView extends React.Component {
       <Button fab mini aria-label="delete" onClick={this.showConfirmationModal} className={this.props.classes.button}>
         <DeleteIcon />
       </Button>
-      {this.props.showTagButton &&
-        <Button onClick={this.showTaggedMemberInfo} className={this.props.classes.infoButton}  style={{display: this.state.showListOfMembers ? 'none' : 'block'}}>
-          <i className="material-icons" style={{display: 'block'}}>info</i>
-        </Button>
-      }
       </div>)
+    }
+    if(this.props.showTagButton){
+      return (
+        <div style={{position: 'absolute', zIndex: 5,top: '3%', left: '3%',display:'flex'}}>
+          <Button onClick={this.showTaggedMemberInfo} className={this.props.classes.infoButton}  style={{display: this.state.showListOfMembers ? 'none' : 'block'}}>
+            <i className="material-icons" style={{display: 'block'}}>info</i>
+          </Button>
+        </div>
+        )
     }
     return;
   }
