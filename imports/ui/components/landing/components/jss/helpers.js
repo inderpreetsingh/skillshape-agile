@@ -64,6 +64,7 @@ export const
     flexHorizontalSpaceBetween = `display: flex; justify-content: space-between; align-items: center;`,
     flexDirectionColumn = `display: flex; flex-direction: column;`,
     hide = `display: none; width: 0; height: 0;`,
+    clipPathCurve = `ellipse(112% 57% at 51% 43%)`,
     coverBg = `background-size: cover;
             background-repeat: no-repeat;
             background-position: top center;`

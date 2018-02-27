@@ -5,26 +5,28 @@ import styled from 'styled-components';
 import * as helpers from '../../jss/helpers.js';
 
 const Wrapper = styled.div`
-  border-radius: ${helpers.rhythmDiv * 2}px;
-  width: 100%;
-  max-width: 300px;
-  height: 100px;
-  padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv}px;
-  cursor: pointer;
-  margin: ${helpers.rhythmDiv * 2}px 0;
-  background-image: url('${props => props.bgImage}');
-  background-size: cover;
-  background-repeat: no-repeat;
   display: flex;
   justify-content: flex-end;
   filter: ${props => props.active ?  'none' : 'grayscale(90%)'};
+  border-radius: ${helpers.rhythmDiv * 2}px;
+  width: 100%;
+  height: 100px;
+  max-width: 300px;
+  padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv}px;
+  cursor: pointer;
+  background-image: url('${props => props.bgImage}');
+  background-size: cover;
+  background-repeat: no-repeat;
   transition: flex-shrink .2s linear;
   min-width: 0;
+  margin: 0 ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    width: 300px;
-    flex-shrink: ${props => props.active ? 0 : 1};
-    margin: 0 ${helpers.rhythmDiv * 2}px;
+    max-width: 250px;
+    width: 100%;
+    flex-shrink: ${props => props.active ?  '0' : '1'};
+    margin: 0 ${helpers.rhythmDiv}px;
+    min-width: 100px;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -52,7 +54,7 @@ const Content = styled.p`
 `;
 
 const IssueCard = (props) => (
-  <Wrapper onClick={props.onClick} active={props.active} bgImage={props.background}>
+  <Wrapper onClick={props.onClick} active={props.active} bgImage={props.cardBgImage}>
     <Content active={props.active}>
       {props.title}
     </Content>

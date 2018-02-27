@@ -5,39 +5,32 @@ import styled from 'styled-components';
 import * as helpers from '../../jss/helpers.js';
 
 const BoxWrapper = styled.div`
-  top: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: ${props => props.bgColor};
-  background-image: url('${props => props.bgImage}');
-  background-size: contain;
-  background-position: bottom left;
-  background-repeat: no-repeat;
+  max-width: 1000px;
+  margin: 0 auto;
   padding: ${helpers.rhythmDiv * 2}px;
-  transition: .2s opacity ease-in;
-  opacity: ${props => props.active ? 1 : 0};
 `;
 
-const Content = styled.p`
+const Content = styled.h2`
   color: ${helpers.black};
   font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize * 2}px;
-  font-weight: 300;
+  font-size: ${helpers.baseFontSize * 4}px;
+  font-weight: 600;
   text-align: center;
+  line-height: 1;
   margin: 0;
+  padding: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    font-size: ${helpers.baseFontSize * 2.25}px;  
+  }
 `;
 
 const SolutionBox = (props) => (
-  <Fragment>
-  {props.issues && props.issues.map((issue,i) => (
-    <BoxWrapper bgColor={issue.bgColor} bgImage={issue.background} active={props.activeIssue === i}>
-      <Content>
-        {issue.title}
-      </Content>
-    </BoxWrapper>
-  ))}
-  </Fragment>
+  <BoxWrapper>
+    <Content>
+      {props.title}
+    </Content>
+  </BoxWrapper>
 );
 
 SolutionBox.propTypes = {
