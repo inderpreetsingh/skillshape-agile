@@ -33,7 +33,7 @@ export default function() {
                 />
             }
                 <Grid item md={8} sm={8} xs={8}>
-                    Media at School name
+                    {this.props.schoolData && <b>Media at {this.props.schoolData.name}</b>}
                 </Grid>
                 <Grid item md={4} sm={4} xs={4} style={{textAlign:'center'}}>
                     <Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
