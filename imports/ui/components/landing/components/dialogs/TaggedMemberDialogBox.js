@@ -1,40 +1,20 @@
 import React, {Component} from 'react';
 import get from 'lodash/get';
 import PropTypes from 'prop-types';
-import Recaptcha from 'react-recaptcha';
-import styled from 'styled-components';
-import { SocialIcon } from 'react-social-icons';
 import Grid from 'material-ui/Grid';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
-
-
-
 import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import ClearIcon from 'material-ui-icons/Clear';
 import Typography from 'material-ui/Typography';
 import Checkbox from 'material-ui/Checkbox';
 import {withStyles} from 'material-ui/styles';
 import { MuiThemeProvider} from 'material-ui/styles';
 
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import GoogleIconButton from '../buttons/GoogleIconButton.jsx';
-import FacebookIconButton from '../buttons/FacebookIconButton.jsx';
-import LoginButton from '../buttons/LoginButton.jsx';
-import IconInput from '../form/IconInput.jsx';
 
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
-import { emailRegex } from '/imports/util';
-import config from '/imports/config';
-import { logoSrc } from '../../site-settings.js';
 
 import Dialog , {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   withMobileDialog,
 } from 'material-ui/Dialog';
 
@@ -49,57 +29,33 @@ import {
 const styles = {
   dialogPaper: {
     padding: `${helpers.rhythmDiv * 2}px`
-  },
-  dialogTitleRoot: {
-    display: 'flex',
-    fontFamily: `${helpers.specialFont}`
-  },
-  dialogContent :  {
-    '@media screen and (max-width : 500px)': {
-      minHeight: '150px',
-    }
-  },
-  dialogAction: {
-    width: '100%',
-    margin: 0
-  },
-  dialogActionsRoot: {
-    width: '100%',
-    padding: `0 ${helpers.rhythmDiv * 3}px`,
-    margin: 0,
-    '@media screen and (max-width : 500px)': {
-      padding: `0 ${helpers.rhythmDiv * 3}px`
-    }
-  },
-  dialogActionsRootButtons: {
-    width: '100%',
-    padding: `0 ${helpers.rhythmDiv}px`,
-    margin: 0,
-    '@media screen and (max-width : 500px)': {
-      padding: `0 ${helpers.rhythmDiv}px`
-    }
-  },
-  dialogActionsRootSubmitButton: {
-    width: '100%',
-    padding: `0 ${helpers.rhythmDiv * 3}px`,
-    margin: 0,
-    '@media screen and (max-width : 500px)': {
-      padding: `0 ${helpers.rhythmDiv * 3}px`
-    }
-  },
-  iconButton: {
-    height: 'auto',
-    width: 'auto'
-  },
-  formControlRoot: {
-    marginBottom: `${helpers.rhythmDiv * 2}px`
   }
 }
 
 class TaggedMemberDialogBox extends Component {
 
     state = {
-      mediaDefaultValue: get(Meteor.user(),'media_access_permission', "public")
+      mediaDefaultValue: get(this.props, `currentMediaData.users_permission[${Meteor.userId()}].accessType`, "public")
+    }
+
+    handleChange = name => event => {
+      this.setState({ [name]: event.target.checked });
+    };
+
+    // This is used to handle "Untag me" and change User specific media settings.
+    handleUsersMediaSetting = () => {
+      const mediaDefaultValue = this.state.mediaDefaultValue;
+      const tagOrUntag = this.state.tagOrUntag;
+      console.log("this is handleUsersMediaSetting",this);
+      const currentMediaData = {...this.props.currentMediaData, users_permission:{[Meteor.userId()]:this.state.mediaDefaultValue}};
+      Meteor.call("media.editMedia",currentMediaData._id, currentMediaData,tagOrUntag);
+    }
+
+    handleMediaSettingChange = (event) => {
+      console.log("event====>",event.target.value)
+      this.setState({
+        mediaDefaultValue: event.target.value
+      })
     }
 
 
@@ -114,11 +70,11 @@ class TaggedMemberDialogBox extends Component {
             onModalClose,
             onUntagMeButtonClick,
             onEditButtonClick,
-            taggedMemberDetails,
+            currentMediaData,
             schoolData
         } = this.props;
 
-        console.log('TaggedMemberDialogBox state -->>',taggedMemberDetails);
+        console.log('TaggedMemberDialogBox state -->>',currentMediaData);
         //console.log('SignUpDialogBox props -->>',this.props);
         return(
             <Dialog
@@ -136,13 +92,13 @@ class TaggedMemberDialogBox extends Component {
                           <Typography>Media Title:</Typography>
                         </Grid>
                         <Grid item md={8} sm={8} xs={8}>
-                          <Typography>{taggedMemberDetails.name}</Typography>
+                          <Typography>{currentMediaData.name}</Typography>
                         </Grid>
                         <Grid item md={4} sm={4} xs={4}>
                           <Typography>Members:</Typography>
                         </Grid>
                         <Grid item md={8} sm={8} xs={8}>
-                          { taggedMemberDetails.taggedUserData && taggedMemberDetails.taggedUserData.map((userData) => {
+                          { currentMediaData.taggedUserData && currentMediaData.taggedUserData.map((userData) => {
                               return userData.profile.name
                           })}
                           <Typography></Typography>
@@ -169,22 +125,38 @@ class TaggedMemberDialogBox extends Component {
                               </RadioGroup>
                           </FormControl>
                         </Grid>
-                        <Grid item md={4} sm={4} xs={4}>
-                          <Typography>Notes:</Typography>
-                        </Grid>
-                        <Grid item md={8} sm={8} xs={8}>
-                          <Input
-                            onBlur={this.props.saveAdminNotesInMembers}
-                            onChange={this.props.handleInput}
-                            fullWidth
-                            style={{border: '1px solid',backgroundColor: '#fff'}}
-                            multiline
-                            rows={4}
-                          />
-                        </Grid>
+                        {(Meteor.userId() !== currentMediaData.createdBy) &&
+                          <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between',alignItems: 'center'}}>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={this.state.tagOrUntag}
+                                  onChange={this.handleChange('tagOrUntag')}
+                                  value="tagOrUntag"
+                                  color="primary"
+                                />
+                              }
+                              label="Untag Me"
+                            />
+                          </Grid>
+                        }
+                        {currentMediaData.desc &&
+                          <Grid container style={{padding: 8}}>
+                            <Grid item md={4} sm={4} xs={4}>
+                              <Typography>Notes:</Typography>
+                            </Grid>
+                            <Grid item md={8} sm={8} xs={8}>
+                              <Typography>{currentMediaData.desc}</Typography>
+                            </Grid>
+                          </Grid>
+                        }
                         <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between'}}>
                           <Button style={{backgroundColor: '#ffd740'}}>Report as inappropriate</Button>
-                          <Button style={{backgroundColor: '#4caf50'}} onClick={this.props.openEditTaggedModal}>Edit</Button>
+                          {
+                            (Meteor.userId() == currentMediaData.createdBy) ?
+                            <Button style={{backgroundColor: '#4caf50'}} onClick={this.props.openEditTaggedModal}>Edit</Button>
+                            : <Button style={{backgroundColor: '#ffd740'}} onClick={this.handleUsersMediaSetting}>Save</Button>
+                          }
                         </Grid>
                       </Grid>
                     </form>
@@ -196,14 +168,8 @@ class TaggedMemberDialogBox extends Component {
 
 TaggedMemberDialogBox.propTypes = {
   onModalClose: PropTypes.func,
-  onLoginButtonClick: PropTypes.func,
-  onSignUpButtonClick: PropTypes.func,
-  onSignUpWithGoogleButtonClick: PropTypes.func,
-  onSignUpWithFacebookButtonClick: PropTypes.func,
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool,
-  errorText: PropTypes.string,
-  unsetError: PropTypes.func,
 }
 
 export default withMobileDialog()(withStyles(styles)(TaggedMemberDialogBox));

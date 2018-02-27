@@ -4,13 +4,12 @@ import FileUpload from 'material-ui-icons/FileUpload';
 import Button from 'material-ui/Button';
 
 import CreateMedia from "/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia.js";
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
-import Thumbnail from '/imports/ui/components/schoolView/editSchool/mediaDetails/mediaList/thumbnail.js';
+import Card from 'material-ui/Card';
 import MediaList from '/imports/ui/components/schoolView/editSchool/mediaDetails/mediaList';
 
 export default function() {
     console.log("this mediaDetails",this)
-    const { showCreateMediaModal, mediaFormData, filterStatus, limit , isGalleryView} = this.state;
+    const { showCreateMediaModal, mediaFormData, filterStatus, limit } = this.state;
     console.log("media list render props -->>",this.props);
     console.log("media list render state -->>",this.state);
     const { memberInfo } = this.props;
