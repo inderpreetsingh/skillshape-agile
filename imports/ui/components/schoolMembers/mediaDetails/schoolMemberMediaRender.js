@@ -52,6 +52,7 @@ export default function() {
                         filters={{'memberId': memberInfo && memberInfo.memberId}}
                         memberExists={true}
                         handleTaggingMembers={this.props.handleTaggingMembers}
+                        schoolData={this.props.schoolData}
                     />
                     {
                     /*collectionData.length && (

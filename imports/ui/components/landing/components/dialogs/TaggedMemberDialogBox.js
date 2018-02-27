@@ -114,7 +114,8 @@ class TaggedMemberDialogBox extends Component {
             onModalClose,
             onUntagMeButtonClick,
             onEditButtonClick,
-            taggedMemberDetails
+            taggedMemberDetails,
+            schoolData
         } = this.props;
 
         console.log('TaggedMemberDialogBox state -->>',taggedMemberDetails);
@@ -141,13 +142,16 @@ class TaggedMemberDialogBox extends Component {
                           <Typography>Members:</Typography>
                         </Grid>
                         <Grid item md={8} sm={8} xs={8}>
-                          <Typography>{(taggedMemberDetails.taggedUserData && taggedMemberDetails.taggedUserData.length > 0) ? taggedMemberDetails.taggedUserData[0].profile.name : ''}</Typography>
+                          { taggedMemberDetails.taggedUserData && taggedMemberDetails.taggedUserData.map((userData) => {
+                              return userData.profile.name
+                          })}
+                          <Typography></Typography>
                         </Grid>
                         <Grid item md={4} sm={4} xs={4}>
                           <Typography>School:</Typography>
                         </Grid>
                         <Grid item md={8} sm={8} xs={8}>
-                          <Typography>{taggedMemberDetails.name}</Typography>
+                          <Typography>{schoolData.name}</Typography>
                         </Grid>
                         <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between',alignItems: 'center'}}>
                           <Typography>Permissions:</Typography>

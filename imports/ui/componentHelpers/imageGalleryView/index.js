@@ -75,9 +75,7 @@ class ImageGalleryView extends React.Component {
     if(this.props.showTagButton){
       return (
         <div style={{position: 'absolute', zIndex: 5,top: '3%', left: '3%',display:'flex'}}>
-          <Button onClick={this.showTaggedMemberInfo} className={this.props.classes.infoButton}  style={{display: this.state.showListOfMembers ? 'none' : 'block'}}>
-            <i className="material-icons" style={{display: 'block'}}>info</i>
-          </Button>
+            <i onClick={this.showTaggedMemberInfo}  style={{display: this.state.showListOfMembers ? 'none' : 'block'}} className="material-icons" style={{display: 'block'}}>info</i>
         </div>
         )
     }
@@ -209,7 +207,7 @@ class ImageGalleryView extends React.Component {
   showTaggedMemberInfo = () => {
     console.log("this====>",this);
     const taggedMemberDetails = this.props.images[this._imageGallery.getCurrentIndex()]['media'];
-    this.setState({showListOfMembers:true, taggedMemberDetails: taggedMemberDetails });
+    this.setState({showListOfMembers:true, taggedMemberDetails: taggedMemberDetails, schoolData:this.props.schoolData });
   }
   handleTagPhoto = () => {
   }
@@ -243,6 +241,7 @@ class ImageGalleryView extends React.Component {
                   onModalClose={() => this.setState({showListOfMembers:false})}
                   taggedMemberDetails={this.state.taggedMemberDetails}
                   openEditTaggedModal= {this.openEditTaggedModal}
+                  schoolData = {this.state.schoolData}
               />
           }
           {
