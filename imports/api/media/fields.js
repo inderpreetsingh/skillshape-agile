@@ -1,4 +1,5 @@
 import config from "/imports/config"
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
 const Media = new Mongo.Collection(config.collections.media);
 /**
@@ -33,13 +34,14 @@ Media.attachSchema(new SimpleSchema({
         type: String,
         optional: true
     },
-    taggedUserIds: {
+    taggedMemberIds: {
         type: [String],
         optional:true
     },
     users_permission: {
-        type:[Object],
-        optional:true
+        type: Object,
+        optional:true,
+        blackbox: true
     },
     accessType: {
         type: String,
@@ -48,7 +50,7 @@ Media.attachSchema(new SimpleSchema({
 
 }));
 
-Media.join(Meteor.users, "taggedUserIds", "taggedUserData", ["profile"]);
+Media.join(SchoolMemberDetails, "taggedMemberIds", "taggedMemberData", ["firstName","lastName","email","activeUserId"]);
 
 // Media.join(Meteor.users, "createdBy", "creator", ["profile"]);
 

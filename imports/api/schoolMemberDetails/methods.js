@@ -23,5 +23,12 @@ Meteor.methods({
     	} else {
     		throw new Meteor.Error("Access Denied due to invalid informations!!");
     	}
+    },
+    "schoolMemberDetails.getAllSchoolMembers": function({ schoolId }) {
+        if(schoolId) {
+            return SchoolMemberDetails.find({schoolId}).fetch();
+        } else {
+            throw new Meteor.Error("Unable to get due to invalid informations!!");
+        }
     }
 })

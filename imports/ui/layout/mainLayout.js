@@ -71,7 +71,7 @@ class MainLayout extends React.Component {
             <div>
                 {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
                 {
-                    currentUser &&
+                    isUserSubsReady && currentUser && !currentUser.term_cond_accepted &&
                     <TermsOfServiceDialogBox
                         open={!currentUser.term_cond_accepted}
                         onModalClose={() => alert("You can not cancel this service and agreement")}
