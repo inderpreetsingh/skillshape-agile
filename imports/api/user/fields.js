@@ -167,9 +167,8 @@ Schema.User = new SimpleSchema({
         optional: true
     },
     media_access_permission: {
-        type: Object,
+        type: String,
         optional: true,
-        blackbox: true
     },
     // this is used to know which service user have used for the sign-up process.
     sign_up_service: {

@@ -91,6 +91,23 @@ const styles = {
 class EditTaggedMemberDialogBox extends Component {
 
     state = {
+      mediaDefaultValue: "public"
+    }
+
+    handleMediaSettingChange = (event,type) => {
+      this.setState({mediaDefaultValue: type});
+    }
+    saveTaggedMediaDetails = () => {
+      console.log("saveTaggedMediaDetails",this);
+      console.log("currentMediaData",this.props.currentMediaData);
+      let selectedPermission = this.state.mediaDefaultValue;
+      const payload = {
+        users_permission : {
+          [Meteor.userId()]: this.state.mediaDefaultValue
+        },
+        currentMediaData: this.props.currentMediaData
+      }
+      // Meteor.call("media.editMedia",payload);
     }
 
     render() {
@@ -102,7 +119,7 @@ class EditTaggedMemberDialogBox extends Component {
             onModalClose,
             onUntagMeButtonClick,
             onEditButtonClick,
-            taggedMemberDetails
+            currentMediaData
         } = this.props;
 
         /*const {
@@ -115,7 +132,9 @@ class EditTaggedMemberDialogBox extends Component {
             sendMeSkillShapeNotification
         } = this.state;*/
 
-        console.log('EditTaggedMemberDialogBox state -->>',taggedMemberDetails);
+        console.log('EditTaggedMemberDialogBox state -->>',this.props);
+
+        // This is used to save Tagged media details
         //console.log('SignUpDialogBox props -->>',this.props);
         return(
             <Dialog
@@ -135,8 +154,9 @@ class EditTaggedMemberDialogBox extends Component {
                         <Grid item md={8} sm={8} xs={8}>
                           <Input
                             type="text"
-                            inputRef={(ref) => (this.urlInput = ref)}
-                            defaultValue={taggedMemberDetails.name}
+                            defaultValue={currentMediaData.name}
+                            value={this.state.currentMediaTitle}
+                            onChange={(event) => this.setState({currentMediaTitle:event.target.value})}
                           />
                         </Grid>
                         <Grid item md={4} sm={4} xs={4}>
@@ -145,18 +165,9 @@ class EditTaggedMemberDialogBox extends Component {
                         <Grid item md={8} sm={8} xs={8}>
                           <Input
                             type="text"
-                            inputRef={(ref) => (this.urlInput = ref)}
-                            defaultValue={(taggedMemberDetails.taggedUserData && taggedMemberDetails.taggedUserData.length > 0) ? taggedMemberDetails.taggedUserData[0].profile.name : ''}
-                          />
-                        </Grid>
-                        <Grid item md={4} sm={4} xs={4}>
-                          <Typography>School:</Typography>
-                        </Grid>
-                        <Grid item md={8} sm={8} xs={8}>
-                          <Input
-                            type="text"
-                            inputRef={(ref) => (this.urlInput = ref)}
-                            defaultValue={taggedMemberDetails.name}
+                            defaultValue={(currentMediaData.taggedUserData && currentMediaData.taggedUserData.length > 0) ? currentMediaData.taggedUserData[0].profile.name : ''}
+                            value={this.state.taggedMemberName}
+                            onChange={(event) => this.setState({taggedMemberName:event.target.value})}
                           />
                         </Grid>
                         <Grid item md={4} sm={4} xs={4}>
@@ -192,7 +203,7 @@ class EditTaggedMemberDialogBox extends Component {
                         <Grid item>
                           <Button>Delete this image</Button>
                           <Button>Cancel</Button>
-                          <Button>Save</Button>
+                          <Button onClick={this.saveTaggedMediaDetails}>Save</Button>
                         </Grid>
                       </Grid>
                     </form>

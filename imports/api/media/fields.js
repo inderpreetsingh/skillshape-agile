@@ -36,6 +36,14 @@ Media.attachSchema(new SimpleSchema({
     taggedUserIds: {
         type: [String],
         optional:true
+    },
+    users_permission: {
+        type:[Object],
+        optional:true
+    },
+    accessType: {
+        type: String,
+        optional:true
     }
 
 }));

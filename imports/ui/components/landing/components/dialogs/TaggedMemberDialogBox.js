@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import get from 'lodash/get';
 import PropTypes from 'prop-types';
 import Recaptcha from 'react-recaptcha';
 import styled from 'styled-components';
@@ -98,9 +99,13 @@ const styles = {
 class TaggedMemberDialogBox extends Component {
 
     state = {
+      mediaDefaultValue: get(Meteor.user(),'media_access_permission', "public")
     }
 
+
     render() {
+
+      console.log("media_access_permission",Meteor.user());
 
         const {
             classes,
@@ -111,16 +116,6 @@ class TaggedMemberDialogBox extends Component {
             onEditButtonClick,
             taggedMemberDetails
         } = this.props;
-
-        /*const {
-            emailOption,
-            robotOption,
-            name,
-            email,
-            errorEmail,
-            captchaValue,
-            sendMeSkillShapeNotification
-        } = this.state;*/
 
         console.log('TaggedMemberDialogBox state -->>',taggedMemberDetails);
         //console.log('SignUpDialogBox props -->>',this.props);
@@ -134,49 +129,41 @@ class TaggedMemberDialogBox extends Component {
               classes={{paper: classes.dialogPaper}}
             >
                 <MuiThemeProvider theme={muiTheme}>
-                    <form /*onSubmit={this.props.onSubmit.bind(this, {name, email, captchaValue, sendMeSkillShapeNotification})}*/>
+                   <form /*onSubmit={this.props.onSubmit.bind(this, {name, email, captchaValue, sendMeSkillShapeNotification})}*/>
                       <Grid container>
-                        <Grid item md={12} sm={12} xs={12}>
-                        {taggedMemberDetails.name ? <Typography>Media Title:{taggedMemberDetails.name}</Typography>:''}
+                        <Grid item md={4} sm={4} xs={4}>
+                          <Typography>Media Title:</Typography>
                         </Grid>
-                        <Grid item md={12} sm={12} xs={12}>
-                        {taggedMemberDetails.name ? <Typography>School:{taggedMemberDetails.name}</Typography>:''}
+                        <Grid item md={8} sm={8} xs={8}>
+                          <Typography>{taggedMemberDetails.name}</Typography>
                         </Grid>
-                        {
-                          (taggedMemberDetails.taggedUserData && taggedMemberDetails.taggedUserData.length > 0) &&
-                          <div>
-                            <Grid item md={4} sm={4} xs={4}>
-                              <Typography>Members:</Typography>
-                            </Grid>
-                            <Grid item md={8} sm={8} xs={8}>
-                              <div>
-                                {taggedMemberDetails.taggedUserData.map((item)=>{
-                                  return item && item.profile.name
-                                })}
-                              </div>
-                            </Grid>
-                          </div>
-                        }
-                        <Grid container>
-                          <Grid md={8} sm={8} xs={8} style={{ padding: 16}}>
-                            <Typography>You are tagged</Typography>
-                            <Button>Untag Me</Button>
-                          </Grid>
-                          <Grid md={12} sm={12} xs={12} style={{ padding: 16}} >
-                            <Typography>Permissions:</Typography>
-                            <FormControl component="fieldset" required >
+                        <Grid item md={4} sm={4} xs={4}>
+                          <Typography>Members:</Typography>
+                        </Grid>
+                        <Grid item md={8} sm={8} xs={8}>
+                          <Typography>{(taggedMemberDetails.taggedUserData && taggedMemberDetails.taggedUserData.length > 0) ? taggedMemberDetails.taggedUserData[0].profile.name : ''}</Typography>
+                        </Grid>
+                        <Grid item md={4} sm={4} xs={4}>
+                          <Typography>School:</Typography>
+                        </Grid>
+                        <Grid item md={8} sm={8} xs={8}>
+                          <Typography>{taggedMemberDetails.name}</Typography>
+                        </Grid>
+                        <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between',alignItems: 'center'}}>
+                          <Typography>Permissions:</Typography>
+                          <FormControl component="fieldset" required >
                               <RadioGroup
                                   aria-label="mediaSetting"
                                   value={this.state.mediaDefaultValue}
                                   name="mediaSetting"
                                   onChange={this.handleMediaSettingChange}
                                   defaultSelected="both"
+                                  style={{display: 'inline'}}
                               >
-                                  <FormControlLabel value="public" control={<Radio />} label="Make media public so you can share them on social media." />
-                                  <FormControlLabel value="member" control={<Radio />} label="Make media from a school only available to members of the school that posted it." />
+                                  <FormControlLabel value="public" control={<Radio />} label="Public" />
+                                  <FormControlLabel value="member" control={<Radio />} label="School only" />
                               </RadioGroup>
-                            </FormControl>
-                          </Grid>
+                          </FormControl>
                         </Grid>
                         <Grid item md={4} sm={4} xs={4}>
                           <Typography>Notes:</Typography>
@@ -191,9 +178,9 @@ class TaggedMemberDialogBox extends Component {
                             rows={4}
                           />
                         </Grid>
-                        <Grid item>
-                          <Button>Report as inappropriate</Button>
-                          <Button onClick={this.props.openEditTaggedModal}>Edit</Button>
+                        <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between'}}>
+                          <Button style={{backgroundColor: '#ffd740'}}>Report as inappropriate</Button>
+                          <Button style={{backgroundColor: '#4caf50'}} onClick={this.props.openEditTaggedModal}>Edit</Button>
                         </Grid>
                       </Grid>
                     </form>
