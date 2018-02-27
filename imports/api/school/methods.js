@@ -444,9 +444,13 @@ Meteor.methods({
             let memberData = SchoolMemberDetails.find({email}).fetch();
             if(!isEmpty(memberData)) {
                 let schoolIds = memberData.map(data => data.schoolId);
+                return {
+                    schools : School.find({ _id: { $in: schoolIds } }).fetch(),
+                    myMemberIds: memberData.map(data => data._id),
+                }
                 return School.find({ _id: { $in: schoolIds } }).fetch();
             }
-            return []
+            return {}
         } else {
             throw new Meteor.Error("Insufficient information!!");
         }

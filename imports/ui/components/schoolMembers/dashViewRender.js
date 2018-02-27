@@ -61,6 +61,7 @@ export default function DashViewRender() {
                 open={renderStudentModal}
                 renderStudentAddModal = {this.renderStudentAddModal}
                 addNewMember={this.addNewMember}
+                onModalClose={() => this.setState({renderStudentModal:false})}
               />
             }
           </form>
@@ -90,6 +91,13 @@ export default function DashViewRender() {
                 schoolData={schoolData}
                 memberInfo={memberInfo}
                 handleTaggingMembers={this.handleTaggingMembers}
+                filters={
+                  {
+                    '$or': [
+                        { taggedMemberIds: { '$in': [memberInfo.memberId]} },
+                    ]
+                  }
+                }
               />
             </Fragment>
           }

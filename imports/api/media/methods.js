@@ -14,7 +14,7 @@ Meteor.methods({
                 }
             }
             doc.accessType = user.media_access_permission || "public";
-            // doc.taggedUserIds = [this.userId];
+            // doc.taggedUserIds = [];
             // console.log("media doc ->",doc);
             return Media.insert(doc);
         } else {
@@ -47,7 +47,7 @@ Meteor.methods({
         //     throw new Meteor.Error("Permission denied!!");
         // }
     },
-    "media.removeModule": function(doc) {
+    "media.removeMedia": function(doc) {
         const user = Meteor.users.findOne(this.userId);
         // console.log("media.removeModule methods called!!!",doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "media_CUD" })) {

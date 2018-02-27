@@ -12,7 +12,8 @@ export default function() {
     const { showCreateMediaModal, mediaFormData, filterStatus, limit } = this.state;
     console.log("media list render props -->>",this.props);
     console.log("media list render state -->>",this.state);
-    const { memberInfo } = this.props;
+    const { memberInfo, filters } = this.props;
+
     return (
         <Card style={{marginTop:'42px',width: '850px'}}>
             <Grid container style={{display: 'flex', width: '100%',padding: '12px'}}>
@@ -48,7 +49,7 @@ export default function() {
                         onDelete={() => alert('changeLimit')}
                         openEditMediaForm={() => alert('changeLimit')}
                         showEditButton={false}
-                        filters={{'memberId': memberInfo && memberInfo.memberId}}
+                        filters={filters}
                         memberExists={true}
                         handleTaggingMembers={this.props.handleTaggingMembers}
                         schoolData={this.props.schoolData}

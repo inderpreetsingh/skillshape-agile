@@ -23,12 +23,12 @@ class MediaList extends React.Component {
 
 }
 export default createContainer(props => {
-    // console.log("MediaList props -->>",props)
+    console.log("MediaList props -->>",props)
     let { schoolId, limit,schoolData } = props;
     let collectionData = [];
     let mediaSubscription;
     if (schoolId) {
-        mediaSubscription = Meteor.subscribe("media.getMedia", { ...props.filters,schoolId, limit:limit});
+        mediaSubscription = Meteor.subscribe("media.getMedia", { ...props.filters, schoolId, limit:limit});
         collectionData = Media.find({schoolId}).fetch();
     }
     return { ...props,

@@ -15,6 +15,7 @@ class MediaContent extends React.Component {
         super(props);
         this.state = {
         	schoolList: [],
+            myMemberIds: [],
         }
     }
 
@@ -31,7 +32,8 @@ class MediaContent extends React.Component {
 	                isLoading: false,
 	            }
 	            if(res) {
-	            	state.schoolList = res;
+	            	state.schoolList = res.schools || [];
+                    state.myMemberIds = res.myMemberIds || [];
 	            } else if(err) {
 	                state.errorText = err.reason || err.message;
 	            }
@@ -41,7 +43,7 @@ class MediaContent extends React.Component {
     }
 
     render() {
-    	const { isLoading, schoolList } = this.state;
+    	const { isLoading, schoolList, myMemberIds } = this.state;
     	const { currentUser } = this.props;
     	console.log("MediaContent state -->>",this.state);
     	return (
@@ -57,6 +59,14 @@ class MediaContent extends React.Component {
     						key={school._id}
 	                        schoolData={school}
 	                        currentUser={currentUser}
+                            filters={
+                                {
+                                    '$or': [
+                                        { taggedMemberIds: { '$in': myMemberIds} },
+                                        { createdBy: currentUser._id }
+                                    ]
+                                }
+                            }
 	                    />
     				})
     			}

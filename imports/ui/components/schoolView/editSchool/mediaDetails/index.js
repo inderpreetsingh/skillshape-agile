@@ -120,7 +120,7 @@ class MediaDetails extends React.Component {
 
     onDeleteMedia = (data) => {
 
-      Meteor.call("media.removeModule", data, (error, result) => {
+      Meteor.call("media.removeMedia", data, (error, result) => {
         if(error) {
           console.error("Error -->>",error)
         }

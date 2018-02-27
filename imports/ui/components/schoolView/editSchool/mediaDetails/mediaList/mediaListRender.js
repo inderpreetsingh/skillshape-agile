@@ -1,6 +1,7 @@
 import React from "react";
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
+import isEmpty from 'lodash/isEmpty';
 
 import Thumbnail from './thumbnail';
 import ImageGalleryView from "/imports/ui/componentHelpers/imageGalleryView";
@@ -16,7 +17,7 @@ export default function() {
 	return (
 		<div className="col-sm-offset-2 col-sm-8 no-padding">
 			{
-				collectionData.length && (
+				isEmpty(collectionData) ?  "No Media Found!!": (
 					<Grid container>
 						<Grid item xs={12} style={{display: 'inline-flex',justifyContent: 'center'}}>
 							<div style={{width: "100%", maxWidth: 650}}>

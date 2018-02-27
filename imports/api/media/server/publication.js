@@ -1,7 +1,9 @@
 import Media from "../fields";
 
-Meteor.publish("media.getMedia", function({ schoolId, memberId, mediaName, startDate, endDate, limit }) {
-	console.log("<<<< media.getMedia called--->>>",schoolId, memberId, mediaName, startDate, endDate)
+Meteor.publish("media.getMedia", function({ schoolId, mediaName, startDate, endDate, limit, $or }) {
+	console.log("<<<< media.getMedia called--->>>",schoolId, mediaName, startDate, endDate)
+    console.log("<<<<<<<<<<<<<<<<media.getMediafilter>>>>>>>>>>>>>>>", JSON.stringify($or, null, "  "));
+
 	let filters = {
 		schoolId: schoolId
 	};
@@ -16,8 +18,9 @@ Meteor.publish("media.getMedia", function({ schoolId, memberId, mediaName, start
         	$lt: endDate
 		}
 	}
-	if(memberId) {
-		filters.memberId = memberId;
+	// Publish those media in which this `User` is tagged or created by this `User`.
+	if($or) {
+		filters['$or'] = $or;
 	}
 
 	let cursor = Media.find(filters, {limit: limit});

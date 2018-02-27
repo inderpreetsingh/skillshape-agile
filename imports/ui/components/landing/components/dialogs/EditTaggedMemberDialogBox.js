@@ -127,9 +127,9 @@ class EditTaggedMemberDialogBox extends Component {
         }
 
         console.log("onSubmit payload",payload);
-        this.setState({ isBusy: true});
 
         if(mediaId) {
+            this.setState({ isBusy: true});
             Meteor.call("media.editMedia", mediaId, payload, (err, res)=> {
                 console.log("onSubmit payload",res, err);
                 let state = { isBusy: false};
@@ -152,6 +152,23 @@ class EditTaggedMemberDialogBox extends Component {
 
     collectSchoolMembers = (values) => {
         this.setState({ taggedMemberIds: values.map((ele) => ele._id)})
+    }
+
+    deleteMedia = () => {
+        this.setState({ isBusy: true});
+        Meteor.call("media.removeMedia", this.props.currentMediaData, (error, result) => {
+            let state = { isBusy: false};
+            if (error) {
+                state.error = error.reason || error.message;
+            }
+
+            this.setState(state, () => {
+                if(result) {
+                    this.props.onModalClose()
+                }
+            });
+            // this.setState();
+        })
     }
 
     render() {
@@ -240,8 +257,8 @@ class EditTaggedMemberDialogBox extends Component {
                         </Grid>
                         <Grid item item sm={12} xs={12} md={12} style={{display:'flex',justifyContent: 'flex-end'}}>
                             { error && <ErrorWrapper>{error}</ErrorWrapper>}
-                            <Button style={{ color: helpers.danger}}>Delete this image</Button>
-                            <Button style={{ color: helpers.cancel}}>Cancel</Button>
+                            <Button style={{ color: helpers.danger}} onClick={this.deleteMedia}>Delete this image</Button>
+                            <Button style={{ color: helpers.cancel}} onClick={onModalClose}>Cancel</Button>
                             <Button type="submit" style={{ color: helpers.action}}>Save</Button>
                         </Grid>
                       </Grid>
