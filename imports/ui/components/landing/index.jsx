@@ -2,7 +2,7 @@ import React, {Component,Fragment} from 'react';
 import { debounce, isEmpty, get } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
-import {Element, scroller } from 'react-scroll'
+import {Element, scroller } from 'react-scroll';
 import Sticky from 'react-stickynode';
 import { browserHistory } from 'react-router';
 import ip from 'ip';
@@ -128,14 +128,14 @@ const FooterWrapper = styled.div`
 
 const CoverWrapper = styled.div`
   position: relative;
-  clip-path: ellipse(94% 57% at 51% 43%);
+  clip-path: ${helpers.clipPathCurve};
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    clip-path: ellipse(112% 57% at 51% 43%);
+    clip-path: ${helpers.clipPathCurve};
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    clip-path: ellipse(116% 57% at 51% 43%);
+    clip-path: ${helpers.clipPathCurve};
   }
 `;
 

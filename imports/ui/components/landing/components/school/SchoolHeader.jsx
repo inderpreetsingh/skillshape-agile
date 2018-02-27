@@ -51,6 +51,10 @@ const Title = styled.h2`
   margin: 0;
   line-height: 1;
   margin-bottom: ${helpers.rhythmDiv}px;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    font-size: ${helpers.baseFontSize * 2}px;  
+  }
 `;
 
 const Content = styled.p`
@@ -75,41 +79,43 @@ const HeaderContentWrapper = styled.div`
 const OuterWrapper = styled.div`
   background-color: ${helpers.schoolPageColor};
   position: relative;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
-
-  &:after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    background-color: inherit;
-    border-bottom: ${helpers.rhythmDiv * 8}px solid ${helpers.schoolPageColor};
-    border-radius: 100%;
-    bottom: -${helpers.rhythmDiv * 8}px;
-    z-index: -1;
-    height: ${helpers.rhythmDiv * 8}px;
-
-    @media screen and (max-width: ${helpers.tablet}px) {
-      opacity: 0.5;
-    }
-  }
+  z-index: 1;
+  clip-path: ${helpers.clipPathCurve};
+  //
+  // &:after {
+  //   content: "";
+  //   position: absolute;
+  //   width: 100%;
+  //   background-color: inherit;
+  //   border-bottom: ${helpers.rhythmDiv * 8}px solid ${helpers.schoolPageColor};
+  //   border-radius: 100%;
+  //   bottom: -${helpers.rhythmDiv * 8}px;
+  //   z-index: -1;
+  //   height: ${helpers.rhythmDiv * 8}px;
+  //
+  //   @media screen and (max-width: ${helpers.tablet}px) {
+  //     opacity: 0.5;
+  //   }
+  // }
 `;
 
 const Wrapper = styled.div`
   max-width: 1000px;
-  height: 600px;
+  height: 664px;
   margin: 0 auto;
   background-image: url(${props => props.bgSrc});
   background-size: 500px;
-  background-position: 100% calc(100% + 40px);
+  background-position: 100% calc(100% - 14px);
   background-repeat: no-repeat;
   position: relative;
 
+
   @media screen and (max-width: ${helpers.tablet}px) {
-    background-position: calc(100% + 125px) calc(100% + 40px);
+    background-position: calc(100% + 125px) calc(100% - 14px);
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    background-position: calc(100% + 250px) calc(100% + 40px);
+    background-position: calc(100% + 250px) calc(100% - 14px);
   }
 
 `;
