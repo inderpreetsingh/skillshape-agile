@@ -29,6 +29,7 @@ export default function() {
 									showEditButton={showEditButton}
 									images={collectionData.map((media)=>({original: media.sourcePath, thumbnail:media.sourcePath, media: media}))}
 									showTagButton = {memberExists}
+									schoolData={this.props.schoolData}
 								/>
 							</div>
 						</Grid>
