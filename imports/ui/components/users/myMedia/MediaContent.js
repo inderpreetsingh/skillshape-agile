@@ -59,7 +59,8 @@ class MediaContent extends React.Component {
     						key={school._id}
 	                        schoolData={school}
 	                        currentUser={currentUser}
-                            filters={
+                            schoolMemberDetailsFilters={{schoolId: school._id, activeUserId: currentUser._id}}
+                            mediaListfilters={
                                 {
                                     '$or': [
                                         { taggedMemberIds: { '$in': myMemberIds} },

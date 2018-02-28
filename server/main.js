@@ -133,7 +133,7 @@ if (Meteor.isServer) {
         //     user.emails[0].verified = true;
         //     return user;
         // }
-        // return user;
+        return user;
     });
 
     var userFeedBack = function(user, email, message, request) {

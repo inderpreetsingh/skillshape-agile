@@ -90,8 +90,9 @@ export default function DashViewRender() {
               <SchoolMemberMedia
                 schoolData={schoolData}
                 memberInfo={memberInfo}
+                schoolMemberDetailsFilters={this.state.schoolMemberDetailsFilters}
                 handleTaggingMembers={this.handleTaggingMembers}
-                filters={
+                mediaListfilters={
                   {
                     '$or': [
                         { taggedMemberIds: { '$in': [memberInfo.memberId]} },

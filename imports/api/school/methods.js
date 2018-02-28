@@ -380,7 +380,7 @@ Meteor.methods({
             doc.activeUserId = newlyCreatedUser.user._id;
         } else {
             // User is already a member in skillshape then need to make them as a School member if they are not member in a Class.
-            let filters = { email: doc.email };
+            let filters = { email: doc.email, schoolId: doc.schoolId };
 
             if(isArray(doc.classIds)) {
                 filters.classIds = { $in:doc.classIds }
@@ -402,7 +402,7 @@ Meteor.methods({
 
             // You are not School Admin of this School so you can not add a New Member.
             if (!schoolAdminRec) {
-                return { accessDenied: true };
+                throw new Meteor.Error("Access Denied!!");
             }
 
             // Create new member
@@ -423,7 +423,7 @@ Meteor.methods({
             sendEmailToStudentForClaimAsMember(claimingMemberRec, password,fromEmail, toEmail, ROOT_URL);
             return { addedNewMember: true };
         } else {
-            return { memberAlreadyExist: true };
+            throw new Meteor.Error("Member Already exist!!");
         }
     },
     // This is used to save admin notes in School Members.

@@ -1,5 +1,6 @@
 import React from 'react';
 import Grid from 'material-ui/Grid';
+import styled from 'styled-components';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import { createContainer } from 'meteor/react-meteor-data';
@@ -26,11 +27,13 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2
   },
 });
-class DashView extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
+const ErrorWrapper = styled.span`
+    color: red;
+    margin: 15px;
+`;
+
+class DashView extends React.Component {
 
     state = {
         renderStudentModal: false,
@@ -39,7 +42,8 @@ class DashView extends React.Component {
         memberInfo:{},
         filters: {
             textSearch:null
-        }
+        },
+        error: ""
     };
 
     /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
@@ -121,6 +125,7 @@ class DashView extends React.Component {
               />
             </Grid>
             <Grid item sm={12} xs={12} md={12} style={{display:'flex',justifyContent: 'flex-end'}}>
+                {this.state.error && <ErrorWrapper>{this.state.error}</ErrorWrapper>}
                 <PrimaryButton formId="addUser" type="submit" label="Add a New Member"/>
                 <PrimaryButton formId="cancelUser" label="Cancel" onClick={() => this.setState({renderStudentModal:false})}/>
             </Grid>
@@ -148,12 +153,19 @@ class DashView extends React.Component {
         this.setState({isLoading:true});
         // Add a new member in School.
         Meteor.call('school.addNewMember',payload , (err,res)=> {
-            this.setState({renderStudentModal:false});
-            // Stop Loading
-            this.setState({isLoading:false})
-            if(res) {
-                console.log("result of school.addNewMember===>",res)
+
+            let state = {
+                isLoading:false,
             }
+
+            if(err) {
+                state.error = err.reason || err.message;
+            }
+            if(res) {
+                state.renderStudentModal = false;
+            }
+
+            this.setState(state);
         });
     }
     handleMemberDialogBoxState = () => {
@@ -194,14 +206,15 @@ class DashView extends React.Component {
         // memberInfo = this.state.memberInfo
         console.log("memberInfo before===>",memberInfo)
         this.setState(
-            {   memberInfo:
-                    {
-                        memberId:memberInfo._id,
-                        name:memberInfo.firstName,
-                        phone:memberInfo.phone,
-                        email:memberInfo.email,
-                        adminNotes:memberInfo.adminNotes
-                    }
+            {
+                memberInfo: {
+                    memberId:memberInfo._id,
+                    name:memberInfo.firstName,
+                    phone:memberInfo.phone,
+                    email:memberInfo.email,
+                    adminNotes:memberInfo.adminNotes
+                },
+                schoolMemberDetailsFilters: { _id: memberId }
             }
         )
         console.log("memberInfo after===>",this);

@@ -8,11 +8,10 @@ import Card from 'material-ui/Card';
 import MediaList from '/imports/ui/components/schoolView/editSchool/mediaDetails/mediaList';
 
 export default function() {
-    console.log("this mediaDetails",this)
-    const { showCreateMediaModal, mediaFormData, filterStatus, limit } = this.state;
-    console.log("media list render props -->>",this.props);
-    console.log("media list render state -->>",this.state);
-    const { memberInfo, filters } = this.props;
+    const { showCreateMediaModal, mediaFormData, filterStatus, limit, memberInfo } = this.state;
+    console.log("SchoolMemberMedia props -->>",this.props);
+    console.log("SchoolMemberMedia state -->>",this.state);
+    const { mediaListfilters } = this.props;
 
     return (
         <Card style={{marginTop:'42px',width: '850px'}}>
@@ -49,10 +48,11 @@ export default function() {
                         onDelete={() => alert('changeLimit')}
                         openEditMediaForm={() => alert('changeLimit')}
                         showEditButton={false}
-                        filters={filters}
+                        filters={mediaListfilters}
                         memberExists={true}
                         handleTaggingMembers={this.props.handleTaggingMembers}
                         schoolData={this.props.schoolData}
+                        memberInfo={this.props.memberInfo}
                     />
                     {
                     /*collectionData.length && (

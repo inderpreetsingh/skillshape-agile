@@ -1,5 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component, Fragment } from 'react';
+import styled from 'styled-components';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import findIndex from 'lodash/findIndex';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import Radio, { RadioGroup } from 'material-ui/Radio';
@@ -15,53 +18,96 @@ import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
 
 import Dialog , {
-  withMobileDialog,
+    withMobileDialog,
 } from 'material-ui/Dialog';
 
 import {
-  FormLabel,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  FormHelperText,
+    FormLabel,
+    FormControl,
+    FormGroup,
+    FormControlLabel,
+    FormHelperText,
 } from 'material-ui/Form';
 
+import { ContainerLoader } from '/imports/ui/loading/container';
+
 const styles = {
-  dialogPaper: {
-    padding: `${helpers.rhythmDiv * 2}px`
-  }
+    dialogPaper: {
+        padding: `${helpers.rhythmDiv * 2}px`
+    }
 }
+
+const ErrorWrapper = styled.span`
+    color: red;
+    margin: 15px;
+`;
 
 class TaggedMemberDialogBox extends Component {
 
-    state = {
-      mediaDefaultValue: get(this.props, `currentMediaData.users_permission[${Meteor.userId()}].accessType`, "public")
+    constructor(props) {
+        super(props);
+        this.state = this.initializeState()
+    }
+
+    initializeState = () => {
+        console.log(get(this.props, "currentMediaData.taggedMemberIds", []), Meteor.userId())
+        console.log(findIndex(get(this.props, "currentMediaData.taggedMemberIds", []), Meteor.userId()))
+        let state = {
+            mediaDefaultValue: get(this.props, `currentMediaData.users_permission[${Meteor.userId()}].accessType`, "public"),
+            isBusy: false,
+            taggedStatus: findIndex(get(this.props, "currentMediaData.taggedMemberIds", []), Meteor.userId()) != -1,
+            error: "",
+        }
+        return state;
     }
 
     handleChange = name => event => {
-      this.setState({ [name]: event.target.checked });
+        console.log("handleChange -->>",name)
+        this.setState({ [name]: event.target.checked });
     };
 
-    // This is used to handle "Untag me" and change User specific media settings.
-    handleUsersMediaSetting = () => {
-      const mediaDefaultValue = this.state.mediaDefaultValue;
-      const tagOrUntag = this.state.tagOrUntag;
-      console.log("this is handleUsersMediaSetting",this);
-      const currentMediaData = {...this.props.currentMediaData, users_permission:{[Meteor.userId()]:this.state.mediaDefaultValue}};
-      Meteor.call("media.editMedia",currentMediaData._id, currentMediaData,tagOrUntag);
-    }
 
     handleMediaSettingChange = (event) => {
-      console.log("event====>",event.target.value)
-      this.setState({
-        mediaDefaultValue: event.target.value
-      })
+        console.log("event====>",event.target.value)
+        this.setState({
+            mediaDefaultValue: event.target.value
+        })
     }
 
+    // This is used to handle "Untag me" and change User specific media settings.
+    onSubmit = (event) => {
+        event.preventDefault();
+        const mediaId = get(this.props, "currentMediaData._id");
+        const payload = {
+            taggedMemberIds: this.state.taggedMemberIds,
+            users_permission: {
+                [Meteor.userId()]: {
+                    accessType: this.state.mediaDefaultValue
+                }
+            }
+        }
+
+        if(mediaId) {
+            this.setState({ isBusy: true});
+            Meteor.call("media.editMedia", mediaId, payload, (err, res)=> {
+                console.log("onSubmit payload",res, err);
+                let state = { isBusy: false };
+
+                if(err) {
+                    state.error = err.reason || err.message;
+                }
+
+                this.setState(state);
+            })
+
+        } else {
+            this.setState({ error: "Access Denied!!!"});
+        }
+    }
 
     render() {
 
-      console.log("media_access_permission",Meteor.user());
+        console.log("media_access_permission",Meteor.user());
 
         const {
             classes,
@@ -74,91 +120,104 @@ class TaggedMemberDialogBox extends Component {
             schoolData
         } = this.props;
 
-        console.log('TaggedMemberDialogBox state -->>',currentMediaData);
-        //console.log('SignUpDialogBox props -->>',this.props);
+        console.log('TaggedMemberDialogBox props -->>',this.props);
+        console.log('TaggedMemberDialogBox state -->>',this.state);
+
         return(
             <Dialog
-              fullScreen={fullScreen}
-              open={open}
-              onClose={onModalClose}
-              onRequestClose={onModalClose}
-              aria-labelledby="sign-up"
-              classes={{paper: classes.dialogPaper}}
+                fullScreen={fullScreen}
+                open={open}
+                onClose={onModalClose}
+                onRequestClose={onModalClose}
+                aria-labelledby="sign-up"
+                classes={{paper: classes.dialogPaper}}
             >
                 <MuiThemeProvider theme={muiTheme}>
-                   <form /*onSubmit={this.props.onSubmit.bind(this, {name, email, captchaValue, sendMeSkillShapeNotification})}*/>
-                      <Grid container>
-                        <Grid item md={4} sm={4} xs={4}>
-                          <Typography>Media Title:</Typography>
-                        </Grid>
-                        <Grid item md={8} sm={8} xs={8}>
-                          <Typography>{currentMediaData.name}</Typography>
-                        </Grid>
-                        <Grid item md={4} sm={4} xs={4}>
-                          <Typography>Members:</Typography>
-                        </Grid>
-                        <Grid item md={8} sm={8} xs={8}>
-                          { currentMediaData.taggedUserData && currentMediaData.taggedUserData.map((userData) => {
-                              return userData.profile.name
-                          })}
-                          <Typography></Typography>
-                        </Grid>
-                        <Grid item md={4} sm={4} xs={4}>
-                          <Typography>School:</Typography>
-                        </Grid>
-                        <Grid item md={8} sm={8} xs={8}>
-                          <Typography>{schoolData.name}</Typography>
-                        </Grid>
-                        <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between',alignItems: 'center'}}>
-                          <Typography>Permissions:</Typography>
-                          <FormControl component="fieldset" required >
-                              <RadioGroup
-                                  aria-label="mediaSetting"
-                                  value={this.state.mediaDefaultValue}
-                                  name="mediaSetting"
-                                  onChange={this.handleMediaSettingChange}
-                                  defaultSelected="both"
-                                  style={{display: 'inline'}}
-                              >
-                                  <FormControlLabel value="public" control={<Radio />} label="Public" />
-                                  <FormControlLabel value="member" control={<Radio />} label="School only" />
-                              </RadioGroup>
-                          </FormControl>
-                        </Grid>
-                        {(Meteor.userId() !== currentMediaData.createdBy) &&
-                          <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between',alignItems: 'center'}}>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={this.state.tagOrUntag}
-                                  onChange={this.handleChange('tagOrUntag')}
-                                  value="tagOrUntag"
-                                  color="primary"
-                                />
-                              }
-                              label="Untag Me"
-                            />
-                          </Grid>
-                        }
-                        {currentMediaData.desc &&
-                          <Grid container style={{padding: 8}}>
+                    <form onSubmit={this.onSubmit}>
+                        {this.state.isBusy && <ContainerLoader/>}
+                        <Grid container>
                             <Grid item md={4} sm={4} xs={4}>
-                              <Typography>Notes:</Typography>
+                                <Typography>Media Title:</Typography>
                             </Grid>
                             <Grid item md={8} sm={8} xs={8}>
-                              <Typography>{currentMediaData.desc}</Typography>
+                                <Typography>{currentMediaData.name}</Typography>
                             </Grid>
-                          </Grid>
-                        }
-                        <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between'}}>
-                          <Button style={{backgroundColor: '#ffd740'}}>Report as inappropriate</Button>
-                          {
-                            (Meteor.userId() == currentMediaData.createdBy) ?
-                            <Button style={{backgroundColor: '#4caf50'}} onClick={this.props.openEditTaggedModal}>Edit</Button>
-                            : <Button style={{backgroundColor: '#ffd740'}} onClick={this.handleUsersMediaSetting}>Save</Button>
-                          }
+                            <Grid item md={4} sm={4} xs={4}>
+                                <Typography>Members:</Typography>
+                            </Grid>
+                            <Grid item md={8} sm={8} xs={8}>
+                                {
+                                    !isEmpty(currentMediaData.taggedMemberData) && currentMediaData.taggedMemberData.map((userData) => {
+                                        return `${userData.firstName} ${userData.lastName}`
+                                    })
+                                }
+                                <Typography></Typography>
+                            </Grid>
+                            <Grid item md={4} sm={4} xs={4}>
+                                <Typography>School:</Typography>
+                            </Grid>
+                            <Grid item md={8} sm={8} xs={8}>
+                                <Typography>{schoolData.name}</Typography>
+                            </Grid>
+                            {
+                                (Meteor.userId() !== currentMediaData.createdBy) &&
+                                    <Fragment>
+                                        <Grid item md={4} sm={4} xs={4}>
+                                            <Typography>You are tagged:</Typography>
+                                        </Grid>
+                                        <Grid item md={8} sm={8} xs={8}>
+                                            <FormControlLabel
+                                              control={
+                                                <Checkbox
+                                                  checked={this.state.tagOrUntag}
+                                                  onChange={this.handleChange('tagOrUntag')}
+                                                  value="tagOrUntag"
+                                                  color="primary"
+                                                />
+                                              }
+                                              label="Untag Me"
+                                            />
+                                        </Grid>
+                                    </Fragment>
+                            }
+                            <Grid item md={4} sm={4} xs={4}>
+                                <Typography>Permissions:</Typography>
+                            </Grid>
+                            <Grid item md={8} sm={8} xs={8}>
+                                <FormControl component="fieldset" required >
+                                    <RadioGroup
+                                        aria-label="mediaSetting"
+                                        value={this.state.mediaDefaultValue}
+                                        name="mediaSetting"
+                                        onChange={this.handleMediaSettingChange}
+                                        defaultSelected="both"
+                                        style={{display: 'inline'}}
+                                    >
+                                        <FormControlLabel value="public" control={<Radio />} label="Public" />
+                                        <FormControlLabel value="member" control={<Radio />} label="School only" />
+                                    </RadioGroup>
+                              </FormControl>
+                            </Grid>
+                            {currentMediaData.desc &&
+                              <Grid container style={{padding: 8}}>
+                                <Grid item md={4} sm={4} xs={4}>
+                                  <Typography>Notes:</Typography>
+                                </Grid>
+                                <Grid item md={8} sm={8} xs={8}>
+                                  <Typography>{currentMediaData.desc}</Typography>
+                                </Grid>
+                              </Grid>
+                            }
+                            <Grid item md={12} sm={12} xs={12} style={{display: 'flex',justifyContent: 'space-between'}}>
+                              <Button style={{backgroundColor: '#ffd740'}}>Report as inappropriate</Button>
+                              { this.state.error && <ErrorWrapper>{this.state.error}</ErrorWrapper>}
+                              {
+                                (Meteor.userId() == currentMediaData.createdBy) ?
+                                <Button style={{backgroundColor: '#4caf50'}} onClick={this.props.openEditTaggedModal}>Edit</Button>
+                                : <Button type="submit" style={{backgroundColor: '#ffd740'}}>Save</Button>
+                              }
+                            </Grid>
                         </Grid>
-                      </Grid>
                     </form>
                 </MuiThemeProvider>
             </Dialog>
