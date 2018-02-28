@@ -9,7 +9,6 @@ const Wrapper = styled.div`
   justify-content: flex-end;
   filter: ${props => props.active ?  'none' : 'grayscale(90%)'};
   border-radius: ${helpers.rhythmDiv * 2}px;
-  width: 100%;
   height: 100px;
   max-width: 300px;
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv}px;
@@ -17,14 +16,13 @@ const Wrapper = styled.div`
   background-image: url('${props => props.bgImage}');
   background-size: cover;
   background-repeat: no-repeat;
-  transition: flex-shrink .2s linear;
-  min-width: 0;
   margin: 0 ${helpers.rhythmDiv * 2}px;
+  width: 100%;
+  min-width: 0;
+  transition: max-width .3s linear;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    max-width: 250px;
-    width: 100%;
-    flex-shrink: ${props => props.active ?  '0' : '1'};
+    max-width: ${props => props.active ?  '250' : '100'}px;
     margin: 0 ${helpers.rhythmDiv}px;
     min-width: 100px;
   }
@@ -45,11 +43,11 @@ const Content = styled.p`
   font-weight: 400;
   opacity: 1;
   margin: 0;
-  transition: opacity .2s linear, transform .2s linear;
+  transition: opacity .1s linear;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    opacity: ${props => props.active ? '1' : '0'};
-    transform: ${props => props.active ? 'scale(1)' : 'scale(0)'};
+    // opacity: ${props => props.active ? '1' : '0'};
+    display: ${props => props.active ? 'flex' : 'none'};
   }
 `;
 

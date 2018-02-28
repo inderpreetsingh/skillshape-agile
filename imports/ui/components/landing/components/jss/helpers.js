@@ -20,6 +20,7 @@ export const
     coverHeight = "95vh",
     cardsListWrapperWidth = rhythmDiv * 150,
     maxContainerWidth = 1400,
+    schoolPageContainer = 1000,
 
     /*******BASIC COLORS*********/
     textColor = colors.grey[800],

@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react';
+import React, {Component, Fragment} from 'react';
+import {scroller, Events, scrollSpy} from 'react-scroll';
 import {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -11,10 +12,9 @@ import IssueNumber from './IssueNumber.jsx';
 const Wrapper= styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
-  max-width: 1000px;
+  max-width: ${helpers.schoolPageContainer}px;
   margin: 0 auto;
   width: 100%;
-  margin-top: ${helpers.rhythmDiv * 8}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     max-width: initial;
@@ -36,6 +36,11 @@ const IssuesTitle = styled.h2`
   text-align: center;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
+  display: ${props => props.mobile ? 'none' : 'block'};
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: block;
+  }
 `;
 
 const IssuesWrapper = styled.div`
@@ -54,41 +59,178 @@ const IssuesNumberWrapper = styled.div`
     left: ${helpers.rhythmDiv}px;
     z-index: 15;
 
-    display: ${props => props.displayIssueNumbers ? 'flex' : 'none'};
+    display: ${props => props.displayIssueNumbers && !props.hideIssues ? 'flex' : 'none'};
   }
 `;
 
-const IssueSelectors = (props) => {
-  console.log('re rendering...')
-  return(<Wrapper>
-    <IssuesTitle>{props.headerContent}</IssuesTitle>
-    <Sticky className='issue-cards' top={helpers.rhythmDiv}>
-      <IssuesWrapper>
-      {props.issues &&
-        props.issues.map((issue,i) => (
-          <IssueCard
+const IssuesNumbers = styled.div`
+  display: none;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 100px;
+    left: ${helpers.rhythmDiv}px;
+    z-index: 15;
+
+    display: ${props => props.displayIssueNumbers ? 'flex' : 'none'};
+}
+`;
+
+const IssuesFixed = styled.div`
+  display: ${props => props.hideIssues ? 'none' : 'block'};
+`;
+
+class IssueSelectors extends Component {
+  state = {
+    activeIssue: 0,
+    clickEvent: false,
+    wrappers: [],
+    hideIssues: false,
+    displayIssueNumbers: true,
+  }
+
+  _calcSolutionWrappersData = () => {
+    const documentElemTop = -1 * document.documentElement.getBoundingClientRect().top;
+    return this.state.wrappers.map((wrapper,i) => {
+      const wrapperObj = findDOMNode(wrapper);
+      const wrapperObjRect = wrapperObj.getBoundingClientRect();
+      return documentElemTop + wrapperObjRect.top;
+    });
+  }
+
+  handleHideIssues = (state) => {
+    if(this.state.hideIssues !== state) {
+      this.setState({
+        hideIssues: state
+      });
+    }
+  }
+
+  handleScroll = () => {
+    const wrappersData = this._calcSolutionWrappersData();
+    console.log(this.state.clickEvent,"scrolling...");
+
+    // This controls whether we want to show the issue cards or not.
+    if(window.pageYOffset >= (wrappersData[2] + window.innerHeight - 200)) {
+      this.handleHideIssues(true);
+    }else {
+      this.handleHideIssues(false);
+    }
+
+    if(!this.state.clickEvent) {
+
+      // If we are moved to the 3rd wrapper/solution box
+      if(window.pageYOffset >= wrappersData[2]) {
+        this.handleActiveIssueState(2);
+      }else if(window.pageYOffset >= wrappersData[1]) {
+        this.handleActiveIssueState(1);
+      }else {
+        this.handleActiveIssueState(0);
+      }
+    }
+
+    // This controls the issue numbers to only display for issues sections
+    if(window.innerWidth < 500) {
+      if(window.pageYOffset < wrappersData[0]) {
+        if(this.state.displayIssueNumbers)
+          this.setState({displayIssueNumbers : false});
+      }else {
+        if(!this.state.displayIssueNumbers)
+          this.setState({displayIssueNumbers : true});
+      }
+    }
+    // console.log(wrappersData,window.pageYOffset,"scrollevent","wrappers...");
+  }
+
+  componentDidMount = () => {
+    const self = this;
+
+    self.handleScroll();
+
+    Events.scrollEvent.register('end', function(to, element) {
+      console.log("scroll end....");
+      self.setState({ clickEvent: false});
+    });
+
+    scrollSpy.update();
+
+    window.addEventListener('scroll',self.handleScroll);
+  }
+
+  componentWillUnMount = () => {
+    Events.scrollEvent.remove('end');
+
+    window.addEventListener('scroll',this.handleScroll);
+  }
+
+  handleActiveIssueState = (index,e) => {
+    // console.log(index,'changing...');
+    if(this.state.activeIssue !== index) {
+      this.setState({
+        activeIssue: index
+      });
+    }
+  }
+
+  scrollTo(index) {
+    scroller.scrollTo((`solution-container-${index}`),{
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart'
+    });
+  }
+
+  handleCardClick = (index) => {
+    this.setState({
+      clickEvent: true,
+      activeIssue: index
+    });
+    this.scrollTo(index);
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    if(this.state.wrappers.length !== nextProps.wrappers) {
+      this.setState({
+        wrappers: nextProps.wrappers
+      });
+    }
+  }
+
+  render() {
+    return(<Wrapper>
+      <Sticky className='issue-cards'>
+        <IssuesFixed hideIssues={this.state.hideIssues}>
+          <IssuesTitle>{this.props.headerContent}</IssuesTitle>
+          <IssuesWrapper>
+          {this.props.issues &&
+            this.props.issues.map((issue,i) => (
+              <IssueCard
+                key={i}
+                active={this.state.activeIssue === i}
+                onClick={() => this.handleCardClick(i)}
+                {...issue}
+                />
+            ))}
+          </IssuesWrapper>
+        </IssuesFixed>
+      </Sticky>
+
+      <IssuesTitle mobile>{this.props.headerContent}</IssuesTitle>
+      <IssuesNumberWrapper displayIssueNumbers={this.state.displayIssueNumbers} hideIssues={this.state.hideIssues}>
+      {this.props.issues &&
+        this.props.issues.map((issue,i) => (
+          <IssueNumber
             key={i}
-            active={props.activeIssue === i}
-            onClick={() => props.handleCardClick(i)}
-            {...issue}
+            active={this.state.activeIssue === i}
+            issueIndex={i + 1}
+            onClick={() => this.handleCardClick(i)}
             />
         ))}
-      </IssuesWrapper>
-    </Sticky>
-
-    <IssuesNumberWrapper displayIssueNumbers={props.displayIssueNumbers}>
-    {props.issues &&
-      props.issues.map((issue,i) => (
-        <IssueNumber
-          key={i}
-          active={props.activeIssue === i}
-          issueIndex={i + 1}
-          onClick={() => props.handleCardClick(i)}
-          />
-      ))}
-    </IssuesNumberWrapper>
-
-  </Wrapper>)
+      </IssuesNumberWrapper>
+    </Wrapper>)
+  }
 }
 
 IssueSelectors.defaultProps = {

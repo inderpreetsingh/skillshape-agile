@@ -7,7 +7,7 @@ import {withStyles} from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 
 import * as helpers from '../jss/helpers.js';
-import { schoolDoorImg } from '../../site-settings.js';
+import { schoolDoorImgSrc } from '../../site-settings.js';
 
 const styles = {
     root: {
@@ -53,7 +53,7 @@ const Title = styled.h2`
   margin-bottom: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    font-size: ${helpers.baseFontSize * 2}px;  
+    font-size: ${helpers.baseFontSize * 2}px;
   }
 `;
 
@@ -100,7 +100,7 @@ const OuterWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 1000px;
+  max-width: ${helpers.schoolPageContainer}px;
   height: 664px;
   margin: 0 auto;
   background-image: url(${props => props.bgSrc});
@@ -206,7 +206,7 @@ SchoolHeader.propTypes = {
 SchoolHeader.defaultProps = {
   title: 'This is your school',
   content: 'Amazing things happen when people enter these doors',
-  schoolHeaderImgSrc: schoolDoorImg
+  schoolHeaderImgSrc: schoolDoorImgSrc
 }
 
 export default withStyles(styles)(SchoolHeader);
