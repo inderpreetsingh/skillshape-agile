@@ -6,9 +6,9 @@ import * as helpers from '../../jss/helpers.js';
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
-  width: ${helpers.rhythmDiv * 8}px;
-  height: ${helpers.rhythmDiv * 8}px;
-  border: 5px solid ${props => props.active ? helpers.primaryColor : helpers.cancel};
+  width: ${helpers.rhythmDiv * 4}px;
+  height: ${helpers.rhythmDiv * 4}px;
+  border: 2px solid ${props => props.active ? helpers.primaryColor : helpers.cancel};
   border-radius: 50%;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   padding: ${helpers.rhythmDiv}px;
@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 `;
 
 const Content = styled.p`
-  font-size: ${helpers.baseFontSize * 1.5}px;
+  font-size: ${helpers.baseFontSize}px;
   font-family: ${helpers.commonFont};
   font-weight: 300;
   margin: 0;
