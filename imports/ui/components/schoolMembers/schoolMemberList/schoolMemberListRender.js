@@ -16,30 +16,32 @@ export default function (props) {
                         <Typography>{collectionData.length} Students</Typography>
                     </Grid>
                     <Grid item sm={12} xs={12} md={12}>
-                        <List>
-                            {
-                              membersByName && Object.keys(membersByName).sort().map((key) => {
-                                return (
-                                  [
-                                  <ListItem style={{borderBottom: 'solid 1px #dddd'}} key={key} dense button><b>{key}</b><hr/></ListItem>,
-                                  membersByName[key] && membersByName[key].map((data) => {
-                                   return (
-                                    <ListItem
-                                      key={data._id}
-                                      dense
-                                      button
-                                      onClick={()=> this.props.handleMemberDetailsToRightPanel(data._id)}
-                                    >
-                                      <Avatar alt="Remy Sharp" src={src ? src : ''}>{key}</Avatar>
-                                      <ListItemText primary={data.firstName} />
-                                    </ListItem>
-                                    )
-                                   })
-                                  ]
-                               )
-                              })
-                            }
-                        </List>
+                        <Grid container style={{borderTop: 'solid 1px #ddd',marginTop: 'auto',overflowY: 'auto',height: '100vh'}}>
+                            <List>
+                                {
+                                  membersByName && Object.keys(membersByName).sort().map((key) => {
+                                    return (
+                                      [
+                                      <ListItem style={{borderBottom: 'solid 1px #dddd'}} key={key} dense button><b>{key}</b><hr/></ListItem>,
+                                      membersByName[key] && membersByName[key].map((data) => {
+                                       return (
+                                        <ListItem
+                                          key={data._id}
+                                          dense
+                                          button
+                                          onClick={()=> this.props.handleMemberDetailsToRightPanel(data._id)}
+                                        >
+                                          <Avatar alt="Remy Sharp" src={src ? src : ''}>{key}</Avatar>
+                                          <ListItemText primary={data.firstName} />
+                                        </ListItem>
+                                        )
+                                       })
+                                      ]
+                                   )
+                                  })
+                                }
+                            </List>
+                        </Grid>
                     </Grid>
                 </Grid>
         : ''
