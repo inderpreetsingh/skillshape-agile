@@ -33,51 +33,53 @@ export default function DashViewRender() {
   console.log("classTypeIds===>",classTypeIds)
   const memberFilter =  {schoolId:schoolData && schoolData._id, textSearch, classTypeIds};
   const drawer = (
-      <div>
-        <List><SchoolMemberListItems filters={memberFilter} handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}/></List>
-      </div>
+        <SchoolMemberListItems filters={memberFilter} handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}/>
     );
   return (
-      <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff'}}>
+      <Grid container className="containerDiv" style={{backgroundColor: '#fff'}}>
         {
         this.state.isLoading && <ContainerLoader />
         }
-        <Grid item sm={4} xs={12} md={4} className="leftSideMenu" style={{border: 'solid 1px #ddd'}}>
-          <SchoolMemberFilter
-              stickyPosition={this.state.sticky}
-              ref="ClaimSchoolFilter"
-              {...this.props}
-              handleClassTypeDataChange={this.handleClassTypeDataChange}
-              onLocationChange={this.onLocationChange}
-              handleMemberNameChange={this.handleMemberNameChange}
-              locationInputChanged={this.locationInputChanged}
-              memberNameFilter = { memberFilter }
-              classTypeData = { classTypeData }
-          />
-          <form noValidate autoComplete="off">
-            {
-              renderStudentModal &&
-              <MemberDialogBox
-                open={renderStudentModal}
-                renderStudentAddModal = {this.renderStudentAddModal}
-                addNewMember={this.addNewMember}
-                onModalClose={() => this.setState({renderStudentModal:false})}
+        <Grid item sm={4} xs={12} md={4} className="leftSideMenu" style={{border: 'solid 1px #ddd',height:'100vh'}}>
+          <Grid container>
+              <SchoolMemberFilter
+                  stickyPosition={this.state.sticky}
+                  ref="ClaimSchoolFilter"
+                  {...this.props}
+                  handleClassTypeDataChange={this.handleClassTypeDataChange}
+                  onLocationChange={this.onLocationChange}
+                  handleMemberNameChange={this.handleMemberNameChange}
+                  locationInputChanged={this.locationInputChanged}
+                  memberNameFilter = { memberFilter }
+                  classTypeData = { classTypeData }
               />
-            }
-          </form>
-          <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse'}}>
-            <Button raised color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
-              Add New Student
-            </Button>
+              <form noValidate autoComplete="off">
+                {
+                  renderStudentModal &&
+                  <MemberDialogBox
+                    open={renderStudentModal}
+                    renderStudentAddModal = {this.renderStudentAddModal}
+                    addNewMember={this.addNewMember}
+                    onModalClose={() => this.setState({renderStudentModal:false})}
+                  />
+                }
+              </form>
+              <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse'}}>
+                <Button raised color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
+                  Add New Student
+                </Button>
+              </Grid>
           </Grid>
-          <div>
-            <Hidden mdUp>
-              {drawer}
-            </Hidden>
-            <Hidden smDown>
-                {drawer}
-            </Hidden>
-          </div>
+          <Grid container>
+            <Grid item sm={12} xs={12} md={12}>
+                <Hidden mdUp>
+                  {drawer}
+                </Hidden>
+                <Hidden smDown>
+                    {drawer}
+                </Hidden>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item sm={8} xs={12} md={8} className="rightPanel">
           { !isEmpty(memberInfo) &&
