@@ -8,7 +8,7 @@ import ImageGalleryView from "/imports/ui/componentHelpers/imageGalleryView";
 
 export default function() {
 
-	const { collectionData, showEditButton, onDelete, openEditMediaForm, memberExists } = this.props;
+	const { collectionData, showEditButton, onDelete, openEditMediaForm, memberExists, memberInfo } = this.props;
 	console.log("media list render props -->>",this.props);
 	console.log("media list render state -->>",this.state);
 	const { isHovering, thumbnailData, imgIndex } = this.state;
@@ -23,14 +23,15 @@ export default function() {
 							<div style={{width: "100%", maxWidth: 650}}>
 								<ImageGalleryView
 									mediaSubscriptionReady={this.props.mediaSubscriptionReady}
-									changeLimit = {this.props.changeLimit}
+									changeLimit={this.props.changeLimit}
 									lazyLoad={true}
 									onDelete={onDelete}
 									openEditMediaForm={openEditMediaForm}
 									showEditButton={showEditButton}
 									images={collectionData.map((media)=>({original: media.sourcePath, thumbnail:media.sourcePath, media: media}))}
-									showTagButton = {memberExists}
+									showTagButton={memberExists}
 									schoolData={this.props.schoolData}
+									memberInfo={memberInfo}
 								/>
 							</div>
 						</Grid>

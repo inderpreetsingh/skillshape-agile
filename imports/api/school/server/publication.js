@@ -377,3 +377,19 @@ Meteor.publish("MembersBySchool", function({ schoolId, textSearch, classTypeIds,
     console.log("MembersRec",SchoolMemberDetails.find(classfilter,{ limit: limit ? limit : 4 },{sort: {firstName: 1}}).fetch());
     return SchoolMemberDetails.find(classfilter,{ limit: limit ? limit : 4 },{sort: {firstName: 1}});
 });
+
+Meteor.publish("school.getSchoolWithConnectedTagedMedia", function({ email }) {
+    if(email) {
+        let schoolMemberCursor = SchoolMemberDetails.find({email});
+        let memberData = schoolMemberCursor.fetch()
+        if(!_.isEmpty(memberData)) {
+            let schoolIds = memberData.map(data => data.schoolId);
+            return [
+                schoolMemberCursor,
+                School.find({ _id: { $in: schoolIds } }),
+            ]
+        }
+        return [];
+    }
+    return [];
+});
