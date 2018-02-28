@@ -29,7 +29,7 @@ export default function() {
                     filterStatus={filterStatus}
                     showLoading = {this.showLoading}
                     tagMember={true}
-                    taggedMemberInfo={this.props.memberInfo}
+                    taggedMemberInfo={memberInfo}
                 />
             }
                 <Grid item md={8} sm={8} xs={8}>
@@ -52,7 +52,7 @@ export default function() {
                         memberExists={true}
                         handleTaggingMembers={this.props.handleTaggingMembers}
                         schoolData={this.props.schoolData}
-                        memberInfo={this.props.memberInfo}
+                        memberInfo={memberInfo}
                     />
                     {
                     /*collectionData.length && (

@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import findIndex from 'lodash/findIndex';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
 import Radio, { RadioGroup } from 'material-ui/Radio';
@@ -46,29 +45,25 @@ class TaggedMemberDialogBox extends Component {
 
     constructor(props) {
         super(props);
-        this.state = this.initializeState()
+        this.state = this.initializeState();
     }
 
     initializeState = () => {
-        console.log(get(this.props, "currentMediaData.taggedMemberIds", []), Meteor.userId())
-        console.log(findIndex(get(this.props, "currentMediaData.taggedMemberIds", []), Meteor.userId()))
+        const taggedMemberIds = get(this.props, "currentMediaData.taggedMemberIds", []);
         let state = {
             mediaDefaultValue: get(this.props, `currentMediaData.users_permission[${Meteor.userId()}].accessType`, "public"),
+            memberTaggedStatus: taggedMemberIds.indexOf(get(this.props, "memberInfo._id")) != -1,
             isBusy: false,
-            taggedStatus: findIndex(get(this.props, "currentMediaData.taggedMemberIds", []), Meteor.userId()) != -1,
             error: "",
         }
         return state;
     }
 
     handleChange = name => event => {
-        console.log("handleChange -->>",name)
         this.setState({ [name]: event.target.checked });
     };
 
-
     handleMediaSettingChange = (event) => {
-        console.log("event====>",event.target.value)
         this.setState({
             mediaDefaultValue: event.target.value
         })
@@ -79,11 +74,14 @@ class TaggedMemberDialogBox extends Component {
         event.preventDefault();
         const mediaId = get(this.props, "currentMediaData._id");
         const payload = {
-            taggedMemberIds: this.state.taggedMemberIds,
             users_permission: {
                 [Meteor.userId()]: {
-                    accessType: this.state.mediaDefaultValue
+                    accessType: this.state.mediaDefaultValue,
                 }
+            },
+            taggedObj: {
+                memberId: get(this.props, "memberInfo._id"),
+                memberTaggedStatus: this.state.memberTaggedStatus,
             }
         }
 
@@ -106,8 +104,6 @@ class TaggedMemberDialogBox extends Component {
     }
 
     render() {
-
-        console.log("media_access_permission",Meteor.user());
 
         const {
             classes,
@@ -169,9 +165,9 @@ class TaggedMemberDialogBox extends Component {
                                             <FormControlLabel
                                               control={
                                                 <Checkbox
-                                                  checked={this.state.tagOrUntag}
-                                                  onChange={this.handleChange('tagOrUntag')}
-                                                  value="tagOrUntag"
+                                                  checked={this.state.memberTaggedStatus}
+                                                  onChange={this.handleChange('memberTaggedStatus')}
+                                                  value="memberTaggedStatus"
                                                   color="primary"
                                                 />
                                               }
@@ -226,9 +222,11 @@ class TaggedMemberDialogBox extends Component {
 }
 
 TaggedMemberDialogBox.propTypes = {
-  onModalClose: PropTypes.func,
-  classes: PropTypes.object.isRequired,
-  open: PropTypes.bool,
+    onModalClose: PropTypes.func,
+    classes: PropTypes.object.isRequired,
+    open: PropTypes.bool,
+    currentMediaData: PropTypes.object.isRequired,
+    memberInfo: PropTypes.object.isRequired,
 }
 
 export default withMobileDialog()(withStyles(styles)(TaggedMemberDialogBox));

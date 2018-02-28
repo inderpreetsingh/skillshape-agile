@@ -439,22 +439,6 @@ Meteor.methods({
         SchoolMemberDetails.update({_id:doc.memberId},{$set:{adminNotes:doc.adminNotes}});
         return {updatedNotes:true};
     },
-    "school.getSchoolWithConnectedTagedMedia": function({ email }) {
-        if(email) {
-            let memberData = SchoolMemberDetails.find({email}).fetch();
-            if(!isEmpty(memberData)) {
-                let schoolIds = memberData.map(data => data.schoolId);
-                return {
-                    schools : School.find({ _id: { $in: schoolIds } }).fetch(),
-                    myMemberIds: memberData.map(data => data._id),
-                }
-                return School.find({ _id: { $in: schoolIds } }).fetch();
-            }
-            return {}
-        } else {
-            throw new Meteor.Error("Insufficient information!!");
-        }
-    },
     "school.updateInviteAcceptedToMemberRec": function({memberId,schoolId,acceptInvite}) {
         let schoolMemberDetails = SchoolMemberDetails.find({_id:memberId,schoolId:schoolId});
         let currentUser = Meteor.users.findOne(this.userId);

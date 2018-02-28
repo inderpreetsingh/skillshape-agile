@@ -38,6 +38,18 @@ Meteor.methods({
                 break;
             }
         }
+
+        if(payload.taggedObj && payload.taggedObj.memberId) {
+            let taggedMemberIds = new Set(mediaData.taggedMemberIds || []);
+            if(payload.taggedObj.memberTaggedStatus) {
+                taggedMemberIds.add(payload.taggedObj.memberId)
+            } else {
+                taggedMemberIds.delete(payload.taggedObj.memberId)
+            }
+            payload.taggedMemberIds = Array.from(taggedMemberIds);
+            delete payload.taggedObj
+        }
+
         console.log("media.editMedia -->>",payload);
         return Media.update({ _id: doc_id }, { $set: payload });
         // return Media.update({ _id: doc_id }, { $set: doc });

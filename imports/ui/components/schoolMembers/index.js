@@ -208,7 +208,8 @@ class DashView extends React.Component {
         this.setState(
             {
                 memberInfo: {
-                    memberId:memberInfo._id,
+                    _id: memberInfo._id,
+                    memberId: memberInfo._id,
                     name:memberInfo.firstName,
                     phone:memberInfo.phone,
                     email:memberInfo.email,

@@ -6,55 +6,29 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
+import School from "/imports/api/school/fields";
 import SchoolMemberMedia from '/imports/ui/components/schoolMembers/mediaDetails';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 
 class MediaContent extends React.Component {
 
-	constructor(props) {
-        super(props);
-        this.state = {
-        	schoolList: [],
-            myMemberIds: [],
-        }
-    }
-
-    componentWillMount() {
-    	this.getSchoolWithConnectedTagedMedia()
-    }
-
-    getSchoolWithConnectedTagedMedia = () => {
-    	let email = get(this.props, "currentUser.emails[0].address")
-    	if(email) {
-	    	this.setState({isLoading: true});
-	    	Meteor.call("school.getSchoolWithConnectedTagedMedia", {email}, (err, res) => {
-	    		let state = {
-	                isLoading: false,
-	            }
-	            if(res) {
-	            	state.schoolList = res.schools || [];
-                    state.myMemberIds = res.myMemberIds || [];
-	            } else if(err) {
-	                state.errorText = err.reason || err.message;
-	            }
-            	this.setState(state)
-	    	})
-    	}
+	state = {
     }
 
     render() {
-    	const { isLoading, schoolList, myMemberIds } = this.state;
-    	const { currentUser } = this.props;
-    	console.log("MediaContent state -->>",this.state);
+    	// const { isLoading, schoolList, myMemberIds } = this.state;
+    	const { currentUser, schoolData, myMemberIds, isLoading } = this.props;
+    	console.log("MediaContent props -->>",this.props);
     	return (
     		<div>
-    			{this.state.isLoading && <Preloader/>}
+    			{isLoading && <Preloader/>}
     			{
-    				isEmpty(schoolList) ? (
+    				isEmpty(schoolData) ? (
                         <Typography type="display2" gutterBottom align="center">
                             Media Data not found!!!
                         </Typography>
-                        ) : schoolList.map((school, index)=> {
+                        ) : schoolData.map((school, index)=> {
     					return  <SchoolMemberMedia
     						key={school._id}
 	                        schoolData={school}
@@ -76,4 +50,32 @@ class MediaContent extends React.Component {
     }
 }
 
-export default MediaContent
+export default createContainer(props => {
+    // console.log("MediaContent props -->>",props)
+    let { currentUser } = props;
+    let email = get(currentUser, "emails[0].address");
+    let isLoading = true;
+    let subscription;
+    let schoolData = [];
+    let schoolMembersData = [];
+    let myMemberIds = [];
+
+    if(email) {
+        subscription = Meteor.subscribe("school.getSchoolWithConnectedTagedMedia", { email });
+    }
+
+    if(subscription && subscription.ready()) {
+        isLoading = false;
+        schoolData = School.find().fetch();
+        schoolMembersData = SchoolMemberDetails.find({email}).fetch();
+        myMemberIds = schoolMembersData.map(data => data._id);
+    }
+
+    return {
+        ...props,
+        schoolData,
+        schoolMembersData,
+        myMemberIds
+    };
+
+}, MediaContent);
