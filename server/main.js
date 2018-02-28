@@ -120,19 +120,20 @@ if (Meteor.isServer) {
                 Meteor.users.remove({_id: existingUser._id}); // remove existing record
                 return existingUser;
             }
-       }
+        }
+
         // if (options.profile == null || options.profile == undefined) {
         //     user.profile = { "role": "Admin", "access_key": Math.random().toString(36).slice(2) }
         //     // Roles.addUsersToRoles(user._id,'admin')
         //     // console.log(Roles.userIsInRole(Meteor.userId(),'admin'));
         // } else {
-        //     user.profile = options.profile;
         // }
         // user.profile = _.extend(user.profile, { "user_type": "C" });
         // if (options.preverfiedUser) {
         //     user.emails[0].verified = true;
         //     return user;
         // }
+        user.profile = options.profile;
         return user;
     });
 
