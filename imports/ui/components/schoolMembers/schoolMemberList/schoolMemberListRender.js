@@ -12,7 +12,7 @@ export default function (props) {
     return (<Grid container>
       {(collectionData && collectionData.length > 0 ) ?
                 <Grid item sm={12} xs={12} md={12}>
-                    <Grid item sm={12} xs={12} md={12}>
+                    <Grid item sm={12} xs={12} md={12} style={{padding: 8}}>
                         <Typography>{collectionData.length} Students</Typography>
                     </Grid>
                     <Grid item sm={12} xs={12} md={12}>
