@@ -286,22 +286,26 @@ class DashBoardView extends React.Component {
             <Fragment>
                 <Grid item sm={4} xs={12} md={4} className="leftSideMenu" style={{position: 'absolute',width: '100%',top: '160px',height: '100%'}}>
                 { this.state.isLoading && <ContainerLoader /> }
-                <form noValidate autoComplete="off">
-                    {
-                      renderStudentModal &&
-                        <MemberDialogBox
-                            open={renderStudentModal}
-                            renderStudentAddModal = {this.renderStudentAddModal}
-                            addNewMember={this.addNewMember}
-                            onModalClose={() => this.setState({renderStudentModal:false})}
-                       />
-                    }
-                </form>
-                <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse'}}>
-                    <Button raised color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
-                      Add New Student
-                    </Button>
-                </Grid>
+                { schoolData &&
+                    <div>
+                        <form noValidate autoComplete="off">
+                            {
+                              renderStudentModal &&
+                                <MemberDialogBox
+                                    open={renderStudentModal}
+                                    renderStudentAddModal = {this.renderStudentAddModal}
+                                    addNewMember={this.addNewMember}
+                                    onModalClose={() => this.setState({renderStudentModal:false})}
+                               />
+                            }
+                        </form>
+                        <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse'}}>
+                            <Button raised color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
+                              Add New Student
+                            </Button>
+                        </Grid>
+                    </div>
+                }
                 <div>
                     <Hidden mdUp>
                       {drawer}
