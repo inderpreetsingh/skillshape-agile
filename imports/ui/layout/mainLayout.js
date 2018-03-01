@@ -21,8 +21,6 @@ class MainLayout extends React.Component {
         if(nextProps.currentUser && nextProps.isUserSubsReady && invite === "true" && this.state.memberInvitation) {
             this.acceptMemberInvitation(nextProps.location.query);
         }
-
-
     }
 
     componentDidUpdate() {

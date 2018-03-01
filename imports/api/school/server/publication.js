@@ -362,10 +362,12 @@ Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, rol
 
 
 // Categorise students on the basis of their first Name
-Meteor.publish("MembersBySchool", function({ schoolId, textSearch, classTypeIds, limit }) {
+Meteor.publish("MembersBySchool", function({ schoolId, memberName, classTypeIds, limit }) {
+    console.log(schoolId, memberName, classTypeIds, limit)
     const classfilter = {};
-    if (textSearch) {
-        classfilter["$text"] = { $search: textSearch };
+    if (memberName) {
+        classfilter['firstName'] =  { $regex: new RegExp(memberName, 'mi') }
+        // classfilter["$text"] = { $search: memberName };
     }
     if(schoolId) {
         classfilter["schoolId"] = schoolId;
