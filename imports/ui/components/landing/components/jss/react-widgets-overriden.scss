@@ -112,6 +112,12 @@
   align-items: flex-end;
 }
 
+// General classes related to it
 .no-shrink {
   flex-shrink: 0;
+}
+
+.my-multi-select-filter-btn {
+  min-width: map-get($sizes,'rhythm-div') * 2px;
+  padding: map-get($sizes,'rhythm-div') * 1px;
 }

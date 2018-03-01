@@ -109,7 +109,6 @@ const Wrapper = styled.div`
   background-repeat: no-repeat;
   position: relative;
 
-
   @media screen and (max-width: ${helpers.tablet}px) {
     background-position: calc(100% + 125px) calc(100% - 14px);
   }
@@ -117,7 +116,6 @@ const Wrapper = styled.div`
   @media screen and (max-width: ${helpers.mobile}px) {
     background-position: calc(100% + 250px) calc(100% - 14px);
   }
-
 `;
 
 const HeaderOverlay = styled.div`

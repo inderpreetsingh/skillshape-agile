@@ -27,7 +27,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 
 const MainContentWrapper = styled.div`
-  padding-top: ${helpers.rhythmDiv * 3}px;
+
 `;
 
 const ContentContainer = styled.div`
@@ -48,11 +48,15 @@ const SearchBarWrapper = styled.div`
 
 const CardsContainer = styled.div`
   width: 100%;
+  padding-top: ${helpers.rhythmDiv * 3}px;
 `;
 
 const NoResultContainer = styled.div`
   text-align: center;
   width: 100%;
+  height: 100vh;
+  ${helpers.flexCenter}
+  flex-direction: column;
 `;
 
 const MapOuterContainer = styled.div`
@@ -165,12 +169,12 @@ class ClassTypeList extends Component {
         } else if(isEmpty(classTypeData)) {
 
             return <NoResultContainer>
-               <span style={{padding: 8}}>
-                  <b>Your search yielded no results. Try changing your search?</b>
-               </span>
                 <NoResults
                     removeAllFiltersButtonClick={this.props.removeAllFilters}
                 />
+                <span style={{padding: 8}}>
+                <b>Your search yielded no results. Try changing your search?</b>
+                </span>
             </NoResultContainer>
         }
     }

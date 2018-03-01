@@ -5,7 +5,8 @@ import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
 import { withStyles, material_ui_next_theme } from '/imports/util';
 
-const theme = createMuiTheme({...material_ui_next_theme});
+// const theme = createMuiTheme({...material_ui_next_theme});
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
 
 const styles = theme => ({
     wrapper : {
@@ -44,7 +45,7 @@ class AdminLayout extends React.Component {
       className.id = "UserMainPanel";
     }
     return (
-      <MuiThemeProvider theme={theme}>
+      <MuiThemeProvider theme={muiTheme}>
         <div className={`${className.mainClass} ${classes.wrapper}`} id={className.id}>
             <BrandBar {...this.props}/>
             <div style={{flex: 1}} ref={(ref)=> {this.mainPanelRef = ref}}>

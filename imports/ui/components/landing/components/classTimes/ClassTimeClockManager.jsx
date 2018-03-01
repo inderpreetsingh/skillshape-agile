@@ -56,16 +56,15 @@ const Day = styled.p`
   font-size: 12px;
   line-height: 1;
   font-family: ${helpers.specialFont};
-  font-weight: 400;
+  font-weight: 500;
   width: 28px;
   height: 28px;
   text-transform: capitalize;
   cursor: pointer;
   border-radius: 50%;
   padding: ${helpers.rhythmDiv}px;
-  background-color: ${props => props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)` };
   border: 1px solid ${props => props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)` };
-  color: ${helpers.lightTextColor};
+  color: ${props => props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)` };
 
   &:last-of-type {
     margin-right: 0;

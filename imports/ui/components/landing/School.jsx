@@ -26,7 +26,7 @@ const School = () => (
       barButton={<span></span>} />
 
     <SchoolHeader />
-
+    
     <SchoolIssues issues={schoolIssuesData} />
 
     <SchoolPricing />
