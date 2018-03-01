@@ -13,12 +13,6 @@ import Button from 'material-ui/Button';
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-
-
-// import { withStyles } from 'material-ui/styles';
-
-import DashViewRender from './dashViewRender';
-
 const MaterialInputWrapper = styled.div`
   transform: translateY(-${props => props.select ? (helpers.rhythmDiv + 2) : helpers.rhythmDiv}px);
 `;

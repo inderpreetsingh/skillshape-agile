@@ -1,7 +1,7 @@
 import React ,{Component} from 'react';
 import SchoolMemberDetailsRender from "./schoolMemberDetailsRender";
 
-export default class SchoolMemberDetails extends Component {
+export default class SchoolMemberInfo extends Component {
 
   state = {
   }
