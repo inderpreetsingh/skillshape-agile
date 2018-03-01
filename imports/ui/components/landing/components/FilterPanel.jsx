@@ -82,7 +82,6 @@ const SwitchViewWrapper = styled.div`
 
 const GridContainerWrapper = styled.div`
   ${helpers.flexCenter}
-
 `;
 
 const MapChangeButtonWrapper = styled.div`
@@ -94,11 +93,11 @@ const MapChangeButtonWrapper = styled.div`
   }
 `;
 
-const ContainerWrapper = styled.div`
-  width: calc(100% - 130px);
+const FilterBarWrapper = styled.div`
+  width: calc(100% - ${props => props.displayChangeViewButton ? '130px' : '0px'});
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    width: calc(100% - 80px);
+    width: calc(100% - ${props => props.displayChangeViewButton ? '80px' : '0px'});
   }
 `;
 
@@ -169,13 +168,13 @@ class FilterPanel extends Component {
 
     renderFilterBar = () => {
       return (<GridContainerWrapper>
-        <MapChangeButtonWrapper>
+        {this.props.displayChangeViewButton && <MapChangeButtonWrapper>
         {this.props.mapView ?
           <PrimaryButton noMarginBottom icon iconName="grid_on" label={this.state.mobile ? "List" : "List View"} onClick={this.props.handleToggleMapView} />
           :
           <PrimaryButton noMarginBottom icon iconName="map" label={this.state.mobile ? "Map" : "Map View"} onClick={this.props.handleToggleMapView} />}
-        </MapChangeButtonWrapper>
-      <ContainerWrapper>
+        </MapChangeButtonWrapper>}
+      <FilterBarWrapper displayChangeViewButton={this.props.displayChangeViewButton}>
       <Grid container spacing={24}>
         <Grid item xs={9} sm={3}>
             <MaterialInputWrapper>
@@ -227,7 +226,7 @@ class FilterPanel extends Component {
            </FilterButtonArea>
         </Grid>
       </Grid>
-      </ContainerWrapper>
+      </FilterBarWrapper>
       </GridContainerWrapper>
     );
     }
@@ -392,11 +391,13 @@ const CssTransitionGroupWrapperGrid = (props) => (
 
 FilterPanel.propTypes = {
   handleShowMoreFiltersButtonClick: PropTypes.func,
-  filtersInDialogBox: PropTypes.bool
+  filtersInDialogBox: PropTypes.bool,
+  displayChangeViewButton: PropTypes.bool
 }
 
 FilterPanel.defaultProps = {
-  filtersInDialogBox: false
+  filtersInDialogBox: false,
+  displayChangeViewButton: true
 }
 
 export default FilterPanel;

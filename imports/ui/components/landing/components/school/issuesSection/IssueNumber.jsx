@@ -13,6 +13,10 @@ const Wrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   padding: ${helpers.rhythmDiv}px;
   cursor: pointer;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 `;
 
 const Content = styled.p`

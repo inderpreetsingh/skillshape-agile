@@ -18,7 +18,8 @@ const OuterWrapper = styled.div`
 // 155px is added for the computed height of the cards and the title above it
 const Wrapper = styled.div`
   max-width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
   padding-top: ${props => props.firstCard ? helpers.rhythmDiv * 8 : 155}px;
   background-color: ${props => props.bgColor};
   background-image: url('${props => props.bgImage}');
@@ -27,7 +28,7 @@ const Wrapper = styled.div`
   position: relative;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    padding-top: ${helpers.rhythmDiv * 8}px;
+    padding-top: 0;
   }
 `;
 
@@ -49,6 +50,22 @@ const Avatar = styled.img`
   left: 30px;
 `;
 
+const IssuesTitleMobile = styled.div`
+  font-family: ${helpers.specialFont};
+  font-style: italic;
+  font-size: ${helpers.baseFontSize * 2}px;
+  color: ${helpers.black};
+  font-weight: 400;
+  text-align: center;
+  margin: 0;
+  display: none;
+  min-height: 100px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    ${helpers.flexCenter}
+  }
+`;
+
 class SchoolIssues extends Component {
   state = {
     wrappers: []
@@ -67,6 +84,7 @@ class SchoolIssues extends Component {
   render() {
     // console.log(this.state.activeIssue,"lajsf");
     return(<OuterWrapper>
+        <IssuesTitleMobile>{this.props.headerContent}</IssuesTitleMobile>
         {this.props.issues && this.props.issues.map((issue, i) => (
           <Element name={`solution-container-${i}`}>
           <Wrapper
@@ -85,7 +103,7 @@ class SchoolIssues extends Component {
                />
 
             <Avatar src={issue.avatar} />
-          </Wrapper></Element>))};
+          </Wrapper></Element>))}
       </OuterWrapper>
     )
   }

@@ -21,9 +21,6 @@ import { cutString, toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 
-
-
-
 const styles = {
   cardWrapper: {
     display: 'flex',

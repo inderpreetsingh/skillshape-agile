@@ -40,7 +40,7 @@ class MyTagList extends React.Component {
   };
 
   state = {
-    mobile: false
+    tablet: false
   }
 
   handleDelete = (item, event) => {
@@ -57,10 +57,10 @@ class MyTagList extends React.Component {
   }
 
   handleUpdateDimensions = (e) => {
-    if(window.innerWidth < 500) {
-      if(!this.state.mobile) this.setState({ mobile: true });
+    if(window.innerWidth < helpers.tablet) {
+      if(!this.state.tablet) this.setState({ tablet: true });
     }else {
-      if(this.state.mobile) this.setState({ mobile: false })
+      if(this.state.tablet) this.setState({ tablet: false })
     }
   }
 
@@ -95,12 +95,12 @@ class MyTagList extends React.Component {
         }
       </MultiselectTag>
       <FilterButtonWrapper>
-        {this.state.mobile ?
+        {this.state.tablet ?
         <div>
-          <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+ ${noOfFilters}`}</button>
+          <button className="no-shrink primary-button my-multi-select-filter-btn" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters}`}</button>
         </div>
         :
-        <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+ ${noOfFilters} Filters`}</button>}
+        <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters} Filters`}</button>}
       </FilterButtonWrapper>
     </Fragment>
     );

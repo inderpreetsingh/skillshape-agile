@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   padding-top: ${helpers.rhythmDiv * 4}px;
   background-color: ${helpers.black};
   max-width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
 `;
 
 const PricingBoxWrapper = styled.div`
@@ -17,7 +17,6 @@ const PricingBoxWrapper = styled.div`
   width: 100%;
   max-width: ${helpers.schoolPageContainer}px;
   padding: ${helpers.rhythmDiv * 2}px;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Title = styled.h2`
@@ -34,6 +33,10 @@ const Title = styled.h2`
 
 const PricingWrapper = styled.div`
   ${helpers.flexCenter};
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    flex-direction: column;
+  }
 `;
 
 const Pricing = styled.div`
@@ -44,6 +47,12 @@ const Pricing = styled.div`
   min-height: 400px;
   background-color: white;
   margin: 0 ${helpers.rhythmDiv}px;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    max-width: 100%;
+    min-height: 200px;
+    margin: ${helpers.rhythmDiv}px 0;
+  }
 `;
 
 const Price = styled.p`

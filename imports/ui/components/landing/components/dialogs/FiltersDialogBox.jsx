@@ -118,7 +118,7 @@ class FiltersDialogBox extends Component {
               open={open}
               onClose={onModalClose}
               onRequestClose={onModalClose}
-              aria-labelledby="sign-up"
+              aria-labelledby="filters-dialog-box"
               classes={{paper: classes.dialogPaper}}
             >
                 <MuiThemeProvider theme={muiTheme}>

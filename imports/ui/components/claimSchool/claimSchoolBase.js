@@ -5,7 +5,8 @@ export default class ClaimSchoolBase extends React.Component {
     super(props);
     this.state = {
       filters: {},
-      sticky: false
+      sticky: false,
+      filterPanelDialogBox: false,
     };
   }
   handleFixedToggle = state => {
@@ -30,6 +31,13 @@ export default class ClaimSchoolBase extends React.Component {
       });
     }
   };
+
+
+  handleFiltersDialogBoxState = (state) => {
+      this.setState({
+          filterPanelDialogBox: state
+      })
+  }
 
   onLocationChange = location => {
       this.setState({

@@ -88,7 +88,7 @@ const ClassTimeClocks = (props) => (
     <ClockWrapper className={`class-time-transition ${props.className}`}>
       {props.data.map((obj, i) => (
         <TimeContainer visible={props.visible === i}>
-          <Duration>{convertDurationToHours(obj.duration)}</Duration>
+          <Duration>{obj.duration}mins</Duration>
           <Time>{obj.time}</Time>
           <TimePeriod>{obj.timePeriod}</TimePeriod>
         </TimeContainer>

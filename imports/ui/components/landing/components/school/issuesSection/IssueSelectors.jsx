@@ -52,30 +52,16 @@ const IssuesNumberWrapper = styled.div`
   display: none;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    display: flex;
+    ${helpers.flexCenter}
     flex-direction: column;
     position: fixed;
-    top: 100px;
+    top: 50%;
+    transform: translateY(-50%);
     left: ${helpers.rhythmDiv}px;
     z-index: 15;
 
     display: ${props => props.displayIssueNumbers && !props.hideIssues ? 'flex' : 'none'};
   }
-`;
-
-const IssuesNumbers = styled.div`
-  display: none;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 100px;
-    left: ${helpers.rhythmDiv}px;
-    z-index: 15;
-
-    display: ${props => props.displayIssueNumbers ? 'flex' : 'none'};
-}
 `;
 
 const IssuesFixed = styled.div`
@@ -217,7 +203,6 @@ class IssueSelectors extends Component {
         </IssuesFixed>
       </Sticky>
 
-      <IssuesTitle mobile>{this.props.headerContent}</IssuesTitle>
       <IssuesNumberWrapper displayIssueNumbers={this.state.displayIssueNumbers} hideIssues={this.state.hideIssues}>
       {this.props.issues &&
         this.props.issues.map((issue,i) => (
