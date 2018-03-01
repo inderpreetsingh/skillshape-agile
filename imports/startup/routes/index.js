@@ -17,7 +17,7 @@ import ResetPassword from '/imports/ui/components/account/resetPassword';
 import MyProfile from '/imports/ui/components/users/myProfile';
 import MyMedia from '/imports/ui/components/users/myMedia';
 import SchoolView from '/imports/ui/components/schoolView';
-import DashView from '/imports/ui/components/schoolMembers';
+import SchoolMemberView from '/imports/ui/components/schoolMembers';
 import ClaimSchool from '/imports/ui/components/claimSchool';
 import SchoolEditView from '/imports/ui/components/schoolView/editSchool';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
@@ -69,7 +69,8 @@ export default Routes = componentLoader((props) => (
 
       <Route path="/" component={AdminLayout}>
         <Route path="/SchoolUpload" component={SchoolUpload} />
-        <Route path="/schools/:slug/members" component={DashView} />
+        <Route path="/schools/:slug/members" component={SchoolMemberView} />
+        <Route path="/classmates" component={SchoolMemberView} />
         {/*<Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />*/}
       </Route>
     </Route>

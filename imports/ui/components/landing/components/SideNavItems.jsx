@@ -130,6 +130,13 @@ const LoginUserSideNav = (props) => (
             iconName="perm_contact_calendar"
             onClick={() => browserHistory.push('/MyCalendar')}
         />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="My Classmates"
+            iconName="find_in_page"
+            onClick={() => browserHistory.push('/classmates')}
+        />
         {
             !isEmpty(props.mySchool) && <SchoolSubMenu
                 data={props.mySchool}
