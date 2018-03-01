@@ -60,7 +60,7 @@ class SchoolMemberView extends Component {
 
         return(
             <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff'}}>
-                 <Grid item sm={4} xs={12} md={4}>
+                 <Grid item sm={4} xs={12} md={4} style={{border: 'solid 1px #ddd'}}>
                     <SchoolMemberFilter
                         stickyPosition={this.state.sticky}
                         ref="ClaimSchoolFilter"

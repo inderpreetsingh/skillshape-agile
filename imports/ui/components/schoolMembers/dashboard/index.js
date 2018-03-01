@@ -264,20 +264,27 @@ class DashBoardView extends React.Component {
         console.log("DashBoardView props -->>",this.props);
         const { classes, theme, schoolData, classTypeData} = this.props;
         const { renderStudentModal,memberInfo } = this.state;
-        const { memberName, classTypeIds } = this.props.filters;
-        const memberFilter =  {schoolId:schoolData && schoolData._id, textSearch: memberName, classTypeIds};
         const drawer = (
             <div>
-                <List><SchoolMemberListItems filters={memberFilter} handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}/></List>
+                <List>
+                    <SchoolMemberListItems
+                        filters={{
+                           ...this.props.filters,
+                           schoolId:schoolData && schoolData._id
+                        }}
+                        handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}
+                    />
+                </List>
             </div>
         );
+
         if(this.props.isLoading) {
             return <Preloader/>
         }
 
         return (
             <Fragment>
-                <Grid item sm={4} xs={12} md={4} className="leftSideMenu" style={{border: 'solid 1px #ddd',position: 'absolute',width: '100%',top: '160px',height: '100%'}}>
+                <Grid item sm={4} xs={12} md={4} className="leftSideMenu" style={{position: 'absolute',width: '100%',top: '160px',height: '100%'}}>
                 { this.state.isLoading && <ContainerLoader /> }
                 <form noValidate autoComplete="off">
                     {
