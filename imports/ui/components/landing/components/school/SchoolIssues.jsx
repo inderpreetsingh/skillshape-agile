@@ -19,14 +19,12 @@ const OuterWrapper = styled.div`
 const Wrapper = styled.div`
   max-width: 100vw;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   position: relative;
-  padding-top: ${props => props.firstCard ? 0 : 108}px;
   background-color: ${props => props.bgColor};
   background-image: url('${props => props.bgImage}');
   background-position: bottom left;
   background-repeat: repeat no-repeat;
-  background-attachment: fixed;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-top: 0;
@@ -66,6 +64,10 @@ const IssuesTitle = styled.div`
   padding-top: ${helpers.rhythmDiv * 4}px;
 `;
 
+const Issues = styled.div`
+
+`;
+
 class SchoolIssues extends Component {
   state = {
     wrappers: []
@@ -94,18 +96,20 @@ class SchoolIssues extends Component {
   render() {
     // console.log(this.state.activeIssue,"lajsf");
     return(<OuterWrapper>
-        <IssuesTitle>{this.props.headerContent}</IssuesTitle>
+        <Issues>
+          <IssuesTitle>{this.props.headerContent}</IssuesTitle>
+          <IssueSelectors
+              issues={this.props.issues}
+              wrappers={this.state.wrappers}
+            />
+        </Issues>
         {this.props.issues && this.props.issues.map((issue, i) => (
           <Element name={`solution-container-${i}`}>
           <Wrapper
             bgImage={issue.bgImage}
             bgColor={issue.bgColor}
-            firstCard={i === 0}
+            firstBox={i === 0}
             ref={container => this.wrappers[i] = container}>
-            {i === 0 ? (<IssueSelectors
-                issues={this.props.issues}
-                wrappers={this.state.wrappers}
-                />) : <span></span>}
 
             <SolutionBox
               firstBox={i === 0}
