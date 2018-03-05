@@ -15,17 +15,16 @@ const OuterWrapper = styled.div`
   height: 100%;
 `;
 
-// 155px is added for the computed height of the cards and the title above it
+// 108px is added for the computed height of the cards and the title above it
 const Wrapper = styled.div`
   max-width: 100vw;
   width: 100%;
-  min-height: 100vh;
-  padding-top: ${props => props.firstCard ? helpers.rhythmDiv * 8 : 155}px;
+  height: 100vh;
+  position: relative;
   background-color: ${props => props.bgColor};
   background-image: url('${props => props.bgImage}');
   background-position: bottom left;
   background-repeat: repeat no-repeat;
-  position: relative;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-top: 0;
@@ -50,7 +49,8 @@ const Avatar = styled.img`
   left: 30px;
 `;
 
-const IssuesTitleMobile = styled.div`
+const IssuesTitle = styled.div`
+  ${helpers.flexCenter}
   font-family: ${helpers.specialFont};
   font-style: italic;
   font-size: ${helpers.baseFontSize * 2}px;
@@ -58,12 +58,14 @@ const IssuesTitleMobile = styled.div`
   font-weight: 400;
   text-align: center;
   margin: 0;
-  display: none;
-  min-height: 100px;
+  min-height: ${helpers.rhythmDiv * 8}px;
+  line-height: 1;
+  padding: ${helpers.rhythmDiv * 2}px 0;
+  padding-top: ${helpers.rhythmDiv * 4}px;
+`;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
-    ${helpers.flexCenter}
-  }
+const Issues = styled.div`
+
 `;
 
 class SchoolIssues extends Component {
@@ -81,25 +83,38 @@ class SchoolIssues extends Component {
     });
   }
 
+  _getCardsDataForSolutionBox = (index) => {
+    if(index === 0) {
+      return this.props.cardsData['bringingMorePeople'];
+    }else if(index === 1) {
+      return this.props.cardsData['keepingStudentsExcited'];
+    }
+
+    return this.props.cardsData['managingAdministrativeChores'];
+  }
+
   render() {
     // console.log(this.state.activeIssue,"lajsf");
     return(<OuterWrapper>
-        <IssuesTitleMobile>{this.props.headerContent}</IssuesTitleMobile>
+        <Issues>
+          <IssuesTitle>{this.props.headerContent}</IssuesTitle>
+          <IssueSelectors
+              issues={this.props.issues}
+              wrappers={this.state.wrappers}
+            />
+        </Issues>
         {this.props.issues && this.props.issues.map((issue, i) => (
           <Element name={`solution-container-${i}`}>
           <Wrapper
             bgImage={issue.bgImage}
             bgColor={issue.bgColor}
-            firstCard={i === 0}
+            firstBox={i === 0}
             ref={container => this.wrappers[i] = container}>
-            {i === 0 ? (<IssueSelectors
-                issues={this.props.issues}
-                wrappers={this.state.wrappers}
-                />) : <span></span>}
 
             <SolutionBox
               firstBox={i === 0}
               title={issue.title}
+              cardsData={this._getCardsDataForSolutionBox(i)}
                />
 
             <Avatar src={issue.avatar} />

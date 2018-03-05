@@ -18,14 +18,14 @@ export default class ClaimSchoolBase extends React.Component {
     //     sticky: stickyPosition
     //   });
     // }
-
-    if (status.status === 2) {
+    console.log(status,"status....");
+    if (state.status === 2) {
       if(!this.state.sticky) {
         this.setState({
           sticky: true
         });
       }
-    }else if(status.status === 0) {
+    }else if(state.status === 0) {
       this.setState({
          sticky: false
       });

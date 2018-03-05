@@ -6,6 +6,7 @@ export const
     //you need to include these fonts in index.html
     specialFont = "'Zilla Slab', serif",
     commonFont =  "'Open Sans', sans-serif",
+    fancyFont = "'Playfair Display', serif",
     baseFontSize = 16,
     baseLineHeight = 1.5,
 

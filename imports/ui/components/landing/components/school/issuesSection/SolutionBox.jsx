@@ -2,13 +2,21 @@ import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import SchoolSolutionCard from '../../cards/SchoolSolutionCard.jsx';
+import SchoolSolutionSlider from './SchoolCardsSlider.jsx';
+
 import * as helpers from '../../jss/helpers.js';
 
 const BoxWrapper = styled.div`
   max-width: ${helpers.schoolPageContainer}px;
   margin: 0 auto;
+  height: 100%;
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: ${helpers.rhythmDiv * 4}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding-top: ${helpers.rhythmDiv * 2}px;
+  }
 `;
 
 const Content = styled.h2`
@@ -18,17 +26,66 @@ const Content = styled.h2`
   font-weight: 500;
   text-align: center;
   line-height: 1;
+  position: absolute;
+  top: ${props => props.firstBox ? '0' : '140'}px;
+  text-align: center;
+  width: 100%;
+  left: 0;
   margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
   @media screen and (max-width: ${helpers.tablet}px) {
     font-size: ${helpers.baseFontSize * 1.5}px;
   }
 `;
 
+SchoolSolutionCardsWrapper = styled.div`
+  width: 100%;
+  ${helpers.flexCenter}
+  justify-content: space-around;
+  max-width: ${helpers.schoolPageContainer}px;
+  padding: ${helpers.rhythmDiv * 2};
+  min-height: 100%;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    max-width: 464px;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    justify-content: flex-start;
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: none;
+  }
+`;
+
+SchoolSolutionSliderWrapper = styled.div`
+  display: none;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-height: calc(100vh - 48px);
+    overflow: hidden;
+    padding-bottom: ${helpers.rhythmDiv * 3}px
+  }
+`;
+
 const SolutionBox = (props) => (
   <BoxWrapper firstBox={props.firstBox}>
-    <Content>
+    <Content firstBox={props.firstBox}>
       {props.title}
     </Content>
+
+    <SchoolSolutionCardsWrapper>
+      {props.cardsData && props.cardsData.map((card,i) => (
+        <SchoolSolutionCard key={i} {...card}/>
+      ))}
+    </SchoolSolutionCardsWrapper>
+
+    <SchoolSolutionSliderWrapper>
+      <SchoolSolutionSlider data={props.cardsData} />
+    </SchoolSolutionSliderWrapper>
   </BoxWrapper>
 );
 
