@@ -8,7 +8,8 @@ import SchoolHeader from './components/school/SchoolHeader.jsx';
 import SchoolIssues from './components/school/SchoolIssues.jsx';
 import SchoolPricing from './components/school/SchoolPricing.jsx';
 
-import schoolIssuesData from './constants/schoolIssues.js'
+import schoolIssuesData from './constants/schoolIssues.js';
+import schoolPageCards from './constants/schoolPageCards.js';
 
 import * as helpers from './components/jss/helpers.js';
 
@@ -26,8 +27,8 @@ const School = () => (
       barButton={<span></span>} />
 
     <SchoolHeader />
-    
-    <SchoolIssues issues={schoolIssuesData} />
+
+    <SchoolIssues issues={schoolIssuesData} cardsData={schoolPageCards}/>
 
     <SchoolPricing />
 

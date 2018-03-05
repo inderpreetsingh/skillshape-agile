@@ -15,17 +15,18 @@ const OuterWrapper = styled.div`
   height: 100%;
 `;
 
-// 155px is added for the computed height of the cards and the title above it
+// 108px is added for the computed height of the cards and the title above it
 const Wrapper = styled.div`
   max-width: 100vw;
   width: 100%;
   min-height: 100vh;
-  padding-top: ${props => props.firstCard ? helpers.rhythmDiv * 8 : 155}px;
+  position: relative;
+  padding-top: ${props => props.firstCard ? 0 : 108}px;
   background-color: ${props => props.bgColor};
   background-image: url('${props => props.bgImage}');
   background-position: bottom left;
   background-repeat: repeat no-repeat;
-  position: relative;
+  background-attachment: fixed;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-top: 0;
@@ -50,7 +51,8 @@ const Avatar = styled.img`
   left: 30px;
 `;
 
-const IssuesTitleMobile = styled.div`
+const IssuesTitle = styled.div`
+  ${helpers.flexCenter}
   font-family: ${helpers.specialFont};
   font-style: italic;
   font-size: ${helpers.baseFontSize * 2}px;
@@ -58,12 +60,10 @@ const IssuesTitleMobile = styled.div`
   font-weight: 400;
   text-align: center;
   margin: 0;
-  display: none;
-  min-height: 100px;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    ${helpers.flexCenter}
-  }
+  min-height: ${helpers.rhythmDiv * 8}px;
+  line-height: 1;
+  padding: ${helpers.rhythmDiv * 2}px 0;
+  padding-top: ${helpers.rhythmDiv * 4}px;
 `;
 
 class SchoolIssues extends Component {
@@ -81,10 +81,20 @@ class SchoolIssues extends Component {
     });
   }
 
+  _getCardsDataForSolutionBox = (index) => {
+    if(index === 0) {
+      return this.props.cardsData['bringingMorePeople'];
+    }else if(index === 1) {
+      return this.props.cardsData['keepingStudentsExcited'];
+    }
+
+    return this.props.cardsData['managingAdministrativeChores'];
+  }
+
   render() {
     // console.log(this.state.activeIssue,"lajsf");
     return(<OuterWrapper>
-        <IssuesTitleMobile>{this.props.headerContent}</IssuesTitleMobile>
+        <IssuesTitle>{this.props.headerContent}</IssuesTitle>
         {this.props.issues && this.props.issues.map((issue, i) => (
           <Element name={`solution-container-${i}`}>
           <Wrapper
@@ -100,6 +110,7 @@ class SchoolIssues extends Component {
             <SolutionBox
               firstBox={i === 0}
               title={issue.title}
+              cardsData={this._getCardsDataForSolutionBox(i)}
                />
 
             <Avatar src={issue.avatar} />

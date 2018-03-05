@@ -53,7 +53,7 @@ const Title = styled.h2`
   margin-bottom: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    font-size: ${helpers.baseFontSize * 2}px;
+    font-size: ${helpers.baseFontSize * 3}px;
   }
 `;
 

@@ -45,6 +45,7 @@ export default function () {
                displayChangeViewButton={false}
                ref="ClaimSchoolFilter"
                {...this.props}
+               stickyPosition={this.state.sticky}  
                collectSelectedSkillCategories={this.handleSkillCategoryChange}
                onLocationChange={this.onLocationChange}
                handleSchoolNameChange={this.handleSchoolNameChange}

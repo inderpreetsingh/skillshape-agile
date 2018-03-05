@@ -21,8 +21,6 @@ import MyMultiSelect from './form/multiSelect/MyMultiSelect.jsx';
 import FloatingChangeViewButton from './buttons/FloatingChangeViewButton.jsx';
 
 import {FormHelperText } from 'material-ui/Form';
-
-
 import {coverSrc} from '../site-settings.js';
 
 import { MuiThemeProvider} from 'material-ui/styles';
@@ -39,8 +37,8 @@ const FilterPanelOuterContainer = styled.div`
 `;
 
 const FilterPanelContainer = styled.div`
+    width: ${props => (props.mapView || props.stickyPosition) ? '100%' : 'auto'};
     max-width: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView) ? '100%' : '1000px'};
-    width: ${props => props.mapView ? '100%' : 'auto'};
     background: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView) ? '#ffffff' : 'transparent'};
     margin: auto;
     position: ${props => props.mapView ? 'fixed' : 'initial'};
@@ -50,11 +48,11 @@ const FilterPanelContainer = styled.div`
 
 const FilterPanelContent = styled.div`
     padding: ${props => (props.stickyPosition || props.mapView || props.filtersInDialogBox) ? (helpers.rhythmDiv * 2) : (helpers.rhythmDiv * 3)}px;
-    margin:auto;
+    margin: auto;
 `;
 
 const FilterPanelAction = styled.div`
-    padding:${helpers.rhythmDiv*2}px 0px;
+    padding: ${helpers.rhythmDiv*2}px 0px;
     transform: translateY(${helpers.rhythmDiv}px);
 `;
 
@@ -115,9 +113,8 @@ class FilterPanel extends Component {
             gender: null,
             schoolName: null,
             age: null
-        }
-    }
-
+          }
+      }
 
       handleChangeInScreenSize = () => {
         if(window.innerWidth < 500) {

@@ -19,7 +19,8 @@ const Wrapper = styled.div`
   margin: 0 ${helpers.rhythmDiv * 2}px;
   width: 100%;
   min-width: 0;
-  transition: max-width .3s linear;
+  transition: max-width .2s linear;
+  position: relative;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     max-width: ${props => props.active ?  '250' : '100'}px;
@@ -34,7 +35,10 @@ const Wrapper = styled.div`
 `;
 
 const Content = styled.p`
-  ${helpers.flexCenter}
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   max-width: 150px;
   font-family: ${helpers.specialFont};
   font-style: italic;
@@ -43,11 +47,10 @@ const Content = styled.p`
   font-weight: 400;
   opacity: 1;
   margin: 0;
-  transition: opacity .1s linear;
+  transition: opacity .05s linear .2s;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    // opacity: ${props => props.active ? '1' : '0'};
-    display: ${props => props.active ? 'flex' : 'none'};
+    opacity: ${props => props.active ? 1 : 0};
   }
 `;
 

@@ -73,7 +73,7 @@ class IssueSelectors extends Component {
     activeIssue: 0,
     clickEvent: false,
     wrappers: [],
-    hideIssues: false,
+    hideIssues: true,
     displayIssueNumbers: true,
   }
 
@@ -98,8 +98,9 @@ class IssueSelectors extends Component {
     const wrappersData = this._calcSolutionWrappersData();
     console.log(this.state.clickEvent,"scrolling...");
 
+    // debugger;
     // This controls whether we want to show the issue cards or not.
-    if(window.pageYOffset >= (wrappersData[2] + window.innerHeight - 200)) {
+    if(window.pageYOffset >= (wrappersData[2] + window.innerHeight - 200) || (window.innerWidth <= 500 && window.pageYOffset <= (wrappersData[0] - 100))) {
       this.handleHideIssues(true);
     }else {
       this.handleHideIssues(false);
@@ -119,13 +120,9 @@ class IssueSelectors extends Component {
 
     // This controls the issue numbers to only display for issues sections
     if(window.innerWidth < 500) {
-      if(window.pageYOffset < wrappersData[0]) {
-        if(this.state.displayIssueNumbers)
-          this.setState({displayIssueNumbers : false});
-      }else {
-        if(!this.state.displayIssueNumbers)
-          this.setState({displayIssueNumbers : true});
-      }
+      if (!this.state.displayIssueNumbers) this.setState({displayIssueNumbers : true});
+    }else {
+      if(this.state.displayIssueNumbers) this.setState({displayIssueNumbers : false});
     }
     // console.log(wrappersData,window.pageYOffset,"scrollevent","wrappers...");
   }
@@ -181,14 +178,15 @@ class IssueSelectors extends Component {
       this.setState({
         wrappers: nextProps.wrappers
       });
+
+      this.handleScroll();
     }
   }
 
   render() {
     return(<Wrapper>
-      <Sticky className='issue-cards'>
+      <Sticky className='issue-cards' top={8}>
         <IssuesFixed hideIssues={this.state.hideIssues}>
-          <IssuesTitle>{this.props.headerContent}</IssuesTitle>
           <IssuesWrapper>
           {this.props.issues &&
             this.props.issues.map((issue,i) => (
