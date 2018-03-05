@@ -7,7 +7,7 @@ import { userRegistrationAndVerifyEmail } from "/imports/api/email";
 
 
 Meteor.methods({
-	"user.createUser": function({ name, email, userType, sendMeSkillShapeNotification, signUpType}) {
+	"user.createUser": function({ name, email, userType, sendMeSkillShapeNotification, signUpType, birthYear}) {
 		if(!isEmpty(name) && !isEmpty(email) ) {
 
 			const password = generator.generate({
@@ -27,6 +27,10 @@ Meteor.methods({
 	            	sendMeSkillShapeNotification: sendMeSkillShapeNotification,
 	            },
 	            sign_up_service: signUpType || 'Unknown',
+	        }
+
+	        if(birthYear) {
+	        	userObj.profile.birthYear = birthYear;
 	        }
 
 	        if(signUpType && signUpType === 'skillshape-signup') {

@@ -360,26 +360,6 @@ Meteor.publish("ClaimSchoolFilter", function ({schoolName, coords, skillCat, rol
 
   });
 
-
-// Categorise students on the basis of their first Name
-Meteor.publish("MembersBySchool", function({ schoolId, memberName, classTypeIds, limit }) {
-    console.log(schoolId, memberName, classTypeIds, limit)
-    const classfilter = {};
-    if (memberName) {
-        classfilter['firstName'] =  { $regex: new RegExp(memberName, 'mi') }
-        // classfilter["$text"] = { $search: memberName };
-    }
-    if(schoolId) {
-        classfilter["schoolId"] = schoolId;
-    }
-    if(classTypeIds && classTypeIds.length > 0) {
-        classfilter["classTypeIds"] = { $in: classTypeIds };
-    }
-    console.log("SchoolMemberDetails called",classfilter);
-    console.log("MembersRec",SchoolMemberDetails.find(classfilter,{ limit: limit ? limit : 4 },{sort: {firstName: 1}}).fetch());
-    return SchoolMemberDetails.find(classfilter,{ limit: limit ? limit : 4 },{sort: {firstName: 1}});
-});
-
 Meteor.publish("school.getSchoolWithConnectedTagedMedia", function({ email }) {
     if(email) {
         let schoolMemberCursor = SchoolMemberDetails.find({email});

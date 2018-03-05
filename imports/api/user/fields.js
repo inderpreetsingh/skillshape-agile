@@ -103,6 +103,10 @@ Schema.UserProfile = new SimpleSchema({
     currency: {
         type: String,
         optional: true
+    },
+    birthYear: {
+        type: Number,
+        optional: true
     }
 });
 

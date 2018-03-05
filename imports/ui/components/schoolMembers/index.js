@@ -16,7 +16,6 @@ class SchoolMemberView extends Component {
                 classTypeIds: [],
                 memberName: "",
             },
-            classTypeData: [],
         }
     }
 
@@ -42,12 +41,14 @@ class SchoolMemberView extends Component {
         });
     }
 
-    setClassTypeData = (classTypeData) => {
-        this.setState({classTypeData})
+    setInitialClassTypeData = (data) => {
+        this.refs.SchoolMemberFilter.setClassTypeData(data);
     }
 
     render() {
         let { currentUser, isUserSubsReady } = this.props;
+        let { slug } = this.props.params;
+        let filters = {...this.state.filters};
 
         if(!isUserSubsReady)
             return <Preloader/>
@@ -58,25 +59,29 @@ class SchoolMemberView extends Component {
             </Typography>
         }
 
+        if(!slug)  {
+            filters.activeUserId = currentUser._id;
+        }
+
         return(
             <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff'}}>
                  <Grid item sm={4} xs={12} md={4} style={{border: 'solid 1px #ddd'}}>
                     <SchoolMemberFilter
                         stickyPosition={this.state.sticky}
-                        ref="ClaimSchoolFilter"
+                        ref="SchoolMemberFilter"
                         handleClassTypeDataChange={this.handleClassTypeDataChange}
                         handleMemberNameChange={this.handleMemberNameChange}
-                        filters={this.state.filters}
+                        filters={filters}
                         classTypeData={this.state.classTypeData}
                     />
                 </Grid>
                 <DashBoardView
-                    filters={this.state.filters}
+                    filters={filters}
                     handleMemberNameChange={this.handleMemberNameChange}
                     handleClassTypeDataChange={this.handleClassTypeDataChange}
                     displayFilters={this.displayFilters}
                     params={this.props.params}
-                    setClassTypeData={this.setClassTypeData}
+                    setInitialClassTypeData={this.setInitialClassTypeData}
                 />
             </Grid>
         )

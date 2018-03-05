@@ -31,6 +31,7 @@ class MediaContent extends React.Component {
                         ) : schoolData.map((school, index)=> {
     					return  <SchoolMemberMedia
     						key={school._id}
+                            showUploadImageBtn={false}
 	                        schoolData={school}
 	                        currentUser={currentUser}
                             schoolMemberDetailsFilters={{schoolId: school._id, activeUserId: currentUser._id}}

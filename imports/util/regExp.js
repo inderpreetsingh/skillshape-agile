@@ -1,8 +1,9 @@
 "use strict";
 
 const regexStrings = {
-  email: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
-  image: (/\.(gif|jpg|jpeg|tiff|png)$/i),
+    email: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
+    image: (/\.(gif|jpg|jpeg|tiff|png)$/i),
+    phone: /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g,
 }
 
 export const emailRegex = {
@@ -11,4 +12,8 @@ export const emailRegex = {
 
 export const imageRegex = {
   image: new RegExp(regexStrings.image),
+}
+
+export const phoneRegex = {
+  phone: new RegExp(regexStrings.phone),
 }

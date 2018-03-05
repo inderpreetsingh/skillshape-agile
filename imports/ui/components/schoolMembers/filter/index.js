@@ -43,7 +43,12 @@ const FilterButtonArea = styled.div`
 export default class SchoolMemberFilter extends Component {
 
 	state = {
+		classTypeData: [],
 	}
+
+	setClassTypeData = (classTypeData) => {
+        this.setState({classTypeData})
+    }
 
   	render() {
     	const { stickyPosition } = this.props;
@@ -73,7 +78,7 @@ export default class SchoolMemberFilter extends Component {
 					                    textField={"name"}
 					                    valueField={"_id"}
 					                    placeholder="Search Member by Class Type"
-					                    data={this.props.classTypeData}
+					                    data={this.state.classTypeData}
 					                    onChange={this.props.handleClassTypeDataChange}
 					                />
 				              	</Grid>

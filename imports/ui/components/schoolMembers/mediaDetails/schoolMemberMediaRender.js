@@ -11,34 +11,40 @@ export default function() {
     const { showCreateMediaModal, mediaFormData, filterStatus, limit, memberInfo } = this.state;
     console.log("SchoolMemberMedia props -->>",this.props);
     console.log("SchoolMemberMedia state -->>",this.state);
-    const { mediaListfilters } = this.props;
+    const { mediaListfilters, showUploadImageBtn } = this.props;
 
     return (
         <Card style={{marginTop:'42px',width: '850px'}}>
             <Grid container style={{display: 'flex', width: '100%',padding: '12px'}}>
              {
-                <CreateMedia
-                    showCreateMediaModal={showCreateMediaModal}
-                    onClose = {this.closeMediaUpload}
-                    formType={showCreateMediaModal}
-                    schoolId={this.props.schoolData._id}
-                    ref="createMedia"
-                    onAdd={this.onAddMedia}
-                    onEdit={this.onEditMedia}
-                    mediaFormData={mediaFormData}
-                    filterStatus={filterStatus}
-                    showLoading = {this.showLoading}
-                    tagMember={true}
-                    taggedMemberInfo={memberInfo}
-                />
+                showUploadImageBtn && (
+                    <CreateMedia
+                        showCreateMediaModal={showCreateMediaModal}
+                        onClose = {this.closeMediaUpload}
+                        formType={showCreateMediaModal}
+                        schoolId={this.props.schoolData._id}
+                        ref="createMedia"
+                        onAdd={this.onAddMedia}
+                        onEdit={this.onEditMedia}
+                        mediaFormData={mediaFormData}
+                        filterStatus={filterStatus}
+                        showLoading = {this.showLoading}
+                        tagMember={true}
+                        taggedMemberInfo={memberInfo}
+                    />
+                )
             }
                 <Grid item md={8} sm={8} xs={8}>
                     {this.props.schoolData && <b>Media at {this.props.schoolData.name}</b>}
                 </Grid>
                 <Grid item md={4} sm={4} xs={4} style={{textAlign:'center'}}>
-                    <Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
-                        Upload Media <FileUpload />
-                    </Button>
+                    {
+                        showUploadImageBtn && (
+                            <Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
+                                Upload Media <FileUpload />
+                            </Button>
+                        )
+                    }
                 </Grid>
                 <Grid item xs={12}>
                     <MediaList
