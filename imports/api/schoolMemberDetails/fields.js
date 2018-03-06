@@ -80,6 +80,11 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
     },
     inviteAccepted: {
         type: Boolean
+    },
+    classmatesNotes: {
+        type: Object,
+        optional: true,
+        blackbox: true,
     }
 }));
 

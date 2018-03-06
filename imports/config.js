@@ -55,4 +55,8 @@ export default config = Object.freeze({
 	],
 	seeMoreCount: 4,
 	CAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", //test key
+	defaultClassType: [
+		{ skillType: "Painting", location: "Paris"},
+		{ skillType: "Game", location: "Goa"},
+	]
 })

@@ -255,7 +255,8 @@ class DashBoardView extends React.Component {
                     phone:memberInfo.phone,
                     email:memberInfo.email,
                     schoolId: memberInfo.schoolId,
-                    adminNotes:memberInfo.adminNotes
+                    adminNotes:memberInfo.adminNotes,
+                    classmatesNotes: memberInfo.classmatesNotes,
                 },
                 schoolMemberDetailsFilters: { _id: memberId }
             }
@@ -382,6 +383,7 @@ class DashBoardView extends React.Component {
                             handleInput={this.handleInput}
                             saveAdminNotesInMembers={this.saveAdminNotesInMembers}
                             disabled={slug ? false : true}
+                            view={slug ? "admin" : "classmates"}
                         />
                         { this.renderSchoolMedia(schoolData, memberInfo, slug) }
                     </Fragment>

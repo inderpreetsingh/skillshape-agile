@@ -176,7 +176,8 @@ class Landing extends Component {
             cardsDataList: [cardsData, cardsData1],
             filters: {
                 coords: null,
-                skillCategoryClassLimit: {}
+                skillCategoryClassLimit: {},
+                applyFilterStatus: false,
             },
             tempFilters: {},
         }
@@ -348,7 +349,8 @@ class Landing extends Component {
             stateObj[updateKey1] = {
                 ...this.state[updateKey1],
                 coords: location.coords,
-                locationName: location.fullAddress
+                locationName: location.fullAddress,
+                applyFilterStatus: true,
             }
         }
 
@@ -392,7 +394,8 @@ class Landing extends Component {
         if(updateKey1) {
             stateObj[updateKey1] = {
                 ...this.state[updateKey1],
-                schoolName: event.target.value
+                schoolName: event.target.value,
+                applyFilterStatus: true,
             }
         }
 
@@ -414,7 +417,8 @@ class Landing extends Component {
             stateObj[updateKey1] = {
                 ...this.state[updateKey1],
                 skillCategoryIds: text.map((ele) => ele._id),
-                defaultSkillCategories: text
+                defaultSkillCategories: text,
+                applyFilterStatus: true,
             }
         }
 
@@ -469,7 +473,7 @@ class Landing extends Component {
     }
 
     applyFilters = () => {
-        this.setState({filters: { ...this.state.filters, ...this.state.tempFilters}})
+        this.setState({filters: { ...this.state.filters, ...this.state.tempFilters, applyFilterStatus: true}})
     }
 
     removeAllFilters = ()=> {
@@ -511,6 +515,7 @@ class Landing extends Component {
     render() {
         // console.log("Landing state -->>",this.state);
         console.log("Landing state -->>",this.state);
+        console.log("Landing props -->>",this.props);
         return(
             <div>
                 <FiltersDialogBox

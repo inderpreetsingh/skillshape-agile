@@ -30,5 +30,16 @@ Meteor.methods({
         } else {
             throw new Meteor.Error("Unable to get due to invalid informations!!");
         }
-    }
+    },
+    "schoolMemberDetails.editSchoolMemberDetails": function({doc_id, doc}) {
+        const user = Meteor.users.findOne(this.userId);
+        console.log("EditSchoolMemberDetails -->>",doc)
+        const memberData = SchoolMemberDetails.findOne({ _id: doc_id });
+
+        if(doc.classmatesNotes && memberData.classmatesNotes) {
+            doc.classmatesNotes = {...memberData.classmatesNotes, ...doc.classmatesNotes}
+        }
+
+        return SchoolMemberDetails.update({ _id: doc_id }, { $set: doc });
+    },
 })

@@ -237,12 +237,12 @@ class FilterPanel extends Component {
             <MaterialInputWrapper>
                 <IconInput
                     value={get(this.props, "tempFilters.locationName", "")}
-                    onChange={(event)=> this.props.locationInputChanged(event, "tempFilters")}
+                    onChange={(event)=> this.props.locationInputChanged(event, null, "tempFilters")}
                     iconName='location_on'
                     defaultValue={this.props.currentAddress}
                     googlelocation={true}
                     labelText="Location"
-                    onLocationChange={(event) => this.props.onLocationChange(event, "tempFilters")}
+                    onLocationChange={(event) => this.props.onLocationChange(event, null, "tempFilters")}
                />
             </MaterialInputWrapper>
             </Grid>
@@ -253,7 +253,7 @@ class FilterPanel extends Component {
                     <IconInput
                         value={get(this.props, "tempFilters.schoolName", "")}
                         iconName='school'
-                        onChange={(event)=> this.props.fliterSchoolName(event, "tempFilters")}
+                        onChange={(event)=> this.props.fliterSchoolName(event, null, "tempFilters")}
                         labelText="School Name"
                     />
                 </MaterialInputWrapper>
@@ -268,7 +268,7 @@ class FilterPanel extends Component {
                         data={this.state.skillCategoryData}
                         defaultValue={get(this.props, "tempFilters.defaultSkillCategories", [])}
                         placeholder="Skill category"
-                        onChange={(event)=> this.props.collectSelectedSkillCategories(event, "tempFilters")}
+                        onChange={(event)=> this.props.collectSelectedSkillCategories(event, null, "tempFilters")}
                     />
                 </div>
             </Grid>
