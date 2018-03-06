@@ -19,10 +19,16 @@ import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-pic
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
 import List from 'material-ui/List';
-import IconButton from 'material-ui/IconButton';
 import Hidden from 'material-ui/Hidden';
 import isEmpty from "lodash/isEmpty";
 import find from "lodash/find";
+import Drawer from 'material-ui/Drawer';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import Toolbar from 'material-ui/Toolbar';
+import MenuIcon from 'material-ui-icons/Menu';
+
+
 
 import { phoneRegex } from '/imports/util';
 import SchoolMemberListItems from '/imports/ui/components/schoolMembers/schoolMemberList/index.js';
@@ -33,17 +39,54 @@ import { ContainerLoader } from '/imports/ui/loading/container.js';
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 
+const drawerWidth = 400;
+
 const styles = theme => ({
-    root: {
-        flexGrow: 1,
-        maxWidth: 752,
+      root: {
+    flexGrow: 1,
+    height: '100%',
+    zIndex: 1,
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
+    width: '100%',
+  },
+  appBar: {
+    position: 'absolute',
+    marginLeft: drawerWidth,
+    [theme.breakpoints.up('md')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
     },
-    demo: {
-        backgroundColor: theme.palette.background.paper,
+  },
+  navIconHide: {
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
     },
-    title: {
-        padding: theme.spacing.unit * 2
+  },
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: drawerWidth,
+    [theme.breakpoints.up('md')]: {
+      position: 'relative',
     },
+    boxShadow:'none !important',
+    height: '100vh',
+    overflow: 'auto',
+    padding:'0px !important',
+  },
+  content: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing.unit * 3,
+  },
+  drawerIcon: {
+    top: '10px',
+    left: '388px',
+    width: '100px',
+    height: '30px',
+    position: 'absolute',
+    float: 'right'
+  }
 });
 
 const ErrorWrapper = styled.span`
@@ -61,6 +104,10 @@ class DashBoardView extends React.Component {
         classTypesData: [],
         error: "",
         birthYear: (new Date()).getFullYear() - 28,
+        filters: {
+        classTypeIds: [],
+            memberName: "",
+        },
     };
 
     /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
@@ -310,6 +357,32 @@ class DashBoardView extends React.Component {
             />
         }
     }
+
+    handleMemberNameChange = (event) => {
+        console.log("handleMemberNameChange -->",event)
+        this.setState({
+            filters: {
+                ...this.state,
+                memberName: event.target.value,
+            }
+        });
+    }
+
+    handleClassTypeDataChange = (data) => {
+        let classTypeIds = data.map((item) => {
+            return item._id;
+        })
+        this.setState({
+            filters: {
+                ...this.state,
+                classTypeIds: classTypeIds,
+            }
+        });
+    }
+
+    setInitialClassTypeData = (data) => {
+        this.refs.SchoolMemberFilter.setClassTypeData(data);
+    }
     // Return Dash view from here
     render() {
         console.log("DashBoardView props -->>",this.props);
@@ -322,9 +395,43 @@ class DashBoardView extends React.Component {
             schoolMemberListFilters.schoolId = !isEmpty(schoolData) && schoolData[0]._id;
         }
 
+        let { currentUser, isUserSubsReady } = this.props;
+        // let { slug } = this.props.params;
+        let filters = {...this.state.filters};
+
+        // if(!isUserSubsReady)
+        //     return <Preloader/>
+
+        // if(!currentUser) {
+        //     return  <Typography type="display2" gutterBottom align="center">
+        //         To access this page you need to signin to skillshape.
+        //     </Typography>
+        // }
+
+        if(!slug)  {
+            filters.activeUserId = currentUser._id;
+        }
+
         const drawer = (
             <div>
                 <List>
+                    <SchoolMemberFilter
+                        stickyPosition={this.state.sticky}
+                        ref="SchoolMemberFilter"
+                        handleClassTypeDataChange={this.handleClassTypeDataChange}
+                        handleMemberNameChange={this.handleMemberNameChange}
+                        filters={filters}
+                        classTypeData={this.state.classTypeData}
+                    />
+                    {
+                        slug && (
+                            <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse'}}>
+                                <Button raised color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
+                                  Add New Student
+                                </Button>
+                            </Grid>
+                        )
+                    }
                     <SchoolMemberListItems
                         filters={schoolMemberListFilters}
                         handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}
@@ -338,8 +445,22 @@ class DashBoardView extends React.Component {
         }
 
         return (
-            <Fragment>
-                <Grid item sm={4} xs={12} md={4} className="leftSideMenu" style={{position: 'absolute',width: '100%',top: '160px',height: '100%'}}>
+            <Grid container className={classes.root}>
+                <AppBar className={classes.appBar}>
+                  <Toolbar>
+                    <IconButton
+                      color="inherit"
+                      aria-label="open drawer"
+                      onClick={this.handleDrawerToggle}
+                      className={classes.navIconHide}
+                    >
+                      <MenuIcon />
+                    </IconButton>
+                    <Typography variant="title" color="inherit" noWrap>
+                      Responsive drawer
+                    </Typography>
+                  </Toolbar>
+                </AppBar>
                 { this.state.isLoading && <ContainerLoader /> }
                 { !isEmpty(schoolData) &&
                     <div>
@@ -354,27 +475,37 @@ class DashBoardView extends React.Component {
                                />
                             }
                         </form>
-                        {
-                            slug && (
-                                <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse'}}>
-                                    <Button raised color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
-                                      Add New Student
-                                    </Button>
-                                </Grid>
-                            )
-                        }
                     </div>
                 }
-                <div>
-                    <Hidden mdUp>
-                      {drawer}
-                    </Hidden>
-                    <Hidden smDown>
-                        {drawer}
-                    </Hidden>
-                </div>
-                </Grid>
-                <Grid item sm={8} xs={12} md={8} className="rightPanel" style={{ height: '100vh'}}>
+                <Hidden mdUp>
+                  <Drawer
+                    variant="temporary"
+                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                    open={this.state.mobileOpen}
+                    onClose={this.handleDrawerToggle}
+                    className={classes.drawerIcon}
+                    ModalProps={{
+                      keepMounted: true, // Better open performance on mobile.
+                    }}
+                  >
+                    {drawer}
+                  </Drawer>
+                </Hidden>
+                <Hidden  smDown>
+                  <div
+                    variant="permanent"
+                    open
+                    className={classes.drawerPaper}
+                    BackdropProps={{style:{display:'none'}}}
+                    hideBackdrop={false}
+                    ModalProps={{
+                      keepMounted: true, // Better open performance on mobile.
+                    }}
+                  >
+                    {drawer}
+                  </div>
+                </Hidden>
+                <Grid item sm={12} xs={12} md={8} className="rightPanel" style={{ height: '100vh',overflow:'auto'}}>
                   { !isEmpty(memberInfo) &&
                     <Fragment>
                         <SchoolMemberInfo
@@ -387,7 +518,7 @@ class DashBoardView extends React.Component {
                     </Fragment>
                   }
                   </Grid>
-            </Fragment>
+            </Grid>
         )
     }
 }
@@ -419,4 +550,4 @@ export default createContainer(props => {
         slug,
     };
 
-},withStyles(styles)(DashBoardView));
+}, withStyles(styles, { withTheme: true })(DashBoardView));

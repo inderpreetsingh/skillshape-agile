@@ -16,7 +16,7 @@ export default function (props) {
                         <Typography>{collectionData.length} Students</Typography>
                     </Grid>
                     <Grid item sm={12} xs={12} md={12}>
-                        <Grid container style={{borderTop: 'solid 1px #ddd',marginTop: 'auto',overflowY: 'auto',height: '100vh'}}>
+                        <Grid container style={{borderTop: 'solid 1px #ddd',marginTop: 'auto'}}>
                             <List>
                                 {
                                   membersByName && Object.keys(membersByName).sort().map((key) => {

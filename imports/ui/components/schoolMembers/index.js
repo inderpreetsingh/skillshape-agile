@@ -42,7 +42,7 @@ class SchoolMemberView extends Component {
     }
 
     setInitialClassTypeData = (data) => {
-        this.refs.SchoolMemberFilter.setClassTypeData(data);
+        // this.refs.SchoolMemberFilter.setClassTypeData(data);
     }
 
     render() {
@@ -65,7 +65,7 @@ class SchoolMemberView extends Component {
 
         return(
             <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff'}}>
-                 <Grid item sm={4} xs={12} md={4} style={{border: 'solid 1px #ddd'}}>
+                 {/*<Grid item sm={4} xs={12} md={4} style={{border: 'solid 1px #ddd'}}>
                     <SchoolMemberFilter
                         stickyPosition={this.state.sticky}
                         ref="SchoolMemberFilter"
@@ -74,7 +74,7 @@ class SchoolMemberView extends Component {
                         filters={filters}
                         classTypeData={this.state.classTypeData}
                     />
-                </Grid>
+                </Grid>*/}
                 <DashBoardView
                     filters={filters}
                     handleMemberNameChange={this.handleMemberNameChange}
