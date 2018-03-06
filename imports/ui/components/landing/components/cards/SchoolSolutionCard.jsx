@@ -28,15 +28,55 @@ const styles = {
     minHeight: '0',
     padding: `0 ${helpers.rhythmDiv}px`,
     height: helpers.rhythmDiv * 4,
-    width: helpers.rhythmDiv * 4
+    width: helpers.rhythmDiv * 4,
+    backgroundColor: 'white',
+    boxShadow: '1px 1px 1px 1px rgba(0,0,0,0.1), 1px 0px 1px 1px rgba(0,0,0,0.1)',
+    '&:hover': {
+      backgroundColor: 'white'
+    }
   }
 }
+
+
+const SolutionCardWrapper = styled.article`
+  max-width: 200px;
+  width: 100%;
+  min-width: 0;
+  height: 320px;
+  border-radius: ${helpers.rhythmDiv * 2}px;
+
+  background-size: cover;
+  background-image: url('${props => props.bgImage}');
+  background-position: center center;
+  background-repeat: no-repeat;
+  padding: ${helpers.rhythmDiv * 2}px;
+  position: relative;
+  margin: 0;
+  margin-right: ${helpers.rhythmDiv * 2}px;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+
+  @media screen and (max-width: ${helpers.tablet}px ) {
+    margin: 0 ${helpers.rhythmDiv}px;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: 200px;
+    margin: 0 auto;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+    &:last-of-type {
+      margin-right: auto;
+    }
+  }
+`;
 
 const CardDescriptionWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
-  font-family: ${helpers.specialFont};
   padding: ${helpers.rhythmDiv * 2}px;
   background-color: white;
   width: 100%;
@@ -52,32 +92,6 @@ const CardDescriptionWrapper = styled.div`
   border-bottom-left-radius: ${helpers.rhythmDiv * 2}px;
   border-bottom-right-radius: ${helpers.rhythmDiv * 2}px;
   transform: ${props => props.revealCard ? 'scaleY(1)' : 'scaleY(0)'};
-`;
-
-const SolutionCardWrapper = styled.article`
-  max-width: 200px;
-  width: 100%;
-  height: 320px;
-  border-radius: ${helpers.rhythmDiv * 2}px;
-
-  background-size: cover;
-  background-image: url('${props => props.bgImage}');
-  background-position: center center;
-  background-repeat: no-repeat;
-  padding: ${helpers.rhythmDiv * 2}px;
-  position: relative;
-
-  margin: 0 ${helpers.rhythmDiv * 2}px;
-
-  @media screen and (max-width: ${helpers.tablet}px ) {
-    margin: 0 ${helpers.rhythmDiv}px;
-    margin-bottom: ${helpers.rhythmDiv * 2}px;
-  }
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    margin: 0 auto;
-    margin-bottom: ${helpers.rhythmDiv * 2}px;
-  }
 `;
 
 const SolutionCardContent = styled.div`
@@ -116,6 +130,7 @@ const CardContent = styled.p`
   margin: 0;
   font-size: ${helpers.baseFontSize}px;
   font-weight: 300;
+  font-style: italic;
   line-height: 1;
   font-family: ${helpers.specialFont};
 `;
@@ -160,6 +175,7 @@ class SchoolSolutionCard extends Component {
     this.setState({ revealCard: true });
   }
   hideCardContent = (e) => {
+    e.stopPropagation();
     this.setState({ revealCard: false });
   }
 
@@ -167,7 +183,7 @@ class SchoolSolutionCard extends Component {
   render() {
     console.log(this.state,"adsljfj")
     return (
-      <SolutionCardWrapper bgImage={this.props.bgImage} itemScope itemType="http://schema.org/Service">
+      <SolutionCardWrapper bgImage={this.props.bgImage} itemScope itemType="http://schema.org/Service" onClick={this.revealCardContent} >
         <SolutionCardContent>
           <CardContentInnerWrapper ref={container => this.contentContainer = container}>
             <CardTitle>{this.props.title}</CardTitle>

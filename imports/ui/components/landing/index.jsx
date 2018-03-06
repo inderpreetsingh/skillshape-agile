@@ -541,37 +541,32 @@ class Landing extends Component {
                     }}
                 />
 
-                {!this.state.mapView &&
-                  (
-               <Fragment>
-                 <CoverWrapper>
-                   <Cover itemScope itemType="http://schema.org/WPHeader">
-                    <BrandBar
-                      currentUser={this.props.currentUser}
-                    />
-                    <SearchArea
-                        onLocationInputChange={this.handleLocationSearch}
-                        onSkillTypeChange={this.handleSkillTypeSearch}
-                        onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
-                        getMyCurrentLocation={this.getMyCurrentLocation}
-                    />
-                    </Cover>
-                  </CoverWrapper>
-                </Fragment>
-              )}
+              {/* Cover */}
+             <CoverWrapper>
+               <Cover itemScope itemType="http://schema.org/WPHeader">
+                <BrandBar
+                  currentUser={this.props.currentUser}
+                />
+                <SearchArea
+                    onLocationInputChange={this.handleLocationSearch}
+                    onSkillTypeChange={this.handleSkillTypeSearch}
+                    onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+                    getMyCurrentLocation={this.getMyCurrentLocation}
+                />
+                </Cover>
+              </CoverWrapper>
 
+              {/* Filter Panel */}
                <FilterPanelWrapper>
-                   {
-                        !this.state.mapView ?
-                            <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
-                                <FilterBarDisplayWrapper sticky={this.state.sticky}>
-                                  {this.renderFilterPanel()}
-                                </FilterBarDisplayWrapper>
-                            </Sticky>
-                        : this.renderFilterPanel()
-                   }
+                  <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
+                    {this.state.mapView ? this.renderFilterPanel() :
+                    <FilterBarDisplayWrapper sticky={this.state.sticky}>
+                      {this.renderFilterPanel()}
+                    </FilterBarDisplayWrapper>}
+                  </Sticky>
                </FilterPanelWrapper>
 
+              {/*Cards List */}
                 <Element name="content-container" className="element homepage-content">
                     <ClassTypeList
                         locationName={this.state.locationName}

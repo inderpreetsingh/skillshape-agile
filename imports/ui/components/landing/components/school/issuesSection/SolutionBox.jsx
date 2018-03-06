@@ -8,11 +8,12 @@ import SchoolSolutionSlider from './SchoolCardsSlider.jsx';
 import * as helpers from '../../jss/helpers.js';
 
 const BoxWrapper = styled.div`
+  ${helpers.flexCenter}
+  flex-direction: column;
   max-width: ${helpers.schoolPageContainer}px;
   margin: 0 auto;
   height: 100%;
   padding: ${helpers.rhythmDiv * 2}px;
-  padding-top: ${helpers.rhythmDiv * 4}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-top: ${helpers.rhythmDiv * 2}px;
@@ -26,11 +27,7 @@ const Content = styled.h2`
   font-weight: 500;
   text-align: center;
   line-height: 1;
-  position: absolute;
-  top: ${props => props.firstBox ? '0' : '140'}px;
   text-align: center;
-  width: 100%;
-  left: 0;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   @media screen and (max-width: ${helpers.tablet}px) {
@@ -44,13 +41,11 @@ SchoolSolutionCardsWrapper = styled.div`
   justify-content: space-around;
   max-width: ${helpers.schoolPageContainer}px;
   padding: ${helpers.rhythmDiv * 2};
-  min-height: 100%;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     max-width: 464px;
     flex-wrap: wrap;
     margin: 0 auto;
-    justify-content: flex-start;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -62,12 +57,11 @@ SchoolSolutionSliderWrapper = styled.div`
   display: none;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    min-height: calc(100vh - 48px);
+    display: block;
+    max-width: 500px;
+    width: 100%;
     overflow: hidden;
-    padding-bottom: ${helpers.rhythmDiv * 3}px
+    padding-bottom: ${helpers.rhythmDiv * 4}px
   }
 `;
 

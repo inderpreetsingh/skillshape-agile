@@ -5,11 +5,14 @@ import styled from 'styled-components';
 
 import * as helpers from '../jss/helpers.js';
 
+import SchoolPriceCard from './SchoolPriceCard.jsx';
+
 const Wrapper = styled.div`
-  padding-top: ${helpers.rhythmDiv * 4}px;
-  background-color: ${helpers.black};
   max-width: 100vw;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: ${helpers.schoolPageColor};
 `;
 
 const PricingBoxWrapper = styled.div`
@@ -17,6 +20,9 @@ const PricingBoxWrapper = styled.div`
   width: 100%;
   max-width: ${helpers.schoolPageContainer}px;
   padding: ${helpers.rhythmDiv * 2}px;
+  height: 100%;
+  flex-grow: 1;
+  ${helpers.flexCenter};
 `;
 
 const Title = styled.h2`
@@ -25,58 +31,35 @@ const Title = styled.h2`
   font-size: ${helpers.baseFontSize * 1.5}px;
   font-weight: 300;
   color: white;
-  text-align: center;
   margin: 0 auto;
-  max-width: 800px;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  max-width: 500px;
+`;
+
+const TitleWrapper = styled.div`
+  background-color: ${helpers.black};
+  padding: ${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 2}px;
+  text-align: center;
 `;
 
 const PricingWrapper = styled.div`
+  width: 100%;
   ${helpers.flexCenter};
+  justify-content: space-between;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     flex-direction: column;
   }
 `;
 
-const Pricing = styled.div`
-  border-radius: ${helpers.rhythmDiv * 6}px;
-  padding: ${helpers.rhythmDiv * 2}px;
-  max-width: 300px;
-  width: 100%;
-  min-height: 400px;
-  background-color: white;
-  margin: 0 ${helpers.rhythmDiv}px;
-
-  @media screen and (max-width: ${helpers.tablet}px) {
-    max-width: 100%;
-    min-height: 200px;
-    margin: ${helpers.rhythmDiv}px 0;
-  }
-`;
-
-const Price = styled.p`
-  margin: 0;
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.rhythmDiv * 4}px;
-  color: ${helpers.black};
-  text-align: center;
-`;
 
 const SchoolPricing = (props) => {
   return(<Wrapper>
+    <TitleWrapper><Title>{props.title}</Title></TitleWrapper>
     <PricingBoxWrapper>
-      <Title>{props.title}</Title>
       <PricingWrapper>
-        <Pricing>
-          <Price>0$</Price>
-        </Pricing>
-        <Pricing>
-          <Price>17$</Price>
-        </Pricing>
-        <Pricing>
-          <Price>37$</Price>
-        </Pricing>
+        <SchoolPriceCard price='$0' title='Free'/>
+        <SchoolPriceCard extended perMonth price='$17' title='Fundamental'/>
+        <SchoolPriceCard perMonth price='$0' title='Full Featured'/>
       </PricingWrapper>
     </PricingBoxWrapper>
   </Wrapper>)

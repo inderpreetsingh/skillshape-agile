@@ -9,8 +9,6 @@ import * as CustomPropTypes from 'react-widgets/lib/util/PropTypes';
 import { dataIndexOf } from 'react-widgets/lib/util/dataHelpers';
 
 import * as helpers from '../../jss/helpers.js';
-
-
 // disabled === true || [1, 2, 3, etc]
 const isDisabled = (item, list, value) =>
   !!(Array.isArray(list) ? ~dataIndexOf(list, item, value) : list)
@@ -20,6 +18,22 @@ const FilterButtonWrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     min-width: 100px;
+  }
+`;
+
+const FilterButtonTabletView = styled.div`
+  display: none;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: block;
+  }
+`;
+
+const FilterButtonDesktopView = styled.div`
+  display: flex;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: none;
   }
 `;
 
@@ -39,10 +53,6 @@ class MyTagList extends React.Component {
     disabled: CustomPropTypes.disabled.acceptsArray,
   };
 
-  state = {
-    tablet: false
-  }
-
   handleDelete = (item, event) => {
     // console.log('handling delete,',item);
     if (this.props.disabled !== true)
@@ -54,23 +64,6 @@ class MyTagList extends React.Component {
     console.log('click..');
     if(this.props.onNoOfFiltersClick)
       this.props.onNoOfFiltersClick();
-  }
-
-  handleUpdateDimensions = (e) => {
-    if(window.innerWidth < helpers.tablet) {
-      if(!this.state.tablet) this.setState({ tablet: true });
-    }else {
-      if(this.state.tablet) this.setState({ tablet: false })
-    }
-  }
-
-  componentDidMount = () => {
-    this.handleUpdateDimensions();
-    window.addEventListener('resize',this.handleUpdateDimensions);
-  }
-
-  componentWillUnMount = () => {
-    window.addEventListener('resize',this.handleUpdateDimensions);
   }
 
   renderCustomList() {
@@ -95,12 +88,15 @@ class MyTagList extends React.Component {
         }
       </MultiselectTag>
       <FilterButtonWrapper>
-        {this.state.tablet ?
-        <div>
+
+        <FilterButtonTabletView>
           <button className="no-shrink primary-button my-multi-select-filter-btn" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters}`}</button>
-        </div>
-        :
-        <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters} Filters`}</button>}
+        </FilterButtonTabletView>
+
+        <FilterButtonDesktopView>
+          <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters} Filters`}</button>
+        </FilterButtonDesktopView>
+
       </FilterButtonWrapper>
     </Fragment>
     );
