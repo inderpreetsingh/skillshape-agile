@@ -7,20 +7,21 @@ import * as helpers from '../../jss/helpers.js';
 const Wrapper = styled.div`
   display: flex;
   justify-content: flex-end;
-  filter: ${props => props.active ?  'none' : 'grayscale(90%)'};
-  border-radius: ${helpers.rhythmDiv * 2}px;
-  height: 100px;
   max-width: 300px;
-  padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv}px;
   cursor: pointer;
-  background-image: url('${props => props.bgImage}');
   background-size: cover;
   background-repeat: no-repeat;
-  margin: 0 ${helpers.rhythmDiv * 2}px;
+  background-image: url('${props => props.bgImage}');
+  height: 100px;
   width: 100%;
   min-width: 0;
   transition: max-width .2s linear;
   position: relative;
+  margin: 0 ${helpers.rhythmDiv * 2}px;
+  filter: ${props => props.active ?  'none' : 'grayscale(90%)'};
+  border-radius: ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv}px;
+  box-shadow: ${props => props.active ? '1px 1px 1px 2px rgba(0,0,0,0.1), -1px -1px 1px 2px rgba(0,0,0,0.1)' : '1px 1px 0px 1px rgba(0,0,0,0.1), -1px -1px 0px 1px rgba(0,0,0,0.1)'};
 
   @media screen and (max-width: ${helpers.tablet}px) {
     max-width: ${props => props.active ?  '250' : '100'}px;

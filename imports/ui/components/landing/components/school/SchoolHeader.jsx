@@ -101,7 +101,7 @@ const OuterWrapper = styled.div`
 
 const Wrapper = styled.div`
   max-width: ${helpers.schoolPageContainer}px;
-  height: 664px;
+  height: 600px;
   margin: 0 auto;
   background-image: url(${props => props.bgSrc});
   background-size: 500px;

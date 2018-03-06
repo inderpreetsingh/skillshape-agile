@@ -25,6 +25,12 @@ const Wrapper = styled.div`
   background-image: url('${props => props.bgImage}');
   background-position: bottom left;
   background-repeat: repeat no-repeat;
+  background-attachment: fixed;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    min-height: 100vh;
+    height: auto;
+  }
 
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-top: 0;
@@ -34,7 +40,7 @@ const Wrapper = styled.div`
 const SolutionBoxWrapper = styled.div`
   position: relative;
   max-width: 600px;
-  height: 512px;
+  min-height: 512px;
   width: 100%;
 
   @media screen and (max-width: ${helpers.tablet}px) {
@@ -70,7 +76,8 @@ const Issues = styled.div`
 
 class SchoolIssues extends Component {
   state = {
-    wrappers: []
+    wrappers: [],
+    mobile: false,
   }
 
   componentWillMount = () => {
