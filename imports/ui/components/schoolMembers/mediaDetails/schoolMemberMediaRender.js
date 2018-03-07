@@ -14,8 +14,8 @@ export default function() {
     const { mediaListfilters, showUploadImageBtn } = this.props;
 
     return (
+    <Grid container style={{display: 'flex',padding: '12px'}}>
         <Card style={{marginTop:'42px',width: '850px'}}>
-            <Grid container style={{display: 'flex', width: '100%',padding: '12px'}}>
              {
                 showUploadImageBtn && (
                     <CreateMedia
@@ -37,7 +37,7 @@ export default function() {
                 <Grid item md={8} sm={8} xs={8}>
                     {this.props.schoolData && <b>Media at {this.props.schoolData.name}</b>}
                 </Grid>
-                <Grid item md={4} sm={4} xs={4} style={{textAlign:'center'}}>
+                <Grid item md={4} sm={4} xs={4} style={{padding: '8px',float: 'right'}}>
                     {
                         showUploadImageBtn && (
                             <Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
@@ -79,7 +79,7 @@ export default function() {
                         </Grid>)*/
                     }
                 </Grid>
-            </Grid>
         </Card>
+    </Grid>
     )
 }

@@ -105,7 +105,7 @@ const styles = theme => ({
     paddingRight: '0px',
     background: 'white',
     border: 'solid 3px #dddd',
-    paddingTop: '0px'
+    paddingTop: '0px !important',
   }
 });
 
