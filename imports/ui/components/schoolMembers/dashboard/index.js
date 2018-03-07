@@ -73,6 +73,7 @@ const styles = theme => ({
     height: '100vh',
     overflow: 'auto',
     padding:'0px !important',
+    paddingLeft:'16px !important',
   },
   content: {
     flexGrow: 1,
@@ -424,7 +425,7 @@ class DashBoardView extends React.Component {
         // }
 
         if(!slug)  {
-            filters.activeUserId = currentUser._id;
+            filters.activeUserId = currentUser && currentUser._id;
         }
 
         const drawer = (
@@ -440,7 +441,7 @@ class DashBoardView extends React.Component {
                     />
                     {
                         slug && (
-                            <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse'}}>
+                            <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse', padding: '16px'}}>
                                 <Button raised color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
                                   Add New Student
                                 </Button>
