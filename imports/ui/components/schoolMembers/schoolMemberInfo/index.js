@@ -69,17 +69,19 @@ class SchoolMemberInfo extends Component {
     	console.log("SchoolMemberInfo notes -->>",this.state);
     	console.log("SchoolMemberInfo props -->>",this.props);
     	return (
-    		<Fragment>
-              	<Grid container className="userInfoPanel" style={{display: 'flex',borderTop: 'solid 3px #ddd'}}>
-	                <Grid item sm={4} xs={12} md={4}>
-	                    <div className="avtar">
+    		<Grid container>
+              	<Grid container className="userInfoPanel" style={{borderTop: 'solid 3px #ddd',display: 'flex'}}>
+	                <Grid item sm={8} xs={12} md={8} style={{display: 'flex',justifyContent: 'space-evenly',padding: '24px'}}>
+	                    <Grid item sm={4} xs={4} md={4}>
 	                    	<img className={classes.avatarCss} src="/images/avatar.jpg"/>
-	                  	</div>
-	                  	<Typography>{ memberInfo.name }</Typography>
-	                  	<Typography>{ memberInfo.phone }</Typography>
-	                  	<Typography>{ memberInfo.email }</Typography>
-	                </Grid>
-                	<Grid item sm={4} xs={12} md={4}>
+	                  	</Grid>
+                        <Grid item sm={4} xs={4} md={4}>
+                            <Typography>{ memberInfo.name }</Typography>
+                            <Typography>{ memberInfo.phone }</Typography>
+                            <Typography>{ memberInfo.email }</Typography>
+                        </Grid>
+                    </Grid>
+                	<Grid item sm={3} xs={12} md={3} style={{padding: '28px'}}>
     					<div className="notes">
                     		{ view === "admin" ? "Admin Notes" : "My Private Notes" }
                   		</div>
@@ -87,10 +89,10 @@ class SchoolMemberInfo extends Component {
 		                    onBlur={this.saveMyNotesInMembers}
 		                    value={this.state.notes}
 		                    onChange={(e) => this.setState({ notes: e.target.value })}
-		                    fullWidth
 		                    style={{border: '1px solid',backgroundColor: '#fff'}}
 		                    multiline
 		                    rows={4}
+                            fullWidth
 		                />
                 	</Grid>
                 </Grid>
@@ -113,7 +115,7 @@ class SchoolMemberInfo extends Component {
               			</Grid>
             		)
             	}
-            </Fragment>
+            </Grid>
     	)
     }
 }
