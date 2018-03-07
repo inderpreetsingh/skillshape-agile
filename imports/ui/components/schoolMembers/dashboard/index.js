@@ -65,9 +65,11 @@ const styles = theme => ({
   },
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
-    width: drawerWidth,
     [theme.breakpoints.up('md')]: {
       position: 'relative',
+    },
+    [theme.breakpoints.down('sm')]: {
+        width: `${drawerWidth}px !important`
     },
     boxShadow:'none !important',
     height: '100vh',
@@ -97,6 +99,13 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
         paddingTop: '90px !important'
     },
+    background: '#ffff'
+  },
+  sideMenu: {
+    paddingRight: '0px',
+    background: 'white',
+    border: 'solid 3px #dddd',
+    paddingTop: '0px'
   }
 });
 
@@ -493,30 +502,31 @@ class DashBoardView extends React.Component {
                         </form>
                     </div>
                 }
-                <Hidden mdUp>
-                  <Drawer
-                    variant="temporary"
-                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                    open={this.state.mobileOpen}
-                    onClose={this.handleDrawerToggle}
-                    className={classes.drawerPaper}
-                    style={{position:'absolute'}}
-                    classes={{
-                      paper: classes.drawerPaper,
-                    }}
-                  >
-                    {drawer}
-                  </Drawer>
-                </Hidden>
-                <Hidden  smDown>
-                  <div
-                    variant="permanent"
-                    open
-                    className={classes.drawerPaper}
-                  >
-                    {drawer}
-                  </div>
-                </Hidden>
+                <Grid item md={4} style={{paddingRight:'0px'}} className={classes.sideMenu}>
+                    <Hidden mdUp>
+                      <Drawer
+                        variant="temporary"
+                        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                        open={this.state.mobileOpen}
+                        onClose={this.handleDrawerToggle}
+                        style={{position:'absolute'}}
+                        classes={{
+                          paper: classes.drawerPaper,
+                        }}
+                      >
+                        {drawer}
+                      </Drawer>
+                    </Hidden>
+                    <Hidden  smDown>
+                      <div
+                        variant="permanent"
+                        open
+                        className={classes.drawerPaper}
+                      >
+                        {drawer}
+                      </div>
+                    </Hidden>
+                </Grid>
                 <Grid item sm={12} xs={12} md={8} className={classes.rightPanel} style={{ height: '100vh',overflow:'auto'}}>
                   { !isEmpty(memberInfo) &&
                     <Fragment>
