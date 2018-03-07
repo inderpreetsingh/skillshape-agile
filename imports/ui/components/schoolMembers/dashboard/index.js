@@ -370,7 +370,7 @@ class DashBoardView extends React.Component {
     }
 
     handleMemberNameChange = (event) => {
-        console.log("handleMemberNameChange -->",event)
+        console.log("handleMemberNameChange -->",event.target.value)
         this.setState({
             filters: {
                 ...this.state,
@@ -405,7 +405,7 @@ class DashBoardView extends React.Component {
         const { classes, theme, schoolData, classTypeData, slug} = this.props;
         const { renderStudentModal,memberInfo } = this.state;
 
-        let schoolMemberListFilters = {...this.props.filters};
+        let schoolMemberListFilters = {...this.state.filters};
         if(slug) {
             schoolMemberListFilters.schoolId = !isEmpty(schoolData) && schoolData[0]._id;
         }
@@ -436,7 +436,7 @@ class DashBoardView extends React.Component {
                         handleClassTypeDataChange={this.handleClassTypeDataChange}
                         handleMemberNameChange={this.handleMemberNameChange}
                         filters={filters}
-                        classTypeData={this.state.classTypeData}
+                        classTypeData={classTypeData}
                     />
                     {
                         slug && (
