@@ -78,7 +78,7 @@ export default class SchoolMemberFilter extends Component {
 					                    textField={"name"}
 					                    valueField={"_id"}
 					                    placeholder="Search Member by Class Type"
-					                    data={this.state.classTypeData}
+					                    data={this.props.classTypeData}
 					                    onChange={this.props.handleClassTypeDataChange}
 					                />
 				              	</Grid>
