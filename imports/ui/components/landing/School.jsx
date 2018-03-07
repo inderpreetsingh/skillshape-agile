@@ -10,6 +10,7 @@ import SchoolPricing from './components/school/SchoolPricing.jsx';
 
 import schoolIssuesData from './constants/schoolIssues.js';
 import schoolPageCards from './constants/schoolPageCards.js';
+import schoolPagePricingCards from './constants/schoolPagePriceCards.js';
 
 import * as helpers from './components/jss/helpers.js';
 
@@ -30,7 +31,7 @@ const School = () => (
 
     <SchoolIssues issues={schoolIssuesData} cardsData={schoolPageCards}/>
 
-    <SchoolPricing />
+    <SchoolPricing cardsData={schoolPagePricingCards}/>
 
     <Footer />
   </Wrapper>

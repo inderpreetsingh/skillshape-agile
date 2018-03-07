@@ -46,7 +46,7 @@ const PricingWrapper = styled.div`
   ${helpers.flexCenter};
   justify-content: space-between;
 
-  @media screen and (max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet + 50}px) {
     flex-direction: column;
   }
 `;
@@ -57,16 +57,14 @@ const SchoolPricing = (props) => {
     <TitleWrapper><Title>{props.title}</Title></TitleWrapper>
     <PricingBoxWrapper>
       <PricingWrapper>
-        <SchoolPriceCard price='$0' title='Free'/>
-        <SchoolPriceCard extended perMonth price='$17' title='Fundamental'/>
-        <SchoolPriceCard perMonth price='$0' title='Full Featured'/>
+        {props.cardsData && props.cardsData.map( (card, index) => <SchoolPriceCard key={index} {...card} />) }
       </PricingWrapper>
     </PricingBoxWrapper>
   </Wrapper>)
 }
 
 SchoolPricing.defaultProps = {
-  title: 'So Sign Up for a skillshape account and see what everyone is talking about.'
+  title: 'So sign up for a skillshape account and see what everyone is talking about.'
 }
 
 export default SchoolPricing;

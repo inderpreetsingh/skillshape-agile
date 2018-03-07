@@ -44,11 +44,9 @@ const SolutionCardWrapper = styled.article`
   min-width: 0;
   height: 320px;
   border-radius: ${helpers.rhythmDiv * 2}px;
-
-  background-size: cover;
+  cursor: pointer;
   background-image: url('${props => props.bgImage}');
   background-position: center center;
-  background-repeat: no-repeat;
   padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
   margin: 0;
