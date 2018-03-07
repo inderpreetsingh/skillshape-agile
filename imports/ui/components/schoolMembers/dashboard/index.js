@@ -55,7 +55,7 @@ const styles = theme => ({
     position: 'absolute',
     marginLeft: drawerWidth,
     [theme.breakpoints.up('md')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
+      display: 'none',
     },
   },
   navIconHide: {
@@ -86,6 +86,16 @@ const styles = theme => ({
     height: '30px',
     position: 'absolute',
     float: 'right'
+  },
+  rightPanel: {
+    flexGrow: 1,
+    backgroundColor: '#fafafa',
+    [theme.breakpoints.up('md')]: {
+      paddingTop: theme.spacing.unit,
+    },
+    [theme.breakpoints.down('sm')]: {
+        paddingTop: '90px !important'
+    },
   }
 });
 
@@ -384,6 +394,10 @@ class DashBoardView extends React.Component {
     setInitialClassTypeData = (data) => {
         this.refs.SchoolMemberFilter.setClassTypeData(data);
     }
+
+    handleDrawerToggle = () => {
+        this.setState({ mobileOpen: !this.state.mobileOpen });
+    };
     // Return Dash view from here
     render() {
         console.log("DashBoardView props -->>",this.props);
@@ -458,7 +472,7 @@ class DashBoardView extends React.Component {
                       <MenuIcon />
                     </IconButton>
                     <Typography variant="title" color="inherit" noWrap>
-                      Responsive drawer
+                      Foldeable search popover
                     </Typography>
                   </Toolbar>
                 </AppBar>
@@ -484,9 +498,10 @@ class DashBoardView extends React.Component {
                     anchor={theme.direction === 'rtl' ? 'right' : 'left'}
                     open={this.state.mobileOpen}
                     onClose={this.handleDrawerToggle}
-                    className={classes.drawerIcon}
-                    ModalProps={{
-                      keepMounted: true, // Better open performance on mobile.
+                    className={classes.drawerPaper}
+                    style={{position:'absolute'}}
+                    classes={{
+                      paper: classes.drawerPaper,
                     }}
                   >
                     {drawer}
@@ -497,16 +512,11 @@ class DashBoardView extends React.Component {
                     variant="permanent"
                     open
                     className={classes.drawerPaper}
-                    BackdropProps={{style:{display:'none'}}}
-                    hideBackdrop={false}
-                    ModalProps={{
-                      keepMounted: true, // Better open performance on mobile.
-                    }}
                   >
                     {drawer}
                   </div>
                 </Hidden>
-                <Grid item sm={12} xs={12} md={8} className="rightPanel" style={{ height: '100vh',overflow:'auto'}}>
+                <Grid item sm={12} xs={12} md={8} className={classes.rightPanel} style={{ height: '100vh',overflow:'auto'}}>
                   { !isEmpty(memberInfo) &&
                     <Fragment>
                         <SchoolMemberInfo
