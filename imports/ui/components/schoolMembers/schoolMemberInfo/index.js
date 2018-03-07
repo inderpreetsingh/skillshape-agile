@@ -5,8 +5,18 @@ import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import Input from 'material-ui/Input';
 import isEmpty from "lodash/isEmpty";
+import { withStyles } from "material-ui/styles";
+const styles = theme => ({
+  avatarCss: {
+    width: '150px',
+    height: '150px',
+    backgroundSize: 'cover',
+    backgroundPosition: 'top center',
+    borderRadius: '50%'
+  }
+});
 
-export default class SchoolMemberInfo extends Component {
+class SchoolMemberInfo extends Component {
 
 	constructor(props) {
         super(props)
@@ -55,15 +65,15 @@ export default class SchoolMemberInfo extends Component {
     }
 
   	render() {
-  		const { memberInfo, view } = this.props;
+  		const { memberInfo, view, classes } = this.props;
     	console.log("SchoolMemberInfo notes -->>",this.state);
     	console.log("SchoolMemberInfo props -->>",this.props);
     	return (
     		<Fragment>
-              	<Grid container className="userInfoPanel" style={{display: 'flex',background: 'lightgrey'}}>
+              	<Grid container className="userInfoPanel" style={{display: 'flex',borderTop: 'solid 3px #ddd'}}>
 	                <Grid item sm={4} xs={12} md={4}>
 	                    <div className="avtar">
-	                    	<img src="/images/avatar.jpg"/>
+	                    	<img className={classes.avatarCss} src="/images/avatar.jpg"/>
 	                  	</div>
 	                  	<Typography>{ memberInfo.name }</Typography>
 	                  	<Typography>{ memberInfo.phone }</Typography>
@@ -86,7 +96,7 @@ export default class SchoolMemberInfo extends Component {
                 </Grid>
             	{
             		view === "admin" && (
-              			<Grid container style={{backgroundColor: 'black'}}>
+              			<Grid container style={{backgroundColor: 'darkgray'}}>
 		                	<Grid item>
 		                  		<Fragment>
 				                    <Button raised color="primary" style={{margin: '5px'}}>
@@ -107,3 +117,5 @@ export default class SchoolMemberInfo extends Component {
     	)
     }
 }
+
+export default withStyles(styles, { withTheme: true })(SchoolMemberInfo);
