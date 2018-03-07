@@ -15,7 +15,10 @@ export default function() {
 
     return (
     <Grid container style={{display: 'flex',padding: '12px'}}>
-        <Card style={{marginTop:'42px',width: '850px'}}>
+        <Grid item md={12} sm={12} xs={12}>
+            {this.props.schoolData && <b>Media at {this.props.schoolData.name}</b>}
+        </Grid>
+        <Grid item md={12} sm={12} xs={12} style={{background: '#fff',width: '100%',boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)'}}>
              {
                 showUploadImageBtn && (
                     <CreateMedia
@@ -34,9 +37,6 @@ export default function() {
                     />
                 )
             }
-                <Grid item md={8} sm={8} xs={8}>
-                    {this.props.schoolData && <b>Media at {this.props.schoolData.name}</b>}
-                </Grid>
                 <Grid item md={4} sm={4} xs={4} style={{padding: '8px',float: 'right'}}>
                     {
                         showUploadImageBtn && (
@@ -79,7 +79,7 @@ export default function() {
                         </Grid>)*/
                     }
                 </Grid>
-        </Card>
+        </Grid>
     </Grid>
     )
 }
