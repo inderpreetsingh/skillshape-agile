@@ -26,7 +26,7 @@ const Wrapper = styled.article`
   background-color: white;
   height: ${props => props.extended ? '528' : '496'}px;
   border-radius: ${helpers.rhythmDiv * 6}px;
-  margin-right: ${helpers.rhythmDiv}px;
+  margin-right: ${helpers.rhythmDiv * 2}px;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -39,7 +39,7 @@ const Wrapper = styled.article`
 
   @media screen and (max-width: ${helpers.tablet + 50}px) {
     margin-right: 0;
-    margin-bottom: ${helpers.rhythmDiv * 2}px;
+    margin-bottom: ${helpers.rhythmDiv * 4}px;
     &:last-of-type {
       margin-bottom: 0;
     }
@@ -122,14 +122,15 @@ const ContentWrapper = styled.div`
 
 const BadgeWrapper = styled.div`
   position: absolute;
-  top: -14px;
+  top: 0px;
   right: 50px;
-
+  font-size: 20px;
+  line-height: 1;
 `;
 
 const Feature = (props) => (<FeatureWrapper>
   <IconButton className={props.classes.iconButton}>
-  <Icon>{props.iconName}</Icon>
+    <Icon>{props.iconName}</Icon>
   </IconButton>
   <FeatureName>{props.featureName}</FeatureName>
   </FeatureWrapper>
@@ -140,7 +141,7 @@ const FeaturesList = (props) => (<FeaturesListWrapper>
   </FeaturesListWrapper>
 );
 
-const MostCommon = () => (<BadgeWrapper><Badge /></BadgeWrapper>);
+const MostCommon = () => (<BadgeWrapper><Badge height='20px' width='20px'/></BadgeWrapper>);
 
 const SchoolPriceCard = (props) => (<Wrapper extended={props.extended}>
     <Price>
@@ -154,7 +155,7 @@ const SchoolPriceCard = (props) => (<Wrapper extended={props.extended}>
         <FeaturesList features={props.features} classes={props.classes}></FeaturesList>
       </ContentWrapper>
       <ButtonWrapper>
-        <PrimaryButton noMarginBottom />
+        <PrimaryButton noMarginBottom labelText="Join Now"/>
       </ButtonWrapper>
     </SchoolCardContent>
   </Wrapper>

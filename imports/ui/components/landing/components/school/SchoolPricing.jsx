@@ -64,7 +64,7 @@ const SchoolPricing = (props) => {
 }
 
 SchoolPricing.defaultProps = {
-  title: 'So Sign Up for a skillshape account and see what everyone is talking about.'
+  title: 'So sign up for a skillshape account and see what everyone is talking about.'
 }
 
 export default SchoolPricing;

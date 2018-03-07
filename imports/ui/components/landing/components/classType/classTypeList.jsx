@@ -207,6 +207,10 @@ class ClassTypeList extends Component {
                               handleSeeMore={this.props.handleSeeMore}
                               filters={this.props.filters}
                             />
+
+                            {
+                                this.getNoResultMsg(isLoading, filters, classTypeData)
+                            }
                           </div>
 
                           <FooterOuterWrapper>
