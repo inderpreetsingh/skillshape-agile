@@ -69,19 +69,19 @@ class SchoolMemberInfo extends Component {
     	console.log("SchoolMemberInfo notes -->>",this.state);
     	console.log("SchoolMemberInfo props -->>",this.props);
     	return (
-    		<Fragment>
-              	<Grid container className="userInfoPanel" style={{borderTop: 'solid 3px #ddd'}}>
-	                <Grid item sm={6} xs={12} md={6} style={{display: 'flex',justifyContent: 'space-evenly'}}>
+    		<Grid container>
+              	<Grid container className="userInfoPanel" style={{borderTop: 'solid 3px #ddd',display: 'flex'}}>
+	                <Grid item sm={8} xs={12} md={8} style={{display: 'flex',justifyContent: 'space-evenly',padding: '24px'}}>
 	                    <Grid item sm={4} xs={4} md={4}>
 	                    	<img className={classes.avatarCss} src="/images/avatar.jpg"/>
 	                  	</Grid>
-                        <div>
+                        <Grid item sm={4} xs={4} md={4}>
                             <Typography>{ memberInfo.name }</Typography>
                             <Typography>{ memberInfo.phone }</Typography>
                             <Typography>{ memberInfo.email }</Typography>
-                        </div>
+                        </Grid>
                     </Grid>
-                	<Grid item sm={6} xs={12} md={6}>
+                	<Grid item sm={3} xs={12} md={3} style={{padding: '28px'}}>
     					<div className="notes">
                     		{ view === "admin" ? "Admin Notes" : "My Private Notes" }
                   		</div>
@@ -92,6 +92,7 @@ class SchoolMemberInfo extends Component {
 		                    style={{border: '1px solid',backgroundColor: '#fff'}}
 		                    multiline
 		                    rows={4}
+                            fullWidth
 		                />
                 	</Grid>
                 </Grid>
@@ -114,7 +115,7 @@ class SchoolMemberInfo extends Component {
               			</Grid>
             		)
             	}
-            </Fragment>
+            </Grid>
     	)
     }
 }

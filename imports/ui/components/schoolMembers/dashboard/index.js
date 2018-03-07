@@ -527,7 +527,7 @@ class DashBoardView extends React.Component {
                       </div>
                     </Hidden>
                 </Grid>
-                <Grid item sm={12} xs={12} md={8} className={classes.rightPanel} style={{ height: '100vh',overflow:'auto'}}>
+                <Grid item sm={12} xs={12} md={8} className={classes.rightPanel} style={{ height: '100vh',overflow:'auto',overflowX:'hidden'}}>
                   { !isEmpty(memberInfo) &&
                     <Fragment>
                         <SchoolMemberInfo
