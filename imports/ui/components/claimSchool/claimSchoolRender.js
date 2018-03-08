@@ -22,11 +22,20 @@ export default function () {
               onModalClose={() => this.handleFiltersDialogBoxState(false)}
               filterPanelProps={{
                 ref: "ClaimSchoolFilter",
-                collectSelectedSkillCategories: this.handleSkillCategoryChange,
+                applyFilters: this.applyFilters,
                 onLocationChange: this.onLocationChange,
                 handleSchoolNameChange: this.handleSchoolNameChange,
                 locationInputChanged: this.locationInputChanged,
                 filters: this.state.filters,
+                tempFilters: this.state.tempFilters,
+                fliterSchoolName: this.fliterSchoolName,
+                filterAge: this.filterAge,
+                filterGender: this.filterGender,
+                skillLevelFilter: this.skillLevelFilter,
+                perClassPriceFilter: this.perClassPriceFilter,
+                pricePerMonthFilter: this.pricePerMonthFilter,
+                collectSelectedSkillCategories: this.collectSelectedSkillCategories,
+                collectSelectedSkillSubject: this.collectSelectedSkillSubject,
               }}
           />
         }
@@ -45,14 +54,15 @@ export default function () {
                displayChangeViewButton={false}
                ref="ClaimSchoolFilter"
                {...this.props}
-               stickyPosition={this.state.sticky}  
-               collectSelectedSkillCategories={this.handleSkillCategoryChange}
-               onLocationChange={this.onLocationChange}
-               handleSchoolNameChange={this.handleSchoolNameChange}
+               onModalClose={() => this.handleFiltersDialogBoxState(false)}
+               stickyPosition={this.state.sticky}
+               collectSelectedSkillCategories = {this.collectSelectedSkillCategories}
+               fliterSchoolName={this.fliterSchoolName}
                locationInputChanged={this.locationInputChanged}
                handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
                handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
                filters={this.state.filters}
+               onLocationChange= {this.onLocationChange}
              />
         </Sticky>
          <ClaimSchoolList

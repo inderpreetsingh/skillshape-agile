@@ -116,7 +116,7 @@ class TaggedMemberDialogBox extends Component {
             schoolData
         } = this.props;
 
-        console.log('TaggedMemberDialogBox props -->>',this.props);
+        console.log('TaggedMemberDialogBox props -->>',currentMediaData);
         console.log('TaggedMemberDialogBox state -->>',this.state);
 
         return(
@@ -144,7 +144,11 @@ class TaggedMemberDialogBox extends Component {
                             <Grid item md={8} sm={8} xs={8}>
                                 {
                                     !isEmpty(currentMediaData.taggedMemberData) && currentMediaData.taggedMemberData.map((userData) => {
-                                        return `${userData.firstName} ${userData.lastName}`
+                                        if(userData.firstName && userData.lastName) {
+                                            return `${userData.firstName} ${userData && userData.lastName}`
+                                        } else {
+                                            return `${userData.firstName}`
+                                        }
                                     })
                                 }
                                 <Typography></Typography>
