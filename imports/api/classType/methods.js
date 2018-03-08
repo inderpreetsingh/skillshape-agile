@@ -41,14 +41,18 @@ Meteor.methods({
         const user = Meteor.users.findOne(this.userId);
         console.log("classType.editClassType methods called!!!",doc_id, doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
-            const temp = {...doc};
+            let classTypeData = ClassType.findOne({_id: doc_id});
+
+            const temp = {...doc, filters: classTypeData.filters || {} };
+
             if(temp.locationId) {
                 const location = SLocation.findOne(temp.locationId);
-                temp.filters =  temp.filters ? temp.filters : {};
+                // temp.filters =  temp.filters ? temp.filters : {};
                 temp.filters["location"] = location.loc;
                 // temp.filters["state"] = location.state;
                 temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${location.country}`;
             }
+
             return ClassType.update({ _id: doc_id }, { $set: temp });
         } else {
             throw new Meteor.Error("Permission denied!!");
