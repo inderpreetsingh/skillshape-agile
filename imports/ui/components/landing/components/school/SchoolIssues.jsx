@@ -26,10 +26,13 @@ const Wrapper = styled.div`
   background-position: bottom left;
   background-repeat: repeat no-repeat;
   background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     min-height: 100vh;
-    height: auto;
+    height: 100%;
+    padding-top: 116px; // 100px is the height of problem cards + 16px marginbottom
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {

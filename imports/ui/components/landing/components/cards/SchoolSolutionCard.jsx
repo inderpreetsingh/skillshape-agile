@@ -58,7 +58,7 @@ const SolutionCardWrapper = styled.article`
 
   @media screen and (max-width: ${helpers.tablet}px ) {
     margin: 0 ${helpers.rhythmDiv}px;
-    margin-bottom: ${helpers.rhythmDiv * 2}px;
+    margin-bottom: ${helpers.rhythmDiv * 4}px;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -122,6 +122,7 @@ const CardContentTitle = styled.h4`
   line-height: 1;
   font-style: italic;
   margin-bottom: ${props => props.description ? helpers.rhythmDiv * 2 : 0}px;
+  margin-top: ${props => props.description ? helpers.rhythmDiv * 2 : 0}px;
 `;
 
 const CardContent = styled.p`

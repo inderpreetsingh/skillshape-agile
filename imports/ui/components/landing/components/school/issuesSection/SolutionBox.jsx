@@ -10,6 +10,7 @@ import * as helpers from '../../jss/helpers.js';
 const BoxWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
+  flex-grow: 1;
   max-width: ${helpers.schoolPageContainer}px;
   margin: 0 auto;
   height: 100%;
@@ -17,6 +18,8 @@ const BoxWrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-top: ${helpers.rhythmDiv * 2}px;
+    max-width: 500px;
+    width: 100%;
   }
 `;
 
@@ -58,7 +61,6 @@ SchoolSolutionSliderWrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     display: block;
-    max-width: 500px;
     width: 100%;
     overflow: hidden;
     padding-bottom: ${helpers.rhythmDiv * 4}px

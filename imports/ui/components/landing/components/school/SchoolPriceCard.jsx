@@ -16,7 +16,11 @@ const styles = {
     width: helpers.rhythmDiv * 2,
     height: helpers.rhythmDiv * 2,
     marginRight: helpers.rhythmDiv * 2,
-    transform: 'translateY(-8px)'
+    transform: `translateY(-${helpers.rhythmDiv/2}px)`
+  },
+  iconStyles : {
+    width: helpers.rhythmDiv * 2,
+    height: helpers.rhythmDiv * 2
   }
 }
 
@@ -24,7 +28,7 @@ const Wrapper = styled.article`
   max-width: 300px;
   width: 100%;
   background-color: white;
-  height: ${props => props.extended ? '528' : '496'}px;
+  height: ${props => props.extended ? '480' : '448'}px;
   border-radius: ${helpers.rhythmDiv * 6}px;
   margin-right: ${helpers.rhythmDiv * 2}px;
   display: flex;
@@ -44,7 +48,6 @@ const Wrapper = styled.article`
       margin-bottom: 0;
     }
   }
-
 `;
 
 const Price = styled.p`
@@ -104,9 +107,9 @@ const SchoolCardContent = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  text-align: center;
-  flex-grow: 1;
   ${helpers.flexCenter}
+  flex-grow: 1;
+  text-align: center;
   align-items: flex-end;
 `;
 
@@ -114,7 +117,7 @@ const PerMonth = styled.span`
   font-size: ${helpers.baseFontSize}px;
   font-style: italic;
   display: inline-block;
-  transform: translate(-4px);
+  transform: translate(-${helpers.rhythmDiv/2}px);
 `;
 
 const ContentWrapper = styled.div`
@@ -124,13 +127,14 @@ const BadgeWrapper = styled.div`
   position: absolute;
   top: 0px;
   right: 50px;
-  font-size: 20px;
+  font-size: 32px;
+  height: 32px;
   line-height: 1;
 `;
 
 const Feature = (props) => (<FeatureWrapper>
   <IconButton className={props.classes.iconButton}>
-    <Icon>{props.iconName}</Icon>
+    <Icon className={props.classes.iconStyles}>{props.iconName}</Icon>
   </IconButton>
   <FeatureName>{props.featureName}</FeatureName>
   </FeatureWrapper>
@@ -141,7 +145,7 @@ const FeaturesList = (props) => (<FeaturesListWrapper>
   </FeaturesListWrapper>
 );
 
-const MostCommon = () => (<BadgeWrapper><Badge height='20px' width='20px'/></BadgeWrapper>);
+const MostCommon = () => (<BadgeWrapper><Badge height='32px' width='32px'/></BadgeWrapper>);
 
 const SchoolPriceCard = (props) => (<Wrapper extended={props.extended}>
     <Price>
@@ -155,7 +159,7 @@ const SchoolPriceCard = (props) => (<Wrapper extended={props.extended}>
         <FeaturesList features={props.features} classes={props.classes}></FeaturesList>
       </ContentWrapper>
       <ButtonWrapper>
-        <PrimaryButton noMarginBottom labelText="Join Now"/>
+        <PrimaryButton noMarginBottom label="Join now"/>
       </ButtonWrapper>
     </SchoolCardContent>
   </Wrapper>

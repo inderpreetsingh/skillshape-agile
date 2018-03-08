@@ -70,7 +70,7 @@ const IssuesFixed = styled.div`
 
 class IssueSelectors extends Component {
   state = {
-    activeIssue: 0,
+    activeIssue: -1,
     clickEvent: false,
     wrappers: [],
     hideIssues: true,
@@ -113,8 +113,10 @@ class IssueSelectors extends Component {
         this.handleActiveIssueState(2);
       }else if(window.pageYOffset >= wrappersData[1]) {
         this.handleActiveIssueState(1);
-      }else {
+      }else if(window.pageYOffset >= wrappersData[0]) {
         this.handleActiveIssueState(0);
+      }else {
+        this.handleActiveIssueState(-1);
       }
     }
 
