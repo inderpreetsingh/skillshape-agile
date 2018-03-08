@@ -189,8 +189,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
         classfilter["schoolId"] = schoolId;
     }
 
-    if (textSearch) {
-        classfilter["$text"] = { $search: textSearch };
+    if (schoolName) {
+        classfilter["$text"] = { $search: schoolName };
     }
 
     if (coords && !is_map_view) {

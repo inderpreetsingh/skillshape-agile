@@ -125,7 +125,7 @@ class DashBoardView extends React.Component {
         error: "",
         birthYear: (new Date()).getFullYear() - 28,
         filters: {
-        classTypeIds: [],
+            classTypeIds: [],
             memberName: "",
         },
     };
@@ -135,9 +135,6 @@ class DashBoardView extends React.Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.schoolData !== this.props.schoolData) {
             this.setState({ memberInfo:{} })
-        }
-        if(!isEmpty(nextProps.classTypeData)) {
-            this.props.setInitialClassTypeData(nextProps.classTypeData)
         }
     }
 
@@ -383,7 +380,7 @@ class DashBoardView extends React.Component {
         console.log("handleMemberNameChange -->",event.target.value)
         this.setState({
             filters: {
-                ...this.state,
+                ...this.state.filters,
                 memberName: event.target.value,
             }
         });
@@ -395,15 +392,15 @@ class DashBoardView extends React.Component {
         })
         this.setState({
             filters: {
-                ...this.state,
+                ...this.state.filters,
                 classTypeIds: classTypeIds,
             }
         });
     }
 
-    setInitialClassTypeData = (data) => {
-        this.refs.SchoolMemberFilter.setClassTypeData(data);
-    }
+    // setInitialClassTypeData = (data) => {
+    //     this.refs.SchoolMemberFilter.setClassTypeData(data);
+    // }
 
     handleDrawerToggle = () => {
         this.setState({ mobileOpen: !this.state.mobileOpen });
@@ -421,17 +418,7 @@ class DashBoardView extends React.Component {
         }
 
         let { currentUser, isUserSubsReady } = this.props;
-        // let { slug } = this.props.params;
         let filters = {...this.state.filters};
-
-        // if(!isUserSubsReady)
-        //     return <Preloader/>
-
-        // if(!currentUser) {
-        //     return  <Typography type="display2" gutterBottom align="center">
-        //         To access this page you need to signin to skillshape.
-        //     </Typography>
-        // }
 
         if(!slug)  {
             filters.activeUserId = currentUser && currentUser._id;
@@ -445,8 +432,8 @@ class DashBoardView extends React.Component {
                         ref="SchoolMemberFilter"
                         handleClassTypeDataChange={this.handleClassTypeDataChange}
                         handleMemberNameChange={this.handleMemberNameChange}
-                        filters={filters}
                         classTypeData={classTypeData}
+                        filters={filters}
                     />
                     {
                         slug && (

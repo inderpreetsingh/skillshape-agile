@@ -12,40 +12,12 @@ class SchoolMemberView extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            filters: {
-                classTypeIds: [],
-                memberName: "",
-            },
+            filters: {},
         }
     }
 
-    handleMemberNameChange = (event) => {
-        console.log("handleMemberNameChange -->",event)
-        this.setState({
-            filters: {
-                ...this.state,
-                memberName: event.target.value,
-            }
-        });
-    }
-
-    handleClassTypeDataChange = (data) => {
-        let classTypeIds = data.map((item) => {
-            return item._id;
-        })
-        this.setState({
-            filters: {
-                ...this.state,
-                classTypeIds: classTypeIds,
-            }
-        });
-    }
-
-    setInitialClassTypeData = (data) => {
-        // this.refs.SchoolMemberFilter.setClassTypeData(data);
-    }
-
     render() {
+        console.log("SchoolMemberView -->>",this.state);
         let { currentUser, isUserSubsReady } = this.props;
         let { slug } = this.props.params;
         let filters = {...this.state.filters};
@@ -65,23 +37,9 @@ class SchoolMemberView extends Component {
 
         return(
             <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff'}}>
-                 {/*<Grid item sm={4} xs={12} md={4} style={{border: 'solid 1px #ddd'}}>
-                    <SchoolMemberFilter
-                        stickyPosition={this.state.sticky}
-                        ref="SchoolMemberFilter"
-                        handleClassTypeDataChange={this.handleClassTypeDataChange}
-                        handleMemberNameChange={this.handleMemberNameChange}
-                        filters={filters}
-                        classTypeData={this.state.classTypeData}
-                    />
-                </Grid>*/}
                 <DashBoardView
                     filters={filters}
-                    handleMemberNameChange={this.handleMemberNameChange}
-                    handleClassTypeDataChange={this.handleClassTypeDataChange}
-                    displayFilters={this.displayFilters}
                     params={this.props.params}
-                    setInitialClassTypeData={this.setInitialClassTypeData}
                 />
             </Grid>
         )

@@ -21,15 +21,22 @@ Meteor.methods({
          const user = Meteor.users.findOne(this.userId);
         // console.log("classType.addClassType methods called!!!");
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
+            const schoolData = School.findOne({_id: doc.schoolId})
             // doc.remoteIP = this.connection.clientAddress;
             const temp = {...doc};
+            temp.filters =  temp.filters ? temp.filters : {};
+
+            if(schoolData.name) {
+                temp.filters["schoolName"] = schoolData.name;
+            }
+
             if(temp.locationId) {
                 const location = SLocation.findOne(doc.locationId);
-                temp.filters =  temp.filters ? temp.filters : {};
                 temp.filters["location"] = location.loc;
                 // doc.filters["state"] = location.state;
                 temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${location.country}`;
             }
+
             temp.createdAt = new Date();
 
             return ClassType.insert(temp);

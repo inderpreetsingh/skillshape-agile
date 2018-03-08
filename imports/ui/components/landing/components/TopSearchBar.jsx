@@ -9,6 +9,7 @@ import Logo from './Logo.jsx';
 import SideNav from './SideNav.jsx';
 import LoginButton from './buttons/LoginButton.jsx';
 import AddSchoolButton from './buttons/AddSchoolButton.jsx';
+import JoinButton from './buttons/JoinButton.jsx';
 
 //TODO: Automatic imports depending upon variables used - intellij
 import * as helpers from './jss/helpers.js';
@@ -99,8 +100,10 @@ const TopSearchBar = (props) => (
     <NavRightSection>
       <LinksWrapper>
         <TopBarLink onClick={props.onSkillShapeForSchoolsClick}>SkillShape For Schools</TopBarLink>
-        <TopBarLink onClick={props.onSignUpLinkClick}>Sign Up</TopBarLink>
-        <TopBarLink onClick={props.onLoginLinkClick}>Log In</TopBarLink>
+        {/*<TopBarLink onClick={props.onSignUpLinkClick}>Sign Up</TopBarLink>
+        <TopBarLink onClick={props.onLoginLinkClick}>Log In</TopBarLink>*/}
+        <JoinButton label="Sign Up" {...props}/>
+        <LoginButton icon={false} {...props}/>
       </LinksWrapper>
       <SideNavWrapper>
         <SideNav {...props} smallSize={true}/>
