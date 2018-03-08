@@ -15,7 +15,7 @@ const styles = theme => {
             color: "#fff",
         },
         headerBtn: {
-            color: "#fff",
+            color: "black",
             fontSize: 13,
             border: "solid 1px #fff"
         },
