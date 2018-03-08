@@ -598,7 +598,7 @@ Meteor.publish("ClaimSchoolFilter", function({
         ];
     }
     /*filter.claimed = { $ne : 'Y' }*/
-    console.log("classfilter", classfilter);
+    console.log("classfilter data", classfilter);
     return School.find(filter, limit);
 });
 
