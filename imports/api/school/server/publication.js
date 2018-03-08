@@ -6,6 +6,7 @@ import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import config from "/imports/config";
+import size from 'lodash/size';
 // import { buildAggregator } from 'meteor/lamoglia:publish-aggregation';
 // import ClientReports from '/imports/startup/client';
 
@@ -469,7 +470,6 @@ Meteor.publish("school.getClassTypesByCategory", function({
 Meteor.publish("ClaimSchoolFilter", function({
     schoolName,
     coords,
-    skillCat,
     role,
     limit,
     gender,
@@ -477,86 +477,53 @@ Meteor.publish("ClaimSchoolFilter", function({
     _monthPrice,
     _classPrice,
     experienceLevel,
-    skillSubjectIds
+    skillCategoryIds,
+    skillSubjectIds,
 }) {
-    filter = {};
-    limit = { limit: limit };
-    schoolList = School.find({ is_publish: "N" }).fetch();
-    let currentUser = Meteor.users.findOne(this.userId);
-    if (currentUser) {
-        filter = { $and: [{ admins: { $ne: this.userId } }] };
-    }
-    if (schoolName) {
-        filter.name = { $regex: "" + schoolName + "", $options: "-i" };
-    }
-    AllSchoolIds = [];
-    console.log("coords", coords);
-    if (coords) {
-        // place variable will have all the information you are looking for.
-        var maxDistance = 50;
-        // we need to convert the distance to radians
-        // the raduis of Earth is approximately 6371 kilometers
-        maxDistance /= 63;
-        slocations = SLocation.find({
-            loc: {
-                $near: coords,
-                $maxDistance: maxDistance
-            }
-        }).fetch();
-        schoolIds = slocations.map(function(a) {
-            return a.schoolId;
-        });
-        console.log(schoolIds);
-        filter._id = { $in: schoolIds };
-        AllSchoolIds = schoolIds;
-    }
-    console.log("cskill===>", skillCat);
-    if (skillCat && skillCat.length > 0) {
-        class_type = ClassType.find({
-            skillCategoryId: { $in: skillCat }
-        }).fetch();
-        console.log("class_type", class_type);
-        schoolIds = class_type.map(function(a) {
-            return a.schoolId;
-        });
-        console.log(schoolIds);
-        AllSchoolIds = schoolIds.concat(AllSchoolIds);
-        if (AllSchoolIds.length > 0) {
-            filter._id = { $in: AllSchoolIds };
-        } else {
-            filter._id = { $in: schoolIds };
-        }
-    }
-    if (role && role == "Superadmin") {
-    } else {
-        /*result = {}
-      result = _.extend(result,filter._id, {$nin:UnPublishSchoolIds});*/
-        filter.is_publish = { $ne: "N" };
+    const schoolFilter = {};
+    const classTypeFilter = {};
+    limit = { limit: limit};
+
+    if(this.userId) {
+        schoolFilter["admins"] = { '$nin': [this.userId]};
     }
 
-    // Dialog box filters that can have different option of ClassType data so needs to handle them :
-    const classfilter = {};
+    if(schoolName) {
+        classTypeFilter["filters.schoolName"] = { $regex: "" + schoolName + "", $options: "-i" };
+        schoolFilter["name"] = { $regex: "" + schoolName + "", $options: "-i" };
+    }
+
+    console.log("argument -->>",arguments['0'], size(arguments['0']))
+
+    if(schoolName && size(arguments['0']) == 2) {
+        return School.find(schoolFilter, limit);
+    }
+
     if (gender) {
-        classfilter["gender"] = gender;
+        classTypeFilter["gender"] = gender;
     }
 
     if (age) {
-        classfilter["ageMin"] = { $lte: age };
-        classfilter["ageMax"] = { $gte: age };
+        classTypeFilter["ageMin"] = { $lte: age };
+        classTypeFilter["ageMax"] = { $gte: age };
     }
 
-    if (skillSubjectIds && skillSubjectIds.length > 0) {
-        classfilter["skillSubject"] = { $in: skillSubjectIds };
+    if (!_.isEmpty(skillCategoryIds)) {
+        classTypeFilter["skillSubject"] = { $in: skillCategoryIds };
     }
 
-    if (experienceLevel && experienceLevel.length > 0) {
-        classfilter["experienceLevel"] = { $in: experienceLevel };
+    if (!_.isEmpty(skillSubjectIds)) {
+        classTypeFilter["skillSubject"] = { $in: skillSubjectIds };
+    }
+
+    if (!_.isEmpty(experienceLevel)) {
+        classTypeFilter["experienceLevel"] = { $in: experienceLevel };
     }
 
     if (_classPrice) {
         let minPrice = parseInt(_classPrice[0]);
         let maxPrice = parseInt(_classPrice[1]);
-        classfilter["filters.classPriceCost"] = {
+        classTypeFilter["filters.classPriceCost"] = {
             $gte: minPrice,
             $lt: maxPrice
         };
@@ -564,7 +531,7 @@ Meteor.publish("ClaimSchoolFilter", function({
     if (_monthPrice) {
         let minMonthPrice = parseInt(_monthPrice[0]);
         let maxMonthPrice = parseInt(_monthPrice[1]);
-        classfilter["$or"] = [
+        classTypeFilter["$or"] = [
             {
                 "filters.monthlyPriceCost.oneMonCost": {
                     $gte: minMonthPrice,
@@ -597,9 +564,45 @@ Meteor.publish("ClaimSchoolFilter", function({
             }
         ];
     }
-    /*filter.claimed = { $ne : 'Y' }*/
-    console.log("classfilter", classfilter);
-    return School.find(filter, limit);
+
+
+    let schoolIds = [];
+
+    if (coords) {
+        // place variable will have all the information you are looking for.
+        var maxDistance = 50;
+        // we need to convert the distance to radians
+        // the raduis of Earth is approximately 6371 kilometers
+        maxDistance /= 63;
+        let slocations = SLocation.find({
+            loc: {
+                $near: coords,
+                $maxDistance: maxDistance
+            }
+        }).fetch();
+
+        slocations.map(function(data) {
+            schoolIds.push(data.schoolId)
+            return
+        });
+    }
+
+    console.log("classTypeFilter -->>",JSON.stringify(classTypeFilter, null, "  "));
+    console.log("schoolFilter -->>",JSON.stringify(schoolFilter, null, "  "));
+    console.log("schoolIds -->>",schoolIds);
+
+    if(!_.isEmpty(schoolIds)) {
+        schoolFilter['_id'] = { '$in': schoolIds }
+    }
+
+    if(_.isEmpty(classTypeFilter)) {
+        return School.find(schoolFilter, limit);
+    } else {
+        let classTypeData = ClassType.find(classTypeFilter).fetch();
+        classTypeData.map((data) => schoolIds.push(data.schoolId));
+        schoolFilter['_id'] = { '$in': schoolIds };
+        return School.find(schoolFilter, limit);
+    }
 });
 
 Meteor.publish("school.getSchoolWithConnectedTagedMedia", function({ email }) {
