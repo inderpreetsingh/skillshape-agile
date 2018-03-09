@@ -132,8 +132,8 @@ class ClassTypeForm extends React.Component {
     		skillSubject: this.state.selectedSkillSubject && this.state.selectedSkillSubject.map(data => data._id),
     		gender: this.state.gender,
     		experienceLevel: this.state.experienceLevel,
-    		ageMin: this.ageMin.value,
-    		ageMax: this.ageMax.value,
+    		ageMin: this.ageMin.value && parseInt(this.ageMin.value),
+    		ageMax: this.ageMax.value && parseInt(this.ageMax.value),
     		locationId: this.state.location,
     	}
 

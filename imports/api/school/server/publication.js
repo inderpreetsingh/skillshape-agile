@@ -7,6 +7,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import config from "/imports/config";
 import size from 'lodash/size';
+import uniq from 'lodash/uniq';
 // import { buildAggregator } from 'meteor/lamoglia:publish-aggregation';
 // import ClientReports from '/imports/startup/client';
 
@@ -479,6 +480,7 @@ Meteor.publish("ClaimSchoolFilter", function({
     experienceLevel,
     skillCategoryIds,
     skillSubjectIds,
+    locationName
 }) {
     const schoolFilter = {};
     const classTypeFilter = {};
@@ -488,17 +490,21 @@ Meteor.publish("ClaimSchoolFilter", function({
         schoolFilter["admins"] = { '$nin': [this.userId]};
     }
 
+    console.log("argument -->>",arguments['0'], size(arguments['0']))
+
     if(schoolName) {
         classTypeFilter["filters.schoolName"] = { $regex: "" + schoolName + "", $options: "-i" };
         schoolFilter["name"] = { $regex: "" + schoolName + "", $options: "-i" };
+
+        if(checkforEmptyFieldsInClassTypeFilter(arguments['0'], "schoolName")) {
+            console.log("---------Inside if---------")
+            return School.find(schoolFilter, limit);
+        }
     }
 
-    console.log("argument -->>",arguments['0'], size(arguments['0']))
-
-    if(schoolName && size(arguments['0']) == 2) {
-        return School.find(schoolFilter, limit);
+    if (locationName) {
+        classTypeFilter["$text"] = { $search: locationName };
     }
-
     if (gender) {
         classTypeFilter["gender"] = gender;
     }
@@ -509,7 +515,7 @@ Meteor.publish("ClaimSchoolFilter", function({
     }
 
     if (!_.isEmpty(skillCategoryIds)) {
-        classTypeFilter["skillSubject"] = { $in: skillCategoryIds };
+        classTypeFilter["skillCategoryId"] = { $in: skillCategoryIds };
     }
 
     if (!_.isEmpty(skillSubjectIds)) {
@@ -568,7 +574,7 @@ Meteor.publish("ClaimSchoolFilter", function({
 
     let schoolIds = [];
 
-    if (coords) {
+    if (coords && checkforEmptyFieldsInClassTypeFilter(arguments['0'], "coords","locationName")) {
         // place variable will have all the information you are looking for.
         var maxDistance = 50;
         // we need to convert the distance to radians
@@ -585,22 +591,21 @@ Meteor.publish("ClaimSchoolFilter", function({
             schoolIds.push(data.schoolId)
             return
         });
+
+        schoolFilter['_id'] = { '$in': schoolIds }
     }
 
     console.log("classTypeFilter -->>",JSON.stringify(classTypeFilter, null, "  "));
     console.log("schoolFilter -->>",JSON.stringify(schoolFilter, null, "  "));
-    console.log("schoolIds -->>",schoolIds);
-
-    if(!_.isEmpty(schoolIds)) {
-        schoolFilter['_id'] = { '$in': schoolIds }
-    }
 
     if(_.isEmpty(classTypeFilter)) {
         return School.find(schoolFilter, limit);
     } else {
         let classTypeData = ClassType.find(classTypeFilter).fetch();
         classTypeData.map((data) => schoolIds.push(data.schoolId));
-        schoolFilter['_id'] = { '$in': schoolIds };
+        schoolFilter['_id'] = { '$in': uniq(schoolIds) };
+        console.log("schoolIds -->>",uniq(schoolIds));
+
         return School.find(schoolFilter, limit);
     }
 });
@@ -620,3 +625,22 @@ Meteor.publish("school.getSchoolWithConnectedTagedMedia", function({ email }) {
     }
     return [];
 });
+
+function checkforEmptyFieldsInClassTypeFilter(object, fieldName,fieldName2) {
+    let temp = {...object}
+    delete temp.limit;
+    console.log("temp", temp);
+
+    for(key in temp) {
+        console.log("temp key-->>", key, temp[key], !_.isEmpty(temp[key]))
+        if(!_.isEmpty(temp[key]) && (key !== fieldName) && (key !==fieldName2)) {
+            return false;
+        }
+    }
+
+    if(temp[fieldName] && !_.isEmpty(temp[fieldName])) {
+        return true
+    } else {
+        return false;
+    }
+}
