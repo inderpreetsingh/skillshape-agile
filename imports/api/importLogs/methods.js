@@ -68,6 +68,7 @@ Meteor.methods({
 				                    {
 				                        $set: {
 				                            "superAdmin": newUser,
+				                            "admins": [newUser],
 				                        }
 				                    }
 				                );
@@ -133,6 +134,7 @@ Meteor.methods({
 		                classTypeObject.name = csvdata[i].classTypeName;
 		                let skillCategory = csvdata[i].skillCategory;
 		                let skillSubject = csvdata[i].skillSubject;
+
 		                if (skillCategory) {
 		                    skillCategory = skillCategory.split(",")
 		                    for(let skill of skillCategory) {
@@ -152,6 +154,7 @@ Meteor.methods({
 				                }
 		                    }
 		                }
+
 		                if (skillSubject) {
 		                    skillSubject = skillSubject.split(",")
 		                    for(let skill of skillSubject) {
@@ -161,9 +164,9 @@ Meteor.methods({
 		                    	if (skillSubjectObject){
 				                	skillSubjectId = skillSubjectObject._id;
 				                } else {
-				                	if (csvdata[i].classTypeName) {
-				                        skillSubjectId = SkillSubject.insert({ name: skill.trim() })
-				                    }
+				                	// if (csvdata[i].classTypeName) {
+				                 //        skillSubjectId = SkillSubject.insert({ name: skill.trim() })
+				                 //    }
 				                }
 
 				                if(skillSubjectId) {
@@ -176,9 +179,11 @@ Meteor.methods({
 		                classTypeObject.classTypeImg = csvdata[i].classTypeImg
 
 		                let classTypeId = null;
-	                    classTypeObject.skillCategoryId = skillCategoryIds;
-                		classTypeObject.skillSubject = skillSubjectIds;
-                    	console.log("ClassTypeObject Data-->>",classTypeObject);
+
+
+                    	classTypeObject.skillCategoryId = skillCategoryIds;
+            			classTypeObject.skillSubject = skillSubjectIds;
+                    	// console.log("ClassTypeObject Data-->>",classTypeObject);
 	                    if (classTypeObject.name) {
 		                	ClassType.update({ schoolId: schoolId, name: csvdata[i].classTypeName, desc: csvdata[i].classTypeDesc },{ $set: classTypeObject},{upsert: true});
 	                    }
