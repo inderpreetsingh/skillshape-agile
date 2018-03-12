@@ -88,7 +88,8 @@ Meteor.methods({
 		                }
 		                let data = {}
 		                try {
-		                    let slocation_detail = doc.address + "," + doc.city + "," + doc.state + "," + doc.zip
+		                	console.log("<<< -------- Start for location searching ------->>>>>>>>>>>")
+		                    let slocation_detail = sLocationDoc.address + "," + sLocationDoc.city + "," + sLocationDoc.state + "," + sLocationDoc.zip;
 		                    console.log(slocation_detail)
 		                    var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + slocation_detail + "&key=AIzaSyBtQoiRR6Ft0wGTajMd8uTZb71h8kwD5Ew"
 		                    data = Meteor.http.call("GET", url);
@@ -106,7 +107,7 @@ Meteor.methods({
 		                    sLocationDoc.geoLong = data.lng
 		                    sLocationDoc.loc = [data.lat, data.lng]
 		                } catch (err) {
-		                    console.log("Location not found");
+		                    console.log("Location not found",err);
 		                    data.lat = 0
 		                    data.lng = 0
 		                    sLocationDoc.geoLat = data.lat

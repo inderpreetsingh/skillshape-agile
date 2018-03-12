@@ -42,7 +42,7 @@ class MapView extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		let locationDiff = _.difference(this.props.filters.coords, nextProps.filters.coords);
-		if(locationDiff && locationDiff.length > 0) {
+		if(nextProps.filters.coords && locationDiff && locationDiff.length > 0) {
 			this.map = reCenterMap(this.map, nextProps.filters.coords)
 		}
 		setMarkersOnMap(this.map, nextProps.sLocationData, nextProps.filters);
