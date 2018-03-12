@@ -38,6 +38,8 @@ import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/M
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
 
 const drawerWidth = 400;
 
@@ -107,6 +109,9 @@ const styles = theme => ({
     background: 'white',
     border: 'solid 3px #dddd',
     paddingTop: '0px !important',
+  },
+  btnBackGround:{
+    background:`${helpers.action}`
   }
 });
 
@@ -442,7 +447,7 @@ class DashBoardView extends React.Component {
                     {
                         slug && (
                             <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse', padding: '16px'}}>
-                                <Button raised color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
+                                <Button raised className={classes.btnBackGround} color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
                                   Add New Student
                                 </Button>
                             </Grid>
