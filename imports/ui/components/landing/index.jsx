@@ -351,6 +351,7 @@ class Landing extends Component {
                 coords: location.coords,
                 locationName: location.fullAddress,
                 applyFilterStatus: true,
+                schoolId: null,
             }
         }
 
@@ -371,6 +372,7 @@ class Landing extends Component {
         if(updateKey1) {
             stateObj[updateKey1] = {
                 ...this.state[updateKey1],
+                coords: null,
                 locationName: event.target.value
             }
         }
@@ -378,6 +380,7 @@ class Landing extends Component {
         if(updateKey2) {
             stateObj[updateKey2] = {
                 ...this.state[updateKey2],
+                coords: null,
                 locationName: event.target.value
             }
         }
@@ -394,6 +397,7 @@ class Landing extends Component {
                 ...this.state[updateKey1],
                 schoolName: event.target.value,
                 applyFilterStatus: true,
+                schoolId: null,
             }
         }
 

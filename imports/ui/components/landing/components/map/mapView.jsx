@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { initializeMap, setMarkersOnMap, reCenterMap } from '/imports/util';
 import Events from '/imports/util/events';
 import config from '/imports/config';
+import isMatch from 'lodash/isMatch';
 
 import * as helpers from "../jss/helpers.js";
 
@@ -41,8 +42,8 @@ class MapView extends React.Component {
     }
 
 	componentWillReceiveProps(nextProps) {
-		let locationDiff = _.difference(this.props.filters.coords, nextProps.filters.coords);
-		if(nextProps.filters.coords && locationDiff && locationDiff.length > 0) {
+		let locationDiff = isMatch(this.props.filters.coords, nextProps.filters.coords);
+		if(nextProps.filters.coords && !locationDiff) {
 			this.map = reCenterMap(this.map, nextProps.filters.coords)
 		}
 		setMarkersOnMap(this.map, nextProps.sLocationData, nextProps.filters);
