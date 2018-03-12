@@ -418,9 +418,11 @@ Meteor.methods({
             let toEmail = get(claimingMemberRec, "emails[0].address") || get(claimingMemberRec, "google.services.email");
 
             let ROOT_URL = `${Meteor.absoluteUrl()}?acceptInvite=${true}&memberId=${memberId}&schoolId=${doc.schoolId}`
+            const currentUserData = Meteor.users.findOne({_id: this.userId});
+            const schoolData = School.findOne(doc.schoolId);
             /*Need to send Email to User so that they get confirmation that their account has been
             linked as a member in School.*/
-            sendEmailToStudentForClaimAsMember(claimingMemberRec, password,fromEmail, toEmail, ROOT_URL);
+            sendEmailToStudentForClaimAsMember(currentUserData,schoolData,claimingMemberRec, password,fromEmail, toEmail, ROOT_URL);
             return { addedNewMember: true };
         } else {
             throw new Meteor.Error("Member Already exist!!");
