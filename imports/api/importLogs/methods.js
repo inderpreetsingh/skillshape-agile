@@ -124,6 +124,7 @@ Meteor.methods({
 		                let skillCategoryIds = [];
 		                let	skillSubjectIds = [];
 		                let classTypeObject = {
+		                	locationId: locationId,
 		                	filters: {
 		                		location: sLocationDoc.loc,
 		                		locationTitle: `${sLocationDoc.state}, ${sLocationDoc.city}, ${sLocationDoc.country}`
