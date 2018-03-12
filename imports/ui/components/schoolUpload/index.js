@@ -2,9 +2,11 @@ import React from "react";
 import { createContainer } from 'meteor/react-meteor-data';
 import schoolUploadRender from "./schoolUploadRender"
 import json2csv from 'json2csv';
+import Typography from 'material-ui/Typography';
 import {downloadingFunction} from '/imports/util';
 // import collection definition over here
 import ImportLogs from "/imports/api/importLogs/fields";
+import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 
 class schoolUploadView extends React.Component {
 
@@ -59,7 +61,21 @@ class schoolUploadView extends React.Component {
     }
 
     render() {
-        return schoolUploadRender.call(this, this.props, this.state)
+        const { currentUser, isUserSubsReady } = this.props;
+
+        console.log("School Upload props -->>",this.props);
+
+        if(!isUserSubsReady)
+        return <Preloader/>
+
+        if(currentUser && Roles.userIsInRole(currentUser._id,"Superadmin")) {
+            return schoolUploadRender.call(this, this.props, this.state)
+        } else {
+            return  <Typography type="display2" gutterBottom align="center">
+                Access Denied
+            </Typography>
+        }
+
     }
 
 }

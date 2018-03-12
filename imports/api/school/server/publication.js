@@ -364,11 +364,16 @@ Meteor.publish("school.getClassTypesByCategory", function({
 
     // const classTypesCursor = ClassType.find({ _id: { $in: classTypeIds } });
 
-    console.log("ClassType Data -->>", ClassType.find({ _id: { $in: classTypeIds } }).count());
+    console.log("ClassType Data Count-->>", ClassType.find({ _id: { $in: classTypeIds } }).count());
 
     /*If there is no filter and no class type data found correspond to user's location
     then need to show default classes to user.*/
     if(!applyFilterStatus && _.isEmpty(ClassType.find({ _id: { $in: classTypeIds } }).fetch())) {
+
+        //delete location filter from classType filter, Because initially corresponding to user location data not found then show our featured classType.
+        if(classfilter["filters.location"]) {
+            delete classfilter["filters.location"]
+        }
 
         for (let itemObj of config.defaultClassType) {
             let skillCategoryFilter = {
@@ -391,7 +396,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
                 $text: { $search: itemObj.skillType }
             });
 
-            console.log("applyFilterStatus skillCategoryFilter",JSON.stringify(skillCategoryFilter, null, "  "));
+            // console.log("applyFilterStatus skillCategoryFilter",JSON.stringify(skillCategoryFilter, null, "  "));
             /////////////////////////////////////////////////////////// ///////////////////////////////////
             skillCategoryCursor = categorizeClassTypeData({
                 classTypeIds,
@@ -609,9 +614,12 @@ function categorizeClassTypeData({
 }) {
     let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
     skillCategoryClassLimit ? skillCategoryClassLimit : {};
+    // console.log("categorizeClassTypeData skillCategoryFilter",JSON.stringify(skillCategoryFilter, null, "  "));
+
     skillCategoryCursor.forEach(skillCategory => {
         classfilter["skillCategoryId"] = { $in: [skillCategory._id] };
         // Initially(classType limit not set) fetch only 4(default) classType for a particular skill category.
+        console.log("categorizeClassTypeData classfilter",JSON.stringify(classfilter, null, "  "));
         let limit = (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory.name]) ||4;
         let classTypeCursor = ClassType.find(classfilter, {
             limit: is_map_view ? undefined : limit

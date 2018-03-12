@@ -5,6 +5,7 @@ import ReactStars from 'react-stars';
 import PropTypes from 'prop-types';
 import { MuiThemeProvider} from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
+import Grid from 'material-ui/Grid'
 
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import SecondaryButton from '../buttons/SecondaryButton.jsx';
@@ -12,7 +13,7 @@ import SecondaryButton from '../buttons/SecondaryButton.jsx';
 import * as helpers from '../jss/helpers.js';
 import MuiTheme from '../jss/muitheme';
 
-import Grid from 'material-ui/Grid'
+import { cutString } from '/imports/util';
 
 const Reviews = styled.a`
     color: ${helpers.primaryColor};
@@ -21,6 +22,7 @@ const NoFoundResultWapper = styled.div`
     text-align: center;
 `
 function goToSchoolPage(school) {
+  console.log("goToSchoolPage --->>",school)
   if(school && school.slug) {
     browserHistory.push(`schools/${school.slug}`)
   }
@@ -49,7 +51,7 @@ const ClassTypeCardDescription = (props) => {
                   {cardRevealInfo.experienceLevel && <Typography>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Typography>}
                <Grid item xs={12}>
                   <Typography style={{marginTop: '15px',fontSize: '17px',fontWeight: 500}}>Class Description: </Typography>
-                  {cardRevealInfo.description && <Typography>{cardRevealInfo.description}</Typography>}
+                  {cardRevealInfo.description && <Typography>{cutString(cardRevealInfo.description, 250)}</Typography>}
                </Grid>
                </Grid>
                <Grid item xs={12} sm={6}>

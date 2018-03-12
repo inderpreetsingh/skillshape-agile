@@ -145,7 +145,7 @@ const LoginDialog = (props) => (
 
           <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
             <ClearIcon/>
-          </IconButton >
+          </IconButton>
         </DialogTitleWrapper>
     </DialogTitle>
 
@@ -160,38 +160,45 @@ const LoginDialog = (props) => (
     </DialogActionWrapper>
 
     <DialogContent classes={{root : props.classes.dialogContent}}>
-        <FormControl error={props.error.email} margin="dense" fullWidth aria-describedby="email-error-text">
-          <InputLabel htmlFor="email">Email Address</InputLabel>
-          <Input
-            autoFocus
-            id="email"
-            type="email"
-            value={props.email}
-            onChange={props.handleInputChange.bind(this, "email")}
-            fullWidth
-           />
-           {
-                props.error.email && <FormHelperText id="email-error-text">Invalid email address</FormHelperText>
-           }
-        </FormControl>
-        <TextField
-          margin="dense"
-          id="password"
-          label="Password"
-          type="password"
-          value={props.password}
-          onChange={props.handleInputChange.bind(this, "password")}
-          fullWidth
-        />
-        {
-          props.error.message && <ErrorWrapper>
-            { props.error.message }
-            { props.showVerficationLink && <a onClick={props.reSendEmailVerificationLink} style={{color: 'blue', cursor: 'pointer'}}> resend e-mail verifcation link </a>}
-            </ErrorWrapper>
-        }
-        <LoginButtonWrapper>
-          <PrimaryButton disabled={props.error.email} label="Login" onClick={props.onSignInButtonClick} noMarginBottom/>
-        </LoginButtonWrapper>
+        <form onSubmit={props.onSignInButtonClick}>
+            <FormControl error={props.error.email} margin="dense" fullWidth aria-describedby="email-error-text">
+              <InputLabel htmlFor="email">Email Address</InputLabel>
+              <Input
+                autoFocus
+                id="email"
+                type="email"
+                value={props.email}
+                onChange={props.handleInputChange.bind(this, "email")}
+                fullWidth
+               />
+               {
+                    props.error.email && <FormHelperText id="email-error-text">Invalid email address</FormHelperText>
+               }
+            </FormControl>
+            <TextField
+              margin="dense"
+              id="password"
+              label="Password"
+              type="password"
+              value={props.password}
+              onChange={props.handleInputChange.bind(this, "password")}
+              fullWidth
+            />
+            {
+              props.error.message && <ErrorWrapper>
+                { props.error.message }
+                { props.showVerficationLink && <a onClick={props.reSendEmailVerificationLink} style={{color: 'blue', cursor: 'pointer'}}> resend e-mail verifcation link </a>}
+                </ErrorWrapper>
+            }
+            <LoginButtonWrapper>
+                <PrimaryButton
+                    type="submit"
+                    disabled={props.error.email}
+                    label="Login"
+                    noMarginBottom
+                />
+            </LoginButtonWrapper>
+        </form>
     </DialogContent>
 
     <DialogActions classes={{root: props.classes.dialogActionsRoot, action: props.classes.dialogActions}}>
