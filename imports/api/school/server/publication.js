@@ -5,6 +5,7 @@ import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
+import Media from "/imports/api/media/fields.js"
 import config from "/imports/config";
 import size from 'lodash/size';
 import uniq from 'lodash/uniq';
@@ -570,20 +571,30 @@ Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
     }
 });
 
+// This publication is used to get media uploaded by admin of a School OR member's media
 Meteor.publish("school.getSchoolWithConnectedTagedMedia", function({ email }) {
-    if (email) {
+    if (email && this.userId) {
+        let schoolIds = [];
+        let schoolCursor;
+
+        // Fetch member's media for `/media` route.
         let schoolMemberCursor = SchoolMemberDetails.find({ email });
         let memberData = schoolMemberCursor.fetch();
-        if (!_.isEmpty(memberData)) {
-            let schoolIds = memberData.map(data => data.schoolId);
-            return [
-                schoolMemberCursor,
-                School.find({ _id: { $in: schoolIds } })
-            ];
+        // Fetch media uploaded by School admin for `/media` route.
+        let adminMedia = Media.find({createdBy:this.userId}).fetch();
+
+        adminMedia.map(data => schoolIds.push(data.schoolId));
+        memberData.map(data => schoolIds.push(data.schoolId));
+
+        if(!_.isEmpty(schoolIds)) {
+            schoolCursor = School.find({ _id: { $in: uniq(schoolIds) } })
         }
-        return [];
+
+        return [
+            schoolCursor,
+            schoolMemberCursor
+        ]
     }
-    return [];
 });
 
 

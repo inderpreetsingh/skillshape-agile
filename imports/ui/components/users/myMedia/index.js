@@ -12,6 +12,11 @@ import classnames from 'classnames';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import { FormControlLabel, FormControl } from 'material-ui/Form';
 import Button from 'material-ui/Button';
+import ExpansionPanel, {
+  ExpansionPanelDetails,
+  ExpansionPanelSummary
+} from 'material-ui/ExpansionPanel';
+import Divider from 'material-ui/Divider';
 
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import { withStyles, toastrModal } from '/imports/util';
@@ -120,53 +125,41 @@ class MyMedia extends React.Component {
     			<Grid container>
     				{ this.state.isBusy && <ContainerLoader/>}
     				<Grid item xs={12} sm={12}>
-                    	<Card className={classes.card}>
-	                        <CardHeader
-	                            title="Media Settings"
-	                            action={
-	                                <IconButton
-	                                  className={classnames(classes.expand, {
-	                                    [classes.expandOpen]: this.state.mediaExpanded,
-	                                  })}
-	                                  onClick={this.handleExpandClick.bind(this, "mediaExpanded")}
-	                                  aria-expanded={this.state.mediaExpanded}
-	                                  aria-label="Show more"
-	                                >
-	                                  <ExpandMoreIcon />
-	                                </IconButton>
-	                            }
-	                        />
-	                        <Collapse in={this.state.mediaExpanded} timeout="auto" unmountOnExit>
-	                            <CardContent>
-	                                <Typography type="headline">Media Display Setting Defaults</Typography>
-	                                <Typography type="subheading">These defaults can be set differently for specific media of you.</Typography>
-	                                <Typography type="subheading">Unless progress or a video is public, it cannot be shared to Social Media.</Typography>
-	                            	<br></br>
-	                                <Typography type="subheading">As a default setting for videos and pictures for you:</Typography>
-	                            	<br></br>
-	                            	<form onSubmit={this.submitMediaDetails}>
-		                            	<FormControl component="fieldset" required >
-						                    <RadioGroup
-						                        aria-label="mediaSetting"
-						                        value={this.state.mediaDefaultValue}
-						                        name="mediaSetting"
-						                        onChange={this.handleMediaSettingChange}
-						                        defaultSelected="both"
-						                    >
-						                        <FormControlLabel value="public" control={<Radio />} label="Make media public so you can share them on social media." />
-						                        <FormControlLabel value="member" control={<Radio />} label="Make media from a school only available to members of the school that posted it." />
-						                    </RadioGroup>
-						                </FormControl>
-						                <br></br>
-						                <SaveBtnWrapper>
-							                <Button type="submit" color="accent" raised dense>
-			                                    Save
-			                                </Button>
-						                </SaveBtnWrapper>
-	                            	</form>
-	                            </CardContent>
-	                        </Collapse>
-                        </Card>
+                        <ExpansionPanel defaultExpanded style={{margin:'3px'}}>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                <div>
+                                    <Typography type="headline">Media Settings</Typography>
+                                </div>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                              <div>
+                                <Typography type="headline">Media Display Setting Defaults</Typography>
+                                <Typography type="subheading">These defaults can be set differently for specific media of you.</Typography>
+                                <Typography type="subheading">Unless progress or a video is public, it cannot be shared to Social Media.</Typography>
+                                <br></br>
+                                <Typography type="subheading">As a default setting for videos and pictures for you:</Typography>
+                                <br></br>
+                                <form onSubmit={this.submitMediaDetails}>
+                                    <FormControl component="fieldset" required >
+                                        <RadioGroup
+                                            aria-label="mediaSetting"
+                                            value={this.state.mediaDefaultValue}
+                                            name="mediaSetting"
+                                            onChange={this.handleMediaSettingChange}
+                                            defaultSelected="both"
+                                        >
+                                            <FormControlLabel value="public" control={<Radio />} label="Make media public so you can share them on social media." />
+                                            <FormControlLabel value="member" control={<Radio />} label="Make media from a school only available to members of the school that posted it." />
+                                        </RadioGroup>
+                                    </FormControl>
+                                    <br></br>
+                                    <Button type="submit" color="accent" raised dense>
+                                        Save
+                                    </Button>
+                                </form>
+                              </div>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
                         <Card className={classes.card}>
                         	<CardContent>
                         		<MediaContent currentUser={currentUser}/>
