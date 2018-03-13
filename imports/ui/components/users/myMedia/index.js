@@ -7,8 +7,6 @@ import Grid from 'material-ui/Grid';
 import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import IconButton from 'material-ui/IconButton';
-import Collapse from 'material-ui/transitions/Collapse';
-import classnames from 'classnames';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import { FormControlLabel, FormControl } from 'material-ui/Form';
 import Button from 'material-ui/Button';
@@ -16,7 +14,6 @@ import ExpansionPanel, {
   ExpansionPanelDetails,
   ExpansionPanelSummary
 } from 'material-ui/ExpansionPanel';
-import Divider from 'material-ui/Divider';
 
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import { withStyles, toastrModal } from '/imports/util';
