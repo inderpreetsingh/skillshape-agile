@@ -20,7 +20,7 @@ export default function() {
 				isEmpty(collectionData) ?  "No Media Found!!": (
 					<Grid container>
 						<Grid item xs={12} style={{display: 'inline-flex',justifyContent: 'center'}}>
-							<div style={{width: "100%", maxWidth: 650}}>
+							<div style={{width: "100%"}}>
 								<ImageGalleryView
 									mediaSubscriptionReady={this.props.mediaSubscriptionReady}
 									changeLimit={this.props.changeLimit}

@@ -93,7 +93,7 @@ export default function () {
                 <Grid item xs={12} sm={4}>
                   <TextField
                       required={true}
-                      defaultValue={schoolData && parseInt((schoolData.phone).replace(/[^0-9]/g, ''), 10)}
+                      defaultValue={schoolData && schoolData.phone && parseInt((schoolData.phone).replace(/[^0-9]/g, ''), 10)}
                       inputRef={(ref)=> this.phone = ref}
                       label="Phone"
                       type="number"

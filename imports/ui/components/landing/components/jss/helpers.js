@@ -44,6 +44,7 @@ export const
     reset = '#989797',
     information = '#348CC0',
     black = '#292828',
+    communication = '#448aff',
 
     /********** SPECIFIC COLORS **************/
     schoolPageColor = '#f2f2f2',

@@ -6,6 +6,10 @@ import Grid from 'material-ui/Grid';
 import Input from 'material-ui/Input';
 import isEmpty from "lodash/isEmpty";
 import { withStyles } from "material-ui/styles";
+import styled from 'styled-components';
+
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
 const styles = theme => ({
   avatarCss: {
     width: '150px',
@@ -13,8 +17,64 @@ const styles = theme => ({
     backgroundSize: 'cover',
     backgroundPosition: 'top center',
     borderRadius: '50%'
+  },
+   btnBackGround:{
+    background:`${helpers.action}`
   }
 });
+
+import MemberActionButton from '/imports/ui/components/landing/components/buttons/MemberActionButton.jsx';
+
+
+const ActionButtonsWrapper = styled.div`
+  left: ${helpers.rhythmDiv * 2}px;
+  bottom: ${helpers.rhythmDiv * 2}px;
+  right: auto;
+  padding: 5px;
+  ${helpers.flexCenter}
+
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    justify-content: flex-start;
+    align-items: flex-start;
+    bottom: 0;
+  }
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    position: initial;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+`;
+
+const ActionButton = styled.div`
+  margin-right: ${helpers.rhythmDiv}px;
+
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    margin-right: 0;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+  }
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    margin-right: ${helpers.rhythmDiv}px;
+  }
+`;
+
+const ActionButtons = (props) => (
+  <ActionButtonsWrapper>
+    <ActionButton>
+      <MemberActionButton icon iconName='phone' label="Call"/>
+    </ActionButton>
+
+    <ActionButton>
+      <MemberActionButton secondary noMarginBottom label="Email" icon iconName="email"/>
+    </ActionButton>
+
+    <ActionButton>
+      <MemberActionButton  noMarginBottom label="Edit" icon iconName="edit"/>
+    </ActionButton>
+  </ActionButtonsWrapper>
+);
 
 class SchoolMemberInfo extends Component {
 
@@ -100,17 +160,7 @@ class SchoolMemberInfo extends Component {
             		view === "admin" && (
               			<Grid container style={{backgroundColor: 'darkgray'}}>
 		                	<Grid item>
-		                  		<Fragment>
-				                    <Button raised color="primary" style={{margin: '5px'}}>
-				                      Call
-				                    </Button>
-				                    <Button style={{margin: '5px'}} raised color="accent">
-				                      Email
-				                    </Button>
-				                    <Button raised color="primary" style={{margin: '5px'}}>
-				                      Edit
-				                    </Button>
-		                  		</Fragment>
+		                  		<ActionButtons/>
 		                	</Grid>
               			</Grid>
             		)
