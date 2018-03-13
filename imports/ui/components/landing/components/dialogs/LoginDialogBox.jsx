@@ -20,6 +20,7 @@ import muiTheme from '../jss/muitheme.jsx';
 import GoogleIconButton from '../buttons/GoogleIconButton.jsx';
 import FacebookIconButton from '../buttons/FacebookIconButton.jsx';
 import JoinButton from '../buttons/JoinButton.jsx';
+import ResetPasswordButton from '../buttons/ResetPasswordButton.jsx'
 
 import Dialog , {
   DialogActions,
@@ -206,8 +207,7 @@ const LoginDialog = (props) => (
           <DialogActionText>
             Lost your password?
           </DialogActionText>
-
-          <SecondaryButton label="Recover Password" onClick={props.onRecoverPasswordButtonClick} />
+          <ResetPasswordButton/>
         </ActionWrapper>
         <ActionWrapper>
           <DialogActionText>

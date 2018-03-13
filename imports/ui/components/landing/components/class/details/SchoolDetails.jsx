@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import isEmpty from 'lodash/isEmpty';
 
 import StudentNotes from './StudentNotes.jsx';
 import AboutSchool from './AboutSchool.jsx';
@@ -59,7 +60,9 @@ const SchoolDetails = (props) => (
       <StudentNotes notes={props.notes}/>
     </SchoolSection>
     <ImgSliderSection>
-      <ClassTypeImgSlider images={props.images} />
+      {
+        !isEmpty(props.images) && <ClassTypeImgSlider images={props.images} />
+      }
     </ImgSliderSection>
   </Wrapper>
 );

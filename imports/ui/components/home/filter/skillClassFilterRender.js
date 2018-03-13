@@ -1,17 +1,16 @@
 import React from "react";
-import TagFilter from '/imports/ui/components/tag';
 import config from '/imports/config';
 import AutoComplete from '/imports/ui/form/autoComplete';
 
 const skillCategory = {
     className: "skillCategory-filter-container",
     theme: { container: "skillCategory-filter-input react-autosuggest__container" },
-    placeHolder: "Type any skill category", 
+    placeHolder: "Type any skill category",
     key: "skillCategoryId",
-    objKey: "skillCategory", 
-    label: "Skill Category", 
-    required: true, 
-    method: "getSkillCategory", 
+    objKey: "skillCategory",
+    label: "Skill Category",
+    required: true,
+    method: "getSkillCategory",
     suggestion: "name",
     valueField: "_id",
     child: {
@@ -20,17 +19,17 @@ const skillCategory = {
         key: "skillSubject",
         type: "auto-select",
         multi: true,
-        method: "getSkillSubjectBySkillCategory", 
+        method: "getSkillSubjectBySkillCategory",
         suggestion: "name",
         suggestionData: null,
-        valueField: "_id" 
-    } 
+        valueField: "_id"
+    }
 }
 
 export default function () {
 	const skillType = this.props.skillType || [];
-  const { 
-    classPrice, 
+  const {
+    classPrice,
     monthPrice,
     SLocation,
   } = this.state;
@@ -41,29 +40,29 @@ export default function () {
             <div className="col-md-2 col-sm-6 col-xs-12">
                 <div className="input-group ">
                     <div className="form-group label-floating is-empty has-warning location-input">
-                        <input 
-                          className="form-control search-bar-form" 
-                          type="text" 
-                          aria-required="true" 
-                          placeholder="Location" 
+                        <input
+                          className="form-control search-bar-form"
+                          type="text"
+                          aria-required="true"
+                          placeholder="Location"
                           id="location"
                           value={SLocation}
-                          onChange={(e) => this.setState({SLocation: e.target.value})} 
+                          onChange={(e) => this.setState({SLocation: e.target.value})}
                           ref= { (ref) => {this.location = ref} }
                         />
                         <span className="material-input"></span>
                         <i className="material-icons card-material-icon" title="Search around your location...">
                           location_searching
-                        </i>            
+                        </i>
                     </div>
                 </div>
             </div>
             <div className="col-md-2 col-sm-6 col-xs-12">
                 <div className="form-group label-floating is-empty has-warning">
-                    <select 
-                        className="form-control search-bar-form" 
-                        style={{width: '100%'}} 
-                        id="gender" 
+                    <select
+                        className="form-control search-bar-form"
+                        style={{width: '100%'}}
+                        id="gender"
                         name="gender"
                         ref= { (ref) => {this.gender = ref}}
                         onChange= {() => this.props.onSearch(this)}
@@ -94,25 +93,25 @@ export default function () {
         <div className="col-md-12 card clear-margin-bt custom-card-filter no-padding">
             <div className="col-md-2 col-sm-4">
                 <div className="form-group label-floating is-empty has-warning">
-                  <input 
-                    className="form-control search-bar-form" 
-                    type="text" 
-                    aria-required="true" 
-                    placeholder="School"  
+                  <input
+                    className="form-control search-bar-form"
+                    type="text"
+                    aria-required="true"
+                    placeholder="School"
                     autoComplete="off"
                     ref= { (ref) => {this.schoolName = ref} }
                     onChange={() => this.props.onSearch(this) }
                   />
                     <i className="material-icons card-material-icon" title="Search around your location...">
                         search
-                    </i>  
+                    </i>
                 </div>
             </div>
             <div className="col-md-2 col-sm-4">
-                <select 
-                    className="form-control search-bar-form" 
-                    style={{width: '100%'}} 
-                    id="experienceLevel" 
+                <select
+                    className="form-control search-bar-form"
+                    style={{width: '100%'}}
+                    id="experienceLevel"
                     name="experienceLevel"
                     ref= { (ref) => {this.experienceLevel = ref}}
                     onChange= {() => this.props.onSearch(this)}
@@ -122,17 +121,17 @@ export default function () {
                         config.experienceLevel.map((data, index)=> {
                             return <option key={index} value={data.value}>{data.label}</option>
                         })
-                    } 
+                    }
                 </select>
             </div>
             <div className="col-md-2 col-sm-4">
-                <input 
-                    className="form-control search-bar-form" 
-                    type="number" 
-                    aria-required="true" 
-                    placeholder="Age"  
+                <input
+                    className="form-control search-bar-form"
+                    type="number"
+                    aria-required="true"
+                    placeholder="Age"
                     autoComplete="off"
-                    min="1" 
+                    min="1"
                     max="60"
                     ref= { (ref) => {this.age = ref} }
                     onChange={() => this.props.onSearch(this) }
@@ -153,7 +152,7 @@ export default function () {
               <div className="col-lg-12 clearfix">
                 <div id="sliderPriceClass" className="range-slider-wrap">
                 </div>
-              </div>                         
+              </div>
             </div>
           </div>
           <div className="col-md-3 col-sm-6">
@@ -167,7 +166,7 @@ export default function () {
                     ${monthPrice[0]} - {monthPrice[1]}$
                   </strong>
                 </div>
-              </div>  
+              </div>
               <div className="col-lg-12 clearfix">
                 <div id="sliderPriceMonth" className="range-slider-wrap">
                 </div>

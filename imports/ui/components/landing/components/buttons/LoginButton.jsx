@@ -154,6 +154,7 @@ class LoginButton extends Component {
     }
 
     reSendEmailVerificationLink = ()=> {
+        this.setState({loading: true});
         Meteor.call("user.sendVerificationEmailLink", this.state.email, (err, res)=> {
             if(err) {
                 let errText = err.reason || err.message;
@@ -161,9 +162,10 @@ class LoginButton extends Component {
             }
             if(res) {
                 this.setState({
-                    loginModal: false
+                    loginModal: false,
+                    loading: false,
                 }, () => {
-                    toastr.success(
+                    this.props.toastr.success(
                         "We send a email verification link, Please check your inbox!!",
                         "success"
                     );
@@ -175,7 +177,7 @@ class LoginButton extends Component {
     render() {
         const {loginModal,error,isBusy} = this.state;
         const {icon,fullWidth,iconName,currentUser} = this.props;
-        // console.log("LoginButton props -->>>",this.props);
+        console.log("LoginButton props -->>>",this.props);
         console.log("LoginButton state -->>>",this.state);
         return(
             <Fragment>
