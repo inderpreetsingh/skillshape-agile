@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react';
+import DocumentTitle from 'react-document-title';
 import { createContainer } from 'meteor/react-meteor-data';
 import { formStyles, cutString } from '/imports/util';
 import MyCalender from '/imports/ui/components/users/myCalender';
@@ -158,6 +159,7 @@ class ManageMyCalendar extends React.Component {
         const { type, classTimesData, myClassTimes, filter } = this.state;
 
         return  (
+            <DocumentTitle title={this.props.route.name}>
             <div>
                 <Card style={{padding: 10, margin: 15}}>
                      <FormControl component="fieldset" required >
@@ -278,6 +280,7 @@ class ManageMyCalendar extends React.Component {
                     />
                 </Card>
             </div>
+            </DocumentTitle>
         )
    }
 }

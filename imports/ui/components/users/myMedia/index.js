@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
@@ -119,7 +120,8 @@ class MyMedia extends React.Component {
 
 	    if(this.validateUser()) {
     		return (
-    			<Grid container>
+    			<DocumentTitle title={this.props.route.name}>
+                <Grid container>
     				{ this.state.isBusy && <ContainerLoader/>}
     				<Grid item xs={12} sm={12}>
                         <ExpansionPanel defaultExpanded style={{margin:'3px'}}>
@@ -164,6 +166,7 @@ class MyMedia extends React.Component {
                         </Card>
     				</Grid>
     			</Grid>
+                </DocumentTitle>
     		)
     	} else {
     		return  <Typography type="display2" gutterBottom align="center">

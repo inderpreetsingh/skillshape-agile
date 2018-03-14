@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import DocumentTitle from 'react-document-title';
 import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -19,14 +20,16 @@ const Wrapper = styled.div`
 `;
 
 class ClassTypeView extends Component {
-
-	render() {
+    render() {
+        console.log("ClassTypeView .props-->>",this.props)
 		return(
-			<Wrapper className="classtype-page">
-				<TopSearchBar/>
-        		    <ClassTypeContent {...this.props}/>
-        		<Footer/>
-        	</Wrapper>
+            <DocumentTitle title={this.props.route.name}>
+    			<Wrapper className="classtype-page">
+    				<TopSearchBar/>
+            		    <ClassTypeContent {...this.props}/>
+            		<Footer/>
+            	</Wrapper>
+            </DocumentTitle>
 		)
 	}
 }

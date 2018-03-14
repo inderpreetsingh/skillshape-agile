@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import styled from 'styled-components';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
@@ -141,8 +142,9 @@ const MainContainer = styled.div`
 `;
 
 const SkillShapeSchool = (props) => {
-
+	console.log("SkillShapeSchool props -->>",props)
 	return (
+	<DocumentTitle title={props.route.name}>
 		<MainContainer>
 			<MainContentWrapper className={props.classes.aboutUs}>
 				<div className="bg-stretch" style={{backgroundImage: 'linear-gradient(to right,grey 50%,yellow 100%),url(images/aboutUs/ballet.jpg)',backgroundBlendMode: 'darken',filter: 'none'}}/>
@@ -424,6 +426,7 @@ const SkillShapeSchool = (props) => {
 				</Grid>
 			</MainContentWrapper>
 		</MainContainer>
+	</DocumentTitle>
 	)
 }
 

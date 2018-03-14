@@ -35,42 +35,38 @@ import {componentLoader} from "/imports/util";
 export default Routes = componentLoader((props) => (
   <Router history={browserHistory}>
     <Route path="/" component={MainLayout} >
-      <IndexRoute component={Landing} />
-      <Route path="/classtype" component={ClassType} />
-      <Route path="/classType/:classTypeId" component={ClassTypeView} />
-      <Route path="/skillshape-for-school" component={School} />
+      <IndexRoute name="Home" component={Landing} />
+      <Route path="/classType/:classTypeId" name="ClassType" component={ClassTypeView} />
+      <Route path="/skillshape-for-school" name="Skillshape-for-school" component={School} />
 
-      <Route path="/no-results" component={NoResults} />
+      <Route path="/no-results" name="NoResults" component={NoResults} />
 
       <Route path="/" component={PublicLayout}>
-        <Route path="/Aboutus" component={AboutUs} />
-        <Route path="/Contactus" component={ContactUs} />
-        <Route path="/profile/:id" component={MyProfile} />
-        <Route path="/media/:id" component={MyMedia} />
-        <Route path="/schoolAdmin/:schoolId/edit" getComponent={(nextState, cb) => {
+        <Route path="/Aboutus" name="Aboutus" component={AboutUs} />
+        <Route path="/Contactus" name="Contactus" component={ContactUs} />
+        <Route path="/profile/:id" name="MyProfile" component={MyProfile} />
+        <Route path="/media/:id" name="MyMedia" component={MyMedia} />
+        <Route path="/schoolAdmin/:schoolId/edit" name="SchoolAdmin-Edit" getComponent={(nextState, cb) => {
           //set loading:true
-          console.log("props",props)
           props.isLoading.show();
           import('/imports/ui/components/schoolView/editSchool').then((SchoolEditView) => {
-              console.log("SchoolEditView",SchoolEditView)
               // set loading false
               props.isLoading.hide();
               cb(null, SchoolEditView.default);
             });
         }} />
-        <Route path="/schools/:slug" component={SchoolView} />
-        <Route path="/MyCalendar" component={ManageMyCalendar} />
-        <Route path="/reset-password/:token" component={ResetPassword}/>
-        <Route path="/claimSchool" component={ClaimSchool}/>
-        <Route path="/verify-email/:token" component={VerifyEmail}/>
-        <Route path="/claimSchool" component={ClaimSchool}/>
-        <Route path="/skillShape-school" component={SkillShapeSchool}/>
+        <Route path="/schools/:slug" name="SchoolView" component={SchoolView} />
+        <Route path="/MyCalendar" name="MyCalendar" component={ManageMyCalendar} />
+        <Route path="/reset-password/:token" name="ResetPassword" component={ResetPassword}/>
+        <Route path="/claimSchool" name="ClaimSchool" component={ClaimSchool}/>
+        <Route path="/verify-email/:token" name="VerifyEmail" component={VerifyEmail}/>
+        <Route path="/skillShape-school" name="SkillShapeSchool" component={SkillShapeSchool}/>
       </Route>
 
       <Route path="/" component={AdminLayout}>
-        <Route path="/SchoolUpload" component={SchoolUpload} />
-        <Route path="/schools/:slug/members" component={SchoolMemberView} />
-        <Route path="/classmates" component={SchoolMemberView} />
+        <Route path="/SchoolUpload" name="SchoolUpload" component={SchoolUpload} />
+        <Route path="/schools/:slug/members" name="SchoolMemberView" component={SchoolMemberView} />
+        <Route path="/classmates" name="classmates" component={SchoolMemberView} />
         {/*<Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />*/}
       </Route>
     </Route>

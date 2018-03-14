@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import get from 'lodash/get';
 import styled from 'styled-components';
 import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
@@ -59,6 +60,7 @@ export default function() {
 
     if(this.validateUser()) {
     	return (
+            <DocumentTitle title={this.props.route.name}>
             <Grid container>
                 { this.state.isBusy && <ContainerLoader/>}
                 <Grid item xs={12} sm={8}>
@@ -217,6 +219,7 @@ export default function() {
                 </Grid>
 
             </Grid>
+            </DocumentTitle>
         )
     } else {
         return  <Typography type="display2" gutterBottom align="center">
