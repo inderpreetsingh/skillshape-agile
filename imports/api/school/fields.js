@@ -137,6 +137,15 @@ School.attachSchema(new SimpleSchema({
   }
 }));
 
+School.friendlySlugs(
+  {
+    slugFrom: 'name',
+    slugField: 'slug',
+    distinct: true,
+    updateSlug: true
+  }
+);
+
 School.join(Meteor.users, "admins", "adminsData", ["profile"]);
 
 Meteor.startup(function() {

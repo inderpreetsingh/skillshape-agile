@@ -12,11 +12,7 @@ import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
 
-import ClassType from "/imports/api/classType/fields";
-import School from "/imports/api/school/fields";
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
-import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
 import List from 'material-ui/List';
 import Hidden from 'material-ui/Hidden';
@@ -27,6 +23,10 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import Toolbar from 'material-ui/Toolbar';
 import MenuIcon from 'material-ui-icons/Menu';
+import ClassType from "/imports/api/classType/fields";
+import School from "/imports/api/school/fields";
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 
 
 
@@ -38,6 +38,8 @@ import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/M
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
 
 const drawerWidth = 400;
 
@@ -76,6 +78,7 @@ const styles = theme => ({
     overflow: 'auto',
     padding:'0px !important',
     paddingLeft:'16px !important',
+    overflowX: 'hidden !important'
   },
   content: {
     flexGrow: 1,
@@ -106,6 +109,9 @@ const styles = theme => ({
     background: 'white',
     border: 'solid 3px #dddd',
     paddingTop: '0px !important',
+  },
+  btnBackGround:{
+    background:`${helpers.action}`
   }
 });
 
@@ -157,6 +163,9 @@ class DashBoardView extends React.Component {
                       required={true}
                     />
                 </Grid>
+                {
+                    this.state.isLoading && <ContainerLoader />
+                }
                 <Grid item xs={12} sm={6}>
                     <TextField
                       id="lastName"
@@ -438,7 +447,7 @@ class DashBoardView extends React.Component {
                     {
                         slug && (
                             <Grid item sm={12} xs={12} md={12} style={{display:'flex',flexDirection: 'row-reverse', padding: '16px'}}>
-                                <Button raised color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
+                                <Button raised className={classes.btnBackGround} color="primary" onClick={()=>this.setState({renderStudentModal:true})}>
                                   Add New Student
                                 </Button>
                             </Grid>
@@ -473,7 +482,6 @@ class DashBoardView extends React.Component {
                     </Typography>
                   </Toolbar>
                 </AppBar>
-                { this.state.isLoading && <ContainerLoader /> }
                 { !isEmpty(schoolData) &&
                     <div>
                         <form noValidate autoComplete="off">

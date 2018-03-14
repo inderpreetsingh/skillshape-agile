@@ -68,6 +68,7 @@ Meteor.methods({
 				                    {
 				                        $set: {
 				                            "superAdmin": newUser,
+				                            "admins": [newUser],
 				                        }
 				                    }
 				                );
@@ -87,7 +88,8 @@ Meteor.methods({
 		                }
 		                let data = {}
 		                try {
-		                    let slocation_detail = doc.address + "," + doc.city + "," + doc.state + "," + doc.zip
+		                	console.log("<<< -------- Start for location searching ------->>>>>>>>>>>")
+		                    let slocation_detail = sLocationDoc.address + "," + sLocationDoc.city + "," + sLocationDoc.state + "," + sLocationDoc.zip;
 		                    console.log(slocation_detail)
 		                    var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + slocation_detail + "&key=AIzaSyBtQoiRR6Ft0wGTajMd8uTZb71h8kwD5Ew"
 		                    data = Meteor.http.call("GET", url);
@@ -105,7 +107,7 @@ Meteor.methods({
 		                    sLocationDoc.geoLong = data.lng
 		                    sLocationDoc.loc = [data.lat, data.lng]
 		                } catch (err) {
-		                    console.log("Location not found");
+		                    console.log("Location not found",err);
 		                    data.lat = 0
 		                    data.lng = 0
 		                    sLocationDoc.geoLat = data.lat
@@ -123,6 +125,7 @@ Meteor.methods({
 		                let skillCategoryIds = [];
 		                let	skillSubjectIds = [];
 		                let classTypeObject = {
+		                	locationId: locationId,
 		                	filters: {
 		                		location: sLocationDoc.loc,
 		                		locationTitle: `${sLocationDoc.state}, ${sLocationDoc.city}, ${sLocationDoc.country}`
@@ -133,6 +136,7 @@ Meteor.methods({
 		                classTypeObject.name = csvdata[i].classTypeName;
 		                let skillCategory = csvdata[i].skillCategory;
 		                let skillSubject = csvdata[i].skillSubject;
+
 		                if (skillCategory) {
 		                    skillCategory = skillCategory.split(",")
 		                    for(let skill of skillCategory) {
@@ -152,6 +156,7 @@ Meteor.methods({
 				                }
 		                    }
 		                }
+
 		                if (skillSubject) {
 		                    skillSubject = skillSubject.split(",")
 		                    for(let skill of skillSubject) {
@@ -161,9 +166,9 @@ Meteor.methods({
 		                    	if (skillSubjectObject){
 				                	skillSubjectId = skillSubjectObject._id;
 				                } else {
-				                	if (csvdata[i].classTypeName) {
-				                        skillSubjectId = SkillSubject.insert({ name: skill.trim() })
-				                    }
+				                	// if (csvdata[i].classTypeName) {
+				                 //        skillSubjectId = SkillSubject.insert({ name: skill.trim() })
+				                 //    }
 				                }
 
 				                if(skillSubjectId) {
@@ -176,9 +181,11 @@ Meteor.methods({
 		                classTypeObject.classTypeImg = csvdata[i].classTypeImg
 
 		                let classTypeId = null;
-	                    classTypeObject.skillCategoryId = skillCategoryIds;
-                		classTypeObject.skillSubject = skillSubjectIds;
-                    	console.log("ClassTypeObject Data-->>",classTypeObject);
+
+
+                    	classTypeObject.skillCategoryId = skillCategoryIds;
+            			classTypeObject.skillSubject = skillSubjectIds;
+                    	// console.log("ClassTypeObject Data-->>",classTypeObject);
 	                    if (classTypeObject.name) {
 		                	ClassType.update({ schoolId: schoolId, name: csvdata[i].classTypeName, desc: csvdata[i].classTypeDesc },{ $set: classTypeObject},{upsert: true});
 	                    }

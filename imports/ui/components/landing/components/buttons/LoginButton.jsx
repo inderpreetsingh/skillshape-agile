@@ -52,39 +52,51 @@ class LoginButton extends Component {
         }
     }
 
-    onSignInButtonClick = () => {
+    onSignInButtonClick = (event) => {
+        event.preventDefault()
         let redirectUrl;
+        const { email, password } = this.state;
+        let stateObj = { ...this.state };
+
         if (this.state.redirectUrl) {
             redirectUrl = this.state.redirectUrl;
         }
-        this.setState({ loading: true })
-        Meteor.loginWithPassword(this.state.email, this.state.password, (err, res) => {
-            let stateObj = { ...this.state };
 
-            stateObj.loading = false;
-            if (err) {
-                stateObj.error.message = err.reason || err.message
-            } else {
-                stateObj.error = {};
-                let emailVerificationStatus = get(Meteor.user(), "emails[0].verified", false)
+        if(email && password) {
+            this.setState({ loading: true })
+            Meteor.loginWithPassword(email, password, (err, res) => {
 
-                if(!emailVerificationStatus) {
-                    Meteor.logout();
-                    stateObj.showVerficationLink = true;
-                    stateObj.error.message = "Please verify email first. ";
+                stateObj.loading = false;
+                if (err) {
+                    stateObj.error.message = err.reason || err.message
                 } else {
-                    stateObj.loginModal = false;
+                    stateObj.error = {};
+                    let emailVerificationStatus = get(Meteor.user(), "emails[0].verified", false)
+
+                    if(!emailVerificationStatus) {
+                        Meteor.logout();
+                        stateObj.showVerficationLink = true;
+                        stateObj.error.message = "Please verify email first. ";
+                    } else {
+                        stateObj.loginModal = false;
+                    }
+                    /*Admin of school was not login while clicking on `No, I will manage the school`
+                    so in this case we need to redirect to school admin page that we are getting in query params*/
+                    if (redirectUrl) {
+                        browserHistory.push(redirectUrl);
+                    } else {
+                        browserHistory.push('/');
+                    }
                 }
-                /*Admin of school was not login while clicking on `No, I will manage the school`
-                so in this case we need to redirect to school admin page that we are getting in query params*/
-                if (redirectUrl) {
-                    browserHistory.push(redirectUrl);
-                } else {
-                    browserHistory.push('/');
-                }
+                this.setState(stateObj)
+            })
+        } else {
+            stateObj.error.message = "Enter Password";
+            if(!email){
+                stateObj.error.message = "Enter Email Address";
             }
             this.setState(stateObj)
-        })
+        }
     }
 
     isLogin = () => {
@@ -142,6 +154,7 @@ class LoginButton extends Component {
     }
 
     reSendEmailVerificationLink = ()=> {
+        this.setState({loading: true});
         Meteor.call("user.sendVerificationEmailLink", this.state.email, (err, res)=> {
             if(err) {
                 let errText = err.reason || err.message;
@@ -149,9 +162,10 @@ class LoginButton extends Component {
             }
             if(res) {
                 this.setState({
-                    loginModal: false
+                    loginModal: false,
+                    loading: false,
                 }, () => {
-                    toastr.success(
+                    this.props.toastr.success(
                         "We send a email verification link, Please check your inbox!!",
                         "success"
                     );
@@ -163,7 +177,7 @@ class LoginButton extends Component {
     render() {
         const {loginModal,error,isBusy} = this.state;
         const {icon,fullWidth,iconName,currentUser} = this.props;
-        // console.log("LoginButton props -->>>",this.props);
+        console.log("LoginButton props -->>>",this.props);
         console.log("LoginButton state -->>>",this.state);
         return(
             <Fragment>

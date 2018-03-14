@@ -11,16 +11,6 @@ import Multiselect from 'react-widgets/lib/Multiselect'
 import Menu, { MenuItem } from 'material-ui/Menu';
 import Button from 'material-ui/Button';
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
-const MaterialInputWrapper = styled.div`
-  transform: translateY(-${props => props.select ? (helpers.rhythmDiv + 2) : helpers.rhythmDiv}px);
-`;
-
-const FilterPanelAction = styled.div`
-    padding:${helpers.rhythmDiv*2}px 0px;
-`;
-
 const drawerWidth = 240;
 
 const styles = theme => ({
