@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
@@ -101,6 +102,7 @@ class AboutUs extends React.Component{
   render(){
     const { classes } = this.props;
     return(
+      <DocumentTitle title={this.props.route.name}>
       <div>
         <Grid container className={classes.aboutUsContainer}>
           {
@@ -244,6 +246,7 @@ class AboutUs extends React.Component{
           </Grid>
         </Grid>
       </div>
+      </DocumentTitle>
     )
   }
 }

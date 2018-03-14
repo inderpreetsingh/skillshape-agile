@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import DocumentTitle from 'react-document-title';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import debounce from 'lodash/debounce';
@@ -36,12 +37,14 @@ class SchoolMemberView extends Component {
         }
 
         return(
-            <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff'}}>
-                <DashBoardView
-                    filters={filters}
-                    params={this.props.params}
-                />
-            </Grid>
+            <DocumentTitle title={this.props.route.name}>
+                <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff'}}>
+                    <DashBoardView
+                        filters={filters}
+                        params={this.props.params}
+                    />
+                </Grid>
+            </DocumentTitle>
         )
     }
 }

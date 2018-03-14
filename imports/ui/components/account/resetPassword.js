@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import styled from 'styled-components';
 import { browserHistory } from 'react-router';
 import { withStyles } from 'material-ui/styles';
@@ -86,7 +87,8 @@ class ResetPassword extends React.Component {
 		const { password, confirmPassword } = this.state;
 
         return(
-			<div>
+			<DocumentTitle title={this.props.route.name}>
+            <div>
                 <Card className={classes.card}>
                     { this.state.isBusy && <ContainerLoader/>}
                     <form onSubmit={this.onSubmit}>
@@ -118,6 +120,7 @@ class ResetPassword extends React.Component {
                     </form>
                 </Card>
             </div>
+            </DocumentTitle>
 		)
 	}
 }

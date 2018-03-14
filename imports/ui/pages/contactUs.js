@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import { browserHistory } from 'react-router';
 import Paper from 'material-ui/Paper';
 import { withStyles } from "material-ui/styles";
@@ -104,6 +105,7 @@ class ContactUs extends React.Component {
         const { classes } = this.props;
         console.log("Props====>",this.props);
         return(
+            <DocumentTitle title={this.props.route.name}>
             <Grid container style={{paddingLeft: 8}}>
               {
               this.state.isLoading && <ContainerLoader />
@@ -202,6 +204,7 @@ class ContactUs extends React.Component {
                     </Paper>
                 </Grid>
             </Grid>
+          </DocumentTitle>
         )
     }
 }

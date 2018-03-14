@@ -1,5 +1,6 @@
 import React,{Fragment} from 'react';
 import ReactDOM from 'react-dom';
+import DocumentTitle from 'react-document-title';
 import { browserHistory, Link } from 'react-router';
 import { floor } from 'lodash';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
@@ -58,6 +59,7 @@ export default function() {
   console.log("SchoolView render  schoolData-->>",schoolData)
   console.log("SchoolView render monthlyPricing -->>",monthlyPricing)
   return (
+        <DocumentTitle title={this.props.route.name}>
         <div className="content">
       {
         this.state.isLoading && <ContainerLoader />
@@ -989,8 +991,9 @@ export default function() {
                         </div>
                       </div>
                     </div>*/}
-        </div>
+                </div>
             </div>
         </div>
+        </DocumentTitle>
     )
 }

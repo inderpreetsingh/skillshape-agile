@@ -1,4 +1,5 @@
 import React from "react";
+import DocumentTitle from 'react-document-title';
 import  ClaimSchoolFilter  from "./filter";
 
 import FilterPanel from '../landing/components/FilterPanel.jsx';
@@ -12,6 +13,7 @@ import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 export default function () {
    return (
+       <DocumentTitle title={this.props.route.name}>
        <div>
         {
           this.state.isLoading && <ContainerLoader />
@@ -70,5 +72,6 @@ export default function () {
             handleClaimASchool={this.handleClaimASchool}
            />
        </div>
+       </DocumentTitle>
    )
  }

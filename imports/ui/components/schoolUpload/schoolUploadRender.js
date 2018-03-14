@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import moment from 'moment';
@@ -38,39 +39,41 @@ const style = {
 
 export default function() {
     return (
-    	<div>
-    		<Grid container>
-                <Grid item xs={12}>
-                <div style={style.uploadFloat}>
-        			<TextField type="text"
-         			 hintText="Select CSV"
-                     value={this.state.fileUploadName}
-        			/>
-        			<input type="file" accept=".csv" onChange={(e)=>{this.fileSelected(e)}} ref={(ref)=>{this.fileInputRef = ref}} style={style.fileUploadStyle} />
-                    <Button raised color="accent"  onClick= {()=>{this.uploadCSV()}} >
-                        Upload
-                    </Button>
-                </div>
+    	<DocumentTitle title={this.props.route.name}>
+            <div>
+        		<Grid container>
+                    <Grid item xs={12}>
+                    <div style={style.uploadFloat}>
+            			<TextField type="text"
+             			 hintText="Select CSV"
+                         value={this.state.fileUploadName}
+            			/>
+            			<input type="file" accept=".csv" onChange={(e)=>{this.fileSelected(e)}} ref={(ref)=>{this.fileInputRef = ref}} style={style.fileUploadStyle} />
+                        <Button raised color="accent"  onClick= {()=>{this.uploadCSV()}} >
+                            Upload
+                        </Button>
+                    </div>
+                    </Grid>
                 </Grid>
-            </Grid>
-    		<div>
-                <div style={{overflowX: "auto"}}>
-                    {<ImportLogTable>
-                            {this.props.importLogs && this.props.importLogs.map((logs, index) => {
-                                return (
-                                  <TableRow selectable={false}>
-                                    <TableCell style={style.w211}>{cutString(logs.fileName, 15)}</TableCell>
-                                    <TableCell style={style.w150}>{logs.status}</TableCell>
-                                    <TableCell style={style.w100}>{logs.totalRecord}</TableCell>
-                                    <TableCell style={style.w100}>{logs.sucessCount}</TableCell>
-                                    <TableCell style={style.w100}><a href="javascript:void(0)" onClick={()=>{this.downloadErrorCSV(logs._id)}}>{logs.errorRecordCount}</a></TableCell>
-                                    <TableCell style={style.w150}>{moment(logs.createdOn).format("MM/DD/YY")}</TableCell>
-                                  </TableRow>
-                                )
-                            })}
-                      </ImportLogTable>}
-                </div>
-        	</div>
-        </div>
+        		<div>
+                    <div style={{overflowX: "auto"}}>
+                        {<ImportLogTable>
+                                {this.props.importLogs && this.props.importLogs.map((logs, index) => {
+                                    return (
+                                      <TableRow selectable={false}>
+                                        <TableCell style={style.w211}>{cutString(logs.fileName, 15)}</TableCell>
+                                        <TableCell style={style.w150}>{logs.status}</TableCell>
+                                        <TableCell style={style.w100}>{logs.totalRecord}</TableCell>
+                                        <TableCell style={style.w100}>{logs.sucessCount}</TableCell>
+                                        <TableCell style={style.w100}><a href="javascript:void(0)" onClick={()=>{this.downloadErrorCSV(logs._id)}}>{logs.errorRecordCount}</a></TableCell>
+                                        <TableCell style={style.w150}>{moment(logs.createdOn).format("MM/DD/YY")}</TableCell>
+                                      </TableRow>
+                                    )
+                                })}
+                          </ImportLogTable>}
+                    </div>
+            	</div>
+            </div>
+        </DocumentTitle>
     )
 }

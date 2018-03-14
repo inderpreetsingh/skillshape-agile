@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Plant from './icons/Plant.jsx';
@@ -73,6 +74,7 @@ const OrText = styled.p`
 `;
 
 const NoResults = (props) => (
+  <DocumentTitle title={props.route.name || "Untitled"}>
   <Wrapper>
     <IconWrapper>
       <Plant />
@@ -86,6 +88,7 @@ const NoResults = (props) => (
       <SecondaryButton fullWidth={true} onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom/>
     </ButtonsWrapper>
   </Wrapper>
+  </DocumentTitle>
 );
 
 NoResults.propTypes = {

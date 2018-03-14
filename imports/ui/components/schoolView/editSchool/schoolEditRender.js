@@ -1,4 +1,5 @@
 import React from "react";
+import DocumentTitle from 'react-document-title';
 import { Loading } from '/imports/ui/loading';
 import { browserHistory, Link } from 'react-router';
 import { FormBuilderModal } from '/imports/ui/modal';
@@ -38,7 +39,8 @@ export default function (props) {
         // this.checkSchoolAccess(currentUser, schoolId)
         if(this.checkSchoolAccess(currentUser, schoolId)) {
         	return (
-        		<div>
+        		<DocumentTitle title={this.props.route.name}>
+                <div>
                   <FormBuilderModal
                       {...formBuilderModal}
                       {...this.props}
@@ -101,6 +103,7 @@ export default function (props) {
                       }
                   </div>
         		</div>
+                </DocumentTitle>
         	)
         } else {
           return  <Typography type="display2" gutterBottom align="center">

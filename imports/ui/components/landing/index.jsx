@@ -1,4 +1,5 @@
 import React, {Component,Fragment} from 'react';
+import DocumentTitle from 'react-document-title';
 import { debounce, isEmpty, get } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
@@ -519,7 +520,8 @@ class Landing extends Component {
         console.log("Landing state -->>",this.state);
         console.log("Landing props -->>",this.props);
         return(
-            <div>
+            <DocumentTitle title={this.props.route.name}>
+                <div>
                 <FiltersDialogBox
                     open={this.state.filterPanelDialogBox}
                     onModalClose={() => this.handleFiltersDialogBoxState(false)}
@@ -642,7 +644,8 @@ class Landing extends Component {
                   }
                 </SwitchViewWrapper>
               */}
-            </div>
+              </div>
+            </DocumentTitle>
         )
     }
 }

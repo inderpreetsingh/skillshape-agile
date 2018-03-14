@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react';
+import DocumentTitle from 'react-document-title';
 import get from 'lodash/get';
 import styled from 'styled-components';
 
@@ -18,17 +19,19 @@ class VerifyEmail extends React.Component {
 	render() {
 		const verificationStatus = get(this.props, "currentUser.emails[0].verified", null);
 		return (
-			<MessageWrapper>
-				{
-					this.props.currentUser &&
-					<Fragment>
-						{
-							verificationStatus ? "Your email is Verified!"
-						    : "Your email is not verified!"
-						}
-					</Fragment>
-				}
-			</MessageWrapper>
+			<DocumentTitle title={this.props.route.name}>
+				<MessageWrapper>
+					{
+						this.props.currentUser &&
+						<Fragment>
+							{
+								verificationStatus ? "Your email is Verified!"
+							    : "Your email is not verified!"
+							}
+						</Fragment>
+					}
+				</MessageWrapper>
+			</DocumentTitle>
 		)
 	}
 }
