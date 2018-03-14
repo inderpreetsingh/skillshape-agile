@@ -20,8 +20,7 @@ const styles = {
     cursor: 'initial'
   },
   iconStyles : {
-    width: helpers.rhythmDiv * 2,
-    height: helpers.rhythmDiv * 2
+    fontSize: 20
   }
 }
 
@@ -58,7 +57,6 @@ const Price = styled.p`
   color: white;
   font-size: ${helpers.baseFontSize * 3}px;
   font-family: ${helpers.specialFont};
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
   border-top-left-radius: ${helpers.rhythmDiv * 6}px;
   border-top-right-radius: ${helpers.rhythmDiv * 6}px;
   padding: ${helpers.rhythmDiv * 2}px;
@@ -88,6 +86,11 @@ const FeatureName = styled.p`
   font-style: italic;
   font-family: ${helpers.specialFont};
   margin: 0;
+  line-height: 1;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    font-size: 14px;
+  }
 `;
 
 
@@ -107,11 +110,15 @@ const SchoolCardContent = styled.div`
   flex-direction: column;
 `;
 
-const ButtonWrapper = styled.div`
+const ButtonAreaWrapper = styled.div`
   ${helpers.flexCenter}
   flex-grow: 1;
   text-align: center;
   align-items: flex-end;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
 `;
 
 const PerMonth = styled.span`
@@ -159,9 +166,11 @@ const SchoolPriceCard = (props) => (<Wrapper extended={props.extended}>
         <Title>{props.title}</Title>
         <FeaturesList features={props.features} classes={props.classes}></FeaturesList>
       </ContentWrapper>
-      <ButtonWrapper>
-        <PrimaryButton noMarginBottom label="Join now"/>
-      </ButtonWrapper>
+      <ButtonAreaWrapper>
+        <ButtonWrapper>
+          <PrimaryButton noMarginBottom label="Join now" />
+        </ButtonWrapper>
+      </ButtonAreaWrapper>
     </SchoolCardContent>
   </Wrapper>
 );

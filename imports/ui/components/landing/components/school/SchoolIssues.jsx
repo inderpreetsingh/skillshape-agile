@@ -57,6 +57,11 @@ const Avatar = styled.img`
   position: absolute;
   bottom: 0;
   left: 30px;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    height: 75px;
+  }
+
 `;
 
 const IssuesTitle = styled.div`

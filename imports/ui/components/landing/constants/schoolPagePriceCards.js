@@ -76,7 +76,7 @@ export default schoolPagePriceCards = [
       },
       {
         iconName: 'pets',
-        featureName: 'Merchandise and Inventory'
+        featureName: 'Merchandise & Inventory'
       },
       {
         iconName: 'android',

@@ -15,15 +15,6 @@ const Wrapper = styled.div`
   background-color: ${helpers.schoolPageColor};
 `;
 
-const PricingBoxWrapper = styled.div`
-  margin: 0 auto;
-  width: 100%;
-  max-width: ${helpers.schoolPageContainer}px;
-  padding: ${helpers.rhythmDiv * 4}px;
-  height: 100%;
-  flex-grow: 1;
-  ${helpers.flexCenter};
-`;
 
 const Title = styled.h2`
   font-style: italic;
@@ -39,6 +30,16 @@ const TitleWrapper = styled.div`
   background-color: ${helpers.black};
   padding: ${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 2}px;
   text-align: center;
+`;
+
+const PricingBoxWrapper = styled.div`
+  margin: 0 auto;
+  width: 100%;
+  max-width: ${helpers.schoolPageContainer}px;
+  padding: ${helpers.rhythmDiv * 4}px;
+  height: 100%;
+  flex-grow: 1;
+  ${helpers.flexCenter};
 `;
 
 const PricingWrapper = styled.div`
