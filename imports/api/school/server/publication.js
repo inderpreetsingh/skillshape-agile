@@ -429,15 +429,17 @@ Meteor.publish("school.getClassTypesByCategory", function({
 
 Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
 
+    console.log("Before tempFilter -->>",tempFilter)
+
     const filterObj = removeKeyValue(tempFilter)
 
     let {
         schoolName,
         coords,
         role,
-        limit,
         gender,
         age,
+        limit,
         _monthPrice,
         _classPrice,
         experienceLevel,
@@ -446,7 +448,7 @@ Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
         locationName
     } = filterObj
 
-    console.log("removeKeyValue filterObj -->>",filterObj)
+    console.log("After filterObj -->>",filterObj, limit)
 
 
     const schoolFilter = {};
@@ -607,7 +609,7 @@ Meteor.publish("school.getSchoolWithConnectedTagedMedia", function({ email }) {
 function removeKeyValue(object) {
     let temp = {...object}
     for(key in temp) {
-        if(_.isEmpty(temp[key])) {
+        if(!temp[key] || (temp[key] && _.isEmpty(temp[key]) && typeof temp[key] === "object") ) {
             delete temp[key]
         }
     }
