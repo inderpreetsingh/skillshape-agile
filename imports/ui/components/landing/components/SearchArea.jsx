@@ -13,6 +13,8 @@ import SecondaryButton from './buttons/SecondaryButton';
 
 import Grade from 'material-ui-icons/Grade';
 import Location from 'material-ui-icons/LocationOn';
+import SearchIcon from 'material-ui-icons/Search';
+
 import { grey } from 'material-ui/colors';
 
 import * as helpers from './jss/helpers.js';
@@ -109,6 +111,7 @@ const SearchInputsSection = (props) => (
       <MySearchBar
         placeholder="Location"
         defaultBorderRadius
+        noCloseIcon
         onChange={props.onLocationInputChange}
       />
     </InputWrapper>

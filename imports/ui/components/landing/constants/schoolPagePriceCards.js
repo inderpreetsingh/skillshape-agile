@@ -68,7 +68,7 @@ export default schoolPagePriceCards = [
       },
       {
         iconName: 'av_timer',
-        featureName: 'Progress Tracking for students'
+        featureName: 'Progress Tracking'
       },
       {
         iconName: 'email',
@@ -76,11 +76,11 @@ export default schoolPagePriceCards = [
       },
       {
         iconName: 'pets',
-        featureName: 'Merchandise and Inventory'
+        featureName: 'Merchandise & Inventory'
       },
       {
         iconName: 'android',
-        featureName: 'School app for IOS & Android'
+        featureName: 'App for IOS & Android'
       }
     ],
     perMonth: true,

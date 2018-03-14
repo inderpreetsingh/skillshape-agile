@@ -5,7 +5,6 @@
 
 .issue-cards {
   @extend .issues;
-  max-width: 1000px;
   width: 100%;
 
   @include respond-to('mobile') {

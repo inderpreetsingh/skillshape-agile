@@ -253,11 +253,11 @@ class Landing extends Component {
         oldFilter.is_map_view = !this.state.mapView;
         this.setState({
             mapView: !this.state.mapView,
-            sticky: false,
             filters: oldFilter,
         });
 
         this.scrollTo();
+        // scroller.scrollMore(10);
     }
 
     scrollTo(name) {
@@ -447,7 +447,7 @@ class Landing extends Component {
     skillLevelFilter = (text) => {
         let oldFilter = {...this.state.tempFilters}
         oldFilter.experienceLevel = text;
-        this.setState({tempFilters:oldFilter})
+        this.setState({tempFilters: oldFilter})
     }
 
 

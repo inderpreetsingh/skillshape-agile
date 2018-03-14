@@ -12,7 +12,6 @@ import IssueNumber from './IssueNumber.jsx';
 const Wrapper= styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
-  max-width: ${helpers.schoolPageContainer}px;
   margin: 0 auto;
   width: 100%;
 
@@ -66,15 +65,33 @@ const IssuesNumberWrapper = styled.div`
 
 const IssuesFixed = styled.div`
   display: ${props => props.hideIssues ? 'none' : 'block'};
+  background-color: ${props => props.sticky ? 'white' : 'none'};
+  padding: ${props => props.sticky ? `${helpers.rhythmDiv}px 0` : 0};
 `;
 
 class IssueSelectors extends Component {
   state = {
-    activeIssue: 0,
+    activeIssue: -1,
     clickEvent: false,
-    wrappers: [],
+    wrappers: [], // It is the solution boxes to which we want to scroll .
     hideIssues: true,
+    sticky: false,
     displayIssueNumbers: true,
+  }
+
+  handleStickyStateChange = (status) => {
+    console.log(status,"status..")
+    if (status.status === 2) {
+      if(!this.state.sticky) {
+        this.setState({
+          sticky: true
+        });
+      }
+    }else if(status.status === 0) {
+      this.setState({
+         sticky: false
+      });
+    }
   }
 
   _calcSolutionWrappersData = () => {
@@ -108,17 +125,19 @@ class IssueSelectors extends Component {
 
     if(!this.state.clickEvent) {
 
-      // If we are moved to the 3rd wrapper/solution box
+      // If we have moved to the 3rd wrapper/solution box
       if(window.pageYOffset >= wrappersData[2]) {
         this.handleActiveIssueState(2);
       }else if(window.pageYOffset >= wrappersData[1]) {
         this.handleActiveIssueState(1);
-      }else {
+      }else if(window.pageYOffset >= wrappersData[0]) {
         this.handleActiveIssueState(0);
+      }else {
+        this.handleActiveIssueState(-1);
       }
     }
 
-    // This controls the issue numbers to only display for issues sections
+    // This controls the issue numbers to only display for browser width less than 500
     if(window.innerWidth < 500) {
       if (!this.state.displayIssueNumbers) this.setState({displayIssueNumbers : true});
     }else {
@@ -185,19 +204,19 @@ class IssueSelectors extends Component {
 
   render() {
     return(<Wrapper>
-      <Sticky className='issue-cards' top={8}>
-        <IssuesFixed hideIssues={this.state.hideIssues}>
-          <IssuesWrapper>
-          {this.props.issues &&
-            this.props.issues.map((issue,i) => (
-              <IssueCard
-                key={i}
-                active={this.state.activeIssue === i}
-                onClick={() => this.handleCardClick(i)}
-                {...issue}
-                />
-            ))}
-          </IssuesWrapper>
+      <Sticky className='issue-cards' onStateChange={this.handleStickyStateChange}>
+        <IssuesFixed sticky={this.state.sticky} hideIssues={this.state.hideIssues}>
+            <IssuesWrapper>
+            {this.props.issues &&
+              this.props.issues.map((issue,i) => (
+                <IssueCard
+                  key={i}
+                  active={this.state.activeIssue === i}
+                  onClick={() => this.handleCardClick(i)}
+                  {...issue}
+                  />
+              ))}
+            </IssuesWrapper>
         </IssuesFixed>
       </Sticky>
 

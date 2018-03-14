@@ -173,7 +173,11 @@ class ClassTypeList extends Component {
                     removeAllFiltersButtonClick={this.props.removeAllFilters}
                 />
                 <span style={{padding: 8}}>
-                <b>Your search yielded no results. Try changing your search?</b>
+                {this.props.mapView ?
+                  <b>No results in this area. Try a different area?</b>
+                  :
+                  <b>Your search yielded no results. Try changing your search?</b>
+                }
                 </span>
             </NoResultContainer>
         }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {findDOMNode} from 'react-dom';
+
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Sticky from 'react-stickynode';
@@ -26,10 +26,14 @@ const Wrapper = styled.div`
   background-position: bottom left;
   background-repeat: repeat no-repeat;
   background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     min-height: 100vh;
-    height: auto;
+    height: 100%;
+    background-attachment: initial;
+    padding-top: 116px; // 100px is the height of problem cards + 16px marginbottom
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -53,6 +57,11 @@ const Avatar = styled.img`
   position: absolute;
   bottom: 0;
   left: 30px;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    height: 75px;
+  }
+
 `;
 
 const IssuesTitle = styled.div`
@@ -90,14 +99,8 @@ class SchoolIssues extends Component {
     });
   }
 
-  _getCardsDataForSolutionBox = (index) => {
-    if(index === 0) {
-      return this.props.cardsData['bringingMorePeople'];
-    }else if(index === 1) {
-      return this.props.cardsData['keepingStudentsExcited'];
-    }
-
-    return this.props.cardsData['managingAdministrativeChores'];
+  _getDataForSolutionBox = (index) => {
+    return this.props.cardsData['solutionBox'+(index+1)];
   }
 
   render() {
@@ -121,8 +124,10 @@ class SchoolIssues extends Component {
             <SolutionBox
               firstBox={i === 0}
               title={issue.title}
-              cardsData={this._getCardsDataForSolutionBox(i)}
-               />
+              helpsUsIn={issue.helpsUsIn}
+              cardBgColor={this._getDataForSolutionBox(i).cardBgColor}
+              cardsData={this._getDataForSolutionBox(i).cardsData}
+            />
 
             <Avatar src={issue.avatar} />
           </Wrapper></Element>))}
