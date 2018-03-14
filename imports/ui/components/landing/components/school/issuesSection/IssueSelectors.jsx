@@ -12,7 +12,6 @@ import IssueNumber from './IssueNumber.jsx';
 const Wrapper= styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
-  max-width: ${helpers.schoolPageContainer}px;
   margin: 0 auto;
   width: 100%;
 
@@ -66,15 +65,33 @@ const IssuesNumberWrapper = styled.div`
 
 const IssuesFixed = styled.div`
   display: ${props => props.hideIssues ? 'none' : 'block'};
+  background-color: ${props => props.sticky ? 'white' : 'none'};
+  padding: ${props => props.sticky ? `${helpers.rhythmDiv}px 0` : 0};
 `;
 
 class IssueSelectors extends Component {
   state = {
     activeIssue: -1,
     clickEvent: false,
-    wrappers: [],
+    wrappers: [], // It is the solution boxes to which we want to scroll .
     hideIssues: true,
+    sticky: false,
     displayIssueNumbers: true,
+  }
+
+  handleStickyStateChange = (status) => {
+    console.log(status,"status..")
+    if (status.status === 2) {
+      if(!this.state.sticky) {
+        this.setState({
+          sticky: true
+        });
+      }
+    }else if(status.status === 0) {
+      this.setState({
+         sticky: false
+      });
+    }
   }
 
   _calcSolutionWrappersData = () => {
@@ -187,19 +204,19 @@ class IssueSelectors extends Component {
 
   render() {
     return(<Wrapper>
-      <Sticky className='issue-cards' top={8}>
-        <IssuesFixed hideIssues={this.state.hideIssues}>
-          <IssuesWrapper>
-          {this.props.issues &&
-            this.props.issues.map((issue,i) => (
-              <IssueCard
-                key={i}
-                active={this.state.activeIssue === i}
-                onClick={() => this.handleCardClick(i)}
-                {...issue}
-                />
-            ))}
-          </IssuesWrapper>
+      <Sticky className='issue-cards' onStateChange={this.handleStickyStateChange}>
+        <IssuesFixed sticky={this.state.sticky} hideIssues={this.state.hideIssues}>
+            <IssuesWrapper>
+            {this.props.issues &&
+              this.props.issues.map((issue,i) => (
+                <IssueCard
+                  key={i}
+                  active={this.state.activeIssue === i}
+                  onClick={() => this.handleCardClick(i)}
+                  {...issue}
+                  />
+              ))}
+            </IssuesWrapper>
         </IssuesFixed>
       </Sticky>
 

@@ -168,12 +168,16 @@ const SchoolPriceCard = (props) => (<Wrapper extended={props.extended}>
       </ContentWrapper>
       <ButtonAreaWrapper>
         <ButtonWrapper>
-          <PrimaryButton noMarginBottom label="Join now" />
+          <PrimaryButton noMarginBottom label="Join now" onClick={props.onJoinNowButtonClick}/>
         </ButtonWrapper>
       </ButtonAreaWrapper>
     </SchoolCardContent>
   </Wrapper>
 );
+
+SchoolPriceCard.propTypes = {
+
+}
 
 SchoolPriceCard.defaultProps = {
 

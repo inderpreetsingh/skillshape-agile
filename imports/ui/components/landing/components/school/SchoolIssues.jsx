@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {findDOMNode} from 'react-dom';
+
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Sticky from 'react-stickynode';
@@ -99,7 +99,7 @@ class SchoolIssues extends Component {
     });
   }
 
-  _getCardsDataForSolutionBox = (index) => {
+  _getDataForSolutionBox = (index) => {
     return this.props.cardsData['solutionBox'+(index+1)];
   }
 
@@ -124,8 +124,10 @@ class SchoolIssues extends Component {
             <SolutionBox
               firstBox={i === 0}
               title={issue.title}
-              cardsData={this._getCardsDataForSolutionBox(i)}
-               />
+              helpsUsIn={issue.helpsUsIn}
+              cardBgColor={this._getDataForSolutionBox(i).cardBgColor}
+              cardsData={this._getDataForSolutionBox(i).cardsData}
+            />
 
             <Avatar src={issue.avatar} />
           </Wrapper></Element>))}

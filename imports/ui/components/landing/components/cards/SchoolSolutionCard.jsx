@@ -45,11 +45,11 @@ const SolutionCardWrapper = styled.article`
   border-radius: ${helpers.rhythmDiv * 2}px;
   cursor: pointer;
   background-image: url('${props => props.bgImage}');
-  background-position: center center;
   padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
   margin: 0;
   margin-right: ${helpers.rhythmDiv * 2}px;
+  background-color: ${props => props.cardBgColor};
 
   &:last-of-type {
     margin-right: 0;
@@ -110,7 +110,11 @@ const CardTitle = styled.h3`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   text-align: center;
   line-height: 1;
-  text-transform: capitalize;
+  text-transform: lowercase;
+
+  :first-letter {
+    text-transform: capitalize;
+  }
 `;
 
 const CardContentTitle = styled.h4`
@@ -182,7 +186,7 @@ class SchoolSolutionCard extends Component {
   render() {
     // console.log(this.state,"adsljfj")
     return (
-      <SolutionCardWrapper bgImage={this.props.bgImage} itemScope itemType="http://schema.org/Service" onClick={this.revealCardContent} >
+      <SolutionCardWrapper cardBgColor={this.props.cardBgColor} bgImage={this.props.bgImage} itemScope itemType="http://schema.org/Service" onClick={this.revealCardContent} >
         <SolutionCardContent>
           <CardContentInnerWrapper ref={container => this.contentContainer = container}>
             <CardTitle>{this.props.title}</CardTitle>
@@ -226,6 +230,7 @@ SchoolSolutionCard.propTypes = {
   tagline: PropTypes.string,
   title: PropTypes.string,
   bgImage: PropTypes.string,
+  cardBgColor: PropTypes.string,
 }
 
 SchoolSolutionCard.defaultProps = {
