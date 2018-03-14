@@ -32,6 +32,7 @@ const Wrapper = styled.div`
   @media screen and (max-width: ${helpers.tablet}px) {
     min-height: 100vh;
     height: 100%;
+    background-attachment: initial;
     padding-top: 116px; // 100px is the height of problem cards + 16px marginbottom
   }
 
@@ -94,13 +95,7 @@ class SchoolIssues extends Component {
   }
 
   _getCardsDataForSolutionBox = (index) => {
-    if(index === 0) {
-      return this.props.cardsData['bringingMorePeople'];
-    }else if(index === 1) {
-      return this.props.cardsData['keepingStudentsExcited'];
-    }
-
-    return this.props.cardsData['managingAdministrativeChores'];
+    return this.props.cardsData['solutionBox'+(index+1)];
   }
 
   render() {

@@ -23,7 +23,6 @@ const styles = {
   },
   cardIconButton : {
     borderRadius: '50%',
-    cursor: 'pointer',
     minWidth: '0',
     minHeight: '0',
     padding: `0 ${helpers.rhythmDiv}px`,
@@ -111,6 +110,7 @@ const CardTitle = styled.h3`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   text-align: center;
   line-height: 1;
+  text-transform: capitalize;
 `;
 
 const CardContentTitle = styled.h4`
@@ -157,8 +157,8 @@ const CardDescription = (props) => (
         <Icon>clear</Icon>
       </Button>
     </IconButtonWrapper>
-    <CardContentTitle description>{props.contentTitle}</CardContentTitle>
-    <CardContent>{props.descriptionContent}</CardContent>
+    <CardContentTitle description>{props.tagline}</CardContentTitle>
+    <CardContent>{props.content}</CardContent>
   </CardDescriptionWrapper>
 );
 
@@ -180,22 +180,22 @@ class SchoolSolutionCard extends Component {
 
 
   render() {
-    console.log(this.state,"adsljfj")
+    // console.log(this.state,"adsljfj")
     return (
       <SolutionCardWrapper bgImage={this.props.bgImage} itemScope itemType="http://schema.org/Service" onClick={this.revealCardContent} >
         <SolutionCardContent>
           <CardContentInnerWrapper ref={container => this.contentContainer = container}>
             <CardTitle>{this.props.title}</CardTitle>
-            <CardContentTitle>{this.props.contentTitle}</CardContentTitle>
+            <CardContentTitle>{this.props.tagline}</CardContentTitle>
           </CardContentInnerWrapper>
         </SolutionCardContent>
 
         <CardDescription
-          descriptionContent={this.props.descriptionContent}
+          content={this.props.content}
           hideCardContent={this.hideCardContent}
           revealCardContent={this.revealCardContent}
           title={this.props.title}
-          contentTitle={this.props.contentTitle}
+          tagline={this.props.tagline}
           classes={this.props.classes}
           key={this.props._id}
           revealCard={this.state.revealCard}
@@ -213,23 +213,25 @@ class SchoolSolutionCard extends Component {
 
 CardDescription.propTypes = {
   name : PropTypes.string,
-  descriptionContent: PropTypes.element,
+  tagline: PropTypes.string,
+  title: PropTypes.string,
+  content: PropTypes.element,
   hideCardContent : PropTypes.func.isRequired
 }
 
 SchoolSolutionCard.propTypes = {
   name: PropTypes.string,
-  classTypeImg: PropTypes.string,
-  height: PropTypes.number,
   classes: PropTypes.object.isRequired,
-  descriptionContent: PropTypes.element,
-  showDetailsComponent : PropTypes.element
+  content: PropTypes.string,
+  tagline: PropTypes.string,
+  title: PropTypes.string,
+  bgImage: PropTypes.string,
 }
 
 SchoolSolutionCard.defaultProps = {
    title: 'Patented Media Management',
-   contentTitle: 'Highlights your school and it\'s offerings',
-   descriptionContent: 'And makes it easy for students to search by times, skill levels, location, and other parameters to find the class that truly meets their needs.'
+   tagline: 'Highlights your school and it\'s offerings',
+   content: 'And makes it easy for students to search by times, skill levels, location, and other parameters to find the class that truly meets their needs.'
 }
 
 export default withStyles(styles)(SchoolSolutionCard);

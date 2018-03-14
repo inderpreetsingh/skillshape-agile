@@ -19,7 +19,7 @@ const PricingBoxWrapper = styled.div`
   margin: 0 auto;
   width: 100%;
   max-width: ${helpers.schoolPageContainer}px;
-  padding: ${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv * 4}px;
   height: 100%;
   flex-grow: 1;
   ${helpers.flexCenter};

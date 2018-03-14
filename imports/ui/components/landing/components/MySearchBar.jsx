@@ -112,10 +112,16 @@ class MySearchBar extends Component {
   }
 
   _getCloseIconClassName = (active,classes) => {
+    if(this.props.noCloseIcon) {
+      return classes.hide;
+    }
     return active ? classes.show : classes.hide;
   }
 
   _getShowIconClassName = (active,classes) => {
+    if(this.props.noCloseIcon) {
+      return classes.show;
+    }
     return active ? classes.hide : classes.show;
   }
   render () {
@@ -206,6 +212,7 @@ MySearchBar.defaultProps = {
   defaultBorderRadius: false,
   withIcon: true,
   rightAlign: false,
+  noCloseIcon: false,
 }
 
 MySearchBar.propTypes = {
@@ -214,7 +221,7 @@ MySearchBar.propTypes = {
   // To specify whether we want closing/searching icon
   withIcon: PropTypes.bool,
   closeIcon: PropTypes.node,
-
+  noCloseIcon: PropTypes.bool,
   disabled: PropTypes.bool,
   /** Sets placeholder for the embedded text field. */
   placeholder: PropTypes.string,

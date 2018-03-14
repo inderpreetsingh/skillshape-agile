@@ -16,7 +16,8 @@ const styles = {
     width: helpers.rhythmDiv * 2,
     height: helpers.rhythmDiv * 2,
     marginRight: helpers.rhythmDiv * 2,
-    transform: `translateY(-${helpers.rhythmDiv/2}px)`
+    transform: `translateY(-${helpers.rhythmDiv/2}px)`,
+    cursor: 'initial'
   },
   iconStyles : {
     width: helpers.rhythmDiv * 2,
@@ -133,7 +134,7 @@ const BadgeWrapper = styled.div`
 `;
 
 const Feature = (props) => (<FeatureWrapper>
-  <IconButton className={props.classes.iconButton}>
+  <IconButton className={props.classes.iconButton} disableRipple={true}>
     <Icon className={props.classes.iconStyles}>{props.iconName}</Icon>
   </IconButton>
   <FeatureName>{props.featureName}</FeatureName>

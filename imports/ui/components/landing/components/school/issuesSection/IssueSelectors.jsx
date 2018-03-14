@@ -108,7 +108,7 @@ class IssueSelectors extends Component {
 
     if(!this.state.clickEvent) {
 
-      // If we are moved to the 3rd wrapper/solution box
+      // If we have moved to the 3rd wrapper/solution box
       if(window.pageYOffset >= wrappersData[2]) {
         this.handleActiveIssueState(2);
       }else if(window.pageYOffset >= wrappersData[1]) {
@@ -120,7 +120,7 @@ class IssueSelectors extends Component {
       }
     }
 
-    // This controls the issue numbers to only display for issues sections
+    // This controls the issue numbers to only display for browser width less than 500
     if(window.innerWidth < 500) {
       if (!this.state.displayIssueNumbers) this.setState({displayIssueNumbers : true});
     }else {
