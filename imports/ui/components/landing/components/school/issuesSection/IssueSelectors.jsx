@@ -65,8 +65,8 @@ const IssuesNumberWrapper = styled.div`
 
 const IssuesFixed = styled.div`
   display: ${props => props.hideIssues ? 'none' : 'block'};
-  background-color: ${props => props.sticky ? 'white' : 'none'};
-  padding: ${props => props.sticky ? `${helpers.rhythmDiv}px 0` : 0};
+  background-color: white;
+  padding: ${helpers.rhythmDiv}px;
 `;
 
 class IssueSelectors extends Component {

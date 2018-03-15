@@ -11,14 +11,17 @@ import { schoolDoorImgSrc } from '../../site-settings.js';
 
 const styles = {
     root: {
-      '@media screen and (max-width: 500px)': {
+      ['@media screen and (max-width : '+helpers.tablet+'px)']: {
+        boxShadow: helpers.inputBoxShadow
+      },
+      ['@media screen and (max-width : '+helpers.mobile+'px)']: {
         width: '100%'
       }
     },
     formControl: {
       width: 250,
       height: helpers.rhythmDiv * 6,
-      '@media screen and (max-width: 500px)': {
+      ['@media screen and (max-width : '+helpers.mobile+'px)']: {
         width: '100%'
       }
     },
@@ -127,7 +130,7 @@ const HeaderOverlay = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(255,255,255,0.5);
+  background-color: ${helpers.overlayColor};
   z-index: -1;
 
   @media screen and ( max-width: ${helpers.tablet}px) {
@@ -145,7 +148,17 @@ const InputWrapper = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  margin-left: ${helpers.rhythmDiv}px;
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: none;
+  }
+`;
+
+const ButtonSmallWrapper = styled.div`
+  display: none;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: block;
+  }
 
   @media screen and (max-width: ${helpers.mobile}px) {
     width: 100%;
@@ -184,6 +197,14 @@ const SchoolHeader = (props) => (
                   noMarginBottom
                   onClick={props.onSignUpBtnClick} />
               </ButtonWrapper>
+              <ButtonSmallWrapper>
+                <PrimaryButton
+                  label="Sign Up"
+                  increaseHeight
+                  noMarginBottom
+                  boxShadow
+                  onClick={props.onSignUpBtnClick} />
+              </ButtonSmallWrapper>
             </InputWrapper>
         </HeaderContent>
 

@@ -54,7 +54,7 @@ const NavBarInnerContent = styled.div`
       bottom: 0;
       left: 0;
       right: 0;
-      background-color: ${props => props.overlay ? 'rgba(255,255,255,0.5)' : 'transparent'};
+      background-color: ${props => props.overlay ? helpers.overlayColor : 'transparent'};
       z-index: -1;
     }
   }

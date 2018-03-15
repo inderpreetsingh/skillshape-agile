@@ -61,6 +61,8 @@ export const
     gradientDirection = "bottom",
     googleButtonColor = 'rgb(221, 75, 57)',
     facebookButtonColor = 'rgb(59, 89, 152)',
+    overlayColor = 'rgba(255,255,255,0.8)',
+    inputBoxShadow = '0px 1px 0px 0px rgba(0, 0, 0, 0.1), 0px 2px 0px 0px rgba(0, 0, 0, 0.1), 0px 3px 1px -2px rgba(0, 0, 0, 0.05)',
 
     /******RULES**********/
     flexCenter = `display: flex; justify-content: center; align-items: center;`,

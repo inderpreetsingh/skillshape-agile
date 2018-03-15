@@ -11,6 +11,8 @@ import ClearIcon from 'material-ui-icons/Clear';
 import SearchIcon from 'material-ui-icons/Search';
 import { grey } from 'material-ui/colors';
 
+import * as helpers from './jss/helpers.js';
+
 const styles = {
   root: {
     height: '100%',
@@ -21,7 +23,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     position: 'relative',
-    boxShadow: `0px 1px 0px 0px rgba(0, 0, 0, 0.1), 0px 2px 0px 0px rgba(0, 0, 0, 0.1), 0px 3px 1px -2px rgba(0, 0, 0, 0.05);`
+    boxShadow: helpers.inputBoxShadow
   },
   iconButtonRoot : {
     height: 32,

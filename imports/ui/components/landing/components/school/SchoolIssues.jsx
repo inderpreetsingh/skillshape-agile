@@ -25,15 +25,13 @@ const Wrapper = styled.div`
   background-image: url('${props => props.bgImage}');
   background-position: bottom left;
   background-repeat: repeat no-repeat;
-  background-attachment: fixed;
+  padding-top: 116px; // 100px is the height of problem cards + 16px marginbottom
   display: flex;
   flex-direction: column;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     min-height: 100vh;
     height: 100%;
-    background-attachment: initial;
-    padding-top: 116px; // 100px is the height of problem cards + 16px marginbottom
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -55,7 +53,7 @@ const SolutionBoxWrapper = styled.div`
 const Avatar = styled.img`
   height: 100px;
   position: absolute;
-  bottom: 0;
+  bottom: 8px;
   left: 30px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
@@ -114,7 +112,9 @@ class SchoolIssues extends Component {
             />
         </Issues>
         {this.props.issues && this.props.issues.map((issue, i) => (
+
           <Element name={`solution-container-${i}`}>
+
           <Wrapper
             bgImage={issue.bgImage}
             bgColor={issue.bgColor}
@@ -130,6 +130,7 @@ class SchoolIssues extends Component {
             />
 
             <Avatar src={issue.avatar} />
+
           </Wrapper></Element>))}
       </OuterWrapper>
     )
