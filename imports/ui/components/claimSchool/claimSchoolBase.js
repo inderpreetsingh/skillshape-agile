@@ -133,7 +133,7 @@ export default class ClaimSchoolBase extends React.Component {
 
     }
 
-        collectSelectedSkillSubject = (text) => {
+    collectSelectedSkillSubject = (text) => {
         let oldFilter = {...this.state.tempFilters}
         oldFilter.skillSubjectIds = text.map((ele) => ele._id);
         oldFilter.defaultSkillSubject = text
@@ -175,55 +175,10 @@ export default class ClaimSchoolBase extends React.Component {
         this.setState({filters: { ...this.state.filters, ...this.state.tempFilters}})
     }
 
-    componentDidMount() {
-        $(window).off("scroll");
-        $(".main-panel").off("scroll");
-        $("#UserMainPanel").off("scroll");
-        $(window).scroll(this.fixedHeader);
-        $("#UserMainPanel").scroll(this.fixedHeader);
-        $(".main-panel").scroll(this.fixedHeader);
+    removeAllFilters = ()=> {
+        this.setState({
+            filters: {},
+            tempFilters: {},
+        })
     }
-
-    fixedHeader = () => {
-        if (window.innerWidth > 767) {
-            if ($("#UserMainPanel").scrollTop() >= 200) {
-                $("#scr_affix").addClass("fixed-header");
-                if ($(".sidebar").length > 0)
-                    $("#scr_affix").css({
-                        position: "relative",
-                        top: $("#UserMainPanel").scrollTop() - 100 + "px"
-                    });
-            } else {
-                $("#scr_affix").removeClass("fixed-header");
-                $("#scr_affix").attr("style", "");
-            }
-        }
-    };
-
-    resetFilter = filterRef => {
-        filterRef.schoolName.value = "";
-        filterRef.website.value = "";
-        filterRef.phoneNumber.value = "";
-        filterRef.claimcoords = "";
-        filterRef.address.value = "";
-        filterRef.typeOfSkill.value = "Any";
-        this.setState({
-            filters: {}
-        });
-    };
-
-    handleSkillCategoryChange = filterRef => {
-        console.log("onSearch", filterRef);
-        let skillCategoryName = filterRef.map(skillCat => {
-            return skillCat._id;
-        });
-        console.log("skillCtaegoryName", skillCategoryName);
-        let oldFilter = this.state.filters;
-        // This is skill category filter.
-        oldFilter.skillCat = skillCategoryName;
-        console.log("oldFilter==>", oldFilter);
-        this.setState({
-            filters: oldFilter
-        });
-    };
 }

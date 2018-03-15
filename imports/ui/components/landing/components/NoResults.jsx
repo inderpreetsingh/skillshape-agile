@@ -1,4 +1,5 @@
 import React from 'react';
+import get from 'lodash/get';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -74,7 +75,7 @@ const OrText = styled.p`
 `;
 
 const NoResults = (props) => (
-  <DocumentTitle title={props.route.name || "Untitled"}>
+  <DocumentTitle title={get(props, "route.name", "Untitled")}>
   <Wrapper>
     <IconWrapper>
       <Plant />
