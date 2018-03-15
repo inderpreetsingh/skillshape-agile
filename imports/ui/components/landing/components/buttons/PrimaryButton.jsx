@@ -137,6 +137,7 @@ PrimaryButton.propTypes = {
     classes: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
     itemScope: PropTypes.bool,
+    boxShadow: PropTypes.bool,
     itemType: PropTypes.string
 }
 

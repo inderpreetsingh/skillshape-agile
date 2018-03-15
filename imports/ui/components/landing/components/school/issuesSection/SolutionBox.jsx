@@ -14,15 +14,21 @@ const BoxWrapper = styled.div`
   flex-grow: 1;
   justify-content: space-evenly;
   max-width: ${helpers.schoolPageContainer}px;
+  width: 100%;
   margin: 0 auto;
   height: 100%;
-  padding: ${helpers.rhythmDiv * 2}px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    padding-top: ${helpers.rhythmDiv * 2}px;
     max-width: 500px;
-    width: 100%;
   }
+`;
+
+const TitleArea = styled.div`
+  width: 100%;
+  text-align: center;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+  margin-top: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Title = styled.h2`
@@ -35,6 +41,7 @@ const Title = styled.h2`
   text-align: center;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv}px;
+
 
   @media screen and (max-width: ${helpers.tablet}px) {
     font-size: ${helpers.baseFontSize * 1.5}px;
@@ -56,13 +63,13 @@ SchoolSolutionCardsWrapper = styled.div`
   ${helpers.flexCenter}
   justify-content: space-around;
   max-width: ${helpers.schoolPageContainer}px;
-  padding: ${helpers.rhythmDiv * 2}px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+  margin-top: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     max-width: 464px;
     flex-wrap: wrap;
-    margin: 0 auto;
-    padding-bottom: 0;
+    margin: ${helpers.rhythmDiv * 2}px auto;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -77,7 +84,8 @@ SchoolSolutionSliderWrapper = styled.div`
     display: block;
     width: 100%;
     overflow: hidden;
-    padding-bottom: ${helpers.rhythmDiv * 4}px
+    margin-top: ${helpers.rhythmDiv * 2}px;
+    padding-bottom: ${helpers.rhythmDiv * 4}px;
   }
 `;
 
@@ -85,15 +93,17 @@ const ActionArea = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+  margin-top: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+  }
+
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
-`;
-
-const TitleArea = styled.div`
-  width: 100%;
-  text-align: center;
 `;
 
 const SolutionBox = (props) => (
@@ -105,17 +115,17 @@ const SolutionBox = (props) => (
 
     <SchoolSolutionCardsWrapper>
       {props.cardsData && props.cardsData.map((card,i) => (
-        <SchoolSolutionCard key={i} {...card} cardBgColor={props.cardBgColor}/>
+        <SchoolSolutionCard key={i} noMarginBotton={i === 2 || i === 3} {...card} cardBgColor={props.cardBgColor}/>
       ))}
     </SchoolSolutionCardsWrapper>
 
     <SchoolSolutionSliderWrapper>
-      <SchoolSolutionSlider data={props.cardsData} />
+      <SchoolSolutionSlider data={props.cardsData} componentProps={{cardBgColor: props.cardBgColor}}/>
     </SchoolSolutionSliderWrapper>
 
     <ActionArea>
       <ButtonWrapper>
-        <PrimaryButton onClick={props.onActionButtonClick}/>
+        <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>
       </ButtonWrapper>
     </ActionArea>
   </BoxWrapper>
