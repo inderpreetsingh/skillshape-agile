@@ -21,8 +21,9 @@ const Wrapper = styled.div`
   filter: ${props => props.active ?  'none' : 'grayscale(90%)'};
   border-radius: ${helpers.rhythmDiv * 2}px;
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv}px;
-  box-shadow: ${props => props.active ? '1px 1px 1px 2px rgba(0,0,0,0.1), -1px -1px 1px 2px rgba(0,0,0,0.1)' : '1px 1px 0px 1px rgba(0,0,0,0.1), -1px -1px 0px 1px rgba(0,0,0,0.1)'};
-
+  box-shadow: ${props => props.active ? '1px 1px 16px 0px rgba(0,0,0,0.1)' : '1px 1px 8px 0px rgba(0,0,0,0.1)'};
+  transition: box-shadow .1s linear;
+  
   @media screen and (max-width: ${helpers.tablet}px) {
     max-width: ${props => props.active ?  '250' : '100'}px;
     margin: 0 ${helpers.rhythmDiv}px;

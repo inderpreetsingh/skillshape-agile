@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import PrimaryButton from '../../buttons/PrimaryButton.jsx';
+
 import SchoolSolutionCard from '../../cards/SchoolSolutionCard.jsx';
 import SchoolSolutionSlider from './SchoolCardsSlider.jsx';
 
@@ -55,6 +56,10 @@ const Tagline = styled.h3`
   font-style: italic;
   font-weight: 300;
   margin: 0;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: none;
+  }
 `;
 
 
@@ -98,6 +103,10 @@ const ActionArea = styled.div`
 
   @media screen and (max-width: ${helpers.tablet}px) {
     margin-bottom: ${helpers.rhythmDiv * 2}px;
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: none;
   }
 
 `;

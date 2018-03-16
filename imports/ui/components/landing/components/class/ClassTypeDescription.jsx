@@ -26,6 +26,7 @@ const Title = styled.h2`
   line-height: 1;
   margin: 0;
   font-weight: 100;
+  text-transform: capitalize;
 `;
 
 const NoOfReviews = styled.p`

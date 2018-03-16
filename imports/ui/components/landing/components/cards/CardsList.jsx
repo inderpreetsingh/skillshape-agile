@@ -45,21 +45,23 @@ const More = styled.div`
     width:100%;
     padding:${helpers.rhythmDiv}px;
     ${helpers.flexCenter}
+    margin-top: ${helpers.rhythmDiv * 3}px;
 `;
 
 const CardsListTitle = styled.h2`
-    padding-left: ${helpers.oneRow}px;
-    color: ${helpers.textColor};
-    font-size: ${helpers.baseFontSize * 2}px;
-    font-weight: 600;
-    font-family: ${helpers.specialFont};
-    margin-bottom: ${helpers.rhythmDiv}px;
-    margin-top: 0;
-    @media screen and (min-width: 0) and (max-width: ${helpers.tablet}px) {
-        padding-left: 0;
-        text-align: center;
-    }
+  padding-left: ${helpers.oneRow}px;
+  color: ${helpers.textColor};
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-weight: 600;
+  font-family: ${helpers.specialFont};
+  margin-bottom: ${helpers.rhythmDiv}px;
+  margin-top: 0;
+  @media screen and (min-width: 0) and (max-width: ${helpers.tablet}px) {
+      padding-left: 0;
+      text-align: center;
+  }
 `;
+
 
 class CardsList extends Component {
     _compareCardsData(currentCardsData,newCardsData) {
@@ -106,14 +108,16 @@ class CardsList extends Component {
             }
         }
         return false;
+
     }
 
     render() {
         const { title, cardsData, mapView,handleSeeMore,name,classInterestData, filters} = this.props;
+
         // console.log("CardsList cardsData-->>",this.props);
         return(
           <CardsListWrapper>
-              <CardsListTitle>{title} </CardsListTitle>
+              <CardsListTitle>{title}</CardsListTitle>
               <CardsListGridWrapper mapView={mapView}>
                  <Grid container spacing={24}>
                      {cardsData.map(card => {
@@ -132,14 +136,16 @@ class CardsList extends Component {
                          }
                      })}
                  </Grid>
+
+                 {
+                   this.seeMoreStatus(cardsData, filters) && (
+                       <More>
+                          <SecondaryButton label="See More" onClick={() => {handleSeeMore(name)}}/>
+                       </More>
+                   )
+                 }
               </CardsListGridWrapper>
-              {
-                this.seeMoreStatus(cardsData, filters) && (
-                    <More>
-                       <SecondaryButton label="See More" onClick={() => {handleSeeMore(name)}}/>
-                    </More>
-                )
-              }
+
           </CardsListWrapper>
         )
     }

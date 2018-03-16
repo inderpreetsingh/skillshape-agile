@@ -62,10 +62,12 @@ const CardContentHeader = styled.div`
   align-items: center;
 `;
 
-const CardContentTitle = styled.div`
+const CardContentTitle = styled.h2`
   font-size: ${helpers.baseFontSize * 1.5}px;
   font-weight: 300;
   font-family: ${helpers.specialFont};
+  margin: 0;
+  text-transform: capitalize;
 
   @media screen and (max-width : ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
@@ -185,7 +187,7 @@ class SchoolCard extends Component {
 
           <CardContent>
             <CardContentHeader>
-              <CardContentTitle itemProp="name">{cutString(schoolCardData.name, 25)}</CardContentTitle>
+              <CardContentTitle itemProp="name">{cutString(schoolCardData.name.toLowerCase(), 25)}</CardContentTitle>
              {/* <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
                 <MoreVert />
               </IconButton>*/}

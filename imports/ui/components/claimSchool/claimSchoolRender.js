@@ -54,6 +54,7 @@ export default function () {
              />*/}
              <FilterPanel
                displayChangeViewButton={false}
+               fullWidth
                ref="ClaimSchoolFilter"
                {...this.props}
                onModalClose={() => this.handleFiltersDialogBoxState(false)}

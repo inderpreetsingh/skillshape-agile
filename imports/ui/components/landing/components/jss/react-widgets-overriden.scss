@@ -5,6 +5,7 @@
   box-shadow: none;
   font-size: $base-font-size * 1px;
   font-family: map-get($fonts,'common');
+
   &:hover {
     box-shadow: none;
     border-bottom: 2px solid $dark-border-color;
@@ -32,6 +33,10 @@
 }
 
 .my-multi-select-filter {
+  .rw-widget-input, .rw-widget-picker, .rw-widget-container, .rw-multiselect {
+    background-color: transparent;
+  }
+
   .rw-multiselect .rw-widget-picker > div {
     max-width: 100%;
   }

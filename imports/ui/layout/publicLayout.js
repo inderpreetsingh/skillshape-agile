@@ -21,7 +21,7 @@ const styles = theme => ({
     },
     content: {
         backgroundColor: theme.palette.background.default,
-        paddingTop: theme.spacing.unit*10 - theme.spacing.unit/2,
+        // paddingTop: theme.spacing.unit*10 - theme.spacing.unit/2,
     }
 });
 

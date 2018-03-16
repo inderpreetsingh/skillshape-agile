@@ -65,11 +65,12 @@ const IssuesNumberWrapper = styled.div`
 
 const IssuesFixed = styled.div`
   display: ${props => props.hideIssues ? 'none' : 'block'};
-  background-color: white;
+  background-color: ${props => props.sticky ? 'white' : 'none'};
   padding: ${helpers.rhythmDiv}px;
 `;
 
-class IssueSelectors extends Component {
+// Helps to decide between the format of issues ( be it cards or numbers).
+class IssueFormatSelectors extends Component {
   state = {
     activeIssue: -1,
     clickEvent: false,
@@ -99,7 +100,8 @@ class IssueSelectors extends Component {
     return this.state.wrappers.map((wrapper,i) => {
       const wrapperObj = findDOMNode(wrapper);
       const wrapperObjRect = wrapperObj.getBoundingClientRect();
-      return documentElemTop + wrapperObjRect.top;
+      // -32 px so that cards can be colored 32px before they reach the solution container.
+      return documentElemTop + wrapperObjRect.top - 32;
     });
   }
 
@@ -235,8 +237,8 @@ class IssueSelectors extends Component {
   }
 }
 
-IssueSelectors.defaultProps = {
+IssueFormatSelectors.defaultProps = {
   headerContent: 'At school you face three main problems'
 }
 
-export default IssueSelectors;
+export default IssueFormatSelectors;
