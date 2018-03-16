@@ -24,7 +24,7 @@ const NoFoundResultWapper = styled.div`
 function goToSchoolPage(school) {
   console.log("goToSchoolPage --->>",school)
   if(school && school.slug) {
-    browserHistory.push(`schools/${school.slug}`)
+    browserHistory.push(`/schools/${school.slug}`)
   }
   return
 }
@@ -57,7 +57,7 @@ const ClassTypeCardDescription = (props) => {
                <Grid item xs={12} sm={6}>
                     <SecondaryButton
                       fullWidth
-                      onClick={() => browserHistory.push(`classType/${cardRevealInfo._id}`)}
+                      onClick={() => browserHistory.push(`/classType/${cardRevealInfo._id}`)}
                       label="View Details"/>
                 </Grid>
                 <Grid item xs={12} sm={6}>

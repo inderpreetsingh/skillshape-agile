@@ -25,7 +25,7 @@ class ClassTypeView extends Component {
 		return(
             <DocumentTitle title={this.props.route.name}>
     			<Wrapper className="classtype-page">
-    				<TopSearchBar/>
+    				<TopSearchBar {...this.props}/>
             		    <ClassTypeContent {...this.props}/>
             		<Footer/>
             	</Wrapper>
