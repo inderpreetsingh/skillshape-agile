@@ -377,6 +377,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
         }
 
         for (let itemObj of config.defaultClassType) {
+            classfilter["$text"] = { $search: itemObj.location };
+
             let skillCategoryFilter = {
                 ["$or"]: []
             };

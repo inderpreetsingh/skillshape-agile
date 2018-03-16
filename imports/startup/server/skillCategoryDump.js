@@ -148,7 +148,8 @@ export default _skillCategoryObj = {
         "Racketball",
         "Pilates",
         "Acrobatics",
-        "Barre"
+        "Barre",
+        "Surfing"
     ],
     "Language": [
         "Arabic",

@@ -12,6 +12,7 @@ import ClassType from '/imports/ui/components/landing/ClassType.jsx';
 import NoResults from '/imports/ui/components/landing/components/NoResults';
 import ClassTypeView from '/imports/ui/components/classTypeView';
 import School from '/imports/ui/components/landing/School.jsx';
+import NoPageFound from '/imports/ui/components/landing/components/NoPageFound';
 
 import ResetPassword from '/imports/ui/components/account/resetPassword';
 import MyProfile from '/imports/ui/components/users/myProfile';
@@ -70,5 +71,6 @@ export default Routes = componentLoader((props) => (
         {/*<Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />*/}
       </Route>
     </Route>
+    <Route path="*" name="NoPageFound" component={NoPageFound} />
   </Router>
 ));

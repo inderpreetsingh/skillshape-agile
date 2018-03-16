@@ -132,6 +132,8 @@ export default function() {
                                             </Typography>
                                             <FormControl fullWidth margin='dense'>
                                                 <MaterialDatePicker
+                                                    required={false}
+                                                    emptyLabel="Select a Date"
                                                     floatingLabelText={"Birth Date"}
                                                     hintText={"Birth Date"}
                                                     value={dob}

@@ -7,7 +7,7 @@ Meteor.methods({
     	return SkillCategory.find({name: { $regex: new RegExp(textSearch, 'mi') }},{limit: 10}).fetch();
     },
     "getAllSkillCategories": function() {
-        console.log("Onserver",SkillCategory.find({},{fields: {_id:0, name: 1}}).fetch())
+        // console.log("Onserver",SkillCategory.find({},{fields: {_id:0, name: 1}}).fetch())
         return SkillCategory.find({},{fields: {name: 1}}).fetch();
     }
 });
