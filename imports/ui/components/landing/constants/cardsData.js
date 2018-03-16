@@ -4,7 +4,7 @@ export const cardsData = [{
     id: uuidv4(),
     reviews: 3,
     ratings: 5,
-    imgSrc: '/images/landing/1.jpg',
+    imgSrc: '/images/landing/p6.jpg',
     name: 'Jan-ni Yoga',
     description: 'In times of pregnancy, when women are battling mood swings at varying levels, fatigue and sickness, painful leg cramps and breathing problems; yoga exercises, techniques and postures ease all',
 },
@@ -20,8 +20,8 @@ export const cardsData = [{
     id: uuidv4(),
     reviews: 1,
     ratings: 3,
-    imgSrc: '/images/landing/5.jpg',
-    name: 'Khamosh',
+    imgSrc: '/images/landing/p6.jpg',
+    name: 'Khamosh Is the Universal Way of meditation',
     description: 'Meditation has the power to boost concentration on daily activities. Learn about meditation benefits, tips, importance and advantages which help to achieve goals in your life.',
 },
 {
@@ -47,8 +47,8 @@ export const cardsData1 = [
     id: uuidv4(),
     reviews: 232,
     ratings: 5,
-    imgSrc: '/images/landing/p5.jpg',
-    name: 'Henry Painted',
+    imgSrc: '/images/landing/p6.jpg',
+    name: 'PAINTING DRAWING MODEL LIVING AND SCULPTURE',
     description: 'Painting is self-discovery. Every good artist paints what he is.'
   },
   {

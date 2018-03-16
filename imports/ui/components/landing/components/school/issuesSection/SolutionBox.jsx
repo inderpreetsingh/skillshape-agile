@@ -55,6 +55,10 @@ const Tagline = styled.h3`
   font-style: italic;
   font-weight: 300;
   margin: 0;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: none;
+  }
 `;
 
 

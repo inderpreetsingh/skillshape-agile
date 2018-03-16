@@ -21,17 +21,32 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    minHeight: 420
   },
   cardIcon : {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    height: 24,
+    width: 24
   }
 }
 
+
+const CardImageTitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 320px;
+`;
+
 const CardImageWrapper = styled.div`
-  height: 250px;
+  max-height: 300px;
+  height: 100%;
   width: 100%;
-  position: relative;
+
+  background-position: 50% 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url('${props => props.bgImage}');
 `;
 
 const CardImage = styled.img`
@@ -39,7 +54,6 @@ const CardImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  position: absolute;
 `;
 
 const CardContent = styled.div`
@@ -48,16 +62,18 @@ const CardContent = styled.div`
 
 const CardContentHeader = styled.div`
   display: flex;
-  padding: 10px;
-  padding-bottom: ${helpers.rhythmDiv}px;
+  padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 `;
 
-const CardContentTitle = styled.div`
+const CardContentTitle = styled.h2`
   font-size: ${helpers.baseFontSize * 1.5}px;
   font-weight: 300;
   font-family: ${helpers.specialFont};
+  line-height: 1;
+  margin: 0;
 
   @media screen and (max-width : ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
@@ -107,21 +123,55 @@ const CardDescriptionActionArea = styled.div`
   padding: 5px;
 `;
 
-const CardDescription = ({ key, classes, className, name, hideCardContent, descriptionContent, classTypeImg}) => (
-  <CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
+
+const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCardContent, descriptionContent, classTypeImg}) => {
+
+  const _getRefactoredTitle = (title, maxLimit) => {
+    if(title.length <= maxLimit) {
+      return title;
+    }
+
+    const words = title.split(' ');
+    const maxCharsToDisplay = _getMaxCharsTitleLimit(words,maxLimit);
+    return title.substr(0,maxCharsToDisplay) + '...';
+  }
+
+  // This function will let us count the max words of title we can display
+  const _getMaxCharsTitleLimit = (words, maxLimit) => {
+    let count = 0;
+
+    for(let i = 0; i < words.length; ++i) {
+      count += words[i].length + 1;
+
+      // if the count increases the maxLimit, gets the last complete word
+      if(count > maxLimit) {
+        count -= (words[i].length + 1);
+        break;
+      }else if( count == maxLimit) {
+        break;
+      }
+    }
+
+    return count;
+  }
+
+
+  return (<CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
     <CardDescriptionHeader>
       <CardImageContainer>
         <avatar style={{backgroundImage: `url(${classTypeImg})`,backgroundSize: 'cover',borderRadius: '50%',height:'40px',width:'40px'}}></avatar>
       </CardImageContainer>
-      <CardContentTitle>{name}</CardContentTitle>
+
+      <CardContentTitle description>{_getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
+
       <CardDescriptionActionArea>
         <IconButton className={classes.cardIcon} color="primary" onClick={hideCardContent}> <Clear /> </IconButton>
       </CardDescriptionActionArea>
     </CardDescriptionHeader>
 
     {descriptionContent}
-  </CardDescriptionWrapper>
-);
+  </CardDescriptionWrapper>);
+}
 
 const Reveal = ({children, ...props}) => {
   // console.log(props,"props..");
@@ -139,6 +189,7 @@ const Reveal = ({children, ...props}) => {
 class CardsReveal extends Component {
   state = {
     imageContainerHeight: '250px',
+    maxCharsLimit: 20,
     revealCard: false
   };
   revealCardContent = (e) => {
@@ -155,13 +206,15 @@ class CardsReveal extends Component {
       imageContainerHeight: width
     })
   }
-  componentDidMount() {
-    //this.updateDimensions();
-    window.addEventListener("resize", this.updateDimensions);
-  }
-  componentWillUnMount() {
-    window.addEventListener("resize", this.updateDimensions);
-  }
+
+
+  // componentDidMount() {
+  //   //this.updateDimensions();
+  //   window.addEventListener("resize", this.updateDimensions);
+  // }
+  // componentWillUnMount() {
+  //   window.addEventListener("resize", this.updateDimensions);
+  // }
   render() {
     const { name, classTypeImg, descriptionContent, body, classes } = this.props;
 
@@ -170,11 +223,10 @@ class CardsReveal extends Component {
       <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
 
         <div onClick={this.revealCardContent}>
-          <CardImageWrapper ref={(div) => this.imgContainer = div} style={{height: this.state.imageContainerHeight}}>
-            <CardImage src={classTypeImg || cardImgSrc} alt="card img" />
-          </CardImageWrapper>
+          <CardImageTitleWrapper>
 
-          <CardContent>
+            <CardImageWrapper ref={(div) => this.imgContainer = div} bgImage={classTypeImg || cardImgSrc}></CardImageWrapper>
+
             <CardContentHeader>
               <CardContentTitle itemProp="name">{name}</CardContentTitle>
               <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
@@ -182,17 +234,21 @@ class CardsReveal extends Component {
               </IconButton>
             </CardContentHeader>
 
+          </CardImageTitleWrapper>
+
+          <CardContent>
             <CardContentBody>{body}</CardContentBody>
           </CardContent>
         </div>
 
         <Transition timeout={{enter : 0, exit: 0}} in={this.state.revealCard}>
-          {(state) => (<CardDescription
+          {(transitionState) => (<CardDescription
               descriptionContent={descriptionContent}
               hideCardContent={this.hideCardContent}
               name={name}
               classes={classes}
-              className={state}
+              className={transitionState}
+              maxCharsLimit={this.state.maxCharsLimit}
               key={this.props._id}
               classTypeImg={classTypeImg || cardImgSrc}
             />)}

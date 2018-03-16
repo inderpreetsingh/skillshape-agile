@@ -38,7 +38,7 @@ const FilterPanelOuterContainer = styled.div`
 
 const FilterPanelContainer = styled.div`
     width: ${props => (props.mapView || props.stickyPosition) ? '100%' : 'auto'};
-    max-width: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView) ? '100%' : '1000px'};
+    max-width: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView || props.fullWidth) ? '100%' : '1000px'};
     background: ${props => props.filtersInDialogBox || (props.stickyPosition || props.mapView) ? '#ffffff' : 'transparent'};
     margin: auto;
     position: ${props => props.mapView ? 'fixed' : 'initial'};
@@ -361,13 +361,13 @@ class FilterPanel extends Component {
     }
     render() {
       const { showMoreFilters } = this.state;
-      const { stickyPosition, mapView, filtersInDialogBox } = this.props;
+      const { stickyPosition, mapView, filtersInDialogBox , fullWidth } = this.props;
       console.log("FilterPanel props  -->>",this.props);
       console.log("FilterPanel state  -->>",this.state);
       return (
           <MuiThemeProvider theme={muiTheme}>
             <FilterPanelOuterContainer mapView={mapView}>
-              <FilterPanelContainer mapView={mapView} stickyPosition={stickyPosition} filtersInDialogBox={filtersInDialogBox}>
+              <FilterPanelContainer fullWidth={fullWidth} mapView={mapView} stickyPosition={stickyPosition} filtersInDialogBox={filtersInDialogBox}>
                   <FilterPanelContent mapView={mapView} stickyPosition={stickyPosition} filtersInDialogBox={filtersInDialogBox}>
                    <form noValidate autoComplete="off">
                       {filtersInDialogBox ? this.renderFiltersForDialogBox() : this.renderFilterBar()}
@@ -389,12 +389,16 @@ const CssTransitionGroupWrapperGrid = (props) => (
 FilterPanel.propTypes = {
   handleShowMoreFiltersButtonClick: PropTypes.func,
   filtersInDialogBox: PropTypes.bool,
-  displayChangeViewButton: PropTypes.bool
+  displayChangeViewButton: PropTypes.bool,
+  fullWidth: PropTypes.bool,
+  stickyPosition: PropTypes.bool,
+  mapView: PropTypes.bool
 }
 
 FilterPanel.defaultProps = {
   filtersInDialogBox: false,
-  displayChangeViewButton: true
+  displayChangeViewButton: true,
+  fullWidth: false
 }
 
 export default FilterPanel;

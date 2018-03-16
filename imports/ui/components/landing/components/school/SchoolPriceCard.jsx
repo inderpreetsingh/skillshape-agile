@@ -34,8 +34,12 @@ const Wrapper = styled.article`
   display: flex;
   flex-direction: column;
   min-width: 0;
+  box-shadow: 1px 1px 8px 0px rgba(0,0,0,0.1);
+  transition: box-shadow .1s linear;
 
-  box-shadow: 1px 1px 0px 1px rgba(0,0,0,0.1), -1px -1px 0px 1px rgba(0,0,0,0.1);
+  &:hover {
+    box-shadow: 1px 1px 16px 0px rgba(0,0,0,0.1);
+  }
 
   &:last-of-type {
     margin-right: 0;
@@ -48,6 +52,8 @@ const Wrapper = styled.article`
       margin-bottom: 0;
     }
   }
+
+
 `;
 
 const Price = styled.p`
@@ -176,7 +182,7 @@ const SchoolPriceCard = (props) => (<Wrapper extended={props.extended}>
 );
 
 SchoolPriceCard.propTypes = {
-
+  onJoinNowButtonClick: PropTypes.func
 }
 
 SchoolPriceCard.defaultProps = {

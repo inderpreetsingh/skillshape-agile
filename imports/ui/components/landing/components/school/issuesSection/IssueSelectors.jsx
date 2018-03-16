@@ -65,7 +65,7 @@ const IssuesNumberWrapper = styled.div`
 
 const IssuesFixed = styled.div`
   display: ${props => props.hideIssues ? 'none' : 'block'};
-  background-color: white;
+  background-color: ${props => props.sticky ? 'white' : 'none'};
   padding: ${helpers.rhythmDiv}px;
 `;
 
@@ -99,7 +99,8 @@ class IssueSelectors extends Component {
     return this.state.wrappers.map((wrapper,i) => {
       const wrapperObj = findDOMNode(wrapper);
       const wrapperObjRect = wrapperObj.getBoundingClientRect();
-      return documentElemTop + wrapperObjRect.top;
+      // -32 px so that cards can be colored 32px before they reach the solution container.
+      return documentElemTop + wrapperObjRect.top - 32;
     });
   }
 

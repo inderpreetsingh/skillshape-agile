@@ -8,6 +8,8 @@ import {Element} from 'react-scroll';
 import IssueSelectors from './issuesSection/IssueSelectors.jsx';
 import SolutionBox from './issuesSection/SolutionBox';
 
+import GetStartedDialogBox from '../dialogs/GetStartedDialogBox.jsx';
+
 import * as helpers from '../jss/helpers.js';
 
 const OuterWrapper = styled.div`
@@ -84,6 +86,7 @@ const Issues = styled.div`
 class SchoolIssues extends Component {
   state = {
     wrappers: [],
+    getStartedDialogBox: false,
     mobile: false,
   }
 
@@ -101,6 +104,12 @@ class SchoolIssues extends Component {
     return this.props.cardsData['solutionBox'+(index+1)];
   }
 
+  handleGetStartedDialogBoxState = (state) => {
+    this.setState({
+      getStartedDialogBox: state
+    })
+  }
+
   render() {
     // console.log(this.state.activeIssue,"lajsf");
     return(<OuterWrapper>
@@ -111,6 +120,8 @@ class SchoolIssues extends Component {
               wrappers={this.state.wrappers}
             />
         </Issues>
+        {this.state.getStartedDialogBox && <GetStartedDialogBox open={this.state.getStartedDialogBox} onModalClose={() => this.handleGetStartedDialogBoxState(false)}/>}
+
         {this.props.issues && this.props.issues.map((issue, i) => (
 
           <Element name={`solution-container-${i}`}>
@@ -127,6 +138,7 @@ class SchoolIssues extends Component {
               helpsUsIn={issue.helpsUsIn}
               cardBgColor={this._getDataForSolutionBox(i).cardBgColor}
               cardsData={this._getDataForSolutionBox(i).cardsData}
+              onActionButtonClick={() => this.handleGetStartedDialogBoxState(true)}
             />
 
             <Avatar src={issue.avatar} />

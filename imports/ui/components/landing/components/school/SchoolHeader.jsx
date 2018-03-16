@@ -41,6 +41,67 @@ const styles = {
 }
 
 
+const OuterWrapper = styled.div`
+  background-color: ${helpers.schoolPageColor};
+  position: relative;
+  z-index: 1;
+  clip-path: ${helpers.clipPathCurve};
+
+  //
+  // &:after {
+  //   content: "";
+  //   position: absolute;
+  //   width: 100%;
+  //   background-color: inherit;
+  //   border-bottom: ${helpers.rhythmDiv * 8}px solid ${helpers.schoolPageColor};
+  //   border-radius: 100%;
+  //   bottom: -${helpers.rhythmDiv * 8}px;
+  //   z-index: -1;
+  //   height: ${helpers.rhythmDiv * 8}px;
+  //
+  //   @media screen and (max-width: ${helpers.tablet}px) {
+  //     opacity: 0.5;
+  //   }
+  // }
+`;
+
+const Wrapper = styled.div`
+  max-width: ${helpers.schoolPageContainer}px;
+  max-height: 600px;
+  height: 100vh;
+  margin: 0 auto;
+  background-image: url(${props => props.bgSrc});
+  background-size: 500px;
+  background-position: 100% calc(100% - 14px);
+  background-repeat: no-repeat;
+  position: relative;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    background-position: calc(100% + 125px) calc(100% - 14px);
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    background-position: calc(100% + 250px) calc(100% - 14px);
+  }
+`;
+
+const HeaderOverlay = styled.div`
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: ${helpers.overlayColor};
+  z-index: -1;
+
+  @media screen and ( max-width: ${helpers.tablet}px) {
+    display: block;
+  }
+`;
+
 const HeaderContent = styled.div`
   width: 500px;
   padding: ${helpers.rhythmDiv * 2}px;
@@ -79,64 +140,6 @@ const HeaderContentWrapper = styled.div`
   z-index: 0;
 `;
 
-const OuterWrapper = styled.div`
-  background-color: ${helpers.schoolPageColor};
-  position: relative;
-  z-index: 1;
-  clip-path: ${helpers.clipPathCurve};
-  //
-  // &:after {
-  //   content: "";
-  //   position: absolute;
-  //   width: 100%;
-  //   background-color: inherit;
-  //   border-bottom: ${helpers.rhythmDiv * 8}px solid ${helpers.schoolPageColor};
-  //   border-radius: 100%;
-  //   bottom: -${helpers.rhythmDiv * 8}px;
-  //   z-index: -1;
-  //   height: ${helpers.rhythmDiv * 8}px;
-  //
-  //   @media screen and (max-width: ${helpers.tablet}px) {
-  //     opacity: 0.5;
-  //   }
-  // }
-`;
-
-const Wrapper = styled.div`
-  max-width: ${helpers.schoolPageContainer}px;
-  height: 600px;
-  margin: 0 auto;
-  background-image: url(${props => props.bgSrc});
-  background-size: 500px;
-  background-position: 100% calc(100% - 14px);
-  background-repeat: no-repeat;
-  position: relative;
-
-  @media screen and (max-width: ${helpers.tablet}px) {
-    background-position: calc(100% + 125px) calc(100% - 14px);
-  }
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    background-position: calc(100% + 250px) calc(100% - 14px);
-  }
-`;
-
-const HeaderOverlay = styled.div`
-  display: none;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: ${helpers.overlayColor};
-  z-index: -1;
-
-  @media screen and ( max-width: ${helpers.tablet}px) {
-    display: block;
-  }
-`;
 
 const InputWrapper = styled.div`
   display: flex;
