@@ -55,7 +55,7 @@ const SchoolDetails = (props) => (
       <AboutSchool
         website={props.website}
         address={props.address}
-        title={props.schoolName}
+        title={props.schoolName.toLowerCase()}
         description={props.description}/>
       <StudentNotes notes={props.notes}/>
     </SchoolSection>

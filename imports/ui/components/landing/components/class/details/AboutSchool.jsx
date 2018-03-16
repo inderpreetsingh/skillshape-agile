@@ -19,6 +19,7 @@ const Title = styled.h2`
   margin: 0;
   font-weight: 300;
   line-height: 1;
+  text-transform: capitalize;
 `;
 
 const Description = styled.p`

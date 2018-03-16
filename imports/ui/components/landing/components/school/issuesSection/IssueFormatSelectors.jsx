@@ -69,7 +69,8 @@ const IssuesFixed = styled.div`
   padding: ${helpers.rhythmDiv}px;
 `;
 
-class IssueSelectors extends Component {
+// Helps to decide between the format of issues ( be it cards or numbers).
+class IssueFormatSelectors extends Component {
   state = {
     activeIssue: -1,
     clickEvent: false,
@@ -236,8 +237,8 @@ class IssueSelectors extends Component {
   }
 }
 
-IssueSelectors.defaultProps = {
+IssueFormatSelectors.defaultProps = {
   headerContent: 'At school you face three main problems'
 }
 
-export default IssueSelectors;
+export default IssueFormatSelectors;

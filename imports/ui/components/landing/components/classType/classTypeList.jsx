@@ -105,6 +105,13 @@ const FooterWrapper = styled.div`
   width: 100%;
 `;
 
+const RevertSearch = styled.span`
+  padding: ${helpers.rhythmDiv}px;
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-weight: 300;
+  font-family: ${helpers.specialFont};
+  color: ${helpers.black};
+`;
 
 class ClassTypeList extends Component {
 
@@ -172,13 +179,9 @@ class ClassTypeList extends Component {
                 <NoResults
                     removeAllFiltersButtonClick={this.props.removeAllFilters}
                 />
-                <span style={{padding: 8}}>
-                {this.props.mapView ?
-                  <b>No results in this area. Try a different area?</b>
-                  :
-                  <b>Your search yielded no results. Try changing your search?</b>
-                }
-                </span>
+                <RevertSearch>
+                  {this.props.mapView ? 'No results in this area. Try a different area?' : 'Your search yielded no results. Try changing your search?'}
+                </RevertSearch>
             </NoResultContainer>
         }
     }

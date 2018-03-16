@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Sticky from 'react-stickynode';
 import {Element} from 'react-scroll';
 
-import IssueSelectors from './issuesSection/IssueSelectors.jsx';
+import IssueFormatSelectors from './issuesSection/IssueFormatSelectors.jsx';
 import SolutionBox from './issuesSection/SolutionBox';
 
 import GetStartedDialogBox from '../dialogs/GetStartedDialogBox.jsx';
@@ -115,7 +115,7 @@ class SchoolIssues extends Component {
     return(<OuterWrapper>
         <Issues>
           <IssuesTitle>{this.props.headerContent}</IssuesTitle>
-          <IssueSelectors
+          <IssueFormatSelectors
               issues={this.props.issues}
               wrappers={this.state.wrappers}
             />

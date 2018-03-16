@@ -74,6 +74,7 @@ const CardContentTitle = styled.h2`
   font-family: ${helpers.specialFont};
   line-height: 1;
   margin: 0;
+  text-transform: capitalize;
 
   @media screen and (max-width : ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
@@ -123,6 +124,9 @@ const CardDescriptionActionArea = styled.div`
   padding: 5px;
 `;
 
+const CardContentInnerTitle = styled.span`
+  text-transform: capitalize;
+`;
 
 const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCardContent, descriptionContent, classTypeImg}) => {
 
@@ -217,7 +221,7 @@ class CardsReveal extends Component {
   // }
   render() {
     const { name, classTypeImg, descriptionContent, body, classes } = this.props;
-
+    const myTitle = name.toLowerCase();
     //console.log(ShowDetails,"adsljfj")
     return (
       <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
@@ -228,7 +232,7 @@ class CardsReveal extends Component {
             <CardImageWrapper ref={(div) => this.imgContainer = div} bgImage={classTypeImg || cardImgSrc}></CardImageWrapper>
 
             <CardContentHeader>
-              <CardContentTitle itemProp="name">{name}</CardContentTitle>
+              <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
               <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
                 <MoreVert />
               </IconButton>
@@ -245,7 +249,7 @@ class CardsReveal extends Component {
           {(transitionState) => (<CardDescription
               descriptionContent={descriptionContent}
               hideCardContent={this.hideCardContent}
-              name={name}
+              name={myTitle}
               classes={classes}
               className={transitionState}
               maxCharsLimit={this.state.maxCharsLimit}
