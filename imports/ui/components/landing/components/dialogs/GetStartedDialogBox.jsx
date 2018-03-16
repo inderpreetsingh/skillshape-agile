@@ -42,26 +42,12 @@ const styles = {
   },
   dialogContent :  {
     display: 'flex',
+    padding: helpers.rhythmDiv * 2,
+    paddingTop: 0
   },
   dialogAction: {
     width: '100%',
     margin: 0
-  },
-  dialogActionsRoot: {
-    width: '100%',
-    padding: `0 ${helpers.rhythmDiv * 3}px`,
-    margin: 0,
-    '@media screen and (max-width : 500px)': {
-      padding: `0 ${helpers.rhythmDiv * 3}px`
-    }
-  },
-  dialogActionsRootButtons: {
-    width: '100%',
-    padding: `0 ${helpers.rhythmDiv}px`,
-    margin: 0,
-    '@media screen and (max-width : 500px)': {
-      padding: `0 ${helpers.rhythmDiv}px`
-    }
   },
   iconButton: {
     height: 'auto',
@@ -98,11 +84,22 @@ const DialogTitleWrapper = styled.h1`
 const ButtonWrapper = styled.div`
   min-width: 100px;
   margin-left: ${helpers.rhythmDiv}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    margin-left: 0;
+    margin-top: ${helpers.rhythmDiv * 2}px;
+    width: 100%;
+  }
 `;
 
 const MyForm = styled.form`
   display: flex;
   align-items: flex-end;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 class SchoolGetStartedDialogBox extends Component {
@@ -159,7 +156,6 @@ class SchoolGetStartedDialogBox extends Component {
                               id="email"
                               type="email"
                               value={this.state.email}
-                              refs={input => this.input = input}
                               onChange={this.handleInputChange}
                               fullWidth
                              />
@@ -177,10 +173,6 @@ class SchoolGetStartedDialogBox extends Component {
                       </MyForm>
                   </DialogContent>
 
-                  <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
-
-                  </DialogActions>
-
                 </MuiThemeProvider>
             </Dialog>
         )
@@ -190,10 +182,7 @@ class SchoolGetStartedDialogBox extends Component {
 SchoolGetStartedDialogBox.propTypes = {
   onModalClose: PropTypes.func,
   classes: PropTypes.object.isRequired,
-  filterPanelProps: PropTypes.object,
   open: PropTypes.bool,
-  errorText: PropTypes.string,
-  unsetError: PropTypes.func,
 }
 
 export default withMobileDialog()(withStyles(styles)(SchoolGetStartedDialogBox));
