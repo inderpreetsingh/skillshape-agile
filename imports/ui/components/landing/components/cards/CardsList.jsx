@@ -18,9 +18,8 @@ const CardsListWrapper = styled.div`
   padding: 0;
 `;
 
-const SPACING = (helpers.rhythmDiv * 3 )/2;
-const SPACING_MAPVIEW = helpers.rhythmDiv;
-const CARD_WIDTH = 320;
+const SPACING = helpers.rhythmDiv * 3;
+const CARD_WIDTH = 280;
 
 const GridContainer = styled.div`
   ${helpers.flexCenter}
@@ -34,28 +33,29 @@ const GridContainer = styled.div`
 
 const GridItem = styled.div`
   width: ${CARD_WIDTH}px;
-  padding: ${props => props.spacing ? props.spacing/2 : '16'}px;
+  margin: ${props => props.spacing/2 || '16'}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     max-width: ${CARD_WIDTH}px;
+    margin: ${props => props.spacing/2 || '16'}px 0;
   }
 `;
 
 const CardsListGridWrapper = styled.div`
-    padding: ${props => props.mapView ? SPACING_MAPVIEW : SPACING}px;
+    padding: ${SPACING/2}px;
     margin: 0;
     margin-right: auto;
-    max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING_MAPVIEW, 2) + 8 : getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
+    max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING, 2) + 24 : getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
 
-    @media screen and (max-width: 1304px) {
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px) {
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px;
     }
 
-    @media screen and (max-width: 984px) {
-      max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING_MAPVIEW,1) + 8 : getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px;
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px) {
+      max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24 : getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px;
     }
 
-    @media screen and (max-width: 664px) {
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px) {
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24}px;
       margin: 0 auto;
     }
