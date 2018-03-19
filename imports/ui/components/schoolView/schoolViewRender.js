@@ -2,7 +2,7 @@ import React,{Fragment} from 'react';
 import ReactDOM from 'react-dom';
 import DocumentTitle from 'react-document-title';
 import { browserHistory, Link } from 'react-router';
-import { floor } from 'lodash';
+import { floor, isArray } from 'lodash';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
@@ -251,10 +251,10 @@ export default function() {
                                         </Typography>
                                         <Typography component="p" style={{color: '#7f7f7f'}}>
                                           <b>Covers:</b> {
-                                            _.isEmpty(enrollmentFee.selectedClassType) ? "None" :
-                                            enrollmentFee.selectedClassType.map((classType) => {
-                                              return <span>{classType.name} </span>
-                                            })
+                                            isArray(enrollmentFee.selectedClassType) ?
+                                              enrollmentFee.selectedClassType.map((classType) => {
+                                                return <span>{classType.name} </span>
+                                              }) : "None"
                                           }
                                         </Typography>
                                       </Grid>
@@ -299,10 +299,10 @@ export default function() {
                                         </Typography>
                                         <Typography component="p" style={{color: '#7f7f7f'}}>
                                           <b>Covers:</b> {
-                                            _.isEmpty(classPrice.selectedClassType) ? "None" :
-                                            classPrice.selectedClassType.map((classType) => {
-                                              return <span>{classType.name} </span>
-                                            })
+                                            isArray(classPrice.selectedClassType) ?
+                                              classPrice.selectedClassType.map((classType) => {
+                                                return <span>{classType.name} </span>
+                                              }) : "None"
                                           }
                                         </Typography>
                                       </Grid>
@@ -371,10 +371,10 @@ export default function() {
                                             }
                                             <Typography component="p" style={{color: '#7f7f7f'}}>
                                               <b>Covers:</b> {
-                                                _.isEmpty(monthPrice.selectedClassType) ? "None" :
-                                                monthPrice.selectedClassType.map((classType) => {
-                                                  return <span>{classType.name} </span>
-                                                })
+                                                isArray(monthPrice.selectedClassType) ?
+                                                  monthPrice.selectedClassType.map((classType) => {
+                                                    return <span>{classType.name} </span>
+                                                  }) : "None"
                                               }
                                             </Typography>
                                         </Grid>
