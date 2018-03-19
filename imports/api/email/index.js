@@ -236,7 +236,7 @@ export const sendEmailToStudentForClaimAsMember = function(
                 "profile.lastName"
             )}`;
         Email.send({
-            to: "sam@skillshape.com",
+            to: toEmail,
             from: fromEmail,
             subject: "School member invitation received",
             html: `Hi ${user.profile.name},
