@@ -103,7 +103,7 @@ const Read = styled.span`
 `;
 
 // This can be changed according to the data
-_isClassOnGoing = (scheduleType) => scheduleType.toLowerCase().replace(/\-/) === ON_GOING_SCHEDULE;
+_isClassOnGoing = (scheduleType) => scheduleType && scheduleType.toLowerCase().replace(/\-/) === ON_GOING_SCHEDULE;
 
 class ClassTime extends Component {
 
@@ -199,7 +199,7 @@ class ClassTime extends Component {
             key={this.props._id} >
             <div>
               <ClassTimeClockManager
-                data={this.props.classTimes}
+                data={this.props}
                 schedule={this.props.scheduleType}
                 clockProps={
                   {
