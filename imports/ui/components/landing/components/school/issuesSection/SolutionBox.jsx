@@ -23,7 +23,6 @@ const BoxWrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     max-width: 500px;
-    justify-content: center;
   }
 `;
 
@@ -35,7 +34,6 @@ const TitleArea = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     ${helpers.flexCenter}
-    flex-grow: 1;
   }
 `;
 
@@ -98,7 +96,6 @@ SchoolSolutionSliderWrapper = styled.div`
     overflow: hidden;
     margin-top: ${helpers.rhythmDiv * 2}px;
     padding-bottom: ${helpers.rhythmDiv * 2}px;
-    flex-grow: 2;
   }
 `;
 
@@ -114,7 +111,7 @@ const ActionArea = styled.div`
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    display: none;
+    opacity: 0;
     margin: 0;
   }
 
