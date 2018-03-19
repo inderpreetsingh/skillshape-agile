@@ -329,8 +329,4 @@ class ClassTypeContent extends Component {
 	}
 }
 
-<<<<<<< HEAD
-export default ClassTypeContent;
-=======
 export default toastrModal(ClassTypeContent);
->>>>>>> e7e080b0b87cf4c6d1239dd4b0c18f1f85cdb624
