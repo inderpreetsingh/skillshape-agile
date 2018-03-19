@@ -180,7 +180,7 @@ class ClassTypeList extends Component {
                     removeAllFiltersButtonClick={this.props.removeAllFilters}
                 />
                 <RevertSearch>
-                  {this.props.mapView ? 'No results in this area. Try a different area?' : 'Your search yielded no results. Try changing your search?'}
+                  {this.props.mapView ? 'No results in this area. Try a different area?' : 'Try changing your search'}
                 </RevertSearch>
             </NoResultContainer>
         }

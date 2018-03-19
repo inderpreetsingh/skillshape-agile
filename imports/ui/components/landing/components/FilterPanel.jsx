@@ -85,7 +85,7 @@ const GridContainerWrapper = styled.div`
 const MapChangeButtonWrapper = styled.div`
   width: 130px;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.mobile + 20}px) {
     margin-right: ${helpers.rhythmDiv * 2}px;
     width: 80px;
   }
@@ -94,7 +94,7 @@ const MapChangeButtonWrapper = styled.div`
 const FilterBarWrapper = styled.div`
   width: calc(100% - ${props => props.displayChangeViewButton ? '130px' : '0px'});
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.mobile + 20}px) {
     width: calc(100% - ${props => props.displayChangeViewButton ? '80px' : '0px'});
   }
 `;
@@ -117,7 +117,8 @@ class FilterPanel extends Component {
       }
 
       handleChangeInScreenSize = () => {
-        if(window.innerWidth < 500) {
+        // +20 is to counter the size of scrollbars
+        if(window.innerWidth <= (helpers.mobile + 20)) {
           if(!this.state.mobile) {
             this.setState({
               ...this.state,
@@ -149,6 +150,10 @@ class FilterPanel extends Component {
             console.log(result,'result');
             this.setState({skillCategoryData:result})
         });
+    }
+
+    componentDidUpdate() {
+      this.handleChangeInScreenSize();
     }
 
     // This is used to get subjects on the basis of subject category.
