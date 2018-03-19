@@ -61,7 +61,7 @@ export default function() {
                                 {this.props.importLogs && this.props.importLogs.map((logs, index) => {
                                     return (
                                       <TableRow selectable={false}>
-                                        <TableCell style={style.w211}>{cutString(logs.fileName, 15)}</TableCell>
+                                        <TableCell title={logs.fileName} style={style.w211}>{cutString(logs.fileName, 30)}</TableCell>
                                         <TableCell style={style.w150}>{logs.status}</TableCell>
                                         <TableCell style={style.w100}>{logs.totalRecord}</TableCell>
                                         <TableCell style={style.w100}>{logs.sucessCount}</TableCell>

@@ -14,6 +14,8 @@ import {getContainerMaxWidth} from '../../../../../util/cards.js';
 
 import * as helpers from '../jss/helpers.js';
 
+import School from "/imports/api/school/fields";
+
 const CardsListWrapper = styled.div`
     padding: 0;
 `;
@@ -121,16 +123,17 @@ class CardsList extends Component {
               <CardsListGridWrapper mapView={mapView}>
                  <Grid container spacing={24}>
                      {cardsData.map(card => {
+                        console.log("cardsData card -->>",card)
                          if(mapView) {
                            return (
                              <Grid item key={card.id} md={6} sm={12} lg={6} xs={12}>
-                                 <ClassTypeCard schoolData={this.props.schoolData} classInterestData={classInterestData} {...card}/>
+                                 <ClassTypeCard schoolData={School.findOne({_id: card.schoolId})} classInterestData={classInterestData} {...card}/>
                              </Grid>
                            )
                          }else {
                            return (
                              <Grid item key={card.id} md={4} sm={6} lg={3} xs={12}>
-                                 <ClassTypeCard schoolData={this.props.schoolData} classInterestData={classInterestData} {...card}/>
+                                 <ClassTypeCard schoolData={School.findOne({_id: card.schoolId})} classInterestData={classInterestData} {...card}/>
                              </Grid>
                            )
                          }
