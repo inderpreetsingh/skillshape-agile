@@ -122,7 +122,7 @@ TopSearchBar.propTypes = {
 }
 
 TopSearchBar.defaultProps = {
-  onSkillShapeForSchoolsClick: () => browserHistory.push('skillshape-school')
+  onSkillShapeForSchoolsClick: () => browserHistory.push('/skillshape-school')
 }
 
 export default TopSearchBar;

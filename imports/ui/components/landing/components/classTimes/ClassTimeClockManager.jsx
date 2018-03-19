@@ -1,4 +1,5 @@
 import React , {Component,Fragment} from 'react';
+import isEmpty from 'lodash/isEmpty';
 import { findDOMNode } from 'react-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -98,29 +99,32 @@ class ClassTimeClockManager extends Component {
   }
 
   _sortDataBasedOnDay = (sliderData) => {
+    console.log("_sortDataBasedOnDay sliderData --->>",sliderData)
     const sortedData = [];
+    if(!isEmpty(sliderData)) {
+      let dayCounter = 0;
+      while(dayCounter < 7) {
+        const currentDay = this.state.daysInWeek[dayCounter];
 
-    let dayCounter = 0;
-    while(dayCounter < 7) {
-      const currentDay = this.state.daysInWeek[dayCounter];
+        // get the data for current day of the week.
+        for(let i = 0; i < sliderData.length; ++i) {
+          if(sliderData[i].day.toLowerCase() == currentDay) {
+            sortedData.push(sliderData[i]);
 
-      // get the data for current day of the week.
-      for(let i = 0; i < sliderData.length; ++i) {
-        if(sliderData[i].day.toLowerCase() == currentDay) {
-          sortedData.push(sliderData[i]);
+            // Remove that day's data from the list.
+            sliderData.splice[i,1];
 
-          // Remove that day's data from the list.
-          sliderData.splice[i,1];
-
-          break;
+            break;
+          }
         }
-      }
 
-      // increment the day counter.
-      ++dayCounter;
+        // increment the day counter.
+        ++dayCounter;
+      }
+      // console.info(sortedData,"----------------------------------------sorted data");
+      return sortedData;
     }
-    // console.info(sortedData,"----------------------------------------sorted data");
-    return sortedData;
+    return sortedData
   }
 
 

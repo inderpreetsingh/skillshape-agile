@@ -14,6 +14,8 @@ import {getContainerMaxWidth} from '../../../../../util/cards.js';
 
 import * as helpers from '../jss/helpers.js';
 
+import School from "/imports/api/school/fields";
+
 const CardsListWrapper = styled.div`
   padding: 0;
 `;
@@ -117,18 +119,18 @@ class CardsList extends Component {
     }
 
     seeMoreStatus = (cardsData, filters) => {
-        // const { limit, skillCategoryClassLimit } = filters;
-        // if(limit) {
-        //     if (limit <= size(cardsData)) {
-        //         return true
-        //     }
-        // } else {
-        //     if ((size(cardsData) >= 4 && isEmpty(skillCategoryClassLimit))
-        //         || (skillCategoryClassLimit && skillCategoryClassLimit[name] < size(cardsData))) {
-        //         return true
-        //     }
-        // }
-        // return false;
+        const { limit, skillCategoryClassLimit } = filters;
+        if(limit) {
+            if (limit <= size(cardsData)) {
+                return true
+            }
+        } else {
+            if ((size(cardsData) >= 4 && isEmpty(skillCategoryClassLimit))
+                || (skillCategoryClassLimit && skillCategoryClassLimit[name] < size(cardsData))) {
+                return true
+            }
+        }
+        return false;
     }
 
     render() {
@@ -141,19 +143,12 @@ class CardsList extends Component {
               <CardsListGridWrapper mapView={mapView}>
                  <GridContainer>
                      {cardsData.map(card => {
-                         if(mapView) {
-                           return (
-                             <GridItem spacing={24}>
-                                 <ClassTypeCard schoolData={this.props.schoolData} classInterestData={classInterestData} {...card}/>
-                             </GridItem>
-                           )
-                         }else {
-                           return (
-                             <GridItem spacing={24}>
-                                 <ClassTypeCard schoolData={this.props.schoolData} classInterestData={classInterestData} {...card}/>
-                             </GridItem>
-                           )
-                         }
+                        console.log("cardsData card -->>",card)
+                        return (
+                           <GridItem spacing={24}>
+                               <ClassTypeCard schoolData={this.props.schoolData} classInterestData={classInterestData} {...card}/>
+                           </GridItem>
+                         )
                      })}
                  </GridContainer>
 

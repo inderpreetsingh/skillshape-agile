@@ -186,7 +186,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
     // console.log("skillTypeText-->>", skillTypeText);
     // console.log("locationText-->>", locationText);
     // console.log("_monthPrice", _monthPrice);
-    // console.log("coords", coords);
+    console.log("coords", coords);
     // console.log("NEPoint", NEPoint);
     // console.log("skillCategoryIds", skillCategoryIds);
     const classfilter = {};
@@ -201,14 +201,18 @@ Meteor.publish("school.getClassTypesByCategory", function({
     }
 
     if (coords && !is_map_view) {
-        // place variable will have all the information you are looking for.
-        var maxDistance = 50;
-        // we need to convert the distance to radians
-        // the raduis of Earth is approximately 6371 kilometers
-        maxDistance /= 63;
-        classfilter["filters.location"] = {
-            $geoWithin: { $center: [coords, 30 / 111.12] }
-        };
+        const isAllZero = coords.some(el => el !==0);
+        if(isAllZero) {
+            // place variable will have all the information you are looking for.
+            var maxDistance = 50;
+            // we need to convert the distance to radians
+            // the raduis of Earth is approximately 6371 kilometers
+            maxDistance /= 63;
+            classfilter["filters.location"] = {
+                $geoWithin: { $center: [coords, 30 / 111.12] }
+            };
+
+        }
     }
 
     // NEPoint and SWPoint these are NorthEast and SouthWest map Bounds value. These value change when we move the map
@@ -377,8 +381,6 @@ Meteor.publish("school.getClassTypesByCategory", function({
         }
 
         for (let itemObj of config.defaultClassType) {
-            classfilter["$text"] = { $search: itemObj.location };
-
             let skillCategoryFilter = {
                 ["$or"]: []
             };

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { isEmpty, get } from 'lodash';
 import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
 
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
@@ -14,7 +15,10 @@ import PackagesList from '/imports/ui/components/landing/components/class/packag
 import SchoolDetails from '/imports/ui/components/landing/components/class/details/SchoolDetails.jsx';
 import MyCalendar from '/imports/ui/components/users/myCalender';
 
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
+import { toastrModal } from '/imports/util';
 
 const SchoolImgWrapper = styled.div`
   height: 400px;
@@ -37,7 +41,7 @@ const Main = styled.main`
 const MainInnerFixedContainer = styled.div`
   max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
   width: 100%;
-  margin: 0 auto;
+  margin: 0 auto;+
   margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 2}px;
 `;
 
@@ -136,7 +140,75 @@ const CalendarWrapper = styled.div`
    border: 1px solid rgba(221,221,221,1);
 `;
 
+const ClassContainer = styled.div`
+  width: 90%;
+  padding: ${helpers.rhythmDiv}px;
+  margin: ${helpers.rhythmDiv}px auto;
+  border-radius: ${helpers.rhythmDiv}px;
+  background: #ffffff;
+  text-align: center;
+`;
+
 class ClassTypeContent extends Component {
+
+    state = {
+        isBusy: false,
+    }
+
+    requestPricingInfo = () => {
+        const { toastr, schoolData } = this.props;
+
+        if(Meteor.userId() && !isEmpty(schoolData)) {
+            this.setState({ isBusy:true });
+
+            Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
+                // Check sucess method in response and send confirmation to user using a toastr.
+                this.setState({isBusy: false}, () => {
+                    if(err) {
+                        toastr.error(err.reason || err.message,"Error");
+                    }
+                    if(res && res.emailSent) {
+                      toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
+                    }
+                });
+            });
+
+        } else {
+            toastr.error("You need to login for Price Package Request!!!!","Error");
+        }
+    }
+
+    handleClassTimeRequest = () => {
+        const { toastr, classTypeData } = this.props;
+
+        if(Meteor.userId() && !isEmpty(classTypeData)) {
+            this.setState({ isBusy:true });
+
+            const payload = {
+                schoolId: classTypeData.schoolId,
+                classTypeId: classTypeData._id,
+                classTypeName: classTypeData.name,
+            }
+
+            Meteor.call("classTimesRequest.notifyToSchool", payload, (err, res) => {
+                console.log("err -->>",err)
+                let stateObj = {
+                    isBusy: false
+                }
+                this.setState({ isBusy: false }, () => {
+                    if(res && res.emailSuccess) {
+                        // Need to show message to user when email is send successfully.
+                        toastr.success("Your email has been sent. We will assist you soon.", "Success");
+                    }
+                    if(res && res.message) {
+                        toastr.error(res.message,"Error");
+                    }
+                })
+            })
+        } else {
+            toastr.error("You need to login for classTimes request!!!!","Error");
+        }
+    }
 
 	render() {
 		console.log("ClassTypeContent props --->>",this.props);
@@ -163,6 +235,7 @@ class ClassTypeContent extends Component {
 
 		return (
 			<Fragment>
+                { this.state.isBusy && <ContainerLoader/>}
 				{/* Class Type Cover includes description, map, foreground image, then class type information*/}
 		        <ClassTypeCover coverSrc={classTypeData.classTypeImg}>
 			        <ClassTypeCoverContent
@@ -187,17 +260,53 @@ class ClassTypeContent extends Component {
 			            <ClassTimesInnerWrapper>
 			                <ClassTimesWrapper paddingBottom="48">
 			                	<ClassTimesTitle>Class timings for <ClassTimesName>{classTypeData.name.toLowerCase()}</ClassTimesName></ClassTimesTitle>
-			                	<ClassTimesBoxes classTimesData={classTimesData} />
+			                	{
+                            isEmpty(classTimesData) ? (
+                                <ClassContainer>
+                                    <Typography caption="p">
+                                        No class times have been given by the school. Please click this button to request the school complete their listing.
+                                    </Typography>
+                                    <br>
+                                    </br>
+                                    <PrimaryButton
+                                        icon
+                                        onClick={this.handleClassTimeRequest}
+                                        iconName="perm_contact_calendar"
+                                        label="REQUEST CLASS TIMES"
+                                    />
+                                </ClassContainer>
+                            ) : (
+                                <ClassTimesBoxes classTimesData={classTimesData} />
+                            )
+                          }
 			                </ClassTimesWrapper>
 			            </ClassTimesInnerWrapper>
 			        </MainInnerFixedContainer>
 
                     <PackagesWrapper>
                         <PackagesTitle>Pay only for what you need</PackagesTitle>
-                        <PackagesList
-                          perClassPackagesData={classPricingData}
-                          monthlyPackagesData={monthlyPricingData}
-                        />
+                        {
+                            (isEmpty(classPricingData) && isEmpty(monthlyPricingData)) ? (
+                                <ClassContainer>
+                                    <Typography caption="p">
+                                        No class pricing have been given by the school. Please click this button to request the school complete their listing.
+                                    </Typography>
+                                    <br>
+                                    </br>
+                                    <PrimaryButton
+                                        icon
+                                        onClick={this.requestPricingInfo}
+                                        iconName="payment"
+                                        label="REQUEST PRICING"
+                                    />
+                                </ClassContainer>
+                            ) : (
+                                <PackagesList
+                                  perClassPackagesData={classPricingData}
+                                  monthlyPackagesData={monthlyPricingData}
+                                />
+                            )
+                        }
                     </PackagesWrapper>
 
                     <MainInnerFixedContainer fixedWidth="1100" marginBottom="64">
@@ -220,4 +329,8 @@ class ClassTypeContent extends Component {
 	}
 }
 
+<<<<<<< HEAD
 export default ClassTypeContent;
+=======
+export default toastrModal(ClassTypeContent);
+>>>>>>> e7e080b0b87cf4c6d1239dd4b0c18f1f85cdb624

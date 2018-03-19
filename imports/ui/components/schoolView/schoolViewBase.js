@@ -293,11 +293,12 @@ export default class SchoolViewBase extends React.Component {
       const { toastr } = this.props;
       Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
         // Check sucess method in response and send confirmation to user using a toastr.
-        if(res.emailSent) {
-          toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
-        } else if(!res.login) {
-          toastr.success('Please login or sign up before creating request','success')
-        }
+          if(err) {
+            toastr.error(err.reason || err.message, "Error")
+          }
+          if(res && res.emailSent) {
+            toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
+          }
       });
     }
 

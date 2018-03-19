@@ -1,4 +1,5 @@
 import React from 'react';
+import isEmpty from 'lodash/isEmpty';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Package from './Package';
@@ -86,16 +87,31 @@ const Title = styled.h1`
   width: 100%;
 `;
 
+const FallBackMsg = styled.h3`
+  font-family: ${helpers.specialFont};
+  text-align: center;
+  font-style: italic;
+  line-height: 1;
+  font-size: ${helpers.baseFontSize}px;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  color: ${helpers.textColor};
+  width: 100%;
+`;
+
 const PackageList = (props) => (
   <PackagesListWrapper classPackages={props.classPackages}>
     <PackagesWrapper classPackages={props.classPackages}>
       <Title>{props.packageListName}</Title>
       {console.log(props,"packages list....")}
-      {props.packagesData && props.packagesData.map(packageData => (
-        <PackageWrapper key={packageData._id}>
-          <Package classPackages={props.classPackages} {...packageData} />
-        </PackageWrapper>
-      ))}
+      {
+        isEmpty(props.packagesData) ? <FallBackMsg>{`${props.packageListName} not found`}</FallBackMsg>
+        : props.packagesData.map(packageData => (
+          <PackageWrapper key={packageData._id}>
+            <Package classPackages={props.classPackages} {...packageData} />
+          </PackageWrapper>
+        ))
+      }
     </PackagesWrapper>
   </PackagesListWrapper>
 );

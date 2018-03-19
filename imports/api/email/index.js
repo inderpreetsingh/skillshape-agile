@@ -25,7 +25,8 @@ export const sendJoinClassEmail = function({ classTypeData }) {
     let classTimes = ClassTimes.findOne(classTypeData.classTimeId);
     let classType = ClassType.findOne(classTypeData.classTypeId);
     let studentName = user.profile && user.profile.firstName;
-    let schoolAdminRec = Meteor.users.findOne(school.userId);
+    let schoolAdminRec = Meteor.users.findOne(school.superAdmin);
+
     if (Meteor.isServer) {
         Email.send({
             to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
@@ -115,8 +116,9 @@ export const sendClassTimesRequest = function({
         )} \n\nThanks, \n\n${EmailSignature}`;
     } else {
         emailObj.to = superAdminData.emails[0].address;
+        const schoolData = School.findOne({_id:schoolId});
         (emailObj.subject = "School Admin not found"),
-            (emailObj.text = `Hi SuperAdmin, \nCorresponding to this schoolId ${schoolId} there is no admin assign yet \n\nThanks, \n\n${EmailSignature}`);
+            (emailObj.text = `Hi SuperAdmin, \nCorresponding to this school ${schoolData.name} there is no admin assign yet \n\nThanks, \n\n${EmailSignature}`);
     }
     if (Meteor.isServer) {
         Email.send({
