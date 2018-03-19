@@ -310,7 +310,10 @@ Meteor.methods({
             const priceInfoRequest = PriceInfoRequest.findOne({schoolId, userId: this.userId });
             console.log("priceInfoRequest -->>",priceInfoRequest)
             if(priceInfoRequest) {
-                // Update `notification: false` in `PriceInfoRequest` so that duplicate entries not created for `PriceInfoRequest`;
+                if(priceInfoRequest.notification) {
+                    throw new Meteor.Error("You pricing request has already been created!!!");
+                }
+                // Update `notification: true` in `PriceInfoRequest` so that duplicate entries not created for `PriceInfoRequest`;
                 PriceInfoRequest.update({_id:priceInfoRequest._id},{$set:{notification: true}});
             } else {
                 const requestObj = {
@@ -344,14 +347,9 @@ Meteor.methods({
                 ownerName = 'Sam'
             }
             let currentUser = Meteor.users.findOne(this.userId);
-            console.log("currentUser===>",currentUser);
-            if(currentUser) {
-                let currentUserName = currentUser.profile.firstName;
-                sendPriceInfoRequestEmail({toEmail,fromEmail,updatePriceLink, ownerName, currentUserName});
-                return {emailSent:true}
-            } else {
-                return {login:false}
-            }
+            let currentUserName = currentUser.profile.firstName;
+            sendPriceInfoRequestEmail({toEmail,fromEmail,updatePriceLink, ownerName, currentUserName});
+            return {emailSent:true};
 
         } else {
             throw new Meteor.Error("Permission denied!!");
