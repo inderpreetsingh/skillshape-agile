@@ -200,7 +200,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
         classfilter["$text"] = { $search: schoolName };
     }
 
-    if (coords && !is_map_view) {
+    const isAllZero = !coords.some(el => el !== 0);
+    if (coords && !is_map_view && !isAllZero) {
         // place variable will have all the information you are looking for.
         var maxDistance = 50;
         // we need to convert the distance to radians
@@ -377,8 +378,6 @@ Meteor.publish("school.getClassTypesByCategory", function({
         }
 
         for (let itemObj of config.defaultClassType) {
-            classfilter["$text"] = { $search: itemObj.location };
-
             let skillCategoryFilter = {
                 ["$or"]: []
             };
