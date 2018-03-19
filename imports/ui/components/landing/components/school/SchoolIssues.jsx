@@ -38,6 +38,8 @@ const Wrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-top: 0;
+    min-height: auto;
+    height: 100vh;
   }
 `;
 

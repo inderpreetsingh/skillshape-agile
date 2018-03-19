@@ -52,8 +52,6 @@ const Wrapper = styled.article`
       margin-bottom: 0;
     }
   }
-
-
 `;
 
 const Price = styled.p`

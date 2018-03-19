@@ -193,15 +193,18 @@ const Reveal = ({children, ...props}) => {
 class CardsReveal extends Component {
   state = {
     imageContainerHeight: '250px',
-    maxCharsLimit: 20,
+    maxCharsLimit: 18,
     revealCard: false
   };
+
   revealCardContent = (e) => {
     this.setState({ revealCard: true });
   }
+
   hideCardContent = (e) => {
     this.setState({ revealCard: false });
   }
+
   updateDimensions = () => {
     const container = ReactDOM.findDOMNode(this.imgContainer);
     const width = window.getComputedStyle(container,null).width;

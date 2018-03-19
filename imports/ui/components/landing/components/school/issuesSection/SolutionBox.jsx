@@ -19,9 +19,11 @@ const BoxWrapper = styled.div`
   margin: 0 auto;
   height: 100%;
   padding: 0 ${helpers.rhythmDiv * 2}px;
+  position: relative;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     max-width: 500px;
+    justify-content: center;
   }
 `;
 
@@ -30,6 +32,11 @@ const TitleArea = styled.div`
   text-align: center;
   padding: 0 ${helpers.rhythmDiv * 2}px;
   margin-top: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    ${helpers.flexCenter}
+    flex-grow: 1;
+  }
 `;
 
 const Title = styled.h2`
@@ -90,7 +97,8 @@ SchoolSolutionSliderWrapper = styled.div`
     width: 100%;
     overflow: hidden;
     margin-top: ${helpers.rhythmDiv * 2}px;
-    padding-bottom: ${helpers.rhythmDiv * 4}px;
+    padding-bottom: ${helpers.rhythmDiv * 2}px;
+    flex-grow: 2;
   }
 `;
 
@@ -107,6 +115,7 @@ const ActionArea = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     display: none;
+    margin: 0;
   }
 
 `;
@@ -117,6 +126,7 @@ const ButtonWrapper = styled.div`
 
 const SolutionBox = (props) => (
   <BoxWrapper firstBox={props.firstBox}>
+
     <TitleArea>
       <Title firstBox={props.firstBox}> {props.title} </Title>
       <Tagline>SkillShape has following functions that will help you {props.helpsUsIn}</Tagline>

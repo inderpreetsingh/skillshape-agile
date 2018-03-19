@@ -571,7 +571,7 @@ class Landing extends Component {
                </FilterPanelWrapper>
 
               {/*Cards List */}
-              
+                {/*
                 <Element name="content-container" className="element homepage-content">
                     <ClassTypeList
                         locationName={this.state.locationName}
@@ -586,9 +586,9 @@ class Landing extends Component {
                         {...this.props}
                     />
                 </Element>
+              */}
 
 
-                {/*
                  <Element name="content-container" className="element">
                   <MainContentWrapper>
                     {this.state.mapView ?
@@ -621,7 +621,7 @@ class Landing extends Component {
                    </CardsContainer>)}
                  </MainContentWrapper>
                </Element>
-               */}
+
 
                {!this.state.mapView && <Footer mapView={this.state.mapView}/>}
 

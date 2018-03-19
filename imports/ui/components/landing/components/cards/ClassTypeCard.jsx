@@ -23,7 +23,7 @@ import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 const CardsRevealWrapper = styled.div`
-  max-width: 320px;
+  width: 100%;
 `;
 
 class ClassTypeCard extends Component {
