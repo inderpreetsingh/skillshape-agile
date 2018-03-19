@@ -4,7 +4,7 @@ export default schoolIssuesData = [
   cardBgImage: '/images/school/bring-people.svg',
   bgImage: '/images/school/withoutboy.svg',
   avatar: '/images/school/boy.svg',
-  bgColor: '#e6f4ff'
+  bgColor: '#d2e4e9'
   },
   {title: 'Keeping students excited about school.',
   helpsUsIn: 'in keeping students excited',

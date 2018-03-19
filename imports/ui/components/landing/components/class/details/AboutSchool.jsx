@@ -63,7 +63,7 @@ const addHttpProtocol = (website) => {
 const AboutSchool = (props) => (
   <Wrapper>
     <SchoolWrapper>
-      <Title>About {props.title}</Title>
+      <Title>About {props.title.toLowerCase()}</Title>
       <Address>
         {props.address && <Postal>{props.address}</Postal>}
         {props.website && <Website href={addHttpProtocol(props.website)} target="_blank"> {props.website} </Website>}

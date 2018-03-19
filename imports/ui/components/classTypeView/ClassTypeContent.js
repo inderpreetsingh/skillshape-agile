@@ -113,6 +113,10 @@ const ClassTimesTitle = styled.h2`
   }
 `;
 
+const ClassTimesName = styled.span`
+  text-transform: capitalize;
+`;
+
 const PackagesWrapper = styled.div`
   ${helpers.flexDirectionColumn}
   width: 100%;
@@ -255,26 +259,26 @@ class ClassTypeContent extends Component {
           			<MainInnerFixedContainer marginBottom="16">
 			            <ClassTimesInnerWrapper>
 			                <ClassTimesWrapper paddingBottom="48">
-			                	<ClassTimesTitle>Class timings for {classTypeData.name}</ClassTimesTitle>
+			                	<ClassTimesTitle>Class timings for <ClassTimesName>{classTypeData.name.toLowerCase()}</ClassTimesName></ClassTimesTitle>
 			                	{
-                                    isEmpty(classTimesData) ? (
-                                        <ClassContainer>
-                                            <Typography caption="p">
-                                                No class times have been given by the school. Please click this button to request the school complete their listing.
-                                            </Typography>
-                                            <br>
-                                            </br>
-                                            <PrimaryButton
-                                                icon
-                                                onClick={this.handleClassTimeRequest}
-                                                iconName="perm_contact_calendar"
-                                                label="REQUEST CLASS TIMES"
-                                            />
-                                        </ClassContainer>
-                                    ) : (
-                                        <ClassTimesBoxes classTimesData={classTimesData} />
-                                    )
-                                }
+                            isEmpty(classTimesData) ? (
+                                <ClassContainer>
+                                    <Typography caption="p">
+                                        No class times have been given by the school. Please click this button to request the school complete their listing.
+                                    </Typography>
+                                    <br>
+                                    </br>
+                                    <PrimaryButton
+                                        icon
+                                        onClick={this.handleClassTimeRequest}
+                                        iconName="perm_contact_calendar"
+                                        label="REQUEST CLASS TIMES"
+                                    />
+                                </ClassContainer>
+                            ) : (
+                                <ClassTimesBoxes classTimesData={classTimesData} />
+                            )
+                          }
 			                </ClassTimesWrapper>
 			            </ClassTimesInnerWrapper>
 			        </MainInnerFixedContainer>

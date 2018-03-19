@@ -15,7 +15,7 @@ import schoolPagePricingCards from './constants/schoolPagePriceCards.js';
 import * as helpers from './components/jss/helpers.js';
 
 const Wrapper = styled.div`
-  background-color: #e6f4ff
+  background-color: #d2e4e9
 `;
 
 const School = () => (

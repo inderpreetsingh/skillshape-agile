@@ -1,6 +1,6 @@
 export default schoolPageCards = {
   solutionBox1 : {
-    cardBgColor: '#ccd9de',
+    cardBgColor: '#e6f4ff',
     cardsData: [
       {
         bgImage: '/images/school/solution-box1/feature1bg.svg',

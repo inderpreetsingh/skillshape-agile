@@ -17,37 +17,58 @@ import * as helpers from '../jss/helpers.js';
 import School from "/imports/api/school/fields";
 
 const CardsListWrapper = styled.div`
-    padding: 0;
+  padding: 0;
 `;
 
 const SPACING = helpers.rhythmDiv * 3;
-const SPACING_MAPVIEW = helpers.rhythmDiv;
-const CARD_WIDTH = 320;
+const CARD_WIDTH = 280;
+
+const GridContainer = styled.div`
+  ${helpers.flexCenter}
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    justify-content: center;
+  }
+`;
+
+const GridItem = styled.div`
+  width: ${CARD_WIDTH}px;
+  margin: ${props => props.spacing/2 || '16'}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    max-width: ${CARD_WIDTH}px;
+    margin: ${props => props.spacing/2 || '16'}px 0;
+  }
+`;
 
 const CardsListGridWrapper = styled.div`
-    padding: ${props => props.mapView ? SPACING_MAPVIEW : SPACING}px;
+    padding: ${SPACING/2}px;
     margin: 0;
     margin-right: auto;
-    max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING_MAPVIEW,2) + 8 : getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
+    max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING, 2) + 24 : getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
 
-    @media screen and (max-width: 1279px) {
-      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3)  + 24}px;
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px) {
+      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px;
     }
 
-    @media screen and (max-width: 959px) {
-      max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING_MAPVIEW,1) + 8 : getContainerMaxWidth(CARD_WIDTH,SPACING,2)  + 24}px;
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px) {
+      max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24 : getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px;
     }
 
-    @media screen and (max-width: 600px) {
-      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1)  + 24}px;
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px) {
+      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24}px;
+      margin: 0 auto;
     }
+
 `;
 
 const More = styled.div`
-    width:100%;
-    padding:${helpers.rhythmDiv}px;
-    ${helpers.flexCenter}
-    margin-top: ${helpers.rhythmDiv * 3}px;
+  width:100%;
+  padding:${helpers.rhythmDiv}px;
+  ${helpers.flexCenter}
+  margin-top: ${helpers.rhythmDiv * 3}px;
 `;
 
 const CardsListTitle = styled.h2`
@@ -110,7 +131,6 @@ class CardsList extends Component {
             }
         }
         return false;
-
     }
 
     render() {
@@ -121,24 +141,16 @@ class CardsList extends Component {
           <CardsListWrapper>
               <CardsListTitle>{title}</CardsListTitle>
               <CardsListGridWrapper mapView={mapView}>
-                 <Grid container spacing={24}>
+                 <GridContainer>
                      {cardsData.map(card => {
                         console.log("cardsData card -->>",card)
-                         if(mapView) {
-                           return (
-                             <Grid item key={card.id} md={6} sm={12} lg={6} xs={12}>
-                                 <ClassTypeCard schoolData={School.findOne({_id: card.schoolId})} classInterestData={classInterestData} {...card}/>
-                             </Grid>
-                           )
-                         }else {
-                           return (
-                             <Grid item key={card.id} md={4} sm={6} lg={3} xs={12}>
-                                 <ClassTypeCard schoolData={School.findOne({_id: card.schoolId})} classInterestData={classInterestData} {...card}/>
-                             </Grid>
-                           )
-                         }
+                        return (
+                           <GridItem spacing={24}>
+                               <ClassTypeCard schoolData={this.props.schoolData} classInterestData={classInterestData} {...card}/>
+                           </GridItem>
+                         )
                      })}
-                 </Grid>
+                 </GridContainer>
 
                  {
                    this.seeMoreStatus(cardsData, filters) && (
