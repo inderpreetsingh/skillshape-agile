@@ -95,7 +95,7 @@ SchoolSolutionSliderWrapper = styled.div`
     width: 100%;
     overflow: hidden;
     margin-top: ${helpers.rhythmDiv * 2}px;
-    padding-bottom: ${helpers.rhythmDiv * 2}px;
+    padding-bottom: ${helpers.rhythmDiv * 3}px;
   }
 `;
 
