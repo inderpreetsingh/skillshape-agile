@@ -12,7 +12,7 @@ export default function () {
 	const { schoolData, moveTab } = this.props;
 	return (
 		<div className="tab-pane active" id="tab_default_10">
-			<PanelHeader cpation="These codes will allow you to put your classes, prices, calendar, and images on your site.
+			<PanelHeader caption="These codes will allow you to put your classes, prices, calendar, and images on your site.
 				Simply copy the code and paste it into the text area or code area of any page on your website. Let us know if there are any issues!
 				notices@SkillShape.com" icon="code"
 			/>
