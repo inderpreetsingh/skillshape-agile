@@ -118,7 +118,7 @@ class CardsList extends Component {
         }
     }
 
-    seeMoreStatus = (cardsData, filters) => {
+    seeMoreStatus = (cardsData, filters, name) => {
         const { limit, skillCategoryClassLimit } = filters;
         if(limit) {
             if (limit <= size(cardsData)) {
@@ -152,7 +152,7 @@ class CardsList extends Component {
                  </GridContainer>
 
                  {
-                   this.seeMoreStatus(cardsData, filters) && (
+                   this.seeMoreStatus(cardsData, filters, name) && (
                        <More>
                           <SecondaryButton label="See More" onClick={() => {handleSeeMore(name)}}/>
                        </More>
