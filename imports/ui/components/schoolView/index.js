@@ -47,11 +47,16 @@ export default createContainer(props => {
     let schoolLocation;
     let classType;
     let enrollmentFee;
+    let showLoading = true;
+    let subscription;
 
     if (slug) {
-        Meteor.subscribe("UserSchoolbySlug", slug);
-        Meteor.subscribe("SkillClassbySchoolBySlug", slug)
+        subscription = Meteor.subscribe("UserSchoolbySlug", slug);
+        // Meteor.subsc/ribe("SkillClassbySchoolBySlug", slug)
+    }
 
+    if(subscription && subscription.ready()) {
+        showLoading = false;
         schoolData = School.findOne({ slug: slug })
         schoolId = schoolData && schoolData._id
     }
@@ -87,5 +92,6 @@ export default createContainer(props => {
         enrollmentFee,
         classType,
         schoolId,
+        showLoading,
     };
 },withStyles(styles)(toastrModal(SchoolView)))

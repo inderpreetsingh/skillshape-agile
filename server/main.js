@@ -54,7 +54,17 @@ if (Meteor.isServer) {
         region: 'us-west-1'
     };
     Accounts.onCreateUser(function(options, user) {
-       if (user.services) {
+        // console.log("onCreateUser options -->>",options)
+        // console.log("onCreateUser user -->>",user)
+        if(options.sign_up_service) {
+            user.sign_up_service = options.sign_up_service;
+        }
+
+        if(options.term_cond_accepted) {
+            user.term_cond_accepted = options.term_cond_accepted;
+        }
+
+        if (user.services) {
             var service = _.keys(user.services)[0];
             if (service == 'facebook') {
                 let email = user.services[service].email;

@@ -7,17 +7,46 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import Media from "/imports/api/media/fields.js"
 import config from "/imports/config";
-import size from 'lodash/size';
-import uniq from 'lodash/uniq';
+import { size, uniq, isEmpty, isArray } from 'lodash';
+// import { checkSuperAdmin } from '/imports/util';
 // import { buildAggregator } from 'meteor/lamoglia:publish-aggregation';
 // import ClientReports from '/imports/startup/client';
 
 Meteor.publish("UserSchool", function(schoolId) {
-    return School.find({ _id: schoolId });
+    const schoolCursor = School.find({ _id: schoolId })
+    const schoolData = schoolCursor.fetch();
+
+    if(this.userId && !isEmpty(schoolData)) {
+        if(Roles.userIsInRole(this.userId,"Superadmin")) {
+            return schoolCursor;
+        } else if(isArray(schoolData[0].admins) && schoolData[0].admins.indexOf(this.userId) > -1) {
+            return schoolCursor
+        }
+        return []
+    }
+    return []
+
 });
 
 Meteor.publish("UserSchoolbySlug", function(slug) {
-    return School.find({ slug: slug });
+    const schoolCursor = School.find({ slug: slug})
+    const schoolData = schoolCursor.fetch();
+    if(!isEmpty(schoolData)) {
+
+        if(schoolData[0].isPublish) {
+            return schoolCursor;
+        } else if(this.userId) {
+            if(Roles.userIsInRole(this.userId,"Superadmin")) {
+                return schoolCursor;
+            } else if(isArray(schoolData[0].admins) && schoolData[0].admins.indexOf(this.userId) > -1) {
+                return schoolCursor
+            } else {
+                return []
+            }
+        }
+        return []
+    }
+    return []
 });
 
 Meteor.publish("classTypeBySchool", function({ schoolId, limit }) {
@@ -45,7 +74,7 @@ Meteor.publish("school.getSchoolClasses", function({
     console.log("_monthPrice", _monthPrice);
     console.log("coords", coords);
     console.log("NEPoint", NEPoint);
-    const classfilter = {};
+    const classfilter = { isPublish: true };
     if (is_map_view && schoolId) {
         classfilter["schoolId"] = schoolId;
     }
@@ -189,7 +218,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
     console.log("coords", coords);
     // console.log("NEPoint", NEPoint);
     // console.log("skillCategoryIds", skillCategoryIds);
-    const classfilter = {};
+    const classfilter = { isPublish: true };
     const skillCategoryFilter = {};
 
     if (is_map_view && schoolId) {
@@ -455,8 +484,8 @@ Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
     console.log("After filterObj -->>",filterObj, limit)
 
 
-    const schoolFilter = {};
-    const classTypeFilter = {};
+    const schoolFilter = { isPublish: true };
+    const classTypeFilter = { isPublish: true };
     limit = { limit: limit};
 
     if(this.userId) {

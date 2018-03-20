@@ -118,19 +118,19 @@ class CardsList extends Component {
         }
     }
 
-    seeMoreStatus = (cardsData, filters) => {
-        // const { limit, skillCategoryClassLimit } = filters;
-        // if(limit) {
-        //     if (limit <= size(cardsData)) {
-        //         return true
-        //     }
-        // } else {
-        //     if ((size(cardsData) >= 4 && isEmpty(skillCategoryClassLimit))
-        //         || (skillCategoryClassLimit && skillCategoryClassLimit[name] < size(cardsData))) {
-        //         return true
-        //     }
-        // }
-        // return false;
+    seeMoreStatus = (cardsData, filters, name) => {
+        const { limit, skillCategoryClassLimit } = filters;
+        if(limit) {
+            if (limit <= size(cardsData)) {
+                return true
+            }
+        } else {
+            if ((size(cardsData) >= 4 && isEmpty(skillCategoryClassLimit))
+                || (skillCategoryClassLimit && skillCategoryClassLimit[name] < size(cardsData))) {
+                return true
+            }
+        }
+        return false;
     }
 
     render() {
@@ -143,17 +143,16 @@ class CardsList extends Component {
               <CardsListGridWrapper mapView={mapView}>
                  <GridContainer>
                      {cardsData.map(card => {
-                        console.log("cardsData card -->>",card)
                         return (
-                           <GridItem spacing={24}>
-                               <ClassTypeCard schoolData={this.props.schoolData} classInterestData={classInterestData} {...card}/>
+                           <GridItem key={card._id} spacing={24}>
+                               <ClassTypeCard schoolData={School.findOne({_id: card.schoolId})} classInterestData={classInterestData} {...card}/>
                            </GridItem>
                          )
                      })}
                  </GridContainer>
 
                  {
-                   this.seeMoreStatus(cardsData, filters) && (
+                   this.seeMoreStatus(cardsData, filters, name) && (
                        <More>
                           <SecondaryButton label="See More" onClick={() => {handleSeeMore(name)}}/>
                        </More>

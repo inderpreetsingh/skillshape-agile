@@ -129,12 +129,7 @@ export const sendEmailToStudentForClassTimeUpdate = function(
     classTypeName
 ) {
     if (Meteor.isServer) {
-        const userName =
-            get(userData, "profile.name") ||
-            `${get(userData, "profile.firstName")} ${get(
-                userData,
-                "profile.lastName"
-            )}`;
+        const userName = getUserFullName(userData);
         Email.send({
             to: "sam@skillshape.com", //userData.emails[0].address;,
             from: "Notices@SkillShape.com",
@@ -194,19 +189,14 @@ export const sendEmailToStudentForPriceInfoUpdate = function(
     schoolData
 ) {
     if (Meteor.isServer) {
-        const userName =
-            get(userData, "profile.name") ||
-            `${get(userData, "profile.firstName")} ${get(
-                userData,
-                "profile.lastName"
-            )}`;
+        const userName = getUserFullName(userData);
         Email.send({
             to: "sam@skillshape.com", // Needs to replace this with requester's Email.
             from: "Notices@SkillShape.com",
             subject: "School has updated pricing info",
             html: `Hi ${userName}, \n${schoolData.name} has updated their prices. Please go to \n ${Meteor.absoluteUrl(
                 `SchoolAdmin/${schoolData._id}/edit`)} to view their new information! \n\nThanks, \n\n${EmailSignature}`
-            });
+        });
     }
 };
 
@@ -221,17 +211,13 @@ export const sendEmailToStudentForClaimAsMember = function(
     ROOT_URL
 ) {
     if (Meteor.isServer) {
-        const adminName =
-            get(currentUserData, "profile.name") ||
-            `${get(currentUserData, "profile.firstName")} ${get(
-                currentUserData,
-                "profile.lastName"
-            )}`;
+        const adminName =  getUserFullName(currentUserData);
+        const userName =  getUserFullName(user);
         Email.send({
             to: toEmail,
             from: fromEmail,
             subject: "School member invitation received",
-            html: `Hi ${user.profile.name},
+            html: `Hi ${userName},
             ${adminName} from ${schoolData.name} has invited you to claim your account.
             Click on the following link to verify your email address:\n
             ${ROOT_URL}

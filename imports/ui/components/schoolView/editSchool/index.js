@@ -72,9 +72,14 @@ class SchoolEditView extends React.Component {
 
 export default createContainer(props => {
  	const { schoolId } = props.params;
+  let subscription;
+  let schoolData;
+  let locationData;
+  let moduleData;
+  let isLoading = true;
 
   if(props.isUserSubsReady) {
-   	Meteor.subscribe("UserSchool", schoolId);
+   	subscription = Meteor.subscribe("UserSchool", schoolId);
    	Meteor.subscribe("location.getSchoolLocation", {schoolId});
     Meteor.subscribe("classtype");
     Meteor.subscribe("SkillType");
@@ -83,10 +88,13 @@ export default createContainer(props => {
     // Meteor.subscribe("classType.getclassType", {schoolId});
   }
 
+  if(subscription && subscription.ready()) {
+    isLoading = false;
+    schoolData = School.findOne({_id: schoolId});
+    locationData = SLocation.find().fetch();
+    moduleData = Modules.find({ schoolId: schoolId }).fetch();
+  }
 
-  let schoolData = School.findOne({_id: schoolId});
-  let locationData = SLocation.find().fetch();
-  let moduleData = Modules.find({ schoolId: schoolId }).fetch();
   // let classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
 
   /*Find skills to make this container reactive on skill
@@ -102,6 +110,7 @@ export default createContainer(props => {
   	schoolData,
     locationData,
     moduleData,
+    isLoading,
   };
 
 }, SchoolEditView);

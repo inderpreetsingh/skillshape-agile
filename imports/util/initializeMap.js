@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 import ClassType from "/imports/api/classType/fields";
 import {cutString} from '/imports/util';
 import config from '/imports/config';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNumber } from 'lodash';
 import { MarkerClusterer } from '/imports/ui/components/landing/components/jss/markerclusterer';
 
 let mc;
@@ -39,9 +39,9 @@ function infoSchool({school, classTypes}) {
 export function createMarkersOnMap(mapId, locationData) {
     let map = new google.maps.Map(document.getElementById(mapId), {zoom: 5});
     let i = 0;
-    // console.log("createMarkersOnMap locationData-->>",locationData)
     for(let obj of locationData) {
-        if(obj.loc && obj.loc[0] && obj.loc[1]) {
+
+        if(obj.loc && isNumber(obj.loc[0]) && isNumber(obj.loc[1])) {
             let geolocate = new google.maps.LatLng(obj.loc[0], obj.loc[1])
             let marker = new google.maps.Marker({
                 position: geolocate,

@@ -134,7 +134,11 @@ School.attachSchema(new SimpleSchema({
   superAdmin: {
     type: String,
     optional: true
-  }
+  },
+  isPublish: {
+    type: Boolean,
+    optional: true
+  },
 }));
 
 School.friendlySlugs(
