@@ -130,6 +130,7 @@ Meteor.methods({
 		                	isPublish: true,
 		                	filters: {
 		                		location: sLocationDoc.loc,
+		                		schoolName:csvdata[i].schoolName,
 		                		locationTitle: `${sLocationDoc.state}, ${sLocationDoc.city}, ${sLocationDoc.country}`
 		                	}
 		                };
