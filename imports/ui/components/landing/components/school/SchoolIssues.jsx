@@ -8,6 +8,10 @@ import {Element} from 'react-scroll';
 import IssueFormatSelectors from './issuesSection/IssueFormatSelectors.jsx';
 import SolutionBox from './issuesSection/SolutionBox';
 
+import Girl from '../icons/Girl.jsx';
+import Boy from '../icons/Boy.jsx';
+import Desk from '../icons/Desk.jsx';
+
 import GetStartedDialogBox from '../dialogs/GetStartedDialogBox.jsx';
 
 import * as helpers from '../jss/helpers.js';
@@ -53,16 +57,25 @@ const SolutionBoxWrapper = styled.div`
   }
 `;
 
-const Avatar = styled.img`
-  height: 100px;
+const Avatar = styled.div`
   position: absolute;
   bottom: 8px;
   left: 30px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    height: 75px;
+    display: none;
   }
+`;
 
+const AvatarSmallScreen = styled.div`
+  position: absolute;
+  bottom: 8px;
+  left: 30px;
+  display: none;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: block;
+  }
 `;
 
 const IssuesTitle = styled.div`
@@ -105,6 +118,16 @@ class SchoolIssues extends Component {
     return this.props.cardsData['solutionBox'+(index+1)];
   }
 
+  _getAvatar = (index, smallScreen) => {
+    if(index == 0) {
+      return smallScreen ? <Boy height="75px" /> : <Boy />
+    }else if(index == 1) {
+      return smallScreen ? <Girl height="75px" /> : <Girl />
+    }else if(index == 2) {
+      return smallScreen ? <Desk height="75px" /> : <Desk />
+    }
+  }
+
   handleGetStartedDialogBoxState = (state) => {
     this.setState({
       getStartedDialogBox: state
@@ -142,7 +165,10 @@ class SchoolIssues extends Component {
               onActionButtonClick={() => this.handleGetStartedDialogBoxState(true)}
             />
 
-            <Avatar src={issue.avatar} />
+            {/*<Avatar src={issue.avatar} /> */}
+            <Avatar> {this._getAvatar(i)} </Avatar>
+
+            <AvatarSmallScreen> {this._getAvatar(i,true)} </AvatarSmallScreen>
 
           </Wrapper></Element>))}
       </OuterWrapper>

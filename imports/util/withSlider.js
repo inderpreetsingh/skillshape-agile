@@ -33,7 +33,7 @@ const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) 
     customPaging: sliderConfig.customPaging ?  sliderConfig.customPaging : defaultPaging,
     variableWidth: sliderConfig.variableWidth || false,
     infinite: true,
-    speed: 500,
+    speed: sliderConfig.speed || 500,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
