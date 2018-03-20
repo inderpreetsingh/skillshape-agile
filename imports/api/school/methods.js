@@ -339,15 +339,15 @@ Meteor.methods({
             let ownerName;
             if(schoolData && schoolData.userId) {
                 // Get Admin of School As school Owner
-                let currentUser = Meteor.users.findOne(schoolData.userId);
-                ownerName= currentUser.profile.firstName;
+                let adminUser = Meteor.users.findOne(schoolData.userId);
+                ownerName= getUserFullName(adminUser);
             }
             if(!ownerName) {
                 // Owner Name will be Sam
                 ownerName = 'Sam'
             }
             let currentUser = Meteor.users.findOne(this.userId);
-            let currentUserName = currentUser.profile.firstName;
+            let currentUserName = getUserFullName(currentUser);
             sendPriceInfoRequestEmail({toEmail,fromEmail,updatePriceLink, ownerName, currentUserName});
             return {emailSent:true};
 

@@ -5,6 +5,8 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import School from "/imports/api/school/fields";
 import EmailSignature from './signature.js';
+import { getUserFullName } from '/imports/util/getUserData';
+
 
 export const sendPackagePurchaseEmail = function({ to, buyer, packageName }) {
     Email.send({
@@ -97,18 +99,8 @@ export const sendClassTimesRequest = function({
 }) {
     let emailObj = {};
     if (schoolOwnerData && currentUserData) {
-        const schoolOwnerName =
-            get(schoolOwnerData, "profile.name") ||
-            `${get(schoolOwnerData, "profile.firstName")} ${get(
-                schoolOwnerData,
-                "profile.lastName"
-            )}`;
-        const userName =
-            get(currentUserData, "profile.name") ||
-            `${get(currentUserData, "profile.firstName")} ${get(
-                currentUserData,
-                "profile.lastName"
-            )}`;
+        const schoolOwnerName = getUserFullName(schoolOwnerData);
+        const userName = getUserFullName(currentUserData);
         emailObj.to = schoolOwnerData.emails[0].address;
         emailObj.subject = "Class Interest";
         emailObj.text = `Hi ${schoolOwnerName}, \n${userName} is interested in learning more about your ${classTypeName} class. \nPlease click this link to update your listing: \n${Meteor.absoluteUrl(
