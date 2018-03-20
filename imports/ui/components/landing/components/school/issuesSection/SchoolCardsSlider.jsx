@@ -9,7 +9,8 @@ import withSlider from '/imports/util/withSlider.js';
 const config = {
   desktop: 4,
   tablet: 1,
-  mobile: 1
+  mobile: 1,
+  speed: 1000
 }
 
 const breakPoints = {
