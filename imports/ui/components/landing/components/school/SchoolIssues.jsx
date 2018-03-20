@@ -63,7 +63,18 @@ const Avatar = styled.div`
   left: 30px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
+    display: none;
+  }
+`;
 
+const AvatarSmallScreen = styled.div`
+  position: absolute;
+  bottom: 8px;
+  left: 30px;
+  display: none;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: block;
   }
 `;
 
@@ -107,13 +118,13 @@ class SchoolIssues extends Component {
     return this.props.cardsData['solutionBox'+(index+1)];
   }
 
-  _getAvatar = (index) => {
+  _getAvatar = (index, smallScreen) => {
     if(index == 0) {
-      return Boy;
+      return smallScreen ? <Boy height="75px" /> : <Boy />
     }else if(index == 1) {
-      return Girl;
+      return smallScreen ? <Girl height="75px" /> : <Girl />
     }else if(index == 2) {
-      return Desk;
+      return smallScreen ? <Desk height="75px" /> : <Desk />
     }
   }
 
@@ -155,9 +166,9 @@ class SchoolIssues extends Component {
             />
 
             {/*<Avatar src={issue.avatar} /> */}
-            <Avatar>
-              {this._getAvatar(i)}
-            </Avatar>
+            <Avatar> {this._getAvatar(i)} </Avatar>
+
+            <AvatarSmallScreen> {this._getAvatar(i,true)} </AvatarSmallScreen>
 
           </Wrapper></Element>))}
       </OuterWrapper>
