@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { browserHistory } from 'react-router';
 import ReactStars from 'react-stars';
 import PropTypes from 'prop-types';
-import { MuiThemeProvider} from 'material-ui/styles';
+
+import { withStyles ,MuiThemeProvider} from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid'
 
@@ -29,6 +30,26 @@ function goToSchoolPage(school) {
   return
 }
 
+const ClassDescriptionContent = styled.p`
+  max-height: 100px;
+  overflow-y: auto;
+  color: ${helpers.black};
+  font-size: ${helpers.baseFontSize}px;
+`;
+
+const styles = {
+  gridDescriptionWrapper : {
+    margin: `${helpers.rhythmDiv * 2}px 0`,
+    border: `1px solid #ddd`
+  },
+  descriptionHeader : {
+    marginTop: `${helpers.rhythmDiv * 2}px`,
+    fontSize: '17px',
+    fontWeight: 500
+  }
+}
+
+
 const ClassTypeCardDescription = (props) => {
 
   const {cardRevealInfo, schoolData} = props;
@@ -44,22 +65,24 @@ const ClassTypeCardDescription = (props) => {
             </div>
 
             <div className="description">
-             <Grid container spacing={8}>
-               <Grid item xs={12} style={{marginTop: '22px',marginBottom: '22px',border: '1px solid #ddd'}}>
-                  {cardRevealInfo.ageMin && <Typography>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Typography>}
-                  {cardRevealInfo.gender && <Typography>{cardRevealInfo.gender && (cardRevealInfo.gender === "Any") ? "All are welcome" : `${cardRevealInfo.gender} only`}</Typography>}
-                  {cardRevealInfo.experienceLevel && <Typography>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Typography>}
-               <Grid item xs={12}>
-                  <Typography style={{marginTop: '15px',fontSize: '17px',fontWeight: 500}}>Class Description: </Typography>
-                  {cardRevealInfo.description && <Typography>{cutString(cardRevealInfo.description, 250)}</Typography>}
+              <Grid container spacing={8}>
+                 <Grid item xs={12} classes={{typeItem: props.classes.gridDescriptionWrapper}}>
+                    {cardRevealInfo.ageMin && <Typography>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Typography>}
+                    {cardRevealInfo.gender && <Typography>{cardRevealInfo.gender && (cardRevealInfo.gender === "Any") ? "All are welcome" : `${cardRevealInfo.gender} only`}</Typography>}
+                    {cardRevealInfo.experienceLevel && <Typography>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Typography>}
+                 <Grid item xs={12}>
+                    <Typography classes={{root: props.classes.descriptionHeader}}>Class Description: </Typography>
+                    {cardRevealInfo.description && <ClassDescriptionContent>{cutString(cardRevealInfo.description, 250)}</ClassDescriptionContent>}
+                 </Grid>
                </Grid>
-               </Grid>
+
                <Grid item xs={12} sm={6}>
                     <SecondaryButton
                       fullWidth
                       onClick={() => browserHistory.push(`/classType/${cardRevealInfo._id}`)}
                       label="View Details"/>
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                     <SecondaryButton
                       fullWidth
@@ -67,6 +90,7 @@ const ClassTypeCardDescription = (props) => {
                       onClick={() => goToSchoolPage(schoolData)}
                     />
                 </Grid>
+
                 <Grid item xs={12}>
                     {
                         props.classTimeCheck ?
@@ -94,4 +118,4 @@ ClassTypeCardDescription.propTypes = {
     onClassTimeButtonClick: PropTypes.func
 };
 
-export default ClassTypeCardDescription;
+export default withStyles(styles)(ClassTypeCardDescription);

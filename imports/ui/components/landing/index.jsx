@@ -556,6 +556,8 @@ class Landing extends Component {
                     onSkillTypeChange={this.handleSkillTypeSearch}
                     onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
                     getMyCurrentLocation={this.getMyCurrentLocation}
+                    onMapViewButtonClick={this.handleToggleMapView}
+                    mapView={this.state.mapView}
                 />
                 </Cover>
               </CoverWrapper>
@@ -571,7 +573,7 @@ class Landing extends Component {
                </FilterPanelWrapper>
 
               {/*Cards List */}
-
+                {/*
                 <Element name="content-container" className="element homepage-content">
                     <ClassTypeList
                         locationName={this.state.locationName}
@@ -586,8 +588,9 @@ class Landing extends Component {
                         {...this.props}
                     />
                 </Element>
+                */}
 
-                {/*
+
                 <Element name="content-container" className="element">
                   <MainContentWrapper>
                     {this.state.mapView ?
@@ -620,7 +623,7 @@ class Landing extends Component {
                    </CardsContainer>)}
                  </MainContentWrapper>
                </Element>
-             */}
+
 
                {!this.state.mapView && <Footer mapView={this.state.mapView}/>}
 

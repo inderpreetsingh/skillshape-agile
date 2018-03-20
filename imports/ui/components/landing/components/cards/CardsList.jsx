@@ -119,18 +119,18 @@ class CardsList extends Component {
     }
 
     seeMoreStatus = (cardsData, filters) => {
-        const { limit, skillCategoryClassLimit } = filters;
-        if(limit) {
-            if (limit <= size(cardsData)) {
-                return true
-            }
-        } else {
-            if ((size(cardsData) >= 4 && isEmpty(skillCategoryClassLimit))
-                || (skillCategoryClassLimit && skillCategoryClassLimit[name] < size(cardsData))) {
-                return true
-            }
-        }
-        return false;
+        // const { limit, skillCategoryClassLimit } = filters;
+        // if(limit) {
+        //     if (limit <= size(cardsData)) {
+        //         return true
+        //     }
+        // } else {
+        //     if ((size(cardsData) >= 4 && isEmpty(skillCategoryClassLimit))
+        //         || (skillCategoryClassLimit && skillCategoryClassLimit[name] < size(cardsData))) {
+        //         return true
+        //     }
+        // }
+        // return false;
     }
 
     render() {

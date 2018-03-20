@@ -70,6 +70,7 @@ const ClassDetailsText = styled.p`
   font-family: ${helpers.specialFont};
   font-weight: 400;
   line-height: 1;
+  text-transform: capitalize;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     text-align: center;
@@ -116,7 +117,7 @@ function getCovers(data) {
     str = data.map(classType => classType.name);
     str = str.join(", ");
   }
-  return str;
+  return str.toLowerCase();
 }
 
 function getPaymentType(payment) {

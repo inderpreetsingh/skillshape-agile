@@ -69,7 +69,7 @@ const In = styled.p`
 `;
 
 const FilterButtonWrapper = styled.div`
-  width: 100px;
+  width: 50%;
 
   @media screen and (max-width : ${helpers.mobile}px) {
     width: 100%;
@@ -79,9 +79,9 @@ const FilterButtonWrapper = styled.div`
 
 const SearchInputsSectionWrapper = styled.div`
   ${helpers.flexCenter}
+  flex-direction: column;
 
   @media screen and (max-width : ${helpers.mobile}px) {
-    flex-direction: column;
     align-items: flex-start;
   }
 `;
@@ -94,40 +94,57 @@ const InputsWrapper = styled.div`
   ${helpers.flexCenter}
 `;
 
+const MapViewButtonWrapper = styled.div`
+  width: 50%;
+  margin-left: ${helpers.rhythmDiv}px;
+`;
+
+const ButtonsWrapper = styled.div`
+  ${helpers.flexCenter}
+  width: 100%;
+  margin-top: ${helpers.rhythmDiv}px;
+`;
+
 const SearchInputsSection = (props) => (
-<SearchInputsSectionWrapper>
-  <InputsWrapper>
-    <InputWrapper>
-      <MySearchBar
-        placeholder="Skill Type"
-        defaultBorderRadius
-        onChange={props.onSkillTypeChange}
-        withIcon={false}
-        rightAlign
-      />
-    </InputWrapper>
-    <In>in</In>
-    <InputWrapper>
-      <MySearchBar
-        placeholder="Location"
-        defaultBorderRadius
-        noCloseIcon
-        onChange={props.onLocationInputChange}
-      />
-    </InputWrapper>
- </InputsWrapper>
- <FilterButtonWrapper>
-   <PrimaryButton
-   label="Filters"
-   icon
-   iconName="tune"
-   boxShadow
-   noMarginBottom
-   increaseHeight
-   onClick={props.onFiltersButtonClick} />
- </FilterButtonWrapper>
-</SearchInputsSectionWrapper>
-)
+  <SearchInputsSectionWrapper>
+
+    <InputsWrapper>
+      <InputWrapper>
+        <MySearchBar
+          placeholder="Skill Type"
+          defaultBorderRadius
+          onChange={props.onSkillTypeChange}
+          withIcon={false}
+          rightAlign
+        />
+      </InputWrapper>
+      <In>in</In>
+      <InputWrapper>
+        <MySearchBar
+          placeholder="Location"
+          defaultBorderRadius
+          noCloseIcon
+          onChange={props.onLocationInputChange}
+        />
+      </InputWrapper>
+   </InputsWrapper>
+
+
+    <ButtonsWrapper>
+      <FilterButtonWrapper>
+        <PrimaryButton fullWidth icon iconName="tune" label="Filters" boxShadow noMarginBottom onClick={props.onFiltersButtonClick} />
+      </FilterButtonWrapper>
+
+      <MapViewButtonWrapper>
+      {props.mapView ?
+        <PrimaryButton fullWidth noMarginBottom icon iconName="grid_on" label="List View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />
+        :
+        <PrimaryButton fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />}
+      </MapViewButtonWrapper>
+    </ButtonsWrapper>
+
+  </SearchInputsSectionWrapper>
+);
 
 const TaglineWrapper = () => (
   <TaglineArea>
@@ -204,6 +221,8 @@ class SearchArea extends Component {
               onLocationInputChange={this.handleLocationInputChange}
               onSkillTypeChange={this.handleSkillTypeChange}
               onFiltersButtonClick={this.props.onFiltersButtonClick}
+              onMapViewButtonClick={this.props.onMapViewButtonClick}
+              mapView={this.props.mapView}
             />
           )}
         {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} /> }
@@ -219,7 +238,9 @@ SearchArea.propTypes = {
     middleSectionText: PropTypes.string,
     bottomSection: PropTypes.element,
     onSearch: PropTypes.func,
-    onFiltersButtonClick: PropTypes.func
+    onFiltersButtonClick: PropTypes.func,
+    onMapViewButtonClick: PropTypes.func,
+    mapView: PropTypes.bool,
 }
 
 SearchAreaPanel.defaultProps = {
