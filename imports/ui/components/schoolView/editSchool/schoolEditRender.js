@@ -6,6 +6,8 @@ import { FormBuilderModal } from '/imports/ui/modal';
 import ResponsiveTabs from '/imports/util/responsiveTabs';
 import Typography from 'material-ui/Typography';
 
+import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+
 //tab details import over here
 import SchoolDetails from './schoolDetails';
 import LocationDetails from './locationDetails';
@@ -14,7 +16,6 @@ import PriceDetails from './priceDetails';
 // import Modules from './modules';
 import EmbedCodes from './embedCodes';
 import MediaDetails from './mediaDetails';
-
 
 export default function (props) {
     console.log("school edit render state -->>",this.state);
@@ -31,8 +32,13 @@ export default function (props) {
         isUserSubsReady,
         locationData,
         moduleData,
+        isLoading,
         ...editSchoolProps
     } = this.props;
+
+    if(isLoading) {
+      return<Preloader/>
+    }
 
     if(isUserSubsReady && schoolData) {
 

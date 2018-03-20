@@ -66,6 +66,10 @@ ClassType.attachSchema(new SimpleSchema({
         type: String,
         optional: true
     },
+    isPublish: {
+        type: Boolean,
+        optional: true
+    },
     filters: {
         type: Object,
         optional: true

@@ -143,10 +143,9 @@ class CardsList extends Component {
               <CardsListGridWrapper mapView={mapView}>
                  <GridContainer>
                      {cardsData.map(card => {
-                        console.log("cardsData card -->>",card)
                         return (
-                           <GridItem spacing={24}>
-                               <ClassTypeCard schoolData={this.props.schoolData} classInterestData={classInterestData} {...card}/>
+                           <GridItem key={card._id} spacing={24}>
+                               <ClassTypeCard schoolData={School.findOne({_id: card.schoolId})} classInterestData={classInterestData} {...card}/>
                            </GridItem>
                          )
                      })}

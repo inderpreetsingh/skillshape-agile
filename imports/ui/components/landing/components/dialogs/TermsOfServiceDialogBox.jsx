@@ -75,7 +75,7 @@ const TermsOfServiceDialogBox = (props) => (
     </DialogActions>
 
     <DialogActions classes={{root: props.classes.dialogAction}}>
-        <PrimaryButton fullWidth={true} label="I agree" onClick={props.onAgreeButtonClick} itemScope itemType="http://schema.org/DisagreeAction"></PrimaryButton>
+        <PrimaryButton fullWidth={true} label="I agree" onClick={props.onAgreeButtonClick} itemScope itemType="http://schema.org/AgreeAction"></PrimaryButton>
         <TermsOfServiceButton label="Terms Of Service"/>
         <Button style={{ width: '100%', backgroundColor: helpers.danger, marginTop: 10, color:'#fff'}} onClick={props.onModalClose}>Cancel</Button>
     </DialogActions>

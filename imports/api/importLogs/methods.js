@@ -58,7 +58,8 @@ Meteor.methods({
 		                        descHtml: csvdata[i].descHtml,
 		                        email: csvdata[i].email,
 		                        firstName: csvdata[i].fName,
-		                        lastName: csvdata[i].lName
+		                        lastName: csvdata[i].lName,
+		                        isPublish: true,
 		                    }
 		                    schoolId = School.insert(schoolInsertDoc)
 		                    let newUser = CreateNewUser(csvdata[i].email, csvdata[i].schoolName, csvdata[i].fName, csvdata[i].lName, schoolId);
@@ -126,6 +127,7 @@ Meteor.methods({
 		                let	skillSubjectIds = [];
 		                let classTypeObject = {
 		                	locationId: locationId,
+		                	isPublish: true,
 		                	filters: {
 		                		location: sLocationDoc.loc,
 		                		locationTitle: `${sLocationDoc.state}, ${sLocationDoc.city}, ${sLocationDoc.country}`

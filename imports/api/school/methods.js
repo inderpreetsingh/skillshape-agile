@@ -24,7 +24,8 @@ Meteor.methods({
         if (schoolData && data.name && schoolData.name !== data.name) {
             ClassType.update(
                 { schoolId: id },
-                { $set: { "filters.schoolName": data.name } }
+                { $set: { "filters.schoolName": data.name } },
+                { multi: true}
             );
         }
         return School.update({ _id: id }, { $set: data });
@@ -75,10 +76,15 @@ Meteor.methods({
             }
         );
     },
-    "school.publishSchool": function(schoolId, is_publish) {
+    "school.publishSchool": function({schoolId, isPublish}) {
+        ClassType.update(
+            { schoolId: schoolId },
+            { $set: { isPublish: isPublish },  },
+            { multi: true}
+        );
         return School.update(
             { _id: schoolId },
-            { $set: { is_publish: is_publish } }
+            { $set: { isPublish: isPublish } }
         );
     },
     "school.purchasePackage": function({ typeOfTable, tableId, schoolId }) {

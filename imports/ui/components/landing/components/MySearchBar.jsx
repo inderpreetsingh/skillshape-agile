@@ -230,7 +230,7 @@ MySearchBar.propTypes = {
   /** Fired when the text value changes. */
   onChange: PropTypes.func,
   /** Fired when the search icon is clicked. */
-  onRequestSearch: PropTypes.func.isRequired,
+  onRequestSearch: PropTypes.func,
   searchIcon: PropTypes.node,
   value: PropTypes.string,
 }
