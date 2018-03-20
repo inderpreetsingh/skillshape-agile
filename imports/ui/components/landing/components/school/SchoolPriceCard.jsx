@@ -180,7 +180,8 @@ const SchoolPriceCard = (props) => (<Wrapper extended={props.extended}>
 );
 
 SchoolPriceCard.propTypes = {
-  onJoinNowButtonClick: PropTypes.func
+  onJoinNowButtonClick: PropTypes.func,
+  classes: PropTypes.object
 }
 
 SchoolPriceCard.defaultProps = {

@@ -27,6 +27,7 @@ const SearchAreaPanel = styled.div`
 
    @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
      max-width: 500px;
+     overflow-x: hidden;
   }
 `;
 
@@ -73,13 +74,13 @@ const FilterButtonWrapper = styled.div`
 
   @media screen and (max-width : ${helpers.mobile}px) {
     width: 100%;
-    margin-top: ${helpers.rhythmDiv}px;
   }
 `;
 
 const SearchInputsSectionWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
+
 
   @media screen and (max-width : ${helpers.mobile}px) {
     align-items: flex-start;
@@ -97,12 +98,22 @@ const InputsWrapper = styled.div`
 const MapViewButtonWrapper = styled.div`
   width: 50%;
   margin-left: ${helpers.rhythmDiv}px;
+
+  @media screen and (max-width : ${helpers.mobile}px) {
+    margin: 0;
+    margin-top: ${helpers.rhythmDiv}px;
+    width: 100%;
+  }
 `;
 
 const ButtonsWrapper = styled.div`
   ${helpers.flexCenter}
   width: 100%;
   margin-top: ${helpers.rhythmDiv}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+  }
 `;
 
 const SearchInputsSection = (props) => (
