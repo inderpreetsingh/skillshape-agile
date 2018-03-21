@@ -75,7 +75,7 @@ export default function () {
 	              	<Grid  style={{display: 'inline-flex',alignItems: 'center', padding: 0}} item md={2} sm={3} xs={12}>
 	              		<div style={{display: 'inline-flex'}} >
 		                	<Icon className="material-icons" style={{marginRight: 5, lineHeight: "45px"}}>{settings.mainPanelHeader.leftIcon}</Icon>
-		                	<Typography style={{lineHeight: "45px"}} className={classes.headerText} >{settings.mainPanelHeader.title || ""}</Typography>
+		                	<Typography style={{lineHeight: "45px"}} className={classes.headerText} >{settings.mainPanelHeader.title || "teeeeeee"}</Typography>
 	              		</div>
 	              	</Grid>
 	              	<Grid style={{margin: '10px 0'}} item sm={6} md={8} xs={12}>
@@ -100,7 +100,7 @@ export default function () {
 		          				<ExpansionPanel key={index} className={classes.expansionPanel} key={index}>
 			          				<ExpansionPanelSummary style={{boxShadow: '0 1px 0 rgba(0,0,0,.1)'}} expandIcon={<ExpandMoreIcon />} >
 			              				<div style={{marginLeft: 15}}>
-			                				<Typography className={classes.secondaryHeading}>{tableData[settings.mainPanelHeader.titleKey] || ""}</Typography>
+			                				<Typography className={classes.secondaryHeading}>{this.getExpansionPanelTitle(tableData, settings.mainPanelHeader.titleKey)}</Typography>
 			              				</div>
 			            			</ExpansionPanelSummary>
 			            			{

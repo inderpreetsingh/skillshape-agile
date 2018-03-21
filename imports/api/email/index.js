@@ -155,11 +155,21 @@ export const userRegistrationAndVerifyEmail = function(
         replyTo: fromEmail,
         subject: "skillshape Registration",
         html: `Hi ${user.profile.name},
-           <br/><br/>Your Email: ${user.emails[0].address} has been registered. Your temporary password is  : ${passwd}<br/>
-            click on the following link to verify your email address:<br/>
-            ${verificationToken}<br/>
-            ${Meteor.absoluteUrl()}
-            You will be asked to make your own when you click the link above.
+            <br/><br/>
+                Your Email: ${user.emails[0].address} has been registered.
+            <br/>
+                Please click on the button below to verify your email address and set your password.
+            <br/><br/>
+            <div>
+               <a href=${verificationToken} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Set Password</a>
+            </div>
+            <br/><br/>
+                If the link doesn't work, copy and paste this address into your browser.
+            <br/>
+                ${verificationToken}
+            <br/>
+                Your temporary password is  : ${passwd}
+            <br/>
             <br/><br/>Thanks, <br/><br/>${EmailSignature}`
     });
 };

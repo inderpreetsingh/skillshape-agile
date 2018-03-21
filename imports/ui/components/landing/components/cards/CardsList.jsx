@@ -14,8 +14,6 @@ import {getContainerMaxWidth} from '../../../../../util/cards.js';
 
 import * as helpers from '../jss/helpers.js';
 
-import School from "/imports/api/school/fields";
-
 const CardsListWrapper = styled.div`
   padding: 0;
 `;
@@ -145,7 +143,7 @@ class CardsList extends Component {
                      {cardsData.map(card => {
                         return (
                            <GridItem key={card._id} spacing={24}>
-                               <ClassTypeCard schoolData={School.findOne({_id: card.schoolId})} classInterestData={classInterestData} {...card}/>
+                               <ClassTypeCard classInterestData={classInterestData} {...card}/>
                            </GridItem>
                          )
                      })}

@@ -7,7 +7,7 @@ export default classTypeSettings = {
     mainPanelHeader: {
         leftIcon: "assignment",
         title: "Class Types",
-        titleKey: "name",
+        titleKey: ["name"],
         showImageUpload: true,
         actions: {
             component: ClassTypeForm,

@@ -6,7 +6,7 @@ export default locationSettings = {
     mainPanelHeader: {
         leftIcon: "location_on",
         title: "Locations",
-        titleKey: "address",
+        titleKey: ["address","city","country"],
         notes: "",
         showImageUpload: false,
         showAddressOnMap: true,
