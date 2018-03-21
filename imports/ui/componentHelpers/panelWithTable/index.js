@@ -1,4 +1,6 @@
 import React from 'react';
+import isArray from 'lodash/isArray';
+import filter from 'lodash/filter';
 import PropTypes from 'prop-types';
 import PanelWithTableRender from './panelWithTableRender';
 import { withStyles } from 'material-ui/styles';
@@ -133,6 +135,20 @@ class PanelWithTable extends React.Component {
     }
 
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
+
+    getExpansionPanelTitle = (data, keys) => {
+        if(isArray(keys)) {
+            let str = []
+            for(let key of keys) {
+                if(data[key]) {
+                    str.push(data[key])
+                }
+            }
+            str = str.join(", ");
+            return str;
+        }
+        return ""
+    }
 
     render() {
         return PanelWithTableRender.call(this, this.props, this.state)

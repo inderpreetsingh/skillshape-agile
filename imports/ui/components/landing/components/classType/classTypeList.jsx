@@ -153,7 +153,6 @@ class ClassTypeList extends Component {
   				if(!isEmpty(classType[key])) {
   					return <CardsList
   						key={index}
-                        schoolData={this.props.schoolData && find(this.props.schoolData, { _id: classType[key][0]["schoolId"]}) }
                 		mapView={this.props.mapView}
                 		title={title}
                 		name={key}

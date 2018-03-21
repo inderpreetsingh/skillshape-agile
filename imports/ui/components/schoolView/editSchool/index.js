@@ -4,7 +4,7 @@ import SchoolEditRender from "./schoolEditRender";
 import { browserHistory } from 'react-router';
 
 // import collection definition over here
-import Modules from "/imports/api/modules/fields";
+// import Modules from "/imports/api/modules/fields";
 import Skills from "/imports/api/skill/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import School from "/imports/api/school/fields";
@@ -84,7 +84,7 @@ export default createContainer(props => {
     Meteor.subscribe("classtype");
     Meteor.subscribe("SkillType");
     Meteor.subscribe("SkillClassbySchool", schoolId);
-    Meteor.subscribe("modules.getModules", {schoolId});
+    // Meteor.subscribe("modules.getModules", {schoolId});
     // Meteor.subscribe("classType.getclassType", {schoolId});
   }
 
@@ -92,7 +92,7 @@ export default createContainer(props => {
     isLoading = false;
     schoolData = School.findOne({_id: schoolId});
     locationData = SLocation.find().fetch();
-    moduleData = Modules.find({ schoolId: schoolId }).fetch();
+    // moduleData = Modules.find({ schoolId: schoolId }).fetch();
   }
 
   // let classTypeData = ClassType.find({ schoolId: schoolId }).fetch();

@@ -14,6 +14,8 @@ import SecondaryButton from '../buttons/SecondaryButton.jsx';
 import * as helpers from '../jss/helpers.js';
 import MuiTheme from '../jss/muitheme';
 
+import School from "/imports/api/school/fields";
+
 import { cutString } from '/imports/util';
 
 const Reviews = styled.a`
@@ -22,12 +24,14 @@ const Reviews = styled.a`
 const NoFoundResultWapper = styled.div`
     text-align: center;
 `
-function goToSchoolPage(school) {
-  console.log("goToSchoolPage --->>",school)
-  if(school && school.slug) {
-    browserHistory.push(`/schools/${school.slug}`)
+function goToSchoolPage(schoolId) {
+  console.log("goToSchoolPage --->>",schoolId)
+  if(schoolId) {
+    const schoolData = School.findOne({_id: schoolId})
+    if(schoolData && schoolData.slug) {
+      browserHistory.push(`/schools/${schoolData.slug}`)
+    }
   }
-  return
 }
 
 const ClassDescriptionContent = styled.p`
@@ -87,7 +91,7 @@ const ClassTypeCardDescription = (props) => {
                     <SecondaryButton
                       fullWidth
                       label="View School"
-                      onClick={() => goToSchoolPage(schoolData)}
+                      onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
                     />
                 </Grid>
 

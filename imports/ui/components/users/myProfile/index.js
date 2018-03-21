@@ -97,6 +97,7 @@ class MyProfile extends React.Component {
   	}
 
   	onLocationChange = (location) => {
+        console.log("location==>",location)
         this.setState({
 	        loc: location.coords,
 	        address: location.fullAddress,
@@ -128,7 +129,8 @@ class MyProfile extends React.Component {
 		  		"profile.dob": this.state.dob && new Date(this.state.dob),
 		  		"profile.address": this.state.address,
 		  		"profile.currency": this.state.currency,
-		  		"profile.about": this.state.about,
+                "profile.about": this.state.about,
+		  		"profile.coords": this.state.loc
 		  	}
   			const { file } = this.state;
 
