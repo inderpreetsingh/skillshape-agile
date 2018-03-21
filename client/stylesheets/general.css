@@ -246,3 +246,12 @@ material ui search bar */
 .homepage-content {
   min-height: 100vh;
 }
+
+.full-width {
+  width: 100%;
+}
+
+.increase-height {
+  min-height: 36px;
+  height: 36px;
+}

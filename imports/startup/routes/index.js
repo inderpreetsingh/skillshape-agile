@@ -27,9 +27,11 @@ import SchoolUpload from '/imports/ui/components/schoolUpload';
 // import SchoolPriceView from '/imports/ui/components/embed/schoolPriceView';
 import VerifyEmail from '/imports/ui/components/account/verifyEmail';
 import SkillShapeSchool from '/imports/ui/components/skillshape-school';
+
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
+import ContactUsPage from '/imports/ui/pages/ContactUsPage';
 
 import {componentLoader} from "/imports/util";
 
@@ -40,6 +42,7 @@ export default Routes = componentLoader((props) => (
       <Route path="/classType/:classTypeId" name="ClassType" component={ClassTypeView} />
       <Route path="/skillshape-for-school" name="Skillshape-for-school" component={School} />
 
+      <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />
 
       <Route path="/" component={PublicLayout}>

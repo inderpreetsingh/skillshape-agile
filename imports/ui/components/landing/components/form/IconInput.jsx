@@ -58,6 +58,7 @@ class IconInput extends React.Component {
           value={props.value}
           disabled={props.disabled}
           multiline={props.multiline}
+          rows={props.rows}
           type={props.type}
           defaultValue={props.defaultValue}
           id={props.inputId}
@@ -80,6 +81,7 @@ class IconInput extends React.Component {
                   value={props.value}
                   disabled={props.disabled}
                   multiline={props.multiline}
+                  rows={props.rows}
                   type={props.type}
                   defaultValue={props.defaultValue}
                   id={props.inputId}
@@ -107,7 +109,7 @@ class IconInput extends React.Component {
 
 
 IconInput.propTypes = {
-  iconName: PropTypes.string.isRequired,
+  iconName: PropTypes.string,
   type: PropTypes.string,
   defaultValue: PropTypes.string,
   inputId: PropTypes.string,
@@ -122,6 +124,7 @@ IconInput.propTypes = {
   classes: PropTypes.object,
   min: PropTypes.number,
   max: PropTypes.number,
+  rows: PropTypes.number,
 }
 
 IconInput.defaultProps = {
@@ -129,5 +132,6 @@ IconInput.defaultProps = {
   disabled: false,
   multiline: false,
   value: "",
+  rows: 6
 }
 export default withStyles(styles)(IconInput);
