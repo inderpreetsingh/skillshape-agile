@@ -6,6 +6,10 @@ import Typography from 'material-ui/Typography';
 
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 
+
+const MessageWrapper = styled.div`
+	color:'blue'
+`
 class VerifyEmail extends React.Component {
 
 	state = {

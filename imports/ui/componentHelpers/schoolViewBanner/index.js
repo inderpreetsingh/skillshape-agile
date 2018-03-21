@@ -35,6 +35,14 @@ class SchoolViewBanner extends React.Component {
 	  	let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
   		return `mailto:${schoolData.email}?subject=I%20wish%20your%20listing%20was%20up%20to%20date%21&body=Hi%20${fullName}%2C%0A%0AI%20am%20on%20SkillShape.com%20looking%20at%20your%20listing.%20It%20seems%20to%20be%20not%20up%20to%20date.%0AIt%20would%20really%20help%20me%20and%20other%20students%20get%20to%20your%20classes%20if%20it%20was%20updated.%20I%20would%20probably%20attend%20a%20class%21%0AHere%20is%20the%20link%2C%20you%20can%20fix%20it%20and%20I%20will%20use%20it%20when%20you%20do%21%0A${url}%0A%0AThanks`
   	}
+  	handleCallUs = (schoolData) => {
+  		console.log("schoolData",schoolData)
+  		let schoolPhone = "tel:+1-303-499-7111";
+  		if(schoolData.phone) {
+			schoolPhone = `tel:${schoolData.phone}`;
+		}
+  		return `${schoolPhone}`;
+  	}
 
 	render(){
 		const {
@@ -90,7 +98,7 @@ class SchoolViewBanner extends React.Component {
 	                                <Grid item xs={12} sm={12} md={3}>
 	                                	{!isEdit && <div className={classes.imageFooterBtnContainer}>
 
-			                            <Button href={this.getMailToData(schoolData)} className={classes.ImageFooterbutton} raised color="primary">
+			                            <Button href={this.handleCallUs(schoolData)} className={classes.ImageFooterbutton} raised color="primary">
 			                              <Phone className={classes.ImageFooterIcon} />
 			                              Call Us
 			                            </Button>
