@@ -98,7 +98,8 @@ const TermsOfServiceDetailDialogBox = (props) => (
             </DialogContent>
 
             <DialogActions classes={{root: props.classes.dialogAction}}>
-                <Button color="primary" onClick={props.onModalClose} itemScope itemType="http://schema.org/AgreeAction"> I agree</Button>
+                <Button color="primary" onClick={props.onDisAgreeButtonClick} itemScope itemType="http://schema.org/disAgreeAction"> Cancel</Button>
+                <Button color="primary" onClick={props.onAgreeButtonClick} itemScope itemType="http://schema.org/AgreeAction"> I agree</Button>
             </DialogActions>
         </MuiThemeProvider>
     </Dialog>

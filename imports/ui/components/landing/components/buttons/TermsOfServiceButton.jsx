@@ -19,7 +19,6 @@ class TermsOfServiceButton extends Component {
 
     render() {
         const { termsOfServiceDetailModal } = this.state;
-
     	return(
     		<Fragment>
                 <Button
@@ -33,6 +32,8 @@ class TermsOfServiceButton extends Component {
                     <TermsOfServiceDetailDialogBox
                         open={termsOfServiceDetailModal}
                         onModalClose={() => this.setState({termsOfServiceDetailModal: false})}
+                        onAgreeButtonClick={this.props.onAgreeButtonClick}
+                        onDisAgreeButtonClick={this.props.onDisAgreeButtonClick}
                     />
                 }
             </Fragment>

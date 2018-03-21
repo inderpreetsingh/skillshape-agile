@@ -9,6 +9,7 @@ import SideNavItems from './SideNavItems.jsx';
 import TermsOfServiceDialogBox from './dialogs/TermsOfServiceDialogBox.jsx';
 import EmailConfirmationDialogBox from './dialogs/EmailConfirmationDialogBox';
 import Events from '/imports/util/events';
+import { toastrModal } from '/imports/util';
 
 class SideNav extends Component {
 
@@ -76,7 +77,8 @@ class SideNav extends Component {
     }
 
     handleEmailConfirmationSubmit = () => {
-        this.setState({isBusy: true})
+        this.setState({isBusy: true});
+        const { toastr } = this.props;
         Meteor.call("user.createUser", {...this.state.userData, signUpType: 'skillshape-signup'}, (err, res) => {
             console.log("user.createUser err res -->>",err,res)
             let modalObj = {
@@ -89,8 +91,14 @@ class SideNav extends Component {
             if(err) {
                 modalObj.errorText = err.reason || err.message;
                 modalObj.signUpDialogBox = true;
+                this.setState(modalObj)
             }
-            this.setState(modalObj)
+
+            if(res) {
+                this.setState(modalObj, ()=> {
+                    toastr.success("Successfully registered, Please check your email.","success");
+                })
+            }
         })
     }
     handleLoginGoogle = () => {
@@ -192,4 +200,4 @@ class SideNav extends Component {
     }
 }
 
-export default SideNav;
+export default toastrModal(SideNav);

@@ -76,7 +76,7 @@ Meteor.methods({
 		                    }
 		                }
 
-		                const slocation = SLocation.findOne({ schoolId: schoolId, zip: csvdata[i].zip, $or: [ {title: csvdata[i].LocationTitle}, {address: csvdata[i].address} ] })
+		                // const slocation = SLocation.findOne({ schoolId: schoolId, zip: csvdata[i].zip, $or: [ {title: csvdata[i].LocationTitle}, {address: csvdata[i].address} ] })
 		                const sLocationDoc = {
 		                    title: csvdata[i].LocationTitle,
 		                    neighbourhood: csvdata[i].neighbourhood,
@@ -115,14 +115,17 @@ Meteor.methods({
 		                    sLocationDoc.geoLong = data.lng
 		                    sLocationDoc.loc = [data.lat, data.lng]
 		                }
-		                if (slocation) {
-		                    locationId = slocation._id;
-		                    SLocation.update({ _id: locationId }, { $set: sLocationDoc });
-		                } else {
-		                    if (csvdata[i].address) {
-		                        locationId = SLocation.insert(sLocationDoc);
-		                    }
-		                }
+		                // if (slocation) {
+		                //     locationId = slocation._id;
+		                //     SLocation.update({ _id: locationId }, { $set: sLocationDoc });
+		                // } else {
+		                //     if (csvdata[i].address) {
+		                //         locationId = SLocation.insert(sLocationDoc);
+		                //     }
+		                // }
+		                if (csvdata[i].address || csvdata[i].city || csvdata[i].state) {
+	                        locationId = SLocation.insert(sLocationDoc);
+	                    }
 		                let skillCategoryIds = [];
 		                let	skillSubjectIds = [];
 		                let classTypeObject = {
