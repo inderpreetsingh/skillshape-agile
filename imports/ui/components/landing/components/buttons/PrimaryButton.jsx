@@ -97,6 +97,7 @@ const PrimaryButton = (props) => {
         disabled={props.disabled}
         itemScope
         itemType={props.itemType}
+        formId={props.formId}
         type={props.type}
       >
           {getIconForButton(props)}
@@ -117,6 +118,7 @@ const PrimaryButton = (props) => {
         disabled={props.disabled}
         type={props.type}
         formId={props.formId}
+        disabled={props.disabled}
       >
           {getIconForButton(props)}
 
@@ -138,7 +140,12 @@ PrimaryButton.propTypes = {
     disabled: PropTypes.bool,
     itemScope: PropTypes.bool,
     boxShadow: PropTypes.bool,
-    itemType: PropTypes.string
+    itemType: PropTypes.string,
+    disabled: PropTypes.bool,
+}
+
+PrimaryButton.defaultProps = {
+  disabled: false
 }
 
 export default withStyles(styles)(PrimaryButton);

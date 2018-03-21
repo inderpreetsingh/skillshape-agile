@@ -232,7 +232,7 @@ class CardsReveal extends Component {
         <div onClick={this.revealCardContent}>
           <CardImageTitleWrapper>
 
-            <CardImageWrapper ref={(div) => this.imgContainer = div} bgImage={classTypeImg || cardImgSrc}></CardImageWrapper>
+            <CardImageWrapper bgImage={classTypeImg || cardImgSrc}></CardImageWrapper>
 
             <CardContentHeader>
               <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
