@@ -40,3 +40,4 @@ import "/imports/api/classInterest/server/publication";
 import "/imports/api/importLogs/server/publication";
 import "/imports/api/enrollmentFee/server/publication";
 import "/imports/api/schoolMemberDetails/server/publication";
+import "/imports/api/user/server/publication";
