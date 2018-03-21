@@ -107,7 +107,13 @@ Schema.UserProfile = new SimpleSchema({
     birthYear: {
         type: Number,
         optional: true
-    }
+    },
+    coords: {
+        type: [Number], // [<longitude>, <latitude>]
+        index: '2d', // create the geospatial index
+        optional: true,
+        decimal: true
+    },
 });
 
 Schema.User = new SimpleSchema({

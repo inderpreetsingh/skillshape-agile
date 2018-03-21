@@ -184,7 +184,7 @@ Meteor.publish("school.getSchoolClasses", function({
 // This publication run on skillshape homepage and give the data of class type by categorization of skill category.
 Meteor.publish("school.getClassTypesByCategory", function({
     is_map_view,
-    schoolId,
+    schoolId, /*schoolId filter is used when we click on marker on map on home page*/
     user_id,
     coords,
     NEPoint,
@@ -208,16 +208,16 @@ Meteor.publish("school.getClassTypesByCategory", function({
 }) {
     // console.log("applyFilterStatus-->>", applyFilterStatus);
     // console.log("schoolId-->>", schoolId);
-    console.log("skillTypeText-->>", skillTypeText);
-    console.log("locationText-->>", locationText);
-    console.log("skillCategoryClassLimit-->>", skillCategoryClassLimit);
+    // console.log("skillTypeText-->>", skillTypeText);
+    // console.log("locationText-->>", locationText);
+    // console.log("skillCategoryClassLimit-->>", skillCategoryClassLimit);
     // console.log("is_map_view-->>", is_map_view);
     // console.log("skillTypeText-->>", skillTypeText);
     // console.log("locationText-->>", locationText);
     // console.log("_monthPrice", _monthPrice);
     console.log("coords", coords);
     // console.log("NEPoint", NEPoint);
-    // console.log("skillCategoryIds", skillCategoryIds);
+    console.log("skillCategoryIds", skillCategoryIds);
     const classfilter = { isPublish: true };
     const skillCategoryFilter = {};
 
@@ -229,18 +229,29 @@ Meteor.publish("school.getClassTypesByCategory", function({
         classfilter["$text"] = { $search: schoolName };
     }
 
+    const isAllZero = coords && coords.some(el => el !==0);
     if (coords && !is_map_view) {
-        const isAllZero = coords.some(el => el !==0);
         if(isAllZero) {
             // place variable will have all the information you are looking for.
-            var maxDistance = 50;
+            // var maxDistance = 50;
             // we need to convert the distance to radians
             // the raduis of Earth is approximately 6371 kilometers
-            maxDistance /= 63;
+            // maxDistance /= 63;
             classfilter["filters.location"] = {
                 $geoWithin: { $center: [coords, 30 / 111.12] }
             };
 
+        }
+    }
+
+    // If no location is available and user has an address in their profile: Show classes in categories based on address.
+    if(this.userId && (!coords || !isAllZero)) {
+        let user = Meteor.users.findOne(this.userId);
+        console.log("inside profile coords");
+        if(user && user.profile && user.profile.coords) {
+            classfilter["filters.location"] = {
+                $geoWithin: { $center: [user.profile.coords, 30 / 111.12] }
+            };
         }
     }
 
@@ -370,12 +381,13 @@ Meteor.publish("school.getClassTypesByCategory", function({
     let locationIds = [];
     // let classTypeCursor;
     let skillCategoryCursor;
+    let collectSkillCategoriesIds = [];
 
     // when map view enable on homepage, Then send the classType data without categorization of skill category.
     if (is_map_view) {
         classTypeCursor = ClassType.find(classfilter, { limit: undefined });
 
-        console.log("classTypes count --->>", classTypeCursor.count());
+        // console.log("classTypes count --->>", classTypeCursor.count());
         classTypeCursor.forEach(classTypeData => {
             locationIds.push(classTypeData.locationId);
             classTypeIds.push(classTypeData._id);
@@ -393,12 +405,13 @@ Meteor.publish("school.getClassTypesByCategory", function({
             skillCategoryClassLimit,
             is_map_view,
             classfilter,
+            collectSkillCategoriesIds,
         })
     }
 
     // const classTypesCursor = ClassType.find({ _id: { $in: classTypeIds } });
 
-    console.log("ClassType Data Count-->>", ClassType.find({ _id: { $in: classTypeIds } }).count());
+    console.log("ClassType Data Count-->>", applyFilterStatus, ClassType.find({ _id: { $in: classTypeIds } }).count());
 
     /*If there is no filter and no class type data found correspond to user's location
     then need to show default classes to user.*/
@@ -440,21 +453,20 @@ Meteor.publish("school.getClassTypesByCategory", function({
                 skillCategoryClassLimit,
                 is_map_view,
                 classfilter,
+                collectSkillCategoriesIds,
             })
         }
     }
 
-    console.log("Final ClassType Data -->>", ClassType.find({ _id: { $in: classTypeIds } }).count());
+    console.log("collectSkillCategoriesIds --->>",collectSkillCategoriesIds)
+    // console.log("Final ClassType Data -->>", ClassType.find({ _id: { $in: classTypeIds } }).count());
     const cursors = [
         ClassType.find({ _id: { $in: uniq(classTypeIds) } }),
         SLocation.find({ _id: { $in: uniq(locationIds) } }),
         School.find({ _id: { $in: uniq(schoolIds) } }),
-        ClassTimes.find({ classTypeId: { $in: uniq(classTypeIds) } })
+        ClassTimes.find({ classTypeId: { $in: uniq(classTypeIds) } }),
+        SkillCategory.find({ _id: { $in: uniq(collectSkillCategoriesIds) }})
     ];
-
-    if (skillCategoryCursor) {
-        cursors.push(skillCategoryCursor);
-    }
 
     return cursors;
 
@@ -657,28 +669,31 @@ function categorizeClassTypeData({
     skillCategoryFilter,
     skillCategoryClassLimit,
     classfilter,
+    collectSkillCategoriesIds
 }) {
     let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
     skillCategoryClassLimit ? skillCategoryClassLimit : {};
+    let newClassFilters = {...classfilter}
     // console.log("categorizeClassTypeData skillCategoryFilter",JSON.stringify(skillCategoryFilter, null, "  "));
 
     skillCategoryCursor.forEach(skillCategory => {
-        classfilter["skillCategoryId"] = { $in: [skillCategory._id] };
+        newClassFilters["skillCategoryId"] = { $in: [skillCategory._id] };
         // Initially(classType limit not set) fetch only 4(default) classType for a particular skill category.
-        console.log("categorizeClassTypeData classfilter",JSON.stringify(classfilter, null, "  "));
+        // console.log("categorizeClassTypeData newClassFilters",JSON.stringify(newClassFilters, null, "  "));
         let limit = (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory.name]) ||4;
-        let classTypeCursor = ClassType.find(classfilter, {
+        let classTypeCursor = ClassType.find(newClassFilters, {
             limit: is_map_view ? undefined : limit
         });
-        console.log("limit -->>>",skillCategory.name, {
-            limit: is_map_view ? undefined : limit
-        },classTypeCursor.count())
+        // console.log("limit -->>>",skillCategory.name, {
+        //     limit: is_map_view ? undefined : limit
+        // },classTypeCursor.count())
 
         // console.log("classTypeCursor count --->>",classTypeCursor.count())
 
         // findout location and school for a class type.
         classTypeCursor.forEach(classTypeData => {
             // console.log("classTypeData --->>",classTypeData)
+            collectSkillCategoriesIds.push(skillCategory._id)
             if(classTypeData.locationId) {
                 locationIds.push(classTypeData.locationId);
             }

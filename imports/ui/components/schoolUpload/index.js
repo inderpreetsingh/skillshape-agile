@@ -7,6 +7,8 @@ import {downloadingFunction} from '/imports/util';
 // import collection definition over here
 import ImportLogs from "/imports/api/importLogs/fields";
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+import { toastrModal } from '/imports/util';
+
 
 class schoolUploadView extends React.Component {
 
@@ -27,6 +29,7 @@ class schoolUploadView extends React.Component {
     uploadCSV = (e)=>{
         var files = this.fileInputRef.files
         var reader = new FileReader();
+        const { toastr } = this.props;
         reader.onload = function(fileLoadEvent) {
             Meteor.call('project_upload', files[0].name, reader.result,function(error, result){
                 if(error){
@@ -43,6 +46,7 @@ class schoolUploadView extends React.Component {
     downloadErrorCSV = (logId) => {
         let importLog = ImportLogs.findOne({ _id: logId });
         if (importLog && importLog.errorRecordCount > 0) {
+            const { toastr } = this.props;
             Meteor.call("getErrorDocs", logId, (err, errorRecord) => {
                 if (err) {
                     toastr.error("Error while fetching the records");
@@ -93,4 +97,4 @@ export default createContainer(props => {
         importLogs
     };
 
-}, schoolUploadView);
+}, toastrModal(schoolUploadView));

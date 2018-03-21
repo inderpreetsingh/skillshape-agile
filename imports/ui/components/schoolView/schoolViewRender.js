@@ -419,7 +419,6 @@ export default function() {
                       </Card>
                     </Grid>
                   </Grid>
-                )
             </div>
 
             {/*<div className="card">

@@ -10,13 +10,20 @@ const styles = theme => {
     btn: {
       margin: 5,
       width: 165,
-      border: "solid 2px black"
+      display: 'inline-block',
+      borderRadius: '4px',
+      position: 'relative',
+      background:'#c0c1c0'
     },
     btnActive: {
       margin: 5,
       width: 165,
-      border: "solid 2px black",
       color: "#fff"
+    },
+    muiLabel: {
+      color: '#fff',
+      fontSize: '14px',
+      fontWeight: 'bold',
     }
   }
 }
@@ -49,7 +56,7 @@ class ResponsiveTabs extends React.Component {
       <div className="responsive-tab">
           <div style={{display: "inline-flex",flexWrap: 'wrap',justifyContent: 'center', width: "100%", marginBottom: 25}}>
               {this.props.tabs.map((tab,index)=> {
-                return <Button className={index == this.state.tabValue ? classes.btnActive : classes.btn} raised color={index == this.state.tabValue && this.props.color } onClick={()=> {this.props.onTabChange(index);this.setState({tabValue: index})}} >
+                return <Button classes={{label: classes.muiLabel}} className={index == this.state.tabValue ? classes.btnActive : classes.btn} raised color={index == this.state.tabValue && this.props.color } onClick={()=> {this.props.onTabChange(index);this.setState({tabValue: index})}} >
                    {tab}
                 </Button>
               })}
