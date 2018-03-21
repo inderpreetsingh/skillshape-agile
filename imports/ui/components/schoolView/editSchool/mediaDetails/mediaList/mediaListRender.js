@@ -15,7 +15,7 @@ export default function() {
 
 
 	return (
-		<div className="col-sm-offset-2 col-sm-8 no-padding">
+		<div style={{textAlign:'center'}}>
 			{
 				isEmpty(collectionData) ?  "No Media Found!!": (
 					<Grid container>
