@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import get from 'lodash/get';
 
 import SignUpDialogBox from './dialogs/SignUpDialogBox.jsx';
+import ChangePasswordDialogBox from './dialogs/ChangePasswordDialogBox.jsx';
 import MenuIconButton from './buttons/MenuIconButton.jsx';
 import SideNavItems from './SideNavItems.jsx';
 import TermsOfServiceDialogBox from './dialogs/TermsOfServiceDialogBox.jsx';
@@ -21,6 +22,7 @@ class SideNav extends Component {
         userData: {},
         isBusy:false,
         errorText: null,
+        changePasswordDialogBox:false
     }
 
     componentWillMount() {
@@ -43,6 +45,13 @@ class SideNav extends Component {
 
     handleSignUpDialogBoxState = (state, userType) => {
         this.setState({signUpDialogBox: state, userData: { userType: userType}, errorText: null});
+    }
+    handleChangePasswordDialogBoxState = (state,message) => {
+        const { toastr } = this.props;
+        if(message) {
+            toastr.success(`${message}`,"success")
+        }
+        this.setState({changePasswordDialogBox: state});
     }
 
     handleTermsOfServiceDialogBoxState = (state) => {
@@ -169,6 +178,14 @@ class SideNav extends Component {
 
                     />
                 }
+                {currentUser && this.state.changePasswordDialogBox &&
+                    <ChangePasswordDialogBox
+                        open={this.state.changePasswordDialogBox}
+                        onModalClose={() => this.handleChangePasswordDialogBoxState(false)}
+                        onSubmit={this.handleChangePasswordSubmit}
+                        hideChangePassword = {(message) =>{this.handleChangePasswordDialogBoxState(false,message)}}
+                    />
+                }
                 {
                     this.state.termsOfServiceDialogBox &&
                     <TermsOfServiceDialogBox
@@ -193,6 +210,7 @@ class SideNav extends Component {
                     open={this.state.open}
                     handleDrawer={() => this.handleDrawerState(false)}
                     handleSignUpDialogBox={this.handleSignUpDialogBoxState}
+                    showChangePassword={() => this.handleChangePasswordDialogBoxState(true)}
                     {...this.props}
                     />
             </Fragment>

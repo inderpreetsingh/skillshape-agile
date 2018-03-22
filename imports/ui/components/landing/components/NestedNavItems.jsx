@@ -39,7 +39,17 @@ class NestedNavItems extends Component {
 					    		{
 					    			childData.map((data, index) => {
 						    			return (
-								            <ListItem className={classes.nested} button={this.props.button ? this.props.button : false} onClick={() => this.props.onClick(data.link)}>
+								            <ListItem
+                                            className={classes.nested}
+                                            button={this.props.button ? this.props.button : false}
+                                            onClick={(e) => {
+                                                if(data.onClick) {
+                                                    data.onClick(e)
+                                                } else if(this.props.onClick) {
+                                                    this.props.onClick(data.link)
+                                                }
+                                            }}
+                                            >
 								                <ListItemIcon>
 								                	<Icon>{data.iconName}</Icon>
 								              	</ListItemIcon>

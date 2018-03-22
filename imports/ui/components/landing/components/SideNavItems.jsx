@@ -119,6 +119,11 @@ const LoginUserSideNav = (props) => (
                     name: "My Media",
                     link: `/media/${Meteor.userId()}`,
                     iconName: "collections",
+                },
+                {
+                    name: "Change Password",
+                    iconName: "lock_open",
+                    onClick: props.showChangePassword
                 }
             ]}
             onClick={props.childItemOnClick}
@@ -258,6 +263,7 @@ class SideNavItems extends React.Component {
     }
 
     handleChildItemOnClick = (link)=> {
+        console.log("handleChildItemOnClick")
         browserHistory.push(link);
     }
 
@@ -315,7 +321,8 @@ SideNavItems.defaultProps = {
 SideNavItems.propTypes = {
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
-    handleSignUpDialogBox: PropTypes.func
+    handleSignUpDialogBox: PropTypes.func,
+    handleChangePasswordDialogBox: PropTypes.func
 }
 
 export default withStyles(styles)(SideNavItems);
