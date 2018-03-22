@@ -169,6 +169,7 @@ const BottomSectionContent = (props) => (
    <PrimaryButton
     onClick={props.getMyCurrentLocation}
     icon
+    boxShadow
     iconName="room"
     label="Browse classes near you"
     itemScope
@@ -178,6 +179,7 @@ const BottomSectionContent = (props) => (
     icon
     iconName="domain"
     label="Add your school"
+    boxShadow
     itemScope
     itemType="http://schema.org/AddAction"
     />

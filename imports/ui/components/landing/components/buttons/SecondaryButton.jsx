@@ -35,6 +35,9 @@ const styles = {
     marginRight: '5px',
     fontSize: 'inherit'
   },
+  searchBarShadow: {
+    boxShadow: `2px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14) , 0px 3px 1px -2px rgba(0, 0, 0, 0.12)`
+  },
    ['@media (max-width:'+helpers.mobile+'px)']: {
     secondaryButton: {
       width: '100%'
@@ -54,6 +57,10 @@ const SecondaryButton = (props) => {
   }
   else{
     rootClass = props.classes.secondaryButton;
+  }
+
+  if(props.boxShadow) {
+    rootClass = rootClass + ' ' + props.classes.searchBarShadow;
   }
 
   if(props.itemScope && props.itemType) {

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import DocumentTitle from 'react-document-title';
 import { createContainer } from 'meteor/react-meteor-data';
+import get from 'lodash/get';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -23,7 +24,7 @@ class ClassTypeView extends Component {
     render() {
         console.log("ClassTypeView .props-->>",this.props)
 		return(
-            <DocumentTitle title={this.props.route.name}>
+            <DocumentTitle title={get(this.props, "params.classTypeName", "Untitled")}>
     			<Wrapper className="classtype-page">
     				<TopSearchBar {...this.props}/>
             		    <ClassTypeContent {...this.props}/>
