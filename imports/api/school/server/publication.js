@@ -515,9 +515,9 @@ Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
         }
     }
 
-    if (locationName) {
-        classTypeFilter["$text"] = { $search: locationName };
-    }
+    // if (locationName) {
+    //     classTypeFilter["$text"] = { $search: locationName };
+    // }
     if (gender) {
         classTypeFilter["gender"] = gender;
     }
@@ -589,14 +589,21 @@ Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
 
     if (coords && locationName && size(filterObj) == 3) {
         // place variable will have all the information you are looking for.
-        var maxDistance = 50;
+        var maxDistance = 200;
         // we need to convert the distance to radians
         // the raduis of Earth is approximately 6371 kilometers
         maxDistance /= 63;
+        classTypeFilter["filters.location"] = {
+            $geoWithin: {
+                $center: [coords, maxDistance]
+            }
+        };
+
         let slocations = SLocation.find({
             loc: {
-                $near: coords,
-                $maxDistance: maxDistance
+                $geoWithin: {
+                    $center: [coords, maxDistance]
+                }
             }
         }).fetch();
 
@@ -617,7 +624,7 @@ Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
         let classTypeData = ClassType.find(classTypeFilter).fetch();
         classTypeData.map((data) => schoolIds.push(data.schoolId));
         schoolFilter['_id'] = { '$in': uniq(schoolIds) };
-        console.log("schoolIds -->>",uniq(schoolIds));
+        console.log("schoolIds inside-->>",uniq(schoolIds));
 
         return School.find(schoolFilter, limit);
     }
