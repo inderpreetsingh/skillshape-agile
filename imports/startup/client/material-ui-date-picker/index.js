@@ -12,29 +12,33 @@ export class MaterialDatePicker extends Component {
             floatingLabelText,
             value,
             emptyLabel,
-            fullWidth
+            fullWidth,
+            format={format}
         } = this.props;
 		return (
-    		<DatePicker
-                required={required}
-                hintText={hintText}
-                floatingLabelText={floatingLabelText}
-                value={value}
-                emptyLabel={emptyLabel || ""}
-                onChange={this.props.onChange}
-                fullWidth={fullWidth}
-                TextFieldComponent={(props)=> {
-                return (
-                        <TextField
-                            id="key"
-                            label={hintText}
-                            margin="normal"
-                            {...this.props}
-                            {...props}
-                        />
-                    )
-                }}
-            />
+            <div className="picker">
+        		<DatePicker
+                    required={required}
+                    hintText={hintText}
+                    format={format}
+                    floatingLabelText={floatingLabelText}
+                    value={value}
+                    emptyLabel={emptyLabel || ""}
+                    onChange={this.props.onChange}
+                    fullWidth={fullWidth}
+                    TextFieldComponent={(props)=> {
+                    return (
+                            <TextField
+                                id="key"
+                                label={hintText}
+                                margin="normal"
+                                {...this.props}
+                                {...props}
+                            />
+                        )
+                    }}
+                />
+            </div>
 		)
 	}
 }

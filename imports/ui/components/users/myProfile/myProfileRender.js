@@ -132,6 +132,7 @@ export default function() {
                                             </Typography>
                                             <FormControl fullWidth margin='dense'>
                                                 <MaterialDatePicker
+                                                    classes={classes.datePickerProps}
                                                     required={false}
                                                     emptyLabel="Select a Date"
                                                     floatingLabelText={"Birth Date"}
@@ -139,6 +140,7 @@ export default function() {
                                                     value={dob}
                                                     onChange={(date) => this.setState({ dob: date})}
                                                     fullWidth={true}
+                                                    format={"DD-MM-YYYY"}
                                                 />
                                             </FormControl>
                                             <Typography className={classes.inputCaption} type="caption">
@@ -152,7 +154,7 @@ export default function() {
                                                 iconName="email"
                                             />
                                             <Typography className={classes.inputCaption} type="caption">
-                                                We won't be share your private email address with others Members.
+                                                We won't be share your private email address with other Members.
                                             </Typography>
                                             <IconInput
                                                 type="tel"
@@ -162,7 +164,7 @@ export default function() {
                                                 onChange={this.handleTextChange.bind(this, "phone")}
                                             />
                                             <Typography className={classes.inputCaption} type="caption">
-                                                This is only shared with Administrators odf a school you have enrolled in.
+                                                This is only shared with Administrators of a school you have enrolled in.
                                             </Typography>
                                             <FormControl fullWidth margin='dense'>
                                                 <InputLabel htmlFor="currency">Preferred Currency</InputLabel>
@@ -187,7 +189,7 @@ export default function() {
                                                 onChange={this.locationInputChanged}
                                                 iconName='location_on'
                                                 googlelocation={true}
-                                                labelText="Where You Live"
+                                                labelText="Where you live"
                                                 value={address}
                                                 defaultValue={address}
                                                 onLocationChange={this.onLocationChange}
