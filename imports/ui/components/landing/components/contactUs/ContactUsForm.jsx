@@ -27,16 +27,23 @@ const styles = {
     width: helpers.rhythmDiv * 3,
     marginRight: helpers.rhythmDiv
   },
+  radioLabelRootZeroMargin: {
+    marginRight: 0
+  },
   radioButtonGroup: {
     display: 'flex',
     flexDirection: 'row',
-    flexWrap: 'no-wrap'
+    flexWrap: 'nowrap',
+    [`@media screen and (max-width: ${helpers.mobile}px)`] : {
+      flexWrap: 'wrap'
+    }
   },
 }
 
 
 const FormWrapper = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
+  padding-bottom: 0;
   max-width: 600px;
   width: 100%:
   display: flex;
@@ -49,8 +56,12 @@ const FormWrapper = styled.div`
 `;
 
 const Form = styled.form`
-width: 80%;
-margin: 0 auto;
+  width: 80%;
+  margin: 0 auto;
+
+  @media screen and (max-width : ${helpers.mobile + 100}px) {
+    width: 100%;
+  }
 `;
 
 const SubmitButtonWrapper = styled.div`
@@ -61,7 +72,6 @@ const SubmitButtonWrapper = styled.div`
 
 const ButtonWidthWrapper = styled.div`
   width: 200px;
-
 `;
 
 class ContactUsForm extends Component {
@@ -77,7 +87,6 @@ class ContactUsForm extends Component {
   handleInputFieldChange = (fieldName) => (e) => {
     this.setState({
       [fieldName] : e.target.value
-
     });
   }
 
@@ -120,9 +129,9 @@ class ContactUsForm extends Component {
                     className={this.props.classes.radioButtonGroup}
                     onChange={this.handleChange}
                   >
-                    <FormControlLabel classes={{root: this.props.classes.radioLabelRoot , label : this.props.classes.radioLabel}} value="feature" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Feature Request" />
-                    <FormControlLabel classes={{root: this.props.classes.radioLabelRoot , label : this.props.classes.radioLabel}} value="somethingBroken" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Something is broken" />
-                    <FormControlLabel classes={{root: this.props.classes.radioLabelRoot , label : this.props.classes.radioLabel}} value="other" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="I Love this!" />
+                    <FormControlLabel classes={{root: this.props.classes.radioLabelRoot , label: this.props.classes.radioLabel}} value="feature" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Feature request" />
+                    <FormControlLabel classes={{root: this.props.classes.radioLabelRoot , label: this.props.classes.radioLabel}} value="somethingBroken" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Something broken" />
+                    <FormControlLabel classes={{root: this.props.classes.radioLabelRootZeroMargin, label: this.props.classes.radioLabel}} value="other" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="I love it!" />
                 </RadioGroup>
             </FormControl>
 
