@@ -7,6 +7,8 @@ import Footer from '../components/landing/components/footer/index.jsx';
 import ContactUsForm from '../components/landing/components/contactUs/ContactUsForm.jsx';
 import ClassMap from '../components/landing/components/map/ClassMap.jsx';
 
+import SocialAccounts from '../components/landing/components/contactUs/SocialAccounts.jsx';
+
 import * as helpers from '../components/landing/components/jss/helpers.js';
 
 const Title = styled.h1`
@@ -15,9 +17,11 @@ const Title = styled.h1`
   font-weight: 300;
   font-style: italic;
   text-align: center;
+  line-height: 1;
   margin: 0;
   margin-top: ${helpers.rhythmDiv * 8}px;
   margin-bottom: ${helpers.rhythmDiv * 4}px;
+  padding: ${helpers.rhythmDiv * 2}px;
 `;
 
 const FormMapWrapper = styled.div`
@@ -33,9 +37,10 @@ const FormMapWrapper = styled.div`
 `;
 
 const MapOuterContainer = styled.div`
-  width: 600px;
-  display: flex;
-  justify-content: center;
+  max-width: 600px;
+  width: 100%;
+  ${helpers.flexCenter}
+  flex-direction: column;
 `;
 
 const MapContainer = styled.div`
@@ -61,6 +66,8 @@ const ContactUs = () => (
         <MapContainer>
           <ClassMap />
         </MapContainer>
+
+        <SocialAccounts />
       </MapOuterContainer>
 
     </FormMapWrapper>

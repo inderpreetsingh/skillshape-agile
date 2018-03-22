@@ -34,6 +34,14 @@ $sizes: (
   rhythm-div: $rhythm-inc * $base-font-size
 );
 
+$social-icons: (
+  twitter: #00aced,
+  facebook: #3b5998,
+  google-plus: #dd4b39,
+  instagram: #bc2a8d,
+  dribbble: #ea4c89
+);
+
 $input-font-color: rgba(0, 0, 0, 0.42);
 $default-border-color: $input-font-color;
 $dark-border-color: rgba(0, 0, 0, 0.87);
