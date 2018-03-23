@@ -236,3 +236,23 @@ export const sendEmailToStudentForClaimAsMember = function(
         });
     }
 };
+
+
+export const sendClassTypeLocationRequestEmail = function({
+    toEmail,
+    fromEmail,
+    updatePriceLink,
+    ownerName,
+    currentUserName
+}) {
+    if (Meteor.isServer) {
+        Email.send({
+            to: 'rajat.rastogi@daffodilsw.com', //emailObj.to
+            from: fromEmail,
+            replyTo: "Notices@SkillShape.com",
+            subject: "Class Type location request received",
+            html: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
+            \n\nThanks, \n\n${EmailSignature}`
+        });
+    }
+};

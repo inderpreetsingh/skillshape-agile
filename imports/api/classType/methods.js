@@ -6,7 +6,9 @@ import ClassInterest from "/imports/api/classInterest/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import School from "/imports/api/school/fields";
 import ClassTimesRequest from "/imports/api/classTimesRequest/fields";
-import { sendEmailToStudentForClassTimeUpdate } from "/imports/api/email";
+import ClassTypeLocationRequest from "/imports/api/classTypeLocationRequest/fields";
+import { sendEmailToStudentForClassTimeUpdate, sendClassTypeLocationRequestEmail } from "/imports/api/email";
+import { getUserFullName } from '/imports/util/getUserData';
 
 Meteor.methods({
     "classType.getClassType": function({schoolId}) {
@@ -90,6 +92,49 @@ Meteor.methods({
                     }
                 }
             }
+        } else {
+            throw new Meteor.Error("Permission denied!!");
+        }
+    },
+    "classType.requestClassTypeLocation": function({schoolId, classTypeId, classTypeName}) {
+        if (this.userId && schoolId) {
+                const classTypeLocationRequest = ClassTypeLocationRequest.findOne({schoolId, classTypeId,userId: this.userId });
+                console.log("classTypeLocationRequest -->>",classTypeLocationRequest)
+                // Request Pending
+                if(classTypeLocationRequest) {
+                    throw new Meteor.Error("Your Class Type request has already been created!!!");
+                } else {
+                    const requestObj = {
+                        schoolId,
+                        createdAt: new Date(),
+                        notification: true,
+                        userId: this.userId,
+                        classTypeId:classTypeId,
+                        classTypeName:classTypeName
+                    }
+                    ClassTypeLocationRequest.insert(requestObj);
+                }
+                let schoolData = School.findOne(schoolId);
+                let ownerName;
+                console.log("schoolData==>",schoolData)
+                if(schoolData && schoolData.superAdmin) {
+                    // Get Admin of School As school Owner
+                    let adminUser = Meteor.users.findOne(schoolData.superAdmin);
+                    ownerName= getUserFullName(adminUser);
+                }
+                // Optional if Owner name not found then owner name will be `Sam`
+                if(!ownerName) {
+                    // Owner Name will be Sam
+                    ownerName = 'Sam'
+                }
+                // Send Email to Admin of School if admin available
+                const toEmail = 'sam@skillshape.com'; // Needs to replace by Admin of School
+                const fromEmail = 'Notices@SkillShape.com';
+                let currentUser = Meteor.users.findOne(this.userId);
+                let currentUserName = getUserFullName(currentUser);
+                sendClassTypeLocationRequestEmail({toEmail, fromEmail, currentUserName,ownerName});
+                return {emailSent:true};
+
         } else {
             throw new Meteor.Error("Permission denied!!");
         }

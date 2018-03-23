@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
 import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
 
 import { createMarkersOnMap } from '/imports/util';
 
@@ -13,6 +14,8 @@ import ActionButtons from '../ActionButtons.jsx';
 
 import * as helpers from '../../jss/helpers.js';
 import * as settings from '../../../site-settings.js';
+import Events from '/imports/util/events';
+
 
 const CoverContent = styled.div`
   display: flex;
@@ -117,6 +120,25 @@ class ClassTypeCoverContent extends React.Component {
     return str;
   }
 
+  // Request Class type location
+  requestClassTypeLocation = () => {
+    console.log("requestClassTypeLocation");
+    // Not login user then show login modal
+    if(!Meteor.user()) {
+      Events.trigger("loginAsUser");
+    } else {
+      const { classTypeData } = this.props;
+      console.log("classTypeData===>",classTypeData)
+      const payload = {
+        schoolId:classTypeData.schoolId,
+        classTypeId:classTypeData._id,
+        classTypeName:classTypeData.name
+      };
+      console.log("payload=========>",payload);
+      Meteor.call('classType.requestClassTypeLocation', payload);
+    }
+  }
+
   render() {
     let props = this.props;
     return(
@@ -127,9 +149,9 @@ class ClassTypeCoverContent extends React.Component {
                   {
                     isEmpty(props.classTypeData.selectedLocation) ? (
                       <LocationNotFound>
-                        <Typography type="display1" gutterBottom align="center">
-                          Their is no location data available for class type
-                        </Typography>
+                        <Button onClick={this.requestClassTypeLocation}>
+                          Request Location
+                        </Button>
                       </LocationNotFound>
                     ) :<div id="classTypeLocationMap" style={{height: '100%', minHeight: 320}}/>
                   }
