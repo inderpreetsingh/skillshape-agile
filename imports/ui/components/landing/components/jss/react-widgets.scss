@@ -1,0 +1,36 @@
+// @import "/node_modules/react-widgets/lib/scss/react-widgets";
+$multiselect-tag-border: black;
+.rw-widget-container {
+    border:none;
+    border-bottom: 1px solid $multiselect-tag-border;
+}
+
+.rw-multiselect-tag {
+    border-radius:500px;
+    margin-right:8px;
+    border:none;
+    padding: 4px 2px 4px 8px;
+    font-size:14px;
+}
+
+.rw-multiselect-tag-btn {
+    background:#999;
+    border-radius:500px;
+    width:23px;
+    height:23px;
+    line-height:20px;
+    color:#eee;
+}
+
+.rw-multiselect .rw-input-reset, .rw-multiselect .rw-input, .rw-multiselect .rw-filter-input {
+    height:40px;
+    margin-top:2px;
+}
+
+.rw-widget-picker {
+  display: block;
+}
+
+.rw-select {
+  font-family: 'rw-widgets';
+}

@@ -1,0 +1,43 @@
+// oath services
+import "./oauth.js"
+
+// All methods imported over here
+
+import "/imports/api/modules/methods";
+import "/imports/api/skill/methods";
+import "/imports/api/skillCategory/methods";
+import "/imports/api/skillSubject/methods";
+import "/imports/api/classType/methods";
+import "/imports/api/media/methods";
+import "/imports/api/classPricing/methods";
+import "/imports/api/monthlyPricing/methods";
+import "/imports/api/school/methods";
+import "/imports/api/sLocation/methods";
+import "/imports/api/classTimes/methods";
+import "/imports/api/classInterest/methods";
+import "/imports/api/importLogs/methods";
+import "/imports/api/enrollmentFee/methods";
+import "/imports/api/school/server/methods";
+import "/imports/api/user/methods";
+import "/imports/api/claimSchoolRequest/methods";
+import "/imports/api/classTimesRequest/methods";
+import "/imports/api/schoolMemberDetails/methods";
+
+// All publication imported over here
+
+import "/imports/api/modules/server/publication";
+import "/imports/api/skill/server/publication";
+import "/imports/api/skillCategory/server/publication";
+import "/imports/api/skillSubject/server/publication";
+import "/imports/api/classType/server/publication";
+import "/imports/api/media/server/publication";
+import "/imports/api/classPricing/server/publication";
+import "/imports/api/monthlyPricing/server/publication";
+import "/imports/api/school/server/publication";
+import "/imports/api/sLocation/server/publication";
+import "/imports/api/classTimes/server/publication";
+import "/imports/api/classInterest/server/publication";
+import "/imports/api/importLogs/server/publication";
+import "/imports/api/enrollmentFee/server/publication";
+import "/imports/api/schoolMemberDetails/server/publication";
+import "/imports/api/user/server/publication";

@@ -1,0 +1,128 @@
+.rw-widget-input, .rw-widget-picker, .rw-widget-container {
+  border: none;
+  border-bottom: 1px solid $default-border-color;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: $base-font-size * 1px;
+  font-family: map-get($fonts,'common');
+
+  &:hover {
+    box-shadow: none;
+    border-bottom: 2px solid $dark-border-color;
+  }
+}
+
+.rw-widget-picker {
+  display: block;
+}
+
+.filters-dialog .rw-widget-picker {
+  height: auto;
+  display: flex;
+  align-items: flex-end;
+  overflow: visible;
+}
+
+.filters-dialog, .homepage-filter {
+  .rw-multiselect .rw-widget-picker > div {
+    max-width: 90%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+  }
+}
+
+.my-multi-select-filter {
+  .rw-widget-input, .rw-widget-picker, .rw-widget-container, .rw-multiselect {
+    background-color: transparent;
+  }
+
+  .rw-multiselect .rw-widget-picker > div {
+    max-width: 100%;
+  }
+
+  .rw-widget-chip {
+    width: 100%;
+    display: flex;
+    min-width: 0;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  .rw-multiselect-tag {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    max-width: initial;
+    padding: 0 2px;
+    margin: 0;
+    margin-right: 2px;
+    border-radius: 2px;
+    font-size: 12px;
+    min-height: map-get($sizes,'rhythm-div') * 4px;
+    min-width: map-get($sizes,'rhythm-div') * 2px;
+
+    & > span {
+      line-height: 1;
+      min-width: 0;
+      max-width: 90%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    & > div {
+      flex-grow: 1;
+      flex-shrink: 0;
+    }
+  }
+
+  .rw-input-reset {
+    max-width: 60%;
+  }
+
+  .rw-multiselect-tag > * {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.rw-state-focus > .rw-widget-container,.rw-state-focus > .rw-widget-container:hover {
+  box-shadow: none;
+  border-color: map-get($colors,'primary');
+}
+
+.rw-list-option.rw-state-focus, .rw-list-option.rw-state-focus:hover {
+  border: 1px solid map-get($colors,'primary');
+}
+
+.rw-multiselect .rw-input-reset, .rw-multiselect .rw-input, .rw-multiselect .rw-filter-input {
+  color: $input-font-color;
+  font-weight: 100;
+  padding: ($base-font-size/2)* 1px 0 0 0;
+}
+
+.rw-multiselect .rw-multiselect-taglist {
+  max-width: 80%;
+  margin-right: map-get($sizes,'rhythm-div') * 1px;
+  margin-bottom: map-get($sizes,'rhythm-div') * 1px;
+}
+
+.rw-my-multiselect-taglist {
+  margin: 0;
+  margin-bottom: (map-get($sizes,'rhythm-div')/2) * 1px;
+  padding-left: 0;
+  display: flex;
+  min-width: 0;
+  align-items: flex-end;
+}
+
+// General classes related to it
+.no-shrink {
+  flex-shrink: 0;
+}
+
+.my-multi-select-filter-btn {
+  min-width: map-get($sizes,'rhythm-div') * 2px;
+  padding: map-get($sizes,'rhythm-div') * 1px;
+}

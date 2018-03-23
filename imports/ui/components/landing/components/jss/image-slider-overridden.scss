@@ -1,0 +1,44 @@
+/*
+  IMG - SLIDER
+*/
+
+#app .image-gallery {
+  margin: 0 auto;
+  width: 100%;
+  transition: all 1s ease;
+  cursor: pointer;
+}
+
+#app .image-gallery-left-nav::before, #app .image-gallery-right-nav::before {
+  color: map-get($colors,'primary');
+  text-shadow: 0 3px 2px rgba(0,0,0,0.2);
+}
+
+#app .image-gallery-image {
+  background-color: transparent;
+  height: 310px;
+}
+
+#app .image-gallery-image img {
+  object-fit: cover;
+}
+
+
+.image-gallery-left-nav, .image-gallery-right-nav {
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.image-gallery:hover  .image-gallery-left-nav {
+  opacity: 1;
+}
+
+.image-gallery:hover  .image-gallery-right-nav {
+  opacity: 1;
+}
+
+@media screen and (max-width : 900px) {
+  #app .image-gallery {
+    width: 100%;
+  }
+}

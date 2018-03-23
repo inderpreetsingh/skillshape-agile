@@ -1,0 +1,21 @@
+.issues {
+  position: relative;
+  z-index: 10;
+}
+
+.issue-cards {
+  @extend .issues;
+  width: 100%;
+
+  @include respond-to('mobile') {
+    display: none;
+    height: 0;
+    width: 0;
+  }
+}
+
+
+.schoolpage-price-badge {
+  font-size: 20px;
+  line-height: 1;
+}

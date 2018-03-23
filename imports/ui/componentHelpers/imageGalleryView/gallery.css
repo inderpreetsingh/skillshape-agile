@@ -1,0 +1,15 @@
+.image-gallery-image {
+  text-align: center;
+  background-color: #000;
+  width: 100%;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.image-gallery-image img {
+  max-height: 500px;
+  max-width: 100%;
+  width: auto !important;
+  height: 100% !important;
+}

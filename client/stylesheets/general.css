@@ -1,0 +1,257 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:200,300,300i,400,400i,600,700,800|Zilla+Slab:200,300,300i,400,400i,500,500i,600,700|Abril+Fatface:300,400,400i,600,700,800|Playfair+Display:400,400i');
+
+* {
+    box-sizing: border-box;
+}
+
+html, body, #app {
+    font-family: 'Open Sans', 'sans-serif';
+    margin: 0;
+    padding: 0;
+}
+
+.material-icons {
+    font-family: 'Material Icons','serif';
+}
+
+a {
+  text-decoration : none;
+}
+
+/*
+  Preloader Icon
+*/
+
+.preloader {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+
+/*
+    custom Classes
+*/
+
+.form-group {
+  display: flex;
+  align-items: center;
+}
+
+.is-show-on-small {
+  margin-right: 10px;
+}
+
+pre {
+  color:#fdf6e3;
+  background:#002b36;
+  width:90%;
+  margin-left:15px;
+  border-radius:15px;
+  padding:15px;
+}
+
+/* TODO: remove following hack, had to use only because of issues with
+material ui search bar */
+.is-search-bar {
+  font-family:'Zilla Slab',serif !important;
+}
+
+/*
+  Cards Reveal Animation
+*/
+
+
+.reveal-card {
+  transform: scaleY(0);
+  transition: transform 250ms ease-in;
+}
+
+.reveal-card-entered {
+  transform: scaleY(1);
+}
+
+.reveal-card-exiting {
+  transform: scaleY(1);
+}
+
+.reveal-card-exited {
+  transform: scaleY(0);
+}
+
+
+.reveal-card-enter {
+  transform: scaleY(0);
+}
+
+.reveal-card-enter.reveal-card-enter-active {
+  transform: scaleY(1);
+  transition: transform 250ms linear;
+}
+
+.reveal-card-exit {
+  transform: scaleY(1);
+}
+
+.reveal-card-exit.reveal-card-exit-active {
+  transform: scaleY(0);
+  transition: transform 250ms linear;
+}
+
+/*
+  FADE ANIMATION -- used in show more filters
+*/
+
+.fade-anim {
+  opacity: 0.01;
+}
+
+.fade-anim.fade-anim-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.fade-anim-enter {
+  opacity: 0.01;
+}
+
+.fade-anim-enter.fade-anim-enter-active {
+  opacity: 1;
+  transition: opacity 800ms ease-in-out;
+}
+
+.fade-anim-leave {
+  opacity: 1;
+}
+
+.fade-anim-leave.fade-anim-leave-active {
+  opacity: 0.01;
+  transition: opacity 800ms ease-in-out;
+}
+
+
+/**
+  SOCIAL ICONS
+**/
+
+.social-container:hover > .social-icon {
+  transform: scale(1.1);
+}
+
+/*
+  HELPER CLASSES
+*/
+
+@media screen and (max-width : 500px) {
+  .is-show-on-small {
+    display: inline-block;
+  }
+
+  .is-hide-on-small {
+    display: none;
+    height: 0;
+    width: 0;
+  }
+}
+
+@media screen and (min-width: 500px) {
+  .is-show-on-small {
+    display: none;
+    height: 0;
+    width: 0;
+  }
+
+  .is-hide-on-small {
+    display: inline-block;
+  }
+}
+
+/*
+    LANDING PAGE - FILTER PANEL
+*/
+
+.filter-panel-wrapper {
+  position: relative;
+  z-index: 100;
+  bottom: 10px;
+}
+
+.filter-panel-sticked {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+
+/*
+  MAP - HOLDER COMPONENT
+*/
+
+.map-holder {
+  height: calc(100vh - 60px);
+}
+
+/*
+  FLEX RULES
+*/
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+
+@keyframes fade {
+  from {
+    background-color: green;
+  }
+  to {
+    background-color: gray;
+  }
+}
+
+
+/*
+  Sticky
+*/
+
+.filter-panel-sticky {
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.filter-panel-sticked {
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.filter-panel-released {
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.search-bar-fixed {
+  z-index: 100;
+}
+
+.search-bar-sticky {
+  height: 0 !important;
+}
+
+
+/*
+  Location Search Results..
+*/
+.pac-container {
+  z-index: 1400
+}
+
+.homepage-content {
+  min-height: 100vh;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.increase-height {
+  min-height: 36px;
+  height: 36px;
+}

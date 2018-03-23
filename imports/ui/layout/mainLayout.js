@@ -1,74 +1,89 @@
 import React from 'react';
+import get from 'lodash/get';
 import { createContainer } from 'meteor/react-meteor-data';
-import Header from '/imports/ui/components/header';
-import Footer from '/imports/ui/components/footer';
-// var styles = {
-//   rowstyle: {
-//     display: 'table',
-//     width: '100%'
-//   },
-//   colstyle: {
-//     backgroundColor: '#2e4462',
-//     display: 'table-cell',
-//     float: 'none'
-//   },
-//   colnav: {
-//     display: 'table-cell',
-//     float: 'none'
-//   }
-// };
+import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
+import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
+import { toastrModal } from '/imports/util';
+import TermsOfServiceDialogBox from '/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx'
 
-export default class MainLayout extends React.Component {
-  constructor( props ) {
-    super( props );
-  }
-  componentWillMount( ) {
-  }
+class MainLayout extends React.Component {
 
-  render( ) {
-    const { nav, content, footer } = this.props;
-    return (
-      <div className="wrapper">
-      {/*
-           {{{#if currentUser}}
-                {{#if IsDemoUser}}
-                  {{> sidebar}}
-                {{else}}
-                  {{> MVPSidebar}}
-               {{/if}} }
-                <div className="main-panel"  style="overflow-y: auto;">
-                  {{Header}}
-                  <div className="content no-padding" style="{{coming_soon_page_style}}">
-                    <div className="container-fluid">
-                      {{#unless currentUser.emails.[0].verified}}
-                        <p className="alert alert-warning">You need to verify your email address before using Skillshape. <a href="#" className="resend-verification-link" style="color:blue">Resend verification link</a></p>
-                      {{else}}
-                        <div className="row">
-                            <div className="col-md-12">
-                              {{> yield}}
-                            </div>
-                        </div>
-                        {{/unless}}
-                    </div>
-                  </div>
-                  {{> Footer}}
-                </div>
-            {{else}}
-      */}
-      <div className="wrapper perfectScroll">
-        <Header/>
-        <div className="content">
-          <div className="container-fluid">
-              <div className="row">
-                  <div className="col-md-12">
-                    {this.props.children}
-                  </div>
-              </div>
-          </div>
-        </div>
-        <Footer/>
-      </div>
-    </div>
-    )
-  }
+    constructor(props) {
+        super( props );
+        this.state = {
+            memberInvitation: true,
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log("MainLayout componentWillReceiveProps",nextProps)
+        let invite = get(nextProps, "location.query.acceptInvite");
+        if(nextProps.currentUser && nextProps.isUserSubsReady && invite === "true" && this.state.memberInvitation) {
+            this.acceptMemberInvitation(nextProps.location.query);
+        }
+    }
+
+    componentDidUpdate() {
+        const { currentUser, isUserSubsReady } = this.props
+        let invite = get(this.props, "location.query.acceptInvite");
+        console.log("MainLayout componentDidUpdate -->>",this.props)
+        if(invite && !currentUser && isUserSubsReady) {
+            Events.trigger("loginAsSchoolAdmin",{redirectUrl: this.props.location.search});
+        }
+    }
+
+    acceptMemberInvitation = (invitationObj)=> {
+        const { toastr } = this.props;
+        console.log("Landing acceptMemberInvitation")
+        Meteor.call("schoolMemberDetails.acceptInvitation", invitationObj, (err, res) => {
+            console.log("acceptMemberInvitation res",res,err)
+            if(err) {
+                let errorText = err.error || err.reason || err.message;
+                this.setState({memberInvitation: false},()=> {
+                    toastr.error(errorText, "Error");
+                })
+            }
+
+            if(res) {
+                this.setState({memberInvitation: false},()=> {
+                    toastr.success(
+                        "You successfully accepted the invitation.",
+                        "success"
+                    );
+                })
+            }
+        })
+    }
+
+    handleServiceAgreementClick = () => {
+        Meteor.call('user.editUser',{doc:{term_cond_accepted:true},docId:this.props.currentUser._id});
+    }
+
+    showTermsOfServiceDialogBox = () => {
+
+    }
+
+    render( ) {
+        const { currentUser, isUserSubsReady, classes} = this.props;
+        return (
+            <div>
+                {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
+                {
+                    isUserSubsReady && currentUser && !currentUser.term_cond_accepted &&
+                    <TermsOfServiceDialogBox
+                        open={!currentUser.term_cond_accepted}
+                        onModalClose={() => alert("You can not cancel this service and agreement")}
+                        onAgreeButtonClick={this.handleServiceAgreementClick}
+                    />
+                }
+            </div>
+        )
+    }
 }
+
+export default createContainer(props => {
+    const currentUser = Meteor.user();
+    let userSubs = Meteor.subscribe("myInfo");
+    let isUserSubsReady = userSubs.ready();
+    return { ...props, currentUser, isUserSubsReady };
+}, toastrModal(MainLayout));

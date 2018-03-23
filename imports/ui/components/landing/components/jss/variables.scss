@@ -1,0 +1,54 @@
+$base-font-size: 16;
+$rhythm-inc: 0.5;
+
+$colors: (
+  caution : #E9B942,
+  action : #9DC161,
+  danger : #D84B47,
+  cancel : #989797,
+  information : #348CC0,
+  my-black : #292828,
+  light-text: #fafafa,
+  dark-text: #424242,
+  primary: #4caf50,
+  secondary: #fafafa,
+  secondary-dark: #989797,
+  focal: #f5f5f5,
+);
+
+$fonts: (
+  special: ("Zilla Slab", serif),
+  common: ("Open Sans", sans-serif),
+  icon-font: ('Material Icons',serif)
+);
+
+$breakpoints: (
+  watch: 320,
+  mobile: 500,
+  tablet: 800,
+  desktop: 1400
+);
+
+$sizes: (
+  one-row: $base-font-size + ($base-font-size * $rhythm-inc),
+  rhythm-div: $rhythm-inc * $base-font-size
+);
+
+$social-icons: (
+  twitter: #00aced,
+  facebook: #3b5998,
+  google-plus: #dd4b39,
+  instagram: #bc2a8d,
+  dribbble: #ea4c89
+);
+
+$input-font-color: rgba(0, 0, 0, 0.42);
+$default-border-color: $input-font-color;
+$dark-border-color: rgba(0, 0, 0, 0.87);
+
+$input-height: 2.429em;
+$input-border-width: 1px;
+$multiselect-gutter-pt: 0.115;
+$multiselect-tag-height-pt: 1 - ($multiselect-gutter-pt * 2);
+$multiselect-tag-gutter-fallback: $input-height * $multiselect-gutter-pt;
+$multiselect-tag-gutter: calc(#{$multiselect-tag-gutter-fallback} - #{$input-border-width});
