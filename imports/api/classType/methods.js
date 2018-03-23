@@ -23,7 +23,7 @@ Meteor.methods({
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
             const schoolData = School.findOne({_id: doc.schoolId})
             // doc.remoteIP = this.connection.clientAddress;
-            const temp = {...doc};
+            const temp = {...doc, isPublish:true};
             temp.filters =  temp.filters ? temp.filters : {};
 
             if(schoolData.name) {

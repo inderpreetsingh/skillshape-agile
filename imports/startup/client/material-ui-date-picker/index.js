@@ -13,7 +13,7 @@ export class MaterialDatePicker extends Component {
             value,
             emptyLabel,
             fullWidth,
-            format={format}
+            format
         } = this.props;
 		return (
             <div className="picker">
