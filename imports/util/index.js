@@ -10,7 +10,7 @@ export {
 	checkDemoUser,
 	checkSuperAdmin,
 } from '/imports/util/checkUserType';
-export { validateImage } from '/imports/util/getUserData';
+export { validateImage, getUserFullName } from '/imports/util/getUserData';
 export { initializeMap, setMarkersOnMap, reCenterMap, initializeSchoolEditLocationMap, createMarkersOnMap } from '/imports/util/initializeMap';
 export { cutString } from '/imports/util/cutString';
 export { withSubscriptionAndPagination } from '/imports/util/subscriptionAndPagination';
@@ -22,3 +22,4 @@ export { withStyles } from "./withStyle";
 export { material_ui_next_theme } from "./theme";
 export { toastrModal } from "./toastrModal";
 export { componentLoader } from "./loading";
+export { dateFriendly } from './dateFriendly';

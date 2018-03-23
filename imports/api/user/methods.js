@@ -96,5 +96,29 @@ Meteor.methods({
 	    	throw new Meteor.Error(` User not found corresponding to this email address "${email}" ` );
     	}
     	throw new Meteor.Error("Invalid email address!!");
+    },
+    "user.getUsers": function({limit,skip}) {
+    	console.log("user.getUsers limit -->>",limit)
+    	console.log("user.getUsers skip -->>",skip)
+    	if(this.userId && Roles.userIsInRole(this.userId,"Superadmin")) {
+    		const filters = {}
+    		console.log(Meteor.users.find(filters,{ limit:limit, skip: skip}).fetch())
+    		return {
+    			usersData : Meteor.users.find(filters,{ limit:limit, skip: skip}).fetch(),
+    			usersCount: Meteor.users.find(filters).count(),
+    		}
+    	} else {
+    		return new Meteor.Error("Permission Denied!!");
+    	}
+    },
+    "user.getAllUsersCount": function({}) {
+    	if(this.userId && Roles.userIsInRole(this.userId,"Superadmin")) {
+    		const filters = {}
+    		return {
+    			usersCount: Meteor.users.find(filters).count()
+    		}
+    	} else {
+    		return new Meteor.Error("Permission Denied!!");
+    	}
     }
 })
