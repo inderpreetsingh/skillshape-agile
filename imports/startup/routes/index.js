@@ -27,7 +27,7 @@ import SchoolUpload from '/imports/ui/components/schoolUpload';
 // import SchoolPriceView from '/imports/ui/components/embed/schoolPriceView';
 import VerifyEmail from '/imports/ui/components/account/verifyEmail';
 import SkillShapeSchool from '/imports/ui/components/skillshape-school';
-
+import ManageUsers from '/imports/ui/components/manage-users';
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
@@ -71,7 +71,7 @@ export default Routes = componentLoader((props) => (
         <Route path="/SchoolUpload" name="SchoolUpload" component={SchoolUpload} />
         <Route path="/schools/:slug/members" name="SchoolMemberView" component={SchoolMemberView} />
         <Route path="/classmates" name="classmates" component={SchoolMemberView} />
-        {/*<Route path="/schoolAdmin/:schoolId/edit" component={SchoolEditView} />*/}
+        <Route path="/manage-users" name="Manage-Users" component={ManageUsers} />
       </Route>
     </Route>
     <Route path="*" name="NoPageFound" component={NoPageFound} />
