@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -41,10 +41,33 @@ const ActionButton = styled.div`
   }
 `;
 
+const MyTel = styled.a`
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: none;
+  }
+`;
+
+const MyTelMobile = styled.a`
+  display: none;
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: initial;
+  }
+`;
+
 const ActionButtons = (props) => (
   <ActionButtonsWrapper>
     <ActionButton>
-      <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
+      {props.contactNumbers.length > 1 ?
+        <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
+        :
+        (<Fragment>
+        <MyTel onClick={(e) => e.preventDefault()}>
+          <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
+        </MyTel>
+        <MyTelMobile href={`tel: ${props.contactNumbers}`}>
+          <ClassTimeButton icon iconName='phone' label="Call Us" />
+        </MyTelMobile></Fragment>)
+      }
     </ActionButton>
 
     <ActionButton>

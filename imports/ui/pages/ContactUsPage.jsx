@@ -63,6 +63,10 @@ const MapOuterContainer = styled.div`
   @media screen and (max-width : ${helpers.tablet + 50}px) {
     padding: 0;
   }
+
+  @media screen and (max-width: ${helpers.mobile + 50}) {
+    min-width: 0;
+  }
 `;
 
 const MapContainer = styled.div`

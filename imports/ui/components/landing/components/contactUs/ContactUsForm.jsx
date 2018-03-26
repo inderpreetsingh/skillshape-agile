@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {withStyles} from 'material-ui/styles';
 
@@ -22,10 +23,8 @@ const styles = {
   radioLabelRoot: {
     marginRight: helpers.rhythmDiv * 3
   },
-  radioLabelMarginBottom: {
-    marginBottom: helpers.rhythmDiv * 2,
-    [`@media screen and (max-width: ${helpers.mobile}px)`] : {
-    }
+  radioLabelRootZeroMargin: {
+    marginRight: 0
   },
   radioLabel: {
     fontSize: helpers.baseFontSize,
@@ -33,13 +32,15 @@ const styles = {
       fontSize: 14
     }
   },
+  radioLabelMarginBottom: {
+    marginBottom: helpers.rhythmDiv * 2,
+    [`@media screen and (max-width: ${helpers.mobile}px)`] : {
+    }
+  },
   radioButton: {
     height: helpers.rhythmDiv * 3,
     width: helpers.rhythmDiv * 3,
     marginRight: helpers.rhythmDiv
-  },
-  radioLabelRootZeroMargin: {
-    marginRight: 0
   },
   radioButtonGroup: {
     display: 'flex',
@@ -48,6 +49,9 @@ const styles = {
     justifyContent: 'space-between',
     [`@media screen and (max-width: ${helpers.mobile + 100}px)`] : {
       justifyContent: 'flex-start'
+    },
+    [`@media screen and (max-width: ${helpers.mobile}px)`] : {
+      flexDirection: 'column'
     }
   },
 }
@@ -57,6 +61,7 @@ const FormWrapper = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
   padding-bottom: 0;
   max-width: 600px;
+  min-width: 540px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -68,6 +73,10 @@ const FormWrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-bottom: ${helpers.rhythmDiv * 2}px;
+  }
+
+  @media screen and (max-width: ${helpers.mobile + 50}px) {
+    min-width: 0;
   }
 `;
 
@@ -104,25 +113,34 @@ class ContactUsForm extends Component {
     readyToSumit: false,
   }
 
-  handleInputFieldChange = (fieldName) => (e) => {
-    this.setState({
-      [fieldName] : e.target.value
-    });
-  }
-
   componentDidUpdate = () => {
-    const readyToSumit = this._checkAllInputsFilled(this.state,this.state.inputsName);
+    const readyToSumit = this._validateAllInputs(this.state,this.state.inputsName);
     if(this.state.readyToSumit !== readyToSumit) {
       this.setState({ readyToSumit : readyToSumit});
     }
   }
-  handleChange = (e, value) => {
+
+  handleInputFieldChange = (fieldName) => (e) => {
     this.setState({
-      radioButtonGroupValue: value
-    })
+      [fieldName] : e.target.value
+    });
+
+    if(this.props.onInputValueChange) {
+      this.props.onInputValueChange(fieldName,e.target.value);
+    }
   }
 
-  _checkAllInputsFilled = (data, inputNames) => {
+  handleRadioChange = (e, value) => {
+    this.setState({
+      radioButtonGroupValue: value
+    });
+
+    if(this.props.onRadioButtonChange) {
+        this.props.onRadioButtonChange(value);
+    }
+  }
+
+  _validateAllInputs = (data, inputNames) => {
 
     for(let i = 0; i < inputNames.length; ++i) {
       if(data[inputNames[i]] == '') {
@@ -151,7 +169,7 @@ class ContactUsForm extends Component {
                     name="contactRequest"
                     value={this.state.radioButtonGroupValue}
                     className={this.props.classes.radioButtonGroup}
-                    onChange={this.handleChange}
+                    onChange={this.handleRadioChange}
                   >
                     <FormControlLabel classes={{root: this.props.classes.radioLabelRoot +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="feature" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Feature request" />
                     <FormControlLabel classes={{root: this.props.classes.radioLabelRoot +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="somethingBroken" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Something broken" />
@@ -159,7 +177,9 @@ class ContactUsForm extends Component {
                 </RadioGroup>
             </FormControl>
 
-            <IconInput inputId="message" labelText="Your message goes here" multiline={true} value={this.state.message} onChange={this.handleInputFieldChange('message')} />
+            <InputWrapper>
+              <IconInput inputId="message" labelText="Your message goes here" multiline={true} value={this.state.message} onChange={this.handleInputFieldChange('message')} />
+            </InputWrapper>
 
             <SubmitButtonWrapper>
               <ButtonWidthWrapper>
@@ -172,6 +192,11 @@ class ContactUsForm extends Component {
           </Form>
       </FormWrapper>)
   }
+}
+
+ContactUsForm.propTypes = {
+  onInputValueChange: PropTypes.func,
+  onRadioButtonChange: PropTypes.func
 }
 
 export default withStyles(styles)(ContactUsForm);

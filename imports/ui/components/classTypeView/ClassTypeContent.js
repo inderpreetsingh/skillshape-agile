@@ -1,9 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
+import {Element, scroller } from 'react-scroll';
 import { isEmpty, get } from 'lodash';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
+
+import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
+import ContactUsDialogBox from '/imports/ui/components/landing/components/dialogs/ContactUsDialogBox.jsx';
 
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
@@ -153,6 +158,35 @@ class ClassTypeContent extends Component {
 
     state = {
         isBusy: false,
+        contactUsDialog: false,
+        callUsDialog: false,
+    }
+
+    _getContactNumbers = (phoneNumbers) => {
+      return this.props.schoolData.phone.split(',');
+    }
+
+    handleEmailUsButtonClick = () => {
+      this.handleDialogState('contactUsDialog',true);
+    }
+
+    handleCallUsButtonClick = () => {
+      this.handleDialogState('callUsDialog',true);
+    }
+
+    handleDialogState = (dialogName,state) => {
+      this.setState({
+        [dialogName]: state
+      })
+    }
+
+
+    scrollTo(name) {
+      scroller.scrollTo((name || 'content-container'),{
+        duration: 800,
+        delay: 0,
+        smooth: 'easeInOutQuart'
+      })
     }
 
     requestPricingInfo = () => {
@@ -218,9 +252,9 @@ class ClassTypeContent extends Component {
 			schoolData,
 			classTypeData,
 			classTimesData,
-            classPricingData,
-            monthlyPricingData,
-            mediaData,
+      classPricingData,
+      monthlyPricingData,
+      mediaData,
 		} = this.props;
 
 		if(isLoading) {
@@ -235,6 +269,8 @@ class ClassTypeContent extends Component {
 
 		return (
 			<Fragment>
+          {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this._getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
+          {this.state.contactUsDialog && <ContactUsDialogBox open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
                 { this.state.isBusy && <ContainerLoader/>}
 				{/* Class Type Cover includes description, map, foreground image, then class type information*/}
 		        <ClassTypeCover coverSrc={classTypeData.classTypeImg}>
@@ -242,9 +278,10 @@ class ClassTypeContent extends Component {
 			        	coverSrc={classTypeData.classTypeImg}
 			            schoolDetails={{...schoolData}}
 			            classTypeData={{...classTypeData}}
-			            onCallUsButtonClick={this.props.onCallUsButtonClick}
-			            onEmailButtonClick={this.props.onEmailButtonClick}
-			            onPricingButtonClick={this.props.onPricingButtonClick}
+                  contactNumbers={this._getContactNumbers()}
+			            onCallUsButtonClick={this.handleCallUsButtonClick}
+			            onEmailButtonClick={this.handleEmailUsButtonClick}
+			            onPricingButtonClick={() => this.scrollTo('price-section')}
 			        />
 		        </ClassTypeCover>
 		        <Main>
@@ -283,45 +320,47 @@ class ClassTypeContent extends Component {
 			            </ClassTimesInnerWrapper>
 			        </MainInnerFixedContainer>
 
-                    <PackagesWrapper>
-                        <PackagesTitle>Pay only for what you need</PackagesTitle>
-                        {
-                            (isEmpty(classPricingData) && isEmpty(monthlyPricingData)) ? (
-                                <ClassContainer>
-                                    <Typography caption="p">
-                                        No class pricing have been given by the school. Please click this button to request the school complete their listing.
-                                    </Typography>
-                                    <br>
-                                    </br>
-                                    <PrimaryButton
-                                        icon
-                                        onClick={this.requestPricingInfo}
-                                        iconName="payment"
-                                        label="REQUEST PRICING"
-                                    />
-                                </ClassContainer>
-                            ) : (
-                                <PackagesList
-                                  perClassPackagesData={classPricingData}
-                                  monthlyPackagesData={monthlyPricingData}
+              <Element name="price-section">
+                <PackagesWrapper>
+                    <PackagesTitle>Pay only for what you need</PackagesTitle>
+                    {
+                        (isEmpty(classPricingData) && isEmpty(monthlyPricingData)) ? (
+                            <ClassContainer>
+                                <Typography caption="p">
+                                    No class pricing have been given by the school. Please click this button to request the school complete their listing.
+                                </Typography>
+                                <br>
+                                </br>
+                                <PrimaryButton
+                                    icon
+                                    onClick={this.requestPricingInfo}
+                                    iconName="payment"
+                                    label="REQUEST PRICING"
                                 />
-                            )
-                        }
-                    </PackagesWrapper>
+                            </ClassContainer>
+                        ) : (
+                            <PackagesList
+                              perClassPackagesData={classPricingData}
+                              monthlyPackagesData={monthlyPricingData}
+                            />
+                        )
+                    }
+                </PackagesWrapper>
+              </Element>
 
-                    <MainInnerFixedContainer fixedWidth="1100" marginBottom="64">
-                        <SchoolDetails
-                          website={schoolData.website}
-                          address={schoolData.address}
-                          images={!isEmpty(mediaData) && mediaData.map((media)=>({original: media.sourcePath, thumbnail:media.sourcePath, media: media})) }
-                          schoolName={schoolData.name}
-                          notes={schoolData.studentNotesHtml}
-                          description={schoolData.aboutHtml}
-                        />
-                        <CalendarWrapper>
-                            <MyCalendar params={this.props.params}/>
-                        </CalendarWrapper>
-                    </MainInnerFixedContainer>
+              <MainInnerFixedContainer fixedWidth="1100" marginBottom="64">
+                  <SchoolDetails
+                    website={schoolData.website}
+                    address={schoolData.address}
+                    images={!isEmpty(mediaData) && mediaData.map((media)=>({original: media.sourcePath, thumbnail:media.sourcePath, media: media})) }
+                    schoolName={schoolData.name}
+                    notes={schoolData.studentNotesHtml}
+                    description={schoolData.aboutHtml}
+                  />
+                  <CalendarWrapper>
+                      <MyCalendar params={this.props.params}/>
+                  </CalendarWrapper>
+              </MainInnerFixedContainer>
 
 		        </Main>
 			</Fragment>
