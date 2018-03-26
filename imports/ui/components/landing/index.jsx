@@ -261,7 +261,7 @@ class Landing extends Component {
     }
 
     scrollTo(name) {
-      scroller.scrollTo(('content-container'|| name),{
+      scroller.scrollTo((name || 'content-container'),{
         duration: 800,
         delay: 0,
         smooth: 'easeInOutQuart'
