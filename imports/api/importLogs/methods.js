@@ -361,7 +361,8 @@ function CreateNewUser(email, name, firstName, lastName, schoolId) {
                 profile: { firstName: firstName, lastName: lastName, schoolId:[schoolId] },
                 preverfiedUser: true
             });
-            return Roles.addUsersToRoles(userId, ["School"]);
+            Roles.addUsersToRoles(userId, ["School"]);
+            return userId;
         } else {
         	// Update `schoolId` in `Users` rec.
         	Meteor.users.update(
