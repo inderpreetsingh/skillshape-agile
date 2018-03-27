@@ -195,6 +195,13 @@ const LoginUserSideNav = (props) => (
                         iconName="file_upload"
                         onClick={() => browserHistory.push('/SchoolUpload')}
                     />
+                    <SideNavItem
+                        button
+                        menuListItemText={props.classes.menuListItemText}
+                        name="Manage Users"
+                        iconName="supervisor_account"
+                        onClick={() => browserHistory.push('/manage-users')}
+                    />
                 </Fragment>
             )
         }

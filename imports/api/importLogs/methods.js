@@ -355,13 +355,14 @@ function CreateNewUser(email, name, firstName, lastName, schoolId) {
     if (typeof email !== "undefined" && emailRegex.test(email)) {
         let _user = Accounts.findUserByEmail(email)
         if (!_user) {
-            return Accounts.createUser({
+            const userId = Accounts.createUser({
                 email: email,
                 password: email,
                 profile: { firstName: firstName, lastName: lastName, schoolId:[schoolId] },
-                roles: "Admin",
                 preverfiedUser: true
             });
+            Roles.addUsersToRoles(userId, ["School"]);
+            return userId;
         } else {
         	// Update `schoolId` in `Users` rec.
         	Meteor.users.update(

@@ -118,7 +118,7 @@ const CardTitle = styled.h3`
 `;
 
 const CardContentTitle = styled.h4`
-  font-size: ${helpers.baseFontSize}px;
+  font-size: ${props => props.description ? 18 : helpers.baseFontSize}px;
   font-weight: 500;
   font-family: ${helpers.specialFont};
   margin: 0;
@@ -132,9 +132,8 @@ const CardContentTitle = styled.h4`
 const CardContent = styled.p`
   margin: 0;
   font-size: ${helpers.baseFontSize}px;
-  font-weight: 300;
-  font-style: italic;
-  line-height: 1;
+  font-weight: 400;
+  line-height: 1.2;
   font-family: ${helpers.specialFont};
 `;
 

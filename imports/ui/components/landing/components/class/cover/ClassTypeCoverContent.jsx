@@ -168,6 +168,7 @@ class ClassTypeCoverContent extends React.Component {
             <ContentSection>
               <ClassTypeForegroundImage coverSrc={props.coverSrc} >
                 {props.actionButtons || <ActionButtons
+                  contactNumbers={props.contactNumbers}
                   onCallUsButtonClick={props.onCallUsButtonClick}
                   onEmailButtonClick={props.onEmailButtonClick}
                   onPricingButtonClick={props.onPricingButtonClick}
@@ -185,6 +186,7 @@ class ClassTypeCoverContent extends React.Component {
 
                 <ShowOnMobile>
                   {props.actionButtons || <ActionButtons
+                    contactNumbers={props.contactNumbers}
                     onCallUsButtonClick={props.onCallUsButtonClick}
                     onEmailButtonClick={props.onEmailButtonClick}
                     onPricingButtonClick={props.onPricingButtonClick}

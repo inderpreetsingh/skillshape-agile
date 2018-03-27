@@ -11,6 +11,13 @@ import SocialAccounts from '../components/landing/components/contactUs/SocialAcc
 
 import * as helpers from '../components/landing/components/jss/helpers.js';
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+`;
+
 const Title = styled.h1`
   font-size: ${helpers.baseFontSize * 3}px;
   font-family: ${helpers.specialFont};
@@ -21,58 +28,88 @@ const Title = styled.h1`
   margin: 0;
   margin-top: ${helpers.rhythmDiv * 8}px;
   margin-bottom: ${helpers.rhythmDiv * 4}px;
-  padding: ${helpers.rhythmDiv * 2}px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    font-size: ${helpers.baseFontSize * 2}px;
+  }
 `;
 
 const FormMapWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 8}px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 
-  @media screen and (max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet + 50}px) {
     flex-direction: column;
     align-items: center;
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding: 0;
   }
 `;
 
 const MapOuterContainer = styled.div`
   max-width: 600px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+  padding-right: 0;
   width: 100%;
   ${helpers.flexCenter}
   flex-direction: column;
+
+  @media screen and (max-width : ${helpers.tablet + 50}px) {
+    padding: 0;
+  }
+
+  @media screen and (max-width: ${helpers.mobile + 50}) {
+    min-width: 0;
+  }
 `;
 
 const MapContainer = styled.div`
   max-width: 500px;
   width: 100%;
   height: 400px;
+
+  @media screen and (max-width: ${helpers.tablet + 50}px) {
+    max-width: 100%;
+  }
 `;
 
-const ContactUs = () => (
-  <Fragment>
+const ContentWrapper = styled.div`
+
+`;
+
+
+const ContactUs = () => (<Wrapper>
     <BrandBar
       navBarHeight="70"
       positionStatic={true}
     />
 
-    <Title>We would love to talk with you</Title>
+    <ContentWrapper>
+      <Title>We would love to talk with you</Title>
 
-    <FormMapWrapper>
+      <FormMapWrapper>
+        <ContactUsForm />
 
-      <ContactUsForm />
+        <MapOuterContainer>
+          <MapContainer>
+            <ClassMap />
+          </MapContainer>
 
-      <MapOuterContainer>
-        <MapContainer>
-          <ClassMap />
-        </MapContainer>
+          <SocialAccounts />
+        </MapOuterContainer>
 
-        <SocialAccounts />
-      </MapOuterContainer>
+      </FormMapWrapper>
+    </ContentWrapper>
 
-    </FormMapWrapper>
     <Footer />
-  </Fragment>
+
+  </Wrapper>
 );
 
 export default ContactUs;
