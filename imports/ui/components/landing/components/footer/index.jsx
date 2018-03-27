@@ -16,6 +16,7 @@ const Container = styled.div`
     width: 100%;
     background-color: ${helpers.darkBgColor};
     padding: ${helpers.rhythmDiv * 2}px;
+    margin-top: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Footer = (props) => (
