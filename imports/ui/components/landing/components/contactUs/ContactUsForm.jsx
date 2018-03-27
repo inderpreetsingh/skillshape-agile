@@ -28,14 +28,12 @@ const styles = {
   },
   radioLabel: {
     fontSize: helpers.baseFontSize,
-    [`@media screen and (max-width: ${helpers.mobile}px)`] : {
+    [`@media screen and (max-width: ${helpers.mobile + 50}px)`] : {
       fontSize: 14
     }
   },
   radioLabelMarginBottom: {
     marginBottom: helpers.rhythmDiv * 2,
-    [`@media screen and (max-width: ${helpers.mobile}px)`] : {
-    }
   },
   radioButton: {
     height: helpers.rhythmDiv * 3,
@@ -160,7 +158,7 @@ class ContactUsForm extends Component {
             </InputWrapper>
 
             <InputWrapper>
-              <IconInput inputId="email" type="email" labelText="Enter your email id" value={this.state.email} onChange={this.handleInputFieldChange('email')} />
+              <IconInput inputId="email" type="email" labelText="Enter your email address" value={this.state.email} onChange={this.handleInputFieldChange('email')} />
             </InputWrapper>
 
             <FormControl component="fieldset" required classes={{root: this.props.classes.formGroupWrapper}}>

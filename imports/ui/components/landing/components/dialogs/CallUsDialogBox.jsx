@@ -57,8 +57,8 @@ const styles = theme => {
       paddingLeft: `${helpers.rhythmDiv * 2}px`
     },
     dialogRoot: {
-      width: '100%',
-      minHeight: '200px'
+      minHeight: '200px',
+      minWidth: '300px'
     },
     iconButton: {
       height: 'auto',
@@ -163,7 +163,7 @@ const CallUsDialogBox = (props) => {
       <MuiThemeProvider theme={muiTheme}>
         <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
           <DialogTitleWrapper>
-              <Title>Contact Numbers</Title>
+              <Title>You can call us at</Title>
               <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
                 <ClearIcon/>
               </IconButton>
