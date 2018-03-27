@@ -57,17 +57,7 @@ const MyTelMobile = styled.a`
 const ActionButtons = (props) => (
   <ActionButtonsWrapper>
     <ActionButton>
-      {props.contactNumbers.length > 1 ?
-        <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
-        :
-        (<Fragment>
-        <MyTel onClick={(e) => e.preventDefault()}>
-          <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
-        </MyTel>
-        <MyTelMobile href={`tel: ${props.contactNumbers}`}>
-          <ClassTimeButton icon iconName='phone' label="Call Us" />
-        </MyTelMobile></Fragment>)
-      }
+      <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
     </ActionButton>
 
     <ActionButton>

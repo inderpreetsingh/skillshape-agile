@@ -1,17 +1,11 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-import SecondaryButton from '../buttons/SecondaryButton';
 import PrimaryButton from '../buttons/PrimaryButton';
-import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import TextField from 'material-ui/TextField';
-import styled from 'styled-components';
-import Input, { InputLabel } from 'material-ui/Input';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-
-import IconInput from '../form/IconInput.jsx';
+import PhoneIcon from 'material-ui-icons/Phone';
 
 import { MuiThemeProvider} from 'material-ui/styles';
 import {withStyles} from 'material-ui/styles';
@@ -34,16 +28,10 @@ const styles = theme => {
     dialogTitleRoot: {
       padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
       marginBottom: `${helpers.rhythmDiv * 2}px`,
-      '@media screen and (max-width : 500px)': {
-        padding: `0 ${helpers.rhythmDiv * 3}px`
-      }
     },
     dialogContent: {
       padding: `0 ${helpers.rhythmDiv * 3}px`,
       flexShrink: 0,
-      '@media screen and (max-width : 500px)': {
-        minHeight: '150px'
-      }
     },
     dialogActionsRoot: {
       padding: '0 8px',
@@ -57,103 +45,89 @@ const styles = theme => {
       paddingLeft: `${helpers.rhythmDiv * 2}px`
     },
     dialogRoot: {
+      minHeight: '400px',
+      maxWidth: '300px',
       width: '100%',
-      minHeight: '200px'
+      [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+        maxWidth: '100%'
+      }
     },
     iconButton: {
       height: 'auto',
       width: 'auto'
+    },
+    phoneIcon: {
+      width: helpers.baseFontSize,
+      height: helpers.baseFontSize,
+      marginRight: helpers.rhythmDiv,
+      color: helpers.primaryColor
     }
   }
 }
 
-const Link = styled.a`
-  color:${helpers.textColor};
-  &:hover {
-    color:${helpers.focalColor};
-  }
+const ContentWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
+
 const DialogTitleWrapper = styled.div`
-  ${helpers.flexHorizontalSpaceBetween}
+  display: flex;
+  justify-content: flex-end;
   font-family: ${helpers.specialFont};
   width: 100%;
 `;
 
-
-const ButtonWrapper = styled.div`
-  ${helpers.flexCenter}
-  margin: ${helpers.rhythmDiv * 4}px 0;
-`;
-
-const DialogActionText = styled.p`
-  margin: 0;
-  margin-right: ${helpers.rhythmDiv}px;
-  flex-shrink: 0;
-`;
-
-const ActionWrapper = styled.div`
-  width: 100%;
-  ${helpers.flexCenter}
-  justify-content: flex-end;
-`;
-
-const InputWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
-
-const Title = styled.span`
+const Title = styled.h2`
   display: inline-block;
   width: 100%;
   text-align: center;
+  margin: ${helpers.rhythmDiv * 4}px 0;
+  color: ${helpers.primaryColor};
+  line-height: 1;
+  font-weight: 300;
+  font-style: italic;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize * 1.5}px;
 `;
 
 
 const WrapperContact = styled.li`
-  margin-bottom: ${helpers.rhythmDiv}px;
+  ${helpers.flexCenter}
+  display: inline-flex;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv}px;
+  border: 1px solid ${helpers.primaryColor};
 `;
 
 const ContactNumbersWrapper = styled.ul`
+  ${helpers.flexCenter}
   margin: 0;
   padding: 0;
+  list-style: none;
+  flex-direction: column;
 `;
 
 const Contact = styled.a`
-  color: ${helpers.black};
+  color: ${helpers.primaryColor};
+  font-size: 20px;
 
   :visited {
-    color: ${helpers.black};
-  }
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    display: none;
-  }
-`;
-
-const ContactMobile = styled.a`
-  display: none;
-
-  color: ${helpers.black};
-
-  :visited: {
-    color: ${helpers.black};
-  }
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    display: initial;
+    color: ${helpers.primaryColor};
   }
 `;
 
 const ContactNumber = (props) => (<WrapperContact>
-    <Contact>{props.tel}</Contact>
-    <ContactMobile href={`tel:${props.tel}`}>{props.tel}</ContactMobile>
+    <PhoneIcon className={props.phoneIconClass}/>
+    <Contact href={`tel:${props.tel}`}>{props.tel}</Contact>
 </WrapperContact>);
 
 const CallUsDialogBox = (props) => {
-    console.log(props,"...");
+    // console.log(props,"...");
     return (
       <Dialog
-        fullScreen={props.fullScreen}
         open={props.open}
         onClose={props.onModalClose}
         onRequestClose={props.onModalClose}
@@ -163,21 +137,23 @@ const CallUsDialogBox = (props) => {
       <MuiThemeProvider theme={muiTheme}>
         <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
           <DialogTitleWrapper>
-              <Title>Contact Numbers</Title>
-              <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
-                <ClearIcon/>
-              </IconButton>
-            </DialogTitleWrapper>
+            <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
+              <ClearIcon/>
+            </IconButton>
+          </DialogTitleWrapper>
         </DialogTitle>
 
         <DialogContent classes={{root : props.classes.dialogContent}}>
-          <ContactNumbersWrapper>
-            {props.contactNumbers.map((contactNumber,i) => <ContactNumber key={i} tel={contactNumber} />)}
-          </ContactNumbersWrapper>
+          <ContentWrapper>
+            <Title>Call us at any of the following numbers:</Title>
+            <ContactNumbersWrapper>
+              {props.contactNumbers.map((contactNumber,i) => <ContactNumber key={i} tel={contactNumber} phoneIconClass={props.classes.phoneIcon}/>)}
+            </ContactNumbersWrapper>
+          </ContentWrapper>
         </DialogContent>
-        </MuiThemeProvider>
-      </Dialog>
-    );
+      </MuiThemeProvider>
+    </Dialog>
+  );
 }
 
 CallUsDialogBox.propTypes = {
