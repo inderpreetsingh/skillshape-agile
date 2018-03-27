@@ -125,8 +125,8 @@ const CardContentTitle = styled.h4`
   text-align: center;
   line-height: 1;
   font-style: italic;
-  margin-bottom: ${props => props.description ? helpers.rhythmDiv * 2 : 0}px;
-  margin-top: ${props => props.description ? helpers.rhythmDiv * 2 : 0}px;
+  margin-bottom: ${props => props.description ? helpers.rhythmDiv : 0}px;
+  margin-top: ${props => props.description ? helpers.rhythmDiv : 0}px;
 `;
 
 const CardContent = styled.p`

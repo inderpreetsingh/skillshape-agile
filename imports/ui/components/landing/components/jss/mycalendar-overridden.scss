@@ -113,6 +113,10 @@ $calendar-button-active-color: #BBB8B9;
   color: map-get($colors,'primary');
 }
 
+.fc-body thead {
+  border-bottom: 0;
+}
+
 
 @media screen and (max-width: 500px) {
   .fc-left .fc-button-group {

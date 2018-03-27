@@ -22,9 +22,9 @@ export default schoolPageCards = {
       },
       {
         bgImage: '/images/school/solution-box1/feature4bg.svg',
-        title: 'Flat monthly fee',
-        tagline: 'Monthly fee for access to classes of any school',
-        content: 'With monthly fee students get access to classes from any participating school. Thus engaging them in long-term enrollment with your school.'
+        title: 'SkillBoard platform Option',
+        tagline: 'Pay monthly fee for limited access to trial classes',
+        content: 'By joining SkillBoard you will see steady flow of students paying you to become aware and experience your classes, potentially signing on for long term enrollments.'
       }
     ]
   },

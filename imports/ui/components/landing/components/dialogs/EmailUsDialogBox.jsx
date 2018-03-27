@@ -120,9 +120,17 @@ class EmailUsDialogBox extends Component {
   handleFormSubmit = (e) => {
     e.preventDefault();
 
+    const {subject,message} = this.state;
+    const mailTo = `mailto:${this.props.ourEmail}?subject=${subject}&body=${message}`;
+    const mailToNormalized = encodeURI(mailTo);
+
+    // console.log('================================',mailToNormalized);
+
     if(this.props.onFormSubmit) {
       this.props.onFormSubmit();
     }
+
+    window.location.href = mailToNormalized;
 
     this.props.onModalClose();
   }
