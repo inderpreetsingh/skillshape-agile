@@ -458,8 +458,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
         }
     }
 
-    console.log("collectSkillCategoriesIds --->>",collectSkillCategoriesIds)
-    // console.log("Final ClassType Data -->>", ClassType.find({ _id: { $in: classTypeIds } }).count());
+    // console.log("collectSkillCategoriesIds --->>",collectSkillCategoriesIds)
+    console.log("Final ClassType Data -->>", ClassType.find({ _id: { $in: classTypeIds } }).count());
     const cursors = [
         ClassType.find({ _id: { $in: uniq(classTypeIds) } }),
         SLocation.find({ _id: { $in: uniq(locationIds) } }),
@@ -691,9 +691,9 @@ function categorizeClassTypeData({
         let classTypeCursor = ClassType.find(newClassFilters, {
             limit: is_map_view ? undefined : limit
         });
-        // console.log("limit -->>>",skillCategory.name, {
-        //     limit: is_map_view ? undefined : limit
-        // },classTypeCursor.count())
+        console.log("limit -->>>",skillCategory.name, {
+            limit: is_map_view ? undefined : limit
+        },classTypeCursor.count())
 
         // console.log("classTypeCursor count --->>",classTypeCursor.count())
 
