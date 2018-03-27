@@ -57,6 +57,8 @@ const styles = theme => {
       width: 'auto'
     },
     phoneIcon: {
+      width: helpers.baseFontSize,
+      height: helpers.baseFontSize,
       marginRight: helpers.rhythmDiv,
       color: helpers.primaryColor
     }
