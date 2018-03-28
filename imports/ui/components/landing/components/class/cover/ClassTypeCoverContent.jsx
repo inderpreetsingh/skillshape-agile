@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
-import { createMarkersOnMap } from '/imports/util';
+import { createMarkersOnMap, toastrModal } from '/imports/util';
 
 import ClassMap from '../../map/ClassMap';
 import ClassTypeDescription from '../ClassTypeDescription.jsx';
@@ -16,6 +16,8 @@ import * as helpers from '../../jss/helpers.js';
 import * as settings from '../../../site-settings.js';
 import Events from '/imports/util/events';
 
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 const CoverContent = styled.div`
   display: flex;
@@ -58,6 +60,7 @@ const LocationNotFound = styled.div`
   display: flex;
   align-items: center;
   height: 100%;
+  justify-content: center;
 `;
 
 const ClassTypeForegroundImage = styled.div`
@@ -97,108 +100,125 @@ const ShowOnMobile = styled.div`
 
 class ClassTypeCoverContent extends React.Component {
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps && !isEmpty(nextProps.classTypeData.selectedLocation)) {
-      createMarkersOnMap("classTypeLocationMap", [nextProps.classTypeData.selectedLocation])
+    state = {
+        isBusy : false
     }
-  }
 
-  componentDidMount() {
-    const { classTypeData } = this.props;
-    if(!isEmpty(classTypeData.selectedLocation)) {
-      createMarkersOnMap("classTypeLocationMap", [classTypeData.selectedLocation])
+    componentWillReceiveProps(nextProps) {
+        if(nextProps && !isEmpty(nextProps.classTypeData.selectedLocation)) {
+          createMarkersOnMap("classTypeLocationMap", [nextProps.classTypeData.selectedLocation])
+        }
     }
-  }
 
-  getSkillValues = (data)=> {
-    let str = "";
-    if(!isEmpty(data)) {
-      str = data.map(skill=> skill.name);
-      str = str.join(", ");
+    componentDidMount() {
+        const { classTypeData } = this.props;
+        if(!isEmpty(classTypeData.selectedLocation)) {
+          createMarkersOnMap("classTypeLocationMap", [classTypeData.selectedLocation])
+        }
     }
-    console.log("str -->>",str)
-    return str;
-  }
 
-  // Request Class type location
-  requestClassTypeLocation = () => {
-    console.log("requestClassTypeLocation");
-    // Not login user then show login modal
-    if(!Meteor.user()) {
-      Events.trigger("loginAsUser");
-    } else {
-      const { classTypeData } = this.props;
-      console.log("classTypeData===>",classTypeData)
-      const payload = {
-        schoolId:classTypeData.schoolId,
-        classTypeId:classTypeData._id,
-        classTypeName:classTypeData.name
-      };
-      console.log("payload=========>",payload);
-      Meteor.call('classType.requestClassTypeLocation', payload);
+    getSkillValues = (data)=> {
+        let str = "";
+        if(!isEmpty(data)) {
+          str = data.map(skill=> skill.name);
+          str = str.join(", ");
+        }
+        console.log("str -->>",str)
+        return str;
     }
-  }
 
-  render() {
-    let props = this.props;
-    return(
-        <CoverContentWrapper>
-          <CoverContent>
-            <ContentSection leftSection>
-              <MapContainer>
-                  {
-                    isEmpty(props.classTypeData.selectedLocation) ? (
-                      <LocationNotFound>
-                        <Button onClick={this.requestClassTypeLocation}>
-                          Request Location
-                        </Button>
-                      </LocationNotFound>
-                    ) :<div id="classTypeLocationMap" style={{height: '100%', minHeight: 320}}/>
-                  }
-              </MapContainer>
-              {props.classDescription || <ClassTypeDescription
-                schoolName={props.schoolDetails.name}
-                description={props.schoolDetails.aboutHtml}
-                classTypeName={props.classTypeData.name}
-                noOfStars={props.schoolDetails.noOfStars}
-                noOfReviews={props.schoolDetails.noOfReviews}
-              />}
-            </ContentSection>
+    // Request Class type location
+    requestClassTypeLocation = () => {
+        const { toastr, classTypeData } = this.props;
+        if(Meteor.userId() && !isEmpty(classTypeData)) {
+            const payload = {
+                schoolId:classTypeData.schoolId,
+                classTypeId:classTypeData._id,
+                classTypeName:classTypeData.name
+            };
+            console.log("payload=========>",payload);
+            this.setState({ isBusy:true });
+            Meteor.call('classType.requestClassTypeLocation', payload, (err,res)=> {
 
-            <ContentSection>
-              <ClassTypeForegroundImage coverSrc={props.coverSrc} >
-                {props.actionButtons || <ActionButtons
-                  contactNumbers={props.contactNumbers}
-                  onCallUsButtonClick={props.onCallUsButtonClick}
-                  onEmailButtonClick={props.onEmailButtonClick}
-                  onPricingButtonClick={props.onPricingButtonClick}
+                this.setState({ isBusy: false }, () => {
+                    if(res) {
+                        // Need to show message to user when email is send successfully.
+                        toastr.success("Your email has been sent. We will assist you soon.", "Success");
+                    }
+                    if(err) {
+                        toastr.error( err.reason || err.message,"Error");
+                    }
+                })
+            });
+        } else {
+            toastr.error("You need to login for location request!!!!","Error");
+        }
+    }
+
+    render() {
+        let props = this.props;
+        return(
+            <CoverContentWrapper>
+              <CoverContent>
+                { this.state.isBusy && <ContainerLoader/>}
+                <ContentSection leftSection>
+                  <MapContainer>
+                      {
+                        isEmpty(props.classTypeData.selectedLocation) ? (
+                          <LocationNotFound>
+                            <PrimaryButton
+                                icon
+                                onClick={this.requestClassTypeLocation}
+                                iconName="add_location"
+                                label="REQUEST LOCATION"
+                            />
+                          </LocationNotFound>
+                        ) :<div id="classTypeLocationMap" style={{height: '100%', minHeight: 320}}/>
+                      }
+                  </MapContainer>
+                  {props.classDescription || <ClassTypeDescription
+                    schoolName={props.schoolDetails.name}
+                    description={props.schoolDetails.aboutHtml}
+                    classTypeName={props.classTypeData.name}
+                    noOfStars={props.schoolDetails.noOfStars}
+                    noOfReviews={props.schoolDetails.noOfReviews}
                   />}
-              </ClassTypeForegroundImage>
+                </ContentSection>
 
-              <ClassTypeInfoWrapper>
-                {props.classTypeMetaInfo || <ClassTypeInfo
-                  ageRange={props.classTypeData.ageMin && props.classTypeData.ageMax && `${props.classTypeData.ageMin} - ${props.classTypeData.ageMax}`}
-                  gender={props.classTypeData.gender}
-                  experience={props.classTypeData.experienceLevel}
-                  subjects={this.getSkillValues(props.classTypeData.selectedSkillSubject)}
-                  categories={this.getSkillValues(props.classTypeData.selectedSkillCategory)}
-                />}
+                <ContentSection>
+                  <ClassTypeForegroundImage coverSrc={props.coverSrc} >
+                    {props.actionButtons || <ActionButtons
+                      contactNumbers={props.contactNumbers}
+                      onCallUsButtonClick={props.onCallUsButtonClick}
+                      onEmailButtonClick={props.onEmailButtonClick}
+                      onPricingButtonClick={props.onPricingButtonClick}
+                      />}
+                  </ClassTypeForegroundImage>
 
-                <ShowOnMobile>
-                  {props.actionButtons || <ActionButtons
-                    contactNumbers={props.contactNumbers}
-                    onCallUsButtonClick={props.onCallUsButtonClick}
-                    onEmailButtonClick={props.onEmailButtonClick}
-                    onPricingButtonClick={props.onPricingButtonClick}
+                  <ClassTypeInfoWrapper>
+                    {props.classTypeMetaInfo || <ClassTypeInfo
+                      ageRange={props.classTypeData.ageMin && props.classTypeData.ageMax && `${props.classTypeData.ageMin} - ${props.classTypeData.ageMax}`}
+                      gender={props.classTypeData.gender}
+                      experience={props.classTypeData.experienceLevel}
+                      subjects={this.getSkillValues(props.classTypeData.selectedSkillSubject)}
+                      categories={this.getSkillValues(props.classTypeData.selectedSkillCategory)}
                     />}
-                </ShowOnMobile>
 
-              </ClassTypeInfoWrapper>
-            </ContentSection>
-          </CoverContent>
-        </CoverContentWrapper>
-    )
-  }
+                    <ShowOnMobile>
+                      {props.actionButtons || <ActionButtons
+                        contactNumbers={props.contactNumbers}
+                        onCallUsButtonClick={props.onCallUsButtonClick}
+                        onEmailButtonClick={props.onEmailButtonClick}
+                        onPricingButtonClick={props.onPricingButtonClick}
+                        />}
+                    </ShowOnMobile>
+
+                  </ClassTypeInfoWrapper>
+                </ContentSection>
+              </CoverContent>
+            </CoverContentWrapper>
+        )
+    }
 }
 
 ClassTypeCoverContent.propTypes = {
@@ -215,4 +235,4 @@ ClassTypeCoverContent.defaultProps = {
 
 }
 
-export default ClassTypeCoverContent;
+export default toastrModal(ClassTypeCoverContent);

@@ -129,7 +129,7 @@ export const sendClassTimesRequest = function({
     }
 };
 
-export const sendEmailToStudentForClassTimeUpdate = function(
+export const sendEmailToStudentForClassTypeUpdation = function(
     userData,
     schoolData,
     classTypeName
@@ -137,12 +137,12 @@ export const sendEmailToStudentForClassTimeUpdate = function(
     if (Meteor.isServer) {
         const userName = getUserFullName(userData);
         Email.send({
-            to: "sam@skillshape.com", //userData.emails[0].address;,
+            to: "sam@skillshape.com",//userData.emails[0].address
             from: "Notices@SkillShape.com",
             subject: "School Updated",
-            html: `${userName}, \n${schoolData.name} has updated their listing for ${classTypeName}. Please go to \n ${Meteor.absoluteUrl(
-                `SchoolAdmin/${schoolData._id}/edit?tabValue=2`
-            )} to view their new information and join the class! \n\nThanks, \n\n${EmailSignature}`
+            html: `${userName}, <br/>${schoolData.name} has updated their listing for ${classTypeName}. Please go to <br/> ${Meteor.absoluteUrl(
+                `schools/${schoolData.slug}`
+            )} to view their new information and join the class! <br/><br/>Thanks, <br/><br/>${EmailSignature}`
         });
     }
 };

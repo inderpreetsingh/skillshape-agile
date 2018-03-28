@@ -37,7 +37,7 @@ import MapComponent from './mapComponent';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
-
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 export default function () {
 
@@ -49,6 +49,7 @@ export default function () {
 	// console.log("Panel with table state -->>",this.state);
 	return (
 		<div className={`${className} panel-table`}>
+          	{ this.state.isBusy && <ContainerLoader/>}
           	{
               this.state.showConfirmationModal && <ConfirmationModal
                   open={this.state.showConfirmationModal}
@@ -105,12 +106,20 @@ export default function () {
 			            			</ExpansionPanelSummary>
 			            			{
 			            				settings.mainPanelHeader.expansionPanelRightBtnTitle && (
-				              				<div className={classes.notifyExplanation}>
-					          					<Typography type="caption">Pressing this button will inform students who are enrolled or interested in this class of any schedule changes. Please do not abuse this button.</Typography>
-					          					<Button onClick={() => this.handleNotifyClassTime(tableData)} color="accent" raised dense>
-					          					 	Notify Students of Time Change
-					          					</Button>
-				          					</div>
+				              				<Fragment>
+					              				<div className={classes.notifyExplanation}>
+						          					<Typography type="caption">Pressing this button will inform students who are enrolled or interested in this class of any schedule changes. Please do not abuse this button.</Typography>
+						          					<Button onClick={() => this.handleNotifyClassTypeUpdate(tableData, "classType.notifyToStudentForClassTimes")} color="accent" raised dense>
+						          					 	Notify Students of Time Change
+						          					</Button>
+					          					</div>
+					          					<div className={classes.notifyExplanation}>
+						          					<Typography type="caption">Pressing this button will inform students who are enrolled or interested in this class of any location changes. Please do not abuse this button.</Typography>
+						          					<Button onClick={() => this.handleNotifyClassTypeUpdate(tableData, "classType.notifyToStudentForLocation")} color="accent" raised dense>
+						          					 	Notify Students of Location Change
+						          					</Button>
+					          					</div>
+				              				</Fragment>
 			            				)
 			            			}
 

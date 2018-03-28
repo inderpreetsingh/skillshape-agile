@@ -7,7 +7,7 @@ import SLocation from "/imports/api/sLocation/fields";
 import School from "/imports/api/school/fields";
 import ClassTimesRequest from "/imports/api/classTimesRequest/fields";
 import ClassTypeLocationRequest from "/imports/api/classTypeLocationRequest/fields";
-import { sendEmailToStudentForClassTimeUpdate, sendClassTypeLocationRequestEmail } from "/imports/api/email";
+import { sendEmailToStudentForClassTypeUpdation, sendClassTypeLocationRequestEmail } from "/imports/api/email";
 import { getUserFullName } from '/imports/util/getUserData';
 
 Meteor.methods({
@@ -88,9 +88,12 @@ Meteor.methods({
 
                     if(userData && schoolData) {
                         ClassTimesRequest.update({ _id: obj._id }, { $set: {notification: false} })
-                        sendEmailToStudentForClassTimeUpdate(userData, schoolData, classTypeName)
+                        sendEmailToStudentForClassTypeUpdation(userData, schoolData, classTypeName)
                     }
                 }
+                return { message :"We successfully notify to student"}
+            } else {
+                return { message :"Their is no student to notify!!!"}
             }
         } else {
             throw new Meteor.Error("Permission denied!!");
@@ -135,6 +138,27 @@ Meteor.methods({
                 sendClassTypeLocationRequestEmail({toEmail, fromEmail, currentUserName,ownerName});
                 return {emailSent:true};
 
+        } else {
+            throw new Meteor.Error("Permission denied!!");
+        }
+    },
+    "classType.notifyToStudentForLocation":function({schoolId, classTypeId, classTypeName}) {
+        if(this.userId) {
+            const classTimesRequestData = ClassTypeLocationRequest.find({schoolId,classTypeId,notification: true}).fetch()
+            if(!isEmpty(classTimesRequestData)) {
+                for(let obj of classTimesRequestData) {
+                    const userData = Meteor.users.findOne({_id: obj.userId});
+                    const schoolData = School.findOne({_id: obj.schoolId})
+
+                    if(userData && schoolData) {
+                        ClassTypeLocationRequest.update({ _id: obj._id }, { $set: {notification: false} })
+                        sendEmailToStudentForClassTypeUpdation(userData, schoolData, classTypeName)
+                    }
+                }
+                return { message :"We successfully notify to student"}
+            } else {
+                return { message :"Their is no student to notify!!!"}
+            }
         } else {
             throw new Meteor.Error("Permission denied!!");
         }

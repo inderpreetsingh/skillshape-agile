@@ -230,9 +230,6 @@ class ClassTypeContent extends Component {
 
             Meteor.call("classTimesRequest.notifyToSchool", payload, (err, res) => {
                 console.log("err -->>",err)
-                let stateObj = {
-                    isBusy: false
-                }
                 this.setState({ isBusy: false }, () => {
                     if(res && res.emailSuccess) {
                         // Need to show message to user when email is send successfully.
