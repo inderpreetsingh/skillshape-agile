@@ -53,12 +53,13 @@ export const sendClaimASchoolEmail = function(
     modifyUsersRoles
 ) {
     if (Meteor.isServer) {
+        const schoolOwnerName = getUserFullName(schoolAdminRec);
         Email.send({
-            to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
+            to: "help@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
             from: config.fromEmailForJoiningClass,
             subject: "Claim A school request received",
             html: `
-                    Hi${(schoolAdminRec && schoolAdminRec.name) || ""},<br/>
+                    Hi${schoolOwnerName || ""},<br/>
                    <b>${claimSchoolData.userName}</b> has requested permission to manage <b>${school.name}</b>. You are listed as the admin. <br/>Do you approve this?<br/><br/>
                    <div>
                        <a href=${modifyUsersRoles.keepMeSuperAdmin} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Yes, make them an Admin, and keep me as SuperAdministrator.</a><br/>

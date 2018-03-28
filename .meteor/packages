@@ -40,3 +40,4 @@ accounts-google
 service-configuration
 accounts-facebook
 okgrow:analytics
+percolate:synced-cron
