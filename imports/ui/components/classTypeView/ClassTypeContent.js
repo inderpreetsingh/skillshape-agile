@@ -19,11 +19,16 @@ import ClassTimesBoxes from '/imports/ui/components/landing/components/classTime
 import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 import SchoolDetails from '/imports/ui/components/landing/components/class/details/SchoolDetails.jsx';
 import MyCalendar from '/imports/ui/components/users/myCalender';
-
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
+
+
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
+
 import { toastrModal } from '/imports/util';
+import { imageExists } from '/imports/util';
+
+import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 const SchoolImgWrapper = styled.div`
   height: 400px;
@@ -160,6 +165,17 @@ class ClassTypeContent extends Component {
         isBusy: false,
         contactUsDialog: false,
         callUsDialog: false,
+        coverSrc: classTypeImgSrc,
+    }
+
+    _setCoverSrc = (imgSrc) => {
+      imageExists(imgSrc).then(() => {
+        console.log(this,'resolved image exists....');
+        this.setState({ coverSrc: imgSrc});
+      }).catch(e => {
+        console.error('no image doesn\'t exists....');
+        this.setState({ coverSrc: classTypeImgSrc });
+      });
     }
 
     _getContactNumbers = () => {
@@ -184,6 +200,27 @@ class ClassTypeContent extends Component {
       })
     }
 
+    componentDidMount = () => {
+      const self = this;
+      console.log(this.props,"dsa");
+      if(!isEmpty(this.props.classTypeData)) {
+        this._setCoverSrc(this.props.classTypeData.classTypeImgSrc);
+      }
+    }
+
+    componentWillReceiveProps = (nextProps) => {
+      console.log('comopnent will recieve', nextProps);
+
+      if(!isEmpty(nextProps.classTypeData)) {
+        if(!isEmpty(this.props.classTypeData)) {
+          if(this.props.classTypeData.classTypeImgSrc != nextProps.classTypeData.classTypeImgSrc) {
+            this._setCoverSrc(nextProps.classTypeData.classTypeImgSrc);
+          }
+        }else {
+          this._setCoverSrc(nextProps.classTypeData.classTypeImgSrc);
+        }
+      }
+    }
 
     scrollTo(name) {
       scroller.scrollTo((name || 'content-container'),{
@@ -274,9 +311,9 @@ class ClassTypeContent extends Component {
           {this.state.contactUsDialog && <EmailUsDialogBox ourEmail={this._getOurEmail()} open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
                 { this.state.isBusy && <ContainerLoader/>}
 				{/* Class Type Cover includes description, map, foreground image, then class type information*/}
-		        <ClassTypeCover coverSrc={classTypeData.classTypeImg}>
+		        <ClassTypeCover coverSrc={this.state.coverSrc}>
 			        <ClassTypeCoverContent
-			        	coverSrc={classTypeData.classTypeImg}
+			        	coverSrc={this.state.coverSrc}
 			            schoolDetails={{...schoolData}}
 			            classTypeData={{...classTypeData}}
                   contactNumbers={this._getContactNumbers()}

@@ -61,11 +61,12 @@ const Reviews = styled.a`
 `;
 
 const ClassTypeDescription = (props) => {
-  const classTypeNameLowerCase = props.classTypeName.toLowerCase();
-  const schoolNameLowerCase = props.schoolName.toLowerCase();
   return (
     <Wrapper>
-      <Title>{classTypeNameLowerCase} {props.schoolName && props.classTypeName ? <span>in</span> : ''} {schoolNameLowerCase}</Title>
+      {props.isClassTypeNameAvailable ?
+      <Title>{props.classTypeName.toLowerCase()} {props.schoolName && props.classTypeName ? <span>in</span> : ''} {props.schoolName.toLowerCase()}</Title>
+      :
+      <Title>{props.schoolName.toLowerCase()}</Title>}
 
       <ReviewsWrapper>
         {props.noOfStars && <StarsBar noOfStars={props.noOfStars} />}
