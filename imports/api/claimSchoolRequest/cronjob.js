@@ -11,7 +11,6 @@ import { sendClaimASchoolEmail } from "/imports/api/email";
       name: 'Crunch some important numbers for the marketing department',
       schedule: function(parser) {
         // parser is a later.parse object
-        console.log("numbersCrunched",SyncedCron._collection.find().fetch());
         return parser.text('at 3:27 pm');
       },
       job: function() {
