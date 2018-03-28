@@ -19,6 +19,7 @@ class SchoolDetails extends React.Component {
       mainImage,
       aboutHtml,
       studentNotesHtml,
+      currency,
     } = schoolData;
 
     this.state = {
@@ -32,7 +33,8 @@ class SchoolDetails extends React.Component {
       email: email,
       backGroundVideoUrl: backGroundVideoUrl,
       mainImage: mainImage,
-      isLoading:false // Loading variable in state.
+      isLoading:false, // Loading variable in state.
+      currency: currency || ""
     };
   }
 

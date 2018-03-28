@@ -139,6 +139,10 @@ School.attachSchema(new SimpleSchema({
     type: Boolean,
     optional: true
   },
+  currency: {
+    type: String,
+    optional: true
+  }
 }));
 
 School.friendlySlugs(
