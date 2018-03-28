@@ -25,7 +25,9 @@ import { sendClaimASchoolEmail } from "/imports/api/email";
                 if(requestObj && requestObj.emailCount < 3) {
                     requestObj.emailCount+=1;
                     // This needs to be replaced with School Admin.
-                    toField = "ramesh.bansal@daffodilsw.com";
+                    if(process.env["NODE_ENV"] == "development") {
+                        toField = "ramesh.bansal@daffodilsw.com";
+                    }
                     // Update count in `ClaimSchoolRequest`.
                     ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj })
                     emailSuccess = sendClaimSchoolEmail(requestObj,requestObj._id, toField);
