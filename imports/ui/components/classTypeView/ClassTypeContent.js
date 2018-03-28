@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
-import ContactUsDialogBox from '/imports/ui/components/landing/components/dialogs/ContactUsDialogBox.jsx';
+import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
@@ -162,8 +162,12 @@ class ClassTypeContent extends Component {
         callUsDialog: false,
     }
 
-    _getContactNumbers = (phoneNumbers) => {
+    _getContactNumbers = () => {
       return this.props.schoolData.phone.split(',');
+    }
+
+    _getOurEmail = () => {
+      return this.props.schoolData.email;
     }
 
     handleEmailUsButtonClick = () => {
@@ -270,7 +274,7 @@ class ClassTypeContent extends Component {
 		return (
 			<Fragment>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this._getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
-          {this.state.contactUsDialog && <ContactUsDialogBox open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
+          {this.state.contactUsDialog && <EmailUsDialogBox ourEmail={this._getOurEmail()} open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
                 { this.state.isBusy && <ContainerLoader/>}
 				{/* Class Type Cover includes description, map, foreground image, then class type information*/}
 		        <ClassTypeCover coverSrc={classTypeData.classTypeImg}>

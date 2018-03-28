@@ -118,8 +118,9 @@ class CardsList extends Component {
 
     seeMoreStatus = (cardsData, filters, name) => {
         const { limit, skillCategoryClassLimit } = filters;
-        if(limit) {
-            if (limit <= size(cardsData)) {
+        // console.log("skillCategoryClassLimit -->>",skillCategoryClassLimit[name],size(cardsData))
+        if(skillCategoryClassLimit && skillCategoryClassLimit[name]) {
+            if (skillCategoryClassLimit[name] <= size(cardsData)) {
                 return true
             }
         } else {

@@ -97,7 +97,6 @@ const FeatureName = styled.p`
   }
 `;
 
-
 const FeaturesListWrapper = styled.ul`
   display: flex;
   flex-direction: column;
@@ -105,7 +104,6 @@ const FeaturesListWrapper = styled.ul`
   padding: 0;
   padding-left: ${helpers.rhythmDiv * 2}px;
 `;
-
 
 const SchoolCardContent = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;

@@ -25,9 +25,7 @@ const Title = styled.h1`
   font-style: italic;
   text-align: center;
   line-height: 1;
-  margin: 0;
-  margin-top: ${helpers.rhythmDiv * 8}px;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin: ${helpers.rhythmDiv * 8}px 0;
   padding: 0 ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {

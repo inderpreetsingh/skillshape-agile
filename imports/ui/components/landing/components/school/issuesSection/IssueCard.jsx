@@ -22,7 +22,6 @@ const Wrapper = styled.div`
   border-radius: ${helpers.rhythmDiv * 2}px;
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv}px;
   box-shadow: ${props => props.active ? '1px 1px 16px 0px rgba(0,0,0,0.1)' : '1px 1px 8px 0px rgba(0,0,0,0.1)'};
-  
 
   @media screen and (max-width: ${helpers.tablet}px) {
     max-width: ${props => props.active ?  '250' : '100'}px;
@@ -44,7 +43,7 @@ const Content = styled.p`
   max-width: 150px;
   font-family: ${helpers.specialFont};
   font-style: italic;
-  font-size: ${helpers.baseFontSize}px;
+  font-size: 18px;
   line-height: 1;
   font-weight: 400;
   opacity: 1;

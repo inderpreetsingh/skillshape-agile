@@ -27,6 +27,7 @@ const MySearchBarStyled = (props) => {
     <MySearchBar
       onChange={props.onSearch}
       onRequestSearch={props.onSearch}
+      noCloseIcon
       itemScope
       itemType="http://schema.org/SearchAction"
       className="is-search-bar"
