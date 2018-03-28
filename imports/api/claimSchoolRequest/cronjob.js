@@ -12,37 +12,40 @@ import { sendClaimASchoolEmail } from "/imports/api/email";
       schedule: function(parser) {
         // parser is a later.parse object
         console.log("numbersCrunched",SyncedCron._collection.find().fetch());
-        return parser.text('every 15 seconds');
+        return parser.text('at 3:27 pm');
       },
       job: function() {
         let pendingClaimSchoolRequest = ClaimSchoolRequest.find({"status" : "pending"}).fetch();
-        // console.log("pendingClaimSchoolRequest",pendingClaimSchoolRequest);
-        if(isEmpty(pendingClaimSchoolRequest)) {
-            // Stop the crone job
-            SyncedCron.stop();
-        } else {
-            // Pending claim school request found then need to send an email
-            var numbersCrunched;
-            pendingClaimSchoolRequest.forEach( (requestObj) => {
-                console.log("requestObj.emailCount",typeof(requestObj.emailCount),requestObj.emailCount,requestObj.emailCount < 3)
+        if(!isEmpty(pendingClaimSchoolRequest)) {
+            let emailSuccess;
+            pendingClaimSchoolRequest.forEach( (requestObj,index) => {
+                // console.log("requestObj.emailCount",typeof(requestObj.emailCount),requestObj.emailCount,requestObj.emailCount < 3)
                 // console.log(requestObj && requestObj.emailCount && requestObj.emailCount < 3);
+                let toField;
                 if(requestObj && requestObj.emailCount < 3) {
                     requestObj.emailCount+=1;
+                    // This needs to be replaced with School Admin.
+                    if(process.env["NODE_ENV"] == "development") {
+                        toField = "ramesh.bansal@daffodilsw.com";
+                    }
                     // Update count in `ClaimSchoolRequest`.
                     ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj })
-                    numbersCrunched = sendClaimSchoolEmail(requestObj,requestObj._id);
+                    emailSuccess = sendClaimSchoolEmail(requestObj,requestObj._id, toField);
                 } else {
-                    console.log("no need to send email as its count is 3")
+                    // To: should be Super Admin.
+                    toField = "help@skillshape.com";
+                    emailSuccess = sendClaimSchoolEmail(requestObj,requestObj._id, toField);
+
                 }
 
-            })
-            return numbersCrunched;
+            });
+            return emailSuccess;
         }
       }
     });
 // }
 
-function sendClaimSchoolEmail(doc,claimRequestId) {
+function sendClaimSchoolEmail(doc,claimRequestId,To) {
     let claimingUserRec = Meteor.users.findOne(doc.userId);
 
     // Whenever a user claim for a School need to get admin user record to send email.
@@ -69,14 +72,15 @@ function sendClaimSchoolEmail(doc,claimRequestId) {
     };
 
     let schoolData = School.findOne({"_id":doc.schoolId});
-    console.log("schoolData",schoolData)
-
-    return (sendClaimASchoolEmail(
+    sendClaimASchoolEmail(
         doc,
         ROOT_URL,
         manageBySelfUrl,
         schoolAdminUser,
         schoolData,
-        modifyUsersRoles
-    ));
+        modifyUsersRoles,
+        To
+    )
+
+    return {emailSuccess:true};
 }

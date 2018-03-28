@@ -50,12 +50,17 @@ export const sendClaimASchoolEmail = function(
     manageBySelfUrl,
     schoolAdminRec,
     school,
-    modifyUsersRoles
+    modifyUsersRoles,
+    To,
 ) {
     if (Meteor.isServer) {
         const schoolOwnerName = getUserFullName(schoolAdminRec);
+        console.log("To====>",To)
+        if(!To) {
+            To = "sam@skillshape.com";
+        }
         Email.send({
-            to: "help@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
+            to: To, // Replace value of `to` with Admin email if Admin exists.
             from: config.fromEmailForJoiningClass,
             subject: "Claim A school request received",
             html: `
