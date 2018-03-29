@@ -54,26 +54,39 @@ const MyTelMobile = styled.a`
   }
 `;
 
-const ActionButtons = (props) => (
-  <ActionButtonsWrapper>
-    <ActionButton>
-      <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
-    </ActionButton>
+const ActionButtons = (props) => {
+  const EditButton = props.editButton;
+  return(<ActionButtonsWrapper>
+    {props.isEdit ?
+    <Fragment>
+      <ClassTimeButton icon iconName='edit' label="Logo" onClick={props.onEditLogoButtonClick} />
+    </Fragment>
+    :
+    <Fragment>
+      {props.editButton && <EditButton />}
+      <ActionButton>
+        <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
+      </ActionButton>
 
-    <ActionButton>
-      <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
-    </ActionButton>
+      <ActionButton>
+        <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
+      </ActionButton>
 
-    <ActionButton>
-      <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
-    </ActionButton>
-  </ActionButtonsWrapper>
-);
+      <ActionButton>
+        <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
+      </ActionButton>
+    </Fragment>}
+  </ActionButtonsWrapper>)
+}
 
 ActionButtons.propTypes = {
   onCallUsButtonClick: PropTypes.func,
   onEmailButtonClick: PropTypes.func,
   onPricingButtonClick: PropTypes.func
+}
+
+ActionButtons.defaultProps = {
+  editButton: false
 }
 
 export default ActionButtons;
