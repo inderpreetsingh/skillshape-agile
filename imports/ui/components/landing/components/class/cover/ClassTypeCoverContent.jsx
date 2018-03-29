@@ -113,6 +113,7 @@ class ClassTypeCoverContent extends React.Component {
 
     componentDidMount() {
         const { classTypeData } = this.props;
+        console.log(classTypeData,"class type data..")
         if(!isEmpty(classTypeData.selectedLocation)) {
           createMarkersOnMap("classTypeLocationMap", [classTypeData.selectedLocation])
         }

@@ -1,12 +1,15 @@
-import React , {Fragment} from 'react';
+import React , {Fragment,Component} from 'react';
 import styled from 'styled-components';
+import {isEmpty} from 'lodash';
+
+import { createMarkersOnMap } from '/imports/util';
 
 import BrandBar from '../components/landing/components/BrandBar';
 import Footer from '../components/landing/components/footer/index.jsx';
 
 import ContactUsForm from '../components/landing/components/contactUs/ContactUsForm.jsx';
 import ClassMap from '../components/landing/components/map/ClassMap.jsx';
-
+import MapView from '../components/landing/components/map/mapView.jsx';
 import SocialAccounts from '../components/landing/components/contactUs/SocialAccounts.jsx';
 
 import * as helpers from '../components/landing/components/jss/helpers.js';
@@ -81,33 +84,126 @@ const ContentWrapper = styled.div`
 
 `;
 
+const MyMap = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
-const ContactUs = () => (<Wrapper>
-    <BrandBar
-      navBarHeight="70"
-      positionStatic={true}
-    />
+class ContactUs extends Component {
 
-    <ContentWrapper>
-      <Title>We would love to talk with you</Title>
+  state = {
+    userLocation: {},
+  }
 
-      <FormMapWrapper>
-        <ContactUsForm />
+  getMyCurrentLocation = () => {
+      if(navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            let geocoder = new google.maps.Geocoder();
+            let coords = [];
+            coords[0] = position.coords.latitude;
+            coords[1] = position.coords.longitude;
 
-        <MapOuterContainer>
-          <MapContainer>
-            <ClassMap />
-          </MapContainer>
+            geocoder.geocode({'latLng': latlng}, (results, status) => {
+                let sLocation = "near by me";
+                let userLocation = { };
 
-          <SocialAccounts />
-        </MapOuterContainer>
+                if (status == google.maps.GeocoderStatus.OK) {
+                  if (results[0]) {
+                    let place = results[0];
+                    console.info(place,"plascing....")
+                    sLocation = results[0].formatted_address;
+                    userLocation = this._createUserLocationFromAddress(results[0].address_components);
+                  }
+                }
 
-      </FormMapWrapper>
-    </ContentWrapper>
+                const newUserLocation = {
+                  ...userLocation,
+                  loc: coords,
+                  id: results[0].place_id
+                }
 
-    <Footer />
+                this.setState({ userLocation: newUserLocation});
+            });
+          // toastr.success("Showing classes around you...","Found your location");
+          // // Session.set("coords",coords)
+        })
+    }
+  }
 
-  </Wrapper>
-);
+  _createUserLocationFromAddress = (addressComponents) => {
+    const localityComponents = ['street_number','sublocality','locality'];
+    const COUNTRY = 'country';
+    const CITY = 'administrative_area_level_1';
+
+    let country = ``;
+    let city = ``;
+    let locality = ``;
+
+    for(addressComponent of addressComponents) {
+
+      if(addressComponent.types.indexOf(COUNTRY) != -1) {
+        country += addressComponent.long_name;
+      }else if(addressComponent.types.indexOf(CITY) != -1) {
+        city += addressComponent.long_name;
+      }else {
+        localityComponents.forEach(component => {
+          if(addressComponent.types.indexOf(component) != -1) {
+            locality += addressComponent.long_name + (component === 'locality' ? '' : ', ');
+          }
+        });
+      }
+    }
+
+    return {
+      address : locality,
+      city,
+      country
+    }
+
+  }
+
+  componentDidMount = () => {
+    this.getMyCurrentLocation();
+  }
+
+  componentDidUpdate = () => {
+    // console.info('component updating.............',this.state);
+    if(!isEmpty(this.state.userLocation)) {
+      createMarkersOnMap("contact-page-map", [this.state.userLocation]);
+    }
+  }
+
+  render() {
+    // console.info('--------------------------------------------------------',this.state, "------ contact us page");
+    return(<Wrapper>
+
+      {/* Brand Bar at Top */}
+      <BrandBar navBarHeight="70" positionStatic={true} />
+
+      {/* Content section including form and map and social accounts*/}
+      <ContentWrapper>
+        <Title>We would love to talk with you</Title>
+
+        <FormMapWrapper>
+          <ContactUsForm />
+
+          <MapOuterContainer>
+            <MapContainer>
+              <MyMap id="contact-page-map" />
+            </MapContainer>
+
+            <SocialAccounts />
+          </MapOuterContainer>
+
+        </FormMapWrapper>
+      </ContentWrapper>
+
+      {/* Footer */}
+      <Footer />
+    </Wrapper>);
+  }
+}
 
 export default ContactUs;
