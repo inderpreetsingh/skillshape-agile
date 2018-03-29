@@ -8,7 +8,10 @@ import Grid from 'material-ui/Grid';
 
 import SchoolCard from "/imports/ui/components/landing/components/cards/schoolCard";
 import NoResults from '/imports/ui/components/landing/components/NoResults';
+
+import {getContainerMaxWidth} from '/imports/util/cards.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
 
 const NoResultContainer = styled.div`
   text-align: center;
@@ -17,6 +20,49 @@ const NoResultContainer = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
 `;
+const SPACING = helpers.rhythmDiv * 2;
+const CARD_WIDTH = 300;
+
+const GridContainer = styled.div`
+  ${helpers.flexCenter}
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    justify-content: center;
+  }
+`;
+
+const GridItem = styled.div`
+  width: ${CARD_WIDTH}px;
+  margin: ${props => props.spacing/2 || '16'}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    max-width: ${CARD_WIDTH}px;
+    margin: ${props => props.spacing/2 || '16'}px 0;
+  }
+`;
+
+const CardsListGridWrapper = styled.div`
+    padding: ${SPACING/2}px;
+    margin: 0 auto;
+    max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
+
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px) {
+      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px;
+    }
+
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px) {
+      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px;
+    }
+
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px) {
+      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24}px;
+      margin: 0 auto;
+    }
+
+`;
+
 
 export default function (props) {
     let schools = this.props.collectionData || [];
@@ -32,17 +78,19 @@ export default function (props) {
     } else {
         return (
             <div>
-                <Grid container style={{paddingLeft:'16px',paddingRight:'16px'}}>
+                <CardsListGridWrapper>
+                  <GridContainer>
                     {
-                        schools.map((school, index) => {
-                            return (
-                                <Grid item key={index} md={4} sm={6} lg={3} xs={12}>
-                                    <SchoolCard schoolCardData={school} handleClaimASchool={this.props.handleClaimASchool}/>
-                                </Grid>
-                            )
-                        })
+                      schools.map((school, index) => {
+                          return (
+                              <GridItem spacing={SPACING} key={index}>
+                                  <SchoolCard schoolCardData={school} handleClaimASchool={this.props.handleClaimASchool}/>
+                              </GridItem>
+                          )
+                      })
                     }
-                </Grid>
+                    </GridContainer>
+                </CardsListGridWrapper>
             </div>
         )
     }
