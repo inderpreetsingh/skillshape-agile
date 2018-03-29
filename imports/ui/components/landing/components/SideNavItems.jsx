@@ -179,15 +179,15 @@ const LoginUserSideNav = (props) => (
             iconName="message"
             onClick={() => browserHistory.push('/ContactUs')}
         />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Add Schools"
+            iconName="add_box"
+            onClick={() => browserHistory.push('/claimSchool')}
+        />
         {
             checkSuperAdmin(props.currentUser) && (<Fragment>
-                    <SideNavItem
-                        button
-                        menuListItemText={props.classes.menuListItemText}
-                        name="Add Schools"
-                        iconName="add_box"
-                        onClick={() => browserHistory.push('/')}
-                    />
                     <SideNavItem
                         button
                         menuListItemText={props.classes.menuListItemText}

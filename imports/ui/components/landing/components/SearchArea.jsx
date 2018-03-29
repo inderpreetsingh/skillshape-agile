@@ -1,6 +1,7 @@
 import React, {Component,Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { browserHistory } from 'react-router';
 
 import SearchBarStyled from './SearchBarStyled.jsx';
 
@@ -182,6 +183,7 @@ const BottomSectionContent = (props) => (
     boxShadow
     itemScope
     itemType="http://schema.org/AddAction"
+    onClick={props.handleAddSchool}
     />
   </div>
 );
@@ -222,6 +224,14 @@ class SearchArea extends Component {
     }
   }
 
+  handleAddSchool = () => {
+    if(Meteor.userId()) {
+      browserHistory.push('/claimSchool');
+    } else {
+      Events.trigger("registerAsSchool",{userType: "School"})
+    }
+  }
+
   render() {
     return (
       <SearchAreaPanel width={this.props.width} textAlign={this.props.textAlign} itemScope itemType="http://schema.org/SearchAction">
@@ -238,7 +248,7 @@ class SearchArea extends Component {
               mapView={this.props.mapView}
             />
           )}
-        {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} /> }
+        {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} handleAddSchool={this.handleAddSchool}/> }
       </SearchAreaPanel>
     )
   }
