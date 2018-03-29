@@ -23,16 +23,16 @@ class SchoolDetails extends React.Component {
     } = schoolData;
 
     this.state = {
-      aboutHtml: aboutHtml,
-      studentNotesHtml: studentNotesHtml ? studentNotesHtml:'',
-      name: name,
-      website: website,
+      aboutHtml: aboutHtml || "",
+      studentNotesHtml: studentNotesHtml || "",
+      name: name || "",
+      website: website || "",
       phone: phone,
-      firstName: firstName,
-      lastName: lastName,
+      firstName: firstName || "",
+      lastName: lastName || "",
       email: email,
-      backGroundVideoUrl: backGroundVideoUrl,
-      mainImage: mainImage,
+      backGroundVideoUrl: backGroundVideoUrl || "",
+      mainImage: mainImage || "",
       isLoading:false, // Loading variable in state.
       currency: currency || ""
     };

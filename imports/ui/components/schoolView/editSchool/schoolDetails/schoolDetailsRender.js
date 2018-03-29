@@ -43,6 +43,7 @@ export default function () {
   } = this.props;
 
   console.log("SchoolEditDetails render props -->>", this.props)
+  console.log("SchoolEditDetails render state -->>", this.state)
   return  (
     <div>
       <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />
@@ -102,7 +103,7 @@ export default function () {
                       label="Phone"
                       type="number"
                       fullWidth
-                      onChange={(event)=> {this.setState({phone:event.target.value})}}
+                      onChange={(event)=> {this.setState({phone: parseInt(event.target.value)})}}
                   />
                 </Grid>
             </Grid>

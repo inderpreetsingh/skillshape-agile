@@ -1,15 +1,37 @@
 import React from "react";
 import DocumentTitle from 'react-document-title';
-import  ClaimSchoolFilter  from "./filter";
+// import  ClaimSchoolFilter  from "./filter";
 
 import FilterPanel from '../landing/components/FilterPanel.jsx';
 import FiltersDialogBox from '../landing/components/dialogs/FiltersDialogBox.jsx';
 
-import ClaimSchoolList  from "./claimSchoolList";
 // import Sticky from 'react-sticky-el';
 import Sticky from 'react-stickynode';
+import styled from 'styled-components';
+import Button from 'material-ui/Button';
 
+
+
+import ClaimSchoolList  from "./claimSchoolList";
 import { ContainerLoader } from '/imports/ui/loading/container.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+`;
+
+const FormSubmitButtonWrapper =styled.div`
+  margin-top: ${helpers.rhythmDiv * 2}px;
+  padding-top: ${helpers.rhythmDiv * 2}px;
+`;
+
+const TextWrapper =styled.div`
+`;
 
 export default function () {
    return (
@@ -68,6 +90,16 @@ export default function () {
                onLocationChange= {this.onLocationChange}
              />
         </Sticky>
+        <Wrapper>
+          <TextWrapper>
+              Check to see if any of these are your school.
+              if so, press the <b>claim</b> button
+              if not, Click the button to the right to open a new listing
+          </TextWrapper>
+          <FormSubmitButtonWrapper>
+            <Button onClick={this.handleListingOfNewSchool}>None of these are my school. <br/>Start a new Listing! </Button>
+          </FormSubmitButtonWrapper>
+        </Wrapper>
          <ClaimSchoolList
             filters={this.state.filters}
             removeAllFilters={this.removeAllFilters}

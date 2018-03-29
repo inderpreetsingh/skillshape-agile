@@ -17,8 +17,8 @@ class LoginButton extends Component {
         Events.on("loginAsSchoolAdmin", "123456", (data) => {
             this.handleLoginModalState(true, data);
         })
-        Events.on("loginAsUser", (data) => {
-            this.handleLoginModalState(true);
+        Events.on("loginAsUser", "123456", (data) => {
+            this.handleLoginModalState(true, data);
         })
     }
 
