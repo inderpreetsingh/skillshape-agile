@@ -455,6 +455,27 @@ Meteor.methods({
             return {memberLogin:false};
         }
         return {inviteAccepted:true};
+    },
+    "school.addNewSchool": function(doc) {
+        if(!this.userId) {
+            throw new Meteor.Error(
+                "Access denied",
+                "Error while adding new school"
+            );
+        }
+        const schoolInsertDoc = {
+            email: doc.emails.address,
+            isPublish: true,
+            superAdmin: doc._id,
+            admins: [doc._id],
+            aboutHtml:"",
+            descHtml:"",
+        }
+        console.log("schoolInsertDoc",schoolInsertDoc)
+        let schoolId = School.insert(schoolInsertDoc);
+        console.log("schoolId",schoolId)
+        let schoolEditViewLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
+        return schoolEditViewLink;
     }
 });
 
