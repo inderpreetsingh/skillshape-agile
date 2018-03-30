@@ -418,7 +418,7 @@ class DashBoardView extends React.Component {
     render() {
         console.log("DashBoardView props -->>",this.props);
         console.log("DashBoardView state -->>",this.state);
-        const { classes, theme, schoolData, classTypeData, slug} = this.props;
+        const { classes, theme, schoolData, classTypeData, slug, schoolAdmin} = this.props;
         const { renderStudentModal,memberInfo } = this.state;
 
         let schoolMemberListFilters = {...this.state.filters};
@@ -431,6 +431,13 @@ class DashBoardView extends React.Component {
 
         if(!slug)  {
             filters.activeUserId = currentUser && currentUser._id;
+        }
+
+        // Not allow accessing this URL to non admin user.
+        if(!schoolAdmin && slug) {
+            return  <Typography type="display2" gutterBottom align="center">
+                To access this page you need to login as an admin.
+            </Typography>
         }
 
         const drawer = (
@@ -547,6 +554,7 @@ export default createContainer(props => {
     let isLoading = true;
     let classTypeData = [];
     let filters = {...props.filters, slug};
+    let schoolAdmin;
 
     let subscription = Meteor.subscribe("schoolMemberDetails.getSchoolMemberWithSchool", filters);
 
@@ -559,6 +567,11 @@ export default createContainer(props => {
         } else {
             schoolData = School.find().fetch()
         }
+        if(schoolData && schoolData.admins) {
+            if(_.contains(schoolData.admins, currentUser._id)) {
+                schoolAdmin = true;
+            }
+        }
     }
 
     return { ...props,
@@ -566,6 +579,7 @@ export default createContainer(props => {
         classTypeData,
         isLoading,
         slug,
+        schoolAdmin
     };
 
 }, withStyles(styles, { withTheme: true })(DashBoardView));

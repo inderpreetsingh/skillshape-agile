@@ -224,7 +224,8 @@ export const sendEmailToStudentForClaimAsMember = function(
     passwd,
     fromEmail,
     toEmail,
-    ROOT_URL
+    ROOT_URL,
+    rejectionUrl
 ) {
     if (Meteor.isServer) {
         const adminName =  getUserFullName(currentUserData);
@@ -233,10 +234,13 @@ export const sendEmailToStudentForClaimAsMember = function(
             to: toEmail,
             from: fromEmail,
             subject: "School member invitation received",
-            html: `Hi ${userName},
-            ${adminName} from ${schoolData.name} has invited you to claim your account.
-            Click on the following link to verify your email address:\n
-            ${ROOT_URL}
+            html: `Hi ${userName},<br/>
+            ${adminName} from ${schoolData.name}  has invited you to claim your account on SkillShape.com
+            <div>
+               Click <b>Claim your account</b> to accept the invitation :<br/>
+               <a href=${ROOT_URL} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Claim your account</a><br/>
+               ${rejectionUrl  ? `If this is a mistake, click here to reject the invitation :<a href=${rejectionUrl} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Reject the invitation</a><br/>` :""}
+            </div>
             ${passwd ? `Your temporary password is  : ${passwd} You will be asked to make your own when you click the link above.`: ''}
              \n\nThanks, \n\n${EmailSignature}`
         });
