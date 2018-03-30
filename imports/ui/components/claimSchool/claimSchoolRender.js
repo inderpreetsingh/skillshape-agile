@@ -37,7 +37,7 @@ const TextWrapper =styled.div`
 export default function () {
    return (
        <DocumentTitle title={this.props.route.name}>
-       <div>
+       <div className={this.props.classes.divStyle}>
         {
           this.state.isLoading && <ContainerLoader />
         }
@@ -102,19 +102,20 @@ export default function () {
              />
         </Sticky>
         <Wrapper>
-          <TextWrapper>
+          <TextWrapper className={this.props.classes.textStyle}>
               Check to see if any of these are your school.
               if so, press the <b>claim</b> button
               if not, Click the button to the right to open a new listing
           </TextWrapper>
           <FormSubmitButtonWrapper>
-            <Button onClick={this.showConfirmationModal}>None of these are my school. <br/>Start a new Listing! </Button>
+            <Button className={this.props.classes.sideButton} onClick={this.showConfirmationModal}>None of these are my school. <br/>Start a new Listing! </Button>
           </FormSubmitButtonWrapper>
         </Wrapper>
          <ClaimSchoolList
             filters={this.state.filters}
             removeAllFilters={this.removeAllFilters}
             handleClaimASchool={this.handleClaimASchool}
+            classes={this.props.classes.divStyle}
            />
        </div>
        </DocumentTitle>

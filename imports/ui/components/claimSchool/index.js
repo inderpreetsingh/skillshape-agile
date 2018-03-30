@@ -3,12 +3,39 @@ import {createContainer} from 'meteor/react-meteor-data';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router';
 import Icon from 'material-ui/Icon';
+import { withStyles } from "material-ui/styles";
 
 import ClaimSchoolBase from "./claimSchoolBase";
 import ClaimSchoolRender from "./claimSchoolRender";
 import SkillCategory from "/imports/api/skillCategory/fields";
 
 import { toastrModal } from '/imports/util';
+
+
+
+
+
+const styles = theme => ({
+  sideButton: {
+    fontWeight: 'bold',
+    borderRadius: 10,
+    backgroundColor: '#ca1e1e',
+    color: 'white',
+    marginRight: 18
+  },
+  divStyle: {
+    display: 'flex',
+    display: 'inline-block'
+  },
+  textStyle: {
+    fontSize: 20,
+    width: 700,
+    marginLeft: 18
+  }
+});
+
+console.log("styles",styles)
+
 
 
 class ClaimSchool extends ClaimSchoolBase {
@@ -88,4 +115,4 @@ export default createContainer(props => {
     let currentUser = Meteor.user();
     let dataForSkillTypes = SkillCategory.find().fetch();
     return {...props, dataForSkillTypes,currentUser};
-}, toastrModal(ClaimSchool));
+}, withStyles(styles,{ withTheme: true })(toastrModal(ClaimSchool)));
