@@ -17,15 +17,11 @@ import { toastrModal } from '/imports/util';
 
 const styles = theme => ({
   sideButton: {
-    fontWeight: 'bold',
+    fontWeight: 600,
     borderRadius: 10,
     backgroundColor: '#ca1e1e',
     color: 'white',
     marginRight: 18
-  },
-  divStyle: {
-    display: 'flex',
-    display: 'inline-block'
   },
   textStyle: {
     fontSize: 20,
