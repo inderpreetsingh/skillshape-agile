@@ -60,10 +60,11 @@ const ActionButtons = (props) => {
     {props.isEdit ?
     <Fragment>
       <ClassTimeButton icon iconName='edit' label="Logo" onClick={props.onEditLogoButtonClick} />
+      <ClassTimeButton icon iconName='edit' label="Background" onClick={props.onEditBgButtonClick} />
     </Fragment>
     :
     <Fragment>
-      {props.editButton && <EditButton />}
+      {props.editButton && <ActionButton> <EditButton /> </ActionButton>}
       <ActionButton>
         <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
       </ActionButton>

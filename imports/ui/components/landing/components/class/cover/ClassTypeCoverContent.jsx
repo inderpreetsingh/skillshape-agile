@@ -57,6 +57,29 @@ const MapContainer = styled.div`
   }
 `;
 
+const LogoContainer = styled.div`
+  height: 320px;
+  max-width: 496px;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    min-width: 496px;
+    width: 100%;
+  }
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    min-width: 100%;
+    width: 100%;
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: 100%;
+    min-width: 300px;
+  }
+`;
+
 const LocationNotFound = styled.div`
   display: flex;
   align-items: center;
@@ -105,18 +128,27 @@ class ClassTypeCoverContent extends React.Component {
         isBusy : false
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(nextProps && !isEmpty(nextProps.classTypeData.selectedLocation)) {
-          createMarkersOnMap("classTypeLocationMap", [nextProps.classTypeData.selectedLocation])
-        }
+    componentDidUpdate() {
+      this.addLocationOnMap();
     }
 
     componentDidMount() {
-        const { classTypeData } = this.props;
-        console.log(classTypeData,"class type data..")
-        if(!isEmpty(classTypeData.selectedLocation)) {
-          createMarkersOnMap("classTypeLocationMap", [classTypeData.selectedLocation])
+      debugger;
+      this.addLocationOnMap();
+    }
+
+    addLocationOnMap() {
+      if(this.props.noClassTypeData) {
+        if(!isEmpty(this.props.schoolLocation)) {
+          const location = this.props.schoolLocation;
+          createMarkersOnMap("myMap", location);
         }
+      }else {
+        if(!isEmpty(this.props.classTypeData.selectedLocation)) {
+          const location = [this.props.classTypeData.selectedLocation];
+          createMarkersOnMap("myMap", location);
+        }
+      }
     }
 
     getSkillValues = (data)=> {
@@ -159,28 +191,36 @@ class ClassTypeCoverContent extends React.Component {
 
   render() {
     let props = this.props;
-    const classTypeName = props.classTypeData.name || '';
+    console.info('this . props ...............',this.props,"...........")
+    const classTypeName = props.noClassTypeData ? '' : props.classTypeData.name;
+    const selectedLocation = props.noClassTypeData ? props.schoolLocation : props.classTypeData.selectedLocation;
 
     return(
         <CoverContentWrapper>
           <CoverContent>
             { this.state.isBusy && <ContainerLoader/>}
             <ContentSection leftSection>
-              <MapContainer>
+              {props.isEdit ?
+                <LogoContainer>
+
+
+                </LogoContainer>: <MapContainer>
                   {
-                    isEmpty(props.classTypeData.selectedLocation) ? (
+                    isEmpty(selectedLocation) ? (
                       <LocationNotFound>
-                        <PrimaryButton
+                        {!props.noClassTypeData && <PrimaryButton
                             icon
                             onClick={this.requestClassTypeLocation}
                             iconName="add_location"
                             label="REQUEST LOCATION"
-                        />
+                        />}
                       </LocationNotFound>
-                    ) :<div id="classTypeLocationMap" style={{height: '100%', minHeight: 320}}/>
+                    ) :<div id="myMap" style={{height: '100%', minHeight: 320}}/>
                   }
-              </MapContainer>
+              </MapContainer>}
               {props.classDescription || <ClassTypeDescription
+                isEdit={props.isEdit}
+                publishStatusButton={props.publishStatusButton}
                 schoolName={props.schoolDetails.name}
                 description={props.schoolDetails.aboutHtml}
                 isClassTypeNameAvailable={!isEmpty(props.classTypeData)}
@@ -194,9 +234,9 @@ class ClassTypeCoverContent extends React.Component {
               <ClassTypeForegroundImage coverSrc={props.coverSrc} >
                 {props.actionButtons || <ActionButtons
                   isEdit={props.isEdit}
-                  editLogoButton={props.editLogoButton}
-                  editBgButton={props.editBgButton}
                   editButton={props.editButton}
+                  onEditLogoButtonClick={props.onEditLogoButtonClick}
+                  onEditBgButtonClick={props.onEditBgButtonClick}
                   onCallUsButtonClick={props.onCallUsButtonClick}
                   onEmailButtonClick={props.onEmailButtonClick}
                   onPricingButtonClick={props.onPricingButtonClick}
@@ -215,9 +255,9 @@ class ClassTypeCoverContent extends React.Component {
                 <ShowOnMobile>
                   {props.actionButtons || <ActionButtons
                     isEdit={props.isEdit}
-                    onEditLogoButton={props.onEditLogoButtonClick}
-                    onEditBgButton={props.onEditBgButtonClick}
-                    editButton={props.onEditButtonClick}
+                    editButton={props.editButton}
+                    onEditLogoButtonClick={props.onEditLogoButtonClick}
+                    onEditBgButtonClick={props.onEditBgButtonClick}
                     onCallUsButtonClick={props.onCallUsButtonClick}
                     onEmailButtonClick={props.onEmailButtonClick}
                     onPricingButtonClick={props.onPricingButtonClick}

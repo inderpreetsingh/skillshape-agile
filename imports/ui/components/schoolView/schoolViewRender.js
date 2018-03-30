@@ -19,12 +19,14 @@ import { checkSuperAdmin, cutString } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
-import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTypeList from '/imports/ui/components/landing/components/classType/classTypeList.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+
+import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
+import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
 
 export default function() {
     console.log("SchoolView render-->>",this.props)
@@ -65,6 +67,8 @@ export default function() {
         const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
         let isPublish = this.getPublishStatus(schoolData.isPublish)
 
+        console.info('---------- is publish...',this.props);
+
         return (
             <DocumentTitle title={this.props.route.name}>
             <div className="content">
@@ -98,7 +102,18 @@ export default function() {
                {/* <div className={classes.imageContainer}>
                   <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
                 </div>*/}
-                <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
+                {this.props.route.name === 'SchoolViewDeveloping' ?
+                  <SchoolViewNewBanner
+                  schoolData={schoolData}
+                  schoolId={schoolId}
+                  isPublish={isPublish}
+                  currentUser={currentUser}
+                  schoolLocation={schoolLocation}
+                  isEdit={false}
+                  handlePublishStatus={this.handlePublishStatus.bind(this, schoolId)}/>
+                  :
+                  <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
+                }
                 <Grid container className={classes.schoolInfo} >
 
                     <Grid item xs={12} sm={8} md={6} >

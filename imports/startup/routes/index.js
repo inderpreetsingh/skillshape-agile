@@ -59,7 +59,18 @@ export default Routes = componentLoader((props) => (
               cb(null, SchoolEditView.default);
             });
         }} />
+
+        <Route path="/school-Admin/:schoolId/edit" name="SchoolAdminDev" getComponent={(nextState, cb) => {
+          //set loading:true
+          props.isLoading.show();
+          import('/imports/ui/components/schoolView/editSchool').then((SchoolEditView) => {
+              // set loading false
+              props.isLoading.hide();
+              cb(null, SchoolEditView.default);
+            });
+        }} />
         <Route path="/schools/:slug" name="SchoolView" component={SchoolView} />
+        <Route path="/schools-dev/:slug" name="SchoolViewDeveloping" component={SchoolView} />
         <Route path="/MyCalendar" name="MyCalendar" component={ManageMyCalendar} />
         <Route path="/reset-password/:token" name="ResetPassword" component={ResetPassword}/>
         <Route path="/claimSchool" name="ClaimSchool" component={ClaimSchool}/>
