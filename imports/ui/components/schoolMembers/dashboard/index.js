@@ -436,7 +436,7 @@ class DashBoardView extends React.Component {
         // Not allow accessing this URL to non admin user.
         if(!schoolAdmin && slug) {
             return  <Typography type="display2" gutterBottom align="center">
-                To access this page you need to signin to skillshape.
+                To access this page you need to login as an admin.
             </Typography>
         }
 
