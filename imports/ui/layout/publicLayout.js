@@ -65,14 +65,19 @@ class PublicLayout extends React.Component {
                 Meteor.call("user.setPassword",{password}, (err,res) => {
                     if (err) {
                         errorMessage = err.reason || err.message
+                        this.setState({ isBusy : false })
                     } else {
-                        browserHistory.push('/claimSchool');
+                        this.setState({ showSetPasswordDialogBox : false, isBusy : false }, ()=> {
+                            Events.trigger("loginAsSchoolAdmin");
+                        })
                     }
-                    this.setState({ showSetPasswordDialogBox : false, isBusy : false })
                 });
             }
         }
-        this.setState({ errorMessage : errorMessage })
+
+        if(errorMessage) {
+            this.setState({ errorMessage : errorMessage })
+        }
     }
 
     render( ) {
