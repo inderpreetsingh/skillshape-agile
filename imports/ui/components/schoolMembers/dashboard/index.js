@@ -193,7 +193,6 @@ class DashBoardView extends React.Component {
                       margin="normal"
                       inputRef = {(ref) => {this.phone = ref}}
                       fullWidth
-                      required={true}
                       onBlur={this.handlePhoneChange}
                     />
                     {
@@ -243,12 +242,6 @@ class DashBoardView extends React.Component {
         console.log("Add addNewMember",this)
         event.preventDefault();
         const { schoolData } = this.props;
-        // let phoneRegex = /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g;
-        // const inputPhoneNumber = this.phone.value;
-        if(!phoneRegex.phone.test(this.phone.value)) {
-            alert('invalid phone');
-            return;
-        }
 
         if(!isEmpty(schoolData)) {
 
@@ -295,7 +288,7 @@ class DashBoardView extends React.Component {
         let phoneRegex = /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g;
         console.log("inputPhoneNumber.match(phoneRegex)",inputPhoneNumber.match(phoneRegex))
         let showErrorMessage;
-        if(inputPhoneNumber.match(phoneRegex)) {
+        if(inputPhoneNumber.match(phoneRegex) || inputPhoneNumber == "") {
             showErrorMessage = false;
         } else {
             showErrorMessage = true;
@@ -557,7 +550,6 @@ export default createContainer(props => {
     let schoolAdmin;
 
     let subscription = Meteor.subscribe("schoolMemberDetails.getSchoolMemberWithSchool", filters);
-
     if(subscription && subscription.ready()) {
         isLoading = false;
         classTypeData = ClassType.find().fetch();
@@ -567,8 +559,9 @@ export default createContainer(props => {
         } else {
             schoolData = School.find().fetch()
         }
-        if(schoolData && schoolData.admins) {
-            if(_.contains(schoolData.admins, currentUser._id)) {
+        if(schoolData && schoolData[0].admins) {
+            let currentUser = Meteor.user();
+            if(_.contains(schoolData[0].admins, currentUser._id) || schoolData[0].superAdmin == currentUser._id) {
                 schoolAdmin = true;
             }
         }
