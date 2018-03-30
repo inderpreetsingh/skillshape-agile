@@ -42,4 +42,18 @@ Meteor.methods({
 
         return SchoolMemberDetails.update({ _id: doc_id }, { $set: doc });
     },
+    "schoolMemberDetails.rejectInvitation": function({ memberId, schoolId}) {
+        console.log("schoolMemberDetailsData -->>",memberId, schoolId)
+        let schoolMemberDetailsData = SchoolMemberDetails.findOne({_id: memberId, schoolId: schoolId})
+        console.log("schoolMemberDetailsData -->>",schoolMemberDetailsData, this.userId)
+        if(schoolMemberDetailsData && this.userId === schoolMemberDetailsData.activeUserId) {
+            if(schoolMemberDetailsData.inviteAccepted) {
+                throw new Meteor.Error("You already accepted the Invitation!");
+            } else {
+                return SchoolMemberDetails.remove({_id: memberId, schoolId: schoolId});
+            }
+        } else {
+            throw new Meteor.Error("Access Denied due to invalid informations!!");
+        }
+    },
 })

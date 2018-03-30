@@ -18,8 +18,14 @@ class MainLayout extends React.Component {
     componentWillReceiveProps(nextProps) {
         console.log("MainLayout componentWillReceiveProps",nextProps)
         let invite = get(nextProps, "location.query.acceptInvite");
+        let inviteRejected = get(nextProps, "location.query.rejectInvite");
+        // Handle Accept member invitation.
         if(nextProps.currentUser && nextProps.isUserSubsReady && invite === "true" && this.state.memberInvitation) {
             this.acceptMemberInvitation(nextProps.location.query);
+        }
+        // Handle Reject member invitation.
+        if(nextProps.currentUser && nextProps.isUserSubsReady && inviteRejected === "true" && this.state.memberInvitation) {
+            this.rejectMemberInvitation(nextProps.location.query);
         }
     }
 
@@ -48,6 +54,29 @@ class MainLayout extends React.Component {
                 this.setState({memberInvitation: false},()=> {
                     toastr.success(
                         "You successfully accepted the invitation.",
+                        "success"
+                    );
+                })
+            }
+        })
+    }
+
+    rejectMemberInvitation = (invitationObj) => {
+        console.log("Reject invitation");
+        const { toastr } = this.props;
+        Meteor.call("schoolMemberDetails.rejectInvitation", invitationObj, (err, res) => {
+            console.log("acceptMemberInvitation res", res, err)
+            if (err) {
+                let errorText = err.error || err.reason || err.message;
+                this.setState({ memberInvitation: false }, () => {
+                    toastr.error(errorText, "Error");
+                })
+            }
+
+            if (res) {
+                this.setState({ memberInvitation: false }, () => {
+                    toastr.success(
+                        "You have successfully rejected school invite.",
                         "success"
                     );
                 })
