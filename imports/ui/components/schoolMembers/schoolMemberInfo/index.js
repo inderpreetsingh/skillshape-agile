@@ -12,7 +12,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 
 const styles = theme => ({
   avatarCss: {
-    width: "150px",
+    width: "175px",
     height: "150px",
     backgroundSize: "cover",
     backgroundPosition: "top center",
@@ -20,6 +20,12 @@ const styles = theme => ({
   },
   btnBackGround: {
     background: `${helpers.action}`
+  },
+  avatarContainer: {
+    border: '2px solid black',
+    backgroundColor: '#FFFFFF',
+    borderRadius: '50%',
+    width: 100,
   }
 });
 
@@ -158,8 +164,8 @@ class SchoolMemberInfo extends Component {
               padding: "24px"
             }}
           >
-            <Grid item sm={4} xs={4} md={4}>
-              <img className={classes.avatarCss} src="/images/avatar.jpg" />
+            <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4}>
+              <img className={classes.avatarCss} src="/images/Avatar-Unisex.png" />
             </Grid>
             <Grid item sm={4} xs={4} md={4}>
               <Typography>{memberInfo.name}</Typography>

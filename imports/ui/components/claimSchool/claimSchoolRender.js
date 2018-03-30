@@ -57,7 +57,7 @@ export default function () {
               onModalClose={() => this.handleFiltersDialogBoxState(false)}
               filterPanelProps={{
                 ref: "ClaimSchoolFilter",
-                applyFilters: this.applyFilters,
+                removeAllFilters: this.removeAllFilters,
                 onLocationChange: this.onLocationChange,
                 handleSchoolNameChange: this.handleSchoolNameChange,
                 locationInputChanged: this.locationInputChanged,

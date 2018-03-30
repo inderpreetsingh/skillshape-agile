@@ -172,51 +172,46 @@ export default class ClaimSchoolBase extends React.Component {
     }
 
     collectSelectedSkillSubject = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter.skillSubjectIds = text.map((ele) => ele._id);
         oldFilter.defaultSkillSubject = text
-        this.setState({ tempFilters: oldFilter})
+        this.setState({ filters: oldFilter})
     }
 
     skillLevelFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter.experienceLevel = text;
-        this.setState({tempFilters:oldFilter})
+        this.setState({filters:oldFilter})
     }
 
 
     filterGender = (event) => {
-        let oldFilter = {...this.state.tempFilters};
+        let oldFilter = {...this.state.filters};
         oldFilter.gender = event.target.value;
-        this.setState({tempFilters:oldFilter})
+        this.setState({filters:oldFilter})
     }
 
     filterAge =(event) => {
-        let oldFilter = {...this.state.tempFilters};
+        let oldFilter = {...this.state.filters};
         oldFilter.age = parseInt(event.target.value);
-        this.setState({ tempFilters: oldFilter });
+        this.setState({ filters: oldFilter });
     }
 
     perClassPriceFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter._classPrice = text;
-        this.setState({ tempFilters: oldFilter })
+        this.setState({ filters: oldFilter })
     }
 
     pricePerMonthFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter._monthPrice = text;
-        this.setState({ tempFilters: oldFilter })
-    }
-
-    applyFilters = () => {
-        this.setState({filters: { ...this.state.filters, ...this.state.tempFilters}})
+        this.setState({ filters: oldFilter })
     }
 
     removeAllFilters = ()=> {
         this.setState({
             filters: {},
-            tempFilters: {},
         })
     }
 }
