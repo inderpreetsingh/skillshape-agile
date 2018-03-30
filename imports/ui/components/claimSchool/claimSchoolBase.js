@@ -12,7 +12,8 @@ export default class ClaimSchoolBase extends React.Component {
             sticky: false,
             filterPanelDialogBox: false,
             tempFilters: {},
-            error: null
+            error: null,
+            showConfirmationModal:false
         };
     }
     handleFixedToggle = state => {
@@ -71,6 +72,10 @@ export default class ClaimSchoolBase extends React.Component {
             Events.trigger("loginAsUser");
         }
 
+    }
+
+    showConfirmationModal = () => {
+        this.setState({showConfirmationModal:true});
     }
 
     onLocationChange = (location, updateKey1, updateKey2) => {
