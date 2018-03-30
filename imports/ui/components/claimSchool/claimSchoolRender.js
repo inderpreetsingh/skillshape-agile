@@ -16,6 +16,7 @@ import ClaimSchoolList  from "./claimSchoolList";
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 
 
 const Wrapper = styled.div`
@@ -39,6 +40,16 @@ export default function () {
        <div>
         {
           this.state.isLoading && <ContainerLoader />
+        }
+        {
+          this.state.showConfirmationModal && <ConfirmationModal
+              open={this.state.showConfirmationModal}
+              submitBtnLabel="Yes"
+              cancelBtnLabel="Cancel"
+              message="This will create a new school for you, Are you sure?"
+              onSubmit={this.handleListingOfNewSchool}
+              onClose={() => this.setState({showConfirmationModal: false})}
+          />
         }
         {this.state.filterPanelDialogBox &&
           <FiltersDialogBox
@@ -97,7 +108,7 @@ export default function () {
               if not, Click the button to the right to open a new listing
           </TextWrapper>
           <FormSubmitButtonWrapper>
-            <Button onClick={this.handleListingOfNewSchool}>None of these are my school. <br/>Start a new Listing! </Button>
+            <Button onClick={this.showConfirmationModal}>None of these are my school. <br/>Start a new Listing! </Button>
           </FormSubmitButtonWrapper>
         </Wrapper>
          <ClaimSchoolList

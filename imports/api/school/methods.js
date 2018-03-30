@@ -470,6 +470,7 @@ Meteor.methods({
             admins: [doc._id],
             aboutHtml:"",
             descHtml:"",
+            name:"my-school"
         }
         console.log("schoolInsertDoc",schoolInsertDoc)
         let schoolId = School.insert(schoolInsertDoc);
