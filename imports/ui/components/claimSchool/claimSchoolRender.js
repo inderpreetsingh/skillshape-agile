@@ -27,8 +27,7 @@ const Wrapper = styled.div`
 `;
 
 const FormSubmitButtonWrapper =styled.div`
-  margin-top: ${helpers.rhythmDiv * 2}px;
-  padding-top: ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv * 2}px;
 `;
 
 const TextWrapper =styled.div`
@@ -37,7 +36,7 @@ const TextWrapper =styled.div`
 export default function () {
    return (
        <DocumentTitle title={this.props.route.name}>
-       <div className={this.props.classes.divStyle}>
+       <div>
         {
           this.state.isLoading && <ContainerLoader />
         }
@@ -115,7 +114,6 @@ export default function () {
             filters={this.state.filters}
             removeAllFilters={this.removeAllFilters}
             handleClaimASchool={this.handleClaimASchool}
-            classes={this.props.classes.divStyle}
            />
        </div>
        </DocumentTitle>
