@@ -559,7 +559,7 @@ export default createContainer(props => {
         } else {
             schoolData = School.find().fetch()
         }
-        if(schoolData && schoolData[0].admins) {
+        if(!isEmpty(schoolData) && schoolData[0].admins) {
             let currentUser = Meteor.user();
             if(_.contains(schoolData[0].admins, currentUser._id) || schoolData[0].superAdmin == currentUser._id) {
                 schoolAdmin = true;
