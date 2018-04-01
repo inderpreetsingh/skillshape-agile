@@ -5,6 +5,7 @@ import get from 'lodash/get';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import ContactUsBar from '/imports/ui/components/landing/components/ContactUsBar';
 import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar';
 import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 import ClassTypeContent from './ClassTypeContent';
@@ -23,14 +24,16 @@ const Wrapper = styled.div`
 class ClassTypeView extends Component {
     render() {
         console.log("ClassTypeView .props-->>",this.props)
-		return(
-            <DocumentTitle title={get(this.props, "params.classTypeName", "Untitled")}>
-    			<Wrapper className="classtype-page">
-    				<TopSearchBar {...this.props}/>
-            		    <ClassTypeContent {...this.props}/>
-            		<Footer/>
-            	</Wrapper>
-            </DocumentTitle>
+		return(<DocumentTitle title={get(this.props, "params.classTypeName", "Untitled")}>
+			     <Wrapper className="classtype-page">
+              <div>
+                <ContactUsBar />
+                <TopSearchBar {...this.props}/>
+              </div>
+      		    <ClassTypeContent {...this.props}/>
+        		<Footer/>
+        	</Wrapper>
+      </DocumentTitle>
 		)
 	}
 }

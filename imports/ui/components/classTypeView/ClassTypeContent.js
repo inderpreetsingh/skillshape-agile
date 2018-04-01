@@ -170,19 +170,19 @@ class ClassTypeContent extends Component {
 
     _setCoverSrc = (imgSrc) => {
       imageExists(imgSrc).then(() => {
-        console.log(this,'resolved image exists....');
+        // console.log(this,'resolved image exists....');
         this.setState({ coverSrc: imgSrc});
       }).catch(e => {
-        console.error('no image doesn\'t exists....');
+        // console.error('no image doesn\'t exists....');
         this.setState({ coverSrc: classTypeImgSrc });
       });
     }
 
-    _getContactNumbers = () => {
+    getContactNumbers = () => {
       return this.props.schoolData.phone.split(',');
     }
 
-    _getOurEmail = () => {
+    getOurEmail = () => {
       return this.props.schoolData.email;
     }
 
@@ -202,22 +202,23 @@ class ClassTypeContent extends Component {
 
     componentDidMount = () => {
       const self = this;
-      console.log(this.props,"dsa");
+      // console.log(this.props,"dsa");
+      debugger;
       if(!isEmpty(this.props.classTypeData)) {
-        this._setCoverSrc(this.props.classTypeData.classTypeImgSrc);
+        this._setCoverSrc(this.props.classTypeData.classTypeImg);
       }
     }
 
     componentWillReceiveProps = (nextProps) => {
       console.log('comopnent will recieve', nextProps);
-
+      debugger;
       if(!isEmpty(nextProps.classTypeData)) {
         if(!isEmpty(this.props.classTypeData)) {
-          if(this.props.classTypeData.classTypeImgSrc != nextProps.classTypeData.classTypeImgSrc) {
-            this._setCoverSrc(nextProps.classTypeData.classTypeImgSrc);
+          if(this.props.classTypeData.classTypeImg != nextProps.classTypeData.classTypeImg) {
+            this._setCoverSrc(nextProps.classTypeData.classTypeImg);
           }
         }else {
-          this._setCoverSrc(nextProps.classTypeData.classTypeImgSrc);
+          this._setCoverSrc(nextProps.classTypeData.classTypeImg);
         }
       }
     }
@@ -307,16 +308,16 @@ class ClassTypeContent extends Component {
 
 		return (
 			<Fragment>
-          {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this._getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
-          {this.state.contactUsDialog && <EmailUsDialogBox ourEmail={this._getOurEmail()} open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
+          {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
+          {this.state.contactUsDialog && <EmailUsDialogBox ourEmail={this.getOurEmail()} open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
                 { this.state.isBusy && <ContainerLoader/>}
-				{/* Class Type Cover includes description, map, foreground image, then class type information*/}
+				    {/* Class Type Cover includes description, map, foreground image, then class type information*/}
 		        <ClassTypeCover coverSrc={this.state.coverSrc}>
 			        <ClassTypeCoverContent
 			        	coverSrc={this.state.coverSrc}
 			            schoolDetails={{...schoolData}}
 			            classTypeData={{...classTypeData}}
-                  contactNumbers={this._getContactNumbers()}
+                  contactNumbers={this.getContactNumbers()}
 			            onCallUsButtonClick={this.handleCallUsButtonClick}
 			            onEmailButtonClick={this.handleEmailUsButtonClick}
 			            onPricingButtonClick={() => this.scrollTo('price-section')}

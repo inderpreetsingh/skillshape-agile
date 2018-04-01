@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import ContactUsBar from './components/ContactUsBar.jsx';
 import BrandBar from './components/BrandBar';
 import Footer from './components/footer/index.jsx';
 import SchoolHeader from './components/school/SchoolHeader.jsx';
@@ -20,12 +21,15 @@ const Wrapper = styled.div`
 
 const School = () => (
   <Wrapper>
-    <BrandBar
-      navBarHeight="70"
-      positionStatic={true}
-      overlay={true}
-      navBgColor={helpers.schoolPageColor}
-      barButton={<span></span>} />
+    <div>
+      <ContactUsBar />
+      <BrandBar
+        navBarHeight="70"
+        positionStatic={true}
+        overlay={true}
+        navBgColor={helpers.schoolPageColor}
+        barButton={<span></span>} />
+    </div>
 
     <SchoolHeader />
 

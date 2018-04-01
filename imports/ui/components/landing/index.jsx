@@ -9,6 +9,7 @@ import { browserHistory } from 'react-router';
 import ip from 'ip';
 
 import Cover from './components/Cover.jsx';
+import ContactUsBar from './components/ContactUsBar.jsx';
 import BrandBar from './components/BrandBar.jsx';
 import SearchArea from './components/SearchArea.jsx';
 import CardsList from './components/cards/CardsList.jsx';
@@ -542,11 +543,15 @@ class Landing extends Component {
                 />
 
               {/* Cover */}
-             <CoverWrapper>
-               <Cover itemScope itemType="http://schema.org/WPHeader">
+              <div>
+                <ContactUsBar />
                 <BrandBar
                   currentUser={this.props.currentUser}
+                  positionStatic
                 />
+              </div>
+             <CoverWrapper>
+               <Cover itemScope itemType="http://schema.org/WPHeader">
                 <SearchArea
                     onLocationInputChange={this.handleLocationSearch}
                     onSkillTypeChange={this.handleSkillTypeSearch}

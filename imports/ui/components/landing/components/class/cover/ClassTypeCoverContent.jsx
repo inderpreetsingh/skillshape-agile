@@ -127,17 +127,16 @@ class ClassTypeCoverContent extends React.Component {
     state = {
         isBusy : false
     }
+    componentDidMount() {
+      this._addLocationOnMap();
+    }
 
     componentDidUpdate() {
-      this.addLocationOnMap();
+      this._addLocationOnMap();
     }
 
-    componentDidMount() {
-      debugger;
-      this.addLocationOnMap();
-    }
 
-    addLocationOnMap() {
+    _addLocationOnMap() {
       if(this.props.noClassTypeData) {
         if(!isEmpty(this.props.schoolLocation)) {
           const location = this.props.schoolLocation;

@@ -4,6 +4,7 @@ import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
 
 import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
+import ContactUsBar from '/imports/ui/components/landing/components/ContactUsBar.jsx';
 import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar.jsx';
 import { withStyles, material_ui_next_theme } from '/imports/util';
 import SetPasswordDialogBox from '/imports/ui/components/landing/components/dialogs/SetPasswordDialogBox';
@@ -100,7 +101,10 @@ class PublicLayout extends React.Component {
           <MuiThemeProvider theme={muiTheme}>
                 <div className={`${className.mainClass} ${classes.wrapper}`} id={className.id}>
                     {/*<BrandBar {...this.props}/>*/}
-                    <TopSearchBar {...this.props} />
+                    <div>
+                      <ContactUsBar />
+                      <TopSearchBar {...this.props} />
+                    </div>
 
                     <SetPasswordDialogBox
                         open={this.state.showSetPasswordDialogBox}
