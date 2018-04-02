@@ -4,13 +4,15 @@ import { createTable } from '/imports/util';
 
 const getTableProps = () => {
   const tableProps = {
-    className: "users-table",
+    className: "table-view",
   }
   const tableHeaderProps = {
     adjustForCheckbox: false,
     displaySelectAll: false,
   }
-  const tableRowProps = {}
+  const tableRowProps = {
+    className: "table-header",
+  }
   const tableHeaderColumns = [{
     columnName: "Name",
     tooltip: "",
@@ -29,9 +31,11 @@ const getTableProps = () => {
     className: "wd-100"
   },]
   const tableHeaderColumnProps = {
+    className: "table-column",
   }
   const tableBodyProps = {
     displayRowCheckbox: false,
+    className: "table-body",
   }
   const tableComponentProps = {
     tableProps,

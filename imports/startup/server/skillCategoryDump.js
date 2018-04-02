@@ -101,7 +101,8 @@ export default _skillCategoryObj = {
         "Tap dance",
         "Vogue",
         "Waltz",
-        "Zumba"
+        "Zumba",
+        "Various Dance Styles"
     ],
     "Art/Design/Craft": [
         "Acrylic Painting",
@@ -121,7 +122,13 @@ export default _skillCategoryObj = {
         "Sewing",
         "Soap/Cosmetic",
         "Stitching",
-        "Watercolor"
+        "Watercolor",
+        "Various Arts",
+        "Graffiti",
+        "Fine Arts",
+        "Ceramic Arts",
+        "Metal Work",
+        "Glass Work"
     ],
     "Sport/Exercise": [
         "American Football",
@@ -164,7 +171,8 @@ export default _skillCategoryObj = {
         "Mandarin",
         "Portuguese",
         "Russian",
-        "Spanish"
+        "Spanish",
+        "Various Languages"
     ],
     "Coding and Computers": [
         "Android",
@@ -172,12 +180,12 @@ export default _skillCategoryObj = {
         "C+",
         "iOS",
         "Javascript",
-        "Javascript",
         "Meteor",
         "Node",
         "PHP",
         "Python",
-        "Ruby on Rails"
+        "Ruby on Rails",
+        "Various Code Languages"
     ],
     "Business/Marketing": [
         "Accounting",
@@ -186,7 +194,8 @@ export default _skillCategoryObj = {
         "Entrepreneurship",
         "Marketing",
         "Sales",
-        "Software Development"
+        "Software Development",
+        "Various Business Skills"
     ],
     "Meditation/Religion": [
         "Meditation",
@@ -203,7 +212,8 @@ export default _skillCategoryObj = {
         "Acting Class",
         "Improvisation",
         "Stand-Up Comedy",
-        "Movement/Slapstick"
+        "Movement/Slapstick",
+        "Various Acting Styles"
     ],
     "Games": [
         "Video Games",
@@ -213,7 +223,8 @@ export default _skillCategoryObj = {
         "Checkers",
         "Poker",
         "Board Games",
-        "Card Games"
+        "Card Games",
+        "Various Games"
     ],
     "Pets": [
         "Dog Walks",
@@ -259,6 +270,25 @@ export default _skillCategoryObj = {
         "Reading/ Literacy",
         "Mediation",
         "Leadership",
-        "Bullying Prevention"
+        "Bullying Prevention",
+        "Various Life Skills"
+    ],
+    "Music":[
+        "Percussion",
+        "Drums",
+        "Bass",
+        "Production",
+        "DJing",
+        "Guitar Electric",
+        "Guitar Classical",
+        "Guitar Rhythm",
+        "Singing",
+        "Band",
+        "Wind Instrument",
+        "Other Instrument",
+        "Guitar",
+        "Keyboard",
+        "Piano",
+        "Various Instruments"
     ]
 }

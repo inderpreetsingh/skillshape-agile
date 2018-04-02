@@ -368,68 +368,71 @@ Meteor.methods({
     */
     "school.addNewMember": function(doc) {
         // Validations
-        // Only school admin can add a new Memeber.
-        console.log("school.addNewMember doc -->>",doc)
-        const userRecExist = Meteor.users.findOne({ "emails.address": doc.email });
-        const googleUserRec = Meteor.users.findOne({ "services.google.email": doc.email });
-        let insertMember, memberDetail, newlyCreatedUser;
-        console.log("userRecExist -->>",userRecExist)
-        console.log("googleUserRec -->>",googleUserRec)
-        // User is not an active user in skillshape then need to create user and add them as a member of a particular class of a School.
-        if (!userRecExist && !googleUserRec) {
-            doc.sendMeSkillShapeNotification = true;
-            doc.name = doc.firstName;
-            newlyCreatedUser = Meteor.call("user.createUser", {...doc, signUpType: 'member-signup'});
-            console.log("activeUserId===>",newlyCreatedUser)
-            doc.activeUserId = newlyCreatedUser.user._id;
-        } else {
-            // User is already a member in skillshape then need to make them as a School member if they are not member in a Class.
-            let filters = { email: doc.email, schoolId: doc.schoolId };
-
-            if(isArray(doc.classIds)) {
-                filters.classIds = { $in:doc.classIds }
-            }
-
-            memberDetail = SchoolMemberDetails.findOne(filters);
-
-            if (!memberDetail) {
-                doc.activeUserId = (userRecExist && userRecExist._id) || (googleUserRec && googleUserRec._id);
+        const schoolAdminRec = Meteor.users.findOne({ "profile.schoolId": doc.schoolId });
+        const currentUserData  = Meteor.users.findOne(this.userId);
+        console.log("currentUserData",currentUserData);
+        console.log("doc",doc);
+        // Admin needs to login and should not be able to create members with their own email.
+        if (!this.userId || !schoolAdminRec) {
+            throw new Meteor.Error("You are not allowed to add a new member!!");
+        } else if((currentUserData && (doc.email == currentUserData.emails[0].address))) {
+            throw new Meteor.Error("You cannot add yourself as a member!!");
+        }else {
+            const userRecExist = Meteor.users.findOne({ "emails.address": doc.email });
+            let insertMember, memberDetail, newlyCreatedUser;
+            // Not an active user in skillshape then need to create user and add them as a member of a particular class in a School.
+            if (!userRecExist) {
+                doc.sendMeSkillShapeNotification = true;
+                doc.name = doc.firstName;
+                newlyCreatedUser = Meteor.call("user.createUser", { ...doc, signUpType: 'member-signup' });
+                doc.activeUserId = newlyCreatedUser.user._id;
             } else {
-                insertMember = true;
+                // User is already a member in skillshape then need to make them as a School member if they are not member in a Class.
+                let filters = { email: doc.email, schoolId: doc.schoolId };
+
+                if (isArray(doc.classIds)) {
+                    filters.classIds = { $in: doc.classIds }
+                }
+
+                memberDetail = SchoolMemberDetails.findOne(filters);
+
+                if (!memberDetail) {
+                    doc.activeUserId = (userRecExist && userRecExist._id) || (googleUserRec && googleUserRec._id);
+                } else {
+                    insertMember = true;
+                }
+
             }
+            if (!insertMember) {
+                doc.createdBy = this.userId;
+                doc.inviteAccepted = false;
+                // Create new member
+                let memberId = SchoolMemberDetails.insert(doc);
 
-        }
-        if (!insertMember) {
-            doc.createdBy = this.userId;
-            doc.inviteAccepted = false;
-            const schoolAdminRec = Meteor.users.findOne({ "profile.schoolId": doc.schoolId });
+                // console.log("doc======>", doc)
+                let claimingMemberRec = Meteor.users.findOne({ _id: doc.activeUserId });
+                let password = newlyCreatedUser ? newlyCreatedUser.password : null;
+                let fromEmail = "Notices@SkillShape.com";
 
-            // You are not School Admin of this School so you can not add a New Member.
-            if (!schoolAdminRec) {
-                throw new Meteor.Error("Access Denied!!");
+                console.log("claimingMemberRec", claimingMemberRec)
+                // To: can be from user's email OR from google services
+                let toEmail = get(claimingMemberRec, "emails[0].address") || get(claimingMemberRec, "google.services.email");
+
+                let ROOT_URL = `${Meteor.absoluteUrl()}?acceptInvite=${true}&memberId=${memberId}&schoolId=${doc.schoolId}`
+                let rejectionUrl;
+                // Active member found, then need to send notification to the member with a button to reject the school.
+                if(!newlyCreatedUser) {
+                    rejectionUrl = `${Meteor.absoluteUrl()}?rejectInvite=${true}&memberId=${memberId}&schoolId=${doc.schoolId}`
+                }
+                // const currentUserData = Meteor.users.findOne({ _id: this.userId });
+                const schoolData = School.findOne(doc.schoolId);
+                /*Need to send Email to User so that they get confirmation that their account has been
+                linked as a member in School.*/
+                sendEmailToStudentForClaimAsMember(currentUserData, schoolData, claimingMemberRec, password, fromEmail, toEmail, ROOT_URL, rejectionUrl);
+                return { addedNewMember: true };
+            } else {
+                throw new Meteor.Error("Member Already exist!!");
             }
-
-            // Create new member
-            let memberId = SchoolMemberDetails.insert(doc);
-
-            console.log("doc======>", doc)
-            let claimingMemberRec = Meteor.users.findOne({_id: doc.activeUserId });
-            let password = newlyCreatedUser ? newlyCreatedUser.password: null;
-            let fromEmail = "Notices@SkillShape.com";
-
-            console.log("claimingMemberRec",claimingMemberRec)
-            // To: can be from user's email OR from google services
-            let toEmail = get(claimingMemberRec, "emails[0].address") || get(claimingMemberRec, "google.services.email");
-
-            let ROOT_URL = `${Meteor.absoluteUrl()}?acceptInvite=${true}&memberId=${memberId}&schoolId=${doc.schoolId}`
-            const currentUserData = Meteor.users.findOne({_id: this.userId});
-            const schoolData = School.findOne(doc.schoolId);
-            /*Need to send Email to User so that they get confirmation that their account has been
-            linked as a member in School.*/
-            sendEmailToStudentForClaimAsMember(currentUserData,schoolData,claimingMemberRec, password,fromEmail, toEmail, ROOT_URL);
-            return { addedNewMember: true };
-        } else {
-            throw new Meteor.Error("Member Already exist!!");
         }
     },
     // This is used to save admin notes in School Members.
@@ -455,6 +458,35 @@ Meteor.methods({
             return {memberLogin:false};
         }
         return {inviteAccepted:true};
+    },
+    "school.addNewSchool": function(doc) {
+        if(!this.userId) {
+            throw new Meteor.Error(
+                "Access denied",
+                "Error while adding new school"
+            );
+        }
+        const schoolInsertDoc = {
+            email: doc.emails.address,
+            isPublish: true,
+            superAdmin: doc._id,
+            admins: [doc._id],
+            aboutHtml:"",
+            descHtml:"",
+            name:"my-school"
+        }
+        let schoolId = School.insert(schoolInsertDoc);
+        // Needs to make current user admin of this School.
+        Meteor.users.update(
+            { _id: this.userId },
+            {
+                $addToSet: {
+                    "profile.schoolId": schoolId,
+                }
+            }
+        );
+        let schoolEditViewLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
+        return schoolEditViewLink;
     }
 });
 

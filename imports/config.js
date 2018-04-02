@@ -34,7 +34,8 @@ export default config = Object.freeze({
 		claimSchoolRequest: "ClaimSchoolRequest",
 		classTimesRequest: "ClassTimesRequest",
 		PriceInfoRequest: "PriceInfoRequest",
-		schoolMemberDetails: "SchoolMemberDetails"
+		schoolMemberDetails: "SchoolMemberDetails",
+		classTypeLocationRequest: "ClassTypeLocationRequest"
 	},
 	gender : [
 		{ label: "Any", value: "Any"},
@@ -56,7 +57,8 @@ export default config = Object.freeze({
 	],
 	// Show only 4 classes initially to Users. This count will increase when user clicks on see more on dash route.
 	seeMoreCount: 4,
-	CAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", //test key
+	// CAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", //test key
+	CAPTCHA_SITE_KEY: process.env.NODE_ENV == "development" ? "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" : "6LeRJE8UAAAAAEtZBraHTNfUe3VD8k5QgJ0oM1J3", // production key
 	// Need to show these default classes to `Users` if no class type data found for User's current location.
 	defaultClassType: [
 		{ skillType: "Judo", location: "Toyko"},

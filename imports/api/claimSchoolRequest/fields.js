@@ -36,6 +36,11 @@ ClaimSchoolRequest.attachSchema(new SimpleSchema({
     createdAt: {
         type: Date,
         optional: true
+    },
+    emailCount: {
+        type: Number,
+        optional: true,
+        defaultValue: 0
     }
 }));
 

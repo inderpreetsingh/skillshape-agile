@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import isEmpty from 'lodash/isEmpty';
 import _skillCategoryObj from "../imports/startup/server/skillCategoryDump";
 import "../imports/startup/server";
 import SkillCategory from "../imports/api/skillCategory/fields";
@@ -41,6 +42,33 @@ Meteor.startup(() => {
                     _mig_: 1
                 });
             })
+        }
+    } else {
+        for (var key in _skillCategoryObj) {
+            const skillCategoryData = SkillCategory.findOne({name: key, _mig_: 1})
+            // console.log("skillCategoryData 1--->>",key, skillCategoryData)
+            if(isEmpty(skillCategoryData)) {
+                let objId = SkillCategory.insert({ name: key, _mig_: 1 })
+                _skillCategoryObj[key].forEach((f) => {
+                    SkillSubject.insert({
+                        name: f,
+                        skillCategoryId: objId,
+                        _mig_: 1
+                    });
+                })
+            } else {
+                _skillCategoryObj[key].forEach((f) => {
+                    const skillSubjectData = SkillSubject.findOne({name: f, _mig_: 1})
+                    // console.log("skillSubjectData 2--->>",f,skillSubjectData)
+                    if(isEmpty(skillSubjectData)) {
+                        SkillSubject.insert({
+                            name: f,
+                            skillCategoryId: skillCategoryData._id,
+                            _mig_: 1
+                        });
+                    }
+                })
+            }
         }
     }
 

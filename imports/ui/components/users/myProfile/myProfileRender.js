@@ -88,7 +88,7 @@ export default function() {
                                             fullScreen={false}
                                             onChange={this.handleUserImageChange}
                                             minWidth={201}
-                                            data={currentUser.profile && currentUser.profile.pic && {file: currentUser.profile.pic, isUrl: true}}
+                                            data={(currentUser.profile && currentUser.profile.pic && {file: currentUser.profile.pic, isUrl: true}) || {file: '/images/Avatar-Unisex.png', isUrl: true}}
                                             showVideoOption={false}
                                         />
                                     </Grid>

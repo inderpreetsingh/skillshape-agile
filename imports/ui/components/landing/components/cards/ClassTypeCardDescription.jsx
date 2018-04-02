@@ -76,7 +76,7 @@ const ClassTypeCardDescription = (props) => {
                     {cardRevealInfo.experienceLevel && <Typography>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Typography>}
                  <Grid item xs={12}>
                     <Typography classes={{root: props.classes.descriptionHeader}}>Class Description: </Typography>
-                    {cardRevealInfo.description && <ClassDescriptionContent>{cutString(cardRevealInfo.description, 250)}</ClassDescriptionContent>}
+                    {cardRevealInfo.description && <ClassDescriptionContent>{cardRevealInfo.description}</ClassDescriptionContent>}
                  </Grid>
                </Grid>
 

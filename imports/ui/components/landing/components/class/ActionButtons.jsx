@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -41,26 +41,52 @@ const ActionButton = styled.div`
   }
 `;
 
-const ActionButtons = (props) => (
-  <ActionButtonsWrapper>
-    <ActionButton>
-      <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
-    </ActionButton>
+const MyTel = styled.a`
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: none;
+  }
+`;
 
-    <ActionButton>
-      <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
-    </ActionButton>
+const MyTelMobile = styled.a`
+  display: none;
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: initial;
+  }
+`;
 
-    <ActionButton>
-      <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
-    </ActionButton>
-  </ActionButtonsWrapper>
-);
+const ActionButtons = (props) => {
+  const EditButton = props.editButton;
+  return(<ActionButtonsWrapper>
+    {props.isEdit ?
+    <Fragment>
+      <ClassTimeButton icon iconName='edit' label="Logo" onClick={props.onEditLogoButtonClick} />
+    </Fragment>
+    :
+    <Fragment>
+      {props.editButton && <EditButton />}
+      <ActionButton>
+        <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
+      </ActionButton>
+
+      <ActionButton>
+        <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
+      </ActionButton>
+
+      <ActionButton>
+        <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
+      </ActionButton>
+    </Fragment>}
+  </ActionButtonsWrapper>)
+}
 
 ActionButtons.propTypes = {
   onCallUsButtonClick: PropTypes.func,
   onEmailButtonClick: PropTypes.func,
   onPricingButtonClick: PropTypes.func
+}
+
+ActionButtons.defaultProps = {
+  editButton: false
 }
 
 export default ActionButtons;

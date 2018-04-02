@@ -18,4 +18,6 @@ Meteor.startup(() => {
 	        secret: 'yspUqSye1D0y0IHaDYIl1G4q'
 	    }
 	});
+	// Start crone job for sending the email.
+	SyncedCron.start();
 })

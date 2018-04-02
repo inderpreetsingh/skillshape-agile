@@ -37,8 +37,8 @@ import {componentLoader} from "/imports/util";
 
 export default Routes = componentLoader((props) => (
   <Router history={browserHistory}>
-    <Route path="/" component={MainLayout} >
-      <IndexRoute name="Home" component={Landing} />
+    <Route name="SkillShape" path="/" component={MainLayout} >
+      <IndexRoute name="SkillShape" component={Landing} />
       <Route path="/classType/:classTypeName/:classTypeId" name="ClassType" component={ClassTypeView} />
       <Route path="/skillshape-for-school" name="Skillshape-for-school" component={School} />
 

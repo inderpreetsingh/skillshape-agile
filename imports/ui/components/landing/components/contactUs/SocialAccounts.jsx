@@ -21,19 +21,29 @@ const IconWrapper = styled.div`
 
 const SocialAccounts = () => (<Wrapper>
     <IconWrapper>
-      <Twitter className="social-icon sc-twitter"/>
+      <a href="https://www.twitter.com/" target="_blank">
+        <Twitter className="social-icon sc-twitter"/>
+      </a>
     </IconWrapper>
     <IconWrapper>
-      <Facebook className="social-icon sc-facebook"/>
+      <a href="https://www.facebook.com/" target="_blank">
+        <Facebook className="social-icon sc-facebook"/>
+      </a>
     </IconWrapper>
     <IconWrapper>
-      <GooglePlus className="social-icon sc-google-plus"/>
+      <a href="https://plus.google.com/" target="_blank">
+        <GooglePlus className="social-icon sc-google-plus"/>
+      </a>
     </IconWrapper>
     <IconWrapper>
-      <Instagram className="social-icon sc-instagram"/>
+      <a href="https://www.instagram.com/?hl=en" target="_blank">
+        <Instagram className="social-icon sc-instagram"/>
+      </a>
     </IconWrapper>
     <IconWrapper>
-      <Dribbble className="social-icon sc-dribbble" />
+      <a href="https://dribbble.com/" target="_blank">
+        <Dribbble className="social-icon sc-dribbble" />
+      </a>
     </IconWrapper>
   </Wrapper>
 );

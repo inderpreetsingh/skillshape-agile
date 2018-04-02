@@ -1,5 +1,9 @@
 import React from "react";
 var ReactDOM = require("react-dom");
+import {browserHistory} from 'react-router';
+import Events from '/imports/util/events';
+
+
 export default class ClaimSchoolBase extends React.Component {
     constructor(props) {
         super(props);
@@ -8,6 +12,8 @@ export default class ClaimSchoolBase extends React.Component {
             sticky: false,
             filterPanelDialogBox: false,
             tempFilters: {},
+            error: null,
+            showConfirmationModal:false
         };
     }
     handleFixedToggle = state => {
@@ -38,6 +44,38 @@ export default class ClaimSchoolBase extends React.Component {
         this.setState({
             filterPanelDialogBox: state
         })
+    }
+
+    // This is used to handle listing of a new school for a login user.
+    handleListingOfNewSchool = () => {
+        let currentUser = Meteor.user();
+        if(currentUser) {
+            // Start Lodaing
+            this.setState({isLoading: true});
+            Meteor.call("school.addNewSchool", currentUser, (err, res) => {
+                let state = {
+                    isLoading:false,
+                }
+
+                if(err) {
+                    state.error = err.reason || err.message;
+                }
+                // Redirect to school Edit view
+                if(res) {
+                    browserHistory.push(res);
+                }
+
+                this.setState(state);
+            })
+        } else {
+            // Show Login popup
+            Events.trigger("loginAsUser");
+        }
+
+    }
+
+    showConfirmationModal = () => {
+        this.setState({showConfirmationModal:true});
     }
 
     onLocationChange = (location, updateKey1, updateKey2) => {
@@ -134,51 +172,46 @@ export default class ClaimSchoolBase extends React.Component {
     }
 
     collectSelectedSkillSubject = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter.skillSubjectIds = text.map((ele) => ele._id);
         oldFilter.defaultSkillSubject = text
-        this.setState({ tempFilters: oldFilter})
+        this.setState({ filters: oldFilter})
     }
 
     skillLevelFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter.experienceLevel = text;
-        this.setState({tempFilters:oldFilter})
+        this.setState({filters:oldFilter})
     }
 
 
     filterGender = (event) => {
-        let oldFilter = {...this.state.tempFilters};
+        let oldFilter = {...this.state.filters};
         oldFilter.gender = event.target.value;
-        this.setState({tempFilters:oldFilter})
+        this.setState({filters:oldFilter})
     }
 
     filterAge =(event) => {
-        let oldFilter = {...this.state.tempFilters};
+        let oldFilter = {...this.state.filters};
         oldFilter.age = parseInt(event.target.value);
-        this.setState({ tempFilters: oldFilter });
+        this.setState({ filters: oldFilter });
     }
 
     perClassPriceFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter._classPrice = text;
-        this.setState({ tempFilters: oldFilter })
+        this.setState({ filters: oldFilter })
     }
 
     pricePerMonthFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter._monthPrice = text;
-        this.setState({ tempFilters: oldFilter })
-    }
-
-    applyFilters = () => {
-        this.setState({filters: { ...this.state.filters, ...this.state.tempFilters}})
+        this.setState({ filters: oldFilter })
     }
 
     removeAllFilters = ()=> {
         this.setState({
             filters: {},
-            tempFilters: {},
         })
     }
 }

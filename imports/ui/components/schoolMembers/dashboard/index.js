@@ -193,7 +193,6 @@ class DashBoardView extends React.Component {
                       margin="normal"
                       inputRef = {(ref) => {this.phone = ref}}
                       fullWidth
-                      required={true}
                       onBlur={this.handlePhoneChange}
                     />
                     {
@@ -243,12 +242,6 @@ class DashBoardView extends React.Component {
         console.log("Add addNewMember",this)
         event.preventDefault();
         const { schoolData } = this.props;
-        // let phoneRegex = /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g;
-        // const inputPhoneNumber = this.phone.value;
-        if(!phoneRegex.phone.test(this.phone.value)) {
-            alert('invalid phone');
-            return;
-        }
 
         if(!isEmpty(schoolData)) {
 
@@ -295,7 +288,7 @@ class DashBoardView extends React.Component {
         let phoneRegex = /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g;
         console.log("inputPhoneNumber.match(phoneRegex)",inputPhoneNumber.match(phoneRegex))
         let showErrorMessage;
-        if(inputPhoneNumber.match(phoneRegex)) {
+        if(inputPhoneNumber.match(phoneRegex) || inputPhoneNumber == "") {
             showErrorMessage = false;
         } else {
             showErrorMessage = true;
@@ -418,7 +411,7 @@ class DashBoardView extends React.Component {
     render() {
         console.log("DashBoardView props -->>",this.props);
         console.log("DashBoardView state -->>",this.state);
-        const { classes, theme, schoolData, classTypeData, slug} = this.props;
+        const { classes, theme, schoolData, classTypeData, slug, schoolAdmin} = this.props;
         const { renderStudentModal,memberInfo } = this.state;
 
         let schoolMemberListFilters = {...this.state.filters};
@@ -431,6 +424,13 @@ class DashBoardView extends React.Component {
 
         if(!slug)  {
             filters.activeUserId = currentUser && currentUser._id;
+        }
+
+        // Not allow accessing this URL to non admin user.
+        if(!schoolAdmin && slug) {
+            return  <Typography type="display2" gutterBottom align="center">
+                To access this page you need to login as an admin.
+            </Typography>
         }
 
         const drawer = (
@@ -547,9 +547,9 @@ export default createContainer(props => {
     let isLoading = true;
     let classTypeData = [];
     let filters = {...props.filters, slug};
+    let schoolAdmin;
 
     let subscription = Meteor.subscribe("schoolMemberDetails.getSchoolMemberWithSchool", filters);
-
     if(subscription && subscription.ready()) {
         isLoading = false;
         classTypeData = ClassType.find().fetch();
@@ -559,6 +559,12 @@ export default createContainer(props => {
         } else {
             schoolData = School.find().fetch()
         }
+        if(!isEmpty(schoolData) && schoolData[0].admins) {
+            let currentUser = Meteor.user();
+            if(_.contains(schoolData[0].admins, currentUser._id) || schoolData[0].superAdmin == currentUser._id) {
+                schoolAdmin = true;
+            }
+        }
     }
 
     return { ...props,
@@ -566,6 +572,7 @@ export default createContainer(props => {
         classTypeData,
         isLoading,
         slug,
+        schoolAdmin
     };
 
 }, withStyles(styles, { withTheme: true })(DashBoardView));

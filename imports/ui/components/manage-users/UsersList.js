@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
+import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
+import Grid from 'material-ui/Grid';
 import isNumber from 'lodash/isNumber';
 import Pagination from '/imports/ui/componentHelpers/pagination';
 import { TableRow, TableCell } from 'material-ui/Table';
@@ -8,6 +10,12 @@ import { TableRow, TableCell } from 'material-ui/Table';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import { UsersDetailsTable } from './UsersDetailsTable';
 import { getUserFullName, dateFriendly } from '/imports/util';
+
+const TotalUsersCount = styled.div`
+	width: 90%;
+	font-size: 20px;
+	margin: auto;
+`;
 
 const style = {
     'w211': {
@@ -53,6 +61,7 @@ class UsersList extends React.Component {
 
 			if(res) {
 				if(isNumber(usersCount)) {
+					stateObj.usersCount = usersCount;
 					stateObj.pageCount = this.totalPageCount(usersCount);
 				}
 				stateObj.usersData = res.usersData;
@@ -77,9 +86,12 @@ class UsersList extends React.Component {
 	}
 
 	render() {
-		const { isBusy, usersData, pageCount } = this.state;
+		const { isBusy, usersData, pageCount, usersCount } = this.state;
 		return (
 			<Fragment>
+				<TotalUsersCount>
+					Total Users: <strong>{usersCount}</strong>
+				</TotalUsersCount>
 				<div style={{overflowX: "auto"}}>
 					<UsersDetailsTable>
 						{
@@ -89,7 +101,7 @@ class UsersList extends React.Component {
 				                        <TableCell style={style.w150}>{getUserFullName(user) || "Unavailable"}</TableCell>
 				                        <TableCell style={style.w211}>{user.emails[0].address || "Unavailable"}</TableCell>
 				                        <TableCell style={style.w150}>{(user.createdAt && dateFriendly(user.createdAt, "MM/DD/YYYY")) || "Unavailable"}</TableCell>
-				                        <TableCell style={style.w100}>{user.roles || "Not Assigned Yet"}</TableCell>
+				                        <TableCell style={style.w100}>{(user.roles && user.roles.join(", ")) || "Not Assigned Yet"}</TableCell>
 				                    </TableRow>
 								})
 							)

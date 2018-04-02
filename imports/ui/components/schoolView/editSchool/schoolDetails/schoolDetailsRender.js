@@ -7,6 +7,10 @@ import config from '/imports/config';
 import Typography from 'material-ui/Typography';
 import Edit from 'material-ui-icons/Edit';
 import TextField from 'material-ui/TextField';
+import Input, { InputLabel } from 'material-ui/Input';
+import Select from 'material-ui/Select';
+import { FormControl } from 'material-ui/Form';
+import { MenuItem } from 'material-ui/Menu';
 
 import { Loading } from '/imports/ui/loading';
 import CreateMedia from '/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia';
@@ -39,6 +43,7 @@ export default function () {
   } = this.props;
 
   console.log("SchoolEditDetails render props -->>", this.props)
+  console.log("SchoolEditDetails render state -->>", this.state)
   return  (
     <div>
       <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />
@@ -49,7 +54,7 @@ export default function () {
           <form style={{maxWidth: 600,padding:24}} method="" action="">
             <Grid container style={{marginBottom: '5px',display: 'flex',alignItems: 'baseline'}}>
                 <Grid item xs={12} sm={4}>
-                  <Typography type="Subheading"> School Info  </Typography>
+                  <Typography type="title"> School Info  </Typography>
                 </Grid>
                 <Grid item xs={12} sm={8}>
                     <Grid container>
@@ -98,13 +103,13 @@ export default function () {
                       label="Phone"
                       type="number"
                       fullWidth
-                      onChange={(event)=> {this.setState({phone:event.target.value})}}
+                      onChange={(event)=> {this.setState({phone: parseInt(event.target.value)})}}
                   />
                 </Grid>
             </Grid>
             <Grid container style={{display: 'flex',alignItems: 'baseline'}}>
               <Grid item xs={12} sm={4}>
-                <Typography type="Subheading"> School Contact  </Typography>
+                <Typography type="title"> School Contact  </Typography>
               </Grid>
                   <Grid item xs={12} sm={4}>
                     <TextField
@@ -129,10 +134,36 @@ export default function () {
                     />
                   </Grid>
             </Grid>
+            <Grid container style={{display: 'flex',alignItems: 'baseline'}}>
+                <Grid item xs={12} sm={4}>
+                    <Typography type="title"> School Currency  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={8}>
+                    <FormControl fullWidth margin='dense'>
+                        <InputLabel htmlFor="currency">Preferred Currency</InputLabel>
+                        <Select
+                            input={<Input id="currency"/>}
+                            value={this.state.currency}
+                            onChange={(event) => this.setState({ currency: event.target.value })}
+                            fullWidth
+                        >
+                            {
+                                config.currency.map((data, index)=> {
+                                    return <MenuItem
+                                        key={`${index}-${data.value}`}
+                                        value={data.value}>
+                                        {data.label}
+                                    </MenuItem>
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                </Grid>
+            </Grid>
             <Grid container>
               <Grid item xs={12}>
                 <div className={classes.editorTop}>
-                  <Typography  type="Subheading" className={classes.typographyRoot}> About the School  </Typography>
+                  <Typography  type="title" className={classes.typographyRoot}> About the School  </Typography>
                 <MaterialRTE value={this.state.aboutHtml} onChange={this.aboutSchoolTREOnChange} />
                 </div>
               </Grid>
@@ -140,7 +171,7 @@ export default function () {
             <Grid container>
               <Grid item xs={12}>
                 <div className={classes.editorTop}>
-                  <Typography type="Subheading" className={classes.typographyRoot}> Notes for Students  </Typography>
+                  <Typography type="title" className={classes.typographyRoot}> Notes for Students  </Typography>
                 <MaterialRTE value={this.state.studentNotesHtml} onChange={this.studentNotesTREOnChange} />
                 </div>
               </Grid>

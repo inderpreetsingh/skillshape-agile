@@ -9,7 +9,7 @@ Meteor.methods({
 		let school = School.findOne({ slug: slug});
 		const schoolId = school && school._id
         console.log("price.getBestPrice schoolId",schoolId)
-        
+
         //////////// Calculate Best price Class package ////////////
         const ClassPricingRaw = ClassPricing.rawCollection()
         let classPricingAggregateQuery = Meteor.wrapAsync(ClassPricingRaw.aggregate, ClassPricingRaw);
@@ -17,16 +17,16 @@ Meteor.methods({
             {
                 $match: { schoolId: schoolId }
             },
-            { 
-                $project: { 
+            {
+                $project: {
                     avgRate: { '$divide': ["$cost", "$noClasses"] }
-                } 
+                }
             },
-            {   
-                $sort : { avgRate : 1 } 
-            } 
+            {
+                $sort : { avgRate : 1 }
+            }
         ])
-    	
+
     	//////////// Calculate Best price Monthly package ////////////
         const MonthlyPricingRaw = MonthlyPricing.rawCollection()
         let monthlyPricingregateQuery = Meteor.wrapAsync(MonthlyPricingRaw.aggregate, MonthlyPricingRaw);
@@ -37,14 +37,14 @@ Meteor.methods({
             {
          		$unwind: "$pymtDetails"
      		},
-            { 
-                $project: { 
+            {
+                $project: {
                     avgRate: { '$divide': ["$pymtDetails.cost", "$pymtDetails.month"] }
-                } 
+                }
             },
-            {   
-                $sort : { avgRate : 1 } 
-            } 
+            {
+                $sort : { avgRate : 1 }
+            }
         ])
 
         // console.log("classPricingAggregateResult-->>",classPricingAggregateResult)

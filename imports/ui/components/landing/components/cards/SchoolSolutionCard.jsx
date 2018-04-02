@@ -118,23 +118,22 @@ const CardTitle = styled.h3`
 `;
 
 const CardContentTitle = styled.h4`
-  font-size: ${helpers.baseFontSize}px;
+  font-size: ${props => props.description ? 18 : helpers.baseFontSize}px;
   font-weight: 500;
   font-family: ${helpers.specialFont};
   margin: 0;
   text-align: center;
   line-height: 1;
   font-style: italic;
-  margin-bottom: ${props => props.description ? helpers.rhythmDiv * 2 : 0}px;
-  margin-top: ${props => props.description ? helpers.rhythmDiv * 2 : 0}px;
+  margin-bottom: ${props => props.description ? helpers.rhythmDiv : 0}px;
+  margin-top: ${props => props.description ? helpers.rhythmDiv : 0}px;
 `;
 
 const CardContent = styled.p`
   margin: 0;
   font-size: ${helpers.baseFontSize}px;
-  font-weight: 300;
-  font-style: italic;
-  line-height: 1;
+  font-weight: 400;
+  line-height: 1.2;
   font-family: ${helpers.specialFont};
 `;
 

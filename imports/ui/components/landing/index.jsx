@@ -261,7 +261,7 @@ class Landing extends Component {
     }
 
     scrollTo(name) {
-      scroller.scrollTo(('content-container'|| name),{
+      scroller.scrollTo((name || 'content-container'),{
         duration: 800,
         delay: 0,
         smooth: 'easeInOutQuart'
@@ -438,45 +438,41 @@ class Landing extends Component {
     }
 
     collectSelectedSkillSubject = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter.skillSubjectIds = text.map((ele) => ele._id);
         oldFilter.defaultSkillSubject = text
-        this.setState({ tempFilters: oldFilter})
+        this.setState({ filters: oldFilter})
     }
 
     skillLevelFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter.experienceLevel = text;
-        this.setState({tempFilters: oldFilter})
+        this.setState({filters: oldFilter})
     }
 
 
     filterGender = (event) => {
-        let oldFilter = {...this.state.tempFilters};
+        let oldFilter = {...this.state.filters};
         oldFilter.gender = event.target.value;
-        this.setState({tempFilters:oldFilter})
+        this.setState({filters:oldFilter})
     }
 
     filterAge =(event) => {
-        let oldFilter = {...this.state.tempFilters};
+        let oldFilter = {...this.state.filters};
         oldFilter.age = parseInt(event.target.value);
-        this.setState({ tempFilters: oldFilter });
+        this.setState({ filters: oldFilter });
     }
 
     perClassPriceFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter._classPrice = text;
-        this.setState({ tempFilters: oldFilter })
+        this.setState({ filters: oldFilter })
     }
 
     pricePerMonthFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter._monthPrice = text;
-        this.setState({ tempFilters: oldFilter })
-    }
-
-    applyFilters = () => {
-        this.setState({filters: { ...this.state.filters, ...this.state.tempFilters, applyFilterStatus: true}})
+        this.setState({ filters: oldFilter })
     }
 
     removeAllFilters = ()=> {
@@ -493,7 +489,7 @@ class Landing extends Component {
     renderFilterPanel = () => {
         return <FilterPanel
             currentAddress={this.state.defaultLocation || this.state.locationName}
-            applyFilters={this.applyFilters}
+            removeAllFilters={this.removeAllFilters}
             mapView={this.state.mapView}
             filters={this.state.filters}
             tempFilters={this.state.tempFilters}
@@ -527,7 +523,7 @@ class Landing extends Component {
                     onModalClose={() => this.handleFiltersDialogBoxState(false)}
                     filterPanelProps={{
                         currentAddress: (this.state.defaultLocation || this.state.locationName),
-                        applyFilters: this.applyFilters,
+                        removeAllFilters: this.removeAllFilters,
                         filters: this.state.filters,
                         tempFilters: this.state.tempFilters,
                         stickyPosition: this.state.sticky,
