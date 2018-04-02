@@ -182,7 +182,7 @@ class ClassTypeCoverContent extends React.Component {
               </MapContainer>
               {props.classDescription || <ClassTypeDescription
                 schoolName={props.schoolDetails.name}
-                description={props.schoolDetails.aboutHtml}
+                description={props.classTypeData.desc}
                 isClassTypeNameAvailable={!isEmpty(props.classTypeData)}
                 classTypeName={classTypeName}
                 noOfStars={props.schoolDetails.noOfStars}

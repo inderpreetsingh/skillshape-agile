@@ -323,13 +323,13 @@ class ClassTypeContent extends Component {
 			        />
 		        </ClassTypeCover>
 		        <Main>
-			        <MainInnerFixedContainer marginBottom="32">
+			        {/*<MainInnerFixedContainer marginBottom="32">
 			            <MainInner reviews largePadding="32" smallPadding="32">
 			              	<ClassWrapper reviews>
 			                	<ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
 			              	</ClassWrapper>
 			            </MainInner>
-          			</MainInnerFixedContainer>
+          			</MainInnerFixedContainer>*/}
 
           			<MainInnerFixedContainer marginBottom="16">
 			            <ClassTimesInnerWrapper>

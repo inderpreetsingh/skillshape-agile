@@ -4,6 +4,7 @@ import generator from 'generate-password';
 
 import './fields.js';
 import { userRegistrationAndVerifyEmail } from "/imports/api/email";
+import { getUserFullName } from '/imports/util/getUserData';
 
 
 Meteor.methods({
@@ -120,5 +121,19 @@ Meteor.methods({
     	} else {
     		return new Meteor.Error("Permission Denied!!");
     	}
+    },
+    "user.checkForRegisteredUser": function({email}) {
+       if(email) {
+           const userData = Meteor.users.findOne({"emails.address":email});
+           if(userData) {
+                let userName = getUserFullName(userData);
+                return {userInfo: `${userName}  at ${email} already exists. Is this your student?` }
+           } else {
+             throw new Meteor.Error("No User Found with this Email!!!");
+           }
+       } else {
+           console.log("else part in server" );
+           throw new Meteor.Error("Email Address not found!!");
+       }
     }
 })
