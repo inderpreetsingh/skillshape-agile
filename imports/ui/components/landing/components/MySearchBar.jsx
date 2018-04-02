@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
@@ -10,6 +11,8 @@ import ClearIcon from 'material-ui-icons/Clear';
 import SearchIcon from 'material-ui-icons/Search';
 import { grey } from 'material-ui/colors';
 
+import * as helpers from './jss/helpers.js';
+
 const styles = {
   root: {
     height: '100%',
@@ -20,12 +23,15 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     position: 'relative',
-    boxShadow: `0px 1px 5px 0px rgba(0, 0, 0, 0.1), 0px 2px 2px 0px rgba(0, 0, 0, 0.1), 0px 3px 1px -2px rgba(0, 0, 0, 0.05);`
+    boxShadow: helpers.inputBoxShadow
   },
   iconButtonRoot : {
     height: 32,
     width: 32,
     transition: 'transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)'
+  },
+  defaultBorderRadius: {
+    borderRadius: 2
   },
   searchContainer: {
 
@@ -41,12 +47,23 @@ const styles = {
   },
   iconTransitions: {
     transition: 'transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)'
+  },
+  rightAlign: {
+    textAlign: 'right'
   }
 }
 
 const iconTransitions = {
   transition: 'transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)'
 }
+
+const LeftSideInput = styled.div`
+  display: ${props => props.inputOnSide === 'left' ? 'block' : 'none'};
+`;
+
+const RightSideInput = styled.div`
+  display: ${props => props.inputOnSide === 'right' ? 'block' : 'none'};
+`;
 
 class MySearchBar extends Component {
   constructor (props) {
@@ -82,7 +99,7 @@ class MySearchBar extends Component {
       active: e.target.value !== '' ? true : false
     });
 
-    this.props.onChange && this.props.onChange(e.target.value);
+    this.props.onChange && this.props.onChange(e);
   }
 
   handleCancel = () => {
@@ -97,10 +114,16 @@ class MySearchBar extends Component {
   }
 
   _getCloseIconClassName = (active,classes) => {
+    if(this.props.noCloseIcon) {
+      return classes.hide;
+    }
     return active ? classes.show : classes.hide;
   }
 
   _getShowIconClassName = (active,classes) => {
+    if(this.props.noCloseIcon) {
+      return classes.show;
+    }
     return active ? classes.hide : classes.show;
   }
   render () {
@@ -117,24 +140,37 @@ class MySearchBar extends Component {
 
     let closeIconClass = classes.iconButtonRoot + ' ' + this._getCloseIconClassName(this.state.active,classes);
     let showIconClass = classes.iconButtonRoot + ' ' + this._getShowIconClassName(this.state.active,classes);
+    let rootClass = `${classes.root} `;
+    let inputClass = ``;
+
+    if(this.props.defaultBorderRadius) {
+      rootClass += `${classes.defaultBorderRadius}`;
+    }
+
+    if(this.props.rightAlign) {
+      inputClass = `${classes.rightAlign}`;
+    }
 
     // console.log('clostIconClass',closeIconClass,showIconClass);
     return (
-      <Paper className={classes.root} >
-        <div>
+      <Paper className={rootClass} >
+        <LeftSideInput inputOnSide={this.props.inputOnSide}>
           <Input
-            {...inputProps}
-            onBlur={this.handleBlur}
-            value={value}
-            onChange={this.handleInput}
-            onKeyUp={this.handleKeyPressed}
-            onFocus={this.handleFocus}
-            fullWidth
-            disableUnderline={true}
-            disabled={disabled}
+          {...inputProps}
+          onBlur={this.handleBlur}
+          value={value}
+          onChange={this.handleInput}
+          onKeyUp={this.handleKeyPressed}
+          onFocus={this.handleFocus}
+          fullWidth
+          disableUnderline={true}
+          disabled={disabled}
+          classes={{input: inputClass}}
           />
-        </div>
-        <IconButton
+        </LeftSideInput>
+        {this.props.withIcon &&
+        ( <Fragment>
+          <IconButton
           style={styles.iconTransitions}
           className={showIconClass}
           disabled={disabled}
@@ -148,7 +184,20 @@ class MySearchBar extends Component {
           disabled={disabled}
         >
           {React.cloneElement(closeIcon)}
-        </IconButton>
+        </IconButton></Fragment>)}
+        <RightSideInput inputOnSide={this.props.inputOnSide}>
+          <Input
+          {...inputProps}
+          onBlur={this.handleBlur}
+          value={value}
+          onChange={this.handleInput}
+          onKeyUp={this.handleKeyPressed}
+          onFocus={this.handleFocus}
+          fullWidth
+          disableUnderline={true}
+          disabled={disabled}
+          />
+        </RightSideInput>
       </Paper>
     )
   }
@@ -160,18 +209,28 @@ MySearchBar.defaultProps = {
   placeholder: 'Search',
   searchIcon: <SearchIcon style={{ color: grey[500] }} />,
   style: null,
-  value: ''
+  value: '',
+  inputOnSide: 'left',
+  defaultBorderRadius: false,
+  withIcon: true,
+  rightAlign: false,
+  noCloseIcon: false,
 }
 
 MySearchBar.propTypes = {
+  // This specifies the side in the bar where there is input.
+  inputOnSide: PropTypes.string,
+  // To specify whether we want closing/searching icon
+  withIcon: PropTypes.bool,
   closeIcon: PropTypes.node,
+  noCloseIcon: PropTypes.bool,
   disabled: PropTypes.bool,
   /** Sets placeholder for the embedded text field. */
   placeholder: PropTypes.string,
   /** Fired when the text value changes. */
   onChange: PropTypes.func,
   /** Fired when the search icon is clicked. */
-  onRequestSearch: PropTypes.func.isRequired,
+  onRequestSearch: PropTypes.func,
   searchIcon: PropTypes.node,
   value: PropTypes.string,
 }

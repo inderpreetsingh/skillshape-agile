@@ -23,7 +23,7 @@ import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 const CardsRevealWrapper = styled.div`
-  max-width: 320px;
+  width: 100%;
 `;
 
 class ClassTypeCard extends Component {
@@ -110,6 +110,7 @@ class ClassTypeCard extends Component {
                   }
                   descriptionContent={
                   <ClassTypeCardDescription
+                      schoolData={this.props.schoolData}
                       classTimeCheck={!isEmpty(classTimesData)}
                       ratings={this.props.ratings}
                       reviews={this.props.reviews}

@@ -5,8 +5,10 @@ import { Transition } from 'react-transition-group';
 
 import TrendingIcon from '../icons/Trending.jsx';
 import ShowMore from '../icons/ShowMore.jsx';
-
 import withShowMoreText from '../../../../../util/withShowMoreText.js';
+
+import ClassTimeClock from './ClassTimeClock.jsx';
+import ClassTimeClockManager from './ClassTimeClockManager.jsx';
 
 import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
@@ -18,7 +20,7 @@ const ON_GOING_SCHEDULE = 'ongoing';
 
 const ClassTimeContainer = styled.div`
   width: 250px;
-  min-height: 350px;
+  min-height: 400px;
   padding: ${helpers.rhythmDiv}px;
   padding: ${helpers.rhythmDiv * 2}px;
   display: flex;
@@ -49,45 +51,9 @@ const ClassTimeContainer = styled.div`
   }
 `;
 
-const ClockOuterWrapper = styled.div`
-  ${helpers.flexCenter}
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
-
-const ClockWrapper = styled.div`
-  ${helpers.flexCenter}
-  flex-direction: column;
-  width: 100px;
-  height: 100px;
-  font-family: ${helpers.specialFont};
-  border-radius: 50%;
-  background: white;
-`;
-
-const TimeContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding-top: 10px;
-`;
-
 const ClassScheduleWrapper = styled.div`
   ${helpers.flexCenter}
   margin-bottom: ${helpers.rhythmDiv}px;
-`;
-
-const Time = styled.p`
-  margin: 0;
-  font-size: ${helpers.baseFontSize * 2}px;
-  color: inherit;
-`;
-
-const TimePeriod = styled.span`
-  display: inline-block;
-  font-weight: 400;
-  font-size: ${helpers.baseFontSize}px;
-  transform: translateY(-10px);
-  color: inherit;
 `;
 
 const Text = styled.p`
@@ -97,19 +63,11 @@ const Text = styled.p`
   font-weight: 600;
 `;
 
-const Seperator = styled.p`
-  margin: 0 ${helpers.rhythmDiv/2}px;
-  font-size: ${helpers.baseFontSize}px;
-  font-family: ${helpers.specialFont};
-  font-weight: 600;
-`;
-
 const Description = styled.p`
-  margin: 0;
+  margin: ${helpers.rhythmDiv}px 0;
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
-
   max-height: 140px;
   overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
@@ -122,17 +80,6 @@ const TrendingWrapper = styled.div`
   right: ${helpers.rhythmDiv * 2}px;
   left: auto;
 `;
-
-const ClassTimeClock = (props) => (
-  <ClockOuterWrapper>
-    <ClockWrapper className={`class-time-transition ${props.className}`}>
-      <TimeContainer>
-        <Time>{props.time}</Time>
-        <TimePeriod>{props.timePeriod}</TimePeriod>
-      </TimeContainer>
-    </ClockWrapper>
-  </ClockOuterWrapper>
-);
 
 const ClassSchedule = (props) => (
   <ClassScheduleWrapper>
@@ -156,7 +103,7 @@ const Read = styled.span`
 `;
 
 // This can be changed according to the data
-_isClassOnGoing = (scheduleType) => scheduleType.toLowerCase().replace(/\-/) === ON_GOING_SCHEDULE;
+_isClassOnGoing = (scheduleType) => scheduleType && scheduleType.toLowerCase().replace(/\-/) === ON_GOING_SCHEDULE;
 
 class ClassTime extends Component {
 
@@ -251,16 +198,15 @@ class ClassTime extends Component {
     return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
             key={this.props._id} >
             <div>
-              <ClassTimeClock
-                time={this.props.time}
-                timePeriod={this.props.timePeriod}
-                className={this._getOuterClockClassName(this.state.addToCalendar, this.state.scheduleTypeOnGoing)}
-              />
-
-              <ClassSchedule
-                classDays={this.props.days}
+              <ClassTimeClockManager
+                data={this.props}
                 schedule={this.props.scheduleType}
-                />
+                clockProps={
+                  {
+                    className: this._getOuterClockClassName(this.state.addToCalendar, this.state.scheduleTypeOnGoing)
+                  }
+                }
+              />
 
               {this.props.showReadMore ?
                 <Description fullTextState={this.state.fullTextState}>
@@ -281,13 +227,17 @@ class ClassTime extends Component {
 }
 
 ClassTime.propTypes = {
-  time: PropTypes.string.isRequired,
-  timePeriod: PropTypes.string.isRequired,
-  days: PropTypes.string.isRequired,
+  classTimes: PropTypes.arrayOf({
+    time: PropTypes.string.isRequired,
+    timePeriod: PropTypes.string.isRequired,
+    day: PropTypes.string.isRequired,
+    duration: PropTypes.number.isRequired
+  }),
   description: PropTypes.string.isRequired,
   addToCalendar: PropTypes.bool.isRequired,
   scheduleType: PropTypes.string.isRequired,
   isTrending: PropTypes.bool
 }
+
 
 export default withShowMoreText(ClassTime, { description: "desc"});

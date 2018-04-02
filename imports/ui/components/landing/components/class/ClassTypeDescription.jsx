@@ -26,6 +26,7 @@ const Title = styled.h2`
   line-height: 1;
   margin: 0;
   font-weight: 100;
+  text-transform: capitalize;
 `;
 
 const NoOfReviews = styled.p`
@@ -62,7 +63,10 @@ const Reviews = styled.a`
 const ClassTypeDescription = (props) => {
   return (
     <Wrapper>
-      <Title>{props.classTypeName} in {props.schoolName}</Title>
+      {props.isClassTypeNameAvailable ?
+      <Title>{props.classTypeName.toLowerCase()} {props.schoolName && props.classTypeName ? <span>in</span> : ''} {props.schoolName.toLowerCase()}</Title>
+      :
+      <Title>{props.schoolName.toLowerCase()}</Title>}
 
       <ReviewsWrapper>
         {props.noOfStars && <StarsBar noOfStars={props.noOfStars} />}

@@ -20,7 +20,17 @@ export default EmailSignature = `<div>
                     </tbody>
                 </table>
             </td>
-            <td style="border-left:3px solid;padding:0 0 3px 6px;font-family: Arial;width:60px;border-color:#348cc0;" valign="middle"> <a href="https://business.facebook.com/SkillShapeLearning" style="margin: 3px 0 0 0; display: block;"><img style="width:24px;" width="24" src="https://mysignature.io/images/socials/43c6f1a197c19805ed4cba24ccffd2f7.png"></a><a href="https://twitter.com/skillshape" style="margin: 3px 0 0 0; display: block;"><img style="width:24px;" width="24" src="https://mysignature.io/images/socials/bbcd40b07067ad6457b43e63178cc0f8.png"></a><a href="https://business.google.com/b/108690723355861260621" style="margin: 3px 0 0 0; display: block;"><img style="width:24px;" width="24" src="https://mysignature.io/images/socials/4c1d636a444e4a91393d5d912bb35f1f.png"></a> </td>
+            <td style="border-left:3px solid;padding:0 0 3px 6px;font-family: Arial;width:60px;border-color:#348cc0;" valign="middle">
+                <a href="https://business.facebook.com/SkillShapeLearning" style="margin: 3px 0 0 0; display: block;">
+                    <img style="width:24px;" width="24" src="https://mysignature.io/images/socials/43c6f1a197c19805ed4cba24ccffd2f7.png">
+                </a>
+                <a href="https://twitter.com/skillshape" style="margin: 3px 0 0 0; display: block;">
+                    <img style="width:24px;" width="24" src="https://mysignature.io/images/socials/bbcd40b07067ad6457b43e63178cc0f8.png">
+                </a>
+                <a href="https://business.google.com/b/115192922174704249661" style="margin: 3px 0 0 0; display: block;">
+                    <img style="width:24px;" width="24" src="https://mysignature.io/images/socials/4c1d636a444e4a91393d5d912bb35f1f.png">
+                </a>
+            </td>
         </tr>
     </tbody>
 </table>

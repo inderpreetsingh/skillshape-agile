@@ -134,9 +134,27 @@ School.attachSchema(new SimpleSchema({
   superAdmin: {
     type: String,
     optional: true
+  },
+  isPublish: {
+    type: Boolean,
+    optional: true
+  },
+  currency: {
+    type: String,
+    optional: true
   }
 }));
 
+School.friendlySlugs(
+  {
+    slugFrom: 'name',
+    slugField: 'slug',
+    distinct: true,
+    updateSlug: true
+  }
+);
+
+School.join(Meteor.users, "admins", "adminsData", ["profile"]);
 
 Meteor.startup(function() {
     if (Meteor.isServer) {

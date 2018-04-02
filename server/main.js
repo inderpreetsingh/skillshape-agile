@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import isEmpty from 'lodash/isEmpty';
 import _skillCategoryObj from "../imports/startup/server/skillCategoryDump";
 import "../imports/startup/server";
 import SkillCategory from "../imports/api/skillCategory/fields";
@@ -42,6 +43,33 @@ Meteor.startup(() => {
                 });
             })
         }
+    } else {
+        for (var key in _skillCategoryObj) {
+            const skillCategoryData = SkillCategory.findOne({name: key, _mig_: 1})
+            // console.log("skillCategoryData 1--->>",key, skillCategoryData)
+            if(isEmpty(skillCategoryData)) {
+                let objId = SkillCategory.insert({ name: key, _mig_: 1 })
+                _skillCategoryObj[key].forEach((f) => {
+                    SkillSubject.insert({
+                        name: f,
+                        skillCategoryId: objId,
+                        _mig_: 1
+                    });
+                })
+            } else {
+                _skillCategoryObj[key].forEach((f) => {
+                    const skillSubjectData = SkillSubject.findOne({name: f, _mig_: 1})
+                    // console.log("skillSubjectData 2--->>",f,skillSubjectData)
+                    if(isEmpty(skillSubjectData)) {
+                        SkillSubject.insert({
+                            name: f,
+                            skillCategoryId: skillCategoryData._id,
+                            _mig_: 1
+                        });
+                    }
+                })
+            }
+        }
     }
 
 });
@@ -54,18 +82,96 @@ if (Meteor.isServer) {
         region: 'us-west-1'
     };
     Accounts.onCreateUser(function(options, user) {
-        if (options.profile == null || options.profile == undefined) {
-            user.profile = { "role": "Admin", "access_key": Math.random().toString(36).slice(2) }
-            // Roles.addUsersToRoles(user._id,'admin')
-            // console.log(Roles.userIsInRole(Meteor.userId(),'admin'));
-        } else {
-            user.profile = options.profile;
+        // console.log("onCreateUser options -->>",options)
+        // console.log("onCreateUser user -->>",user)
+        if(options.sign_up_service) {
+            user.sign_up_service = options.sign_up_service;
         }
-        user.profile = _.extend(user.profile, { "user_type": "C" });
-        if (options.preverfiedUser) {
-            user.emails[0].verified = true;
-            return user;
+
+        if(options.term_cond_accepted) {
+            user.term_cond_accepted = options.term_cond_accepted;
         }
+
+        if (user.services) {
+            var service = _.keys(user.services)[0];
+            if (service == 'facebook') {
+                let email = user.services[service].email;
+                user.profile = user.profile || {}
+                user.profile.firstName = user.services.facebook.first_name;
+                user.profile.lastName = user.services.facebook.last_name;
+                user.name = `${user.profile.firstName} ${user.profile.lastName}`;
+                user.emails = [{address: email, verified: true}]
+                console.log("onCreateUser facebook 2...",user);
+                let existingUser = Meteor.users.findOne({'emails.address': email});
+                console.log("onCreateUser  facebook1..",existingUser);
+                if (!existingUser)
+                    return user;
+
+                // precaution, these will exist from accounts-password if used
+                if (!existingUser.services)
+                    existingUser.services = { resume: { loginTokens: [] }};
+                if (!existingUser.services.resume)
+                    existingUser.services.resume = { loginTokens: [] };
+
+                // copy across new service info
+                existingUser.services[service] = user.services[service];
+                /*if(user.services.resume && user.services.resume.loginTokens) {
+                    console.log("Token",user.services.resume.loginTokens)
+                    existingUser.services.resume.loginTokens.push(
+                        user.services.resume.loginTokens[0]
+                    );
+                }*/
+                console.log("Existing facebook user",existingUser);
+                // even worse hackery
+                Meteor.users.remove({_id: existingUser._id}); // remove existing record
+                return existingUser;
+            } else if(service == 'google') {
+                let email = user.services[service].email;
+                user.profile = user.profile || {}
+                user.profile.firstName = user.services.google.given_name;
+                user.profile.lastName = user.services.google.family_name;
+                user.profile.name = user.services.google.name;
+                user.emails = [{address: email, verified: true}];
+
+                console.log("onCreateUser google 2...",user);
+                let existingUser = Meteor.users.findOne({'emails.address': email});
+                console.log("onCreateUser  google 1..",existingUser);
+                if (!existingUser)
+                    return user;
+
+                // precaution, these will exist from accounts-password if used
+                if (!existingUser.services)
+                    existingUser.services = { resume: { loginTokens: [] }};
+                if (!existingUser.services.resume)
+                    existingUser.services.resume = { loginTokens: [] };
+
+                // copy across new service info
+                existingUser.services[service] = user.services[service];
+                /*if(user.services.resume && user.services.resume.loginTokens) {
+                    console.log("Token",user.services.resume.loginTokens)
+                    existingUser.services.resume.loginTokens.push(
+                        user.services.resume.loginTokens[0]
+                    );
+                }*/
+                console.log("Existing google user",existingUser);
+                // even worse hackery
+                Meteor.users.remove({_id: existingUser._id}); // remove existing record
+                return existingUser;
+            }
+        }
+
+        // if (options.profile == null || options.profile == undefined) {
+        //     user.profile = { "role": "Admin", "access_key": Math.random().toString(36).slice(2) }
+        //     // Roles.addUsersToRoles(user._id,'admin')
+        //     // console.log(Roles.userIsInRole(Meteor.userId(),'admin'));
+        // } else {
+        // }
+        // user.profile = _.extend(user.profile, { "user_type": "C" });
+        // if (options.preverfiedUser) {
+        //     user.emails[0].verified = true;
+        //     return user;
+        // }
+        user.profile = options.profile;
         return user;
     });
 

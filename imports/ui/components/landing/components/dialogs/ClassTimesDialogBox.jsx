@@ -171,7 +171,7 @@ class ClassTimesDialogBox extends React.Component {
                                 <ClassContainerHeader>
 
                                     <ClassTimings>
-                                        {data.timing}
+                                        {data.name}
                                     </ClassTimings>
 
                                     <Chip label={data.scheduleType} classes={{root: this.props.classes.chip, label: this.props.classes.chipLabel}}/>

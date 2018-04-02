@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
-import { findIndex, isEmpty } from 'lodash';
+import { findIndex, isEmpty, find } from 'lodash';
 import Typography from 'material-ui/Typography';
 //import `Sticky` from 'react-sticky-el';
 import Sticky from 'react-stickynode';
@@ -27,7 +27,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 
 const MainContentWrapper = styled.div`
-  padding-top: ${helpers.rhythmDiv * 3}px;
+
 `;
 
 const ContentContainer = styled.div`
@@ -48,11 +48,15 @@ const SearchBarWrapper = styled.div`
 
 const CardsContainer = styled.div`
   width: 100%;
+  padding-top: ${helpers.rhythmDiv * 3}px;
 `;
 
 const NoResultContainer = styled.div`
   text-align: center;
   width: 100%;
+  height: 100vh;
+  ${helpers.flexCenter}
+  flex-direction: column;
 `;
 
 const MapOuterContainer = styled.div`
@@ -101,6 +105,13 @@ const FooterWrapper = styled.div`
   width: 100%;
 `;
 
+const RevertSearch = styled.span`
+  padding: ${helpers.rhythmDiv}px;
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-weight: 300;
+  font-family: ${helpers.specialFont};
+  color: ${helpers.black};
+`;
 
 class ClassTypeList extends Component {
 
@@ -138,6 +149,7 @@ class ClassTypeList extends Component {
                 } else if(this.props.locationName) {
                     title = `${key} in ${this.props.locationName}`
                 }
+
   				if(!isEmpty(classType[key])) {
   					return <CardsList
   						key={index}
@@ -163,18 +175,18 @@ class ClassTypeList extends Component {
         } else if(isEmpty(classTypeData)) {
 
             return <NoResultContainer>
-               <span style={{padding: 8}}>
-                  <b>Your search yielded no results. Try changing your search?</b>
-               </span>
                 <NoResults
                     removeAllFiltersButtonClick={this.props.removeAllFilters}
                 />
+                <RevertSearch>
+                  {this.props.mapView ? 'No results in this area. Try a different area?' : 'Try changing your search'}
+                </RevertSearch>
             </NoResultContainer>
         }
     }
 
 	render() {
-		console.log("ClassTypeList props -->>",this.props);
+		// console.log("ClassTypeList props -->>",this.props);
 		const { mapView, classTypeData, skillCategoryData, splitByCategory, filters, isLoading } = this.props;
     // console.log(classTypeData ,"class type data ---->///")
     return (
@@ -194,12 +206,17 @@ class ClassTypeList extends Component {
                       <WithMapCardsContainer>
                           <div>
                             <CardsList
+                              schoolData={this.props.schoolData}
                               mapView={this.props.mapView}
                               cardsData={classTypeData}
                               classInterestData={this.props.classInterestData}
                               handleSeeMore={this.props.handleSeeMore}
                               filters={this.props.filters}
                             />
+
+                            {
+                                this.getNoResultMsg(isLoading, filters, classTypeData)
+                            }
                           </div>
 
                           <FooterOuterWrapper>

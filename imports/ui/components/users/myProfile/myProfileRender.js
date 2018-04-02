@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import get from 'lodash/get';
 import styled from 'styled-components';
 import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
@@ -59,6 +60,7 @@ export default function() {
 
     if(this.validateUser()) {
     	return (
+            <DocumentTitle title={this.props.route.name}>
             <Grid container>
                 { this.state.isBusy && <ContainerLoader/>}
                 <Grid item xs={12} sm={8}>
@@ -86,7 +88,7 @@ export default function() {
                                             fullScreen={false}
                                             onChange={this.handleUserImageChange}
                                             minWidth={201}
-                                            data={currentUser.profile && currentUser.profile.pic && {file: currentUser.profile.pic, isUrl: true}}
+                                            data={(currentUser.profile && currentUser.profile.pic && {file: currentUser.profile.pic, isUrl: true}) || {file: '/images/Avatar-Unisex.png', isUrl: true}}
                                             showVideoOption={false}
                                         />
                                     </Grid>
@@ -130,11 +132,15 @@ export default function() {
                                             </Typography>
                                             <FormControl fullWidth margin='dense'>
                                                 <MaterialDatePicker
+                                                    classes={classes.datePickerProps}
+                                                    required={false}
+                                                    emptyLabel="Select a Date"
                                                     floatingLabelText={"Birth Date"}
                                                     hintText={"Birth Date"}
                                                     value={dob}
                                                     onChange={(date) => this.setState({ dob: date})}
                                                     fullWidth={true}
+                                                    format={"DD-MM-YYYY"}
                                                 />
                                             </FormControl>
                                             <Typography className={classes.inputCaption} type="caption">
@@ -148,7 +154,7 @@ export default function() {
                                                 iconName="email"
                                             />
                                             <Typography className={classes.inputCaption} type="caption">
-                                                We won't be share your private email address with others Members.
+                                                We won't be share your private email address with other Members.
                                             </Typography>
                                             <IconInput
                                                 type="tel"
@@ -158,7 +164,7 @@ export default function() {
                                                 onChange={this.handleTextChange.bind(this, "phone")}
                                             />
                                             <Typography className={classes.inputCaption} type="caption">
-                                                This is only shared with Administrators odf a school you have enrolled in.
+                                                This is only shared with Administrators of a school you have enrolled in.
                                             </Typography>
                                             <FormControl fullWidth margin='dense'>
                                                 <InputLabel htmlFor="currency">Preferred Currency</InputLabel>
@@ -183,7 +189,7 @@ export default function() {
                                                 onChange={this.locationInputChanged}
                                                 iconName='location_on'
                                                 googlelocation={true}
-                                                labelText="Where You Live"
+                                                labelText="Where you live"
                                                 value={address}
                                                 defaultValue={address}
                                                 onLocationChange={this.onLocationChange}
@@ -217,6 +223,7 @@ export default function() {
                 </Grid>
 
             </Grid>
+            </DocumentTitle>
         )
     } else {
         return  <Typography type="display2" gutterBottom align="center">

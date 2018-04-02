@@ -29,8 +29,13 @@ export function toastrModal(WrappedComponent) {
     onClose = ()=> {
         this.setState({open: false})
     }
-    show = (message, isErrorMessage)=> {
-        this.setState({message, isErrorMessage: isErrorMessage == "Error", open: true})
+    show = (message, isErrorMessage, elements)=> {
+        this.setState({
+          message,
+          isErrorMessage: isErrorMessage == "Error",
+          open: true,
+          elementObj: elements
+        })
     }
 
     render() {
@@ -40,7 +45,8 @@ export function toastrModal(WrappedComponent) {
         const {
             title,
             message,
-            isErrorMessage
+            isErrorMessage,
+            elementObj
         } = this.state;
         return  <Fragment>
                     <WrappedComponent {...this.props} toastr={{error: this.show, success:this.show }}/>
@@ -51,6 +57,9 @@ export function toastrModal(WrappedComponent) {
                         { title && <DialogTitle id="form-dialog-title">{title}</DialogTitle>}
                         <DialogContent>
                             <Typography color={isErrorMessage ? 'accent' : "primary"}> {message} </Typography>
+                            {
+                              elementObj && elementObj.element
+                            }
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => this.onClose()} color="primary">

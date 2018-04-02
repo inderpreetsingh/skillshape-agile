@@ -75,11 +75,14 @@ class CreateMedia extends React.Component {
 		mediaData.desc = this.mediaNotes.value
 		mediaData.schoolId = this.props.schoolId
 
- 		console.log("onSubmit file",this.state.file)
- 		console.log("onSubmit mediaData",mediaData)
+ 		// console.log("onSubmit file",this.state.file)
+ 		console.log("onSubmit mediaData",this.props)
   		if(mediaFormData) {
   			this.props.onEdit({editKey: mediaFormData._id , data: mediaData, fileData:file});
   		} else {
+	        if(this.props.tagMember) {
+	            mediaData.taggedMemberIds = [this.props.taggedMemberInfo._id];
+	        }
 	  		this.props.onAdd({data: mediaData, fileData: file, isUrl: this.state.file.isUrl});
   		}
   	}

@@ -21,6 +21,7 @@ import "/imports/api/school/server/methods";
 import "/imports/api/user/methods";
 import "/imports/api/claimSchoolRequest/methods";
 import "/imports/api/classTimesRequest/methods";
+import "/imports/api/schoolMemberDetails/methods";
 
 // All publication imported over here
 
@@ -38,3 +39,6 @@ import "/imports/api/classTimes/server/publication";
 import "/imports/api/classInterest/server/publication";
 import "/imports/api/importLogs/server/publication";
 import "/imports/api/enrollmentFee/server/publication";
+import "/imports/api/schoolMemberDetails/server/publication";
+import "/imports/api/user/server/publication";
+import "/imports/api/claimSchoolRequest/cronjob";

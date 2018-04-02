@@ -117,8 +117,13 @@ const LoginUserSideNav = (props) => (
                 },
                 {
                     name: "My Media",
-                    link: "/",
+                    link: `/media/${Meteor.userId()}`,
                     iconName: "collections",
+                },
+                {
+                    name: "Change Password",
+                    iconName: "lock_open",
+                    onClick: props.showChangePassword
                 }
             ]}
             onClick={props.childItemOnClick}
@@ -129,6 +134,13 @@ const LoginUserSideNav = (props) => (
             name="My Calendar"
             iconName="perm_contact_calendar"
             onClick={() => browserHistory.push('/MyCalendar')}
+        />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="My Classmates"
+            iconName="find_in_page"
+            onClick={() => browserHistory.push('/classmates')}
         />
         {
             !isEmpty(props.mySchool) && <SchoolSubMenu
@@ -167,21 +179,28 @@ const LoginUserSideNav = (props) => (
             iconName="message"
             onClick={() => browserHistory.push('/ContactUs')}
         />
+        <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Add Schools"
+            iconName="add_box"
+            onClick={() => browserHistory.push('/claimSchool')}
+        />
         {
             checkSuperAdmin(props.currentUser) && (<Fragment>
-                    <SideNavItem
-                        button
-                        menuListItemText={props.classes.menuListItemText}
-                        name="Add Schools"
-                        iconName="add_box"
-                        onClick={() => browserHistory.push('/')}
-                    />
                     <SideNavItem
                         button
                         menuListItemText={props.classes.menuListItemText}
                         name="Upload Schools"
                         iconName="file_upload"
                         onClick={() => browserHistory.push('/SchoolUpload')}
+                    />
+                    <SideNavItem
+                        button
+                        menuListItemText={props.classes.menuListItemText}
+                        name="Manage Users"
+                        iconName="supervisor_account"
+                        onClick={() => browserHistory.push('/manage-users')}
                     />
                 </Fragment>
             )
@@ -251,6 +270,7 @@ class SideNavItems extends React.Component {
     }
 
     handleChildItemOnClick = (link)=> {
+        console.log("handleChildItemOnClick")
         browserHistory.push(link);
     }
 
@@ -308,7 +328,8 @@ SideNavItems.defaultProps = {
 SideNavItems.propTypes = {
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
-    handleSignUpDialogBox: PropTypes.func
+    handleSignUpDialogBox: PropTypes.func,
+    handleChangePasswordDialogBox: PropTypes.func
 }
 
 export default withStyles(styles)(SideNavItems);

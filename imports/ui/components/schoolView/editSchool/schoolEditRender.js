@@ -1,9 +1,12 @@
 import React from "react";
+import DocumentTitle from 'react-document-title';
 import { Loading } from '/imports/ui/loading';
 import { browserHistory, Link } from 'react-router';
 import { FormBuilderModal } from '/imports/ui/modal';
 import ResponsiveTabs from '/imports/util/responsiveTabs';
 import Typography from 'material-ui/Typography';
+
+import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 
 //tab details import over here
 import SchoolDetails from './schoolDetails';
@@ -13,7 +16,6 @@ import PriceDetails from './priceDetails';
 // import Modules from './modules';
 import EmbedCodes from './embedCodes';
 import MediaDetails from './mediaDetails';
-
 
 export default function (props) {
     console.log("school edit render state -->>",this.state);
@@ -30,15 +32,21 @@ export default function (props) {
         isUserSubsReady,
         locationData,
         moduleData,
+        isLoading,
         ...editSchoolProps
     } = this.props;
+
+    if(isLoading) {
+      return<Preloader/>
+    }
 
     if(isUserSubsReady && schoolData) {
 
         // this.checkSchoolAccess(currentUser, schoolId)
         if(this.checkSchoolAccess(currentUser, schoolId)) {
         	return (
-        		<div>
+        		<DocumentTitle title={this.props.route.name}>
+                <div>
                   <FormBuilderModal
                       {...formBuilderModal}
                       {...this.props}
@@ -101,6 +109,7 @@ export default function (props) {
                       }
                   </div>
         		</div>
+                </DocumentTitle>
         	)
         } else {
           return  <Typography type="display2" gutterBottom align="center">

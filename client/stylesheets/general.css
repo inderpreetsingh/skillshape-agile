@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:200,300,300i,400,400i,600,700,800|Zilla+Slab:200,300,300i,400,400i,500,500i,600,700|Abril+Fatface:300,400,400i,600,700,800');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:200,300,300i,400,400i,600,700,800|Zilla+Slab:200,300,300i,400,400i,500,500i,600,700|Abril+Fatface:300,400,400i,600,700,800|Playfair+Display:400,400i');
 
 * {
     box-sizing: border-box;
@@ -241,4 +241,17 @@ material ui search bar */
 */
 .pac-container {
   z-index: 1400
+}
+
+.homepage-content {
+  min-height: 100vh;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.increase-height {
+  min-height: 36px;
+  height: 36px;
 }

@@ -8,16 +8,36 @@ import MultiselectTag from 'react-widgets/lib/MultiselectTag';
 import * as CustomPropTypes from 'react-widgets/lib/util/PropTypes';
 import { dataIndexOf } from 'react-widgets/lib/util/dataHelpers';
 
+import * as helpers from '../../jss/helpers.js';
 // disabled === true || [1, 2, 3, etc]
 const isDisabled = (item, list, value) =>
   !!(Array.isArray(list) ? ~dataIndexOf(list, item, value) : list)
 
-const MyCustomTag = styled.li`
+const FilterButtonWrapper = styled.div`
+  display: flex;
 
+  @media screen and (max-width: ${helpers.mobile}px) {
+    min-width: 100px;
+  }
+`;
+
+const FilterButtonTabletView = styled.div`
+  display: none;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: block;
+  }
+`;
+
+const FilterButtonDesktopView = styled.div`
+  display: flex;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: none;
+  }
 `;
 
 class MyTagList extends React.Component {
-
   static propTypes ={
     id: PropTypes.string.isRequired,
     activeId: PropTypes.string.isRequired,
@@ -28,14 +48,13 @@ class MyTagList extends React.Component {
 
     valueAccessor: PropTypes.func.isRequired,
     textAccessor: PropTypes.func.isRequired,
-
     onDelete: PropTypes.func.isRequired,
     valueComponent: PropTypes.func,
-
     disabled: CustomPropTypes.disabled.acceptsArray,
   };
 
   handleDelete = (item, event) => {
+    // console.log('handling delete,',item);
     if (this.props.disabled !== true)
       this.props.onDelete(item, event)
   };
@@ -68,8 +87,17 @@ class MyTagList extends React.Component {
           : <span>{textAccessor(item)}</span>
         }
       </MultiselectTag>
-      <li className="rw-multiselect-tag no-shrink">...</li>
-      <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+ ${noOfFilters} Filters`}</button>
+      <FilterButtonWrapper>
+
+        <FilterButtonTabletView>
+          <button className="no-shrink primary-button my-multi-select-filter-btn" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters}`}</button>
+        </FilterButtonTabletView>
+
+        <FilterButtonDesktopView>
+          <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters} Filters`}</button>
+        </FilterButtonDesktopView>
+
+      </FilterButtonWrapper>
     </Fragment>
     );
     }

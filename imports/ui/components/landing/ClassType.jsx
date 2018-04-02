@@ -128,6 +128,10 @@ const ClassTimesTitle = styled.h2`
   }
 `;
 
+const ClassTimesName = styled.span`
+  text-transform: capitalize;
+`;
+
 const PackagesWrapper = styled.div`
   ${helpers.flexDirectionColumn}
   width: 100%;
@@ -181,7 +185,7 @@ class ClassType extends Component {
         <MainInnerFixedContainer marginBottom="16">
             <ClassTimesInnerWrapper>
               <ClassTimesWrapper paddingBottom="48">
-                <ClassTimesTitle>Class timings for {this.props.className}</ClassTimesTitle>
+                <ClassTimesTitle>Class timings for <ClassTimesName>{this.props.className.toLowerCase()}</ClassTimesName></ClassTimesTitle>
                 <ClassTimesBoxes classTimesData={classTimesBarData} />
               </ClassTimesWrapper>
             </ClassTimesInnerWrapper>

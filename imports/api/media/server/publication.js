@@ -1,13 +1,15 @@
 import Media from "../fields";
 
-Meteor.publish("media.getMedia", function({ schoolId, name, startDate, endDate, limit }) {
-	// console.log("<<<< media.getMedia called--->>>",schoolId, name, startDate, endDate)
+Meteor.publish("media.getMedia", function({ schoolId, mediaName, startDate, endDate, limit, $or }) {
+	console.log("<<<< media.getMedia called--->>>",schoolId, mediaName, startDate, endDate)
+    console.log("<<<<<<<<<<<<<<<<media.getMediafilter>>>>>>>>>>>>>>>", JSON.stringify($or, null, "  "));
+
 	let filters = {
 		schoolId: schoolId
 	};
 
-	if(name) {
-		filters["$text"] = { $search: name }
+	if(mediaName) {
+		filters["$text"] = { $search: mediaName }
 	}
 
 	if(startDate && endDate) {
@@ -15,6 +17,10 @@ Meteor.publish("media.getMedia", function({ schoolId, name, startDate, endDate, 
 			$gte: startDate,
         	$lt: endDate
 		}
+	}
+	// Publish those media in which this `User` is tagged or created by this `User`.
+	if($or) {
+		filters['$or'] = $or;
 	}
 
 	let cursor = Media.find(filters, {limit: limit});

@@ -21,15 +21,13 @@ import { cutString, toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 
-
-
-
 const styles = {
   cardWrapper: {
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    minHeight: 450
   },
   cardIcon : {
     cursor: 'pointer'
@@ -39,10 +37,28 @@ const styles = {
   }
 }
 
-const CardImageWrapper = styled.div`
-  height: 250px;
+const MyLink = styled(Link)`
   width: 100%;
-  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const CardImageContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 420px;
+`;
+
+const CardImageWrapper = styled.div`
+  max-height: 300px;
+  flex-grow: 1;
+  width: 100%;
+
+  background-position: 50% 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url('${props => props.bgImage}');
 `;
 
 const CardImage = styled.img`
@@ -50,8 +66,8 @@ const CardImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  position: absolute;
 `;
+
 
 const CardContent = styled.div`
 
@@ -59,16 +75,22 @@ const CardContent = styled.div`
 
 const CardContentHeader = styled.div`
   display: flex;
-  padding: 10px;
-  padding-bottom: ${helpers.rhythmDiv}px;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
 `;
 
-const CardContentTitle = styled.div`
+
+const CardContentTitle = styled.h2`
   font-size: ${helpers.baseFontSize * 1.5}px;
   font-weight: 300;
   font-family: ${helpers.specialFont};
+  margin: 0;
+  text-transform: capitalize;
+  margin-bottom: ${helpers.rhythmDiv}px;
+  text-align: center;
+  line-height: 1;
 
   @media screen and (max-width : ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
@@ -82,6 +104,7 @@ const CardContentTitle = styled.div`
 const CardContentBody = styled.div`
   padding: 0px 10px 10px 10px;
 `;
+
 
 const CardDescriptionWrapper = styled.div`
   display: flex;
@@ -116,20 +139,7 @@ class SchoolCard extends Component {
     revealCard: false,
     isLoading:false
   };
-  updateDimensions = () => {
-    const container = ReactDOM.findDOMNode(this.imgContainer);
-    const width = window.getComputedStyle(container,null).width;
-    this.setState({
-      imageContainerHeight: width
-    })
-  }
-  componentDidMount() {
-    //this.updateDimensions();
-    window.addEventListener("resize", this.updateDimensions);
-  }
-  componentWillUnMount() {
-    window.addEventListener("resize", this.updateDimensions);
-  }
+
   componentDidCatch(error, info) {
     // Display fallback UI
     // You can also log the error to an error reporting service
@@ -162,6 +172,8 @@ class SchoolCard extends Component {
         toastr
       } = this.props;
     //console.log(ShowDetails,"adsljfj")
+    const name = schoolCardData.name.toLowerCase();
+
     return (
       <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
         {
@@ -180,25 +192,22 @@ class SchoolCard extends Component {
           />
         }
         <div>
-          <CardImageWrapper ref={(div) => this.imgContainer = div} style={{height: this.state.imageContainerHeight}}>
-             <Link to={`/schools/${schoolCardData.slug}`}>
-                <CardImage src={schoolCardData.mainImage || cardImgSrc} alt="card img" />
-              </Link>
-          </CardImageWrapper>
+          <CardImageContentWrapper>
+            <MyLink to={`/schools/${schoolCardData.slug}`}> <CardImageWrapper bgImage={schoolCardData.mainImage || cardImgSrc}  /> </MyLink>
 
-          <CardContent>
             <CardContentHeader>
-              <CardContentTitle itemProp="name">{cutString(schoolCardData.name, 25)}</CardContentTitle>
-             {/* <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
-                <MoreVert />
-              </IconButton>*/}
+              <CardContentTitle itemProp="name">{name}</CardContentTitle>
+              <CardContentBody>
+                  <Typography><b>Website: </b><a href={schoolCardData.website} target='_blank'>{cutString(schoolCardData.website, 20)}</a></Typography>
+                  {schoolCardData.email && (<Typography><b>Email: </b>{schoolCardData.email}</Typography>)}
+                  <Typography><b>Phone: </b>{schoolCardData.phone}</Typography>
+              </CardContentBody>
             </CardContentHeader>
 
-            <CardContentBody>
-                <Typography><b>Website: </b><a href={schoolCardData.website} target='_blank'>{cutString(schoolCardData.website, 20)}</a></Typography>
-                {schoolCardData.email && (<Typography><b>Email: </b>{schoolCardData.email}</Typography>)}
-                <Typography><b>Phone: </b>{schoolCardData.phone}</Typography>
-            </CardContentBody>
+          </CardImageContentWrapper>
+
+
+          <CardContent>
             <Grid container>
                 <Grid item xs={6} sm={6} className={classes.marginAuto}>
                   {

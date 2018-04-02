@@ -4,11 +4,13 @@ import styled from 'styled-components';
 import get from 'lodash/get';
 
 import SignUpDialogBox from './dialogs/SignUpDialogBox.jsx';
+import ChangePasswordDialogBox from './dialogs/ChangePasswordDialogBox.jsx';
 import MenuIconButton from './buttons/MenuIconButton.jsx';
 import SideNavItems from './SideNavItems.jsx';
 import TermsOfServiceDialogBox from './dialogs/TermsOfServiceDialogBox.jsx';
 import EmailConfirmationDialogBox from './dialogs/EmailConfirmationDialogBox';
 import Events from '/imports/util/events';
+import { toastrModal } from '/imports/util';
 
 class SideNav extends Component {
 
@@ -20,12 +22,18 @@ class SideNav extends Component {
         userData: {},
         isBusy:false,
         errorText: null,
+        changePasswordDialogBox:false
     }
 
     componentWillMount() {
         Events.on("registerAsSchool", "123#567",(data) => {
           let {userType} = data;
           this.handleSignUpDialogBoxState(true, userType);
+        })
+        // This will listen if terms and services not accepted by User.
+        Events.on("acceptTermsAndServices", "123#567",(data) => {
+          let {userType} = data;
+          this.handleTermsOfServiceDialogBoxState(true, userType);
         })
     }
 
@@ -37,6 +45,13 @@ class SideNav extends Component {
 
     handleSignUpDialogBoxState = (state, userType) => {
         this.setState({signUpDialogBox: state, userData: { userType: userType}, errorText: null});
+    }
+    handleChangePasswordDialogBoxState = (state,message) => {
+        const { toastr } = this.props;
+        if(message) {
+            toastr.success(`${message}`,"success")
+        }
+        this.setState({changePasswordDialogBox: state});
     }
 
     handleTermsOfServiceDialogBoxState = (state) => {
@@ -53,7 +68,6 @@ class SideNav extends Component {
 
     handleSignUpSubmit = (payload, event) => {
         event.preventDefault();
-        console.log("handleSignUpSubmit -->>",payload);
         let obj = {};
         if(!payload.name || !payload.email) {
             obj.errorText = "* fields are mandatory";
@@ -72,8 +86,9 @@ class SideNav extends Component {
     }
 
     handleEmailConfirmationSubmit = () => {
-        this.setState({isBusy: true})
-        Meteor.call("user.createUser", {...this.state.userData}, (err, res) => {
+        this.setState({isBusy: true});
+        const { toastr } = this.props;
+        Meteor.call("user.createUser", {...this.state.userData, signUpType: 'skillshape-signup'}, (err, res) => {
             console.log("user.createUser err res -->>",err,res)
             let modalObj = {
                 open: false,
@@ -85,14 +100,19 @@ class SideNav extends Component {
             if(err) {
                 modalObj.errorText = err.reason || err.message;
                 modalObj.signUpDialogBox = true;
+                this.setState(modalObj)
             }
-            this.setState(modalObj)
+
+            if(res) {
+                this.setState(modalObj, ()=> {
+                    toastr.success("Successfully registered, Please check your email.","success");
+                })
+            }
         })
     }
     handleLoginGoogle = () => {
         let self = this;
         Meteor.loginWithGoogle({}, function(err,result) {
-
             let modalObj = {
                 open: false,
                 signUpDialogBox: false,
@@ -158,6 +178,14 @@ class SideNav extends Component {
 
                     />
                 }
+                {currentUser && this.state.changePasswordDialogBox &&
+                    <ChangePasswordDialogBox
+                        open={this.state.changePasswordDialogBox}
+                        onModalClose={() => this.handleChangePasswordDialogBoxState(false)}
+                        onSubmit={this.handleChangePasswordSubmit}
+                        hideChangePassword = {(message) =>{this.handleChangePasswordDialogBoxState(false,message)}}
+                    />
+                }
                 {
                     this.state.termsOfServiceDialogBox &&
                     <TermsOfServiceDialogBox
@@ -182,6 +210,7 @@ class SideNav extends Component {
                     open={this.state.open}
                     handleDrawer={() => this.handleDrawerState(false)}
                     handleSignUpDialogBox={this.handleSignUpDialogBoxState}
+                    showChangePassword={() => this.handleChangePasswordDialogBoxState(true)}
                     {...this.props}
                     />
             </Fragment>
@@ -189,4 +218,4 @@ class SideNav extends Component {
     }
 }
 
-export default SideNav;
+export default toastrModal(SideNav);

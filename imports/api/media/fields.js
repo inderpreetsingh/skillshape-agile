@@ -1,4 +1,5 @@
 import config from "/imports/config"
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
 const Media = new Mongo.Collection(config.collections.media);
 /**
@@ -28,10 +29,30 @@ Media.attachSchema(new SimpleSchema({
     },
     createdAt: {
         type: Date,
+    },
+    memberId: { // Needs to delete this If media uploads from School member page
+        type: String,
+        optional: true
+    },
+    taggedMemberIds: {
+        type: [String],
+        optional:true
+    },
+    users_permission: {
+        type: Object,
+        optional:true,
+        blackbox: true
+    },
+    accessType: {
+        type: String,
+        optional:true
     }
+
 }));
 
-Media.join(Meteor.users, "createdBy", "creator", ["profile"]);
+Media.join(SchoolMemberDetails, "taggedMemberIds", "taggedMemberData", ["firstName","lastName","email","activeUserId"]);
+
+// Media.join(Meteor.users, "createdBy", "creator", ["profile"]);
 
 Meteor.startup(function() {
     if (Meteor.isServer) {

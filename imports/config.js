@@ -14,6 +14,7 @@ export default config = Object.freeze({
 		white: '#ffffff',
 	},
 	defaultLocation: [52.3702157, 4.8951],
+	// All collections needs to put here.
 	collections: {
 		modules : "Modules",
 		skills : "Skills",
@@ -33,7 +34,8 @@ export default config = Object.freeze({
 		claimSchoolRequest: "ClaimSchoolRequest",
 		classTimesRequest: "ClassTimesRequest",
 		PriceInfoRequest: "PriceInfoRequest",
-		schoolMemberDetails: "SchoolMemberDetails"
+		schoolMemberDetails: "SchoolMemberDetails",
+		classTypeLocationRequest: "ClassTypeLocationRequest"
 	},
 	gender : [
 		{ label: "Any", value: "Any"},
@@ -53,6 +55,18 @@ export default config = Object.freeze({
 		{ label: "INR", value: "₹"},
 		{ label: "EUR", value: "€"},
 	],
+	// Show only 4 classes initially to Users. This count will increase when user clicks on see more on dash route.
 	seeMoreCount: 4,
-	CAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", //test key
+	// CAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", //test key
+	CAPTCHA_SITE_KEY: process.env.NODE_ENV == "development" ? "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" : "6LeRJE8UAAAAAEtZBraHTNfUe3VD8k5QgJ0oM1J3", // production key
+	// Need to show these default classes to `Users` if no class type data found for User's current location.
+	defaultClassType: [
+		{ skillType: "Judo", location: "Toyko"},
+		{ skillType: "Surfing", location: "Hawail"},
+		{ skillType: "Brazilian Jujitsu", location: "Rio De Janiero"},
+		{ skillType: "Cooking", location: "Sicily"},
+		{ skillType: "Acting", location: "London"},
+		{ skillType: "Painting", location: "Paris"},
+		{ skillType: "Yoga", location: "Delhi"},
+	]
 })

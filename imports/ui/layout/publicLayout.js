@@ -4,11 +4,14 @@ import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
 
 import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
+import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar.jsx';
 import { withStyles, material_ui_next_theme } from '/imports/util';
 import SetPasswordDialogBox from '/imports/ui/components/landing/components/dialogs/SetPasswordDialogBox';
 import { browserHistory } from 'react-router';
 
-const theme = createMuiTheme({...material_ui_next_theme});
+// const theme = createMuiTheme({...material_ui_next_theme});
+
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
 
 const styles = theme => ({
     wrapper : {
@@ -18,8 +21,7 @@ const styles = theme => ({
     },
     content: {
         backgroundColor: theme.palette.background.default,
-        paddingTop: theme.spacing.unit*10 - theme.spacing.unit/2,
-        overflow: 'hidden',
+        // paddingTop: theme.spacing.unit*10 - theme.spacing.unit/2,
     }
 });
 
@@ -63,14 +65,19 @@ class PublicLayout extends React.Component {
                 Meteor.call("user.setPassword",{password}, (err,res) => {
                     if (err) {
                         errorMessage = err.reason || err.message
+                        this.setState({ isBusy : false })
                     } else {
-                        browserHistory.push('/claimSchool');
+                        this.setState({ showSetPasswordDialogBox : false, isBusy : false }, ()=> {
+                            Events.trigger("loginAsSchoolAdmin");
+                        })
                     }
-                    this.setState({ showSetPasswordDialogBox : false, isBusy : false })
                 });
             }
         }
-        this.setState({ errorMessage : errorMessage })
+
+        if(errorMessage) {
+            this.setState({ errorMessage : errorMessage })
+        }
     }
 
     render( ) {
@@ -90,9 +97,11 @@ class PublicLayout extends React.Component {
         }
 
         return (
-          <MuiThemeProvider theme={theme}>
+          <MuiThemeProvider theme={muiTheme}>
                 <div className={`${className.mainClass} ${classes.wrapper}`} id={className.id}>
-                    <BrandBar {...this.props}/>
+                    {/*<BrandBar {...this.props}/>*/}
+                    <TopSearchBar {...this.props} />
+
                     <SetPasswordDialogBox
                         open={this.state.showSetPasswordDialogBox}
                         onModalClose={() => this.setState({showSetPasswordDialogBox: false})}

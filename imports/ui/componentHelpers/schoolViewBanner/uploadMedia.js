@@ -9,6 +9,7 @@ import Dialog, {
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import { withStyles, imageRegex } from "/imports/util";
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 import { ContainerLoader } from '/imports/ui/loading/container';
 import '/imports/api/media/methods';
@@ -111,12 +112,12 @@ class UploadMedia extends React.Component {
 			        	</Grid>
 		        	</DialogContent>
 		        	<DialogActions>
-		        		<Button color="primary" type="submit"  >
-					        Save
-					    </Button>
-					    <Button color="primary" onClick={onClose} >
-					        Close
-					    </Button>
+  					    <Button style={{ color: helpers.cancel}} color="primary" onClick={onClose} >
+  					        Cancel
+  					    </Button>
+                <Button style={{ color: helpers.action}} color="primary" type="submit"  >
+                    Save
+                </Button>
 		        	</DialogActions>
 		        </form>
 	        </Dialog>

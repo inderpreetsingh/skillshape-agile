@@ -1,3 +1,6 @@
+import isEmpty from 'lodash/isEmpty';
+import isArray from 'lodash/isArray';
+import get from 'lodash/get';
 import ClassType from "/imports/api/classType/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
@@ -9,6 +12,7 @@ import PriceInfoRequest from "/imports/api/priceInfoRequest/fields.js";
 import { sendClaimASchoolEmail } from "/imports/api/email";
 import { sendConfirmationEmail } from "/imports/api/email";
 import { sendPriceInfoRequestEmail } from "/imports/api/email";
+import { sendEmailToStudentForClaimAsMember } from "/imports/api/email";
 import { getUserFullName } from '/imports/util/getUserData';
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
@@ -20,7 +24,8 @@ Meteor.methods({
         if (schoolData && data.name && schoolData.name !== data.name) {
             ClassType.update(
                 { schoolId: id },
-                { $set: { "filters.schoolName": data.name } }
+                { $set: { "filters.schoolName": data.name } },
+                { multi: true}
             );
         }
         return School.update({ _id: id }, { $set: data });
@@ -71,10 +76,15 @@ Meteor.methods({
             }
         );
     },
-    "school.publishSchool": function(schoolId, is_publish) {
+    "school.publishSchool": function({schoolId, isPublish}) {
+        ClassType.update(
+            { schoolId: schoolId },
+            { $set: { isPublish: isPublish },  },
+            { multi: true}
+        );
         return School.update(
             { _id: schoolId },
-            { $set: { is_publish: is_publish } }
+            { $set: { isPublish: isPublish } }
         );
     },
     "school.purchasePackage": function({ typeOfTable, tableId, schoolId }) {
@@ -306,7 +316,10 @@ Meteor.methods({
             const priceInfoRequest = PriceInfoRequest.findOne({schoolId, userId: this.userId });
             console.log("priceInfoRequest -->>",priceInfoRequest)
             if(priceInfoRequest) {
-                // Update `notification: false` in `PriceInfoRequest` so that duplicate entries not created for `PriceInfoRequest`;
+                if(priceInfoRequest.notification) {
+                    throw new Meteor.Error("You pricing request has already been created!!!");
+                }
+                // Update `notification: true` in `PriceInfoRequest` so that duplicate entries not created for `PriceInfoRequest`;
                 PriceInfoRequest.update({_id:priceInfoRequest._id},{$set:{notification: true}});
             } else {
                 const requestObj = {
@@ -332,39 +345,143 @@ Meteor.methods({
             let ownerName;
             if(schoolData && schoolData.userId) {
                 // Get Admin of School As school Owner
-                let currentUser = Meteor.users.findOne(schoolData.userId);
-                ownerName= currentUser.profile.firstName;
+                let adminUser = Meteor.users.findOne(schoolData.userId);
+                ownerName= getUserFullName(adminUser);
             }
             if(!ownerName) {
                 // Owner Name will be Sam
                 ownerName = 'Sam'
             }
             let currentUser = Meteor.users.findOne(this.userId);
-            console.log("currentUser===>",currentUser);
-            if(currentUser) {
-                let currentUserName = currentUser.profile.firstName;
-                sendPriceInfoRequestEmail({toEmail,fromEmail,updatePriceLink, ownerName, currentUserName});
-                return {emailSent:true}
-            } else {
-                return {login:false}
-            }
+            let currentUserName = getUserFullName(currentUser);
+            sendPriceInfoRequestEmail({toEmail,fromEmail,updatePriceLink, ownerName, currentUserName});
+            return {emailSent:true};
 
         } else {
             throw new Meteor.Error("Permission denied!!");
         }
     },
-    // This function is used to add a school member in `School`.
-    "school.addNewMember" : function(doc) {
+    /*** This function is used to add a school member in `School`.
+      * Here we check if user not exist then need to create new user and send invitation
+      * to this user so that it can become active member by clicking on it.
+      * if user is already a skillshape user then just make them as a member of School.
+    */
+    "school.addNewMember": function(doc) {
+        // Validations
+        const schoolAdminRec = Meteor.users.findOne({ "profile.schoolId": doc.schoolId });
+        const currentUserData  = Meteor.users.findOne(this.userId);
+        console.log("currentUserData",currentUserData);
+        console.log("doc",doc);
+        // Admin needs to login and should not be able to create members with their own email.
+        if (!this.userId || !schoolAdminRec) {
+            throw new Meteor.Error("You are not allowed to add a new member!!");
+        } else if((currentUserData && (doc.email == currentUserData.emails[0].address))) {
+            throw new Meteor.Error("You cannot add yourself as a member!!");
+        }else {
+            const userRecExist = Meteor.users.findOne({ "emails.address": doc.email });
+            let insertMember, memberDetail, newlyCreatedUser;
+            // Not an active user in skillshape then need to create user and add them as a member of a particular class in a School.
+            if (!userRecExist) {
+                doc.sendMeSkillShapeNotification = true;
+                doc.name = doc.firstName;
+                newlyCreatedUser = Meteor.call("user.createUser", { ...doc, signUpType: 'member-signup' });
+                doc.activeUserId = newlyCreatedUser.user._id;
+            } else {
+                // User is already a member in skillshape then need to make them as a School member if they are not member in a Class.
+                let filters = { email: doc.email, schoolId: doc.schoolId };
+
+                if (isArray(doc.classIds)) {
+                    filters.classIds = { $in: doc.classIds }
+                }
+
+                memberDetail = SchoolMemberDetails.findOne(filters);
+
+                if (!memberDetail) {
+                    doc.activeUserId = (userRecExist && userRecExist._id) || (googleUserRec && googleUserRec._id);
+                } else {
+                    insertMember = true;
+                }
+
+            }
+            if (!insertMember) {
+                doc.createdBy = this.userId;
+                doc.inviteAccepted = false;
+                // Create new member
+                let memberId = SchoolMemberDetails.insert(doc);
+
+                // console.log("doc======>", doc)
+                let claimingMemberRec = Meteor.users.findOne({ _id: doc.activeUserId });
+                let password = newlyCreatedUser ? newlyCreatedUser.password : null;
+                let fromEmail = "Notices@SkillShape.com";
+
+                console.log("claimingMemberRec", claimingMemberRec)
+                // To: can be from user's email OR from google services
+                let toEmail = get(claimingMemberRec, "emails[0].address") || get(claimingMemberRec, "google.services.email");
+
+                let ROOT_URL = `${Meteor.absoluteUrl()}?acceptInvite=${true}&memberId=${memberId}&schoolId=${doc.schoolId}`
+                let rejectionUrl;
+                // Active member found, then need to send notification to the member with a button to reject the school.
+                if(!newlyCreatedUser) {
+                    rejectionUrl = `${Meteor.absoluteUrl()}?rejectInvite=${true}&memberId=${memberId}&schoolId=${doc.schoolId}`
+                }
+                // const currentUserData = Meteor.users.findOne({ _id: this.userId });
+                const schoolData = School.findOne(doc.schoolId);
+                /*Need to send Email to User so that they get confirmation that their account has been
+                linked as a member in School.*/
+                sendEmailToStudentForClaimAsMember(currentUserData, schoolData, claimingMemberRec, password, fromEmail, toEmail, ROOT_URL, rejectionUrl);
+                return { addedNewMember: true };
+            } else {
+                throw new Meteor.Error("Member Already exist!!");
+            }
+        }
+    },
+    // This is used to save admin notes in School Members.
+    "school.saveAdminNotesToMember" : function(doc) {
         // Validations
         // Only school admin can add a new Memeber.
-        console.log("school.addNewMember",doc)
-        doc.createdBy = this.userId;
+        console.log("saveAdminNotesToMember",doc)
+        doc.updatedBy = this.userId;
         const schoolAdminRec = Meteor.users.findOne({"profile.schoolId": doc.schoolId});
-        // You are not School Admin of this School so you can not add a New Member.
         if(!schoolAdminRec) {
             return {accessDenied:true};
         }
-        SchoolMemberDetails.insert(doc);
-        return {addedNewMember:true};
+        SchoolMemberDetails.update({_id:doc.memberId},{$set:{adminNotes:doc.adminNotes}});
+        return {updatedNotes:true};
+    },
+    "school.updateInviteAcceptedToMemberRec": function({memberId,schoolId,acceptInvite}) {
+        let schoolMemberDetails = SchoolMemberDetails.find({_id:memberId,schoolId:schoolId});
+        let currentUser = Meteor.users.findOne(this.userId);
+        let email = (currentUser.emails && currentUser.emails[0].address) || currentUser.services.google.email;
+        if(this.userId && schoolMemberDetails.email == email) {
+            SchoolMemberDetails.update({_id:memberId},{$set:{inviteAccepted:true}});
+        } else {
+            return {memberLogin:false};
+        }
+        return {inviteAccepted:true};
+    },
+    "school.addNewSchool": function(doc) {
+        if(!this.userId) {
+            throw new Meteor.Error(
+                "Access denied",
+                "Error while adding new school"
+            );
+        }
+        const schoolInsertDoc = {
+            email: doc.emails.address,
+            isPublish: true,
+            superAdmin: doc._id,
+            admins: [doc._id],
+            aboutHtml:"",
+            descHtml:"",
+            name:"my-school"
+        }
+        console.log("schoolInsertDoc",schoolInsertDoc)
+        let schoolId = School.insert(schoolInsertDoc);
+        console.log("schoolId",schoolId)
+        let schoolEditViewLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
+        return schoolEditViewLink;
     }
 });
+
+
+/*name, email, userType, sendMeSkillShapeNotification*/

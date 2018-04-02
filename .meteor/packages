@@ -39,3 +39,6 @@ seba:minifiers-autoprefixer
 accounts-google
 service-configuration
 accounts-facebook
+okgrow:analytics
+percolate:synced-cron
+force-ssl

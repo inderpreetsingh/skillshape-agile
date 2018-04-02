@@ -66,6 +66,10 @@ ClassType.attachSchema(new SimpleSchema({
         type: String,
         optional: true
     },
+    isPublish: {
+        type: Boolean,
+        optional: true
+    },
     filters: {
         type: Object,
         optional: true
@@ -103,7 +107,7 @@ ClassType.join(SLocation, "locationId", "selectedLocation", ["loc","rooms", "add
 
 Meteor.startup(function() {
     if (Meteor.isServer) {
-        // ClassType._ensureIndex({ name:"text",desc:"text", "filters.locationTitle": "text" });
+        ClassType._ensureIndex({ name:"text",desc:"text", "filters.locationTitle": "text", "filters.schoolName": "text" });
     }
 });
 

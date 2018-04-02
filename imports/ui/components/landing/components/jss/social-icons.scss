@@ -1,0 +1,27 @@
+.social-icon {
+  cursor: pointer;
+
+  &-svg path{
+    transition: fill .4s ease;
+  }
+}
+
+.sc-twitter-svg:hover path {
+  fill: map-get($social-icons,'twitter');
+}
+
+.sc-facebook-svg:hover path {
+  fill: map-get($social-icons,'facebook');
+}
+
+.sc-google-plus-svg:hover path {
+  fill: map-get($social-icons,'google-plus');
+}
+
+.sc-instagram-svg:hover path {
+  fill: map-get($social-icons,'instagram');
+}
+
+.sc-dribbble-svg:hover path {
+  fill: map-get($social-icons,'dribbble');
+}

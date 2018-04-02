@@ -4,6 +4,7 @@
   border-radius: 0;
   box-shadow: none;
   font-size: $base-font-size * 1px;
+  font-family: map-get($fonts,'common');
 
   &:hover {
     box-shadow: none;
@@ -29,10 +30,13 @@
     display: flex;
     align-items: flex-end;
   }
-
 }
 
-.homepage-filter {
+.my-multi-select-filter {
+  .rw-widget-input, .rw-widget-picker, .rw-widget-container, .rw-multiselect {
+    background-color: transparent;
+  }
+
   .rw-multiselect .rw-widget-picker > div {
     max-width: 100%;
   }
@@ -47,6 +51,7 @@
 
   .rw-multiselect-tag {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     overflow: hidden;
     max-width: initial;
@@ -54,6 +59,22 @@
     margin: 0;
     margin-right: 2px;
     border-radius: 2px;
+    font-size: 12px;
+    min-height: map-get($sizes,'rhythm-div') * 4px;
+    min-width: map-get($sizes,'rhythm-div') * 2px;
+
+    & > span {
+      line-height: 1;
+      min-width: 0;
+      max-width: 90%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    & > div {
+      flex-grow: 1;
+      flex-shrink: 0;
+    }
   }
 
   .rw-input-reset {
@@ -64,13 +85,6 @@
     display: flex;
     align-items: center;
   }
-}
-
-.filter-tags {
-  display: flex;
-  margin: 0;
-  margin-bottom: map-get($sizes,'rhythm-div') * 1px;
-  margin-right: map-get($sizes,'rhythm-div') * 1px;
 }
 
 .rw-state-focus > .rw-widget-container,.rw-state-focus > .rw-widget-container:hover {
@@ -103,6 +117,12 @@
   align-items: flex-end;
 }
 
+// General classes related to it
 .no-shrink {
   flex-shrink: 0;
+}
+
+.my-multi-select-filter-btn {
+  min-width: map-get($sizes,'rhythm-div') * 2px;
+  padding: map-get($sizes,'rhythm-div') * 1px;
 }

@@ -15,51 +15,74 @@ import {getContainerMaxWidth} from '../../../../../util/cards.js';
 import * as helpers from '../jss/helpers.js';
 
 const CardsListWrapper = styled.div`
-    padding: 0;
+  padding: 0;
 `;
 
 const SPACING = helpers.rhythmDiv * 3;
-const SPACING_MAPVIEW = helpers.rhythmDiv;
-const CARD_WIDTH = 320;
+const CARD_WIDTH = 280;
+
+const GridContainer = styled.div`
+  ${helpers.flexCenter}
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    justify-content: center;
+  }
+`;
+
+const GridItem = styled.div`
+  width: ${CARD_WIDTH}px;
+  margin: ${props => props.spacing/2 || '16'}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    max-width: ${CARD_WIDTH}px;
+    margin: ${props => props.spacing/2 || '16'}px 0;
+  }
+`;
 
 const CardsListGridWrapper = styled.div`
-    padding: ${props => props.mapView ? SPACING_MAPVIEW : SPACING}px;
+    padding: ${SPACING/2}px;
     margin: 0;
     margin-right: auto;
-    max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING_MAPVIEW,2) + 8 : getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
+    max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING, 2) + 24 : getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
 
-    @media screen and (max-width: 1279px) {
-      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3)  + 24}px;
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px) {
+      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px;
     }
 
-    @media screen and (max-width: 959px) {
-      max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING_MAPVIEW,1) + 8 : getContainerMaxWidth(CARD_WIDTH,SPACING,2)  + 24}px;
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px) {
+      max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24 : getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px;
     }
 
-    @media screen and (max-width: 600px) {
-      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1)  + 24}px;
+    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px) {
+      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24}px;
+      margin: 0 auto;
     }
+
 `;
 
 const More = styled.div`
-    width:100%;
-    padding:${helpers.rhythmDiv}px;
-    ${helpers.flexCenter}
+  width:100%;
+  padding:${helpers.rhythmDiv}px;
+  ${helpers.flexCenter}
+  margin-top: ${helpers.rhythmDiv * 3}px;
 `;
 
 const CardsListTitle = styled.h2`
-    padding-left: ${helpers.oneRow}px;
-    color: ${helpers.textColor};
-    font-size: ${helpers.baseFontSize * 2}px;
-    font-weight: 600;
-    font-family: ${helpers.specialFont};
-    margin-bottom: ${helpers.rhythmDiv}px;
-    margin-top: 0;
-    @media screen and (min-width: 0) and (max-width: ${helpers.tablet}px) {
-        padding-left: 0;
-        text-align: center;
-    }
+  padding-left: ${helpers.oneRow}px;
+  color: ${helpers.textColor};
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-weight: 600;
+  font-family: ${helpers.specialFont};
+  margin-bottom: ${helpers.rhythmDiv}px;
+  margin-top: 0;
+  @media screen and (min-width: 0) and (max-width: ${helpers.tablet}px) {
+      padding-left: 0;
+      text-align: center;
+  }
 `;
+
 
 class CardsList extends Component {
     _compareCardsData(currentCardsData,newCardsData) {
@@ -93,10 +116,11 @@ class CardsList extends Component {
         }
     }
 
-    seeMoreStatus = (cardsData, filters) => {
+    seeMoreStatus = (cardsData, filters, name) => {
         const { limit, skillCategoryClassLimit } = filters;
-        if(limit) {
-            if (limit <= size(cardsData)) {
+        // console.log("skillCategoryClassLimit -->>",skillCategoryClassLimit[name],size(cardsData))
+        if(skillCategoryClassLimit && skillCategoryClassLimit[name]) {
+            if (skillCategoryClassLimit[name] <= size(cardsData)) {
                 return true
             }
         } else {
@@ -110,36 +134,31 @@ class CardsList extends Component {
 
     render() {
         const { title, cardsData, mapView,handleSeeMore,name,classInterestData, filters} = this.props;
+
         // console.log("CardsList cardsData-->>",this.props);
         return(
           <CardsListWrapper>
-              <CardsListTitle>{title} </CardsListTitle>
+              <CardsListTitle>{title}</CardsListTitle>
               <CardsListGridWrapper mapView={mapView}>
-                 <Grid container spacing={24}>
+                 <GridContainer>
                      {cardsData.map(card => {
-                         if(mapView) {
-                           return (
-                             <Grid item key={card.id} md={6} sm={12} lg={6} xs={12}>
-                                 <ClassTypeCard classInterestData={classInterestData} {...card}/>
-                             </Grid>
-                           )
-                         }else {
-                           return (
-                             <Grid item key={card.id} md={4} sm={6} lg={3} xs={12}>
-                                 <ClassTypeCard classInterestData={classInterestData} {...card}/>
-                             </Grid>
-                           )
-                         }
+                        return (
+                           <GridItem key={card._id} spacing={24}>
+                               <ClassTypeCard classInterestData={classInterestData} {...card}/>
+                           </GridItem>
+                         )
                      })}
-                 </Grid>
+                 </GridContainer>
+
+                 {
+                   this.seeMoreStatus(cardsData, filters, name) && (
+                       <More>
+                          <SecondaryButton label="See More" onClick={() => {handleSeeMore(name)}}/>
+                       </More>
+                   )
+                 }
               </CardsListGridWrapper>
-              {
-                this.seeMoreStatus(cardsData, filters) && (
-                    <More>
-                       <SecondaryButton label="See More" onClick={() => {handleSeeMore(name)}}/>
-                    </More>
-                )
-              }
+
           </CardsListWrapper>
         )
     }

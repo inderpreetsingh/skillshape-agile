@@ -1,91 +1,128 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
+import styled from 'styled-components';
 import { browserHistory } from 'react-router';
-import { emailRegex } from '/imports/util';
+import { withStyles } from 'material-ui/styles';
+import Card, { CardHeader, CardActions, CardContent } from 'material-ui/Card';
+import Button from 'material-ui/Button';
 
-export default class ResetPassword extends React.Component {
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import IconInput from '/imports/ui/components/landing/components/form/IconInput.jsx';
+
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { toastrModal } from '/imports/util';
+
+const InputWrapper = styled.div`
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+const ErrorWrapper = styled.span`
+    color: red;
+    float: right;
+`;
+
+const styles = theme => ({
+    card: {
+        minWidth: 275,
+        maxWidth: 600,
+        margin: 'auto',
+    },
+    actions: {
+        justifyContent: 'space-between',
+        display: 'flex',
+        margin: 15
+    },
+});
+
+
+class ResetPassword extends React.Component {
 
 	constructor(props){
-    super(props);
-  }
-
-  submit = (event) => {
-    event.preventDefault();
-    const { token } = this.props.routeParams;
-    const password = this.refs.resetPasswordPassword.value;
-    const passwordConfirm = this.refs.resetPasswordPasswordConfirm.value;
-    console.log("pwd : " + password);
-    if(!password){
-      toastr.error("Please enter password","Error");
-      return
+        super(props);
+        this.state = {
+            errorText: "",
+            isBusy: false,
+        }
     }
 
-    if(password != passwordConfirm){
-      toastr.error("Please enter valid confirm password","Error");
-      return
+    handleTextChange = (inputName, event)=> {
+        this.setState({ [inputName]: event.target.value, errorText: ""})
     }
-    
-    Accounts.resetPassword(token, password, function(err) {
-      if (err) {
-        console.log(err.message);
-        toastr.error("We are sorry but something went wrong.");
-      } else {
-        toastr.success("Your password as been updated!");
-        browserHistory.push('/');
-      }
-    });
-  }
+
+    onSubmit = (event) => {
+        event.preventDefault();
+        const { token } = this.props.routeParams;
+        const { password, confirmPassword } = this.state;
+
+        if(password && confirmPassword) {
+
+            if(password === confirmPassword) {
+                const stateObj = {...this.state};
+                this.setState({isBusy: true})
+                Accounts.resetPassword(token, password, (err, res) => {
+                    stateObj.isBusy = false;
+                    if (err) {
+                        stateObj.errorText = err.reason || err.message
+                    } else {
+                        this.props.toastr.success("Your password has been updated!");
+                        setTimeout(() => {
+                            browserHistory.push('/');
+                        },2000)
+                    }
+                    this.setState(stateObj)
+                });
+
+            } else {
+                this.setState({ errorText: "Password not match!!"})
+            }
+
+        } else {
+            this.setState({ errorText: "Enter password"})
+        }
+
+    }
 
 	render() {
+        const { classes } = this.props;
+		const { password, confirmPassword } = this.state;
 
-		return(
-			<div className="full-page home-page" filter-color="black" style={{backgroundImage: `url('/images/comingsoon.jpg')`}}>
-  			<div className="content" style={{paddingTop: '0px'}}>
-          <div className="row">
-          	<div className="login-card">
-            	<div className="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
-                <form onSubmit={this.submit} id="loginmodal">
-                  <div className="card card-login card-hidden" style={{paddingBottom: '0px'}}>
-                    <div className="card-header text-center" data-background-color="info">
-                      <h4 className="card-title">
-                      	Reset Password
-                      </h4>
-                    </div>
-                    <div className="card-content">
-                      <div className="input-group">
-                          <span className="input-group-addon">
-                              <i className="material-icons">lock_outline</i>
-                          </span>
-                          <input 
-                          	type="password" 
-                          	placeholder="Password..." 
-                          	className="form-control" 
-                          	id="resetPasswordPassword"
-                          	ref="resetPasswordPassword"
-                          />
-                      </div>
-                      <div className="input-group">
-                          <span className="input-group-addon">
-                              <i className="material-icons">lock_outline</i>
-                          </span>
-                          <input 
-                          	type="password" 
-                          	placeholder="Re-Password..." 
-                          	className="form-control" 
-                          	id="resetPasswordPasswordConfirm"
-                          	ref="resetPasswordPasswordConfirm" 
-                          />
-                      </div>
-                    </div>
-                    <div className="footer text-center">
-                      <button type="submit" id="resetPassword" className="btn btn-danger">Reset</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
+        return(
+			<DocumentTitle title={this.props.route.name}>
+            <div>
+                <Card className={classes.card}>
+                    { this.state.isBusy && <ContainerLoader/>}
+                    <form onSubmit={this.onSubmit}>
+                        <CardHeader
+                            title="Change Password"
+                        />
+                        <CardContent>
+                            <InputWrapper>
+                                <IconInput
+                                    labelText="Password"
+                                    type="password"
+                                    iconName="lock_open"
+                                    value={this.state.password}
+                                    onChange={this.handleTextChange.bind(this, "password")}
+                                />
+                                <IconInput
+                                    labelText="Repeat Password"
+                                    type="password"
+                                    iconName="lock_open"
+                                    value={this.state.confirmPassword}
+                                    onChange={this.handleTextChange.bind(this, "confirmPassword")}
+                                />
+                            </InputWrapper>
+                        </CardContent>
+                        <CardActions className={classes.actions}>
+                            <ErrorWrapper>{this.state.errorText}</ErrorWrapper>
+                            <Button type="submit" style={{ color: helpers.action}} size="small">Reset Password</Button>
+                        </CardActions>
+                    </form>
+                </Card>
             </div>
-          </div>
-        </div>
-      </div>
+            </DocumentTitle>
 		)
 	}
 }
+
+export default withStyles(styles)(toastrModal(ResetPassword));;

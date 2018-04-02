@@ -1,4 +1,6 @@
 import React from 'react';
+import get from 'lodash/get';
+import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Plant from './icons/Plant.jsx';
@@ -27,6 +29,10 @@ const Title = styled.h1`
   color: ${helpers.black};
   font-size: ${helpers.baseFontSize * 3}px;
   font-style: italic;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    font-size: ${helpers.baseFontSize * 2}px;
+  }
 `;
 
 const ButtonsWrapper = styled.div`
@@ -69,6 +75,7 @@ const OrText = styled.p`
 `;
 
 const NoResults = (props) => (
+  <DocumentTitle title={get(props, "route.name", "Untitled")}>
   <Wrapper>
     <IconWrapper>
       <Plant />
@@ -82,6 +89,7 @@ const NoResults = (props) => (
       <SecondaryButton fullWidth={true} onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom/>
     </ButtonsWrapper>
   </Wrapper>
+  </DocumentTitle>
 );
 
 NoResults.propTypes = {

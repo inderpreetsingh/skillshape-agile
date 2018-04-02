@@ -37,7 +37,7 @@ import MapComponent from './mapComponent';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
-
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 export default function () {
 
@@ -49,6 +49,7 @@ export default function () {
 	// console.log("Panel with table state -->>",this.state);
 	return (
 		<div className={`${className} panel-table`}>
+          	{ this.state.isBusy && <ContainerLoader/>}
           	{
               this.state.showConfirmationModal && <ConfirmationModal
                   open={this.state.showConfirmationModal}
@@ -75,7 +76,7 @@ export default function () {
 	              	<Grid  style={{display: 'inline-flex',alignItems: 'center', padding: 0}} item md={2} sm={3} xs={12}>
 	              		<div style={{display: 'inline-flex'}} >
 		                	<Icon className="material-icons" style={{marginRight: 5, lineHeight: "45px"}}>{settings.mainPanelHeader.leftIcon}</Icon>
-		                	<Typography style={{lineHeight: "45px"}} className={classes.headerText} >{settings.mainPanelHeader.title || ""}</Typography>
+		                	<Typography style={{lineHeight: "45px"}} className={classes.headerText} >{settings.mainPanelHeader.title || "teeeeeee"}</Typography>
 	              		</div>
 	              	</Grid>
 	              	<Grid style={{margin: '10px 0'}} item sm={6} md={8} xs={12}>
@@ -100,17 +101,25 @@ export default function () {
 		          				<ExpansionPanel key={index} className={classes.expansionPanel} key={index}>
 			          				<ExpansionPanelSummary style={{boxShadow: '0 1px 0 rgba(0,0,0,.1)'}} expandIcon={<ExpandMoreIcon />} >
 			              				<div style={{marginLeft: 15}}>
-			                				<Typography className={classes.secondaryHeading}>{tableData[settings.mainPanelHeader.titleKey] || ""}</Typography>
+			                				<Typography className={classes.secondaryHeading}>{this.getExpansionPanelTitle(tableData, settings.mainPanelHeader.titleKey)}</Typography>
 			              				</div>
 			            			</ExpansionPanelSummary>
 			            			{
 			            				settings.mainPanelHeader.expansionPanelRightBtnTitle && (
-				              				<div className={classes.notifyExplanation}>
-					          					<Typography type="caption">Pressing this button will inform students who are enrolled or interested in this class of any schedule changes. Please do not abuse this button.</Typography>
-					          					<Button onClick={() => this.handleNotifyClassTime(tableData)} color="accent" raised dense>
-					          					 	Notify Students of Time Change
-					          					</Button>
-				          					</div>
+				              				<Fragment>
+					              				<div className={classes.notifyExplanation}>
+						          					<Typography type="caption">Pressing this button will inform students who are enrolled or interested in this class of any schedule changes. Please do not abuse this button.</Typography>
+						          					<Button onClick={() => this.handleNotifyClassTypeUpdate(tableData, "classType.notifyToStudentForClassTimes")} color="accent" raised dense>
+						          					 	Notify Students of Time Change
+						          					</Button>
+					          					</div>
+					          					<div className={classes.notifyExplanation}>
+						          					<Typography type="caption">Pressing this button will inform students who are enrolled or interested in this class of any location changes. Please do not abuse this button.</Typography>
+						          					<Button onClick={() => this.handleNotifyClassTypeUpdate(tableData, "classType.notifyToStudentForLocation")} color="accent" raised dense>
+						          					 	Notify Students of Location Change
+						          					</Button>
+					          					</div>
+				              				</Fragment>
 			            				)
 			            			}
 

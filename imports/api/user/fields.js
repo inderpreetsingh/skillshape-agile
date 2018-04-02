@@ -103,7 +103,17 @@ Schema.UserProfile = new SimpleSchema({
     currency: {
         type: String,
         optional: true
-    }
+    },
+    birthYear: {
+        type: Number,
+        optional: true
+    },
+    coords: {
+        type: [Number], // [<longitude>, <latitude>]
+        index: '2d', // create the geospatial index
+        optional: true,
+        decimal: true
+    },
 });
 
 Schema.User = new SimpleSchema({
@@ -165,6 +175,19 @@ Schema.User = new SimpleSchema({
     heartbeat: {
         type: Date,
         optional: true
+    },
+    media_access_permission: {
+        type: String,
+        optional: true,
+    },
+    // this is used to know which service user have used for the sign-up process.
+    sign_up_service: {
+        type: String,
+        optional: true,
+    },
+    term_cond_accepted: {
+        type: Boolean,
+        optional: true,
     }
 });
 

@@ -117,7 +117,7 @@ class ClassTimeForm extends React.Component {
 
         } else if(tabValue === 2) {
 
-            payload.scheduleType = "onGoing"
+            payload.scheduleType = "OnGoing"
             payload.startDate = new Date();
             payload.scheduleDetails = this.refs.weekDaysRow.getRowData();
 

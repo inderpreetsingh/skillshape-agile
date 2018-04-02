@@ -1,7 +1,10 @@
 import React from 'react';
+import isArray from 'lodash/isArray';
+import filter from 'lodash/filter';
 import PropTypes from 'prop-types';
 import PanelWithTableRender from './panelWithTableRender';
 import { withStyles } from 'material-ui/styles';
+import { toastrModal } from '/imports/util';
 
 const styles = theme => {
       // console.log("theme", theme);
@@ -15,7 +18,7 @@ const styles = theme => {
             color: "#fff",
         },
         headerBtn: {
-            color: "#fff",
+            color: "black",
             fontSize: 13,
             border: "solid 1px #fff"
         },
@@ -73,7 +76,9 @@ class PanelWithTable extends React.Component {
             value: '',
             showForm: false,
             showEditForm: false,
-            currentTableData:null
+            currentTableData:null,
+            methodName: "",
+            isBusy: false,
         }
     }
 
@@ -118,21 +123,48 @@ class PanelWithTable extends React.Component {
 
     handleExpansionPanelRightBtn = (data) => {
         // Show `UpdateClassTimeDialog` as a popup when user click on "Notify Student"
-        Meteor.call("classType.notifyToStudentForClassTimes", {schoolId: data.schoolId, classTypeId: data._id, classTypeName: data.name}, (error, result)=> {
-            console.log("classType.notifyToStudentForClassTimes",error, result)
-            this.setState({showConfirmationModal: false});
-        })
+        if(this.state.methodName) {
+            this.setState({isBusy: true})
+            Meteor.call(this.state.methodName, {schoolId: data.schoolId, classTypeId: data._id, classTypeName: data.name}, (err, res)=> {
+                // console.log("classType.notifyToStudentForClassTimes",error, result)
+                const { toastr } = this.props;
+                this.setState({showConfirmationModal: false, isBusy:false}, ()=> {
+                    if(res && res.message) {
+                        // Need to show message to user when email is send successfully.
+                        toastr.success(res.message, "Success");
+                    }
+                    if(err) {
+                        toastr.error(err.reason || err.message,"Error");
+                    }
+                });
+            })
+        }
     }
 
     // This is done so that we can show confirmation modal.
-    handleNotifyClassTime =(tableData) => {
+    handleNotifyClassTypeUpdate =(tableData, methodName) => {
         this.setState({
             showConfirmationModal: true,
-            currentTableData:tableData
+            currentTableData:tableData,
+            methodName
         });
     }
 
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
+
+    getExpansionPanelTitle = (data, keys) => {
+        if(isArray(keys)) {
+            let str = []
+            for(let key of keys) {
+                if(data[key]) {
+                    str.push(data[key])
+                }
+            }
+            str = str.join(", ");
+            return str;
+        }
+        return ""
+    }
 
     render() {
         return PanelWithTableRender.call(this, this.props, this.state)
@@ -143,4 +175,4 @@ PanelWithTable.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PanelWithTable);
+export default withStyles(styles)(toastrModal(PanelWithTable));

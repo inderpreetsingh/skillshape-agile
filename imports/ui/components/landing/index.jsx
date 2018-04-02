@@ -1,8 +1,9 @@
 import React, {Component,Fragment} from 'react';
-import { debounce, isEmpty } from 'lodash';
+import DocumentTitle from 'react-document-title';
+import { debounce, isEmpty, get } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
-import {Element, scroller } from 'react-scroll'
+import {Element, scroller } from 'react-scroll';
 import Sticky from 'react-stickynode';
 import { browserHistory } from 'react-router';
 import ip from 'ip';
@@ -15,7 +16,7 @@ import ClassMap from './components/map/ClassMap.jsx';
 import FilterPanel from './components/FilterPanel.jsx';
 import ClassTypeList from './components/classType/classTypeList.jsx';
 import SwitchIconButton from './components/buttons/SwitchIconButton.jsx';
-import FloatingMapButton from './components/buttons/FloatingMapButton.jsx';
+import FloatingChangeViewButton from './components/buttons/FloatingChangeViewButton.jsx';
 import Footer from './components/footer/index.jsx';
 import NoResults from './components/NoResults.jsx';
 
@@ -26,6 +27,7 @@ import * as helpers from './components/jss/helpers.js';
 import { cardsData, cardsData1} from './constants/cardsData.js';
 import config from '/imports/config';
 import Events from '/imports/util/events';
+import { toastrModal } from '/imports/util';
 
 const MainContentWrapper = styled.div`
   display: flex;
@@ -77,10 +79,21 @@ const SwitchViewWrapper = styled.div`
   right: 0;
   bottom: 0;
   z-index: 20;
+  display: flex;
+  align-items: center;
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     display: ${props => props.mapView ? 'none' : 'block'};
   }
+`;
+
+const MapViewText = styled.p`
+  margin: 0;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize * 2}px;
+  margin-right: ${helpers.rhythmDiv}px;
+  color: ${helpers.primaryColor};
+  font-weight: 300;
 `;
 
 const FloatingMapButtonWrapper = styled.div`
@@ -114,22 +127,43 @@ const FooterWrapper = styled.div`
   width: 100%;
 `;
 
+const CoverWrapper = styled.div`
+  position: relative;
+  clip-path: ${helpers.clipPathCurve};
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    clip-path: ${helpers.clipPathCurve};
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    clip-path: ${helpers.clipPathCurve};
+  }
+`;
 
 const CenterCapsule = styled.div`
-   font-size:12px;
-   line-height:${helpers.baseFontSize}px;
-   background:white;
-   border-radius:400px;
-   max-width:200px;
-   color:${helpers.textColor};
-   background:${helpers.panelColor};
-   margin:auto;
+   font-size: 12px;
+   line-height: ${helpers.baseFontSize}px;
+   background: white;
+   border-radius: 400px;
+   max-width: 200px;
+   color: ${helpers.textColor};
+   background: ${helpers.panelColor};
+   margin: auto;
    transform: translateY(-50%);
-   text-transform:uppercase;
-   letter-spacing:1px;
-   box-shadow:2px 2px 3px rgba(0,0,0,0.1);
-   text-align:center;
-   padding:4px;
+   text-transform: uppercase;
+   letter-spacing: 1px;
+   box-shadow: 2px 2px 3px rgba(0,0,0,0.1);
+   text-align: center;
+   padding: 4px;
+ `;
+
+ const FilterPanelWrapper = styled.div`
+  position: relative;
+ `;
+
+ const FilterBarDisplayWrapper = styled.div`
+  display: ${props => props.sticky ? 'block' : 'none'};
+  width: 100%;
  `;
 
 class Landing extends Component {
@@ -143,11 +177,13 @@ class Landing extends Component {
             cardsDataList: [cardsData, cardsData1],
             filters: {
                 coords: null,
-                skillCategoryClassLimit: {}
+                skillCategoryClassLimit: {},
+                applyFilterStatus: false,
             },
             tempFilters: {},
         }
-        this.onSearch = debounce(this.onSearch, 1000);
+        this.handleLocationSearch = debounce(this.handleLocationSearch, 1000);
+        this.handleSkillTypeSearch = debounce(this.handleSkillTypeSearch, 1000);
     }
 
     componentWillMount() {
@@ -192,14 +228,19 @@ class Landing extends Component {
             });
         }
       }
+      if(this.props.location.query && this.props.location.query.acceptInvite) {
+        Events.trigger("acceptInvitationAsMember",{userData: this.props.location.query});
+      }
     }
 
     handleStickyStateChange = (status) => {
       console.log(status,"status..")
       if (status.status === 2) {
-        this.setState({
-           sticky: true
-        });
+        if(!this.state.sticky) {
+          this.setState({
+            sticky: true
+          });
+        }
       }else if(status.status === 0) {
         this.setState({
            sticky: false
@@ -216,10 +257,11 @@ class Landing extends Component {
         });
 
         this.scrollTo();
+        // scroller.scrollMore(10);
     }
 
     scrollTo(name) {
-      scroller.scrollTo(('content-container'|| name),{
+      scroller.scrollTo((name || 'content-container'),{
         duration: 800,
         delay: 0,
         smooth: 'easeInOutQuart'
@@ -269,11 +311,23 @@ class Landing extends Component {
       this.setState({filters:oldFilter})
     }
 
-    onSearch = (value) => {
-        let oldFilters = {...this.state.filters};
-        oldFilters.mainSearchText = value;
+    handleLocationSearch = (locationText) => {
+        // console.log("handleLocationSearch -->>",locationText)
         this.setState({
-            filters: oldFilters
+            filters: {
+                ...this.state.filters,
+                locationText
+            }
+        })
+    }
+
+    handleSkillTypeSearch = (skillTypeText) => {
+        // console.log("handleSkillTypeSearch -->>",skillTypeText);
+        this.setState({
+            filters: {
+                ...this.state.filters,
+                skillTypeText
+            }
         })
     }
 
@@ -289,80 +343,136 @@ class Landing extends Component {
         })
     }
 
-    onLocationChange = (location, updateKey) => {
-        let oldFilters = {...this.state[updateKey]};
-        oldFilters['coords'] = location.coords;
-        oldFilters.locationName = location.fullAddress;
-        this.setState({
-            [updateKey]: oldFilters
-        })
+    onLocationChange = (location, updateKey1, updateKey2) => {
+        let stateObj = {};
+
+        if(updateKey1) {
+            stateObj[updateKey1] = {
+                ...this.state[updateKey1],
+                coords: location.coords,
+                locationName: location.fullAddress,
+                applyFilterStatus: true,
+                schoolId: null,
+            }
+        }
+
+        if(updateKey2) {
+            stateObj[updateKey2] = {
+                ...this.state[updateKey2],
+                coords: location.coords,
+                locationName: location.fullAddress
+            }
+        }
+
+        this.setState(stateObj);
     }
 
-    locationInputChanged = (event, updateKey) => {
-        let oldFilters = {...this.state[updateKey]};
-        oldFilters.locationName = event.target.value;
-        this.setState({
-            [updateKey]: oldFilters
-        })
+    locationInputChanged = (event, updateKey1, updateKey2) => {
+        let stateObj = {};
+
+        if(updateKey1) {
+            stateObj[updateKey1] = {
+                ...this.state[updateKey1],
+                coords: null,
+                locationName: event.target.value
+            }
+        }
+
+        if(updateKey2) {
+            stateObj[updateKey2] = {
+                ...this.state[updateKey2],
+                coords: null,
+                locationName: event.target.value
+            }
+        }
+
+        this.setState(stateObj);
+
     }
 
-    fliterSchoolName = (event, updateKey) => {
-        let oldFilters = {...this.state[updateKey]};
-        oldFilters.schoolName = event.target.value;
-        this.setState({
-            [updateKey]: oldFilters
-        })
+    fliterSchoolName = (event, updateKey1, updateKey2) => {
+        let stateObj = {};
+
+        if(updateKey1) {
+            stateObj[updateKey1] = {
+                ...this.state[updateKey1],
+                schoolName: event.target.value,
+                applyFilterStatus: true,
+                schoolId: null,
+            }
+        }
+
+        if(updateKey2) {
+            stateObj[updateKey2] = {
+                ...this.state[updateKey2],
+                schoolName: event.target.value
+            }
+        }
+
+        this.setState(stateObj);
+
     }
 
-    collectSelectedSkillCategories = (text, updateKey) => {
-        let oldFilters = {...this.state[updateKey]};
-        oldFilters.skillCategoryIds = text.map((ele) => ele._id);
-        oldFilters.defaultSkillCategories = text;
-        this.setState({
-            [updateKey]: oldFilters
-        })
+    collectSelectedSkillCategories = (text, updateKey1, updateKey2) => {
+        let stateObj = {};
+
+        if(updateKey1) {
+            stateObj[updateKey1] = {
+                ...this.state[updateKey1],
+                skillCategoryIds: text.map((ele) => ele._id),
+                defaultSkillCategories: text,
+                applyFilterStatus: true,
+            }
+        }
+
+        if(updateKey2) {
+            stateObj[updateKey2] = {
+                ...this.state[updateKey2],
+                skillCategoryIds: text.map((ele) => ele._id),
+                defaultSkillCategories: text
+            }
+        }
+
+        this.setState(stateObj);
+
     }
 
     collectSelectedSkillSubject = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter.skillSubjectIds = text.map((ele) => ele._id);
         oldFilter.defaultSkillSubject = text
-        this.setState({ tempFilters: oldFilter})
+        this.setState({ filters: oldFilter})
     }
 
     skillLevelFilter = (text) => {
-        let oldFilter = {...this.props.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter.experienceLevel = text;
-        this.setState({tempFilters:oldFilter})
+        this.setState({filters: oldFilter})
     }
 
 
     filterGender = (event) => {
-        let oldFilter = {...this.state.tempFilters};
+        let oldFilter = {...this.state.filters};
         oldFilter.gender = event.target.value;
-        this.setState({tempFilters:oldFilter})
+        this.setState({filters:oldFilter})
     }
 
     filterAge =(event) => {
-        let oldFilter = {...this.state.tempFilters};
+        let oldFilter = {...this.state.filters};
         oldFilter.age = parseInt(event.target.value);
-        this.setState({ tempFilters: oldFilter });
+        this.setState({ filters: oldFilter });
     }
 
     perClassPriceFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter._classPrice = text;
-        this.setState({ tempFilters: oldFilter })
+        this.setState({ filters: oldFilter })
     }
 
     pricePerMonthFilter = (text) => {
-        let oldFilter = {...this.state.tempFilters}
+        let oldFilter = {...this.state.filters}
         oldFilter._monthPrice = text;
-        this.setState({ tempFilters: oldFilter })
-    }
-
-    applyFilters = () => {
-        this.setState({filters: { ...this.state.filters, ...this.state.tempFilters}})
+        this.setState({ filters: oldFilter })
     }
 
     removeAllFilters = ()=> {
@@ -372,14 +482,19 @@ class Landing extends Component {
         })
     }
 
+    handleMemberInvitedDialogBoxState = (state) => {
+        this.setState({memberInvitedDialogBox: state});
+    }
+
     renderFilterPanel = () => {
         return <FilterPanel
             currentAddress={this.state.defaultLocation || this.state.locationName}
-            applyFilters={this.applyFilters}
+            removeAllFilters={this.removeAllFilters}
             mapView={this.state.mapView}
             filters={this.state.filters}
             tempFilters={this.state.tempFilters}
             stickyPosition={this.state.sticky}
+            handleToggleMapView={this.handleToggleMapView}
             handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
             handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
             onLocationChange={this.onLocationChange}
@@ -399,14 +514,16 @@ class Landing extends Component {
     render() {
         // console.log("Landing state -->>",this.state);
         console.log("Landing state -->>",this.state);
+        console.log("Landing props -->>",this.props);
         return(
-            <div>
+            <DocumentTitle title={this.props.route.name}>
+                <div>
                 <FiltersDialogBox
                     open={this.state.filterPanelDialogBox}
                     onModalClose={() => this.handleFiltersDialogBoxState(false)}
                     filterPanelProps={{
                         currentAddress: (this.state.defaultLocation || this.state.locationName),
-                        applyFilters: this.applyFilters,
+                        removeAllFilters: this.removeAllFilters,
                         filters: this.state.filters,
                         tempFilters: this.state.tempFilters,
                         stickyPosition: this.state.sticky,
@@ -424,34 +541,35 @@ class Landing extends Component {
                     }}
                 />
 
-                {!this.state.mapView &&
-                  (
-                  <Fragment>
-                  <Cover itemScope itemType="http://schema.org/WPHeader">
-                    <BrandBar
-                      currentUser={this.props.currentUser}
-                    />
-                    <SearchArea
-                        onSearch={this.onSearch}
-                        onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
-                        getMyCurrentLocation={this.getMyCurrentLocation}
-                    />
-                    </Cover>
-                     <CenterCapsule> Browse using Filters ⤵ </CenterCapsule>
-                </Fragment>
-              )}
+              {/* Cover */}
+             <CoverWrapper>
+               <Cover itemScope itemType="http://schema.org/WPHeader">
+                <BrandBar
+                  currentUser={this.props.currentUser}
+                />
+                <SearchArea
+                    onLocationInputChange={this.handleLocationSearch}
+                    onSkillTypeChange={this.handleSkillTypeSearch}
+                    onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+                    getMyCurrentLocation={this.getMyCurrentLocation}
+                    onMapViewButtonClick={this.handleToggleMapView}
+                    mapView={this.state.mapView}
+                />
+                </Cover>
+              </CoverWrapper>
 
-               <div>
-                   {
-                        !this.state.mapView ?
-                            <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
-                                {this.renderFilterPanel()}
-                            </Sticky>
-                        : this.renderFilterPanel()
-                   }
-               </div>
+              {/* Filter Panel */}
+               <FilterPanelWrapper>
+                  <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
+                    {this.state.mapView ? this.renderFilterPanel() :
+                    <FilterBarDisplayWrapper sticky={this.state.sticky}>
+                      {this.renderFilterPanel()}
+                    </FilterBarDisplayWrapper>}
+                  </Sticky>
+               </FilterPanelWrapper>
 
-                <Element name="content-container" className="element">
+              {/*Cards List */}
+                <Element name="content-container" className="element homepage-content">
                     <ClassTypeList
                         locationName={this.state.locationName}
                         mapView={this.state.mapView}
@@ -468,7 +586,7 @@ class Landing extends Component {
 
 
                 {/*
-                 <Element name="content-container" className="element">
+                <Element name="content-container" className="element">
                   <MainContentWrapper>
                     {this.state.mapView ?
                       (
@@ -499,21 +617,34 @@ class Landing extends Component {
                       <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
                    </CardsContainer>)}
                  </MainContentWrapper>
-               </Element> */}
+               </Element>
+               */}
 
                {!this.state.mapView && <Footer mapView={this.state.mapView}/>}
 
                {this.state.mapView && <FloatingMapButtonWrapper>
-                  <FloatingMapButton
+                  <FloatingChangeViewButton
                     onListButtonClick={this.handleToggleMapView}
-
                   />
                </FloatingMapButtonWrapper>}
 
+               {/*
                 <SwitchViewWrapper mapView={this.state.mapView}>
-                    <SwitchIconButton onClick={this.handleToggleMapView}/>
+                  {this.state.mapView ?
+                  (<FloatingChangeViewButton
+                      cardsView={true}
+                      onListButtonClick={this.handleToggleMapView} />)
+                    :
+                  (<FloatingChangeViewButton
+                    cardsView={true}
+                    label="MAP"
+                    iconName="map"
+                    onListButtonClick={this.handleToggleMapView} />)
+                  }
                 </SwitchViewWrapper>
-            </div>
+              */}
+              </div>
+            </DocumentTitle>
         )
     }
 }

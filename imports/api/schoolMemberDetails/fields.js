@@ -18,7 +18,7 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
     },
     phone: {
         optional: true,
-        type: Number
+        type: String
     },
     pic: {
         optional: true,
@@ -60,7 +60,7 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
         type: Boolean,
         optional: true
     },
-    notes: {
+    adminNotes: {
         type: String,
         optional: true
     },
@@ -74,7 +74,24 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
     packageName: { // Students can have package name.
         type: String,
         optional: true
+    },
+    activeUserId: {
+        type: String
+    },
+    inviteAccepted: {
+        type: Boolean
+    },
+    classmatesNotes: {
+        type: Object,
+        optional: true,
+        blackbox: true,
     }
 }));
 
+Meteor.startup(function() {
+    // FTS on the basis of first name last name and class types.
+    if (Meteor.isServer) {
+        SchoolMemberDetails._ensureIndex({ firstName: "text", lastName: "text", classType:"text" });
+    }
+});
 export default SchoolMemberDetails;

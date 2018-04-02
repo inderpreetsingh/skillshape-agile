@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ReactStars from 'react-stars';
 import PropTypes from 'prop-types';
+import ReactHtmlParser from 'react-html-parser';
 
 import * as helpers from '../../jss/helpers.js';
 
@@ -36,7 +37,7 @@ const conditionalRender = (props) => {
   return (props.notes ? (<Wrapper>
     <Title>Student Notes</Title>
     <Notes>
-      {props.notes.map((note,index) => <Note key={index}>{note}</Note>)}
+      {props.notes && ReactHtmlParser(props.notes)}
     </Notes>
   </Wrapper>) : <span></span>);
 }

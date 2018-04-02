@@ -86,3 +86,34 @@ li {
   right: 0;
   filter: opacity(.2);
 }
+
+.table-view {
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0px;
+  table-layout: fixed;
+  font-family: 'circular', sans-serif !important;
+  width: 90% !important;
+  margin: auto;
+}
+
+.table-header th {
+  color: rgba(0, 0, 0, 0.87) !important;
+  height: 48px;
+  font-weight: 500;
+  font-size: 20px;
+  background-color: #fff;
+}
+
+thead {
+  border-bottom: 2px solid rgb(224, 224, 224);
+}
+
+.table-body tr:nth-child(odd) {
+  background-color: #fbfbfb;
+}
+
+.table-body tr:nth-child(even) {
+  background-color: #fff;
+}

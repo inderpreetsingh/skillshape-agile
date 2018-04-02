@@ -17,6 +17,14 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
+const styles = {
+  typeItem: {
+    display: 'flex',
+    justifyContent: 'center'
+  }
+}
+
+
 const CARD_WIDTH = 250;
 
 
@@ -36,13 +44,6 @@ const ClassTimesWrapper = styled.div`
     max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,1)}px;
   }
 `;
-
-const styles = {
-  typeItem: {
-    display: 'flex',
-    justifyContent: 'center'
-  }
-}
 
 const GridContainer = styled.div`
   ${helpers.flexCenter}

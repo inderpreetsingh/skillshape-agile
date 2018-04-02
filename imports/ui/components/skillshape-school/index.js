@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import styled from 'styled-components';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
@@ -141,8 +142,9 @@ const MainContainer = styled.div`
 `;
 
 const SkillShapeSchool = (props) => {
-
+	console.log("SkillShapeSchool props -->>",props)
 	return (
+	<DocumentTitle title={props.route.name}>
 		<MainContainer>
 			<MainContentWrapper className={props.classes.aboutUs}>
 				<div className="bg-stretch" style={{backgroundImage: 'linear-gradient(to right,grey 50%,yellow 100%),url(images/aboutUs/ballet.jpg)',backgroundBlendMode: 'darken',filter: 'none'}}/>
@@ -161,7 +163,7 @@ const SkillShapeSchool = (props) => {
 					<h1 style={{font: '400 36px/1.2 "Open Sans", sans-serif',textAlign:'center'}}>
 				        As a school, you face 3 main problems
 				    </h1>
-				    <ul style={{justifySelf: 'center',maxWidth: '509px',margin: 'auto'}}>
+				    <ol style={{justifySelf: 'center',maxWidth: '609px',margin: 'auto'}}>
 				    	<li className={props.classes.typoText}>
 							Bringing people in.
 						</li>
@@ -171,7 +173,7 @@ const SkillShapeSchool = (props) => {
 						<li className={props.classes.typoText}>
 							Managing the administrative chores of the school.
 						</li>
-				    </ul>
+				    </ol>
 					<h2 style={{font: '"Open Sans", sans-serif', textAlign:'center'}}>
 			    		At SkillShape, we bring you solutions to all 3 of these challenges.
 				    </h2>
@@ -197,7 +199,7 @@ const SkillShapeSchool = (props) => {
 						</li>
 						<br></br>
 						<li className={props.classes.typoText}>
-							SkillShape’s SkillBoard platform allows you to pay a flat monthly fee for access to classes from any participating school. By joining SkillBoard you will see a steady flow of students who will become aware of and experience your classes, potentially signing on for long term enrollment in your school.
+							SkillShape’s SkillBoard platform allows students to pay a flat monthly fee for access to classes from any participating school. By joining SkillBoard you will see a steady flow of students who will become aware of and experience your classes, potentially signing on for long term enrollment in your school.
 						</li>
 					</ul>
 				</div>
@@ -264,7 +266,7 @@ const SkillShapeSchool = (props) => {
 				<Grid container style={{margin: 'auto',maxWidth: '1000px'}}>
 					<Grid item md={4} sm={4} xs={12} className={props.classes.styleGrid}>
 						<div style={{textAlign:'center'}}>
-							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-free.svg"/>
+							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-full.png"/>
 						</div>
 						<Card className={props.classes.card}>
 							<CardHeader
@@ -315,7 +317,7 @@ const SkillShapeSchool = (props) => {
 							</div>
 					        <CardActions className={props.classes.actions}>
 					            <Button color="accent" className={props.classes.letsHandleIt} dense onClick={this.doSignUp}>
-					            	Let's handle it!
+					            	Start for Fee Today!
 					            </Button>
 					        </CardActions>
 						</Card>
@@ -323,7 +325,7 @@ const SkillShapeSchool = (props) => {
 
 					<Grid item md={4} sm={4} xs={12} className={props.classes.styleGrid}>
 						<div style={{textAlign:'center'}}>
-							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-pro.svg"/>
+							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-free.svg"/>
 						</div>
 						<Card className={props.classes.card}>
 							<CardHeader
@@ -424,6 +426,7 @@ const SkillShapeSchool = (props) => {
 				</Grid>
 			</MainContentWrapper>
 		</MainContainer>
+	</DocumentTitle>
 	)
 }
 

@@ -2,6 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import ReactStars from 'react-stars';
 import PropTypes from 'prop-types';
+import ReactHtmlParser from 'react-html-parser';
+
+import { cutString } from '/imports/util';
 
 import * as helpers from '../../jss/helpers.js';
 
@@ -18,6 +21,7 @@ const Title = styled.h2`
   margin: 0;
   font-weight: 300;
   line-height: 1;
+  text-transform: capitalize;
 `;
 
 const Description = styled.p`
@@ -61,13 +65,13 @@ const addHttpProtocol = (website) => {
 const AboutSchool = (props) => (
   <Wrapper>
     <SchoolWrapper>
-      <Title>About {props.title}</Title>
+      <Title>About {props.title.toLowerCase()}</Title>
       <Address>
         {props.address && <Postal>{props.address}</Postal>}
-        {props.website && <Website href={addHttpProtocol(props.website)} target="_blank"> {props.website} </Website>}
+        {props.website && <Website href={addHttpProtocol(props.website)} target="_blank"> {cutString(props.website,60)} </Website>}
       </Address>
     </SchoolWrapper>
-    <Description>{props.description}</Description>
+    <Description>{props.description && ReactHtmlParser(props.description)}</Description>
   </Wrapper>
 );
 

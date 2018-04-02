@@ -24,9 +24,9 @@ export default class SchoolViewBase extends React.Component {
         })
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(!_.isEmpty(nextProps.schoolLocation)) {
-            createMarkersOnMap("schoolLocationMap", nextProps.schoolLocation)
+    componentDidUpdate() {
+        if(!_.isEmpty(this.props.schoolLocation)) {
+            createMarkersOnMap("schoolLocationMap", this.props.schoolLocation)
         }
     }
 
@@ -177,23 +177,35 @@ export default class SchoolViewBase extends React.Component {
     }
 
     getPublishStatus = (isPublish) => {
-        if(isPublish && isPublish === "Y")
+        if(isPublish)
           return true;
         return false;
     }
 
     handlePublishStatus = (schoolId, event) => {
-
-        let publish_state = event.target.checked ? "Y" : "N"
+        const { toastr } = this.props;
         if(schoolId) {
-          Meteor.call("school.publishSchool",schoolId,publish_state,(error, result) => {
-            if(error){
-              console.error("Error ->>", error);
-            }
-            if(result){
-              console.log("Successfully updation")
-            }
-          });
+            let isPublish = event.target.checked
+            this.setState({isLoading: true})
+
+            Meteor.call("school.publishSchool",{schoolId,isPublish},(error, result) => {
+                this.setState({isLoading: false}, _=> {
+                    if(error) {
+                        toastr.error(error.reason || error.message, "Error")
+                    }
+                    if(result){
+                        let msg;
+                        if(isPublish) {
+                            msg = "This School and all his Class Types of this has been published."
+                        } else {
+                            msg = "This School and all his Class Types of this has been unpublished."
+                        }
+                        toastr.success(msg,'success')
+                    }
+                })
+            });
+        } else {
+            toastr.error("Something went wrong. Please try after sometime!!", "Error")
         }
     }
 
@@ -293,11 +305,12 @@ export default class SchoolViewBase extends React.Component {
       const { toastr } = this.props;
       Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
         // Check sucess method in response and send confirmation to user using a toastr.
-        if(res.emailSent) {
-          toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
-        } else if(!res.login) {
-          toastr.success('Please login or sign up before creating request','success')
-        }
+          if(err) {
+            toastr.error(err.reason || err.message, "Error")
+          }
+          if(res && res.emailSent) {
+            toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
+          }
       });
     }
 

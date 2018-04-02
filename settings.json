@@ -1,0 +1,8 @@
+{
+  "public": {
+    "analyticsSettings": {
+      "Google Analytics" : {"trackingId": "UA-115755152-1"},
+      "Amplitude"        : {"apiKey": "92093780eecbbd214c300694e1910214"}
+    }
+  }
+}

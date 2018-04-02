@@ -3,7 +3,6 @@ import { createContainer } from 'meteor/react-meteor-data';
 import MediaDetailsRender from './mediaDetailsRender';
 import Media from "/imports/api/media/fields";
 import '/imports/api/media/methods';
-import { withStyles } from "/imports/util";
 
 class MediaDetails extends React.Component {
 
@@ -11,19 +10,45 @@ class MediaDetails extends React.Component {
         super(props);
         this.state = {
           open: false,
+          sticky: false,
           limit: 10,
           filters: {
             schoolId: this.props.schoolId
           }
         }
     }
+    handleFixedToggle = status => {
+      // console.log("handleFixedToggle", defaultPosition);
+      // const stickyPosition = !defaultPosition;
+      // console.log(this.state.sticky, defaultPosition);
+      // if (this.state.sticky != stickyPosition) {
+      //   this.setState({
+      //     sticky: stickyPosition
+      //   });
+      // }
+
+      if (status.status === 2) {
+        if(!this.state.sticky) {
+          this.setState({
+            sticky: true
+          });
+        }
+      }else if(status.status === 0) {
+        this.setState({
+           sticky: false
+        });
+      }
+    }
+
     changeLimit = ()=>{
       let incerementFactor = 10;
       this.setState({limit: this.state.limit+incerementFactor})
     }
+
     closeMediaUpload = ()=>{
       this.setState({showCreateMediaModal: false, loading: false})
     }
+
     openEditMediaForm = (data) => this.setState({showCreateMediaModal: true, mediaFormData: data, filterStatus: false})
 
     showLoading = ()=>{
@@ -31,6 +56,7 @@ class MediaDetails extends React.Component {
     }
 
     onAddMedia = ({data, fileData, isUrl}) => {
+      console.log("data====>",data)
       // console.log("onAddMedia data -->>",data, fileData);
       if(isUrl){
           this.meteorCall({type:"add", data})
@@ -94,7 +120,7 @@ class MediaDetails extends React.Component {
 
     onDeleteMedia = (data) => {
 
-      Meteor.call("media.removeModule", data, (error, result) => {
+      Meteor.call("media.removeMedia", data, (error, result) => {
         if(error) {
           console.error("Error -->>",error)
         }
@@ -105,23 +131,20 @@ class MediaDetails extends React.Component {
 
     }
 
-    onSearch = (filterRef) => {
-      console.log("Media search filterRef  --->>",filterRef);
-      let filters = {...this.state.filters};
-      filters.name = filterRef.imageName.value
-      filters.startDate = filterRef.startDate
-      filters.endDate = filterRef.endDate
-      this.setState({filters, filterStatus: true})
+    onSearch = (filterObj) => {
+      this.setState({
+        filters: {
+          ...this.state.filters,
+          ...filterObj,
+        }
+      })
     }
 
-    resetFilter = (filterRef) => {
-      let filters = {...this.state.filters};
-      filterRef.imageName.value = null;
+    resetFilter = () => {
       this.setState({
         filters: {
             schoolId: this.props.schoolId
         },
-        filterStatus: true,
       });
     }
 
@@ -130,8 +153,4 @@ class MediaDetails extends React.Component {
     }
 }
 
-const styles = theme => {
-  return {}
-}
-
-export default  withStyles(styles)(MediaDetails);
+export default MediaDetails;

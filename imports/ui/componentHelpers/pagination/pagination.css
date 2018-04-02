@@ -1,0 +1,92 @@
+.pagination-container {
+  height: 40px;
+  padding: 10px;
+  text-align: center;
+}
+
+.pagination {
+  ul {
+    display: inline-block;
+  }
+
+  li {
+    display: inline-block;
+    padding-right: 15px;
+  }
+
+  li a {
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+    color: darkgray;
+  }
+
+  li:not(:first-child):before, li:not(:last-child):before {
+    content: "/";
+    color: darkgray;
+    padding-right: 15px;
+    font-weight: bold;
+  }
+
+  li:nth-child(1):before {
+    content: " " !important;
+  }
+
+  li:nth-child(1):after {
+    content: " " !important;
+    border: solid 1px darkgray;
+    width: 22px;
+    height: 0px;
+    padding: 0;
+    transform: rotate(180deg);
+    display: inline-block;
+    margin: 6px;
+  }
+
+  li:nth-child(2):before {
+    content: " " !important;
+  }
+
+  li:last-child:before {
+    content: " " !important;
+    border: solid 1px darkgray;
+    width: 22px;
+    height: 0px;
+    padding: 0;
+    transform: rotate(180deg);
+    display: inline-block;
+    margin: 6px;
+  }
+
+  .active a {
+    color: #18dcff;
+  }
+
+  .previous a {
+    font-size: 25px;
+    color: darkgray;
+    font-weight: 500;
+  }
+
+  .next a {
+    font-size: 25px;
+    color: #18dcff;
+    font-weight: 500;
+  }
+
+  .disabled {
+
+  }
+
+  .break-me {
+
+  }
+
+  .next-link {
+
+  }
+
+  .back-link {
+
+  }
+}
