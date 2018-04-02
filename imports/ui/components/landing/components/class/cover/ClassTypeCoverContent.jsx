@@ -257,7 +257,7 @@ class ClassTypeCoverContent extends React.Component {
                 isEdit={props.isEdit}
                 publishStatusButton={props.publishStatusButton}
                 schoolName={props.schoolDetails.name}
-                description={props.schoolDetails.aboutHtml}
+                description={props.classTypeData.desc}
                 isClassTypeNameAvailable={!isEmpty(props.classTypeData)}
                 classTypeName={classTypeName}
                 noOfStars={props.schoolDetails.noOfStars}

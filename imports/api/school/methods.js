@@ -475,9 +475,16 @@ Meteor.methods({
             descHtml:"",
             name:"my-school"
         }
-        console.log("schoolInsertDoc",schoolInsertDoc)
         let schoolId = School.insert(schoolInsertDoc);
-        console.log("schoolId",schoolId)
+        // Needs to make current user admin of this School.
+        Meteor.users.update(
+            { _id: this.userId },
+            {
+                $addToSet: {
+                    "profile.schoolId": schoolId,
+                }
+            }
+        );
         let schoolEditViewLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
         return schoolEditViewLink;
     }
