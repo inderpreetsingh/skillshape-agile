@@ -18,14 +18,17 @@ const Wrapper = styled.div`
   background-color: #d2e4e9
 `;
 
-const School = () => (
+const School = (props) => (
   <Wrapper>
-    <BrandBar
-      navBarHeight="70"
-      positionStatic={true}
-      overlay={true}
-      navBgColor={helpers.schoolPageColor}
-      barButton={<span></span>} />
+    {console.log('props....... in school page',props)}
+    <div>
+      <BrandBar
+        navBarHeight="70"
+        positionStatic={true}
+        overlay={true}
+        navBgColor={helpers.schoolPageColor}
+        barButton={<span></span>} />
+    </div>
 
     <SchoolHeader />
 

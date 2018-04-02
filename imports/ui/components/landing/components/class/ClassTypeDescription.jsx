@@ -10,6 +10,12 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 496px;
+
+  opacity: ${props => props.isEdit ? 0 : 1};
+
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    display: ${props => props.isEdit ? 'none' : 'flex'};
+  }
 `;
 
 const ReviewsWrapper = styled.div`
@@ -61,24 +67,27 @@ const Reviews = styled.a`
 `;
 
 const ClassTypeDescription = (props) => {
+  const PublishStatusButton = props.publishStatusButton;
   return (
-    <Wrapper>
-      {props.isClassTypeNameAvailable ?
-      <Title>{props.classTypeName.toLowerCase()} {props.schoolName && props.classTypeName ? <span>at</span> : ''} {props.schoolName.toLowerCase()}</Title>
-      :
-      <Title>{props.schoolName.toLowerCase()}</Title>}
+    <Wrapper isEdit={props.isEdit}>
+        {props.isClassTypeNameAvailable ?
+        <Title>{props.classTypeName.toLowerCase()} {props.schoolName && props.classTypeName ? <span>in</span> : ''} {props.schoolName.toLowerCase()}</Title>
+        :
+        <Title>{props.schoolName.toLowerCase()}
+          {(!props.isEdit && props.publishStatusButton) && <PublishStatusButton />}
+        </Title>}
 
-      <ReviewsWrapper>
-        {props.noOfStars && <StarsBar noOfStars={props.noOfStars} />}
+        <ReviewsWrapper>
+          {props.noOfStars && <StarsBar noOfStars={props.noOfStars} />}
 
-        <NoOfReviews>
-          {props.noOfReviews && <Reviews href="#">({props.noOfReviews} Reviews)</Reviews>}
-        </NoOfReviews>
-      </ReviewsWrapper>
+          <NoOfReviews>
+            {props.noOfReviews && <Reviews href="#">({props.noOfReviews} Reviews)</Reviews>}
+          </NoOfReviews>
+        </ReviewsWrapper>
 
-      <Description>
-        {props.description && ReactHtmlParser(props.description)}
-      </Description>
+        <Description>
+          {props.description && ReactHtmlParser(props.description)}
+        </Description>
     </Wrapper>
   )
 }
@@ -89,6 +98,10 @@ ClassTypeDescription.propTypes = {
   description: PropTypes.string,
   noOfReviews: PropTypes.number,
   noOfStars: PropTypes.number
+}
+
+ClassTypeDescription.defaultProps = {
+  isEdit: false
 }
 
 export default ClassTypeDescription;

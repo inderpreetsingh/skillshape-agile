@@ -19,12 +19,14 @@ import { checkSuperAdmin, cutString } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
-import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTypeList from '/imports/ui/components/landing/components/classType/classTypeList.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+
+import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
+import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
 
 export default function() {
     console.log("SchoolView render-->>",this.props)
@@ -65,6 +67,8 @@ export default function() {
         const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
         let isPublish = this.getPublishStatus(schoolData.isPublish)
 
+        console.info('---------- is publish...',this.props);
+
         return (
             <DocumentTitle title={this.props.route.name}>
             <div className="content">
@@ -98,14 +102,67 @@ export default function() {
                {/* <div className={classes.imageContainer}>
                   <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
                 </div>*/}
-                <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
-                <Grid container className={classes.schoolInfo} >
+                {this.props.route.name === 'SchoolViewDeveloping' ?
+                  <SchoolViewNewBanner
+                  schoolData={schoolData}
+                  schoolId={schoolId}
+                  isPublish={isPublish}
+                  currentUser={currentUser}
+                  schoolLocation={schoolLocation}
+                  isEdit={false}
+                  handlePublishStatus={this.handlePublishStatus.bind(this, schoolId)}/>
+                  :
+                  <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
+                }
 
-                    <Grid item xs={12} sm={8} md={6} >
+
+                <Grid container className={classes.schoolInfo} >
+                    {this.props.route.name === 'SchoolViewDeveloping' ?
+                    <Fragment>
+                      {
+                          this.checkForHtmlCode(schoolData.studentNotesHtml) && (
+                            <Grid item xs={12} sm={12} md={6}>
+                              <Card className={`${classes.card} ${classes.schoolInfo}`}>
+                                  <Grid item xs={12}>
+                                    <Typography type="title">Notes for student of {schoolData.name} <br/> </Typography>
+                                    <Typography type="caption"> {ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
+                                  </Grid>
+                                </Card>
+                              </Grid>
+                          )
+                      }
+
+                      <Grid item xs={12} sm={12} md={6}>
+                        {this.state.bestPriceDetails && (
+                          <Card className={classes.card}>
+                            <CardContent className={classes.content}>
+                                  <Grid>
+                                        {
+                                          this.state.bestPriceDetails.bestMonthlyPrice && (
+                                            <Typography component="p">
+                                              Monthly Packages from {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}$ per Month
+                                            </Typography>
+                                          )
+                                        }
+                                        {
+                                          this.state.bestPriceDetails.bestClassPrice && (
+                                            <Typography component="p">
+                                              Class Packages from {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}$ per Class
+                                            </Typography>
+                                          )
+                                        }
+                                  </Grid>
+                            </CardContent>
+                          </Card>)}
+                      </Grid>
+                    </Fragment>
+                    :
+                    <Fragment>
+                    <Grid item xs={12} sm={8} md={6} > {/* Old Grid item */}
                         <Card className={`${classes.card} ${classes.schoolInfo}`}>
                             <Grid item xs={12}>
                                 {
-                                  checkUserAccess && (
+                                   checkUserAccess && (
                                     <div>Publish / Unpublish <Switch
                                         checked={isPublish}
                                         onChange={this.handlePublishStatus.bind(this, schoolId)}
@@ -132,15 +189,16 @@ export default function() {
                             }
                         </Card>
                     </Grid>
+
                     <Grid item xs={12} sm={4} md={3}>
                         <div className="card-content" id="schoolLocationMap" style={{height: '100%', minHeight: 250}}>
                         </div>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={3}>
-                    <Grid container style={{textAlign: "center"}}>
-                      <Grid item xs={12} sm={6} md={12} >
-                        <Card className={classes.card}>
 
+                    <Grid item xs={12} sm={12} md={3}>
+                      <Grid container style={{textAlign: "center"}}>
+                        <Grid item xs={12} sm={6} md={12} >
+                          <Card className={classes.card}>
                               <Fragment>
                                 <CardContent className={classes.content}>
                                   {
@@ -163,6 +221,7 @@ export default function() {
                                       </Grid>
                                   )}
                                 </CardContent>
+
                                 <CardActions style={{height: "auto"}}>
                                   <Grid container>
                                     <Grid item xs={12} sm={6}>
@@ -178,14 +237,16 @@ export default function() {
                                   </Grid>
                                 </CardActions>
                               </Fragment>
-
-                        </Card>
+                          </Card>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
+                    </Grid> </Fragment>}
+
+                </Grid> {/* container, school-info ends*/}
+
               </Grid>
-            </Grid>
+            </Grid> {/* container, school-header ends */}
+
             <Grid container className={classes.content}>
               <Grid item xs={12}>
                 <ClassTypeList

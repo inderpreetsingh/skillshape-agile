@@ -57,8 +57,9 @@ const TaglineText = styled.p`
 
 const In = styled.p`
   ${helpers.flexCenter}
-  font-family : ${helpers.commonFont};
-  font-weight: 100;
+  font-family : ${helpers.specialFont};
+  font-weight: 500;
+  font-style: italic;
   font-size: ${helpers.baseFontSize}px;
   margin: 0;
   line-height: 1;

@@ -15,6 +15,7 @@ import PrimaryButton from '../buttons/PrimaryButton.jsx';
 
 import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
+import {imageExists} from '/imports/util';
 
 const styles = {
   cardWrapper: {
@@ -163,7 +164,7 @@ const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCar
   return (<CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
     <CardDescriptionHeader>
       <CardImageContainer>
-        <avatar style={{backgroundImage: `url(${classTypeImg})`,backgroundSize: 'cover',borderRadius: '50%',height:'40px',width:'40px'}}></avatar>
+        <avatar style={{backgroundImage: `url(${classTypeImg})`, backgroundSize: 'cover',borderRadius: '50%',height:'40px',width:'40px'}}></avatar>
       </CardImageContainer>
 
       <CardContentTitle description>{_getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
@@ -192,9 +193,9 @@ const Reveal = ({children, ...props}) => {
 
 class CardsReveal extends Component {
   state = {
-    imageContainerHeight: '250px',
     maxCharsLimit: 18,
-    revealCard: false
+    revealCard: false,
+    cardImgSrc: cardImgSrc
   };
 
   revealCardContent = (e) => {
@@ -205,23 +206,28 @@ class CardsReveal extends Component {
     this.setState({ revealCard: false });
   }
 
-  updateDimensions = () => {
-    const container = ReactDOM.findDOMNode(this.imgContainer);
-    const width = window.getComputedStyle(container,null).width;
-    //console.log('width',container,width,this.state.imgContainerHeight);
-    this.setState({
-      imageContainerHeight: width
-    })
+  _setCardImgSrc = (imgSrc) => {
+    return imageExists(imgSrc).then(() => {
+      if(this.state.cardImgSrc != imgSrc)
+        this.setState({ cardImgSrc: imgSrc});
+
+      return imgSrc;
+    }).catch(e => {
+      if(this.state.cardImgSrc != cardImgSrc)
+        this.setState({ cardImgSrc: cardImgSrc });
+
+      return cardImgSrc;
+    });
   }
 
+  componentDidMount = () => {
+    this._setCardImgSrc(this.props.classTypeImg)
+  }
 
-  // componentDidMount() {
-  //   //this.updateDimensions();
-  //   window.addEventListener("resize", this.updateDimensions);
-  // }
-  // componentWillUnMount() {
-  //   window.addEventListener("resize", this.updateDimensions);
-  // }
+  componentDidUpdate = () => {
+    this._setCardImgSrc(this.props.classTypeImg);
+  }
+
   render() {
     const { name, classTypeImg, descriptionContent, body, classes } = this.props;
     const myTitle = name.toLowerCase();
@@ -232,7 +238,7 @@ class CardsReveal extends Component {
         <div onClick={this.revealCardContent}>
           <CardImageTitleWrapper>
 
-            <CardImageWrapper bgImage={classTypeImg || cardImgSrc}></CardImageWrapper>
+            <CardImageWrapper bgImage={this.state.cardImgSrc}></CardImageWrapper>
 
             <CardContentHeader>
               <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
@@ -257,7 +263,7 @@ class CardsReveal extends Component {
               className={transitionState}
               maxCharsLimit={this.state.maxCharsLimit}
               key={this.props._id}
-              classTypeImg={classTypeImg || cardImgSrc}
+              classTypeImg={this.state.cardImgSrc}
             />)}
         </Transition>
       </Paper>
