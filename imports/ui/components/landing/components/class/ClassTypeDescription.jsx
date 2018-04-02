@@ -64,7 +64,7 @@ const ClassTypeDescription = (props) => {
   return (
     <Wrapper>
       {props.isClassTypeNameAvailable ?
-      <Title>{props.classTypeName.toLowerCase()} {props.schoolName && props.classTypeName ? <span>in</span> : ''} {props.schoolName.toLowerCase()}</Title>
+      <Title>{props.classTypeName.toLowerCase()} {props.schoolName && props.classTypeName ? <span>at</span> : ''} {props.schoolName.toLowerCase()}</Title>
       :
       <Title>{props.schoolName.toLowerCase()}</Title>}
 
