@@ -26,7 +26,6 @@ const CoverContent = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
   z-index: 16;
-
   @media screen and (max-width: ${helpers.tablet}px) {
     flex-direction: column;
     padding-bottom: 0;
@@ -41,7 +40,6 @@ const CoverContentWrapper = styled.div`
 
 
 const ClassTypeInfoWrapper = styled.div`
-
 `;
 
 
@@ -51,7 +49,6 @@ const MapContainer = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   border-radius: 5px;
   background-color: #e0e0e0;
-
   @media screen and (max-width: ${helpers.tablet}px) {
     max-width: 100%;
     width: 100%;
@@ -64,18 +61,15 @@ const LogoContainer = styled.div`
   display: flex;
   align-items: flex-end;
   border-radius: 5px;
-
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     min-width: 496px;
     width: 100%;
   }
-
   @media screen and (max-width: ${helpers.tablet}px) {
     min-height: 480px;
     min-width: 100%;
     width: 100%;
   }
-
   @media screen and (max-width: ${helpers.mobile}px) {
     width: 100%;
     min-width: 300px;
@@ -97,7 +91,6 @@ const ClassTypeForegroundImage = styled.div`
   border-radius: 5px;
   flex-grow: 1;
   position: relative;
-
   @media screen and (max-width: ${helpers.tablet}px) {
     display: none;
   }
@@ -114,13 +107,11 @@ const ClassTypeLogo = styled.div`
   background-color: ${helpers.cancel};
   background-position: center center;
   background-image: url('${props => props.logoSrc}');
-
   @media screen and (max-width: 1100px) {
     bottom: ${props => props.publicView ? props.bottom + 64 : 0}px;
     left: ${props => props.publicView ? '50%' : (props.left || 0)+'px'};
     transform: translateX(${props => props.publicView ? '-50%' : 0});
   }
-
   @media screen and (max-width: 875px) {
     bottom: ${props => props.publicView ? props.bottom + 112 : 0}px;
   }
@@ -132,7 +123,6 @@ const ContentSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: ${props => props.leftSection ? 'initial' : 'stretch' };
-
   @media screen and (max-width: ${helpers.tablet}px) {
     margin-right: 0;
   }
@@ -140,7 +130,6 @@ const ContentSection = styled.div`
 
 const ShowOnMobile = styled.div`
   display: none;
-
   @media screen and (max-width: ${helpers.tablet}px) {
     display: block;
     margin-top: ${helpers.rhythmDiv * 2}px;
@@ -257,7 +246,7 @@ class ClassTypeCoverContent extends React.Component {
                 isEdit={props.isEdit}
                 publishStatusButton={props.publishStatusButton}
                 schoolName={props.schoolDetails.name}
-                description={props.classTypeData.desc}
+                description={props.schoolDetails.aboutHtml}
                 isClassTypeNameAvailable={!isEmpty(props.classTypeData)}
                 classTypeName={classTypeName}
                 noOfStars={props.schoolDetails.noOfStars}

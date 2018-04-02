@@ -120,9 +120,6 @@ class PublicLayout extends React.Component {
                 <div style={{flex: 1}} ref={(ref)=> {this.mainPanelRef = ref}}>
                     <main className={classes.content}>
                         {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
-
-
-                         {!isEmpty(currentUser) && <ContactUsFloatingButton />}
                     </main>
                 </div>
               <Footer />

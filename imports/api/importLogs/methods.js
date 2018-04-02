@@ -92,7 +92,7 @@ Meteor.methods({
 		                	console.log("<<< -------- Start for location searching ------->>>>>>>>>>>")
 		                    let slocation_detail = sLocationDoc.address + "," + sLocationDoc.city + "," + sLocationDoc.state + "," + sLocationDoc.zip;
 		                    console.log(slocation_detail)
-		                    var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + slocation_detail + "&key=AIzaSyBtQoiRR6Ft0wGTajMd8uTZb71h8kwD5Ew"
+		                    var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + slocation_detail + "&key=AIzaSyAUzsZloT4lEquePIL_uReXGwMYGqyL0NE"
 		                    data = Meteor.http.call("GET", url);
 		                    data = JSON.parse(data.content);
 		                    console.log(">>>>>data is >>>>> ", data)
