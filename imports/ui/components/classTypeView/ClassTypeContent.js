@@ -179,7 +179,9 @@ class ClassTypeContent extends Component {
     }
 
     _getContactNumbers = () => {
-      return this.props.schoolData.phone.split(',');
+      if(this.props.schoolData.phone) {
+        return this.props.schoolData.phone.split(',');
+      }
     }
 
     _getOurEmail = () => {
