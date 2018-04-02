@@ -1,5 +1,6 @@
 import React,{Fragment} from 'react';
 import { Link } from 'react-router';
+import styled from 'styled-components';
 
 import Grid from 'material-ui/Grid';
 import Card, {CardMedia} from 'material-ui/Card';
@@ -21,6 +22,21 @@ import { getUserFullName } from '/imports/util/getUserData';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
 import ClassTypeCoverContent from '/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx';
+
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
+const PublishStatusButtonWrapper = styled.div`
+	${helpers.flexCenter}
+	justify-content: flex-start;
+	font-size: ${helpers.baseFontSize}px;
+	font-family: ${helpers.specialFont};
+	color: ${helpers.black};
+`;
+
+styles.switchButton = {
+	width: helpers.rhythmDiv * 5,
+	height: helpers.rhythmDiv * 5
+}
 
 class SchoolViewBanner extends React.Component {
 	constructor(props){
@@ -69,14 +85,15 @@ class SchoolViewBanner extends React.Component {
 				isEdit={isEdit}
         schoolLocation={schoolLocation}
 
-        publishStatusButton={checkUserAccess && (() => <div>Publish / Unpublish
-          <Switch checked={isPublish} onChange={this.props.handlePublishStatus} aria-label={schoolId} /></div>)}
+        publishStatusButton={checkUserAccess && (() => <PublishStatusButtonWrapper>Publish / Unpublish
+          <Switch checked={isPublish} className={this.props.classes.switchButton} onChange={this.props.handlePublishStatus} aria-label={schoolId} /></PublishStatusButtonWrapper>)}
         editButton={checkUserAccess && (() => <Link className={classes.ImageFooterbutton}  to={`/School-Admin/${schoolData._id}/edit`}>
           <ClassTimeButton icon iconName='edit' label="Edit"> Edit </ClassTimeButton> </Link>)}
 
         onEditLogoButtonClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})}
 				onEditBgButtonClick={() => this.setState({showBackgroundUpload: true, imageType: "mainImage"})}
 				coverSrc={schoolData.mainImage || config.defaultSchoolImage}
+				logoSrc={schoolData.logoImg}
 				schoolDetails={{...schoolData}}
 				onCallUsButtonClick={this.handleCallUs}
 				onEmailButtonClick={() => this.getMailToData(schoolData)}

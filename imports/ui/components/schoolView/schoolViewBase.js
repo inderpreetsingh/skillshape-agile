@@ -25,7 +25,7 @@ export default class SchoolViewBase extends React.Component {
     }
 
     componentDidUpdate() {
-        if(!_.isEmpty(this.props.schoolLocation)) {
+        if(!_.isEmpty(this.props.schoolLocation) && this.props.route.name !== 'SchoolViewDeveloping') {
             createMarkersOnMap("schoolLocationMap", this.props.schoolLocation)
         }
     }

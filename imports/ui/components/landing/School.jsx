@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import ContactUsBar from './components/ContactUsBar.jsx';
 import BrandBar from './components/BrandBar';
 import Footer from './components/footer/index.jsx';
 import SchoolHeader from './components/school/SchoolHeader.jsx';
@@ -19,10 +18,10 @@ const Wrapper = styled.div`
   background-color: #d2e4e9
 `;
 
-const School = () => (
+const School = (props) => (
   <Wrapper>
+    {console.log('props....... in school page',props)}
     <div>
-      <ContactUsBar />
       <BrandBar
         navBarHeight="70"
         positionStatic={true}

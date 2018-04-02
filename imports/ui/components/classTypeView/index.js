@@ -27,7 +27,6 @@ class ClassTypeView extends Component {
 		return(<DocumentTitle title={get(this.props, "params.classTypeName", "Untitled")}>
 			     <Wrapper className="classtype-page">
               <div>
-                <ContactUsBar />
                 <TopSearchBar {...this.props}/>
               </div>
       		    <ClassTypeContent {...this.props}/>

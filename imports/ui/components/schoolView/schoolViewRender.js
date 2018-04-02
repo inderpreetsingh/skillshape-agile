@@ -114,13 +114,55 @@ export default function() {
                   :
                   <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
                 }
-                <Grid container className={classes.schoolInfo} >
 
-                    <Grid item xs={12} sm={8} md={6} >
+
+                <Grid container className={classes.schoolInfo} >
+                    {this.props.route.name === 'SchoolViewDeveloping' ?
+                    <Fragment>
+                      {
+                          this.checkForHtmlCode(schoolData.studentNotesHtml) && (
+                            <Grid item xs={12} sm={12} md={6}>
+                              <Card className={`${classes.card} ${classes.schoolInfo}`}>
+                                  <Grid item xs={12}>
+                                    <Typography type="title">Notes for student of {schoolData.name} <br/> </Typography>
+                                    <Typography type="caption"> {ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
+                                  </Grid>
+                                </Card>
+                              </Grid>
+                          )
+                      }
+
+                      <Grid item xs={12} sm={12} md={6}>
+                        {this.state.bestPriceDetails && (
+                          <Card className={classes.card}>
+                            <CardContent className={classes.content}>
+                                  <Grid>
+                                        {
+                                          this.state.bestPriceDetails.bestMonthlyPrice && (
+                                            <Typography component="p">
+                                              Monthly Packages from {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}$ per Month
+                                            </Typography>
+                                          )
+                                        }
+                                        {
+                                          this.state.bestPriceDetails.bestClassPrice && (
+                                            <Typography component="p">
+                                              Class Packages from {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}$ per Class
+                                            </Typography>
+                                          )
+                                        }
+                                  </Grid>
+                            </CardContent>
+                          </Card>)}
+                      </Grid>
+                    </Fragment>
+                    :
+                    <Fragment>
+                    <Grid item xs={12} sm={8} md={6} > {/* Old Grid item */}
                         <Card className={`${classes.card} ${classes.schoolInfo}`}>
                             <Grid item xs={12}>
                                 {
-                                  checkUserAccess && (
+                                   checkUserAccess && (
                                     <div>Publish / Unpublish <Switch
                                         checked={isPublish}
                                         onChange={this.handlePublishStatus.bind(this, schoolId)}
@@ -147,15 +189,16 @@ export default function() {
                             }
                         </Card>
                     </Grid>
+
                     <Grid item xs={12} sm={4} md={3}>
                         <div className="card-content" id="schoolLocationMap" style={{height: '100%', minHeight: 250}}>
                         </div>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={3}>
-                    <Grid container style={{textAlign: "center"}}>
-                      <Grid item xs={12} sm={6} md={12} >
-                        <Card className={classes.card}>
 
+                    <Grid item xs={12} sm={12} md={3}>
+                      <Grid container style={{textAlign: "center"}}>
+                        <Grid item xs={12} sm={6} md={12} >
+                          <Card className={classes.card}>
                               <Fragment>
                                 <CardContent className={classes.content}>
                                   {
@@ -178,6 +221,7 @@ export default function() {
                                       </Grid>
                                   )}
                                 </CardContent>
+
                                 <CardActions style={{height: "auto"}}>
                                   <Grid container>
                                     <Grid item xs={12} sm={6}>
@@ -193,14 +237,16 @@ export default function() {
                                   </Grid>
                                 </CardActions>
                               </Fragment>
-
-                        </Card>
+                          </Card>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
+                    </Grid> </Fragment>}
+
+                </Grid> {/* container, school-info ends*/}
+
               </Grid>
-            </Grid>
+            </Grid> {/* container, school-header ends */}
+
             <Grid container className={classes.content}>
               <Grid item xs={12}>
                 <ClassTypeList

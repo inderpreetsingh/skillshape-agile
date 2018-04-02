@@ -9,7 +9,6 @@ import { browserHistory } from 'react-router';
 import ip from 'ip';
 
 import Cover from './components/Cover.jsx';
-import ContactUsBar from './components/ContactUsBar.jsx';
 import BrandBar from './components/BrandBar.jsx';
 import SearchArea from './components/SearchArea.jsx';
 import CardsList from './components/cards/CardsList.jsx';
@@ -22,6 +21,7 @@ import Footer from './components/footer/index.jsx';
 import NoResults from './components/NoResults.jsx';
 
 import PrimaryButton from './components/buttons/PrimaryButton.jsx';
+import ContactUsFloatingButton from './components/buttons/ContactUsFloatingButton.jsx';
 import FiltersDialogBox from './components/dialogs/FiltersDialogBox.jsx';
 
 import * as helpers from './components/jss/helpers.js';
@@ -165,6 +165,13 @@ const CenterCapsule = styled.div`
  const FilterBarDisplayWrapper = styled.div`
   display: ${props => props.sticky ? 'block' : 'none'};
   width: 100%;
+ `;
+
+ const ContactUsWrapper = styled.div`
+  position: fixed;
+  right: 10px;
+  bottom: 10%;
+  z-index: 1500;
  `;
 
 class Landing extends Component {
@@ -543,15 +550,11 @@ class Landing extends Component {
                 />
 
               {/* Cover */}
-              <div>
-                <ContactUsBar />
-                <BrandBar
-                  currentUser={this.props.currentUser}
-                  positionStatic
-                />
-              </div>
              <CoverWrapper>
                <Cover itemScope itemType="http://schema.org/WPHeader">
+               <BrandBar
+                currentUser={this.props.currentUser}
+               />
                 <SearchArea
                     onLocationInputChange={this.handleLocationSearch}
                     onSkillTypeChange={this.handleSkillTypeSearch}
@@ -624,6 +627,7 @@ class Landing extends Component {
                  </MainContentWrapper>
                </Element>
                */}
+
 
                {!this.state.mapView && <Footer mapView={this.state.mapView}/>}
 
