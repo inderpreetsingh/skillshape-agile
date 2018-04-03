@@ -63,6 +63,7 @@ const Text = styled.p`
   font-size: ${helpers.baseFontSize}px;
   font-family: ${helpers.specialFont};
   font-weight: 600;
+  text-transform: capitalize;
 `;
 
 const Description = styled.p`
@@ -70,6 +71,8 @@ const Description = styled.p`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
+  padding: ${helpers.rhythmDiv * 2}px;
+  padding-top: 0;
   max-height: 140px;
   overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
@@ -147,10 +150,13 @@ class ClassTime extends Component {
   componentWillReceiveProps = (newProps) => {
     if(this.state.fullTextState !== newProps.fullTextState) {
       this.setState({
-        fullTextState: newProps.fullTextState
+        fullTextState: newProps.fullTextState,
+        scheduleTypeOnGoing: _isClassOnGoing(newProps.scheduleTypeOnGoing)
       });
     }
   }
+
+  _getWrapperClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar' : 'remove-from-calendar';
 
   removeFromMyCalender = (classTimeRec) => {
     console.log("this.props",this.props,classTimeRec);

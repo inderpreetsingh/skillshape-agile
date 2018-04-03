@@ -7,9 +7,15 @@ import { isEmpty, get } from 'lodash';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
+import { toastrModal } from '/imports/util';
+import { imageExists } from '/imports/util';
+
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
+import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
 
+import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
 import ClassTypeCoverContent from '/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx';
@@ -19,16 +25,11 @@ import ClassTimesBoxes from '/imports/ui/components/landing/components/classTime
 import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 import SchoolDetails from '/imports/ui/components/landing/components/class/details/SchoolDetails.jsx';
 import MyCalendar from '/imports/ui/components/users/myCalender';
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { ContainerLoader } from '/imports/ui/loading/container.js';
-
-import { toastrModal } from '/imports/util';
-import { imageExists } from '/imports/util';
-
-import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 const SchoolImgWrapper = styled.div`
   height: 400px;
@@ -141,7 +142,7 @@ const PackagesTitle = styled.h2`
   font-style: italic;
   margin: 0;
   line-height: 1;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
   padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
@@ -157,15 +158,17 @@ const ClassContainer = styled.div`
   border-radius: ${helpers.rhythmDiv}px;
   background: #ffffff;
   text-align: center;
+  margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv}px;
 `;
 
 class ClassTypeContent extends Component {
 
     state = {
-        isBusy: false,
-        contactUsDialog: false,
-        callUsDialog: false,
-        coverSrc: classTypeImgSrc,
+      isBusy: false,
+      contactUsDialog: false,
+      callUsDialog: false,
+      giveReviewDialog: false,
+      coverSrc: classTypeImgSrc,
     }
 
     _setCoverSrc = (imgSrc) => {
@@ -203,15 +206,12 @@ class ClassTypeContent extends Component {
     componentDidMount = () => {
       const self = this;
       // console.log(this.props,"dsa");
-      debugger;
       if(!isEmpty(this.props.classTypeData)) {
         this._setCoverSrc(this.props.classTypeData.classTypeImg);
       }
     }
 
     componentWillReceiveProps = (nextProps) => {
-      console.log('comopnent will recieve', nextProps);
-      debugger;
       if(!isEmpty(nextProps.classTypeData)) {
         if(!isEmpty(this.props.classTypeData)) {
           if(this.props.classTypeData.classTypeImg != nextProps.classTypeData.classTypeImg) {
@@ -283,6 +283,14 @@ class ClassTypeContent extends Component {
         }
     }
 
+    handleGiveReview = () => {
+      const {toastr} = this.props;
+      if(Meteor.userId()) {
+        this.handleDialogState('giveReviewDialog',true);
+      }else {
+        toastr.error("You need to login for writing a review !","Error");
+      }
+    }
 
 
 	render() {
@@ -296,6 +304,7 @@ class ClassTypeContent extends Component {
       classPricingData,
       monthlyPricingData,
       mediaData,
+      reviewsData,
       classInterestData
 		} = this.props;
 
@@ -313,8 +322,9 @@ class ClassTypeContent extends Component {
 			<Fragment>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.contactUsDialog && <EmailUsDialogBox ourEmail={this.getOurEmail()} open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
-                { this.state.isBusy && <ContainerLoader/>}
-				    {/* Class Type Cover includes description, map, foreground image, then class type information*/}
+          {this.state.giveReviewDialog && <GiveReviewDialogBox open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
+          {this.state.isBusy && <ContainerLoader/>}
+				   {/* Class Type Cover includes description, map, foreground image, then class type information*/}
 		        <ClassTypeCover coverSrc={this.state.coverSrc}>
 			        <ClassTypeCoverContent
 			        	coverSrc={this.state.coverSrc}
@@ -327,18 +337,31 @@ class ClassTypeContent extends Component {
 			        />
 		        </ClassTypeCover>
 		        <Main>
-			        {/*<MainInnerFixedContainer marginBottom="32">
-			            <MainInner reviews largePadding="32" smallPadding="32">
-			              	<ClassWrapper reviews>
-			                	<ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
-			              	</ClassWrapper>
-			            </MainInner>
-          			</MainInnerFixedContainer>*/}
+			        <MainInnerFixedContainer marginBottom="32">
+			            {!isEmpty(reviewsData) && (<MainInner reviews largePadding="32" smallPadding="32">
+                        <ClassWrapper reviews>
+                          <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
+                        </ClassWrapper>
+                    </MainInner>)}
+
+                  <ClassContainer marginBottom={32}>
+                    {isEmpty(reviewsData) && <Fragment><Typography>
+                      You are the first one to write review for this class.
+                    </Typography>
+                    <br /></Fragment>}
+                    <ClassTimeButton
+                        icon
+                        onClick={this.handleGiveReview}
+                        iconName="rate_review"
+                        label="Give review"
+                    />
+                  </ClassContainer>
+          			</MainInnerFixedContainer>
 
           			<MainInnerFixedContainer marginBottom="16">
 			            <ClassTimesInnerWrapper>
 			                <ClassTimesWrapper paddingBottom="48">
-			                	<ClassTimesTitle>Class timings for <ClassTimesName>{classTypeData.name.toLowerCase()}</ClassTimesName></ClassTimesTitle>
+			                	<ClassTimesTitle>Class times for <ClassTimesName>{classTypeData.name.toLowerCase()}</ClassTimesName></ClassTimesTitle>
 			                	{
                             isEmpty(classTimesData) ? (
                                 <ClassContainer>
@@ -347,11 +370,11 @@ class ClassTypeContent extends Component {
                                     </Typography>
                                     <br>
                                     </br>
-                                    <PrimaryButton
+                                    <ClassTimeButton
                                         icon
                                         onClick={this.handleClassTimeRequest}
                                         iconName="perm_contact_calendar"
-                                        label="REQUEST CLASS TIMES"
+                                        label="Request class times"
                                     />
                                 </ClassContainer>
                             ) : (
@@ -376,11 +399,11 @@ class ClassTypeContent extends Component {
                                 </Typography>
                                 <br>
                                 </br>
-                                <PrimaryButton
+                                <ClassTimeButton
                                     icon
                                     onClick={this.requestPricingInfo}
                                     iconName="payment"
-                                    label="REQUEST PRICING"
+                                    label="Request pricing"
                                 />
                             </ClassContainer>
                         ) : (
@@ -403,7 +426,7 @@ class ClassTypeContent extends Component {
                     description={schoolData.aboutHtml}
                   />
                   <CalendarWrapper>
-                      <MyCalendar params={this.props.params}/>
+                      <MyCalendar params={this.props.params} onJoinClassButtonClick={this.handleClassTimeRequest}/>
                   </CalendarWrapper>
               </MainInnerFixedContainer>
 

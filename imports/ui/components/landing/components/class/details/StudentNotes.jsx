@@ -20,9 +20,12 @@ const Title = styled.h3`
   font-size: ${helpers.baseFontSize}px;
 `;
 
-const Notes = styled.ul`
+const Notes = styled.div`
   margin: 0;
   padding: 0;
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+  color: ${helpers.black};
 `;
 
 const Note = styled.li`
@@ -31,6 +34,14 @@ const Note = styled.li`
   font-family: ${helpers.specialFont};
   line-height: 1;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
+  color: ${helpers.black};
+`;
+
+const NoteStyled = styled.p`
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  color: ${helpers.black};
 `;
 
 const conditionalRender = (props) => {

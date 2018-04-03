@@ -84,7 +84,7 @@ const ClassTypeCardDescription = (props) => {
                     <SecondaryButton
                       fullWidth
                       onClick={() => browserHistory.push(`/classType/${cardRevealInfo.name}/${cardRevealInfo._id}`)}
-                      label="View Details"/>
+                      label="Class Details"/>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>

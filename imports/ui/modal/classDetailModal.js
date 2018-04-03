@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import moment from 'moment';
+import styled from 'styled-components';
 import { formStyles } from '/imports/util';
 // import { blue500 } from 'material-ui/styles/colors';
 
@@ -7,6 +8,8 @@ import Dialog, {
   DialogActions,
   withMobileDialog,
 } from 'material-ui/Dialog';
+
+
 import Icon from 'material-ui/Icon';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import Button from 'material-ui/Button';
@@ -18,6 +21,10 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 import { browserHistory, Link } from 'react-router';
 import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
+
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import {flexCenter, rhythmDiv} from '/imports/ui/components/landing/components/jss/helpers';
+
 import '/imports/api/classInterest/methods';
 import '/imports/api/classTimes/methods';
 
@@ -50,6 +57,12 @@ const styles = theme => {
     }
   }
 }
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  ${flexCenter}
+  padding: ${rhythmDiv}px 0px;
+`;
 
 class ClassDetailModal extends React.Component{
 
@@ -276,16 +289,22 @@ class ClassDetailModal extends React.Component{
                                                     {day} - { this.renderdaySchedule(eventData.scheduleDetails[day])}
                                                 </Typography>
                                             )
-                                            
+
                                         })
                                     }
                                     </Fragment>
                                 )
                             }
                         </CardContent>
+
+                        <ButtonWrapper>
+                          <PrimaryButton icon iconName="add_circle_outline" label="Join This Class" onClick={this.props.onJoinClassButtonClick}/>
+                        </ButtonWrapper>
                     </Card>
                 )
             }
+
+
             {fullScreen && (
                 <DialogActions>
                     <Button onClick={()=>{this.props.closeEventModal(false, null)}} color="primary">

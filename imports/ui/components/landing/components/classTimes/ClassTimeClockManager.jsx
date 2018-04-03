@@ -43,6 +43,7 @@ const Schedule = styled.p`
   margin-top: ${helpers.rhythmDiv}px;
   font-weight: 400;
   font-size: ${helpers.baseFontSize}px;
+  text-transform: capitalize;
 `;
 
 const Days = styled.p`

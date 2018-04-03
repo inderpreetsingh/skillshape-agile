@@ -14,11 +14,18 @@ const styles = {
     transform: 'translateY(2px)',
     cursor: 'pointer'
   }
-}
+};
+
+const OuterWrapper = styled.div`
+   position: fixed;
+   right: ${helpers.rhythmDiv * 3}px;
+   bottom: ${helpers.rhythmDiv * 3}px;
+   z-index: 1500;
+`;
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
-  transition: .2s ease-in max-width, .1s ease-in-out border-radius;
+  transition: .2s ease-in max-width, .2s ease-in-out border-radius ${props => props.showComplete ? '0s' : '.1s'};
   max-height: 60px;
   max-width: ${props => props.showComplete ? 400 : 60}px;
   width: 100%;
@@ -34,7 +41,7 @@ const Text = styled.p`
   color: white;
   transition: .2s linear max-width, .2s linear transform , ${props => props.show ? '0.1s linear opacity 0.15s' : '0s linear opacity'};
   font-family: ${helpers.specialFont};
-  font-size: ${props => props.largeFont ? helpers.baseFontSize * 1.25 : helpers.baseFontSize}px;
+  font-size: ${props => props.largeFont ? helpers.baseFontSize * 1.25 : 18}px;
   font-weight: 400;
   opacity: ${props => props.show ? 1 : 0};
   padding: ${props => props.show ? `${helpers.rhythmDiv * 2}px` : 0};
@@ -53,18 +60,10 @@ const MyLink = styled(Link)`
   text-align: center;
 `;
 
-const OuterWrapper = styled.div`
- position: fixed;
- right: 10px;
- bottom: 10%;
- z-index: 1500;
-`;
-
-
 class ContactUsFloatingButton extends Component {
 
   state = {
-    showComplete : false
+    showComplete : true
   }
 
   handleShowCompleteButton = (e) => {
@@ -78,7 +77,7 @@ class ContactUsFloatingButton extends Component {
     return(<OuterWrapper>
       <Wrapper showComplete={this.state.showComplete}>
         <Text show={this.state.showComplete} largeFont={false}>
-          <MyText>Confused ? Questions ? <MyLink to="/contact-us"> click here</MyLink></MyText>
+          <MyText><MyLink to="/contact-us">Confused ? Questions ? Click here</MyLink></MyText>
           <Icon className={this.props.classes.iconStyles} onClick={this.handleShowCompleteButton}> keyboard_arrow_down </Icon>
         </Text>
         <Text show={!this.state.showComplete} largeFont>
