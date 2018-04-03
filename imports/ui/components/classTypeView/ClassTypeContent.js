@@ -292,7 +292,8 @@ class ClassTypeContent extends Component {
       }
     }
 
-	 render() {
+
+	render() {
 		console.log("ClassTypeContent props --->>",this.props);
 
 		const {
@@ -304,6 +305,7 @@ class ClassTypeContent extends Component {
       monthlyPricingData,
       mediaData,
       reviewsData,
+      classInterestData
 		} = this.props;
 
 		if(isLoading) {
@@ -343,10 +345,10 @@ class ClassTypeContent extends Component {
                     </MainInner>)}
 
                   <ClassContainer marginBottom={32}>
-                    <Typography>
+                    {!isEmpty(reviewsData) && <Typography>
                       You are the first one to write review for this class.
                     </Typography>
-                    <br />
+                    <br />}
                     <ClassTimeButton
                         icon
                         onClick={this.handleGiveReview}
@@ -376,7 +378,10 @@ class ClassTypeContent extends Component {
                                     />
                                 </ClassContainer>
                             ) : (
-                                <ClassTimesBoxes classTimesData={classTimesData} />
+                                <ClassTimesBoxes
+                                  classTimesData={classTimesData}
+                                  classInterestData={ classInterestData}
+                                />
                             )
                           }
 			                </ClassTimesWrapper>

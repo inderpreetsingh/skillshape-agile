@@ -39,7 +39,7 @@ export class WeekDaysRow extends React.Component {
                 }
     		}
     	} else {
-    		state.row.push({ key: "", startTime: {}, duration: "", day: null, roomId: ""})
+    		state.row.push({ key: "", startTime: new Date(), duration: "", day: null, roomId: ""})
     	}
     	// console.log("WeekDaysRow initializeFields -->>",state)
     	return state;
@@ -54,7 +54,7 @@ export class WeekDaysRow extends React.Component {
 
     addNewRow = ()=> {
     	const oldRow = [...this.state.row];
-    	oldRow.push({ key: null, startTime: {}, duration: "", day: null, roomId: null});
+    	oldRow.push({ key: null, startTime: new Date(), duration: "", day: null, roomId: null});
     	this.setState({ row: oldRow })
     }
 

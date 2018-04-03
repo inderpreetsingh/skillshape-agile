@@ -27,8 +27,8 @@ export class OneTimeRow extends React.Component {
     		state = {
 	    		row:  [
 	    			{
-	    				startDate: {},
-	    				startTime: {},
+	    				startDate: new Date(),
+	    				startTime: new Date(),
 	    				duration: "",
 	    				roomId: "",
 	    			}
@@ -42,7 +42,7 @@ export class OneTimeRow extends React.Component {
 
     addNewRow = ()=> {
     	const oldRow = [...this.state.row];
-    	oldRow.push({ startDate: {}, startTime: {}, duration: "", roomId: ""});
+    	oldRow.push({ startDate: new Date(), startTime: new Date(), duration: "", roomId: ""});
     	this.setState({ row: oldRow })
     }
 
@@ -54,8 +54,7 @@ export class OneTimeRow extends React.Component {
 
     handleChangeDate = (index, fieldName, date) => {
         const oldRow = [...this.state.row];
-        console.log("date",date.toISOString())
-        oldRow[index][fieldName] = date.toISOString();
+        oldRow[index][fieldName] = new Date(date);
         this.setState({ row: oldRow });
     }
 
