@@ -52,6 +52,8 @@ class ClassTimeForm extends React.Component {
         let state = {
             roomData: [],
             roomId: "",
+            startDate: new Date(),
+            endDate: new Date()
         }
 
         if(!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {

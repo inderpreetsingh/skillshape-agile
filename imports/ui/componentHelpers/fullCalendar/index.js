@@ -50,7 +50,7 @@ class FullCalendar extends React.Component {
                             return true;
                         return false;
                     }
-                    case "onGoing": {
+                    case "OnGoing": {
                         if(moment(event.start).format("YYYY-MM-DD") >= moment(event.startDate).format("YYYY-MM-DD"))
                             return true;
                         return false;
@@ -106,7 +106,7 @@ class FullCalendar extends React.Component {
                     }
                 }
 
-                if(classTime.scheduleDetails && (classTime.scheduleType === "recurring" || classTime.scheduleType === "onGoing")) {
+                if(classTime.scheduleDetails && (classTime.scheduleType === "recurring" || classTime.scheduleType === "OnGoing")) {
                     let scheduleData = {...classTime.scheduleDetails};
                     sevent.scheduleDetails = classTime.scheduleDetails;
                     sevent.endDate = classTime.endDate && moment(classTime.endDate)
