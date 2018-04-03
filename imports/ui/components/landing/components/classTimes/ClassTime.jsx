@@ -13,6 +13,8 @@ import ClassTimeClockManager from './ClassTimeClockManager.jsx';
 import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
 import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
+import { isEmpty, get } from 'lodash';
+
 
 import * as helpers from '../jss/helpers.js';
 
@@ -129,11 +131,8 @@ class ClassTime extends Component {
     this.setState({
       addToCalendar: false
     });
-
-
-    if(this.props.onAddToMyCalendarButtonClick) {
-      this.props.onAddToMyCalendarButtonClick();
-    }
+    console.log("this.props.handleAddToMyCalendarButtonClick",this.props);
+    this.addToMyCalender(this.props.classTimeData);
   }
 
   handleRemoveFromCalendarButtonClick = () => {
@@ -141,10 +140,8 @@ class ClassTime extends Component {
     this.setState({
       addToCalendar: true
     });
-
-    if(this.props.onRemoveFromCalendarButtonClick) {
-      this.props.onRemoveFromCalendarButtonClick();
-    }
+    console.log("this.props",this.props);
+    this.removeFromMyCalender(this.props.classTimeData);
   }
 
   componentWillReceiveProps = (newProps) => {
@@ -155,46 +152,86 @@ class ClassTime extends Component {
     }
   }
 
+  removeFromMyCalender = (classTimeRec) => {
+    console.log("this.props",this.props,classTimeRec);
+    const result = this.props.classInterestData.filter(data => data.classTimeId  == classTimeRec._id);
+    console.log("result==>",result);
+    // check for user login or not
+    const userId = Meteor.userId()
+    if(!isEmpty(userId)) {
+        const doc = {
+            _id: result[0]._id,
+             userId,
+        }
+        this.handleClassInterest({
+            methodName:"classInterest.removeClassInterest",
+            data: {doc}
+        })
+    } else {
+        alert("Please login !!!!")
+    }
+  }
+  addToMyCalender = (data) => {
+    // check for user login or not
+    console.log("addToMyCalender",data);
+    const userId = Meteor.userId();
+    if(!isEmpty(userId)) {
+        const doc = {
+            classTimeId: data._id,
+            classTypeId: data.classTypeId,
+            schoolId: data.schoolId,
+            userId,
+        }
+        this.handleClassInterest({
+            methodName:"classInterest.addClassInterest",
+            data: {doc}
+        })
+    } else {
+        alert("Please login !!!!")
+    }
+  }
+    handleClassInterest = ({methodName, data}) => {
+      console.log("handleClassInterest",methodName,data);
+      Meteor.call(methodName, data, (err, res) => {
+          console.log(res,err);
+      })
+    }
+
+
   _getWrapperClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar' : 'remove-from-calendar';
 
   _getOuterClockClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
 
   _getCalenderButton = (addToCalender,scheduleTypeOnGoing) => {
-    if(scheduleTypeOnGoing && addToCalender) {
-      return (<ClassTimeButton
-        icon
-        onClick={this.handleAddToMyCalendarButtonClick}
-        iconName="perm_contact_calendar"
-        label="Add to my Calendar"
-      />);
-    }else if(scheduleTypeOnGoing && !addToCalender) {
-      return (<ClassTimeButton
-        ghost
-        icon
-        onClick={this.handleRemoveFromCalendarButtonClick}
-        iconName="delete"
-        label="Remove from Calendar"
-      />)
-    }
-    else if(!scheduleTypeOnGoing && !addToCalender) {
+    const addToMyCalender = this.props.addToCalender;
+    const iconName = addToMyCalender ? "delete": "add_circle_outline";
+    // const label = addToMyCalender ? "Remove from Calender" :  "Add to my Calendar";
+    if(addToMyCalender) {
       return (
-        <ClassTimeButton
-          ghost
-          icon
-          onClick={this.handleRemoveFromCalendarButtonClick}
-          iconName="delete"
-          label="Remove from Calendar"
-        />
+         <ClassTimeButton
+              icon
+              onClick={this.handleAddToMyCalendarButtonClick}
+              label="Add to my Calender"
+              iconName={iconName}
+          />
       )
-    }
-
+      } else {
+        return (
+           <ClassTimeButton
+              icon
+              onClick={this.handleRemoveFromCalendarButtonClick}
+              label="Remove from calendar"
+              iconName={iconName}
+          />
+        )
+      }
     return (
       <div></div>
     )
   }
 
   render() {
-    console.log("ClassTime props -->>",this.props);
+    console.log("ClassTime props -->>",this);
     return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
             key={this.props._id} >
             <div>
@@ -219,7 +256,7 @@ class ClassTime extends Component {
                 </Description>}
             </div>
 
-            {this._getCalenderButton(this.state.addToCalendar, this.state.scheduleTypeOnGoing)}
+            {this._getCalenderButton(this.state.addToCalendar, this.state.scheduleTypeOnGoing, this.props)}
 
             {this.props.isTrending && <Trending />}
         </ClassTimeContainer>)

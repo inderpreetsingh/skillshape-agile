@@ -17,8 +17,8 @@ Meteor.methods({
         }
     },
     "classInterest.removeClassInterest": function({doc}) {
-        if (this.userId === doc.userId) {
-            return ClassInterest.remove({ _id: doc._id });
+        if (this.userId) {
+            return ClassInterest.remove({ _id: doc._id, userId: this.userId });
         } else {
             throw new Meteor.Error("Permission denied!!");
         }
