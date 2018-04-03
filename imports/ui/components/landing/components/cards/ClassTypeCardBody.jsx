@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import Grid from 'material-ui/Grid'
 
+import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import SecondaryButton from '../buttons/SecondaryButton.jsx';
 import * as helpers from '../jss/helpers.js';
 
@@ -45,7 +46,7 @@ const ClassTypeCardBody = (props) =>(
 
         <Grid container spacing={8}>
             <Grid item xs={12} sm={7} >
-                <SecondaryButton icon iconName="add_circle_outline" fullWidth label="Join Class" onClick={props.onJoinClassButtonClick}/>
+                <PrimaryButton icon iconName="add_circle_outline" fullWidth label="Join Class" onClick={props.onJoinClassButtonClick}/>
              </Grid>
             <Grid item xs={12} sm={5} >
                 <SecondaryButton fullWidth label="Details" />

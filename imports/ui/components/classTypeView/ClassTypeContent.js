@@ -345,10 +345,10 @@ class ClassTypeContent extends Component {
                     </MainInner>)}
 
                   <ClassContainer marginBottom={32}>
-                    {!isEmpty(reviewsData) && <Typography>
+                    {isEmpty(reviewsData) && <Fragment><Typography>
                       You are the first one to write review for this class.
                     </Typography>
-                    <br />}
+                    <br /></Fragment>}
                     <ClassTimeButton
                         icon
                         onClick={this.handleGiveReview}
@@ -426,7 +426,7 @@ class ClassTypeContent extends Component {
                     description={schoolData.aboutHtml}
                   />
                   <CalendarWrapper>
-                      <MyCalendar params={this.props.params}/>
+                      <MyCalendar params={this.props.params} onJoinClassButtonClick={this.handleClassTimeRequest}/>
                   </CalendarWrapper>
               </MainInnerFixedContainer>
 
