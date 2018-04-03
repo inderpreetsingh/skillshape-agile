@@ -32,7 +32,7 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
     let condition = {
         '$or': [
             { scheduleType: "oneTime", "scheduleDetails.oneTime": {"$exists": true}, "scheduleDetails.oneTime.startDate": { '$gte': startDate } },
-            { scheduleType: "onGoing", startDate: { '$lte': endDate } },
+            { scheduleType: "OnGoing", startDate: { '$lte': endDate } },
             { scheduleType: "recurring", endDate: { '$gte': startDate } },
         ],
     };
