@@ -42,7 +42,7 @@ export class OneTimeRow extends React.Component {
 
     addNewRow = ()=> {
     	const oldRow = [...this.state.row];
-    	oldRow.push({ startDate: {}, startTime: {}, duration: "", roomId: ""});
+    	oldRow.push({ startDate: new Date(), startTime: new Date(), duration: "", roomId: ""});
     	this.setState({ row: oldRow })
     }
 
