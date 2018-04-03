@@ -16,6 +16,8 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import Media from "/imports/api/media/fields";
+import ClassInterest from "/imports/api/classInterest/fields";
+
 
 const Wrapper = styled.div`
   width: 100%;
@@ -50,6 +52,7 @@ export default createContainer(props => {
 	const { classTypeId } = props.params;
 	let subscription;
 	let isLoading = true;
+  let classInterestData = [];
 
 	if(classTypeId) {
 		subscription = Meteor.subscribe("classType.getClassTypeWithClassTimes", {classTypeId});
@@ -58,7 +61,8 @@ export default createContainer(props => {
 	if(subscription && subscription.ready()) {
         isLoading = false
     }
-
+    Meteor.subscribe("classInterest.getClassInterest");
+    classInterestData = ClassInterest.find({}).fetch();
     let classTypeData = ClassType.findOne({ _id: classTypeId});
     let schoolData = School.findOne();
     let classTimesData = ClassTimes.find().fetch();
@@ -80,6 +84,7 @@ export default createContainer(props => {
         classPricingData,
         monthlyPricingData,
         mediaData,
+        classInterestData
   	}
 
 }, ClassTypeView);

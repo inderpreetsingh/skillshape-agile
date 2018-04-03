@@ -283,6 +283,8 @@ class ClassTypeContent extends Component {
         }
     }
 
+
+
 	render() {
 		console.log("ClassTypeContent props --->>",this.props);
 
@@ -294,6 +296,7 @@ class ClassTypeContent extends Component {
       classPricingData,
       monthlyPricingData,
       mediaData,
+      classInterestData
 		} = this.props;
 
 		if(isLoading) {
@@ -352,7 +355,10 @@ class ClassTypeContent extends Component {
                                     />
                                 </ClassContainer>
                             ) : (
-                                <ClassTimesBoxes classTimesData={classTimesData} />
+                                <ClassTimesBoxes
+                                  classTimesData={classTimesData}
+                                  classInterestData={ classInterestData}
+                                />
                             )
                           }
 			                </ClassTimesWrapper>
