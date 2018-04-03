@@ -1,9 +1,12 @@
 import React from 'react';
-import get from 'lodash/get';
+import styled from 'styled-components';
+import {isEmpty, get} from 'lodash';
 import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
 
 import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
+import ContactUsFloatingButton from '/imports/ui/components/landing/components/buttons/ContactUsFloatingButton.jsx';
+import ContactUsBar from '/imports/ui/components/landing/components/ContactUsBar.jsx';
 import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar.jsx';
 import { withStyles, material_ui_next_theme } from '/imports/util';
 import SetPasswordDialogBox from '/imports/ui/components/landing/components/dialogs/SetPasswordDialogBox';
@@ -24,6 +27,7 @@ const styles = theme => ({
         // paddingTop: theme.spacing.unit*10 - theme.spacing.unit/2,
     }
 });
+
 
 class PublicLayout extends React.Component {
 
@@ -96,26 +100,30 @@ class PublicLayout extends React.Component {
             className.id = "UserMainPanel";
         }
 
+        console.info(currentUser, isUserSubsReady,"---------- main layout ----------");
+
         return (
           <MuiThemeProvider theme={muiTheme}>
-                <div className={`${className.mainClass} ${classes.wrapper}`} id={className.id}>
-                    {/*<BrandBar {...this.props}/>*/}
-                    <TopSearchBar {...this.props} />
-
-                    <SetPasswordDialogBox
-                        open={this.state.showSetPasswordDialogBox}
-                        onModalClose={() => this.setState({showSetPasswordDialogBox: false})}
-                        onCompleteButtonClick={this.setPasswordDialogBoxSubmit}
-                        errorText={this.state.errorMessage}
-                        isLoading={this.state.isBusy}
-                    />
-                    <div style={{flex: 1}} ref={(ref)=> {this.mainPanelRef = ref}}>
-                        <main className={classes.content}>
-                            {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
-                        </main>
-                    </div>
-                  <Footer />
+            <div className={`${className.mainClass} ${classes.wrapper}`} id={className.id}>
+                {/*<BrandBar {...this.props}/>*/}
+                <div>
+                  <TopSearchBar {...this.props} />
                 </div>
+
+                <SetPasswordDialogBox
+                    open={this.state.showSetPasswordDialogBox}
+                    onModalClose={() => this.setState({showSetPasswordDialogBox: false})}
+                    onCompleteButtonClick={this.setPasswordDialogBoxSubmit}
+                    errorText={this.state.errorMessage}
+                    isLoading={this.state.isBusy}
+                />
+                <div style={{flex: 1}} ref={(ref)=> {this.mainPanelRef = ref}}>
+                    <main className={classes.content}>
+                        {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
+                    </main>
+                </div>
+              <Footer />
+            </div>
           </MuiThemeProvider>
         )
     }

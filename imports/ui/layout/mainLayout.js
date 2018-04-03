@@ -1,8 +1,10 @@
 import React from 'react';
-import get from 'lodash/get';
+import { isEmpty, get } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
+import ContactUsFloatingButton from '/imports/ui/components/landing/components/buttons/ContactUsFloatingButton.jsx';
+
 import { toastrModal } from '/imports/util';
 import TermsOfServiceDialogBox from '/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx'
 
@@ -94,6 +96,7 @@ class MainLayout extends React.Component {
 
     render( ) {
         const { currentUser, isUserSubsReady, classes} = this.props;
+        console.log(this.props.route,"main layout.......................")
         return (
             <div>
                 {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
@@ -105,6 +108,7 @@ class MainLayout extends React.Component {
                         onAgreeButtonClick={this.handleServiceAgreementClick}
                     />
                 }
+                {!isEmpty(currentUser) && this.props.location.pathname !== '/contact-us' && <ContactUsFloatingButton />}
             </div>
         )
     }

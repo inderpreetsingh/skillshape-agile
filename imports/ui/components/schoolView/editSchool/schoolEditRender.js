@@ -66,6 +66,7 @@ export default function (props) {
                               schoolId={schoolId}
                               moveTab={this.moveTab}
                               currentUser={currentUser}
+                              route={this.props.route}
                           />
                       }
                       {

@@ -13,11 +13,12 @@ import ReviewsSlider from './components/class/ReviewsSlider.jsx';
 import ClassTypeCoverContent from './components/class/cover/ClassTypeCoverContent.jsx';
 import MyCalendar from '../users/myCalender';
 
+import TopSearchBar from './components/TopSearchBar';
+import ContactUsBar from './components/ContactUsBar';
+import Footer from './components/footer/index.jsx';
 import StarsBar from './components/StarsBar.jsx';
 import ClassTimesSlider from './components/classTimes/ClassTimesSlider.jsx';
 import BrandBar from './components/BrandBar';
-import TopSearchBar from './components/TopSearchBar';
-import Footer from './components/footer/index.jsx';
 import ClassTimesBoxes from './components/classTimes/ClassTimesBoxes';
 import ClassTimeButton from './components/buttons/ClassTimeButton.jsx';
 
@@ -158,8 +159,9 @@ const CalendarWrapper = styled.div`
 class ClassType extends Component {
   render() {
     return (<Wrapper className="classtype-page">
-        <TopSearchBar />
-
+        <div>
+          <TopSearchBar />
+        </div>
         {/* Class Type Cover includes description, map, foreground image, then class type information*/}
         <ClassTypeCover coverSrc={this.props.coverSrc}>
           <ClassTypeCoverContent
