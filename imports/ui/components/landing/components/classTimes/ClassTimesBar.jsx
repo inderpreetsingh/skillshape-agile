@@ -80,6 +80,7 @@ const ClassTimesBar = (props) => {
             return (
               <GridItem key={classTimeObj._id} spacing={32}>
                 <ClassTime
+                  {...classTimeObj}
                   classTimeData={ classTimeObj }
                   classInterestData={classInterestData}
                   addToCalender={addToCalender}

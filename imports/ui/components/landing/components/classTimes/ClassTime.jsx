@@ -204,7 +204,7 @@ class ClassTime extends Component {
 
   _getCalenderButton = (addToCalender,scheduleTypeOnGoing) => {
     const addToMyCalender = this.props.addToCalender;
-    const iconName = addToMyCalender ? "delete": "add_circle_outline";
+    const iconName = addToMyCalender ? "add_circle_outline": "delete";
     // const label = addToMyCalender ? "Remove from Calender" :  "Add to my Calendar";
     if(addToMyCalender) {
       return (
