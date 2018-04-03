@@ -232,9 +232,7 @@ class CardsReveal extends Component {
     const { name, classTypeImg, descriptionContent, body, classes } = this.props;
     const myTitle = name.toLowerCase();
     //console.log(ShowDetails,"adsljfj")
-    return (
-      <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
-
+    return (<Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
         <div onClick={this.revealCardContent}>
           <CardImageTitleWrapper>
 

@@ -61,6 +61,7 @@ const Text = styled.p`
   font-size: ${helpers.baseFontSize}px;
   font-family: ${helpers.specialFont};
   font-weight: 600;
+  text-transform: capitalize;
 `;
 
 const Description = styled.p`
@@ -68,6 +69,8 @@ const Description = styled.p`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
+  padding: ${helpers.rhythmDiv * 2}px;
+  padding-top: 0;
   max-height: 140px;
   overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
@@ -108,7 +111,7 @@ _isClassOnGoing = (scheduleType) => scheduleType && scheduleType.toLowerCase().r
 class ClassTime extends Component {
 
   state = {
-    addToCalendar : this.props.addToCalendar,
+    addedToCalendar : this.props.addedToCalendar,
     scheduleTypeOnGoing: _isClassOnGoing(this.props.scheduleType),
     fullTextState: this.props.fullTextState,
     showReadMore: this.props.showReadMore
@@ -120,14 +123,14 @@ class ClassTime extends Component {
 
   handleToggleAddToCalendar = () => {
     this.setState({
-      addToCalendar: !this.state.addToCalendar
+      addedToCalendar: !this.state.addedToCalendar
     });
   }
 
   handleAddToMyCalendarButtonClick = () => {
 
     this.setState({
-      addToCalendar: false
+      addedToCalendar: false
     });
 
 
@@ -139,7 +142,7 @@ class ClassTime extends Component {
   handleRemoveFromCalendarButtonClick = () => {
 
     this.setState({
-      addToCalendar: true
+      addedToCalendar: true
     });
 
     if(this.props.onRemoveFromCalendarButtonClick) {
@@ -150,14 +153,15 @@ class ClassTime extends Component {
   componentWillReceiveProps = (newProps) => {
     if(this.state.fullTextState !== newProps.fullTextState) {
       this.setState({
-        fullTextState: newProps.fullTextState
+        fullTextState: newProps.fullTextState,
+        scheduleTypeOnGoing: _isClassOnGoing(newProps.scheduleTypeOnGoing)
       });
     }
   }
 
-  _getWrapperClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar' : 'remove-from-calendar';
+  _getWrapperClassName = (addedToCalendar,scheduleTypeOnGoing) => (addedToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar' : 'remove-from-calendar';
 
-  _getOuterClockClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
+  _getOuterClockClassName = (addedToCalendar,scheduleTypeOnGoing) => (addedToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
 
   _getCalenderButton = (addToCalender,scheduleTypeOnGoing) => {
     if(scheduleTypeOnGoing && addToCalender) {
@@ -195,7 +199,7 @@ class ClassTime extends Component {
 
   render() {
     console.log("ClassTime props -->>",this.props);
-    return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
+    return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addedToCalendar,this.state.scheduleTypeOnGoing)}`}
             key={this.props._id} >
             <div>
               <ClassTimeClockManager
@@ -203,7 +207,7 @@ class ClassTime extends Component {
                 schedule={this.props.scheduleType}
                 clockProps={
                   {
-                    className: this._getOuterClockClassName(this.state.addToCalendar, this.state.scheduleTypeOnGoing)
+                    className: this._getOuterClockClassName(this.state.addedToCalendar, this.state.scheduleTypeOnGoing)
                   }
                 }
               />
@@ -219,7 +223,7 @@ class ClassTime extends Component {
                 </Description>}
             </div>
 
-            {this._getCalenderButton(this.state.addToCalendar, this.state.scheduleTypeOnGoing)}
+            {this._getCalenderButton(this.state.addedToCalendar, this.state.scheduleTypeOnGoing)}
 
             {this.props.isTrending && <Trending />}
         </ClassTimeContainer>)
@@ -234,7 +238,7 @@ ClassTime.propTypes = {
     duration: PropTypes.number.isRequired
   }),
   description: PropTypes.string.isRequired,
-  addToCalendar: PropTypes.bool.isRequired,
+  addedToCalendar: PropTypes.bool.isRequired,
   scheduleType: PropTypes.string.isRequired,
   isTrending: PropTypes.bool
 }

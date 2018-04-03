@@ -49,7 +49,7 @@ const classTimesBarData = [
       }
     ],
     description: 'This class is taught by Mr. Surnaam Singh, who is head of naam yoga festival foundation celebration in New York and Los Angeles',
-    addToCalendar: true,
+    addedToCalendar: true,
     scheduleType: 'Ongoing',
     isTrending: true
 },
@@ -70,7 +70,7 @@ const classTimesBarData = [
       },
     ],
     description: 'The karate class is practiced under Miss Jen who is black belt in Karate and have immense knowledge in TaekWondo as well. Her immense experience in this field make her really great instructor.',
-    addToCalendar: true,
+    addedToCalendar: true,
     scheduleType: 'Finished',
     isTrending: false
 },
@@ -97,7 +97,7 @@ const classTimesBarData = [
       }
     ],
     description: 'This class is taught by Mr. Surnaam Singh, who is head of naam yoga festival foundation celebration in New York and Los Angeles',
-    addToCalendar: false,
+    addedToCalendar: false,
     scheduleType: 'Ongoing',
 },
 {
@@ -123,7 +123,7 @@ const classTimesBarData = [
       }
     ],
     description: 'The karate class is practiced under Miss Jen who is black belt in Karate and have immense knowledge in TaekWondo as well. Her immense experience in this field make her really great instructor.',
-    addToCalendar: false,
+    addedToCalendar: false,
     scheduleType: 'Finished',
 },
 {
@@ -143,7 +143,7 @@ const classTimesBarData = [
       },
     ],
     description: 'This class is taught by Mr. Surnaam Singh, who is head of naam yoga festival foundation celebration in New York and Los Angeles.',
-    addToCalendar: false,
+    addedToCalendar: false,
     scheduleType: 'Ongoing'
 },
 {
@@ -175,7 +175,7 @@ const classTimesBarData = [
       }
     ],
     description: 'The karate class is practiced under Miss Jen who is black belt in Karate and have immense knowledge in TaekWondo as well. Her immense experience in this field make her really great instructor.',
-    addToCalendar: false,
+    addedToCalendar: false,
     scheduleType: 'Finished',
 }
 ];

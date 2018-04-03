@@ -57,11 +57,14 @@ const SchoolDetails = (props) => (
         address={props.address}
         title={props.schoolName}
         description={props.description}/>
-      <StudentNotes notes={props.notes}/>
+        {!isEmpty(props.images) && <StudentNotes notes={props.notes} />}
     </SchoolSection>
     <ImgSliderSection>
       {
-        !isEmpty(props.images) && <ClassTypeImgSlider images={props.images} />
+        !isEmpty(props.images) ?
+        <ClassTypeImgSlider images={props.images} />
+        :
+        <StudentNotes notes={props.notes}/>
       }
     </ImgSliderSection>
   </Wrapper>
