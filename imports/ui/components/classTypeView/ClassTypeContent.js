@@ -12,6 +12,7 @@ import { imageExists } from '/imports/util';
 
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
+import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
 
 import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
@@ -163,10 +164,11 @@ const ClassContainer = styled.div`
 class ClassTypeContent extends Component {
 
     state = {
-        isBusy: false,
-        contactUsDialog: false,
-        callUsDialog: false,
-        coverSrc: classTypeImgSrc,
+      isBusy: false,
+      contactUsDialog: false,
+      callUsDialog: false,
+      giveReviewDialog: false,
+      coverSrc: classTypeImgSrc,
     }
 
     _setCoverSrc = (imgSrc) => {
@@ -282,12 +284,15 @@ class ClassTypeContent extends Component {
     }
 
     handleGiveReview = () => {
-      if(Meteor.userId) {
-
+      const {toastr} = this.props;
+      if(Meteor.userId()) {
+        this.handleDialogState('giveReviewDialog',true);
+      }else {
+        toastr.error("You need to login for writing a review !","Error");
       }
     }
 
-	render() {
+	 render() {
 		console.log("ClassTypeContent props --->>",this.props);
 
 		const {
@@ -315,8 +320,9 @@ class ClassTypeContent extends Component {
 			<Fragment>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.contactUsDialog && <EmailUsDialogBox ourEmail={this.getOurEmail()} open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
-                { this.state.isBusy && <ContainerLoader/>}
-				    {/* Class Type Cover includes description, map, foreground image, then class type information*/}
+          {this.state.giveReviewDialog && <GiveReviewDialogBox open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
+          {this.state.isBusy && <ContainerLoader/>}
+				   {/* Class Type Cover includes description, map, foreground image, then class type information*/}
 		        <ClassTypeCover coverSrc={this.state.coverSrc}>
 			        <ClassTypeCoverContent
 			        	coverSrc={this.state.coverSrc}
@@ -330,24 +336,24 @@ class ClassTypeContent extends Component {
 		        </ClassTypeCover>
 		        <Main>
 			        <MainInnerFixedContainer marginBottom="32">
-			            {isEmpty(reviewsData) ?
-                      <ClassContainer marginBottom={32}>
-                        <Typography>
-                          You are the first one to write review for this class.
-                        </Typography>
-                        <br />
-                        <ClassTimeButton
-                            icon
-                            onClick={this.handleGiveReview}
-                            iconName="rate_review"
-                            label="Give review"
-                        />
-                      </ClassContainer>
-                    : (<MainInner reviews largePadding="32" smallPadding="32">
-			              	<ClassWrapper reviews>
-			                	<ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
-			              	</ClassWrapper>
-			            </MainInner>)}
+			            {!isEmpty(reviewsData) && (<MainInner reviews largePadding="32" smallPadding="32">
+                        <ClassWrapper reviews>
+                          <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
+                        </ClassWrapper>
+                    </MainInner>)}
+
+                  <ClassContainer marginBottom={32}>
+                    <Typography>
+                      You are the first one to write review for this class.
+                    </Typography>
+                    <br />
+                    <ClassTimeButton
+                        icon
+                        onClick={this.handleGiveReview}
+                        iconName="rate_review"
+                        label="Give review"
+                    />
+                  </ClassContainer>
           			</MainInnerFixedContainer>
 
           			<MainInnerFixedContainer marginBottom="16">
