@@ -76,8 +76,7 @@ const CardsListTitle = styled.h2`
   font-family: ${helpers.specialFont};
   margin-bottom: ${helpers.rhythmDiv}px;
   margin-top: 0;
-  text-align: center;
-  
+
   @media screen and (min-width: 0) and (max-width: ${helpers.tablet}px) {
       padding-left: 0;
   }
@@ -138,8 +137,8 @@ class CardsList extends Component {
         // console.log("CardsList cardsData-->>",this.props);
         return(
           <CardsListWrapper>
-              <CardsListTitle>{title}</CardsListTitle>
               <CardsListGridWrapper mapView={mapView}>
+                <CardsListTitle>{title}</CardsListTitle>
                  <GridContainer>
                      {cardsData.map(card => {
                         return (

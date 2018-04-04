@@ -11,6 +11,7 @@ import * as helpers from '../jss/helpers.js';
 
 const styles = {
   iconStyles : {
+    marginLeft: helpers.rhythmDiv,
     transform: 'translateY(2px)',
     cursor: 'pointer'
   }
@@ -47,6 +48,7 @@ const Text = styled.p`
   padding: ${props => props.show ? `${helpers.rhythmDiv * 2}px` : 0};
   max-width: ${props => props.show ? '100%' : '0'};
   pointer-events: ${props => props.show ? 'all' : 'none'};
+  cursor: ${props => props.showCursor ? 'pointer' : 'initial'};
 `;
 
 const MyText = styled.span`
@@ -80,8 +82,8 @@ class ContactUsFloatingButton extends Component {
           <MyText><MyLink to="/contact-us">Confused ? Questions ? Click here</MyLink></MyText>
           <Icon className={this.props.classes.iconStyles} onClick={this.handleShowCompleteButton}> keyboard_arrow_down </Icon>
         </Text>
-        <Text show={!this.state.showComplete} largeFont>
-          <MyLink onClick={this.handleShowCompleteButton}> ? </MyLink>
+        <Text show={!this.state.showComplete} largeFont showCursor onClick={this.handleShowCompleteButton}>
+          <MyLink> ? </MyLink>
         </Text>
       </Wrapper></OuterWrapper>
     )
