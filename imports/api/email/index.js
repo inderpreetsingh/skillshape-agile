@@ -21,21 +21,18 @@ export const sendPackagePurchaseEmail = function({ to, buyer, packageName }) {
 };
 
 // Send Email to school admin when user wants to join a class.
-export const sendJoinClassEmail = function({ classTypeData }) {
-    let user = Meteor.users.findOne(classTypeData.userId);
-    let school = School.findOne(classTypeData.schoolId);
-    let classTimes = ClassTimes.findOne(classTypeData.classTimeId);
-    let classType = ClassType.findOne(classTypeData.classTypeId);
-    let studentName = user.profile && user.profile.firstName;
-    let schoolAdminRec = Meteor.users.findOne(school.superAdmin);
-
+export const sendJoinClassEmail = function({
+    currentUserName,
+    schoolAdminName,
+    classTypeName,
+    classTimeName
+}) {
     if (Meteor.isServer) {
         Email.send({
             to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
             from: config.fromEmailForJoiningClass,
             subject: "Join Class Request Recieved",
-            html: `Hi ${schoolAdminRec.profile
-                .firstName}, <br/><b>${studentName}</b> has showed interest in joining your : <b>${classType.name}</b> at <b>${classTimes.name}</b>.
+            html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your : <b>${classTypeName}</b> at <b>${classTimeName}</b>.
                 <br/><br/>
                 <br/><br/>
                 ${EmailSignature}`
