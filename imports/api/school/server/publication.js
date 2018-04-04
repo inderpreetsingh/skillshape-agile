@@ -215,9 +215,9 @@ Meteor.publish("school.getClassTypesByCategory", function({
     // console.log("skillTypeText-->>", skillTypeText);
     // console.log("locationText-->>", locationText);
     // console.log("_monthPrice", _monthPrice);
-    console.log("coords", coords);
+    // console.log("coords", coords);
     // console.log("NEPoint", NEPoint);
-    console.log("skillCategoryIds", skillCategoryIds);
+    // console.log("skillCategoryIds", skillCategoryIds);
     const classfilter = { isPublish: true };
     const skillCategoryFilter = {};
 
@@ -228,6 +228,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
     if (schoolName) {
         classfilter["$text"] = { $search: schoolName };
     }
+
+    // console.log("this====>",this)
 
     const isAllZero = coords && coords.some(el => el !==0);
     if (coords && !is_map_view) {
@@ -245,13 +247,26 @@ Meteor.publish("school.getClassTypesByCategory", function({
     }
 
     // If no location is available and user has an address in their profile: Show classes in categories based on address.
-    if(this.userId && (!coords || !isAllZero)) {
+    if(this.userId && (!coords || !isAllZero) && !locationText) {
         let user = Meteor.users.findOne(this.userId);
-        console.log("inside profile coords");
+        // console.log("inside profile coords");
         if(user && user.profile && user.profile.coords) {
             classfilter["filters.location"] = {
                 $geoWithin: { $center: [user.profile.coords, 30 / 111.12] }
             };
+        } else {
+            try{
+                const myIp = this.connection.clientAddress;
+                const url = `https://freegeoip.net/json/${myIp}`;
+                const result =  Meteor.http.call("GET",url);
+                if(result) {
+                    classfilter["filters.location"] = {
+                        $geoWithin: { $center: [[ result.data.latitude, result.data.longitude], 30 / 111.12] }
+                    };
+                }
+            } catch(err) {
+                console.log("err",err);
+            }
         }
     }
 
@@ -360,7 +375,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
     // locationText is a text value that search on classType data.
     if (locationText) {
         classfilter["$text"] = { $search: locationText };
-
+        console.log("classfilter", JSON.stringify(classfilter, null, "  "))
+        console.log("data with filter", ClassType.findOne(classfilter))
         const classTypeExitWithLocationFilter = ClassType.findOne(classfilter);
         // if there is not data found corresponding to locationText filter then remove this filter from classType filter.
         if (!classTypeExitWithLocationFilter) {
