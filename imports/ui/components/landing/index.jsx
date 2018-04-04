@@ -29,6 +29,8 @@ import { cardsData, cardsData1} from './constants/cardsData.js';
 import config from '/imports/config';
 import Events from '/imports/util/events';
 import { toastrModal } from '/imports/util';
+import Chip from 'material-ui/Chip';
+import Icon from 'material-ui/Icon';
 
 const MainContentWrapper = styled.div`
   display: flex;
@@ -162,6 +164,19 @@ const CenterCapsule = styled.div`
   position: relative;
  `;
 
+const WrapperDiv = styled.div`
+    box-sizing: border-box;
+    padding: 0;
+    margin-top: 27px;
+    display: flex;
+    height: 47px;
+    font-weight: 500;
+    font-size: 16px;
+    margin-top: 4px;
+    padding:8px;
+    border-bottom: solid 1px #dddd;
+ `;
+
  const FilterBarDisplayWrapper = styled.div`
   display: ${props => props.sticky ? 'block' : 'none'};
   width: 100%;
@@ -195,15 +210,15 @@ class Landing extends Component {
     }
 
     componentWillMount() {
-        let url = `https://freegeoip.net/json/${ip.address()}`
-        Meteor.http.get(url, (err, res)=> {
-            console.log("freegeoip response -->>",res)
-            if(res && !isEmpty(res.data)) {
-                let oldFilters = {...this.state.filters};
-                oldFilters.coords = [ res.data.latitude, res.data.longitude];
-                this.setState({filters: oldFilters})
-            }
-        })
+        // let url = `https://freegeoip.net/json/${ip.address()}`
+        // Meteor.http.get(url, (err, res)=> {
+        //     console.log("freegeoip response -->>",res)
+        //     if(res && !isEmpty(res.data)) {
+        //         let oldFilters = {...this.state.filters};
+        //         oldFilters.coords = [ res.data.latitude, res.data.longitude];
+        //         this.setState({filters: oldFilters})
+        //     }
+        // })
     }
 
     componentDidMount() {
@@ -295,6 +310,8 @@ class Landing extends Component {
                         // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
                         sLocation = results[0].formatted_address
                         oldFilters["coords"] = coords;
+                        oldFilters["locationName"] = "";
+                        oldFilters["applyFilterStatus"] = true;
                       }
                     }
                     this.setState({
@@ -372,7 +389,7 @@ class Landing extends Component {
             }
         }
 
-        this.setState(stateObj);
+        this.setState({ ...stateObj, locationName: false, defaultLocation: false });
     }
 
     locationInputChanged = (event, updateKey1, updateKey2) => {
@@ -496,7 +513,6 @@ class Landing extends Component {
 
     renderFilterPanel = () => {
         return <FilterPanel
-            currentAddress={this.state.defaultLocation || this.state.locationName}
             removeAllFilters={this.removeAllFilters}
             mapView={this.state.mapView}
             filters={this.state.filters}
@@ -506,7 +522,6 @@ class Landing extends Component {
             handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
             handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
             onLocationChange={this.onLocationChange}
-            locationName={this.state.locationName}
             locationInputChanged={this.locationInputChanged}
             fliterSchoolName={this.fliterSchoolName}
             filterAge={this.filterAge}
@@ -517,6 +532,52 @@ class Landing extends Component {
             collectSelectedSkillCategories={this.collectSelectedSkillCategories}
             collectSelectedSkillSubject={this.collectSelectedSkillSubject}
         />
+    }
+
+    showAppliedTopFilter = () => {
+        const { locationText, skillTypeText } = this.state.filters;
+        // let appliedTopFilterText = "Showing result for "
+
+        let keyword;
+        if (locationText && skillTypeText) {
+            text =  `Showing result for ${skillTypeText} in ${locationText}`
+            return this.showText(text, this.deleteFilterText);
+        } else if (locationText) {
+            text = `Showing result in ${locationText}`
+            return this.showText(text, this.deleteFilterText);
+        } else if (skillTypeText) {
+            text = `Showing result for ${skillTypeText}`
+            return this.showText(text, this.deleteFilterText);
+        }
+      }
+    showText = (text, cb) => {
+      return (
+        <WrapperDiv>
+          <Icon onClick={cb}>close</Icon>{text}
+        </WrapperDiv>
+      )
+    }
+    // Delete `skillTypeText` and `locationText` from filters.
+    deleteFilterText = () => {
+      const oldFilter = {...this.state.filters};
+      oldFilter.skillTypeText="";
+      oldFilter.locationText="";
+      this.setState({filters:oldFilter, resetMainSearch: !this.state.resetMainSearch});
+    }
+    showAppliedLocationFilter = () => {
+        const { locationName, defaultLocation } = this.state;
+        // console.log("locationName",locationName, defaultLocation)
+        if (locationName && defaultLocation) {
+            text =  `Showing classes near you (${defaultLocation})`;
+            return this.showText(text, this.clearDefaultLocationFilter);
+        }
+    }
+
+    clearDefaultLocationFilter = () => {
+      stateObj = this.state.filters;
+      stateObj.coords= null;
+      this.setState({filters: stateObj, locationName:null, defaultLocation: null});
+
     }
 
     render() {
@@ -530,7 +591,7 @@ class Landing extends Component {
                     open={this.state.filterPanelDialogBox}
                     onModalClose={() => this.handleFiltersDialogBoxState(false)}
                     filterPanelProps={{
-                        currentAddress: (this.state.defaultLocation || this.state.locationName),
+                        currentAddress: (this.state.locationName),
                         removeAllFilters: this.removeAllFilters,
                         filters: this.state.filters,
                         tempFilters: this.state.tempFilters,
@@ -562,6 +623,7 @@ class Landing extends Component {
                     getMyCurrentLocation={this.getMyCurrentLocation}
                     onMapViewButtonClick={this.handleToggleMapView}
                     mapView={this.state.mapView}
+                    resetSearch = {this.state.resetMainSearch}
                 />
                 </Cover>
               </CoverWrapper>
@@ -575,16 +637,16 @@ class Landing extends Component {
                     </FilterBarDisplayWrapper>}
                   </Sticky>
                </FilterPanelWrapper>
+               {/* Applied Filters */}
+              {this.state.filters && this.showAppliedTopFilter()}
+              {this.state.locationName && this.showAppliedLocationFilter()}
 
               {/*Cards List */}
                 <Element name="content-container" className="element homepage-content">
                     <ClassTypeList
-                        locationName={this.state.locationName}
                         mapView={this.state.mapView}
                         filters={this.state.filters}
                         handleSeeMore={this.handleSeeMore}
-                        defaultLocation={this.state.defaultLocation}
-                        clearDefaultLocation={this.clearDefaultLocation}
                         splitByCategory={true}
                         setSchoolIdFilter={this.setSchoolIdFilter}
                         removeAllFilters={this.removeAllFilters}
