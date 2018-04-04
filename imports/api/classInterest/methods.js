@@ -18,8 +18,8 @@ Meteor.methods({
                 let schoolAdminRec = Meteor.users.findOne(schoolData.superAdmin);
                 const currentUserName = getUserFullName(currentUserRec);
                 const schoolAdminName = getUserFullName(schoolAdminRec);
-                sendJoinClassEmail({currentUserName:currentUserName,
-                    schoolAdminName: schoolAdminName,
+                sendJoinClassEmail({currentUserName,
+                    schoolAdminName,
                     classTypeName: classTypeData.name,
                     classTimeName: classTimes.name
                 });
