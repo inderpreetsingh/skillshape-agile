@@ -129,6 +129,7 @@ const SearchInputsSection = (props) => (
           onChange={props.onSkillTypeChange}
           withIcon={false}
           rightAlign
+          resetSearch={props.resetSearch}
         />
       </InputWrapper>
       <In>in</In>
@@ -138,6 +139,7 @@ const SearchInputsSection = (props) => (
           defaultBorderRadius
           noCloseIcon
           onChange={props.onLocationInputChange}
+          resetSearch={props.resetSearch}
         />
       </InputWrapper>
    </InputsWrapper>
@@ -234,6 +236,7 @@ class SearchArea extends Component {
   }
 
   render() {
+    console.log("this.state SearchAreaPanel",this.state)
     return (
       <SearchAreaPanel width={this.props.width} textAlign={this.props.textAlign} itemScope itemType="http://schema.org/SearchAction">
         {this.props.topSection ? this.props.topSection : <TaglineWrapper />}
@@ -247,6 +250,9 @@ class SearchArea extends Component {
               onFiltersButtonClick={this.props.onFiltersButtonClick}
               onMapViewButtonClick={this.props.onMapViewButtonClick}
               mapView={this.props.mapView}
+              locationText={this.props.locationText}
+              skillTypeText={this.props.skillTypeText}
+              resetSearch={this.props.resetSearch}
             />
           )}
         {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} handleAddSchool={this.handleAddSchool}/> }

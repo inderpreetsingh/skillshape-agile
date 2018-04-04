@@ -76,6 +76,9 @@ class MySearchBar extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    if(this.props.resetSearch != nextProps.resetSearch) {
+      this.setState({value: "", active: false})
+    }
     if (this.props.value !== nextProps.value) {
       this.setState({...this.state, value: nextProps.value});
     }
