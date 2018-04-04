@@ -207,7 +207,7 @@ class ClassType extends Component {
               website={schoolDetails.website}
               address={schoolDetails.address}
               images={schoolImages}
-              schoolName={schoolDetails.schoolName}
+              schoolName={schoolDetails.name}
               notes={schoolDetails.notes}
               description={schoolDetails.fullDescription}
             />

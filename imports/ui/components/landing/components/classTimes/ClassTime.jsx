@@ -237,18 +237,15 @@ class ClassTime extends Component {
   }
 
   render() {
-    console.log("ClassTime props -->>",this);
+    console.log("ClassTime props -->>",this.props);
     return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
             key={this.props._id} >
             <div>
               <ClassTimeClockManager
                 data={this.props}
-                schedule={this.props.scheduleType}
-                clockProps={
-                  {
-                    className: this._getOuterClockClassName(this.state.addToCalendar, this.state.scheduleTypeOnGoing)
-                  }
-                }
+                scheduleType={this.props.scheduleType}
+                classTimes={this.props.classTimes}
+                clockProps={{ className: this._getOuterClockClassName(this.state.addToCalendar, this.state.scheduleTypeOnGoing) }}
               />
 
               {this.props.showReadMore ?
