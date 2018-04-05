@@ -247,8 +247,8 @@ Meteor.publish("school.getClassTypesByCategory", function({
     }
 
     // If no location is available and user has an address in their profile: Show classes in categories based on address.
-    if(this.userId && (!coords || !isAllZero) && !locationText) {
-        let user = Meteor.users.findOne(this.userId);
+    if((!coords || !isAllZero) && !locationText) {
+        let user = this.userId && Meteor.users.findOne(this.userId);
         // console.log("inside profile coords");
         if(user && user.profile && user.profile.coords) {
             classfilter["filters.location"] = {
@@ -259,7 +259,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
                 const myIp = this.connection.clientAddress;
                 const url = `https://freegeoip.net/json/${myIp}`;
                 const result =  Meteor.http.call("GET",url);
-                if(result) {
+                if(result && result.data && result.data.latitude && result.data.longitude) {
                     classfilter["filters.location"] = {
                         $geoWithin: { $center: [[ result.data.latitude, result.data.longitude], 30 / 111.12] }
                     };

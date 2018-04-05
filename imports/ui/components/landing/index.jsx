@@ -644,6 +644,7 @@ class Landing extends Component {
               {/*Cards List */}
                 <Element name="content-container" className="element homepage-content">
                     <ClassTypeList
+                        defaultLocation={this.state.defaultLocation}
                         mapView={this.state.mapView}
                         filters={this.state.filters}
                         handleSeeMore={this.handleSeeMore}
