@@ -8,6 +8,7 @@ import * as helpers from '../jss/helpers.js';
 import ClassTimeClock from './ClassTimeClock.jsx';
 import ClassTimeNewClock from './ClassTimeNewClock.jsx';
 
+const ONE_TIME = 'onetime';
 const DAYS_IN_WEEK = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
 
 const OuterWrapper = styled.div`
@@ -17,7 +18,7 @@ const OuterWrapper = styled.div`
 const InnerWrapper = styled.div`
   ${helpers.flexCenter}
   width: 100%;
-  min-height: 140px;
+  min-height: 160px;
   position: relative;
 `;
 
@@ -26,7 +27,6 @@ const ClockWrapper = styled.div`
   left: 50%;
   transform: translateX(-50%);
 `;
-
 
 const ChangeSlide = styled.div`
   width: 100%;
@@ -83,31 +83,19 @@ const Seperator = styled.span`
 
 class ClassTimeClockManager extends Component {
   state = {
-    originalClassTimes : this.props.classTimes,
-    formattedClassTimes: this.props.classTimes,
     currentIndex: 0,
     lastIndex: 0
   }
 
-  componentWillMount = () => {
-    if(this.state.originalClassTimes) {
-      const formattedClassTimes = this._formatDataBasedOnScheduleType(this.state.originalClassTimes);
-      this.setState({
-        formattedClassTimes: formattedClassTimes,
-        lastIndex: formattedClassTimes.length
-      });
-    }
-  }
-
-  _getDayInShortFormat = (dayDb) => {
+  getDayInShortFormat = (dayDb) => {
     const day = dayDb.toLowerCase();
     return day.substr(0,2);
   }
 
-  _formatDataBasedOnScheduleType = (data) => {
+  formatDataBasedOnScheduleType = (data) => {
     // In this method we basically need to format data
     /* eg formatted data..
-    classTimes : [
+    classTimes : {
       'monday': [{
           time: '07:00',
           timePeriod: 'am',
@@ -126,7 +114,7 @@ class ClassTimeClockManager extends Component {
         duration: 175,
         date: "2018-04-16T06:45:54.289Z"
       }]
-    ],
+    }
 
     NOTE: Recurring, Ongoing scheduleType are already formatted (or easy to format) this way,
         but for oneTime we need to transform into this format to feed data to clock(s).
@@ -167,22 +155,21 @@ class ClassTimeClockManager extends Component {
 
   render() {
     console.log(' clock times clock manager -----> ',this.props.data,".....");
-
-    return (
-      <Fragment>
+    const formattedClassTimes = this.formatDataBasedOnScheduleType(this.props.classTimes);
+    return (<Fragment>
         {/*Clock Times*/}
         <OuterWrapper width={this.props.outerWidth}>
           <InnerWrapper>
             {/* NOTE : This is not to be used when we are using the ClassTimeNewClock */}
             {/* <ClassTimeClock data={this.props.data} visible={this.state.currentIndex} {...this.props.clockProps} /> */}
 
-            {this.state.formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
-              console.log(this.props,'this.props......')
-              if(this.state.formattedClassTimes[day]) {
+            {formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
+              // console.log(this.props,'this.props......')
+              if(formattedClassTimes[day]) {
                 return <ClassTimeNewClock
                   currentDay={day}
                   scheduleType={this.props.scheduleType}
-                  scheduleData={this.state.formattedClassTimes[day]}
+                  scheduleData={formattedClassTimes[day]}
                   visible={i === this.state.currentIndex}
                   clockProps={this.props.clockProps} />
               }
@@ -193,14 +180,14 @@ class ClassTimeClockManager extends Component {
 
         <ChangeSlide>
           <Days>
-            {this.state.formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
+            {formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
               // console.log(this.props,'this.props......')
-              if(this.state.formattedClassTimes[day]){
+              if(formattedClassTimes[day]){
                 return(<Day
                   key={i}
                   active={i === this.state.currentIndex}
                   onClick={this.handleDayClick(i)}>
-                  {this._getDayInShortFormat(day)}
+                  {this.getDayInShortFormat(day)}
                 </Day>)
               }
               return null;
@@ -208,7 +195,7 @@ class ClassTimeClockManager extends Component {
           </Days>
         </ChangeSlide>
 
-        <Schedule>{this.props.scheduleType}</Schedule>
+        {this.props.scheduleType.toLowerCase() !== ONE_TIME && <Schedule>{ this.props.scheduleType}</Schedule>}
       </Fragment>
     )
   }

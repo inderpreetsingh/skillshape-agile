@@ -22,7 +22,7 @@ const ON_GOING_SCHEDULE = 'ongoing';
 
 const ClassTimeContainer = styled.div`
   width: 250px;
-  min-height: 400px;
+  min-height: 430px;
   padding: ${helpers.rhythmDiv}px;
   padding: ${helpers.rhythmDiv * 2}px;
   display: flex;
@@ -73,7 +73,7 @@ const Description = styled.p`
   font-weight: 400;
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;
-  max-height: 140px;
+  max-height: 160px;
   overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
 
@@ -116,7 +116,6 @@ class ClassTime extends Component {
     addToCalendar : this.props.addToCalendar,
     scheduleTypeOnGoing: _isClassOnGoing(this.props.scheduleType),
     fullTextState: this.props.fullTextState,
-    showReadMore: this.props.showReadMore
   }
 
   componentDidMount = () => {
