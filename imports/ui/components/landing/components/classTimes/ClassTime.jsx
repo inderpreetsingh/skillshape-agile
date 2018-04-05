@@ -22,7 +22,7 @@ const ON_GOING_SCHEDULE = 'ongoing';
 
 const ClassTimeContainer = styled.div`
   width: 250px;
-  min-height: 400px;
+  min-height: 430px;
   padding: ${helpers.rhythmDiv}px;
   padding: ${helpers.rhythmDiv * 2}px;
   display: flex;
@@ -73,7 +73,7 @@ const Description = styled.p`
   font-weight: 400;
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;
-  max-height: 140px;
+  max-height: 160px;
   overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
 
@@ -116,7 +116,6 @@ class ClassTime extends Component {
     addToCalendar : this.props.addToCalendar,
     scheduleTypeOnGoing: _isClassOnGoing(this.props.scheduleType),
     fullTextState: this.props.fullTextState,
-    showReadMore: this.props.showReadMore
   }
 
   componentDidMount = () => {
@@ -208,6 +207,8 @@ class ClassTime extends Component {
 
   _getOuterClockClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
 
+  _getDotColor = (addToCalendar, scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? helpers.primaryColor : helpers.cancel;
+
   _getCalenderButton = (addToCalender,scheduleTypeOnGoing) => {
     const addToMyCalender = this.props.addToCalender;
     const iconName = addToMyCalender ? "add_circle_outline": "delete";
@@ -238,6 +239,8 @@ class ClassTime extends Component {
 
   render() {
     console.log("ClassTime props -->>",this.props);
+    const classNameForClock = this._getOuterClockClassName(this.state.addToCalendar, this.state.scheduleTypeOnGoing);
+    const dotColor = this._getDotColor(this.state.addToCalendar, this.state.scheduleTypeOnGoing);
     return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
             key={this.props._id} >
             <div>
@@ -245,7 +248,7 @@ class ClassTime extends Component {
                 data={this.props}
                 scheduleType={this.props.scheduleType}
                 classTimes={this.props.classTimes}
-                clockProps={{ className: this._getOuterClockClassName(this.state.addToCalendar, this.state.scheduleTypeOnGoing) }}
+                clockProps={{ className: classNameForClock, dotColor: dotColor }}
               />
 
               {this.props.showReadMore ?
