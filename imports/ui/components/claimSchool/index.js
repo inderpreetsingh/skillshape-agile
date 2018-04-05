@@ -11,10 +11,6 @@ import SkillCategory from "/imports/api/skillCategory/fields";
 
 import { toastrModal } from '/imports/util';
 
-
-
-
-
 const styles = theme => ({
   sideButton: {
     fontWeight: 600,
@@ -30,9 +26,7 @@ const styles = theme => ({
   }
 });
 
-console.log("styles",styles)
-
-
+console.log("styles",styles);
 
 class ClaimSchool extends ClaimSchoolBase {
 

@@ -131,7 +131,7 @@ const ClassTimesName = styled.span`
 const PackagesWrapper = styled.div`
   ${helpers.flexDirectionColumn}
   width: 100%;
-  margin-bottom: ${helpers.rhythmDiv * 8}px;
+  margin-bottom: ${props => props.marginBottom}px;
 `;
 
 const PackagesTitle = styled.h2`
@@ -389,7 +389,7 @@ class ClassTypeContent extends Component {
 			        </MainInnerFixedContainer>
 
               <Element name="price-section">
-                <PackagesWrapper>
+                <PackagesWrapper marginBottom={isEmpty(classPricingData) && isEmpty(monthlyPricingData) ? helpers.rhythmDiv * 4 : helpers.rhythmDiv * 8 }>
                     <PackagesTitle>Pay only for what you need</PackagesTitle>
                     {
                         (isEmpty(classPricingData) && isEmpty(monthlyPricingData)) ? (

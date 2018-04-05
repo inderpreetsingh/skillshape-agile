@@ -28,3 +28,11 @@
   border: 2px solid map-get($colors,'secondary-dark');
   color: map-get($colors,'secondary-dark');
 }
+
+.add-to-calendar-dot {
+  background: map-get($colors,'primary');
+}
+
+.remove-from-calendar-dot {
+  background: map-get($colors,'secondary-dark');
+}

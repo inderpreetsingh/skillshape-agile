@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
+import SliderDots from '../helpers/SliderDots.jsx';
 import * as helpers from '../jss/helpers.js';
 
 const ONE_TIME = 'onetime';
@@ -93,6 +94,7 @@ const DayDateInfo = styled.p`
   text-align: center;
   opacity: 1;
   transition: opacity .2s ease-out;
+  text-transform: capitalize;
 `;
 
 
@@ -133,11 +135,21 @@ const Date = styled.p`
   margin: 0;
 `;
 
+const DotsWrapper = styled.div`
+  width: 100%;
+  ${helpers.flexCenter}
+  margin: ${helpers.rhythmDiv}px 0;
+`;
 
 const MyClock = (props) => (<MyClockWrapper
   clockType={props.clockType}
   currentClock={props.currentClock}
   onClick={props.onClockClick} >
+  {props.scheduleType.toLowerCase() === ONE_TIME && <DayDateContainer>
+    <DayDateInfo clockType={props.clockType}>
+      <Date>({props.formattedDate})</Date>
+    </DayDateInfo>
+  </DayDateContainer>}
 
   <ClockWrapper className={`class-time-transition ${props.className}`}>
     <TimeContainer>
@@ -146,16 +158,9 @@ const MyClock = (props) => (<MyClockWrapper
       <TimePeriod>{props.schedule.timePeriod}</TimePeriod>
     </TimeContainer>
   </ClockWrapper>
-
-  {props.scheduleType.toLowerCase() === ONE_TIME && <DayDateContainer>
-    <DayDateInfo clockType={props.clockType}>
-      <ScheduleLabel>one time</ScheduleLabel>
-      <Date>({props.formattedDate})</Date>
-    </DayDateInfo>
-  </DayDateContainer>}
 </MyClockWrapper>);
 
-class ClassTimeClock extends Component {
+class ClassTimeNewClock extends Component {
   state = {
     currentClockIndex: 0,
   }
@@ -176,7 +181,7 @@ class ClassTimeClock extends Component {
   render() {
     // console.log("Clock Outer wrapper",this.props,"..............");
     const type = this.props.scheduleData.length > 1 ? 'multiple' : 'single';
-    const { scheduleType, currentDay } = this.props;
+    const { scheduleData, scheduleType, currentDay } = this.props;
     console.info('---------------',this.props.scheduleType," clock outer wrapper........");
     return (<ClockOuterWrapper
               visible={this.props.visible}
@@ -185,7 +190,7 @@ class ClassTimeClock extends Component {
               <ClockInnerWrapper
                 clockType={type}
                 currentClockIndex={this.state.currentClockIndex}>
-                {this.props.scheduleData.map((schedule,i) => (<MyClock
+                {scheduleData && scheduleData.map((schedule,i) => (<MyClock
                   key={i}
                   currentClock={i}
                   clockType={type}
@@ -197,7 +202,12 @@ class ClassTimeClock extends Component {
                   {...this.props.clockProps}
                 />))}
               </ClockInnerWrapper>
-              {scheduleType.toLowerCase() !== ONE_TIME && <DayDateContainer>
+              {(scheduleData.length > 1) && <DotsWrapper><SliderDots
+                  currentIndex={this.state.currentClockIndex}
+                  noOfDots={this.props.scheduleData.length}
+                  dotColor={this.props.clockProps.dotColor}
+                  onDotClick={this.handleClockClick} /></DotsWrapper> }
+              {scheduleType && scheduleType.toLowerCase() !== ONE_TIME && <DayDateContainer>
                 <DayDateInfo clockType={type} visible>
                   {currentDay}
                 </DayDateInfo>
@@ -206,11 +216,11 @@ class ClassTimeClock extends Component {
     }
 }
 
-ClassTimeClock.propTypes = {
+ClassTimeNewClock.propTypes = {
   time: PropTypes.string,
   timePeriod: PropTypes.string,
   duration: PropTypes.number,
   day: PropTypes.string,
 }
 
-export default ClassTimeClock;
+export default ClassTimeNewClock;

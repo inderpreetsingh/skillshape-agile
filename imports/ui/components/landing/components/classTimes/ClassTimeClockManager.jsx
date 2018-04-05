@@ -149,9 +149,6 @@ class ClassTimeClockManager extends Component {
     });
   }
 
-  componentDidMount = () => {
-    console.log(this.sliderContainer,"slider container");
-  }
 
   render() {
     console.log(' clock times clock manager -----> ',this.props.data,".....");
@@ -195,22 +192,19 @@ class ClassTimeClockManager extends Component {
           </Days>
         </ChangeSlide>
 
-        {this.props.scheduleType.toLowerCase() !== ONE_TIME && <Schedule>{ this.props.scheduleType}</Schedule>}
+        {<Schedule>{ this.props.scheduleType}</Schedule>}
       </Fragment>
     )
   }
 }
 
 ClassTimeClockManager.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object),
+  classTimes: PropTypes.arrayOf(PropTypes.object),
   scheduleType: PropTypes.string,
-  automatic: PropTypes.bool,
-  slideTime: PropTypes.number
 }
 
 ClassTimeClockManager.defaultProps = {
-  automatic: true,
-  slideTime: 4000
+
 }
 
 export default ClassTimeClockManager;

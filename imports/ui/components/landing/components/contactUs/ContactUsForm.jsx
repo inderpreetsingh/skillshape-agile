@@ -138,6 +138,18 @@ class ContactUsForm extends Component {
     }
   }
 
+  handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    if(this.state.readyToSumit) {
+      // ..
+
+      if(this.props.onFormSubmit) {
+        this.props.onFormSubmit();
+      }
+    }
+  }
+
   _validateAllInputs = (data, inputNames) => {
 
     for(let i = 0; i < inputNames.length; ++i) {
@@ -152,7 +164,7 @@ class ContactUsForm extends Component {
   render() {
     return (
         <FormWrapper>
-          <Form>
+          <Form onSubmit={this.handleFormSubmit}>
             <InputWrapper>
               <IconInput inputId="name" labelText="Your name" value={this.state.name} onChange={this.handleInputFieldChange('name')}/>
             </InputWrapper>
@@ -182,7 +194,7 @@ class ContactUsForm extends Component {
             <SubmitButtonWrapper>
               <ButtonWidthWrapper>
                 {this.state.readyToSumit ?
-                <PrimaryButton fullWidth type="submit" noMarginBottom label="Send Message" />
+                <PrimaryButton fullWidth type="submit" noMarginBottom label="Send Message" onClick={this.handleFormSubmit} />
                 :
                 <button className="cancel-button full-width increase-height" disabled >Send Message</button>}
               </ButtonWidthWrapper>

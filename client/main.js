@@ -9,7 +9,11 @@ import { render } from 'react-dom';
 import React from 'react';
 
 import { MuiThemeProvider } from 'material-ui/styles';
-import muiTheme from '../imports/ui/components/landing/components/jss/muitheme.jsx';
+
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
+import pickerStyles from '/imports/startup/client/material-ui-picker-styles/styles.js';
+
+muiTheme.overrides = pickerStyles;
 
 // All the routes used in application
 import Routes from '../imports/startup/routes';
