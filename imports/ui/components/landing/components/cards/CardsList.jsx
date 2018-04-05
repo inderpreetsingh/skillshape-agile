@@ -43,8 +43,7 @@ const GridItem = styled.div`
 
 const CardsListGridWrapper = styled.div`
     padding: ${SPACING/2}px;
-    margin: 0;
-    margin-right: auto;
+    margin: 0 auto;
     max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING, 2) + 24 : getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
 
     @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px) {
@@ -77,9 +76,9 @@ const CardsListTitle = styled.h2`
   font-family: ${helpers.specialFont};
   margin-bottom: ${helpers.rhythmDiv}px;
   margin-top: 0;
+
   @media screen and (min-width: 0) and (max-width: ${helpers.tablet}px) {
       padding-left: 0;
-      text-align: center;
   }
 `;
 
@@ -138,8 +137,8 @@ class CardsList extends Component {
         // console.log("CardsList cardsData-->>",this.props);
         return(
           <CardsListWrapper>
-              <CardsListTitle>{title}</CardsListTitle>
               <CardsListGridWrapper mapView={mapView}>
+                <CardsListTitle>{title}</CardsListTitle>
                  <GridContainer>
                      {cardsData.map(card => {
                         return (

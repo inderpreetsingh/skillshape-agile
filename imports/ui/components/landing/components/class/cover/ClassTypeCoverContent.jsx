@@ -228,7 +228,7 @@ class ClassTypeCoverContent extends React.Component {
                             icon
                             onClick={this.requestClassTypeLocation}
                             iconName="add_location"
-                            label="REQUEST LOCATION"
+                            label="Request location"
                         />}
                       </LocationNotFound>
                     ) :<div id="myMap" style={{height: '100%', minHeight: 320}}/>

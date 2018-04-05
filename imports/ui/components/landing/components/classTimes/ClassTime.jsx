@@ -13,6 +13,8 @@ import ClassTimeClockManager from './ClassTimeClockManager.jsx';
 import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
 import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
+import { isEmpty, get } from 'lodash';
+
 
 import * as helpers from '../jss/helpers.js';
 
@@ -61,6 +63,7 @@ const Text = styled.p`
   font-size: ${helpers.baseFontSize}px;
   font-family: ${helpers.specialFont};
   font-weight: 600;
+  text-transform: capitalize;
 `;
 
 const Description = styled.p`
@@ -68,6 +71,8 @@ const Description = styled.p`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
+  padding: ${helpers.rhythmDiv * 2}px;
+  padding-top: 0;
   max-height: 140px;
   overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
@@ -129,11 +134,8 @@ class ClassTime extends Component {
     this.setState({
       addToCalendar: false
     });
-
-
-    if(this.props.onAddToMyCalendarButtonClick) {
-      this.props.onAddToMyCalendarButtonClick();
-    }
+    console.log("this.props.handleAddToMyCalendarButtonClick",this.props);
+    this.addToMyCalender(this.props.classTimeData);
   }
 
   handleRemoveFromCalendarButtonClick = () => {
@@ -141,53 +143,94 @@ class ClassTime extends Component {
     this.setState({
       addToCalendar: true
     });
-
-    if(this.props.onRemoveFromCalendarButtonClick) {
-      this.props.onRemoveFromCalendarButtonClick();
-    }
+    console.log("this.props",this.props);
+    this.removeFromMyCalender(this.props.classTimeData);
   }
 
   componentWillReceiveProps = (newProps) => {
     if(this.state.fullTextState !== newProps.fullTextState) {
       this.setState({
-        fullTextState: newProps.fullTextState
+        fullTextState: newProps.fullTextState,
+        scheduleTypeOnGoing: _isClassOnGoing(newProps.scheduleTypeOnGoing)
       });
     }
   }
 
   _getWrapperClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar' : 'remove-from-calendar';
 
+  removeFromMyCalender = (classTimeRec) => {
+    console.log("this.props",this.props,classTimeRec);
+    const result = this.props.classInterestData.filter(data => data.classTimeId  == classTimeRec._id);
+    console.log("result==>",result);
+    // check for user login or not
+    const userId = Meteor.userId()
+    if(!isEmpty(userId)) {
+        const doc = {
+            _id: result[0]._id,
+             userId,
+        }
+        this.handleClassInterest({
+            methodName:"classInterest.removeClassInterest",
+            data: {doc}
+        })
+    } else {
+        alert("Please login !!!!")
+    }
+  }
+  addToMyCalender = (data) => {
+    // check for user login or not
+    console.log("addToMyCalender",data);
+    const userId = Meteor.userId();
+    if(!isEmpty(userId)) {
+        const doc = {
+            classTimeId: data._id,
+            classTypeId: data.classTypeId,
+            schoolId: data.schoolId,
+            userId,
+        }
+        this.handleClassInterest({
+            methodName:"classInterest.addClassInterest",
+            data: {doc}
+        })
+    } else {
+        alert("Please login !!!!")
+    }
+  }
+    handleClassInterest = ({methodName, data}) => {
+      console.log("handleClassInterest",methodName,data);
+      Meteor.call(methodName, data, (err, res) => {
+          console.log(res,err);
+      })
+    }
+
+
+  _getWrapperClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar' : 'remove-from-calendar';
+
   _getOuterClockClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
 
   _getCalenderButton = (addToCalender,scheduleTypeOnGoing) => {
-    if(scheduleTypeOnGoing && addToCalender) {
-      return (<ClassTimeButton
-        icon
-        onClick={this.handleAddToMyCalendarButtonClick}
-        iconName="perm_contact_calendar"
-        label="Add to my Calendar"
-      />);
-    }else if(scheduleTypeOnGoing && !addToCalender) {
-      return (<ClassTimeButton
-        ghost
-        icon
-        onClick={this.handleRemoveFromCalendarButtonClick}
-        iconName="delete"
-        label="Remove from Calendar"
-      />)
-    }
-    else if(!scheduleTypeOnGoing && !addToCalender) {
+    const addToMyCalender = this.props.addToCalender;
+    const iconName = addToMyCalender ? "add_circle_outline": "delete";
+    // const label = addToMyCalender ? "Remove from Calender" :  "Add to my Calendar";
+    if(addToMyCalender) {
       return (
-        <ClassTimeButton
-          ghost
-          icon
-          onClick={this.handleRemoveFromCalendarButtonClick}
-          iconName="delete"
-          label="Remove from Calendar"
-        />
+         <ClassTimeButton
+              icon
+              onClick={this.handleAddToMyCalendarButtonClick}
+              label="Add to my Calender"
+              iconName={iconName}
+          />
       )
-    }
-
+      } else {
+        return (
+           <ClassTimeButton
+              icon
+              onClick={this.handleRemoveFromCalendarButtonClick}
+              label="Remove from calendar"
+              iconName={iconName}
+          />
+        )
+      }
     return (
       <div></div>
     )
@@ -200,12 +243,9 @@ class ClassTime extends Component {
             <div>
               <ClassTimeClockManager
                 data={this.props}
-                schedule={this.props.scheduleType}
-                clockProps={
-                  {
-                    className: this._getOuterClockClassName(this.state.addToCalendar, this.state.scheduleTypeOnGoing)
-                  }
-                }
+                scheduleType={this.props.scheduleType}
+                classTimes={this.props.classTimes}
+                clockProps={{ className: this._getOuterClockClassName(this.state.addToCalendar, this.state.scheduleTypeOnGoing) }}
               />
 
               {this.props.showReadMore ?
@@ -219,7 +259,7 @@ class ClassTime extends Component {
                 </Description>}
             </div>
 
-            {this._getCalenderButton(this.state.addToCalendar, this.state.scheduleTypeOnGoing)}
+            {this._getCalenderButton(this.state.addToCalendar, this.state.scheduleTypeOnGoing, this.props)}
 
             {this.props.isTrending && <Trending />}
         </ClassTimeContainer>)

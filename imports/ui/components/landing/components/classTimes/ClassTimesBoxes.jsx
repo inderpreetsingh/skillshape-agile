@@ -24,14 +24,20 @@ const BarWrapper = styled.div`
 
 class ClassTimesBoxes extends Component {
   render() {
-    const { classTimesData} = this.props;
+    console.log("props in ClassTimesBoxes",this.props)
+    const { classTimesData,
+            classInterestData
+          } = this.props;
     // console.log("ClassTimesBoxes props-->>",this.props, slider);
     return (<Fragment>
         <SliderWrapper>
           <ClassTimesSlider data={classTimesData} padding={helpers.rhythmDiv} />
         </SliderWrapper>
         <BarWrapper>
-          <ClassTimesBar classTimesData={classTimesData} />
+          <ClassTimesBar
+            classTimesData={classTimesData}
+            classInterestData={classInterestData}
+          />
         </BarWrapper>
     </Fragment>)
   }

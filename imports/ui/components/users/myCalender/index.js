@@ -26,7 +26,7 @@ export default class MyCalender extends React.Component {
             <FullCalendarContainer
     			subscriptionName="ClassSchedule"
     			setDate={this.setDate}
-                showEventModal={this.handleEventModal}
+          showEventModal={this.handleEventModal}
     			{...this.state}
     			{...this.props}
     		/>
@@ -35,7 +35,8 @@ export default class MyCalender extends React.Component {
                   eventData={eventData}
                   showModal={isOpen}
                   closeEventModal={this.handleEventModal}
-                />
+									onJoinClassButtonClick={this.props.onJoinClassButtonClick}
+								/>
             }
         </div>
     )

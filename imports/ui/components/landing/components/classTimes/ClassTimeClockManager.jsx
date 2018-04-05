@@ -5,13 +5,17 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import * as helpers from '../jss/helpers.js';
-import ClassTimeClocks from './ClassTimeClock.jsx';
+import ClassTimeClock from './ClassTimeClock.jsx';
+import ClassTimeNewClock from './ClassTimeNewClock.jsx';
+
+const DAYS_IN_WEEK = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
 
 const OuterWrapper = styled.div`
   width: ${props => props.width || 250}px;
   overflow: hidden;
 `;
 const InnerWrapper = styled.div`
+  ${helpers.flexCenter}
   width: 100%;
   min-height: 140px;
   position: relative;
@@ -43,6 +47,7 @@ const Schedule = styled.p`
   margin-top: ${helpers.rhythmDiv}px;
   font-weight: 400;
   font-size: ${helpers.baseFontSize}px;
+  text-transform: capitalize;
 `;
 
 const Days = styled.p`
@@ -78,19 +83,20 @@ const Seperator = styled.span`
 
 class ClassTimeClockManager extends Component {
   state = {
-    daysInWeek: ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'],
-    originalData: this.props.data,
-    sortedData: this.props.data,
+    originalClassTimes : this.props.classTimes,
+    formattedClassTimes: this.props.classTimes,
     currentIndex: 0,
     lastIndex: 0
   }
 
   componentWillMount = () => {
-    const sortedData = this._sortDataBasedOnDay(this.state.originalData);
-    this.setState({
-      sortedData: sortedData,
-      lastIndex: sortedData.length
-    });
+    if(this.state.originalClassTimes) {
+      const formattedClassTimes = this._formatDataBasedOnScheduleType(this.state.originalClassTimes);
+      this.setState({
+        formattedClassTimes: formattedClassTimes,
+        lastIndex: formattedClassTimes.length
+      });
+    }
   }
 
   _getDayInShortFormat = (dayDb) => {
@@ -98,33 +104,34 @@ class ClassTimeClockManager extends Component {
     return day.substr(0,2);
   }
 
-  _sortDataBasedOnDay = (sliderData) => {
-    console.log("_sortDataBasedOnDay sliderData --->>",sliderData)
-    const sortedData = [];
-    if(!isEmpty(sliderData)) {
-      let dayCounter = 0;
-      while(dayCounter < 7) {
-        const currentDay = this.state.daysInWeek[dayCounter];
+  _formatDataBasedOnScheduleType = (data) => {
+    // In this method we basically need to format data
+    /* eg formatted data..
+    classTimes : [
+      'monday': [{
+          time: '07:00',
+          timePeriod: 'am',
+          duration: 120,
+          date: "2018-04-06T06:45:54.289Z"
+      }],
+      'wednesday': [{
+        time: '3:00',
+        timePeriod: 'pm',
+        duration: 145,
+        date: "2018-04-16T06:45:54.289Z"
+      },
+      {
+        time: '05:30',
+        timePeriod: 'am',
+        duration: 175,
+        date: "2018-04-16T06:45:54.289Z"
+      }]
+    ],
 
-        // get the data for current day of the week.
-        for(let i = 0; i < sliderData.length; ++i) {
-          if(sliderData[i].day.toLowerCase() == currentDay) {
-            sortedData.push(sliderData[i]);
-
-            // Remove that day's data from the list.
-            sliderData.splice[i,1];
-
-            break;
-          }
-        }
-
-        // increment the day counter.
-        ++dayCounter;
-      }
-      // console.info(sortedData,"----------------------------------------sorted data");
-      return sortedData;
-    }
-    return sortedData
+    NOTE: Recurring, Ongoing scheduleType are already formatted (or easy to format) this way,
+        but for oneTime we need to transform into this format to feed data to clock(s).
+    */
+    return data;
   }
 
 
@@ -159,29 +166,49 @@ class ClassTimeClockManager extends Component {
   }
 
   render() {
+    console.log(' clock times clock manager -----> ',this.props.data,".....");
+
     return (
       <Fragment>
         {/*Clock Times*/}
         <OuterWrapper width={this.props.outerWidth}>
           <InnerWrapper>
-            <ClassTimeClocks data={this.state.sortedData} visible={this.state.currentIndex} {...this.props.clockProps}/>
+            {/* NOTE : This is not to be used when we are using the ClassTimeNewClock */}
+            {/* <ClassTimeClock data={this.props.data} visible={this.state.currentIndex} {...this.props.clockProps} /> */}
+
+            {this.state.formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
+              console.log(this.props,'this.props......')
+              if(this.state.formattedClassTimes[day]) {
+                return <ClassTimeNewClock
+                  currentDay={day}
+                  scheduleType={this.props.scheduleType}
+                  scheduleData={this.state.formattedClassTimes[day]}
+                  visible={i === this.state.currentIndex}
+                  clockProps={this.props.clockProps} />
+              }
+              return null;
+            })}
           </InnerWrapper>
         </OuterWrapper>
 
         <ChangeSlide>
           <Days>
-            {this.state.sortedData && this.state.sortedData.map((obj,i) => (
-              <Day
-                key={i}
-                active={i === this.state.currentIndex}
-                onClick={this.handleDayClick(i)}>
-                {this._getDayInShortFormat(obj.day)}
-              </Day>
-            ))}
+            {this.state.formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
+              // console.log(this.props,'this.props......')
+              if(this.state.formattedClassTimes[day]){
+                return(<Day
+                  key={i}
+                  active={i === this.state.currentIndex}
+                  onClick={this.handleDayClick(i)}>
+                  {this._getDayInShortFormat(day)}
+                </Day>)
+              }
+              return null;
+            })}
           </Days>
         </ChangeSlide>
 
-        <Schedule>{this.props.schedule}</Schedule>
+        <Schedule>{this.props.scheduleType}</Schedule>
       </Fragment>
     )
   }
@@ -189,7 +216,7 @@ class ClassTimeClockManager extends Component {
 
 ClassTimeClockManager.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object),
-  schedule: PropTypes.string,
+  scheduleType: PropTypes.string,
   automatic: PropTypes.bool,
   slideTime: PropTypes.number
 }

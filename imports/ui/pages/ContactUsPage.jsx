@@ -97,20 +97,6 @@ class ContactUs extends Component {
   }
 
   getMyCurrentLocation = () => {
-    //   if(navigator) {
-    //     navigator.geolocation.getCurrentPosition((position) => {
-    //         let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    //         let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    //         let geocoder = new google.maps.Geocoder();
-    //         let coords = [];
-    //         coords[0] = position.coords.latitude;
-    //         coords[1] = position.coords.longitude;
-    //
-    //
-    //       // toastr.success("Showing classes around you...","Found your location");
-    //       // // Session.set("coords",coords)
-    //     })
-    // }
     let geocoder = new google.maps.Geocoder();
     geocoder.geocode({address: siteAddress}, (results, status) => {
         let sLocation = "near by me";
@@ -179,10 +165,13 @@ class ContactUs extends Component {
 
   render() {
     // console.info('--------------------------------------------------------',this.state, "------ contact us page");
+    console.info('--- contact us page props --->',this.props, this.state);
     return(<Wrapper>
 
       {/* Brand Bar at Top */}
-      <BrandBar navBarHeight="70" positionStatic={true} />
+      <BrandBar navBarHeight="70" positionStatic={true}
+        currentUser={this.props.currentUser}
+        isUserSubsReady={this.props.isUserSubsReady}/>
 
       {/* Content section including form and map and social accounts*/}
       <ContentWrapper>

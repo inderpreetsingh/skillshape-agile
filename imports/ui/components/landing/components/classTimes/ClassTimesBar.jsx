@@ -5,9 +5,12 @@ import styled from 'styled-components';
 
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
+import { isEmpty } from 'lodash';
+
 
 import ClassTime from './ClassTime.jsx';
 import classTime from '../../constants/structure/classTime.js';
+import ClassInterest from "/imports/api/classInterest/fields";
 
 import  {getContainerMaxWidth} from '../../../../../util/cards.js';
 
@@ -55,19 +58,41 @@ const GridItem = styled.div`
   padding: ${props => props.spacing ? props.spacing/2 : '16'}px;
 `;
 
-const ClassTimesBar = (props) => (
-  <Wrapper>
-     <ClassTimesWrapper spacing={32}>
-      <GridContainer>
-        {props.classTimesData.map(classTimeObj => (
-          <GridItem key={classTimeObj._id} spacing={32}>
-            <ClassTime {...classTimeObj} />
-          </GridItem>
-        ))}
-      </GridContainer>
-     </ClassTimesWrapper>
-  </Wrapper>
-);
+const ClassTimesBar = (props) => {
+
+  checkForAddToCalender = (data) => {
+    const userId = Meteor.userId()
+    if(isEmpty(data) || isEmpty(userId)) {
+        return true;
+    } else {
+        return isEmpty(ClassInterest.find({classTimeId: data._id, userId}).fetch());
+    }
+  }
+  console.log("props in ClassTimesBar",props);
+  const { handleAddToMyCalendarButtonClick, classInterestData, handleRemoveFromCalendarButtonClick } = props;
+  let addToCalender;
+  return (
+    <Wrapper>
+       <ClassTimesWrapper spacing={32}>
+        <GridContainer>
+          {props.classTimesData.map(classTimeObj => {
+            addToCalender  = this.checkForAddToCalender(classTimeObj)
+            return (
+              <GridItem key={classTimeObj._id} spacing={32}>
+                <ClassTime
+                  {...classTimeObj}
+                  classTimeData={ classTimeObj }
+                  classInterestData={classInterestData}
+                  addToCalender={addToCalender}
+                 />
+              </GridItem>
+            )
+          })}
+        </GridContainer>
+       </ClassTimesWrapper>
+    </Wrapper>
+  );
+}
 
 ClassTimesBar.propTypes = {
   classTimesData: PropTypes.arrayOf(classTime),
