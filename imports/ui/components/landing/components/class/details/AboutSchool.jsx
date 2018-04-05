@@ -22,6 +22,7 @@ const Title = styled.h2`
   font-weight: 300;
   line-height: 1;
   text-transform: capitalize;
+  text-align: center;
 `;
 
 const Description = styled.p`
@@ -29,6 +30,8 @@ const Description = styled.p`
   font-size: ${helpers.baseFontSize}px;
   font-family: ${helpers.specialFont};
   line-height: 1;
+  text-align: justify;
+  padding: 0px 44px;
 `;
 
 const SchoolWrapper = styled.div`
@@ -43,6 +46,7 @@ const Address = styled.address`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   line-height: 1;
+  text-align: center;
 `;
 
 const Website = styled.a`
@@ -55,6 +59,17 @@ const Postal = styled.p`
   line-height: 1;
 `;
 
+const Heading = styled.h2`
+  text-align: center;
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  margin: 0;
+  line-height: 1;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+`;
+
 const addHttpProtocol = (website) => {
   if(website.match('http')) {
     return website;
@@ -65,7 +80,8 @@ const addHttpProtocol = (website) => {
 const AboutSchool = (props) => (
   <Wrapper>
     <SchoolWrapper>
-      <Title>About {props.title.toLowerCase()}</Title>
+      <Heading>About</Heading>
+      <Title>{props.title.toLowerCase()}</Title>
       <Address>
         {props.address && <Postal>{props.address}</Postal>}
         {props.website && <Website href={addHttpProtocol(props.website)} target="_blank"> {cutString(props.website,60)} </Website>}
