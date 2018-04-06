@@ -429,7 +429,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
 
     } else {
         // when map view disable on homepage, Then send the classType data by categorization of skill category.
-       
+
         skillCategoryCursor = categorizeClassTypeData({
             classTypeIds,
             schoolIds,
@@ -447,6 +447,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
 
     /*If there is no filter and no class type data found correspond to user's location
     then need to show default classes to user.*/
+    console.log("applyFilterStatus", applyFilterStatus);
     if (!applyFilterStatus && _.isEmpty(ClassType.find({ _id: { $in: classTypeIds } }).fetch())) {
         console.log("applyFilterStatus>>>>>>>>>>>>>>", applyFilterStatus);
         //delete location filter from classType filter, Because initially corresponding to user location data not found then show our featured classType.

@@ -1,9 +1,9 @@
-import React, {Component,Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import DocumentTitle from 'react-document-title';
 import { debounce, isEmpty, get } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import styled from 'styled-components';
-import {Element, scroller } from 'react-scroll';
+import { Element, scroller } from 'react-scroll';
 import Sticky from 'react-stickynode';
 import { browserHistory } from 'react-router';
 import ip from 'ip';
@@ -25,7 +25,7 @@ import ContactUsFloatingButton from './components/buttons/ContactUsFloatingButto
 import FiltersDialogBox from './components/dialogs/FiltersDialogBox.jsx';
 
 import * as helpers from './components/jss/helpers.js';
-import { cardsData, cardsData1} from './constants/cardsData.js';
+import { cardsData, cardsData1 } from './constants/cardsData.js';
 import config from '/imports/config';
 import Events from '/imports/util/events';
 import { toastrModal } from '/imports/util';
@@ -159,7 +159,7 @@ const CenterCapsule = styled.div`
    padding: 4px;
  `;
 
- const FilterPanelWrapper = styled.div`
+const FilterPanelWrapper = styled.div`
   position: relative;
  `;
 
@@ -176,12 +176,12 @@ const WrapperDiv = styled.div`
     border-bottom: solid 1px #dddd;
  `;
 
- const FilterBarDisplayWrapper = styled.div`
+const FilterBarDisplayWrapper = styled.div`
   display: ${props => props.sticky ? 'block' : 'none'};
   width: 100%;
  `;
 
- const ContactUsWrapper = styled.div`
+const ContactUsWrapper = styled.div`
   position: fixed;
   right: 10px;
   bottom: 10%;
@@ -221,57 +221,57 @@ class Landing extends Component {
     }
 
     componentDidMount() {
-      console.log("this.props.location.query in componentDidMount",this.props.location.query)
-      if(this.props.location.query && this.props.location.query.claimRequest) {
+        // console.log("this.props.location.query in componentDidMount", this.props.location.query)
+        if (this.props.location.query && this.props.location.query.claimRequest) {
 
-        if(this.props.location.query.schoolRegister) {
-            Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
-              Events.trigger("registerAsSchool",{userType: "School"})
-            });
-        } else if(this.props.location.query.approve) {
-            Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest);
-        } else if(this.props.location.query.redirectUrl) {
-            Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{rejected: true},()=> {
-                if(!this.props.currentUser) {
-                  // Let the admin user login if user is not login.
-                  Events.trigger("loginAsSchoolAdmin",{redirectUrl: this.props.location.query.redirectUrl});
-                } else { // Otherwise redirect to school admin page
-                  browserHistory.push(this.props.location.query.redirectUrl)
-                }
-            });
-        } else if(this.props.location.query.keepMeSuperAdmin) { // Handle Keep me Super Admin case
-           Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{keepMeSuperAdmin: true},()=> {
-            });
-        } else if(this.props.location.query.makeRequesterSuperAdmin) { // Handle make requester Super Admin
-             Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{makeRequesterSuperAdmin: true},()=> {
-            });
-        } else if(this.props.location.query.removeMeAsAdmin) { // Remove me as Super Admin
-             Meteor.call('school.approveSchoolClaimRequest',this.props.location.query.claimRequest,{removeMeAsAdmin: true},()=> {
-            });
+            if (this.props.location.query.schoolRegister) {
+                Meteor.call('school.approveSchoolClaimRequest', this.props.location.query.claimRequest, { rejected: true }, () => {
+                    Events.trigger("registerAsSchool", { userType: "School" })
+                });
+            } else if (this.props.location.query.approve) {
+                Meteor.call('school.approveSchoolClaimRequest', this.props.location.query.claimRequest);
+            } else if (this.props.location.query.redirectUrl) {
+                Meteor.call('school.approveSchoolClaimRequest', this.props.location.query.claimRequest, { rejected: true }, () => {
+                    if (!this.props.currentUser) {
+                        // Let the admin user login if user is not login.
+                        Events.trigger("loginAsSchoolAdmin", { redirectUrl: this.props.location.query.redirectUrl });
+                    } else { // Otherwise redirect to school admin page
+                        browserHistory.push(this.props.location.query.redirectUrl)
+                    }
+                });
+            } else if (this.props.location.query.keepMeSuperAdmin) { // Handle Keep me Super Admin case
+                Meteor.call('school.approveSchoolClaimRequest', this.props.location.query.claimRequest, { keepMeSuperAdmin: true }, () => {
+                });
+            } else if (this.props.location.query.makeRequesterSuperAdmin) { // Handle make requester Super Admin
+                Meteor.call('school.approveSchoolClaimRequest', this.props.location.query.claimRequest, { makeRequesterSuperAdmin: true }, () => {
+                });
+            } else if (this.props.location.query.removeMeAsAdmin) { // Remove me as Super Admin
+                Meteor.call('school.approveSchoolClaimRequest', this.props.location.query.claimRequest, { removeMeAsAdmin: true }, () => {
+                });
+            }
         }
-      }
-      if(this.props.location.query && this.props.location.query.acceptInvite) {
-        Events.trigger("acceptInvitationAsMember",{userData: this.props.location.query});
-      }
+        if (this.props.location.query && this.props.location.query.acceptInvite) {
+            Events.trigger("acceptInvitationAsMember", { userData: this.props.location.query });
+        }
     }
 
     handleStickyStateChange = (status) => {
-      console.log(status,"status..")
-      if (status.status === 2) {
-        if(!this.state.sticky) {
-          this.setState({
-            sticky: true
-          });
+        // console.log(status, "status..")
+        if (status.status === 2) {
+            if (!this.state.sticky) {
+                this.setState({
+                    sticky: true
+                });
+            }
+        } else if (status.status === 0) {
+            this.setState({
+                sticky: false
+            });
         }
-      }else if(status.status === 0) {
-        this.setState({
-           sticky: false
-        });
-      }
     }
 
     handleToggleMapView = () => {
-        let oldFilter = {...this.state.filters};
+        let oldFilter = { ...this.state.filters };
         oldFilter.is_map_view = !this.state.mapView;
         this.setState({
             mapView: !this.state.mapView,
@@ -283,15 +283,15 @@ class Landing extends Component {
     }
 
     scrollTo(name) {
-      scroller.scrollTo((name || 'content-container'),{
-        duration: 800,
-        delay: 0,
-        smooth: 'easeInOutQuart'
-      })
+        scroller.scrollTo((name || 'content-container'), {
+            duration: 800,
+            delay: 0,
+            smooth: 'easeInOutQuart'
+        })
     }
 
     getMyCurrentLocation = () => {
-        if(navigator) {
+        if (navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
                 let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -299,40 +299,40 @@ class Landing extends Component {
                 let coords = [];
                 coords[0] = position.coords.latitude || config.defaultLocation[0];
                 coords[1] = position.coords.longitude || config.defaultLocation[1];
-                geocoder.geocode({'latLng': latlng}, (results, status) => {
+                geocoder.geocode({ 'latLng': latlng }, (results, status) => {
                     let sLocation = "near by me";
-                    let oldFilters = {...this.state.filters};
+                    let oldFilters = { ...this.state.filters };
                     if (status == google.maps.GeocoderStatus.OK) {
-                      if (results[0]) {
-                        let place = results[0];
-                        // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
-                        // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
-                        sLocation = results[0].formatted_address
-                        oldFilters["coords"] = coords;
-                        oldFilters["locationName"] = "";
-                        oldFilters["applyFilterStatus"] = true;
-                      }
+                        if (results[0]) {
+                            let place = results[0];
+                            // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
+                            // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
+                            sLocation = results[0].formatted_address
+                            oldFilters["coords"] = coords;
+                            oldFilters["locationName"] = sLocation;
+                            oldFilters["applyFilterStatus"] = true;
+                        }
                     }
                     this.setState({
-                      filters: oldFilters,
-                      locationName: `your location`,
-                      defaultLocation: sLocation,
-                      isLoading: false,
+                        filters: oldFilters,
+                        //   locationName: `your location`,
+                        //   defaultLocation: sLocation,
+                        isLoading: false,
                     })
                 });
-              // toastr.success("Showing classes around you...","Found your location");
-              // // Session.set("coords",coords)
+                // toastr.success("Showing classes around you...","Found your location");
+                // // Session.set("coords",coords)
             })
         }
     }
 
     handleSeeMore = (categoyName) => {
-      // Attach count with skill cateory name so that see more functionlity can work properly.
-      let oldFilter = {...this.state.filters};
-      let categoryFilter = oldFilter.skillCategoryClassLimit || {};
-      categoryFilter[categoyName] = categoryFilter[categoyName] && categoryFilter[categoyName] + config.seeMoreCount || 2 * config.seeMoreCount;
-      oldFilter.skillCategoryClassLimit = categoryFilter;
-      this.setState({filters:oldFilter})
+        // Attach count with skill cateory name so that see more functionlity can work properly.
+        let oldFilter = { ...this.state.filters };
+        let categoryFilter = oldFilter.skillCategoryClassLimit || {};
+        categoryFilter[categoyName] = categoryFilter[categoyName] && categoryFilter[categoyName] + config.seeMoreCount || 2 * config.seeMoreCount;
+        oldFilter.skillCategoryClassLimit = categoryFilter;
+        this.setState({ filters: oldFilter })
     }
 
     handleLocationSearch = (locationText) => {
@@ -355,10 +355,10 @@ class Landing extends Component {
         })
     }
 
-    setSchoolIdFilter = ({schoolId}) => {
-        let oldFilters = {...this.state.filters};
+    setSchoolIdFilter = ({ schoolId }) => {
+        let oldFilters = { ...this.state.filters };
         oldFilters.schoolId = schoolId;
-        this.setState({filters: oldFilters})
+        this.setState({ filters: oldFilters })
     }
 
     handleFiltersDialogBoxState = (state) => {
@@ -370,7 +370,7 @@ class Landing extends Component {
     onLocationChange = (location, updateKey1, updateKey2) => {
         let stateObj = {};
 
-        if(updateKey1) {
+        if (updateKey1) {
             stateObj[updateKey1] = {
                 ...this.state[updateKey1],
                 coords: location.coords,
@@ -380,7 +380,7 @@ class Landing extends Component {
             }
         }
 
-        if(updateKey2) {
+        if (updateKey2) {
             stateObj[updateKey2] = {
                 ...this.state[updateKey2],
                 coords: location.coords,
@@ -393,8 +393,7 @@ class Landing extends Component {
 
     locationInputChanged = (event, updateKey1, updateKey2) => {
         let stateObj = {};
-
-        if(updateKey1) {
+        if (updateKey1) {
             stateObj[updateKey1] = {
                 ...this.state[updateKey1],
                 coords: null,
@@ -402,7 +401,7 @@ class Landing extends Component {
             }
         }
 
-        if(updateKey2) {
+        if (updateKey2) {
             stateObj[updateKey2] = {
                 ...this.state[updateKey2],
                 coords: null,
@@ -417,7 +416,7 @@ class Landing extends Component {
     fliterSchoolName = (event, updateKey1, updateKey2) => {
         let stateObj = {};
 
-        if(updateKey1) {
+        if (updateKey1) {
             stateObj[updateKey1] = {
                 ...this.state[updateKey1],
                 schoolName: event.target.value,
@@ -426,7 +425,7 @@ class Landing extends Component {
             }
         }
 
-        if(updateKey2) {
+        if (updateKey2) {
             stateObj[updateKey2] = {
                 ...this.state[updateKey2],
                 schoolName: event.target.value
@@ -440,7 +439,7 @@ class Landing extends Component {
     collectSelectedSkillCategories = (text, updateKey1, updateKey2) => {
         let stateObj = {};
 
-        if(updateKey1) {
+        if (updateKey1) {
             stateObj[updateKey1] = {
                 ...this.state[updateKey1],
                 skillCategoryIds: text.map((ele) => ele._id),
@@ -449,7 +448,7 @@ class Landing extends Component {
             }
         }
 
-        if(updateKey2) {
+        if (updateKey2) {
             stateObj[updateKey2] = {
                 ...this.state[updateKey2],
                 skillCategoryIds: text.map((ele) => ele._id),
@@ -462,44 +461,44 @@ class Landing extends Component {
     }
 
     collectSelectedSkillSubject = (text) => {
-        let oldFilter = {...this.state.filters}
+        let oldFilter = { ...this.state.filters }
         oldFilter.skillSubjectIds = text.map((ele) => ele._id);
         oldFilter.defaultSkillSubject = text
-        this.setState({ filters: oldFilter})
+        this.setState({ filters: oldFilter })
     }
 
     skillLevelFilter = (text) => {
-        let oldFilter = {...this.state.filters}
+        let oldFilter = { ...this.state.filters }
         oldFilter.experienceLevel = text;
-        this.setState({filters: oldFilter})
+        this.setState({ filters: oldFilter })
     }
 
 
     filterGender = (event) => {
-        let oldFilter = {...this.state.filters};
+        let oldFilter = { ...this.state.filters };
         oldFilter.gender = event.target.value;
-        this.setState({filters:oldFilter})
+        this.setState({ filters: oldFilter })
     }
 
-    filterAge =(event) => {
-        let oldFilter = {...this.state.filters};
+    filterAge = (event) => {
+        let oldFilter = { ...this.state.filters };
         oldFilter.age = parseInt(event.target.value);
         this.setState({ filters: oldFilter });
     }
 
     perClassPriceFilter = (text) => {
-        let oldFilter = {...this.state.filters}
+        let oldFilter = { ...this.state.filters }
         oldFilter._classPrice = text;
         this.setState({ filters: oldFilter })
     }
 
     pricePerMonthFilter = (text) => {
-        let oldFilter = {...this.state.filters}
+        let oldFilter = { ...this.state.filters }
         oldFilter._monthPrice = text;
         this.setState({ filters: oldFilter })
     }
 
-    removeAllFilters = ()=> {
+    removeAllFilters = () => {
         this.setState({
             filters: {},
             tempFilters: {},
@@ -507,7 +506,7 @@ class Landing extends Component {
     }
 
     handleMemberInvitedDialogBoxState = (state) => {
-        this.setState({memberInvitedDialogBox: state});
+        this.setState({ memberInvitedDialogBox: state });
     }
 
     renderFilterPanel = () => {
@@ -539,7 +538,7 @@ class Landing extends Component {
 
         let keyword;
         if (locationText && skillTypeText) {
-            text =  `Showing result for ${skillTypeText} in ${locationText}`
+            text = `Showing result for ${skillTypeText} in ${locationText}`
             return this.showText(text, this.deleteFilterText);
         } else if (locationText) {
             text = `Showing result in ${locationText}`
@@ -548,114 +547,115 @@ class Landing extends Component {
             text = `Showing result for ${skillTypeText}`
             return this.showText(text, this.deleteFilterText);
         }
-      }
+    }
     showText = (text, cb) => {
-      return (
-        <WrapperDiv>
-          <Icon onClick={cb}>close</Icon>{text}
-        </WrapperDiv>
-      )
+        return (
+            <WrapperDiv>
+                <Icon onClick={cb}>close</Icon>{text}
+            </WrapperDiv>
+        )
     }
     // Delete `skillTypeText` and `locationText` from filters.
     deleteFilterText = () => {
-      const oldFilter = {...this.state.filters};
-      oldFilter.skillTypeText="";
-      oldFilter.locationText="";
-      this.setState({filters:oldFilter, resetMainSearch: !this.state.resetMainSearch});
+        const oldFilter = { ...this.state.filters };
+        oldFilter.skillTypeText = "";
+        oldFilter.locationText = "";
+        this.setState({ filters: oldFilter, resetMainSearch: !this.state.resetMainSearch });
     }
     showAppliedLocationFilter = () => {
-        const { locationName, defaultLocation } = this.state;
-        // console.log("locationName",locationName, defaultLocation)
-        if (locationName && defaultLocation) {
-            text =  `Showing classes near you (${defaultLocation})`;
+        const { locationName } = this.state.filters;
+        // console.log("locationName",this.state.filters, defaultLocation)
+        if (locationName) {
+            text = `Showing classes near you (${locationName})`;
             return this.showText(text, this.clearDefaultLocationFilter);
         }
     }
 
     clearDefaultLocationFilter = () => {
-      stateObj = this.state.filters;
-      stateObj.coords= null;
-      this.setState({filters: stateObj, locationName:null, defaultLocation: null});
+        stateObj = this.state.filters;
+        stateObj.coords = null;
+        stateObj.locationName = "";
+        this.setState({ filters: stateObj });
 
     }
 
     render() {
         // console.log("Landing state -->>",this.state);
-        console.log("Landing state -->>",this.state);
-        console.log("Landing props -->>",this.props);
-        return(
+        // console.log("Landing state -->>", this.state);
+        // console.log("Landing props -->>", this.props);
+        return (
             <DocumentTitle title={this.props.route.name}>
                 <div>
-                <FiltersDialogBox
-                    open={this.state.filterPanelDialogBox}
-                    onModalClose={() => this.handleFiltersDialogBoxState(false)}
-                    filterPanelProps={{
-                        currentAddress: (this.state.locationName),
-                        removeAllFilters: this.removeAllFilters,
-                        filters: this.state.filters,
-                        tempFilters: this.state.tempFilters,
-                        stickyPosition: this.state.sticky,
-                        onLocationChange: this.onLocationChange,
-                        locationName: this.state.locationName,
-                        locationInputChanged: this.locationInputChanged,
-                        fliterSchoolName: this.fliterSchoolName,
-                        filterAge: this.filterAge,
-                        filterGender: this.filterGender,
-                        skillLevelFilter: this.skillLevelFilter,
-                        perClassPriceFilter: this.perClassPriceFilter,
-                        pricePerMonthFilter: this.pricePerMonthFilter,
-                        collectSelectedSkillCategories: this.collectSelectedSkillCategories,
-                        collectSelectedSkillSubject: this.collectSelectedSkillSubject,
-                    }}
-                />
-
-              {/* Cover */}
-             <CoverWrapper>
-               <Cover itemScope itemType="http://schema.org/WPHeader">
-               <BrandBar
-                currentUser={this.props.currentUser}
-               />
-                <SearchArea
-                    onLocationInputChange={this.handleLocationSearch}
-                    onSkillTypeChange={this.handleSkillTypeSearch}
-                    onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
-                    getMyCurrentLocation={this.getMyCurrentLocation}
-                    onMapViewButtonClick={this.handleToggleMapView}
-                    mapView={this.state.mapView}
-                    resetSearch = {this.state.resetMainSearch}
-                />
-                </Cover>
-              </CoverWrapper>
-
-              {/* Filter Panel */}
-               <FilterPanelWrapper>
-                  <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
-                    {this.state.mapView ? this.renderFilterPanel() :
-                    <FilterBarDisplayWrapper sticky={this.state.sticky}>
-                      {this.renderFilterPanel()}
-                    </FilterBarDisplayWrapper>}
-                  </Sticky>
-               </FilterPanelWrapper>
-               {/* Applied Filters */}
-              {this.state.filters && this.showAppliedTopFilter()}
-              {this.state.locationName && this.showAppliedLocationFilter()}
-
-              {/*Cards List */}
-                <Element name="content-container" className="element homepage-content">
-                    <ClassTypeList
-                        defaultLocation={this.state.defaultLocation}
-                        mapView={this.state.mapView}
-                        filters={this.state.filters}
-                        handleSeeMore={this.handleSeeMore}
-                        splitByCategory={true}
-                        setSchoolIdFilter={this.setSchoolIdFilter}
-                        removeAllFilters={this.removeAllFilters}
-                        {...this.props}
+                    <FiltersDialogBox
+                        open={this.state.filterPanelDialogBox}
+                        onModalClose={() => this.handleFiltersDialogBoxState(false)}
+                        filterPanelProps={{
+                            currentAddress: (this.state.locationName),
+                            removeAllFilters: this.removeAllFilters,
+                            filters: this.state.filters,
+                            tempFilters: this.state.tempFilters,
+                            stickyPosition: this.state.sticky,
+                            onLocationChange: this.onLocationChange,
+                            locationName: this.state.locationName,
+                            locationInputChanged: this.locationInputChanged,
+                            fliterSchoolName: this.fliterSchoolName,
+                            filterAge: this.filterAge,
+                            filterGender: this.filterGender,
+                            skillLevelFilter: this.skillLevelFilter,
+                            perClassPriceFilter: this.perClassPriceFilter,
+                            pricePerMonthFilter: this.pricePerMonthFilter,
+                            collectSelectedSkillCategories: this.collectSelectedSkillCategories,
+                            collectSelectedSkillSubject: this.collectSelectedSkillSubject,
+                        }}
                     />
-                </Element>
+
+                    {/* Cover */}
+                    <CoverWrapper>
+                        <Cover itemScope itemType="http://schema.org/WPHeader">
+                            <BrandBar
+                                currentUser={this.props.currentUser}
+                            />
+                            <SearchArea
+                                onLocationInputChange={this.handleLocationSearch}
+                                onSkillTypeChange={this.handleSkillTypeSearch}
+                                onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+                                getMyCurrentLocation={this.getMyCurrentLocation}
+                                onMapViewButtonClick={this.handleToggleMapView}
+                                mapView={this.state.mapView}
+                                resetSearch={this.state.resetMainSearch}
+                            />
+                        </Cover>
+                    </CoverWrapper>
+
+                    {/* Filter Panel */}
+                    <FilterPanelWrapper>
+                        <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
+                            {this.state.mapView ? this.renderFilterPanel() :
+                                <FilterBarDisplayWrapper sticky={this.state.sticky}>
+                                    {this.renderFilterPanel()}
+                                </FilterBarDisplayWrapper>}
+                        </Sticky>
+                    </FilterPanelWrapper>
+                    {/* Applied Filters */}
+                    {this.state.filters && this.showAppliedTopFilter()}
+                    {this.state.filters && this.state.filters.coords && this.showAppliedLocationFilter()}
+
+                    {/*Cards List */}
+                    <Element name="content-container" className="element homepage-content">
+                        <ClassTypeList
+                            defaultLocation={this.state.defaultLocation}
+                            mapView={this.state.mapView}
+                            filters={this.state.filters}
+                            handleSeeMore={this.handleSeeMore}
+                            splitByCategory={true}
+                            setSchoolIdFilter={this.setSchoolIdFilter}
+                            removeAllFilters={this.removeAllFilters}
+                            {...this.props}
+                        />
+                    </Element>
 
 
-                {/*
+                    {/*
                 <Element name="content-container" className="element">
                   <MainContentWrapper>
                     {this.state.mapView ?
@@ -691,15 +691,15 @@ class Landing extends Component {
                */}
 
 
-               {!this.state.mapView && <Footer mapView={this.state.mapView}/>}
+                    {!this.state.mapView && <Footer mapView={this.state.mapView} />}
 
-               {this.state.mapView && <FloatingMapButtonWrapper>
-                  <FloatingChangeViewButton
-                    onListButtonClick={this.handleToggleMapView}
-                  />
-               </FloatingMapButtonWrapper>}
+                    {this.state.mapView && <FloatingMapButtonWrapper>
+                        <FloatingChangeViewButton
+                            onListButtonClick={this.handleToggleMapView}
+                        />
+                    </FloatingMapButtonWrapper>}
 
-               {/*
+                    {/*
                 <SwitchViewWrapper mapView={this.state.mapView}>
                   {this.state.mapView ?
                   (<FloatingChangeViewButton
@@ -714,7 +714,7 @@ class Landing extends Component {
                   }
                 </SwitchViewWrapper>
               */}
-              </div>
+                </div>
             </DocumentTitle>
         )
     }
