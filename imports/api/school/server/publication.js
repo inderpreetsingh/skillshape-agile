@@ -12,14 +12,14 @@ import { size, uniq, isEmpty, isArray } from 'lodash';
 // import { buildAggregator } from 'meteor/lamoglia:publish-aggregation';
 // import ClientReports from '/imports/startup/client';
 
-Meteor.publish("UserSchool", function(schoolId) {
+Meteor.publish("UserSchool", function (schoolId) {
     const schoolCursor = School.find({ _id: schoolId })
     const schoolData = schoolCursor.fetch();
 
-    if(this.userId && !isEmpty(schoolData)) {
-        if(Roles.userIsInRole(this.userId,"Superadmin")) {
+    if (this.userId && !isEmpty(schoolData)) {
+        if (Roles.userIsInRole(this.userId, "Superadmin")) {
             return schoolCursor;
-        } else if(isArray(schoolData[0].admins) && schoolData[0].admins.indexOf(this.userId) > -1) {
+        } else if (isArray(schoolData[0].admins) && schoolData[0].admins.indexOf(this.userId) > -1) {
             return schoolCursor
         }
         return []
@@ -28,17 +28,17 @@ Meteor.publish("UserSchool", function(schoolId) {
 
 });
 
-Meteor.publish("UserSchoolbySlug", function(slug) {
-    const schoolCursor = School.find({ slug: slug})
+Meteor.publish("UserSchoolbySlug", function (slug) {
+    const schoolCursor = School.find({ slug: slug })
     const schoolData = schoolCursor.fetch();
-    if(!isEmpty(schoolData)) {
+    if (!isEmpty(schoolData)) {
 
-        if(schoolData[0].isPublish) {
+        if (schoolData[0].isPublish) {
             return schoolCursor;
-        } else if(this.userId) {
-            if(Roles.userIsInRole(this.userId,"Superadmin")) {
+        } else if (this.userId) {
+            if (Roles.userIsInRole(this.userId, "Superadmin")) {
                 return schoolCursor;
-            } else if(isArray(schoolData[0].admins) && schoolData[0].admins.indexOf(this.userId) > -1) {
+            } else if (isArray(schoolData[0].admins) && schoolData[0].admins.indexOf(this.userId) > -1) {
                 return schoolCursor
             } else {
                 return []
@@ -49,13 +49,13 @@ Meteor.publish("UserSchoolbySlug", function(slug) {
     return []
 });
 
-Meteor.publish("classTypeBySchool", function({ schoolId, limit }) {
+Meteor.publish("classTypeBySchool", function ({ schoolId, limit }) {
     return [
         ClassType.find({ schoolId: schoolId }, { limit: limit ? limit : 4 })
     ];
 });
 
-Meteor.publish("school.getSchoolClasses", function({
+Meteor.publish("school.getSchoolClasses", function ({
     is_map_view,
     schoolId,
     user_id,
@@ -182,7 +182,7 @@ Meteor.publish("school.getSchoolClasses", function({
 });
 
 // This publication run on skillshape homepage and give the data of class type by categorization of skill category.
-Meteor.publish("school.getClassTypesByCategory", function({
+Meteor.publish("school.getClassTypesByCategory", function ({
     is_map_view,
     schoolId, /*schoolId filter is used when we click on marker on map on home page*/
     user_id,
@@ -218,7 +218,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
     // console.log("coords", coords);
     // console.log("NEPoint", NEPoint);
     // console.log("skillCategoryIds", skillCategoryIds);
-    const classfilter = { isPublish: true };
+    const classfilter = { isPublish: true, "$or": [] };
     const skillCategoryFilter = {};
 
     if (is_map_view && schoolId) {
@@ -231,41 +231,49 @@ Meteor.publish("school.getClassTypesByCategory", function({
 
     // console.log("this====>",this)
 
-    const isAllZero = coords && coords.some(el => el !==0);
+    const isAllZero = coords && coords.some(el => el !== 0);
     if (coords && !is_map_view) {
-        if(isAllZero) {
+        if (isAllZero) {
             // place variable will have all the information you are looking for.
             // var maxDistance = 50;
             // we need to convert the distance to radians
             // the raduis of Earth is approximately 6371 kilometers
             // maxDistance /= 63;
-            classfilter["filters.location"] = {
-                $geoWithin: { $center: [coords, 30 / 111.12] }
-            };
+            classfilter["$or"].push({
+                ["filters.location"]: {
+                    $geoWithin: { $center: [coords, 30 / 111.12] }
+                }
+            });
 
         }
     }
 
     // If no location is available and user has an address in their profile: Show classes in categories based on address.
-    if((!coords || !isAllZero) && !locationText) {
+    if ((!coords || !isAllZero) && !locationText) {
         let user = this.userId && Meteor.users.findOne(this.userId);
         // console.log("inside profile coords");
-        if(user && user.profile && user.profile.coords) {
-            classfilter["filters.location"] = {
-                $geoWithin: { $center: [user.profile.coords, 30 / 111.12] }
-            };
+        if (user && user.profile && user.profile.coords) {
+
+            classfilter["$or"].push({
+                ["filters.location"]: {
+                    $geoWithin: { $center: [user.profile.coords, 30 / 111.12] }
+                }
+            });
         } else {
-            try{
+            try {
                 const myIp = this.connection.clientAddress;
                 const url = `https://freegeoip.net/json/${myIp}`;
-                const result =  Meteor.http.call("GET",url);
-                if(result && result.data && result.data.latitude && result.data.longitude) {
-                    classfilter["filters.location"] = {
-                        $geoWithin: { $center: [[ result.data.latitude, result.data.longitude], 30 / 111.12] }
-                    };
+                const result = Meteor.http.call("GET", url);
+                if (result && result.data && result.data.latitude && result.data.longitude) {
+
+                    classfilter["$or"].push({
+                        ["filters.location"]: {
+                            $geoWithin: { $center: [[result.data.latitude, result.data.longitude], 30 / 111.12] }
+                        }
+                    });
                 }
-            } catch(err) {
-                console.log("err",err);
+            } catch (err) {
+                console.log("err", err);
             }
         }
     }
@@ -275,6 +283,12 @@ Meteor.publish("school.getClassTypesByCategory", function({
         classfilter["filters.location"] = {
             $geoWithin: { $box: [NEPoint, SWPoint] }
         };
+        classfilter["$or"].push({
+            ["filters.location"]: {
+                $geoWithin: { $box: [NEPoint, SWPoint] }
+            }
+        });
+
     } else if (!NEPoint && !SWPoint && is_map_view) {
         // when map view is on, NEPoint and SWPoint are empty then send empty data.
         return [];
@@ -356,7 +370,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
     if (skillTypeText) {
         skillCategoryFilter["$or"] = [];
 
-       // first find in skill subject collections
+        // first find in skill subject collections
         const skillSubjectData = SkillSubject.find({
             $text: { $search: skillTypeText }
         }).fetch();
@@ -374,21 +388,24 @@ Meteor.publish("school.getClassTypesByCategory", function({
 
     // locationText is a text value that search on classType data.
     if (locationText) {
-        classfilter["$text"] = { $search: locationText };
+        classfilter["$or"].push({ ["$text"]: { $search: locationText } });
         console.log("classfilter", JSON.stringify(classfilter, null, "  "))
         console.log("data with filter", ClassType.findOne(classfilter))
         const classTypeExitWithLocationFilter = ClassType.findOne(classfilter);
         // if there is not data found corresponding to locationText filter then remove this filter from classType filter.
-        if (!classTypeExitWithLocationFilter) {
-            delete classfilter["$text"];
-        }
+        // if (!classTypeExitWithLocationFilter) {
+        //     delete classfilter["$text"];
+        // }
 
-        if (!_.isEmpty(classfilter["filters.location"])) {
-            delete classfilter["filters.location"];
-        }
+        // if (!_.isEmpty(classfilter["filters.location"])) {
+        //     delete classfilter["filters.location"];
+        // }
     }
-    console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>",JSON.stringify(classfilter, null, "  "));
-    console.log("<<<<<<<<<<<<<<<<skillCategoryFilter>>>>>>>>>>>>>>>",JSON.stringify(skillCategoryFilter, null, "  "));
+    if (_.isEmpty(classfilter["$or"])) {
+        delete classfilter["$or"];
+    }
+    console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", JSON.stringify(classfilter, null, "  "));
+    console.log("<<<<<<<<<<<<<<<<skillCategoryFilter>>>>>>>>>>>>>>>", JSON.stringify(skillCategoryFilter, null, "  "));
     // console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", SLocation.find({loc: classfilter["filters.location"]}, { limit: limit || 10 }).fetch());
     // console.log("<<<<<<<<<<<<<<<<class type data >>>>>>>>>>>>>>>", ClassType.find(classfilter).fetch());
 
@@ -412,7 +429,7 @@ Meteor.publish("school.getClassTypesByCategory", function({
 
     } else {
         // when map view disable on homepage, Then send the classType data by categorization of skill category.
-
+       
         skillCategoryCursor = categorizeClassTypeData({
             classTypeIds,
             schoolIds,
@@ -427,14 +444,13 @@ Meteor.publish("school.getClassTypesByCategory", function({
 
     // const classTypesCursor = ClassType.find({ _id: { $in: classTypeIds } });
 
-    console.log("ClassType Data Count-->>", applyFilterStatus, ClassType.find({ _id: { $in: classTypeIds } }).count());
 
     /*If there is no filter and no class type data found correspond to user's location
     then need to show default classes to user.*/
-    if(!applyFilterStatus && _.isEmpty(ClassType.find({ _id: { $in: classTypeIds } }).fetch())) {
-
+    if (!applyFilterStatus && _.isEmpty(ClassType.find({ _id: { $in: classTypeIds } }).fetch())) {
+        console.log("applyFilterStatus>>>>>>>>>>>>>>", applyFilterStatus);
         //delete location filter from classType filter, Because initially corresponding to user location data not found then show our featured classType.
-        if(classfilter["filters.location"]) {
+        if (classfilter["filters.location"]) {
             delete classfilter["filters.location"]
         }
 
@@ -481,16 +497,16 @@ Meteor.publish("school.getClassTypesByCategory", function({
         SLocation.find({ _id: { $in: uniq(locationIds) } }),
         School.find({ _id: { $in: uniq(schoolIds) } }),
         ClassTimes.find({ classTypeId: { $in: uniq(classTypeIds) } }),
-        SkillCategory.find({ _id: { $in: uniq(collectSkillCategoriesIds) }})
+        SkillCategory.find({ _id: { $in: uniq(collectSkillCategoriesIds) } })
     ];
 
     return cursors;
 
 });
 
-Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
+Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
 
-    console.log("Before tempFilter -->>",tempFilter)
+    console.log("Before tempFilter -->>", tempFilter)
 
     const filterObj = removeKeyValue(tempFilter)
 
@@ -509,24 +525,24 @@ Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
         locationName
     } = filterObj
 
-    console.log("After filterObj -->>",filterObj, limit)
+    console.log("After filterObj -->>", filterObj, limit)
 
 
     const schoolFilter = { isPublish: true };
     const classTypeFilter = { isPublish: true };
-    limit = { limit: limit};
+    limit = { limit: limit };
 
-    if(this.userId) {
-        schoolFilter["admins"] = { '$nin': [this.userId]};
+    if (this.userId) {
+        schoolFilter["admins"] = { '$nin': [this.userId] };
     }
 
     // console.log("argument -->>",arguments['0'], size(arguments['0']))
 
-    if(schoolName) {
+    if (schoolName) {
         classTypeFilter["filters.schoolName"] = { $regex: "" + schoolName + "", $options: "-i" };
         schoolFilter["name"] = { $regex: "" + schoolName + "", $options: "-i" };
 
-        if(size(filterObj) == 2) {
+        if (size(filterObj) == 2) {
             return School.find(schoolFilter, limit);
         }
     }
@@ -623,7 +639,7 @@ Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
             }
         }).fetch();
 
-        slocations.map(function(data) {
+        slocations.map(function (data) {
             schoolIds.push(data.schoolId)
             return
         });
@@ -631,23 +647,23 @@ Meteor.publish("ClaimSchoolFilter", function(tempFilter) {
         schoolFilter['_id'] = { '$in': schoolIds }
     }
 
-    console.log("classTypeFilter -->>",JSON.stringify(classTypeFilter, null, "  "));
-    console.log("schoolFilter -->>",JSON.stringify(schoolFilter, null, "  "));
+    console.log("classTypeFilter -->>", JSON.stringify(classTypeFilter, null, "  "));
+    console.log("schoolFilter -->>", JSON.stringify(schoolFilter, null, "  "));
 
-    if(_.isEmpty(classTypeFilter)) {
+    if (_.isEmpty(classTypeFilter)) {
         return School.find(schoolFilter, limit);
     } else {
         let classTypeData = ClassType.find(classTypeFilter).fetch();
         classTypeData.map((data) => schoolIds.push(data.schoolId));
         schoolFilter['_id'] = { '$in': uniq(schoolIds) };
-        console.log("schoolIds inside-->>",uniq(schoolIds));
+        console.log("schoolIds inside-->>", uniq(schoolIds));
 
         return School.find(schoolFilter, limit);
     }
 });
 
 // This publication is used to get media uploaded by admin of a School OR member's media
-Meteor.publish("school.getSchoolWithConnectedTagedMedia", function({ email }) {
+Meteor.publish("school.getSchoolWithConnectedTagedMedia", function ({ email }) {
     if (email && this.userId) {
         let schoolIds = [];
         let schoolCursor;
@@ -656,12 +672,12 @@ Meteor.publish("school.getSchoolWithConnectedTagedMedia", function({ email }) {
         let schoolMemberCursor = SchoolMemberDetails.find({ email });
         let memberData = schoolMemberCursor.fetch();
         // Fetch media uploaded by School admin for `/media` route.
-        let adminMedia = Media.find({createdBy:this.userId}).fetch();
+        let adminMedia = Media.find({ createdBy: this.userId }).fetch();
 
         adminMedia.map(data => schoolIds.push(data.schoolId));
         memberData.map(data => schoolIds.push(data.schoolId));
 
-        if(!_.isEmpty(schoolIds)) {
+        if (!_.isEmpty(schoolIds)) {
             schoolCursor = School.find({ _id: { $in: uniq(schoolIds) } })
         }
 
@@ -675,9 +691,9 @@ Meteor.publish("school.getSchoolWithConnectedTagedMedia", function({ email }) {
 
 ////////////////////// Helper function ///////////////////////////////////
 function removeKeyValue(object) {
-    let temp = {...object}
-    for(key in temp) {
-        if(!temp[key] || (temp[key] && _.isEmpty(temp[key]) && typeof temp[key] === "object") ) {
+    let temp = { ...object }
+    for (key in temp) {
+        if (!temp[key] || (temp[key] && _.isEmpty(temp[key]) && typeof temp[key] === "object")) {
             delete temp[key]
         }
     }
@@ -696,20 +712,17 @@ function categorizeClassTypeData({
 }) {
     let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
     skillCategoryClassLimit ? skillCategoryClassLimit : {};
-    let newClassFilters = {...classfilter}
+    let newClassFilters = { ...classfilter }
     // console.log("categorizeClassTypeData skillCategoryFilter",JSON.stringify(skillCategoryFilter, null, "  "));
 
     skillCategoryCursor.forEach(skillCategory => {
         newClassFilters["skillCategoryId"] = { $in: [skillCategory._id] };
         // Initially(classType limit not set) fetch only 4(default) classType for a particular skill category.
         // console.log("categorizeClassTypeData newClassFilters",JSON.stringify(newClassFilters, null, "  "));
-        let limit = (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory.name]) ||4;
+        let limit = (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory.name]) || 4;
         let classTypeCursor = ClassType.find(newClassFilters, {
             limit: is_map_view ? undefined : limit
         });
-        console.log("limit -->>>",skillCategory.name, {
-            limit: is_map_view ? undefined : limit
-        },classTypeCursor.count())
 
         // console.log("classTypeCursor count --->>",classTypeCursor.count())
 
@@ -717,7 +730,7 @@ function categorizeClassTypeData({
         classTypeCursor.forEach(classTypeData => {
             // console.log("classTypeData --->>",classTypeData)
             collectSkillCategoriesIds.push(skillCategory._id)
-            if(classTypeData.locationId) {
+            if (classTypeData.locationId) {
                 locationIds.push(classTypeData.locationId);
             }
             classTypeIds.push(classTypeData._id);
