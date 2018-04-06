@@ -215,7 +215,7 @@ class SchoolMemberInfo extends Component {
                   showCreateMediaModal={showCreateMediaModal}
                   onClose = {this.closeMediaUpload}
                   formType={showCreateMediaModal}
-                  schoolId={this.props.schoolData._id}
+                  schoolId={this.props.schoolData && this.props.schoolData._id}
                   ref="createMedia"
                   onAdd={this.onAddMedia}
                   onEdit={this.onEditMedia}
