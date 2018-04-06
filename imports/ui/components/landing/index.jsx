@@ -580,7 +580,7 @@ class Landing extends Component {
     }
 
     render() {
-        // console.log("Landing state -->>",this.state);
+        console.log("Landing state -->>",this.state);
         // console.log("Landing state -->>", this.state);
         // console.log("Landing props -->>", this.props);
         return (
@@ -623,6 +623,10 @@ class Landing extends Component {
                                 onMapViewButtonClick={this.handleToggleMapView}
                                 mapView={this.state.mapView}
                                 resetSearch={this.state.resetMainSearch}
+                                locationInputChanged={this.locationInputChanged}
+                                currentAddress = {this.state.locationName}
+                                filters={this.state.filters}
+                                onLocationChange={this.onLocationChange}
                             />
                         </Cover>
                     </CoverWrapper>

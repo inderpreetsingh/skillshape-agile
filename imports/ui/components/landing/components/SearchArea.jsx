@@ -19,6 +19,8 @@ import SearchIcon from 'material-ui-icons/Search';
 import { grey } from 'material-ui/colors';
 
 import * as helpers from './jss/helpers.js';
+// import IconInput from './form/IconInput.jsx';
+import get from 'lodash/get';
 
 const SearchAreaPanel = styled.div`
   padding: ${helpers.rhythmInc};
@@ -136,10 +138,14 @@ const SearchInputsSection = (props) => (
       <InputWrapper>
         <MySearchBar
           placeholder="Location"
+          defaultValue={props.currentAddress}
           defaultBorderRadius
           noCloseIcon
-          onChange={props.onLocationInputChange}
-          resetSearch={props.resetSearch}
+          onChange={(event) => props.locationInputChanged(event, "filters", null)}
+          filters={props.filters}
+          onLocationChange={(event)=> {props.onLocationChange(event, "filters", null)}}
+          currentAddress={props.currentAddress}
+          googlelocation={true}
         />
       </InputWrapper>
    </InputsWrapper>
@@ -236,7 +242,7 @@ class SearchArea extends Component {
   }
 
   render() {
-    console.log("this.state SearchAreaPanel",this.state)
+
     return (
       <SearchAreaPanel width={this.props.width} textAlign={this.props.textAlign} itemScope itemType="http://schema.org/SearchAction">
         {this.props.topSection ? this.props.topSection : <TaglineWrapper />}
@@ -253,6 +259,11 @@ class SearchArea extends Component {
               locationText={this.props.locationText}
               skillTypeText={this.props.skillTypeText}
               resetSearch={this.props.resetSearch}
+              locationInputChanged={this.props.locationInputChanged}
+              currentAddress = {this.props.locationName}
+              filters={this.props.filters}
+              onLocationChange={this.props.onLocationChange}
+              currentAddress={this.props.currentAddress}
             />
           )}
         {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} handleAddSchool={this.handleAddSchool}/> }
