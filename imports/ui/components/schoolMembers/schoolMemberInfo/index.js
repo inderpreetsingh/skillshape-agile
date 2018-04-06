@@ -7,8 +7,14 @@ import Input from "material-ui/Input";
 import isEmpty from "lodash/isEmpty";
 import { withStyles } from "material-ui/styles";
 import styled from "styled-components";
+import FileUpload from 'material-ui-icons/FileUpload';
+import MobileDetect from 'mobile-detect';
+
 
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import CreateMedia from "/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia.js";
+import CallMemberDialogBox from '/imports/ui/components/landing/components/dialogs/CallMemberDialogBox.js';
+import EmailMemberDialogBox from '/imports/ui/components/landing/components/dialogs/EmailMemberDialogBox.jsx';
 
 const styles = theme => ({
   avatarCss: {
@@ -67,11 +73,11 @@ const ActionButton = styled.div`
 
 const ActionButtons = props => (
   <ActionButtonsWrapper>
-    <ActionButton>
+    <ActionButton onClick={()=> {props.handleCall(props.memberInfo)}}>
       <MemberActionButton icon iconName="phone" label="Call" />
     </ActionButton>
 
-    <ActionButton>
+    <ActionButton onClick={()=> {props.handleEmail(props.memberInfo)}}>
       <MemberActionButton
         secondary
         noMarginBottom
@@ -142,12 +148,51 @@ class SchoolMemberInfo extends Component {
     );
   };
 
+  // Handle call button for member's view.
+  handleCall = (memberInfo) => {
+    console.log("memberInfo=>",memberInfo);
+    // Detect mobile and dial number on phone else show popup that shows phone information.
+    let md = new MobileDetect(window.navigator.userAgent);
+      if(md.mobile()) {
+        let schoolPhone = "tel:+1-303-499-7111";
+        if(schoolData.phone) {
+        schoolPhone = `tel:${schoolData.phone}`;
+        return `${schoolPhone}`;
+      }
+    } else {
+      this.handleCallButtonClick();
+    }
+  }
+  handleEmail = (memberInfo) => {
+    this.handleEmailButtonClick();
+  }
+
+  handleEmailButtonClick = () => {
+    this.handleDialogState('emailMemberDialog',true);
+  }
+      // Handle call us button click for school page
+  handleCallButtonClick = () => {
+    this.handleDialogState('callMemberDialog',true);
+  }
+
+  handleDialogState = (dialogName,state) => {
+    this.setState({
+      [dialogName]: state
+    })
+  }
+  getContactNumber = () => {
+    return this.props.memberInfo && this.props.memberInfo.phone;
+  }
+
   render() {
     const { memberInfo, view, classes } = this.props;
-    console.log("SchoolMemberInfo notes -->>", this.state);
+    console.log("SchoolMemberInfo state -->>", this.state);
     console.log("SchoolMemberInfo props -->>", this.props);
+    const { showCreateMediaModal, mediaFormData, filterStatus, limit } = this.state;
     return (
       <Grid container>
+        {this.state.callMemberDialog && <CallMemberDialogBox contactNumbers={this.getContactNumber()} open={this.state.callMemberDialog} onModalClose={() => this.handleDialogState('callMemberDialog',false)}/>}
+        {this.state.emailMemberDialog && <EmailMemberDialogBox  open={this.state.emailMemberDialog} onModalClose={() => this.handleDialogState('emailMemberDialog',false)}/>}
         <Grid
           container
           className="userInfoPanel"
@@ -166,7 +211,28 @@ class SchoolMemberInfo extends Component {
           >
             <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4}>
               <img className={classes.avatarCss} src="/images/Avatar-Unisex.png" />
+              {<CreateMedia
+                  showCreateMediaModal={showCreateMediaModal}
+                  onClose = {this.closeMediaUpload}
+                  formType={showCreateMediaModal}
+                  schoolId={this.props.schoolData._id}
+                  ref="createMedia"
+                  onAdd={this.onAddMedia}
+                  onEdit={this.onEditMedia}
+                  mediaFormData={mediaFormData}
+                  filterStatus={filterStatus}
+                  showLoading = {this.showLoading}
+                  tagMember={true}
+                  taggedMemberInfo={memberInfo}
+              />}
             </Grid>
+            <Grid item md={4} sm={4} xs={4} style={{padding: '8px',float: 'right'}}>
+              {
+                <Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
+                    Upload Image <FileUpload />
+                </Button>
+              }
+              </Grid>
             <Grid item sm={4} xs={4} md={4}>
               <Typography>{memberInfo.name}</Typography>
               {view === "admin" && (
@@ -195,7 +261,11 @@ class SchoolMemberInfo extends Component {
         {view === "admin" && (
           <Grid container style={{ backgroundColor: "darkgray" }}>
             <Grid item>
-              <ActionButtons />
+              <ActionButtons
+                memberInfo={this.props.memberInfo}
+                handleCall={this.handleCall}
+                handleEmail={this.handleEmail}
+              />
             </Grid>
           </Grid>
         )}

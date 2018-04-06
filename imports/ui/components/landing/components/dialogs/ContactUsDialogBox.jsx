@@ -13,6 +13,7 @@ import IconInput from '../form/IconInput.jsx';
 import { MuiThemeProvider} from 'material-ui/styles';
 import {withStyles} from 'material-ui/styles';
 
+import ContactUsForm from '../contactUs/ContactUsForm.jsx';
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
 
@@ -37,7 +38,10 @@ const styles = theme => {
     },
     dialogContent: {
       padding: `0 ${helpers.rhythmDiv * 3}px`,
+      paddingBottom: helpers.rhythmDiv * 3,
       flexShrink: 0,
+      display: 'flex',
+      justifyContent: 'center',
       '@media screen and (max-width : 500px)': {
         minHeight: '150px'
       }
@@ -54,7 +58,7 @@ const styles = theme => {
       paddingLeft: `${helpers.rhythmDiv * 2}px`
     },
     dialogRoot: {
-      width: '100%'
+      width: '100%',
     },
     iconButton: {
       height: 'auto',
@@ -104,53 +108,23 @@ const Title = styled.span`
   text-align: center;
 `;
 
-class EmailUsDialogBox extends Component {
-
-  state = {
-    subject: '',
-    message: ''
-  }
-
-  handleInputFieldChange = (fieldName) => (e) => {
-    this.setState({
-      [fieldName] : e.target.value
-    });
-  }
-
-  handleFormSubmit = (e) => {
-    e.preventDefault();
-
-    const {subject,message} = this.state;
-    const mailTo = `mailto:${this.props.ourEmail}?subject=${subject}&body=${message}`;
-    const mailToNormalized = encodeURI(mailTo);
-
-    // console.log('================================',mailToNormalized);
-
-    if(this.props.onFormSubmit) {
-      this.props.onFormSubmit();
-    }
-
-    window.location.href = mailToNormalized;
-
-    this.props.onModalClose();
-  }
-
+class ContactUsDialogBox extends Component {
   render() {
     const {props} = this;
-    console.log(props,"...");
+    // console.log(props,"...");
     return (
       <Dialog
         fullScreen={props.fullScreen}
         open={props.open}
         onClose={props.onModalClose}
         onRequestClose={props.onModalClose}
-        aria-labelledby="email us"
+        aria-labelledby="contact us"
         classes={{paper: props.classes.dialogRoot}}
       >
       <MuiThemeProvider theme={muiTheme}>
         <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
           <DialogTitleWrapper>
-              <Title>Email Us</Title>
+              <Title>Contact Us</Title>
               <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
                 <ClearIcon/>
               </IconButton>
@@ -158,36 +132,19 @@ class EmailUsDialogBox extends Component {
         </DialogTitle>
 
         <DialogContent classes={{root : props.classes.dialogContent}}>
-            <form onSubmit={this.handleFormSubmit}>
-              <InputWrapper>
-                <IconInput inputId="subject" labelText="Subject" value={this.state.subject} onChange={this.handleInputFieldChange('subject')}/>
-              </InputWrapper>
-
-              <InputWrapper>
-                <IconInput inputId="message" labelText="Your message goes here" multiline={true} value={this.state.message} onChange={this.handleInputFieldChange('message')} />
-              </InputWrapper>
-
-              <ButtonWrapper>
-                  <PrimaryButton
-                      type="submit"
-                      label="Send Message"
-                      noMarginBottom
-                      onClick={this.handleFormSubmit}
-                  />
-              </ButtonWrapper>
-            </form>
+          <ContactUsForm onSubmitForm={props.onModalClose} />
         </DialogContent>
-        </MuiThemeProvider>
+      </MuiThemeProvider>
       </Dialog>
     );
   }
 }
 
-EmailUsDialogBox.propTypes = {
+ContactUsDialogBox.propTypes = {
   onFormSubmit: PropTypes.func,
   onHandleInputChange: PropTypes.func,
   onModalClose: PropTypes.func,
   loading: PropTypes.bool,
 }
 
-export default withMobileDialog()(withStyles(styles)(EmailUsDialogBox));
+export default withMobileDialog()(withStyles(styles)(ContactUsDialogBox));

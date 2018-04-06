@@ -104,7 +104,7 @@ const Title = styled.span`
   text-align: center;
 `;
 
-class EmailUsDialogBox extends Component {
+class EmailMemberDialogBox extends Component {
 
   state = {
     subject: '',
@@ -144,13 +144,13 @@ class EmailUsDialogBox extends Component {
         open={props.open}
         onClose={props.onModalClose}
         onRequestClose={props.onModalClose}
-        aria-labelledby="email us"
+        aria-labelledby="contact us"
         classes={{paper: props.classes.dialogRoot}}
       >
       <MuiThemeProvider theme={muiTheme}>
         <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
           <DialogTitleWrapper>
-              <Title>Email Us</Title>
+              <Title>Email Member</Title>
               <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
                 <ClearIcon/>
               </IconButton>
@@ -183,11 +183,11 @@ class EmailUsDialogBox extends Component {
   }
 }
 
-EmailUsDialogBox.propTypes = {
+EmailMemberDialogBox.propTypes = {
   onFormSubmit: PropTypes.func,
   onHandleInputChange: PropTypes.func,
   onModalClose: PropTypes.func,
   loading: PropTypes.bool,
 }
 
-export default withMobileDialog()(withStyles(styles)(EmailUsDialogBox));
+export default withMobileDialog()(withStyles(styles)(EmailMemberDialogBox));

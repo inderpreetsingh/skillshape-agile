@@ -75,9 +75,7 @@ const MapContainer = styled.div`
 
 const WithMapCardsContainer = styled.div`
   width: 60%;
-  padding:${helpers.rhythmDiv * 2}px;
-  padding-top: 0;
-
+  
   ${helpers.flexDirectionColumn}
   justify-content: space-between;
   transform: translateY(80px);

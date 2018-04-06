@@ -10,6 +10,7 @@ import { Link } from 'react-router';
 import find from "lodash/find";
 
 
+import MobileDetect from 'mobile-detect';
 import UploadMedia from './uploadMedia';
 import config from '/imports/config';
 import styles from "./style";
@@ -19,6 +20,8 @@ import { getUserFullName } from '/imports/util/getUserData';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
 import ClassTypeCoverContent from '/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx';
+import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
+
 
 class SchoolViewBanner extends React.Component {
 	constructor(props){
@@ -41,13 +44,32 @@ class SchoolViewBanner extends React.Component {
   		return `mailto:${schoolData.email}?subject=I%20wish%20your%20listing%20was%20up%20to%20date%21&body=Hi%20${fullName}%2C%0A%0AI%20am%20on%20SkillShape.com%20looking%20at%20your%20listing.%20It%20seems%20to%20be%20not%20up%20to%20date.%0AIt%20would%20really%20help%20me%20and%20other%20students%20get%20to%20your%20classes%20if%20it%20was%20updated.%20I%20would%20probably%20attend%20a%20class%21%0AHere%20is%20the%20link%2C%20you%20can%20fix%20it%20and%20I%20will%20use%20it%20when%20you%20do%21%0A${url}%0A%0AThanks`
   	}
   	handleCallUs = (schoolData) => {
-  		console.log("schoolData",schoolData)
+		// Detect mobile and dial number on phone else show popup that shows phone information.
+		let md = new MobileDetect(window.navigator.userAgent);
+		if(md.mobile()) {
   		let schoolPhone = "tel:+1-303-499-7111";
   		if(schoolData.phone) {
 			schoolPhone = `tel:${schoolData.phone}`;
+			return `${schoolPhone}`;
 		}
-  		return `${schoolPhone}`;
+		} else {
+			this.handleCallUsButtonClick();
+		}
   	}
+
+  	// Handle call us button click for school page
+    handleCallUsButtonClick = () => {
+      this.handleDialogState('callUsDialog',true);
+    }
+
+    handleDialogState = (dialogName,state) => {
+      this.setState({
+        [dialogName]: state
+      })
+    }
+    getContactNumbers = () => {
+      return this.props.schoolData.phone.split(',');
+    }
 
 	render(){
 		const {
@@ -61,6 +83,7 @@ class SchoolViewBanner extends React.Component {
 			console.info('shcooll data',schoolData,"-------");
 		return(<Grid container className={classes.schoolHeaderContainer}>
 	  <Grid item xs={12}  style={{paddingTop: 0}}>
+	  	{this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
 	    <CardMedia  className={classes.cardMedia} >
 	        {schoolData.mainImage && <div className={classes.imageContainer} style={{backgroundImage: `url(${ schoolData.mainImage || config.defaultSchoolImage })`}}> </div>}
 	        <div className={classes.imageHeader}>
@@ -102,7 +125,7 @@ class SchoolViewBanner extends React.Component {
 	                <Grid item xs={12} sm={12} md={3}>
 	                  {!isEdit && <div className={classes.imageFooterBtnContainer}>
 
-	                <Button href={this.handleCallUs(schoolData)} className={classes.ImageFooterbutton} raised color="primary">
+	                <Button onClick={()=> {this.handleCallUs(schoolData)}} className={classes.ImageFooterbutton} raised color="primary">
 	                  <Phone className={classes.ImageFooterIcon} />
 	                  Call Us
 	                </Button>

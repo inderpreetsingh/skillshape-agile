@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
 
-import { MuiThemeProvider} from 'material-ui';
 import { TimePicker } from 'material-ui-pickers'
 import TextField from 'material-ui/TextField';
-import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
-import timePickerOverridenStyles from './styles';
-
-muiTheme.overrides = timePickerOverridenStyles;
 
 export class MaterialTimePicker extends Component {
 
 	render() {
 		const { required, format, hintText, floatingLabelText, value, fullWidth } = this.props;
-		return (
-			<MuiThemeProvider theme={muiTheme} >
-    		<TimePicker
+		return (<TimePicker
           required={required}
           format={format}
           hintText={hintText}
@@ -33,8 +26,6 @@ export class MaterialTimePicker extends Component {
                   />
               )
           }}
-      />
-			</MuiThemeProvider>
-		)
+      />)
 	}
 }

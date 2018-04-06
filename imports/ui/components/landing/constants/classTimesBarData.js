@@ -76,7 +76,7 @@ const classTimesBarData = [
   },
   {
     _id: uuidv4(),
-    classTimes : [
+    classTimes : {
       'monday': [{
           time: '07:00',
           timePeriod: 'am',
@@ -95,7 +95,7 @@ const classTimesBarData = [
         duration: 175,
         date: "2018-04-16T06:45:54.289Z"
       }]
-    ],
+    },
     desc: 'The karate class is practiced under Miss Jen who is black belt in Karate and have immense knowledge in TaekWondo as well. Her immense experience in this field make her really great instructor.',
     addedToCalendar: false,
     scheduleType: 'oneTime',

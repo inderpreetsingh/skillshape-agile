@@ -58,7 +58,6 @@ const MapContainer = styled.div`
 
 const WithMapCardsContainer = styled.div`
   width: 60%;
-  padding:${helpers.rhythmDiv * 2}px;
   padding-top: 0;
 
   ${helpers.flexDirectionColumn}
@@ -644,6 +643,7 @@ class Landing extends Component {
               {/*Cards List */}
                 <Element name="content-container" className="element homepage-content">
                     <ClassTypeList
+                        defaultLocation={this.state.defaultLocation}
                         mapView={this.state.mapView}
                         filters={this.state.filters}
                         handleSeeMore={this.handleSeeMore}

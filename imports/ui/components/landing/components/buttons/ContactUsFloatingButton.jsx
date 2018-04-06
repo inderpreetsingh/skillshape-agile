@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
+import {Link} from 'react-router';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { withStyles } from 'material-ui/styles';
 import Icon from 'material-ui/Icon';
 
-import {Link} from 'react-router';
+import ContactUsDialogBox from '../dialogs/ContactUsDialogBox.jsx';
 
 import * as helpers from '../jss/helpers.js';
 
@@ -45,27 +46,21 @@ const Text = styled.p`
   font-size: ${props => props.largeFont ? helpers.baseFontSize * 1.25 : 18}px;
   font-weight: 400;
   opacity: ${props => props.show ? 1 : 0};
-  padding: ${props => props.show ? `${helpers.rhythmDiv * 2}px` : 0};
+  padding: ${props => props.show ? `${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 4}px` : 0};
   max-width: ${props => props.show ? '100%' : '0'};
   pointer-events: ${props => props.show ? 'all' : 'none'};
   cursor: ${props => props.showCursor ? 'pointer' : 'initial'};
 `;
 
 const MyText = styled.span`
-
-`;
-
-const MyLink = styled(Link)`
   cursor: pointer;
-  color: white;
-  min-width: ${helpers.rhythmDiv * 3}px;
-  text-align: center;
 `;
 
 class ContactUsFloatingButton extends Component {
 
   state = {
-    showComplete : true
+    showComplete : true,
+    contactUsDialogBox: false,
   }
 
   handleShowCompleteButton = (e) => {
@@ -75,18 +70,25 @@ class ContactUsFloatingButton extends Component {
     });
   }
 
+  handleContactUsDialogBox = (state) => {
+    this.setState({
+      contactUsDialogBox: state
+    })
+  }
+
   render() {
-    return(<OuterWrapper>
+    return(<Fragment>
+      {this.state.contactUsDialogBox && <ContactUsDialogBox open={this.state.contactUsDialogBox} onModalClose={() => this.handleContactUsDialogBox(false)} />}
+      <OuterWrapper>
       <Wrapper showComplete={this.state.showComplete}>
         <Text show={this.state.showComplete} largeFont={false}>
-          <MyText><MyLink to="/contact-us">Confused ? Questions ? Click here</MyLink></MyText>
+          <MyText onClick={() => this.handleContactUsDialogBox(true)}>Confused ? Questions ? Click here</MyText>
           <Icon className={this.props.classes.iconStyles} onClick={this.handleShowCompleteButton}> keyboard_arrow_down </Icon>
         </Text>
         <Text show={!this.state.showComplete} largeFont showCursor onClick={this.handleShowCompleteButton}>
-          <MyLink> ? </MyLink>
+          <MyText> ? </MyText>
         </Text>
-      </Wrapper></OuterWrapper>
-    )
+      </Wrapper></OuterWrapper></Fragment>)
   }
 }
 
