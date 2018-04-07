@@ -132,6 +132,7 @@ const SearchInputsSection = (props) => (
           withIcon={false}
           rightAlign
           resetSearch={props.resetSearch}
+          value={props.skillTypeText}
         />
       </InputWrapper>
       <In>in</In>
@@ -146,6 +147,8 @@ const SearchInputsSection = (props) => (
           onLocationChange={(event)=> {props.onLocationChange(event, "filters", null)}}
           currentAddress={props.currentAddress}
           googlelocation={true}
+          value={props.currentAddress}
+          resetSearch={props.resetSearch}
         />
       </InputWrapper>
    </InputsWrapper>
@@ -229,7 +232,7 @@ class SearchArea extends Component {
     });
 
     if(this.props.onSkillTypeChange) {
-      this.props.onSkillTypeChange(value);
+      this.props.onSkillTypeChange(value, "filters", null);
     }
   }
 
@@ -242,6 +245,8 @@ class SearchArea extends Component {
   }
 
   render() {
+
+    console.log("this.props in SearchArea",this.props);
 
     return (
       <SearchAreaPanel width={this.props.width} textAlign={this.props.textAlign} itemScope itemType="http://schema.org/SearchAction">
@@ -257,13 +262,12 @@ class SearchArea extends Component {
               onMapViewButtonClick={this.props.onMapViewButtonClick}
               mapView={this.props.mapView}
               locationText={this.props.locationText}
-              skillTypeText={this.props.skillTypeText}
+              skillTypeText={this.props.filters && this.props.filters.skillTypeText}
               resetSearch={this.props.resetSearch}
               locationInputChanged={this.props.locationInputChanged}
-              currentAddress = {this.props.locationName}
+              currentAddress = {this.props.filters && this.props.filters.locationName}
               filters={this.props.filters}
               onLocationChange={this.props.onLocationChange}
-              currentAddress={this.props.currentAddress}
             />
           )}
         {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} handleAddSchool={this.handleAddSchool}/> }

@@ -345,8 +345,8 @@ class Landing extends Component {
         })
     }
 
-    handleSkillTypeSearch = (skillTypeText) => {
-        // console.log("handleSkillTypeSearch -->>",skillTypeText);
+    handleSkillTypeSearch = (skillTypeText, updateKey1, updateKey2) => {
+        console.log("handleSkillTypeSearch -->>",skillTypeText, updateKey1, updateKey2);
         this.setState({
             filters: {
                 ...this.state.filters,
@@ -533,20 +533,28 @@ class Landing extends Component {
     }
 
     showAppliedTopFilter = () => {
-        const { locationText, skillTypeText } = this.state.filters;
-        // let appliedTopFilterText = "Showing result for "
 
-        let keyword;
-        if (locationText && skillTypeText) {
-            text = `Showing result for ${skillTypeText} in ${locationText}`
-            return this.showText(text, this.deleteFilterText);
-        } else if (locationText) {
-            text = `Showing result in ${locationText}`
-            return this.showText(text, this.deleteFilterText);
-        } else if (skillTypeText) {
-            text = `Showing result for ${skillTypeText}`
-            return this.showText(text, this.deleteFilterText);
+        const filtersData = this.state.filters;
+        for (var prop in filtersData) {
+            if(!isEmpty(filtersData[prop])) {
+                console.log("filtersData[prop]===>",filtersData[prop])
+                return this.showText("Clear Filters", this.deleteFilterText);
+            }
         }
+        // const { locationText, skillTypeText } = this.state.filters;
+        // // let appliedTopFilterText = "Showing result for "
+
+        // let keyword;
+        // if (locationText && skillTypeText) {
+        //     text = `Showing result for ${skillTypeText} in ${locationText}`
+        //     return this.showText(text, this.deleteFilterText);
+        // } else if (locationText) {
+        //     text = `Showing result in ${locationText}`
+        //     return this.showText(text, this.deleteFilterText);
+        // } else if (skillTypeText) {
+        //     text = `Showing result for ${skillTypeText}`
+        //     return this.showText(text, this.deleteFilterText);
+        // }
     }
     showText = (text, cb) => {
         return (
@@ -557,19 +565,20 @@ class Landing extends Component {
     }
     // Delete `skillTypeText` and `locationText` from filters.
     deleteFilterText = () => {
-        const oldFilter = { ...this.state.filters };
-        oldFilter.skillTypeText = "";
-        oldFilter.locationText = "";
-        this.setState({ filters: oldFilter, resetMainSearch: !this.state.resetMainSearch });
+        this.setState({
+            filters: {},
+            tempFilters: {},
+            resetMainSearch:!this.state.resetMainSearch
+        })
     }
-    showAppliedLocationFilter = () => {
-        const { locationName } = this.state.filters;
-        // console.log("locationName",this.state.filters, defaultLocation)
-        if (locationName) {
-            text = `Showing classes near you (${locationName})`;
-            return this.showText(text, this.clearDefaultLocationFilter);
-        }
-    }
+    // showAppliedLocationFilter = () => {
+    //     const { locationName } = this.state.filters;
+    //     // console.log("locationName",this.state.filters, defaultLocation)
+    //     if (locationName) {
+    //         text = `Showing classes near you (${locationName})`;
+    //         return this.showText(text, this.clearDefaultLocationFilter);
+    //     }
+    // }
 
     clearDefaultLocationFilter = () => {
         stateObj = this.state.filters;
@@ -606,6 +615,8 @@ class Landing extends Component {
                             pricePerMonthFilter: this.pricePerMonthFilter,
                             collectSelectedSkillCategories: this.collectSelectedSkillCategories,
                             collectSelectedSkillSubject: this.collectSelectedSkillSubject,
+                            handleSkillTypeSearch: this.handleSkillTypeSearch,
+                            skillTypeText: this.state.filters.skillTypeText
                         }}
                     />
 
@@ -627,6 +638,7 @@ class Landing extends Component {
                                 currentAddress = {this.state.locationName}
                                 filters={this.state.filters}
                                 onLocationChange={this.onLocationChange}
+                                currentFilterState={this.state.filters}
                             />
                         </Cover>
                     </CoverWrapper>
@@ -642,7 +654,6 @@ class Landing extends Component {
                     </FilterPanelWrapper>
                     {/* Applied Filters */}
                     {this.state.filters && this.showAppliedTopFilter()}
-                    {this.state.filters && this.state.filters.coords && this.showAppliedLocationFilter()}
 
                     {/*Cards List */}
                     <Element name="content-container" className="element homepage-content">

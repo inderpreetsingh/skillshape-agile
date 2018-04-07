@@ -113,7 +113,8 @@ class FilterPanel extends Component {
             gender: null,
             schoolName: null,
             age: null
-          }
+          },
+        skillTypeText: get(this.props, "filters.skillTypeText", "")
       }
 
       handleChangeInScreenSize = () => {
@@ -144,6 +145,12 @@ class FilterPanel extends Component {
         window.removeEventListener("resize",this.handleChangeInScreenSize);
       }
 
+      componentWillReceiveProps = (nextProps, nextState) => {
+        console.log("componentWillReceiveProps",nextProps, nextState)
+        if((this.props.skillTypeText) !== (nextProps.skillTypeText)) {
+            this.setState({skillTypeText:nextProps.skillTypeText});
+        }
+      }
 
     componentWillMount() {
         const dataSourceCategories = Meteor.call('getAllSkillCategories', (err,result) => {
@@ -166,6 +173,13 @@ class FilterPanel extends Component {
                     this.setState({skillSubjectData: res || []});
                 }
             })
+    }
+
+    handleSkillTypeText = (event) => {
+      console.log("handleSkillTypeText", event.target.value);
+
+      this.setState({skillTypeText:event.target.value});
+      this.props.handleSkillTypeSearch(event.target.value);
     }
 
     renderFilterBar = () => {
@@ -239,6 +253,15 @@ class FilterPanel extends Component {
       return (
         <Grid container spacing={24}>
             {/* 1rst Row */}
+            <Grid item xs={12} sm={12} md={12}>
+              <div>skill type text filter :</div>
+              <MaterialInputWrapper>
+                <IconInput
+                  value={ this.state.skillTypeText}
+                  onChange={(event) => {this.handleSkillTypeText(event)}}
+               />
+              </MaterialInputWrapper>
+            </Grid>
             <Grid item xs={12} sm={6}>
             <MaterialInputWrapper>
                 <IconInput
@@ -352,7 +375,7 @@ class FilterPanel extends Component {
               />
             </Grid>
 
-            <Grid item xs={12} sm={12} >
+            <Grid item item xs={12} sm={6} >
              <FilterPanelAction>
                 <PrimaryButton
                     fullWidth
@@ -360,6 +383,15 @@ class FilterPanel extends Component {
                     icon={true}
                     iconName="refresh"
                     onClick={() => {this.props.onModalClose();this.props.removeAllFilters();}}/>
+              </FilterPanelAction>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FilterPanelAction>
+                <PrimaryButton
+                  fullWidth
+                  label="Save"
+                  icon={true}
+                />
               </FilterPanelAction>
             </Grid>
           </Grid>
