@@ -79,9 +79,9 @@ class MySearchBar extends Component {
     if(this.props.resetSearch != nextProps.resetSearch) {
       this.setState({value: "", active: false})
     }
-    if (this.props.value !== nextProps.value) {
-      this.setState({...this.state, value: nextProps.value});
-    }
+    // if (this.props.value !== nextProps.value) {
+    //   this.setState({...this.state, value: nextProps.value});
+    // }
   }
 
   handleFocus = () => {
@@ -131,6 +131,7 @@ class MySearchBar extends Component {
   }
   render () {
     const { value } = this.state;
+    let self = this;
     // console.log('value this.state',this.state);
     const {
       closeIcon,
@@ -154,12 +155,32 @@ class MySearchBar extends Component {
       inputClass = `${classes.rightAlign}`;
     }
 
+    const props = this.props;
+    let inputRef;
+    if(props.googlelocation) {
+      setTimeout(()=> {
+        let options ={strictBounds:true}
+        // Google's API
+        let autocomplete = new google.maps.places.Autocomplete(inputRef,options);
+        // This runs when user changes location.
+        autocomplete.addListener('place_changed', () => {
+          let place = autocomplete.getPlace();
+          let coords = [];
+          coords[0] = place.geometry['location'].lat();
+          coords[1] =place.geometry['location'].lng();
+          this.setState({value: place.formatted_address});
+          props.onLocationChange({name: place.name, coords, fullAddress: place.formatted_address })
+        })
+      },2000)
+    }
+
     // console.log('clostIconClass',closeIconClass,showIconClass);
     return (
       <Paper className={rootClass} >
         <LeftSideInput inputOnSide={this.props.inputOnSide}>
           <Input
           {...inputProps}
+          inputRef={(ref)=> inputRef = ref}
           onBlur={this.handleBlur}
           value={value}
           onChange={this.handleInput}
