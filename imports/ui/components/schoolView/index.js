@@ -14,6 +14,7 @@ import School from "/imports/api/school/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import { toastrModal } from '/imports/util';
 import config from '/imports/config';
+import ClassTimes from "/imports/api/classTimes/fields";
 
 
 class SchoolView extends SchoolViewBase {
@@ -24,7 +25,16 @@ class SchoolView extends SchoolViewBase {
             isPublish: true,
             bestPriceDetails: null,
             isLoading:false,
-            seeMoreCount:4
+            seeMoreCount:4,
+            type: "both",
+            classTimesData: [],
+            myClassTimes: [],
+            manageAll: true,
+            attendAll: true,
+            filter: {
+                classTimesIds: [],
+                classTimesIdsForCI: [],
+            },
         }
     }
 
@@ -49,6 +59,7 @@ export default createContainer(props => {
     let enrollmentFee;
     let showLoading = true;
     let subscription;
+    let classTimesData;
 
     if (slug) {
         subscription = Meteor.subscribe("UserSchoolbySlug", slug);
@@ -93,5 +104,6 @@ export default createContainer(props => {
         classType,
         schoolId,
         showLoading,
+        classTimesData
     };
 },withStyles(styles)(toastrModal(SchoolView)))

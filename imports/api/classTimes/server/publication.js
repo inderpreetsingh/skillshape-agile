@@ -3,13 +3,11 @@ import ClassInterest from "/imports/api/classInterest/fields";
 import School from "/imports/api/school/fields";
 
 Meteor.publish("classTimes.getclassTimes", function({ schoolId, classTypeId }) {
-    // console.log("classTimes.getclassTimes -->>", schoolId, classTypeId);
     let cursor = ClassTimes.find({ schoolId, classTypeId });
     return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
 Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classTypeId, calendarStartDate, calendarEndDate, view}) {
-    // console.log("classTimes.getclassTimesForCalendar schoolId -->>>", schoolId, classTypeId);
     let startDate = '';
     let endDate = '';
     let result = [];
@@ -45,25 +43,17 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
         condition.classTypeId = classTypeId;
     }
 
-    if(view === "schoolCalendar") {
-        if (school) {
-            // console.log("classTimes.getclassTimesForCalendar condition --->>", condition)
-            result.push(ClassTimes.find(condition));
-            // result.push(ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this));
-        }
-    }
-
-    if(view === "myCalendar" && this.userId) {
-        let classInterestCursor = ClassInterest.find({userId: this.userId})
+    if(this.userId) {
+        let classInterestCursor = ClassInterest.find({userId: this.userId});
         let classTimeIds = classInterestCursor.map((data) => {
             return data.classTimeId;
         })
-        // console.log("classTimeIds -->>",classTimeIds)
-        condition['$or'].push({classTypeId: { $in: classTimeIds }})
-        // console.log("myCalendar condition -->>",condition)
+        condition['$or'].push({_id: { $in: classTimeIds }})
         let classTimeCursor = ClassTimes.find(condition);
         result.push(classInterestCursor);
         result.push(classTimeCursor);
+    } else {
+        result.push(ClassTimes.find(condition));
     }
 
     return result;

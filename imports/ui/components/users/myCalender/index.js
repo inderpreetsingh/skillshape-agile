@@ -29,6 +29,7 @@ export default class MyCalender extends React.Component {
           showEventModal={this.handleEventModal}
     			{...this.state}
     			{...this.props}
+          manageMyCalendar={true}
     		/>
             {
                 isOpen && <ClassDetailModal

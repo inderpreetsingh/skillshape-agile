@@ -27,6 +27,7 @@ import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
+import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
 export default function() {
     console.log("SchoolView render-->>",this.props)
@@ -256,13 +257,16 @@ export default function() {
                   splitByCategory={false}
                   classTypeBySchool='classTypeBySchool'
                   handleSeeMore={this.handleSeeMore}
+                  classTimesData={this.props.classTimesData}
                 />
             </Grid>
             </Grid>
             <Grid container className={classes.content}>
               <Grid ref={(el) => { this.schoolCalendar = el; }} item xs={12}>
                 <Card className={classes.content}>
-                  {<MyCalender {...this.props}/>}
+                  {/*<MyCalender {...this.props}/>*/
+                    <ManageMyCalendar schoolCalendar={true} {...this.props}/>
+                  }
                 </Card>
               </Grid>
             </Grid>
