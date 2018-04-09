@@ -21,6 +21,8 @@ import { Loading } from '/imports/ui/loading';
 import { checkSuperAdmin, cutString } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
+import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
+
 import ReviewsSlider from '/imports/ui/components/landing/components/class/ReviewsSlider.jsx';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
@@ -396,7 +398,7 @@ export default function() {
 
             {/* Calendar Section*/}
             <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
-              {<MyCalender {...this.props}/>}
+              {<ManageMyCalendar schoolCalendar={true} {...this.props}/>}
             </MyCalendarWrapper>
 
 
