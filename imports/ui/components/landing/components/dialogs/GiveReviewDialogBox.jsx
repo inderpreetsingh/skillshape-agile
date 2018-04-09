@@ -157,7 +157,7 @@ class GiveReviewDialogBox extends Component {
       <MuiThemeProvider theme={muiTheme}>
         <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
           <DialogTitleWrapper>
-            <Title>Give Review</Title>
+            <Title>{props.title}</Title>
             <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
               <ClearIcon/>
             </IconButton>
@@ -195,6 +195,11 @@ GiveReviewDialogBox.propTypes = {
   onRatingsChange: PropTypes.func,
   onReviewChange: PropTypes.func,
   onModalClose: PropTypes.func,
+  title: PropTypes.string
+}
+
+GiveReviewDialogBox.defaultProps = {
+  title: 'Give Review'
 }
 
 export default withMobileDialog()(withStyles(styles)(GiveReviewDialogBox));

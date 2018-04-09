@@ -75,6 +75,11 @@ export default styles = theme => {
       lineHeight: '44px',
       paddingLeft: theme.spacing.unit * 2,
       font: '100 3vw/3vh cookie, cursive',
+    },
+    mediaContent: {
+      position: 'relative',
+      padding: 0,
+      marginBottom: theme.spacing.unit * 4
     }
   }
 }
