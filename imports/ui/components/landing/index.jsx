@@ -616,7 +616,8 @@ class Landing extends Component {
                             collectSelectedSkillCategories: this.collectSelectedSkillCategories,
                             collectSelectedSkillSubject: this.collectSelectedSkillSubject,
                             handleSkillTypeSearch: this.handleSkillTypeSearch,
-                            skillTypeText: this.state.filters.skillTypeText
+                            skillTypeText: this.state.filters.skillTypeText,
+                            handleFiltersDialogBoxState: this.handleFiltersDialogBoxState
                         }}
                     />
 
