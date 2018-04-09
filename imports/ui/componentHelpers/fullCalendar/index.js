@@ -140,7 +140,6 @@ class FullCalendar extends React.Component {
 }
 
 export default createContainer(props => {
-    console.log("props FullCalendarContainer = ", props);
     const { startDate, endDate, manageMyCalendar, isUserSubsReady, currentUser, manageMyCalendarFilter } = props;
     let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
     let { schoolId, slug, classTypeId } = props.params || {};
@@ -150,7 +149,9 @@ export default createContainer(props => {
     if (!schoolId && !slug) {
         schoolId = currentUser && currentUser.profile && currentUser.profile.schoolId;
     }
-
+    if(slug) {
+        schoolId = props.schoolData._id;
+    }
     if (startDate && endDate) {
         let subscription = Meteor.subscribe("classTimes.getclassTimesForCalendar", {schoolId: schoolId || slug, classTypeId: classTypeId, calendarStartDate: startDate, calendarEndDate: endDate, view})
         let classTimesFilter = {};

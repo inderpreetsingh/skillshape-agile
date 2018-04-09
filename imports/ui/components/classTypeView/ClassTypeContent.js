@@ -30,6 +30,7 @@ import PrimaryButton from '/imports/ui/components/landing/components/buttons/Pri
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
 const SchoolImgWrapper = styled.div`
   height: 400px;
@@ -169,6 +170,15 @@ class ClassTypeContent extends Component {
       callUsDialog: false,
       giveReviewDialog: false,
       coverSrc: classTypeImgSrc,
+      type: "both",
+            classTimesData: [],
+            myClassTimes: [],
+            manageAll: true,
+            attendAll: true,
+            filter: {
+                classTimesIds: [],
+                classTimesIdsForCI: [],
+            },
     }
 
     _setCoverSrc = (imgSrc) => {
@@ -425,9 +435,12 @@ class ClassTypeContent extends Component {
                     notes={schoolData.studentNotesHtml}
                     description={schoolData.aboutHtml}
                   />
-                  <CalendarWrapper>
+                  {/*<CalendarWrapper>
                       <MyCalendar params={this.props.params} onJoinClassButtonClick={this.handleClassTimeRequest}/>
-                  </CalendarWrapper>
+                  </CalendarWrapper>*/}
+                  {/*<MyCalender {...this.props}/>*/
+                    <ManageMyCalendar schoolCalendar={true} {...this.props}/>
+                  }
               </MainInnerFixedContainer>
 
 		        </Main>
