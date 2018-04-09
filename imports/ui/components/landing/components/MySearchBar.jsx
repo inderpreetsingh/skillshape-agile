@@ -70,18 +70,18 @@ class MySearchBar extends Component {
     super(props)
     this.state = {
       focus: false,
-      value: this.props.value,
+      value: props.value,
       active: false
     }
   }
 
   componentWillReceiveProps (nextProps) {
+    if (this.props.value !== nextProps.value) {
+      this.setState({...this.state, value: nextProps.value, active: false});
+    }
     if(this.props.resetSearch != nextProps.resetSearch) {
       this.setState({value: "", active: false})
     }
-    // if (this.props.value !== nextProps.value) {
-    //   this.setState({...this.state, value: nextProps.value});
-    // }
   }
 
   handleFocus = () => {
@@ -132,7 +132,9 @@ class MySearchBar extends Component {
   render () {
     const { value } = this.state;
     let self = this;
-    // console.log('value this.state',this.state);
+    console.log('value in MySearchBar===>',value);
+    console.log('state in MySearchBar===>',this.state);
+    console.log('props in MySearchBar===>',this.props);
     const {
       closeIcon,
       disabled,
@@ -233,7 +235,6 @@ MySearchBar.defaultProps = {
   placeholder: 'Search',
   searchIcon: <SearchIcon style={{ color: grey[500] }} />,
   style: null,
-  value: '',
   inputOnSide: 'left',
   defaultBorderRadius: false,
   withIcon: true,
