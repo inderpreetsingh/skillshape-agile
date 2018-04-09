@@ -2,6 +2,7 @@ import React from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import SchoolViewBase from './schoolViewBase';
 import SchoolViewRender from './schoolViewRender';
+import SchoolViewNewRender from './schoolViewNewRender';
 import styles from "./style";
 import { withStyles } from "/imports/util";
 
@@ -45,6 +46,10 @@ class SchoolView extends SchoolViewBase {
       this.setState({seeMoreCount:(config.seeMoreCount + currentCount)})
     }
     render() {
+        console.log(this.props,'This . route . location name school view render..');
+        if(this.props.route.name === 'SchoolViewDeveloping') {
+          return SchoolViewNewRender.call(this, this.props, this.state);
+        }
         return SchoolViewRender.call(this, this.props, this.state);
     }
 }

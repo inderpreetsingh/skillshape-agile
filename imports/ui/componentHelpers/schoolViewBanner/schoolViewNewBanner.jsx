@@ -1,4 +1,5 @@
 import React,{Fragment} from 'react';
+import {scroller} from 'react-scroll';
 import { Link } from 'react-router';
 import styled from 'styled-components';
 
@@ -10,6 +11,7 @@ import Edit from 'material-ui-icons/Edit';
 import Email from 'material-ui-icons/Email';
 import Phone from 'material-ui-icons/Phone';
 import Switch from 'material-ui/Switch';
+import MobileDetect from 'mobile-detect';
 
 import find from "lodash/find";
 
@@ -22,6 +24,7 @@ import { getUserFullName } from '/imports/util/getUserData';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
 import ClassTypeCoverContent from '/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx';
+import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
@@ -47,25 +50,55 @@ class SchoolViewBanner extends React.Component {
 	}
 
 	checkClaim = (currentUser, schoolId) => {
-	    if(currentUser && currentUser.profile && currentUser.profile.schoolId === schoolId)
-	      return false;
-	    return true;
-  	}
+    if(currentUser && currentUser.profile && currentUser.profile.schoolId === schoolId)
+      return false;
+    return true;
+  }
 
-  	getMailToData = (schoolData) => {
-	  	let superAdmin = find(schoolData.adminsData, {_id: schoolData.superAdmin});
-	  	let fullName = getUserFullName(superAdmin)
-	  	let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
-  		return `mailto:${schoolData.email}?subject=I%20wish%20your%20listing%20was%20up%20to%20date%21&body=Hi%20${fullName}%2C%0A%0AI%20am%20on%20SkillShape.com%20looking%20at%20your%20listing.%20It%20seems%20to%20be%20not%20up%20to%20date.%0AIt%20would%20really%20help%20me%20and%20other%20students%20get%20to%20your%20classes%20if%20it%20was%20updated.%20I%20would%20probably%20attend%20a%20class%21%0AHere%20is%20the%20link%2C%20you%20can%20fix%20it%20and%20I%20will%20use%20it%20when%20you%20do%21%0A${url}%0A%0AThanks`
-  	}
-  	handleCallUs = (schoolData) => {
-  		console.log("schoolData",schoolData)
-  		let schoolPhone = "tel:+1-303-499-7111";
-  		if(schoolData.phone) {
-			schoolPhone = `tel:${schoolData.phone}`;
+  handleEmailUs = (schoolData) => {
+  	let superAdmin = find(schoolData.adminsData, {_id: schoolData.superAdmin});
+  	let fullName = getUserFullName(superAdmin)
+  	let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
+		window.location.href = `mailto:${schoolData.email}?subject=I%20wish%20your%20listing%20was%20up%20to%20date%21&body=Hi%20${fullName}%2C%0A%0AI%20am%20on%20SkillShape.com%20looking%20at%20your%20listing.%20It%20seems%20to%20be%20not%20up%20to%20date.%0AIt%20would%20really%20help%20me%20and%20other%20students%20get%20to%20your%20classes%20if%20it%20was%20updated.%20I%20would%20probably%20attend%20a%20class%21%0AHere%20is%20the%20link%2C%20you%20can%20fix%20it%20and%20I%20will%20use%20it%20when%20you%20do%21%0A${url}%0A%0AThanks`;
+  }
+
+	handleCallUs = (schoolData) => {
+		// Detect mobile and dial number on phone else show popup that shows phone information.
+		let md = new MobileDetect(window.navigator.userAgent);
+		if(md.mobile()) {
+			let schoolPhone = "tel:+1-303-499-7111";
+			if(schoolData.phone) {
+				schoolPhone = `tel:${schoolData.phone}`;
+				return `${schoolPhone}`;
+			}
 		}
-  		return `${schoolPhone}`;
-  	}
+		else {
+				this.handleCallUsButtonClick();
+		}
+	}
+
+	// Handle call us button click for school page
+	handleCallUsButtonClick = () => {
+		this.handleDialogState('callUsDialog',true);
+	}
+
+	handleDialogState = (dialogName,state) => {
+		this.setState({
+			[dialogName]: state
+		})
+	}
+
+	getContactNumbers = () => {
+		return this.props.schoolData.phone.split(',');
+	}
+
+	scrollTo(name) {
+			scroller.scrollTo((name || 'content-container'), {
+					duration: 800,
+					delay: 0,
+					smooth: 'easeInOutQuart'
+			})
+	}
 
 	render(){
 		const {
@@ -79,7 +112,9 @@ class SchoolViewBanner extends React.Component {
 	  	} = this.props;
 	  	const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
 			console.info('shcooll data',schoolData,"-------");
-		return(<Fragment><ClassTypeCover coverSrc={schoolData.mainImage || config.defaultSchoolImage}>
+		return(<Fragment>
+			{this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
+			<ClassTypeCover coverSrc={schoolData.mainImage || config.defaultSchoolImage}>
 			<ClassTypeCoverContent
         noClassTypeData
 				isEdit={isEdit}
@@ -95,8 +130,8 @@ class SchoolViewBanner extends React.Component {
 				coverSrc={schoolData.mainImage || config.defaultSchoolImage}
 				logoSrc={schoolData.logoImg}
 				schoolDetails={{...schoolData}}
-				onCallUsButtonClick={this.handleCallUs}
-				onEmailButtonClick={() => this.getMailToData(schoolData)}
+				onCallUsButtonClick={() => this.handleCallUs(schoolData)}
+				onEmailButtonClick={() => this.handleEmailUs(schoolData)}
 				onPricingButtonClick={() => this.scrollTo('price-section')}
 			/>
 		</ClassTypeCover>

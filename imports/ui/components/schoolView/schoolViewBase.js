@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { checkSuperAdmin, createMarkersOnMap } from '/imports/util';
 import Events from '/imports/util/events';
+import { capitalizeString } from '/imports/util';
 import { browserHistory, Link } from 'react-router';
 
 // import collection definition over here
@@ -39,6 +40,26 @@ export default class SchoolViewBase extends React.Component {
   // checkUserAccess = (currentUser,schoolId) => {
   //   return checkMyAccess({user: currentUser,schoolId});
   // }
+
+    handleGiveReview = () => {
+      const {toastr} = this.props;
+      const oldState = this.state;
+      oldState.giveReviewDialog = true;
+      if(Meteor.userId()) {
+        this.handleDialogState('giveReviewDialog',true);
+      }else {
+        toastr.error("You need to login for writing a review !","Error");
+      }
+    }
+
+    getReviewTitle = (name) => {
+      return `Give review for ${capitalizeString(name)}`;
+    }
+
+    handleDialogState = (dialogName,state) => {
+      const currentState = Object.assign({},this.state, {[dialogName] : state});
+      this.setState(currentState);
+    }
 
     claimASchool = (currentUser, schoolData) => {
       	if(currentUser) {
@@ -321,6 +342,14 @@ export default class SchoolViewBase extends React.Component {
         console.log(typeOfTable, tableId, schoolId);
         const { toastr } = this.props;
         let self = this;
+
+        // Meteor.setTimeout(() => {
+        //   console.log("called the method handle purchase package",typeOfTable, tableId, schoolId);
+        //   self.setState({
+        //     isLoading: false
+        //   })
+        // },2000);
+
         Meteor.call(
             "school.purchasePackage", {
                 typeOfTable: typeOfTable,

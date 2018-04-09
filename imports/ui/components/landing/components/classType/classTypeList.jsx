@@ -48,7 +48,7 @@ const SearchBarWrapper = styled.div`
 
 const CardsContainer = styled.div`
   width: 100%;
-  padding-top: ${helpers.rhythmDiv * 3}px;
+  padding-top: ${props => props.containerPaddingTop ? props.containerPaddingTop : (helpers.rhythmDiv * 3) + 'px'};
 `;
 
 const NoResultContainer = styled.div`
@@ -75,7 +75,7 @@ const MapContainer = styled.div`
 
 const WithMapCardsContainer = styled.div`
   width: 60%;
-  
+
   ${helpers.flexDirectionColumn}
   justify-content: space-between;
   transform: translateY(80px);
@@ -191,7 +191,7 @@ class ClassTypeList extends Component {
 			<MainContentWrapper>
 				{
 					mapView ? (
-                <ContentContainer>
+                <ContentContainer >
                     <MapContentContainer>
                       <MapOuterContainer>
                         <Sticky top={10}>
@@ -226,7 +226,7 @@ class ClassTypeList extends Component {
                     </MapContentContainer>
                 </ContentContainer>
 					) : (
-						<CardsContainer>
+						<CardsContainer containerPaddingTop={this.props.containerPaddingTop}>
 							{
 								splitByCategory ? this.showClassTypes({
 									classType: this.makeCategorization({classTypeData: classTypeData, skillCategoryData: skillCategoryData})

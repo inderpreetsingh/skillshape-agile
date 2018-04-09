@@ -29,6 +29,7 @@ import MyCalendar from '/imports/ui/components/users/myCalender';
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
 
+import { capitalizeString } from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
@@ -302,6 +303,9 @@ class ClassTypeContent extends Component {
       }
     }
 
+    getReviewTitle = (name) => {
+      return `Give review for ${capitalizeString(name)}`;
+    }
 
 	render() {
 		console.log("ClassTypeContent props --->>",this.props);
@@ -332,7 +336,7 @@ class ClassTypeContent extends Component {
 			<Fragment>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.contactUsDialog && <EmailUsDialogBox ourEmail={this.getOurEmail()} open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
-          {this.state.giveReviewDialog && <GiveReviewDialogBox open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
+          {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.isBusy && <ContainerLoader/>}
 				   {/* Class Type Cover includes description, map, foreground image, then class type information*/}
 		        <ClassTypeCover coverSrc={this.state.coverSrc}>

@@ -1,7 +1,10 @@
 import React,{Fragment} from 'react';
 import ReactDOM from 'react-dom';
+import { Element } from 'react-scroll';
 import DocumentTitle from 'react-document-title';
 import { browserHistory, Link } from 'react-router';
+
+import styled from 'styled-components';
 import { floor, isArray, isEmpty } from 'lodash';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 import Typography from 'material-ui/Typography';
@@ -18,16 +21,77 @@ import { Loading } from '/imports/ui/loading';
 import { checkSuperAdmin, cutString } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
+import ReviewsSlider from '/imports/ui/components/landing/components/class/ReviewsSlider.jsx';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTypeList from '/imports/ui/components/landing/components/classType/classTypeList.jsx';
-import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
+
 
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
-import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
+const CardContentPriceWrapper = styled.div`
+  padding: ${helpers.rhythmDiv}px;
+`;
+
+const GenericWrapper = styled.div`
+  width: 100%;
+  margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 4}px;
+`;
+
+const ClassTypeListWrapper = GenericWrapper.extend` `;
+
+const ReviewsWrapper = GenericWrapper.extend`
+  margin-bottom: 0;
+`;
+
+const ReviewsInnerWrapper = ReviewsWrapper.extend`
+  padding: ${helpers.rhythmDiv * 4}px;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+  text-align: ${props => props.centerText ? 'center': 'left'};
+
+  @media screen and (max-width : ${helpers.mobile}px) {
+    padding: ${helpers.rhythmDiv * 4}px;
+  }
+`;
+
+const MediaWrapper = GenericWrapper.extend`
+  background: white;
+  padding-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const PackagesWrapper = styled.div`
+  ${helpers.flexDirectionColumn}
+  width: 100%;
+  margin-bottom: ${props => props.marginBottom}px;
+`;
+
+const EnrollMentWrapper = PackagesWrapper.extend`
+  margin-bottom: 0;
+  flex-direction: row;
+  background: #dddd;
+`;
+
+const MyCalendarWrapper = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  background: white;
+  border: 1px solid rgba(221,221,221,1);
+`;
+
+const PricingSection = styled.div`
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+`;
 
 export default function() {
     console.log("SchoolView render-->>",this.props)
@@ -44,6 +108,7 @@ export default function() {
         classes,
         enrollmentFee,
         showLoading,
+        reviewsData,
     } = this.props;
 
     const {
@@ -76,6 +141,8 @@ export default function() {
           {
             this.state.isLoading && <ContainerLoader />
           }
+          {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(schoolData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
+
 
           {
             this.state.showConfirmationModal && <ConfirmationModal
@@ -103,10 +170,65 @@ export default function() {
                {/* <div className={classes.imageContainer}>
                   <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
                 </div>*/}
+                {this.props.route.name === 'SchoolViewDeveloping' ?
+                  <SchoolViewNewBanner
+                  schoolData={schoolData}
+                  schoolId={schoolId}
+                  isPublish={isPublish}
+                  currentUser={currentUser}
+                  schoolLocation={schoolLocation}
+                  isEdit={false}
+                  handlePublishStatus={this.handlePublishStatus.bind(this, schoolId)}/>
+                  :
+                  <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
+                }
 
-                <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
 
                 <Grid container className={classes.schoolInfo} >
+                    {this.props.route.name === 'SchoolViewDeveloping' ?
+                    <Fragment>
+                      {
+                          this.checkForHtmlCode(schoolData.studentNotesHtml) && (
+                            <Grid item xs={12} sm={12} md={6}>
+                              <Card className={`${classes.card} ${classes.schoolInfo}`}>
+                                  <Grid item xs={12}>
+                                    <Typography type="title">Notes for student of {schoolData.name} <br/> </Typography>
+                                    <Typography type="caption"> {ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
+                                  </Grid>
+                                </Card>
+                              </Grid>
+                          )
+                      }
+
+                      <Grid item xs={12} sm={12} md={6}>
+                        {!isEmpty(this.state.bestPriceDetails) && (
+                          <Card className={classes.card}>
+                          {console.log('School View New Render , this.state',this.state)}
+                            <CardContent className={classes.content}>
+                                  <Grid>
+                                    <CardContentPriceWrapper>
+                                        {
+                                          this.state.bestPriceDetails.bestMonthlyPrice && (
+                                            <Typography component="p">
+                                              Monthly Packages from {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}$ per Month
+                                            </Typography>
+                                          )
+                                        }
+                                        {
+                                          this.state.bestPriceDetails.bestClassPrice && (
+                                            <Typography component="p">
+                                              Class Packages from {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}$ per Class
+                                            </Typography>
+                                          )
+                                        }
+                                      </CardContentPriceWrapper>
+                                  </Grid>
+                            </CardContent>
+                          </Card>)}
+                      </Grid>
+                    </Fragment>
+                    :
+                    <Fragment>
                     <Grid item xs={12} sm={8} md={6} > {/* Old Grid item */}
                         <Card className={`${classes.card} ${classes.schoolInfo}`}>
                             <Grid item xs={12}>
@@ -189,250 +311,94 @@ export default function() {
                           </Card>
                         </Grid>
                       </Grid>
-                    </Grid>
+                    </Grid> </Fragment>}
 
                 </Grid> {/* container, school-info ends*/}
 
               </Grid>
             </Grid> {/* container, school-header ends */}
 
-            <Grid container className={classes.content}>
-              <Grid item xs={12}>
-                <ClassTypeList
-                  locationName={null}
-                  mapView={false}
-                  filters={{schoolId: schoolId,limit:this.state.seeMoreCount}}
-                  splitByCategory={false}
-                  classTypeBySchool='classTypeBySchool'
-                  handleSeeMore={this.handleSeeMore}
-                  classTimesData={this.props.classTimesData}
+            <ReviewsWrapper marginBottom="32">
+              {!isEmpty(reviewsData) && (<ReviewsInnerWrapper>
+                  <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
+                </ReviewsInnerWrapper>)}
+
+              <ReviewsInnerWrapper centerText marginBottom={32}>
+                {isEmpty(reviewsData) && <Fragment><Typography>
+                  You are the first one to write review for this school.
+                </Typography>
+                <br /></Fragment>}
+                <PrimaryButton
+                    icon
+                    onClick={this.handleGiveReview}
+                    iconName="rate_review"
+                    label="Give review"
                 />
-            </Grid>
-            </Grid>
-            <Grid container className={classes.content}>
-              <Grid ref={(el) => { this.schoolCalendar = el; }} item xs={12}>
-                <Card className={classes.content}>
-                  {/*<MyCalender {...this.props}/>*/
-                    <ManageMyCalendar schoolCalendar={true} {...this.props}/>
-                  }
-                </Card>
-              </Grid>
-            </Grid>
-            <Grid container className={classes.content}>
-              <Grid item xs={12}>
-                <Card className={classes.content}>
-                  <div className="content-list-heading ">
-                    <h2 style={{textAlign: 'center'}}>Media
-                      <figure>
-                        <img style={{maxWidth: "100%"}} src="/images/heading-line.png"/>
-                      </figure>
-                    </h2>
-                  </div>
-                  <MediaDetails
+              </ReviewsInnerWrapper>
+          </ReviewsWrapper>
+
+
+          {/* Cards List Section*/}
+          <ClassTypeListWrapper>
+            <ClassTypeList
+                containerPaddingTop="0px"
+                locationName={null}
+                mapView={false}
+                filters={{schoolId: schoolId,limit:this.state.seeMoreCount}}
+                splitByCategory={false}
+                classTypeBySchool='classTypeBySchool'
+                handleSeeMore={this.handleSeeMore}
+              />
+          </ClassTypeListWrapper>
+
+          {/* Media Section */}
+          <MediaWrapper>
+            <MediaDetails
+              schoolId={schoolId}
+              schoolView= {true}
+            />
+            {/*<Card className={classes.content}> </Card>*/}
+          </MediaWrapper>
+
+          {/* Pricing Section*/}
+          <PricingSection ref={(el) => { this.schoolPrice = el; }}>
+            <Element name="price-section">
+              {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
+                <div style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
+                  <Button onClick={this.handlePricingInfoRequestModal} color="primary"  dense raised>
+                      Request Pricing Info
+                  </Button>
+                </div> : ''}
+
+                <EnrollMentWrapper>
+                  {enrollmentFee && enrollmentFee.length > 0 ?
+                    <PackagesList
                       schoolId={schoolId}
-                      schoolView= {true}
-                  />
-                </Card>
-              </Grid>
-            </Grid>
-            <div ref={(el) => { this.schoolPrice = el; }}>
-                  <Grid container className={classes.content}>
-                    <Grid item xs={12} sm={12}>
-                      <Card className={classes.content}>
-                        <div className="content-list-heading ">
-                          <h2 style={{textAlign: 'center',paddingTop: 8}}>Prices
-                            <figure>
-                              <img style={{maxWidth: "100%"}} src="/images/heading-line.png"/>
-                            </figure>
-                          </h2>
-                        </div>
-                        {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
-                          <div style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
-                            <Button onClick={this.handlePricingInfoRequestModal} color="primary"  dense raised>
-                                Request Pricing Info
-                            </Button>
-                          </div> : ''
-                        }
-                        <Grid container className={classes.themeSpacing}>
-                          {enrollmentFee && enrollmentFee.length > 0 ?
-                          <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: '#dddd'}}>
-                              <Typography align="center" type="headline" className={classes.themeSpacing}>
-                                Enrollment Fee
-                              </Typography>
-                              <Grid container style={{display: 'inline-table'}}>
-                                {
-                                  enrollmentFee && enrollmentFee.map((enrollmentFee, index)=> {
-                                    return (
-                                        <Grid key={index} item xs={12} md={8} sm={12}  style= {{height:'100%', maxWidth: '100%', boxShadow: 'none'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
-                                          <Card style= {{height:'100%',boxShadow: 'none',border: '1px solid rgb(217, 205, 205)'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
-                                          <Grid item xs={6} sm={6} className={classes.content}>
-                                            <Typography align="justify" type="title">
-                                              {enrollmentFee.name}
-                                            </Typography>
-                                            <Typography component="p" style={{color: '#7f7f7f'}}>
-                                              <b>Covers:</b> {
-                                                isArray(enrollmentFee.selectedClassType) ?
-                                                  enrollmentFee.selectedClassType.map((classType) => {
-                                                    return <span>{classType.name} </span>
-                                                  }) : "None"
-                                              }
-                                            </Typography>
-                                          </Grid>
-                                          <Grid item xs={3} sm={3} className={classes.content}>
-                                            <Typography className={classes.dollarStyles}>
-                                                ${enrollmentFee.cost}
-                                                <Typography  style={{color: '#7f7f7f'}}>
-                                                  &nbsp;for enrollment.
-                                                </Typography>
-                                            </Typography>
-                                          </Grid>
-                                          <Grid item xs={3} sm={3} className={classes.content} style={{textAlign: 'end',margin:'auto'}}>
-                                            <Button className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, "EP", enrollmentFee._id, schoolId)} color="accent" style={{ boxShadow: 'none'}} dense raised>
-                                              <i class="material-icons">add_shopping_cart</i>
-                                           </Button>
-                                          </Grid>
-                                        </Card>
-                                        </Grid>
-                                    )
-                                  })
-                                }
-                              </Grid>
-                          </Grid> : ''}
+                      onAddToCartIconButtonClick={this.handlePurcasePackage}
+                      enrollMentPackages
+                      enrollMentPackagesData={enrollmentFee}
+                    /> : ''}
+                </EnrollMentWrapper>
 
-                          {classPricing && classPricing.length > 0 ?
-                            <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: 'aliceblue'}}>
-                              <Typography align="center" type="headline" style={{color: '#7f7f7f'}} className={classes.themeSpacing}>
-                                Class Packages
-                              </Typography>
-                              <Grid container style={{display: 'inline-table'}}>
-                                {
-                                  classPricing && classPricing.map((classPrice, index)=> {
-                                    return (
-                                      <Grid key={index} item xs={12} md={8} sm={12} style={{maxWidth: '100%'}}>
-                                        <Card style= {{height:'100%',boxShadow: 'none',border: '1px solid rgb(217, 205, 205)'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
-                                          <Grid item xs={6} sm={6} className={classes.content}>
-                                            <Typography align='justify' type="title">
-                                              {classPrice.packageName}
-                                            </Typography>
-                                            <Typography component="p" style={{color: '#7f7f7f'}}>
-                                              <b>Expiration:</b> {(classPrice.expDuration && classPrice.expPeriod) ? `${classPrice.expDuration} ${classPrice.expPeriod}` : "None"}
-                                            </Typography>
-                                            <Typography component="p" style={{color: '#7f7f7f'}}>
-                                              <b>Covers:</b> {
-                                                isArray(classPrice.selectedClassType) ?
-                                                  classPrice.selectedClassType.map((classType) => {
-                                                    return <span>{classType.name} </span>
-                                                  }) : "None"
-                                              }
-                                            </Typography>
-                                          </Grid>
-                                          <Grid item xs={3} sm={3} className={classes.content}>
-                                            <Typography className={classes.dollarStyles} component="p">
-                                              ${classPrice.cost}
-                                              <Typography style={{color: '#7f7f7f'}}>for {classPrice.noClasses > 1 ? `${classPrice.noClasses} classes`: `${classPrice.noClasses} class` } </Typography>
-                                            </Typography>
-                                          </Grid>
-                                          <Grid item xs={3} sm={3} className={classes.content} style={{textAlign: 'end',margin:'auto'}}>
-                                            <Button  className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, "CP", classPrice._id, schoolId)} color="accent" className={classes.purchaseBtn} dense raised>
-                                              <i class="material-icons">add_shopping_cart</i>
-                                           </Button>
-                                          </Grid>
-                                        </Card>
-                                      </Grid>
-                                    )
-                                  })
-                                }
+               <PackagesWrapper>
+                  {(isEmpty(classPricing) && isEmpty(monthlyPricing)) ?
+                    '' :
+                    <PackagesList
+                      schoolId={schoolId}
+                      onAddToCartIconButtonClick={this.handlePurcasePackage}
+                      perClassPackagesData={classPricing}
+                      monthlyPackagesData={monthlyPricing}
+                     />
+                  }
+              </PackagesWrapper>
+            </Element>
+          </PricingSection>
 
-                              </Grid>
-                            </Grid> :
-                            ''
-                          }
+            {/* Calendar Section*/}
+            <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
+              {<MyCalender {...this.props}/>}
+            </MyCalendarWrapper>
 
-                          {monthlyPricing && monthlyPricing.length > 0 ?
-                            <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: '#fafafa'}} >
-                              <Typography align='justify' type="headline" className={classes.themeSpacing}>
-                                Monthly Packages
-                              </Typography>
-                              <Grid container style={{display: 'inline-table'}}>
-                                {
-                                  monthlyPricing && monthlyPricing.map((monthPrice, index)=> {
-                                    let paymentType = '';
-                                    if(monthPrice.pymtType) {
-                                      if(monthPrice.pymtType['autoWithDraw'] && monthPrice.pymtType['payAsYouGo']) {
-                                        paymentType += 'Automatic Withdrawal and Pay As You Go';
-                                      } else if(monthPrice.pymtType['autoWithDraw']) {
-                                        paymentType += 'Automatic Withdrawal';
-
-                                      } else if(monthPrice.pymtType['payAsYouGo']) {
-                                        paymentType += 'Pay As You Go';
-
-                                      } else if(monthPrice.pymtType['payUpFront']) {
-                                        paymentType += 'Pay Up Front';
-                                      }
-                                    }
-                                    return (
-                                      <Grid key={index} item xs={12} md={8} sm={12} style={{maxWidth: '100%'}}>
-                                        <Card style= {{height:'100%',boxShadow: 'none',border: '1px solid rgb(217, 205, 205)'}} className={`${classes.card} price-card-container ${classes.roundPapers}`}>
-                                            <Grid item xs={5} sm={5} className={classes.content}>
-                                                <Typography align='justify' type="title">
-                                                  {monthPrice.packageName}
-                                                </Typography>
-                                                <Typography component="p" style={{color: '#7f7f7f'}}>
-                                                  <b>Payment Method:</b> {monthPrice.pymtMethod}
-                                                </Typography>
-                                                {
-                                                  monthPrice.pymtType && (
-                                                    <Fragment>
-                                                      <Typography component="p" style={{color: '#7f7f7f'}}>
-                                                        <b>Payment Type:</b> {paymentType}
-                                                      </Typography>
-                                                    </Fragment>
-                                                  )
-                                                }
-                                                <Typography component="p" style={{color: '#7f7f7f'}}>
-                                                  <b>Covers:</b> {
-                                                    isArray(monthPrice.selectedClassType) ?
-                                                      monthPrice.selectedClassType.map((classType) => {
-                                                        return <span>{classType.name} </span>
-                                                      }) : "None"
-                                                  }
-                                                </Typography>
-                                            </Grid>
-                                            {
-                                              _.isEmpty(monthPrice.pymtDetails) ? "None" :
-                                              monthPrice.pymtDetails.map((payment) => {
-                                                return (
-                                                  <Grid item xs={4} sm={4}>
-                                                    <Typography>
-                                                      <Typography className={classes.dollarStyles}>
-                                                      ${payment.cost}
-                                                        <Typography style={{color: '#7f7f7f'}}>per month for</Typography>
-                                                        <Typography style={{color: '#7f7f7f'}}> {payment.month} months</Typography>
-                                                      </Typography>
-                                                    </Typography>
-                                                  </Grid>
-                                                )
-                                              })
-                                            }
-                                            <Grid item xs={3} sm={3} style={{textAlign: 'end',margin:'auto'}}>
-                                              <Button className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, "MP", monthPrice._id, schoolId)} color="accent" style={{boxShadow: 'none'}} dense raised>
-                                                <i class="material-icons">add_shopping_cart</i>
-                                              </Button>
-                                            </Grid>
-                                        </Card>
-                                      </Grid>
-                                    )
-                                  })
-                                }
-                              </Grid>
-                            </Grid> :
-                            ''
-                          }
-                        </Grid>
-                      </Card>
-                    </Grid>
-                  </Grid>
-            </div>
 
             {/*<div className="card">
               <div className="col-md-12 media-heading-box">
