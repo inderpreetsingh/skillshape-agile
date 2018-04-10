@@ -51,7 +51,7 @@ export default styles = theme => {
     },
     schoolInfo: {
       padding: theme.spacing.unit,
-      backgroundColor: '#fff'
+    
     },
     roundPapers: {
       height: '100%',

@@ -97,7 +97,7 @@ const LogOutUserSideNav = (props) => (
             menuListItemText={props.classes.menuListItemText}
             name="Contact Us"
             iconName="email"
-            onClick={() => browserHistory.push('/ContactUs')}
+            onClick={() => browserHistory.push('/contact-us')}
         />
     </Fragment>
 )

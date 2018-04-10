@@ -184,14 +184,14 @@ class ClassType extends Component {
             </MainInner>
           </MainInnerFixedContainer>
 
-        <MainInnerFixedContainer marginBottom="16">
+          <MainInnerFixedContainer marginBottom="16">
             <ClassTimesInnerWrapper>
               <ClassTimesWrapper paddingBottom="48">
                 <ClassTimesTitle>Class timings for <ClassTimesName>{this.props.className.toLowerCase()}</ClassTimesName></ClassTimesTitle>
                 <ClassTimesBoxes classTimesData={classTimesBarData} />
               </ClassTimesWrapper>
             </ClassTimesInnerWrapper>
-        </MainInnerFixedContainer>
+          </MainInnerFixedContainer>
 
 
           <PackagesWrapper>

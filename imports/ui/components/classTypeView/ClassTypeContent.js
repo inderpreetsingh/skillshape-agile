@@ -369,7 +369,7 @@ class ClassTypeContent extends Component {
                         iconName="rate_review"
                         label="Give review"
                     />
-                  </ClassContainer>
+                    </ClassContainer>
           			</MainInnerFixedContainer>
 
           			<MainInnerFixedContainer marginBottom="16">

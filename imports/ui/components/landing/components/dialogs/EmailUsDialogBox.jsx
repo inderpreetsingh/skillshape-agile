@@ -160,6 +160,10 @@ class EmailUsDialogBox extends Component {
         <DialogContent classes={{root : props.classes.dialogContent}}>
             <form onSubmit={this.handleFormSubmit}>
               <InputWrapper>
+                <IconInput inputId="to" labelText="To" value={this.props.ourEmail} disabled/>
+              </InputWrapper>
+
+              <InputWrapper>
                 <IconInput inputId="subject" labelText="Subject" value={this.state.subject} onChange={this.handleInputFieldChange('subject')}/>
               </InputWrapper>
 

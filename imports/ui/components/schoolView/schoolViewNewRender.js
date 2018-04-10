@@ -30,34 +30,46 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTypeList from '/imports/ui/components/landing/components/classType/classTypeList.jsx';
 import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
 
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-const CardContentPriceWrapper = styled.div`
-  padding: ${helpers.rhythmDiv}px;
+const Wrapper = styled.div`
+  background: white;
+  overflow-x: hidden;
 `;
+
 
 const GenericWrapper = styled.div`
   width: 100%;
-  margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 4}px;
+  background: white;
+`;
+
+const GenericFixedWidthWrapper = GenericWrapper.extend`
+  max-width: 1200px;
+  margin: 0 auto;
 `;
 
 const ClassTypeListWrapper = GenericWrapper.extend` `;
+
+const CardContentPriceWrapper = GenericWrapper.extend`
+  padding: ${helpers.rhythmDiv * 2}px;
+  margin: ${helpers.rhythmDiv * 2}px 0;
+`;
 
 const ReviewsWrapper = GenericWrapper.extend`
   margin-bottom: 0;
 `;
 
-const ReviewsInnerWrapper = ReviewsWrapper.extend`
+const ReviewsInnerWrapper = GenericFixedWidthWrapper.extend`
   padding: ${helpers.rhythmDiv * 4}px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding-top: 0;
   overflow: hidden;
   text-align: ${props => props.centerText ? 'center': 'left'};
 
@@ -66,33 +78,65 @@ const ReviewsInnerWrapper = ReviewsWrapper.extend`
   }
 `;
 
-const MediaWrapper = GenericWrapper.extend`
-  background: white;
-  padding-bottom: ${helpers.rhythmDiv}px;
+const SchoolExtraSection = GenericFixedWidthWrapper.extend`
+  ${helpers.flexCenter}
+  align-items: flex-start;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    align-items: center;
+    flex-direction: column;
+  }
 `;
 
-const PackagesWrapper = styled.div`
+const MediaWrapper = GenericWrapper.extend`
+  padding-bottom: ${helpers.rhythmDiv}px;
+  max-width: 502px;
+`;
+
+const NotesWrapper = GenericWrapper.extend`
+  max-width: 474px;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    margin-bottom: ${helpers.rhythmDiv * 4}px;
+  }
+`;
+
+const PackagesWrapper = GenericWrapper.extend`
   ${helpers.flexDirectionColumn}
-  width: 100%;
   margin-bottom: ${props => props.marginBottom}px;
 `;
 
 const EnrollMentWrapper = PackagesWrapper.extend`
   margin-bottom: 0;
   flex-direction: row;
-  background: #dddd;
 `;
 
-const MyCalendarWrapper = styled.div`
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  background: white;
-  border: 1px solid rgba(221,221,221,1);
-`;
+const MyCalendarWrapper = GenericFixedWidthWrapper.extend``;
 
 const PricingSection = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 4}px;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-family: ${helpers.specialFont};
+  font-style: italic;
+  font-weight: 300;
+  text-align: center;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+const ButtonWrapper = styled.div`
+  ${helpers.flexCenter}
+  width: 100%;
+`;
+
+const ContentWrapper = styled.div`
+  width: 100%;
+  text-align: center;
 `;
 
 export default function() {
@@ -139,7 +183,7 @@ export default function() {
 
         return (
             <DocumentTitle title={this.props.route.name}>
-            <div className="content">
+            <Wrapper className="content">
           {
             this.state.isLoading && <ContainerLoader />
           }
@@ -167,176 +211,54 @@ export default function() {
             />
           }
           <div>
-            <Grid container className={classes.schoolHeaderContainer}>
-              <Grid item xs={12}>
-               {/* <div className={classes.imageContainer}>
-                  <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
-                </div>*/}
-                {this.props.route.name === 'SchoolViewDeveloping' ?
-                  <SchoolViewNewBanner
-                  schoolData={schoolData}
-                  schoolId={schoolId}
-                  isPublish={isPublish}
-                  currentUser={currentUser}
-                  schoolLocation={schoolLocation}
-                  isEdit={false}
-                  handlePublishStatus={this.handlePublishStatus.bind(this, schoolId)}/>
-                  :
-                  <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
+          <SchoolViewNewBanner
+            schoolData={schoolData}
+            schoolId={schoolId}
+            isPublish={isPublish}
+            currentUser={currentUser}
+            schoolLocation={schoolLocation}
+            isEdit={false}
+            handlePublishStatus={this.handlePublishStatus.bind(this, schoolId)}/> {/* container, school-header ends */}
+
+          {/* Best Price Details */}
+          {!isEmpty(this.state.bestPriceDetails) && (<CardContentPriceWrapper>
+              <SectionTitle>Best Prices Available</SectionTitle>
+              <ContentWrapper>
+                {
+                  this.state.bestPriceDetails.bestMonthlyPrice && (
+                    <Typography component="p">
+                      Monthly Packages from {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}$ per Month
+                    </Typography>
+                  )
                 }
+                {
+                  this.state.bestPriceDetails.bestClassPrice && (
+                    <Typography component="p">
+                      Class Packages from {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}$ per Class
+                    </Typography>
+                  )
+                }
+              </ContentWrapper>
+            </CardContentPriceWrapper>)}
 
+          {/* Reviews List */}
+          <ReviewsWrapper>
+            {!isEmpty(reviewsData) && (<ReviewsInnerWrapper>
+                <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
+              </ReviewsInnerWrapper>)}
 
-                <Grid container className={classes.schoolInfo} >
-                    {this.props.route.name === 'SchoolViewDeveloping' ?
-                    <Fragment>
-                      {
-                          this.checkForHtmlCode(schoolData.studentNotesHtml) && (
-                            <Grid item xs={12} sm={12} md={6}>
-                              <Card className={`${classes.card} ${classes.schoolInfo}`}>
-                                  <Grid item xs={12}>
-                                    <Typography type="title">Notes for student of {schoolData.name} <br/> </Typography>
-                                    <Typography type="caption"> {ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
-                                  </Grid>
-                                </Card>
-                              </Grid>
-                          )
-                      }
-
-                      <Grid item xs={12} sm={12} md={6}>
-                        {!isEmpty(this.state.bestPriceDetails) && (
-                          <Card className={classes.card}>
-                          {console.log('School View New Render , this.state',this.state)}
-                            <CardContent className={classes.content}>
-                                  <Grid>
-                                    <CardContentPriceWrapper>
-                                        {
-                                          this.state.bestPriceDetails.bestMonthlyPrice && (
-                                            <Typography component="p">
-                                              Monthly Packages from {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}$ per Month
-                                            </Typography>
-                                          )
-                                        }
-                                        {
-                                          this.state.bestPriceDetails.bestClassPrice && (
-                                            <Typography component="p">
-                                              Class Packages from {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}$ per Class
-                                            </Typography>
-                                          )
-                                        }
-                                      </CardContentPriceWrapper>
-                                  </Grid>
-                            </CardContent>
-                          </Card>)}
-                      </Grid>
-                    </Fragment>
-                    :
-                    <Fragment>
-                    <Grid item xs={12} sm={8} md={6} > {/* Old Grid item */}
-                        <Card className={`${classes.card} ${classes.schoolInfo}`}>
-                            <Grid item xs={12}>
-                                {
-                                   checkUserAccess && (
-                                    <div>Publish / Unpublish <Switch
-                                        checked={isPublish}
-                                        onChange={this.handlePublishStatus.bind(this, schoolId)}
-                                        aria-label={schoolId}
-                                      /></div>
-                                  )
-                                }
-                                {
-                                  this.checkForHtmlCode(schoolData.aboutHtml) && (
-                                    <Fragment>
-                                        <Typography type="title"> About {schoolData.name} </Typography>
-                                        <Typography type="caption"> {ReactHtmlParser(schoolData.aboutHtml)} </Typography>
-                                    </Fragment>
-                                  )
-                                }
-                            </Grid>
-                            {
-                                this.checkForHtmlCode(schoolData.studentNotesHtml) && (
-                                    <Grid item xs={12}>
-                                      <Typography type="title">Notes for student of {schoolData.name} <br/> </Typography>
-                                      <Typography type="caption"> {ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
-                                    </Grid>
-                                )
-                            }
-                        </Card>
-                    </Grid>
-
-                    <Grid item xs={12} sm={4} md={3}>
-                        <div className="card-content" id="schoolLocationMap" style={{height: '100%', minHeight: 250}}>
-                        </div>
-                    </Grid>
-
-                    <Grid item xs={12} sm={12} md={3}>
-                      <Grid container style={{textAlign: "center"}}>
-                        <Grid item xs={12} sm={6} md={12} >
-                          <Card className={classes.card}>
-                              <Fragment>
-                                <CardContent className={classes.content}>
-                                  {
-                                    this.state.bestPriceDetails && (
-                                      <Grid>
-                                            {
-                                              this.state.bestPriceDetails.bestMonthlyPrice && (
-                                                <Typography component="p">
-                                                  Monthly Packages from {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}$ per Month
-                                                </Typography>
-                                              )
-                                            }
-                                            {
-                                              this.state.bestPriceDetails.bestClassPrice && (
-                                                <Typography component="p">
-                                                  Class Packages from {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}$ per Class
-                                                </Typography>
-                                              )
-                                            }
-                                      </Grid>
-                                  )}
-                                </CardContent>
-
-                                <CardActions style={{height: "auto"}}>
-                                  <Grid container>
-                                    <Grid item xs={12} sm={6}>
-                                      <Button onClick={this.scrollToTop.bind(this, this.schoolCalendar)} color="primary" style={{width: '100%'}} dense raised>
-                                        Schedule
-                                      </Button>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                      <Button onClick={this.scrollToTop.bind(this, this.schoolPrice)} style={{width: '100%',backgroundColor:'#4caf50'}} dense raised>
-                                        Pricing
-                                      </Button>
-                                    </Grid>
-                                  </Grid>
-                                </CardActions>
-                              </Fragment>
-                          </Card>
-                        </Grid>
-                      </Grid>
-                    </Grid> </Fragment>}
-
-                </Grid> {/* container, school-info ends*/}
-
-              </Grid>
-            </Grid> {/* container, school-header ends */}
-
-            <ReviewsWrapper marginBottom="32">
-              {!isEmpty(reviewsData) && (<ReviewsInnerWrapper>
-                  <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
-                </ReviewsInnerWrapper>)}
-
-              <ReviewsInnerWrapper centerText marginBottom={32}>
-                {isEmpty(reviewsData) && <Fragment><Typography>
-                  You are the first one to write review for this school.
-                </Typography>
-                <br /></Fragment>}
-                <PrimaryButton
-                    icon
-                    onClick={this.handleGiveReview}
-                    iconName="rate_review"
-                    label="Give review"
-                />
-              </ReviewsInnerWrapper>
+            <ReviewsInnerWrapper centerText>
+              {isEmpty(reviewsData) && <Fragment><Typography>
+                You are the first one to write review for this school.
+              </Typography>
+              <br /></Fragment>}
+              <ClassTimeButton
+                icon
+                onClick={this.handleGiveReview}
+                iconName="rate_review"
+                label="Give review"
+              />
+            </ReviewsInnerWrapper>
           </ReviewsWrapper>
 
 
@@ -353,24 +275,34 @@ export default function() {
               />
           </ClassTypeListWrapper>
 
-          {/* Media Section */}
-          <MediaWrapper>
-            <MediaDetails
-              schoolId={schoolId}
-              schoolView= {true}
-            />
-            {/*<Card className={classes.content}> </Card>*/}
-          </MediaWrapper>
+          {/* School Extra Section -- Notes & Media*/}
+          <SchoolExtraSection>
+            {this.checkForHtmlCode(schoolData.studentNotesHtml) && (<NotesWrapper>
+                <Typography align="center" type="title"> Notes for student of {schoolData.name}</Typography>
+                <Typography type="caption"> {ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
+              </NotesWrapper>)}
+
+            <MediaWrapper>
+              <MediaDetails
+                schoolId={schoolId}
+                schoolView= {true}
+              />
+              {/*<Card className={classes.content}> </Card>*/}
+            </MediaWrapper>
+          </SchoolExtraSection>
 
           {/* Pricing Section*/}
           <PricingSection ref={(el) => { this.schoolPrice = el; }}>
             <Element name="price-section">
+              <SectionTitle>Pay only for what you want.</SectionTitle>
               {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
-                <div style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
-                  <Button onClick={this.handlePricingInfoRequestModal} color="primary"  dense raised>
-                      Request Pricing Info
-                  </Button>
-                </div> : ''}
+                <ButtonWrapper>
+                  <ClassTimeButton
+                    onClick={this.handlePricingInfoRequestModal}
+                    icon
+                    iconName="attach_money"
+                    label="Request pricing info" />
+                </ButtonWrapper> : ''}
 
                 <EnrollMentWrapper>
                   {enrollmentFee && enrollmentFee.length > 0 ?
@@ -980,7 +912,7 @@ export default function() {
                         </div>*/}
                     </div>
                 </div>
-            </div>
+            </Wrapper>
             </DocumentTitle>
         )
     }

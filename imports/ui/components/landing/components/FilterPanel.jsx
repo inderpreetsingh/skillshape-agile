@@ -254,9 +254,10 @@ class FilterPanel extends Component {
         <Grid container spacing={24}>
             {/* 1rst Row */}
             <Grid item xs={12} sm={12} md={12}>
-              <div>skill type text filter :</div>
+              {/*<div>skill type text filter :</div>*/}
               <MaterialInputWrapper>
                 <IconInput
+                  labelText="Skill type text filter"
                   value={ this.state.skillTypeText}
                   onChange={(event) => {this.handleSkillTypeText(event)}}
                />

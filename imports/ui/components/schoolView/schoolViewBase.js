@@ -43,8 +43,6 @@ export default class SchoolViewBase extends React.Component {
 
     handleGiveReview = () => {
       const {toastr} = this.props;
-      const oldState = this.state;
-      oldState.giveReviewDialog = true;
       if(Meteor.userId()) {
         this.handleDialogState('giveReviewDialog',true);
       }else {
@@ -57,7 +55,7 @@ export default class SchoolViewBase extends React.Component {
     }
 
     handleDialogState = (dialogName,state) => {
-      const currentState = Object.assign({},this.state, {[dialogName] : state});
+      const currentState = {...this.state};
       this.setState(currentState);
     }
 
