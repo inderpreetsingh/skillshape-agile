@@ -93,6 +93,10 @@ export default createContainer(props => {
         schoolLocation = SLocation.find({ schoolId: schoolId }).fetch()
         classType = ClassType.find({ schoolId: schoolId }).fetch();
         enrollmentFee = EnrollmentFees.find({schoolId}).fetch();
+        // Class times subscription.
+        let classTypeIds = classType && classType.map((data) => data._id);
+        Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", { schoolId, classTypeIds });
+        classTimesData = ClassTimes.find({ schoolId }, { sort: { _id: -1 } }).fetch();
     }
 
     // console.log("SchoolView schoolData--->>", schoolData)
