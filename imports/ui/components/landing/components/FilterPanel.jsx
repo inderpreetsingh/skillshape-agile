@@ -379,7 +379,7 @@ class FilterPanel extends Component {
              <FilterPanelAction>
                 <PrimaryButton
                     fullWidth
-                    label="Reset Filters"
+                    label="Clear Filters"
                     icon={true}
                     iconName="refresh"
                     onClick={() => {this.props.onModalClose();this.props.removeAllFilters();}}/>
@@ -389,7 +389,7 @@ class FilterPanel extends Component {
               <FilterPanelAction>
                 <PrimaryButton
                   fullWidth
-                  label="Save"
+                  label="Close"
                   icon={true}
                   onClick={() => this.props.handleFiltersDialogBoxState(false)}
                 />
