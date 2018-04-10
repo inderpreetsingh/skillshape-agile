@@ -82,33 +82,10 @@ const ButtonWrapper = styled.div`
   ${helpers.flexCenter}
 `;
 
-const DialogActionText = styled.p`
-  margin: 0;
-  margin-right: ${helpers.rhythmDiv}px;
-  flex-shrink: 0;
-`;
-
-const ActionWrapper = styled.div`
-  width: 100%;
-  ${helpers.flexCenter}
-  justify-content: flex-end;
-`;
-
-const InputWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
-
 const Title = styled.span`
   display: inline-block;
   width: 100%;
   text-align: center;
-`;
-
-const Or  = styled.span`
-  font-size: ${helpers.baseFontSize * 1.5}px;
-  font-family: ${helpers.specialFont};
-  font-weight: 500;
-  margin-right: ${helpers.rhythmDiv}px;
 `;
 
 
