@@ -108,7 +108,7 @@ class CardsList extends Component {
             return true;
         } else if (this.props.cardsData.length !== nextProps.cardsData.length) {
             return true;
-        } else if (this.props.classTimesData.length !== nextProps.classTimesData.length) {
+        } else if (this.props.classTimesData && this.props.classTimesData.length !== nextProps.classTimesData.length) {
             return true;
         } else if ((this.props.classInterestData && nextProps.classInterestData) && this.props.classInterestData.length !== nextProps.classInterestData.length) {
             return true;
