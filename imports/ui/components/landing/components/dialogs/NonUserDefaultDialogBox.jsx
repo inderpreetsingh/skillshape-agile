@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import PrimaryButton from '../buttons/PrimaryButton';
+import { MuiThemeProvider} from 'material-ui/styles';
+import {withStyles} from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import TextField from 'material-ui/TextField';
-import styled from 'styled-components';
-
+import Typography from 'material-ui/Typography';
 import IconInput from '../form/IconInput.jsx';
 
-import { MuiThemeProvider} from 'material-ui/styles';
-import {withStyles} from 'material-ui/styles';
+import PrimaryButton from '../buttons/PrimaryButton';
+import LoginButton from '../buttons/LoginButton.jsx';
+import JoinButton from '../buttons/JoinButton.jsx';
 
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
@@ -42,19 +44,8 @@ const styles = theme => {
         minHeight: '150px'
       }
     },
-    dialogActionsRoot: {
-      padding: '0 8px',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-end',
-      justifyContent: 'flex-start'
-    },
-    dialogActions: {
-      width: '100%',
-      paddingLeft: `${helpers.rhythmDiv * 2}px`
-    },
     dialogRoot: {
-      width: '100%'
+
     },
     iconButton: {
       height: 'auto',
@@ -69,10 +60,26 @@ const DialogTitleWrapper = styled.div`
   width: 100%;
 `;
 
+const ContentWrapper = styled.p`
+  margin: 0;
+  font-family: ${helpers.commonFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+const Bold = styled.span`
+  font-weight: 500;
+`;
+
+const ButtonsWrapper = styled.div`
+  ${helpers.flexCenter}
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+`;
 
 const ButtonWrapper = styled.div`
   ${helpers.flexCenter}
-  margin: ${helpers.rhythmDiv * 4}px 0;
 `;
 
 const DialogActionText = styled.p`
@@ -97,53 +104,28 @@ const Title = styled.span`
   text-align: center;
 `;
 
-class EmailUsDialogBox extends Component {
+const Or  = styled.span`
+  font-size: ${helpers.baseFontSize * 1.5}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 500;
+  margin-right: ${helpers.rhythmDiv}px;
+`;
 
-  state = {
-    subject: '',
-    message: ''
-  }
 
-  handleInputFieldChange = (fieldName) => (e) => {
-    this.setState({
-      [fieldName] : e.target.value
-    });
-  }
-
-  handleFormSubmit = (e) => {
-    e.preventDefault();
-
-    const {subject,message} = this.state;
-    const mailTo = `mailto:${this.props.ourEmail}?subject=${subject}&body=${message}`;
-    const mailToNormalized = encodeURI(mailTo);
-
-    // console.log('================================',mailToNormalized);
-
-    if(this.props.onFormSubmit) {
-      this.props.onFormSubmit();
-    }
-
-    window.location.href = mailToNormalized;
-
-    this.props.onModalClose();
-  }
-
-  render() {
-    const {props} = this;
-    console.log(props,"...");
+const NonUserDefaultDialogBox = (props) => {
     return (
       <Dialog
         fullScreen={props.fullScreen}
         open={props.open}
         onClose={props.onModalClose}
         onRequestClose={props.onModalClose}
-        aria-labelledby="email us"
+        aria-labelledby="join skillshape"
         classes={{paper: props.classes.dialogRoot}}
       >
       <MuiThemeProvider theme={muiTheme}>
         <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
           <DialogTitleWrapper>
-              <Title>Email Us</Title>
+              <Title>{props.title}</Title>
               <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
                 <ClearIcon/>
               </IconButton>
@@ -151,40 +133,29 @@ class EmailUsDialogBox extends Component {
         </DialogTitle>
 
         <DialogContent classes={{root : props.classes.dialogContent}}>
-            <form onSubmit={this.handleFormSubmit}>
-              <InputWrapper>
-                <IconInput inputId="to" labelText="To" value={this.props.ourEmail} disabled/>
-              </InputWrapper>
-
-              <InputWrapper>
-                <IconInput inputId="subject" labelText="Subject" value={this.state.subject} onChange={this.handleInputFieldChange('subject')}/>
-              </InputWrapper>
-
-              <InputWrapper>
-                <IconInput inputId="message" labelText="Your message goes here" multiline={true} value={this.state.message} onChange={this.handleInputFieldChange('message')} />
-              </InputWrapper>
-
-              <ButtonWrapper>
-                  <PrimaryButton
-                      type="submit"
-                      label="Send Message"
-                      noMarginBottom
-                      onClick={this.handleFormSubmit}
-                  />
-              </ButtonWrapper>
-            </form>
+          <ContentWrapper>Press <Bold>Login</Bold> if already a member, or <Bold>Sign up</Bold> to become a member.</ContentWrapper>
+          <ButtonsWrapper>
+            <ButtonWrapper>
+              <LoginButton />
+            </ButtonWrapper>
+            <ButtonWrapper>
+              <JoinButton label="Sign Up"/>
+            </ButtonWrapper>
+          </ButtonsWrapper>
         </DialogContent>
         </MuiThemeProvider>
       </Dialog>
     );
-  }
 }
 
-EmailUsDialogBox.propTypes = {
-  onFormSubmit: PropTypes.func,
-  onHandleInputChange: PropTypes.func,
-  onModalClose: PropTypes.func,
+
+NonUserDefaultDialogBox.propTypes = {
+  title: PropTypes.string,
   loading: PropTypes.bool,
 }
 
-export default withMobileDialog()(withStyles(styles)(EmailUsDialogBox));
+NonUserDefaultDialogBox.defaultProps = {
+  title: 'Join us'
+}
+
+export default withMobileDialog()(withStyles(styles)(NonUserDefaultDialogBox));

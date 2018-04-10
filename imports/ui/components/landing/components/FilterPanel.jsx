@@ -392,7 +392,7 @@ class FilterPanel extends Component {
                   fullWidth
                   label="Close"
                   icon={true}
-                  onClick={() => this.props.handleFiltersDialogBoxState(false)}
+                  onClick={this.props.handleFiltersDialogSaveButtonClick}
                 />
               </FilterPanelAction>
             </Grid>

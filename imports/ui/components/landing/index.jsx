@@ -588,6 +588,11 @@ class Landing extends Component {
 
     }
 
+    handleFiltersDialogSaveButtonClick = () => {
+      this.handleFiltersDialogBoxState(false);
+      this.scrollTo();
+    }
+
     render() {
         console.log("Landing state -->>",this.state);
         // console.log("Landing state -->>", this.state);
@@ -617,7 +622,8 @@ class Landing extends Component {
                             collectSelectedSkillSubject: this.collectSelectedSkillSubject,
                             handleSkillTypeSearch: this.handleSkillTypeSearch,
                             skillTypeText: this.state.filters.skillTypeText,
-                            handleFiltersDialogBoxState: this.handleFiltersDialogBoxState
+                            handleFiltersDialogBoxState: this.handleFiltersDialogBoxState,
+                            handleFiltersDialogSaveButtonClick: this.handleFiltersDialogSaveButtonClick
                         }}
                     />
 
@@ -640,6 +646,7 @@ class Landing extends Component {
                                 filters={this.state.filters}
                                 onLocationChange={this.onLocationChange}
                                 currentFilterState={this.state.filters}
+                                onSearchIconClick={() => this.scrollTo('content-container')}
                             />
                         </Cover>
                     </CoverWrapper>

@@ -46,7 +46,7 @@ export default class SchoolViewBase extends React.Component {
       if(Meteor.userId()) {
         this.handleDialogState('giveReviewDialog',true);
       }else {
-        toastr.error("You need to login for writing a review !","Error");
+        this.handleDefaultDialogBox('Login to give review',true);
       }
     }
 
@@ -56,7 +56,13 @@ export default class SchoolViewBase extends React.Component {
 
     handleDialogState = (dialogName,state) => {
       const currentState = {...this.state};
+      currentState[dialogName] = state;
       this.setState(currentState);
+    }
+
+    handleDefaultDialogBox = (title, state) => {
+      const newState = {...state, defaultDialogBoxTitle: title, nonUserDefaultDialog: state};
+      this.setState(newState);
     }
 
     claimASchool = (currentUser, schoolData) => {

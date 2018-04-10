@@ -141,6 +141,7 @@ const SearchInputsSection = (props) => (
           placeholder="Location"
           defaultValue={props.currentAddress}
           defaultBorderRadius
+          onSearchIconClick={props.onSearchIconClick}
           noCloseIcon
           onChange={(event) => props.locationInputChanged(event, "filters", null)}
           filters={props.filters}
@@ -268,6 +269,7 @@ class SearchArea extends Component {
               currentAddress = {this.props.filters && this.props.filters.locationName}
               filters={this.props.filters}
               onLocationChange={this.props.onLocationChange}
+              onSearchIconClick={this.props.onSearchIconClick}
             />
           )}
         {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} handleAddSchool={this.handleAddSchool}/> }

@@ -32,6 +32,7 @@ import PackagesList from '/imports/ui/components/landing/components/class/packag
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
+import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
@@ -61,6 +62,8 @@ const ClassTypeListWrapper = GenericWrapper.extend` `;
 const CardContentPriceWrapper = GenericWrapper.extend`
   padding: ${helpers.rhythmDiv * 2}px;
   margin: ${helpers.rhythmDiv * 2}px 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
 `;
 
 const ReviewsWrapper = GenericWrapper.extend`
@@ -69,7 +72,6 @@ const ReviewsWrapper = GenericWrapper.extend`
 
 const ReviewsInnerWrapper = GenericFixedWidthWrapper.extend`
   padding: ${helpers.rhythmDiv * 4}px;
-  padding-top: 0;
   overflow: hidden;
   text-align: ${props => props.centerText ? 'center': 'left'};
 
@@ -188,7 +190,7 @@ export default function() {
             this.state.isLoading && <ContainerLoader />
           }
           {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(schoolData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
-
+          {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
 
           {
             this.state.showConfirmationModal && <ConfirmationModal
@@ -277,10 +279,10 @@ export default function() {
 
           {/* School Extra Section -- Notes & Media*/}
           <SchoolExtraSection>
-            {this.checkForHtmlCode(schoolData.studentNotesHtml) && (<NotesWrapper>
-                <Typography align="center" type="title"> Notes for student of {schoolData.name}</Typography>
-                <Typography type="caption"> {ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
-              </NotesWrapper>)}
+            <NotesWrapper>
+              <Typography align="center" type="title"> Notes for student of {schoolData.name}</Typography>
+              <Typography type="caption"> {this.checkForHtmlCode(schoolData.studentNotesHtml) ? ReactHtmlParser(schoolData.studentNotesHtml) : 'Nothing here for the moment, but keep an eye. We may add it soon.'} </Typography>
+            </NotesWrapper>
 
             <MediaWrapper>
               <MediaDetails
