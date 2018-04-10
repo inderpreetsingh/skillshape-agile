@@ -66,7 +66,9 @@ export default styles = theme => {
       '@media screen and (min-height : 700px)': {
          height: '368px !important',
       }
-
+    },
+    centerAligned: {
+      textAlign: 'center'
     }
   }
 }

@@ -13,6 +13,7 @@ import { imageExists } from '/imports/util';
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
+import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
 
 import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
@@ -170,16 +171,18 @@ class ClassTypeContent extends Component {
       contactUsDialog: false,
       callUsDialog: false,
       giveReviewDialog: false,
+      nonUserDefaultDialog: false,
+      defaultDialogBoxTitle: '',
       coverSrc: classTypeImgSrc,
       type: "both",
-            classTimesData: [],
-            myClassTimes: [],
-            manageAll: true,
-            attendAll: true,
-            filter: {
-                classTimesIds: [],
-                classTimesIdsForCI: [],
-            },
+      classTimesData: [],
+      myClassTimes: [],
+      manageAll: true,
+      attendAll: true,
+      filter: {
+          classTimesIds: [],
+          classTimesIdsForCI: [],
+      },
     }
 
     _setCoverSrc = (imgSrc) => {
@@ -209,9 +212,9 @@ class ClassTypeContent extends Component {
     }
 
     handleDialogState = (dialogName,state) => {
-      this.setState({
-        [dialogName]: state
-      })
+      const newState = {...this.state};
+      newState[dialogName] = state;
+      this.setState(newState);
     }
 
     componentDidMount = () => {
@@ -261,7 +264,8 @@ class ClassTypeContent extends Component {
             });
 
         } else {
-            toastr.error("You need to login for Price Package Request!!!!","Error");
+            this.handleDefaultDialogBox('Login to make price package requests',true);
+            // toastr.error("You need to login for Price Package Request!!!!","Error");
         }
     }
 
@@ -290,8 +294,14 @@ class ClassTypeContent extends Component {
                 })
             })
         } else {
-            toastr.error("You need to login for classTimes request!!!!","Error");
+            // toastr.error("You need to login for classTimes request!!!!","Error");
+            this.handleDefaultDialogBox('Login to make class time requests',true);
         }
+    }
+
+    handleDefaultDialogBox = (title, state) => {
+      const newState = {...state, defaultDialogBoxTitle: title, nonUserDefaultDialog: state};
+      this.setState(newState);
     }
 
     handleGiveReview = () => {
@@ -299,8 +309,13 @@ class ClassTypeContent extends Component {
       if(Meteor.userId()) {
         this.handleDialogState('giveReviewDialog',true);
       }else {
-        toastr.error("You need to login for writing a review !","Error");
+        this.handleDefaultDialogBox('Login to give review',true);
       }
+    }
+
+    _setDefaultDialogBoxTitle = (title) => {
+      const newState = {...this.state, defaultDialogBoxTitle : title};
+      this.setState(newState);
     }
 
     getReviewTitle = (name) => {
@@ -337,6 +352,7 @@ class ClassTypeContent extends Component {
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.contactUsDialog && <EmailUsDialogBox ourEmail={this.getOurEmail()} open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
           {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
+          {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.isBusy && <ContainerLoader/>}
 				   {/* Class Type Cover includes description, map, foreground image, then class type information*/}
 		        <ClassTypeCover coverSrc={this.state.coverSrc}>
@@ -369,7 +385,7 @@ class ClassTypeContent extends Component {
                         iconName="rate_review"
                         label="Give review"
                     />
-                  </ClassContainer>
+                    </ClassContainer>
           			</MainInnerFixedContainer>
 
           			<MainInnerFixedContainer marginBottom="16">

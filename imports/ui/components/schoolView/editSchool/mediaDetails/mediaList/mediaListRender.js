@@ -1,6 +1,7 @@
 import React from "react";
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
+import Typography from 'material-ui/Typography';
 import isEmpty from 'lodash/isEmpty';
 
 import Thumbnail from './thumbnail';
@@ -13,11 +14,10 @@ export default function() {
 	console.log("media list render state -->>",this.state);
 	const { isHovering, thumbnailData, imgIndex } = this.state;
 
-
 	return (
 		<div style={{textAlign:'center'}}>
 			{
-				isEmpty(collectionData) ?  "No Media Found!!": (
+				isEmpty(collectionData) ? <Typography>No Media Found</Typography>: (
 					<Grid container>
 						<Grid item xs={12} style={{display: 'inline-flex',justifyContent: 'center'}}>
 							<div style={{width: "100%"}}>

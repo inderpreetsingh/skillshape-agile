@@ -200,6 +200,7 @@ class MySearchBar extends Component {
           style={styles.iconTransitions}
           className={showIconClass}
           disabled={disabled}
+          onClick={props.onSearchIconClick}
         >
           {React.cloneElement(searchIcon)}
         </IconButton>
@@ -207,6 +208,7 @@ class MySearchBar extends Component {
           style={styles.iconTransitions}
           onClick={this.handleCancel}
           className={closeIconClass}
+          onClick={props.onCloseIconClick}
           disabled={disabled}
         >
           {React.cloneElement(closeIcon)}
@@ -256,6 +258,8 @@ MySearchBar.propTypes = {
   onChange: PropTypes.func,
   /** Fired when the search icon is clicked. */
   onRequestSearch: PropTypes.func,
+  onCloseIconClick: PropTypes.func,
+  onSearchIconClick: PropTypes.func,
   searchIcon: PropTypes.node,
   value: PropTypes.string,
 }
