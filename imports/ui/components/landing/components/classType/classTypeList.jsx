@@ -75,7 +75,7 @@ const MapContainer = styled.div`
 
 const WithMapCardsContainer = styled.div`
   width: 60%;
-  
+
   ${helpers.flexDirectionColumn}
   justify-content: space-between;
   transform: translateY(80px);
@@ -185,8 +185,7 @@ class ClassTypeList extends Component {
 
 	render() {
 		// console.log("ClassTypeList props -->>",this.props);
-		const { mapView, classTypeData, skillCategoryData, splitByCategory, filters, isLoading } = this.props;
-    // console.log(classTypeData ,"class type data ---->///")
+		const { mapView, classTypeData, skillCategoryData, splitByCategory, filters, isLoading, classTimesData } = this.props;
     return (
 			<MainContentWrapper>
 				{
@@ -231,12 +230,13 @@ class ClassTypeList extends Component {
 								splitByCategory ? this.showClassTypes({
 									classType: this.makeCategorization({classTypeData: classTypeData, skillCategoryData: skillCategoryData})
 								}) : ( <CardsList
-                                  mapView={this.props.mapView}
-                                  cardsData={classTypeData}
-                                  classInterestData={this.props.classInterestData}
-                                  handleSeeMore={this.props.handleSeeMore}
-                                  filters={this.props.filters}
-                                />)
+                          mapView={this.props.mapView}
+                          cardsData={classTypeData}
+                          classInterestData={this.props.classInterestData}
+                          handleSeeMore={this.props.handleSeeMore}
+                          filters={this.props.filters}
+                          classTimesData={ classTimesData }
+                        />)
 							}
 
                             {
