@@ -235,7 +235,7 @@ class ClassTypeList extends Component {
                           classInterestData={this.props.classInterestData}
                           handleSeeMore={this.props.handleSeeMore}
                           filters={this.props.filters}
-                          classTimesData={ classTimesData }
+                          classTimesData={ classTimesData || [] }
                         />)
 							}
 
