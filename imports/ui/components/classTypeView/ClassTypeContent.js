@@ -439,7 +439,7 @@ class ClassTypeContent extends Component {
                       <MyCalendar params={this.props.params} onJoinClassButtonClick={this.handleClassTimeRequest}/>
                   </CalendarWrapper>*/}
                   {/*<MyCalender {...this.props}/>*/
-                    <ManageMyCalendar schoolCalendar={true} {...this.props}/>
+                    <ManageMyCalendar classCalendar={true} {...this.props}/>
                   }
               </MainInnerFixedContainer>
 

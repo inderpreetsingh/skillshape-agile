@@ -28,6 +28,7 @@ class ManageMyCalendar extends React.Component {
             myClassTimes: [],
             manageAll: true,
             attendAll: true,
+            managedClassTimes:[],
             filter: {
                 classTimesIds: [],
                 classTimesIdsForCI: [],
@@ -39,7 +40,7 @@ class ManageMyCalendar extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         console.log("ManageMyCalendar componentWillReceiveProps called",nextProps)
-        const { classTimesData, classInterestData} = nextProps;
+        const { classTimesData, classInterestData, managedClassTimes} = nextProps;
         if(!_.isEmpty(classTimesData) || !_.isEmpty(classInterestData)) {
             let { classTimesIds, classTimesIdsForCI } = this.state.filter;
             let myClassTimes = []
@@ -58,6 +59,7 @@ class ManageMyCalendar extends React.Component {
             this.setState({
                 classTimesData,
                 myClassTimes,
+                managedClassTimes,
                 filter: {
                     classTimesIds,
                     classTimesIdsForCI,
@@ -117,10 +119,13 @@ class ManageMyCalendar extends React.Component {
             [parentKey]: bool,
         })
     }
-
+    // onChange={this.handleChangeAllClassTime.bind(this, "manageAll", "classTimesData", "classTimesIds")}
+    // this, "schoolClassTimes", "myClassTimes", "classTimesIdsForCI"
     handleChangeAllClassTime = (parentKey, fieldName, childKey,event, isInputChecked) => {
-        // console.log("handleChangeAllClassTime -->>",parentKey,fieldName, childKey, isInputChecked)
+        console.log("handleChangeAllClassTime -->>",parentKey, fieldName, childKey,event, isInputChecked)
+        // manageAll classTimesData classTimesIds false
         const data = this.state[fieldName]
+        console.log("data",data);
         let oldFilter = {...this.state.filter}
         let classTimesIds = [...oldFilter.classTimesIds];
         oldFilter[childKey] = [];
@@ -130,7 +135,7 @@ class ManageMyCalendar extends React.Component {
             if(isInputChecked) {
 
                 oldFilter[childKey].push(data[i]._id)
-                if(parentKey === "attendAll") {
+                if(parentKey === "attendAll" || "manageAll") {
                     oldFilter.classTimesIds.push(data[i]._id)
                 }
 
@@ -155,8 +160,10 @@ class ManageMyCalendar extends React.Component {
     }
 
     render() {
+        console.log("ManageMyCalendar props--->>",this.props);
         console.log("ManageMyCalendar state--->>",this.state);
-        const { type, classTimesData, myClassTimes, filter } = this.state;
+        const { schoolClassTimes } = this.props;
+        const { type, classTimesData, myClassTimes, filter, managedClassTimes } = this.state;
 
         return  (
             <DocumentTitle title={this.props.route.name}>
@@ -169,16 +176,23 @@ class ManageMyCalendar extends React.Component {
                         name="classTimes"
                         style={{width: '100%', padding: 15, display: 'inline', flexWrap: 'wrap'}}
                         onChange={this.handleClassOnChange}
-                        defaultSelected="both"
+                        defaultSelected="Select any one"
                     >
                      <FormControlLabel  value="both" control={<Radio />} label="Both" />
-                     <FormControlLabel  value="managing" control={<Radio />} label="Class I am Managing" />
-                     <FormControlLabel  value="attending" control={<Radio />} label="Class I am Attending" />
+                     { (managedClassTimes && managedClassTimes.length > 0) &&
+                        <FormControlLabel  value="managing" control={<Radio />} label="Class I am Managing" />
+                     }
+                     {(myClassTimes && myClassTimes.length > 0) &&
+                        <FormControlLabel  value="attending" control={<Radio />} label="Class I am Attending" />
+                     }
+                     { (schoolClassTimes && schoolClassTimes.length > 0 ) &&
+                        <FormControlLabel  value="school" control={<Radio />} label="School Class Times" />
+                     }
                     </RadioGroup>
                     </FormControl>
                     <Divider/>
                     {
-                        (type === "both" || type === "managing") && (
+                        (managedClassTimes && managedClassTimes.length > 0) && (
                             <Fragment>
                                 <div style={{...styles.formControlInline, display: 'inline-flex', alignItems: 'center', padding: 10}}>
                                     <div style={styles.formControl}>
@@ -192,7 +206,7 @@ class ManageMyCalendar extends React.Component {
                                               control={
                                                 <Checkbox
                                                   checked={this.state.manageAll}
-                                                  onChange={this.handleChangeAllClassTime.bind(this, "manageAll", "classTimesData", "classTimesIds")}
+                                                  onChange={this.handleChangeAllClassTime.bind(this, "manageAll", "managedClassTimes", "classTimesIds")}
                                                   value="classTimesIds"
                                                 />
                                               }
@@ -202,7 +216,7 @@ class ManageMyCalendar extends React.Component {
                                         </div>
                                     </div>
                                     {
-                                        classTimesData.map((classTime, index) => {
+                                        managedClassTimes && managedClassTimes.map((classTime, index) => {
                                             return (
                                                 <div key={index} style={styles.formControl}>
                                                     <div style={inputStyle}>
@@ -210,7 +224,7 @@ class ManageMyCalendar extends React.Component {
                                                           control={
                                                             <Checkbox
                                                               checked={classTime.isCheck}
-                                                              onChange={this.handleChangeClassTime.bind(this, "manageAll", "classTimesData", "classTimesIds", classTime._id)}
+                                                              onChange={this.handleChangeClassTime.bind(this, "manageAll", "managedClassTimes", "classTimesIds", classTime._id)}
                                                               value={classTime._id}
                                                             />
                                                           }
@@ -227,7 +241,7 @@ class ManageMyCalendar extends React.Component {
                         )
                     }
                     {
-                        (type === "both" || type === "attending") && (
+                        (/*(type === "both" || type === "attending") &&*/ myClassTimes && myClassTimes.length > 0 ) && (
                             <Fragment>
                                 <div style={{...styles.formControlInline,display: 'inline-flex', alignItems: 'center', padding: 10}}>
                                     <div style={styles.formControl}>
@@ -270,11 +284,59 @@ class ManageMyCalendar extends React.Component {
                                         })
                                     }
                                 </div>
+                                <Divider/>
+                            </Fragment>
+                        )
+                    }
+                    {
+                        ( schoolClassTimes && schoolClassTimes.length > 0) && (
+                            <Fragment>
+                                <div style={{...styles.formControlInline,display: 'inline-flex', alignItems: 'center', padding: 10}}>
+                                    <div style={styles.formControl}>
+                                        <div style={{minWidth: 150, display: 'flex'}}>
+                                            <strong>School Class Times</strong>
+                                        </div>
+                                    </div>
+                                    <div style={styles.formControl}>
+                                        <div style={inputStyle}>
+                                            <FormControlLabel
+                                              control={
+                                                <Checkbox
+                                                  checked={this.state.schoolClassTime}
+                                                  onChange={this.handleChangeAllClassTime.bind(this, "schoolClassTime", "myClassTimes", "classTimesIdsForCI")}
+                                                  value="classTimesIdsForCI"
+                                                />
+                                              }
+                                              label="All"
+                                            />
+                                        </div>
+                                    </div>
+                                    {
+                                        schoolClassTimes.map((classTime, index) => {
+                                            return (
+                                                <div key={index} style={styles.formControl}>
+                                                    <div style={inputStyle}>
+                                                        <FormControlLabel
+                                                          control={
+                                                            <Checkbox
+                                                              checked={classTime.isCheck}
+                                                              onChange={this.handleChangeClassTime.bind(this, "attendAll", "myClassTimes", "classTimesIdsForCI", classTime._id)}
+                                                              value={classTime._id}
+                                                            />
+                                                          }
+                                                          label={cutString(classTime.name, 12)}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
                             </Fragment>
                         )
                     }
                     <MyCalender
-                        manageMyCalendar={true}
+                        manageMyCalendar={ this.props.route.name == "MyCalendar" }
                         manageMyCalendarFilter={filter}
                         {...this.props}
                     />
@@ -287,12 +349,31 @@ class ManageMyCalendar extends React.Component {
 
 export default createContainer(props => {
 
+    console.log("props in manageMyCalendar",props)
     const classTimesData = ClassTimes.find({}).fetch();
+    console.log("classTimesData===>", classTimesData)
+    let managedClassTimes = [];
+    // Class Times that are managed by current user.
+    if(props.currentUser) {
+        let currentUser = props.currentUser;
+        let adminUserSchoolIds = currentUser && currentUser.profile &&  currentUser.profile.schoolId
+        if( adminUserSchoolIds ) {
+           let mangedClassJson =  { schoolId : {$in : adminUserSchoolIds} };
+           managedClassTimes = ClassTimes.find(mangedClassJson).fetch();
+        }
+    }
+    // Class Times of current School.
+    let schoolClassTimes = [];
+    if(props.schoolId) {
+        schoolClassTimes = ClassTimes.find({ schoolId:props.schoolId }).fetch();
+    }
     const classInterestData = ClassInterest.find({}).fetch();
     return {
         ...props,
         classTimesData,
-        classInterestData
+        classInterestData,
+        managedClassTimes,
+        schoolClassTimes
     };
 
 }, ManageMyCalendar);

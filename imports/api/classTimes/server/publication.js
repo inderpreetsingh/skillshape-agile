@@ -35,19 +35,42 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
         ],
     };
 
-    if(school && school._id) {
-        condition.schoolId = school._id;
-    }
-
     if(classTypeId) {
         condition.classTypeId = classTypeId;
     }
 
+    let currentUser = Meteor.users.findOne(this.userId);
+    let selfManagedClassTimeIds = [];
+    // This is done to grab class time ids that are managed by current user everywhere.
+    if(currentUser) {
+        let schoolIds = currentUser.profile && currentUser.profile.schoolId;
+        if(!_.isEmpty(schoolIds)) {
+            classTimesData = ClassTimes.find({ schoolId: { $in: schoolIds }}).fetch();
+            selfManagedClassTimeIds = classTimesData.map((item) => { return item && item._id});
+        }
+        if(selfManagedClassTimeIds && school) {
+            selfManagedClassTimeIds.push(school._id);
+        }
+    } else {
+        // This is done to grab Class Times of current School.
+        if(school && school._id) {
+            condition.schoolId = school._id;
+        }
+    }
+
+    console.log("selfManagedClassTimeIds", selfManagedClassTimeIds)
+    console.log("condition", JSON.stringify(condition))
+
     if(this.userId) {
+        // Attending Class Times of current user.
         let classInterestCursor = ClassInterest.find({userId: this.userId});
         let classTimeIds = classInterestCursor.map((data) => {
             return data.classTimeId;
         })
+        // Class time ids of school that is managed by current user.
+        if(selfManagedClassTimeIds) {
+            classTimeIds = _.union(selfManagedClassTimeIds, classTimeIds);
+        }
         condition['$or'].push({_id: { $in: classTimeIds }})
         let classTimeCursor = ClassTimes.find(condition);
         result.push(classInterestCursor);
