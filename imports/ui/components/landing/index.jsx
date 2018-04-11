@@ -31,6 +31,8 @@ import Events from '/imports/util/events';
 import { toastrModal } from '/imports/util';
 import Chip from 'material-ui/Chip';
 import Icon from 'material-ui/Icon';
+import Button from 'material-ui/Button';
+
 
 const MainContentWrapper = styled.div`
   display: flex;
@@ -272,6 +274,13 @@ class Landing extends Component {
 
     handleToggleMapView = () => {
         let oldFilter = { ...this.state.filters };
+        // This is done so that `Clear Filters` does not appear on click of list view.
+        if(this.state.mapView) {
+            oldFilter.NEPoint = [];
+            oldFilter.SWPoint = [];
+            // This is done to empty coords from URL on click of list view.
+            browserHistory.push({pathname: ''});
+        }
         oldFilter.is_map_view = !this.state.mapView;
         this.setState({
             mapView: !this.state.mapView,
@@ -320,6 +329,8 @@ class Landing extends Component {
                         isLoading: false,
                     })
                 });
+                // Toggle map view on click of `Browse classes near by me`
+                this.handleToggleMapView();
                 // toastr.success("Showing classes around you...","Found your location");
                 // // Session.set("coords",coords)
             })
@@ -538,7 +549,7 @@ class Landing extends Component {
         for (var prop in filtersData) {
             if(!isEmpty(filtersData[prop])) {
                 console.log("filtersData[prop]===>",filtersData[prop])
-                return this.showText("Clear Filters", this.deleteFilterText);
+                return this.showText("Clear All Filters", this.deleteFilterText);
             }
         }
         // const { locationText, skillTypeText } = this.state.filters;
@@ -592,6 +603,7 @@ class Landing extends Component {
         console.log("Landing state -->>",this.state);
         // console.log("Landing state -->>", this.state);
         // console.log("Landing props -->>", this.props);
+        let filtersApplied  = this.state.filters && this.showAppliedTopFilter()
         return (
             <DocumentTitle title={this.props.route.name}>
                 <div>
@@ -655,7 +667,15 @@ class Landing extends Component {
                     </FilterPanelWrapper>
                     {/* Applied Filters */}
                     {this.state.filters && this.showAppliedTopFilter()}
-
+                    {filtersApplied &&
+                        <WrapperDiv style={{textAlign: 'justify',display: 'flex',alignItems: 'center'}}>
+                            <Button fab mini onClick={() => this.handleFiltersDialogBoxState(true)}>
+                               <Icon>tune </Icon>
+                            </Button>
+                            <div style={{padding:8}}>
+                            View Filters
+                            </div>
+                        </WrapperDiv>}
                     {/*Cards List */}
                     <Element name="content-container" className="element homepage-content">
                         <ClassTypeList

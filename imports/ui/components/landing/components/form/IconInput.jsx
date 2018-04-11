@@ -68,6 +68,7 @@ class IconInput extends React.Component {
             min: props.min,
             max: props.max
           }}
+          style={{fontWeight:600}}
         />
         {
           props.error && <FormHelperText id="error-text">{props.errorText}</FormHelperText>
