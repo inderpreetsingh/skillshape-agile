@@ -12,7 +12,7 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
     let endDate = '';
     let result = [];
     let school;
-
+    console.log("schoolId, classTypeId, calendarStartDate, calendarEndDate, view", schoolId, classTypeId, calendarStartDate, calendarEndDate, view)
     if (calendarStartDate && calendarEndDate) {
         startDate = new Date(calendarStartDate);
         endDate = new Date(calendarEndDate);
@@ -22,15 +22,12 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
         startDate = new Date(calendarStartDate.getFullYear(), calendarStartDate.getMonth(), 0);
         endDate = new Date(calendarEndDate.getFullYear(), calendarEndDate.getMonth(), 0);
     }
-    // if(schoolId) {
-    //     school = School.findOne({ $or: [{ _id: schoolId }, { slug: schoolId }] });
-    // }
 
     let condition = {
         '$or': [
-            { scheduleType: "oneTime", "scheduleDetails.oneTime": {"$exists": true}, "scheduleDetails.oneTime.startDate": { '$gte': startDate } },
-            { scheduleType: "OnGoing", startDate: { '$lte': endDate } },
-            { scheduleType: "recurring", endDate: { '$gte': startDate } },
+            // { scheduleType: "oneTime", "scheduleDetails.oneTime": {"$exists": true}, "scheduleDetails.oneTime.startDate": { '$gte': startDate } },
+            // { scheduleType: "OnGoing", startDate: { '$lte': endDate } },
+            // { scheduleType: "recurring", endDate: { '$gte': startDate } },
         ],
     };
 
@@ -41,7 +38,7 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
     }
     // Class Type View
     if(view == "ClassType") {
-        condition.classTypeId = classTypeId;
+        condition['$or'].push({classTypeId: classTypeId});
     }
 
     // Class I am Managing.
@@ -64,7 +61,7 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
             return data.classTimeId;
         });
 
-        // My Calander and I don't manage any school and I have no class Interests.
+        // My Calander View and I don't manage any school and I have no class Interests.
         if(view == "MyCalendar") {
             if(_.isEmpty(schoolIds) && _.isEmpty(classTimeIds)) {
                 return [];
@@ -86,6 +83,7 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
         if(school) {
             schoolIds.push(school._id);
         }
+        condition['$or'].push({schoolId: { $in: schoolIds }});
         condition.schoolId = {$in: schoolIds}
         console.log("condition",JSON.stringify(condition));
         result.push(ClassTimes.find(condition));

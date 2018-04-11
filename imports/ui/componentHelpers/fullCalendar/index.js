@@ -160,9 +160,6 @@ export default createContainer(props => {
     if(slug) {
         schoolId = props.schoolData._id;
     }
-    let managedClassTimes = [];
-    // Class Times of current School.
-    let schoolClassTimes = [];
     if (startDate && endDate) {
         let subscription = Meteor.subscribe("classTimes.getclassTimesForCalendar", {schoolId: schoolId || slug, classTypeId: classTypeId, calendarStartDate: startDate, calendarEndDate: endDate, view})
         let classTimesFilter = {};
@@ -171,25 +168,10 @@ export default createContainer(props => {
             if(manageMyCalendar) {
                 classTimesFilter = { _id: { $in: manageMyCalendarFilter.classTimesIds } }
                 classInterestFilter = { classTimeId: { $in: manageMyCalendarFilter.classTimesIdsForCI } }
-
-                // Class Times that are managed by current user.
-                if(props.currentUser) {
-                    let currentUser = props.currentUser;
-                    let adminUserSchoolIds = currentUser && currentUser.profile &&  currentUser.profile.schoolId
-                    if( adminUserSchoolIds ) {
-                       let mangedClassJson =  { schoolId : {$in : adminUserSchoolIds} };
-                       managedClassTimes = ClassTimes.find(mangedClassJson).fetch();
-                    }
-                }
-
-                if(props.schoolId) {
-                    schoolClassTimes = ClassTimes.find({ schoolId:props.schoolId }).fetch();
-                }
             }
         }
-        // console.log("classTimesFilter -->>",classTimesFilter)
         // console.log("classInterestFilter -->>",classInterestFilter)
-        classTimesData = ClassTimes.find(classTimesFilter).fetch();
+        classTimesData = ClassTimes.find().fetch();
         classInterestData = ClassInterest.find(classInterestFilter).fetch();
     }
 
@@ -199,11 +181,10 @@ export default createContainer(props => {
     // console.log("FullCalendar createContainer classInterestData-->>",classInterestData)
     // console.log("FullCalendar createContainer myClassIds-->>",myClassIds)
     // console.log("FullCalendar createContainer classSchedule-->>",classSchedule)
+
     return {
         ...props,
         classTimesData,
         classInterestData,
-        managedClassTimes,
-        schoolClassTimes
     };
 }, FullCalendar);
