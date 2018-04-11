@@ -5,6 +5,8 @@ import { findIndex, isEmpty, find } from 'lodash';
 import Typography from 'material-ui/Typography';
 //import `Sticky` from 'react-sticky-el';
 import Sticky from 'react-stickynode';
+import { browserHistory } from 'react-router';
+
 
 import NoResults from '../NoResults.jsx';
 import ClassMap from '../map/ClassMap.jsx';
@@ -120,6 +122,14 @@ class ClassTypeList extends Component {
 	    }
 	}
 
+  handleAddSchool = () => {
+    if(Meteor.userId()) {
+      browserHistory.push('/claimSchool');
+    } else {
+      Events.trigger("registerAsSchool",{userType: "School"})
+    }
+  }
+
 	makeCategorization = ({classTypeData = [], skillCategoryData}) => {
 	    let data = {};
 	    for(skillCategoryObj of skillCategoryData) {
@@ -175,6 +185,7 @@ class ClassTypeList extends Component {
             return <NoResultContainer>
                 <NoResults
                     removeAllFiltersButtonClick={this.props.removeAllFilters}
+                    addYourSchoolButtonClick={this.handleAddSchool}
                 />
                 <RevertSearch>
                   {this.props.mapView ? 'No results in this area. Try a different area?' : 'Try changing your search'}
