@@ -258,6 +258,7 @@ export default function() {
                   classTypeBySchool='classTypeBySchool'
                   handleSeeMore={this.handleSeeMore}
                   classTimesData={this.props.classTimesData}
+                  schoolView={true}
                 />
             </Grid>
             </Grid>
