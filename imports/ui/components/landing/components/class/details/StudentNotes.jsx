@@ -18,6 +18,7 @@ const Title = styled.h3`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   line-height: 1;
   font-size: ${helpers.baseFontSize}px;
+  text-align: center;
 `;
 
 const Notes = styled.div`
@@ -45,12 +46,12 @@ const NoteStyled = styled.p`
 `;
 
 const conditionalRender = (props) => {
-  return (props.notes ? (<Wrapper>
+  return(<Wrapper>
     <Title>Student Notes</Title>
     <Notes>
-      {props.notes && ReactHtmlParser(props.notes)}
+      {props.notes ? ReactHtmlParser(props.notes) : <NoteStyled>Nothing for the moment, but keep an eye. We may add soon.</NoteStyled>}
     </Notes>
-  </Wrapper>) : <span></span>);
+  </Wrapper>);
 }
 
 const StudentNotes = (props) => {

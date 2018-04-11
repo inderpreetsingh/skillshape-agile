@@ -24,6 +24,7 @@ import MyCalender from '/imports/ui/components/users/myCalender';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
 import ReviewsSlider from '/imports/ui/components/landing/components/class/ReviewsSlider.jsx';
+import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes.jsx';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
 import { ContainerLoader } from '/imports/ui/loading/container';
@@ -99,8 +100,11 @@ const MediaWrapper = GenericWrapper.extend`
 
 const NotesWrapper = GenericWrapper.extend`
   max-width: 474px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+  margin-right: ${helpers.rhythmDiv * 3}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
+    margin-right: 0;
     margin-bottom: ${helpers.rhythmDiv * 4}px;
   }
 `;
@@ -280,8 +284,10 @@ export default function() {
           {/* School Extra Section -- Notes & Media*/}
           <SchoolExtraSection>
             <NotesWrapper>
-              <Typography align="center" type="title"> Notes for student of {schoolData.name}</Typography>
-              <Typography type="caption"> {this.checkForHtmlCode(schoolData.studentNotesHtml) ? ReactHtmlParser(schoolData.studentNotesHtml) : 'Nothing here for the moment, but keep an eye. We may add it soon.'} </Typography>
+             {/*
+              <Typography align="center" type="title" classes={{title: classes.title}}> Notes for students</Typography>
+              <Typography type="caption" classes={{caption: classes.caption}}> {this.checkForHtmlCode(schoolData.studentNotesHtml) ? ReactHtmlParser(schoolData.studentNotesHtml) : 'Nothing here for the moment, but keep an eye. We may add it soon.'} </Typography>*/}
+              <StudentNotes notes={schoolData.studentNotesHtml} />
             </NotesWrapper>
 
             <MediaWrapper>
