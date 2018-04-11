@@ -183,8 +183,8 @@ class ClassTypeContent extends Component {
       manageAll: true,
       attendAll: true,
       filter: {
-          classTimesIds: [],
-          classTimesIdsForCI: [],
+        classTimesIds: [],
+        classTimesIdsForCI: [],
       },
     }
 
