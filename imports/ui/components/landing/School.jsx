@@ -23,6 +23,7 @@ const School = (props) => (
     {console.log('props....... in school page',props)}
     <div>
       <BrandBar
+        currentUser={props.currentUser}
         navBarHeight="70"
         positionStatic={true}
         overlay={true}
