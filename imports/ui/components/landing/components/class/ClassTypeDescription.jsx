@@ -71,7 +71,9 @@ const ClassTypeDescription = (props) => {
   return (
     <Wrapper isEdit={props.isEdit}>
         {props.isClassTypeNameAvailable ?
-        <Title>{props.classTypeName.toLowerCase()} {props.schoolName && props.classTypeName ? <span>in</span> : ''} {props.schoolName.toLowerCase()}</Title>
+        <Title>{props.classTypeName.toLowerCase()}
+          {props.schoolName && props.classTypeName ? <span>in</span> : ''} {props.schoolName.toLowerCase()}
+        </Title>
         :
         <Title>{props.schoolName.toLowerCase()}
           {(!props.isEdit && props.publishStatusButton) && <PublishStatusButton />}
@@ -97,7 +99,8 @@ ClassTypeDescription.propTypes = {
   schoolName: PropTypes.string.isRequired,
   description: PropTypes.string,
   noOfReviews: PropTypes.number,
-  noOfStars: PropTypes.number
+  noOfStars: PropTypes.number,
+  isEdit: PropTypes.bool
 }
 
 ClassTypeDescription.defaultProps = {

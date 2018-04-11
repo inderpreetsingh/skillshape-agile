@@ -76,17 +76,17 @@ const ActionButtons = (props) => {
   return(<ActionButtonsContainer>
     {props.isEdit ? <Fragment></Fragment> :
     <Fragment>
-      <ActionButton rightSide={props.rightSide}>
+      {props.callUsButton && <ActionButton rightSide={props.rightSide}>
         <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
-      </ActionButton>
+      </ActionButton>}
 
-      <ActionButton rightSide={props.rightSide}>
+      {props.emailUsButton && <ActionButton rightSide={props.rightSide}>
         <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
-      </ActionButton>
+      </ActionButton>}
 
-      <ActionButton rightSide={props.rightSide}>
+      {props.pricingButton && <ActionButton rightSide={props.rightSide}>
         <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
-      </ActionButton>
+      </ActionButton>}
     </Fragment>}
   </ActionButtonsContainer>)
 }
@@ -95,12 +95,18 @@ ActionButtons.propTypes = {
   onCallUsButtonClick: PropTypes.func,
   onEmailButtonClick: PropTypes.func,
   onPricingButtonClick: PropTypes.func,
+  emailUsButton: PropTypes.bool,
+  callUsButton: PropTypes.bool,
+  pricingButton: PropTypes.bool,
   rightSide: PropTypes.bool
 }
 
 ActionButtons.defaultProps = {
   editButton: false,
-  rightSide: false
+  rightSide: false,
+  emailUsButton: true,
+  callUsButton: true,
+  pricingButton: true
 }
 
 export default ActionButtons;

@@ -83,7 +83,8 @@ class SchoolViewBanner extends React.Component {
 	}
 
 	handleEmailUs = () => {
-		this.handleDialogStateO('emailUsDialog',true);
+		console.log('handle email us clicked..')
+		this.handleDialogState('emailUsDialog',true);
 	}
 
 	handleDialogState = (dialogName,state) => {
@@ -119,40 +120,43 @@ class SchoolViewBanner extends React.Component {
 		    isEdit
 	  	} = this.props;
 	  	const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
+			const ourEmail = this.getOurEmail();
+			const emailUsButton = ourEmail ? true : false;
 			console.info('shcooll data',schoolData,"-------");
 		return(<Fragment>
 			{this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
-			{this.state.emailUsDialg && <EmailUsDialogBox ourEmail={this.getOurEmail()} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
-			<ClassTypeCover coverSrc={schoolData.mainImage || config.defaultSchoolImage}>
-			<ClassTypeCoverContent
-        noClassTypeData
-				isEdit={isEdit}
-        schoolLocation={schoolLocation}
-
-        publishStatusButton={checkUserAccess && (() => <PublishStatusButtonWrapper>Publish / Unpublish
-          <Switch checked={isPublish} className={this.props.classes.switchButton} onChange={this.props.handlePublishStatus} aria-label={schoolId} /></PublishStatusButtonWrapper>)}
-        editButton={checkUserAccess && (() => <Link className={classes.ImageFooterbutton}  to={`/School-Admin/${schoolData._id}/edit`}>
-          <ClassTimeButton icon iconName='edit' label="Edit"> Edit </ClassTimeButton> </Link>)}
-
-        onEditLogoButtonClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})}
-				onEditBgButtonClick={() => this.setState({showBackgroundUpload: true, imageType: "mainImage"})}
-				coverSrc={schoolData.mainImage || config.defaultSchoolImage}
-				logoSrc={schoolData.logoImg}
-				schoolDetails={{...schoolData}}
-				onCallUsButtonClick={() => this.handleCallUs(schoolData)}
-				onEmailButtonClick={this.handleEmailUs}
-				onPricingButtonClick={() => this.scrollTo('price-section')}
-			/>
-		</ClassTypeCover>
-		{
-				this.state.showBackgroundUpload && <UploadMedia
+			{this.state.emailUsDialog && <EmailUsDialogBox ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
+			{this.state.showBackgroundUpload && <UploadMedia
 						schoolId={schoolId}
 						showCreateMediaModal= {this.state.showBackgroundUpload}
 						onClose={()=> this.setState({ showBackgroundUpload: false})}
 						mediaFormData={schoolData}
 						imageType={this.state.imageType}
+				/>}
+			<ClassTypeCover isEdit={isEdit} coverSrc={schoolData.mainImage || config.defaultSchoolImage}>
+				<ClassTypeCoverContent
+	        noClassTypeData
+					isEdit={isEdit}
+					schoolLocation={schoolLocation}
+					schoolDetails={{...schoolData}}
+					logoSrc={schoolData.logoImg}
+					coverSrc={schoolData.mainImage || config.defaultSchoolImage}
+
+					emailUsButton={emailUsButton}
+
+					publishStatusButton={checkUserAccess && (() => <PublishStatusButtonWrapper>Publish / Unpublish
+	          <Switch checked={isPublish} className={this.props.classes.switchButton} onChange={this.props.handlePublishStatus} aria-label={schoolId} /></PublishStatusButtonWrapper>)}
+	        editButton={checkUserAccess && (() => <Link className={classes.ImageFooterbutton}  to={`/School-Admin/${schoolData._id}/edit`}>
+	          <ClassTimeButton icon iconName='edit' label="Edit"> Edit </ClassTimeButton> </Link>)}
+
+					onEmailButtonClick={this.handleEmailUs}
+					onCallUsButtonClick={() => this.handleCallUs(schoolData)}
+					onPricingButtonClick={() => this.scrollTo('price-section')}
+	        onEditLogoButtonClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})}
+					onEditBgButtonClick={() => this.setState({showBackgroundUpload: true, imageType: "mainImage"})}
 				/>
-		}</Fragment>)
+			</ClassTypeCover>
+			</Fragment>)
 	}
 }
 
