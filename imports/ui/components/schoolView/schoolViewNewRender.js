@@ -123,6 +123,11 @@ const EnrollMentWrapper = PackagesWrapper.extend`
 
 const MyCalendarWrapper = GenericFixedWidthWrapper.extend`
   margin-bottom: ${helpers.rhythmDiv * 8}px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding: 0;
+  }
 `;
 
 const PricingSection = styled.div`
