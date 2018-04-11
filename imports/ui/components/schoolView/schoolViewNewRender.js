@@ -24,6 +24,7 @@ import MyCalender from '/imports/ui/components/users/myCalender';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
 import ReviewsSlider from '/imports/ui/components/landing/components/class/ReviewsSlider.jsx';
+import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes.jsx';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
 import { ContainerLoader } from '/imports/ui/loading/container';
@@ -57,7 +58,9 @@ const GenericFixedWidthWrapper = GenericWrapper.extend`
   margin: 0 auto;
 `;
 
-const ClassTypeListWrapper = GenericWrapper.extend` `;
+const ClassTypeListWrapper = GenericWrapper.extend`
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+ `;
 
 const CardContentPriceWrapper = GenericWrapper.extend`
   padding: ${helpers.rhythmDiv * 2}px;
@@ -83,7 +86,7 @@ const ReviewsInnerWrapper = GenericFixedWidthWrapper.extend`
 const SchoolExtraSection = GenericFixedWidthWrapper.extend`
   ${helpers.flexCenter}
   align-items: flex-start;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  margin-bottom: ${helpers.rhythmDiv * 6}px;
   padding: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
@@ -99,8 +102,11 @@ const MediaWrapper = GenericWrapper.extend`
 
 const NotesWrapper = GenericWrapper.extend`
   max-width: 474px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+  margin-right: ${helpers.rhythmDiv * 3}px;
 
   @media screen and (max-width: ${helpers.tablet}px) {
+    margin-right: 0;
     margin-bottom: ${helpers.rhythmDiv * 4}px;
   }
 `;
@@ -115,20 +121,17 @@ const EnrollMentWrapper = PackagesWrapper.extend`
   flex-direction: row;
 `;
 
-const MyCalendarWrapper = GenericFixedWidthWrapper.extend``;
+const MyCalendarWrapper = GenericFixedWidthWrapper.extend`
+  margin-bottom: ${helpers.rhythmDiv * 8}px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding: 0;
+  }
+`;
 
 const PricingSection = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 4}px;
-`;
-
-const SectionTitle = styled.h2`
-  font-size: ${helpers.baseFontSize * 2}px;
-  font-family: ${helpers.specialFont};
-  font-style: italic;
-  font-weight: 300;
-  text-align: center;
-  margin: 0;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -139,6 +142,50 @@ const ButtonWrapper = styled.div`
 const ContentWrapper = styled.div`
   width: 100%;
   text-align: center;
+`;
+
+// Texts
+const SectionTitle = styled.h2`
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-family: ${helpers.specialFont};
+  font-style: italic;
+  font-weight: 300;
+  text-align: center;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+const ErrorText = styled.p`
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+  margin: 0;
+  color: ${helpers.black};
+`;
+
+
+// No Media Found
+const NoMediaFound = styled.div`
+	${helpers.flexCenter}
+
+	height: 300px;
+	width: 100%;
+	position: relative;
+	z-index: 1;
+
+	&:after {
+		content: '';
+		position: absolute;
+		z-index : -1;
+		opacity: 0.5;
+		border-radius: 5px;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: ${helpers.cancel};
+	}
 `;
 
 export default function() {
@@ -277,15 +324,57 @@ export default function() {
               />
           </ClassTypeListWrapper>
 
+        {/* Pricing Section*/}
+        <PricingSection ref={(el) => { this.schoolPrice = el; }}>
+          <Element name="price-section">
+          <SectionTitle>Pay only for what you want.</SectionTitle>
+          {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
+            <ButtonWrapper>
+            <ClassTimeButton
+            onClick={this.handlePricingInfoRequestModal}
+            icon
+            iconName="attach_money"
+            label="Request pricing info" />
+            </ButtonWrapper> : ''}
+
+            <EnrollMentWrapper>
+            {enrollmentFee && enrollmentFee.length > 0 ?
+              <PackagesList
+              schoolId={schoolId}
+              onAddToCartIconButtonClick={this.handlePurcasePackage}
+              enrollMentPackages
+              enrollMentPackagesData={enrollmentFee}
+              /> : ''}
+              </EnrollMentWrapper>
+
+              <PackagesWrapper>
+              {(isEmpty(classPricing) && isEmpty(monthlyPricing)) ?
+                '' :
+                <PackagesList
+                schoolId={schoolId}
+                onAddToCartIconButtonClick={this.handlePurcasePackage}
+                perClassPackagesData={classPricing}
+                monthlyPackagesData={monthlyPricing}
+                />
+              }
+              </PackagesWrapper>
+              </Element>
+          </PricingSection>
+
           {/* School Extra Section -- Notes & Media*/}
           <SchoolExtraSection>
             <NotesWrapper>
-              <Typography align="center" type="title"> Notes for student of {schoolData.name}</Typography>
-              <Typography type="caption"> {this.checkForHtmlCode(schoolData.studentNotesHtml) ? ReactHtmlParser(schoolData.studentNotesHtml) : 'Nothing here for the moment, but keep an eye. We may add it soon.'} </Typography>
+             {/*
+              <Typography align="center" type="title" classes={{title: classes.title}}> Notes for students</Typography>
+              <Typography type="caption" classes={{caption: classes.caption}}> {this.checkForHtmlCode(schoolData.studentNotesHtml) ? ReactHtmlParser(schoolData.studentNotesHtml) : 'Nothing here for the moment, but keep an eye. We may add it soon.'} </Typography>*/}
+              <StudentNotes notes={schoolData.studentNotesHtml} />
             </NotesWrapper>
 
             <MediaWrapper>
               <MediaDetails
+                noMediaFound={<NoMediaFound>
+        						<ErrorText>No Media Found</ErrorText>
+        					</NoMediaFound>}
                 schoolId={schoolId}
                 schoolView= {true}
               />
@@ -293,42 +382,6 @@ export default function() {
             </MediaWrapper>
           </SchoolExtraSection>
 
-          {/* Pricing Section*/}
-          <PricingSection ref={(el) => { this.schoolPrice = el; }}>
-            <Element name="price-section">
-              <SectionTitle>Pay only for what you want.</SectionTitle>
-              {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
-                <ButtonWrapper>
-                  <ClassTimeButton
-                    onClick={this.handlePricingInfoRequestModal}
-                    icon
-                    iconName="attach_money"
-                    label="Request pricing info" />
-                </ButtonWrapper> : ''}
-
-                <EnrollMentWrapper>
-                  {enrollmentFee && enrollmentFee.length > 0 ?
-                    <PackagesList
-                      schoolId={schoolId}
-                      onAddToCartIconButtonClick={this.handlePurcasePackage}
-                      enrollMentPackages
-                      enrollMentPackagesData={enrollmentFee}
-                    /> : ''}
-                </EnrollMentWrapper>
-
-               <PackagesWrapper>
-                  {(isEmpty(classPricing) && isEmpty(monthlyPricing)) ?
-                    '' :
-                    <PackagesList
-                      schoolId={schoolId}
-                      onAddToCartIconButtonClick={this.handlePurcasePackage}
-                      perClassPackagesData={classPricing}
-                      monthlyPackagesData={monthlyPricing}
-                     />
-                  }
-              </PackagesWrapper>
-            </Element>
-          </PricingSection>
 
             {/* Calendar Section*/}
             <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>

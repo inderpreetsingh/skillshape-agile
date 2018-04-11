@@ -265,6 +265,9 @@ class ClassTypeCoverContent extends React.Component {
                 <Fragment>
                   {props.actionButtons || <ActionButtons
                     isEdit={props.isEdit}
+                    emailUsButton={props.emailUsButton}
+                    pricingButton={props.pricingButton}
+                    callUsButton={props.callUsButton}
                     rightSide={props.noClassTypeData && props.logoSrc}
                     onCallUsButtonClick={props.onCallUsButtonClick}
                     onEmailButtonClick={props.onEmailButtonClick}
@@ -297,6 +300,9 @@ class ClassTypeCoverContent extends React.Component {
                 <ShowOnMobile>
                   {props.actionButtons || <ActionButtons
                     isEdit={props.isEdit}
+                    emailUsButton={props.emailUsButton}
+                    pricingButton={props.pricingButton}
+                    callUsButton={props.callUsButton}
                     onCallUsButtonClick={props.onCallUsButtonClick}
                     onEmailButtonClick={props.onEmailButtonClick}
                     onPricingButtonClick={props.onPricingButtonClick}

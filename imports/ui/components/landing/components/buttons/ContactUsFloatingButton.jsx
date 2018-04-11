@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import { withStyles } from 'material-ui/styles';
 import Icon from 'material-ui/Icon';
+import MobileDetect from 'mobile-detect';
 
 import ContactUsDialogBox from '../dialogs/ContactUsDialogBox.jsx';
 
@@ -35,6 +36,11 @@ const Wrapper = styled.div`
   border-radius: ${props => props.showComplete ? helpers.rhythmDiv * 2 + 'px' : '50%'};
   background: ${helpers.black};
   border: 5px solid rgba(223,223,223,0.9);
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    max-height: 45px;
+    max-width: ${props => props.showComplete ? 400 : 45}px;
+  }
 `;
 
 const Text = styled.p`
@@ -50,6 +56,11 @@ const Text = styled.p`
   max-width: ${props => props.show ? '100%' : '0'};
   pointer-events: ${props => props.show ? 'all' : 'none'};
   cursor: ${props => props.showCursor ? 'pointer' : 'initial'};
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    font-size: ${helpers.baseFontSize}px;
+    padding: ${props => props.show ? helpers.rhythmDiv * 2 : 0}px;
+  }
 `;
 
 const MyText = styled.span`
@@ -74,6 +85,23 @@ class ContactUsFloatingButton extends Component {
     this.setState({
       contactUsDialogBox: state
     })
+  }
+
+  handleMobileView = (e) => {
+    const md = new MobileDetect(window.navigator.userAgent);
+    if(md.mobile() || window.innerWidth < (helpers.mobile + 20)) {
+      if(this.state.showComplete) {
+        this.setState({showComplete: false});
+      }
+    }else {
+      if(!this.state.showComplete) {
+        this.setState({showComplete: true});
+      }
+    }
+  }
+
+  componentDidMount = () => {
+    this.handleMobileView();
   }
 
   render() {

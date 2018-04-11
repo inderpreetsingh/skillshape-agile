@@ -30,6 +30,7 @@ $breakpoints: (
 );
 
 $sizes: (
+  base-font-size: $base-font-size,
   one-row: $base-font-size + ($base-font-size * $rhythm-inc),
   rhythm-div: $rhythm-inc * $base-font-size
 );

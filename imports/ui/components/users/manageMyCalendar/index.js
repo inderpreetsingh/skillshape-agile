@@ -221,7 +221,8 @@ class ManageMyCalendar extends React.Component {
         return  (
             <DocumentTitle title={this.props.route.name}>
             <div>
-                <Card style={{padding: 10, margin: 15}}>
+                {/*<Card style={{padding: 10, margin: 15}}> */}
+                <Card style={{padding: 8}}>
                      <FormControl component="fieldset" required >
                     <RadioGroup
                         aria-label="classTimes"

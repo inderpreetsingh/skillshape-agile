@@ -55,7 +55,7 @@ const Main = styled.main`
 const MainInnerFixedContainer = styled.div`
   max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
   width: 100%;
-  margin: 0 auto;+
+  margin: 0 auto;
   margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 2}px;
 `;
 
@@ -150,8 +150,11 @@ const PackagesTitle = styled.h2`
 `;
 
 const CalendarWrapper = styled.div`
-   _box-shadow: 0px 0px 5px 1px rgba(221,221,221,1);
-   border: 1px solid rgba(221,221,221,1);
+   padding: 0 ${helpers.rhythmDiv * 2}px;
+
+   @media screen and (max-width: ${helpers.mobile}px) {
+     padding: 0;
+   }
 `;
 
 const ClassContainer = styled.div`
@@ -168,7 +171,7 @@ class ClassTypeContent extends Component {
 
     state = {
       isBusy: false,
-      contactUsDialog: false,
+      emailUsDialog: false,
       callUsDialog: false,
       giveReviewDialog: false,
       nonUserDefaultDialog: false,
@@ -180,8 +183,8 @@ class ClassTypeContent extends Component {
       manageAll: true,
       attendAll: true,
       filter: {
-          classTimesIds: [],
-          classTimesIdsForCI: [],
+        classTimesIds: [],
+        classTimesIdsForCI: [],
       },
     }
 
@@ -204,7 +207,7 @@ class ClassTypeContent extends Component {
     }
 
     handleEmailUsButtonClick = () => {
-      this.handleDialogState('contactUsDialog',true);
+      this.handleDialogState('emailUsDialog',true);
     }
 
     handleCallUsButtonClick = () => {
@@ -347,20 +350,25 @@ class ClassTypeContent extends Component {
         	</Typography>
 		}
 
+    const ourEmail = this.getOurEmail();
+    const emailUsButton = ourEmail ? true : false;
+
 		return (
 			<Fragment>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
-          {this.state.contactUsDialog && <EmailUsDialogBox ourEmail={this.getOurEmail()} open={this.state.contactUsDialog} onModalClose={() => this.handleDialogState('contactUsDialog',false)}/>}
+          {this.state.emailUsDialog && <EmailUsDialogBox ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)}/>}
           {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.isBusy && <ContainerLoader/>}
-				   {/* Class Type Cover includes description, map, foreground image, then class type information*/}
+
+          {/* Class Type Cover includes description, map, foreground image, then class type information*/}
 		        <ClassTypeCover coverSrc={this.state.coverSrc}>
 			        <ClassTypeCoverContent
 			        	coverSrc={this.state.coverSrc}
 			            schoolDetails={{...schoolData}}
 			            classTypeData={{...classTypeData}}
                   contactNumbers={this.getContactNumbers()}
+                  emailUsButton={emailUsButton}
 			            onCallUsButtonClick={this.handleCallUsButtonClick}
 			            onEmailButtonClick={this.handleEmailUsButtonClick}
 			            onPricingButtonClick={() => this.scrollTo('price-section')}
@@ -459,7 +467,9 @@ class ClassTypeContent extends Component {
                       <MyCalendar params={this.props.params} onJoinClassButtonClick={this.handleClassTimeRequest}/>
                   </CalendarWrapper>*/}
                   {/*<MyCalender {...this.props}/>*/
-                    <ManageMyCalendar classCalendar={true} {...this.props}/>
+                    <CalendarWrapper>
+                      <ManageMyCalendar classCalendar={true} {...this.props}/>
+                    </CalendarWrapper>
                   }
               </MainInnerFixedContainer>
 
