@@ -12,7 +12,7 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
     let endDate = '';
     let result = [];
     let school;
-
+    console.log("schoolId, classTypeId, calendarStartDate, calendarEndDate, view", schoolId, classTypeId, calendarStartDate, calendarEndDate, view)
     if (calendarStartDate && calendarEndDate) {
         startDate = new Date(calendarStartDate);
         endDate = new Date(calendarEndDate);
@@ -23,59 +23,69 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
         endDate = new Date(calendarEndDate.getFullYear(), calendarEndDate.getMonth(), 0);
     }
 
-    if(schoolId) {
-        school = School.findOne({ $or: [{ _id: schoolId }, { slug: schoolId }] });
-    }
-
     let condition = {
         '$or': [
-            { scheduleType: "oneTime", "scheduleDetails.oneTime": {"$exists": true}, "scheduleDetails.oneTime.startDate": { '$gte': startDate } },
-            { scheduleType: "OnGoing", startDate: { '$lte': endDate } },
-            { scheduleType: "recurring", endDate: { '$gte': startDate } },
+            // { scheduleType: "oneTime", "scheduleDetails.oneTime": {"$exists": true}, "scheduleDetails.oneTime.startDate": { '$gte': startDate } },
+            // { scheduleType: "OnGoing", startDate: { '$lte': endDate } },
+            // { scheduleType: "recurring", endDate: { '$gte': startDate } },
         ],
     };
 
-    if(classTypeId) {
-        condition.classTypeId = classTypeId;
+    // School View
+    if(view == "SchoolView") {
+        school = School.findOne({ $or: [{ _id: schoolId }, { slug: schoolId }] });
+        // condition.schoolId = school && school._id;
+    }
+    // Class Type View
+    if(view == "ClassType") {
+        condition['$or'].push({classTypeId: classTypeId});
     }
 
-    let currentUser = Meteor.users.findOne(this.userId);
-    let selfManagedClassTimeIds = [];
-    // This is done to grab class time ids that are managed by current user everywhere.
-    if(currentUser) {
-        let schoolIds = currentUser.profile && currentUser.profile.schoolId;
-        if(!_.isEmpty(schoolIds)) {
-            classTimesData = ClassTimes.find({ schoolId: { $in: schoolIds }}).fetch();
-            selfManagedClassTimeIds = classTimesData.map((item) => { return item && item._id});
-        }
-        if(selfManagedClassTimeIds && school) {
-            selfManagedClassTimeIds.push(school._id);
-        }
-    } else {
-        // This is done to grab Class Times of current School.
-        if(school && school._id) {
-            condition.schoolId = school._id;
-        }
-    }
-
-    console.log("selfManagedClassTimeIds", selfManagedClassTimeIds)
-    console.log("condition", JSON.stringify(condition))
-
+    // Class I am Managing.
     if(this.userId) {
+
+        let currentUser = Meteor.users.findOne(this.userId);
+        let schoolIds = [];
+
+        // This is done to grab class time ids that are managed by current user everywhere.
+        if(currentUser) {
+            schoolIds = currentUser.profile && currentUser.profile.schoolId || [];
+        }
+        if(school) {
+            schoolIds.push(school._id);
+        }
+
         // Attending Class Times of current user.
         let classInterestCursor = ClassInterest.find({userId: this.userId});
         let classTimeIds = classInterestCursor.map((data) => {
             return data.classTimeId;
-        })
-        // Class time ids of school that is managed by current user.
-        if(selfManagedClassTimeIds) {
-            classTimeIds = _.union(selfManagedClassTimeIds, classTimeIds);
+        });
+
+        // My Calander View and I don't manage any school and I have no class Interests.
+        if(view == "MyCalendar") {
+            if(_.isEmpty(schoolIds) && _.isEmpty(classTimeIds)) {
+                return [];
+            }
         }
-        condition['$or'].push({_id: { $in: classTimeIds }})
+
+        condition['$or'].push({_id: { $in: classTimeIds }});
+        if(schoolIds  && schoolIds.length > 0) {
+            condition['$or'].push({schoolId: { $in: schoolIds }});
+        }
         let classTimeCursor = ClassTimes.find(condition);
+        console.log("view", view);
+        console.log("schoolId", schoolId);
+        console.log("condition", JSON.stringify(condition));
         result.push(classInterestCursor);
         result.push(classTimeCursor);
     } else {
+        let schoolIds= [];
+        if(school) {
+            schoolIds.push(school._id);
+        }
+        condition['$or'].push({schoolId: { $in: schoolIds }});
+        condition.schoolId = {$in: schoolIds}
+        console.log("condition",JSON.stringify(condition));
         result.push(ClassTimes.find(condition));
     }
 

@@ -28,11 +28,14 @@ class ManageMyCalendar extends React.Component {
             myClassTimes: [],
             manageAll: true,
             attendAll: true,
+            schoolClassTime: true,
             managedClassTimes:[],
             schoolClassTimes:[],
             filter: {
                 classTimesIds: [],
                 classTimesIdsForCI: [],
+                manageClassTimeIds:[],
+                schoolClassTimeId:[]
             },
         };
     }
@@ -40,14 +43,22 @@ class ManageMyCalendar extends React.Component {
     handleClassOnChange = (event, type) => {
         this.setState({type});
     }
-
+    componentDidMount() {
+        this.intitializeClassTimeFilterForCalander(this.props);
+    }
     componentWillReceiveProps(nextProps) {
-        console.log("ManageMyCalendar componentWillReceiveProps called",nextProps)
-        const { classTimesData, classInterestData, managedClassTimes, schoolClassTimes} = nextProps;
+        this.intitializeClassTimeFilterForCalander(nextProps);
+    }
+    intitializeClassTimeFilterForCalander = (props) => {
+        const { classTimesData, classInterestData, managedClassTimes, schoolClassTimes} = props;
         if(!_.isEmpty(classTimesData) || !_.isEmpty(classInterestData)) {
-            let { classTimesIds, classTimesIdsForCI } = this.state.filter;
-            let myClassTimes = []
+            let { classTimesIds, classTimesIdsForCI, manageClassTimeIds, schoolClassTimeId } = this.state.filter;
+            let myClassTimes = [];
+            let managedClassTime = [];
             let myClassTimesIds = classInterestData.map(data => data.classTimeId);
+            let managedClassTimeIds = managedClassTimes.map(data => data._id);
+            let schoolClassTimeIds = schoolClassTimes.map(data => data._id);
+            let schoolClassTime =[];
             for (var i = 0; i < classTimesData.length; i++) {
 
                 classTimesData[i].isCheck = true;
@@ -57,21 +68,30 @@ class ManageMyCalendar extends React.Component {
                     myClassTimes.push({...classTimesData[i]});
                     classTimesIdsForCI.push(classTimesData[i]._id);
                 }
+                if(managedClassTimeIds.indexOf(classTimesData[i]._id) > -1) {
+                    managedClassTime.push({...classTimesData[i]})
+                    manageClassTimeIds.push(classTimesData[i]._id);
+                }
+                if(schoolClassTimeIds.indexOf(classTimesData[i]._id) > -1) {
+                    schoolClassTime.push({...classTimesData[i]})
+                    schoolClassTimeId.push(classTimesData[i]._id);
+                }
             }
-            classTimesIds = _.union(classTimesIds,myClassTimesIds)
+            classTimesIds = _.union(classTimesIds,myClassTimesIds);
             this.setState({
                 classTimesData,
                 myClassTimes,
-                managedClassTimes,
-                schoolClassTimes,
+                managedClassTimes: managedClassTime,
+                schoolClassTimes: schoolClassTime,
                 filter: {
                     classTimesIds,
                     classTimesIdsForCI,
+                    manageClassTimeIds,
+                    schoolClassTimeId
                 }
             })
         }
     }
-
     handleChangeClassTime = (parentKey, fieldName, childKey, classTimeId, event, isInputChecked) => {
         const data = this.state[fieldName];
         let oldFilter = {...this.state.filter}
@@ -130,8 +150,11 @@ class ManageMyCalendar extends React.Component {
         // manageAll classTimesData classTimesIds false
         const data = this.state[fieldName]
         console.log("data",data);
-        let oldFilter = {...this.state.filter}
+        let oldFilter = {...this.state.filter};
+        console.log("oldFilter===>",oldFilter);
         let classTimesIds = [...oldFilter.classTimesIds];
+        let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
+        let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
         oldFilter[childKey] = [];
         for (let i = 0; i < data.length; i++) {
             data[i].isCheck = isInputChecked;
@@ -139,24 +162,48 @@ class ManageMyCalendar extends React.Component {
             if(isInputChecked) {
 
                 oldFilter[childKey].push(data[i]._id)
-                if(parentKey === "attendAll" || "manageAll" || "schoolClassTime") {
-                    oldFilter.classTimesIds.push(data[i]._id)
+                if(parentKey === "attendAll") {
+                    oldFilter.classTimesIds.push(data[i]._id);
+                }
+                if(parentKey === "manageAll") {
+                    oldFilter.manageClassTimeIds.push(data[i]._id);
+                }
+                if(parentKey === "schoolClassTime") {
+                    oldFilter.schoolClassTimeId.push(data[i]._id);
                 }
 
             } else {
 
-                if(parentKey === "attendAll" || "manageAll" || "schoolClassTime") {
+                if(parentKey === "attendAll") {
                     let index = classTimesIds.indexOf(data[i]._id);
                     if(index > -1) {
                         classTimesIds.splice(index, 1);
                     }
                     oldFilter.classTimesIds = classTimesIds;
                 }
+                if(parentKey === "manageAll") {
+                    let index = manageClassTimeIds.indexOf(data[i]._id);
+                    if(index > -1) {
+                        manageClassTimeIds.splice(index, 1);
+                    }
+                    oldFilter.manageClassTimeIds = manageClassTimeIds;
+                }
+                if(parentKey === "schoolClassTime") {
+                    let index = schoolClassTimeId.indexOf(data[i]._id);
+                    if(index > -1) {
+                        schoolClassTimeId.splice(index, 1);
+                    }
+                    oldFilter.schoolClassTimeId = schoolClassTimeId;
+                }
 
             }
         }
         classTimesIds = _.uniq(oldFilter.classTimesIds);
+        manageClassTimeIds = _.uniq(oldFilter.manageClassTimeIds);
+        schoolClassTimeId = _.uniq(oldFilter.schoolClassTimeId);
         oldFilter.classTimesIds = classTimesIds;
+        oldFilter.manageClassTimeIds = manageClassTimeIds;
+        oldFilter.schoolClassTimeId = schoolClassTimeId;
         // console.log("oldFilter -->>",oldFilter)
         this.setState({
             [parentKey]: isInputChecked,
@@ -311,8 +358,8 @@ class ManageMyCalendar extends React.Component {
                                               control={
                                                 <Checkbox
                                                   checked={this.state.schoolClassTime}
-                                                  onChange={this.handleChangeAllClassTime.bind(this, "schoolClassTime", "schoolClassTimes", "classTimesIdsForCI")}
-                                                  value="classTimesIdsForCI"
+                                                  onChange={this.handleChangeAllClassTime.bind(this, "schoolClassTime", "schoolClassTimes", "schoolClassTimeId")}
+                                                  value="schoolClassTimeId"
                                                 />
                                               }
                                               label="All"
@@ -376,6 +423,7 @@ export default createContainer(props => {
         schoolClassTimes = ClassTimes.find({ schoolId:props.schoolId }).fetch();
     }
     const classInterestData = ClassInterest.find({}).fetch();
+    console.log("managedClassTimes", managedClassTimes)
     return {
         ...props,
         classTimesData,

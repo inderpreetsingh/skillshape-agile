@@ -32,7 +32,7 @@ class SchoolDetails extends React.Component {
       lastName: lastName || "",
       email: email,
       backGroundVideoUrl: backGroundVideoUrl || "",
-      mainImage: mainImage || "",
+      mainImage: schoolData.mainImage || "",
       isLoading:false, // Loading variable in state.
       currency: currency || ""
     };
@@ -65,6 +65,9 @@ class SchoolDetails extends React.Component {
     const { schoolId,toastr } = this.props;
 
     let schoolObj = {...this.state}
+    if(this.state && !this.state.mainImage) {
+      schoolObj['mainImage'] = this.props.schoolData && this.props.schoolData.mainImage;
+    }
     // This function is used to edit school details.
     Meteor.call("editSchool", schoolId, schoolObj, (error, result) => {
       if (error) {

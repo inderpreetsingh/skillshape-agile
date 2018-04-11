@@ -38,7 +38,7 @@ export default config = Object.freeze({
 		classTypeLocationRequest: "ClassTypeLocationRequest"
 	},
 	gender : [
-		{ label: "Any", value: "Any"},
+		{ label: "Other", value: "Other"},
 		{ label: "Male", value: "Male"},
 		{ label: "Female", value: "Female"},
 	],

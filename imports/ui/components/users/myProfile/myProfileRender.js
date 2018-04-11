@@ -115,6 +115,7 @@ export default function() {
                                                     value={this.state.gender}
                                                     onChange={(event) => this.setState({ gender: event.target.value })}
                                                     fullWidth
+                                                    style={{fontWeight:600}}
                                                 >
                                                     {
                                                         config.gender.map((data, index)=> {
@@ -141,10 +142,11 @@ export default function() {
                                                     onChange={(date) => this.setState({ dob: date})}
                                                     fullWidth={true}
                                                     format={"DD-MM-YYYY"}
+                                                    style={{fontWeight:600}}
                                                 />
                                             </FormControl>
                                             <Typography className={classes.inputCaption} type="caption">
-                                                The wonderful day you took your first breath. We use this data to help you find classes and never share ti with other users.
+                                                The wonderful day you took your first breath. We use this data to help you find classes and never share it with other users.
                                             </Typography>
                                             <IconInput
                                                 type="email"
@@ -173,6 +175,7 @@ export default function() {
                                                     value={this.state.currency}
                                                     onChange={(event) => this.setState({ currency: event.target.value })}
                                                     fullWidth
+                                                    style={{fontWeight:600}}
                                                 >
                                                     {
                                                         config.currency.map((data, index)=> {

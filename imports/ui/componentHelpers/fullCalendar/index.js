@@ -141,7 +141,15 @@ class FullCalendar extends React.Component {
 
 export default createContainer(props => {
     const { startDate, endDate, manageMyCalendar, isUserSubsReady, currentUser, manageMyCalendarFilter } = props;
-    let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
+    let view;
+    if(props.route.name == "SchoolView" ) {
+        view = "SchoolView";
+    } else if (props.route.name == "ClassType") {
+        view = "ClassType";
+    } else if(props.route.name == "MyCalendar") {
+        view = "MyCalendar";
+    }
+    // let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
     let { schoolId, slug, classTypeId } = props.params || {};
     let classTimesData = [];
     let classInterestData = [];
@@ -162,9 +170,8 @@ export default createContainer(props => {
                 classInterestFilter = { classTimeId: { $in: manageMyCalendarFilter.classTimesIdsForCI } }
             }
         }
-        // console.log("classTimesFilter -->>",classTimesFilter)
         // console.log("classInterestFilter -->>",classInterestFilter)
-        classTimesData = ClassTimes.find(classTimesFilter).fetch();
+        classTimesData = ClassTimes.find().fetch();
         classInterestData = ClassInterest.find(classInterestFilter).fetch();
     }
 
@@ -174,6 +181,7 @@ export default createContainer(props => {
     // console.log("FullCalendar createContainer classInterestData-->>",classInterestData)
     // console.log("FullCalendar createContainer myClassIds-->>",myClassIds)
     // console.log("FullCalendar createContainer classSchedule-->>",classSchedule)
+
     return {
         ...props,
         classTimesData,
