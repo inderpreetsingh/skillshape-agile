@@ -125,6 +125,17 @@ const PricingSection = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
+const ButtonWrapper = styled.div`
+  ${helpers.flexCenter}
+  width: 100%;
+`;
+
+const ContentWrapper = styled.div`
+  width: 100%;
+  text-align: center;
+`;
+
+// Texts
 const SectionTitle = styled.h2`
   font-size: ${helpers.baseFontSize * 2}px;
   font-family: ${helpers.specialFont};
@@ -135,14 +146,37 @@ const SectionTitle = styled.h2`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
-const ButtonWrapper = styled.div`
-  ${helpers.flexCenter}
-  width: 100%;
+const ErrorText = styled.p`
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+  margin: 0;
+  color: ${helpers.black};
 `;
 
-const ContentWrapper = styled.div`
-  width: 100%;
-  text-align: center;
+
+// No Media Found
+const NoMediaFound = styled.div`
+	${helpers.flexCenter}
+
+	height: 300px;
+	width: 100%;
+	position: relative;
+	z-index: 1;
+
+	&:after {
+		content: '';
+		position: absolute;
+		z-index : -1;
+		opacity: 0.5;
+		border-radius: 5px;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: ${helpers.cancel};
+	}
 `;
 
 export default function() {
@@ -292,6 +326,9 @@ export default function() {
 
             <MediaWrapper>
               <MediaDetails
+                noMediaFound={<NoMediaFound>
+        						<ErrorText>No Media Found</ErrorText>
+        					</NoMediaFound>}
                 schoolId={schoolId}
                 schoolView= {true}
               />

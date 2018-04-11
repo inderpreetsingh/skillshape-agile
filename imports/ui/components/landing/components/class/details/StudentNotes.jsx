@@ -18,7 +18,6 @@ const Title = styled.h3`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   line-height: 1;
   font-size: ${helpers.baseFontSize}px;
-  text-align: center;
 `;
 
 const Notes = styled.div`

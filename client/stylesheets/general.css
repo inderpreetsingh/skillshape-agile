@@ -10,7 +10,7 @@ html, body, #app {
     padding: 0;
 }
 
-ol {
+ol , p {
   margin: 0;
 }
 
