@@ -141,7 +141,15 @@ class FullCalendar extends React.Component {
 
 export default createContainer(props => {
     const { startDate, endDate, manageMyCalendar, isUserSubsReady, currentUser, manageMyCalendarFilter } = props;
-    let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
+    let view;
+    if(props.route.name == "SchoolView" ) {
+        view = "SchoolView";
+    } else if (props.route.name == "ClassType") {
+        view = "ClassType";
+    } else if(props.route.name == "MyCalendar") {
+        view = "MyCalendar";
+    }
+    // let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
     let { schoolId, slug, classTypeId } = props.params || {};
     let classTimesData = [];
     let classInterestData = [];
@@ -152,6 +160,9 @@ export default createContainer(props => {
     if(slug) {
         schoolId = props.schoolData._id;
     }
+    let managedClassTimes = [];
+    // Class Times of current School.
+    let schoolClassTimes = [];
     if (startDate && endDate) {
         let subscription = Meteor.subscribe("classTimes.getclassTimesForCalendar", {schoolId: schoolId || slug, classTypeId: classTypeId, calendarStartDate: startDate, calendarEndDate: endDate, view})
         let classTimesFilter = {};
@@ -160,6 +171,20 @@ export default createContainer(props => {
             if(manageMyCalendar) {
                 classTimesFilter = { _id: { $in: manageMyCalendarFilter.classTimesIds } }
                 classInterestFilter = { classTimeId: { $in: manageMyCalendarFilter.classTimesIdsForCI } }
+
+                // Class Times that are managed by current user.
+                if(props.currentUser) {
+                    let currentUser = props.currentUser;
+                    let adminUserSchoolIds = currentUser && currentUser.profile &&  currentUser.profile.schoolId
+                    if( adminUserSchoolIds ) {
+                       let mangedClassJson =  { schoolId : {$in : adminUserSchoolIds} };
+                       managedClassTimes = ClassTimes.find(mangedClassJson).fetch();
+                    }
+                }
+
+                if(props.schoolId) {
+                    schoolClassTimes = ClassTimes.find({ schoolId:props.schoolId }).fetch();
+                }
             }
         }
         // console.log("classTimesFilter -->>",classTimesFilter)
@@ -178,5 +203,7 @@ export default createContainer(props => {
         ...props,
         classTimesData,
         classInterestData,
+        managedClassTimes,
+        schoolClassTimes
     };
 }, FullCalendar);
