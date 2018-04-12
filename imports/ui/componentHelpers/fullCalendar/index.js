@@ -68,10 +68,13 @@ class FullCalendar extends React.Component {
     }
 
     buildCalander = () => {
-        // console.log("buildCalander props -->>",this.props);
-        let { classTimesData, classInterestData } = this.props;
+        let { classTimesData, classInterestData, managedClassTimes, schoolClassTimes } = this.props;
+        let { manageMyCalendarFilter } = this.props;
         let sevents = [];
         let myClassTimesIds = classInterestData.map(data => data.classTimeId);
+        // Class Time Ids managed by current user
+        let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
+        // let schoolClassTimesIds = schoolClassTimes.map(data => data._id);
         for (var i = 0; i < classTimesData.length; i++) {
             let classTime = classTimesData[i];
 
@@ -86,10 +89,14 @@ class FullCalendar extends React.Component {
                     scheduleType: classTime.scheduleType,
                 };
 
-                if (myClassTimesIds.indexOf(classTime._id) > -1) {
+                // Three type of class times seperated into different colors.
+                if(manageClassTimeIds.indexOf(classTime._id) > -1) {
+                    sevent.className="event-rose";
+                    sevent.attending = true;
+                } else if (myClassTimesIds.indexOf(classTime._id) > -1) {
                     sevent.className = "event-green";
                     sevent.attending = true;
-                } else {
+                } else if(schoolClassTimeId.indexOf(classTime._id) > -1) {
                     sevent.className = "event-azure";
                     sevent.attending = false;
                 }
@@ -166,12 +173,17 @@ export default createContainer(props => {
         let classInterestFilter = {};
         if(subscription.ready()) {
             if(manageMyCalendar) {
-                classTimesFilter = { _id: { $in: manageMyCalendarFilter.classTimesIds } }
+                let classTimesIds=[];
+                for (var prop in manageMyCalendarFilter) {
+                    classTimesIds.push(manageMyCalendarFilter[prop]);
+                }
+                classTimesIds= _.flatten(classTimesIds);
+                classTimesFilter = { _id: { $in: classTimesIds } }
                 classInterestFilter = { classTimeId: { $in: manageMyCalendarFilter.classTimesIdsForCI } }
             }
         }
         // console.log("classInterestFilter -->>",classInterestFilter)
-        classTimesData = ClassTimes.find().fetch();
+        classTimesData = ClassTimes.find(classTimesFilter).fetch();
         classInterestData = ClassInterest.find(classInterestFilter).fetch();
     }
 

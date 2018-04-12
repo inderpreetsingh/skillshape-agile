@@ -85,6 +85,10 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
         type: Object,
         optional: true,
         blackbox: true,
+    },
+    birthYear: {
+        type: String,
+        optional: true
     }
 }));
 
