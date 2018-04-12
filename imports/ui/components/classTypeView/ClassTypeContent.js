@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
 import { toastrModal } from '/imports/util';
-import { imageExists } from '/imports/util';
+import withImageExists from '/imports/util/withImageExists.js';
 
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
@@ -26,13 +26,13 @@ import ClassTimesBoxes from '/imports/ui/components/landing/components/classTime
 import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 import SchoolDetails from '/imports/ui/components/landing/components/class/details/SchoolDetails.jsx';
 import MyCalendar from '/imports/ui/components/users/myCalender';
+import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
 
 import { capitalizeString } from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
 const SchoolImgWrapper = styled.div`
   height: 400px;
@@ -89,11 +89,10 @@ const ClassWrapper = styled.div`
 `;
 
 const ClassTimesWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  padding-bottom: ${helpers.rhythmDiv * 4}px;
 
   @media screen and (max-width: ${helpers.mobile + 100}px) {
-    padding-bottom: ${props => props.paddingBottom ? props.paddingBottom: 0}px;
-    margin-bottom: 0;
+    padding-bottom: ${props => props.paddingBottom}px;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -159,13 +158,24 @@ const CalendarWrapper = styled.div`
 
 const ClassContainer = styled.div`
   width: 90%;
-  padding: ${helpers.rhythmDiv}px;
-  margin: ${helpers.rhythmDiv}px auto;
+  padding: 0 ${helpers.rhythmDiv}px;
+  margin: 0px auto;
   border-radius: ${helpers.rhythmDiv}px;
   background: #ffffff;
   text-align: center;
-  margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv}px;
+  margin-top: ${props => props.marginTop}px;
+  margin-bottom: ${props => props.marginBottom}px;
+  padding-bottom: ${props => props.paddingBottom}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding-bottom: ${props => props.smallPadding ? props.smallPadding : props.paddingBottom}px;
+  }
 `;
+
+const imageExistsConfig = {
+  image: 'classTypeData.classTypeImg',
+  defaultImg: classTypeImgSrc
+}
 
 class ClassTypeContent extends Component {
 
@@ -176,7 +186,6 @@ class ClassTypeContent extends Component {
       giveReviewDialog: false,
       nonUserDefaultDialog: false,
       defaultDialogBoxTitle: '',
-      coverSrc: classTypeImgSrc,
       type: "both",
       classTimesData: [],
       myClassTimes: [],
@@ -186,16 +195,6 @@ class ClassTypeContent extends Component {
         classTimesIds: [],
         classTimesIdsForCI: [],
       },
-    }
-
-    _setCoverSrc = (imgSrc) => {
-      imageExists(imgSrc).then(() => {
-        // console.log(this,'resolved image exists....');
-        this.setState({ coverSrc: imgSrc});
-      }).catch(e => {
-        // console.error('no image doesn\'t exists....');
-        this.setState({ coverSrc: classTypeImgSrc });
-      });
     }
 
     getContactNumbers = () => {
@@ -218,26 +217,6 @@ class ClassTypeContent extends Component {
       const newState = {...this.state};
       newState[dialogName] = state;
       this.setState(newState);
-    }
-
-    componentDidMount = () => {
-      const self = this;
-      // console.log(this.props,"dsa");
-      if(!isEmpty(this.props.classTypeData)) {
-        this._setCoverSrc(this.props.classTypeData.classTypeImg);
-      }
-    }
-
-    componentWillReceiveProps = (nextProps) => {
-      if(!isEmpty(nextProps.classTypeData)) {
-        if(!isEmpty(this.props.classTypeData)) {
-          if(this.props.classTypeData.classTypeImg != nextProps.classTypeData.classTypeImg) {
-            this._setCoverSrc(nextProps.classTypeData.classTypeImg);
-          }
-        }else {
-          this._setCoverSrc(nextProps.classTypeData.classTypeImg);
-        }
-      }
     }
 
     scrollTo(name) {
@@ -329,6 +308,7 @@ class ClassTypeContent extends Component {
 		console.log("ClassTypeContent props --->>",this.props);
 
 		const {
+      bgImg,
 			isLoading,
 			schoolData,
 			classTypeData,
@@ -361,28 +341,30 @@ class ClassTypeContent extends Component {
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.isBusy && <ContainerLoader/>}
 
-          {/* Class Type Cover includes description, map, foreground image, then class type information*/}
-		        <ClassTypeCover coverSrc={this.state.coverSrc}>
+          {/* Class Type Cover includes description, map, foreground image, class type information*/}
+		        <ClassTypeCover coverSrc={bgImg}>
 			        <ClassTypeCoverContent
-			        	coverSrc={this.state.coverSrc}
+			        	coverSrc={bgImg}
 			            schoolDetails={{...schoolData}}
 			            classTypeData={{...classTypeData}}
                   contactNumbers={this.getContactNumbers()}
-                  emailUsButton={emailUsButton}
-			            onCallUsButtonClick={this.handleCallUsButtonClick}
-			            onEmailButtonClick={this.handleEmailUsButtonClick}
-			            onPricingButtonClick={() => this.scrollTo('price-section')}
+                  actionButtonProps={{
+                    emailUsButton: emailUsButton,
+                    onCallUsButtonClick: this.handleCallUsButtonClick,
+                    onEmailButtonClick: this.handleEmailUsButtonClick,
+                    onPricingButtonClick: () => this.scrollTo('price-section')
+                  }}
 			        />
 		        </ClassTypeCover>
 		        <Main>
-			        <MainInnerFixedContainer marginBottom="32">
+			        <MainInnerFixedContainer marginBottom={!isEmpty(reviewsData) ? 32 : 64}>
 			            {!isEmpty(reviewsData) && (<MainInner reviews largePadding="32" smallPadding="32">
                         <ClassWrapper reviews>
                           <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
                         </ClassWrapper>
                     </MainInner>)}
 
-                  <ClassContainer marginBottom={32}>
+                  <ClassContainer marginTop="64" marginBottom="32">
                     {isEmpty(reviewsData) && <Fragment><Typography>
                       You are the first one to write review for this class.
                     </Typography>
@@ -396,13 +378,13 @@ class ClassTypeContent extends Component {
                     </ClassContainer>
           			</MainInnerFixedContainer>
 
-          			<MainInnerFixedContainer marginBottom="16">
+          			<MainInnerFixedContainer>
 			            <ClassTimesInnerWrapper>
 			                <ClassTimesWrapper paddingBottom="48">
 			                	<ClassTimesTitle>Class times for <ClassTimesName>{classTypeData.name.toLowerCase()}</ClassTimesName></ClassTimesTitle>
 			                	{
                             isEmpty(classTimesData) ? (
-                                <ClassContainer>
+                                <ClassContainer paddingBottom="16" smallPadding="0">
                                     <Typography caption="p">
                                         No class times have been given by the school. Please click this button to request the school complete their listing.
                                     </Typography>
@@ -431,7 +413,7 @@ class ClassTypeContent extends Component {
                     <PackagesTitle>Pay only for what you need</PackagesTitle>
                     {
                         (isEmpty(classPricingData) && isEmpty(monthlyPricingData)) ? (
-                            <ClassContainer>
+                            <ClassContainer paddingBottom="32">
                                 <Typography caption="p">
                                     No class pricing have been given by the school. Please click this button to request the school complete their listing.
                                 </Typography>
@@ -479,4 +461,4 @@ class ClassTypeContent extends Component {
 	}
 }
 
-export default toastrModal(ClassTypeContent);
+export default toastrModal(withImageExists(ClassTypeContent,imageExistsConfig));

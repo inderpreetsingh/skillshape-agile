@@ -126,6 +126,12 @@ $calendar-button-active-color: #BBB8B9;
   border-bottom: 0;
 }
 
+.fc .fc-event {
+  font-size: 14px;
+  font-family: map-get($fonts,'special');
+  line-height: 1.2;
+}
+
 
 @media screen and (max-width: 500px) {
   .fc-left .fc-button-group {

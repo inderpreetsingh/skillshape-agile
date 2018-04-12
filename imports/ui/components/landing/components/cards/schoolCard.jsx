@@ -45,13 +45,17 @@ const styles = {
     height: helpers.rhythmDiv * 4,
     width: helpers.rhythmDiv * 4,
     color: helpers.darkBgColor,
-    marginBottom: helpers.rhythmDiv
+    marginBottom: helpers.rhythmDiv,
+    transition: '0.1s color linear',
+    '&:hover' : {
+      color: helpers.primaryColor
+    }
   },
   actionButtonIcon: {
     fontSize: helpers.baseFontSize * 2,
     height: helpers.rhythmDiv * 4,
     width: helpers.rhythmDiv * 4,
-    fontWeight: 100
+    fontWeight: 100,
   }
 }
 
@@ -178,8 +182,8 @@ const MyAnchor = ActionBtnText.withComponent('a').extend`
   }
 `;
 
-const ActionButton = (props) => (<ActionBtnWrapper>
-    <IconButton className={props.classes.actionButton} onClick={props.onClick}>
+const ActionButton = (props) => (<ActionBtnWrapper onClick={props.onClick}>
+    <IconButton className={props.classes.actionButton}>
       <Icon className={props.classes.actionButtonIcon}>{props.iconName}</Icon>
     </IconButton>
     <ActionBtnText>

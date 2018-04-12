@@ -49,6 +49,10 @@ const ImgSliderSection = styled.div`
   width: 100%;
 `;
 
+const ImgSliderStudentNotes = styled.div`
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+`;
+
 const SchoolDetails = (props) => (
   <Wrapper>
     <SchoolSection>
@@ -64,7 +68,9 @@ const SchoolDetails = (props) => (
         !isEmpty(props.images) ?
         <ClassTypeImgSlider images={props.images} />
         :
-        <StudentNotes notes={props.notes}/>
+        <ImgSliderStudentNotes>
+          <StudentNotes notes={props.notes}/>
+        </ImgSliderStudentNotes>
       }
     </ImgSliderSection>
   </Wrapper>

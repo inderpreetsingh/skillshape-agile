@@ -1,7 +1,7 @@
 import React , {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
+import {isEmpty} from 'lodash';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
@@ -11,6 +11,8 @@ import ClassMap from '../../map/ClassMap';
 import ClassTypeDescription from '../ClassTypeDescription.jsx';
 import ClassTypeInfo from '../ClassTypeInfo.jsx';
 import ActionButtons from '../ActionButtons.jsx';
+import BestPrices from '../BestPrices.jsx';
+import ClassTypeLogo from '../ClassTypeLogo.jsx';
 
 import * as helpers from '../../jss/helpers.js';
 import * as settings from '../../../site-settings.js';
@@ -44,7 +46,7 @@ const ClassTypeInfoWrapper = styled.div`
 
 
 const MapContainer = styled.div`
-  height: 320px;
+  min-height: 320px;
   max-width: 496px;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   border-radius: 5px;
@@ -53,6 +55,16 @@ const MapContainer = styled.div`
     max-width: 100%;
     width: 100%;
   }
+`;
+
+const MyLocation = styled.div`
+  width: 100%;
+  background: white;
+  font-family: ${helpers.commonFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-style: italic;
+  color: ${helpers.textColor};
+  padding: ${helpers.rhythmDiv * 2}px;
 `;
 
 const LogoContainer = styled.div`
@@ -96,27 +108,6 @@ const ClassTypeForegroundImage = styled.div`
   }
 `;
 
-const ClassTypeLogo = styled.div`
-  width: ${helpers.rhythmDiv * 20}px;
-  height: ${helpers.rhythmDiv * 20}px;
-  border-radius: 5px;
-  position: ${props => props.position ? props.position : 'absolute'};
-  left: ${props => props.left ? props.left : 0}px;
-  bottom: ${props => props.bottom ? props.bottom: 0}px;
-  ${helpers.coverBg}
-  background-color: ${helpers.cancel};
-  background-position: center center;
-  background-image: url('${props => props.logoSrc}');
-  @media screen and (max-width: 1100px) {
-    bottom: ${props => props.publicView ? props.bottom + 64 : 0}px;
-    left: ${props => props.publicView ? '50%' : (props.left || 0)+'px'};
-    transform: translateX(${props => props.publicView ? '-50%' : 0});
-  }
-  @media screen and (max-width: 875px) {
-    bottom: ${props => props.publicView ? props.bottom + 112 : 0}px;
-  }
-`;
-
 const ContentSection = styled.div`
   margin-right:${props => props.leftSection ? `${helpers.rhythmDiv * 2}px` : 0 };
   flex-grow: ${props => props.leftSection ? 0 : 1 };
@@ -156,17 +147,39 @@ class ClassTypeCoverContent extends React.Component {
       this._addLocationOnMap();
     }
 
+    _createAddressStr(locationData) {
+      for (obj of locationData) {
+        console.info(obj,"object.....");
+        return obj.address + ", "+ obj.city + ", "+ obj.state +", "+obj.country;
+      }
+    }
 
     _addLocationOnMap() {
+      let locationData;
       if(this.props.noClassTypeData) {
         if(!isEmpty(this.props.schoolLocation)) {
-          const location = this.props.schoolLocation;
-          createMarkersOnMap("myMap", location);
+          locationData = this.props.schoolLocation;
+          createMarkersOnMap("myMap", locationData);
         }
       }else {
         if(!isEmpty(this.props.classTypeData.selectedLocation)) {
-          const location = [this.props.classTypeData.selectedLocation];
-          createMarkersOnMap("myMap", location);
+          locationData = [this.props.classTypeData.selectedLocation];
+          createMarkersOnMap("myMap", locationData);
+        }
+      }
+    }
+
+    getAddress() {
+      let locationData;
+      if(this.props.noClassTypeData) {
+        if(!isEmpty(this.props.schoolLocation)) {
+          locationData = this.props.schoolLocation;
+          return this._createAddressStr(locationData);
+        }
+      }else {
+        if(!isEmpty(this.props.classTypeData.selectedLocation)) {
+          locationData = [this.props.classTypeData.selectedLocation];
+          return this._createAddressStr(locationData);
         }
       }
     }
@@ -218,8 +231,9 @@ class ClassTypeCoverContent extends React.Component {
     return(
         <CoverContentWrapper>
           <CoverContent>
-            { this.state.isBusy && <ContainerLoader/>}
+            {this.state.isBusy && <ContainerLoader/>}
             <ContentSection leftSection>
+              {/* Displays map when it's not edit mode*/}
               {!props.isEdit && <MapContainer>
                   {
                     isEmpty(selectedLocation) ? (
@@ -231,47 +245,62 @@ class ClassTypeCoverContent extends React.Component {
                             label="Request location"
                         />}
                       </LocationNotFound>
-                    ) :<div id="myMap" style={{height: '100%', minHeight: 320}}/>
+                    ) :
+                    <Fragment>
+                      <div id="myMap" style={{height: '100%', minHeight: 320}}/>
+                      <MyLocation>{this.getAddress()}</MyLocation>
+                    </Fragment>
                   }
-              </MapContainer>}
+            </MapContainer>}
+
+              {/* When it's edit mode, displays logo */}
               {props.isEdit ?
                 <LogoContainer>
-                  <ClassTypeLogo position='relative' logoSrc={props.logoSrc} noMarginBottom>
+                  <ClassTypeLogo position='relative' logoSrc={props.logoSrc} >
                     <EditButtonWrapper>
                       <ClassTimeButton icon iconName='photo_camera' label="Logo" onClick={props.onEditLogoButtonClick} />
                     </EditButtonWrapper>
                   </ClassTypeLogo>
                 </LogoContainer>
-                : <ClassTypeDescription
-                isEdit={props.isEdit}
-                publishStatusButton={props.publishStatusButton}
-                schoolName={props.schoolDetails.name}
-                description={props.schoolDetails.aboutHtml}
-                isClassTypeNameAvailable={!isEmpty(props.classTypeData)}
-                classTypeName={classTypeName}
-                noOfStars={props.schoolDetails.noOfStars}
-                noOfReviews={props.schoolDetails.noOfReviews}
+                :
+                <ClassTypeDescription
+                  isEdit={props.isEdit}
+                  publishStatusButton={props.publishStatusButton}
+                  schoolName={props.schoolDetails.name}
+                  description={props.schoolDetails.aboutHtml}
+                  isClassTypeNameAvailable={!isEmpty(props.classTypeData)}
+                  classTypeName={classTypeName}
+                  noOfStars={props.schoolDetails.noOfStars}
+                  noOfReviews={props.schoolDetails.noOfReviews}
               />}
+
+              {!props.isEdit && props.noClassTypeData && (props.bestPriceDetails.class || props.bestPriceDetails.monthly) && <BestPrices
+                  onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
+                  bestPriceDetails={props.bestPriceDetails}
+                />}
             </ContentSection>
 
             <ContentSection>
               <ShowOnMobile>
-              {props.isEdit && <EditButtonWrapper>
-                <ClassTimeButton icon iconName="photo_camera" label="Background" onClick={props.onEditBgButtonClick} />
+                {props.isEdit && <EditButtonWrapper>
+                  <ClassTimeButton icon iconName="photo_camera" label="Background" onClick={props.onEditBgButtonClick} />
                 </EditButtonWrapper>}
               </ShowOnMobile>
+
 
               <ClassTypeForegroundImage coverSrc={props.coverSrc} >
                 <Fragment>
                   {props.actionButtons || <ActionButtons
                     isEdit={props.isEdit}
-                    emailUsButton={props.emailUsButton}
-                    pricingButton={props.pricingButton}
-                    callUsButton={props.callUsButton}
+                    emailUsButton={props.actionButtonProps.emailUsButton}
+                    pricingButton={props.actionButtonProps.pricingButton}
+                    callUsButton={props.actionButtonProps.callUsButton}
+                    scheduleButton={props.actionButtonProps.scheduleButton}
+                    onCallUsButtonClick={props.actionButtonProps.onCallUsButtonClick}
+                    onEmailButtonClick={props.actionButtonProps.onEmailButtonClick}
+                    onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
+                    onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
                     rightSide={props.noClassTypeData && props.logoSrc}
-                    onCallUsButtonClick={props.onCallUsButtonClick}
-                    onEmailButtonClick={props.onEmailButtonClick}
-                    onPricingButtonClick={props.onPricingButtonClick}
                     />}
 
                   {props.logoSrc && !props.isEdit && <ClassTypeLogo
@@ -279,15 +308,17 @@ class ClassTypeCoverContent extends React.Component {
                       bottom={helpers.rhythmDiv * 2}
                       logoSrc={props.logoSrc}
                       publicView
-                      />}
+                    />}
 
                   {props.editButton && (props.isEdit ? <EditButtonWrapper>
                     <ClassTimeButton icon iconName="photo_camera" label="Background" onClick={props.onEditBgButtonClick} />
                     </EditButtonWrapper> : <EditButtonWrapper> <EditButton /> </EditButtonWrapper>)}
 
-                </Fragment>
+                  </Fragment>
               </ClassTypeForegroundImage>
 
+              {/* On large screens this section will be below foregroud image,
+                on smaller screens it's below the left side*/}
               <ClassTypeInfoWrapper>
                 {props.classTypeMetaInfo || (props.classTypeData ? <ClassTypeInfo
                   ageRange={props.classTypeData.ageMin && props.classTypeData.ageMax && `${props.classTypeData.ageMin} - ${props.classTypeData.ageMax}`}
@@ -300,14 +331,16 @@ class ClassTypeCoverContent extends React.Component {
                 <ShowOnMobile>
                   {props.actionButtons || <ActionButtons
                     isEdit={props.isEdit}
-                    emailUsButton={props.emailUsButton}
-                    pricingButton={props.pricingButton}
-                    callUsButton={props.callUsButton}
-                    onCallUsButtonClick={props.onCallUsButtonClick}
-                    onEmailButtonClick={props.onEmailButtonClick}
-                    onPricingButtonClick={props.onPricingButtonClick}
+                    emailUsButton={props.actionButtonProps.emailUsButton}
+                    pricingButton={props.actionButtonProps.pricingButton}
+                    callUsButton={props.actionButtonProps.callUsButton}
+                    scheduleButton={props.actionButtonProps.scheduleButton}
+                    onCallUsButtonClick={props.actionButtonProps.onCallUsButtonClick}
+                    onEmailButtonClick={props.actionButtonProps.onEmailButtonClick}
+                    onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
+                    onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
                     />}
-                  </ShowOnMobile>
+                </ShowOnMobile>
               </ClassTypeInfoWrapper>
             </ContentSection>
           </CoverContent>
@@ -324,11 +357,14 @@ ClassTypeCoverContent.propTypes = {
   map: PropTypes.element,
   mapLocation: PropTypes.string,
   classTypeData: PropTypes.object,
-  schoolDetails: PropTypes.object
+  schoolDetails: PropTypes.object,
+  actionButtonProps: PropTypes.object
 }
 
 ClassTypeCoverContent.defaultProps = {
+  actionButtonProps: {
 
+  }
 }
 
 export default toastrModal(ClassTypeCoverContent);

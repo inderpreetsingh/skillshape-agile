@@ -187,8 +187,6 @@ export default createContainer(props => {
         classInterestData = ClassInterest.find(classInterestFilter).fetch();
     }
 
-
-
     // console.log("FullCalendar createContainer classTimesData-->>", classTimesData)
     // console.log("FullCalendar createContainer classInterestData-->>",classInterestData)
     // console.log("FullCalendar createContainer myClassIds-->>",myClassIds)

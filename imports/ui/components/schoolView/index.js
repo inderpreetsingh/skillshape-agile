@@ -17,7 +17,6 @@ import { toastrModal } from '/imports/util';
 import config from '/imports/config';
 import ClassTimes from "/imports/api/classTimes/fields";
 
-
 class SchoolView extends SchoolViewBase {
 
     constructor(props) {
@@ -37,6 +36,16 @@ class SchoolView extends SchoolViewBase {
                 classTimesIdsForCI: [],
             },
         }
+    }
+
+    _setCoverSrc = (imgSrc) => {
+      imageExists(imgSrc).then(() => {
+        // console.log(this,'resolved image exists....');
+        this.setState({ coverSrc: imgSrc});
+      }).catch(e => {
+        // console.error('no image doesn\'t exists....');
+        this.setState({ coverSrc: schoolDetailsImgSrc });
+      });
     }
 
     handleSeeMore = () => {

@@ -59,7 +59,7 @@ const GenericFixedWidthWrapper = GenericWrapper.extend`
 `;
 
 const ClassTypeListWrapper = GenericWrapper.extend`
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 5}px;
  `;
 
 const CardContentPriceWrapper = GenericWrapper.extend`
@@ -131,12 +131,14 @@ const MyCalendarWrapper = GenericFixedWidthWrapper.extend`
 `;
 
 const PricingSection = styled.div`
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin-top: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 6}px;
 `;
 
 const ButtonWrapper = styled.div`
   ${helpers.flexCenter}
   width: 100%;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
 const ContentWrapper = styled.div`
@@ -242,7 +244,7 @@ export default function() {
           {
             this.state.showConfirmationModal && <ConfirmationModal
                 open={this.state.showConfirmationModal}
-                submitBtnLabel="REQUEST PRICING"
+                submitBtnLabel="Request pricing"
                 cancelBtnLabel="Cancel"
                 message="No prices have been added by the school. Please click this button to request the school complete their pricing info?"
                 onSubmit={()=>{this.requestPricingInfo(schoolData)}}
@@ -267,28 +269,11 @@ export default function() {
             currentUser={currentUser}
             schoolLocation={schoolLocation}
             isEdit={false}
+            bestPriceDetails={{
+              monthly: !isEmpty(this.state.bestPriceDetails) ? floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate) : null,
+              class: !isEmpty(this.state.bestPriceDetails) ? floor(this.state.bestPriceDetails.bestClassPrice.avgRate) : null
+            }}
             handlePublishStatus={this.handlePublishStatus.bind(this, schoolId)}/> {/* container, school-header ends */}
-
-          {/* Best Price Details */}
-          {!isEmpty(this.state.bestPriceDetails) && (<CardContentPriceWrapper>
-              <SectionTitle>Best Prices Available</SectionTitle>
-              <ContentWrapper>
-                {
-                  this.state.bestPriceDetails.bestMonthlyPrice && (
-                    <Typography component="p">
-                      Monthly Packages from {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}$ per Month
-                    </Typography>
-                  )
-                }
-                {
-                  this.state.bestPriceDetails.bestClassPrice && (
-                    <Typography component="p">
-                      Class Packages from {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}$ per Class
-                    </Typography>
-                  )
-                }
-              </ContentWrapper>
-            </CardContentPriceWrapper>)}
 
           {/* Reviews List */}
           <ReviewsWrapper>
@@ -330,34 +315,34 @@ export default function() {
           <SectionTitle>Pay only for what you want.</SectionTitle>
           {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
             <ButtonWrapper>
-            <ClassTimeButton
-            onClick={this.handlePricingInfoRequestModal}
-            icon
-            iconName="attach_money"
-            label="Request pricing info" />
+              <ClassTimeButton
+                onClick={this.handlePricingInfoRequestModal}
+                icon
+                iconName="attach_money"
+                label="Request pricing info" />
             </ButtonWrapper> : ''}
 
             <EnrollMentWrapper>
             {enrollmentFee && enrollmentFee.length > 0 ?
               <PackagesList
-              schoolId={schoolId}
-              onAddToCartIconButtonClick={this.handlePurcasePackage}
-              enrollMentPackages
-              enrollMentPackagesData={enrollmentFee}
+                schoolId={schoolId}
+                onAddToCartIconButtonClick={this.handlePurcasePackage}
+                enrollMentPackages
+                enrollMentPackagesData={enrollmentFee}
               /> : ''}
               </EnrollMentWrapper>
 
-              <PackagesWrapper>
-              {(isEmpty(classPricing) && isEmpty(monthlyPricing)) ?
-                '' :
-                <PackagesList
-                schoolId={schoolId}
-                onAddToCartIconButtonClick={this.handlePurcasePackage}
-                perClassPackagesData={classPricing}
-                monthlyPackagesData={monthlyPricing}
-                />
-              }
-              </PackagesWrapper>
+                <PackagesWrapper>
+                {(isEmpty(classPricing) && isEmpty(monthlyPricing)) ?
+                  '' :
+                  <PackagesList
+                  schoolId={schoolId}
+                  onAddToCartIconButtonClick={this.handlePurcasePackage}
+                  perClassPackagesData={classPricing}
+                  monthlyPackagesData={monthlyPricing}
+                  />
+                }
+                </PackagesWrapper>
               </Element>
           </PricingSection>
 
@@ -385,7 +370,9 @@ export default function() {
 
             {/* Calendar Section*/}
             <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
+              <Element name="schedule-section">
               {<ManageMyCalendar schoolCalendar={true} {...this.props}/>}
+              </Element>
             </MyCalendarWrapper>
 
 

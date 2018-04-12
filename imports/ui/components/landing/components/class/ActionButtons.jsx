@@ -87,6 +87,10 @@ const ActionButtons = (props) => {
       {props.pricingButton && <ActionButton rightSide={props.rightSide}>
         <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
       </ActionButton>}
+
+      {props.scheduleButton && <ActionButton rightSide={props.rightSide}>
+        <ClassTimeButton secondary noMarginBottom label="Schedule" icon iconName="schedule" onClick={props.onScheduleButtonClick} />
+      </ActionButton>}
     </Fragment>}
   </ActionButtonsContainer>)
 }
@@ -95,9 +99,11 @@ ActionButtons.propTypes = {
   onCallUsButtonClick: PropTypes.func,
   onEmailButtonClick: PropTypes.func,
   onPricingButtonClick: PropTypes.func,
+  onScheduleButtonClick: PropTypes.func,
   emailUsButton: PropTypes.bool,
   callUsButton: PropTypes.bool,
   pricingButton: PropTypes.bool,
+  scheduleButton: PropTypes.bool,
   rightSide: PropTypes.bool
 }
 
@@ -106,7 +112,8 @@ ActionButtons.defaultProps = {
   rightSide: false,
   emailUsButton: true,
   callUsButton: true,
-  pricingButton: true
+  pricingButton: true,
+  scheduleButton: false,
 }
 
 export default ActionButtons;

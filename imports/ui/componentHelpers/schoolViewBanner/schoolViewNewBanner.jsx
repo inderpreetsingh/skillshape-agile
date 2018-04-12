@@ -1,5 +1,6 @@
 import React,{Fragment} from 'react';
 import {scroller} from 'react-scroll';
+import {isEmpty} from 'lodash';
 import { Link } from 'react-router';
 import styled from 'styled-components';
 import find from "lodash/find";
@@ -27,6 +28,10 @@ import { getUserFullName } from '/imports/util/getUserData';
 import UploadMedia from './uploadMedia';
 import config from '/imports/config';
 import styles from "./style";
+import withImageExists from '/imports/util/withImageExists.js';
+import {imageExists} from '/imports/util';
+
+import { schoolDetailsImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 const PublishStatusButtonWrapper = styled.div`
 	${helpers.flexCenter}
@@ -41,11 +46,16 @@ styles.switchButton = {
 	height: helpers.rhythmDiv * 5
 }
 
+const imageExistsConfig = {
+	image: 'schoolData.mainImage',
+	defaultImg: schoolDetailsImgSrc
+}
+
 class SchoolViewBanner extends React.Component {
 	constructor(props){
 		super(props);
 		this.state={
-			showBackgroundUpload: false
+			showBackgroundUpload: false,
 		}
 	}
 
@@ -117,7 +127,9 @@ class SchoolViewBanner extends React.Component {
 		    schoolId,
         isPublish,
 		    currentUser,
-		    isEdit
+				bestPriceDetails,
+		    isEdit,
+				bgImg,
 	  	} = this.props;
 	  	const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
 			const ourEmail = this.getOurEmail();
@@ -133,25 +145,32 @@ class SchoolViewBanner extends React.Component {
 						mediaFormData={schoolData}
 						imageType={this.state.imageType}
 				/>}
-			<ClassTypeCover isEdit={isEdit} coverSrc={schoolData.mainImage || config.defaultSchoolImage}>
+			<ClassTypeCover isEdit={isEdit} coverSrc={bgImg}>
 				<ClassTypeCoverContent
 	        noClassTypeData
 					isEdit={isEdit}
 					schoolLocation={schoolLocation}
 					schoolDetails={{...schoolData}}
 					logoSrc={schoolData.logoImg}
-					coverSrc={schoolData.mainImage || config.defaultSchoolImage}
-
-					emailUsButton={emailUsButton}
+					coverSrc={bgImg}
 
 					publishStatusButton={checkUserAccess && (() => <PublishStatusButtonWrapper>Publish / Unpublish
-	          <Switch checked={isPublish} className={this.props.classes.switchButton} onChange={this.props.handlePublishStatus} aria-label={schoolId} /></PublishStatusButtonWrapper>)}
-	        editButton={checkUserAccess && (() => <Link className={classes.ImageFooterbutton}  to={`/School-Admin/${schoolData._id}/edit`}>
-	          <ClassTimeButton icon iconName='edit' label="Edit"> Edit </ClassTimeButton> </Link>)}
+						<Switch checked={isPublish} className={this.props.classes.switchButton} onChange={this.props.handlePublishStatus} aria-label={schoolId} /></PublishStatusButtonWrapper>)}
+					editButton={checkUserAccess && (() => <Link className={classes.ImageFooterbutton}  to={`/School-Admin/${schoolData._id}/edit`}>
+						<ClassTimeButton icon iconName='edit' label="Edit"> Edit </ClassTimeButton> </Link>)}
 
-					onEmailButtonClick={this.handleEmailUs}
-					onCallUsButtonClick={() => this.handleCallUs(schoolData)}
-					onPricingButtonClick={() => this.scrollTo('price-section')}
+					actionButtonProps={{
+						emailUsButton: emailUsButton,
+						scheduleButton: true,
+						pricingButton: false,
+						onEmailButtonClick: this.handleEmailUs,
+						onCallUsButtonClick: () => this.handleCallUs(schoolData),
+						onPricingButtonClick: () => this.scrollTo('price-section'),
+						onScheduleButtonClick: () => this.scrollTo('schedule-section')
+					}}
+
+					bestPriceDetails={bestPriceDetails}
+
 	        onEditLogoButtonClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})}
 					onEditBgButtonClick={() => this.setState({showBackgroundUpload: true, imageType: "mainImage"})}
 				/>
@@ -160,4 +179,4 @@ class SchoolViewBanner extends React.Component {
 	}
 }
 
-export default withStyles(styles)(SchoolViewBanner)
+export default withStyles(styles)(withImageExists(SchoolViewBanner,imageExistsConfig));
