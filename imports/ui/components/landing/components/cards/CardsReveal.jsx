@@ -5,6 +5,8 @@ import { CSSTransition, Transition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import { withStyles } from 'material-ui/styles';
+import withImageExists from '/imports/util/withImageExists.js';
+
 import Paper from 'material-ui/Paper';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
@@ -15,7 +17,6 @@ import PrimaryButton from '../buttons/PrimaryButton.jsx';
 
 import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
-import {imageExists} from '/imports/util';
 
 const styles = {
   cardWrapper: {
@@ -32,6 +33,10 @@ const styles = {
   }
 }
 
+const imageExistsConfig = {
+  image: 'classTypeImg',
+  defaultImg: cardImgSrc
+}
 
 const CardImageTitleWrapper = styled.div`
   display: flex;
@@ -195,20 +200,7 @@ class CardsReveal extends Component {
   state = {
     maxCharsLimit: 18,
     revealCard: false,
-    cardImgSrc: this.props.classTypeImg
   };
-
-  _setCardImgSrc = (imgSrc) => {
-    return imageExists(imgSrc).then(() => {
-      if(this.state.cardImgSrc != imgSrc)
-        this.setState({ cardImgSrc: imgSrc});
-
-    }).catch(e => {
-      if(this.state.cardImgSrc != cardImgSrc)
-        this.setState({ cardImgSrc: cardImgSrc });
-
-    });
-  }
 
   revealCardContent = (e) => {
     this.setState({ revealCard: true });
@@ -218,25 +210,16 @@ class CardsReveal extends Component {
     this.setState({ revealCard: false });
   }
 
-  componentDidMount = () => {
-    this._setCardImgSrc(this.props.classTypeImg)
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    if(nextProps.classTypeImg != this.props.classTypeImg) {
-      this._setCardImgSrc(nextProps.classTypeImg);
-    }
-  }
 
   render() {
-    const { name, classTypeImg, descriptionContent, body, classes } = this.props;
+    const { name, classTypeImg, descriptionContent, body, classes, bgImg } = this.props;
     const myTitle = name.toLowerCase();
     //console.log(ShowDetails,"adsljfj")
     return (<Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
         <div onClick={this.revealCardContent}>
           <CardImageTitleWrapper>
 
-            <CardImageWrapper bgImage={this.state.cardImgSrc}></CardImageWrapper>
+            <CardImageWrapper bgImage={bgImg}></CardImageWrapper>
 
             <CardContentHeader>
               <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
@@ -290,4 +273,4 @@ CardsReveal.defaultProps = {
    name: 'Card Title'
 }
 
-export default withStyles(styles)(CardsReveal);
+export default withStyles(styles)(withImageExists(CardsReveal,imageExistsConfig));

@@ -12,6 +12,7 @@ import ClassTypeDescription from '../ClassTypeDescription.jsx';
 import ClassTypeInfo from '../ClassTypeInfo.jsx';
 import ActionButtons from '../ActionButtons.jsx';
 import BestPrices from '../BestPrices.jsx';
+import ClassTypeLogo from '../ClassTypeLogo.jsx';
 
 import * as helpers from '../../jss/helpers.js';
 import * as settings from '../../../site-settings.js';
@@ -104,27 +105,6 @@ const ClassTypeForegroundImage = styled.div`
   position: relative;
   @media screen and (max-width: ${helpers.tablet}px) {
     display: none;
-  }
-`;
-
-const ClassTypeLogo = styled.div`
-  width: ${helpers.rhythmDiv * 20}px;
-  height: ${helpers.rhythmDiv * 20}px;
-  border-radius: 5px;
-  position: ${props => props.position ? props.position : 'absolute'};
-  left: ${props => props.left ? props.left : 0}px;
-  bottom: ${props => props.bottom ? props.bottom: 0}px;
-  ${helpers.coverBg}
-  background-color: ${helpers.cancel};
-  background-position: center center;
-  background-image: url('${props => props.logoSrc}');
-  @media screen and (max-width: 1100px) {
-    bottom: ${props => props.publicView ? props.bottom + 64 : 0}px;
-    left: ${props => props.publicView ? '50%' : (props.left || 0)+'px'};
-    transform: translateX(${props => props.publicView ? '-50%' : 0});
-  }
-  @media screen and (max-width: 875px) {
-    bottom: ${props => props.publicView ? props.bottom + 112 : 0}px;
   }
 `;
 
@@ -276,7 +256,7 @@ class ClassTypeCoverContent extends React.Component {
               {/* When it's edit mode, displays logo */}
               {props.isEdit ?
                 <LogoContainer>
-                  <ClassTypeLogo position='relative' logoSrc={props.logoSrc} noMarginBottom>
+                  <ClassTypeLogo position='relative' logoSrc={props.logoSrc} >
                     <EditButtonWrapper>
                       <ClassTimeButton icon iconName='photo_camera' label="Logo" onClick={props.onEditLogoButtonClick} />
                     </EditButtonWrapper>
