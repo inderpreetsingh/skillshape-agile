@@ -15,6 +15,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import CreateMedia from "/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia.js";
 import CallMemberDialogBox from '/imports/ui/components/landing/components/dialogs/CallMemberDialogBox.js';
 import EmailMemberDialogBox from '/imports/ui/components/landing/components/dialogs/EmailMemberDialogBox.jsx';
+import EditMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditMemberDialogBox.js";
 
 const styles = theme => ({
   avatarCss: {
@@ -88,7 +89,7 @@ const ActionButtons = props => (
     </ActionButton>
 
     <ActionButton>
-      <MemberActionButton noMarginBottom label="Edit" icon iconName="edit" />
+      <MemberActionButton noMarginBottom label="Edit" icon iconName="edit" onClick={props.openEditMemberModal} />
     </ActionButton>
   </ActionButtonsWrapper>
 );
@@ -193,6 +194,16 @@ class SchoolMemberInfo extends Component {
       <Grid container>
         {this.state.callMemberDialog && <CallMemberDialogBox contactNumbers={this.getContactNumber()} open={this.state.callMemberDialog} onModalClose={() => this.handleDialogState('callMemberDialog',false)}/>}
         {this.state.emailMemberDialog && <EmailMemberDialogBox  open={this.state.emailMemberDialog} onModalClose={() => this.handleDialogState('emailMemberDialog',false)}/>}
+        {
+          this.state.openEditMemberModal &&
+          <EditMemberDialogBox
+              open={this.state.openEditMemberModal}
+              onModalClose={() => this.setState({openEditMemberModal:false})}
+              openEditTaggedModal= {this.openEditMemberModal}
+              memberInfo={ memberInfo }
+              classTypeData={ this.props.classTypeData }
+          />
+        }
         <Grid
           container
           className="userInfoPanel"
@@ -265,6 +276,7 @@ class SchoolMemberInfo extends Component {
                 memberInfo={this.props.memberInfo}
                 handleCall={this.handleCall}
                 handleEmail={this.handleEmail}
+                openEditMemberModal={(event)=> {this.setState({openEditMemberModal:true})}}
               />
             </Grid>
           </Grid>
