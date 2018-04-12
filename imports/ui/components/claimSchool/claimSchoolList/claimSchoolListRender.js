@@ -41,7 +41,7 @@ const FormSubmitButtonWrapper =styled.div`
 
 const TextWrapper =styled.div`
   font-size: ${helpers.baseFontSize * 1.25}px;
-  max-width: 600px;
+  max-width: 900px;
   margin-left: ${helpers.rhythmDiv * 2}px;
 `;
 
@@ -104,9 +104,9 @@ export default function (props) {
                 <CardsListGridWrapper>
                   <Wrapper>
                     <TextWrapper>
-                        Check to see if any of these are your school.
-                        if so, press the <b>claim</b> button
-                        if not, Click the button to the right to open a new listing
+                        Check to see if any of these are your school. The filters can help you search!
+                        If you find your school, press the <b>claim</b> button.
+                        If you do not find it, click the button to the right to open a new listing!
                     </TextWrapper>
                     <FormSubmitButtonWrapper>
                       <Button className={props.classes.buttonStyles} onClick={props.onStartNewListingButtonClick}>
