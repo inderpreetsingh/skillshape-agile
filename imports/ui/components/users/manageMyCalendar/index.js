@@ -97,6 +97,8 @@ class ManageMyCalendar extends React.Component {
         let oldFilter = {...this.state.filter}
         let ids = oldFilter[childKey] || [];
         let classTimesIds = [...oldFilter.classTimesIds];
+        let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
+        let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
         console.log("handleChangeClassTime data-->>",data);
         console.log("handleChangeClassTime ids-->>",ids);
         let bool = true
@@ -112,6 +114,14 @@ class ManageMyCalendar extends React.Component {
                         classTimesIds.push(classTimeId)
                         oldFilter.classTimesIds = classTimesIds;
                     }
+                    if(parentKey === "manageAll") {
+                        manageClassTimeIds.push(classTimeId)
+                        oldFilter.manageClassTimeIds = manageClassTimeIds;
+                    }
+                    if(parentKey === "schoolClassTime") {
+                        schoolClassTimeId.push(classTimeId)
+                        oldFilter.schoolClassTimeId = schoolClassTimeId;
+                    }
 
                 } else {
 
@@ -124,6 +134,20 @@ class ManageMyCalendar extends React.Component {
                     console.log("handleChangeClassTime oldFilter-->>",oldFilter);
 
                     if(parentKey === "attendAll") {
+                        let index = ids.indexOf(classTimeId);
+                        if(index > -1) {
+                            ids.splice(index, 1);
+                        }
+                        oldFilter[childKey] = ids
+                    }
+                    if(parentKey === "manageAll") {
+                        let index = ids.indexOf(classTimeId);
+                        if(index > -1) {
+                            ids.splice(index, 1);
+                        }
+                        oldFilter[childKey] = ids
+                    }
+                    if(parentKey === "schoolClassTime") {
                         let index = ids.indexOf(classTimeId);
                         if(index > -1) {
                             ids.splice(index, 1);
@@ -279,7 +303,7 @@ class ManageMyCalendar extends React.Component {
                                                           control={
                                                             <Checkbox
                                                               checked={classTime.isCheck}
-                                                              onChange={this.handleChangeClassTime.bind(this, "manageAll", "managedClassTimes", "classTimesIds", classTime._id)}
+                                                              onChange={this.handleChangeClassTime.bind(this, "manageAll", "managedClassTimes", "manageClassTimeIds", classTime._id)}
                                                               value={classTime._id}
                                                             />
                                                           }
@@ -375,7 +399,7 @@ class ManageMyCalendar extends React.Component {
                                                           control={
                                                             <Checkbox
                                                               checked={classTime.isCheck}
-                                                              onChange={this.handleChangeClassTime.bind(this, "schoolClassTime", "schoolClassTimes", "classTimesIdsForCI", classTime._id)}
+                                                              onChange={this.handleChangeClassTime.bind(this, "schoolClassTime", "schoolClassTimes", "schoolClassTimeId", classTime._id)}
                                                               value={classTime._id}
                                                             />
                                                           }
