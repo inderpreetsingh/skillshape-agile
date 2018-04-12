@@ -27,6 +27,7 @@ import ClassType from "/imports/api/classType/fields";
 import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import get from "lodash/get";
 
 
 
@@ -353,6 +354,10 @@ class DashBoardView extends React.Component {
                     schoolId: memberInfo.schoolId,
                     adminNotes:memberInfo.adminNotes,
                     classmatesNotes: memberInfo.classmatesNotes,
+                    birthYear: memberInfo.birthYear,
+                    lastName:memberInfo.lastName,
+                    classTypeIds: memberInfo.classTypeIds,
+                    firstName:memberInfo.firstName,
                 },
                 schoolMemberDetailsFilters: { _id: memberId }
             }
@@ -572,6 +577,7 @@ class DashBoardView extends React.Component {
                             saveAdminNotesInMembers={this.saveAdminNotesInMembers}
                             disabled={slug ? false : true}
                             view={slug ? "admin" : "classmates"}
+                            classTypeData={ get(this.props, "classTypeData", []) }
                         />
                         { this.renderSchoolMedia(schoolData, memberInfo, slug) }
                     </Fragment>
