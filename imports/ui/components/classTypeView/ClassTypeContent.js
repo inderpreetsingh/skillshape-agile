@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
 import { toastrModal } from '/imports/util';
-import { imageExists } from '/imports/util';
+import withImageExists from '/imports/util/withImageExists.js';
 
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
@@ -172,6 +172,11 @@ const ClassContainer = styled.div`
   }
 `;
 
+const imageExistsConfig = {
+  image: 'classTypeData.classTypeImg',
+  defaultImg: classTypeImgSrc
+}
+
 class ClassTypeContent extends Component {
 
     state = {
@@ -181,7 +186,6 @@ class ClassTypeContent extends Component {
       giveReviewDialog: false,
       nonUserDefaultDialog: false,
       defaultDialogBoxTitle: '',
-      coverSrc: classTypeImgSrc,
       type: "both",
       classTimesData: [],
       myClassTimes: [],
@@ -191,16 +195,6 @@ class ClassTypeContent extends Component {
         classTimesIds: [],
         classTimesIdsForCI: [],
       },
-    }
-
-    _setCoverSrc = (imgSrc) => {
-      imageExists(imgSrc).then(() => {
-        // console.log(this,'resolved image exists....');
-        this.setState({ coverSrc: imgSrc});
-      }).catch(e => {
-        // console.error('no image doesn\'t exists....');
-        this.setState({ coverSrc: classTypeImgSrc });
-      });
     }
 
     getContactNumbers = () => {
@@ -223,26 +217,6 @@ class ClassTypeContent extends Component {
       const newState = {...this.state};
       newState[dialogName] = state;
       this.setState(newState);
-    }
-
-    componentDidMount = () => {
-      const self = this;
-      // console.log(this.props,"dsa");
-      if(!isEmpty(this.props.classTypeData)) {
-        this._setCoverSrc(this.props.classTypeData.classTypeImg);
-      }
-    }
-
-    componentWillReceiveProps = (nextProps) => {
-      if(!isEmpty(nextProps.classTypeData)) {
-        if(!isEmpty(this.props.classTypeData)) {
-          if(this.props.classTypeData.classTypeImg != nextProps.classTypeData.classTypeImg) {
-            this._setCoverSrc(nextProps.classTypeData.classTypeImg);
-          }
-        }else {
-          this._setCoverSrc(nextProps.classTypeData.classTypeImg);
-        }
-      }
     }
 
     scrollTo(name) {
@@ -334,6 +308,7 @@ class ClassTypeContent extends Component {
 		console.log("ClassTypeContent props --->>",this.props);
 
 		const {
+      bgImg,
 			isLoading,
 			schoolData,
 			classTypeData,
@@ -367,9 +342,9 @@ class ClassTypeContent extends Component {
           {this.state.isBusy && <ContainerLoader/>}
 
           {/* Class Type Cover includes description, map, foreground image, class type information*/}
-		        <ClassTypeCover coverSrc={this.state.coverSrc}>
+		        <ClassTypeCover coverSrc={bgImg}>
 			        <ClassTypeCoverContent
-			        	coverSrc={this.state.coverSrc}
+			        	coverSrc={bgImg}
 			            schoolDetails={{...schoolData}}
 			            classTypeData={{...classTypeData}}
                   contactNumbers={this.getContactNumbers()}
@@ -486,4 +461,4 @@ class ClassTypeContent extends Component {
 	}
 }
 
-export default toastrModal(ClassTypeContent);
+export default toastrModal(withImageExists(ClassTypeContent,imageExistsConfig));

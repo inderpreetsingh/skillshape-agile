@@ -195,8 +195,20 @@ class CardsReveal extends Component {
   state = {
     maxCharsLimit: 18,
     revealCard: false,
-    cardImgSrc: cardImgSrc
+    cardImgSrc: this.props.classTypeImg
   };
+
+  _setCardImgSrc = (imgSrc) => {
+    return imageExists(imgSrc).then(() => {
+      if(this.state.cardImgSrc != imgSrc)
+        this.setState({ cardImgSrc: imgSrc});
+
+    }).catch(e => {
+      if(this.state.cardImgSrc != cardImgSrc)
+        this.setState({ cardImgSrc: cardImgSrc });
+
+    });
+  }
 
   revealCardContent = (e) => {
     this.setState({ revealCard: true });
@@ -206,26 +218,14 @@ class CardsReveal extends Component {
     this.setState({ revealCard: false });
   }
 
-  _setCardImgSrc = (imgSrc) => {
-    return imageExists(imgSrc).then(() => {
-      if(this.state.cardImgSrc != imgSrc)
-        this.setState({ cardImgSrc: imgSrc});
-
-      return imgSrc;
-    }).catch(e => {
-      if(this.state.cardImgSrc != cardImgSrc)
-        this.setState({ cardImgSrc: cardImgSrc });
-
-      return cardImgSrc;
-    });
-  }
-
   componentDidMount = () => {
     this._setCardImgSrc(this.props.classTypeImg)
   }
 
-  componentDidUpdate = () => {
-    this._setCardImgSrc(this.props.classTypeImg);
+  componentWillReceiveProps = (nextProps) => {
+    if(nextProps.classTypeImg != this.props.classTypeImg) {
+      this._setCardImgSrc(nextProps.classTypeImg);
+    }
   }
 
   render() {

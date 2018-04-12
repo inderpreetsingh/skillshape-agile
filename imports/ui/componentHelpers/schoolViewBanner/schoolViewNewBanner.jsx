@@ -1,5 +1,6 @@
 import React,{Fragment} from 'react';
 import {scroller} from 'react-scroll';
+import {isEmpty} from 'lodash';
 import { Link } from 'react-router';
 import styled from 'styled-components';
 import find from "lodash/find";
@@ -27,6 +28,10 @@ import { getUserFullName } from '/imports/util/getUserData';
 import UploadMedia from './uploadMedia';
 import config from '/imports/config';
 import styles from "./style";
+import withImageExists from '/imports/util/withImageExists.js';
+import {imageExists} from '/imports/util';
+
+import { schoolDetailsImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 const PublishStatusButtonWrapper = styled.div`
 	${helpers.flexCenter}
@@ -41,11 +46,16 @@ styles.switchButton = {
 	height: helpers.rhythmDiv * 5
 }
 
+const imageExistsConfig = {
+	image: 'schoolData.mainImage',
+	defaultImg: schoolDetailsImgSrc
+}
+
 class SchoolViewBanner extends React.Component {
 	constructor(props){
 		super(props);
 		this.state={
-			showBackgroundUpload: false
+			showBackgroundUpload: false,
 		}
 	}
 
@@ -118,7 +128,8 @@ class SchoolViewBanner extends React.Component {
         isPublish,
 		    currentUser,
 				bestPriceDetails,
-		    isEdit
+		    isEdit,
+				bgImg,
 	  	} = this.props;
 	  	const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
 			const ourEmail = this.getOurEmail();
@@ -134,14 +145,14 @@ class SchoolViewBanner extends React.Component {
 						mediaFormData={schoolData}
 						imageType={this.state.imageType}
 				/>}
-			<ClassTypeCover isEdit={isEdit} coverSrc={schoolData.mainImage || config.defaultSchoolImage}>
+			<ClassTypeCover isEdit={isEdit} coverSrc={bgImg}>
 				<ClassTypeCoverContent
 	        noClassTypeData
 					isEdit={isEdit}
 					schoolLocation={schoolLocation}
 					schoolDetails={{...schoolData}}
 					logoSrc={schoolData.logoImg}
-					coverSrc={schoolData.mainImage || config.defaultSchoolImage}
+					coverSrc={bgImg}
 
 					publishStatusButton={checkUserAccess && (() => <PublishStatusButtonWrapper>Publish / Unpublish
 						<Switch checked={isPublish} className={this.props.classes.switchButton} onChange={this.props.handlePublishStatus} aria-label={schoolId} /></PublishStatusButtonWrapper>)}
@@ -168,4 +179,4 @@ class SchoolViewBanner extends React.Component {
 	}
 }
 
-export default withStyles(styles)(SchoolViewBanner)
+export default withStyles(styles)(withImageExists(SchoolViewBanner,imageExistsConfig));
