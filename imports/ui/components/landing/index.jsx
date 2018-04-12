@@ -190,6 +190,13 @@ const ContactUsWrapper = styled.div`
   z-index: 1500;
  `;
 
+const FilterAppliedDivs = styled.div`
+    display: flex;
+    width: 200px;
+    float: left;
+    align-items: center;
+`;
+
 class Landing extends Component {
 
     constructor(props) {
@@ -570,7 +577,23 @@ class Landing extends Component {
     showText = (text, cb) => {
         return (
             <WrapperDiv>
-                <Icon onClick={cb}>close</Icon>{text}
+                <FilterAppliedDivs>
+                    Filters in use.
+                </FilterAppliedDivs>
+                <FilterAppliedDivs>
+                    <div>
+                        {text}
+                    </div>
+                    <Icon onClick={cb}>close</Icon>
+                </FilterAppliedDivs>
+                <FilterAppliedDivs>
+                    <div style={{padding:8}}>
+                    View Filters
+                    </div>
+                    <Button fab mini onClick={() => this.handleFiltersDialogBoxState(true)}>
+                       <Icon>tune </Icon>
+                    </Button>
+                </FilterAppliedDivs>
             </WrapperDiv>
         )
     }
@@ -608,7 +631,6 @@ class Landing extends Component {
         console.log("Landing state -->>",this.state);
         // console.log("Landing state -->>", this.state);
         // console.log("Landing props -->>", this.props);
-        let filtersApplied  = this.state.filters && this.showAppliedTopFilter()
         return (
             <DocumentTitle title={this.props.route.name}>
                 <div>
@@ -674,15 +696,6 @@ class Landing extends Component {
                     </FilterPanelWrapper>
                     {/* Applied Filters */}
                     {this.state.filters && this.showAppliedTopFilter()}
-                    {filtersApplied &&
-                        <WrapperDiv style={{textAlign: 'justify',display: 'flex',alignItems: 'center'}}>
-                            <Button fab mini onClick={() => this.handleFiltersDialogBoxState(true)}>
-                               <Icon>tune </Icon>
-                            </Button>
-                            <div style={{padding:8}}>
-                            View Filters
-                            </div>
-                        </WrapperDiv>}
                     {/*Cards List */}
                     <Element name="content-container" className="element homepage-content">
                         <ClassTypeList
