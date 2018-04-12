@@ -10,7 +10,7 @@ import { imageExists } from '/imports/util';
 export default withImageExists = (WrappedComponent,config) => {
   return class extends Component {
     state = {
-      bgImg: get(this.props,config.image,"")
+      bgImg: get(this.props,config.image,config.defaultImg)
     }
 
     _setbgImg = (imgSrc) => {
