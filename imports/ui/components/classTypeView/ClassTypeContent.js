@@ -89,11 +89,10 @@ const ClassWrapper = styled.div`
 `;
 
 const ClassTimesWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  padding-bottom: ${helpers.rhythmDiv * 4}px;
 
   @media screen and (max-width: ${helpers.mobile + 100}px) {
-    padding-bottom: ${props => props.paddingBottom ? props.paddingBottom: 0}px;
-    margin-bottom: 0;
+    padding-bottom: ${props => props.paddingBottom}px;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -159,12 +158,18 @@ const CalendarWrapper = styled.div`
 
 const ClassContainer = styled.div`
   width: 90%;
-  padding: ${helpers.rhythmDiv}px;
-  margin: ${helpers.rhythmDiv}px auto;
+  padding: 0 ${helpers.rhythmDiv}px;
+  margin: 0px auto;
   border-radius: ${helpers.rhythmDiv}px;
   background: #ffffff;
   text-align: center;
-  margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv}px;
+  margin-top: ${props => props.marginTop}px;
+  margin-bottom: ${props => props.marginBottom}px;
+  padding-bottom: ${props => props.paddingBottom}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding-bottom: ${props => props.smallPadding ? props.smallPadding : props.paddingBottom}px;
+  }
 `;
 
 class ClassTypeContent extends Component {
@@ -375,14 +380,14 @@ class ClassTypeContent extends Component {
 			        />
 		        </ClassTypeCover>
 		        <Main>
-			        <MainInnerFixedContainer marginBottom="32">
+			        <MainInnerFixedContainer marginBottom={!isEmpty(reviewsData) ? 32 : 64}>
 			            {!isEmpty(reviewsData) && (<MainInner reviews largePadding="32" smallPadding="32">
                         <ClassWrapper reviews>
                           <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
                         </ClassWrapper>
                     </MainInner>)}
 
-                  <ClassContainer marginBottom={32}>
+                  <ClassContainer marginTop="64" marginBottom="32">
                     {isEmpty(reviewsData) && <Fragment><Typography>
                       You are the first one to write review for this class.
                     </Typography>
@@ -396,13 +401,13 @@ class ClassTypeContent extends Component {
                     </ClassContainer>
           			</MainInnerFixedContainer>
 
-          			<MainInnerFixedContainer marginBottom="16">
+          			<MainInnerFixedContainer>
 			            <ClassTimesInnerWrapper>
 			                <ClassTimesWrapper paddingBottom="48">
 			                	<ClassTimesTitle>Class times for <ClassTimesName>{classTypeData.name.toLowerCase()}</ClassTimesName></ClassTimesTitle>
 			                	{
                             isEmpty(classTimesData) ? (
-                                <ClassContainer>
+                                <ClassContainer paddingBottom="16" smallPadding="0">
                                     <Typography caption="p">
                                         No class times have been given by the school. Please click this button to request the school complete their listing.
                                     </Typography>
@@ -431,7 +436,7 @@ class ClassTypeContent extends Component {
                     <PackagesTitle>Pay only for what you need</PackagesTitle>
                     {
                         (isEmpty(classPricingData) && isEmpty(monthlyPricingData)) ? (
-                            <ClassContainer>
+                            <ClassContainer paddingBottom="32">
                                 <Typography caption="p">
                                     No class pricing have been given by the school. Please click this button to request the school complete their listing.
                                 </Typography>
