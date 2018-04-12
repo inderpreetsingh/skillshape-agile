@@ -11,6 +11,7 @@ import ClassMap from '../../map/ClassMap';
 import ClassTypeDescription from '../ClassTypeDescription.jsx';
 import ClassTypeInfo from '../ClassTypeInfo.jsx';
 import ActionButtons from '../ActionButtons.jsx';
+import BestPrices from '../BestPrices.jsx';
 
 import * as helpers from '../../jss/helpers.js';
 import * as settings from '../../../site-settings.js';
@@ -218,8 +219,9 @@ class ClassTypeCoverContent extends React.Component {
     return(
         <CoverContentWrapper>
           <CoverContent>
-            { this.state.isBusy && <ContainerLoader/>}
+            {this.state.isBusy && <ContainerLoader/>}
             <ContentSection leftSection>
+              {/* Displays map when it's not edit mode*/}
               {!props.isEdit && <MapContainer>
                   {
                     isEmpty(selectedLocation) ? (
@@ -233,7 +235,9 @@ class ClassTypeCoverContent extends React.Component {
                       </LocationNotFound>
                     ) :<div id="myMap" style={{height: '100%', minHeight: 320}}/>
                   }
-              </MapContainer>}
+            </MapContainer>}
+
+              {/* When it's edit mode, displays logo */}
               {props.isEdit ?
                 <LogoContainer>
                   <ClassTypeLogo position='relative' logoSrc={props.logoSrc} noMarginBottom>
@@ -242,36 +246,45 @@ class ClassTypeCoverContent extends React.Component {
                     </EditButtonWrapper>
                   </ClassTypeLogo>
                 </LogoContainer>
-                : <ClassTypeDescription
-                isEdit={props.isEdit}
-                publishStatusButton={props.publishStatusButton}
-                schoolName={props.schoolDetails.name}
-                description={props.schoolDetails.aboutHtml}
-                isClassTypeNameAvailable={!isEmpty(props.classTypeData)}
-                classTypeName={classTypeName}
-                noOfStars={props.schoolDetails.noOfStars}
-                noOfReviews={props.schoolDetails.noOfReviews}
+                :
+                <ClassTypeDescription
+                  isEdit={props.isEdit}
+                  publishStatusButton={props.publishStatusButton}
+                  schoolName={props.schoolDetails.name}
+                  description={props.schoolDetails.aboutHtml}
+                  isClassTypeNameAvailable={!isEmpty(props.classTypeData)}
+                  classTypeName={classTypeName}
+                  noOfStars={props.schoolDetails.noOfStars}
+                  noOfReviews={props.schoolDetails.noOfReviews}
               />}
+
+              {!props.isEdit && props.noClassTypeData && !isEmpty(props.bestPriceDetails) && <BestPrices
+                  onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
+                  bestPriceDetails={props.bestPriceDetails}
+                />}
             </ContentSection>
 
             <ContentSection>
               <ShowOnMobile>
-              {props.isEdit && <EditButtonWrapper>
-                <ClassTimeButton icon iconName="photo_camera" label="Background" onClick={props.onEditBgButtonClick} />
+                {props.isEdit && <EditButtonWrapper>
+                  <ClassTimeButton icon iconName="photo_camera" label="Background" onClick={props.onEditBgButtonClick} />
                 </EditButtonWrapper>}
               </ShowOnMobile>
+
 
               <ClassTypeForegroundImage coverSrc={props.coverSrc} >
                 <Fragment>
                   {props.actionButtons || <ActionButtons
                     isEdit={props.isEdit}
-                    emailUsButton={props.emailUsButton}
-                    pricingButton={props.pricingButton}
-                    callUsButton={props.callUsButton}
+                    emailUsButton={props.actionButtonProps.emailUsButton}
+                    pricingButton={props.actionButtonProps.pricingButton}
+                    callUsButton={props.actionButtonProps.callUsButton}
+                    scheduleButton={props.actionButtonProps.scheduleButton}
+                    onCallUsButtonClick={props.actionButtonProps.onCallUsButtonClick}
+                    onEmailButtonClick={props.actionButtonProps.onEmailButtonClick}
+                    onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
+                    onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
                     rightSide={props.noClassTypeData && props.logoSrc}
-                    onCallUsButtonClick={props.onCallUsButtonClick}
-                    onEmailButtonClick={props.onEmailButtonClick}
-                    onPricingButtonClick={props.onPricingButtonClick}
                     />}
 
                   {props.logoSrc && !props.isEdit && <ClassTypeLogo
@@ -279,15 +292,17 @@ class ClassTypeCoverContent extends React.Component {
                       bottom={helpers.rhythmDiv * 2}
                       logoSrc={props.logoSrc}
                       publicView
-                      />}
+                    />}
 
                   {props.editButton && (props.isEdit ? <EditButtonWrapper>
                     <ClassTimeButton icon iconName="photo_camera" label="Background" onClick={props.onEditBgButtonClick} />
                     </EditButtonWrapper> : <EditButtonWrapper> <EditButton /> </EditButtonWrapper>)}
 
-                </Fragment>
+                  </Fragment>
               </ClassTypeForegroundImage>
 
+              {/* On large screens this section will be below foregroud image,
+                on smaller screens it's below the left side*/}
               <ClassTypeInfoWrapper>
                 {props.classTypeMetaInfo || (props.classTypeData ? <ClassTypeInfo
                   ageRange={props.classTypeData.ageMin && props.classTypeData.ageMax && `${props.classTypeData.ageMin} - ${props.classTypeData.ageMax}`}
@@ -300,14 +315,16 @@ class ClassTypeCoverContent extends React.Component {
                 <ShowOnMobile>
                   {props.actionButtons || <ActionButtons
                     isEdit={props.isEdit}
-                    emailUsButton={props.emailUsButton}
-                    pricingButton={props.pricingButton}
-                    callUsButton={props.callUsButton}
-                    onCallUsButtonClick={props.onCallUsButtonClick}
-                    onEmailButtonClick={props.onEmailButtonClick}
-                    onPricingButtonClick={props.onPricingButtonClick}
+                    emailUsButton={props.actionButtonProps.emailUsButton}
+                    pricingButton={props.actionButtonProps.pricingButton}
+                    callUsButton={props.actionButtonProps.callUsButton}
+                    scheduleButton={props.actionButtonProps.scheduleButton}
+                    onCallUsButtonClick={props.actionButtonProps.onCallUsButtonClick}
+                    onEmailButtonClick={props.actionButtonProps.onEmailButtonClick}
+                    onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
+                    onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
                     />}
-                  </ShowOnMobile>
+                </ShowOnMobile>
               </ClassTypeInfoWrapper>
             </ContentSection>
           </CoverContent>
@@ -324,11 +341,14 @@ ClassTypeCoverContent.propTypes = {
   map: PropTypes.element,
   mapLocation: PropTypes.string,
   classTypeData: PropTypes.object,
-  schoolDetails: PropTypes.object
+  schoolDetails: PropTypes.object,
+  actionButtonProps: PropTypes.object
 }
 
 ClassTypeCoverContent.defaultProps = {
+  actionButtonProps: {
 
+  }
 }
 
 export default toastrModal(ClassTypeCoverContent);

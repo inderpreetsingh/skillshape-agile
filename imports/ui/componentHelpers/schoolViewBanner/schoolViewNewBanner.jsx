@@ -117,6 +117,7 @@ class SchoolViewBanner extends React.Component {
 		    schoolId,
         isPublish,
 		    currentUser,
+				bestPriceDetails,
 		    isEdit
 	  	} = this.props;
 	  	const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
@@ -142,16 +143,23 @@ class SchoolViewBanner extends React.Component {
 					logoSrc={schoolData.logoImg}
 					coverSrc={schoolData.mainImage || config.defaultSchoolImage}
 
-					emailUsButton={emailUsButton}
-
 					publishStatusButton={checkUserAccess && (() => <PublishStatusButtonWrapper>Publish / Unpublish
-	          <Switch checked={isPublish} className={this.props.classes.switchButton} onChange={this.props.handlePublishStatus} aria-label={schoolId} /></PublishStatusButtonWrapper>)}
-	        editButton={checkUserAccess && (() => <Link className={classes.ImageFooterbutton}  to={`/School-Admin/${schoolData._id}/edit`}>
-	          <ClassTimeButton icon iconName='edit' label="Edit"> Edit </ClassTimeButton> </Link>)}
+						<Switch checked={isPublish} className={this.props.classes.switchButton} onChange={this.props.handlePublishStatus} aria-label={schoolId} /></PublishStatusButtonWrapper>)}
+					editButton={checkUserAccess && (() => <Link className={classes.ImageFooterbutton}  to={`/School-Admin/${schoolData._id}/edit`}>
+						<ClassTimeButton icon iconName='edit' label="Edit"> Edit </ClassTimeButton> </Link>)}
 
-					onEmailButtonClick={this.handleEmailUs}
-					onCallUsButtonClick={() => this.handleCallUs(schoolData)}
-					onPricingButtonClick={() => this.scrollTo('price-section')}
+					actionButtonProps={{
+						emailUsButton: emailUsButton,
+						scheduleButton: true,
+						pricingButton: false,
+						onEmailButtonClick: this.handleEmailUs,
+						onCallUsButtonClick: () => this.handleCallUs(schoolData),
+						onPricingButtonClick: () => this.scrollTo('price-section'),
+						onScheduleButtonClick: () => this.scrollTo('schedule-section')
+					}}
+
+					bestPriceDetails={bestPriceDetails}
+
 	        onEditLogoButtonClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})}
 					onEditBgButtonClick={() => this.setState({showBackgroundUpload: true, imageType: "mainImage"})}
 				/>

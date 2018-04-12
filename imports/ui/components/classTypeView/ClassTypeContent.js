@@ -366,17 +366,19 @@ class ClassTypeContent extends Component {
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.isBusy && <ContainerLoader/>}
 
-          {/* Class Type Cover includes description, map, foreground image, then class type information*/}
+          {/* Class Type Cover includes description, map, foreground image, class type information*/}
 		        <ClassTypeCover coverSrc={this.state.coverSrc}>
 			        <ClassTypeCoverContent
 			        	coverSrc={this.state.coverSrc}
 			            schoolDetails={{...schoolData}}
 			            classTypeData={{...classTypeData}}
                   contactNumbers={this.getContactNumbers()}
-                  emailUsButton={emailUsButton}
-			            onCallUsButtonClick={this.handleCallUsButtonClick}
-			            onEmailButtonClick={this.handleEmailUsButtonClick}
-			            onPricingButtonClick={() => this.scrollTo('price-section')}
+                  actionButtonProps={{
+                    emailUsButton: emailUsButton,
+                    onCallUsButtonClick: this.handleCallUsButtonClick,
+                    onEmailButtonClick: this.handleEmailUsButtonClick,
+                    onPricingButtonClick: () => this.scrollTo('price-section')
+                  }}
 			        />
 		        </ClassTypeCover>
 		        <Main>
