@@ -1,7 +1,7 @@
 import React , {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
+import {isEmpty,isArray,isObject} from 'lodash';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
@@ -45,7 +45,7 @@ const ClassTypeInfoWrapper = styled.div`
 
 
 const MapContainer = styled.div`
-  height: 320px;
+  min-height: 320px;
   max-width: 496px;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   border-radius: 5px;
@@ -54,6 +54,16 @@ const MapContainer = styled.div`
     max-width: 100%;
     width: 100%;
   }
+`;
+
+const MyLocation = styled.div`
+  width: 100%;
+  background: white;
+  font-family: ${helpers.commonFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-style: italic;
+  color: ${helpers.textColor};
+  padding: ${helpers.rhythmDiv * 2}px;
 `;
 
 const LogoContainer = styled.div`
@@ -157,17 +167,39 @@ class ClassTypeCoverContent extends React.Component {
       this._addLocationOnMap();
     }
 
+    _createAddressStr(locationData) {
+      for (obj of locationData) {
+        console.info(obj,"object.....");
+        return obj.address + ", "+ obj.city + ", "+ obj.state +", "+obj.country;
+      }
+    }
 
     _addLocationOnMap() {
+      let locationData;
       if(this.props.noClassTypeData) {
         if(!isEmpty(this.props.schoolLocation)) {
-          const location = this.props.schoolLocation;
-          createMarkersOnMap("myMap", location);
+          locationData = this.props.schoolLocation;
+          createMarkersOnMap("myMap", locationData);
         }
       }else {
         if(!isEmpty(this.props.classTypeData.selectedLocation)) {
-          const location = [this.props.classTypeData.selectedLocation];
-          createMarkersOnMap("myMap", location);
+          locationData = [this.props.classTypeData.selectedLocation];
+          createMarkersOnMap("myMap", locationData);
+        }
+      }
+    }
+
+    getAddress() {
+      let locationData;
+      if(this.props.noClassTypeData) {
+        if(!isEmpty(this.props.schoolLocation)) {
+          locationData = this.props.schoolLocation;
+          return this._createAddressStr(locationData);
+        }
+      }else {
+        if(!isEmpty(this.props.classTypeData.selectedLocation)) {
+          locationData = [this.props.classTypeData.selectedLocation];
+          return this._createAddressStr(locationData);
         }
       }
     }
@@ -233,7 +265,11 @@ class ClassTypeCoverContent extends React.Component {
                             label="Request location"
                         />}
                       </LocationNotFound>
-                    ) :<div id="myMap" style={{height: '100%', minHeight: 320}}/>
+                    ) :
+                    <Fragment>
+                      <div id="myMap" style={{height: '100%', minHeight: 320}}/>
+                      <MyLocation>{this.getAddress()}</MyLocation>
+                    </Fragment>
                   }
             </MapContainer>}
 
@@ -258,7 +294,7 @@ class ClassTypeCoverContent extends React.Component {
                   noOfReviews={props.schoolDetails.noOfReviews}
               />}
 
-              {!props.isEdit && props.noClassTypeData && !isEmpty(props.bestPriceDetails) && <BestPrices
+              {!props.isEdit && props.noClassTypeData && (props.bestPriceDetails.class || props.bestPriceDetails.monthly) && <BestPrices
                   onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
                   bestPriceDetails={props.bestPriceDetails}
                 />}

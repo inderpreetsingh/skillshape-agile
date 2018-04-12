@@ -138,6 +138,7 @@ const PricingSection = styled.div`
 const ButtonWrapper = styled.div`
   ${helpers.flexCenter}
   width: 100%;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
 const ContentWrapper = styled.div`
@@ -274,27 +275,6 @@ export default function() {
             }}
             handlePublishStatus={this.handlePublishStatus.bind(this, schoolId)}/> {/* container, school-header ends */}
 
-          {/* Best Price Details */}
-          {!isEmpty(this.state.bestPriceDetails) && (<CardContentPriceWrapper>
-              <SectionTitle>Best Prices Available</SectionTitle>
-              <ContentWrapper>
-                {
-                  this.state.bestPriceDetails.bestMonthlyPrice && (
-                    <Typography component="p">
-                      Monthly Packages from {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}$ per Month
-                    </Typography>
-                  )
-                }
-                {
-                  this.state.bestPriceDetails.bestClassPrice && (
-                    <Typography component="p">
-                      Class Packages from {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}$ per Class
-                    </Typography>
-                  )
-                }
-              </ContentWrapper>
-            </CardContentPriceWrapper>)}
-
           {/* Reviews List */}
           <ReviewsWrapper>
             {!isEmpty(reviewsData) && (<ReviewsInnerWrapper>
@@ -335,11 +315,11 @@ export default function() {
           <SectionTitle>Pay only for what you want.</SectionTitle>
           {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
             <ButtonWrapper>
-            <ClassTimeButton
-              onClick={this.handlePricingInfoRequestModal}
-              icon
-              iconName="attach_money"
-              label="Request pricing info" />
+              <ClassTimeButton
+                onClick={this.handlePricingInfoRequestModal}
+                icon
+                iconName="attach_money"
+                label="Request pricing info" />
             </ButtonWrapper> : ''}
 
             <EnrollMentWrapper>
@@ -390,7 +370,9 @@ export default function() {
 
             {/* Calendar Section*/}
             <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
+              <Element name="schedule-section">
               {<ManageMyCalendar schoolCalendar={true} {...this.props}/>}
+              </Element>
             </MyCalendarWrapper>
 
 

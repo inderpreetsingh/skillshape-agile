@@ -1,22 +1,37 @@
 import React, {Fragment} from 'react';
+import styled from 'styled-components';
 import DocumentTitle from 'react-document-title';
 import { createContainer } from 'meteor/react-meteor-data';
+
 import { formStyles, cutString } from '/imports/util';
 import MyCalender from '/imports/ui/components/users/myCalender';
 import ClassTimes from '/imports/api/classTimes/fields';
 import ClassInterest from '/imports/api/classInterest/fields';
 
+import { withStyles } from 'material-ui/styles';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import Card  from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import Checkbox from 'material-ui/Checkbox';
 import { FormControlLabel, FormControl } from 'material-ui/Form';
+
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
+import newStyles from './styles.js';
 const styles = formStyles();
 
 const inputStyle = {
     minWidth: 150,
     display: 'flex',
 }
+
+const StrongText = styled.p`
+  margin: 0;
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 500;
+  line-height: 1;
+`;
 
 class ManageMyCalendar extends React.Component {
 
@@ -216,6 +231,7 @@ class ManageMyCalendar extends React.Component {
         console.log("ManageMyCalendar props--->>",this.props);
         console.log("ManageMyCalendar state--->>",this.state);
         // const { schoolClassTimes } = this.props;
+        const { classes } = this.props;
         const { type, classTimesData, myClassTimes, filter, managedClassTimes, schoolClassTimes } = this.state;
 
         return  (
@@ -223,26 +239,26 @@ class ManageMyCalendar extends React.Component {
             <div>
                 {/*<Card style={{padding: 10, margin: 15}}> */}
                 <Card style={{padding: 8}}>
-                     <FormControl component="fieldset" required >
-                    <RadioGroup
-                        aria-label="classTimes"
-                        value={this.state.type}
-                        name="classTimes"
-                        style={{width: '100%', padding: 15, display: 'inline', flexWrap: 'wrap'}}
-                        onChange={this.handleClassOnChange}
-                        defaultSelected="Select any one"
-                    >
-                     <FormControlLabel  value="both" control={<Radio />} label="Show All" />
-                     { (managedClassTimes && managedClassTimes.length > 0) &&
-                        <FormControlLabel  value="managing" control={<Radio />} label="Class I am Managing" />
-                     }
-                     {(myClassTimes && myClassTimes.length > 0) &&
-                        <FormControlLabel  value="attending" control={<Radio />} label="Class I am Attending" />
-                     }
-                     { (schoolClassTimes && schoolClassTimes.length > 0 ) &&
-                        <FormControlLabel  value="school" control={<Radio />} label="School Class Times" />
-                     }
-                    </RadioGroup>
+                    <FormControl component="fieldset" required >
+                      <RadioGroup
+                          aria-label="classTimes"
+                          value={this.state.type}
+                          name="classTimes"
+                          style={{width: '100%', padding: 15, display: 'inline', flexWrap: 'wrap'}}
+                          onChange={this.handleClassOnChange}
+                          defaultSelected="Select any one"
+                      >
+                       <FormControlLabel  value="both" control={<Radio />} label="Show All" classes={{label: classes.label}}/>
+                       {(managedClassTimes && managedClassTimes.length > 0) &&
+                          <FormControlLabel  value="managing" control={<Radio />} label="Class I am Managing" classes={{label: classes.label}}/>
+                       }
+                       {(myClassTimes && myClassTimes.length > 0) &&
+                          <FormControlLabel  value="attending" control={<Radio />} label="Class I am Attending" classes={{label: classes.label}}/>
+                       }
+                       { (schoolClassTimes && schoolClassTimes.length > 0 ) &&
+                          <FormControlLabel  value="school" control={<Radio />} label="School Class Times" classes={{label: classes.label}}/>
+                       }
+                      </RadioGroup>
                     </FormControl>
                     <Divider/>
                     {
@@ -251,7 +267,7 @@ class ManageMyCalendar extends React.Component {
                                 <div style={{...styles.formControlInline, display: 'inline-flex', alignItems: 'center', padding: 10}}>
                                     <div style={styles.formControl}>
                                         <div style={inputStyle}>
-                                            <strong>Class I am Managing</strong>
+                                            <StrongText>Class I am Managing</StrongText>
                                         </div>
                                     </div>
                                     <div style={styles.formControl}>
@@ -264,6 +280,7 @@ class ManageMyCalendar extends React.Component {
                                                   value="classTimesIds"
                                                 />
                                               }
+                                              classes={{label: classes.label}}
                                               label="All"
                                             />
 
@@ -283,6 +300,7 @@ class ManageMyCalendar extends React.Component {
                                                               value={classTime._id}
                                                             />
                                                           }
+                                                          classes={{label: classes.label}}
                                                           label={cutString(classTime.name, 12)}
                                                         />
                                                     </div>
@@ -301,7 +319,7 @@ class ManageMyCalendar extends React.Component {
                                 <div style={{...styles.formControlInline,display: 'inline-flex', alignItems: 'center', padding: 10}}>
                                     <div style={styles.formControl}>
                                         <div style={{minWidth: 150, display: 'flex'}}>
-                                            <strong>Class I am Attending</strong>
+                                            <StrongText>Class I am Attending</StrongText>
                                         </div>
                                     </div>
                                     <div style={styles.formControl}>
@@ -314,6 +332,7 @@ class ManageMyCalendar extends React.Component {
                                                   value="classTimesIdsForCI"
                                                 />
                                               }
+                                              classes={{label: classes.label}}
                                               label="All"
                                             />
                                         </div>
@@ -331,6 +350,7 @@ class ManageMyCalendar extends React.Component {
                                                               value={classTime._id}
                                                             />
                                                           }
+                                                          classes={{label: classes.label}}
                                                           label={cutString(classTime.name, 12)}
                                                         />
                                                     </div>
@@ -349,7 +369,7 @@ class ManageMyCalendar extends React.Component {
                                 <div style={{...styles.formControlInline,display: 'inline-flex', alignItems: 'center', padding: 10}}>
                                     <div style={styles.formControl}>
                                         <div style={{minWidth: 150, display: 'flex'}}>
-                                            <strong>School Class Times</strong>
+                                            <StrongText>School Class Times</StrongText>
                                         </div>
                                     </div>
                                     <div style={styles.formControl}>
@@ -362,6 +382,7 @@ class ManageMyCalendar extends React.Component {
                                                   value="schoolClassTimeId"
                                                 />
                                               }
+                                              classes={{label: classes.label}}
                                               label="All"
                                             />
                                         </div>
@@ -379,6 +400,7 @@ class ManageMyCalendar extends React.Component {
                                                               value={classTime._id}
                                                             />
                                                           }
+                                                          classes={{label: classes.label}}
                                                           label={cutString(classTime.name, 12)}
                                                         />
                                                     </div>
@@ -432,4 +454,4 @@ export default createContainer(props => {
         schoolClassTimes
     };
 
-}, ManageMyCalendar);
+}, withStyles(newStyles)(ManageMyCalendar));
