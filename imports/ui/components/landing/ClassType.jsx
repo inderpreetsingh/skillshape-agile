@@ -11,7 +11,8 @@ import PackagesList from './components/class/packages/PackagesList.jsx';
 import SchoolDetails from './components/class/details/SchoolDetails.jsx';
 import ReviewsSlider from './components/class/ReviewsSlider.jsx';
 import ClassTypeCoverContent from './components/class/cover/ClassTypeCoverContent.jsx';
-import MyCalendar from '../users/myCalender';
+import MyCalendar from '/imports/ui/components/users/myCalender';
+import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
 import TopSearchBar from './components/TopSearchBar';
 import ContactUsBar from './components/ContactUsBar';
@@ -212,7 +213,7 @@ class ClassType extends Component {
               description={schoolDetails.fullDescription}
             />
             <CalendarWrapper>
-              <MyCalendar />
+              <ManageMyCalendar classCalendar={true} {...this.props}/>
             </CalendarWrapper>
           </MainInnerFixedContainer>
 

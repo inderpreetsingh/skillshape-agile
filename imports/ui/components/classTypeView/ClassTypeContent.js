@@ -26,13 +26,13 @@ import ClassTimesBoxes from '/imports/ui/components/landing/components/classTime
 import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 import SchoolDetails from '/imports/ui/components/landing/components/class/details/SchoolDetails.jsx';
 import MyCalendar from '/imports/ui/components/users/myCalender';
+import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
 
 import { capitalizeString } from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
 const SchoolImgWrapper = styled.div`
   height: 400px;
