@@ -63,6 +63,7 @@ class EditMemberDialogBox extends Component {
         };
     }
 
+
     collectSelectedClassTypes = (data) => {
         console.log("collectSelectedClassTypes",data);
         let classTypeIds = data.map((item) => {return item._id})
@@ -91,6 +92,7 @@ class EditMemberDialogBox extends Component {
                 this.setState({isLoading: false});
                 // Close Modal
                 this.props.onModalClose();
+                this.props.reRender(memberInfo._id);
             }
         );
     }

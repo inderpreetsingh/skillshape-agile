@@ -202,6 +202,7 @@ class SchoolMemberInfo extends Component {
               openEditTaggedModal= {this.openEditMemberModal}
               memberInfo={ memberInfo }
               classTypeData={ this.props.classTypeData }
+              reRender={this.props.handleMemberDetailsToRightPanel}
           />
         }
         <Grid
