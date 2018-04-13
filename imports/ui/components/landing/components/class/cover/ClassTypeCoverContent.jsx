@@ -2,8 +2,11 @@ import React , {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {isEmpty} from 'lodash';
+
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
+import Icon from 'material-ui/Icon';
+import { withStyles } from 'material-ui/styles';
 
 import { createMarkersOnMap, toastrModal } from '/imports/util';
 
@@ -22,6 +25,13 @@ import PrimaryButton from '/imports/ui/components/landing/components/buttons/Pri
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import Events from '/imports/util/events';
+
+const styles = {
+  myLocationIcon : {
+    marginRight: helpers.rhythmDiv,
+    color: helpers.textColor
+  }
+}
 
 const CoverContent = styled.div`
   display: flex;
@@ -58,6 +68,8 @@ const MapContainer = styled.div`
 `;
 
 const MyLocation = styled.div`
+  ${helpers.flexCenter}
+  justify-content: flex-start;
   width: 100%;
   background: white;
   font-family: ${helpers.commonFont};
@@ -248,7 +260,7 @@ class ClassTypeCoverContent extends React.Component {
                     ) :
                     <Fragment>
                       <div id="myMap" style={{height: '100%', minHeight: 320}}/>
-                      <MyLocation>{this.getAddress()}</MyLocation>
+                      <MyLocation> <Icon className={props.classes.myLocationIcon}>location_on</Icon> {this.getAddress()}</MyLocation>
                     </Fragment>
                   }
             </MapContainer>}
@@ -367,4 +379,4 @@ ClassTypeCoverContent.defaultProps = {
   }
 }
 
-export default toastrModal(ClassTypeCoverContent);
+export default toastrModal(withStyles(styles)(ClassTypeCoverContent));
