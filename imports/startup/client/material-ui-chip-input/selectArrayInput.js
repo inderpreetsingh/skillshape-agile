@@ -5,13 +5,14 @@ import ChipInput from "./chipInput";
 import MuiThemeProvider from '/imports/startup/client/lib/material-ui-old/styles/MuiThemeProvider';
 import getMuiTheme from '/imports/startup/client/lib/material-ui-old/styles/getMuiTheme';
 import { material_ui_next_theme } from '/imports/util';
+import ourMuiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
 
 const muiTheme = getMuiTheme({
-
     palette: {
-        primary1Color: material_ui_next_theme.palette.primary[900]
+        primary1Color: ourMuiTheme.palette.primary['A700']
     }
 });
+
 // import FieldTitle from '../../util/FieldTitle';
 
 /**
@@ -175,6 +176,8 @@ export class SelectArrayInput extends Component {
             dataSourceConfig
         } = this.props;
         // console.log("muiTheme", muiTheme)
+        // console.info("mui Theme",material_ui_next_theme,muiTheme);
+
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <ChipInput

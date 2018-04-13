@@ -177,7 +177,7 @@ const LoginUserSideNav = (props) => (
             menuListItemText={props.classes.menuListItemText}
             name="Send us feedback"
             iconName="message"
-            onClick={() => browserHistory.push('/ContactUs')}
+            onClick={() => browserHistory.push('/contact-us')}
         />
         <SideNavItem
             button

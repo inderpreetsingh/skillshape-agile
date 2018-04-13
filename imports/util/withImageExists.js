@@ -14,12 +14,10 @@ export default withImageExists = (WrappedComponent,config) => {
     }
 
     _setbgImg = (imgSrc) => {
-  		imageExists(imgSrc).then(() => {
-  			// console.log(this,'resolved image exists....');
+      imageExists(imgSrc).then(() => {
   			this.setState({ bgImg: imgSrc});
   		}).catch(e => {
-  			// console.error('no image doesn\'t exists....');
-  			this.setState({ bgImg: config.defaultImg });
+        this.setState({ bgImg: config.defaultImg });
   		});
   	}
 

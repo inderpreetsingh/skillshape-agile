@@ -23,7 +23,7 @@ const OuterWrapper = styled.div`
    position: fixed;
    right: ${helpers.rhythmDiv * 3}px;
    bottom: ${helpers.rhythmDiv * 3}px;
-   z-index: 1500;
+   z-index: 1;
 `;
 
 const Wrapper = styled.div`
