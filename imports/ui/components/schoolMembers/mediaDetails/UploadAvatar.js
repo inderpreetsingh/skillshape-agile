@@ -15,6 +15,7 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 import { withStyles, imageRegex } from "/imports/util";
 import '/imports/api/media/methods';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 
 const formId = "create-media";
@@ -53,14 +54,13 @@ class UploadAvatar extends React.Component {
 
     onSubmit = (event) => {
         event.preventDefault();
-        console.log("this.props.memberInfo",this);
-        let file= this.state.file;
+        console.log("this.props.memberInfo", this);
+        let file = this.state.file;
         if (!this.state.file) {
             this.setState({ fileUploadError: true })
             return
         } else {
-            // this.props.showLoading();
-            this.setState({ isBusy: true, fileUploadError: false })
+            this.setState({ isLoading: true, fileUploadError: false })
         }
         const memberData = this.props.memberInfo;
         if (file && file.fileData && !file.isUrl) {
@@ -86,20 +86,22 @@ class UploadAvatar extends React.Component {
         }
     }
     editUserCall = (memberData) => {
-        console.log("memberData==>",memberData);
+        console.log("memberData==>", memberData);
         let payload = {};
         payload.pic = memberData.pic;
         Meteor.call(
-          "schoolMemberDetails.editSchoolMemberDetails",
-          { doc_id: memberData._id, doc: payload },
-          (err, res) => {
-            if (res) {
-              console.log("Upadted School Image", res);
+            "schoolMemberDetails.editSchoolMemberDetails", { doc_id: memberData._id, doc: payload },
+            (err, res) => {
+                if (res) {
+                    console.log("Upadted School Image", res);
+                }
+                if (err) {
+                    console.error("err", err);
+                }
+                // Stop loading and close modal.
+                this.setState({ isLoading: false });
+                this.props.onClose();
             }
-            if (err) {
-              console.error("err", err);
-            }
-          }
         );
     }
 
@@ -122,6 +124,9 @@ class UploadAvatar extends React.Component {
                     </Grid>
                     </form>
                 </DialogContent>
+                {
+                    this.state.isLoading && <ContainerLoader />
+                }
                 <DialogActions>
                     <div>
                     {

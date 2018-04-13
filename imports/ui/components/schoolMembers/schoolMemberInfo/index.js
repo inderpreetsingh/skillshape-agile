@@ -71,6 +71,29 @@ const ActionButton = styled.div`
     margin-right: ${helpers.rhythmDiv}px;
   }
 `;
+const UploadDiv = styled.div`
+      background: #448aff;
+    /* display: block; */
+    /* overflow: hidden; */
+    position: relative;
+    text-align: center;
+    /* bottom: 21px; */
+    left: 20px;
+    /* overflow: hidden; */
+    width: 137px;
+    /* background-image: url((unknown)); */
+    /* background-size: cover; */
+    /* background-position: center; */
+    /* height: 250px; */
+    /* width: 250px; */
+    border: 1px solid #bbb;
+    /* width: 122px; */
+    /* height: 100pc; */
+    top: 65px;
+    color: #fff;
+    font-family: inherit;
+    font-weight: 400;
+`;
 
 const ActionButtons = props => (
   <ActionButtonsWrapper>
@@ -185,37 +208,6 @@ class SchoolMemberInfo extends Component {
     return this.props.memberInfo && this.props.memberInfo.phone;
   }
 
-  onSubmit = (event) => {
-        event.preventDefault()
-        const { file } = this.state.file;
-        const mediaData = {};
-        const { mediaFormData, formType } = this.props;
-        if(!this.state.file){
-            this.setState({fileUploadError: true})
-            return
-        } else {
-            // this.props.showLoading();
-            this.setState({isBusy:true, fileUploadError: false})
-        }
-        if(file && file.fileData && !file.isUrl) {
-                S3.upload({files: { "0": file.fileData}, path:"memberAvatar"}, (err, res) => {
-                    if(err) {
-                        console.error("err ",err)
-                        this.setState({isBusy: false, errorText: err.reason || err.message})
-                    }
-                    if(res) {
-                        userData["profile.pic"] = res.secure_url
-                        this.editUserCall(userData)
-                    }
-                })
-            } else if(file && file.isUrl) {
-                userData["profile.pic"] = file.file;
-                this.editUserCall(userData);
-            } else {
-                this.editUserCall(userData);
-            }
-    }
-
   render() {
     const { memberInfo, view, classes } = this.props;
     console.log("SchoolMemberInfo state -->>", this.state);
@@ -254,9 +246,9 @@ class SchoolMemberInfo extends Component {
           >
             <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4}>
               { memberInfo.pic ? <img className={classes.avatarCss} src={memberInfo.pic} /> :
-                <Button raised color="accent" onClick={()=> this.setState({showUploadAvatarModal:true, mediaFormData: null, filterStatus: false})}>
+                (view === "admin" ) ? <UploadDiv onClick={()=> this.setState({showUploadAvatarModal:true, mediaFormData: null, filterStatus: false})}>
                     Upload Image <FileUpload />
-                </Button>
+                </UploadDiv> : ''
               }
             </Grid>
             {
@@ -267,7 +259,6 @@ class SchoolMemberInfo extends Component {
                 ref="uploadAvatar"
                 onAdd={this.onUploadAvatar}
                 onEdit={this.onEditAvatar}
-                showLoading = {this.showLoading}
                 memberInfo={memberInfo}
               />
             }
