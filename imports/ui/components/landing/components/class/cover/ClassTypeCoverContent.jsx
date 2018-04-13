@@ -29,7 +29,8 @@ import Events from '/imports/util/events';
 const styles = {
   myLocationIcon : {
     marginRight: helpers.rhythmDiv,
-    color: helpers.textColor
+    color: helpers.textColor,
+    fontSize: helpers.baseFontSize
   }
 }
 
@@ -239,7 +240,11 @@ class ClassTypeCoverContent extends React.Component {
     console.info('this . props ...............',this.props,"...........")
     const classTypeName = props.noClassTypeData ? '' : props.classTypeData.name;
     const selectedLocation = props.noClassTypeData ? props.schoolLocation : props.classTypeData.selectedLocation;
+    const description = props.noClassTypeData ? props.schoolDetails.aboutHtml : props.classTypeData.desc;
+    const noOfRatings = props.noClassTypeData ? props.schoolDetails.noOfRatings : props.classTypeData.noOfRatings;
+    const noOfReviews = props.noClassTypeData ? props.schoolDetails.noOfReviews : props.classTypeData.noOfReviews;
     const EditButton = props.editButton;
+
     return(
         <CoverContentWrapper>
           <CoverContent>
@@ -279,11 +284,11 @@ class ClassTypeCoverContent extends React.Component {
                   isEdit={props.isEdit}
                   publishStatusButton={props.publishStatusButton}
                   schoolName={props.schoolDetails.name}
-                  description={props.schoolDetails.aboutHtml}
-                  isClassTypeNameAvailable={!isEmpty(props.classTypeData)}
+                  description={description}
+                  isClassTypeNameAvailable={!props.noClassTypeData}
                   classTypeName={classTypeName}
-                  noOfStars={props.schoolDetails.noOfStars}
-                  noOfReviews={props.schoolDetails.noOfReviews}
+                  noOfStars={noOfRatings}
+                  noOfReviews={noOfReviews}
               />}
 
               {!props.isEdit && props.noClassTypeData && (props.bestPriceDetails.class || props.bestPriceDetails.monthly) && <BestPrices

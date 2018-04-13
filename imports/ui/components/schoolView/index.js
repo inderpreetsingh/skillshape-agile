@@ -38,16 +38,6 @@ class SchoolView extends SchoolViewBase {
         }
     }
 
-    _setCoverSrc = (imgSrc) => {
-      imageExists(imgSrc).then(() => {
-        // console.log(this,'resolved image exists....');
-        this.setState({ coverSrc: imgSrc});
-      }).catch(e => {
-        // console.error('no image doesn\'t exists....');
-        this.setState({ coverSrc: schoolDetailsImgSrc });
-      });
-    }
-
     handleSeeMore = () => {
       // Attach count with skill cateory name so that see more functionlity can work properly.
       console.log("handleSeeMore");

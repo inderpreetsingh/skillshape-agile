@@ -72,7 +72,7 @@ const ClassTypeDescription = (props) => {
     <Wrapper isEdit={props.isEdit}>
         {props.isClassTypeNameAvailable ?
         <Title>{props.classTypeName.toLowerCase()}
-          {props.schoolName && props.classTypeName ? <span>in</span> : ''} {props.schoolName.toLowerCase()}
+          {props.schoolName && props.classTypeName ? <span> in </span> : ''} {props.schoolName.toLowerCase()}
         </Title>
         :
         <Title>{props.schoolName.toLowerCase()}

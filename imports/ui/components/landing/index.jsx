@@ -302,8 +302,9 @@ class Landing extends Component {
         scroller.scrollTo((name || 'content-container'), {
             duration: 800,
             delay: 0,
+            offset: 10,
             smooth: 'easeInOutQuart'
-        })
+        });
     }
 
     getMyCurrentLocation = () => {

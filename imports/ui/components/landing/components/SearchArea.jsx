@@ -2,6 +2,10 @@ import React, {Component,Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { browserHistory } from 'react-router';
+import Icon from 'material-ui/Icon';
+import {withStyles} from 'material-ui/styles';
+
+import IconButton from 'material-ui/IconButton';
 
 import SearchBarStyled from './SearchBarStyled.jsx';
 
@@ -21,6 +25,12 @@ import { grey } from 'material-ui/colors';
 import * as helpers from './jss/helpers.js';
 // import IconInput from './form/IconInput.jsx';
 import get from 'lodash/get';
+
+const styles = {
+  iconButtonStyle: {
+    color: helpers.textColor
+  }
+}
 
 const SearchAreaPanel = styled.div`
   padding: ${helpers.rhythmInc};
@@ -141,6 +151,7 @@ const SearchInputsSection = (props) => (
           placeholder="Location"
           defaultValue={props.currentAddress}
           defaultBorderRadius
+          searchIcon={<IconButton className={props.classes.iconButtonStyle}><Icon>search</Icon></IconButton>}
           onSearchIconClick={props.onSearchIconClick}
           noCloseIcon
           onChange={(event) => props.locationInputChanged(event, "filters", null)}
@@ -255,6 +266,7 @@ class SearchArea extends Component {
         {this.props.middleSection ? this.props.middleSection :
           (
             <SearchInputsSection
+              classes={this.props.classes}
               location={this.state.location}
               skillType={this.state.skillType}
               onLocationInputChange={this.handleLocationInputChange}
@@ -298,4 +310,4 @@ SearchArea.defaultProps = {
     middleSectionText: 'Or'
 }
 
-export default SearchArea;
+export default withStyles(styles)(SearchArea);
