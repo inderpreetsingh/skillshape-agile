@@ -49,7 +49,7 @@ class EditMemberDialogBox extends Component {
         const { memberInfo } = this.props;
         console.log("props",props)
         this.state = {
-            birthYear: memberInfo.birthYear || 1990,
+            birthYear: memberInfo.birthYear || 1990, // default value....
             firstName:memberInfo.firstName,
             lastName:memberInfo.lastName || "",
             email:memberInfo.email,
@@ -67,6 +67,32 @@ class EditMemberDialogBox extends Component {
         console.log("collectSelectedClassTypes",data);
         let classTypeIds = data.map((item) => {return item._id})
         this.setState({selectedClassTypes:classTypeIds})
+    }
+
+    onSubmit = (event) => {
+        event.preventDefault();
+        let memberInfo = this.props.memberInfo;
+        let payload = {};
+        payload.firstName = this.state.firstName;
+        payload.lastName = this.state.lastName;
+        payload.phone = this.state.phone;
+        payload.birthYear = this.state.birthYear;
+        payload.classTypeIds = this.state.selectedClassTypes;
+        this.setState({isLoading: true});
+        Meteor.call(
+            "schoolMemberDetails.editSchoolMemberDetails", { doc_id: memberInfo._id, doc: payload },
+            (err, res) => {
+                if (res) {
+                    console.log("Member's details editing done!!", res);
+                }
+                if (err) {
+                    console.error("err", err);
+                }
+                this.setState({isLoading: false});
+                // Close Modal
+                this.props.onModalClose();
+            }
+        );
     }
 
     render() {
@@ -123,7 +149,7 @@ class EditMemberDialogBox extends Component {
                                       label="Last Name"
                                       margin="normal"
                                       fullWidth
-                                      lastName={this.state.lastName}
+                                      value={this.state.lastName}
                                       onChange={(event) => this.setState({ lastName: event.target.value })}
 
                                     />
@@ -135,6 +161,7 @@ class EditMemberDialogBox extends Component {
                                       margin="normal"
                                       fullWidth
                                       value={this.state.email}
+                                      disabled={true}
                                       onChange={(event) => this.setState({ email: event.target.value })}
 
                                     />
@@ -180,14 +207,14 @@ class EditMemberDialogBox extends Component {
                                             data={this.props.classTypeData}
                                             defaultValue={get(this.state, "classTypeData", [])}
                                             placeholder="Skill category"
-                                            onChange={(event)=> this.collectSelectedClassTypes}
+                                            onChange={this.collectSelectedClassTypes}
                                         />
                                     </div>
                                 </Grid>
                                 <Grid item sm={12} xs={12} md={12} style={{display:'flex',justifyContent: 'flex-end'}}>
                                     {this.state.error && <ErrorWrapper>{this.state.error}</ErrorWrapper>}
-                                    <PrimaryButton formId="addUser" type="submit" label="Edit Member"/>
-                                    <PrimaryButton formId="cancelUser" label="Cancel" onClick={() => this.setState({renderStudentModal:false, error:false})}/>
+                                    <PrimaryButton formId="addUser" type="submit" label="Save"/>
+                                    <PrimaryButton formId="cancelUser" label="Cancel" onClick={() => this.props.onModalClose()}/>
                                 </Grid>
                             </Grid>
                         </FormInnerWrapper>
