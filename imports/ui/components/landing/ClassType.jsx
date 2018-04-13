@@ -194,7 +194,6 @@ class ClassType extends Component {
             </ClassTimesInnerWrapper>
           </MainInnerFixedContainer>
 
-
           <PackagesWrapper>
             <PackagesTitle>Pay only for what you need</PackagesTitle>
             <PackagesList

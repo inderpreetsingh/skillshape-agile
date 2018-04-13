@@ -149,8 +149,8 @@ class ClassTypeCoverContent extends React.Component {
 
     _createAddressStr(locationData) {
       for (obj of locationData) {
-        console.info(obj,"object.....");
-        return obj.address + ", "+ obj.city + ", "+ obj.state +", "+obj.country;
+        const addressArray = [obj.address,obj.city,obj.state,obj.country];
+        return addressArray.filter(str => str).join(', ');
       }
     }
 
