@@ -28,7 +28,9 @@ import get from 'lodash/get';
 
 const styles = {
   iconButtonStyle: {
-    color: helpers.textColor
+    color: helpers.textColor,
+    background: helpers.panelColor,
+    borderRadius: 10
   }
 }
 
@@ -91,6 +93,10 @@ const FilterButtonWrapper = styled.div`
   }
 `;
 
+const LocationButtonWrapper = styled.div`
+  padding-left: ${helpers.rhythmDiv}px;
+`;
+
 const SearchInputsSectionWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
@@ -102,6 +108,7 @@ const SearchInputsSectionWrapper = styled.div`
 `;
 
 const InputWrapper = styled.div`
+  ${props => props.locationInput ? `${helpers.flexCenter}` : ''}
   height: 48px;
 `;
 
@@ -146,12 +153,12 @@ const SearchInputsSection = (props) => (
         />
       </InputWrapper>
       <In>in</In>
-      <InputWrapper>
+      <InputWrapper locationInput>
         <MySearchBar
           placeholder="Location"
           defaultValue={props.currentAddress}
           defaultBorderRadius
-          searchIcon={<IconButton className={props.classes.iconButtonStyle}><Icon>search</Icon></IconButton>}
+          withIcon={false}
           onSearchIconClick={props.onSearchIconClick}
           noCloseIcon
           onChange={(event) => props.locationInputChanged(event, "filters", null)}
@@ -162,6 +169,12 @@ const SearchInputsSection = (props) => (
           value={props.currentAddress}
           resetSearch={props.resetSearch}
         />
+        <LocationButtonWrapper>
+          <IconButton className={props.classes.iconButtonStyle} onClick={props.onSearchIconClick}>
+            <Icon>search</Icon>
+          </IconButton>
+        </LocationButtonWrapper>
+
       </InputWrapper>
    </InputsWrapper>
 

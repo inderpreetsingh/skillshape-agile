@@ -11,13 +11,13 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-const Title = styled.h3`
-  font-weight: 600;
+const Title = styled.h2`
+  font-weight: ${props => props.noClassTypeData ? 300 : 600};
   font-family: ${helpers.specialFont};
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   line-height: 1;
-  font-size: ${helpers.baseFontSize}px;
+  font-size: ${props => props.noClassTypeData ? helpers.baseFontSize * 2 : helpers.baseFontSize}px;
 `;
 
 const Notes = styled.div`
@@ -46,7 +46,7 @@ const NoteStyled = styled.p`
 
 const conditionalRender = (props) => {
   return(<Wrapper>
-    <Title>Student Notes</Title>
+    <Title noClassTypeData={props.noClassTypeData}>Student Notes</Title>
     <Notes>
       {props.notes ? ReactHtmlParser(props.notes) : <NoteStyled>Nothing for the moment, but keep an eye. We may add soon.</NoteStyled>}
     </Notes>
@@ -58,6 +58,7 @@ const StudentNotes = (props) => {
 }
 
 StudentNotes.propTypes = {
+  noClassTypeData: false,
   notes: PropTypes.arrayOf(PropTypes.String)
 }
 
