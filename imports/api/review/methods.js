@@ -10,6 +10,8 @@ Meteor.methods({
        });
 
        if(validationContext.isValid()) {
+
+       }else {
          
        }
     }
