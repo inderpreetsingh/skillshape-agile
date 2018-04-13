@@ -578,6 +578,7 @@ class DashBoardView extends React.Component {
                             disabled={slug ? false : true}
                             view={slug ? "admin" : "classmates"}
                             classTypeData={ get(this.props, "classTypeData", []) }
+                            handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}
                         />
                         { this.renderSchoolMedia(schoolData, memberInfo, slug) }
                     </Fragment>
