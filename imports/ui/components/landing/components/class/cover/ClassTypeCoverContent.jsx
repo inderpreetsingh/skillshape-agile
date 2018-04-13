@@ -2,8 +2,11 @@ import React , {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {isEmpty} from 'lodash';
+
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
+import Icon from 'material-ui/Icon';
+import { withStyles } from 'material-ui/styles';
 
 import { createMarkersOnMap, toastrModal } from '/imports/util';
 
@@ -22,6 +25,14 @@ import PrimaryButton from '/imports/ui/components/landing/components/buttons/Pri
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import Events from '/imports/util/events';
+
+const styles = {
+  myLocationIcon : {
+    marginRight: helpers.rhythmDiv,
+    color: helpers.textColor,
+    fontSize: helpers.baseFontSize
+  }
+}
 
 const CoverContent = styled.div`
   display: flex;
@@ -58,6 +69,8 @@ const MapContainer = styled.div`
 `;
 
 const MyLocation = styled.div`
+  ${helpers.flexCenter}
+  justify-content: flex-start;
   width: 100%;
   background: white;
   font-family: ${helpers.commonFont};
@@ -149,8 +162,8 @@ class ClassTypeCoverContent extends React.Component {
 
     _createAddressStr(locationData) {
       for (obj of locationData) {
-        console.info(obj,"object.....");
-        return obj.address + ", "+ obj.city + ", "+ obj.state +", "+obj.country;
+        const addressArray = [obj.address,obj.city,obj.state,obj.country];
+        return addressArray.filter(str => str).join(', ');
       }
     }
 
@@ -227,7 +240,11 @@ class ClassTypeCoverContent extends React.Component {
     console.info('this . props ...............',this.props,"...........")
     const classTypeName = props.noClassTypeData ? '' : props.classTypeData.name;
     const selectedLocation = props.noClassTypeData ? props.schoolLocation : props.classTypeData.selectedLocation;
+    const description = props.noClassTypeData ? props.schoolDetails.aboutHtml : props.classTypeData.desc;
+    const noOfRatings = props.noClassTypeData ? props.schoolDetails.noOfRatings : props.classTypeData.noOfRatings;
+    const noOfReviews = props.noClassTypeData ? props.schoolDetails.noOfReviews : props.classTypeData.noOfReviews;
     const EditButton = props.editButton;
+
     return(
         <CoverContentWrapper>
           <CoverContent>
@@ -248,7 +265,7 @@ class ClassTypeCoverContent extends React.Component {
                     ) :
                     <Fragment>
                       <div id="myMap" style={{height: '100%', minHeight: 320}}/>
-                      <MyLocation>{this.getAddress()}</MyLocation>
+                      <MyLocation> <Icon className={props.classes.myLocationIcon}>location_on</Icon> {this.getAddress()}</MyLocation>
                     </Fragment>
                   }
             </MapContainer>}
@@ -267,11 +284,11 @@ class ClassTypeCoverContent extends React.Component {
                   isEdit={props.isEdit}
                   publishStatusButton={props.publishStatusButton}
                   schoolName={props.schoolDetails.name}
-                  description={props.schoolDetails.aboutHtml}
-                  isClassTypeNameAvailable={!isEmpty(props.classTypeData)}
+                  description={description}
+                  isClassTypeNameAvailable={!props.noClassTypeData}
                   classTypeName={classTypeName}
-                  noOfStars={props.schoolDetails.noOfStars}
-                  noOfReviews={props.schoolDetails.noOfReviews}
+                  noOfStars={noOfRatings}
+                  noOfReviews={noOfReviews}
               />}
 
               {!props.isEdit && props.noClassTypeData && (props.bestPriceDetails.class || props.bestPriceDetails.monthly) && <BestPrices
@@ -367,4 +384,4 @@ ClassTypeCoverContent.defaultProps = {
   }
 }
 
-export default toastrModal(ClassTypeCoverContent);
+export default toastrModal(withStyles(styles)(ClassTypeCoverContent));

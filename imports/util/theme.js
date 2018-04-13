@@ -1,4 +1,5 @@
-import { lightBlue, amber } from 'material-ui/colors';
+import { green, blue ,lightBlue, amber } from 'material-ui/colors';
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
 
 const themeGreen = {
   50: '#F7F7F1',
@@ -18,7 +19,6 @@ const themeGreen = {
   contrastDefaultColor: 'dark',
   rgba: 'rgba(157, 193, 97, 0.54)',
 };
-
 
 const themeRed = {
   50: 	'#FCEDE9',
@@ -58,13 +58,32 @@ const themeYellow = {
   rgba: 'rgba(233, 185, 66, 0.54)',
 };
 
+// const themeGreen = {
+//   50 : "#e8f5e9",
+//   100 : "#c8e6c9",
+//   200 : "#a5d6a7",
+//   300 : "#81c784",
+//   400 : "#66bb6a",
+//   500 : "#4caf50",
+//   600 : "#43a047",
+//   700 : "#388e3c",
+//   800 : "#2e7d32",
+//   900 : "#00c853",
+//   A100 : "#00c853",
+//   A200 : "#00c853",
+//   A400 : "#00c853",
+//   A700 : "#00c853"
+// }
+
 lightBlue.rgba = 'rgba(3, 169, 244, 0.34)'
 lightBlue.main = lightBlue.A700;
 lightBlue.default = lightBlue.A700;
 
+console.log(muiTheme,"muiTheme...")
 export const material_ui_next_theme = {
     palette: {
-        primary: lightBlue,
+        // primary: lightBlue,
+        primary: themeGreen,
         secondary: amber,
         themeColor3: themeYellow
     },

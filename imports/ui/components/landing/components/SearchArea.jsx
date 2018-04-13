@@ -2,6 +2,10 @@ import React, {Component,Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { browserHistory } from 'react-router';
+import Icon from 'material-ui/Icon';
+import {withStyles} from 'material-ui/styles';
+
+import IconButton from 'material-ui/IconButton';
 
 import SearchBarStyled from './SearchBarStyled.jsx';
 
@@ -21,6 +25,14 @@ import { grey } from 'material-ui/colors';
 import * as helpers from './jss/helpers.js';
 // import IconInput from './form/IconInput.jsx';
 import get from 'lodash/get';
+
+const styles = {
+  iconButtonStyle: {
+    color: helpers.textColor,
+    background: helpers.panelColor,
+    borderRadius: 10
+  }
+}
 
 const SearchAreaPanel = styled.div`
   padding: ${helpers.rhythmInc};
@@ -81,6 +93,10 @@ const FilterButtonWrapper = styled.div`
   }
 `;
 
+const LocationButtonWrapper = styled.div`
+  padding-left: ${helpers.rhythmDiv}px;
+`;
+
 const SearchInputsSectionWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
@@ -92,6 +108,7 @@ const SearchInputsSectionWrapper = styled.div`
 `;
 
 const InputWrapper = styled.div`
+  ${props => props.locationInput ? `${helpers.flexCenter}` : ''}
   height: 48px;
 `;
 
@@ -136,11 +153,12 @@ const SearchInputsSection = (props) => (
         />
       </InputWrapper>
       <In>in</In>
-      <InputWrapper>
+      <InputWrapper locationInput>
         <MySearchBar
           placeholder="Location"
           defaultValue={props.currentAddress}
           defaultBorderRadius
+          withIcon={false}
           onSearchIconClick={props.onSearchIconClick}
           noCloseIcon
           onChange={(event) => props.locationInputChanged(event, "filters", null)}
@@ -151,6 +169,12 @@ const SearchInputsSection = (props) => (
           value={props.currentAddress}
           resetSearch={props.resetSearch}
         />
+        <LocationButtonWrapper>
+          <IconButton className={props.classes.iconButtonStyle} onClick={props.onSearchIconClick}>
+            <Icon>search</Icon>
+          </IconButton>
+        </LocationButtonWrapper>
+
       </InputWrapper>
    </InputsWrapper>
 
@@ -255,6 +279,7 @@ class SearchArea extends Component {
         {this.props.middleSection ? this.props.middleSection :
           (
             <SearchInputsSection
+              classes={this.props.classes}
               location={this.state.location}
               skillType={this.state.skillType}
               onLocationInputChange={this.handleLocationInputChange}
@@ -298,4 +323,4 @@ SearchArea.defaultProps = {
     middleSectionText: 'Or'
 }
 
-export default SearchArea;
+export default withStyles(styles)(SearchArea);

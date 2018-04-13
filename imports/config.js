@@ -18,6 +18,7 @@ export default config = Object.freeze({
 	collections: {
 		modules : "Modules",
 		skills : "Skills",
+		reviews: "Reviews",
 		skillCategory: "SkillCategory",
 		skillSubject: "SkillSubject",
 		classType: "ClassType",

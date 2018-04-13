@@ -104,7 +104,7 @@ class SchoolViewBanner extends React.Component {
 	}
 
 	getContactNumbers = () => {
-		return this.props.schoolData.phone.split(',');
+		return this.props.schoolData.phone.split(/[\|\,\\]/);
 	}
 
 	getOurEmail = () => {

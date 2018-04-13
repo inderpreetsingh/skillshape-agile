@@ -352,7 +352,7 @@ export default function() {
              {/*
               <Typography align="center" type="title" classes={{title: classes.title}}> Notes for students</Typography>
               <Typography type="caption" classes={{caption: classes.caption}}> {this.checkForHtmlCode(schoolData.studentNotesHtml) ? ReactHtmlParser(schoolData.studentNotesHtml) : 'Nothing here for the moment, but keep an eye. We may add it soon.'} </Typography>*/}
-              <StudentNotes notes={schoolData.studentNotesHtml} />
+              <StudentNotes noClassTypeData notes={schoolData.studentNotesHtml} />
             </NotesWrapper>
 
             <MediaWrapper>

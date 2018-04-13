@@ -37,7 +37,7 @@ const ClassTypeLogo = (props) => (<Logo
   left={props.left}
   publicView={props.publicView}
   position={props.position}
-  logoSrc={props.bgImg}
-/>);
+  logoSrc={props.logoSrc ? props.bgImg : props.logoSrc}
+>{props.children}</Logo>);
 
 export default withImageExists(ClassTypeLogo,imageExistsConfig);
