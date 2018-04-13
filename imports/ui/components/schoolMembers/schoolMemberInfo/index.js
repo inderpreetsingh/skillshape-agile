@@ -12,7 +12,7 @@ import MobileDetect from 'mobile-detect';
 
 
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import CreateMedia from "/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia.js";
+import UploadAvatar from "/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js";
 import CallMemberDialogBox from '/imports/ui/components/landing/components/dialogs/CallMemberDialogBox.js';
 import EmailMemberDialogBox from '/imports/ui/components/landing/components/dialogs/EmailMemberDialogBox.jsx';
 import EditMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditMemberDialogBox.js";
@@ -70,6 +70,29 @@ const ActionButton = styled.div`
   @media screen and (max-width: ${helpers.tablet}px) {
     margin-right: ${helpers.rhythmDiv}px;
   }
+`;
+const UploadDiv = styled.div`
+      background: #448aff;
+    /* display: block; */
+    /* overflow: hidden; */
+    position: relative;
+    text-align: center;
+    /* bottom: 21px; */
+    left: 20px;
+    /* overflow: hidden; */
+    width: 137px;
+    /* background-image: url((unknown)); */
+    /* background-size: cover; */
+    /* background-position: center; */
+    /* height: 250px; */
+    /* width: 250px; */
+    border: 1px solid #bbb;
+    /* width: 122px; */
+    /* height: 100pc; */
+    top: 65px;
+    color: #fff;
+    font-family: inherit;
+    font-weight: 400;
 `;
 
 const ActionButtons = props => (
@@ -189,7 +212,7 @@ class SchoolMemberInfo extends Component {
     const { memberInfo, view, classes } = this.props;
     console.log("SchoolMemberInfo state -->>", this.state);
     console.log("SchoolMemberInfo props -->>", this.props);
-    const { showCreateMediaModal, mediaFormData, filterStatus, limit } = this.state;
+    const { showUploadAvatarModal, mediaFormData, filterStatus, limit } = this.state;
     return (
       <Grid container>
         {this.state.callMemberDialog && <CallMemberDialogBox contactNumbers={this.getContactNumber()} open={this.state.callMemberDialog} onModalClose={() => this.handleDialogState('callMemberDialog',false)}/>}
@@ -222,29 +245,23 @@ class SchoolMemberInfo extends Component {
             }}
           >
             <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4}>
-              <img className={classes.avatarCss} src="/images/Avatar-Unisex.png" />
-              {<CreateMedia
-                  showCreateMediaModal={showCreateMediaModal}
-                  onClose = {this.closeMediaUpload}
-                  formType={showCreateMediaModal}
-                  schoolId={this.props.schoolData && this.props.schoolData._id}
-                  ref="createMedia"
-                  onAdd={this.onAddMedia}
-                  onEdit={this.onEditMedia}
-                  mediaFormData={mediaFormData}
-                  filterStatus={filterStatus}
-                  showLoading = {this.showLoading}
-                  tagMember={true}
-                  taggedMemberInfo={memberInfo}
-              />}
-            </Grid>
-            <Grid item md={4} sm={4} xs={4} style={{padding: '8px',float: 'right'}}>
-              {
-                <Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
+              { memberInfo.pic ? <img className={classes.avatarCss} src={memberInfo.pic} /> :
+                (view === "admin" ) ? <UploadDiv onClick={()=> this.setState({showUploadAvatarModal:true, mediaFormData: null, filterStatus: false})}>
                     Upload Image <FileUpload />
-                </Button>
+                </UploadDiv> : ''
               }
-              </Grid>
+            </Grid>
+            {
+              <UploadAvatar
+                showUploadAvatarModal={showUploadAvatarModal}
+                onClose = {()=> {this.setState({showUploadAvatarModal:false})}}
+                formType={showUploadAvatarModal}
+                ref="uploadAvatar"
+                onAdd={this.onUploadAvatar}
+                onEdit={this.onEditAvatar}
+                memberInfo={memberInfo}
+              />
+            }
             <Grid item sm={4} xs={4} md={4}>
               <Typography>{memberInfo.name}</Typography>
               {view === "admin" && (

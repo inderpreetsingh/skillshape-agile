@@ -358,6 +358,7 @@ class DashBoardView extends React.Component {
                     lastName:memberInfo.lastName,
                     classTypeIds: memberInfo.classTypeIds,
                     firstName:memberInfo.firstName,
+                    pic:memberInfo.pic
                 },
                 schoolMemberDetailsFilters: { _id: memberId }
             }
