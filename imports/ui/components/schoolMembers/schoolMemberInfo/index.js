@@ -12,7 +12,7 @@ import MobileDetect from 'mobile-detect';
 
 
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import CreateMedia from "/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia.js";
+import UploadAvatar from "/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js";
 import CallMemberDialogBox from '/imports/ui/components/landing/components/dialogs/CallMemberDialogBox.js';
 import EmailMemberDialogBox from '/imports/ui/components/landing/components/dialogs/EmailMemberDialogBox.jsx';
 import EditMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditMemberDialogBox.js";
@@ -185,11 +185,42 @@ class SchoolMemberInfo extends Component {
     return this.props.memberInfo && this.props.memberInfo.phone;
   }
 
+  onSubmit = (event) => {
+        event.preventDefault()
+        const { file } = this.state.file;
+        const mediaData = {};
+        const { mediaFormData, formType } = this.props;
+        if(!this.state.file){
+            this.setState({fileUploadError: true})
+            return
+        } else {
+            // this.props.showLoading();
+            this.setState({isBusy:true, fileUploadError: false})
+        }
+        if(file && file.fileData && !file.isUrl) {
+                S3.upload({files: { "0": file.fileData}, path:"memberAvatar"}, (err, res) => {
+                    if(err) {
+                        console.error("err ",err)
+                        this.setState({isBusy: false, errorText: err.reason || err.message})
+                    }
+                    if(res) {
+                        userData["profile.pic"] = res.secure_url
+                        this.editUserCall(userData)
+                    }
+                })
+            } else if(file && file.isUrl) {
+                userData["profile.pic"] = file.file;
+                this.editUserCall(userData);
+            } else {
+                this.editUserCall(userData);
+            }
+    }
+
   render() {
     const { memberInfo, view, classes } = this.props;
     console.log("SchoolMemberInfo state -->>", this.state);
     console.log("SchoolMemberInfo props -->>", this.props);
-    const { showCreateMediaModal, mediaFormData, filterStatus, limit } = this.state;
+    const { showUploadAvatarModal, mediaFormData, filterStatus, limit } = this.state;
     return (
       <Grid container>
         {this.state.callMemberDialog && <CallMemberDialogBox contactNumbers={this.getContactNumber()} open={this.state.callMemberDialog} onModalClose={() => this.handleDialogState('callMemberDialog',false)}/>}
@@ -222,29 +253,24 @@ class SchoolMemberInfo extends Component {
             }}
           >
             <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4}>
-              <img className={classes.avatarCss} src="/images/Avatar-Unisex.png" />
-              {<CreateMedia
-                  showCreateMediaModal={showCreateMediaModal}
-                  onClose = {this.closeMediaUpload}
-                  formType={showCreateMediaModal}
-                  schoolId={this.props.schoolData && this.props.schoolData._id}
-                  ref="createMedia"
-                  onAdd={this.onAddMedia}
-                  onEdit={this.onEditMedia}
-                  mediaFormData={mediaFormData}
-                  filterStatus={filterStatus}
-                  showLoading = {this.showLoading}
-                  tagMember={true}
-                  taggedMemberInfo={memberInfo}
-              />}
-            </Grid>
-            <Grid item md={4} sm={4} xs={4} style={{padding: '8px',float: 'right'}}>
-              {
-                <Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
+              { memberInfo.pic ? <img className={classes.avatarCss} src={memberInfo.pic} /> :
+                <Button raised color="accent" onClick={()=> this.setState({showUploadAvatarModal:true, mediaFormData: null, filterStatus: false})}>
                     Upload Image <FileUpload />
                 </Button>
               }
-              </Grid>
+            </Grid>
+            {
+              <UploadAvatar
+                showUploadAvatarModal={showUploadAvatarModal}
+                onClose = {()=> {this.setState({showUploadAvatarModal:false})}}
+                formType={showUploadAvatarModal}
+                ref="uploadAvatar"
+                onAdd={this.onUploadAvatar}
+                onEdit={this.onEditAvatar}
+                showLoading = {this.showLoading}
+                memberInfo={memberInfo}
+              />
+            }
             <Grid item sm={4} xs={4} md={4}>
               <Typography>{memberInfo.name}</Typography>
               {view === "admin" && (
