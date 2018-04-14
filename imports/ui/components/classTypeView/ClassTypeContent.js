@@ -337,7 +337,7 @@ class ClassTypeContent extends Component {
 			<Fragment>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.emailUsDialog && <EmailUsDialogBox ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)}/>}
-          {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
+          {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData.name)} reviewFor='class' reviewForId={classTypeData._id} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.isBusy && <ContainerLoader/>}
 

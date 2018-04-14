@@ -10,6 +10,7 @@ import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar
 import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 import ClassTypeContent from './ClassTypeContent';
 
+import Reviews from "/imports/api/review/fields";
 import School from "/imports/api/school/fields";
 import ClassType from "/imports/api/classType/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
@@ -51,15 +52,18 @@ export default createContainer(props => {
 	console.log("ClassType createContainer props -->>",props);
 	const { classTypeId } = props.params;
 	let subscription;
-	let isLoading = true;
+  let reviewsSubscription;
+  let isLoading = true;
   let classInterestData = [];
 
 	if(classTypeId) {
 		subscription = Meteor.subscribe("classType.getClassTypeWithClassTimes", {classTypeId});
-	}
+    reviewsSubscriptions = Meteor.subscribe('review.getReviews',{reviewForId: classTypeId});
+  }
 
-	if(subscription && subscription.ready()) {
-        isLoading = false
+
+	if((subscription && subscription.ready()) && (reviewsSubscriptions && reviewsSubscriptions.ready())) {
+      isLoading = false
     }
     Meteor.subscribe("classInterest.getClassInterest");
     classInterestData = ClassInterest.find({}).fetch();
@@ -69,7 +73,7 @@ export default createContainer(props => {
     let classPricingData = ClassPricing.find().fetch();
     let monthlyPricingData = MonthlyPricing.find().fetch();
     let mediaData = Media.find().fetch();
-
+    let reviewsData = Reviews.find().fetch();
   	console.log("ClassType classTypeData -->>>",classTypeData)
     console.log("ClassType classTimesData -->>>",classTimesData)
     console.log("ClassType schoolData -->>>",schoolData)
@@ -78,13 +82,14 @@ export default createContainer(props => {
 	return {
   		...props,
   		isLoading,
-  		classTypeData,
+      reviewsData,
+      classTypeData,
   		classTimesData,
-        schoolData,
-        classPricingData,
-        monthlyPricingData,
-        mediaData,
-        classInterestData
+      schoolData,
+      classPricingData,
+      monthlyPricingData,
+      mediaData,
+      classInterestData
   	}
 
 }, ClassTypeView);
