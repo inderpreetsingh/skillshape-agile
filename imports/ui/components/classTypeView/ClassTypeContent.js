@@ -359,7 +359,7 @@ class ClassTypeContent extends Component {
 			        />
 		        </ClassTypeCover>
 		        <Main>
-			        <MainInnerFixedContainer marginTop={isReviewsDataEmpty ? "0" : "32"} marginBottom={isReviewsDataEmpty ? 32 : 64}>
+			        <MainInnerFixedContainer marginTop={isReviewsDataEmpty ? "0" : "32"} marginBottom={64}>
 			            {!isReviewsDataEmpty && (<MainInner reviews largePadding="32" smallPadding="32">
                         <ClassWrapper reviews>
                           <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
