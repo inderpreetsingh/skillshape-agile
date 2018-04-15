@@ -19,7 +19,6 @@ import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import Media from "/imports/api/media/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 
-
 const Wrapper = styled.div`
   width: 100%;
 `;
@@ -32,7 +31,7 @@ class ClassTypeView extends Component {
               <div>
                 <TopSearchBar {...this.props}/>
               </div>
-      		    <ClassTypeContent {...this.props}/>
+      		    <ClassTypeContent {...this.props} />
         		<Footer/>
         	</Wrapper>
       </DocumentTitle>

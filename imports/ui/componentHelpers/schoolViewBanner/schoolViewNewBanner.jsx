@@ -30,7 +30,6 @@ import config from '/imports/config';
 import styles from "./style";
 import withImageExists from '/imports/util/withImageExists.js';
 import {imageExists} from '/imports/util';
-
 import { schoolDetailsImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 const PublishStatusButtonWrapper = styled.div`
@@ -47,8 +46,8 @@ styles.switchButton = {
 }
 
 const imageExistsConfig = {
-	image: 'schoolData.mainImage',
-	defaultImg: schoolDetailsImgSrc
+	originalImagePath: 'schoolData.mainImage',
+	defaultImage: schoolDetailsImgSrc
 }
 
 class SchoolViewBanner extends React.Component {

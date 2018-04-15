@@ -23,6 +23,7 @@ import * as settings from '../../../site-settings.js';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
+import {schoolLogo} from '/imports/ui/components/landing/site-settings.js';
 
 import Events from '/imports/util/events';
 
@@ -273,7 +274,7 @@ class ClassTypeCoverContent extends React.Component {
               {/* When it's edit mode, displays logo */}
               {props.isEdit ?
                 <LogoContainer>
-                  <ClassTypeLogo position='relative' logoSrc={props.logoSrc} >
+                  <ClassTypeLogo position='relative' defaultImage={schoolLogo} originalImage={props.logoSrc} >
                     <EditButtonWrapper>
                       <ClassTimeButton icon iconName='photo_camera' label="Logo" onClick={props.onEditLogoButtonClick} />
                     </EditButtonWrapper>

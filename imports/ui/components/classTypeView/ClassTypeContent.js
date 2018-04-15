@@ -34,6 +34,11 @@ import ClassTimeButton from '/imports/ui/components/landing/components/buttons/C
 import { capitalizeString } from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
+const imageExistsConfig = {
+  originalImagePath: 'classTypeData.classTypeImg',
+  defaultImage: classTypeImgSrc
+}
+
 const SchoolImgWrapper = styled.div`
   height: 400px;
 `;
@@ -172,10 +177,6 @@ const ClassContainer = styled.div`
   }
 `;
 
-const imageExistsConfig = {
-  image: 'classTypeData.classTypeImg',
-  defaultImg: classTypeImgSrc
-}
 
 class ClassTypeContent extends Component {
 
