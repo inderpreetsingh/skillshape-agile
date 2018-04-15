@@ -34,8 +34,8 @@ const styles = {
 }
 
 const imageExistsConfig = {
-  image: 'classTypeImg',
-  defaultImg: cardImgSrc
+  originalImagePath: 'classTypeImg',
+  defaultImage: cardImgSrc
 }
 
 const CardImageTitleWrapper = styled.div`

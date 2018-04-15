@@ -22,6 +22,8 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
+import { cardImgSrc } from '../../site-settings.js';
+
 const CardsRevealWrapper = styled.div`
   width: 100%;
 `;
@@ -101,9 +103,10 @@ class ClassTypeCard extends Component {
                 this.state.isLoading && <ContainerLoader />
             }
             <CardsRevealWrapper>
-              <CardsReveal {...this.props}
+              <CardsReveal defaultImage={cardImgSrc} originalImage={this.props.classTypeImg} {...this.props}
                   body={
                   <ClassTypeCardBody
+
                       ratings={this.props.ratings}
                       reviews={this.props.reviews}
                       onJoinClassButtonClick={this.handleDialogState(true)} />

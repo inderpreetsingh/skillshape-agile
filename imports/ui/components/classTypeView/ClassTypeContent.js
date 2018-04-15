@@ -34,6 +34,11 @@ import ClassTimeButton from '/imports/ui/components/landing/components/buttons/C
 import { capitalizeString } from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
+const imageExistsConfig = {
+  originalImagePath: 'classTypeData.classTypeImg',
+  defaultImage: classTypeImgSrc
+}
+
 const SchoolImgWrapper = styled.div`
   height: 400px;
 `;
@@ -56,6 +61,7 @@ const MainInnerFixedContainer = styled.div`
   max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
   width: 100%;
   margin: 0 auto;
+  margin-top: ${props => props.marginTop}px;
   margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 2}px;
 `;
 
@@ -172,10 +178,6 @@ const ClassContainer = styled.div`
   }
 `;
 
-const imageExistsConfig = {
-  image: 'classTypeData.classTypeImg',
-  defaultImg: classTypeImgSrc
-}
 
 class ClassTypeContent extends Component {
 
@@ -332,12 +334,12 @@ class ClassTypeContent extends Component {
 
     const ourEmail = this.getOurEmail();
     const emailUsButton = ourEmail ? true : false;
-
+    const isReviewsDataEmpty = isEmpty(reviewsData);
 		return (
 			<Fragment>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.emailUsDialog && <EmailUsDialogBox ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)}/>}
-          {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
+          {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData.name)} reviewFor='class' reviewForId={classTypeData._id} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.isBusy && <ContainerLoader/>}
 
@@ -357,15 +359,15 @@ class ClassTypeContent extends Component {
 			        />
 		        </ClassTypeCover>
 		        <Main>
-			        <MainInnerFixedContainer marginBottom={!isEmpty(reviewsData) ? 32 : 64}>
-			            {!isEmpty(reviewsData) && (<MainInner reviews largePadding="32" smallPadding="32">
+			        <MainInnerFixedContainer marginTop={isReviewsDataEmpty ? "0" : "32"} marginBottom={64}>
+			            {!isReviewsDataEmpty && (<MainInner reviews largePadding="32" smallPadding="32">
                         <ClassWrapper reviews>
                           <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
                         </ClassWrapper>
                     </MainInner>)}
 
-                  <ClassContainer marginTop="64" marginBottom="32">
-                    {isEmpty(reviewsData) && <Fragment><Typography>
+                  <ClassContainer marginTop={isReviewsDataEmpty ? "64" : "0"} marginBottom="32">
+                    {isReviewsDataEmpty && <Fragment><Typography>
                       You are the first one to write review for this class.
                     </Typography>
                     <br /></Fragment>}

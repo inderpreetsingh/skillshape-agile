@@ -7,7 +7,6 @@ import Typography from 'material-ui/Typography';
 import Sticky from 'react-stickynode';
 import { browserHistory } from 'react-router';
 
-
 import NoResults from '../NoResults.jsx';
 import ClassMap from '../map/ClassMap.jsx';
 import MapView from '../map/mapView.jsx';

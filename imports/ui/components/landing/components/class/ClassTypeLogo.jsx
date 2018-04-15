@@ -28,7 +28,7 @@ const Logo = styled.div`
 `;
 
 const imageExistsConfig = {
-  image: 'logoSrc',
+  originalImagePath: 'logoSrc',
   defaultImg: schoolLogo
 }
 
