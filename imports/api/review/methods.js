@@ -6,13 +6,16 @@ Meteor.methods({
     'reviews.addReview': function(data) {
       if(this.userId) {
         const validationContext = ReviewsSchema.newContext();
-        // console.info('reviews calling......',validationContext);
         data.reviewerId = this.userId;
         data.publishedAt = new Date();
         const isValid = validationContext.validate(data);
 
         if(isValid) {
           console.log('\n.... Review being added... \n');
+          const reviewExists = Reviews.find({reviewerId: this.userId , reviewForId: data.reviewForId}).fetch()[0];
+          if(reviewExists) {
+            return Reviews.update({_id: reviewExists._id},{$set: data});
+          }
           return Reviews.insert(data);
         }else {
           const invalidData = validationContext.invalidKeys()[0];
@@ -24,6 +27,10 @@ Meteor.methods({
       }
     },
     'reviews.getMyReview' : function(reviewForId) {
-      return Reviews.find({reviewerId: this.userId , reviewForId: reviewForId}).fetch();
+      const myReview =  Reviews.find({reviewerId: this.userId , reviewForId: reviewForId}).fetch()[0];
+      return {
+        ratings: myReview.ratings,
+        comment: myReview.comment
+      }
     }
 });

@@ -61,6 +61,7 @@ const MainInnerFixedContainer = styled.div`
   max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
   width: 100%;
   margin: 0 auto;
+  margin-top: ${props => props.marginTop}px;
   margin-bottom: ${props => props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 2}px;
 `;
 
@@ -333,7 +334,7 @@ class ClassTypeContent extends Component {
 
     const ourEmail = this.getOurEmail();
     const emailUsButton = ourEmail ? true : false;
-
+    const isReviewsDataEmpty = isEmpty(reviewsData);
 		return (
 			<Fragment>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
@@ -358,15 +359,15 @@ class ClassTypeContent extends Component {
 			        />
 		        </ClassTypeCover>
 		        <Main>
-			        <MainInnerFixedContainer marginBottom={!isEmpty(reviewsData) ? 32 : 64}>
-			            {!isEmpty(reviewsData) && (<MainInner reviews largePadding="32" smallPadding="32">
+			        <MainInnerFixedContainer marginTop={isReviewsDataEmpty ? "0" : "32"} marginBottom={isReviewsDataEmpty ? 32 : 64}>
+			            {!isReviewsDataEmpty && (<MainInner reviews largePadding="32" smallPadding="32">
                         <ClassWrapper reviews>
                           <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
                         </ClassWrapper>
                     </MainInner>)}
 
-                  <ClassContainer marginTop="64" marginBottom="32">
-                    {isEmpty(reviewsData) && <Fragment><Typography>
+                  <ClassContainer marginTop={isReviewsDataEmpty ? "64" : "0"} marginBottom="32">
+                    {isReviewsDataEmpty && <Fragment><Typography>
                       You are the first one to write review for this class.
                     </Typography>
                     <br /></Fragment>}

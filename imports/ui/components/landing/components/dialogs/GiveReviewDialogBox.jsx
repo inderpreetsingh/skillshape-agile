@@ -150,11 +150,14 @@ class GiveReviewDialogBox extends Component {
 
       Meteor.call('reviews.addReview',data,(err,res) => {
         this.setState({isBusy: false}, () => {
+
+          console.log(this,this.props,"this .props")
             if(err) {
                 toastr.error(err.reason || err.message,"Error");
             }
             else if(res) {
-              toastr.success('Your review has been added','success');
+              toastr.success('Your review has been added/updated','success');
+              // this.props.onModalClose();
             }
 
             if(this.props.onFormSubmit) {
@@ -164,7 +167,6 @@ class GiveReviewDialogBox extends Component {
       });
     }
 
-    this.props.modalClose();
   }
 
   componentDidMount = () => {
@@ -172,8 +174,9 @@ class GiveReviewDialogBox extends Component {
       console.log(data,"we get back this data..")
       if(data) {
         this.setState({
-
-        })
+          ratings: data.ratings,
+          comment: data.comment
+        });
       }
     })
   }
