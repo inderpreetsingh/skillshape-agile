@@ -167,6 +167,17 @@ class GiveReviewDialogBox extends Component {
     this.props.modalClose();
   }
 
+  componentDidMount = () => {
+    Meteor.call('reviews.getMyReview',this.props.reviewForId,(err,data) => {
+      console.log(data,"we get back this data..")
+      if(data) {
+        this.setState({
+
+        })
+      }
+    })
+  }
+
   render() {
     const {props} = this;
     console.log(props,"...");

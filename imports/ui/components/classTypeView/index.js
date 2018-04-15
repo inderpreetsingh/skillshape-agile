@@ -60,8 +60,10 @@ export default createContainer(props => {
     reviewsSubscriptions = Meteor.subscribe('review.getReviews',{reviewForId: classTypeId});
   }
 
+  const sub1Ready = subscription && subscription.ready();
+  const sub2Ready = reviewsSubscriptions && reviewsSubscriptions.ready();
 
-	if((subscription && subscription.ready()) && (reviewsSubscriptions && reviewsSubscriptions.ready())) {
+	if(sub1Ready && sub2Ready) {
       isLoading = false
     }
     Meteor.subscribe("classInterest.getClassInterest");

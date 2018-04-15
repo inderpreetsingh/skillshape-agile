@@ -22,5 +22,8 @@ Meteor.methods({
       }else {
         throw new Meteor.Error('Permission Denied !');
       }
+    },
+    'reviews.getMyReview' : function(reviewForId) {
+      return Reviews.find({reviewerId: this.userId , reviewForId: reviewForId}).fetch();
     }
 });

@@ -28,7 +28,7 @@ export default withImageExists = (WrappedComponent,config) => {
 				}
   		}
       else{
-  			this._setCoverSrc(get(nextProps,config.originalImagePath,""));
+  			this._setbgImg(get(nextProps,config.originalImagePath,""));
   		}
   	}
 
