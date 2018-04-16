@@ -18,12 +18,13 @@ import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 
 import { Loading } from '/imports/ui/loading';
-import { checkSuperAdmin, cutString } from '/imports/util';
+import { getAverageNoOfRatings, checkSuperAdmin, cutString } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
-import ReviewsSlider from '/imports/ui/components/landing/components/class/reviews/ReviewsSlider.jsx';
+//import ReviewsSlider from '/imports/ui/components/landing/components/class/reviews/ReviewsSlider.jsx';
+import ReviewsManager from '/imports/ui/components/landing/components/class/reviews/ReviewsManager.jsx';
 import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes.jsx';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
@@ -72,6 +73,7 @@ const CardContentPriceWrapper = GenericWrapper.extend`
 `;
 
 const ReviewsWrapper = GenericWrapper.extend`
+  margin-top: ${helpers.rhythmDiv * 4}px;
   margin-bottom: 0;
 `;
 
@@ -79,11 +81,13 @@ const ReviewsInnerWrapper = GenericFixedWidthWrapper.extend`
   padding: ${helpers.rhythmDiv * 4}px;
   overflow: hidden;
   text-align: ${props => props.centerText ? 'center': 'left'};
-
-  @media screen and (max-width : ${helpers.mobile}px) {
-    padding: ${helpers.rhythmDiv * 4}px;
-  }
 `;
+
+const ReviewsButtonWrapper = GenericFixedWidthWrapper.extend`
+  padding-bottom: ${helpers.rhythmDiv * 4}px;
+  text-align: center;
+`;
+
 
 const SchoolExtraSection = GenericFixedWidthWrapper.extend`
   ${helpers.flexCenter}
@@ -198,6 +202,7 @@ export default function() {
     const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
     const {
         schoolData,
+        reviewsData,
         classPricing,
         monthlyPricing,
         schoolLocation,
@@ -207,7 +212,6 @@ export default function() {
         classes,
         enrollmentFee,
         showLoading,
-        reviewsData,
     } = this.props;
 
     const {
@@ -240,7 +244,7 @@ export default function() {
           {
             this.state.isLoading && <ContainerLoader />
           }
-          {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(schoolData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
+          {this.state.giveReviewDialog && <GiveReviewDialogBox reviewForId={schoolId} reviewFor='school' title={this.getReviewTitle(schoolData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
 
           {
@@ -253,7 +257,7 @@ export default function() {
                 onClose={this.cancelConfirmationModal}
             />
           }
-                { (claimSchoolModal || claimRequestModal || successModal) && <CustomModal
+            {(claimSchoolModal || claimRequestModal || successModal) && <CustomModal
               className={successModal ? "success-modal" : "info-modal" }
               title={this.getClaimSchoolModalTitle()}
               message={successModal && `You are now owner of ${schoolData.name} Would you like to edit ?`}
@@ -275,15 +279,19 @@ export default function() {
               monthly: !isEmpty(this.state.bestPriceDetails) ? floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate) : null,
               class: !isEmpty(this.state.bestPriceDetails) ? floor(this.state.bestPriceDetails.bestClassPrice.avgRate) : null
             }}
+            reviewsStats={{
+              noOfRatings: getAverageNoOfRatings(reviewsData),
+              noOfReviews: reviewsData.length
+            }}
             handlePublishStatus={this.handlePublishStatus.bind(this, schoolId)}/> {/* container, school-header ends */}
 
           {/* Reviews List */}
           <ReviewsWrapper>
             {!isEmpty(reviewsData) && (<ReviewsInnerWrapper>
-                <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
+                <ReviewsManager reviewsData={reviewsData} padding={helpers.rhythmDiv * 2}/>
               </ReviewsInnerWrapper>)}
 
-            <ReviewsInnerWrapper centerText>
+            <ReviewsButtonWrapper centerText>
               {isEmpty(reviewsData) && <Fragment><Typography>
                 You are the first one to write review for this school.
               </Typography>
@@ -294,7 +302,7 @@ export default function() {
                 iconName="rate_review"
                 label="Give review"
               />
-            </ReviewsInnerWrapper>
+            </ReviewsButtonWrapper>
           </ReviewsWrapper>
 
 

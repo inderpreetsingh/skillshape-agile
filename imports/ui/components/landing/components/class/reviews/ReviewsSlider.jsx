@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 
 import Review from './Review';
 import withSlider from '/imports/util/withSlider.js';
-import {mobile} from '/imports/ui/components/landing/components/jss/helpers.js';
+import {mobile,tablet} from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const config = {
   desktop: 3,
@@ -12,7 +12,8 @@ const config = {
 }
 
 const breakPoints = {
-  mobile: mobile + 121
+  mobile: mobile + 121,
+  tablet: tablet + 121
 }
 
 export default withSlider(Review,config,breakPoints);

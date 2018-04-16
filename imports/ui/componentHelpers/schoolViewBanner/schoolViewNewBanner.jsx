@@ -119,6 +119,7 @@ class SchoolViewBanner extends React.Component {
 		    schoolId,
         isPublish,
 		    currentUser,
+				reviewsStats,
 				bestPriceDetails,
 		    isEdit,
 				bgImg,
@@ -161,10 +162,7 @@ class SchoolViewBanner extends React.Component {
 						onScheduleButtonClick: () => this.scrollTo('schedule-section')
 					}}
 
-					reviews={{
-						noOfRatings: this.props.noOfRatings,
-						noOfReviews: this.props.noOfReviews
-					}}
+					reviews={reviewsStats}
 
 					bestPriceDetails={bestPriceDetails}
 

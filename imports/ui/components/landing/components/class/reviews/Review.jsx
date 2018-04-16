@@ -64,7 +64,7 @@ const CommentWrapper = styled.div`
     bottom: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: 0;
     background: ${helpers.caution};
     opacity: 0.1;
     border-radius: 8px;

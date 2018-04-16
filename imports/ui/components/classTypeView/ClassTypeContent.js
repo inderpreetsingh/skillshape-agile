@@ -7,7 +7,7 @@ import { isEmpty, get } from 'lodash';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
-import { toastrModal } from '/imports/util';
+import { getAverageNoOfRatings , toastrModal } from '/imports/util';
 import withImageExists from '/imports/util/withImageExists.js';
 
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
@@ -306,14 +306,6 @@ class ClassTypeContent extends Component {
       return `Give review for ${capitalizeString(name)}`;
     }
 
-    getAverageNoOfRatings = (reviewsData) => {
-      const totalReviews = reviewsData.length;
-      const totalRatings = reviewsData.map(data => data.ratings).reduce((acc,currentVal) => acc + currentVal);
-      const averageRatings = Math.round(totalRatings/totalReviews * 10)/10;
-      console.log(averageRatings,"Average Ratings...");
-      return averageRatings;
-    }
-
 	render() {
 		console.log("ClassTypeContent props --->>",this.props);
 
@@ -365,7 +357,7 @@ class ClassTypeContent extends Component {
                   onPricingButtonClick: () => this.scrollTo('price-section')
                 }}
                 reviews={{
-                  noOfRatings: this.getAverageNoOfRatings(reviewsData),
+                  noOfRatings: getAverageNoOfRatings(reviewsData),
                   noOfReviews: reviewsData.length
                 }}
 			        />

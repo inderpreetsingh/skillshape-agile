@@ -15,20 +15,20 @@ export default withImageExists = (WrappedComponent,config) => {
 
     _setbgImg = (imgSrc) => {
       imageExists(imgSrc).then(() => {
-  			this.setState({ bgImg: imgSrc});
+        if(this.state.bgImg !== imgSrc)
+  			   this.setState({ bgImg: imgSrc});
   		}).catch(e => {
-        this.setState({ bgImg: config.defaultImage });
+        if(this.state.bgImg !== config.defaultImage)
+          this.setState({ bgImg: config.defaultImage });
   		});
   	}
 
     componentWillReceiveProps = (nextProps) => {
   		if(!isEmpty(get(nextProps,config.originalImagePath,""))) {
-				if(get(this.props,config.originalImagePath,"") != get(nextProps,config.originalImagePath,"")) {
-					this._setbgImg(get(nextProps,config.originalImagePath,""));
-				}
-  		}
-      else{
-  			this._setbgImg(get(nextProps,config.originalImagePath,""));
+        this._setbgImg(get(nextProps,config.originalImagePath,""));
+        // if(get(this.props,config.originalImagePath,"") != get(nextProps,config.originalImagePath,"")) {
+				// 	this._setbgImg(get(nextProps,config.originalImagePath,""));
+				// }
   		}
   	}
 
