@@ -13,6 +13,7 @@ import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import School from "/imports/api/school/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import Reviews from "/imports/api/review/fields";
 import { toastrModal } from '/imports/util';
 import config from '/imports/config';
 import ClassTimes from "/imports/api/classTimes/fields";
@@ -56,6 +57,7 @@ class SchoolView extends SchoolViewBase {
 export default createContainer(props => {
     let { schoolId, slug } = props.params
     let schoolData;
+    let reviewsData;
     let classPricing;
     let monthlyPricing;
     let schoolLocation;
@@ -63,6 +65,7 @@ export default createContainer(props => {
     let enrollmentFee;
     let showLoading = true;
     let subscription;
+    let reviewsSubscriptions;
     let classTimesData;
 
     if (slug) {
@@ -71,31 +74,40 @@ export default createContainer(props => {
     }
 
     if(subscription && subscription.ready()) {
-        showLoading = false;
-        schoolData = School.findOne({ slug: slug })
-        schoolId = schoolData && schoolData._id
+      // showLoading = false;
+      schoolData = School.findOne({ slug: slug })
+      schoolId = schoolData && schoolData._id;
+      reviewsSubscriptions = Meteor.subscribe('review.getReviews',{reviewForId: schoolId});
+    }
+
+    const sub1 = reviewsSubscriptions && reviewsSubscriptions.ready();
+    const sub2 = subscription && subscription.ready();
+
+    if(sub1 && sub2) {
+      showLoading = false;
     }
 
     if (schoolId) {
-        Meteor.subscribe("UserSchool", schoolId);
-        Meteor.subscribe("SkillClassbySchool", schoolId);
-        Meteor.subscribe("ClaimOrder", "");
-        Meteor.subscribe("location.getSchoolLocation", { schoolId });
-        Meteor.subscribe("classTypeBySchool", schoolId);
-        Meteor.subscribe("classPricing.getClassPricing", { schoolId })
-        Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId })
-        Meteor.subscribe("enrollmentFee.getEnrollmentFee", {schoolId});
+      Meteor.subscribe("UserSchool", schoolId);
+      Meteor.subscribe("SkillClassbySchool", schoolId);
+      Meteor.subscribe("ClaimOrder", "");
+      Meteor.subscribe("location.getSchoolLocation", { schoolId });
+      Meteor.subscribe("classTypeBySchool", schoolId);
+      Meteor.subscribe("classPricing.getClassPricing", { schoolId })
+      Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId })
+      Meteor.subscribe("enrollmentFee.getEnrollmentFee", {schoolId});
 
-        schoolData = School.findOne({ _id: schoolId })
-        classPricing = ClassPricing.find({ schoolId: schoolId }).fetch()
-        monthlyPricing = MonthlyPricing.find({ schoolId: schoolId }).fetch()
-        schoolLocation = SLocation.find({ schoolId: schoolId }).fetch()
-        classType = ClassType.find({ schoolId: schoolId }).fetch();
-        enrollmentFee = EnrollmentFees.find({schoolId}).fetch();
-        // Class times subscription.
-        let classTypeIds = classType && classType.map((data) => data._id);
-        Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", { schoolId, classTypeIds });
-        classTimesData = ClassTimes.find({ schoolId }, { sort: { _id: -1 } }).fetch();
+      schoolData = School.findOne({ _id: schoolId })
+      reviewsData = Reviews.find({reviewForId: schoolId}).fetch();
+      classPricing = ClassPricing.find({ schoolId: schoolId }).fetch()
+      monthlyPricing = MonthlyPricing.find({ schoolId: schoolId }).fetch()
+      schoolLocation = SLocation.find({ schoolId: schoolId }).fetch()
+      classType = ClassType.find({ schoolId: schoolId }).fetch();
+      enrollmentFee = EnrollmentFees.find({schoolId}).fetch();
+      // Class times subscription.
+      let classTypeIds = classType && classType.map((data) => data._id);
+      Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", { schoolId, classTypeIds });
+      classTimesData = ClassTimes.find({ schoolId }, { sort: { _id: -1 } }).fetch();
     }
 
     // console.log("SchoolView schoolData--->>", schoolData)
@@ -105,6 +117,7 @@ export default createContainer(props => {
     // console.log("SchoolView schoolLocation--->>", schoolLocation)
     return { ...props,
         schoolData,
+        reviewsData,
         classPricing,
         monthlyPricing,
         schoolLocation,

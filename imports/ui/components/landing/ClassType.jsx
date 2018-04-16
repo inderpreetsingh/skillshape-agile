@@ -5,11 +5,12 @@ import styled from 'styled-components';
 // Testing
 import SkillShapeButtonsCollection from './SkillShapeButtonsCollection.jsx';
 
-import ReviewsBar from './components/class/ReviewsBar.jsx';
+// import ReviewsBar from './components/class/ReviewsBar.jsx';
+// import ReviewsSlider from './components/class/ReviewsSlider.jsx';
+import ReviewsManager from './components/class/reviews/ReviewsManager.jsx';
 import ClassTypeCover from './components/class/cover/ClassTypeCover.jsx';
 import PackagesList from './components/class/packages/PackagesList.jsx';
 import SchoolDetails from './components/class/details/SchoolDetails.jsx';
-import ReviewsSlider from './components/class/ReviewsSlider.jsx';
 import ClassTypeCoverContent from './components/class/cover/ClassTypeCoverContent.jsx';
 import MyCalendar from '/imports/ui/components/users/myCalender';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
@@ -179,8 +180,8 @@ class ClassType extends Component {
         <Main>
           <MainInnerFixedContainer marginBottom="32">
             <MainInner reviews largePadding="32" smallPadding="32">
-              <ClassWrapper reviews>
-                <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
+              <ClassWrapper>
+                <ReviewsManager reviewsData={reviewsData} />
               </ClassWrapper>
             </MainInner>
           </MainInnerFixedContainer>

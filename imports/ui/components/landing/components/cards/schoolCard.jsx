@@ -236,9 +236,9 @@ class SchoolCard extends Component {
       toastr.error('You must be signed in to claim a school. [Sign In] or [Sign Up]', 'Error');
     } else {
         // Show confirmation Modal before claiming a school.
-        this.setState({
-            showConfirmationModal: true,
-        });
+      this.setState({
+          showConfirmationModal: true,
+      });
     }
   }
 
@@ -271,7 +271,7 @@ class SchoolCard extends Component {
         {this.state.emailUsDialog && <EmailUsDialogBox ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
         <div>
           <CardImageContentWrapper>
-            <MyLink to={`/schools/${schoolCardData.slug}`}> <CardImageWrapper bgImage={schoolCardData.mainImage || cardImgSrc}  /> </MyLink>
+            <MyLink to={`/schools/${schoolCardData.slug}`} target="_blank"> <CardImageWrapper bgImage={schoolCardData.mainImage || cardImgSrc}  /> </MyLink>
 
             <CardContentHeader>
               <CardContentTitle itemProp="name">{name}</CardContentTitle>

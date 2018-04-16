@@ -242,8 +242,8 @@ class ClassTypeCoverContent extends React.Component {
     const classTypeName = props.noClassTypeData ? '' : props.classTypeData.name;
     const selectedLocation = props.noClassTypeData ? props.schoolLocation : props.classTypeData.selectedLocation;
     const description = props.noClassTypeData ? props.schoolDetails.aboutHtml : props.classTypeData.desc;
-    const noOfRatings = props.noClassTypeData ? props.schoolDetails.noOfRatings : props.classTypeData.noOfRatings;
-    const noOfReviews = props.noClassTypeData ? props.schoolDetails.noOfReviews : props.classTypeData.noOfReviews;
+    const noOfRatings = !props.isEdit && props.reviews.noOfRatings;
+    const noOfReviews = !props.isEdit && props.reviews.noOfReviews;
     const EditButton = props.editButton;
 
     return(
@@ -274,7 +274,7 @@ class ClassTypeCoverContent extends React.Component {
               {/* When it's edit mode, displays logo */}
               {props.isEdit ?
                 <LogoContainer>
-                  <ClassTypeLogo position='relative' defaultImage={schoolLogo} originalImage={props.logoSrc} >
+                  <ClassTypeLogo position='relative' logoSrc={props.logoSrc} >
                     <EditButtonWrapper>
                       <ClassTimeButton icon iconName='photo_camera' label="Logo" onClick={props.onEditLogoButtonClick} />
                     </EditButtonWrapper>
@@ -314,10 +314,12 @@ class ClassTypeCoverContent extends React.Component {
                     pricingButton={props.actionButtonProps.pricingButton}
                     callUsButton={props.actionButtonProps.callUsButton}
                     scheduleButton={props.actionButtonProps.scheduleButton}
+                    visitSiteButton={props.actionButtonProps.visitSiteButton}
                     onCallUsButtonClick={props.actionButtonProps.onCallUsButtonClick}
                     onEmailButtonClick={props.actionButtonProps.onEmailButtonClick}
                     onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
                     onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
+                    siteLink={props.actionButtonProps.siteLink}
                     rightSide={props.noClassTypeData && props.logoSrc}
                     />}
 
@@ -353,10 +355,12 @@ class ClassTypeCoverContent extends React.Component {
                     pricingButton={props.actionButtonProps.pricingButton}
                     callUsButton={props.actionButtonProps.callUsButton}
                     scheduleButton={props.actionButtonProps.scheduleButton}
+                    visitSiteButton={props.actionButtonProps.visitSiteButton}
                     onCallUsButtonClick={props.actionButtonProps.onCallUsButtonClick}
                     onEmailButtonClick={props.actionButtonProps.onEmailButtonClick}
                     onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
                     onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
+                    siteLink={props.actionButtonProps.siteLink}
                     />}
                 </ShowOnMobile>
               </ClassTypeInfoWrapper>

@@ -2,6 +2,8 @@ import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
+import { Link } from 'react-router';
+
 import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
 
 import * as helpers from '../jss/helpers.js';
@@ -91,6 +93,10 @@ const ActionButtons = (props) => {
       {props.scheduleButton && <ActionButton rightSide={props.rightSide}>
         <ClassTimeButton secondary noMarginBottom label="Schedule" icon iconName="schedule" onClick={props.onScheduleButtonClick} />
       </ActionButton>}
+
+      {props.visitSiteButton && <a href={props.siteLink} target="_blank"><ActionButton rightSide={props.rightSide}>
+        <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" />
+      </ActionButton></a>}
     </Fragment>}
   </ActionButtonsContainer>)
 }
@@ -100,10 +106,12 @@ ActionButtons.propTypes = {
   onEmailButtonClick: PropTypes.func,
   onPricingButtonClick: PropTypes.func,
   onScheduleButtonClick: PropTypes.func,
+  onVisitSiteButtonClick: PropTypes.func,
   emailUsButton: PropTypes.bool,
   callUsButton: PropTypes.bool,
   pricingButton: PropTypes.bool,
   scheduleButton: PropTypes.bool,
+  visitSiteButton: PropTypes.bool,
   rightSide: PropTypes.bool
 }
 
@@ -114,6 +122,7 @@ ActionButtons.defaultProps = {
   callUsButton: true,
   pricingButton: true,
   scheduleButton: false,
+  visitSiteButton: false,
 }
 
 export default ActionButtons;

@@ -58,7 +58,6 @@ const CardsListGridWrapper = styled.div`
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24}px;
       margin: 0 auto;
     }
-
 `;
 
 const More = styled.div`
