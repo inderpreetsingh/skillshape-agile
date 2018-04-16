@@ -582,18 +582,22 @@ class Landing extends Component {
                     Filters in use.
                 </FilterAppliedDivs>
                 <FilterAppliedDivs>
-                    <div>
+                  <PrimaryButton fullWidth noMarginBottom icon iconName="close" label="Clear All Filters" boxShadow noMarginBottom onClick={cb} />
+
+                    {/*<div>
                         {text}
                     </div>
-                    <Icon onClick={cb}>close</Icon>
+                    <Icon onClick={cb}>close</Icon>*/}
                 </FilterAppliedDivs>
                 <FilterAppliedDivs>
-                    <div style={{padding:8}}>
+                  <PrimaryButton fullWidth noMarginBottom icon iconName="tune" label="View Filters" boxShadow noMarginBottom onClick={() => this.handleFiltersDialogBoxState(true)} />
+
+                    {/*<div style={{padding:8}}>
                     View Filters
                     </div>
                     <Button fab mini onClick={() => this.handleFiltersDialogBoxState(true)}>
                        <Icon>tune </Icon>
-                    </Button>
+                    </Button>*/}
                 </FilterAppliedDivs>
             </WrapperDiv>
         )
