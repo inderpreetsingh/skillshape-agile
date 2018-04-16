@@ -306,6 +306,14 @@ class ClassTypeContent extends Component {
       return `Give review for ${capitalizeString(name)}`;
     }
 
+    getAverageNoOfRatings = (reviewsData) => {
+      const totalReviews = reviewsData.length;
+      const totalRatings = reviewsData.map(data => data.ratings).reduce((acc,currentVal) => acc + currentVal);
+      const averageRatings = Math.round(totalRatings/totalReviews * 10)/10;
+      console.log(averageRatings,"Average Ratings...");
+      return averageRatings;
+    }
+
 	render() {
 		console.log("ClassTypeContent props --->>",this.props);
 
@@ -347,15 +355,19 @@ class ClassTypeContent extends Component {
 		        <ClassTypeCover coverSrc={bgImg}>
 			        <ClassTypeCoverContent
 			        	coverSrc={bgImg}
-			            schoolDetails={{...schoolData}}
-			            classTypeData={{...classTypeData}}
-                  contactNumbers={this.getContactNumbers()}
-                  actionButtonProps={{
-                    emailUsButton: emailUsButton,
-                    onCallUsButtonClick: this.handleCallUsButtonClick,
-                    onEmailButtonClick: this.handleEmailUsButtonClick,
-                    onPricingButtonClick: () => this.scrollTo('price-section')
-                  }}
+		            schoolDetails={{...schoolData}}
+		            classTypeData={{...classTypeData}}
+                contactNumbers={this.getContactNumbers()}
+                actionButtonProps={{
+                  emailUsButton: emailUsButton,
+                  onCallUsButtonClick: this.handleCallUsButtonClick,
+                  onEmailButtonClick: this.handleEmailUsButtonClick,
+                  onPricingButtonClick: () => this.scrollTo('price-section')
+                }}
+                reviews={{
+                  noOfRatings: this.getAverageNoOfRatings(reviewsData),
+                  noOfReviews: reviewsData.length
+                }}
 			        />
 		        </ClassTypeCover>
 		        <Main>

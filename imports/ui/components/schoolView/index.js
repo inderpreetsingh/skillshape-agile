@@ -71,9 +71,10 @@ export default createContainer(props => {
     }
 
     if(subscription && subscription.ready()) {
-        showLoading = false;
         schoolData = School.findOne({ slug: slug })
-        schoolId = schoolData && schoolData._id
+        schoolId = schoolData && schoolData._id;
+
+
     }
 
     if (schoolId) {
