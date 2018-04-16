@@ -15,13 +15,13 @@ import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/
 import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
 import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
 
+import reviewsData from '/imports/ui/components/landing/constants/reviewsData.js';
+import ReviewsManager from '/imports/ui/components/landing/components/class/reviews/ReviewsManager.jsx';
 import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
 import ClassTypeCoverContent from '/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx';
-import reviewsData from '/imports/ui/components/landing/constants/reviewsData.js';
-import ReviewsSlider from '/imports/ui/components/landing/components/class/ReviewsSlider.jsx';
 import ClassTimesBoxes from '/imports/ui/components/landing/components/classTimes/ClassTimesBoxes';
 import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 import SchoolDetails from '/imports/ui/components/landing/components/class/details/SchoolDetails.jsx';
@@ -362,7 +362,7 @@ class ClassTypeContent extends Component {
 			        <MainInnerFixedContainer marginTop={isReviewsDataEmpty ? "0" : "32"} marginBottom={64}>
 			            {!isReviewsDataEmpty && (<MainInner reviews largePadding="32" smallPadding="32">
                         <ClassWrapper reviews>
-                          <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
+                          <ReviewsManager reviewsData={reviewsData} />
                         </ClassWrapper>
                     </MainInner>)}
 

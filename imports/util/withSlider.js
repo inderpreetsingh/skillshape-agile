@@ -7,6 +7,7 @@ import * as helpers from '../ui/components/landing/components/jss/helpers.js';
 
 const OuterWrapper = styled.div`
   padding-right: ${props => props.padding}px;
+  padding-left: ${props => props.paddingLeft}px;
 `;
 
 const Wrapper = styled.div`
@@ -49,7 +50,7 @@ const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) 
       <Slider {...settings}>
       {props.data && props.data.map((obj,i) => {
         return (
-          <OuterWrapper padding={props.padding} key={obj._id || i}>
+          <OuterWrapper padding={props.padding} paddingLeft={props.paddingLeft} key={obj._id || i}>
             <Wrapper >
               <WrappedComponent {...obj} {...componentProps}/>
             </Wrapper>

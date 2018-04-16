@@ -23,7 +23,7 @@ import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
-import ReviewsSlider from '/imports/ui/components/landing/components/class/ReviewsSlider.jsx';
+import ReviewsSlider from '/imports/ui/components/landing/components/class/reviews/ReviewsSlider.jsx';
 import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes.jsx';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
