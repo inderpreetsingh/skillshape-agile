@@ -83,7 +83,7 @@ const ClassTypeDescription = (props) => {
           {props.noOfStars && <StarsBar noOfStars={props.noOfStars} />}
 
           <NoOfReviews>
-            {props.noOfReviews && <Reviews href="#">({props.noOfReviews} Reviews)</Reviews>}
+            {props.noOfReviews > 0 && <Reviews href="#">({props.noOfReviews} Reviews)</Reviews>}
           </NoOfReviews>
         </ReviewsWrapper>
 

@@ -5,6 +5,6 @@ export const getAverageNoOfRatings = (reviewsData) => {
   const totalReviews = reviewsData.length;
   const totalRatings = reviewsData.map(data => data.ratings).reduce((acc,currentVal) => acc + currentVal);
   const averageRatings = Math.round(totalRatings/totalReviews * 10)/10;
-  // console.log(averageRatings,"Average Ratings...");
+  console.info(totalRatings,totalReviews,totalRatings/totalReviews,averageRatings,"Average Ratings...");
   return averageRatings;
 }

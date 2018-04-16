@@ -18,7 +18,7 @@ const StarWrapper = styled.div`
 
 const createStars = (noOfStars) => {
   const stars = [];
-  const totalStars = Math.ceil(noOfStars);
+  const totalStars = Math.floor(noOfStars);
   for(i = 0; i < totalStars; ++i) {
     stars.push(
       <StarWrapper key={i}>

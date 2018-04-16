@@ -84,6 +84,7 @@ const ReviewsInnerWrapper = GenericFixedWidthWrapper.extend`
 `;
 
 const ReviewsButtonWrapper = GenericFixedWidthWrapper.extend`
+  margin-top: ${props => props.marginTop}px;
   padding-bottom: ${helpers.rhythmDiv * 4}px;
   text-align: center;
 `;
@@ -291,7 +292,7 @@ export default function() {
                 <ReviewsManager reviewsData={reviewsData} padding={helpers.rhythmDiv * 2}/>
               </ReviewsInnerWrapper>)}
 
-            <ReviewsButtonWrapper centerText>
+            <ReviewsButtonWrapper marginTop={isEmpty(reviewsData) ? "64" : "0"}>
               {isEmpty(reviewsData) && <Fragment><Typography>
                 You are the first one to write review for this school.
               </Typography>

@@ -242,8 +242,8 @@ class ClassTypeCoverContent extends React.Component {
     const classTypeName = props.noClassTypeData ? '' : props.classTypeData.name;
     const selectedLocation = props.noClassTypeData ? props.schoolLocation : props.classTypeData.selectedLocation;
     const description = props.noClassTypeData ? props.schoolDetails.aboutHtml : props.classTypeData.desc;
-    const noOfRatings = props.reviews.noOfRatings;
-    const noOfReviews = props.reviews.noOfReviews;
+    const noOfRatings = !props.isEdit && props.reviews.noOfRatings;
+    const noOfReviews = !props.isEdit && props.reviews.noOfReviews;
     const EditButton = props.editButton;
 
     return(
@@ -274,7 +274,7 @@ class ClassTypeCoverContent extends React.Component {
               {/* When it's edit mode, displays logo */}
               {props.isEdit ?
                 <LogoContainer>
-                  <ClassTypeLogo position='relative' defaultImage={schoolLogo} originalImage={props.logoSrc} >
+                  <ClassTypeLogo position='relative' logoSrc={props.logoSrc} >
                     <EditButtonWrapper>
                       <ClassTimeButton icon iconName='photo_camera' label="Logo" onClick={props.onEditLogoButtonClick} />
                     </EditButtonWrapper>
