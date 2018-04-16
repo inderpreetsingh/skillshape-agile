@@ -66,7 +66,7 @@ class ClassTimeForm extends React.Component {
                 state.tabValue = 0
             } else if(data.scheduleType === "recurring") {
                 state.tabValue = 1
-            } else if(data.scheduleType === "onGoing") {
+            } else if(data.scheduleType === "OnGoing") {
                 state.tabValue = 2
             }
 
