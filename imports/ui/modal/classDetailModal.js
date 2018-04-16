@@ -183,7 +183,7 @@ class ClassDetailModal extends React.Component{
                             <Grid item sm={6} md={6} xs={12}>
                                 <CardMedia style={{height:200}}>
                                     <div className={classes.imageContainer}>
-                                        <div style={{position: "absolute", top: 10, right: 10}}>
+                                        {/*<div style={{position: "absolute", top: 10, right: 10}}>
                                             {
                                                 eventData.attending && (
                                                     <Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
@@ -195,7 +195,7 @@ class ClassDetailModal extends React.Component{
                                                     </Button>
                                                 )
                                             }
-                                        </div>
+                                        </div>*/}
                                         <img className={classes.image} src={this.getImageSrc(classType,school)}/>
                                     </div>
                                 </CardMedia>
