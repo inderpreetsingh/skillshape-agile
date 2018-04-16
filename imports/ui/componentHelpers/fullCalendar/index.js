@@ -73,6 +73,7 @@ class FullCalendar extends React.Component {
         let sevents = [];
         let myClassTimesIds = classInterestData.map(data => data.classTimeId);
         // Class Time Ids managed by current user
+        console.log("classTimesData", classTimesData)
         let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
         // let schoolClassTimesIds = schoolClassTimes.map(data => data._id);
         for (var i = 0; i < classTimesData.length; i++) {
@@ -87,6 +88,9 @@ class FullCalendar extends React.Component {
                     locationId: classTime.locationId,
                     startDate: moment(classTime.startDate),
                     scheduleType: classTime.scheduleType,
+                    name: classTime.name,
+                    desc:classTime.desc,
+                    endDate:classTime.endDate
                 };
 
                 // Three type of class times seperated into different colors.
@@ -103,6 +107,7 @@ class FullCalendar extends React.Component {
 
                 if (classTime.scheduleType === "oneTime") {
                     let scheduleData = [...classTime.scheduleDetails.oneTime];
+                    sevent.scheduleDetails = classTime.scheduleDetails;
                     for(let obj of scheduleData) {
                         sevent.start = obj.startDate;
                         sevent.roomId = obj.roomId;

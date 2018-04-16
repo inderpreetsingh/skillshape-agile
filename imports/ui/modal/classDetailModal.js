@@ -63,6 +63,21 @@ const ButtonWrapper = styled.div`
   ${flexCenter}
   padding: ${rhythmDiv}px 0px;
 `;
+const InnerWrapper = styled.div`
+  width: 100%;
+  display: flex;
+    flex-direction: column;
+`;
+const ClassTimesWrapper = styled.div`
+    padding: 16px;
+    width: 100%;
+    display: flex;
+    border: 2px solid #ccc;
+`;
+
+const scheduleDetails = [
+    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+]
 
 class ClassDetailModal extends React.Component{
 
@@ -124,12 +139,25 @@ class ClassDetailModal extends React.Component{
     })
   }
 
-  renderdaySchedule = (data)=> {
+  renderdaySchedule = (data, eventData)=> {
+    let type = eventData.scheduleType;
     const result = data.map((item, index)=> {
         const { startTime, duration} = item;
+        let startDate = moment(eventData.startDate).format("DD:MM:YYYY");
+        let endDate = moment(eventData.endDate).format("DD:MM:YYYY");
+        // let endDate = new Date(eventData.endDate);
+        let date = new Date(startTime);
+        let day = date.getDay();
+        let scheduleDay = scheduleDetails[day];
         const eventStartTime = moment(startTime).format("hh:mm");
         const eventEndTime = moment(new Date(startTime)).add(duration, "minutes").format("hh:mm");
-        return `${eventStartTime} to ${eventEndTime} `
+        if(type == "OnGoing") {
+            return `Every ${scheduleDay} at ${eventStartTime}`
+        } else if(type == "recurring") {
+            return `Every ${scheduleDay} at ${eventStartTime} from ${startDate} to ${endDate}`
+        } else if(type == "oneTime") {
+            return `${scheduleDay} ${startDate} at ${eventStartTime}`;
+        }
     })
     return result.toString();
   }
@@ -139,6 +167,7 @@ class ClassDetailModal extends React.Component{
     // console.log("ClassDetailModal render state -->>", this.state);
     const { isLoading, error, school, classType, classTimes, location } = this.state;
     const { eventData, fullScreen, classes } = this.props;
+    console.log("eventData____________", eventData)
     return (
         <Dialog
           fullScreen={fullScreen}
@@ -149,34 +178,76 @@ class ClassDetailModal extends React.Component{
             { isLoading && <ContainerLoader/> }
             { error && <div style={{color: 'red'}}>{error}</div> }
             { !isLoading && !error && (
-                    <Card>
-                        <CardMedia style={{height:200}}>
-                            <div className={classes.imageContainer}>
-                                <div style={{position: "absolute", top: 10, right: 10}}>
+                    <Grid container style={{padding: '24px'}}>
+                        <Grid container style={{background: '#ddd'}}>
+                            <Grid item sm={6} md={6} xs={12}>
+                                <CardMedia style={{height:200}}>
+                                    <div className={classes.imageContainer}>
+                                        <div style={{position: "absolute", top: 10, right: 10}}>
+                                            {
+                                                eventData.attending && (
+                                                    <Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
+                                                       <Icon
+                                                            className="material-icons"
+                                                        >
+                                                            delete
+                                                        </Icon>
+                                                    </Button>
+                                                )
+                                            }
+                                        </div>
+                                        <img className={classes.image} src={this.getImageSrc(classType,school)}/>
+                                    </div>
+                                </CardMedia>
+                            </Grid>
+                            <Grid item sm={6} md={6} xs={12}>
+                                <Grid item sm={12} md={12} xs={12}>
+                                    <div>{eventData.name}</div>
+                                </Grid>
+                                <Grid item sm={12} md={12} xs={12}>
+                                    <div>{eventData.desc || ""}</div>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container style={{padding: '16px', border: '2px solid #ccc', marginTop:'16px' }}>
+                        <Grid item xs={12}>
+                            { eventData.scheduleType == "OnGoing" ? <Typography component="p">This is an Ongoing class.</Typography> : ""}
+                            { eventData.scheduleType == "oneTime" ? <Typography>This is a non-repeating class.</Typography>: ""}
+                            { eventData.scheduleType == "recurring" ? <Typography>This is a Repeating Class with START/END.</Typography>: ""}
+                        </Grid>
+                        <Grid item xs={12}>
+                            {
+                                eventData.scheduleDetails && (
+                                    <Fragment>
+                                    <Typography type="headline" style={{marginBottom:'20px', marginTop:'20px'}} component="h2">
+                                        Times:
+                                    </Typography>
                                     {
-                                        eventData.attending && (
-                                            <Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
-                                               <Icon
-                                                    className="material-icons"
-                                                >
-                                                    delete
-                                                </Icon>
-                                            </Button>
-                                        )
+                                        Object.keys(eventData.scheduleDetails).map((day, index) => {
+
+                                            return (
+                                                <Typography type="caption" >
+                                                    { this.renderdaySchedule(eventData.scheduleDetails[day], eventData)}
+                                                </Typography>
+                                            )
+
+                                        })
                                     }
-                                </div>
-                                <img className={classes.image} src={this.getImageSrc(classType,school)}/>
-                            </div>
-                        </CardMedia>
-                        <CardContent>
-                            <Typography type="headline" component="h2">
-                                {classType && classType.name}
-                            </Typography>
-                            <Typography component="p" style={{marginBottom:'20px'}}>
-                                {classType && classType.desc}
-                            </Typography>
-                            <Grid container>
-                                <Grid item xs={6}>
+                                    </Fragment>
+                                )
+                            }
+                        </Grid>
+                        </Grid>
+                            <Grid container style={{border: '2px solid #ccc',marginTop: '16px'}}>
+                                <Grid item sm={12} md={12} xs={12}>
+                                    <Typography type="headline" component="h2">
+                                    {classType && classType.name}
+                                    </Typography>
+                                    {/*<Typography component="p" style={{marginBottom:'20px'}}>
+                                        {classType && classType.desc}
+                                    </Typography>*/}
+                                </Grid>
+                                <Grid item xs={12}>
                                     <div className={classes.iconWithDetailContainer}>
                                         <div className="circle-icon" className={classes.iconStyle}>
                                             <Icon
@@ -192,7 +263,7 @@ class ClassDetailModal extends React.Component{
                                         </div>
                                     </div>
                                 </Grid>
-                                <Grid item xs={6}>
+                                {/*<Grid item xs={6}>
                                     <div className={classes.iconWithDetailContainer}>
                                         <div className="circle-icon" className={classes.iconStyle}>
                                             <Icon
@@ -207,8 +278,8 @@ class ClassDetailModal extends React.Component{
                                             <Typography type="caption" >{eventData.startDate && eventData.startDate.format("dddd, Do MMM YYYY")}</Typography>
                                         </div>
                                     </div>
-                                </Grid>
-                                <Grid item xs={6}>
+                                </Grid>*/}
+                                <Grid item xs={12}>
                                     <div className={classes.iconWithDetailContainer}>
                                         <div className="circle-icon" className={classes.iconStyle}>
                                             <Icon
@@ -224,7 +295,7 @@ class ClassDetailModal extends React.Component{
                                         </div>
                                     </div>
                                 </Grid>
-                                <Grid item xs={6}>
+                                {/*<Grid item xs={6}>
                                     <div className={classes.iconWithDetailContainer}>
                                         <div className="circle-icon" className={classes.iconStyle}>
                                             <Icon
@@ -239,9 +310,15 @@ class ClassDetailModal extends React.Component{
                                             <Typography type="caption" >{`${eventData.eventStartTime} to ${eventData.eventEndTime}`}</Typography>
                                         </div>
                                     </div>
+                                </Grid>*/}
+                                <Grid item xs={6}>
+                                    <PrimaryButton fullWidth noMarginBottom  label="View Class Type" boxShadow noMarginBottom/>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <PrimaryButton fullWidth noMarginBottom  label="View School" boxShadow noMarginBottom />
                                 </Grid>
                             </Grid>
-                            <Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
+                            {/*<Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
                                 Entire Class Dates
                             </Typography>
                             <Grid container>
@@ -258,8 +335,8 @@ class ClassDetailModal extends React.Component{
                                             <Typography type="caption" >{ eventData.endDate ? moment(eventData.endDate).format("Do MMM YYYY") : "NA"}</Typography>
                                         </div>
                                     </div>
-                                </Grid>
-                                <Grid item xs={6}>
+                                </Grid>*/}
+                                {/*<Grid item xs={6}>
                                     <div className={classes.iconWithDetailContainer}>
                                         <div className="circle-icon" className={classes.iconStyle}>
                                             <Icon
@@ -273,34 +350,13 @@ class ClassDetailModal extends React.Component{
                                             <Typography type="caption" >This is a class series with start and end date.</Typography>
                                         </div>
                                     </div>
-                                </Grid>
                             </Grid>
-                            {
-                                eventData.scheduleDetails && (
-                                    <Fragment>
-                                    <Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
-                                        Entire Class Times Schedule
-                                    </Typography>
-                                    {
-                                        Object.keys(eventData.scheduleDetails).map((day, index) => {
-
-                                            return (
-                                                <Typography type="caption" >
-                                                    {day} - { this.renderdaySchedule(eventData.scheduleDetails[day])}
-                                                </Typography>
-                                            )
-
-                                        })
-                                    }
-                                    </Fragment>
-                                )
-                            }
-                        </CardContent>
+                                </Grid>*/}
 
                         <ButtonWrapper>
                           <PrimaryButton icon iconName="add_circle_outline" label="Join This Class" onClick={this.props.onJoinClassButtonClick}/>
                         </ButtonWrapper>
-                    </Card>
+                    </Grid>
                 )
             }
 
