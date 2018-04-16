@@ -314,10 +314,12 @@ class ClassTypeCoverContent extends React.Component {
                     pricingButton={props.actionButtonProps.pricingButton}
                     callUsButton={props.actionButtonProps.callUsButton}
                     scheduleButton={props.actionButtonProps.scheduleButton}
+                    visitSiteButton={props.actionButtonProps.visitSiteButton}
                     onCallUsButtonClick={props.actionButtonProps.onCallUsButtonClick}
                     onEmailButtonClick={props.actionButtonProps.onEmailButtonClick}
                     onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
                     onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
+                    siteLink={props.actionButtonProps.siteLink}
                     rightSide={props.noClassTypeData && props.logoSrc}
                     />}
 
@@ -353,10 +355,12 @@ class ClassTypeCoverContent extends React.Component {
                     pricingButton={props.actionButtonProps.pricingButton}
                     callUsButton={props.actionButtonProps.callUsButton}
                     scheduleButton={props.actionButtonProps.scheduleButton}
+                    visitSiteButton={props.actionButtonProps.visitSiteButton}
                     onCallUsButtonClick={props.actionButtonProps.onCallUsButtonClick}
                     onEmailButtonClick={props.actionButtonProps.onEmailButtonClick}
                     onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
                     onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
+                    siteLink={props.actionButtonProps.siteLink}
                     />}
                 </ShowOnMobile>
               </ClassTypeInfoWrapper>
