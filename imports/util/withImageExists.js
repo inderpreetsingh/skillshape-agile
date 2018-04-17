@@ -23,6 +23,10 @@ export default withImageExists = (WrappedComponent,config) => {
   		});
   	}
 
+    componentDidMount = () => {
+      this._setbgImg(get(this.props,config.originalImagePath,""));
+    }
+
     componentWillReceiveProps = (nextProps) => {
   		if(!isEmpty(get(nextProps,config.originalImagePath,""))) {
         this._setbgImg(get(nextProps,config.originalImagePath,""));
