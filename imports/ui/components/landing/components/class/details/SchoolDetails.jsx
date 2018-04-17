@@ -48,6 +48,7 @@ const ImgSliderSection = styled.div`
   max-height: 500px;
   width: 100%;
   ${helpers.flexCenter}
+  align-items: ${props => props.notes ? 'flex-start' : 'center'};
 `;
 
 const ImgSliderStudentNotes = styled.div`
@@ -64,7 +65,7 @@ const SchoolDetails = (props) => (
         description={props.description}/>
         {!isEmpty(props.images) && <StudentNotes notes={props.notes} />}
     </SchoolSection>
-    <ImgSliderSection>
+    <ImgSliderSection notes={isEmpty(props.images)}>
       {
         !isEmpty(props.images) ?
         <ClassTypeImgSlider images={props.images} />
