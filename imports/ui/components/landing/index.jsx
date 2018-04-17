@@ -646,13 +646,15 @@ class Landing extends Component {
     }
 
     checkIfAnyFilterIsApplied = () => {
-      if(isEmpty(this.state.filters)) {
+      const {filters} = this.state;
+      if(isEmpty(filters)) {
         return false;
       }
       else {
-        if(this.state.filters.skillTypeText
-          || this.state.filters.applyFilterStatus
-          || this.state.filters.locationName)
+        if(filters.skillTypeText
+          || filters.applyFilterStatus
+          || filters.locationName
+          || filters.experienceLevel)
           return true;
         else
           return false;
