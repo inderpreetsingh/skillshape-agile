@@ -167,12 +167,12 @@ class ClassDetailModal extends React.Component{
     let type = eventData.scheduleType;
     const result = data.map((item, index)=> {
         const { startTime, duration} = item;
-        let startDate = moment(eventData.startDate).format("DD:MM:YYYY");
-        let endDate = moment(eventData.endDate).format("DD:MM:YYYY");
+        let startDate = moment(item.startDate).format("DD:MM:YYYY");
+        let endDate = moment(item.endDate).format("DD:MM:YYYY");
         // let endDate = new Date(eventData.endDate);
         let date = new Date(startTime);
         let day = date.getDay();
-        let scheduleDay = scheduleDetails[day];
+        let scheduleDay = scheduleDetails[day - 1];
         const eventStartTime = moment(startTime).format("hh:mm");
         const eventEndTime = moment(new Date(startTime)).add(duration, "minutes").format("hh:mm");
         if(type == "OnGoing") {
@@ -248,6 +248,22 @@ class ClassDetailModal extends React.Component{
                                     </div>
                                 </div>
                             </Grid>
+                            <Grid item xs={6}>
+                                    <div className={classes.iconWithDetailContainer}>
+                                        <div className="circle-icon" className={classes.iconStyle}>
+                                            <Icon
+                                                className="material-icons"
+                                                color="primary"
+                                            >
+                                                av_timer
+                                            </Icon>
+                                        </div>
+                                        <div>
+                                            <Typography type="caption" >TIME</Typography>
+                                            <Typography type="caption" >{`${eventData.eventStartTime}`}</Typography>
+                                        </div>
+                                    </div>
+                                </Grid>
                         </Grid>
                         <Grid container style={{padding: '16px', border: '2px solid #ccc', marginTop:'16px' }}>
                         <Grid item xs={12}>

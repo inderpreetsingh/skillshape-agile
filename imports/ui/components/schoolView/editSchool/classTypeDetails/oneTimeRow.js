@@ -54,6 +54,14 @@ export class OneTimeRow extends React.Component {
 
     handleChangeDate = (index, fieldName, date) => {
         const oldRow = [...this.state.row];
+        if(fieldName == "startTime") {
+            let selectedDate = oldRow[index]['startDate'];
+            let currentDate = selectedDate.getDate();
+            date = new Date(date).setDate(currentDate);
+        } else {
+            // Need to change time according to selected date.
+            oldRow[index]['startTime'] = new Date(date);
+        }
         oldRow[index][fieldName] = new Date(date);
         this.setState({ row: oldRow });
     }
