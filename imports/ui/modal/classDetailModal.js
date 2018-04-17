@@ -27,8 +27,9 @@ import {flexCenter, rhythmDiv} from '/imports/ui/components/landing/components/j
 
 import '/imports/api/classInterest/methods';
 import '/imports/api/classTimes/methods';
-import { goToSchoolPage, goToClassTypePage } from "/imports/util";
-
+import { goToClassTypePage, checkForAddToCalender } from "/imports/util";
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
+import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx"
 
 const formStyle = formStyles();
 
@@ -101,13 +102,16 @@ class ClassDetailModal extends React.Component{
         Meteor.call("classTimes.getClassTimes", {schoolId, classTypeId, classTimeId, locationId}, (error, {school, classTimes, classType, location}) => {
             // console.log("classTimes.getClassTimes res -->>");
             // console.log("classTimes.getClassTimes error -->>",error);
+            let addToMyCalender = checkForAddToCalender(classTimes)
+            console.log("addToCalender________",addToMyCalender)
             this.setState({
                 isLoading: false,
                 school,
                 classTimes,
                 classType,
                 location,
-                error
+                error,
+                addToMyCalender
             })
         })
     } else {
@@ -141,6 +145,24 @@ class ClassDetailModal extends React.Component{
     })
   }
 
+  handleClassInterest = (event, eventData) => {
+      console.log("eventData====>", eventData);
+      const doc = {
+          classTimeId: eventData.classTimeId,
+          classTypeId: eventData.classTypeId,
+          schoolId: eventData.schoolId,
+          userId: Meteor.userId()
+      };
+      // Start Loading
+      this.setState({ isLoading: true });
+      Meteor.call("classInterest.addClassInterest", { doc }, (err, res) => {
+          console.log(res, err);
+          // Stop loading and close modal.
+          this.setState({ isLoading: false, error: err });
+          this.props.closeEventModal(false, null)
+      })
+  }
+
   renderdaySchedule = (data, eventData)=> {
     let type = eventData.scheduleType;
     const result = data.map((item, index)=> {
@@ -167,9 +189,9 @@ class ClassDetailModal extends React.Component{
   render() {
     // console.log("ClassDetailModal render props -->>", this.props);
     // console.log("ClassDetailModal render state -->>", this.state);
-    const { isLoading, error, school, classType, classTimes, location } = this.state;
+    const { isLoading, error, school, classType, classTimes, location, addToMyCalender } = this.state;
     const { eventData, fullScreen, classes, clickedDate } = this.props;
-    // console.log("eventData____________", eventData)
+    console.log("eventData____________", eventData)
     return (
         <Dialog
           fullScreen={fullScreen}
@@ -210,6 +232,22 @@ class ClassDetailModal extends React.Component{
                                     <div>{eventData.desc || ""}</div>
                                 </Grid>
                             </Grid>
+                            <Grid item xs={6}>
+                                <div className={classes.iconWithDetailContainer}>
+                                    <div className="circle-icon" className={classes.iconStyle}>
+                                        <Icon
+                                            className="material-icons"
+                                            color="primary"
+                                        >
+                                            date_range
+                                        </Icon>
+                                    </div>
+                                    <div>
+                                        <Typography type="caption" >DATE</Typography>
+                                        <Typography type="caption" >{clickedDate}</Typography>
+                                    </div>
+                                </div>
+                            </Grid>
                         </Grid>
                         <Grid container style={{padding: '16px', border: '2px solid #ccc', marginTop:'16px' }}>
                         <Grid item xs={12}>
@@ -238,7 +276,19 @@ class ClassDetailModal extends React.Component{
                                     </Fragment>
                                 )
                             }
-                        </Grid>
+                            { addToMyCalender ? <ClassTimeButton
+                                      icon
+                                      onClick={(event) => {this.handleClassInterest(event, eventData)}}
+                                      label="Add to my Calender"
+                                      iconName="add_circle_outline"
+                                  /> : <ClassTimeButton
+                                      icon
+                                      onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)}
+                                      label="Remove from calendar"
+                                      iconName="delete"
+                                  />
+                            }
+                            </Grid>
                         </Grid>
                             <Grid container style={{border: '2px solid #ccc',marginTop: '16px'}}>
                                 <Grid item sm={12} md={12} xs={12}>
@@ -262,22 +312,6 @@ class ClassDetailModal extends React.Component{
                                         <div>
                                             <Typography type="caption" >SCHOOL</Typography>
                                             <Typography type="caption" >{school && school.name}</Typography>
-                                        </div>
-                                    </div>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <div className={classes.iconWithDetailContainer}>
-                                        <div className="circle-icon" className={classes.iconStyle}>
-                                            <Icon
-                                                className="material-icons"
-                                                color="primary"
-                                            >
-                                                date_range
-                                            </Icon>
-                                        </div>
-                                        <div>
-                                            <Typography type="caption" >DATE</Typography>
-                                            <Typography type="caption" >{clickedDate}</Typography>
                                         </div>
                                     </div>
                                 </Grid>
@@ -355,9 +389,9 @@ class ClassDetailModal extends React.Component{
                             </Grid>
                                 </Grid>*/}
 
-                        <ButtonWrapper>
+                        {/*<ButtonWrapper>
                           <PrimaryButton icon iconName="add_circle_outline" label="Join This Class" onClick={this.props.onJoinClassButtonClick}/>
-                        </ButtonWrapper>
+                        </ButtonWrapper>*/}
                     </Grid>
                 )
             }
