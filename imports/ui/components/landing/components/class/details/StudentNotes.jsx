@@ -16,7 +16,7 @@ const Title = styled.h2`
   font-family: ${helpers.specialFont};
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
-  line-height: 1;
+  color: ${helpers.headingColor};
   font-size: ${helpers.baseFontSize * 2}px;
 `;
 
@@ -45,13 +45,13 @@ const NoteStyled = styled.p`
 `;
 
 const conditionalRender = (props) => {
-  return(<Wrapper>
+  return(props.notes ? (<Wrapper>
     {/*<Title noClassTypeData={props.noClassTypeData}>Student Notes</Title> */}
     <Title>Student Notes</Title>
     <Notes>
-      {props.notes ? ReactHtmlParser(props.notes) : <NoteStyled>Nothing for the moment, but keep an eye. We may add soon.</NoteStyled>}
+      {props.notes ? ReactHtmlParser(props.notes)}
     </Notes>
-  </Wrapper>);
+  </Wrapper> : '');
 }
 
 const StudentNotes = (props) => {

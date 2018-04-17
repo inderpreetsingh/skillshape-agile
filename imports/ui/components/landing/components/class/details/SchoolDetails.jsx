@@ -47,6 +47,7 @@ const ImgSliderSection = styled.div`
   max-width: 502px;
   max-height: 500px;
   width: 100%;
+  ${helpers.flexCenter}
 `;
 
 const ImgSliderStudentNotes = styled.div`
