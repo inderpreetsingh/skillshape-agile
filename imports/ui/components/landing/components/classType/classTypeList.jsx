@@ -7,6 +7,8 @@ import Typography from 'material-ui/Typography';
 import Sticky from 'react-stickynode';
 import { browserHistory } from 'react-router';
 
+import {getAverageNoOfRatings} from '/imports/util';
+
 import NoResults from '../NoResults.jsx';
 import ClassMap from '../map/ClassMap.jsx';
 import MapView from '../map/mapView.jsx';
@@ -18,8 +20,11 @@ import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import * as helpers from '../jss/helpers.js';
 
+
+
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
+import Reviews from "/imports/api/review/fields";
 import School from "/imports/api/school/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
@@ -268,14 +273,15 @@ class ClassTypeList extends Component {
 
 export default createContainer(props => {
 	// console.log("ClassTypeList createContainer -->>",props)
-	let classTypeData = [];
-	let schoolData = [];
-	let skillCategoryData = [];
-	let classTimesData = [];
-	let classInterestData = [];
+  	let classTypeData = [];
+    let classTypeIds = [];
+    let schoolData = [];
+  	let skillCategoryData = [];
+  	let classTimesData = [];
+  	let classInterestData = [];
     let sLocationData = [];
     let isLoading = true;
-    let subscription;
+    let subscription, reviewsSubscription;
     let filters = props.filters ? props.filters : {};
 
     if(props.mapView) {
@@ -293,10 +299,14 @@ export default createContainer(props => {
         subscription = Meteor.subscribe(props.classTypeBySchool, props.filters);
     }
 
-	Meteor.subscribe("classInterest.getClassInterest");
+	   Meteor.subscribe("classInterest.getClassInterest");
 
-	classTypeData = ClassType.find().fetch();
-	schoolData = School.find().fetch();
+  	classTypeData = ClassType.find().fetch();
+    classTypeIds = classTypeData.map(data => data._id);
+    // We will subscribe only those reviews with classtype ids
+    reviewsSubscription = Meteor.subscribe("review.getReviewsWithReviewForIds",classTypeIds);
+
+    schoolData = School.find().fetch();
   	skillCategoryData = SkillCategory.find().fetch();
   	classTimesData = ClassTimes.find().fetch();
   	classInterestData = ClassInterest.find().fetch();
@@ -307,8 +317,20 @@ export default createContainer(props => {
     perak:joins */
     SkillSubject.find().fetch();
 
-    if(subscription.ready()) {
-        isLoading = false
+    if(subscription.ready() && reviewsSubscription.ready()) {
+
+        classTypeData = classTypeData.map(data => {
+          const reviewsData = Reviews.find({reviewForId: data._id}).fetch();
+          if(reviewsData.length) {
+            data.reviewsStats = {
+              ratings: getAverageNoOfRatings(reviewsData),
+              reviews: reviewsData.length
+            }
+          }
+          return data;
+        });
+
+        isLoading = false;
     }
   	// console.log("classInterestData --->>",classInterestData)
   	return {
@@ -318,8 +340,8 @@ export default createContainer(props => {
   		skillCategoryData,
   		classTimesData,
   		classInterestData,
-        sLocationData,
-        isLoading,
+      sLocationData,
+      isLoading,
   	};
 
 }, ClassTypeList);
