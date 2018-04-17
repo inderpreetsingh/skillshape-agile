@@ -76,6 +76,7 @@ class ClassTypeCard extends Component {
 
     render() {
         console.log("ClassTypeCard props --->>",this.props);
+        let ratings,reviews;
         const cardRevealData = {
           _id:this.props._id,
           schoolId:this.props.schoolId,
@@ -87,6 +88,12 @@ class ClassTypeCard extends Component {
           name:this.props.name,
         }
         const classTimesData = this.getClassTimes(get(this.props, "_id", null))
+        const {reviewsStats} = this.props;
+        if(!isEmpty(reviewsStats)) {
+          ratings = reviewsStats.ratings;
+          reviews = reviewsStats.reviews;
+        }
+
         return(
             <Fragment>
             {
@@ -106,17 +113,16 @@ class ClassTypeCard extends Component {
               <CardsReveal defaultImage={cardImgSrc} originalImage={this.props.classTypeImg} {...this.props}
                   body={
                   <ClassTypeCardBody
-
-                      ratings={this.props.ratings}
-                      reviews={this.props.reviews}
+                      ratings={ratings}
+                      reviews={reviews}
                       onJoinClassButtonClick={this.handleDialogState(true)} />
                   }
                   descriptionContent={
                   <ClassTypeCardDescription
                       schoolData={this.props.schoolData}
                       classTimeCheck={!isEmpty(classTimesData)}
-                      ratings={this.props.ratings}
-                      reviews={this.props.reviews}
+                      ratings={ratings}
+                      reviews={reviews}
                       description={this.props.desc}
                       onClassTimeButtonClick={this.handleDialogState(true)}
                       cardRevealInfo={cardRevealData}

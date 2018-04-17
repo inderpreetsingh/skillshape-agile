@@ -329,7 +329,7 @@ export default createContainer(props => {
           }
           return data;
         });
-
+        // console.info("class type data...................................................",classTypeData);
         isLoading = false;
     }
   	// console.log("classInterestData --->>",classInterestData)

@@ -21,6 +21,7 @@ import Footer from './components/footer/index.jsx';
 import NoResults from './components/NoResults.jsx';
 
 import PrimaryButton from './components/buttons/PrimaryButton.jsx';
+import FormGhostButton from './components/buttons/FormGhostButton.jsx';
 import ContactUsFloatingButton from './components/buttons/ContactUsFloatingButton.jsx';
 import FiltersDialogBox from './components/dialogs/FiltersDialogBox.jsx';
 
@@ -165,18 +166,6 @@ const FilterPanelWrapper = styled.div`
   position: relative;
  `;
 
-const WrapperDiv = styled.div`
-    box-sizing: border-box;
-    padding: 0;
-    margin-top: 27px;
-    display: flex;
-    height: 47px;
-    font-weight: 500;
-    font-size: 16px;
-    margin-top: 4px;
-    padding:8px;
-    border-bottom: solid 1px #dddd;
- `;
 
 const FilterBarDisplayWrapper = styled.div`
   display: ${props => props.sticky ? 'block' : 'none'};
@@ -189,12 +178,36 @@ const ContactUsWrapper = styled.div`
   bottom: 10%;
   z-index: 1500;
  `;
+ const WrapperDiv = styled.div`
+   ${helpers.flexCenter}
+   font-weight: 500;
+   font-size: ${helpers.baseFontSize}px;
+   padding: ${helpers.rhythmDiv}px;
+   // border-bottom: solid 1px #dddd;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+  }
+ `;
 
 const FilterAppliedDivs = styled.div`
     display: flex;
-    width: 200px;
-    float: left;
     align-items: center;
+    margin-right: ${props => props.marginRight}px;
+
+    @media screen and (max-width: ${helpers.mobile}px) {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: ${helpers.rhythmDiv}px;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+`;
+
+const ClassTypeOuterWrapper = styled.div`
+  padding-top: ${props => props.padding}px;
 `;
 
 class Landing extends Component {
@@ -578,11 +591,11 @@ class Landing extends Component {
     showText = (text, cb) => {
         return (
             <WrapperDiv>
-                <FilterAppliedDivs>
+                {/*<FilterAppliedDivs>
                     Filters in use.
-                </FilterAppliedDivs>
-                <FilterAppliedDivs>
-                  <PrimaryButton fullWidth noMarginBottom icon iconName="close" label="Clear All Filters" boxShadow noMarginBottom onClick={cb} />
+                </FilterAppliedDivs>*/}
+                <FilterAppliedDivs marginRight="16">
+                  <FormGhostButton fullWidth noMarginBottom icon iconName="close" label="Clear All Filters" onClick={cb} />
 
                     {/*<div>
                         {text}
@@ -590,7 +603,7 @@ class Landing extends Component {
                     <Icon onClick={cb}>close</Icon>*/}
                 </FilterAppliedDivs>
                 <FilterAppliedDivs>
-                  <PrimaryButton fullWidth noMarginBottom icon iconName="tune" label="View Filters" boxShadow noMarginBottom onClick={() => this.handleFiltersDialogBoxState(true)} />
+                  <FormGhostButton blackColor fullWidth noMarginBottom icon iconName="tune" label="View Filters" onClick={() => this.handleFiltersDialogBoxState(true)} />
 
                     {/*<div style={{padding:8}}>
                     View Filters
@@ -630,6 +643,20 @@ class Landing extends Component {
     handleFiltersDialogSaveButtonClick = () => {
       this.handleFiltersDialogBoxState(false);
       this.scrollTo();
+    }
+
+    checkIfAnyFilterIsApplied = () => {
+      if(isEmpty(this.state.filters)) {
+        return false;
+      }
+      else {
+        if(this.state.filters.skillTypeText
+          || this.state.filters.applyFilterStatus
+          || this.state.filters.locationName)
+          return true;
+        else
+          return false;
+      }
     }
 
     render() {
@@ -699,20 +726,23 @@ class Landing extends Component {
                                 </FilterBarDisplayWrapper>}
                         </Sticky>
                     </FilterPanelWrapper>
-                    {/* Applied Filters */}
-                    {this.state.filters && this.showAppliedTopFilter()}
+
                     {/*Cards List */}
                     <Element name="content-container" className="element homepage-content">
-                        <ClassTypeList
-                            defaultLocation={this.state.defaultLocation}
-                            mapView={this.state.mapView}
-                            filters={this.state.filters}
-                            handleSeeMore={this.handleSeeMore}
-                            splitByCategory={true}
-                            setSchoolIdFilter={this.setSchoolIdFilter}
-                            removeAllFilters={this.removeAllFilters}
-                            {...this.props}
-                        />
+                        {/* Applied Filters */}
+                        <ClassTypeOuterWrapper padding={this.checkIfAnyFilterIsApplied() ? '96' : '0'}>
+                          {this.state.filters && this.showAppliedTopFilter()}
+                          <ClassTypeList
+                              defaultLocation={this.state.defaultLocation}
+                              mapView={this.state.mapView}
+                              filters={this.state.filters}
+                              handleSeeMore={this.handleSeeMore}
+                              splitByCategory={true}
+                              setSchoolIdFilter={this.setSchoolIdFilter}
+                              removeAllFilters={this.removeAllFilters}
+                              {...this.props}
+                          />
+                        </ClassTypeOuterWrapper>
                     </Element>
 
 

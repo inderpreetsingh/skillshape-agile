@@ -13,18 +13,22 @@ const styles = {
   formGhostButton: {
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
-    backgroundColor:"transparent",
-    border:"1px solid",
+    backgroundColor: "transparent",
+    border: "1px solid",
     borderColor: helpers.primaryColor,
-    color:helpers.primaryColor,
-    textTransform:"none",
+    color: helpers.primaryColor,
+    textTransform: "none",
   },
   fullWidth: {
     width: '100%'
   },
   buttonIcon: {
     display: 'inline-block',
-    marginRight: '5px' 
+    marginRight: '5px'
+  },
+  blackColor: {
+    color: helpers.black,
+    borderColor: helpers.black
   }
 };
 
@@ -32,9 +36,13 @@ const styles = {
 const FormGhostButton = (props) => {
   let rootClass = ``;
   if(props.fullWidth) {
-    rootClass = `${props.classes.formGhostButton} ${props.classes.fullWidth}`;  
+    rootClass = `${props.classes.formGhostButton} ${props.classes.fullWidth}`;
   }else{
     rootClass = props.classes.formGhostButton;
+  }
+
+  if(props.blackColor) {
+    rootClass = rootClass + ' ' + props.classes.blackColor;
   }
 
   return (
@@ -42,7 +50,7 @@ const FormGhostButton = (props) => {
       root: rootClass,
       }} onClick={props.onClick}>
         {props.icon && <Icon className={props.classes.buttonIcon}>{props.iconName}</Icon>}
-        
+
         {props.label ? props.label : 'Submit'}
     </Button>
   )
@@ -56,7 +64,5 @@ FormGhostButton.propTypes = {
     fullWidth: PropTypes.bool,
     classes: PropTypes.object.isRequired
 }
-        
+
 export default withStyles(styles)(FormGhostButton);
-
-

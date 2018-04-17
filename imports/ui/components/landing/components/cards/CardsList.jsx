@@ -86,11 +86,10 @@ class CardsList extends Component {
     _compareCardsData(currentCardsData,newCardsData) {
         for(let i = 0; i < currentCardsData.length; ++i) {
             if(currentCardsData[i]._id !== newCardsData[i]._id
-                || currentCardsData[i].reviews !== newCardsData[i].reviews
                 || currentCardsData[i].classTypeImg !== newCardsData[i].classTypeImg
-                || currentCardsData[i].ratings !== newCardsData[i].ratings
                 || currentCardsData[i].name !== newCardsData[i].name
                 || currentCardsData[i].desc !== newCardsData[i].desc
+                || currentCardsData[i].reviewsStats !== newCardsData[i].reviewsStats
             ) {
                 return true;
            }
