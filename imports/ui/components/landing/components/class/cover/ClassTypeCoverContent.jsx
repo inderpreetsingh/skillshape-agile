@@ -20,6 +20,7 @@ import ClassTypeLogo from '../ClassTypeLogo.jsx';
 import * as helpers from '../../jss/helpers.js';
 import * as settings from '../../../site-settings.js';
 
+import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
@@ -151,6 +152,7 @@ const EditButtonWrapper = styled.div`
 class ClassTypeCoverContent extends React.Component {
 
     state = {
+        nonUserDefaultDialog: false,
         isBusy : false
     }
     componentDidMount() {
@@ -208,6 +210,11 @@ class ClassTypeCoverContent extends React.Component {
         return str;
     }
 
+    handleDefaultDialogBox = (title, state) => {
+      const newState = {...state, defaultDialogBoxTitle: title, nonUserDefaultDialog: state};
+      this.setState(newState);
+    }
+
     // Request Class type location
     requestClassTypeLocation = () => {
         const { toastr, classTypeData } = this.props;
@@ -232,7 +239,7 @@ class ClassTypeCoverContent extends React.Component {
                 })
             });
         } else {
-            toastr.error("You need to login for location request!!!!","Error");
+            this.handleDefaultDialogBox('Login to request location',true);
         }
     }
 
@@ -241,6 +248,7 @@ class ClassTypeCoverContent extends React.Component {
     console.info('this . props ...............',this.props,"...........")
     const classTypeName = props.noClassTypeData ? '' : props.classTypeData.name;
     const selectedLocation = props.noClassTypeData ? props.schoolLocation : props.classTypeData.selectedLocation;
+    // const selectedLocation = '';
     const description = props.noClassTypeData ? props.schoolDetails.aboutHtml : props.classTypeData.desc;
     const noOfRatings = !props.isEdit && props.reviews.noOfRatings;
     const noOfReviews = !props.isEdit && props.reviews.noOfReviews;
@@ -250,6 +258,8 @@ class ClassTypeCoverContent extends React.Component {
         <CoverContentWrapper>
           <CoverContent>
             {this.state.isBusy && <ContainerLoader/>}
+            {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
+
             <ContentSection leftSection>
               {/* Displays map when it's not edit mode*/}
               {!props.isEdit && <MapContainer>

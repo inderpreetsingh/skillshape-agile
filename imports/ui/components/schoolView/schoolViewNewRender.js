@@ -277,8 +277,8 @@ export default function() {
             schoolLocation={schoolLocation}
             isEdit={false}
             bestPriceDetails={{
-              monthly: !isEmpty(this.state.bestPriceDetails) ? floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate) : null,
-              class: !isEmpty(this.state.bestPriceDetails) ? floor(this.state.bestPriceDetails.bestClassPrice.avgRate) : null
+              monthly: !isEmpty(this.state.bestPriceDetails.bestMonthlyPrice) ? floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate) : null,
+              class: !isEmpty(this.state.bestPriceDetails.bestClassPrice) ? floor(this.state.bestPriceDetails.bestClassPrice.avgRate) : null
             }}
             reviewsStats={{
               noOfRatings: getAverageNoOfRatings(reviewsData),
@@ -359,12 +359,9 @@ export default function() {
 
           {/* School Extra Section -- Notes & Media*/}
           <SchoolExtraSection>
-            <NotesWrapper>
-             {/*
-              <Typography align="center" type="title" classes={{title: classes.title}}> Notes for students</Typography>
-              <Typography type="caption" classes={{caption: classes.caption}}> {this.checkForHtmlCode(schoolData.studentNotesHtml) ? ReactHtmlParser(schoolData.studentNotesHtml) : 'Nothing here for the moment, but keep an eye. We may add it soon.'} </Typography>*/}
+            {this.checkForHtmlCode(schoolData.studentNotesHtml) && <NotesWrapper>
               <StudentNotes noClassTypeData notes={schoolData.studentNotesHtml} />
-            </NotesWrapper>
+            </NotesWrapper>}
 
             <MediaWrapper>
               <MediaDetails

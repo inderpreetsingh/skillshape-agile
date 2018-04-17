@@ -13,8 +13,6 @@ import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'materi
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
-
-
 const styles = theme => ({
   textColor: {
     color: "#fff"

@@ -41,13 +41,22 @@ const ClassDescriptionContent = styled.p`
   font-size: ${helpers.baseFontSize}px;
 `;
 
+const Text = styled.p`
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.commontFont};
+  color: ${helpers.black};
+  line-height: 1.2;
+  margin: 0;
+`;
+
 const styles = {
   gridDescriptionWrapper : {
     margin: `${helpers.rhythmDiv * 2}px 0`,
+    marginBottom: 4,
     border: `1px solid #ddd`
   },
   descriptionHeader : {
-    marginTop: `${helpers.rhythmDiv * 2}px`,
+    marginTop: `${helpers.rhythmDiv}px`,
     fontSize: '17px',
     fontWeight: 500
   }
@@ -64,16 +73,17 @@ const ClassTypeCardDescription = (props) => {
             <div itemScope itemType="http://schema.org/AggregateRating">
                 <ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount"/>
                 <Reviews href="#">
-                    <Typography> <span itemProp="reviewCount">{props.reviews}</span> Reviews</Typography>
+                    <Typography>
+                      <span itemProp="reviewCount">{props.reviews}</span> Reviews</Typography>
                 </Reviews>
             </div>
 
             <div className="description">
               <Grid container spacing={8}>
                  <Grid item xs={12} classes={{typeItem: props.classes.gridDescriptionWrapper}}>
-                    {cardRevealInfo.ageMin && <Typography>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Typography>}
-                    {cardRevealInfo.gender && <Typography>{cardRevealInfo.gender && (cardRevealInfo.gender === "Any") ? "All are welcome" : `${cardRevealInfo.gender} only`}</Typography>}
-                    {cardRevealInfo.experienceLevel && <Typography>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Typography>}
+                    {cardRevealInfo.ageMin && <Text>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Text>}
+                    {cardRevealInfo.gender && <Text>{cardRevealInfo.gender && (cardRevealInfo.gender === "Any") ? "All are welcome" : `${cardRevealInfo.gender} only`}</Text>}
+                    {cardRevealInfo.experienceLevel && <Text>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Text>}
                  <Grid item xs={12}>
                     <Typography classes={{root: props.classes.descriptionHeader}}>Class Description: </Typography>
                     {cardRevealInfo.description && <ClassDescriptionContent>{cardRevealInfo.description}</ClassDescriptionContent>}
@@ -82,6 +92,7 @@ const ClassTypeCardDescription = (props) => {
 
                <Grid item xs={12} sm={6}>
                     <SecondaryButton
+                      noMarginBottom
                       fullWidth
                       onClick={() => browserHistory.push(`/classType/${cardRevealInfo.name}/${cardRevealInfo._id}`)}
                       label="Class Details"/>
@@ -89,6 +100,7 @@ const ClassTypeCardDescription = (props) => {
 
                 <Grid item xs={12} sm={6}>
                     <SecondaryButton
+                      noMarginBottom
                       fullWidth
                       label="View School"
                       onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}

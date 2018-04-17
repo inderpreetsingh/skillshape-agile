@@ -1,6 +1,7 @@
 import React , {Fragment,Component} from 'react';
 import styled from 'styled-components';
 import {isEmpty} from 'lodash';
+import DocumentTitle from 'react-document-title';
 
 import { createMarkersOnMap } from '/imports/util';
 
@@ -166,7 +167,8 @@ class ContactUs extends Component {
   render() {
     // console.info('--------------------------------------------------------',this.state, "------ contact us page");
     console.info('--- contact us page props --->',this.props, this.state);
-    return(<Wrapper>
+    return(<DocumentTitle title={this.props.route.name} >
+      <Wrapper>
 
       {/* Brand Bar at Top */}
       <BrandBar navBarHeight="70" positionStatic={true}
@@ -193,7 +195,8 @@ class ContactUs extends Component {
 
       {/* Footer */}
       <Footer />
-    </Wrapper>);
+      </Wrapper>
+    </DocumentTitle>);
   }
 }
 

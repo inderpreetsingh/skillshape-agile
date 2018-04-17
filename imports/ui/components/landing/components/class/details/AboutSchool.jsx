@@ -68,6 +68,7 @@ const Heading = styled.h2`
   line-height: 1;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   padding: 0 ${helpers.rhythmDiv * 2}px;
+  color: ${helpers.headingColor};
 `;
 
 const addHttpProtocol = (website) => {

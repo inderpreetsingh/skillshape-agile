@@ -81,6 +81,7 @@ const CardContentTitle = styled.h2`
   line-height: 1;
   margin: 0;
   text-transform: capitalize;
+  text-align: center;
 
   @media screen and (max-width : ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
@@ -121,8 +122,8 @@ const CardImageContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 52px;
-  width: 72px;
+  height: 45px;
+  width: 45px;
   flex: 0 0 auto;
 `;
 
@@ -134,7 +135,15 @@ const CardContentInnerTitle = styled.span`
   text-transform: capitalize;
 `;
 
-const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCardContent, descriptionContent, classTypeImg}) => {
+const Avatar = styled.div`
+  background-image: url(${props => props.bgImg});
+  background-size: cover;
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+`;
+
+const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCardContent, descriptionContent, bgImg}) => {
 
   const _getRefactoredTitle = (title, maxLimit) => {
     if(title.length <= maxLimit) {
@@ -169,7 +178,7 @@ const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCar
   return (<CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
     <CardDescriptionHeader>
       <CardImageContainer>
-        <avatar style={{backgroundImage: `url(${classTypeImg})`, backgroundSize: 'cover',borderRadius: '50%',height:'40px',width:'40px'}}></avatar>
+        <Avatar bgImg={bgImg} />
       </CardImageContainer>
 
       <CardContentTitle description>{_getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
@@ -244,7 +253,7 @@ class CardsReveal extends Component {
               className={transitionState}
               maxCharsLimit={this.state.maxCharsLimit}
               key={this.props._id}
-              classTypeImg={this.state.cardImgSrc}
+              bgImg={bgImg}
             />)}
         </Transition>
       </Paper>

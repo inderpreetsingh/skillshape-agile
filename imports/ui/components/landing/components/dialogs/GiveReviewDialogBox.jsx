@@ -156,8 +156,8 @@ class GiveReviewDialogBox extends Component {
                 toastr.error(err.reason || err.message,"Error");
             }
             else if(res) {
-              toastr.success('Your review has been added/updated','success');
-              // this.props.onModalClose();
+                toastr.success('Your review has been added/updated','success');
+              this.props.onModalClose();
             }
 
             if(this.props.onFormSubmit) {
