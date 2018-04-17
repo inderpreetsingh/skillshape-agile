@@ -12,12 +12,12 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h2`
-  font-weight: 300;
+  font-size: ${helpers.baseFontSize * 2}px;
   font-family: ${helpers.specialFont};
+  font-weight: 300;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   color: ${helpers.headingColor};
-  font-size: ${helpers.baseFontSize * 2}px;
 `;
 
 const Notes = styled.div`

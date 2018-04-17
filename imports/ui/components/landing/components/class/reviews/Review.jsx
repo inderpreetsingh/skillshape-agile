@@ -17,6 +17,7 @@ const Wrapper = styled.div`
 const Container = styled.div`
   ${helpers.flexDirectionColumn}
   align-items: flex-end;
+  margin-right: ${helpers.rhythmDiv}px;
 `;
 
 const Person = styled.div`
@@ -92,7 +93,7 @@ const Review = (props) => {
       <Person>
         <Container>
           <StarsBar noOfStars={props.ratings} />
-          <Name>{profile.name || profile.firstName + ' ' + props.lastName}</Name>
+          {profile.name || profile.firstName && <Name>{profile.name || profile.firstName + ' ' + props.lastName}</Name>}
         </Container>
 
         <ProfilePicContainer>
