@@ -166,8 +166,9 @@ class ClassDetailModal extends React.Component{
     // console.log("ClassDetailModal render props -->>", this.props);
     // console.log("ClassDetailModal render state -->>", this.state);
     const { isLoading, error, school, classType, classTimes, location } = this.state;
-    const { eventData, fullScreen, classes } = this.props;
+    const { eventData, fullScreen, classes, clickedDate } = this.props;
     console.log("eventData____________", eventData)
+    console.log("clickedDate", clickedDate)
     return (
         <Dialog
           fullScreen={fullScreen}
@@ -263,7 +264,7 @@ class ClassDetailModal extends React.Component{
                                         </div>
                                     </div>
                                 </Grid>
-                                {/*<Grid item xs={6}>
+                                <Grid item xs={6}>
                                     <div className={classes.iconWithDetailContainer}>
                                         <div className="circle-icon" className={classes.iconStyle}>
                                             <Icon
@@ -275,10 +276,10 @@ class ClassDetailModal extends React.Component{
                                         </div>
                                         <div>
                                             <Typography type="caption" >DATE</Typography>
-                                            <Typography type="caption" >{eventData.startDate && eventData.startDate.format("dddd, Do MMM YYYY")}</Typography>
+                                            <Typography type="caption" >{clickedDate}</Typography>
                                         </div>
                                     </div>
-                                </Grid>*/}
+                                </Grid>
                                 <Grid item xs={12}>
                                     <div className={classes.iconWithDetailContainer}>
                                         <div className="circle-icon" className={classes.iconStyle}>

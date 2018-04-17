@@ -34,7 +34,7 @@ class FullCalendar extends React.Component {
                     // console.log("eventSources startDate changed-->>")
                     this.props.setDate(startDate, endDate)
                 }
-                let sevents = this.buildCalander() || []
+                let sevents = this.buildCalander() || [];
                 // console.log("sevents -->>",sevents);
                 callback(sevents);
             },
@@ -59,9 +59,10 @@ class FullCalendar extends React.Component {
 
             },
             eventClick: (event) => {
-                // console.log("eventClick -->>",event)
+                console.log("eventClick -->>",event)
+                let clickedDate = moment(event.start).format("YYYY-MM-DD");
                 if (event.classTimeId && event.classTypeId) {
-                    this.props.showEventModal(true, event)
+                    this.props.showEventModal(true, event, clickedDate)
                 }
             }
         }
