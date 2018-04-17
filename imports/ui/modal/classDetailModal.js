@@ -27,6 +27,8 @@ import {flexCenter, rhythmDiv} from '/imports/ui/components/landing/components/j
 
 import '/imports/api/classInterest/methods';
 import '/imports/api/classTimes/methods';
+import { goToSchoolPage, goToClassTypePage } from "/imports/util";
+
 
 const formStyle = formStyles();
 
@@ -167,8 +169,7 @@ class ClassDetailModal extends React.Component{
     // console.log("ClassDetailModal render state -->>", this.state);
     const { isLoading, error, school, classType, classTimes, location } = this.state;
     const { eventData, fullScreen, classes, clickedDate } = this.props;
-    console.log("eventData____________", eventData)
-    console.log("clickedDate", clickedDate)
+    // console.log("eventData____________", eventData)
     return (
         <Dialog
           fullScreen={fullScreen}
@@ -313,10 +314,10 @@ class ClassDetailModal extends React.Component{
                                     </div>
                                 </Grid>*/}
                                 <Grid item xs={6}>
-                                    <PrimaryButton fullWidth noMarginBottom  label="View Class Type" boxShadow noMarginBottom/>
+                                    <PrimaryButton fullWidth noMarginBottom  label="View Class Type" boxShadow noMarginBottom onClick={()=> goToClassTypePage(classType.name, eventData.classTypeId)} />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <PrimaryButton fullWidth noMarginBottom  label="View School" boxShadow noMarginBottom />
+                                    <PrimaryButton fullWidth noMarginBottom  label="View School" boxShadow noMarginBottom  onClick={()=> browserHistory.push(`/schools/${school.slug}`)}/>
                                 </Grid>
                             </Grid>
                             {/*<Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
