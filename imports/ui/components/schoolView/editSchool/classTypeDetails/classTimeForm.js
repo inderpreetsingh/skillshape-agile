@@ -60,13 +60,13 @@ class ClassTimeForm extends React.Component {
             state.roomData = parentData.selectedLocation.rooms;
             state.locationId = parentData.selectedLocation._id;
         }
-
+        // Default selected tab accoring to data found for `ClassTimes` rec.
         if(!_.isEmpty(data)) {
             if(data.scheduleType === "oneTime") {
                 state.tabValue = 0
             } else if(data.scheduleType === "recurring") {
                 state.tabValue = 1
-            } else if(data.scheduleType === "onGoing") {
+            } else if(data.scheduleType === "OnGoing") {
                 state.tabValue = 2
             }
 
