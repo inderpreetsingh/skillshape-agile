@@ -45,13 +45,12 @@ const NoteStyled = styled.p`
 `;
 
 const conditionalRender = (props) => {
-  return(props.notes ? (<Wrapper>
-    {/*<Title noClassTypeData={props.noClassTypeData}>Student Notes</Title> */}
+  return (props.notes ? (<Wrapper>
     <Title>Student Notes</Title>
     <Notes>
-      {props.notes ? ReactHtmlParser(props.notes)}
+      {ReactHtmlParser(props.notes)}
     </Notes>
-  </Wrapper> : '');
+  </Wrapper>) : null);
 }
 
 const StudentNotes = (props) => {
