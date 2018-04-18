@@ -237,7 +237,7 @@ class ClassTypeForm extends React.Component {
 		                                            fullWidth
 		                                        >
 			                                        {
-			                                        	config.gender.map((data, index)=> {
+			                                        	config.genderForClassType.map((data, index)=> {
 			                                        		return <MenuItem key={index} value={data.label}>{data.value}</MenuItem>
 			                                        	})
 			                                        }
