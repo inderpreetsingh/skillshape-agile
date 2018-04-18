@@ -43,6 +43,11 @@ export default config = Object.freeze({
 		{ label: "Male", value: "Male"},
 		{ label: "Female", value: "Female"},
 	],
+	genderForClassType : [
+		{ label: "All", value: "All"},
+		{ label: "Male Only", value: "Male Only"},
+		{ label: "Female Only", value: "Female Only"},
+	],
 	experienceLevel : [
 		{ label: "All", value: "all"},
 		{ label: "Beginner", value: "beginner"},
