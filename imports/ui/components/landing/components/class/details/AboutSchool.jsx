@@ -14,6 +14,12 @@ const Wrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
+const MainHeading = styled.div`
+  ${helpers.flexCenter}
+  flex-wrap : wrap;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
 const Title = styled.h2`
   font-size: ${helpers.baseFontSize * 2}px;
   font-family: ${helpers.specialFont};
@@ -25,18 +31,29 @@ const Title = styled.h2`
   text-align: center;
 `;
 
+const Heading = styled.h2`
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  margin: 0;
+  line-height: 1;
+  padding-right: ${helpers.rhythmDiv}px;
+  color: ${helpers.headingColor};
+`;
+
 const Description = styled.p`
   margin: 0;
   font-size: ${helpers.baseFontSize}px;
   font-family: ${helpers.specialFont};
   line-height: 1;
   text-align: justify;
-  padding: 0px 44px;
+  padding: 0px ${helpers.rhythmDiv * 2}px;
 `;
 
 const SchoolWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
@@ -59,17 +76,6 @@ const Postal = styled.p`
   line-height: 1;
 `;
 
-const Heading = styled.h2`
-  text-align: center;
-  font-size: ${helpers.baseFontSize * 2}px;
-  font-family: ${helpers.specialFont};
-  font-weight: 300;
-  margin: 0;
-  line-height: 1;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-  padding: 0 ${helpers.rhythmDiv * 2}px;
-  color: ${helpers.headingColor};
-`;
 
 const addHttpProtocol = (website) => {
   if(website.match('http')) {
@@ -81,8 +87,10 @@ const addHttpProtocol = (website) => {
 const AboutSchool = (props) => (
   <Wrapper>
     <SchoolWrapper>
-      <Heading>About</Heading>
-      <Title>{props.title.toLowerCase()}</Title>
+      <MainHeading>
+        <Heading>About</Heading>
+        <Title>{props.title.toLowerCase()}</Title>
+      </MainHeading>
       <Address>
         {props.address && <Postal>{props.address}</Postal>}
         {props.website && <Website href={addHttpProtocol(props.website)} target="_blank"> {cutString(props.website,60)} </Website>}

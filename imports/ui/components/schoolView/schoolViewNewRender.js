@@ -56,6 +56,17 @@ const GenericWrapper = styled.div`
   background: white;
 `;
 
+const GenericButtonWrapper = styled.div`
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    ${helpers.flexCenter}
+    max-width: 300px;
+    width: 100%;
+    margin: 0 auto;
+  }
+`;
+
+
 const GenericFixedWidthWrapper = GenericWrapper.extend`
   max-width: 1200px;
   margin: 0 auto;
@@ -87,6 +98,10 @@ const ReviewsButtonWrapper = GenericFixedWidthWrapper.extend`
   margin-top: ${props => props.marginTop}px;
   padding-bottom: ${helpers.rhythmDiv * 4}px;
   text-align: center;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    ${helpers.flexCenter}
+  }
 `;
 
 
@@ -142,7 +157,7 @@ const PricingSection = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 6}px;
 `;
 
-const ButtonWrapper = styled.div`
+const ButtonWrapper = GenericButtonWrapper.extend`
   ${helpers.flexCenter}
   width: 100%;
   padding: 0 ${helpers.rhythmDiv * 2}px;
@@ -297,12 +312,14 @@ export default function() {
                 You are the first one to write review for this school.
               </Typography>
               <br /></Fragment>}
-              <ClassTimeButton
-                icon
-                onClick={this.handleGiveReview}
-                iconName="rate_review"
-                label="Give review"
-              />
+              <GenericButtonWrapper>
+                <ClassTimeButton
+                  icon
+                  onClick={this.handleGiveReview}
+                  iconName="rate_review"
+                  label="Give review"
+                />
+              </GenericButtonWrapper>
             </ReviewsButtonWrapper>
           </ReviewsWrapper>
 
@@ -379,7 +396,7 @@ export default function() {
             {/* Calendar Section*/}
             <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
               <Element name="schedule-section">
-              {<ManageMyCalendar schoolCalendar={true} {...this.props}/>}
+                {<ManageMyCalendar schoolCalendar={true} {...this.props}/>}
               </Element>
             </MyCalendarWrapper>
 
