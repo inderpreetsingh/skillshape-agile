@@ -603,7 +603,7 @@ class Landing extends Component {
                     <Icon onClick={cb}>close</Icon>*/}
                 </FilterAppliedDivs>
                 <FilterAppliedDivs>
-                  <FormGhostButton blackColor fullWidth noMarginBottom icon iconName="tune" label="View Filters" onClick={() => this.handleFiltersDialogBoxState(true)} />
+                  <FormGhostButton darkGreyColor fullWidth noMarginBottom icon iconName="tune" label="View Filters" onClick={() => this.handleFiltersDialogBoxState(true)} />
 
                     {/*<div style={{padding:8}}>
                     View Filters

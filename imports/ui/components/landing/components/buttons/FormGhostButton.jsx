@@ -18,6 +18,10 @@ const styles = {
     borderColor: helpers.primaryColor,
     color: helpers.primaryColor,
     textTransform: "none",
+    '&:hover': {
+      backgroundColor: helpers.primaryColor,
+      color: 'white'
+    }
   },
   fullWidth: {
     width: '100%'
@@ -28,7 +32,27 @@ const styles = {
   },
   blackColor: {
     color: helpers.black,
-    borderColor: helpers.black
+    borderColor: helpers.black,
+    '&:hover': {
+      backgroundColor: helpers.black,
+      color: 'white'
+    }
+  },
+  greyColor: {
+    color: helpers.cancel,
+    borderColor: helpers.cancel,
+    '&:hover': {
+      backgroundColor: helpers.cancel,
+      color: 'white'
+    }
+  },
+  darkGreyColor: {
+    color: helpers.darkBgColor,
+    borderColor: helpers.darkBgColor,
+    '&:hover': {
+      backgroundColor: helpers.darkBgColor,
+      color: 'white'
+    }
   }
 };
 
@@ -43,6 +67,12 @@ const FormGhostButton = (props) => {
 
   if(props.blackColor) {
     rootClass = rootClass + ' ' + props.classes.blackColor;
+  }
+  else if(props.greyColor) {
+    rootClass = rootClass + ' ' + props.classes.greyColor;
+  }
+  else if(props.darkGreyColor) {
+    rootClass = rootClass + ' ' + props.classes.darkGreyColor;
   }
 
   return (
