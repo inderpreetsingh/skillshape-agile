@@ -208,7 +208,7 @@ class GiveReviewDialogBox extends Component {
           <DialogContent classes={{root : props.classes.dialogContent}}>
             <form onSubmit={this.handleFormSubmit}>
               <InputWrapper stars>
-                <ReactStars size={24} count={5} edit half value={this.state.ratings} onChange={this.handleRatingsChange}/>
+                <ReactStars size={24} count={5} half={false} value={this.state.ratings} onChange={this.handleRatingsChange}/>
               </InputWrapper>
 
               <InputWrapper>

@@ -12,6 +12,8 @@ import SecondaryButton from '../buttons/SecondaryButton.jsx';
 
 import {getContainerMaxWidth} from '../../../../../util/cards.js';
 
+import Reviews from '/imports/api/review/fields.js';
+
 import * as helpers from '../jss/helpers.js';
 
 const CardsListWrapper = styled.div`

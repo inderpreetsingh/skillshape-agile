@@ -54,7 +54,7 @@ const PriceText = Text.extend`
   font-size: ${helpers.baseFontSize * 1.5}px;
   line-height: 1;
   margin: 0;
-  font-weight: 500;
+  font-weight: 400;
 `;
 
 const BestPrice = (props) => (<BestPriceWrapper>
@@ -71,7 +71,7 @@ const BestPrices = (props) => (<Wrapper>
       currency={props.currency}
   />}
   {props.bestPriceDetails.class && <BestPrice
-      text="Class"
+      type="Class"
       price={props.bestPriceDetails.class}
       priceFor="class"
       currency={props.currency}
