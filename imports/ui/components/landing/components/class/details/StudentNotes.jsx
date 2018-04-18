@@ -18,6 +18,7 @@ const Title = styled.h2`
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   color: ${helpers.headingColor};
+  text-align: center;
 `;
 
 const Notes = styled.div`
