@@ -124,15 +124,15 @@ class ContactUsDialogBox extends Component {
       <MuiThemeProvider theme={muiTheme}>
         <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
           <DialogTitleWrapper>
-              <Title>Contact Us</Title>
-              <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
-                <ClearIcon/>
-              </IconButton>
-            </DialogTitleWrapper>
+            <Title>Contact Us</Title>
+            <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
+              <ClearIcon/>
+            </IconButton>
+          </DialogTitleWrapper>
         </DialogTitle>
 
         <DialogContent classes={{root : props.classes.dialogContent}}>
-          <ContactUsForm onSubmitForm={props.onModalClose} />
+          <ContactUsForm dialogBox onToastrClose={props.onModalClose} onFormSubmit={props.onModalClose} />
         </DialogContent>
       </MuiThemeProvider>
       </Dialog>

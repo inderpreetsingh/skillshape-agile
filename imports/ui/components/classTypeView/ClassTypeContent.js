@@ -174,7 +174,18 @@ const ClassContainer = styled.div`
   padding-bottom: ${props => props.paddingBottom}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
+    ${helpers.flexCenter}
+    flex-direction: column;
     padding-bottom: ${props => props.smallPadding ? props.smallPadding : props.paddingBottom}px;
+  }
+`;
+
+const GenericButtonWrapper = styled.div`
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    ${helpers.flexCenter}
+    max-width: 300px;
+    width: 100%;
   }
 `;
 
@@ -375,12 +386,14 @@ class ClassTypeContent extends Component {
                       You are the first one to write review for this class.
                     </Typography>
                     <br /></Fragment>}
-                    <ClassTimeButton
-                        icon
-                        onClick={this.handleGiveReview}
-                        iconName="rate_review"
-                        label="Give review"
-                    />
+                    <GenericButtonWrapper>
+                      <ClassTimeButton
+                          icon
+                          onClick={this.handleGiveReview}
+                          iconName="rate_review"
+                          label="Give review"
+                      />
+                    </GenericButtonWrapper>
                     </ClassContainer>
           			</MainInnerFixedContainer>
 
@@ -396,12 +409,14 @@ class ClassTypeContent extends Component {
                                     </Typography>
                                     <br>
                                     </br>
-                                    <ClassTimeButton
-                                        icon
-                                        onClick={this.handleClassTimeRequest}
-                                        iconName="perm_contact_calendar"
-                                        label="Request class times"
-                                    />
+                                    <GenericButtonWrapper>
+                                      <ClassTimeButton
+                                          icon
+                                          onClick={this.handleClassTimeRequest}
+                                          iconName="perm_contact_calendar"
+                                          label="Request class times"
+                                      />
+                                    </GenericButtonWrapper>
                                 </ClassContainer>
                             ) : (
                                 <ClassTimesBoxes
@@ -425,12 +440,14 @@ class ClassTypeContent extends Component {
                                 </Typography>
                                 <br>
                                 </br>
-                                <ClassTimeButton
-                                    icon
-                                    onClick={this.requestPricingInfo}
-                                    iconName="payment"
-                                    label="Request pricing"
-                                />
+                                <GenericButtonWrapper>
+                                  <ClassTimeButton
+                                      icon
+                                      onClick={this.requestPricingInfo}
+                                      iconName="payment"
+                                      label="Request pricing"
+                                  />
+                                </GenericButtonWrapper>
                             </ClassContainer>
                         ) : (
                             <PackagesList

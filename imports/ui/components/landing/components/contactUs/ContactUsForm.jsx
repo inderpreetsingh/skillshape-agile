@@ -153,7 +153,8 @@ class ContactUsForm extends Component {
     const message = this.state.message;
     const selectedOption = this.state.radioButtonGroupValue;
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    console.info(message,selectedOption,email,name);
+    // console.info(message,selectedOption,email,name);
+
     if(this.state.readyToSumit) {
       //..
       if (!email) {
@@ -173,12 +174,15 @@ class ContactUsForm extends Component {
                 console.log("error", error);
             } else {
                 toastr.success("Thanks for providing your feedback", "Success");
-                setTimeout(() => {
+                if(!this.props.dialogBox) {
+                  setTimeout(() => {
                     browserHistory.push(`/`);
-                }, 200);
+                  }, 200);
+                }
             }
             this.setState({ isLoading: false });
           });
+
         }
     }
   }
@@ -197,7 +201,7 @@ class ContactUsForm extends Component {
   render() {
     return (
         <FormWrapper>
-        { this.state.isLoading && <ContainerLoader />}
+          {this.state.isLoading && <ContainerLoader />}
           <Form onSubmit={this.handleFormSubmit}>
             <InputWrapper>
               <IconInput inputId="name" labelText="Your name" value={this.state.name} onChange={this.handleInputFieldChange('name')}/>
