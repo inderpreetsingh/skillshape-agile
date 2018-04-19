@@ -142,7 +142,7 @@ class FullCalendar extends React.Component {
             }
         }
 
-        // console.warn("Final sevent/s 12-->>",sevents)
+        console.warn("Final sevent/s 12-->>",sevents)
         return sevents
     }
 
@@ -155,11 +155,12 @@ class FullCalendar extends React.Component {
 export default createContainer(props => {
     const { startDate, endDate, manageMyCalendar, isUserSubsReady, currentUser, manageMyCalendarFilter } = props;
     let view;
-    if(props.route.name == "SchoolView" ) {
+    console.log("props.route",props);
+    if(props.route && props.route.name == "SchoolView" ) {
         view = "SchoolView";
-    } else if (props.route.name == "ClassType") {
+    } else if (props.route && props.route.name == "ClassType") {
         view = "ClassType";
-    } else if(props.route.name == "MyCalendar") {
+    } else if(props.route && props.route.name == "MyCalendar") {
         view = "MyCalendar";
     }
     // let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
