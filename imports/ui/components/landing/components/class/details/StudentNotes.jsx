@@ -27,6 +27,12 @@ const Notes = styled.div`
   font-size: ${helpers.baseFontSize}px;
   font-family: ${helpers.specialFont};
   color: ${helpers.black};
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+
+  ul, ol {
+    margin: 0;
+    padding: 0;
+  }
 
   li {
     list-style-position: outside;

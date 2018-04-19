@@ -11,7 +11,7 @@ import * as helpers from '../../jss/helpers.js';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
 const MainHeading = styled.div`
@@ -26,7 +26,6 @@ const Title = styled.h2`
   color: ${helpers.primaryColor};
   margin: 0;
   font-weight: 300;
-  line-height: 1;
   text-transform: capitalize;
   text-align: center;
   position: relative;
@@ -54,7 +53,6 @@ const Heading = styled.h2`
   font-family: ${helpers.specialFont};
   font-weight: 300;
   margin: 0;
-  line-height: 1;
   padding-right: ${helpers.rhythmDiv}px;
   color: ${helpers.headingColor};
 `;
@@ -72,7 +70,6 @@ const SchoolWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 ${helpers.rhythmDiv * 2}px;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Address = styled.address`
@@ -85,13 +82,13 @@ const Address = styled.address`
 `;
 
 const Website = styled.a`
-  line-height: 1;
   color: inherit;
 `;
 
 const Postal = styled.p`
   margin: 0;
   line-height: 1;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 

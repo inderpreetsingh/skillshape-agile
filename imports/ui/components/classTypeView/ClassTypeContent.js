@@ -240,6 +240,25 @@ class ClassTypeContent extends Component {
       }
     }
 
+    normalizeMonthlyPricingData = (monthlyPricingData) => {
+      if(monthlyPricingData) {
+        let normalizedMonthlyPricingData = [];
+
+        for(let monthlyPricingObj of monthlyPricingData) {
+            monthlyPricingObj.pymtDetails.forEach(payment => {
+              const myMonthlyPricingObj = Object.assign({},monthlyPricingObj);
+              myMonthlyPricingObj.pymtDetails = [];
+              myMonthlyPricingObj.pymtDetails.push(payment);
+              normalizedMonthlyPricingData.push(myMonthlyPricingObj);
+            });
+        }
+
+        return normalizedMonthlyPricingData;
+      }else{
+        return monthlyPricingData;
+      }
+    }
+
     scrollTo(name) {
       scroller.scrollTo((name || 'content-container'),{
         duration: 800,
@@ -452,7 +471,7 @@ class ClassTypeContent extends Component {
                         ) : (
                             <PackagesList
                               perClassPackagesData={classPricingData}
-                              monthlyPackagesData={monthlyPricingData}
+                              monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricingData)}
                             />
                         )
                     }

@@ -152,10 +152,10 @@ const Package = (props) => (
           ) : (
             <Fragment>
               <ClassDetailsText>
-                Payment Method: {props.pymtMethod || "NA"}
+               {props.pymtMethod || "NA"}
               </ClassDetailsText>
               <ClassDetailsText>
-                Payment Type: {getPaymentType(props.pymtType) || "NA"}
+                {getPaymentType(props.pymtType) || "NA"}
               </ClassDetailsText>
             </Fragment>
           )
