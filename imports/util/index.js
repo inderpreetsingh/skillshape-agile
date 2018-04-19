@@ -26,4 +26,5 @@ export { material_ui_next_theme } from "./theme";
 export { toastrModal } from "./toastrModal";
 export { componentLoader } from "./loading";
 export { dateFriendly } from './dateFriendly';
+export { openMailToInNewTab } from './openInNewTabHelpers';
 export { goToSchoolPage, goToClassTypePage, checkForAddToCalender } from './handleRedirect.js';

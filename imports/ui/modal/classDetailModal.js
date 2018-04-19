@@ -50,6 +50,7 @@ const styles = theme => {
       minHeight: 200,
       justifyContent: 'center',
       backgroundSize: 'auto',
+      height:'200px'
     },
     iconStyle: {
         marginRight: '5px'
@@ -370,6 +371,17 @@ class ClassDetailModal extends React.Component{
                                     <PrimaryButton fullWidth noMarginBottom  label="View School" boxShadow noMarginBottom  onClick={()=> browserHistory.push(`/schools/${school.slug}`)}/>
                                 </Grid>
                             </Grid>
+                                {fullScreen && (
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <DialogActions>
+                                            <Button onClick={()=>{this.props.closeEventModal(false, null)}} color="primary">
+                                              Close
+                                            </Button>
+                                        </DialogActions>
+                                    </Grid>
+                                </Grid>
+                                )}
                             {/*<Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
                                 Entire Class Dates
                             </Typography>
@@ -411,15 +423,6 @@ class ClassDetailModal extends React.Component{
                     </Grid>
                 )
             }
-
-
-            {fullScreen && (
-                <DialogActions>
-                    <Button onClick={()=>{this.props.closeEventModal(false, null)}} color="primary">
-                      Close
-                    </Button>
-                </DialogActions>
-            )}
         </Dialog>
     )
   }
