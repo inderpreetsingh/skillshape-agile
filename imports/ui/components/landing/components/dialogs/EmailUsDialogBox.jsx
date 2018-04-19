@@ -7,6 +7,8 @@ import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import TextField from 'material-ui/TextField';
 import styled from 'styled-components';
+import Typography from 'material-ui/Typography';
+
 
 import IconInput from '../form/IconInput.jsx';
 
@@ -15,6 +17,8 @@ import {withStyles} from 'material-ui/styles';
 
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
+import { toastrModal } from '/imports/util';
+
 
 import Dialog , {
   DialogActions,
@@ -101,7 +105,17 @@ class EmailUsDialogBox extends Component {
 
   state = {
     subject: '',
-    message: ''
+    message: '',
+    yourEmail:'',
+    yourName:'',
+    readyToSumit:false,
+    inputsName: ['subject','message','yourEmail','yourName']
+  }
+  componentDidUpdate = () => {
+    const readyToSumit = this._validateAllInputs(this.state,this.state.inputsName);
+    if(this.state.readyToSumit !== readyToSumit) {
+      this.setState({ readyToSumit : readyToSumit});
+    }
   }
 
   handleInputFieldChange = (fieldName) => (e) => {
@@ -110,22 +124,86 @@ class EmailUsDialogBox extends Component {
     });
   }
 
-  handleFormSubmit = (e) => {
-    e.preventDefault();
+  _validateAllInputs = (data, inputNames) => {
 
-    const {subject,message} = this.state;
-    const mailTo = `mailto:${this.props.ourEmail}?subject=${subject}&body=${message}`;
-    const mailToNormalized = encodeURI(mailTo);
-
-    // console.log('================================',mailToNormalized);
-
-    if(this.props.onFormSubmit) {
-      this.props.onFormSubmit();
+    // User is login then no need of their email and name in email us dialog box.
+    if(Meteor.user()) {
+      inputNames =  _.without(inputNames, 'yourName','yourEmail');
+    }
+    for(let i = 0; i < inputNames.length; ++i) {
+      if(data[inputNames[i]] == '') {
+        return false;
+      }
     }
 
-    window.location.href = mailToNormalized;
+    return true;
+  }
 
-    this.props.onModalClose();
+
+  renderForNotLoginUser = () => {
+    return (
+      <div>
+        <InputWrapper>
+          <IconInput value={this.state.yourEmail} labelText="Your Email" onChange={this.handleInputFieldChange('yourEmail')} inputId="yourEmail" fullWidth />
+        </InputWrapper>
+        <InputWrapper>
+          <IconInput value={this.state.yourName} labelText="Your Name" onChange={this.handleInputFieldChange('yourName')} inputId="yourName" fullWidth/>
+        </InputWrapper>
+      </div>
+    )
+  }
+  // Handle Email Us functionality from class type page.
+  handleFormSubmit = (e) => {
+      e.preventDefault();
+
+      const { subject, message } = this.state;
+      const name = this.state.name;
+      const { toastr } = this.props;
+
+      let yourEmail =""
+      let yourName = ""
+      if(!Meteor.user()) {
+        yourEmail = this.state.yourEmail;
+        yourName = this.state.yourName;
+      }
+      // const message = this.state.message;
+      // const selectedOption = this.state.radioButtonGroupValue;
+      const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+      let schoolData = this.props.schoolData;
+      if(this.state.readyToSumit) {
+      if (!emailReg.test(yourEmail) && !Meteor.user()) {
+          toastr.error("Please enter valid email address", "Error");
+          return false;
+      } else {
+          // Start loading
+          this.setState({ isLoading: true });
+          Meteor.call("classType.handleEmailUsForSchool", subject, message, schoolData, yourEmail, yourName, (err, res) => {
+          let stateObj = {};
+          if (err) {
+              let errorMessage = err.reason || err.message;
+              stateObj.error = errorMessage;
+              toastr.error(errorMessage, "Success");
+          }
+          if (res) {
+              toastr.success(res.message, "Success");
+          }
+          console.log("errrrrr",err,res)
+          stateObj.isLoading = false;
+          this.setState(stateObj);
+          this.props.onModalClose();
+          });
+        }
+    }
+      // const mailTo = `mailto:${this.props.ourEmail}?subject=${subject}&body=${message}`;
+      // const mailToNormalized = encodeURI(mailTo);
+
+      // // console.log('================================',mailToNormalized);
+
+      // if(this.props.onFormSubmit) {
+      //   this.props.onFormSubmit();
+      // }
+
+      // window.location.href = mailToNormalized;
   }
 
   render() {
@@ -149,9 +227,15 @@ class EmailUsDialogBox extends Component {
               </IconButton>
             </DialogTitleWrapper>
         </DialogTitle>
-
+        {
+          this.state.isLoading && <ContainerLoader />
+        }
         <DialogContent classes={{root : props.classes.dialogContent}}>
-            <form onSubmit={this.handleFormSubmit}>
+          <InputWrapper>
+            <Typography>You are emailing {props.schoolData.website} at {props.schoolData.name}</Typography>
+          </InputWrapper>
+            <form onSubmit={this.handleFormSubmit} id="sendMessage">
+              {!this.props.currentUser &&  this.renderForNotLoginUser()}
               <InputWrapper>
                 <IconInput inputId="to" labelText="To" value={this.props.ourEmail} disabled/>
               </InputWrapper>
@@ -165,12 +249,17 @@ class EmailUsDialogBox extends Component {
               </InputWrapper>
 
               <ButtonWrapper>
-                  <PrimaryButton
+                  {/*<PrimaryButton
                       type="submit"
                       label="Send Message"
                       noMarginBottom
+                      formId="sendMessage"
                       onClick={this.handleFormSubmit}
-                  />
+                  />*/}
+                  {this.state.readyToSumit ?
+                    <PrimaryButton fullWidth type="submit" noMarginBottom label="Send Message" onClick={this.handleFormSubmit} />
+                    :
+                    <button className="cancel-button full-width increase-height" disabled >Send Message</button>}
               </ButtonWrapper>
             </form>
         </DialogContent>
@@ -187,4 +276,4 @@ EmailUsDialogBox.propTypes = {
   loading: PropTypes.bool,
 }
 
-export default withMobileDialog()(withStyles(styles)(EmailUsDialogBox));
+export default withMobileDialog()(toastrModal(withStyles(styles)(EmailUsDialogBox)));
