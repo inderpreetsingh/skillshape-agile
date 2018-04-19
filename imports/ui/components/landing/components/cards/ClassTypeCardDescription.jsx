@@ -17,6 +17,7 @@ import MuiTheme from '../jss/muitheme';
 import School from "/imports/api/school/fields";
 
 import { cutString } from '/imports/util';
+import { goToSchoolPage, goToClassTypePage } from "/imports/util";
 
 const Reviews = styled.a`
     color: ${helpers.primaryColor};
@@ -24,15 +25,6 @@ const Reviews = styled.a`
 const NoFoundResultWapper = styled.div`
     text-align: center;
 `
-function goToSchoolPage(schoolId) {
-  console.log("goToSchoolPage --->>",schoolId)
-  if(schoolId) {
-    const schoolData = School.findOne({_id: schoolId})
-    if(schoolData && schoolData.slug) {
-      browserHistory.push(`/schools/${schoolData.slug}`)
-    }
-  }
-}
 
 const ClassDescriptionContent = styled.p`
   max-height: 100px;
@@ -94,7 +86,7 @@ const ClassTypeCardDescription = (props) => {
                     <SecondaryButton
                       noMarginBottom
                       fullWidth
-                      onClick={() => browserHistory.push(`/classType/${cardRevealInfo.name}/${cardRevealInfo._id}`)}
+                      onClick={() => goToClassTypePage(cardRevealInfo.name,cardRevealInfo._id )}
                       label="Class Details"/>
                 </Grid>
 
