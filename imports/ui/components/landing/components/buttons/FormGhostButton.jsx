@@ -28,7 +28,8 @@ const styles = {
   },
   buttonIcon: {
     display: 'inline-block',
-    marginRight: '5px'
+    marginRight: '5px',
+    fontSize: helpers.baseFontSize
   },
   blackColor: {
     color: helpers.black,

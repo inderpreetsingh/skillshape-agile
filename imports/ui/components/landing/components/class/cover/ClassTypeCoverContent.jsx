@@ -250,8 +250,8 @@ class ClassTypeCoverContent extends React.Component {
     const selectedLocation = props.noClassTypeData ? props.schoolLocation : props.classTypeData.selectedLocation;
     // const selectedLocation = '';
     const description = props.noClassTypeData ? props.schoolDetails.aboutHtml : props.classTypeData.desc;
-    const noOfRatings = !props.isEdit && props.reviews.noOfRatings;
-    const noOfReviews = !props.isEdit && props.reviews.noOfReviews;
+    const noOfRatings = !props.isEdit && !isEmpty(props.reviews) && props.reviews.noOfRatings;
+    const noOfReviews = !props.isEdit && !isEmpty(props.reviews) && props.reviews.noOfReviews;
     const EditButton = props.editButton;
 
     return(
@@ -309,12 +309,9 @@ class ClassTypeCoverContent extends React.Component {
             </ContentSection>
 
             <ContentSection>
-              <ShowOnMobile>
-                {props.isEdit && <EditButtonWrapper>
-                  <ClassTimeButton icon iconName="photo_camera" label="Background" onClick={props.onEditBgButtonClick} />
-                </EditButtonWrapper>}
-              </ShowOnMobile>
-
+              {props.isEdit && <ShowOnMobile> <EditButtonWrapper>
+                <ClassTimeButton icon iconName="photo_camera" label="Background" onClick={props.onEditBgButtonClick} />
+                </EditButtonWrapper></ShowOnMobile>}
 
               <ClassTypeForegroundImage coverSrc={props.coverSrc} >
                 <Fragment>
@@ -350,13 +347,13 @@ class ClassTypeCoverContent extends React.Component {
               {/* On large screens this section will be below foregroud image,
                 on smaller screens it's below the left side*/}
               <ClassTypeInfoWrapper>
-                {props.classTypeMetaInfo || (props.classTypeData ? <ClassTypeInfo
+                {(props.classTypeMetaInfo || props.classTypeData) && <ClassTypeInfo
                   ageRange={props.classTypeData.ageMin && props.classTypeData.ageMax && `${props.classTypeData.ageMin} - ${props.classTypeData.ageMax}`}
                   gender={props.classTypeData.gender}
                   experience={props.classTypeData.experienceLevel}
                   subjects={this.getSkillValues(props.classTypeData.selectedSkillSubject)}
                   categories={this.getSkillValues(props.classTypeData.selectedSkillCategory)}
-                /> : <span></span>)}
+                />}
 
                 <ShowOnMobile>
                   {props.actionButtons || <ActionButtons

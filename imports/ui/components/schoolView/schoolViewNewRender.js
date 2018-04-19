@@ -50,6 +50,10 @@ const Wrapper = styled.div`
   overflow-x: hidden;
 `;
 
+const PreloaderWrapper = styled.div`
+  ${helpers.flexCenter};
+  height: calc(100vh - 290px); // 220 for footer + 70 for top bar.
+`;
 
 const GenericWrapper = styled.div`
   width: 100%;
@@ -237,7 +241,7 @@ export default function() {
     } = this.state;
 
     if(showLoading) {
-        return <Preloader/>
+        return <PreloaderWrapper><Preloader/></PreloaderWrapper>
     }
 
     if(isEmpty(schoolData)) {
@@ -367,7 +371,7 @@ export default function() {
                   schoolId={schoolId}
                   onAddToCartIconButtonClick={this.handlePurcasePackage}
                   perClassPackagesData={classPricing}
-                  monthlyPackagesData={monthlyPricing}
+                  monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricing)}
                   />
                 }
                 </PackagesWrapper>

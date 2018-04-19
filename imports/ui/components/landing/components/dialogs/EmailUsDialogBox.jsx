@@ -101,6 +101,18 @@ const Title = styled.span`
   text-align: center;
 `;
 
+const Text = styled.p`
+  width: 100%;
+  text-align: center;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize}px;
+`;
+
+const FocusedText = styled.span`
+  font-weight: 300;
+  font-style: italic;
+`;
+
 class EmailUsDialogBox extends Component {
 
   state = {
@@ -235,7 +247,7 @@ class EmailUsDialogBox extends Component {
         }
         <DialogContent classes={{root : props.classes.dialogContent}}>
           <InputWrapper>
-            <Typography>You are emailing {props.schoolData.website} at {props.schoolData.name}</Typography>
+            <Text>You are emailing <FocusedText>{props.schoolData.website}</FocusedText> at <FocusedText>{props.schoolData.name}</FocusedText></Text>
           </InputWrapper>
             <form onSubmit={this.handleFormSubmit} id="sendMessage">
               {!this.props.currentUser &&  this.renderForNotLoginUser()}

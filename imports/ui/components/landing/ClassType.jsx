@@ -181,7 +181,7 @@ class ClassType extends Component {
           <MainInnerFixedContainer marginBottom="32">
             <MainInner reviews largePadding="32" smallPadding="32">
               <ClassWrapper>
-                <ReviewsManager reviewsData={reviewsData} />
+                {/*<ReviewsManager reviewsData={reviewsData} /> */}
               </ClassWrapper>
             </MainInner>
           </MainInnerFixedContainer>

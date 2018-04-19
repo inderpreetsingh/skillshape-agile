@@ -20,8 +20,6 @@ import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import * as helpers from '../jss/helpers.js';
 
-
-
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
 import Reviews from "/imports/api/review/fields";
@@ -34,6 +32,11 @@ import ClassInterest from "/imports/api/classInterest/fields";
 
 const MainContentWrapper = styled.div`
 
+`;
+
+const PreloaderWrapper = styled.div`
+  ${helpers.flexCenter}
+  height: 100vh;
 `;
 
 const ContentContainer = styled.div`
@@ -173,6 +176,7 @@ class ClassTypeList extends Component {
                         locationName={this.props.locationName}
                         handleSeeMore={this.props.handleSeeMore}
                         filters={this.props.filters}
+                        reviewsData={this.props.reviewsData || []}
                 	/>
   				}
   			})
@@ -182,7 +186,7 @@ class ClassTypeList extends Component {
     getNoResultMsg = (isLoading, filters, classTypeData) => {
         if(isLoading) {
 
-            return <Preloader/>
+            return <PreloaderWrapper><Preloader/></PreloaderWrapper>
 
         } else if(isEmpty(classTypeData)) {
 
@@ -199,8 +203,8 @@ class ClassTypeList extends Component {
     }
 
 	render() {
-		console.log("ClassTypeList props -->>",this.props);
-		const { mapView, classTypeData, skillCategoryData, splitByCategory, filters, isLoading, classTimesData } = this.props;
+		const { mapView, classTypeData, reviewsData, skillCategoryData, splitByCategory, filters, isLoading, classTimesData } = this.props;
+    console.log("ClassTypeList props -->>",this.props);
     return (
 			<MainContentWrapper>
 				{
@@ -221,6 +225,7 @@ class ClassTypeList extends Component {
                               schoolData={this.props.schoolData}
                               mapView={this.props.mapView}
                               cardsData={classTypeData}
+                              reviewsData={reviewsData || []}
                               classInterestData={this.props.classInterestData}
                               handleSeeMore={this.props.handleSeeMore}
                               filters={this.props.filters}
@@ -247,6 +252,7 @@ class ClassTypeList extends Component {
 								}) : ( <CardsList
                           mapView={this.props.mapView}
                           cardsData={classTypeData}
+                          reviewsData={reviewsData || [] }
                           classInterestData={this.props.classInterestData}
                           handleSeeMore={this.props.handleSeeMore}
                           filters={this.props.filters}
@@ -274,6 +280,7 @@ class ClassTypeList extends Component {
 export default createContainer(props => {
 	// console.log("ClassTypeList createContainer -->>",props)
   	let classTypeData = [];
+    let reviewsData = [];
     let classTypeIds = [];
     let schoolData = [];
   	let skillCategoryData = [];
@@ -319,16 +326,7 @@ export default createContainer(props => {
 
     if(subscription.ready() && reviewsSubscription.ready()) {
 
-        classTypeData = classTypeData.map(data => {
-          const reviewsData = Reviews.find({reviewForId: data._id}).fetch();
-          if(reviewsData.length) {
-            data.reviewsStats = {
-              ratings: getAverageNoOfRatings(reviewsData),
-              reviews: reviewsData.length
-            }
-          }
-          return data;
-        });
+        reviewsData = Reviews.find().fetch()
         // console.info("class type data...................................................",classTypeData);
         isLoading = false;
     }
@@ -337,6 +335,7 @@ export default createContainer(props => {
   		...props,
   		classTypeData,
   		schoolData,
+      reviewsData,
   		skillCategoryData,
   		classTimesData,
   		classInterestData,
