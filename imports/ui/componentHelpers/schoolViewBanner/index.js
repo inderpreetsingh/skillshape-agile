@@ -21,6 +21,7 @@ import ClassTimeButton from '/imports/ui/components/landing/components/buttons/C
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
 import ClassTypeCoverContent from '/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx';
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 
 
 class SchoolViewBanner extends React.Component {
@@ -41,7 +42,9 @@ class SchoolViewBanner extends React.Component {
 	  	let superAdmin = find(schoolData.adminsData, {_id: schoolData.superAdmin});
 	  	let fullName = getUserFullName(superAdmin)
 	  	let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
-  		return `mailto:${schoolData.email}?subject=I%20wish%20your%20listing%20was%20up%20to%20date%21&body=Hi%20${fullName}%2C%0A%0AI%20am%20on%20SkillShape.com%20looking%20at%20your%20listing.%20It%20seems%20to%20be%20not%20up%20to%20date.%0AIt%20would%20really%20help%20me%20and%20other%20students%20get%20to%20your%20classes%20if%20it%20was%20updated.%20I%20would%20probably%20attend%20a%20class%21%0AHere%20is%20the%20link%2C%20you%20can%20fix%20it%20and%20I%20will%20use%20it%20when%20you%20do%21%0A${url}%0A%0AThanks`
+	  	const mailTo = `mailto:${schoolData.email}?subject=I wish your listing was up to date&body=Hi ${fullName},\n\nI am on SkillShape.com looking at your listing. It seems to be not up to date.It would really help me and other students get to your classes if it was updated. I would probably attend a class!\n\nHere is the link you can fix it and I will use it when you do!\n\n${url}\nThanks`;
+	    const mailToNormalized = encodeURI(mailTo);
+	    openMailToInNewTab(mailToNormalized);
   	}
   	handleCallUs = (schoolData) => {
 		// Detect mobile and dial number on phone else show popup that shows phone information.
@@ -131,7 +134,7 @@ class SchoolViewBanner extends React.Component {
 	                </Button>
 	                {
 	                  schoolData.email && (
-	                    <Button href={this.getMailToData(schoolData)} className={classes.ImageFooterbutton} raised color="accent">
+	                    <Button onClick={() => this.getMailToData(schoolData)} className={classes.ImageFooterbutton} raised color="accent">
 	                        <Email className={classes.ImageFooterIcon} />
 	                        Email Us
 	                    </Button>
