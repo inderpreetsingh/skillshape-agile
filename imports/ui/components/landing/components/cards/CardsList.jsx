@@ -10,10 +10,9 @@ import ClassTypeCard from './ClassTypeCard.jsx';
 import CardStructure from '../../constants/structure/card.js';
 import SecondaryButton from '../buttons/SecondaryButton.jsx';
 
-import {getContainerMaxWidth} from '../../../../../util/cards.js';
+import {getContainerMaxWidth,getAverageNoOfRatings} from '/imports/util';
 
 import Reviews from '/imports/api/review/fields.js';
-
 import * as helpers from '../jss/helpers.js';
 
 const CardsListWrapper = styled.div`
@@ -83,6 +82,29 @@ const CardsListTitle = styled.h2`
   }
 `;
 
+// NOTE: This method will remove the reviews which already have been searched and
+// return the searched reviews;
+const getReviewsWithId = (id,reviews) => {
+  const currentCardReviews = [];
+  // debugger;
+  for(let i = 0; i < reviews.length; ++i) {
+    if(reviews[i].reviewForId === id) {
+      idToRemove = i;
+      currentCardReviews.push(reviews[i]);
+
+      // Removing that element from the array;
+      reviews.splice(i,1);
+
+      --i;
+    }
+  }
+
+  return {
+    reviews,
+    currentCardReviews
+  }
+}
+
 
 class CardsList extends Component {
     _compareCardsData(currentCardsData,newCardsData) {
@@ -112,7 +134,9 @@ class CardsList extends Component {
             return true;
         } else if ((this.props.classInterestData && nextProps.classInterestData) && this.props.classInterestData.length !== nextProps.classInterestData.length) {
             return true;
-        } else {
+        }else if((this.props.reviewsData && nextProps.reviewsData) && this.props.reviewsData.length !== nextProps.reviewsData.length) {
+            return true;
+        }else {
             return this._compareCardsData(this.props.cardsData, nextProps.cardsData);
         }
     }
@@ -134,15 +158,29 @@ class CardsList extends Component {
     }
 
     render() {
-        const { title, cardsData, mapView,handleSeeMore,name,classInterestData, filters} = this.props;
-
-        // console.log("CardsList cardsData-->>",this.props);
+        const { title, cardsData, mapView, handleSeeMore, name, classInterestData, filters} = this.props;
+        let { reviewsData } = this.props;
+        // debugger;
+        console.log("CardsList cardsData-->>",this.props);
         return(
           <CardsListWrapper>
               <CardsListGridWrapper mapView={mapView}>
                 <CardsListTitle>{title}</CardsListTitle>
                  <GridContainer>
                      {cardsData.map(card => {
+
+                       const ourReviewsData = getReviewsWithId(card._id,reviewsData);
+                       const currentCardReviews = ourReviewsData['currentCardReviews'];
+                       // storing back the removed out reviews so that in next search we don't have to go through those reviews as well.
+                       reviewsData = ourReviewsData['reviews'];
+
+                       if(currentCardReviews.length) {
+                         card.reviewsStats = {
+                           ratings: getAverageNoOfRatings(currentCardReviews),
+                           reviews: currentCardReviews.length
+                         }
+                       }
+
                         return (
                            <GridItem key={card._id} spacing={24}>
                                <ClassTypeCard classInterestData={classInterestData} {...card}/>

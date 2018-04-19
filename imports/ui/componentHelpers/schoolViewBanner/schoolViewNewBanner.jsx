@@ -130,7 +130,11 @@ class SchoolViewBanner extends React.Component {
 			// console.info('shcooll data',schoolData,"-------");
 		return(<Fragment>
 			{this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
-			{this.state.emailUsDialog && <EmailUsDialogBox ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
+			{this.state.emailUsDialog && <EmailUsDialogBox
+					ourEmail={ourEmail}
+					schoolData={schoolData}
+					open={this.state.emailUsDialog}
+					onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
 			{this.state.showBackgroundUpload && <UploadMedia
 						schoolId={schoolId}
 						showCreateMediaModal= {this.state.showBackgroundUpload}
@@ -156,7 +160,7 @@ class SchoolViewBanner extends React.Component {
 						emailUsButton: emailUsButton,
 						visitSiteButton: true,
 						pricingButton: false,
-						siteLink: schoolData.website,  
+						siteLink: schoolData.website,
 						onEmailButtonClick: this.handleEmailUs,
 						onCallUsButtonClick: () => this.handleCallUs(schoolData),
 						onPricingButtonClick: () => this.scrollTo('price-section'),

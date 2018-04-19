@@ -20,6 +20,7 @@ export { formStyles } from '/imports/util/formStyle';
 export { createTable } from '/imports/util/createTable';
 export { downloadingFunction } from '/imports/util/csvFileDownload';
 export { imageExists } from '/imports/util/imageExists';
+export { getContainerMaxWidth } from '/imports/util/cards.js';
 
 export { withStyles } from "./withStyle";
 export { material_ui_next_theme } from "./theme";

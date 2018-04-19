@@ -29,6 +29,24 @@ const Title = styled.h2`
   line-height: 1;
   text-transform: capitalize;
   text-align: center;
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    transform: scaleX(0);
+    bottom: -2px;
+    left: 0;
+    background-color: currentColor;
+    transition: 0.2s ease-in transform;
+  }
+
+  &:hover:after {
+    transform: scaleX(1);
+  }
+
 `;
 
 const Heading = styled.h2`
@@ -89,11 +107,13 @@ const AboutSchool = (props) => (
     <SchoolWrapper>
       <MainHeading>
         <Heading>About</Heading>
-        <Title>{props.title.toLowerCase()}</Title>
+        <Website href={addHttpProtocol(props.website)} target="_blank">
+          <Title>{props.title.toLowerCase()}</Title>
+        </Website>
       </MainHeading>
       <Address>
         {props.address && <Postal>{props.address}</Postal>}
-        {props.website && <Website href={addHttpProtocol(props.website)} target="_blank"> {cutString(props.website,60)} </Website>}
+        {/*props.website && <Website href={addHttpProtocol(props.website)} target="_blank"> {cutString(props.website,60)} </Website>*/}
       </Address>
     </SchoolWrapper>
     <Description>{props.description && ReactHtmlParser(props.description)}</Description>
