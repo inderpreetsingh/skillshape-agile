@@ -19,8 +19,8 @@ import EditMemberDialogBox from "/imports/ui/components/landing/components/dialo
 
 const styles = theme => ({
   avatarCss: {
-    width: "175px",
-    height: "150px",
+    width: "100%",
+    height: "100%",
     backgroundSize: "cover",
     backgroundPosition: "top center",
     borderRadius: "50%"
