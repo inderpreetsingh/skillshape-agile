@@ -274,7 +274,7 @@ export const sendEmailToSchool = function(message,studentName,contactName,school
                    ${yourEmail ? `User Email: ${yourEmail}<br/>`: ""}
                    ${yourName ? `User Name:${yourName}<br/>`: ""}
                    ${studentName} saw your listing on SkillShape.com ${Meteor.absoluteUrl(
-                   `SchoolAdmin/${schoolData.slug}`)} and has the following message for you:
+                   `schools/${schoolData.slug}`)} and has the following message for you:
                    <br/> ${message} <br/>Thanks, <br/>${EmailSignature}`
         });
     }

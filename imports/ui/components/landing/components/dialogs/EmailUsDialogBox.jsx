@@ -179,18 +179,21 @@ class EmailUsDialogBox extends Component {
           this.setState({ isLoading: true });
           Meteor.call("classType.handleEmailUsForSchool", subject, message, schoolData, yourEmail, yourName, (err, res) => {
           let stateObj = {};
+          let errorMessage;
+          let resultMessage;
           if (err) {
-              let errorMessage = err.reason || err.message;
+              errorMessage = err.reason || err.message;
               stateObj.error = errorMessage;
-              toastr.error(errorMessage, "Success");
+              // toastr.error(errorMessage, "Success");
           }
           if (res) {
-              toastr.success(res.message, "Success");
+              resultMessage = res.message;
+              // toastr.success(res.message, "Success");
           }
           console.log("errrrrr",err,res)
           stateObj.isLoading = false;
           this.setState(stateObj);
-          this.props.onModalClose();
+          this.props.onModalClose(errorMessage, resultMessage);
           });
         }
     }
