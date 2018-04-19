@@ -33,6 +33,7 @@ import ClassTimeButton from '/imports/ui/components/landing/components/buttons/C
 
 import { capitalizeString } from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { getUserFullName } from '/imports/util/getUserData';
 
 const imageExistsConfig = {
   originalImagePath: 'classTypeData.classTypeImg',
@@ -231,25 +232,17 @@ class ClassTypeContent extends Component {
 
     requestPricingInfo = () => {
         const { toastr, schoolData } = this.props;
-
         if(Meteor.userId() && !isEmpty(schoolData)) {
-            this.setState({ isBusy:true });
-
-            Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
-                // Check sucess method in response and send confirmation to user using a toastr.
-                this.setState({isBusy: false}, () => {
-                    if(err) {
-                        toastr.error(err.reason || err.message,"Error");
-                    }
-                    if(res && res.emailSent) {
-                      toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
-                    }
-                });
-            });
-
+          let emailBody = "";
+          let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
+          let subject ="", message =  "";
+          let currentUserName = getUserFullName(Meteor.user());
+          emailBody = `Hi ${currentUserName} saw your listing on SkillShape.com ${url} and has the following message for you:${message}`
+          const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
+          const mailToNormalized = encodeURI(mailTo);
+          window.location.href = mailToNormalized;
         } else {
             this.handleDefaultDialogBox('Login to make price package requests',true);
-            // toastr.error("You need to login for Price Package Request!!!!","Error");
         }
     }
 
@@ -338,7 +331,7 @@ class ClassTypeContent extends Component {
 		return (
 			<Fragment>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
-          {this.state.emailUsDialog && <EmailUsDialogBox ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)}/>}
+          {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolData} ourEmail={ourEmail} open={this.state.emailUsDialog} currentUser={this.props.currentUser} onModalClose={() => this.handleDialogState('emailUsDialog',false)}/>}
           {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData.name)} reviewFor='class' reviewForId={classTypeData._id} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.isBusy && <ContainerLoader/>}

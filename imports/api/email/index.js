@@ -263,3 +263,19 @@ export const sendClassTypeLocationRequestEmail = function({
         });
     }
 };
+
+export const sendEmailToSchool = function(message,studentName,contactName,schoolData,subject,yourEmail, yourName) {
+    if (Meteor.isServer) {
+        Email.send({
+            to: "sam@skillshape.com", // Needs to replace this with requester's Email.
+            from: "Notices@SkillShape.com",
+            subject: subject,
+            html: `Hi, ${contactName}<br/>
+                   ${yourEmail ? `User Email: ${yourEmail}<br/>`: ""}
+                   ${yourName ? `User Name:${yourName}<br/>`: ""}
+                   ${studentName} saw your listing on SkillShape.com ${Meteor.absoluteUrl(
+                   `SchoolAdmin/${schoolData.slug}`)} and has the following message for you:
+                   <br/> ${message} <br/>Thanks, <br/>${EmailSignature}`
+        });
+    }
+}

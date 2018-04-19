@@ -8,6 +8,7 @@ import School from "/imports/api/school/fields";
 import ClassTimesRequest from "/imports/api/classTimesRequest/fields";
 import ClassTypeLocationRequest from "/imports/api/classTypeLocationRequest/fields";
 import { sendEmailToStudentForClassTypeUpdation, sendClassTypeLocationRequestEmail } from "/imports/api/email";
+import { sendEmailToSchool } from "/imports/api/email";
 import { getUserFullName } from '/imports/util/getUserData';
 
 Meteor.methods({
@@ -161,6 +162,27 @@ Meteor.methods({
             }
         } else {
             throw new Meteor.Error("Permission denied!!");
+        }
+    },
+    "classType.handleEmailUsForSchool":function(subject, message, schoolData, yourEmail, yourName) {
+        let contactName;
+        if(Meteor.isServer) {
+            let schoolAdmin = Meteor.users.findOne({_id: { $in:schoolData.admins}});
+            if(schoolAdmin) {
+                contactName =  getUserFullName(schoolAdmin)
+            } else {
+                throw new Meteor.Error("No admin found for School");
+            }
+            let studentName;
+            if(this.userId) {
+                let currentUser = Meteor.users.findOne(this.userId);
+                studentName =  getUserFullName(currentUser);
+            }
+            if(!studentName) {
+                studentName = "I";
+            }
+            sendEmailToSchool(message,studentName,contactName,schoolData, subject, yourEmail, yourName);
+            return {message: "Email Sent successfully!!!"}
         }
     }
 });
