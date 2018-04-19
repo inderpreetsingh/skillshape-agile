@@ -49,6 +49,10 @@ const SchoolImg = styled.img`
   height: 100%;
 `;
 
+const PreloaderWrapper = styled.div`
+  ${helpers.flexCenter};
+  height: calc(100vh - 282px); // 212 for footer + 70 for top bar.
+`;
 
 const Main = styled.main`
   width: 100%;
@@ -57,6 +61,7 @@ const Main = styled.main`
     overflow: hidden;
   }
 `;
+
 
 const MainInnerFixedContainer = styled.div`
   max-width: ${props => props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
@@ -353,7 +358,7 @@ class ClassTypeContent extends Component {
 		} = this.props;
 
 		if(isLoading) {
-			return <Preloader/>
+			return <PreloaderWrapper><Preloader/></PreloaderWrapper>
 		}
 
 		if(isEmpty(classTypeData)) {

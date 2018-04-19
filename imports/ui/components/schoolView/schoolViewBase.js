@@ -65,6 +65,25 @@ export default class SchoolViewBase extends React.Component {
       this.setState(newState);
     }
 
+    normalizeMonthlyPricingData = (monthlyPricingData) => {
+      if(monthlyPricingData) {
+        let normalizedMonthlyPricingData = [];
+
+        for(let monthlyPricingObj of monthlyPricingData) {
+            monthlyPricingObj.pymtDetails.forEach(payment => {
+              const myMonthlyPricingObj = Object.assign({},monthlyPricingObj);
+              myMonthlyPricingObj.pymtDetails = [];
+              myMonthlyPricingObj.pymtDetails.push(payment);
+              normalizedMonthlyPricingData.push(myMonthlyPricingObj);
+            });
+        }
+
+        return normalizedMonthlyPricingData;
+      }else{
+        return monthlyPricingData;
+      }
+    }
+
     claimASchool = (currentUser, schoolData) => {
       	if(currentUser) {
       		setTimeout(() => {

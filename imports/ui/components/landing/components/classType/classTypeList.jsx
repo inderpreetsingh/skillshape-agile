@@ -34,6 +34,11 @@ const MainContentWrapper = styled.div`
 
 `;
 
+const PreloaderWrapper = styled.div`
+  ${helpers.flexCenter}
+  height: 100vh;
+`;
+
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -181,7 +186,7 @@ class ClassTypeList extends Component {
     getNoResultMsg = (isLoading, filters, classTypeData) => {
         if(isLoading) {
 
-            return <Preloader/>
+            return <PreloaderWrapper><Preloader/></PreloaderWrapper>
 
         } else if(isEmpty(classTypeData)) {
 
