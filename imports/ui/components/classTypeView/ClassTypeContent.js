@@ -227,7 +227,7 @@ class ClassTypeContent extends Component {
       this.handleDialogState('callUsDialog',true);
     }
 
-    handleDialogState = (dialogName,state, errorMessage, resMessage) => {
+    handleDialogState = (dialogName,state, event, errorMessage, resMessage) => {
       const newState = {...this.state};
       newState[dialogName] = state;
       this.setState(newState);
@@ -236,7 +236,7 @@ class ClassTypeContent extends Component {
         toastr.error(errorMessage, "Error");
       }
       if(resMessage) {
-        toastr.error(resMessage, "Error");
+        toastr.error(resMessage, "Success");
       }
     }
 
@@ -350,7 +350,7 @@ class ClassTypeContent extends Component {
 			<Fragment>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolData} ourEmail={ourEmail} open={this.state.emailUsDialog} currentUser={this.props.currentUser} onModalClose={(err, res) => this.handleDialogState('emailUsDialog',false, err, res)}/>}
-          {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData.name)} reviewFor='class' reviewForId={classTypeData._id} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
+          {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData && classTypeData.name)} reviewFor='class' reviewForId={classTypeData._id} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.isBusy && <ContainerLoader/>}
 
@@ -400,7 +400,7 @@ class ClassTypeContent extends Component {
           			<MainInnerFixedContainer>
 			            <ClassTimesInnerWrapper>
 			                <ClassTimesWrapper paddingBottom="48">
-			                	<ClassTimesTitle>Class times for <ClassTimesName>{classTypeData.name.toLowerCase()}</ClassTimesName></ClassTimesTitle>
+			                	<ClassTimesTitle>Class times for <ClassTimesName>{classTypeData && classTypeData.name.toLowerCase()}</ClassTimesName></ClassTimesTitle>
 			                	{
                             isEmpty(classTimesData) ? (
                                 <ClassContainer paddingBottom="16" smallPadding="0">
@@ -464,7 +464,7 @@ class ClassTypeContent extends Component {
                     website={schoolData.website}
                     address={schoolData.address}
                     images={!isEmpty(mediaData) && mediaData.map((media)=>({original: media.sourcePath, thumbnail:media.sourcePath, media: media})) }
-                    schoolName={schoolData.name}
+                    schoolName={schoolData && schoolData.name}
                     notes={schoolData.studentNotesHtml}
                     description={schoolData.aboutHtml}
                   />
