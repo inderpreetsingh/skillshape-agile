@@ -250,8 +250,8 @@ class ClassTypeCoverContent extends React.Component {
     const selectedLocation = props.noClassTypeData ? props.schoolLocation : props.classTypeData.selectedLocation;
     // const selectedLocation = '';
     const description = props.noClassTypeData ? props.schoolDetails.aboutHtml : props.classTypeData.desc;
-    const noOfRatings = !props.isEdit && props.reviews.noOfRatings;
-    const noOfReviews = !props.isEdit && props.reviews.noOfReviews;
+    const noOfRatings = !props.isEdit && !isEmpty(props.reviews) && props.reviews.noOfRatings;
+    const noOfReviews = !props.isEdit && !isEmpty(props.reviews) && props.reviews.noOfReviews;
     const EditButton = props.editButton;
 
     return(
