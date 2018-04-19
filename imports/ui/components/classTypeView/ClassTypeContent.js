@@ -34,6 +34,7 @@ import ClassTimeButton from '/imports/ui/components/landing/components/buttons/C
 import { capitalizeString } from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { getUserFullName } from '/imports/util/getUserData';
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 
 const imageExistsConfig = {
   originalImagePath: 'classTypeData.classTypeImg',
@@ -237,11 +238,8 @@ class ClassTypeContent extends Component {
       newState[dialogName] = state;
       this.setState(newState);
       const { toastr } = this.props;
-      if(errorMessage) {
-        toastr.error(errorMessage, "Error");
-      }
       if(resMessage) {
-        toastr.error(resMessage, "Success");
+        toastr.success(resMessage, "Success");
       }
     }
 
@@ -282,7 +280,9 @@ class ClassTypeContent extends Component {
           emailBody = `Hi ${currentUserName} saw your listing on SkillShape.com ${url} and has the following message for you:${message}`
           const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
           const mailToNormalized = encodeURI(mailTo);
-          window.location.href = mailToNormalized;
+          // window.location.href = mailToNormalized;
+          openMailToInNewTab(mailToNormalized);
+
         } else {
             this.handleDefaultDialogBox('Login to make price package requests',true);
         }
