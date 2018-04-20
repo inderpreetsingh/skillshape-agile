@@ -4,7 +4,7 @@ export function openMailToInNewTab(mailToNormalized) {
     windowRef.onfocus = function() {
         return;
     }
-    setTimeout(function() {
-        windowRef.close();
-    }, 500);
+    // setTimeout(function() {
+    //     windowRef.close();
+    // }, 500);
 }
