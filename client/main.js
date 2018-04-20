@@ -4,9 +4,10 @@ import "react-image-gallery/styles/css/image-gallery.css";
 
 // Run this when the meteor app is started
 import '../imports/startup/client';
+import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom';
-import React from 'react';
+import ReactGA from 'react-ga';
 
 import { MuiThemeProvider } from 'material-ui/styles';
 
@@ -18,13 +19,25 @@ muiTheme.overrides = pickerStyles;
 // All the routes used in application
 import Routes from '../imports/startup/routes';
 
-const App = () => (
-  <MuiThemeProvider theme={muiTheme} >
-    <div>
-      <Routes />
-    </div>
-  </MuiThemeProvider>
-)
+class App extends Component {
+
+  componentWillMount = () => {
+    ReactGA.initialize('UA-115928788-1',{
+      debug: true
+    });
+  }
+
+  render() {
+    return (
+      <MuiThemeProvider theme={muiTheme} >
+        <div>
+          <Routes />
+        </div>
+      </MuiThemeProvider>
+    )
+  }
+}
+
 
 Meteor.startup(() => {
   render(<App />, document.getElementById('app'));
