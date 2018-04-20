@@ -14,7 +14,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid'
 import { Link } from 'react-router';
 
-import { cutString, toastrModal } from '/imports/util';
+import { cutString, toastrModal, handleOutBoundLink } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
@@ -294,6 +294,7 @@ class SchoolCard extends Component {
                     classes={classes}
                     iconName="present_to_all"
                     text="Website"
+                    onClick={handleOutBoundLink}
                     />
                   </MyAnchor>
                   {/*

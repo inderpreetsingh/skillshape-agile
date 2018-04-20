@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { Link } from 'react-router';
+import { handleOutBoundLink } from '/imports/util';
 
 import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
 
@@ -95,7 +96,7 @@ const ActionButtons = (props) => {
       </ActionButton>}
 
       {props.visitSiteButton && <a href={props.siteLink} target="_blank"><ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" />
+        <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" onClick={handleOutBoundLink}/>
       </ActionButton></a>}
     </Fragment>}
   </ActionButtonsContainer>)
