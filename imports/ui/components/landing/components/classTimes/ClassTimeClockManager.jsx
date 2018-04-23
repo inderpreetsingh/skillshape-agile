@@ -9,7 +9,7 @@ import ClassTimeClock from './ClassTimeClock.jsx';
 import ClassTimeNewClock from './ClassTimeNewClock.jsx';
 
 const ONE_TIME = 'onetime';
-const DAYS_IN_WEEK = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+const DAYS_IN_WEEK = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 const OuterWrapper = styled.div`
   width: ${props => props.width || 250}px;
@@ -147,8 +147,11 @@ class ClassTimeClockManager extends Component {
             classTimes[day] = [];
             classTimes[day].push(currentJsonData);
           }
+          // this.handleSliderState(dayOfTheWeek - 1);
         })
         return classTimes;
+      } else {
+        return data.scheduleDetails;
       }
   }
 
@@ -203,7 +206,6 @@ class ClassTimeClockManager extends Component {
             {/* <ClassTimeClock data={this.props.data} visible={this.state.currentIndex} {...this.props.clockProps} /> */}
 
             {formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
-              // console.log(this.props,'this.props......')
               if(formattedClassTimes[day]) {
                 return <ClassTimeNewClock
                   currentDay={day}
