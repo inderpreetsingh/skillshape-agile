@@ -138,6 +138,7 @@ export class WeekDaysRow extends React.Component {
                                     label="Duration"
                                     type="number"
                                     fullWidth
+                                    required={true}
                                 />
 		                	</Grid>
 		                	<Grid item sm={6} xs={12}>
