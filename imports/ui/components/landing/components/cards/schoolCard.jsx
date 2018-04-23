@@ -206,7 +206,7 @@ class SchoolCard extends Component {
   }
 
   getContactNumbers = () => {
-    return this.props.schoolCardData.phone.split(/[\|\,\\]/);
+    return this.props.schoolData.phone && this.props.schoolCardData.phone.split(/[\|\,\\]/);
   }
 
   getOurEmail = () => {
