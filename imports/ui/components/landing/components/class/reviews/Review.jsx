@@ -97,7 +97,7 @@ const Review = (props) => {
         </Container>
 
         <ProfilePicContainer>
-          <MyProfilePic imgSrc={profile.pic} />
+          <MyProfilePic imgSrc={profile && profile.pic} />
         </ProfilePicContainer>
       </Person>
 
