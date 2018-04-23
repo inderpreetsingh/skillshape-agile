@@ -54,17 +54,13 @@ const Title = styled.h2`
   }
 `;
 
-const Tagline = styled.h3`
+const Heading = styled.h3`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   line-height: 1;
   font-style: italic;
   font-weight: 300;
   margin: 0;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    display: none;
-  }
 `;
 
 
@@ -122,13 +118,95 @@ const ButtonWrapper = styled.div`
   display: flex;
 `;
 
+const SolutionContent = styled.div`
+  ${helpers.flexCenter};
+  max-width: 450px;
+  flex-direction: column;
+  transition: .2s opacity ease-in;
+`;
+
+const Solution = styled.div`
+
+`;
+
+const Description = styled.p`
+  margin: 0;
+  font-weight: 300;
+  font-style: ${helpers.specialFont};
+`;
+
+const SolutionBox extends Component {
+
+  state = {
+    currentSolution: 0,
+  }
+
+  handleSolutionChange = (currentSolution) => {
+    this.setState({currentSolution});
+  }
+
+  render() {
+    return(<BoxWrapper firstBox={props.firstBox}>
+
+        {/*<TitleArea>
+          <Title firstBox={props.firstBox}> {props.title} </Title>
+          <Tagline>SkillShape has following functions that will help you {props.helpsUsIn}</Tagline>
+        </TitleArea> */}
+
+        <SchoolSolutionCardsWrapper>
+          {props.cardsData && props.cardsData.map((card,i) => (
+            <SchoolSolutionCard
+              key={i}
+              {...card}
+              marginTop={(i == 1 && helpers.rhythmDiv * 4) || (i == 2 && -1 * helpers.rhythmDiv * 4)}
+              marginLeft={i === 2 && helpers.rhythmDiv * 2}
+              noMarginBotton={i === 2 || i === 3}
+              onCardClick={() => this.handleSolutionChange(i)}
+              cardBgColor={props.cardBgColor}/>
+          ))}
+        </SchoolSolutionCardsWrapper>
+
+        <SchoolSolutionSliderWrapper>
+          <SchoolSolutionSlider data={props.cardsData} componentProps={{cardBgColor: props.cardBgColor}}/>
+        </SchoolSolutionSliderWrapper>
+
+        <SolutionContent>
+          <TitleArea>
+            <Title firstBox={props.firstBox}> {props.title} </Title>
+          </TitleArea>
+
+          {props.cardsData && props.cardsData.map((card,i) => {
+            return(<Solution>
+              <Heading>
+                {card.tagline}
+              </Heading>
+
+              <Description>
+                {props.description}
+              </Description>
+
+              <ActionArea>
+                <ButtonWrapper>
+                  <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>
+                </ButtonWrapper>
+              </ActionArea>
+            </Solution>);
+          });
+
+        </SolutionContent>
+
+      </BoxWrapper>);
+  }
+}
+
+{/*
 const SolutionBox = (props) => (
   <BoxWrapper firstBox={props.firstBox}>
 
-    <TitleArea>
+    {/*<TitleArea>
       <Title firstBox={props.firstBox}> {props.title} </Title>
       <Tagline>SkillShape has following functions that will help you {props.helpsUsIn}</Tagline>
-    </TitleArea>
+    </TitleArea> */}
 
     <SchoolSolutionCardsWrapper>
       {props.cardsData && props.cardsData.map((card,i) => (
@@ -140,13 +218,34 @@ const SolutionBox = (props) => (
       <SchoolSolutionSlider data={props.cardsData} componentProps={{cardBgColor: props.cardBgColor}}/>
     </SchoolSolutionSliderWrapper>
 
-    <ActionArea>
-      <ButtonWrapper>
-        <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>
-      </ButtonWrapper>
-    </ActionArea>
+    <SolutionContent>
+      <TitleArea>
+        <Title firstBox={props.firstBox}> {props.title} </Title>
+      </TitleArea>
+
+      {props.cardsData && props.cardsData.map((card,i) => {
+        return(<Solution>
+          <Heading>
+            {card.tagline}
+          </Heading>
+
+          <Description>
+            {props.description}
+          </Description>
+
+          <ActionArea>
+            <ButtonWrapper>
+              <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>
+            </ButtonWrapper>
+          </ActionArea>
+        </Solution>);
+      });
+
+    </SolutionContent>
+
   </BoxWrapper>
 );
+*/}
 
 SolutionBox.propTypes = {
   content: PropTypes.string,
