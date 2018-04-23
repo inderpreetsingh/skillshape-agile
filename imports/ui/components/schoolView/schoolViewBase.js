@@ -10,6 +10,11 @@ import ClassType from "/imports/api/classType/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import { Loading } from '/imports/ui/loading';
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+import { isEmpty } from 'lodash';
+import { getUserFullName } from '/imports/util/getUserData';
+
+
 
 export default class SchoolViewBase extends React.Component {
 
@@ -339,23 +344,40 @@ export default class SchoolViewBase extends React.Component {
         });
     }
 
+    getOurEmail = () => {
+      return this.props.schoolData.email;
+    }
+
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
 
     // Request Pricing info using this function
     requestPricingInfo = (schoolData) => {
-      // Close Modal and Do request for pricing info.
+
       this.setState({showConfirmationModal: false});
-      const { toastr } = this.props;
-      Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
-        // Check sucess method in response and send confirmation to user using a toastr.
-          if(err) {
-            toastr.error(err.reason || err.message, "Error")
-          }
-          if(res && res.emailSent) {
-            toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
-          }
-      });
+      if(!isEmpty(schoolData)) {
+          let emailBody = "";
+          let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
+          let subject ="", message =  "";
+          let currentUserName = getUserFullName(Meteor.user());
+          emailBody = `Hi ${currentUserName} saw your listing on SkillShape.com ${url} and has the following message for you:${message}`
+          const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
+          const mailToNormalized = encodeURI(mailTo);
+          // window.location.href = mailToNormalized;
+          openMailToInNewTab(mailToNormalized);
+
+        }
+      // Close Modal and Do request for pricing info.
+      // const { toastr } = this.props;
+      // Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
+      //   // Check sucess method in response and send confirmation to user using a toastr.
+      //     if(err) {
+      //       toastr.error(err.reason || err.message, "Error")
+      //     }
+      //     if(res && res.emailSent) {
+      //       toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
+      //     }
+      // });
     }
 
     // This is used to send purchase request email when user wants to purchase a package.
