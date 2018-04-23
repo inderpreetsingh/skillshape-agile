@@ -119,7 +119,48 @@ class ClassTimeClockManager extends Component {
     NOTE: Recurring, Ongoing scheduleType are already formatted (or easy to format) this way,
         but for oneTime we need to transform into this format to feed data to clock(s).
     */
-    return data;
+    const classTimesData = {...data};
+    console.log("formatDataBasedOnScheduleType________", data);
+      let classTimes;
+      if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
+        classTimes = {};
+        let schoolDetails = data.scheduleDetails.oneTime;
+        let startDate, dayOfTheWeek, day, startTime, formattedTime, timePeriod, currentJsonData;
+        schoolDetails.forEach((item) => {
+          startDate = new Date(item.startDate);
+          dayOfTheWeek = startDate.getDay(); // day of the week (from 0 to 6)
+          day = DAYS_IN_WEEK[dayOfTheWeek - 1];
+          startTime = new Date(item.startTime); // Get Time from date time
+          formattedTime = this.formatTime(startTime);
+          timePeriod = this.formatAMPM(startTime);
+          currentJsonData = {
+            time: formattedTime,
+            timePeriod: timePeriod,
+            duration: item.duration,
+            date: `${startDate}`
+          };
+          if(classTimes && classTimes[day]) {
+            let existingTimes = classTimes[day];
+            existingTimes.push(currentJsonData);
+            classTimes[day] = existingTimes;
+          } else {
+            classTimes[day] = [];
+            classTimes[day].push(currentJsonData);
+          }
+        })
+        return classTimes;
+      }
+  }
+
+  formatAMPM = (startTime) => {
+      let hours = startTime.getHours();
+      let ampm = hours >= 12 ? 'pm' : 'am';
+      return ampm;
+  }
+  formatTime = (startTime) => {
+    let hour  = startTime.getHours();
+    let minutes = startTime.getMinutes();
+    return `${hour}:${minutes}`;
   }
 
 
@@ -152,7 +193,8 @@ class ClassTimeClockManager extends Component {
 
   render() {
     console.log(' clock times clock manager -----> ',this.props.data,".....");
-    const formattedClassTimes = this.formatDataBasedOnScheduleType(this.props.classTimes);
+    const formattedClassTimes = this.formatDataBasedOnScheduleType(this.props.data);
+    console.log('formattedClassTimes',formattedClassTimes);
     return (<Fragment>
         {/*Clock Times*/}
         <OuterWrapper width={this.props.outerWidth}>

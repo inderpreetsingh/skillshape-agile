@@ -259,7 +259,7 @@ class ManageMyCalendar extends React.Component {
         const { type, classTimesData, myClassTimes, filter, managedClassTimes, schoolClassTimes } = this.state;
 
         return  (
-            <DocumentTitle title={this.props.route.name}>
+            <DocumentTitle title={this.props.route && this.props.route.name}>
             <div>
                 {/*<Card style={{padding: 10, margin: 15}}> */}
                 <Card style={{padding: 8}}>
@@ -437,7 +437,7 @@ class ManageMyCalendar extends React.Component {
                         )
                     }
                     <MyCalender
-                        manageMyCalendar={ this.props.route.name == "MyCalendar" }
+                        manageMyCalendar={ this.props.route && this.props.route.name == "MyCalendar" }
                         manageMyCalendarFilter={filter}
                         {...this.props}
                     />
