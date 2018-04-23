@@ -145,7 +145,7 @@ const MyClock = (props) => (<MyClockWrapper
   clockType={props.clockType}
   currentClock={props.currentClock}
   onClick={props.onClockClick} >
-  {props.scheduleType.toLowerCase() === ONE_TIME && <DayDateContainer>
+  {props.scheduleType && <DayDateContainer>
     <DayDateInfo clockType={props.clockType}>
       <Date>({props.formattedDate})</Date>
     </DayDateInfo>
@@ -153,9 +153,9 @@ const MyClock = (props) => (<MyClockWrapper
 
   <ClockWrapper className={`class-time-transition ${props.className}`}>
     <TimeContainer>
-      <Duration>{props.schedule.duration}mins</Duration>
-      <Time>{props.schedule.time}</Time>
-      <TimePeriod>{props.schedule.timePeriod}</TimePeriod>
+      <Duration>{props.schedule.duration}</Duration>
+      <Time>{props.schedule.time || props.eventStartTime && props.formatTime(props.eventStartTime)}</Time>
+      <TimePeriod>{props.schedule.timePeriod  || props.eventStartTime && props.formatAmPm(props.eventStartTime)}</TimePeriod>
     </TimeContainer>
   </ClockWrapper>
 </MyClockWrapper>);
@@ -173,6 +173,19 @@ class ClassTimeNewClock extends Component {
     }
   }
 
+  formatTime = (startTime) => {
+    if(startTime && startTime.props) {
+      return `${moment(startTime.props).format("hh:mm")}`
+    }
+  }
+  formatAmPm = (startTime) => {
+    if(startTime && startTime.props) {
+      let hours = startTime.props.getHours();
+      let ampm = hours >= 12 ? 'pm' : 'am';
+      return `${ampm}`
+    }
+  }
+
   formatDate = (date) => {
     console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
     return moment(date).format('DD-MM-YYYY');
@@ -182,7 +195,7 @@ class ClassTimeNewClock extends Component {
     // console.log("Clock Outer wrapper",this.props,"..............");
     const type = this.props.scheduleData.length > 1 ? 'multiple' : 'single';
     const { scheduleData, scheduleType, currentDay } = this.props;
-    console.info('---------------',this.props.scheduleType," clock outer wrapper........");
+    console.info(" clock outer wrapper........",this.props);
     return (<ClockOuterWrapper
               visible={this.props.visible}
               clockType={type}
@@ -197,9 +210,12 @@ class ClassTimeNewClock extends Component {
                   schedule={schedule}
                   day={currentDay}
                   scheduleType={scheduleType}
-                  formattedDate={this.formatDate(schedule.date)}
+                  formattedDate={this.formatDate(schedule.date || schedule.startTime)}
                   onClockClick={() => this.handleClockClick(i)}
                   {...this.props.clockProps}
+                  eventStartTime={schedule && new Date(schedule.startTime)}
+                  formatTime={this.formatTime}
+                  formatAmPm={this.formatAmPm}
                 />))}
               </ClockInnerWrapper>
               {(scheduleData.length > 1) && <DotsWrapper><SliderDots

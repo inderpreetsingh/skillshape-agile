@@ -272,7 +272,7 @@ class ClassTypeContent extends Component {
 
     requestPricingInfo = () => {
         const { toastr, schoolData } = this.props;
-        if(Meteor.userId() && !isEmpty(schoolData)) {
+        if(!isEmpty(schoolData)) {
           let emailBody = "";
           let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
           let subject ="", message =  "";
@@ -283,39 +283,41 @@ class ClassTypeContent extends Component {
           // window.location.href = mailToNormalized;
           openMailToInNewTab(mailToNormalized);
 
-        } else {
+        } /*else {
             this.handleDefaultDialogBox('Login to make price package requests',true);
-        }
+        }*/
     }
 
     handleClassTimeRequest = () => {
-        const { toastr, classTypeData } = this.props;
+        // const { toastr, classTypeData } = this.props;
+        // Handle Class time request using mailTo:
+        this.handleClassTimeRequest();
+        // COMMENTED OUT BECAUSE NOW WE HAVE CHNAGED THIS REQUEST WITH MAILTO.
+        // if(Meteor.userId() && !isEmpty(classTypeData)) {
+        //     this.setState({ isBusy:true });
 
-        if(Meteor.userId() && !isEmpty(classTypeData)) {
-            this.setState({ isBusy:true });
+        //     const payload = {
+        //         schoolId: classTypeData.schoolId,
+        //         classTypeId: classTypeData._id,
+        //         classTypeName: classTypeData.name,
+        //     }
 
-            const payload = {
-                schoolId: classTypeData.schoolId,
-                classTypeId: classTypeData._id,
-                classTypeName: classTypeData.name,
-            }
-
-            Meteor.call("classTimesRequest.notifyToSchool", payload, (err, res) => {
-                console.log("err -->>",err)
-                this.setState({ isBusy: false }, () => {
-                    if(res && res.emailSuccess) {
-                        // Need to show message to user when email is send successfully.
-                        toastr.success("Your email has been sent. We will assist you soon.", "Success");
-                    }
-                    if(res && res.message) {
-                        toastr.error(res.message,"Error");
-                    }
-                })
-            })
-        } else {
-            // toastr.error("You need to login for classTimes request!!!!","Error");
-            this.handleDefaultDialogBox('Login to make class time requests',true);
-        }
+        //     Meteor.call("classTimesRequest.notifyToSchool", payload, (err, res) => {
+        //         console.log("err -->>",err)
+        //         this.setState({ isBusy: false }, () => {
+        //             if(res && res.emailSuccess) {
+        //                 // Need to show message to user when email is send successfully.
+        //                 toastr.success("Your email has been sent. We will assist you soon.", "Success");
+        //             }
+        //             if(res && res.message) {
+        //                 toastr.error(res.message,"Error");
+        //             }
+        //         })
+        //     })
+        // } else {
+        //     // toastr.error("You need to login for classTimes request!!!!","Error");
+        //     this.handleDefaultDialogBox('Login to make class time requests',true);
+        // }
     }
 
     handleDefaultDialogBox = (title, state) => {
