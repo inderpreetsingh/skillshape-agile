@@ -39,6 +39,17 @@ const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) 
     slidesToScroll: 1,
     autoplay: true,
     infinite: true,
+    beforeChange: (current, next) => {
+      const {sliderProps} = props;
+      if(sliderProps.onBeforeSlideChange)
+        sliderProps.onBeforeSlideChange(next);
+    },
+    afterChange: (index) => {
+      console.log(index);
+      const {sliderProps} = props;
+      if(sliderProps.onAfterSlideChange)
+        sliderProps.onAfterSlideChange(index);
+    },
     slidesToShow: sliderConfig.desktop,
     responsive: [{ breakpoint: breakPoints.mobile, settings: { slidesToShow: sliderConfig.mobile } }, { breakpoint: breakPoints.tablet, settings: { slidesToShow: sliderConfig.tablet }}]
   };
