@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { CSSTransition, Transition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import { withStyles } from 'material-ui/styles';
@@ -11,6 +10,7 @@ import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 
+import { lightenDarkenColor } from '/imports/util';
 import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
 
@@ -53,13 +53,18 @@ const SolutionCardWrapper = styled.article`
   margin-left: ${props => props.marginLeft}px;
   margin-top: ${props => props.marginTop}px;
   background-color: ${props => props.cardBgColor};
+  transition: 0.1s background-color ease-in;
   &:last-of-type {
     margin-right: 0;
   }
 
   @media screen and (max-width: ${helpers.tablet}px ) {
-    margin: 0 ${helpers.rhythmDiv}px;
-    margin-bottom: ${props => props.noMarginBotton ? 0 : helpers.rhythmDiv * 4}px;
+    // margin: 0 ${helpers.rhythmDiv}px;
+    // margin-bottom: ${props => props.noMarginBotton ? 0 : helpers.rhythmDiv * 4}px;
+    margin-right: ${helpers.rhythmDiv * 2}px;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+    margin-left: ${props => props.marginLeft/2}px;
+    margin-top: ${props => props.marginTop/2}px;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -69,6 +74,10 @@ const SolutionCardWrapper = styled.article`
     &:last-of-type {
       margin-right: auto;
     }
+  }
+
+  &:hover {
+    background-color: ${props => lightenDarkenColor(props.cardBgColor,-20)};
   }
 `;
 
