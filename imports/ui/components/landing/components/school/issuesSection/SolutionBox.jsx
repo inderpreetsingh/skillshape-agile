@@ -69,10 +69,11 @@ const Tagline = styled.h3`
 
 
 SchoolSolutionCardsWrapper = styled.div`
-  width: 100%;
   ${helpers.flexCenter}
-  justify-content: space-around;
-  max-width: ${helpers.schoolPageContainer}px;
+  width: 100%;
+  max-width: ${464 + 2 * helpers.rhythmDiv * 2}px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   padding: 0 ${helpers.rhythmDiv * 2}px;
   margin-top: ${helpers.rhythmDiv * 2}px;
 
@@ -131,7 +132,7 @@ const SolutionBox = (props) => (
 
     <SchoolSolutionCardsWrapper>
       {props.cardsData && props.cardsData.map((card,i) => (
-        <SchoolSolutionCard key={i} noMarginBotton={i === 2 || i === 3} {...card} cardBgColor={props.cardBgColor}/>
+        <SchoolSolutionCard key={i} marginTop={(i == 1 && helpers.rhythmDiv * 4) || (i == 2 && -1 * helpers.rhythmDiv * 4)} marginLeft={i === 2 && helpers.rhythmDiv * 2} noMarginBotton={i === 2 || i === 3} {...card} cardBgColor={props.cardBgColor}/>
       ))}
     </SchoolSolutionCardsWrapper>
 

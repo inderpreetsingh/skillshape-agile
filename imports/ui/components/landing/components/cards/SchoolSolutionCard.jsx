@@ -48,9 +48,11 @@ const SolutionCardWrapper = styled.article`
   padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
   margin: 0;
-  margin-right: ${helpers.rhythmDiv * 2}px;
+  margin-right: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin-left: ${props => props.marginLeft}px;
+  margin-top: ${props => props.marginTop}px;
   background-color: ${props => props.cardBgColor};
-
   &:last-of-type {
     margin-right: 0;
   }
@@ -185,7 +187,15 @@ class SchoolSolutionCard extends Component {
   render() {
     // console.log(this.state,"adsljfj")
     return (
-      <SolutionCardWrapper noMarginBotton={this.props.noMarginBotton} cardBgColor={this.props.cardBgColor} bgImage={this.props.bgImage} itemScope itemType="http://schema.org/Service" onClick={this.revealCardContent} >
+      <SolutionCardWrapper
+        marginLeft={this.props.marginLeft}
+        marginTop={this.props.marginTop}
+        noMarginBotton={this.props.noMarginBotton}
+        cardBgColor={this.props.cardBgColor}
+        bgImage={this.props.bgImage}
+        itemScope
+        itemType="http://schema.org/Service"
+        onClick={this.props.onCardClick} >
         <SolutionCardContent>
           <CardContentInnerWrapper ref={container => this.contentContainer = container}>
             <CardTitle>{this.props.title}</CardTitle>
@@ -204,11 +214,11 @@ class SchoolSolutionCard extends Component {
           revealCard={this.state.revealCard}
         />
 
-        <IconButtonWrapper revealCard={this.state.revealCard} showMoreButton>
+        {/*<IconButtonWrapper revealCard={this.state.revealCard} showMoreButton>
           <Button className={this.props.classes.cardIconButton} variant="fab" aria-label="show-more" onClick={this.revealCardContent}>
             <Icon>more_vert</Icon>
           </Button>
-        </IconButtonWrapper>
+        </IconButtonWrapper>*/}
       </SolutionCardWrapper>
     );
   }
@@ -230,14 +240,19 @@ SchoolSolutionCard.propTypes = {
   title: PropTypes.string,
   bgImage: PropTypes.string,
   cardBgColor: PropTypes.string,
-  noMarginBotton: PropTypes.bool
+  noMarginBotton: PropTypes.bool,
+  marginLeft: PropTypes.string,
+  marginTop: PropTypes.string,
+  onCardClick: PropTypes.func
 }
 
 SchoolSolutionCard.defaultProps = {
    title: 'Patented Media Management',
    tagline: 'Highlights your school and it\'s offerings',
    content: 'And makes it easy for students to search by times, skill levels, location, and other parameters to find the class that truly meets their needs.',
-   noMarginBotton: false
+   noMarginBotton: false,
+   marginLeft: 0,
+   marginTop: 0,
 }
 
 export default withStyles(styles)(SchoolSolutionCard);

@@ -25,7 +25,7 @@ const OuterWrapper = styled.div`
 const Wrapper = styled.div`
   max-width: 100vw;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
   background-color: ${props => props.bgColor};
   background-image: url('${props => props.bgImage}');
