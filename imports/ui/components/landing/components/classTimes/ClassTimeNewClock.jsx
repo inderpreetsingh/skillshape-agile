@@ -155,7 +155,7 @@ const MyClock = (props) => (<MyClockWrapper
     <TimeContainer>
       <Duration>{props.schedule.duration}</Duration>
       <Time>{props.schedule.time || props.eventStartTime && props.formatTime(props.eventStartTime)}</Time>
-      <TimePeriod>{props.schedule.timePeriod}</TimePeriod>
+      <TimePeriod>{props.schedule.timePeriod  || props.eventStartTime && props.formatAmPm(props.eventStartTime)}</TimePeriod>
     </TimeContainer>
   </ClockWrapper>
 </MyClockWrapper>);
@@ -175,9 +175,14 @@ class ClassTimeNewClock extends Component {
 
   formatTime = (startTime) => {
     if(startTime && startTime.props) {
+      return `${moment(startTime.props).format("hh:mm")}`
+    }
+  }
+  formatAmPm = (startTime) => {
+    if(startTime && startTime.props) {
       let hours = startTime.props.getHours();
       let ampm = hours >= 12 ? 'pm' : 'am';
-      return `${moment(startTime.props).format("hh:mm")}${ampm}`
+      return `${ampm}`
     }
   }
 
@@ -210,6 +215,7 @@ class ClassTimeNewClock extends Component {
                   {...this.props.clockProps}
                   eventStartTime={schedule && new Date(schedule.startTime)}
                   formatTime={this.formatTime}
+                  formatAmPm={this.formatAmPm}
                 />))}
               </ClockInnerWrapper>
               {(scheduleData.length > 1) && <DotsWrapper><SliderDots
