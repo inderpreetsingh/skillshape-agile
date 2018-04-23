@@ -93,7 +93,7 @@ const Review = (props) => {
       <Person>
         <Container>
           <StarsBar noOfStars={props.ratings} />
-          {profile.name || profile.firstName && <Name>{profile.name || profile.firstName + ' ' + props.lastName}</Name>}
+          {profile && (profile.name || profile.firstName) && <Name>{profile.name || profile.firstName + ' ' + props.lastName}</Name>}
         </Container>
 
         <ProfilePicContainer>
