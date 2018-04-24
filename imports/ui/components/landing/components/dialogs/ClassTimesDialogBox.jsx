@@ -28,6 +28,8 @@ import Dialog , {
 } from 'material-ui/Dialog';
 
 import ClassInterest from "/imports/api/classInterest/fields";
+import Events from '/imports/util/events';
+
 
 const styles = {
   dialog: {
@@ -117,7 +119,8 @@ class ClassTimesDialogBox extends React.Component {
                 data: {doc}
             })
         } else {
-            alert("Please login !!!!")
+            // Show Login popup
+            Events.trigger("loginAsUser");
         }
     }
 
