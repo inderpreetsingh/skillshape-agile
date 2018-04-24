@@ -49,8 +49,8 @@ class ClassTypeCard extends Component {
 
     handleClassTimeRequest = (schoolId, classTypeId, classTypeName) => {
         console.log("handleClassTimeRequest --->>",schoolId, classTypeId);
-        this.setState({isLoading:true});
         if(Meteor.userId()) {
+            this.setState({isLoading:true});
             const { toastr } = this.props;
             Meteor.call("classTimesRequest.notifyToSchool", {schoolId, classTypeId, classTypeName}, (err, res) => {
                 console.log("err -->>",err);

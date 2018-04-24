@@ -30,6 +30,7 @@ import '/imports/api/classTimes/methods';
 import { goToClassTypePage, checkForAddToCalender } from "/imports/util";
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx"
+import Events from '/imports/util/events';
 
 const formStyle = formStyles();
 
@@ -147,20 +148,27 @@ class ClassDetailModal extends React.Component{
 
   handleClassInterest = (event, eventData) => {
       console.log("eventData====>", eventData);
-      const doc = {
-          classTimeId: eventData.classTimeId,
-          classTypeId: eventData.classTypeId,
-          schoolId: eventData.schoolId,
-          userId: Meteor.userId()
-      };
-      // Start Loading
-      this.setState({ isLoading: true });
-      Meteor.call("classInterest.addClassInterest", { doc }, (err, res) => {
-          console.log(res, err);
-          // Stop loading and close modal.
-          this.setState({ isLoading: false, error: err });
-          this.props.closeEventModal(false, null)
-      })
+      if(Meteor.userId()) {
+          const doc = {
+              classTimeId: eventData.classTimeId,
+              classTypeId: eventData.classTypeId,
+              schoolId: eventData.schoolId,
+              userId: Meteor.userId()
+          };
+          // Start Loading
+          this.setState({ isLoading: true });
+          Meteor.call("classInterest.addClassInterest", { doc }, (err, res) => {
+              console.log(res, err);
+              // Stop loading and close modal.
+              this.setState({ isLoading: false, error: err });
+              this.props.closeEventModal(false, null)
+          })
+      } else {
+        // Show Login popup
+        Events.trigger("loginAsUser");
+        this.props.closeEventModal(false, null)
+
+      }
   }
 
   renderdaySchedule = (data, eventData)=> {

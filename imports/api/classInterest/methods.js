@@ -9,7 +9,7 @@ import School from "/imports/api/school/fields";
 Meteor.methods({
     "classInterest.addClassInterest": function({doc}) {
         doc.createdAt = new Date();
-        if(this.userId == doc.userId) {
+        if(this.userId && this.userId == doc.userId) {
             return ClassInterest.insert(doc,()=> {
                 let currentUserRec = Meteor.users.findOne(this.userId);
                 let classTypeData = ClassType.findOne(doc.classTypeId);
@@ -24,6 +24,8 @@ Meteor.methods({
                     classTimeName: classTimes.name
                 });
             });
+        } else {
+            throw new Meteor.Error("Permission denied!!");
         }
     },
     "classInterest.editClassInterest": function({doc_id, doc}) {
