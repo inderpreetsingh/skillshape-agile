@@ -48,8 +48,9 @@ export default function () {
   console.log("SchoolEditDetails render state -->>", this.state)
   return  (
     <div>
-      {this.props.route.name === 'SchoolAdminDev' ? <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} /> :
-        <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />}
+      <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />
+      {/*this.props.route.name === 'SchoolAdminDev' ? <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} /> :
+        <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} /> */}
         {
         this.state.isLoading && <ContainerLoader />
         }
