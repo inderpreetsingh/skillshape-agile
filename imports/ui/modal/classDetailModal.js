@@ -38,8 +38,8 @@ const styles = theme => {
   return {
     image: {
       verticalAlign: 'middle',
-      width: 'auto',
-      height: 200,
+      width: '100%',
+      height: '100%',
     },
     imageContainer: {
       backgroundColor: '#000',
@@ -347,7 +347,7 @@ class ClassDetailModal extends React.Component{
                                         </div>
                                     </div>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} style={{padding: '16px'}}>
                                     { eventData && eventData.age && <Typography type="caption">Age:{eventData.age}</Typography>}
                                     { eventData && eventData.gender && (eventData.gender !== "All") && <Typography type="caption">{eventData.gender}</Typography>}
                                     { eventData && eventData.experienceLevel && eventData.experienceLevel  == "All" ?  <Typography type="caption">Experience: All levels are welcomed</Typography> : <Typography>{eventData.experienceLevel && `Experience: ${eventData.experienceLevel}`}</Typography>}
