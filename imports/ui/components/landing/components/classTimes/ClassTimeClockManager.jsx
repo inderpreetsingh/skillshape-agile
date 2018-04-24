@@ -215,7 +215,6 @@ class ClassTimeClockManager extends Component {
   componentDidUpdate = (prevProps,prevState) => {
     const currentClassTimesData = this.props.formattedClassTimes;
     const prevClassTimesData = prevProps.formattedClassTimes;
-    debugger;
     if(!isEqual(Object.keys(currentClassTimesData),Object.keys(prevClassTimesData))) {
       this.setCurrentSelectedDay(this.props.formattedClassTimes);
     }

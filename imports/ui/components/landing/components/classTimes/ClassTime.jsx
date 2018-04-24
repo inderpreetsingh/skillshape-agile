@@ -200,8 +200,11 @@ class ClassTime extends Component {
       return ampm;
   }
   formatTime = (startTime) => {
-    let hour  = startTime.getHours();
-    let minutes = startTime.getMinutes();
+    debugger;
+    const hours = startTime.getHours();
+    let hour  = hours > 12 ? hours - 12 : hours;
+    hour = hour < 10 ? '0' + hour : hour;
+    let minutes = startTime.getMinutes() === 0 ? "00" : startTime.getMinutes();
     return `${hour}:${minutes}`;
   }
 
