@@ -153,7 +153,7 @@ const MyClock = (props) => (<MyClockWrapper
 
   <ClockWrapper className={`class-time-transition ${props.className}`}>
     <TimeContainer>
-      <Duration>{props.schedule.duration}</Duration>
+      <Duration>{props.schedule.duration && props.schedule.duration + 'mins'}</Duration>
       <Time>{props.schedule.time || props.eventStartTime && props.formatTime(props.eventStartTime)}</Time>
       <TimePeriod>{props.schedule.timePeriod  || props.eventStartTime && props.formatAmPm(props.eventStartTime)}</TimePeriod>
     </TimeContainer>

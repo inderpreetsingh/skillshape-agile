@@ -1,5 +1,5 @@
 import React , {Component,Fragment} from 'react';
-import isEmpty from 'lodash/isEmpty';
+import {isEqual,isEmpty} from 'lodash';
 import { findDOMNode } from 'react-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -20,6 +20,7 @@ const InnerWrapper = styled.div`
   width: 100%;
   min-height: 160px;
   position: relative;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const ClockWrapper = styled.div`
@@ -92,6 +93,7 @@ class ClassTimeClockManager extends Component {
     return day.substr(0,2);
   }
 
+  /*
   formatDataBasedOnScheduleType = (data) => {
     // In this method we basically need to format data
     /* eg formatted data..
@@ -118,7 +120,7 @@ class ClassTimeClockManager extends Component {
 
     NOTE: Recurring, Ongoing scheduleType are already formatted (or easy to format) this way,
         but for oneTime we need to transform into this format to feed data to clock(s).
-    */
+
     const classTimesData = {...data};
     console.log("formatDataBasedOnScheduleType________", data);
       let classTimes;
@@ -165,7 +167,7 @@ class ClassTimeClockManager extends Component {
     let minutes = startTime.getMinutes();
     return `${hour}:${minutes}`;
   }
-
+  */
 
   startAutoMaticSlider = () => {
     this.sliderInterval = setInterval(() => {
@@ -193,10 +195,35 @@ class ClassTimeClockManager extends Component {
     });
   }
 
+  setCurrentSelectedDay = (formattedClassTimes) => {
+    let selectedDay = 6;
+    Object.keys(formattedClassTimes).forEach(day => {
+      const currentDay = DAYS_IN_WEEK.indexOf(day);
+
+      if(currentDay < selectedDay) selectedDay = currentDay;
+
+    });
+
+    if(this.state.currentIndex !== selectedDay)
+      this.setState({ currentIndex: selectedDay});
+  }
+
+  componentDidMount = () => {
+    this.setCurrentSelectedDay(this.props.formattedClassTimes);
+  }
+
+  componentDidUpdate = (prevProps,prevState) => {
+    const currentClassTimesData = this.props.formattedClassTimes;
+    const prevClassTimesData = prevProps.formattedClassTimes;
+    debugger;
+    if(!isEqual(Object.keys(currentClassTimesData),Object.keys(prevClassTimesData))) {
+      this.setCurrentSelectedDay(this.props.formattedClassTimes);
+    }
+  }
 
   render() {
-    console.log(' clock times clock manager -----> ',this.props.data,".....");
-    const formattedClassTimes = this.formatDataBasedOnScheduleType(this.props.data);
+    console.log(' clock times clock manager -----> ',this.props.formattedClassTimes,".....");
+    const formattedClassTimes = this.props.formattedClassTimes;
     console.log('formattedClassTimes',formattedClassTimes);
     return (<Fragment>
         {/*Clock Times*/}
