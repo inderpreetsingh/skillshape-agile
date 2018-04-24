@@ -58,7 +58,7 @@ const styles = {
 const ClassTypeCardDescription = (props) => {
 
   const {cardRevealInfo, schoolData} = props;
-  // console.log("ClassTypeCardDescription props-->>",props);
+  console.log("ClassTypeCardDescription props-->>",props);
   return(
     <MuiThemeProvider theme={MuiTheme}>
         <Fragment>
@@ -74,7 +74,7 @@ const ClassTypeCardDescription = (props) => {
               <Grid container spacing={8}>
                  <Grid item xs={12} classes={{typeItem: props.classes.gridDescriptionWrapper}}>
                     {cardRevealInfo.ageMin && <Text>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Text>}
-                    {cardRevealInfo.gender && <Text>{cardRevealInfo.gender && (cardRevealInfo.gender === "Any") ? "All are welcome" : `${cardRevealInfo.gender}`}</Text>}
+                    {cardRevealInfo.gender && <Text>{cardRevealInfo.gender && (cardRevealInfo.gender !== "All") && `${cardRevealInfo.gender}`}</Text>}
                     {cardRevealInfo.experienceLevel && <Text>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Text>}
                  <Grid item xs={12}>
                     <Typography classes={{root: props.classes.descriptionHeader}}>Class Description: </Typography>

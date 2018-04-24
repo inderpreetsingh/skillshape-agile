@@ -4,6 +4,8 @@ import FullCalendarRender from './fullCalendarRender';
 import ClassTimes from '/imports/api/classTimes/fields';
 import ClassInterest from '/imports/api/classInterest/fields';
 import moment from 'moment';
+import ClassType from "/imports/api/classType/fields";
+
 
 class FullCalendar extends React.Component {
 
@@ -105,7 +107,7 @@ class FullCalendar extends React.Component {
                     sevent.className = "event-azure";
                     sevent.attending = false;
                 }
-
+                let classTypeData = ClassType.findOne({ _id: classTime.classTypeId});
                 if (classTime.scheduleType === "oneTime") {
                     let scheduleData = [...classTime.scheduleDetails.oneTime];
                     sevent.scheduleDetails = classTime.scheduleDetails;
@@ -115,7 +117,10 @@ class FullCalendar extends React.Component {
                         sevent.eventStartTime = moment(obj.startTime).format("hh:mm");
                         sevent.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
                         sevent.title = classTime.name + " " + sevent.eventStartTime + " to " + sevent.eventEndTime;
-                        sevents.push(sevent)
+                        sevent.age = classTypeData && classTypeData.ageMin;
+                        sevent.gender = classTypeData && classTypeData.gender;
+                        sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
+                        sevents.push(sevent);
                     }
                 }
 
@@ -132,6 +137,9 @@ class FullCalendar extends React.Component {
                             temp.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
                             temp.title = classTime.name + " " + temp.eventStartTime + " to " + temp.eventEndTime;
                             temp.roomId = obj.roomId;
+                            sevent.age = classTypeData && classTypeData.ageMin;
+                            sevent.gender = classTypeData && classTypeData.gender;
+                            sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
                             sevents.push(temp);
                         }
                     }

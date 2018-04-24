@@ -61,7 +61,6 @@ const styles = theme => {
     }
   }
 }
-
 const ButtonWrapper = styled.div`
   width: 100%;
   ${flexCenter}
@@ -347,6 +346,11 @@ class ClassDetailModal extends React.Component{
                                             <Typography type="caption" >{location && `${location.address}, ${location.city}, ${location.state}`}</Typography>
                                         </div>
                                     </div>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    { eventData && eventData.age && <Typography type="caption">Age:{eventData.age}</Typography>}
+                                    { eventData && eventData.gender && (eventData.gender !== "All") && <Typography type="caption">{eventData.gender}</Typography>}
+                                    { eventData && eventData.experienceLevel && eventData.experienceLevel  == "All" ?  <Typography type="caption">Experience: All levels are welcomed</Typography> : <Typography>{eventData.experienceLevel && `Experience: ${eventData.experienceLevel}`}</Typography>}
                                 </Grid>
                                 {/*<Grid item xs={6}>
                                     <div className={classes.iconWithDetailContainer}>
