@@ -277,7 +277,7 @@ class ClassTypeContent extends Component {
           let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
           let subject ="", message =  "";
           let currentUserName = getUserFullName(Meteor.user());
-          emailBody = `Hi ${currentUserName} saw your listing on SkillShape.com ${url} and has the following message for you:${message}`
+          emailBody = `Hi ${currentUserName || "I"} saw your listing on SkillShape.com ${url} and has the following message for you:${message}`
           const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
           const mailToNormalized = encodeURI(mailTo);
           // window.location.href = mailToNormalized;
@@ -291,7 +291,7 @@ class ClassTypeContent extends Component {
     handleClassTimeRequest = () => {
         // const { toastr, classTypeData } = this.props;
         // Handle Class time request using mailTo:
-        this.handleClassTimeRequest();
+        this.requestPricingInfo();
         // COMMENTED OUT BECAUSE NOW WE HAVE CHNAGED THIS REQUEST WITH MAILTO.
         // if(Meteor.userId() && !isEmpty(classTypeData)) {
         //     this.setState({ isBusy:true });

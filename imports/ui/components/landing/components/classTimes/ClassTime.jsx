@@ -14,6 +14,7 @@ import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
 import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
 import { isEmpty, get } from 'lodash';
+import Events from '/imports/util/events';
 
 
 import * as helpers from '../jss/helpers.js';
@@ -192,7 +193,8 @@ class ClassTime extends Component {
             data: {doc}
         })
     } else {
-        alert("Please login !!!!")
+        // alert("Please login !!!!")
+        Events.trigger("loginAsUser");
     }
   }
     handleClassInterest = ({methodName, data}) => {

@@ -30,6 +30,7 @@ import '/imports/api/classTimes/methods';
 import { goToClassTypePage, checkForAddToCalender } from "/imports/util";
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx"
+import Events from '/imports/util/events';
 
 const formStyle = formStyles();
 
@@ -38,8 +39,8 @@ const styles = theme => {
   return {
     image: {
       verticalAlign: 'middle',
-      width: 'auto',
-      height: 200,
+      width: '100%',
+      height: '100%',
     },
     imageContainer: {
       backgroundColor: '#000',
@@ -61,7 +62,6 @@ const styles = theme => {
     }
   }
 }
-
 const ButtonWrapper = styled.div`
   width: 100%;
   ${flexCenter}
@@ -148,20 +148,27 @@ class ClassDetailModal extends React.Component{
 
   handleClassInterest = (event, eventData) => {
       console.log("eventData====>", eventData);
-      const doc = {
-          classTimeId: eventData.classTimeId,
-          classTypeId: eventData.classTypeId,
-          schoolId: eventData.schoolId,
-          userId: Meteor.userId()
-      };
-      // Start Loading
-      this.setState({ isLoading: true });
-      Meteor.call("classInterest.addClassInterest", { doc }, (err, res) => {
-          console.log(res, err);
-          // Stop loading and close modal.
-          this.setState({ isLoading: false, error: err });
-          this.props.closeEventModal(false, null)
-      })
+      if(Meteor.userId()) {
+          const doc = {
+              classTimeId: eventData.classTimeId,
+              classTypeId: eventData.classTypeId,
+              schoolId: eventData.schoolId,
+              userId: Meteor.userId()
+          };
+          // Start Loading
+          this.setState({ isLoading: true });
+          Meteor.call("classInterest.addClassInterest", { doc }, (err, res) => {
+              console.log(res, err);
+              // Stop loading and close modal.
+              this.setState({ isLoading: false, error: err });
+              this.props.closeEventModal(false, null)
+          })
+      } else {
+        // Show Login popup
+        Events.trigger("loginAsUser");
+        this.props.closeEventModal(false, null)
+
+      }
   }
 
   renderdaySchedule = (data, eventData)=> {
@@ -347,6 +354,11 @@ class ClassDetailModal extends React.Component{
                                             <Typography type="caption" >{location && `${location.address}, ${location.city}, ${location.state}`}</Typography>
                                         </div>
                                     </div>
+                                </Grid>
+                                <Grid item xs={12} style={{padding: '16px'}}>
+                                    { eventData && eventData.age && <Typography type="caption">Age:{eventData.age}</Typography>}
+                                    { eventData && eventData.gender && (eventData.gender !== "All") && <Typography type="caption">{eventData.gender}</Typography>}
+                                    { eventData && eventData.experienceLevel && eventData.experienceLevel  == "All" ?  <Typography type="caption">Experience: All levels are welcomed</Typography> : <Typography>{eventData.experienceLevel && `Experience: ${eventData.experienceLevel}`}</Typography>}
                                 </Grid>
                                 {/*<Grid item xs={6}>
                                     <div className={classes.iconWithDetailContainer}>

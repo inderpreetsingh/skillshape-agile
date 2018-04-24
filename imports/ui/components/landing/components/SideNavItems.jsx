@@ -69,6 +69,13 @@ const LogOutUserSideNav = (props) => (
             iconName="home"
             onClick={() => browserHistory.push('/')}
         />
+         <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Find a School"
+            iconName="find_in_page"
+            onClick={() => browserHistory.push('/')}
+        />
         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
@@ -158,7 +165,7 @@ const LoginUserSideNav = (props) => (
             childData={props.connectedSchool}
             onClick={props.childItemOnClick}
         />
-        <SideNavItem
+         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
             name="Find a School"
