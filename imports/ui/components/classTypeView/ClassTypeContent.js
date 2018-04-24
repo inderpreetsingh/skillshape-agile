@@ -354,6 +354,7 @@ class ClassTypeContent extends Component {
 			classTimesData,
       classPricingData,
       monthlyPricingData,
+      enrollmentFeeData,
       mediaData,
       reviewsData,
       classInterestData
@@ -477,6 +478,9 @@ class ClassTypeContent extends Component {
                             </ClassContainer>
                         ) : (
                             <PackagesList
+                              schoolId={classTypeData.schoolId}
+                              enrollMentPackages
+                              enrollMentPackagesData={enrollmentFeeData}
                               perClassPackagesData={classPricingData}
                               monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricingData)}
                             />

@@ -147,29 +147,8 @@ const EnrollmentPackagesList = (props) => (
 
 const PackagesList = (props) => {
   return (
-    <Wrapper>
-      {!props.enrollMentPackages ? <Fragment>
-      <PackageList
-        packageProps={{
-          packageType: "CP",
-          onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-          schoolId: props.schoolId,
-        }}
-        onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
-        classPackages
-        packageListName='Class Packages'
-        packagesData={props.perClassPackagesData} />
-
-      <PackageList
-        packageProps={{
-          packageType: "MP",
-          onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-          schoolId: props.schoolId
-        }}
-        packageListName='Monthly Packages'
-        packagesData={props.monthlyPackagesData} />
-      </Fragment> :
-
+    <Fragment>
+      {props.enrollMentPackages && <Wrapper>
       <EnrollmentPackagesList
         packageProps={{
           packageType: "EP",
@@ -177,8 +156,30 @@ const PackagesList = (props) => {
           schoolId: props.schoolId
         }}
         packageListName='Enrollment Packages'
-        packagesData={props.enrollMentPackagesData} /> }
-    </Wrapper>
+        packagesData={props.enrollMentPackagesData} />
+      </Wrapper>}
+      <Wrapper>
+        <PackageList
+          packageProps={{
+            packageType: "CP",
+            onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+            schoolId: props.schoolId,
+          }}
+          onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
+          classPackages
+          packageListName='Class Packages'
+          packagesData={props.perClassPackagesData} />
+
+        <PackageList
+          packageProps={{
+            packageType: "MP",
+            onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+            schoolId: props.schoolId
+          }}
+          packageListName='Monthly Packages'
+          packagesData={props.monthlyPackagesData} />
+      </Wrapper>
+    </Fragment>
   )
 }
 
