@@ -212,11 +212,11 @@ class ClassTimeClockManager extends Component {
     this.setCurrentSelectedDay(this.props.formattedClassTimes);
   }
 
-  componentDidUpdate = (prevProps,prevState) => {
+  componentWillReceiveProps = (nextProps) => {
     const currentClassTimesData = this.props.formattedClassTimes;
-    const prevClassTimesData = prevProps.formattedClassTimes;
-    if(!isEqual(Object.keys(currentClassTimesData),Object.keys(prevClassTimesData))) {
-      this.setCurrentSelectedDay(this.props.formattedClassTimes);
+    const nextClassTimesData = nextProps.formattedClassTimes;
+    if(!isEqual(Object.keys(currentClassTimesData),Object.keys(nextClassTimesData))) {
+      this.setCurrentSelectedDay(nextProps.formattedClassTimes);
     }
   }
 

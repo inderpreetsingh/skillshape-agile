@@ -73,9 +73,8 @@ const Description = styled.p`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
-  padding: ${helpers.rhythmDiv * 2}px;
-  padding-top: 0;
-  max-height: 160px;
+  padding: 0 ${props => props.fullTextState ? helpers.rhythmDiv * 2 : helpers.rhythmDiv * 2}px;
+  max-height: 120px;
   overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
 
@@ -200,7 +199,6 @@ class ClassTime extends Component {
       return ampm;
   }
   formatTime = (startTime) => {
-    debugger;
     const hours = startTime.getHours();
     let hour  = hours > 12 ? hours - 12 : hours;
     hour = hour < 10 ? '0' + hour : hour;
