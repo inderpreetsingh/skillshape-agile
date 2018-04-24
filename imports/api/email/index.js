@@ -32,7 +32,7 @@ export const sendJoinClassEmail = function({
             to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
             from: config.fromEmailForJoiningClass,
             subject: "Join Class Request Recieved",
-            html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your : <b>${classTypeName}</b> at <b>${classTimeName}</b>.
+            html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your class: <b>${classTypeName}</b> , <b>${classTimeName}</b>.
                 <br/><br/>
                 <br/><br/>
                 ${EmailSignature}`
