@@ -11,13 +11,13 @@ import Grid from 'material-ui/Grid'
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import SecondaryButton from '../buttons/SecondaryButton.jsx';
 
+import School from "/imports/api/school/fields";
+import { cutString, goToSchoolPage, goToClassTypePage } from "/imports/util";
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+
 import * as helpers from '../jss/helpers.js';
 import MuiTheme from '../jss/muitheme';
 
-import School from "/imports/api/school/fields";
-
-import { cutString } from '/imports/util';
-import { goToSchoolPage, goToClassTypePage } from "/imports/util";
 
 const Reviews = styled.a`
     color: ${helpers.primaryColor};
@@ -109,7 +109,11 @@ const ClassTypeCardDescription = (props) => {
                           itemScope
                           itemType="http://schema.org/ViewAction"
                           />
-                        : <NoFoundResultWapper>No Class Time Found</NoFoundResultWapper>
+                        : <PrimaryButton
+                          label="Request Class Times"
+                          fullWidth
+                          onClick={props.onRequestClassTimeButtonClick}
+                        />
                     }
                 </Grid>
               </Grid>
