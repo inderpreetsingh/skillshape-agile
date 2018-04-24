@@ -20,6 +20,7 @@ import Events from '/imports/util/events';
 import * as helpers from '../jss/helpers.js';
 
 const ON_GOING_SCHEDULE = 'ongoing';
+const DAYS_IN_WEEK = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 const ClassTimeContainer = styled.div`
   width: 250px;
@@ -156,6 +157,57 @@ class ClassTime extends Component {
     }
   }
 
+  formatDataBasedOnScheduleType = (data) => {
+    const classTimesData = {...data};
+    // console.log("formatDataBasedOnScheduleType________", data);
+      let classTimes;
+      if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
+        classTimes = {};
+        let schoolDetails = data.scheduleDetails.oneTime;
+        let startDate, dayOfTheWeek, day, startTime, formattedTime, timePeriod, currentJsonData;
+        schoolDetails.forEach((item) => {
+          startDate = new Date(item.startDate);
+          dayOfTheWeek = startDate.getDay(); // day of the week (from 0 to 6)
+          day = DAYS_IN_WEEK[dayOfTheWeek - 1];
+          startTime = new Date(item.startTime); // Get Time from date time
+          formattedTime = this.formatTime(startTime);
+          timePeriod = this.formatAMPM(startTime);
+          currentJsonData = {
+            time: formattedTime,
+            timePeriod: timePeriod,
+            duration: item.duration,
+            date: `${startDate}`
+          };
+          if(classTimes && classTimes[day]) {
+            let existingTimes = classTimes[day];
+            existingTimes.push(currentJsonData);
+            classTimes[day] = existingTimes;
+          } else {
+            classTimes[day] = [];
+            classTimes[day].push(currentJsonData);
+          }
+          // this.handleSliderState(dayOfTheWeek - 1);
+        })
+        return classTimes;
+      } else {
+        return data.scheduleDetails;
+      }
+  }
+
+  formatAMPM = (startTime) => {
+      let hours = startTime.getHours();
+      let ampm = hours >= 12 ? 'pm' : 'am';
+      return ampm;
+  }
+  formatTime = (startTime) => {
+    debugger;
+    const hours = startTime.getHours();
+    let hour  = hours > 12 ? hours - 12 : hours;
+    hour = hour < 10 ? '0' + hour : hour;
+    let minutes = startTime.getMinutes() === 0 ? "00" : startTime.getMinutes();
+    return `${hour}:${minutes}`;
+  }
+
   _getWrapperClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar' : 'remove-from-calendar';
 
   removeFromMyCalender = (classTimeRec) => {
@@ -247,7 +299,7 @@ class ClassTime extends Component {
             key={this.props._id} >
             <div>
               <ClassTimeClockManager
-                data={this.props}
+                formattedClassTimes={this.formatDataBasedOnScheduleType(this.props)}
                 scheduleType={this.props.scheduleType}
                 classTimes={this.props.classTimes}
                 clockProps={{ className: classNameForClock, dotColor: dotColor }}

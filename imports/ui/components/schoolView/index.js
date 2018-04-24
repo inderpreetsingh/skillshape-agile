@@ -47,10 +47,10 @@ class SchoolView extends SchoolViewBase {
     }
     render() {
         console.log(this.props,'This . route . location name school view render..');
-        if(this.props.route.name === 'SchoolViewDeveloping') {
+        // if(this.props.route.name === 'SchoolViewDeveloping') {
           return SchoolViewNewRender.call(this, this.props, this.state);
-        }
-        return SchoolViewRender.call(this, this.props, this.state);
+        // }
+        // return SchoolViewRender.call(this, this.props, this.state);
     }
 }
 

@@ -206,7 +206,7 @@ class SchoolCard extends Component {
   }
 
   getContactNumbers = () => {
-    return this.props.schoolData.phone && this.props.schoolCardData.phone.split(/[\|\,\\]/);
+    return this.props.schoolCardData.phone && this.props.schoolCardData.phone.split(/[\|\,\\]/);
   }
 
   getOurEmail = () => {
@@ -268,7 +268,7 @@ class SchoolCard extends Component {
               schoolCardData= {schoolCardData}
           />}
         {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)} /> }
-        {this.state.emailUsDialog && <EmailUsDialogBox ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
+        {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolCardData} ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
         <div>
           <CardImageContentWrapper>
             <MyLink to={`/schools/${schoolCardData.slug}`} target="_blank"> <CardImageWrapper bgImage={schoolCardData.mainImage || cardImgSrc}  /> </MyLink>
@@ -305,8 +305,6 @@ class SchoolCard extends Component {
             </CardContentHeader>
 
           </CardImageContentWrapper>
-
-
           <CardContent>
             <Grid container>
                 <Grid item xs={6} sm={6} className={classes.marginAuto}>

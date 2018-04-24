@@ -17,6 +17,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import Media from "/imports/api/media/fields";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 
 const Wrapper = styled.div`
@@ -67,6 +68,7 @@ export default createContainer(props => {
       isLoading = false
     }
     Meteor.subscribe("classInterest.getClassInterest");
+    Meteor.subscribe("enrollmentFee.getClassTypeEnrollMentFree",{classTypeId});
     classInterestData = ClassInterest.find({}).fetch();
     let classTypeData = ClassType.findOne({ _id: classTypeId});
     let schoolData = School.findOne();
@@ -75,6 +77,7 @@ export default createContainer(props => {
     let monthlyPricingData = MonthlyPricing.find().fetch();
     let mediaData = Media.find().fetch();
     let reviewsData = Reviews.find().fetch();
+    let enrollmentFeeData = EnrollmentFees.find().fetch();
   	console.log("ClassType classTypeData -->>>",classTypeData)
     console.log("ClassType classTimesData -->>>",classTimesData)
     console.log("ClassType schoolData -->>>",schoolData)
@@ -89,6 +92,7 @@ export default createContainer(props => {
       schoolData,
       classPricingData,
       monthlyPricingData,
+      enrollmentFeeData,
       mediaData,
       classInterestData
   	}

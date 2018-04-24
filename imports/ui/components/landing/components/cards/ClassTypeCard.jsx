@@ -125,6 +125,7 @@ class ClassTypeCard extends Component {
                       reviews={reviews}
                       description={this.props.desc}
                       onClassTimeButtonClick={this.handleDialogState(true)}
+                      onRequestClassTimeButtonClick={this.handleDialogState(true)}
                       cardRevealInfo={cardRevealData}
                       />
                   } />
