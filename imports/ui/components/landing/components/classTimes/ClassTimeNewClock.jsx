@@ -145,11 +145,6 @@ const MyClock = (props) => (<MyClockWrapper
   clockType={props.clockType}
   currentClock={props.currentClock}
   onClick={props.onClockClick} >
-  {props.scheduleType && <DayDateContainer>
-    <DayDateInfo clockType={props.clockType}>
-      <Date>({props.formattedDate})</Date>
-    </DayDateInfo>
-  </DayDateContainer>}
 
   <ClockWrapper className={`class-time-transition ${props.className}`}>
     <TimeContainer>
@@ -158,6 +153,11 @@ const MyClock = (props) => (<MyClockWrapper
       <TimePeriod>{props.schedule.timePeriod  || props.eventStartTime && props.formatAmPm(props.eventStartTime)}</TimePeriod>
     </TimeContainer>
   </ClockWrapper>
+  {props.scheduleType && <DayDateContainer>
+    <DayDateInfo clockType={props.clockType}>
+      <Date>{props.day} ({props.formattedDate})</Date>
+      </DayDateInfo>
+    </DayDateContainer>}
 </MyClockWrapper>);
 
 class ClassTimeNewClock extends Component {
@@ -223,11 +223,11 @@ class ClassTimeNewClock extends Component {
                   noOfDots={this.props.scheduleData.length}
                   dotColor={this.props.clockProps.dotColor}
                   onDotClick={this.handleClockClick} /></DotsWrapper> }
-              {scheduleType && scheduleType.toLowerCase() !== ONE_TIME && <DayDateContainer>
+              {/*scheduleType && scheduleType.toLowerCase() !== ONE_TIME && <DayDateContainer>
                 <DayDateInfo clockType={type} visible>
                   {currentDay}
                 </DayDateInfo>
-              </DayDateContainer>}
+              </DayDateContainer>*/}
         </ClockOuterWrapper>)
     }
 }

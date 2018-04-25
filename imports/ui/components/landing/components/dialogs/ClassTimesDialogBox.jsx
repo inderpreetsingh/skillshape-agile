@@ -160,11 +160,17 @@ class ClassTimesDialogBox extends React.Component {
       if(scheduleType === 'recurring') {
         startDate = moment(new Date(data.startDate)).format(dateFormat);
         endDate = moment(new Date(data.endDate)).format(dateFormat);
+        debugger;
+        if(startDate == 'Invalid date') {
+          return `Recurring ending on ${endDate}`;
+        }else if(endDate == 'Invalid date') {
+          return `Recurring starting from ${startDate}`;
+        }
         return `Recurring from ${startDate} to ${endDate}`;
       }else if(scheduleType === 'ongoing') {
         return `Ongoing`;
       }else {
-        startDate = moment(new Date(scheduleDetails['oneTime'][0].startDate)).format(dateFormat);
+        startDate = moment(new Date(scheduleDetails['oneTime'].startDate)).format(dateFormat);
         return `Onetime on ${startDate}`;
       }
     }
@@ -204,9 +210,8 @@ class ClassTimesDialogBox extends React.Component {
         if(data.scheduleType === 'oneTime') {
           // If schedule is one time..
           data.scheduleDetails.oneTime.forEach(currentData => {
-            const myScheduleData = {...data};
-            myScheduleData.scheduleDetails.oneTime = [];
-            myScheduleData.scheduleDetails.oneTime.push(currentData);
+            const myScheduleData = JSON.parse(JSON.stringify(data));
+            myScheduleData.scheduleDetails.oneTime = {...currentData};
 
             ourSchedules.push(<MyClassInfo
                 data={myScheduleData}
@@ -215,6 +220,8 @@ class ClassTimesDialogBox extends React.Component {
                 handleClassInterest={this.handleClassInterest}
                 addToCalender={addToCalender}
               />);
+
+              // console.info(myScheduleData,"---------------------------");
           });
         }else {
           // If schedule is ongoing or recurring..
@@ -227,6 +234,8 @@ class ClassTimesDialogBox extends React.Component {
         }
 
       });
+
+      // console.info(classesData,ourSchedules,"ourSchedules....");
 
       return ourSchedules;
     }

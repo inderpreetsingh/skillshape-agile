@@ -18,7 +18,7 @@ const OuterWrapper = styled.div`
 const InnerWrapper = styled.div`
   ${helpers.flexCenter}
   width: 100%;
-  min-height: 160px;
+  min-height: 170px;
   position: relative;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
