@@ -161,7 +161,7 @@ class CardsList extends Component {
         const { title, cardsData, mapView, handleSeeMore, name, classInterestData, filters} = this.props;
         let { reviewsData } = this.props;
         // debugger;
-        console.log("CardsList cardsData-->>",this.props);
+        console.log("CardsList cardsData-->>",this.props, Reviews.find().fetch());
         return(
           <CardsListWrapper>
               <CardsListGridWrapper mapView={mapView}>
