@@ -81,8 +81,7 @@ const CardContentTitle = styled.h2`
   line-height: 1;
   margin: 0;
   text-transform: capitalize;
-  text-align: center;
-
+  
   @media screen and (max-width : ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
   }

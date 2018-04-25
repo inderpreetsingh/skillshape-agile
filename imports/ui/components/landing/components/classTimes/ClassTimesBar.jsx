@@ -7,7 +7,6 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { isEmpty } from 'lodash';
 
-
 import ClassTime from './ClassTime.jsx';
 import classTime from '../../constants/structure/classTime.js';
 import ClassInterest from "/imports/api/classInterest/fields";
@@ -76,14 +75,13 @@ const ClassTimesBar = (props) => {
        <ClassTimesWrapper spacing={32}>
         <GridContainer>
           {props.classTimesData.map(classTimeObj => {
-            addToCalender  = this.checkForAddToCalender(classTimeObj)
+            // addToCalender  = this.checkForAddToCalender(classTimeObj)
             return (
               <GridItem key={classTimeObj._id} spacing={32}>
                 <ClassTime
                   {...classTimeObj}
                   classTimeData={ classTimeObj }
                   classInterestData={classInterestData}
-                  addToCalender={addToCalender}
                  />
               </GridItem>
             )

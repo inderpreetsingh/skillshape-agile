@@ -18,7 +18,7 @@ const OuterWrapper = styled.div`
 const InnerWrapper = styled.div`
   ${helpers.flexCenter}
   width: 100%;
-  min-height: 160px;
+  min-height: 170px;
   position: relative;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -197,15 +197,17 @@ class ClassTimeClockManager extends Component {
 
   setCurrentSelectedDay = (formattedClassTimes) => {
     let selectedDay = 6;
-    Object.keys(formattedClassTimes).forEach(day => {
-      const currentDay = DAYS_IN_WEEK.indexOf(day);
+    if(formattedClassTimes) {
+      Object.keys(formattedClassTimes).forEach(day => {
+        const currentDay = DAYS_IN_WEEK.indexOf(day);
 
-      if(currentDay < selectedDay) selectedDay = currentDay;
+        if(currentDay < selectedDay) selectedDay = currentDay;
 
-    });
+      });
 
-    if(this.state.currentIndex !== selectedDay)
+      if(this.state.currentIndex !== selectedDay)
       this.setState({ currentIndex: selectedDay});
+    }
   }
 
   componentDidMount = () => {
