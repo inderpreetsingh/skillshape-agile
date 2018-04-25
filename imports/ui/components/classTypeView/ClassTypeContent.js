@@ -9,6 +9,8 @@ import Button from 'material-ui/Button';
 
 import { getAverageNoOfRatings , toastrModal } from '/imports/util';
 import withImageExists from '/imports/util/withImageExists.js';
+import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
@@ -17,8 +19,6 @@ import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/d
 
 import reviewsData from '/imports/ui/components/landing/constants/reviewsData.js';
 import ReviewsManager from '/imports/ui/components/landing/components/class/reviews/ReviewsManager.jsx';
-import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
-import { ContainerLoader } from '/imports/ui/loading/container.js';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
 import ClassTypeCoverContent from '/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx';

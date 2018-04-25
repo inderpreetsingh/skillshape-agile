@@ -197,15 +197,17 @@ class ClassTimeClockManager extends Component {
 
   setCurrentSelectedDay = (formattedClassTimes) => {
     let selectedDay = 6;
-    Object.keys(formattedClassTimes).forEach(day => {
-      const currentDay = DAYS_IN_WEEK.indexOf(day);
+    if(formattedClassTimes) {
+      Object.keys(formattedClassTimes).forEach(day => {
+        const currentDay = DAYS_IN_WEEK.indexOf(day);
 
-      if(currentDay < selectedDay) selectedDay = currentDay;
+        if(currentDay < selectedDay) selectedDay = currentDay;
 
-    });
+      });
 
-    if(this.state.currentIndex !== selectedDay)
+      if(this.state.currentIndex !== selectedDay)
       this.setState({ currentIndex: selectedDay});
+    }
   }
 
   componentDidMount = () => {
