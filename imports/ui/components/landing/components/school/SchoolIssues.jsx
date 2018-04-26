@@ -158,6 +158,7 @@ class SchoolIssues extends Component {
 
             <SolutionBox
               firstBox={i === 0}
+              solutionIndex={i + 1}
               title={issue.title}
               helpsUsIn={issue.helpsUsIn}
               cardBgColor={this._getDataForSolutionBox(i).cardBgColor}

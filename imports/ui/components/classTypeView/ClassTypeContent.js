@@ -163,10 +163,6 @@ const PackagesTitle = styled.h2`
 
 const CalendarWrapper = styled.div`
    padding: 0 ${helpers.rhythmDiv * 2}px;
-
-   @media screen and (max-width: ${helpers.mobile}px) {
-     padding: 0;
-   }
 `;
 
 const ClassContainer = styled.div`

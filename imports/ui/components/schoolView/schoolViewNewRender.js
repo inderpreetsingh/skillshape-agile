@@ -103,8 +103,10 @@ const ReviewsButtonWrapper = GenericFixedWidthWrapper.extend`
   padding-bottom: ${helpers.rhythmDiv * 4}px;
   text-align: center;
 
+
   @media screen and (max-width: ${helpers.mobile}px) {
     ${helpers.flexCenter}
+    flex-direction: column;
   }
 `;
 
@@ -145,10 +147,6 @@ const PackagesWrapper = GenericWrapper.extend`
 const MyCalendarWrapper = GenericFixedWidthWrapper.extend`
   margin-bottom: ${helpers.rhythmDiv * 8}px;
   padding: 0 ${helpers.rhythmDiv * 2}px;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    padding: 0;
-  }
 `;
 
 const PricingSection = styled.div`

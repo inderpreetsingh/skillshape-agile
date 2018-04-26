@@ -249,7 +249,7 @@ class ClassTimeClockManager extends Component {
 
         <ChangeSlide>
           <Days>
-            {formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
+            {formattedClassTimes && Object.keys(formattedClassTimes).length > 1 && DAYS_IN_WEEK.map((day,i) => {
               // console.log(this.props,'this.props......')
               if(formattedClassTimes[day]){
                 return(<Day
