@@ -41,7 +41,9 @@ const SolutionCardOuterWrapper = styled.div`
   height: ${props => props.active ? 240 : 180}px;
   height: 240px;
   position: relative;
-  width: 200px;
+  max-width: 200px;
+  min-width: 0;
+  width: 100%;
   margin-right: ${helpers.rhythmDiv * 4}px;
   margin-bottom: ${helpers.rhythmDiv * 4}px;
 
@@ -53,7 +55,6 @@ const SolutionCardOuterWrapper = styled.div`
 const SolutionCardWrapper = styled.article`
   position: absolute;
   ${props => props.downwards ? 'top: 0' : 'bottom: 0'};
-  min-width: 0;
   width: 100%;
   border-radius: ${helpers.rhythmDiv * 2}px;
   cursor: pointer;
@@ -84,9 +85,9 @@ const SolutionCardWrapper = styled.article`
     }
   }
 
-  &:hover {
-    background-color: ${props => lightenDarkenColor(props.cardBgColor,-20)};
-  }
+  // &:hover {
+  //   background-color: ${props => lightenDarkenColor(props.cardBgColor,-20)};
+  // }
 `;
 
 const CardDescriptionWrapper = styled.div`

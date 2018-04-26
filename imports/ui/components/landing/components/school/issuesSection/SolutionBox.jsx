@@ -20,6 +20,7 @@ const BoxWrapper = styled.div`
   height: 100%;
   padding: 0 ${helpers.rhythmDiv * 2}px;
   position: relative;
+  overflow: hidden;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     max-width: 500px;
@@ -87,6 +88,7 @@ SchoolSolutionCardsWrapper = styled.div`
   max-width: ${464 + 2 * helpers.rhythmDiv * 2}px;
   flex-wrap: wrap;
   justify-content: flex-start;
+  flex-shrink: 0;
   padding: 0 ${helpers.rhythmDiv * 2}px;
   margin-top: ${helpers.rhythmDiv * 2}px;
 
@@ -137,7 +139,10 @@ const ButtonWrapper = styled.div`
 const SolutionContentWrapper = styled.div`
   ${helpers.flexCenter};
   flex-direction: column;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
   max-width: 450px;
+
+  min-height: 300px;
   width: 100%;
   position: relative;
 
@@ -192,11 +197,64 @@ const ProblemTitle = styled.h2`
   line-height: 1;
 `;
 
+const Arrows = styled.div`
+  position: absolute;
+  width: 100%;
+  font-size: 60px;
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  color: ${helpers.primaryColor};
+  ${helpers.flexCenter}
+  transition: .1s linear opacity;
+  opacity: ${props => props.showArrows ? 1 : 0};
+`;
+
+const LeftArrow = styled.p`
+  width: 100%;
+  margin: 0;
+  position: relative;
+  left: -30px;
+  cursor: pointer;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    left: -15px;
+  }
+`;
+
+const RightArrow = styled.p`
+  margin: 0;
+  right: 0;
+  position: relative;
+  right: -30px;
+  cursor: pointer;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    right: -15px;
+  }
+`;
+const TOTAL_NUMBER_OF_SOLUTIONS = 3;
+
 class SolutionBox extends Component {
 
   state = {
     currentSolution: 0,
-    showSlider: false,
+    showArrows: false,
+    showCards: true,
+  }
+
+  handleArrowClick = (arrow) => {
+    let nextSolution = this.state.currentSolution;
+    if(arrow === 'left') {
+      if(0 === nextSolution) {
+        nextSolution = TOTAL_NUMBER_OF_SOLUTIONS;
+      }else {
+        nextSolution = --nextSolution;
+      }
+    }else {
+      nextSolution = (++nextSolution) % (TOTAL_NUMBER_OF_SOLUTIONS + 1);
+    }
+    //debugger;
+    this.handleSolutionChange(nextSolution);
   }
 
   handleSolutionChange = (currentSolution) => {
@@ -204,18 +262,27 @@ class SolutionBox extends Component {
   }
 
   handleScreenResize = () => {
-    if(window.innerWidth <= 500) {
+    if(window.innerWidth <= helpers.tablet) {
       // console.log(window.innerWidth,"------");
-      if(!this.state.showSlider)
-        this.setState({showSlider: true});
+      if(this.state.showCards)
+        this.setState({showCards: false});
     }else {
-      if(this.state.showSlider)
-        this.setState({showSlider: false});
+      if(!this.state.showCards)
+        this.setState({showCards: true});
     }
+  }
+  handleMouseEvent = (state) => {
+    this.setState({
+      showArrows: state
+    });
   }
 
   componentWillMount = () => {
     window.addEventListener('resize',this.handleScreenResize);
+  }
+
+  componentDidMount = () => {
+    this.handleScreenResize();
   }
 
   componentWillUnMount = () => {
@@ -227,12 +294,12 @@ class SolutionBox extends Component {
     return(<BoxWrapper firstBox={props.firstBox}>
         <Problem>
           <MyProblemWrapper>
-            <ProblemNumber>Problem #1</ProblemNumber>
+            <ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber>
             <ProblemTitle>{props.title}</ProblemTitle>
           </MyProblemWrapper>
         </Problem>
         <BoxInnerWrapper>
-          <SchoolSolutionCardsWrapper>
+          {this.state.showCards && <SchoolSolutionCardsWrapper>
             {props.cardsData && props.cardsData.map((card,i) => (
               <SchoolSolutionCard
                 key={i}
@@ -243,20 +310,27 @@ class SolutionBox extends Component {
                 onCardClick={() => this.handleSolutionChange(i)}
                 cardBgColor={props.cardBgColor}/>
             ))}
-          </SchoolSolutionCardsWrapper>
+          </SchoolSolutionCardsWrapper>}
 
-          {this.state.showSlider && <SchoolSolutionSliderWrapper>
+          {/*this.state.showCards && <SchoolSolutionSliderWrapper>
             <SchoolSolutionSlider
               data={props.cardsData}
               sliderProps={{onBeforeSlideChange: this.handleSolutionChange}}
               componentProps={{cardBgColor: props.cardBgColor}} />
-          </SchoolSolutionSliderWrapper>}
+          </SchoolSolutionSliderWrapper>*/}
 
-
-          <SolutionContentWrapper>
+          <SolutionContentWrapper
+            onTouchMove={this.handleTouchEvent}
+            onTouchStart={this.handleTouchStart}
+            onMouseOver={() => this.handleMouseEvent(true)}
+            onMouseOut={() => this.handleMouseEvent(false)}>
+            <Arrows showArrows={this.state.showArrows}>
+              <LeftArrow onClick={() => this.handleArrowClick('left')}> {'<'} </LeftArrow>
+              <RightArrow onClick={() => this.handleArrowClick('right')}> {'>'} </RightArrow>
+            </Arrows>
             {props.cardsData && props.cardsData.map((card,i) => {
               return(<SolutionContent key={i} showContent={this.state.currentSolution === i}>
-                <SolutionNumber>Solution #2</SolutionNumber>
+                <SolutionNumber>Solution #{props.solutionIndex}</SolutionNumber>
                 <Title firstBox={props.firstBox}> {card.title} </Title>
 
                 <Tagline>
