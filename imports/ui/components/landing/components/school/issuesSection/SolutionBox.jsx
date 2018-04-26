@@ -14,7 +14,7 @@ const BoxWrapper = styled.div`
   flex-direction: column;
   flex-grow: 1;
   justify-content: space-evenly;
-  max-width: ${helpers.schoolPageContainer}px;
+  max-width: ${helpers.schoolPageContainer + 200}px;
   width: 100%;
   margin: 0 auto;
   height: 100%;
@@ -28,12 +28,11 @@ const BoxWrapper = styled.div`
 
 const BoxInnerWrapper = styled.div`
   ${helpers.flexCenter}
+  width: 100%;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     flex-direction: column-reverse;
-    width: 100%;
   }
-
 `;
 
 const TitleArea = styled.div`
@@ -44,6 +43,12 @@ const TitleArea = styled.div`
     ${helpers.flexCenter}
   }
 `;
+const SolutionNumber = styled.p`
+  color: ${helpers.primaryColor};
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+  margin: 0;
+`;
 
 const Title = styled.h2`
   color: ${helpers.black};
@@ -52,26 +57,26 @@ const Title = styled.h2`
   font-weight: 500;
   line-height: 1;
   margin: 0;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
   @media screen and (max-width: ${helpers.tablet}px) {
     font-size: ${helpers.baseFontSize * 1.5}px;
   }
 `;
 
-const Heading = styled.h3`
+const Tagline = styled.h3`
   color: ${helpers.black};
   font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize}px;
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 400;
   margin: 0;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
   line-height: 1;
-  font-weight: 500;
 `;
 
 const Description = styled.p`
   margin: 0;
   font-weight: 300;
-  font-size: ${helpers.baseFontSize}px;
+  font-size: 24px;
   font-family: ${helpers.specialFont};
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
@@ -129,15 +134,24 @@ const ButtonWrapper = styled.div`
   margin-right: ${props => props.marginRight}px;
 `;
 
-const SolutionContent = styled.div`
+const SolutionContentWrapper = styled.div`
   ${helpers.flexCenter};
-  max-width: 400px;
   flex-direction: column;
+  max-width: 450px;
+  width: 100%;
+  position: relative;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     margin-bottom: ${helpers.rhythmDiv * 2}px;
   }
 `;
+
+const SolutionContent = styled.div`
+  position: absolute;
+  transition: .2s opacity ease-in-out;
+  opacity: ${props => props.showContent ? 1 : 0};
+`;
+
 
 const SolutionWrapper = styled.div`
   position: relative;
@@ -146,10 +160,36 @@ const SolutionWrapper = styled.div`
 `;
 
 const Solution = styled.div`
-  // position: ${props => props.showContent ? 'static' : 'absolute'};
-  position: absolute;
-  transition: .2s opacity ease-in-out;
-  opacity: ${props => props.showContent ? 1 : 0};
+
+`;
+
+const Problem = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: ${helpers.rhythmDiv * 4}px 0;
+`;
+
+const MyProblemWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ProblemNumber = styled.p`
+  margin: 0;
+  color: ${helpers.danger};
+  font-size: 28px;
+  font-family: ${helpers.specialFont};
+  line-height: 1;
+`;
+
+const ProblemTitle = styled.h2`
+  margin: 0;
+  color: ${helpers.black};
+  font-size: 40px;
+  font-family: ${helpers.specialFont};
+  font-weight: 600;
+  line-height: 1;
 `;
 
 class SolutionBox extends Component {
@@ -185,6 +225,12 @@ class SolutionBox extends Component {
   render() {
     const {props} = this;
     return(<BoxWrapper firstBox={props.firstBox}>
+        <Problem>
+          <MyProblemWrapper>
+            <ProblemNumber>Problem #1</ProblemNumber>
+            <ProblemTitle>{props.title}</ProblemTitle>
+          </MyProblemWrapper>
+        </Problem>
         <BoxInnerWrapper>
           <SchoolSolutionCardsWrapper>
             {props.cardsData && props.cardsData.map((card,i) => (
@@ -206,17 +252,16 @@ class SolutionBox extends Component {
               componentProps={{cardBgColor: props.cardBgColor}} />
           </SchoolSolutionSliderWrapper>}
 
-          <SolutionContent>
-            <TitleArea>
-              <Title firstBox={props.firstBox}> {props.title} </Title>
-            </TitleArea>
 
-            <SolutionWrapper>
+          <SolutionContentWrapper>
             {props.cardsData && props.cardsData.map((card,i) => {
-              return(<Fragment><Solution key={i} showContent={this.state.currentSolution === i}>
-                <Heading>
+              return(<SolutionContent key={i} showContent={this.state.currentSolution === i}>
+                <SolutionNumber>Solution #2</SolutionNumber>
+                <Title firstBox={props.firstBox}> {card.title} </Title>
+
+                <Tagline>
                   {card.tagline}
-                </Heading>
+                </Tagline>
 
                 <Description>
                   {card.content}
@@ -230,78 +275,14 @@ class SolutionBox extends Component {
                     <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>
                   </ButtonWrapper>
                 </ActionArea>
-              </Solution>
-
-              </Fragment>)
+              </SolutionContent>)
             })}
-            </SolutionWrapper>
+            </SolutionContentWrapper>
 
-            {/*
-            <SolutionWrapper>
-              <Solution showContent={true}>
-                <Heading>
-                  {props.cardsData && props.cardsData[this.state.currentSolution].tagline}
-                </Heading>
-
-                <Description>
-                  {props.cardsData && props.cardsData[this.state.currentSolution].content}
-                </Description>
-              </Solution>
-            </SolutionWrapper>
-            */}
-          </SolutionContent>
         </BoxInnerWrapper>
       </BoxWrapper>);
   }
 }
-
-{/*
-const SolutionBox = (props) => (
-  <BoxWrapper firstBox={props.firstBox}>
-
-    {/*<TitleArea>
-      <Title firstBox={props.firstBox}> {props.title} </Title>
-      <Tagline>SkillShape has following functions that will help you {props.helpsUsIn}</Tagline>
-    </TitleArea>
-
-    <SchoolSolutionCardsWrapper>
-      {props.cardsData && props.cardsData.map((card,i) => (
-        <SchoolSolutionCard key={i} marginTop={(i == 1 && helpers.rhythmDiv * 4) || (i == 2 && -1 * helpers.rhythmDiv * 4)} marginLeft={i === 2 && helpers.rhythmDiv * 2} noMarginBotton={i === 2 || i === 3} {...card} cardBgColor={props.cardBgColor}/>
-      ))}
-    </SchoolSolutionCardsWrapper>
-
-    <SchoolSolutionSliderWrapper>
-      <SchoolSolutionSlider data={props.cardsData} componentProps={{cardBgColor: props.cardBgColor}}/>
-    </SchoolSolutionSliderWrapper>
-
-    <SolutionContent>
-      <TitleArea>
-        <Title firstBox={props.firstBox}> {props.title} </Title>
-      </TitleArea>
-
-      {props.cardsData && props.cardsData.map((card,i) => {
-        return(<Solution>
-          <Heading>
-            {card.tagline}
-          </Heading>
-
-          <Description>
-            {props.description}
-          </Description>
-
-          <ActionArea>
-            <ButtonWrapper>
-              <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>
-            </ButtonWrapper>
-          </ActionArea>
-        </Solution>);
-      });
-
-    </SolutionContent>
-
-  </BoxWrapper>
-);
-*/}
 
 SolutionBox.propTypes = {
   content: PropTypes.string,
