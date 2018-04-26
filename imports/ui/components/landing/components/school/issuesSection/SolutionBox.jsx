@@ -237,8 +237,8 @@ class SolutionBox extends Component {
               <SchoolSolutionCard
                 key={i}
                 {...card}
-                marginTop={(i == 1 && helpers.rhythmDiv * 4) || (i == 2 && -1 * helpers.rhythmDiv * 4)}
-                marginLeft={i === 2 && helpers.rhythmDiv * 2}
+                downwards={i === 2 || i === 3}
+                active={i === this.state.currentSolution}
                 noMarginBotton={i === 2 || i === 3}
                 onCardClick={() => this.handleSolutionChange(i)}
                 cardBgColor={props.cardBgColor}/>
@@ -283,6 +283,11 @@ class SolutionBox extends Component {
       </BoxWrapper>);
   }
 }
+
+{/*
+  marginTop={(i == 1 && helpers.rhythmDiv * 4) || (i == 2 && -1 * helpers.rhythmDiv * 4)}
+  marginLeft={i === 2 && helpers.rhythmDiv * 2}
+*/}
 
 SolutionBox.propTypes = {
   content: PropTypes.string,

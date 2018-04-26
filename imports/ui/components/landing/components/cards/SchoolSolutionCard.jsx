@@ -36,35 +36,43 @@ const styles = {
   }
 }
 
+const SolutionCardOuterWrapper = styled.div`
+  transition: 0.1s background-color ease-in, 0.1s height ease-in;
+  height: ${props => props.active ? 240 : 180}px;
+  height: 240px;
+  position: relative;
+  width: 200px;
+  margin-right: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+`;
 
 const SolutionCardWrapper = styled.article`
-  max-width: 200px;
-  width: 100%;
+  position: absolute;
+  ${props => props.downwards ? 'top: 0' : 'bottom: 0'};
   min-width: 0;
-  height: 320px;
+  width: 100%;
   border-radius: ${helpers.rhythmDiv * 2}px;
   cursor: pointer;
   background-image: url('${props => props.bgImage}');
   padding: ${helpers.rhythmDiv * 2}px;
-  position: relative;
+  height: ${props => props.active ? 240 : 180}px;
   margin: 0;
-  margin-right: ${helpers.rhythmDiv * 4}px;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
-  margin-left: ${props => props.marginLeft}px;
-  margin-top: ${props => props.marginTop}px;
+  // margin-left: ${props => props.marginLeft}px;
+  // margin-top: ${props => props.marginTop}px;
   background-color: ${props => props.cardBgColor};
-  transition: 0.1s background-color ease-in;
-  &:last-of-type {
-    margin-right: 0;
-  }
+  transition: 0.1s background-color ease-in, 0.1s height ease-in;
 
   @media screen and (max-width: ${helpers.tablet}px ) {
     // margin: 0 ${helpers.rhythmDiv}px;
     // margin-bottom: ${props => props.noMarginBotton ? 0 : helpers.rhythmDiv * 4}px;
     margin-right: ${helpers.rhythmDiv * 2}px;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
-    margin-left: ${props => props.marginLeft/2}px;
-    margin-top: ${props => props.marginTop/2}px;
+    // margin-left: ${props => props.marginLeft/2}px;
+    // margin-top: ${props => props.marginTop/2}px;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -176,8 +184,6 @@ const CardDescription = (props) => (
   </CardDescriptionWrapper>
 );
 
-
-
 class SchoolSolutionCard extends Component {
   state = {
     revealCard: false,
@@ -192,43 +198,46 @@ class SchoolSolutionCard extends Component {
     this.setState({ revealCard: false });
   }
 
-
   render() {
     // console.log(this.state,"adsljfj")
-    return (
+    return (<SolutionCardOuterWrapper active={this.props.active} heightSet={this.props.heightSet}>
       <SolutionCardWrapper
+        downwards={this.props.downwards}
         marginLeft={this.props.marginLeft}
         marginTop={this.props.marginTop}
         noMarginBotton={this.props.noMarginBotton}
         cardBgColor={this.props.cardBgColor}
         bgImage={this.props.bgImage}
+        active={this.props.active}
         itemScope
         itemType="http://schema.org/Service"
-        onClick={this.props.onCardClick} >
-        <SolutionCardContent>
-          <CardContentInnerWrapper ref={container => this.contentContainer = container}>
-            <CardTitle>{this.props.title}</CardTitle>
-            <CardContentTitle>{this.props.tagline}</CardContentTitle>
-          </CardContentInnerWrapper>
-        </SolutionCardContent>
+        onClick={this.props.onCardClick}
+        >
+          <SolutionCardContent>
+            <CardContentInnerWrapper ref={container => this.contentContainer = container}>
+              <CardTitle>{this.props.title}</CardTitle>
+              {/*<CardContentTitle>{this.props.tagline}</CardContentTitle> */}
+            </CardContentInnerWrapper>
+          </SolutionCardContent>
 
-        <CardDescription
-          content={this.props.content}
-          hideCardContent={this.hideCardContent}
-          revealCardContent={this.revealCardContent}
-          title={this.props.title}
-          tagline={this.props.tagline}
-          classes={this.props.classes}
-          key={this.props._id}
-          revealCard={this.state.revealCard}
-        />
+          <CardDescription
+            content={this.props.content}
+            hideCardContent={this.hideCardContent}
+            revealCardContent={this.revealCardContent}
+            title={this.props.title}
+            tagline={this.props.tagline}
+            classes={this.props.classes}
+            key={this.props._id}
+            revealCard={this.state.revealCard}
+          />
 
-        {/*<IconButtonWrapper revealCard={this.state.revealCard} showMoreButton>
-          <Button className={this.props.classes.cardIconButton} variant="fab" aria-label="show-more" onClick={this.revealCardContent}>
-            <Icon>more_vert</Icon>
-          </Button>
-        </IconButtonWrapper>*/}
-      </SolutionCardWrapper>
+          {/*<IconButtonWrapper revealCard={this.state.revealCard} showMoreButton>
+            <Button className={this.props.classes.cardIconButton} variant="fab" aria-label="show-more" onClick={this.revealCardContent}>
+              <Icon>more_vert</Icon>
+            </Button>
+          </IconButtonWrapper>*/}
+          </SolutionCardWrapper>
+      </SolutionCardOuterWrapper>
     );
   }
 }
