@@ -249,6 +249,7 @@ class SideNavItems extends React.Component {
                     link: `/schools/${school.slug}`,
                     iconName: "school",
                     nameLimit: 17,
+                    schoolEditLink:`/School-Admin/${school._id}/edit`
                 }
             })
             this.setState({connectedSchool: connectedSchool})
@@ -268,6 +269,7 @@ class SideNavItems extends React.Component {
                             name: school.name,
                             link: `/schools/${school.slug}`,
                             iconName: "school",
+                            schoolEditLink:`/School-Admin/${school._id}/edit`
                         }
                     })
                     this.setState({mySchool: mySchool})
