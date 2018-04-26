@@ -40,6 +40,11 @@ class SchoolSubMenu extends React.Component {
 								        iconName: "home",
 								    },
 								    {
+								        name: "Edit",
+								        link: school.schoolEditLink,
+								        iconName: "mode_edit",
+								    },
+								    {
 								        name: "Members",
 								        link: `${school.link}/members`,
 								        iconName: "people",
@@ -74,6 +79,11 @@ class SchoolSubMenu extends React.Component {
 												        name: "Home Page",
 												        link: school.link,
 												        iconName: "home",
+												    },
+												    {
+												        name: "Edit",
+												        link: school.schoolEditLink,
+												        iconName: "mode_edit",
 												    },
 												    {
 												        name: "Members",
