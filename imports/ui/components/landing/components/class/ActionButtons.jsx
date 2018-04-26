@@ -2,15 +2,18 @@ import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
+import { Link } from 'react-router';
+import { handleOutBoundLink } from '/imports/util';
+
 import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
 
 import * as helpers from '../jss/helpers.js';
 
 const ActionButtonsWrapper = styled.div`
   position: absolute;
-  left: ${helpers.rhythmDiv * 2}px;
+  left: ${props => props.rightSide ? 'auto' : helpers.rhythmDiv * 2}px;
   bottom: ${helpers.rhythmDiv * 2}px;
-  right: auto;
+  right: ${props => props.rightSide ? helpers.rhythmDiv * 2 + 'px' : 'auto'};
   ${helpers.flexCenter}
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
@@ -28,8 +31,37 @@ const ActionButtonsWrapper = styled.div`
   }
 `;
 
+const ActionButtonsRightSideWrapper = styled.div`
+  position: absolute;
+  left: 'auto';
+  bottom: ${helpers.rhythmDiv * 2}px;
+  right: ${helpers.rhythmDiv * 2 + 'px'};
+  ${helpers.flexCenter}
+
+  @media screen and (max-width: 1100px) {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    position: initial;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+`;
+
 const ActionButton = styled.div`
   margin-right: ${helpers.rhythmDiv}px;
+
+  @media screen and (max-width: 1100px) {
+    margin-bottom: ${props => props.rightSide ? helpers.rhythmDiv * 2 : 0}px;
+  }
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     margin-right: 0;
@@ -41,52 +73,57 @@ const ActionButton = styled.div`
   }
 `;
 
-const MyTel = styled.a`
-  @media screen and (max-width: ${helpers.mobile}px) {
-    display: none;
-  }
-`;
-
-const MyTelMobile = styled.a`
-  display: none;
-  @media screen and (max-width: ${helpers.mobile}px) {
-    display: initial;
-  }
-`;
 
 const ActionButtons = (props) => {
-  const EditButton = props.editButton;
-  return(<ActionButtonsWrapper>
-    {props.isEdit ?
+  const ActionButtonsContainer = props.rightSide ? ActionButtonsRightSideWrapper : ActionButtonsWrapper;
+  return(<ActionButtonsContainer>
+    {props.isEdit ? <Fragment></Fragment> :
     <Fragment>
-      <ClassTimeButton icon iconName='edit' label="Logo" onClick={props.onEditLogoButtonClick} />
-    </Fragment>
-    :
-    <Fragment>
-      {props.editButton && <EditButton />}
-      <ActionButton>
+      {props.callUsButton && <ActionButton rightSide={props.rightSide}>
         <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
-      </ActionButton>
+      </ActionButton>}
 
-      <ActionButton>
+      {props.emailUsButton && <ActionButton rightSide={props.rightSide}>
         <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
-      </ActionButton>
+      </ActionButton>}
 
-      <ActionButton>
+      {props.pricingButton && <ActionButton rightSide={props.rightSide}>
         <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
-      </ActionButton>
+      </ActionButton>}
+
+      {props.scheduleButton && <ActionButton rightSide={props.rightSide}>
+        <ClassTimeButton secondary noMarginBottom label="Schedule" icon iconName="schedule" onClick={props.onScheduleButtonClick} />
+      </ActionButton>}
+
+      {props.visitSiteButton && <a href={props.siteLink} target="_blank"><ActionButton rightSide={props.rightSide}>
+        <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" onClick={handleOutBoundLink}/>
+      </ActionButton></a>}
     </Fragment>}
-  </ActionButtonsWrapper>)
+  </ActionButtonsContainer>)
 }
 
 ActionButtons.propTypes = {
   onCallUsButtonClick: PropTypes.func,
   onEmailButtonClick: PropTypes.func,
-  onPricingButtonClick: PropTypes.func
+  onPricingButtonClick: PropTypes.func,
+  onScheduleButtonClick: PropTypes.func,
+  onVisitSiteButtonClick: PropTypes.func,
+  emailUsButton: PropTypes.bool,
+  callUsButton: PropTypes.bool,
+  pricingButton: PropTypes.bool,
+  scheduleButton: PropTypes.bool,
+  visitSiteButton: PropTypes.bool,
+  rightSide: PropTypes.bool
 }
 
 ActionButtons.defaultProps = {
-  editButton: false
+  editButton: false,
+  rightSide: false,
+  emailUsButton: true,
+  callUsButton: true,
+  pricingButton: true,
+  scheduleButton: false,
+  visitSiteButton: false,
 }
 
 export default ActionButtons;

@@ -39,7 +39,7 @@ export class WeekDaysRow extends React.Component {
                 }
     		}
     	} else {
-    		state.row.push({ key: "", startTime: {}, duration: "", day: null, roomId: ""})
+    		state.row.push({ key: "", startTime: new Date(), duration: "", day: null, roomId: ""})
     	}
     	// console.log("WeekDaysRow initializeFields -->>",state)
     	return state;
@@ -54,7 +54,7 @@ export class WeekDaysRow extends React.Component {
 
     addNewRow = ()=> {
     	const oldRow = [...this.state.row];
-    	oldRow.push({ key: null, startTime: {}, duration: "", day: null, roomId: null});
+    	oldRow.push({ key: null, startTime: new Date(), duration: "", day: null, roomId: null});
     	this.setState({ row: oldRow })
     }
 
@@ -66,17 +66,21 @@ export class WeekDaysRow extends React.Component {
 
     handleSelectInputChange = (index, fieldName, event)=> {
     	const oldRow = [...this.state.row];
-    	// console.log("handleSelectInputChange -->>",event.target.value)
+    	console.log("handleSelectInputChange -->>",index, fieldName, event.target.value)
     	oldRow[index][fieldName] = event.target.value
 
         if(fieldName === "key") {
-            oldRow[index].day = 1+scheduleDetails.indexOf(event.target.value);
+            let indexOfDay = scheduleDetails.indexOf(event.target.value);
+            oldRow[index].day = 1 + scheduleDetails.indexOf(event.target.value);
+            // Set Time according to week day selected.
+            let ret = new Date();
+            ret.setDate(ret.getDate() + (indexOfDay - ret.getDay()) % 7 + 1);
+            oldRow[index]['startTime'] = ret;
         }
 
         if(fieldName === "duration") {
             oldRow[index][fieldName] = parseInt(event.target.value)
         }
-
         this.setState({ row: oldRow });
     }
 
@@ -134,6 +138,7 @@ export class WeekDaysRow extends React.Component {
                                     label="Duration"
                                     type="number"
                                     fullWidth
+                                    required={true}
                                 />
 		                	</Grid>
 		                	<Grid item sm={6} xs={12}>

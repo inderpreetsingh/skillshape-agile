@@ -5,6 +5,8 @@ import { CSSTransition, Transition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import { withStyles } from 'material-ui/styles';
+import withImageExists from '/imports/util/withImageExists.js';
+
 import Paper from 'material-ui/Paper';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
@@ -31,6 +33,10 @@ const styles = {
   }
 }
 
+const imageExistsConfig = {
+  originalImagePath: 'classTypeImg',
+  defaultImage: cardImgSrc
+}
 
 const CardImageTitleWrapper = styled.div`
   display: flex;
@@ -75,7 +81,7 @@ const CardContentTitle = styled.h2`
   line-height: 1;
   margin: 0;
   text-transform: capitalize;
-
+  
   @media screen and (max-width : ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
   }
@@ -115,8 +121,8 @@ const CardImageContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 52px;
-  width: 72px;
+  height: 45px;
+  width: 45px;
   flex: 0 0 auto;
 `;
 
@@ -128,7 +134,15 @@ const CardContentInnerTitle = styled.span`
   text-transform: capitalize;
 `;
 
-const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCardContent, descriptionContent, classTypeImg}) => {
+const Avatar = styled.div`
+  background-image: url(${props => props.bgImg});
+  background-size: cover;
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+`;
+
+const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCardContent, descriptionContent, bgImg}) => {
 
   const _getRefactoredTitle = (title, maxLimit) => {
     if(title.length <= maxLimit) {
@@ -163,7 +177,7 @@ const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCar
   return (<CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
     <CardDescriptionHeader>
       <CardImageContainer>
-        <avatar style={{backgroundImage: `url(${classTypeImg})`,backgroundSize: 'cover',borderRadius: '50%',height:'40px',width:'40px'}}></avatar>
+        <Avatar bgImg={bgImg} />
       </CardImageContainer>
 
       <CardContentTitle description>{_getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
@@ -192,9 +206,8 @@ const Reveal = ({children, ...props}) => {
 
 class CardsReveal extends Component {
   state = {
-    imageContainerHeight: '250px',
     maxCharsLimit: 18,
-    revealCard: false
+    revealCard: false,
   };
 
   revealCardContent = (e) => {
@@ -205,34 +218,16 @@ class CardsReveal extends Component {
     this.setState({ revealCard: false });
   }
 
-  updateDimensions = () => {
-    const container = ReactDOM.findDOMNode(this.imgContainer);
-    const width = window.getComputedStyle(container,null).width;
-    //console.log('width',container,width,this.state.imgContainerHeight);
-    this.setState({
-      imageContainerHeight: width
-    })
-  }
 
-
-  // componentDidMount() {
-  //   //this.updateDimensions();
-  //   window.addEventListener("resize", this.updateDimensions);
-  // }
-  // componentWillUnMount() {
-  //   window.addEventListener("resize", this.updateDimensions);
-  // }
   render() {
-    const { name, classTypeImg, descriptionContent, body, classes } = this.props;
+    const { name, classTypeImg, descriptionContent, body, classes, bgImg } = this.props;
     const myTitle = name.toLowerCase();
     //console.log(ShowDetails,"adsljfj")
-    return (
-      <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
-
+    return (<Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
         <div onClick={this.revealCardContent}>
           <CardImageTitleWrapper>
 
-            <CardImageWrapper bgImage={classTypeImg || cardImgSrc}></CardImageWrapper>
+            <CardImageWrapper bgImage={bgImg}></CardImageWrapper>
 
             <CardContentHeader>
               <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
@@ -257,7 +252,7 @@ class CardsReveal extends Component {
               className={transitionState}
               maxCharsLimit={this.state.maxCharsLimit}
               key={this.props._id}
-              classTypeImg={classTypeImg || cardImgSrc}
+              bgImg={bgImg}
             />)}
         </Transition>
       </Paper>
@@ -286,4 +281,4 @@ CardsReveal.defaultProps = {
    name: 'Card Title'
 }
 
-export default withStyles(styles)(CardsReveal);
+export default withStyles(styles)(withImageExists(CardsReveal,imageExistsConfig));

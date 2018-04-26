@@ -13,18 +13,47 @@ const styles = {
   formGhostButton: {
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
-    backgroundColor:"transparent",
-    border:"1px solid",
+    backgroundColor: "transparent",
+    border: "1px solid",
     borderColor: helpers.primaryColor,
-    color:helpers.primaryColor,
-    textTransform:"none",
+    color: helpers.primaryColor,
+    textTransform: "none",
+    '&:hover': {
+      backgroundColor: helpers.primaryColor,
+      color: 'white'
+    }
   },
   fullWidth: {
     width: '100%'
   },
   buttonIcon: {
     display: 'inline-block',
-    marginRight: '5px' 
+    marginRight: '5px',
+    fontSize: helpers.baseFontSize
+  },
+  blackColor: {
+    color: helpers.black,
+    borderColor: helpers.black,
+    '&:hover': {
+      backgroundColor: helpers.black,
+      color: 'white'
+    }
+  },
+  greyColor: {
+    color: helpers.cancel,
+    borderColor: helpers.cancel,
+    '&:hover': {
+      backgroundColor: helpers.cancel,
+      color: 'white'
+    }
+  },
+  darkGreyColor: {
+    color: helpers.darkBgColor,
+    borderColor: helpers.darkBgColor,
+    '&:hover': {
+      backgroundColor: helpers.darkBgColor,
+      color: 'white'
+    }
   }
 };
 
@@ -32,9 +61,19 @@ const styles = {
 const FormGhostButton = (props) => {
   let rootClass = ``;
   if(props.fullWidth) {
-    rootClass = `${props.classes.formGhostButton} ${props.classes.fullWidth}`;  
+    rootClass = `${props.classes.formGhostButton} ${props.classes.fullWidth}`;
   }else{
     rootClass = props.classes.formGhostButton;
+  }
+
+  if(props.blackColor) {
+    rootClass = rootClass + ' ' + props.classes.blackColor;
+  }
+  else if(props.greyColor) {
+    rootClass = rootClass + ' ' + props.classes.greyColor;
+  }
+  else if(props.darkGreyColor) {
+    rootClass = rootClass + ' ' + props.classes.darkGreyColor;
   }
 
   return (
@@ -42,7 +81,7 @@ const FormGhostButton = (props) => {
       root: rootClass,
       }} onClick={props.onClick}>
         {props.icon && <Icon className={props.classes.buttonIcon}>{props.iconName}</Icon>}
-        
+
         {props.label ? props.label : 'Submit'}
     </Button>
   )
@@ -56,7 +95,5 @@ FormGhostButton.propTypes = {
     fullWidth: PropTypes.bool,
     classes: PropTypes.object.isRequired
 }
-        
+
 export default withStyles(styles)(FormGhostButton);
-
-

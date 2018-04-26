@@ -2,10 +2,15 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {withStyles} from 'material-ui/styles';
+import { browserHistory } from 'react-router';
+
+import { toastrModal } from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import IconInput from '../form/IconInput.jsx';
 import Radio, { RadioGroup } from 'material-ui/Radio';
+
 import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'material-ui/Form';
 
 import * as helpers from '../jss/helpers.js';
@@ -103,6 +108,7 @@ const InputWrapper = styled.div`
 
 class ContactUsForm extends Component {
   state = {
+    isLoading: false,
     name: '',
     email: '',
     message: '',
@@ -138,6 +144,49 @@ class ContactUsForm extends Component {
     }
   }
 
+  handleFormSubmit = (e) => {
+    const {toastr} = this.props;
+    e.preventDefault();
+
+    const name = this.state.name;
+    const email = this.state.email;
+    const message = this.state.message;
+    const selectedOption = this.state.radioButtonGroupValue;
+    const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+    // console.info(message,selectedOption,email,name);
+
+    if(this.state.readyToSumit) {
+      //..
+      if (!email) {
+          toastr.error('Please enter your email.', 'Error');
+          return false;
+      } else if (!emailReg.test(email)) {
+          toastr.error("Please enter valid email address", "Error");
+          return false;
+      } else if (!message) {
+          toastr.error("Please enter a message.", "Error");
+          return false;
+      } else {
+          // Start loading
+          this.setState({ isLoading: true });
+          Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
+            if (error) {
+                console.log("error", error);
+            } else {
+                toastr.success("Thanks for providing your feedback", "Success");
+                if(!this.props.dialogBox) {
+                  setTimeout(() => {
+                    browserHistory.push(`/`);
+                  }, 200);
+                }
+            }
+            this.setState({ isLoading: false });
+          });
+
+        }
+    }
+  }
+
   _validateAllInputs = (data, inputNames) => {
 
     for(let i = 0; i < inputNames.length; ++i) {
@@ -152,7 +201,8 @@ class ContactUsForm extends Component {
   render() {
     return (
         <FormWrapper>
-          <Form>
+          {this.state.isLoading && <ContainerLoader />}
+          <Form onSubmit={this.handleFormSubmit}>
             <InputWrapper>
               <IconInput inputId="name" labelText="Your name" value={this.state.name} onChange={this.handleInputFieldChange('name')}/>
             </InputWrapper>
@@ -182,7 +232,7 @@ class ContactUsForm extends Component {
             <SubmitButtonWrapper>
               <ButtonWidthWrapper>
                 {this.state.readyToSumit ?
-                <PrimaryButton fullWidth type="submit" noMarginBottom label="Send Message" />
+                <PrimaryButton fullWidth type="submit" noMarginBottom label="Send Message" onClick={this.handleFormSubmit} />
                 :
                 <button className="cancel-button full-width increase-height" disabled >Send Message</button>}
               </ButtonWidthWrapper>
@@ -197,4 +247,4 @@ ContactUsForm.propTypes = {
   onRadioButtonChange: PropTypes.func
 }
 
-export default withStyles(styles)(ContactUsForm);
+export default withStyles(styles)(toastrModal(ContactUsForm));

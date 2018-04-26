@@ -1,3 +1,5 @@
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
 export default styles = theme => {
   return {
     imageContainer: {
@@ -51,7 +53,7 @@ export default styles = theme => {
     },
     schoolInfo: {
       padding: theme.spacing.unit,
-      backgroundColor: '#fff'
+
     },
     roundPapers: {
       height: '100%',
@@ -75,6 +77,22 @@ export default styles = theme => {
       lineHeight: '44px',
       paddingLeft: theme.spacing.unit * 2,
       font: '100 3vw/3vh cookie, cursive',
+    },
+    mediaContent: {
+      position: 'relative',
+      padding: 0,
+      marginBottom: theme.spacing.unit * 4
+    },
+    title: {
+      fontSize: helpers.baseFontSize,
+      lineHeight: 1,
+      fontWeight: 600,
+      fontFamily: helpers.specialFont
+    },
+    caption: {
+      lineHeight: 1.2,
+      fontSize: helpers.baseFontSize,
+      fontFamily: helpers.specialFont
     }
   }
 }

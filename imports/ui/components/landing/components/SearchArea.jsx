@@ -2,6 +2,10 @@ import React, {Component,Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { browserHistory } from 'react-router';
+import Icon from 'material-ui/Icon';
+import {withStyles} from 'material-ui/styles';
+
+import IconButton from 'material-ui/IconButton';
 
 import SearchBarStyled from './SearchBarStyled.jsx';
 
@@ -19,6 +23,16 @@ import SearchIcon from 'material-ui-icons/Search';
 import { grey } from 'material-ui/colors';
 
 import * as helpers from './jss/helpers.js';
+// import IconInput from './form/IconInput.jsx';
+import get from 'lodash/get';
+
+const styles = {
+  iconButtonStyle: {
+    color: helpers.textColor,
+    background: helpers.panelColor,
+    borderRadius: 10
+  }
+}
 
 const SearchAreaPanel = styled.div`
   padding: ${helpers.rhythmInc};
@@ -53,12 +67,17 @@ const TaglineText = styled.p`
   font-size: ${helpers.baseFontSize}px;
   color: ${helpers.textColor};
   margin: ${helpers.rhythmDiv}px 0;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding: 0 ${helpers.rhythmDiv * 2}px;
+  }
 `;
 
 const In = styled.p`
   ${helpers.flexCenter}
-  font-family : ${helpers.commonFont};
-  font-weight: 100;
+  font-family : ${helpers.specialFont};
+  font-weight: 500;
+  font-style: italic;
   font-size: ${helpers.baseFontSize}px;
   margin: 0;
   line-height: 1;
@@ -70,18 +89,31 @@ const In = styled.p`
   box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.1), 0px 2px 0px 0px rgba(0, 0, 0, 0.1), 0px 3px 1px -2px rgba(0, 0, 0, 0.05);
 `;
 
-const FilterButtonWrapper = styled.div`
+const GenericButtonWrapper = styled.div`
+  @media screen and (max-width : ${helpers.mobile}px) {
+    ${helpers.flexCenter}
+    max-width: 300px;
+    width: 100%;
+  }
+`;
+
+const FilterButtonWrapper = GenericButtonWrapper.extend`
   width: 50%;
 
   @media screen and (max-width : ${helpers.mobile}px) {
+    ${helpers.flexCenter}
+    max-width: 300px;
     width: 100%;
   }
+`;
+
+const LocationButtonWrapper = styled.div`
+  padding-left: ${helpers.rhythmDiv}px;
 `;
 
 const SearchInputsSectionWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
-
 
   @media screen and (max-width : ${helpers.mobile}px) {
     align-items: flex-start;
@@ -89,6 +121,7 @@ const SearchInputsSectionWrapper = styled.div`
 `;
 
 const InputWrapper = styled.div`
+  ${props => props.locationInput ? `${helpers.flexCenter}` : ''}
   height: 48px;
 `;
 
@@ -96,14 +129,13 @@ const InputsWrapper = styled.div`
   ${helpers.flexCenter}
 `;
 
-const MapViewButtonWrapper = styled.div`
+const MapViewButtonWrapper = GenericButtonWrapper.extend`
   width: 50%;
   margin-left: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width : ${helpers.mobile}px) {
     margin: 0;
     margin-top: ${helpers.rhythmDiv}px;
-    width: 100%;
   }
 `;
 
@@ -128,16 +160,33 @@ const SearchInputsSection = (props) => (
           onChange={props.onSkillTypeChange}
           withIcon={false}
           rightAlign
+          resetSearch={props.resetSearch}
+          value={props.skillTypeText}
         />
       </InputWrapper>
       <In>in</In>
-      <InputWrapper>
+      <InputWrapper locationInput>
         <MySearchBar
           placeholder="Location"
+          defaultValue={props.currentAddress}
           defaultBorderRadius
+          withIcon={false}
+          onSearchIconClick={props.onSearchIconClick}
           noCloseIcon
-          onChange={props.onLocationInputChange}
+          onChange={(event) => props.locationInputChanged(event, "filters", null)}
+          filters={props.filters}
+          onLocationChange={(event)=> {props.onLocationChange(event, "filters", null)}}
+          currentAddress={props.currentAddress}
+          googlelocation={true}
+          value={props.currentAddress}
+          resetSearch={props.resetSearch}
         />
+        <LocationButtonWrapper>
+          <IconButton className={props.classes.iconButtonStyle} onClick={props.onSearchIconClick}>
+            <Icon>search</Icon>
+          </IconButton>
+        </LocationButtonWrapper>
+
       </InputWrapper>
    </InputsWrapper>
 
@@ -167,24 +216,30 @@ const TaglineWrapper = () => (
 const BottomSectionContent = (props) => (
   <div>
    <TaglineText>SkillShape helps you find and attend <span itemProp="object">classes</span> on your subject of interest, in your location, and at your price</TaglineText>
-   <PrimaryButton
-    onClick={props.getMyCurrentLocation}
-    icon
-    boxShadow
-    iconName="room"
-    label="Browse classes near you"
-    itemScope
-    itemType="http://schema.org/DiscoverAction"
-    />
-   <SecondaryButton
-    icon
-    iconName="domain"
-    label="Add your school"
-    boxShadow
-    itemScope
-    itemType="http://schema.org/AddAction"
-    onClick={props.handleAddSchool}
-    />
+   <ButtonsWrapper>
+     <GenericButtonWrapper>
+       <PrimaryButton
+        onClick={props.getMyCurrentLocation}
+        icon
+        boxShadow
+        iconName="room"
+        label="Browse classes near you"
+        itemScope
+        itemType="http://schema.org/DiscoverAction"
+        />
+      </GenericButtonWrapper>
+      <GenericButtonWrapper>
+       <SecondaryButton
+        icon
+        iconName="domain"
+        label="Add your school"
+        boxShadow
+        itemScope
+        itemType="http://schema.org/AddAction"
+        onClick={props.handleAddSchool}
+        />
+      </GenericButtonWrapper>
+    </ButtonsWrapper>
   </div>
 );
 
@@ -220,7 +275,7 @@ class SearchArea extends Component {
     });
 
     if(this.props.onSkillTypeChange) {
-      this.props.onSkillTypeChange(value);
+      this.props.onSkillTypeChange(value, "filters", null);
     }
   }
 
@@ -233,12 +288,16 @@ class SearchArea extends Component {
   }
 
   render() {
+
+    console.log("this.props in SearchArea",this.props);
+
     return (
       <SearchAreaPanel width={this.props.width} textAlign={this.props.textAlign} itemScope itemType="http://schema.org/SearchAction">
         {this.props.topSection ? this.props.topSection : <TaglineWrapper />}
         {this.props.middleSection ? this.props.middleSection :
           (
             <SearchInputsSection
+              classes={this.props.classes}
               location={this.state.location}
               skillType={this.state.skillType}
               onLocationInputChange={this.handleLocationInputChange}
@@ -246,6 +305,14 @@ class SearchArea extends Component {
               onFiltersButtonClick={this.props.onFiltersButtonClick}
               onMapViewButtonClick={this.props.onMapViewButtonClick}
               mapView={this.props.mapView}
+              locationText={this.props.locationText}
+              skillTypeText={this.props.filters && this.props.filters.skillTypeText}
+              resetSearch={this.props.resetSearch}
+              locationInputChanged={this.props.locationInputChanged}
+              currentAddress = {this.props.filters && this.props.filters.locationName}
+              filters={this.props.filters}
+              onLocationChange={this.props.onLocationChange}
+              onSearchIconClick={this.props.onSearchIconClick}
             />
           )}
         {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} handleAddSchool={this.handleAddSchool}/> }
@@ -274,4 +341,4 @@ SearchArea.defaultProps = {
     middleSectionText: 'Or'
 }
 
-export default SearchArea;
+export default withStyles(styles)(SearchArea);

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { CSSTransition, Transition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import { withStyles } from 'material-ui/styles';
@@ -11,6 +10,7 @@ import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 
+import { lightenDarkenColor } from '/imports/util';
 import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
 
@@ -48,16 +48,23 @@ const SolutionCardWrapper = styled.article`
   padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
   margin: 0;
-  margin-right: ${helpers.rhythmDiv * 2}px;
+  margin-right: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin-left: ${props => props.marginLeft}px;
+  margin-top: ${props => props.marginTop}px;
   background-color: ${props => props.cardBgColor};
-
+  transition: 0.1s background-color ease-in;
   &:last-of-type {
     margin-right: 0;
   }
 
   @media screen and (max-width: ${helpers.tablet}px ) {
-    margin: 0 ${helpers.rhythmDiv}px;
-    margin-bottom: ${props => props.noMarginBotton ? 0 : helpers.rhythmDiv * 4}px;
+    // margin: 0 ${helpers.rhythmDiv}px;
+    // margin-bottom: ${props => props.noMarginBotton ? 0 : helpers.rhythmDiv * 4}px;
+    margin-right: ${helpers.rhythmDiv * 2}px;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+    margin-left: ${props => props.marginLeft/2}px;
+    margin-top: ${props => props.marginTop/2}px;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -67,6 +74,10 @@ const SolutionCardWrapper = styled.article`
     &:last-of-type {
       margin-right: auto;
     }
+  }
+
+  &:hover {
+    background-color: ${props => lightenDarkenColor(props.cardBgColor,-20)};
   }
 `;
 
@@ -185,7 +196,15 @@ class SchoolSolutionCard extends Component {
   render() {
     // console.log(this.state,"adsljfj")
     return (
-      <SolutionCardWrapper noMarginBotton={this.props.noMarginBotton} cardBgColor={this.props.cardBgColor} bgImage={this.props.bgImage} itemScope itemType="http://schema.org/Service" onClick={this.revealCardContent} >
+      <SolutionCardWrapper
+        marginLeft={this.props.marginLeft}
+        marginTop={this.props.marginTop}
+        noMarginBotton={this.props.noMarginBotton}
+        cardBgColor={this.props.cardBgColor}
+        bgImage={this.props.bgImage}
+        itemScope
+        itemType="http://schema.org/Service"
+        onClick={this.props.onCardClick} >
         <SolutionCardContent>
           <CardContentInnerWrapper ref={container => this.contentContainer = container}>
             <CardTitle>{this.props.title}</CardTitle>
@@ -204,11 +223,11 @@ class SchoolSolutionCard extends Component {
           revealCard={this.state.revealCard}
         />
 
-        <IconButtonWrapper revealCard={this.state.revealCard} showMoreButton>
+        {/*<IconButtonWrapper revealCard={this.state.revealCard} showMoreButton>
           <Button className={this.props.classes.cardIconButton} variant="fab" aria-label="show-more" onClick={this.revealCardContent}>
             <Icon>more_vert</Icon>
           </Button>
-        </IconButtonWrapper>
+        </IconButtonWrapper>*/}
       </SolutionCardWrapper>
     );
   }
@@ -230,14 +249,19 @@ SchoolSolutionCard.propTypes = {
   title: PropTypes.string,
   bgImage: PropTypes.string,
   cardBgColor: PropTypes.string,
-  noMarginBotton: PropTypes.bool
+  noMarginBotton: PropTypes.bool,
+  marginLeft: PropTypes.string,
+  marginTop: PropTypes.string,
+  onCardClick: PropTypes.func
 }
 
 SchoolSolutionCard.defaultProps = {
    title: 'Patented Media Management',
    tagline: 'Highlights your school and it\'s offerings',
    content: 'And makes it easy for students to search by times, skill levels, location, and other parameters to find the class that truly meets their needs.',
-   noMarginBotton: false
+   noMarginBotton: false,
+   marginLeft: 0,
+   marginTop: 0,
 }
 
 export default withStyles(styles)(SchoolSolutionCard);

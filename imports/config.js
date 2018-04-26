@@ -18,6 +18,7 @@ export default config = Object.freeze({
 	collections: {
 		modules : "Modules",
 		skills : "Skills",
+		reviews: "Reviews",
 		skillCategory: "SkillCategory",
 		skillSubject: "SkillSubject",
 		classType: "ClassType",
@@ -38,9 +39,14 @@ export default config = Object.freeze({
 		classTypeLocationRequest: "ClassTypeLocationRequest"
 	},
 	gender : [
-		{ label: "Any", value: "Any"},
+		{ label: "Other", value: "Other"},
 		{ label: "Male", value: "Male"},
 		{ label: "Female", value: "Female"},
+	],
+	genderForClassType : [
+		{ label: "All", value: "All"},
+		{ label: "Male Only", value: "Male Only"},
+		{ label: "Female Only", value: "Female Only"},
 	],
 	experienceLevel : [
 		{ label: "All", value: "all"},

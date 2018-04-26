@@ -27,6 +27,7 @@ import ClassType from "/imports/api/classType/fields";
 import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import get from "lodash/get";
 
 
 
@@ -39,7 +40,7 @@ import { ContainerLoader } from '/imports/ui/loading/container.js';
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 
 const drawerWidth = 400;
 
@@ -232,10 +233,47 @@ class DashBoardView extends React.Component {
                 <Grid item sm={12} xs={12} md={12} style={{display:'flex',justifyContent: 'flex-end'}}>
                     {this.state.error && <ErrorWrapper>{this.state.error}</ErrorWrapper>}
                     <PrimaryButton formId="addUser" type="submit" label="Add a New Member"/>
-                    <PrimaryButton formId="cancelUser" label="Cancel" onClick={() => this.setState({renderStudentModal:false})}/>
+                    <PrimaryButton formId="cancelUser" label="Cancel" onClick={() => this.setState({renderStudentModal:false, error:false})}/>
                 </Grid>
             </Grid>
         )
+    }
+
+
+    allowAddNewMemberWithThisEmail = (event) => {
+        // event.preventDefault();
+        // const { payload } = this.state;
+        const { schoolData } = this.props;
+        let payload = {};
+        payload.firstName = this.firstName.value;
+        payload.lastName = this.lastName.value;
+        payload.email = this.email.value;
+        payload.phone = this.phone.value;
+        payload.schoolId = schoolData[0]._id;
+        payload.classTypeIds = this.state.selectedClassTypes;
+        payload.birthYear = this.state.birthYear;
+
+        let state = {
+            isLoading:true,
+        }
+        // Confirmation modal open then close it.
+        if(this.state.showConfirmationModal) {
+            state.showConfirmationModal = false;
+        }
+        this.setState(state);
+        Meteor.call('school.addNewMember',payload , (err,res)=> {
+            let state = {
+                isLoading: false,
+            }
+            if(err) {
+                state.error = err.reason || err.message;
+            }
+            if(res) {
+                state.renderStudentModal = false;
+            }
+            this.setState(state);
+        });
+
     }
 
     addNewMember = (event) => {
@@ -244,33 +282,26 @@ class DashBoardView extends React.Component {
         const { schoolData } = this.props;
 
         if(!isEmpty(schoolData)) {
-
-            let payload = {};
-            payload.firstName = this.firstName.value;
-            payload.lastName = this.lastName.value;
-            payload.email = this.email.value;
-            payload.phone = this.phone.value;
-            payload.schoolId = schoolData[0]._id;
-            payload.classTypeIds = this.state.selectedClassTypes;
-            payload.birthYear = this.state.birthYear;
-            // Show Loading
+             // Show Loading
             this.setState({isLoading:true});
-            // Add a new member in School.
-            Meteor.call('school.addNewMember',payload , (err,res)=> {
-
-                let state = {
-                    isLoading:false,
-                }
-
-                if(err) {
-                    state.error = err.reason || err.message;
-                }
-                if(res) {
-                    state.renderStudentModal = false;
-                }
-
-                this.setState(state);
-            });
+            // Check if user with this email already exists If member exists, school admin sees a dialogue.
+            Meteor.call('user.checkForRegisteredUser', {email:this.email.value}, (err,res)=> {
+              console.log("err...",err);
+              console.log("res....",res);
+              let state = {
+              }
+              if(res) {
+                // Open Modal
+                state.showConfirmationModal=true;
+                state.message=res;
+                state.isLoading=false;
+                // this.setState({showConfirmationModal:true, message:res});
+              }
+              if(err) {
+               this.allowAddNewMemberWithThisEmail();
+              }
+              this.setState(state);
+            })
         }
     }
 
@@ -323,6 +354,11 @@ class DashBoardView extends React.Component {
                     schoolId: memberInfo.schoolId,
                     adminNotes:memberInfo.adminNotes,
                     classmatesNotes: memberInfo.classmatesNotes,
+                    birthYear: memberInfo.birthYear,
+                    lastName:memberInfo.lastName,
+                    classTypeIds: memberInfo.classTypeIds,
+                    firstName:memberInfo.firstName,
+                    pic:memberInfo.pic
                 },
                 schoolMemberDetailsFilters: { _id: memberId }
             }
@@ -467,6 +503,17 @@ class DashBoardView extends React.Component {
 
         return (
             <Grid container className={classes.root}>
+
+                {
+                  this.state.showConfirmationModal && <ConfirmationModal
+                      open={this.state.showConfirmationModal}
+                      submitBtnLabel="Yes"
+                      cancelBtnLabel="No, I will try with different Email"
+                      message={this.state && this.state.message.userInfo}
+                      onSubmit={this.allowAddNewMemberWithThisEmail}
+                      onClose={() => this.setState({showConfirmationModal: false})}
+                  />
+                }
                 <AppBar className={classes.appBar}>
                   <Toolbar>
                     <IconButton
@@ -491,7 +538,7 @@ class DashBoardView extends React.Component {
                                     open={renderStudentModal}
                                     renderStudentAddModal = {this.renderStudentAddModal}
                                     addNewMember={this.addNewMember}
-                                    onModalClose={() => this.setState({renderStudentModal:false})}
+                                    onModalClose={() => this.setState({renderStudentModal:false, error:false})}
                                />
                             }
                         </form>
@@ -531,6 +578,8 @@ class DashBoardView extends React.Component {
                             saveAdminNotesInMembers={this.saveAdminNotesInMembers}
                             disabled={slug ? false : true}
                             view={slug ? "admin" : "classmates"}
+                            classTypeData={ get(this.props, "classTypeData", []) }
+                            handleMemberDetailsToRightPanel={this.handleMemberDetailsToRightPanel}
                         />
                         { this.renderSchoolMedia(schoolData, memberInfo, slug) }
                     </Fragment>

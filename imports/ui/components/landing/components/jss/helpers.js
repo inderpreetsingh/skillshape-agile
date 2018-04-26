@@ -28,7 +28,7 @@ export const
     headingColor = colors.grey[900],
     lightTextColor = colors.grey[50], //for dark backgrounds
     ignoreMeText = "rgb(154,154,154)",
-    defaultInputColor = "rgba(0, 0, 0, 0.42)",
+    defaultInputColor = "#A9A9A9",
 
     focalColor = colors.red[700],
     primaryColor = colors.green[500],
@@ -47,6 +47,7 @@ export const
     communication = '#448aff',
 
     /********** SPECIFIC COLORS **************/
+    defaultBoxColor = "#f2f2f2",
     schoolPageColor = '#f2f2f2',
     classTimeClockButtonColor = '152,151,151', // So that it can be used as rgba with varying opacity
 

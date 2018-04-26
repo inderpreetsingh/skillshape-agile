@@ -5,19 +5,22 @@ import styled from 'styled-components';
 // Testing
 import SkillShapeButtonsCollection from './SkillShapeButtonsCollection.jsx';
 
-import ReviewsBar from './components/class/ReviewsBar.jsx';
+// import ReviewsBar from './components/class/ReviewsBar.jsx';
+// import ReviewsSlider from './components/class/ReviewsSlider.jsx';
+import ReviewsManager from './components/class/reviews/ReviewsManager.jsx';
 import ClassTypeCover from './components/class/cover/ClassTypeCover.jsx';
 import PackagesList from './components/class/packages/PackagesList.jsx';
 import SchoolDetails from './components/class/details/SchoolDetails.jsx';
-import ReviewsSlider from './components/class/ReviewsSlider.jsx';
 import ClassTypeCoverContent from './components/class/cover/ClassTypeCoverContent.jsx';
-import MyCalendar from '../users/myCalender';
+import MyCalendar from '/imports/ui/components/users/myCalender';
+import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
+import TopSearchBar from './components/TopSearchBar';
+import ContactUsBar from './components/ContactUsBar';
+import Footer from './components/footer/index.jsx';
 import StarsBar from './components/StarsBar.jsx';
 import ClassTimesSlider from './components/classTimes/ClassTimesSlider.jsx';
 import BrandBar from './components/BrandBar';
-import TopSearchBar from './components/TopSearchBar';
-import Footer from './components/footer/index.jsx';
 import ClassTimesBoxes from './components/classTimes/ClassTimesBoxes';
 import ClassTimeButton from './components/buttons/ClassTimeButton.jsx';
 
@@ -158,8 +161,9 @@ const CalendarWrapper = styled.div`
 class ClassType extends Component {
   render() {
     return (<Wrapper className="classtype-page">
-        <TopSearchBar />
-
+        <div>
+          <TopSearchBar />
+        </div>
         {/* Class Type Cover includes description, map, foreground image, then class type information*/}
         <ClassTypeCover coverSrc={this.props.coverSrc}>
           <ClassTypeCoverContent
@@ -176,21 +180,20 @@ class ClassType extends Component {
         <Main>
           <MainInnerFixedContainer marginBottom="32">
             <MainInner reviews largePadding="32" smallPadding="32">
-              <ClassWrapper reviews>
-                <ReviewsSlider data={reviewsData} padding={helpers.rhythmDiv * 2}/>
+              <ClassWrapper>
+                {/*<ReviewsManager reviewsData={reviewsData} /> */}
               </ClassWrapper>
             </MainInner>
           </MainInnerFixedContainer>
 
-        <MainInnerFixedContainer marginBottom="16">
+          <MainInnerFixedContainer marginBottom="16">
             <ClassTimesInnerWrapper>
               <ClassTimesWrapper paddingBottom="48">
                 <ClassTimesTitle>Class timings for <ClassTimesName>{this.props.className.toLowerCase()}</ClassTimesName></ClassTimesTitle>
                 <ClassTimesBoxes classTimesData={classTimesBarData} />
               </ClassTimesWrapper>
             </ClassTimesInnerWrapper>
-        </MainInnerFixedContainer>
-
+          </MainInnerFixedContainer>
 
           <PackagesWrapper>
             <PackagesTitle>Pay only for what you need</PackagesTitle>
@@ -205,12 +208,12 @@ class ClassType extends Component {
               website={schoolDetails.website}
               address={schoolDetails.address}
               images={schoolImages}
-              schoolName={schoolDetails.schoolName}
+              schoolName={schoolDetails.name}
               notes={schoolDetails.notes}
               description={schoolDetails.fullDescription}
             />
             <CalendarWrapper>
-              <MyCalendar />
+              <ManageMyCalendar classCalendar={true} {...this.props}/>
             </CalendarWrapper>
           </MainInnerFixedContainer>
 

@@ -11,6 +11,7 @@ import AutoComplete from '/imports/startup/client/lib/material-ui-old/AutoComple
 import transitions from '/imports/startup/client/lib/material-ui-old/styles/transitions';
 import Chip from '/imports/startup/client/lib/material-ui-old/Chip';
 // import {blue300} from '/imports/startup/clie0nt/lib/material-ui-old/styles/colors';
+import {commonFont} from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const getStyles = (props, context, state) => {
   const {
@@ -33,7 +34,7 @@ const getStyles = (props, context, state) => {
       display: 'inline-block',
       position: 'relative',
       backgroundColor: backgroundColor,
-      fontFamily: baseTheme.fontFamily,
+      fontFamily: commonFont,
       transition: transitions.easeOut('200ms', 'height'),
       cursor: 'text'
     },
@@ -76,7 +77,8 @@ const getStyles = (props, context, state) => {
       float: 'left'
     },
     chipContainer: {
-      marginTop: props.floatingLabelText ? 12 : 0
+      marginTop: props.floatingLabelText ? 12 : 0,
+      fontFamily: commonFont
     }
   }
 
@@ -532,7 +534,7 @@ class ChipInput extends React.Component {
       >
         <div>
           {floatingLabelTextElement}
-          <div style={Object.assign(styles.chipContainer, chipContainerStyle)}>
+          <div style={Object.assign(styles.chipContainer, chipContainerStyle, {fontFamily: commonFont})}>
             {chips.map((tag, i) => {
               const value = dataSourceConfig ? tag[dataSourceConfig.value] : tag
               return chipRenderer({

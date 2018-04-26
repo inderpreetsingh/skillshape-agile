@@ -14,12 +14,16 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid'
 import { Link } from 'react-router';
 
+import { cutString, toastrModal, handleOutBoundLink } from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
+
+import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
+import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import * as helpers from '../jss/helpers';
 import { cardImgSrc } from '../../site-settings.js';
-import { cutString, toastrModal } from '/imports/util';
-import { ContainerLoader } from '/imports/ui/loading/container.js';
-import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 
 const styles = {
   cardWrapper: {
@@ -34,6 +38,24 @@ const styles = {
   },
   marginAuto: {
     margin:'auto'
+  },
+  actionButton: {
+    fontSize: helpers.baseFontSize * 2,
+    lineHeight: 1,
+    height: helpers.rhythmDiv * 4,
+    width: helpers.rhythmDiv * 4,
+    color: helpers.darkBgColor,
+    marginBottom: helpers.rhythmDiv,
+    transition: '0.1s color linear',
+    '&:hover' : {
+      color: helpers.primaryColor
+    }
+  },
+  actionButtonIcon: {
+    fontSize: helpers.baseFontSize * 2,
+    height: helpers.rhythmDiv * 4,
+    width: helpers.rhythmDiv * 4,
+    fontWeight: 100,
   }
 }
 
@@ -78,7 +100,6 @@ const CardContentHeader = styled.div`
   justify-content: center;
   flex-direction: column;
   flex-shrink: 0;
-  padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
 `;
 
 
@@ -88,9 +109,9 @@ const CardContentTitle = styled.h2`
   font-family: ${helpers.specialFont};
   margin: 0;
   text-transform: capitalize;
-  margin-bottom: ${helpers.rhythmDiv}px;
   text-align: center;
   line-height: 1;
+  padding: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width : ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
@@ -102,7 +123,6 @@ const CardContentTitle = styled.h2`
 `;
 
 const CardContentBody = styled.div`
-  padding: 0px 10px 10px 10px;
 `;
 
 
@@ -133,17 +153,78 @@ const CardDescriptionActionArea = styled.div`
   padding: 5px;
 `;
 
+const ActionButtonsWrapper = styled.div`
+  ${helpers.flexCenter}
+  justify-content: space-evenly;
+  background: ${helpers.panelColor};
+  padding: ${helpers.rhythmDiv * 2}px;
+  color: ${helpers.darkBgColor};
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+const ActionBtnWrapper = styled.div`
+  ${helpers.flexCenter}
+  flex-direction: column;
+`;
+
+const ActionBtnText = styled.p`
+  font-family: ${helpers.commonFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 500;
+  margin: 0;
+`;
+
+const MyAnchor = ActionBtnText.withComponent('a').extend`
+  color: ${helpers.darkBgColor};
+
+  &:visited , &:active {
+    color: ${helpers.darkBgColor};
+  }
+`;
+
+const ActionButton = (props) => (<ActionBtnWrapper onClick={props.onClick}>
+    <IconButton className={props.classes.actionButton}>
+      <Icon className={props.classes.actionButtonIcon}>{props.iconName}</Icon>
+    </IconButton>
+    <ActionBtnText>
+      {props.text}
+    </ActionBtnText>
+  </ActionBtnWrapper>
+)
+
 class SchoolCard extends Component {
   state = {
     imageContainerHeight: '250px',
     revealCard: false,
-    isLoading:false
+    isLoading: false,
   };
 
   componentDidCatch(error, info) {
     // Display fallback UI
     // You can also log the error to an error reporting service
     console.info("The error is this...",error, info);
+  }
+
+  getContactNumbers = () => {
+    return this.props.schoolCardData.phone && this.props.schoolCardData.phone.split(/[\|\,\\]/);
+  }
+
+  getOurEmail = () => {
+    return this.props.schoolCardData.email;
+  }
+
+  handleEmailUsButtonClick = () => {
+    this.handleDialogState('emailUsDialog',true);
+  }
+
+  handleCallUsButtonClick = () => {
+    this.handleDialogState('callUsDialog',true);
+  }
+
+  handleDialogState = (dialogName,state) => {
+    const newState = {...this.state};
+    newState[dialogName] = state;
+    this.setState(newState);
   }
 
   showConfirmationModal =() => {
@@ -155,14 +236,13 @@ class SchoolCard extends Component {
       toastr.error('You must be signed in to claim a school. [Sign In] or [Sign Up]', 'Error');
     } else {
         // Show confirmation Modal before claiming a school.
-        this.setState({
-            showConfirmationModal: true,
-        });
+      this.setState({
+          showConfirmationModal: true,
+      });
     }
   }
 
   cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
-
 
   render() {
     console.log("this.props checkUserAccess",this.props)
@@ -173,14 +253,11 @@ class SchoolCard extends Component {
       } = this.props;
     //console.log(ShowDetails,"adsljfj")
     const name = schoolCardData.name.toLowerCase();
-
+    const ourEmail = this.getOurEmail();
     return (
       <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
-        {
-          this.state.isLoading && <ContainerLoader />
-        }
-        {
-          this.state.showConfirmationModal && <ConfirmationModal
+        {this.state.isLoading && <ContainerLoader />}
+        {this.state.showConfirmationModal && <ConfirmationModal
               open={this.state.showConfirmationModal}
               submitBtnLabel="Yes"
               cancelBtnLabel="Cancel"
@@ -189,24 +266,45 @@ class SchoolCard extends Component {
               onClose={this.cancelConfirmationModal}
               toastr = {toastr}
               schoolCardData= {schoolCardData}
-          />
-        }
+          />}
+        {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)} /> }
+        {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolCardData} ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
         <div>
           <CardImageContentWrapper>
-            <MyLink to={`/schools/${schoolCardData.slug}`}> <CardImageWrapper bgImage={schoolCardData.mainImage || cardImgSrc}  /> </MyLink>
+            <MyLink to={`/schools/${schoolCardData.slug}`} target="_blank"> <CardImageWrapper bgImage={schoolCardData.mainImage || cardImgSrc}  /> </MyLink>
 
             <CardContentHeader>
               <CardContentTitle itemProp="name">{name}</CardContentTitle>
               <CardContentBody>
-                  <Typography><b>Website: </b><a href={schoolCardData.website} target='_blank'>{cutString(schoolCardData.website, 20)}</a></Typography>
+                <ActionButtonsWrapper>
+                  <ActionButton
+                    classes={classes}
+                    iconName="phone"
+                    text="Call us"
+                    onClick={this.handleCallUsButtonClick}
+                  />
+                  {ourEmail && <ActionButton
+                    classes={classes}
+                    iconName="mail_outline"
+                    text="Email us"
+                    onClick={this.handleEmailUsButtonClick}
+                  />}
+                  <MyAnchor href={schoolCardData.website} target='_blank'>
+                    <ActionButton
+                    classes={classes}
+                    iconName="present_to_all"
+                    text="Website"
+                    onClick={handleOutBoundLink}
+                    />
+                  </MyAnchor>
+                  {/*
                   {schoolCardData.email && (<Typography><b>Email: </b>{schoolCardData.email}</Typography>)}
-                  <Typography><b>Phone: </b>{schoolCardData.phone}</Typography>
+                  <Typography><b>Phone: </b>{schoolCardData.phone}</Typography> */}
+                </ActionButtonsWrapper>
               </CardContentBody>
             </CardContentHeader>
 
           </CardImageContentWrapper>
-
-
           <CardContent>
             <Grid container>
                 <Grid item xs={6} sm={6} className={classes.marginAuto}>

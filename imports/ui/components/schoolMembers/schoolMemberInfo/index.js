@@ -7,13 +7,20 @@ import Input from "material-ui/Input";
 import isEmpty from "lodash/isEmpty";
 import { withStyles } from "material-ui/styles";
 import styled from "styled-components";
+import FileUpload from 'material-ui-icons/FileUpload';
+import MobileDetect from 'mobile-detect';
+
 
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import UploadAvatar from "/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js";
+import CallMemberDialogBox from '/imports/ui/components/landing/components/dialogs/CallMemberDialogBox.js';
+import EmailMemberDialogBox from '/imports/ui/components/landing/components/dialogs/EmailMemberDialogBox.jsx';
+import EditMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditMemberDialogBox.js";
 
 const styles = theme => ({
   avatarCss: {
-    width: "175px",
-    height: "150px",
+    width: "100%",
+    height: '150px',
     backgroundSize: "cover",
     backgroundPosition: "top center",
     borderRadius: "50%"
@@ -22,7 +29,6 @@ const styles = theme => ({
     background: `${helpers.action}`
   },
   avatarContainer: {
-    border: '2px solid black',
     backgroundColor: '#FFFFFF',
     borderRadius: '50%',
     width: 100,
@@ -64,14 +70,37 @@ const ActionButton = styled.div`
     margin-right: ${helpers.rhythmDiv}px;
   }
 `;
+const UploadDiv = styled.div`
+      background: #448aff;
+    /* display: block; */
+    /* overflow: hidden; */
+    position: relative;
+    text-align: center;
+    /* bottom: 21px; */
+    left: 20px;
+    /* overflow: hidden; */
+    width: 137px;
+    /* background-image: url((unknown)); */
+    /* background-size: cover; */
+    /* background-position: center; */
+    /* height: 250px; */
+    /* width: 250px; */
+    border: 1px solid #bbb;
+    /* width: 122px; */
+    /* height: 100pc; */
+    top: 65px;
+    color: #fff;
+    font-family: inherit;
+    font-weight: 400;
+`;
 
 const ActionButtons = props => (
   <ActionButtonsWrapper>
-    <ActionButton>
+    <ActionButton onClick={()=> {props.handleCall(props.memberInfo)}}>
       <MemberActionButton icon iconName="phone" label="Call" />
     </ActionButton>
 
-    <ActionButton>
+    <ActionButton onClick={()=> {props.handleEmail(props.memberInfo)}}>
       <MemberActionButton
         secondary
         noMarginBottom
@@ -82,7 +111,7 @@ const ActionButtons = props => (
     </ActionButton>
 
     <ActionButton>
-      <MemberActionButton noMarginBottom label="Edit" icon iconName="edit" />
+      <MemberActionButton noMarginBottom label="Edit" icon iconName="edit" onClick={props.openEditMemberModal} />
     </ActionButton>
   </ActionButtonsWrapper>
 );
@@ -142,12 +171,62 @@ class SchoolMemberInfo extends Component {
     );
   };
 
+  // Handle call button for member's view.
+  handleCall = (memberInfo) => {
+    console.log("memberInfo=>",memberInfo);
+    // Detect mobile and dial number on phone else show popup that shows phone information.
+    let md = new MobileDetect(window.navigator.userAgent);
+      if(md.mobile()) {
+        let schoolPhone = "tel:+1-303-499-7111";
+        if(schoolData.phone) {
+        schoolPhone = `tel:${schoolData.phone}`;
+        return `${schoolPhone}`;
+      }
+    } else {
+      this.handleCallButtonClick();
+    }
+  }
+  handleEmail = (memberInfo) => {
+    this.handleEmailButtonClick();
+  }
+
+  handleEmailButtonClick = () => {
+    this.handleDialogState('emailMemberDialog',true);
+  }
+      // Handle call us button click for school page
+  handleCallButtonClick = () => {
+    this.handleDialogState('callMemberDialog',true);
+  }
+
+  handleDialogState = (dialogName,state) => {
+    this.setState({
+      [dialogName]: state
+    })
+  }
+  getContactNumber = () => {
+    return this.props.memberInfo && this.props.memberInfo.phone;
+  }
+
   render() {
     const { memberInfo, view, classes } = this.props;
-    console.log("SchoolMemberInfo notes -->>", this.state);
+    console.log("SchoolMemberInfo state -->>", this.state);
     console.log("SchoolMemberInfo props -->>", this.props);
+    const { showUploadAvatarModal, mediaFormData, filterStatus, limit } = this.state;
     return (
       <Grid container>
+        {this.state.callMemberDialog && <CallMemberDialogBox contactNumbers={this.getContactNumber()} open={this.state.callMemberDialog} onModalClose={() => this.handleDialogState('callMemberDialog',false)}/>}
+        {this.state.emailMemberDialog && <EmailMemberDialogBox  open={this.state.emailMemberDialog} onModalClose={() => this.handleDialogState('emailMemberDialog',false)}/>}
+        {
+          this.state.openEditMemberModal &&
+          <EditMemberDialogBox
+              open={this.state.openEditMemberModal}
+              onModalClose={() => this.setState({openEditMemberModal:false})}
+              openEditTaggedModal= {this.openEditMemberModal}
+              memberInfo={ memberInfo }
+              classTypeData={ this.props.classTypeData }
+              reRender={this.props.handleMemberDetailsToRightPanel}
+          />
+        }
         <Grid
           container
           className="userInfoPanel"
@@ -165,8 +244,23 @@ class SchoolMemberInfo extends Component {
             }}
           >
             <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4}>
-              <img className={classes.avatarCss} src="/images/Avatar-Unisex.png" />
+              { memberInfo.pic ? <img className={classes.avatarCss} src={memberInfo.pic} /> :
+                (view === "admin" ) ? <UploadDiv onClick={()=> this.setState({showUploadAvatarModal:true, mediaFormData: null, filterStatus: false})}>
+                    Upload Image <FileUpload />
+                </UploadDiv> : ''
+              }
             </Grid>
+            {
+              <UploadAvatar
+                showUploadAvatarModal={showUploadAvatarModal}
+                onClose = {()=> {this.setState({showUploadAvatarModal:false})}}
+                formType={showUploadAvatarModal}
+                ref="uploadAvatar"
+                onAdd={this.onUploadAvatar}
+                onEdit={this.onEditAvatar}
+                memberInfo={memberInfo}
+              />
+            }
             <Grid item sm={4} xs={4} md={4}>
               <Typography>{memberInfo.name}</Typography>
               {view === "admin" && (
@@ -195,7 +289,12 @@ class SchoolMemberInfo extends Component {
         {view === "admin" && (
           <Grid container style={{ backgroundColor: "darkgray" }}>
             <Grid item>
-              <ActionButtons />
+              <ActionButtons
+                memberInfo={this.props.memberInfo}
+                handleCall={this.handleCall}
+                handleEmail={this.handleEmail}
+                openEditMemberModal={(event)=> {this.setState({openEditMemberModal:true})}}
+              />
             </Grid>
           </Grid>
         )}

@@ -1,6 +1,7 @@
-import React,{Component} from 'react';
+import React,{Component,Fragment} from 'react';
 import styled, {keyframes} from 'styled-components';
 import PropTypes from 'prop-types';
+import { isEmpty, get } from 'lodash';
 import { Transition } from 'react-transition-group';
 
 import TrendingIcon from '../icons/Trending.jsx';
@@ -14,13 +15,18 @@ import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
 import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
 
+import {toastrModal} from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
+import Events from '/imports/util/events';
+
 import * as helpers from '../jss/helpers.js';
 
 const ON_GOING_SCHEDULE = 'ongoing';
+const DAYS_IN_WEEK = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 const ClassTimeContainer = styled.div`
   width: 250px;
-  min-height: 400px;
+  min-height: 430px;
   padding: ${helpers.rhythmDiv}px;
   padding: ${helpers.rhythmDiv * 2}px;
   display: flex;
@@ -61,6 +67,7 @@ const Text = styled.p`
   font-size: ${helpers.baseFontSize}px;
   font-family: ${helpers.specialFont};
   font-weight: 600;
+  text-transform: capitalize;
 `;
 
 const Description = styled.p`
@@ -68,7 +75,8 @@ const Description = styled.p`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
-  max-height: 140px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+  max-height: 120px;
   overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
 
@@ -108,86 +116,178 @@ _isClassOnGoing = (scheduleType) => scheduleType && scheduleType.toLowerCase().r
 class ClassTime extends Component {
 
   state = {
-    addToCalendar : this.props.addToCalendar,
-    scheduleTypeOnGoing: _isClassOnGoing(this.props.scheduleType),
+    isLoading: false,
     fullTextState: this.props.fullTextState,
-    showReadMore: this.props.showReadMore
   }
 
   componentDidMount = () => {
     // console.info('Show me state',this.state);
   }
 
-  handleToggleAddToCalendar = () => {
-    this.setState({
-      addToCalendar: !this.state.addToCalendar
-    });
-  }
+  // handleToggleAddToCalendar = () => {
+  //   this.setState({
+  //     addToCalendar: !this.state.addToCalendar
+  //   });
+  // }
 
   handleAddToMyCalendarButtonClick = () => {
-
-    this.setState({
-      addToCalendar: false
-    });
-
-
-    if(this.props.onAddToMyCalendarButtonClick) {
-      this.props.onAddToMyCalendarButtonClick();
-    }
+    // console.log("this.props.handleAddToMyCalendarButtonClick",this.props);
+    this.addToMyCalender(this.props.classTimeData);
   }
 
   handleRemoveFromCalendarButtonClick = () => {
 
-    this.setState({
-      addToCalendar: true
-    });
-
-    if(this.props.onRemoveFromCalendarButtonClick) {
-      this.props.onRemoveFromCalendarButtonClick();
-    }
+    // this.setState({ addToCalendar: true });
+    // console.log("this.props",this.props);
+    this.removeFromMyCalender(this.props.classTimeData);
   }
 
   componentWillReceiveProps = (newProps) => {
     if(this.state.fullTextState !== newProps.fullTextState) {
       this.setState({
-        fullTextState: newProps.fullTextState
+        // addToCalendar: newProps.addToCalendar,
+        fullTextState: newProps.fullTextState,
       });
     }
   }
 
-  _getWrapperClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar' : 'remove-from-calendar';
+  formatDataBasedOnScheduleType = (data) => {
+    const classTimesData = {...data};
+    // console.log("formatDataBasedOnScheduleType________", data);
+      let classTimes;
+      if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
+        classTimes = {};
+        let schoolDetails = data.scheduleDetails.oneTime;
+        let startDate, dayOfTheWeek, day, startTime, formattedTime, timePeriod, currentJsonData;
+        schoolDetails.forEach((item) => {
+          startDate = new Date(item.startDate);
+          dayOfTheWeek = startDate.getDay(); // day of the week (from 0 to 6)
+          day = DAYS_IN_WEEK[dayOfTheWeek - 1];
+          startTime = new Date(item.startTime); // Get Time from date time
+          formattedTime = this.formatTime(startTime);
+          timePeriod = this.formatAMPM(startTime);
+          currentJsonData = {
+            time: formattedTime,
+            timePeriod: timePeriod,
+            duration: item.duration,
+            date: `${startDate}`
+          };
+          if(classTimes && classTimes[day]) {
+            let existingTimes = classTimes[day];
+            existingTimes.push(currentJsonData);
+            classTimes[day] = existingTimes;
+          } else {
+            classTimes[day] = [];
+            classTimes[day].push(currentJsonData);
+          }
+          // this.handleSliderState(dayOfTheWeek - 1);
+        })
+        return classTimes;
+      } else {
+        return data.scheduleDetails;
+      }
+  }
 
-  _getOuterClockClassName = (addToCalendar,scheduleTypeOnGoing) => (addToCalendar && scheduleTypeOnGoing) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
+  formatAMPM = (startTime) => {
+      let hours = startTime.getHours();
+      let ampm = hours >= 12 ? 'pm' : 'am';
+      return ampm;
+  }
+  formatTime = (startTime) => {
+    const hours = startTime.getHours();
+    let hour  = hours > 12 ? hours - 12 : hours;
+    hour = hour < 10 ? '0' + hour : hour;
+    let minutes = startTime.getMinutes() === 0 ? "00" : startTime.getMinutes();
+    return `${hour}:${minutes}`;
+  }
 
-  _getCalenderButton = (addToCalender,scheduleTypeOnGoing) => {
-    if(scheduleTypeOnGoing && addToCalender) {
-      return (<ClassTimeButton
-        icon
-        onClick={this.handleAddToMyCalendarButtonClick}
-        iconName="perm_contact_calendar"
-        label="Add to my Calendar"
-      />);
-    }else if(scheduleTypeOnGoing && !addToCalender) {
-      return (<ClassTimeButton
-        ghost
-        icon
-        onClick={this.handleRemoveFromCalendarButtonClick}
-        iconName="delete"
-        label="Remove from Calendar"
-      />)
+  removeFromMyCalender = (classTimeRec) => {
+    console.log("this.props",this.props,classTimeRec);
+    const result = this.props.classInterestData.filter(data => data.classTimeId  == classTimeRec._id);
+    console.log("result==>",result);
+    // check for user login or not
+    const userId = Meteor.userId()
+    if(!isEmpty(userId)) {
+        const doc = {
+            _id: result[0]._id,
+             userId,
+        }
+        this.handleClassInterest({
+            methodName:"classInterest.removeClassInterest",
+            data: {doc}
+        })
+    } else {
+        alert("Please login !!!!")
     }
-    else if(!scheduleTypeOnGoing && !addToCalender) {
+  }
+  addToMyCalender = (data) => {
+    // check for user login or not
+    console.log("addToMyCalender",data);
+    const userId = Meteor.userId();
+    if(!isEmpty(userId)) {
+        const doc = {
+            classTimeId: data._id,
+            classTypeId: data.classTypeId,
+            schoolId: data.schoolId,
+            userId,
+        }
+        this.handleClassInterest({
+            methodName:"classInterest.addClassInterest",
+            data: {doc}
+        })
+    } else {
+        // alert("Please login !!!!")
+        Events.trigger("loginAsUser");
+    }
+  }
+
+  handleClassInterest = ({methodName, data}) => {
+    console.log("handleClassInterest",methodName,data);
+    this.setState({isLoading: true});
+    Meteor.call(methodName, data, (err, res) => {
+      const {toastr} = this.props;
+      this.setState({isLoading: false});
+      if(err) {
+        toastr.error(err.message,"Error");
+      }else {
+        if(methodName.indexOf('remove') !== -1)
+          toastr.success("Class removed successfully","Success");
+        else
+          toastr.success("Class added to your calendar","Success");
+      }
+    })
+  }
+
+
+  _getWrapperClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar' : 'remove-from-calendar';
+
+  _getOuterClockClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
+
+  _getDotColor = (addToCalendar) => (addToCalendar) ? helpers.primaryColor : helpers.cancel;
+
+  _getCalenderButton = (addToCalender) => {
+    const iconName = addToCalender ? "add_circle_outline": "delete";
+    // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
+    if(addToCalender) {
       return (
-        <ClassTimeButton
-          ghost
-          icon
-          onClick={this.handleRemoveFromCalendarButtonClick}
-          iconName="delete"
-          label="Remove from Calendar"
-        />
+         <ClassTimeButton
+              icon
+              onClick={this.handleAddToMyCalendarButtonClick}
+              label="Add to my Calender"
+              iconName={iconName}
+          />
       )
-    }
-
+      } else {
+        return (
+           <ClassTimeButton
+              icon
+              ghost
+              onClick={this.handleRemoveFromCalendarButtonClick}
+              label="Remove from calendar"
+              iconName={iconName}
+          />
+        )
+      }
     return (
       <div></div>
     )
@@ -195,17 +295,18 @@ class ClassTime extends Component {
 
   render() {
     console.log("ClassTime props -->>",this.props);
-    return (<ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.state.addToCalendar,this.state.scheduleTypeOnGoing)}`}
+    const classNameForClock = this._getOuterClockClassName(this.props.addToCalendar);
+    const dotColor = this._getDotColor(this.props.addToCalendar);
+    return (<Fragment>
+      {this.state.isLoading && <ContainerLoader />}
+      <ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.props.addToCalendar)}`}
             key={this.props._id} >
             <div>
               <ClassTimeClockManager
-                data={this.props}
-                schedule={this.props.scheduleType}
-                clockProps={
-                  {
-                    className: this._getOuterClockClassName(this.state.addToCalendar, this.state.scheduleTypeOnGoing)
-                  }
-                }
+                formattedClassTimes={this.formatDataBasedOnScheduleType(this.props)}
+                scheduleType={this.props.scheduleType}
+                classTimes={this.props.classTimes}
+                clockProps={{ className: classNameForClock, dotColor: dotColor }}
               />
 
               {this.props.showReadMore ?
@@ -219,10 +320,10 @@ class ClassTime extends Component {
                 </Description>}
             </div>
 
-            {this._getCalenderButton(this.state.addToCalendar, this.state.scheduleTypeOnGoing)}
+            {this._getCalenderButton(this.props.addToCalendar)}
 
             {this.props.isTrending && <Trending />}
-        </ClassTimeContainer>)
+        </ClassTimeContainer></Fragment>)
     }
 }
 
@@ -240,4 +341,4 @@ ClassTime.propTypes = {
 }
 
 
-export default withShowMoreText(ClassTime, { description: "desc"});
+export default toastrModal(withShowMoreText(ClassTime, { description: "desc"}));

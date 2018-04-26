@@ -70,14 +70,17 @@ class MySearchBar extends Component {
     super(props)
     this.state = {
       focus: false,
-      value: this.props.value,
+      value: props.value,
       active: false
     }
   }
 
   componentWillReceiveProps (nextProps) {
     if (this.props.value !== nextProps.value) {
-      this.setState({...this.state, value: nextProps.value});
+      this.setState({...this.state, value: nextProps.value, active: false});
+    }
+    if(this.props.resetSearch != nextProps.resetSearch) {
+      this.setState({value: "", active: false})
     }
   }
 
@@ -128,7 +131,10 @@ class MySearchBar extends Component {
   }
   render () {
     const { value } = this.state;
-    // console.log('value this.state',this.state);
+    let self = this;
+    console.log('value in MySearchBar===>',value);
+    console.log('state in MySearchBar===>',this.state);
+    console.log('props in MySearchBar===>',this.props);
     const {
       closeIcon,
       disabled,
@@ -151,12 +157,32 @@ class MySearchBar extends Component {
       inputClass = `${classes.rightAlign}`;
     }
 
+    const props = this.props;
+    let inputRef;
+    if(props.googlelocation) {
+      setTimeout(()=> {
+        let options ={strictBounds:true}
+        // Google's API
+        let autocomplete = new google.maps.places.Autocomplete(inputRef,options);
+        // This runs when user changes location.
+        autocomplete.addListener('place_changed', () => {
+          let place = autocomplete.getPlace();
+          let coords = [];
+          coords[0] = place.geometry['location'].lat();
+          coords[1] =place.geometry['location'].lng();
+          this.setState({value: place.formatted_address});
+          props.onLocationChange({name: place.name, coords, fullAddress: place.formatted_address })
+        })
+      },2000)
+    }
+
     // console.log('clostIconClass',closeIconClass,showIconClass);
     return (
       <Paper className={rootClass} >
         <LeftSideInput inputOnSide={this.props.inputOnSide}>
           <Input
           {...inputProps}
+          inputRef={(ref)=> inputRef = ref}
           onBlur={this.handleBlur}
           value={value}
           onChange={this.handleInput}
@@ -174,6 +200,7 @@ class MySearchBar extends Component {
           style={styles.iconTransitions}
           className={showIconClass}
           disabled={disabled}
+          onClick={props.onSearchIconClick}
         >
           {React.cloneElement(searchIcon)}
         </IconButton>
@@ -181,6 +208,7 @@ class MySearchBar extends Component {
           style={styles.iconTransitions}
           onClick={this.handleCancel}
           className={closeIconClass}
+          onClick={props.onCloseIconClick}
           disabled={disabled}
         >
           {React.cloneElement(closeIcon)}
@@ -209,7 +237,6 @@ MySearchBar.defaultProps = {
   placeholder: 'Search',
   searchIcon: <SearchIcon style={{ color: grey[500] }} />,
   style: null,
-  value: '',
   inputOnSide: 'left',
   defaultBorderRadius: false,
   withIcon: true,
@@ -231,6 +258,8 @@ MySearchBar.propTypes = {
   onChange: PropTypes.func,
   /** Fired when the search icon is clicked. */
   onRequestSearch: PropTypes.func,
+  onCloseIconClick: PropTypes.func,
+  onSearchIconClick: PropTypes.func,
   searchIcon: PropTypes.node,
   value: PropTypes.string,
 }

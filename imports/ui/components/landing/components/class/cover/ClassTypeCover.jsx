@@ -25,18 +25,27 @@ const CoverDiv = styled.div`
       opacity: 0.9;
       z-index: 0;
     }
+
+    ${props => props.isEdit ? `@media screen and (max-width: ${helpers.tablet}px) {
+      &:after {
+        width: 0;
+        height: 0;
+        opacity: 0;
+        background-color: transparent;
+      }
+    }` : ''};
 `;
 
 const ClassTypeCover = (props) => {
     if(props.itemScope && props.itemType) {
         return(
-          <CoverDiv coverSrc={props.coverSrc} itemScope itemType={props.itemType}>
+          <CoverDiv coverSrc={props.coverSrc} itemScope itemType={props.itemType} isEdit={props.isEdit}>
             {props.children}
           </CoverDiv>
         )
     }
     return(
-      <CoverDiv coverSrc={props.coverSrc}>
+      <CoverDiv coverSrc={props.coverSrc} isEdit={props.isEdit}>
         {props.children}
       </CoverDiv>
     )

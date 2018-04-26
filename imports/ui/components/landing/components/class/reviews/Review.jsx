@@ -3,12 +3,9 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import ReactStars from 'react-stars';
 
-import StarsBar from '../StarsBar.jsx';
-
-import { reviewImgSrc } from '../../site-settings.js';
-import * as helpers from '../jss/helpers.js';
-
-console.log(reviewImgSrc,'review img srouc');
+import MyProfilePic from '/imports/ui/components/landing/components/class/reviews/ReviewerPic.jsx';
+import StarsBar from '/imports/ui/components/landing/components/StarsBar.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -20,6 +17,7 @@ const Wrapper = styled.div`
 const Container = styled.div`
   ${helpers.flexDirectionColumn}
   align-items: flex-end;
+  margin-right: ${helpers.rhythmDiv}px;
 `;
 
 const Person = styled.div`
@@ -67,7 +65,7 @@ const CommentWrapper = styled.div`
     bottom: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: 0;
     background: ${helpers.caution};
     opacity: 0.1;
     border-radius: 8px;
@@ -84,7 +82,9 @@ const Comment = styled.p`
   color: ${helpers.black};
 `;
 
-const Review = (props) => (
+const Review = (props) => {
+  const {profile} = props.userProfile;
+  return (
     <Wrapper>
       <CommentWrapper>
         <Comment>{props.comment}</Comment>
@@ -93,16 +93,16 @@ const Review = (props) => (
       <Person>
         <Container>
           <StarsBar noOfStars={props.ratings} />
-          <Name>{props.name}</Name>
+          {profile && (profile.name || profile.firstName) && <Name>{profile.name || profile.firstName + ' ' + props.lastName}</Name>}
         </Container>
 
         <ProfilePicContainer>
-          <ProfilePic imgSrc={props.imgSrc} />
+          <MyProfilePic imgSrc={profile && profile.pic} />
         </ProfilePicContainer>
       </Person>
 
-    </Wrapper>
-);
+    </Wrapper>);
+}
 
 Review.propTypes = {
   imgSrc: PropTypes.string,
@@ -110,9 +110,5 @@ Review.propTypes = {
   comment: PropTypes.string,
   ratings: PropTypes.number
 };
-
-Review.defaultProps = {
-  imgSrc: reviewImgSrc
-}
 
 export default Review;

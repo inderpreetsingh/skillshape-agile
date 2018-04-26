@@ -27,7 +27,10 @@ export function toastrModal(WrappedComponent) {
         open: false
     }
     onClose = ()=> {
-        this.setState({open: false})
+        this.setState({open: false});
+
+        if(this.props.onToastrClose)
+          this.props.onToastrClose();
     }
     show = (message, isErrorMessage, elements)=> {
         this.setState({

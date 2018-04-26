@@ -35,6 +35,9 @@ const styles = {
     marginRight: '5px',
     fontSize: 'inherit'
   },
+  searchBarHeight: {
+    height: 48
+  },
   searchBarShadow: {
     boxShadow: `2px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14) , 0px 3px 1px -2px rgba(0, 0, 0, 0.12)`
   },
@@ -42,8 +45,18 @@ const styles = {
     secondaryButton: {
       width: '100%'
     }
+  },
+  noMinWidth: {
+    minWidth: 0
   }
 };
+
+const getLabel = (props) => {
+  if(props.noLabel) {
+    return ''
+  }
+  return props.label ? props.label : 'Submit';
+}
 
 
 const SecondaryButton = (props) => {
@@ -59,8 +72,16 @@ const SecondaryButton = (props) => {
     rootClass = props.classes.secondaryButton;
   }
 
+  if(props.increaseHeight) {
+    rootClass = rootClass + ' ' + props.classes.searchBarHeight;
+  }
+
   if(props.boxShadow) {
     rootClass = rootClass + ' ' + props.classes.searchBarShadow;
+  }
+
+  if(props.noLabel) {
+    rootClass = rootClass + ' ' + props.classes.noMinWidth;
   }
 
   if(props.itemScope && props.itemType) {
@@ -75,7 +96,7 @@ const SecondaryButton = (props) => {
         >
           {props.icon && <Icon className={props.classes.secondaryButtonIcon}>{props.iconName}</Icon>}
 
-          {props.label ? props.label : 'Submit'}
+          {getLabel(props)}
       </Button>
     )
   }
@@ -87,7 +108,7 @@ const SecondaryButton = (props) => {
       }} onClick={props.onClick}>
         {props.icon && <Icon className={props.classes.secondaryButtonIcon}>{props.iconName}</Icon>}
 
-        {props.label ? props.label : 'Submit'}
+        {getLabel(props)}
     </Button>
   )
 }
@@ -101,7 +122,12 @@ SecondaryButton.propTypes = {
     noMarginBottom: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     itemScope: PropTypes.string,
-    itemProp: PropTypes.string
+    itemProp: PropTypes.string,
+    noLabel: PropTypes.bool
+}
+
+SecondaryButton.defaultProps = {
+  noLabel: false
 }
 
 export default withStyles(styles)(SecondaryButton);

@@ -15,6 +15,7 @@ import { MenuItem } from 'material-ui/Menu';
 import { Loading } from '/imports/ui/loading';
 import CreateMedia from '/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia';
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
+import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
 
 import MaterialRTE from "/imports/startup/client/material-rte"
 // Need to import this in order to show loading component.
@@ -38,6 +39,7 @@ export default function () {
     schoolId,
     schoolData,
     classes,
+    route,
     mediaFormData,
     currentUser
   } = this.props;
@@ -46,7 +48,9 @@ export default function () {
   console.log("SchoolEditDetails render state -->>", this.state)
   return  (
     <div>
-      <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />
+      <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />
+      {/*this.props.route.name === 'SchoolAdminDev' ? <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} /> :
+        <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} /> */}
         {
         this.state.isLoading && <ContainerLoader />
         }

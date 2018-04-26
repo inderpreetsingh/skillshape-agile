@@ -14,12 +14,21 @@ $calendar-button-active-color: #BBB8B9;
   display: flex;
   position: relative;
   justify-content: center;
-  margin-bottom: map-get($sizes,'rhythm-div') * 8px;
+  margin-bottom: map-get($sizes,'rhythm-div') * 10px;
+}
+
+.fc .fc-toolbar h2 {
+  font-family: map-get($fonts,'special');
+  font-weight: 300;
+  font-style: italic;
+  margin: 0;
+  line-height: 1;
+  font-size: map-get($sizes,'base-font-size') * 1.5px;
 }
 
 .fc .fc-toolbar .fc-center {
   position: absolute;
-  margin-top: map-get($sizes,'rhythm-div') * 6px;
+  margin-top: map-get($sizes,'rhythm-div') * 8px;
 }
 
 .fc .fc-toolbar .fc-right {
@@ -34,7 +43,7 @@ $calendar-button-active-color: #BBB8B9;
   width: 100%;
   position: absolute;
   left: 0;
-  top: map-get($sizes,'rhythm-div') * 7px;
+  top: map-get($sizes,'rhythm-div') * 8px;
 }
 
 .fc .fc-left button.fc-next-button {
@@ -51,8 +60,8 @@ $calendar-button-active-color: #BBB8B9;
 }
 
 .fc .fc-left  button .fc-icon {
-  font-size: $base-font-size * 2px;
-  line-height: $base-font-size * 2px;
+  font-size: map-get($sizes,'base-font-size') * 2px;
+  line-height: map-get($sizes,'base-font-size') * 2px;
   font-family: map-get($fonts,'special');
   height: auto;
 }
@@ -115,6 +124,12 @@ $calendar-button-active-color: #BBB8B9;
 
 .fc-body thead {
   border-bottom: 0;
+}
+
+.fc .fc-event {
+  font-size: 14px;
+  font-family: map-get($fonts,'special');
+  line-height: 1.2;
 }
 
 

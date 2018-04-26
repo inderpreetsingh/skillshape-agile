@@ -1,10 +1,19 @@
 import React from "react";
+import styled from 'styled-components';
 import { createContainer } from 'meteor/react-meteor-data';
 
 import MediaListRender from "./mediaListRender";
 import { withSubscriptionAndPagination } from '/imports/util';
 import Media from "/imports/api/media/fields";
 import { Session } from 'meteor/session';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
+const ErrorText = styled.p`
+	font-size: ${helpers.baseFontSize}px;
+	font-family: ${helpers.specialFont};
+	margin: 0;
+	color: ${helpers.black};
+`;
 
 class MediaList extends React.Component {
 
@@ -18,10 +27,16 @@ class MediaList extends React.Component {
   }
 
   render() {
+    console.info('this .props ',this.props,"media list render");
     return MediaListRender.call(this, this.props);
   }
 
 }
+
+MediaList.defaultProps = {
+  noMediaFound: <ErrorText>No Media Found</ErrorText>
+}
+
 export default createContainer(props => {
     console.log("MediaList props -->>",props)
     let { schoolId, limit,schoolData } = props;
@@ -37,5 +52,6 @@ export default createContainer(props => {
         schoolData: schoolData
     };
 }, MediaList);
+
 
 // export default withSubscriptionAndPagination(MediaList, {collection: Media, subscriptionName: "media.getMedia", filter: {}, recordLimit: 30});

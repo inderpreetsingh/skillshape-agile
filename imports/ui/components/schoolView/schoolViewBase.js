@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { checkSuperAdmin, createMarkersOnMap } from '/imports/util';
 import Events from '/imports/util/events';
+import { capitalizeString } from '/imports/util';
 import { browserHistory, Link } from 'react-router';
 
 // import collection definition over here
@@ -9,6 +10,11 @@ import ClassType from "/imports/api/classType/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import { Loading } from '/imports/ui/loading';
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+import { isEmpty } from 'lodash';
+import { getUserFullName } from '/imports/util/getUserData';
+
+
 
 export default class SchoolViewBase extends React.Component {
 
@@ -25,7 +31,7 @@ export default class SchoolViewBase extends React.Component {
     }
 
     componentDidUpdate() {
-        if(!_.isEmpty(this.props.schoolLocation)) {
+        if(!_.isEmpty(this.props.schoolLocation) && this.props.route.name !== 'SchoolViewDeveloping') {
             createMarkersOnMap("schoolLocationMap", this.props.schoolLocation)
         }
     }
@@ -39,6 +45,49 @@ export default class SchoolViewBase extends React.Component {
   // checkUserAccess = (currentUser,schoolId) => {
   //   return checkMyAccess({user: currentUser,schoolId});
   // }
+
+    handleGiveReview = () => {
+      const {toastr} = this.props;
+      if(Meteor.userId()) {
+        this.handleDialogState('giveReviewDialog',true);
+      }else {
+        this.handleDefaultDialogBox('Login to give review',true);
+      }
+    }
+
+    getReviewTitle = (name) => {
+      return `Give review for ${capitalizeString(name)}`;
+    }
+
+    handleDialogState = (dialogName,state) => {
+      const currentState = {...this.state};
+      currentState[dialogName] = state;
+      this.setState(currentState);
+    }
+
+    handleDefaultDialogBox = (title, state) => {
+      const newState = {...state, defaultDialogBoxTitle: title, nonUserDefaultDialog: state};
+      this.setState(newState);
+    }
+
+    normalizeMonthlyPricingData = (monthlyPricingData) => {
+      if(monthlyPricingData) {
+        let normalizedMonthlyPricingData = [];
+
+        for(let monthlyPricingObj of monthlyPricingData) {
+            monthlyPricingObj.pymtDetails.forEach(payment => {
+              const myMonthlyPricingObj = Object.assign({},monthlyPricingObj);
+              myMonthlyPricingObj.pymtDetails = [];
+              myMonthlyPricingObj.pymtDetails.push(payment);
+              normalizedMonthlyPricingData.push(myMonthlyPricingObj);
+            });
+        }
+
+        return normalizedMonthlyPricingData;
+      }else{
+        return monthlyPricingData;
+      }
+    }
 
     claimASchool = (currentUser, schoolData) => {
       	if(currentUser) {
@@ -295,23 +344,40 @@ export default class SchoolViewBase extends React.Component {
         });
     }
 
+    getOurEmail = () => {
+      return this.props.schoolData.email;
+    }
+
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
 
     // Request Pricing info using this function
     requestPricingInfo = (schoolData) => {
-      // Close Modal and Do request for pricing info.
+
       this.setState({showConfirmationModal: false});
-      const { toastr } = this.props;
-      Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
-        // Check sucess method in response and send confirmation to user using a toastr.
-          if(err) {
-            toastr.error(err.reason || err.message, "Error")
-          }
-          if(res && res.emailSent) {
-            toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
-          }
-      });
+      if(!isEmpty(schoolData)) {
+          let emailBody = "";
+          let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
+          let subject ="", message =  "";
+          let currentUserName = getUserFullName(Meteor.user());
+          emailBody = `Hi, \n\n${currentUserName || "I"} saw your listing on SkillShape.com ${url} and has the following message for you:${message}`
+          const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
+          const mailToNormalized = encodeURI(mailTo);
+          // window.location.href = mailToNormalized;
+          openMailToInNewTab(mailToNormalized);
+
+        }
+      // Close Modal and Do request for pricing info.
+      // const { toastr } = this.props;
+      // Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
+      //   // Check sucess method in response and send confirmation to user using a toastr.
+      //     if(err) {
+      //       toastr.error(err.reason || err.message, "Error")
+      //     }
+      //     if(res && res.emailSent) {
+      //       toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
+      //     }
+      // });
     }
 
     // This is used to send purchase request email when user wants to purchase a package.
@@ -321,6 +387,14 @@ export default class SchoolViewBase extends React.Component {
         console.log(typeOfTable, tableId, schoolId);
         const { toastr } = this.props;
         let self = this;
+
+        // Meteor.setTimeout(() => {
+        //   console.log("called the method handle purchase package",typeOfTable, tableId, schoolId);
+        //   self.setState({
+        //     isLoading: false
+        //   })
+        // },2000);
+
         Meteor.call(
             "school.purchasePackage", {
                 typeOfTable: typeOfTable,

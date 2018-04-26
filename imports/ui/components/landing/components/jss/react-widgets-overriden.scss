@@ -3,7 +3,7 @@
   border-bottom: 1px solid $default-border-color;
   border-radius: 0;
   box-shadow: none;
-  font-size: $base-font-size * 1px;
+  font-size: map-get($sizes,'base-font-size') * 1px;
   font-family: map-get($fonts,'common');
 
   &:hover {

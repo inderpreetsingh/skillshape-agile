@@ -5,6 +5,9 @@ import { findIndex, isEmpty, find } from 'lodash';
 import Typography from 'material-ui/Typography';
 //import `Sticky` from 'react-sticky-el';
 import Sticky from 'react-stickynode';
+import { browserHistory } from 'react-router';
+
+import {getAverageNoOfRatings} from '/imports/util';
 
 import NoResults from '../NoResults.jsx';
 import ClassMap from '../map/ClassMap.jsx';
@@ -19,6 +22,7 @@ import * as helpers from '../jss/helpers.js';
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
+import Reviews from "/imports/api/review/fields";
 import School from "/imports/api/school/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
@@ -28,6 +32,11 @@ import ClassInterest from "/imports/api/classInterest/fields";
 
 const MainContentWrapper = styled.div`
 
+`;
+
+const PreloaderWrapper = styled.div`
+  ${helpers.flexCenter}
+  height: 100vh;
 `;
 
 const ContentContainer = styled.div`
@@ -48,7 +57,7 @@ const SearchBarWrapper = styled.div`
 
 const CardsContainer = styled.div`
   width: 100%;
-  padding-top: ${helpers.rhythmDiv * 3}px;
+  padding-top: ${props => props.containerPaddingTop ? props.containerPaddingTop : (helpers.rhythmDiv * 3) + 'px'};
 `;
 
 const NoResultContainer = styled.div`
@@ -75,8 +84,6 @@ const MapContainer = styled.div`
 
 const WithMapCardsContainer = styled.div`
   width: 60%;
-  padding:${helpers.rhythmDiv * 2}px;
-  padding-top: 0;
 
   ${helpers.flexDirectionColumn}
   justify-content: space-between;
@@ -122,6 +129,14 @@ class ClassTypeList extends Component {
 	    }
 	}
 
+  handleAddSchool = () => {
+    if(Meteor.userId()) {
+      browserHistory.push('/claimSchool');
+    } else {
+      Events.trigger("registerAsSchool",{userType: "School"})
+    }
+  }
+
 	makeCategorization = ({classTypeData = [], skillCategoryData}) => {
 	    let data = {};
 	    for(skillCategoryObj of skillCategoryData) {
@@ -161,6 +176,7 @@ class ClassTypeList extends Component {
                         locationName={this.props.locationName}
                         handleSeeMore={this.props.handleSeeMore}
                         filters={this.props.filters}
+                        reviewsData={this.props.reviewsData || []}
                 	/>
   				}
   			})
@@ -170,13 +186,14 @@ class ClassTypeList extends Component {
     getNoResultMsg = (isLoading, filters, classTypeData) => {
         if(isLoading) {
 
-            return <Preloader/>
+            return <PreloaderWrapper><Preloader/></PreloaderWrapper>
 
         } else if(isEmpty(classTypeData)) {
 
             return <NoResultContainer>
                 <NoResults
                     removeAllFiltersButtonClick={this.props.removeAllFilters}
+                    addYourSchoolButtonClick={this.handleAddSchool}
                 />
                 <RevertSearch>
                   {this.props.mapView ? 'No results in this area. Try a different area?' : 'Try changing your search'}
@@ -186,14 +203,13 @@ class ClassTypeList extends Component {
     }
 
 	render() {
-		// console.log("ClassTypeList props -->>",this.props);
-		const { mapView, classTypeData, skillCategoryData, splitByCategory, filters, isLoading } = this.props;
-    // console.log(classTypeData ,"class type data ---->///")
+		const { mapView, classTypeData, reviewsData, skillCategoryData, splitByCategory, filters, isLoading, classTimesData } = this.props;
+    console.log("ClassTypeList props -->>",this.props);
     return (
 			<MainContentWrapper>
 				{
 					mapView ? (
-                <ContentContainer>
+                <ContentContainer >
                     <MapContentContainer>
                       <MapOuterContainer>
                         <Sticky top={10}>
@@ -209,13 +225,14 @@ class ClassTypeList extends Component {
                               schoolData={this.props.schoolData}
                               mapView={this.props.mapView}
                               cardsData={classTypeData}
+                              reviewsData={reviewsData || []}
                               classInterestData={this.props.classInterestData}
                               handleSeeMore={this.props.handleSeeMore}
                               filters={this.props.filters}
                             />
 
-                            {
-                                this.getNoResultMsg(isLoading, filters, classTypeData)
+                            {/*Hack to get rid of this on school type page*/
+                                !this.props.schoolView && this.getNoResultMsg(isLoading, filters, classTypeData)
                             }
                           </div>
 
@@ -228,21 +245,23 @@ class ClassTypeList extends Component {
                     </MapContentContainer>
                 </ContentContainer>
 					) : (
-						<CardsContainer>
+						<CardsContainer containerPaddingTop={this.props.containerPaddingTop}>
 							{
 								splitByCategory ? this.showClassTypes({
 									classType: this.makeCategorization({classTypeData: classTypeData, skillCategoryData: skillCategoryData})
 								}) : ( <CardsList
-                                  mapView={this.props.mapView}
-                                  cardsData={classTypeData}
-                                  classInterestData={this.props.classInterestData}
-                                  handleSeeMore={this.props.handleSeeMore}
-                                  filters={this.props.filters}
-                                />)
+                          mapView={this.props.mapView}
+                          cardsData={classTypeData}
+                          reviewsData={reviewsData || [] }
+                          classInterestData={this.props.classInterestData}
+                          handleSeeMore={this.props.handleSeeMore}
+                          filters={this.props.filters}
+                          classTimesData={ classTimesData || [] }
+                        />)
 							}
 
                             {
-                                this.getNoResultMsg(isLoading, filters, classTypeData)
+                                !this.props.schoolView && this.getNoResultMsg(isLoading, filters, classTypeData)
                             }
                         	{/*<CardsList
                         		mapView={mapView}
@@ -260,14 +279,16 @@ class ClassTypeList extends Component {
 
 export default createContainer(props => {
 	// console.log("ClassTypeList createContainer -->>",props)
-	let classTypeData = [];
-	let schoolData = [];
-	let skillCategoryData = [];
-	let classTimesData = [];
-	let classInterestData = [];
+  	let classTypeData = [];
+    let reviewsData = [];
+    let classTypeIds = [];
+    let schoolData = [];
+  	let skillCategoryData = [];
+  	let classTimesData = [];
+  	let classInterestData = [];
     let sLocationData = [];
     let isLoading = true;
-    let subscription;
+    let subscription, reviewsSubscription;
     let filters = props.filters ? props.filters : {};
 
     if(props.mapView) {
@@ -285,10 +306,14 @@ export default createContainer(props => {
         subscription = Meteor.subscribe(props.classTypeBySchool, props.filters);
     }
 
-	Meteor.subscribe("classInterest.getClassInterest");
+	   Meteor.subscribe("classInterest.getClassInterest");
 
-	classTypeData = ClassType.find().fetch();
-	schoolData = School.find().fetch();
+  	classTypeData = ClassType.find().fetch();
+    classTypeIds = classTypeData.map(data => data._id);
+    // We will subscribe only those reviews with classtype ids
+    reviewsSubscription = Meteor.subscribe("review.getReviewsWithReviewForIds",classTypeIds);
+
+    schoolData = School.find().fetch();
   	skillCategoryData = SkillCategory.find().fetch();
   	classTimesData = ClassTimes.find().fetch();
   	classInterestData = ClassInterest.find().fetch();
@@ -299,19 +324,23 @@ export default createContainer(props => {
     perak:joins */
     SkillSubject.find().fetch();
 
-    if(subscription.ready()) {
-        isLoading = false
+    if(subscription.ready() && reviewsSubscription.ready()) {
+
+        reviewsData = Reviews.find().fetch()
+        // console.info("class type data...................................................",classTypeData);
+        isLoading = false;
     }
   	// console.log("classInterestData --->>",classInterestData)
   	return {
   		...props,
   		classTypeData,
   		schoolData,
+      reviewsData,
   		skillCategoryData,
   		classTimesData,
   		classInterestData,
-        sLocationData,
-        isLoading,
+      sLocationData,
+      isLoading,
   	};
 
 }, ClassTypeList);

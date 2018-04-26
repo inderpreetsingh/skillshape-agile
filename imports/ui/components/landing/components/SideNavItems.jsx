@@ -69,6 +69,13 @@ const LogOutUserSideNav = (props) => (
             iconName="home"
             onClick={() => browserHistory.push('/')}
         />
+         <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Find a School"
+            iconName="find_in_page"
+            onClick={() => browserHistory.push('/')}
+        />
         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
@@ -97,7 +104,7 @@ const LogOutUserSideNav = (props) => (
             menuListItemText={props.classes.menuListItemText}
             name="Contact Us"
             iconName="email"
-            onClick={() => browserHistory.push('/ContactUs')}
+            onClick={() => browserHistory.push('/contact-us')}
         />
     </Fragment>
 )
@@ -158,7 +165,7 @@ const LoginUserSideNav = (props) => (
             childData={props.connectedSchool}
             onClick={props.childItemOnClick}
         />
-        <SideNavItem
+         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
             name="Find a School"
@@ -177,7 +184,7 @@ const LoginUserSideNav = (props) => (
             menuListItemText={props.classes.menuListItemText}
             name="Send us feedback"
             iconName="message"
-            onClick={() => browserHistory.push('/ContactUs')}
+            onClick={() => browserHistory.push('/contact-us')}
         />
         <SideNavItem
             button

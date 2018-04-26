@@ -17,7 +17,7 @@ import Sticky from 'react-stickynode';
 export default function () {
 
 	const { showCreateMediaModal, mediaFormData, filterStatus, limit , isGalleryView} = this.state;
-	const { schoolId, mediaData, classes, fullScreen, schoolView  } = this.props;
+	const { schoolId, mediaData, classes, fullScreen, schoolView, noMediaFound  } = this.props;
 	console.log("<<<<media details state --->>",this.props);
 	return (
 		<div>
@@ -108,6 +108,7 @@ export default function () {
 									onDelete={this.onDeleteMedia}
 									openEditMediaForm={this.openEditMediaForm}
 									showEditButton={false}
+									noMediaFound={noMediaFound}
 									{...this.state}
 								/>
 				        	</Grid>

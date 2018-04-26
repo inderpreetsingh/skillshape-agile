@@ -21,21 +21,18 @@ export const sendPackagePurchaseEmail = function({ to, buyer, packageName }) {
 };
 
 // Send Email to school admin when user wants to join a class.
-export const sendJoinClassEmail = function({ classTypeData }) {
-    let user = Meteor.users.findOne(classTypeData.userId);
-    let school = School.findOne(classTypeData.schoolId);
-    let classTimes = ClassTimes.findOne(classTypeData.classTimeId);
-    let classType = ClassType.findOne(classTypeData.classTypeId);
-    let studentName = user.profile && user.profile.firstName;
-    let schoolAdminRec = Meteor.users.findOne(school.superAdmin);
-
+export const sendJoinClassEmail = function({
+    currentUserName,
+    schoolAdminName,
+    classTypeName,
+    classTimeName
+}) {
     if (Meteor.isServer) {
         Email.send({
             to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
             from: config.fromEmailForJoiningClass,
             subject: "Join Class Request Recieved",
-            html: `Hi ${schoolAdminRec.profile
-                .firstName}, <br/><b>${studentName}</b> has showed interest in joining your : <b>${classType.name}</b> at <b>${classTimes.name}</b>.
+            html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your class: <b>${classTypeName}</b> , <b>${classTimeName}</b>.
                 <br/><br/>
                 <br/><br/>
                 ${EmailSignature}`
@@ -266,3 +263,19 @@ export const sendClassTypeLocationRequestEmail = function({
         });
     }
 };
+
+export const sendEmailToSchool = function(message,studentName,contactName,schoolData,subject,yourEmail, yourName) {
+    if (Meteor.isServer) {
+        Email.send({
+            to: "sam@skillshape.com", // Needs to replace this with requester's Email.
+            from: "Notices@SkillShape.com",
+            subject: subject,
+            html: `Hi, ${contactName}<br/>
+                   ${yourEmail ? `User Email: ${yourEmail}<br/>`: ""}
+                   ${yourName ? `User Name:${yourName}<br/>`: ""}
+                   ${studentName} saw your listing on SkillShape.com ${Meteor.absoluteUrl(
+                   `schools/${schoolData.slug}`)} and has the following message for you:
+                   <br/> ${message} <br/>Thanks, <br/>${EmailSignature}`
+        });
+    }
+}

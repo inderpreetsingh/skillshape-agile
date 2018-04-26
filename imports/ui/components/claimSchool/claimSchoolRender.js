@@ -100,7 +100,7 @@ export default function () {
                onLocationChange= {this.onLocationChange}
              />
         </Sticky>
-        <Wrapper>
+        {/*<Wrapper>
           <TextWrapper className={this.props.classes.textStyle}>
               Check to see if any of these are your school.
               if so, press the <b>claim</b> button
@@ -109,11 +109,12 @@ export default function () {
           <FormSubmitButtonWrapper>
             <Button className={this.props.classes.sideButton} onClick={this.showConfirmationModal}>None of these are my school. <br/>Start a new Listing! </Button>
           </FormSubmitButtonWrapper>
-        </Wrapper>
+        </Wrapper> */}
          <ClaimSchoolList
             filters={this.state.filters}
             removeAllFilters={this.removeAllFilters}
             handleClaimASchool={this.handleClaimASchool}
+            onStartNewListingButtonClick={this.showConfirmationModal}
            />
        </div>
        </DocumentTitle>

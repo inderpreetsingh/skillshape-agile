@@ -1,18 +1,20 @@
 import React , {Fragment,Component} from 'react';
 import styled from 'styled-components';
 import {isEmpty} from 'lodash';
+import DocumentTitle from 'react-document-title';
 
 import { createMarkersOnMap } from '/imports/util';
 
-import BrandBar from '../components/landing/components/BrandBar';
-import Footer from '../components/landing/components/footer/index.jsx';
+import BrandBar from '/imports/ui/components/landing/components/BrandBar';
+import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 
-import ContactUsForm from '../components/landing/components/contactUs/ContactUsForm.jsx';
-import ClassMap from '../components/landing/components/map/ClassMap.jsx';
-import MapView from '../components/landing/components/map/mapView.jsx';
-import SocialAccounts from '../components/landing/components/contactUs/SocialAccounts.jsx';
+import ContactUsForm from '/imports/ui/components/landing/components/contactUs/ContactUsForm.jsx';
+import ClassMap from '/imports/ui/components/landing/components/map/ClassMap.jsx';
+import MapView from '/imports/ui/components/landing/components/map/mapView.jsx';
+import SocialAccounts from '/imports/ui/components/landing/components/contactUs/SocialAccounts.jsx';
 
-import * as helpers from '../components/landing/components/jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { siteAddress } from '/imports/ui/components/landing/site-settings.js';
 
 const Wrapper = styled.div`
   display: flex;
@@ -96,44 +98,31 @@ class ContactUs extends Component {
   }
 
   getMyCurrentLocation = () => {
-      if(navigator) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            let geocoder = new google.maps.Geocoder();
-            let coords = [];
-            coords[0] = position.coords.latitude;
-            coords[1] = position.coords.longitude;
+    let geocoder = new google.maps.Geocoder();
+    geocoder.geocode({address: siteAddress}, (results, status) => {
+        let sLocation = "near by me";
+        let userLocation = { };
+        let coords = { };
+        if (status == google.maps.GeocoderStatus.OK) {
+          if (results[0]) {
+            userLocation = this._createUserLocationFromAddress(results[0].address_components);
+            coords[0] = results[0].geometry.location.lat();
+            coords[1] = results[0].geometry.location.lng();
+          }
+        }
 
-            geocoder.geocode({'latLng': latlng}, (results, status) => {
-                let sLocation = "near by me";
-                let userLocation = { };
+        const newUserLocation = {
+          ...userLocation,
+          loc: coords,
+          id: results[0].place_id
+        }
 
-                if (status == google.maps.GeocoderStatus.OK) {
-                  if (results[0]) {
-                    let place = results[0];
-                    console.info(place,"plascing....")
-                    sLocation = results[0].formatted_address;
-                    userLocation = this._createUserLocationFromAddress(results[0].address_components);
-                  }
-                }
-
-                const newUserLocation = {
-                  ...userLocation,
-                  loc: coords,
-                  id: results[0].place_id
-                }
-
-                this.setState({ userLocation: newUserLocation});
-            });
-          // toastr.success("Showing classes around you...","Found your location");
-          // // Session.set("coords",coords)
-        })
-    }
+        this.setState({ userLocation: newUserLocation});
+    });
   }
 
   _createUserLocationFromAddress = (addressComponents) => {
-    const localityComponents = ['street_number','sublocality','locality'];
+    const localityComponents = ['street_number','route','sublocality','locality'];
     const COUNTRY = 'country';
     const CITY = 'administrative_area_level_1';
 
@@ -177,10 +166,14 @@ class ContactUs extends Component {
 
   render() {
     // console.info('--------------------------------------------------------',this.state, "------ contact us page");
-    return(<Wrapper>
+    console.info('--- contact us page props --->',this.props, this.state);
+    return(<DocumentTitle title={this.props.route.name} >
+      <Wrapper>
 
       {/* Brand Bar at Top */}
-      <BrandBar navBarHeight="70" positionStatic={true} />
+      <BrandBar navBarHeight="70" positionStatic={true}
+        currentUser={this.props.currentUser}
+        isUserSubsReady={this.props.isUserSubsReady}/>
 
       {/* Content section including form and map and social accounts*/}
       <ContentWrapper>
@@ -202,7 +195,8 @@ class ContactUs extends Component {
 
       {/* Footer */}
       <Footer />
-    </Wrapper>);
+      </Wrapper>
+    </DocumentTitle>);
   }
 }
 

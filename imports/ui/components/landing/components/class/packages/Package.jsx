@@ -58,6 +58,7 @@ const Body = styled.section`
 const ClassDetailsSection = styled.div`
   ${helpers.flexDirectionColumn}
   max-width: 65%;
+  padding-right: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     max-width: 100%;
@@ -81,6 +82,7 @@ const ClassDetailsText = styled.p`
 const PriceSection = styled.div`
   ${helpers.flexDirectionColumn}
   margin: 0;
+  padding-right: ${helpers.rhythmDiv}px;
   padding-bottom: ${helpers.rhythmDiv/2}px;
 `;
 
@@ -142,45 +144,52 @@ const Package = (props) => (
   <OuterWrapper>
     <Wrapper>
       <ClassDetailsSection>
-        <Title>{props.packageName}</Title>
+        <Title>{props.packageName || props.name}</Title>
+        {props.packageType !== 'EP' && <Fragment>
         {
           props.classPackages ? (
             <ClassDetailsText>Expiration: {(props.expDuration && props.expPeriod) ? `${props.expDuration} ${props.expPeriod}` : "None"}</ClassDetailsText>
           ) : (
             <Fragment>
               <ClassDetailsText>
-                Payment Method: {props.pymtMethod || "NA"}
+               {props.pymtMethod || "NA"}
               </ClassDetailsText>
               <ClassDetailsText>
-                Payment Type: {getPaymentType(props.pymtType) || "NA"}
+                {getPaymentType(props.pymtType) || "NA"}
               </ClassDetailsText>
             </Fragment>
           )
         }
+        </Fragment>}
         <ClassDetailsText>Covers: {getCovers(props.selectedClassType)}</ClassDetailsText>
       </ClassDetailsSection>
 
       <RightSection>
-        {
-          props.classPackages ? (
-            <PriceSection>
-              <Price>{props.cost && `${props.cost}$`}</Price>
-              <NoOfClasses>{props.noClasses && `for ${props.noClasses} classes`}</NoOfClasses>
-            </PriceSection>
-          ) : (
-            !isEmpty(props.pymtDetails) && (
-              props.pymtDetails.map((payment, index)=> {
-                return <PriceSection key={`${payment.cost}-${index}`}>
-                    <Price>{payment.cost && `${payment.cost}$`}</Price>
-                    <NoOfClasses>{payment.month && `per month for ${payment.month} months`}</NoOfClasses>
-                  </PriceSection>
-              })
+        {props.packageType !== 'EP' ? <Fragment>
+          {
+            props.classPackages ? (
+              <PriceSection>
+                <Price>{props.cost && `${props.cost}$`}</Price>
+                <NoOfClasses>{props.noClasses && `for ${props.noClasses} classes`}</NoOfClasses>
+              </PriceSection>
+            ) : (
+              !isEmpty(props.pymtDetails) && (
+                props.pymtDetails.map((payment, index)=> {
+                  return <PriceSection key={`${payment.cost}-${index}`}>
+                      <Price>{payment.cost && `${payment.cost}$`}</Price>
+                      <NoOfClasses>{payment.month && `per month for ${payment.month} months`}</NoOfClasses>
+                    </PriceSection>
+                })
+              )
             )
-          )
-        }
+          }
+          </Fragment> : <PriceSection> {/* used for enrollment packages */}
+            <Price>{props.cost && `${props.cost}$`}</Price>
+            <NoOfClasses>${props.cost && 'For Enrollment'}</NoOfClasses>
+          </PriceSection>}
 
         <AddToCartSection >
-          <Cart onClick={props.onAddToCartIconButtonClick} />
+          <Cart onClick={() => props.onAddToCartIconButtonClick(props.packageType, props._id, props.schoolId)} />
         </AddToCartSection>
       </RightSection>
     </Wrapper>

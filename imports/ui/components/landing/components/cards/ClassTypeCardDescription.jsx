@@ -11,12 +11,13 @@ import Grid from 'material-ui/Grid'
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import SecondaryButton from '../buttons/SecondaryButton.jsx';
 
+import School from "/imports/api/school/fields";
+import { cutString, goToSchoolPage, goToClassTypePage } from "/imports/util";
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+
 import * as helpers from '../jss/helpers.js';
 import MuiTheme from '../jss/muitheme';
 
-import School from "/imports/api/school/fields";
-
-import { cutString } from '/imports/util';
 
 const Reviews = styled.a`
     color: ${helpers.primaryColor};
@@ -24,15 +25,6 @@ const Reviews = styled.a`
 const NoFoundResultWapper = styled.div`
     text-align: center;
 `
-function goToSchoolPage(schoolId) {
-  console.log("goToSchoolPage --->>",schoolId)
-  if(schoolId) {
-    const schoolData = School.findOne({_id: schoolId})
-    if(schoolData && schoolData.slug) {
-      browserHistory.push(`/schools/${schoolData.slug}`)
-    }
-  }
-}
 
 const ClassDescriptionContent = styled.p`
   max-height: 100px;
@@ -41,13 +33,22 @@ const ClassDescriptionContent = styled.p`
   font-size: ${helpers.baseFontSize}px;
 `;
 
+const Text = styled.p`
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.commontFont};
+  color: ${helpers.black};
+  line-height: 1.2;
+  margin: 0;
+`;
+
 const styles = {
   gridDescriptionWrapper : {
     margin: `${helpers.rhythmDiv * 2}px 0`,
+    marginBottom: 4,
     border: `1px solid #ddd`
   },
   descriptionHeader : {
-    marginTop: `${helpers.rhythmDiv * 2}px`,
+    marginTop: `${helpers.rhythmDiv}px`,
     fontSize: '17px',
     fontWeight: 500
   }
@@ -57,23 +58,24 @@ const styles = {
 const ClassTypeCardDescription = (props) => {
 
   const {cardRevealInfo, schoolData} = props;
-  // console.log("ClassTypeCardDescription props-->>",props);
+  console.log("ClassTypeCardDescription props-->>",props);
   return(
     <MuiThemeProvider theme={MuiTheme}>
         <Fragment>
             <div itemScope itemType="http://schema.org/AggregateRating">
                 <ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount"/>
                 <Reviews href="#">
-                    <Typography> <span itemProp="reviewCount">{props.reviews}</span> Reviews</Typography>
+                    <Typography>
+                      <span itemProp="reviewCount">{props.reviews}</span> Reviews</Typography>
                 </Reviews>
             </div>
 
             <div className="description">
               <Grid container spacing={8}>
                  <Grid item xs={12} classes={{typeItem: props.classes.gridDescriptionWrapper}}>
-                    {cardRevealInfo.ageMin && <Typography>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Typography>}
-                    {cardRevealInfo.gender && <Typography>{cardRevealInfo.gender && (cardRevealInfo.gender === "Any") ? "All are welcome" : `${cardRevealInfo.gender} only`}</Typography>}
-                    {cardRevealInfo.experienceLevel && <Typography>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Typography>}
+                    {cardRevealInfo.ageMin && <Text>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Text>}
+                    {cardRevealInfo.gender && <Text>{cardRevealInfo.gender && (cardRevealInfo.gender !== "All") && `${cardRevealInfo.gender}`}</Text>}
+                    {cardRevealInfo.experienceLevel && <Text>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Text>}
                  <Grid item xs={12}>
                     <Typography classes={{root: props.classes.descriptionHeader}}>Class Description: </Typography>
                     {cardRevealInfo.description && <ClassDescriptionContent>{cardRevealInfo.description}</ClassDescriptionContent>}
@@ -82,13 +84,15 @@ const ClassTypeCardDescription = (props) => {
 
                <Grid item xs={12} sm={6}>
                     <SecondaryButton
+                      noMarginBottom
                       fullWidth
-                      onClick={() => browserHistory.push(`/classType/${cardRevealInfo.name}/${cardRevealInfo._id}`)}
-                      label="View Details"/>
+                      onClick={() => goToClassTypePage(cardRevealInfo.name,cardRevealInfo._id )}
+                      label="Class Details"/>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
                     <SecondaryButton
+                      noMarginBottom
                       fullWidth
                       label="View School"
                       onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
@@ -105,7 +109,11 @@ const ClassTypeCardDescription = (props) => {
                           itemScope
                           itemType="http://schema.org/ViewAction"
                           />
-                        : <NoFoundResultWapper>No Class Time Found</NoFoundResultWapper>
+                        : <PrimaryButton
+                          label="Request Class Times"
+                          fullWidth
+                          onClick={props.onRequestClassTimeButtonClick}
+                        />
                     }
                 </Grid>
               </Grid>

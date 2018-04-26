@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { isEmpty } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 
@@ -28,6 +29,8 @@ import Dialog , {
 } from 'material-ui/Dialog';
 
 import ClassInterest from "/imports/api/classInterest/fields";
+import Events from '/imports/util/events';
+
 
 const styles = {
   dialog: {
@@ -62,6 +65,7 @@ const ClassContainer = styled.div`
 const ClassContainerHeader = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -87,9 +91,53 @@ const DescriptionContainer = styled.div`
 `;
 
 const ErrorWrapper = styled.span`
- color: red;
- float: right;
+   color: red;
+   float: right;
 `;
+
+const ScheduleType = styled.span`
+  display: inline-block;
+  padding: ${helpers.rhythmDiv}px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: ${helpers.specialFont};
+  background: ${helpers.lightTextColor};
+  color: ${helpers.primaryColor};
+  border-radius: 2px;`;
+
+
+const MyClassInfo = (props) => (<ClassContainer>
+      <ClassContainerHeader>
+
+          <ClassTimings>
+            {props.data.name}
+          </ClassTimings>
+
+          {/*<Chip label={props.data.scheduleType} classes={{root: this.props.classes.chip, label: this.props.classes.chipLabel}}/> */}
+          <ScheduleType>{props.getDatesBasedOnScheduleType(props.data)}</ScheduleType>
+      </ClassContainerHeader>
+          <Typography>
+            {props.data.desc}
+          </Typography>
+
+      <CalenderButtonWrapper>
+          {
+              props.addToCalender ?  <PrimaryButton
+                  icon
+                  onClick={() => props.addToMyCalender(props.data)}
+                  iconName="perm_contact_calendar"
+                  label="Add to my Calender"
+              />
+              : <SecondaryButton
+                  icon
+                  onClick={() => props.handleClassInterest({methodName: "classInterest.removeClassInterestByClassTimeId", data: {classTimeId: props.data._id} })}
+                  iconName="delete"
+                  label="Remove from my Calender"
+              />
+          }
+      </CalenderButtonWrapper>
+  </ClassContainer>
+)
 
 class ClassTimesDialogBox extends React.Component {
 
@@ -100,6 +148,31 @@ class ClassTimesDialogBox extends React.Component {
         } else {
             return isEmpty(ClassInterest.find({classTimeId: data._id, userId}).fetch());
         }
+    }
+
+    getDatesBasedOnScheduleType = (data) => {
+      let startDate = '';
+      let endDate = '';
+      const dateFormat = 'DD-MM-YYYY';
+      const scheduleType = data.scheduleType.toLowerCase();
+      const scheduleDetails = data.scheduleDetails;
+
+      if(scheduleType === 'recurring') {
+        startDate = moment(new Date(data.startDate)).format(dateFormat);
+        endDate = moment(new Date(data.endDate)).format(dateFormat);
+        debugger;
+        if(startDate == 'Invalid date') {
+          return `Recurring ending on ${endDate}`;
+        }else if(endDate == 'Invalid date') {
+          return `Recurring starting from ${startDate}`;
+        }
+        return `Recurring from ${startDate} to ${endDate}`;
+      }else if(scheduleType === 'ongoing') {
+        return `Ongoing`;
+      }else {
+        startDate = moment(new Date(scheduleDetails['oneTime'].startDate)).format(dateFormat);
+        return `Onetime on ${startDate}`;
+      }
     }
 
     addToMyCalender = (data) => {
@@ -117,7 +190,8 @@ class ClassTimesDialogBox extends React.Component {
                 data: {doc}
             })
         } else {
-            alert("Please login !!!!")
+            // Show Login popup
+            Events.trigger("loginAsUser");
         }
     }
 
@@ -127,7 +201,47 @@ class ClassTimesDialogBox extends React.Component {
         })
     }
 
+    getSchedules = (classesData) => {
+      const ourSchedules = [];
+
+      classesData.forEach(data => {
+        const addToCalender = this.checkForAddToCalender(data);
+
+        if(data.scheduleType === 'oneTime') {
+          // If schedule is one time..
+          data.scheduleDetails.oneTime.forEach(currentData => {
+            const myScheduleData = JSON.parse(JSON.stringify(data));
+            myScheduleData.scheduleDetails.oneTime = {...currentData};
+
+            ourSchedules.push(<MyClassInfo
+                data={myScheduleData}
+                getDatesBasedOnScheduleType={this.getDatesBasedOnScheduleType}
+                addToMyCalender={this.addToMyCalender}
+                handleClassInterest={this.handleClassInterest}
+                addToCalender={addToCalender}
+              />);
+
+              // console.info(myScheduleData,"---------------------------");
+          });
+        }else {
+          // If schedule is ongoing or recurring..
+          ourSchedules.push(<MyClassInfo
+            data={data}
+            addToCalender={addToCalender}
+            getDatesBasedOnScheduleType={this.getDatesBasedOnScheduleType}
+            addToMyCalender={this.addToMyCalender}
+            handleClassInterest={this.handleClassInterest} />);
+        }
+
+      });
+
+      // console.info(classesData,ourSchedules,"ourSchedules....");
+
+      return ourSchedules;
+    }
+
     render() {
+        // const classTimesData = this.normalizeScheduledetails(this.props.classesData);
 
         console.log("ClassTimesDialogBox props--->>",this.props)
         return (
@@ -160,44 +274,11 @@ class ClassTimesDialogBox extends React.Component {
                                     icon
                                     onClick={this.props.handleClassTimeRequest}
                                     iconName="perm_contact_calendar"
-                                    label="REQUEST CLASS TIMES"
+                                    label="Request class times"
                                 />
                             </ClassContainer>
                         )
-                        : this.props.classesData.map(data => {
-                            const addToCalender  = this.checkForAddToCalender(data);
-                            return <ClassContainer>
-
-                                <ClassContainerHeader>
-
-                                    <ClassTimings>
-                                        {data.name}
-                                    </ClassTimings>
-
-                                    <Chip label={data.scheduleType} classes={{root: this.props.classes.chip, label: this.props.classes.chipLabel}}/>
-                                </ClassContainerHeader>
-                                    <Typography>
-                                      {data.desc}
-                                    </Typography>
-
-                                <CalenderButtonWrapper>
-                                    {
-                                        addToCalender ?  <PrimaryButton
-                                            icon
-                                            onClick={() => this.addToMyCalender(data)}
-                                            iconName="perm_contact_calendar"
-                                            label="Add to my Calender"
-                                        />
-                                        : <SecondaryButton
-                                            icon
-                                            onClick={() => this.handleClassInterest({methodName: "classInterest.removeClassInterestByClassTimeId", data: {classTimeId: data._id} })}
-                                            iconName="delete"
-                                            label="Remove from my Calender"
-                                        />
-                                    }
-                                </CalenderButtonWrapper>
-                            </ClassContainer>
-                        })
+                        : this.getSchedules(this.props.classesData)
                     }
                     {
                       this.props.errorText && <ErrorWrapper>{this.props.errorText}</ErrorWrapper>

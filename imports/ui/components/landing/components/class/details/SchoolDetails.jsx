@@ -47,6 +47,12 @@ const ImgSliderSection = styled.div`
   max-width: 502px;
   max-height: 500px;
   width: 100%;
+  ${helpers.flexCenter}
+  align-items: ${props => props.notes ? 'flex-start' : 'center'};
+`;
+
+const ImgSliderStudentNotes = styled.div`
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
 const SchoolDetails = (props) => (
@@ -57,11 +63,16 @@ const SchoolDetails = (props) => (
         address={props.address}
         title={props.schoolName}
         description={props.description}/>
-      <StudentNotes notes={props.notes}/>
+        {!isEmpty(props.images) && <StudentNotes notes={props.notes} />}
     </SchoolSection>
-    <ImgSliderSection>
+    <ImgSliderSection notes={isEmpty(props.images)}>
       {
-        !isEmpty(props.images) && <ClassTypeImgSlider images={props.images} />
+        !isEmpty(props.images) ?
+        <ClassTypeImgSlider images={props.images} />
+        :
+        <ImgSliderStudentNotes>
+          <StudentNotes notes={props.notes}/>
+        </ImgSliderStudentNotes>
       }
     </ImgSliderSection>
   </Wrapper>

@@ -22,6 +22,8 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
+import { cardImgSrc } from '../../site-settings.js';
+
 const CardsRevealWrapper = styled.div`
   width: 100%;
 `;
@@ -47,8 +49,8 @@ class ClassTypeCard extends Component {
 
     handleClassTimeRequest = (schoolId, classTypeId, classTypeName) => {
         console.log("handleClassTimeRequest --->>",schoolId, classTypeId);
-        this.setState({isLoading:true});
         if(Meteor.userId()) {
+            this.setState({isLoading:true});
             const { toastr } = this.props;
             Meteor.call("classTimesRequest.notifyToSchool", {schoolId, classTypeId, classTypeName}, (err, res) => {
                 console.log("err -->>",err);
@@ -74,6 +76,7 @@ class ClassTypeCard extends Component {
 
     render() {
         console.log("ClassTypeCard props --->>",this.props);
+        let ratings,reviews;
         const cardRevealData = {
           _id:this.props._id,
           schoolId:this.props.schoolId,
@@ -85,6 +88,12 @@ class ClassTypeCard extends Component {
           name:this.props.name,
         }
         const classTimesData = this.getClassTimes(get(this.props, "_id", null))
+        const {reviewsStats} = this.props;
+        if(!isEmpty(reviewsStats)) {
+          ratings = reviewsStats.ratings;
+          reviews = reviewsStats.reviews;
+        }
+
         return(
             <Fragment>
             {
@@ -101,21 +110,22 @@ class ClassTypeCard extends Component {
                 this.state.isLoading && <ContainerLoader />
             }
             <CardsRevealWrapper>
-              <CardsReveal {...this.props}
+              <CardsReveal defaultImage={cardImgSrc} originalImage={this.props.classTypeImg} {...this.props}
                   body={
                   <ClassTypeCardBody
-                      ratings={this.props.ratings}
-                      reviews={this.props.reviews}
+                      ratings={ratings}
+                      reviews={reviews}
                       onJoinClassButtonClick={this.handleDialogState(true)} />
                   }
                   descriptionContent={
                   <ClassTypeCardDescription
                       schoolData={this.props.schoolData}
                       classTimeCheck={!isEmpty(classTimesData)}
-                      ratings={this.props.ratings}
-                      reviews={this.props.reviews}
+                      ratings={ratings}
+                      reviews={reviews}
                       description={this.props.desc}
                       onClassTimeButtonClick={this.handleDialogState(true)}
+                      onRequestClassTimeButtonClick={this.handleDialogState(true)}
                       cardRevealInfo={cardRevealData}
                       />
                   } />

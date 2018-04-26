@@ -10,8 +10,9 @@ import ClassTypeCard from './ClassTypeCard.jsx';
 import CardStructure from '../../constants/structure/card.js';
 import SecondaryButton from '../buttons/SecondaryButton.jsx';
 
-import {getContainerMaxWidth} from '../../../../../util/cards.js';
+import {getContainerMaxWidth,getAverageNoOfRatings} from '/imports/util';
 
+import Reviews from '/imports/api/review/fields.js';
 import * as helpers from '../jss/helpers.js';
 
 const CardsListWrapper = styled.div`
@@ -43,8 +44,7 @@ const GridItem = styled.div`
 
 const CardsListGridWrapper = styled.div`
     padding: ${SPACING/2}px;
-    margin: 0;
-    margin-right: auto;
+    margin: 0 auto;
     max-width: ${props => props.mapView ? getContainerMaxWidth(CARD_WIDTH,SPACING, 2) + 24 : getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
 
     @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px) {
@@ -59,7 +59,6 @@ const CardsListGridWrapper = styled.div`
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24}px;
       margin: 0 auto;
     }
-
 `;
 
 const More = styled.div`
@@ -77,22 +76,44 @@ const CardsListTitle = styled.h2`
   font-family: ${helpers.specialFont};
   margin-bottom: ${helpers.rhythmDiv}px;
   margin-top: 0;
+
   @media screen and (min-width: 0) and (max-width: ${helpers.tablet}px) {
       padding-left: 0;
-      text-align: center;
   }
 `;
+
+// NOTE: This method will remove the reviews which already have been searched and
+// return the searched reviews;
+const getReviewsWithId = (id,reviews) => {
+  const currentCardReviews = [];
+  // debugger;
+  for(let i = 0; i < reviews.length; ++i) {
+    if(reviews[i].reviewForId === id) {
+      idToRemove = i;
+      currentCardReviews.push(reviews[i]);
+
+      // Removing that element from the array;
+      reviews.splice(i,1);
+
+      --i;
+    }
+  }
+
+  return {
+    reviews,
+    currentCardReviews
+  }
+}
 
 
 class CardsList extends Component {
     _compareCardsData(currentCardsData,newCardsData) {
         for(let i = 0; i < currentCardsData.length; ++i) {
             if(currentCardsData[i]._id !== newCardsData[i]._id
-                || currentCardsData[i].reviews !== newCardsData[i].reviews
                 || currentCardsData[i].classTypeImg !== newCardsData[i].classTypeImg
-                || currentCardsData[i].ratings !== newCardsData[i].ratings
                 || currentCardsData[i].name !== newCardsData[i].name
                 || currentCardsData[i].desc !== newCardsData[i].desc
+                || currentCardsData[i].reviewsStats !== newCardsData[i].reviewsStats
             ) {
                 return true;
            }
@@ -109,9 +130,13 @@ class CardsList extends Component {
             return true;
         } else if (this.props.cardsData.length !== nextProps.cardsData.length) {
             return true;
+        } else if (this.props.classTimesData && this.props.classTimesData.length !== nextProps.classTimesData.length) {
+            return true;
         } else if ((this.props.classInterestData && nextProps.classInterestData) && this.props.classInterestData.length !== nextProps.classInterestData.length) {
             return true;
-        } else {
+        }else if((this.props.reviewsData && nextProps.reviewsData) && this.props.reviewsData.length !== nextProps.reviewsData.length) {
+            return true;
+        }else {
             return this._compareCardsData(this.props.cardsData, nextProps.cardsData);
         }
     }
@@ -133,15 +158,29 @@ class CardsList extends Component {
     }
 
     render() {
-        const { title, cardsData, mapView,handleSeeMore,name,classInterestData, filters} = this.props;
-
-        // console.log("CardsList cardsData-->>",this.props);
+        const { title, cardsData, mapView, handleSeeMore, name, classInterestData, filters} = this.props;
+        let { reviewsData } = this.props;
+        // debugger;
+        console.log("CardsList cardsData-->>",this.props, Reviews.find().fetch());
         return(
           <CardsListWrapper>
-              <CardsListTitle>{title}</CardsListTitle>
               <CardsListGridWrapper mapView={mapView}>
+                <CardsListTitle>{title}</CardsListTitle>
                  <GridContainer>
                      {cardsData.map(card => {
+
+                       const ourReviewsData = getReviewsWithId(card._id,reviewsData);
+                       const currentCardReviews = ourReviewsData['currentCardReviews'];
+                       // storing back the removed out reviews so that in next search we don't have to go through those reviews as well.
+                       reviewsData = ourReviewsData['reviews'];
+
+                       if(currentCardReviews.length) {
+                         card.reviewsStats = {
+                           ratings: getAverageNoOfRatings(currentCardReviews),
+                           reviews: currentCardReviews.length
+                         }
+                       }
+
                         return (
                            <GridItem key={card._id} spacing={24}>
                                <ClassTypeCard classInterestData={classInterestData} {...card}/>
