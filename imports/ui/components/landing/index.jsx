@@ -697,8 +697,9 @@ class Landing extends Component {
 
                     {/* Cover */}
                     <CoverWrapper>
-                        <Cover itemScope itemType="http://schema.org/WPHeader">
+                        <Cover polytheneVerticalFlow itemScope itemType="http://schema.org/WPHeader">
                             <BrandBar
+                                positionStatic
                                 currentUser={this.props.currentUser}
                             />
                             <SearchArea
@@ -723,9 +724,9 @@ class Landing extends Component {
                     <FilterPanelWrapper>
                         <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
                             {this.state.mapView ? this.renderFilterPanel() :
-                                <FilterBarDisplayWrapper sticky={this.state.sticky}>
-                                    {this.renderFilterPanel()}
-                                </FilterBarDisplayWrapper>}
+                              <FilterBarDisplayWrapper sticky={this.state.sticky}>
+                                  {this.renderFilterPanel()}
+                              </FilterBarDisplayWrapper>}
                         </Sticky>
                     </FilterPanelWrapper>
 
@@ -763,8 +764,8 @@ class Landing extends Component {
                           </MapOuterContainer>
                          <WithMapCardsContainer>
                             <div>
-                            <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
-                            <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
+                              <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
+                              <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
                             </div>
                             <FooterOuterWrapper>
                               <FooterWrapper>
