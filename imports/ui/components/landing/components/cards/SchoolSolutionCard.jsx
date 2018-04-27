@@ -38,8 +38,7 @@ const styles = {
 
 const SolutionCardOuterWrapper = styled.div`
   transition: 0.1s background-color ease-in, 0.1s height ease-in;
-  height: ${props => props.active ? 240 : 180}px;
-  height: 240px;
+  height: 180px;
   position: relative;
   max-width: 200px;
   min-width: 0;
@@ -60,7 +59,7 @@ const SolutionCardWrapper = styled.article`
   cursor: pointer;
   background-image: url('${props => props.bgImage}');
   padding: ${helpers.rhythmDiv * 2}px;
-  height: ${props => props.active ? 240 : 180}px;
+  height: 100%;
   margin: 0;
   // margin-left: ${props => props.marginLeft}px;
   // margin-top: ${props => props.marginTop}px;

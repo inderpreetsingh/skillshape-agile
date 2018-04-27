@@ -7,6 +7,8 @@ import PrimaryButton from '../../buttons/PrimaryButton.jsx';
 import SchoolSolutionCard from '../../cards/SchoolSolutionCard.jsx';
 import SchoolSolutionSlider from './SchoolCardsSlider.jsx';
 
+import ContactUsDialogBox from '/imports/ui/components/landing/components/dialogs/ContactUsDialogBox.jsx';
+
 import * as helpers from '../../jss/helpers.js';
 
 const BoxWrapper = styled.div`
@@ -29,6 +31,8 @@ const BoxWrapper = styled.div`
 
 const BoxInnerWrapper = styled.div`
   ${helpers.flexCenter}
+  padding: ${helpers.rhythmDiv * 2}px;
+  justify-content: space-between;
   width: 100%;
 
   @media screen and (max-width: ${helpers.tablet}px) {
@@ -140,9 +144,8 @@ const SolutionContentWrapper = styled.div`
   ${helpers.flexCenter};
   flex-direction: column;
   padding: 0 ${helpers.rhythmDiv * 2}px;
-  max-width: 450px;
-
-  min-height: 300px;
+  max-width: 500px;
+  min-height: 400px;
   width: 100%;
   position: relative;
 
@@ -155,6 +158,7 @@ const SolutionContent = styled.div`
   position: absolute;
   transition: .2s opacity ease-in-out;
   opacity: ${props => props.showContent ? 1 : 0};
+  z-index: ${props => props.showContent ? 1 : 0};
 `;
 
 
@@ -242,6 +246,12 @@ class SolutionBox extends Component {
     showCards: true,
   }
 
+  handleDialogBoxState = (dialogBoxName,state) => {
+    this.setState({
+      [dialogBoxName] : state
+    })
+  }
+
   handleArrowClick = (arrow) => {
     let nextSolution = this.state.currentSolution;
     if(arrow === 'left') {
@@ -271,6 +281,7 @@ class SolutionBox extends Component {
         this.setState({showCards: true});
     }
   }
+
   handleMouseEvent = (state) => {
     this.setState({
       showArrows: state
@@ -292,9 +303,10 @@ class SolutionBox extends Component {
   render() {
     const {props} = this;
     return(<BoxWrapper firstBox={props.firstBox}>
+        {this.state.contactDialog && <ContactUsDialogBox open={this.state.contactDialog} onClose={() => this.handleDialogBoxState('contactDialog',false)}/>}
         <Problem>
           <MyProblemWrapper>
-            <ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber>
+            {/*<ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber> */}
             <ProblemTitle>{props.title}</ProblemTitle>
           </MyProblemWrapper>
         </Problem>
@@ -330,7 +342,7 @@ class SolutionBox extends Component {
             </Arrows>
             {props.cardsData && props.cardsData.map((card,i) => {
               return(<SolutionContent key={i} showContent={this.state.currentSolution === i}>
-                <SolutionNumber>Solution #{props.solutionIndex}</SolutionNumber>
+                {/*<SolutionNumber>Solution #{props.solutionIndex}</SolutionNumber> */}
                 <Title firstBox={props.firstBox}> {card.title} </Title>
 
                 <Tagline>
@@ -343,7 +355,7 @@ class SolutionBox extends Component {
 
                 <ActionArea>
                   <ButtonWrapper marginRight={helpers.rhythmDiv * 2}>
-                    <PrimaryButton noMarginBottom onClick={props.onKnowMoreButtonClick} label="Know more" />
+                    <PrimaryButton noMarginBottom onClick={() => this.handleDialogBoxState('contactDialog',true)} label="Any doubts?" />
                   </ButtonWrapper>
                   <ButtonWrapper>
                     <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>
