@@ -1,6 +1,7 @@
 import ClassTimes from "../fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import School from "/imports/api/school/fields";
+import ClassType from "/imports/api/classType/fields";
 
 Meteor.publish("classTimes.getclassTimes", function({ schoolId, classTypeId }) {
     let cursor = ClassTimes.find({ schoolId, classTypeId });
@@ -12,7 +13,7 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
     let endDate = '';
     let result = [];
     let school;
-    console.log("schoolId, classTypeId, calendarStartDate, calendarEndDate, view", schoolId, classTypeId, calendarStartDate, calendarEndDate, view)
+    // console.log("schoolId, classTypeId, calendarStartDate, calendarEndDate, view", schoolId, classTypeId, calendarStartDate, calendarEndDate, view)
     if (calendarStartDate && calendarEndDate) {
         startDate = new Date(calendarStartDate);
         endDate = new Date(calendarEndDate);
@@ -72,13 +73,15 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
         if(schoolIds  && schoolIds.length > 0) {
             condition['$or'].push({schoolId: { $in: schoolIds }});
         }
+        console.log("schoolIds====>",schoolIds)
         let classTimeCursor = ClassTimes.find(condition);
+        let classTypeData = ClassType.find({schoolId: { $in: schoolIds }})
         console.log("view", view);
-        console.log("schoolId", schoolId);
-        console.log("condition", JSON.stringify(condition));
         result.push(classInterestCursor);
         result.push(classTimeCursor);
+        result.push(classTypeData);
     } else {
+        // User is not login then show only class times of that School only.
         let schoolIds= [];
         if(school) {
             schoolIds.push(school._id);
