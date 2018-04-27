@@ -20,6 +20,7 @@ class SideNav extends Component {
         termsOfServiceDialogBox: false,
         emailConfirmationDialogBox: false,
         userData: {},
+        userEmail: '',
         isBusy:false,
         errorText: null,
         changePasswordDialogBox:false
@@ -27,8 +28,10 @@ class SideNav extends Component {
 
     componentWillMount() {
         Events.on("registerAsSchool", "123#567",(data) => {
-          let {userType} = data;
-          this.handleSignUpDialogBoxState(true, userType);
+          let {userType, userEmail} = data;
+          console.info(userType,userEmail);
+          //debugger;
+          this.handleSignUpDialogBoxState(true, userType, userEmail);
         })
         // This will listen if terms and services not accepted by User.
         Events.on("acceptTermsAndServices", "123#567",(data) => {
@@ -43,8 +46,8 @@ class SideNav extends Component {
 
     unsetError = () =>  this.setState({errorText: null});
 
-    handleSignUpDialogBoxState = (state, userType) => {
-        this.setState({signUpDialogBox: state, userData: { userType: userType}, errorText: null});
+    handleSignUpDialogBoxState = (state, userType, userEmail) => {
+        this.setState({signUpDialogBox: state, userData: { userType: userType}, userEmail: userEmail, errorText: null});
     }
     handleChangePasswordDialogBoxState = (state,message) => {
         const { toastr } = this.props;
@@ -164,6 +167,7 @@ class SideNav extends Component {
     render() {
         const { currentUser } = this.props;
         console.log("SideNav state -->>>",this.state);
+        debugger;
         return (
             <Fragment>
                 {!currentUser && this.state.signUpDialogBox &&
@@ -173,6 +177,7 @@ class SideNav extends Component {
                         onSubmit={this.handleSignUpSubmit}
                         errorText={this.state.errorText}
                         unsetError={this.unsetError}
+                        userEmail={this.state.userEmail}
                         onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
                         onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
 
