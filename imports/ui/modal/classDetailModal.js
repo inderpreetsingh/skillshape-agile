@@ -359,7 +359,7 @@ class ClassDetailModal extends React.Component{
                                 <Grid item xs={12} style={{padding: '16px'}}>
                                     { classTypeData && classTypeData.ageMin && <Typography type="caption">Age:{classTypeData.ageMin}</Typography>}
                                     { classTypeData && classTypeData.gender && (classTypeData.gender !== "All") && <Typography type="caption">{classTypeData.gender}</Typography>}
-                                    { classTypeData && classTypeData.experienceLevel && classTypeData.experienceLevel  == "All" ?  <Typography type="caption">Experience: All levels are welcomed</Typography> : <Typography type="caption">{classTypeData.experienceLevel && `Experience: ${classTypeData.experienceLevel}`}</Typography>}
+                                    { classTypeData && classTypeData.experienceLevel && classTypeData.experienceLevel  == "All" ?  <Typography type="caption">Experience: All levels are welcomed</Typography> : <Typography type="caption">{classTypeData && classTypeData.experienceLevel && `Experience: ${classTypeData.experienceLevel}`}</Typography>}
                                 </Grid>
                                 {/*<Grid item xs={6}>
                                     <div className={classes.iconWithDetailContainer}>
