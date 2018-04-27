@@ -12,7 +12,7 @@ const ONE_TIME = 'onetime';
 const ClockOuterWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
-  max-width: ${helpers.rhythmDiv * 20}px;
+  max-width: 180px;
   overflow: hidden;
   width: 100%;
   height: 100%;
@@ -84,6 +84,12 @@ const DayDateContainer = styled.div`
   min-width: 50px;
 `;
 
+const MutipleDatesContainer = DayDateContainer.extend`
+  position: relative;
+  ${helpers.flexCenter}
+  min-height: 32px;
+`;
+
 const DayDateInfo = styled.p`
   display: inline-block;
   font-style: italic;
@@ -95,6 +101,11 @@ const DayDateInfo = styled.p`
   opacity: 1;
   transition: opacity .2s ease-out;
   text-transform: capitalize;
+`;
+
+const CurrentDate = DayDateInfo.extend`
+  position: absolute;
+  opacity: ${props => props.visible ? 1 : 0};
 `;
 
 
@@ -153,9 +164,9 @@ const MyClock = (props) => (<MyClockWrapper
       <TimePeriod>{props.schedule.timePeriod  || props.eventStartTime && props.formatAmPm(props.eventStartTime)}</TimePeriod>
     </TimeContainer>
   </ClockWrapper>
-  {props.scheduleType && <DayDateContainer>
+  {props.scheduleType && props.clockType !== 'multiple' && <DayDateContainer>
     <DayDateInfo clockType={props.clockType}>
-      <Date>{props.day} ({props.formattedDate})</Date>
+      <Date>{props.day}, {props.formattedDate}</Date>
       </DayDateInfo>
     </DayDateContainer>}
 </MyClockWrapper>);
@@ -223,11 +234,11 @@ class ClassTimeNewClock extends Component {
                   noOfDots={this.props.scheduleData.length}
                   dotColor={this.props.clockProps.dotColor}
                   onDotClick={this.handleClockClick} /></DotsWrapper> }
-              {/*scheduleType && scheduleType.toLowerCase() !== ONE_TIME && <DayDateContainer>
-                <DayDateInfo clockType={type} visible>
-                  {currentDay}
-                </DayDateInfo>
-              </DayDateContainer>*/}
+              {scheduleType && type === 'multiple' && <MutipleDatesContainer>
+                {scheduleData.map((schedule,i) => (<CurrentDate clockType={type} visible={i === this.state.currentClockIndex}>
+                  {currentDay}, {this.formatDate(schedule.date || schedule.startTime)}
+                </CurrentDate>))}
+              </MutipleDatesContainer>}
         </ClockOuterWrapper>)
     }
 }

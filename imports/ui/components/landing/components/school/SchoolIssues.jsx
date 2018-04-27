@@ -25,7 +25,8 @@ const OuterWrapper = styled.div`
 const Wrapper = styled.div`
   max-width: 100vw;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  min-height: 600px;
   position: relative;
   background-color: ${props => props.bgColor};
   background-image: url('${props => props.bgImage}');
@@ -35,14 +36,9 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media screen and (max-width: ${helpers.tablet}px) {
-    min-height: 100vh;
-    height: 100%;
-  }
-
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-top: 0;
-    height: 100vh;
+    min-height: auto;
   }
 `;
 
@@ -61,6 +57,7 @@ const Avatar = styled.div`
   position: absolute;
   bottom: 8px;
   left: 30px;
+  z-index: 4;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     display: none;
@@ -72,6 +69,7 @@ const AvatarSmallScreen = styled.div`
   bottom: 8px;
   left: 30px;
   display: none;
+  z-index: 4;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     display: block;

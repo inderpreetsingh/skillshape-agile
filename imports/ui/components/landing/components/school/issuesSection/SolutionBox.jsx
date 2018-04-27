@@ -7,6 +7,8 @@ import PrimaryButton from '../../buttons/PrimaryButton.jsx';
 import SchoolSolutionCard from '../../cards/SchoolSolutionCard.jsx';
 import SchoolSolutionSlider from './SchoolCardsSlider.jsx';
 
+import ContactUsDialogBox from '/imports/ui/components/landing/components/dialogs/ContactUsDialogBox.jsx';
+
 import * as helpers from '../../jss/helpers.js';
 
 const BoxWrapper = styled.div`
@@ -25,14 +27,21 @@ const BoxWrapper = styled.div`
   @media screen and (max-width: ${helpers.mobile}px) {
     max-width: 500px;
   }
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    justify-content: center;
+  }
 `;
 
 const BoxInnerWrapper = styled.div`
   ${helpers.flexCenter}
+  padding: ${helpers.rhythmDiv * 2}px;
+  justify-content: space-between;
   width: 100%;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     flex-direction: column-reverse;
+    padding: 0 ${helpers.rhythmDiv * 2}px;
   }
 `;
 
@@ -58,7 +67,7 @@ const Title = styled.h2`
   font-weight: 500;
   line-height: 1;
   margin: 0;
-  @media screen and (max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
     font-size: ${helpers.baseFontSize * 1.5}px;
   }
 `;
@@ -72,6 +81,10 @@ const Tagline = styled.h3`
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 4}px;
   line-height: 1;
+
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    font-size: 16px;
+  }
 `;
 
 const Description = styled.p`
@@ -80,26 +93,32 @@ const Description = styled.p`
   font-size: 24px;
   font-family: ${helpers.specialFont};
   margin-bottom: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    font-size: 20px;
+  }
 `;
 
 SchoolSolutionCardsWrapper = styled.div`
   ${helpers.flexCenter}
   width: 100%;
-  max-width: ${464 + 2 * helpers.rhythmDiv * 2}px;
-  flex-wrap: wrap;
   justify-content: flex-start;
-  flex-shrink: 0;
+`;
+
+SchoolSolutionCardsOuterWrapper = styled.div`
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   padding: 0 ${helpers.rhythmDiv * 2}px;
   margin-top: ${helpers.rhythmDiv * 2}px;
-
-  @media screen and (max-width: ${helpers.tablet}px) {
-    // margin: ${helpers.rhythmDiv * 2}px auto;
-  }
+  flex-shrink: 1;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     display: none;
   }
 `;
+
 
 SchoolSolutionSliderWrapper = styled.div`
   display: none;
@@ -127,6 +146,7 @@ const ActionArea = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-bottom: 0;
+    flex-direction: column;
   }
 
 `;
@@ -134,27 +154,39 @@ const ActionArea = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   margin-right: ${props => props.marginRight}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: 100%;
+    margin-bottom: ${helpers.rhythmDiv}px;
+  }
 `;
 
 const SolutionContentWrapper = styled.div`
   ${helpers.flexCenter};
   flex-direction: column;
   padding: 0 ${helpers.rhythmDiv * 2}px;
-  max-width: 450px;
-
+  max-width: 500px;
   min-height: 300px;
   width: 100%;
+  flex-shrink: 1;
   position: relative;
 
   @media screen and (max-width: ${helpers.tablet}px) {
+    justify-content: flex-start;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
   }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    justify-content: flex-start;
+  }
 `;
+
 
 const SolutionContent = styled.div`
   position: absolute;
   transition: .2s opacity ease-in-out;
   opacity: ${props => props.showContent ? 1 : 0};
+  z-index: ${props => props.showContent ? 1 : 0};
 `;
 
 
@@ -173,6 +205,11 @@ const Problem = styled.div`
   justify-content: center;
   width: 100%;
   margin: ${helpers.rhythmDiv * 4}px 0;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    margin-top: 0;
+    margin: ${helpers.rhythmDiv * 2}px 0;
+  }
 `;
 
 const MyProblemWrapper = styled.div`
@@ -180,13 +217,13 @@ const MyProblemWrapper = styled.div`
   flex-direction: column;
 `;
 
-const ProblemNumber = styled.p`
-  margin: 0;
-  color: ${helpers.danger};
-  font-size: 28px;
-  font-family: ${helpers.specialFont};
-  line-height: 1;
-`;
+// const ProblemNumber = styled.p`
+//   margin: 0;
+//   color: ${helpers.danger};
+//   font-size: 28px;
+//   font-family: ${helpers.specialFont};
+//   line-height: 1;
+// `;
 
 const ProblemTitle = styled.h2`
   margin: 0;
@@ -195,18 +232,29 @@ const ProblemTitle = styled.h2`
   font-family: ${helpers.specialFont};
   font-weight: 600;
   line-height: 1;
+  text-align: center;
+
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    font-size: 32px;
+  }
 `;
 
 const Arrows = styled.div`
   position: absolute;
   width: 100%;
+  height: 100%;
+  top: 40px;
+  left: 0;
+  bottom: 0;
+  right: 0;
   font-size: 60px;
   font-family: ${helpers.specialFont};
   font-weight: 300;
   color: ${helpers.primaryColor};
-  ${helpers.flexCenter}
   transition: .1s linear opacity;
   opacity: ${props => props.showArrows ? 1 : 0};
+  ${helpers.flexCenter};
+  align-items: flex-start;
 `;
 
 const LeftArrow = styled.p`
@@ -215,6 +263,7 @@ const LeftArrow = styled.p`
   position: relative;
   left: -30px;
   cursor: pointer;
+  z-index: 3;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     left: -15px;
@@ -222,14 +271,17 @@ const LeftArrow = styled.p`
 `;
 
 const RightArrow = styled.p`
+  width: 100%;
   margin: 0;
-  right: 0;
   position: relative;
-  right: -30px;
+  right: -20px;
   cursor: pointer;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 3;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    right: -15px;
+    right: -10px;
   }
 `;
 const TOTAL_NUMBER_OF_SOLUTIONS = 3;
@@ -240,6 +292,12 @@ class SolutionBox extends Component {
     currentSolution: 0,
     showArrows: false,
     showCards: true,
+  }
+
+  handleDialogBoxState = (dialogBoxName,state) => {
+    this.setState({
+      [dialogBoxName] : state
+    })
   }
 
   handleArrowClick = (arrow) => {
@@ -271,6 +329,7 @@ class SolutionBox extends Component {
         this.setState({showCards: true});
     }
   }
+
   handleMouseEvent = (state) => {
     this.setState({
       showArrows: state
@@ -292,25 +351,42 @@ class SolutionBox extends Component {
   render() {
     const {props} = this;
     return(<BoxWrapper firstBox={props.firstBox}>
+        {this.state.contactDialog && <ContactUsDialogBox open={this.state.contactDialog} onClose={() => this.handleDialogBoxState('contactDialog',false)}/>}
         <Problem>
           <MyProblemWrapper>
-            <ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber>
+            {/*<ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber> */}
             <ProblemTitle>{props.title}</ProblemTitle>
           </MyProblemWrapper>
         </Problem>
         <BoxInnerWrapper>
-          {this.state.showCards && <SchoolSolutionCardsWrapper>
-            {props.cardsData && props.cardsData.map((card,i) => (
-              <SchoolSolutionCard
-                key={i}
-                {...card}
-                downwards={i === 2 || i === 3}
-                active={i === this.state.currentSolution}
-                noMarginBotton={i === 2 || i === 3}
-                onCardClick={() => this.handleSolutionChange(i)}
-                cardBgColor={props.cardBgColor}/>
-            ))}
-          </SchoolSolutionCardsWrapper>}
+          <SchoolSolutionCardsOuterWrapper>
+            {this.state.showCards && <SchoolSolutionCardsWrapper>
+              {props.cardsData && props.cardsData.map((card,i) => {
+                  if(i == 0 || i == 1) {
+                    return (<SchoolSolutionCard
+                      key={i}
+                      {...card}
+                      active={i === this.state.currentSolution}
+                      noMarginBotton={i === 2 || i === 3}
+                      onCardClick={() => this.handleSolutionChange(i)}
+                      cardBgColor={props.cardBgColor}/>)
+                  }
+              })}
+              </SchoolSolutionCardsWrapper>}
+            {this.state.showCards && <SchoolSolutionCardsWrapper>
+                {props.cardsData && props.cardsData.map((card,i) => {
+                    if(i == 2 || i == 3) {
+                      return (<SchoolSolutionCard
+                        key={i}
+                        {...card}
+                        active={i === this.state.currentSolution}
+                        noMarginBotton={i === 2 || i === 3}
+                        onCardClick={() => this.handleSolutionChange(i)}
+                        cardBgColor={props.cardBgColor}/>)
+                    }
+                })}
+              </SchoolSolutionCardsWrapper>}
+            </SchoolSolutionCardsOuterWrapper>
 
           {/*this.state.showCards && <SchoolSolutionSliderWrapper>
             <SchoolSolutionSlider
@@ -330,7 +406,7 @@ class SolutionBox extends Component {
             </Arrows>
             {props.cardsData && props.cardsData.map((card,i) => {
               return(<SolutionContent key={i} showContent={this.state.currentSolution === i}>
-                <SolutionNumber>Solution #{props.solutionIndex}</SolutionNumber>
+                {/*<SolutionNumber>Solution #{props.solutionIndex}</SolutionNumber> */}
                 <Title firstBox={props.firstBox}> {card.title} </Title>
 
                 <Tagline>
@@ -343,7 +419,7 @@ class SolutionBox extends Component {
 
                 <ActionArea>
                   <ButtonWrapper marginRight={helpers.rhythmDiv * 2}>
-                    <PrimaryButton noMarginBottom onClick={props.onKnowMoreButtonClick} label="Know more" />
+                    <PrimaryButton noMarginBottom onClick={() => this.handleDialogBoxState('contactDialog',true)} label="Any doubts?" />
                   </ButtonWrapper>
                   <ButtonWrapper>
                     <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>

@@ -182,7 +182,7 @@ class SignUpDialogBox extends Component {
 
     state = {
         name: "",
-        email: "",
+        email: this.props.userEmail,
         sendMeSkillShapeNotification: true,
         robotOption: false,
         errorEmail: false,

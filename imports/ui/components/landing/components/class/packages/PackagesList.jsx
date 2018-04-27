@@ -72,14 +72,14 @@ const PackagesWrapper = styled.div`
   z-index: 1;
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
-    max-width: 100%;
+    max-width: 550px;
     padding: ${helpers.rhythmDiv}px;
     align-items: center;
   }
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    max-width: 500px;
-    width: 100%;
+    // max-width: 500px;
+    // width: 100%;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
