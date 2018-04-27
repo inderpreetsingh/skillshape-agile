@@ -223,6 +223,7 @@ class SchoolMemberInfo extends Component {
               memberInfo={ memberInfo }
               classTypeData={ this.props.classTypeData }
               reRender={this.props.handleMemberDetailsToRightPanel}
+              schoolId={this.props.memberInfo && this.props.memberInfo.schoolId}
           />
         }
         <Grid
