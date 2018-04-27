@@ -199,7 +199,8 @@ class ClassDetailModal extends React.Component{
     // console.log("ClassDetailModal render state -->>", this.state);
     const { isLoading, error, school, classType, classTimes, location, addToMyCalender } = this.state;
     const { eventData, fullScreen, classes, clickedDate } = this.props;
-    console.log("eventData____________", eventData)
+    console.log("eventData____________", eventData);
+    let classTypeData = ClassType.findOne({_id:eventData.classTypeId});
     return (
         <Dialog
           fullScreen={fullScreen}
@@ -356,9 +357,9 @@ class ClassDetailModal extends React.Component{
                                     </div>
                                 </Grid>
                                 <Grid item xs={12} style={{padding: '16px'}}>
-                                    { eventData && eventData.age && <Typography type="caption">Age:{eventData.age}</Typography>}
-                                    { eventData && eventData.gender && (eventData.gender !== "All") && <Typography type="caption">{eventData.gender}</Typography>}
-                                    { eventData && eventData.experienceLevel && eventData.experienceLevel  == "All" ?  <Typography type="caption">Experience: All levels are welcomed</Typography> : <Typography>{eventData.experienceLevel && `Experience: ${eventData.experienceLevel}`}</Typography>}
+                                    { classTypeData && classTypeData.ageMin && <Typography type="caption">Age:{classTypeData.ageMin}</Typography>}
+                                    { classTypeData && classTypeData.gender && (classTypeData.gender !== "All") && <Typography type="caption">{classTypeData.gender}</Typography>}
+                                    { classTypeData && classTypeData.experienceLevel && classTypeData.experienceLevel  == "All" ?  <Typography type="caption">Experience: All levels are welcomed</Typography> : <Typography type="caption">{classTypeData.experienceLevel && `Experience: ${classTypeData.experienceLevel}`}</Typography>}
                                 </Grid>
                                 {/*<Grid item xs={6}>
                                     <div className={classes.iconWithDetailContainer}>
