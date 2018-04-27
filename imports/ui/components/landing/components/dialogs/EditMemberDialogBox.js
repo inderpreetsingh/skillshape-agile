@@ -19,7 +19,7 @@ import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import ClassType from "/imports/api/classType/fields";
-
+import { toastrModal } from '/imports/util';
 
 
 import Dialog , {
@@ -52,7 +52,7 @@ class EditMemberDialogBox extends Component {
             birthYear: memberInfo.birthYear || 1990, // default value....
             firstName:memberInfo.firstName,
             lastName:memberInfo.lastName || "",
-            email:memberInfo.email,
+            email:memberInfo.email || null,
             phone:memberInfo.phone,
             birthYear:parseInt(memberInfo.birthYear) || "",
             classTypeData: ClassType.find({_id: {$in: memberInfo.classTypeIds || []}}).fetch(),
@@ -79,19 +79,24 @@ class EditMemberDialogBox extends Component {
         payload.phone = this.state.phone;
         payload.birthYear = this.state.birthYear;
         payload.classTypeIds = this.state.selectedClassTypes;
+        payload.email = this.state.email;
+        payload.schoolId = this.props.schoolId;
+        payload.studentWithoutEmail = get(memberInfo, "studentWithoutEmail");
         this.setState({isLoading: true});
         Meteor.call(
             "schoolMemberDetails.editSchoolMemberDetails", { doc_id: memberInfo._id, doc: payload },
             (err, res) => {
+                const {toastr} = this.props;
                 if (res) {
                     console.log("Member's details editing done!!", res);
+                    this.props.onModalClose();
                 }
                 if (err) {
                     console.error("err", err);
+                    toastr.error(`${err.reason || err.message}`, "Error");
                 }
                 this.setState({isLoading: false});
                 // Close Modal
-                this.props.onModalClose();
                 this.props.reRender(memberInfo._id);
             }
         );
@@ -104,7 +109,8 @@ class EditMemberDialogBox extends Component {
             open,
             fullScreen,
             onModalClose,
-            onEditButtonClick
+            onEditButtonClick,
+            memberInfo
         } = this.props;
 
         console.log("state of EditMemberDialogBox",this.state)
@@ -163,7 +169,8 @@ class EditMemberDialogBox extends Component {
                                       margin="normal"
                                       fullWidth
                                       value={this.state.email}
-                                      disabled={true}
+                                      required={true}
+                                      disabled={memberInfo.email}
                                       onChange={(event) => this.setState({ email: event.target.value })}
 
                                     />
@@ -233,4 +240,4 @@ EditMemberDialogBox.propTypes = {
     open: PropTypes.bool,
 }
 
-export default withMobileDialog()(withStyles(styles)(EditMemberDialogBox));
+export default withMobileDialog()(withStyles(styles)(toastrModal(EditMemberDialogBox)));
