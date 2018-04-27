@@ -26,6 +26,7 @@ const Wrapper = styled.div`
   max-width: 100vw;
   width: 100%;
   height: 100vh;
+  min-height: 600px;
   position: relative;
   background-color: ${props => props.bgColor};
   background-image: url('${props => props.bgImage}');
@@ -37,6 +38,7 @@ const Wrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-top: 0;
+    min-height: auto;
   }
 `;
 

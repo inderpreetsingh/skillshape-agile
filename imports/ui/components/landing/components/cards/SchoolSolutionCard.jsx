@@ -134,6 +134,10 @@ const CardTitle = styled.h3`
   :first-letter {
     text-transform: capitalize;
   }
+
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
+    font-size: ${helpers.baseFontSize * 1.5}px;
+  }
 `;
 
 const CardContentTitle = styled.h4`
