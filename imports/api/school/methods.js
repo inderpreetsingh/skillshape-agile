@@ -487,6 +487,23 @@ Meteor.methods({
         );
         let schoolEditViewLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
         return schoolEditViewLink;
+    },
+    "school.addNewMemberWithoutEmail": function(doc) {
+        const schoolAdminRec = Meteor.users.findOne({ "profile.schoolId": doc.schoolId });
+        const currentUserRec = Meteor.users.findOne({ _id: this.userId });
+        let schoolIds = [];
+        if (currentUserRec) {
+            schoolIds = get(currentUserRec, "profile.schoolId");
+        }
+        // Member insertion is allowed only to School Admin.
+        if (this.userId && schoolAdminRec && (schoolAdminRec._id == this.userId || _.contains(schoolIds, doc.schoolId))) {
+            doc.createdBy = this.userId;
+            doc.inviteAccepted = false;
+            let memberId = SchoolMemberDetails.insert(doc);
+            return { addedNewMember: true };
+        } else {
+            throw new Meteor.Error("Access Denied!!!!");
+        }
     }
 });
 

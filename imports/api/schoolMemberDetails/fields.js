@@ -76,7 +76,8 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
         optional: true
     },
     activeUserId: {
-        type: String
+        type: String,
+        optional: true
     },
     inviteAccepted: {
         type: Boolean
@@ -89,7 +90,12 @@ SchoolMemberDetails.attachSchema(new SimpleSchema({
     birthYear: {
         type: String,
         optional: true
+    },
+    studentWithoutEmail: {
+        type: Boolean,
+        optional: true
     }
+
 }));
 
 Meteor.startup(function() {
