@@ -57,6 +57,7 @@ const Avatar = styled.div`
   position: absolute;
   bottom: 8px;
   left: 30px;
+  z-index: 4;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     display: none;
@@ -68,6 +69,7 @@ const AvatarSmallScreen = styled.div`
   bottom: 8px;
   left: 30px;
   display: none;
+  z-index: 4;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     display: block;
