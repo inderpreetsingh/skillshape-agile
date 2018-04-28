@@ -166,8 +166,7 @@ class SideNav extends Component {
     }
     render() {
         const { currentUser } = this.props;
-        console.log("SideNav state -->>>",this.state);
-        debugger;
+        // console.log("SideNav state -->>>",this.state);
         return (
             <Fragment>
                 {!currentUser && this.state.signUpDialogBox &&

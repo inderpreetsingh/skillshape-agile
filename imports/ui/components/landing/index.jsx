@@ -647,6 +647,7 @@ class Landing extends Component {
 
     checkIfAnyFilterIsApplied = () => {
       const {filters} = this.state;
+      // debugger;
       if(isEmpty(filters)) {
         return false;
       }
@@ -733,8 +734,8 @@ class Landing extends Component {
                     {/*Cards List */}
                     <Element name="content-container" className="element homepage-content">
                         {/* Applied Filters */}
-                        <ClassTypeOuterWrapper padding={this.checkIfAnyFilterIsApplied() ? '96' : '0'}>
-                          {this.state.filters && this.showAppliedTopFilter()}
+                        <ClassTypeOuterWrapper padding={!this.state.mapView && this.checkIfAnyFilterIsApplied() ? '96' : '0'}>
+                          {(!this.state.mapView && this.checkIfAnyFilterIsApplied()) && this.showAppliedTopFilter()}
                           <ClassTypeList
                               defaultLocation={this.state.defaultLocation}
                               mapView={this.state.mapView}
@@ -742,6 +743,7 @@ class Landing extends Component {
                               handleSeeMore={this.handleSeeMore}
                               splitByCategory={true}
                               setSchoolIdFilter={this.setSchoolIdFilter}
+                              appliedTopFilter={this.checkIfAnyFilterIsApplied() && this.showAppliedTopFilter()}
                               removeAllFilters={this.removeAllFilters}
                               {...this.props}
                           />

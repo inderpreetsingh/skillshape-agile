@@ -31,7 +31,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 
 const MainContentWrapper = styled.div`
-
+  // margin-top: ${props => props.isAnyFilterApplied ? -56 : 0}px;
 `;
 
 const PreloaderWrapper = styled.div`
@@ -191,6 +191,7 @@ class ClassTypeList extends Component {
         } else if(isEmpty(classTypeData)) {
 
             return <NoResultContainer>
+                {console.log(this.props.appliedTopFilter,"appliedTopFilter...")}
                 <NoResults
                     removeAllFiltersButtonClick={this.props.removeAllFilters}
                     addYourSchoolButtonClick={this.handleAddSchool}
@@ -205,8 +206,7 @@ class ClassTypeList extends Component {
 	render() {
 		const { mapView, classTypeData, reviewsData, skillCategoryData, splitByCategory, filters, isLoading, classTimesData } = this.props;
     console.log("ClassTypeList props -->>",this.props);
-    return (
-			<MainContentWrapper>
+    return (<MainContentWrapper>
 				{
 					mapView ? (
                 <ContentContainer >
@@ -221,6 +221,7 @@ class ClassTypeList extends Component {
 
                       <WithMapCardsContainer>
                           <div>
+                            {this.props.appliedTopFilter && React.cloneElement(this.props.appliedTopFilter)}
                             <CardsList
                               schoolData={this.props.schoolData}
                               mapView={this.props.mapView}

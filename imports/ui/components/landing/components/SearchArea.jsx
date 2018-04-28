@@ -128,7 +128,10 @@ const InputWrapper = styled.div`
 const InputsWrapper = styled.div`
   ${helpers.flexCenter}
   max-width: 100%;
-  padding: 0 ${helpers.rhythmDiv}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding: 0 ${helpers.rhythmDiv}px;
+  }
 `;
 
 const MapViewButtonWrapper = GenericButtonWrapper.extend`
