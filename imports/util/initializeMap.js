@@ -149,7 +149,7 @@ export function initializeMap(center) {
                   search: `?zoom=${map.getZoom()}&SWPoint=${SWPoint}&NEPoint=${NEPoint}`
                 })
             },countDebounce)();
-            countDebounce = 2000;
+            countDebounce = 5000;
         });
         return map;
     }
