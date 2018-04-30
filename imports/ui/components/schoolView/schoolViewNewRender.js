@@ -252,7 +252,7 @@ export default function() {
         console.info('---------- is publish...',this.props);
 
         return (
-            <DocumentTitle title={this.props.route.name}>
+            <DocumentTitle title={this.props.routeParams.slug}>
             <Wrapper className="content">
           {
             this.state.isLoading && <ContainerLoader />

@@ -45,6 +45,10 @@ class SchoolView extends SchoolViewBase {
       let currentCount = this.state.seeMoreCount;
       this.setState({seeMoreCount:(config.seeMoreCount + currentCount)})
     }
+    componentDidUpdate = () => {
+      document.title = this.props.routeParams.slug;
+    }
+
     render() {
         console.log(this.props,'This . route . location name school view render..');
         // if(this.props.route.name === 'SchoolViewDeveloping') {
