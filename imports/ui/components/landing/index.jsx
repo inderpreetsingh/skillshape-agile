@@ -667,8 +667,8 @@ class Landing extends Component {
         // console.log("Landing state -->>", this.state);
         // console.log("Landing props -->>", this.props);
         return (
-            <DocumentTitle title={this.props.route.name}>
                 <div>
+                {/*<DocumentTitle title={this.props.route.name}> */}
                     <FiltersDialogBox
                         open={this.state.filterPanelDialogBox}
                         onModalClose={() => this.handleFiltersDialogBoxState(false)}
@@ -810,8 +810,8 @@ class Landing extends Component {
                   }
                 </SwitchViewWrapper>
               */}
+              {/*</DocumentTitle> */}
                 </div>
-            </DocumentTitle>
         )
     }
 }

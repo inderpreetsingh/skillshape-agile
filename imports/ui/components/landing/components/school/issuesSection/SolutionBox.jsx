@@ -181,6 +181,10 @@ const SolutionContentWrapper = styled.div`
   }
 `;
 
+const SolutionInnerContent = styled.div`
+  display: flex;
+`;
+
 
 const SolutionContent = styled.div`
   position: absolute;
@@ -239,6 +243,8 @@ const ProblemTitle = styled.h2`
   }
 `;
 
+
+
 const Arrows = styled.div`
   position: absolute;
   width: 100%;
@@ -257,33 +263,26 @@ const Arrows = styled.div`
   align-items: flex-start;
 `;
 
-const LeftArrow = styled.p`
-  width: 100%;
-  margin: 0;
-  position: relative;
-  left: -30px;
-  cursor: pointer;
-  z-index: 3;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    left: -15px;
-  }
-`;
-
-const RightArrow = styled.p`
-  width: 100%;
-  margin: 0;
-  position: relative;
-  right: -20px;
-  cursor: pointer;
+const Arrow = styled.p`
   display: flex;
-  justify-content: flex-end;
-  z-index: 3;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    right: -10px;
-  }
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  align-items: center;
+  font-size: 60px;
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  color: ${helpers.primaryColor};
+  margin: 0 ${helpers.rhythmDiv}px;
+  padding: 0 ${helpers.rhythmDiv}px;
+  transition: .1s linear opacity;
+  opacity: ${props => props.show ? 1 : 0};
 `;
+
+const LeftArrow = Arrow.extend``;
+
+const RightArrow = Arrow.extend``;
+
 const TOTAL_NUMBER_OF_SOLUTIONS = 3;
 
 class SolutionBox extends Component {
@@ -351,7 +350,7 @@ class SolutionBox extends Component {
   render() {
     const {props} = this;
     return(<BoxWrapper firstBox={props.firstBox}>
-        {this.state.contactDialog && <ContactUsDialogBox open={this.state.contactDialog} onClose={() => this.handleDialogBoxState('contactDialog',false)}/>}
+        {this.state.contactDialog && <ContactUsDialogBox open={this.state.contactDialog} onModalClose={() => this.handleDialogBoxState('contactDialog',false)}/>}
         <Problem>
           <MyProblemWrapper>
             {/*<ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber> */}
@@ -400,31 +399,37 @@ class SolutionBox extends Component {
             onTouchStart={this.handleTouchStart}
             onMouseOver={() => this.handleMouseEvent(true)}
             onMouseOut={() => this.handleMouseEvent(false)}>
-            <Arrows showArrows={this.state.showArrows}>
+            {/* <Arrows showArrows={this.state.showArrows || !this.state.showCards}>
               <LeftArrow onClick={() => this.handleArrowClick('left')}> {'<'} </LeftArrow>
               <RightArrow onClick={() => this.handleArrowClick('right')}> {'>'} </RightArrow>
-            </Arrows>
+            </Arrows> */}
             {props.cardsData && props.cardsData.map((card,i) => {
               return(<SolutionContent key={i} showContent={this.state.currentSolution === i}>
-                {/*<SolutionNumber>Solution #{props.solutionIndex}</SolutionNumber> */}
-                <Title firstBox={props.firstBox}> {card.title} </Title>
+                <SolutionInnerContent>
+                  <Arrow show={this.state.showArrows} onClick={() => this.handleArrowClick('left')}> {'<'} </Arrow>
 
-                <Tagline>
-                  {card.tagline}
-                </Tagline>
+                  <div>
+                    <Title firstBox={props.firstBox}> {card.title} </Title>
+                    <Tagline>
+                      {card.tagline}
+                    </Tagline>
 
-                <Description>
-                  {card.content}
-                </Description>
+                    <Description>
+                      {card.content}
+                    </Description>
 
-                <ActionArea>
-                  <ButtonWrapper marginRight={helpers.rhythmDiv * 2}>
-                    <PrimaryButton noMarginBottom onClick={() => this.handleDialogBoxState('contactDialog',true)} label="Any doubts?" />
-                  </ButtonWrapper>
-                  <ButtonWrapper>
-                    <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>
-                  </ButtonWrapper>
-                </ActionArea>
+                    <ActionArea>
+                      <ButtonWrapper marginRight={helpers.rhythmDiv * 2}>
+                        <PrimaryButton noMarginBottom onClick={() => this.handleDialogBoxState('contactDialog',true)} label="Any doubts?" />
+                      </ButtonWrapper>
+                      <ButtonWrapper>
+                        <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>
+                      </ButtonWrapper>
+                    </ActionArea>
+                  </div>
+
+                  <Arrow show={this.state.showArrows} onClick={() => this.handleArrowClick('right')}> {'>'} </Arrow>
+                </SolutionInnerContent>
               </SolutionContent>)
             })}
             </SolutionContentWrapper>

@@ -29,11 +29,13 @@ class ClassTypeView extends Component {
         console.log("ClassTypeView .props-->>",this.props)
 
 		return(<Wrapper className="classtype-page">
+        {/*<DocumentTitle title={get(this.props,"params.classTypeName","untitled")}> */}
               <div>
                 <TopSearchBar {...this.props}/>
               </div>
       		    <ClassTypeContent {...this.props} />
         		<Footer/>
+          {/*  </DocumentTitle> */}
         	</Wrapper>
 		)
 	}

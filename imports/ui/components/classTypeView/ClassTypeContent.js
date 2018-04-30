@@ -345,6 +345,7 @@ class ClassTypeContent extends Component {
     }
 
     componentDidUpdate = () => {
+      // Need to directly set the document title somehow Document title is being overriden with the value from name prop of the react router
       setTimeout(() => {
         document.title = this.props.classTypeData ? this.props.classTypeData.name : this.props.params.classTypeName;
       });
@@ -380,8 +381,7 @@ class ClassTypeContent extends Component {
     const ourEmail = this.getOurEmail();
     const emailUsButton = ourEmail ? true : false;
     const isReviewsDataEmpty = isEmpty(reviewsData);
-		return (
-      <Fragment>
+		return (<div>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolData} ourEmail={ourEmail} open={this.state.emailUsDialog} currentUser={this.props.currentUser} onModalClose={(err, res) => this.handleDialogState('emailUsDialog',false, err, res)}/>}
           {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData && classTypeData.name)} reviewFor='class' reviewForId={classTypeData._id} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
@@ -515,7 +515,7 @@ class ClassTypeContent extends Component {
                   }
               </MainInnerFixedContainer>
 		        </Main>
-          </Fragment>
+          </div>
 		)
 	}
 }

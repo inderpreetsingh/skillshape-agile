@@ -14,6 +14,7 @@ import MySearchBar from './MySearchBar.jsx';
 
 import NearByClassesButton from './buttons/NearByClassesButton';
 import PrimaryButton from './buttons/PrimaryButton';
+import FormGhostButton from './buttons/FormGhostButton';
 import SecondaryButton from './buttons/SecondaryButton';
 
 import Grade from 'material-ui-icons/Grade';
@@ -198,14 +199,14 @@ const SearchInputsSection = (props) => (
 
     <ButtonsWrapper>
       <FilterButtonWrapper>
-        <PrimaryButton fullWidth icon iconName="tune" label="Filters" boxShadow noMarginBottom onClick={props.onFiltersButtonClick} />
+        <FormGhostButton darkGreyColor fullWidth icon iconName="tune" label="Filters" boxShadow noMarginBottom onClick={props.onFiltersButtonClick} />
       </FilterButtonWrapper>
 
       <MapViewButtonWrapper>
       {props.mapView ?
-        <PrimaryButton fullWidth noMarginBottom icon iconName="grid_on" label="List View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />
+        <FormGhostButton darkGreyColor fullWidth noMarginBottom icon iconName="grid_on" label="List View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />
         :
-        <PrimaryButton fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />}
+        <FormGhostButton darkGreyColor fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />}
       </MapViewButtonWrapper>
     </ButtonsWrapper>
 
