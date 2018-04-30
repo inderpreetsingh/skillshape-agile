@@ -1,6 +1,7 @@
 import React, {Fragment,Component} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Events from '/imports/util/events';
 
 import PrimaryButton from '../../buttons/PrimaryButton.jsx';
 
@@ -41,7 +42,8 @@ const BoxInnerWrapper = styled.div`
 
   @media screen and (max-width: ${helpers.tablet}px) {
     flex-direction: column-reverse;
-    padding: 0 ${helpers.rhythmDiv * 2}px;
+    // padding: 0 ${helpers.rhythmDiv * 2}px;
+    padding: 0;
   }
 `;
 
@@ -85,6 +87,10 @@ const Tagline = styled.h3`
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     font-size: 16px;
   }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+  }
 `;
 
 const Description = styled.p`
@@ -96,6 +102,10 @@ const Description = styled.p`
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     font-size: 20px;
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    font-size: 16px;
   }
 `;
 
@@ -243,8 +253,6 @@ const ProblemTitle = styled.h2`
   }
 `;
 
-
-
 const Arrows = styled.div`
   position: absolute;
   width: 100%;
@@ -266,14 +274,17 @@ const Arrows = styled.div`
 const Arrow = styled.p`
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  height: 100%;
+  // flex-grow: 1;
+  // flex-basis: 0;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
   align-items: center;
   font-size: 60px;
   font-family: ${helpers.specialFont};
   font-weight: 300;
   color: ${helpers.primaryColor};
-  margin: 0 ${helpers.rhythmDiv}px;
   padding: 0 ${helpers.rhythmDiv}px;
   transition: .1s linear opacity;
   opacity: ${props => props.show ? 1 : 0};
@@ -297,6 +308,10 @@ class SolutionBox extends Component {
     this.setState({
       [dialogBoxName] : state
     })
+  }
+
+  handleSignUpButtonClick = () => {
+    Events.trigger("registerAsSchool",{userType : 'School'});
   }
 
   handleArrowClick = (arrow) => {
@@ -399,10 +414,6 @@ class SolutionBox extends Component {
             onTouchStart={this.handleTouchStart}
             onMouseOver={() => this.handleMouseEvent(true)}
             onMouseOut={() => this.handleMouseEvent(false)}>
-            {/* <Arrows showArrows={this.state.showArrows || !this.state.showCards}>
-              <LeftArrow onClick={() => this.handleArrowClick('left')}> {'<'} </LeftArrow>
-              <RightArrow onClick={() => this.handleArrowClick('right')}> {'>'} </RightArrow>
-            </Arrows> */}
             {props.cardsData && props.cardsData.map((card,i) => {
               return(<SolutionContent key={i} showContent={this.state.currentSolution === i}>
                 <SolutionInnerContent>
@@ -423,7 +434,7 @@ class SolutionBox extends Component {
                         <PrimaryButton noMarginBottom onClick={() => this.handleDialogBoxState('contactDialog',true)} label="Any doubts?" />
                       </ButtonWrapper>
                       <ButtonWrapper>
-                        <PrimaryButton noMarginBottom onClick={props.onActionButtonClick} label="Get started"/>
+                        <PrimaryButton noMarginBottom onClick={this.handleSignUpButtonClick} label="Sign up"/>
                       </ButtonWrapper>
                     </ActionArea>
                   </div>

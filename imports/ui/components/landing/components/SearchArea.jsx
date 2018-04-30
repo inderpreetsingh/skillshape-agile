@@ -43,6 +43,7 @@ const SearchAreaPanel = styled.div`
 
    @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
      max-width: 500px;
+     padding-left: ${helpers.rhythmDiv}px;
      overflow-x: hidden;
   }
 `;
@@ -131,7 +132,9 @@ const InputsWrapper = styled.div`
   max-width: 100%;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    padding: 0 ${helpers.rhythmDiv}px;
+    padding-right: ${helpers.rhythmDiv}px;
+    margin: 0 auto;
+    max-width: 300px;
   }
 `;
 
@@ -199,14 +202,14 @@ const SearchInputsSection = (props) => (
 
     <ButtonsWrapper>
       <FilterButtonWrapper>
-        <FormGhostButton darkGreyColor fullWidth icon iconName="tune" label="Filters" boxShadow noMarginBottom onClick={props.onFiltersButtonClick} />
+        <PrimaryButton darkGreyColor fullWidth icon iconName="tune" label="Filters" boxShadow noMarginBottom onClick={props.onFiltersButtonClick} />
       </FilterButtonWrapper>
 
       <MapViewButtonWrapper>
       {props.mapView ?
-        <FormGhostButton darkGreyColor fullWidth noMarginBottom icon iconName="grid_on" label="List View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />
+        <PrimaryButton darkGreyColor fullWidth noMarginBottom icon iconName="grid_on" label="List View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />
         :
-        <FormGhostButton darkGreyColor fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />}
+        <PrimaryButton darkGreyColor fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />}
       </MapViewButtonWrapper>
     </ButtonsWrapper>
 
