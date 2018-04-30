@@ -93,7 +93,8 @@ class FullCalendar extends React.Component {
                     scheduleType: classTime.scheduleType,
                     name: classTime.name,
                     desc:classTime.desc,
-                    endDate:classTime.endDate
+                    endDate:classTime.endDate,
+                    allDay:false// This property affects whether an event's time is shown.
                 };
 
                 // Three type of class times seperated into different colors.
@@ -134,6 +135,9 @@ class FullCalendar extends React.Component {
                         for(let obj of scheduleData[key]) {
                             let temp = {...sevent};
                             temp.dow = [obj.day];
+                            // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
+                            temp.start = moment(obj.startTime).format("hh:mm");
+                            temp.end = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
                             temp.eventStartTime = moment(obj.startTime).format("hh:mm");
                             temp.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
                             temp.title = classTime.name + " " + temp.eventStartTime + " to " + temp.eventEndTime;
