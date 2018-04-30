@@ -27,15 +27,16 @@ const Wrapper = styled.div`
 class ClassTypeView extends Component {
     render() {
         console.log("ClassTypeView .props-->>",this.props)
-		return(<DocumentTitle title={get(this.props, "params.classTypeName", "Untitled")}>
-			     <Wrapper className="classtype-page">
+
+		return(<Wrapper className="classtype-page">
+        {/*<DocumentTitle title={get(this.props,"params.classTypeName","untitled")}> */}
               <div>
                 <TopSearchBar {...this.props}/>
               </div>
       		    <ClassTypeContent {...this.props} />
         		<Footer/>
+          {/*  </DocumentTitle> */}
         	</Wrapper>
-      </DocumentTitle>
 		)
 	}
 }
