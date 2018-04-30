@@ -40,7 +40,7 @@ export default Routes = componentLoader((props) => (
     <Route name="SkillShape" path="/" component={MainLayout} >
       <IndexRoute name="SkillShape" component={Landing} />
       <Route path="/classType-dev" name="classtype-dev" component={ClassType} />
-      <Route path="/classType/:classTypeName/:classTypeId" name="ClassType" component={ClassTypeView} />
+      <Route path="/classType/:classTypeName/:classTypeId" name="" component={ClassTypeView} />
       <Route path="/skillshape-for-school" name="Skillshape-for-school" component={School} />
 
       <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
