@@ -1,6 +1,7 @@
 import React, {Fragment,Component} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Swipe from 'react-easy-swipe';
 import Events from '/imports/util/events';
 
 import PrimaryButton from '../../buttons/PrimaryButton.jsx';
@@ -176,8 +177,8 @@ const SolutionContentWrapper = styled.div`
   flex-direction: column;
   padding: 0 ${helpers.rhythmDiv * 2}px;
   max-width: 500px;
-  min-height: 300px;
   width: 100%;
+  min-height: 300px;
   flex-shrink: 1;
   position: relative;
 
@@ -193,8 +194,8 @@ const SolutionContentWrapper = styled.div`
 
 const SolutionInnerContent = styled.div`
   display: flex;
+  width: 100%;
 `;
-
 
 const SolutionContent = styled.div`
   position: absolute;
@@ -203,6 +204,9 @@ const SolutionContent = styled.div`
   z-index: ${props => props.showContent ? 1 : 0};
 `;
 
+const SolutionContentArea = styled.div`
+  width: 100%;
+`;
 
 const SolutionWrapper = styled.div`
   position: relative;
@@ -230,6 +234,7 @@ const MyProblemWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 
 // const ProblemNumber = styled.p`
 //   margin: 0;
@@ -296,6 +301,19 @@ const RightArrow = Arrow.extend``;
 
 const TOTAL_NUMBER_OF_SOLUTIONS = 3;
 
+const MySwipe = styled.div`
+  width: 100%;
+`;
+
+let myPosition = {
+  initX : 0,
+  initY : 0,
+  currentX: 0,
+  currentY: 0,
+}
+
+const TOUCH_MOVE_THRESHOLD = 40;
+
 class SolutionBox extends Component {
 
   state = {
@@ -314,10 +332,11 @@ class SolutionBox extends Component {
     Events.trigger("registerAsSchool",{userType : 'School'});
   }
 
-  handleArrowClick = (arrow) => {
+  _getNextSolution = (direction) => {
     let nextSolution = this.state.currentSolution;
-    if(arrow === 'left') {
-      if(0 === nextSolution) {
+
+    if(direction === 'left') {
+      if(nextSolution === 0) {
         nextSolution = TOTAL_NUMBER_OF_SOLUTIONS;
       }else {
         nextSolution = --nextSolution;
@@ -325,8 +344,20 @@ class SolutionBox extends Component {
     }else {
       nextSolution = (++nextSolution) % (TOTAL_NUMBER_OF_SOLUTIONS + 1);
     }
+
+    return nextSolution;
+  }
+
+  _moveToSolution = (direction) => {
+    // get next solution with given direction.
+    const nextSolution = this._getNextSolution(direction);
+
     //debugger;
     this.handleSolutionChange(nextSolution);
+  }
+
+  handleArrowClick = (arrow) => {
+    this.moveToSolution(arrow);
   }
 
   handleSolutionChange = (currentSolution) => {
@@ -348,6 +379,38 @@ class SolutionBox extends Component {
     this.setState({
       showArrows: state
     });
+  }
+
+  handleTouchStart = (e) => {
+    console.log('handleTouchStart',e.touches[0].clientX);
+    this.touchStarted = true;
+    myPosition.initX = e.touches[0].clientX;
+  }
+
+  handleTouchMove = (e) => {
+    console.info('handle Touch Move',e.touches[0].clientX);
+    myPosition.currentX = e.touches[0].clientX;
+  }
+
+  _resetTouchEventData = () => {
+    this.touchStarted = this.touchMoved = false;
+    myPosition.initX = myPosition.initY = myPosition.currentX = myPosition.currentY = 0;
+  }
+
+  handleTouchCancel = (e) => {
+    this._resetTouchEventData();
+  }
+
+  handleTouchEnd = (e) => {
+    console.info('handle touch end');
+    if(Math.abs(myPosition.currentX - myPosition.initX) > TOUCH_MOVE_THRESHOLD) {
+      if(myPosition.initX < myPosition.currentX) {
+        this._moveToSolution('right');
+      }else {
+        this._moveToSolution('left');
+      }
+    }
+    this._resetTouchEventData();
   }
 
   componentWillMount = () => {
@@ -372,6 +435,7 @@ class SolutionBox extends Component {
             <ProblemTitle>{props.title}</ProblemTitle>
           </MyProblemWrapper>
         </Problem>
+
         <BoxInnerWrapper>
           <SchoolSolutionCardsOuterWrapper>
             {this.state.showCards && <SchoolSolutionCardsWrapper>
@@ -409,42 +473,46 @@ class SolutionBox extends Component {
               componentProps={{cardBgColor: props.cardBgColor}} />
           </SchoolSolutionSliderWrapper>*/}
 
-          <SolutionContentWrapper
-            onTouchMove={this.handleTouchEvent}
+          <MySwipe
             onTouchStart={this.handleTouchStart}
-            onMouseOver={() => this.handleMouseEvent(true)}
-            onMouseOut={() => this.handleMouseEvent(false)}>
-            {props.cardsData && props.cardsData.map((card,i) => {
-              return(<SolutionContent key={i} showContent={this.state.currentSolution === i}>
-                <SolutionInnerContent>
-                  <Arrow show={this.state.showArrows} onClick={() => this.handleArrowClick('left')}> {'<'} </Arrow>
+            onTouchMove={this.handleTouchMove}
+            onTouchCancel={this.handleTouchCancel}
+            onTouchEnd={this.handleTouchEnd}
+          >
+            <SolutionContentWrapper
+              onMouseOver={() => this.handleMouseEvent(true)}
+              onMouseOut={() => this.handleMouseEvent(false)}>
+              {props.cardsData && props.cardsData.map((card,i) => {
+                return(<SolutionContent key={i} showContent={this.state.currentSolution === i}>
+                  <SolutionInnerContent>
+                    <Arrow show={this.state.showArrows} onClick={() => this.handleArrowClick('left')}> {'<'} </Arrow>
 
-                  <div>
-                    <Title firstBox={props.firstBox}> {card.title} </Title>
-                    <Tagline>
-                      {card.tagline}
-                    </Tagline>
+                    <SolutionContentArea>
+                      <Title firstBox={props.firstBox}> {card.title} </Title>
+                      <Tagline>
+                        {card.tagline}
+                      </Tagline>
 
-                    <Description>
-                      {card.content}
-                    </Description>
+                      <Description>
+                        {card.content}
+                      </Description>
 
-                    <ActionArea>
-                      <ButtonWrapper marginRight={helpers.rhythmDiv * 2}>
-                        <PrimaryButton noMarginBottom onClick={() => this.handleDialogBoxState('contactDialog',true)} label="Any doubts?" />
-                      </ButtonWrapper>
-                      <ButtonWrapper>
-                        <PrimaryButton noMarginBottom onClick={this.handleSignUpButtonClick} label="Sign up"/>
-                      </ButtonWrapper>
-                    </ActionArea>
-                  </div>
+                      <ActionArea>
+                        <ButtonWrapper marginRight={helpers.rhythmDiv * 2}>
+                          <PrimaryButton noMarginBottom onClick={() => this.handleDialogBoxState('contactDialog',true)} label="Any doubts?" />
+                        </ButtonWrapper>
+                        <ButtonWrapper>
+                          <PrimaryButton noMarginBottom onClick={this.handleSignUpButtonClick} label="Sign up"/>
+                        </ButtonWrapper>
+                      </ActionArea>
+                    </SolutionContentArea>
 
-                  <Arrow show={this.state.showArrows} onClick={() => this.handleArrowClick('right')}> {'>'} </Arrow>
-                </SolutionInnerContent>
-              </SolutionContent>)
-            })}
+                    <Arrow show={this.state.showArrows} onClick={() => this.handleArrowClick('right')}> {'>'} </Arrow>
+                  </SolutionInnerContent>
+                </SolutionContent>)
+              })}
             </SolutionContentWrapper>
-
+          </MySwipe>
         </BoxInnerWrapper>
       </BoxWrapper>);
   }
