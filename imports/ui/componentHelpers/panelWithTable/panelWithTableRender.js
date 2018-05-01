@@ -98,7 +98,7 @@ export default function () {
 						let childTableData = this.props.getChildTableData && this.props.getChildTableData(tableData);
 	          			// console.log("childTableData -->>",childTableData);
 	          			return (
-		          				<ExpansionPanel key={index} className={classes.expansionPanel} key={index}>
+		          				<ExpansionPanel key={index} className={classes.expansionPanel} key={index} defaultExpanded={this.state.showClassTimeFormModal && this.state.showClassTimeFormModal[tableData._id]}>
 			          				<ExpansionPanelSummary style={{boxShadow: '0 1px 0 rgba(0,0,0,.1)'}} expandIcon={<ExpandMoreIcon />} >
 			              				<div style={{marginLeft: 15}}>
 			                				<Typography className={classes.secondaryHeading}>{this.getExpansionPanelTitle(tableData, settings.mainPanelHeader.titleKey)}</Typography>
@@ -206,7 +206,9 @@ export default function () {
 									                	childTable={settings.childTable}
 									                	childTableData={childTableData}
 									                	parentKey={tableData._id}
+									                	showClassTimeFormModal={this.state.showClassTimeFormModal && this.state.showClassTimeFormModal[tableData._id]}
 									                	parentData={tableData}
+									                	updateParentProps={this.updateParentProps}
 									                />
 									            </Grid>
 									        }
