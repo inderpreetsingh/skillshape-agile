@@ -79,10 +79,13 @@ class PanelWithTable extends React.Component {
             currentTableData:null,
             methodName: "",
             isBusy: false,
+            showClassTimeFormModal: {}
         }
     }
 
-    handleFormModal = ()=> this.setState({showForm: false, formData: null})
+    handleFormModal = (classTypeId)=> {
+        this.setState({showForm: false, formData: null, showClassTimeFormModal: {[classTypeId]: true}});
+    }
 
     handleChange = (event, value) => {
         if(value == 0) {

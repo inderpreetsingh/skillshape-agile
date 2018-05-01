@@ -74,12 +74,14 @@ class ChildTable extends React.Component {
             open: false,
             expanded: false,
             value: '',
-            showForm: false,
+            showForm: props.showClassTimeFormModal,
             classTimeModalOpen: false
         }
     }
 
-    handleFormModal = ()=> this.setState({showForm: false, formData: null})
+    handleFormModal = ()=> {
+        this.setState({showForm: false, formData: null})
+    }
 
     handleChange = (event, value) => {
         if (value == 0) {

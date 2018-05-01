@@ -154,7 +154,7 @@ class ClassTypeForm extends React.Component {
               console.error("error", error);
             }
             if (result) {
-                this.props.onClose()
+                this.props.onClose(result);
             }
             this.setState({isBusy: false, error});
         });
