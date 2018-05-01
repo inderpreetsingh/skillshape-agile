@@ -4,6 +4,7 @@ import { getUserFullName } from '/imports/util/getUserData';
 import ClassType from "/imports/api/classType/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import School from "/imports/api/school/fields";
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
 
 Meteor.methods({
@@ -18,10 +19,20 @@ Meteor.methods({
                 let schoolAdminRec = Meteor.users.findOne(schoolData.superAdmin);
                 const currentUserName = getUserFullName(currentUserRec);
                 const schoolAdminName = getUserFullName(schoolAdminRec);
+                // Use `encodeURIComponent()` to encode spaces in class type name.
+                let classTypeName =encodeURIComponent(classTypeData.name)/* classTypeData.name.split(' ').join('_')*/;
+                let classLink = `${Meteor.absoluteUrl()}classType/${classTypeName}/${classTypeData._id}`;
+                let schoolMemberData = SchoolMemberDetails.findOne({activeUserId: this.userId});
+                let memberLink;
+                if(schoolMemberData) {
+                    memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
+                }
                 sendJoinClassEmail({currentUserName,
                     schoolAdminName,
                     classTypeName: classTypeData.name,
-                    classTimeName: classTimes.name
+                    classTimeName: classTimes.name,
+                    classLink,
+                    memberLink,
                 });
             });
         } else {

@@ -267,18 +267,18 @@ class ClassTypeContent extends Component {
       })
     }
 
-    requestPricingInfo = () => {
+    requestPricingInfo = (text) => {
         const { toastr, schoolData } = this.props;
         if(!isEmpty(schoolData)) {
           let emailBody = "";
           let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
           let subject ="", message =  "";
           let currentUserName = getUserFullName(Meteor.user());
-          emailBody = `Hi, \n\n ${currentUserName || "I"} saw your listing on SkillShape.com ${url} and has the following message for you:${message}`
+          emailBody = `Hi,  %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
           const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
-          const mailToNormalized = encodeURI(mailTo);
+          // const mailToNormalized = encodeURI(mailTo);
           // window.location.href = mailToNormalized;
-          openMailToInNewTab(mailToNormalized);
+          openMailToInNewTab(mailTo);
 
         } /*else {
             this.handleDefaultDialogBox('Login to make price package requests',true);
@@ -288,7 +288,7 @@ class ClassTypeContent extends Component {
     handleClassTimeRequest = () => {
         // const { toastr, classTypeData } = this.props;
         // Handle Class time request using mailTo:
-        this.requestPricingInfo();
+        this.requestPricingInfo('Class Times');
         // COMMENTED OUT BECAUSE NOW WE HAVE CHNAGED THIS REQUEST WITH MAILTO.
         // if(Meteor.userId() && !isEmpty(classTypeData)) {
         //     this.setState({ isBusy:true });

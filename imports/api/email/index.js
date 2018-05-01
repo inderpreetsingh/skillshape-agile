@@ -25,7 +25,9 @@ export const sendJoinClassEmail = function({
     currentUserName,
     schoolAdminName,
     classTypeName,
-    classTimeName
+    classTimeName,
+    classLink, // Relevant links for class interests.
+    memberLink
 }) {
     if (Meteor.isServer) {
         Email.send({
@@ -33,6 +35,9 @@ export const sendJoinClassEmail = function({
             from: config.fromEmailForJoiningClass,
             subject: "Join Class Request Recieved",
             html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your class: <b>${classTypeName}</b> , <b>${classTimeName}</b>.
+                <br/>You can visit the following link OR links to know more about this request:
+                ${classLink ? `<a href=${classLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Class</a><br/>` : ""}
+                ${memberLink ? `<a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Member</a><br/>` : ""}
                 <br/><br/>
                 <br/><br/>
                 ${EmailSignature}`
