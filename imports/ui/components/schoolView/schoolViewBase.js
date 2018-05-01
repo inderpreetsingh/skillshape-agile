@@ -360,9 +360,9 @@ export default class SchoolViewBase extends React.Component {
           let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
           let subject ="", message =  "";
           let currentUserName = getUserFullName(Meteor.user());
-          emailBody = `Hi, \n\n${currentUserName || "I"} saw your listing on SkillShape.com ${url} and has the following message for you:${message}`
+          emailBody = `Hi, %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend.%0D%0A%0D%0ACan you update your pricing%3F %0D%0A%0D%0A Thanks`
           const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
-          const mailToNormalized = encodeURI(mailTo);
+          const mailToNormalized = mailTo;
           // window.location.href = mailToNormalized;
           openMailToInNewTab(mailToNormalized);
 
