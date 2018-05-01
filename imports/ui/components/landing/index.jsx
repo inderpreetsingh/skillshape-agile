@@ -164,6 +164,7 @@ const CenterCapsule = styled.div`
 
 const FilterPanelWrapper = styled.div`
   position: relative;
+  height: ${props => props.height}px;
  `;
 
 
@@ -315,7 +316,7 @@ class Landing extends Component {
         scroller.scrollTo((name || 'content-container'), {
             duration: 800,
             delay: 0,
-            offset: 10,
+            offset: 2,
             smooth: 'easeInOutQuart'
         });
     }
@@ -662,6 +663,18 @@ class Landing extends Component {
       }
     }
 
+    getOuterWrapperPadding = () => {
+      if(!this.state.mapView && this.checkIfAnyFilterIsApplied() && this.state.sticky) {
+        return 96; // Size of filter bar + buttons
+      }else if(!this.state.mapView && this.checkIfAnyFilterIsApplied()) {
+        return 96;
+      }else if(!this.state.mapView && this.state.sticky) {
+        return 72;
+      }else {
+        return 0;
+      }
+    }
+
     render() {
         console.log("Landing state -->>",this.state);
         // console.log("Landing state -->>", this.state);
@@ -722,19 +735,19 @@ class Landing extends Component {
                     </CoverWrapper>
 
                     {/* Filter Panel */}
-                    <FilterPanelWrapper>
+                    <FilterPanelWrapper height={!this.state.mapView && '0'}>
                         <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
-                            {this.state.mapView ? this.renderFilterPanel() :
-                              <FilterBarDisplayWrapper sticky={this.state.sticky}>
-                                  {this.renderFilterPanel()}
-                              </FilterBarDisplayWrapper>}
+                          {this.state.mapView ? this.renderFilterPanel() :
+                            <FilterBarDisplayWrapper sticky={this.state.sticky}>
+                                {this.renderFilterPanel()}
+                            </FilterBarDisplayWrapper>}
                         </Sticky>
                     </FilterPanelWrapper>
 
                     {/*Cards List */}
                     <Element name="content-container" className="element homepage-content">
                         {/* Applied Filters */}
-                        <ClassTypeOuterWrapper padding={!this.state.mapView && this.checkIfAnyFilterIsApplied() ? '96' : '0'}>
+                        <ClassTypeOuterWrapper padding={this.getOuterWrapperPadding()}>
                           {(!this.state.mapView && this.checkIfAnyFilterIsApplied()) && this.showAppliedTopFilter()}
                           <ClassTypeList
                               defaultLocation={this.state.defaultLocation}
