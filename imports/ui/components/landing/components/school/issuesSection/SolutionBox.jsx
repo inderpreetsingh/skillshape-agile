@@ -1,7 +1,6 @@
 import React, {Fragment,Component} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import Swipe from 'react-easy-swipe';
 import Events from '/imports/util/events';
 
 import PrimaryButton from '../../buttons/PrimaryButton.jsx';
