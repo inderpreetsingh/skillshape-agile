@@ -1,7 +1,7 @@
 "use strict";
 
 const regexStrings = {
-    email: /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
+    email: /^[^@\s]+@[^@\s]+$/,
     image: (/\.(gif|jpg|jpeg|tiff|png)$/i),
     phone: /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g,
 }
