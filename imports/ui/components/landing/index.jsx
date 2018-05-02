@@ -164,6 +164,10 @@ const CenterCapsule = styled.div`
 
 const FilterPanelWrapper = styled.div`
   position: relative;
+  width: 100%;
+  height: 80px;
+  left: 0;
+  z-index: 5;
   height: ${props => props.height}px;
  `;
 
@@ -209,6 +213,12 @@ const FilterAppliedDivs = styled.div`
 
 const ClassTypeOuterWrapper = styled.div`
   padding-top: ${props => props.padding}px;
+`;
+
+const FakeFilterBar = styled.div`
+  height: 80px;
+  width: 100%;
+  position: relative;
 `;
 
 class Landing extends Component {
@@ -316,7 +326,7 @@ class Landing extends Component {
         scroller.scrollTo((name || 'content-container'), {
             duration: 800,
             delay: 0,
-            offset: 2,
+            offset: 5,
             smooth: 'easeInOutQuart'
         });
     }
@@ -729,8 +739,18 @@ class Landing extends Component {
                                 filters={this.state.filters}
                                 onLocationChange={this.onLocationChange}
                                 currentFilterState={this.state.filters}
-                                onSearchIconClick={() => this.scrollTo('content-container')}
+                                onSearchIconClick={() => this.scrollTo()}
                             />
+
+                            {/* Filter Panel */}
+                            {/*this.state.mapView && <FilterPanelWrapper>
+                                <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
+                                  {this.state.mapView ? this.renderFilterPanel() :
+                                    <FilterBarDisplayWrapper sticky={this.state.sticky}>
+                                        {this.renderFilterPanel()}
+                                    </FilterBarDisplayWrapper>}
+                                </Sticky>
+                            </FilterPanelWrapper>*/}
                         </Cover>
                     </CoverWrapper>
 

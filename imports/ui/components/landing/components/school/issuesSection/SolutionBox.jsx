@@ -484,7 +484,7 @@ class SolutionBox extends Component {
               {props.cardsData && props.cardsData.map((card,i) => {
                 return(<SolutionContent key={i} showContent={this.state.currentSolution === i}>
                   <SolutionInnerContent>
-                    <Arrow show={this.state.showArrows} onClick={() => this.handleArrowClick('left')}> {'<'} </Arrow>
+                    <Arrow show={this.state.showArrows || !this.state.showCards} onClick={() => this.handleArrowClick('left')}> {'<'} </Arrow>
 
                     <SolutionContentArea>
                       <Title firstBox={props.firstBox}> {card.title} </Title>
@@ -506,7 +506,7 @@ class SolutionBox extends Component {
                       </ActionArea>
                     </SolutionContentArea>
 
-                    <Arrow show={this.state.showArrows} onClick={() => this.handleArrowClick('right')}> {'>'} </Arrow>
+                    <Arrow show={this.state.showArrows || !this.state.showCards} onClick={() => this.handleArrowClick('right')}> {'>'} </Arrow>
                   </SolutionInnerContent>
                 </SolutionContent>)
               })}
