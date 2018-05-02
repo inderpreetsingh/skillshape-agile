@@ -76,10 +76,10 @@ Meteor.startup(() => {
 
 if (Meteor.isServer) {
     S3.config = {
-        key: 'AKIAIUDOMFJ4ZGYKIO6Q',
-        secret: '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',
-        bucket: 'skillshape',
-        region: 'us-west-1'
+        key: Meteor.settings.AWSAccessKeyId,
+        secret: Meteor.settings.AWSSecretAccessKey,
+        bucket: Meteor.settings.AWSBucket,
+        region: Meteor.settings.AWSRegion
     };
     Accounts.onCreateUser(function(options, user) {
         // console.log("onCreateUser options -->>",options)
