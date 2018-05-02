@@ -2,3 +2,4 @@
 .deployment/
 node_modules/
 meteor.sh
+config/settings/production.json
