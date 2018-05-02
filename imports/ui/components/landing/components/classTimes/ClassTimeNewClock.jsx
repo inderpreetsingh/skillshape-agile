@@ -31,19 +31,21 @@ const ClockInnerWrapper = styled.div`
   justify-content: ${props => props.clockType === 'single' ? 'center' : 'flex-start'};
   width: 100%;
   transition: transform .2s ease-in;
-  transform: translateX(${props => props.currentClockIndex * -110}px);
+  transform: translateX(${props => props.currentClockIndex * -60}px);
 `;
 
 const ClockWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
+  flex-shrink: 0;
   width: 100px;
   height: 100px;
-  flex-shrink: 0;
   font-family: ${helpers.specialFont};
   border-radius: 50%;
   background: white;
   margin-bottom: ${helpers.rhythmDiv}px;
+  ${props => !props.active ? `width: 50px;
+    height: 50px;` : ''}
 `;
 
 
@@ -51,21 +53,21 @@ const TimeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding-top: 10px;
+  padding-top: ${props => props.active ? 10 : 5}px;
   transition: opacity .2s ease-out;
 `;
 
 const Time = styled.p`
   margin: 0;
-  font-size: ${helpers.baseFontSize * 2}px;
+  font-size: ${props => props.active ? helpers.baseFontSize * 2 : helpers.baseFontSize}px;
   color: inherit;
 `;
 
 const TimePeriod = styled.span`
   display: inline-block;
   font-weight: 400;
-  font-size: ${helpers.baseFontSize}px;
-  transform: translateY(-10px);
+  font-size: ${props => props.active ? helpers.baseFontSize : 12}px;
+  transform: translateY(${props => props.active ? -10 : -5}px);
   color: inherit;
 `;
 
@@ -73,7 +75,7 @@ const Duration = styled.span`
   text-align: left;
   display: inline-block;
   font-weight: 400;
-  font-size: ${helpers.baseFontSize}px;
+  font-size: ${props => props.active ? helpers.baseFontSize : 12}px;
   color: inherit;
   width: 100%;
   text-align: left;
@@ -129,7 +131,7 @@ const convertDurationToHours = (duration) => {
 const MyClockWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
-  margin-left: ${props => (props.clockType === 'multiple') ? (props.currentClock === 0) ? '30px' : '10px' : '0px'};
+  margin-left: ${props => (props.clockType === 'multiple') ? (props.currentClock === 0) ? '60px' : '10px' : '0px'}; // IF the currentClock is 0
   cursor: ${props => props.clockType === 'multiple' ? 'pointer' : 'initial'};
 `;
 
@@ -158,11 +160,11 @@ const MyClock = (props) => (<MyClockWrapper
   currentClock={props.currentClock}
   onClick={props.onClockClick} >
 
-  <ClockWrapper className={`class-time-transition ${props.className}`}>
-    <TimeContainer>
-      <Duration>{props.schedule.duration && props.schedule.duration + 'mins'}</Duration>
-      <Time>{props.schedule.time || props.eventStartTime && props.formatTime(props.eventStartTime)}</Time>
-      <TimePeriod>{props.schedule.timePeriod  || props.eventStartTime && props.formatAmPm(props.eventStartTime)}</TimePeriod>
+  <ClockWrapper active={props.active} className={`class-time-transition ${props.className}`}>
+    <TimeContainer active={props.active}>
+      {props.active && <Duration active={props.active}>{props.schedule.duration && props.schedule.duration + 'mins'}</Duration>}
+      <Time active={props.active}>{props.schedule.time || props.eventStartTime && props.formatTime(props.eventStartTime)}</Time>
+      <TimePeriod active={props.active}>{props.schedule.timePeriod  || props.eventStartTime && props.formatAmPm(props.eventStartTime)}</TimePeriod>
     </TimeContainer>
   </ClockWrapper>
 </MyClockWrapper>);
@@ -229,6 +231,7 @@ class ClassTimeNewClock extends Component {
                 {scheduleData && scheduleData.map((schedule,i) => (<MyClock
                   key={i}
                   currentClock={i}
+                  active={i === this.state.currentClockIndex}
                   clockType={type}
                   schedule={schedule}
                   day={currentDay}
