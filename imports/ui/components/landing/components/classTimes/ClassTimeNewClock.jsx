@@ -44,6 +44,7 @@ const ClockWrapper = styled.div`
   border-radius: 50%;
   background: white;
   margin-bottom: ${helpers.rhythmDiv}px;
+  transition: .1s linear width;
   ${props => !props.active ? `width: 50px;
     height: 50px;` : ''}
 `;
