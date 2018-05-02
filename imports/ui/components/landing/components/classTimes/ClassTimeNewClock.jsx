@@ -11,8 +11,9 @@ const ONE_TIME = 'onetime';
 
 const ClockOuterWrapper = styled.div`
   ${helpers.flexCenter}
+  justify-content: flex-start;
   flex-direction: column;
-  max-width: 180px;
+  max-width: 220px;
   overflow: hidden;
   width: 100%;
   height: 100%;
@@ -93,8 +94,8 @@ const MutipleDatesContainer = DayDateContainer.extend`
 const DayDateInfo = styled.p`
   display: inline-block;
   font-style: italic;
-  font-size: ${helpers.baseFontSize}px;
-  font-weight: 300;
+  font-size: 14px;
+  font-weight: 400;
   margin: 0;
   width: 100%;
   text-align: center;
@@ -164,11 +165,6 @@ const MyClock = (props) => (<MyClockWrapper
       <TimePeriod>{props.schedule.timePeriod  || props.eventStartTime && props.formatAmPm(props.eventStartTime)}</TimePeriod>
     </TimeContainer>
   </ClockWrapper>
-  {props.scheduleType && props.clockType !== 'multiple' && <DayDateContainer>
-    <DayDateInfo clockType={props.clockType}>
-      <Date>{props.day}, {props.formattedDate}</Date>
-      </DayDateInfo>
-    </DayDateContainer>}
 </MyClockWrapper>);
 
 class ClassTimeNewClock extends Component {
@@ -181,6 +177,22 @@ class ClassTimeNewClock extends Component {
       this.setState({
         currentClockIndex : currentClockIndex
       });
+    }
+  }
+
+  formatScheduleDisplay = (currentDay, currentDate, eventStartTime) => {
+    const { scheduleData , scheduleStartDate, scheduleEndDate} = this.props;
+    const scheduleType = this.props.scheduleType.toLowerCase();
+    const eventTime = `${this.formatTime(eventStartTime)} ${this.formatAmPm(eventStartTime)}`;
+
+    // console.info(scheduleType,scheduleData,eventTime,"============");
+    // debugger;
+    if(scheduleType === 'ongoing') {
+      return `Every ${currentDay} at ${eventTime}`;
+    }else if(scheduleType === 'recurring') {
+      return `Every ${currentDay} at ${eventTime} from ${this.formatDate(scheduleStartDate)} to ${this.formatDate(scheduleEndDate)}`;
+    }else {
+      return `${currentDay}, ${currentDate} at ${scheduleData[0].time} ${scheduleData[0].timePeriod}`;
     }
   }
 
@@ -223,10 +235,11 @@ class ClassTimeNewClock extends Component {
                   scheduleType={scheduleType}
                   formattedDate={this.formatDate(schedule.date || schedule.startTime)}
                   onClockClick={() => this.handleClockClick(i)}
-                  {...this.props.clockProps}
                   eventStartTime={schedule && new Date(schedule.startTime)}
                   formatTime={this.formatTime}
                   formatAmPm={this.formatAmPm}
+                  formatScheduleDisplay={this.formatScheduleDisplay}
+                  {...this.props.clockProps}
                 />))}
               </ClockInnerWrapper>
               {(scheduleData.length > 1) && <DotsWrapper><SliderDots
@@ -234,11 +247,14 @@ class ClassTimeNewClock extends Component {
                   noOfDots={this.props.scheduleData.length}
                   dotColor={this.props.clockProps.dotColor}
                   onDotClick={this.handleClockClick} /></DotsWrapper> }
-              {scheduleType && type === 'multiple' && <MutipleDatesContainer>
-                {scheduleData.map((schedule,i) => (<CurrentDate clockType={type} visible={i === this.state.currentClockIndex}>
-                  {currentDay}, {this.formatDate(schedule.date || schedule.startTime)}
-                </CurrentDate>))}
-              </MutipleDatesContainer>}
+              {scheduleType && <MutipleDatesContainer>
+                {scheduleData.map((schedule,i) => {
+                  const eventStartTime = new Date(schedule.startTime);
+                  // console.info(eventStartTime,"===========================");
+                  return(<CurrentDate clockType={type} visible={i === this.state.currentClockIndex}>
+                  {this.formatScheduleDisplay(currentDay, this.formatDate(schedule.date || eventStartTime), eventStartTime) }
+                </CurrentDate>)
+              })}</MutipleDatesContainer>}
         </ClockOuterWrapper>)
     }
 }

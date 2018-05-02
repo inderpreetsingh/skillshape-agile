@@ -304,6 +304,8 @@ class ClassTime extends Component {
             <div>
               <ClassTimeClockManager
                 formattedClassTimes={this.formatDataBasedOnScheduleType(this.props)}
+                scheduleStartDate={this.props.startDate}
+                scheduleEndDate={this.props.endDate}
                 scheduleType={this.props.scheduleType}
                 classTimes={this.props.classTimes}
                 clockProps={{ className: classNameForClock, dotColor: dotColor }}
