@@ -92,7 +92,7 @@ class SideNav extends Component {
         this.setState({isBusy: true});
         const { toastr } = this.props;
         Meteor.call("user.createUser", {...this.state.userData, signUpType: 'skillshape-signup'}, (err, res) => {
-            console.log("user.createUser err res -->>",err,res)
+            // console.log("user.createUser err res -->>",err,res)
             let modalObj = {
                 open: false,
                 signUpDialogBox: false,

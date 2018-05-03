@@ -25,7 +25,7 @@ class UploadMedia extends React.Component {
     }
 
   	handleChange = (file)=> {
-  		console.log("handleChange -->>",file);
+  		// console.log("handleChange -->>",file);
   		this.state.file = file;
   		// this.setState({file})
   	}
@@ -46,7 +46,7 @@ class UploadMedia extends React.Component {
 
   	onSubmit = (event)=> {
   		event.preventDefault()
-  		console.log("handleSubmit state -->>",this.state);
+  		// console.log("handleSubmit state -->>",this.state);
   		const mediaData = {};
   		const { file } = this.state;
   		this.setState({isBusy: true})
@@ -54,13 +54,13 @@ class UploadMedia extends React.Component {
         this.handleSubmit({ [this.props.imageType]: file.file })
       } else {
 
-        console.log("yessssssssssssssssssssssssssssssssssssfile", file.fileData)
+        // console.log("yessssssssssssssssssssssssssssssssssssfile", file.fileData)
   			S3.upload({files: { "0": file.fileData}, path:"schools"}, (err, res) => {
 	            if(err) {
-	                console.log("err s3 >>>>>>>????????>>>> ",err);
+	                // console.log("err s3 >>>>>>>????????>>>> ",err);
 	            }
 	            if(res) {
-                console.log("res from s3>>>>>>>>>>>>>>>>>> ", res)
+                // console.log("res from s3>>>>>>>>>>>>>>>>>> ", res)
                 this.handleSubmit({ [this.props.imageType]: res.secure_url })
 	            }
         	})
@@ -75,7 +75,7 @@ class UploadMedia extends React.Component {
   		} else if(mainImage) {
   			data.mainImage = mainImage;
   		}
-      console.log("calling >>>>>>>>>>> editSchool")
+      // console.log("calling >>>>>>>>>>> editSchool")
   		Meteor.call("editSchool", this.props.schoolId, data, (error, result) => {
             if(error) {
               console.error("error", error);
@@ -87,8 +87,8 @@ class UploadMedia extends React.Component {
 
     render() {
     	let { mediaFormData, fullScreen, showCreateMediaModal, onClose, imageType } = this.props;
-    	console.log("UploadMedia props -->>",this.props)
-    	console.log("UploadMedia state -->>",this.state)
+    	// console.log("UploadMedia props -->>",this.props)
+    	// console.log("UploadMedia state -->>",this.state)
 	    return (
 	    	<Dialog
 				fullScreen={fullScreen}

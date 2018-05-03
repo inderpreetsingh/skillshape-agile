@@ -73,10 +73,10 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
         if(schoolIds  && schoolIds.length > 0) {
             condition['$or'].push({schoolId: { $in: schoolIds }});
         }
-        console.log("schoolIds====>",schoolIds)
+        // console.log("schoolIds====>",schoolIds)
         let classTimeCursor = ClassTimes.find(condition);
         let classTypeData = ClassType.find({schoolId: { $in: schoolIds }})
-        console.log("view", view);
+        // console.log("view", view);
         result.push(classInterestCursor);
         result.push(classTimeCursor);
         result.push(classTypeData);
@@ -88,7 +88,7 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
         }
         condition['$or'].push({schoolId: { $in: schoolIds }});
         condition.schoolId = {$in: schoolIds}
-        console.log("condition",JSON.stringify(condition));
+        // console.log("condition",JSON.stringify(condition));
         result.push(ClassTimes.find(condition));
     }
 

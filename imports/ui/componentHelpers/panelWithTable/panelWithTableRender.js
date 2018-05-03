@@ -44,7 +44,7 @@ export default function () {
 	const { classes, className, settings, mainTableData, schoolId, fullScreen } = this.props;
 	const FormComponent = settings.mainPanelHeader.actions.component;
 	// const EditForm = settings.mainTable.actions.edit.component;
-	console.log("Panel with table props -->>",this.state);
+	// console.log("Panel with table props -->>",this.state);
 	const {currentTableData} = this.state;
 	// console.log("Panel with table state -->>",this.state);
 	return (

@@ -91,7 +91,7 @@ const withShowMoreText = function(WrappedComponent,showMoreTextConfig) {
       const maxLimit = this.state.maxStringCharsToShow;
       const words = text.split(' ');
       const newMaxCharLimit = getMaxCharLimit(words,maxLimit);
-      console.log(newMaxCharLimit)
+      // console.log(newMaxCharLimit)
       return text.substr(0, newMaxCharLimit);
     }
 
