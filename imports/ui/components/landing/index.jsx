@@ -288,6 +288,11 @@ class Landing extends Component {
         }
     }
 
+    componentDidUpdate() {
+      // Have to manually set it , otherwise it resets automatically in mapView.
+      document.title = "Skillshape";
+    }
+
     handleStickyStateChange = (status) => {
         // console.log(status, "status..")
         if (status.status === 2) {
@@ -689,9 +694,8 @@ class Landing extends Component {
         // console.log("Landing state -->>",this.state);
         // console.log("Landing state -->>", this.state);
         // console.log("Landing props -->>", this.props);
-        return (
+        return (<DocumentTitle title={this.props.route.name}>
                 <div>
-                {/*<DocumentTitle title={this.props.route.name}> */}
                     <FiltersDialogBox
                         open={this.state.filterPanelDialogBox}
                         onModalClose={() => this.handleFiltersDialogBoxState(false)}
@@ -741,16 +745,6 @@ class Landing extends Component {
                                 currentFilterState={this.state.filters}
                                 onSearchIconClick={() => this.scrollTo()}
                             />
-
-                            {/* Filter Panel */}
-                            {/*this.state.mapView && <FilterPanelWrapper>
-                                <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
-                                  {this.state.mapView ? this.renderFilterPanel() :
-                                    <FilterBarDisplayWrapper sticky={this.state.sticky}>
-                                        {this.renderFilterPanel()}
-                                    </FilterBarDisplayWrapper>}
-                                </Sticky>
-                            </FilterPanelWrapper>*/}
                         </Cover>
                     </CoverWrapper>
 
@@ -842,9 +836,9 @@ class Landing extends Component {
                     onListButtonClick={this.handleToggleMapView} />)
                   }
                 </SwitchViewWrapper>
-              */}
-              {/*</DocumentTitle> */}
-                </div>
+                */}
+              </div>
+          </DocumentTitle>
         )
     }
 }

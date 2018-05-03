@@ -356,7 +356,7 @@ class SolutionBox extends Component {
   }
 
   handleArrowClick = (arrow) => {
-    this.moveToSolution(arrow);
+    this._moveToSolution(arrow);
   }
 
   handleSolutionChange = (currentSolution) => {
