@@ -6,11 +6,12 @@ export const PricingRequestSchema = new SimpleSchema({
   name: {
     type: String,
   },
-  emailId: {
+  email: {
     type: String,
   },
   classTypeId: {
     type: String,
+    optional: true
   },
   schoolId: {
     type: String,

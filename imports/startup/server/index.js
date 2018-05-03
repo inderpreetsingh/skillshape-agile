@@ -23,6 +23,7 @@ import "/imports/api/review/methods";
 import "/imports/api/claimSchoolRequest/methods";
 import "/imports/api/classTimesRequest/methods";
 import "/imports/api/schoolMemberDetails/methods";
+import "/imports/api/pricingRequest/methods";
 
 // All publication imported over here
 

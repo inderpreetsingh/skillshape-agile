@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { FormGroup, FormControlLabel } from 'material-ui/Form';
 import Checkbox from 'material-ui/Checkbox';
 
+import { getUserFullName } from '/imports/util/getUserData';
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
+import { isEmpty} from 'lodash';
 
 import PrimaryButton from '../buttons/PrimaryButton';
 import IconButton from 'material-ui/IconButton';
@@ -108,18 +111,21 @@ const Title = styled.span`
   text-align: center;
 `;
 
-class ManageRequests extends Component {
+class ManageRequestsDialogBox extends Component {
   state = {
     isBusy: false,
+    userExists: false,
     name: '',
     email: '',
-    subscribe: true
+    subscribe: true,
+    readyToSubmit: false,
+    inputsName: ['name','email'],
   }
 
   handleInputChange = name => e => {
     this.setState({
       [name] : e.target.value
-    })
+    });
   }
 
   handleChange = name => e => {
@@ -128,53 +134,115 @@ class ManageRequests extends Component {
     })
   }
 
+  handleRequest = (text) => {
+    const {schoolData} = this.props;
+    const userName = Meteor.userId ? getUserFullName(Meteor.user()) : this.state.name;
+    if(!isEmpty(schoolData)) {
+      const ourEmail = schoolData.email;
+      let emailBody = "";
+      let subject ="", message =  "";
+      let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
+      let currentUserName = userName;
+      // emailBody = `Hi, %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
+      emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing} %0D%0A%0D%0A Thanks`
+      const mailTo = `mailto:${ourEmail}?subject=${subject}&body=${emailBody}`;
+
+      console.info(encodeURI(mailTo),mailTo,"my mail To data.............");
+
+      openMailToInNewTab(mailTo);
+
+    }
+  }
+
   handleFormSubmit = (e) => {
     e.preventDefault();
+    const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     const {toastr,requestFor} = this.props;
     const data = {
-      name: this.state.reviewForId,
-      email: this.state.reviewFor,
-      subscribe: this.state.subscribe,
+      name: this.state.name,
+      email: this.state.email,
+      classTypeId: this.props.classTypeId,
+      schoolId: this.props.schoolData._id
     }
     let methodNameToCall = 'classTimesRequest.addRequest';
-
+    let text = 'class times';
     if(requestFor === 'price') {
       methodNameToCall = 'pricingRequest.addRequest';
+      text = 'pricing';
     }
 
-    this.setState({isBusy: true});
-    Meteor.call(methodNameToCall, data, (err,res) => {
-      this.setState({isBusy: false}, () => {
-        // console.log(this,this.props,"this .props")
-          if(err) {
-            toastr.error(err.reason || err.message,"Error");
-          }else if(res.message) {
-            toastr.error(res.message,'Error');
-            this.props.onModalClose();
-          }
-          else if(res) {
-            toastr.success('Your request have been added, will be notified shortly','success');
-            this.props.onModalClose();
-          }
+    if(this.state.readyToSubmit && this.state.subscribe) {
+      if (!data.email) {
+          toastr.error('Please enter your email.', 'Error');
+          return false;
+      } else if (!emailReg.test(data.email)) {
+          toastr.error("Please enter valid email address", "Error");
+          return false;
+      } else if (!data.name) {
+          toastr.error("Please enter a name", "Error");
+          return false;
+      }else {
+        this.setState({isBusy: true});
+        Meteor.call(methodNameToCall, data, (err,res) => {
+          this.setState({isBusy: false}, () => {
+            // console.log(this,this.props,"this .props")
+            debugger;
+              if(err) {
+                toastr.error(err.reason || err.message,"Error");
+              }else if(res.message) {
+                toastr.error(res.message,'Error');
+                // this.props.onModalClose();
+              }
+              else if(res) {
+                // toastr.success('Your request have been added, will be notified shortly','success');
+                this.props.onModalClose();
+                setTimeout(() => {
+                  this.handleRequest(text);
+                })
+              }
 
-          if(this.props.onFormSubmit) {
-            this.props.onFormSubmit();
-          }
-      });
-    });
+              if(this.props.onFormSubmit) {
+                this.props.onFormSubmit();
+              }
+          });
+        });
 
+      }
+    }else if(this.state.readyToSubmit && !this.state.subscribe) {
+      this.handleRequest(text);
+    }
+  }
+
+  _validateAllInputs = (data, inputNames) => {
+
+    for(let i = 0; i < inputNames.length; ++i) {
+      if(data[inputNames[i]] == '') {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  componentDidUpdate = () => {
+    const readyToSubmit = this._validateAllInputs(this.state,this.state.inputsName);
+    if(this.state.readyToSubmit !== readyToSubmit) {
+      this.setState({ readyToSubmit : readyToSubmit});
+    }
+  }
+
+  _addExistingUserDetails = () => {
+    this.setState({
+      userExists: true,
+      email: Meteor.user().emails[0].address,
+      name: getUserFullName(Meteor.user())
+    })
   }
 
   componentDidMount = () => {
-    // Meteor.call('reviews.getMyReview',this.props.reviewForId,(err,data) => {
-    //   // console.log(data,"we get back this data..")
-    //   if(data) {
-    //     this.setState({
-    //       ratings: data.ratings,
-    //       comment: data.comment
-    //     });
-    //   }
-    // });
+    if(Meteor.userId()) {
+      this._addExistingUserDetails();
+    }
   }
 
   render() {
@@ -194,7 +262,7 @@ class ManageRequests extends Component {
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
             <DialogTitleWrapper>
-              <Title>Request {title}</Title>
+              <Title>Request {props.title}</Title>
               <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
                 <ClearIcon/>
               </IconButton>
@@ -204,11 +272,11 @@ class ManageRequests extends Component {
           <DialogContent classes={{root : props.classes.dialogContent}}>
             <form onSubmit={this.handleFormSubmit}>
               <InputWrapper stars>
-                <IconInput inputId="name" labelText="Your name" value={this.state.name} onChange={this.handleInputChange('name')} />
+                <IconInput inputId="name" labelText="Your name" value={this.state.name} disabled={this.state.userExists} onChange={this.handleInputChange('name')} />
               </InputWrapper>
 
               <InputWrapper>
-                <IconInput inputId="message" type='email' labelText="Your email address" value={this.state.email} onChange={this.handleInputChange('email')} />
+                <IconInput inputId="message" type='email' labelText="Your email address" disabled={this.state.userExists} value={this.state.email} onChange={this.handleInputChange('email')} />
               </InputWrapper>
 
               <InputWrapper>
@@ -226,12 +294,15 @@ class ManageRequests extends Component {
               </InputWrapper>
 
               <ButtonWrapper>
-                <PrimaryButton
-                  type="submit"
-                  label={this.props.submitBtnLabel}
-                  noMarginBottom
-                  onClick={this.handleFormSubmit}
-                />
+                {this.state.readyToSubmit ?
+                  <PrimaryButton
+                    type="submit"
+                    label={props.submitBtnLabel}
+                    noMarginBottom
+                    onClick={this.handleFormSubmit}
+                  />
+                :
+                <button className="cancel-button increase-height" disabled >{props.submitBtnLabel}</button>}
               </ButtonWrapper>
             </form>
           </DialogContent>
@@ -242,7 +313,7 @@ class ManageRequests extends Component {
   }
 }
 
-ManageRequests.propTypes = {
+ManageRequestsDialogBox.propTypes = {
   onFormSubmit: PropTypes.func,
   requestFor: PropTypes.string,
   userProfile: PropTypes.object,
@@ -250,10 +321,10 @@ ManageRequests.propTypes = {
   submitBtnLabel: PropTypes.string,
 }
 
-ManageRequests.defaultProps = {
+ManageRequestsDialogBox.defaultProps = {
   title: 'Pricing',
   requestFor: 'price',
-  submitBtnLabel: 'RequestPricing'
+  submitBtnLabel: 'Request pricing'
 }
 
-export default toastrModal(withMobileDialog()(withStyles(styles)(ManageRequests)));
+export default toastrModal(withMobileDialog()(withStyles(styles)(ManageRequestsDialogBox)));

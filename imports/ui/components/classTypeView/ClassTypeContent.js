@@ -17,6 +17,7 @@ import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/C
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
 import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
+import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx';
 
 import reviewsData from '/imports/ui/components/landing/constants/reviewsData.js';
 import ReviewsManager from '/imports/ui/components/landing/components/class/reviews/ReviewsManager.jsx';
@@ -201,6 +202,7 @@ class ClassTypeContent extends Component {
       emailUsDialog: false,
       callUsDialog: false,
       giveReviewDialog: false,
+      manageRequestsDialog: false,
       nonUserDefaultDialog: false,
       defaultDialogBoxTitle: '',
       type: "both",
@@ -269,26 +271,48 @@ class ClassTypeContent extends Component {
 
     requestPricingInfo = (text) => {
         const { toastr, schoolData } = this.props;
-        if(!isEmpty(schoolData)) {
-          let emailBody = "";
-          let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
-          let subject ="", message =  "";
-          let currentUserName = getUserFullName(Meteor.user());
-          emailBody = `Hi,  %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
-          const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
-          // const mailToNormalized = encodeURI(mailTo);
-          // window.location.href = mailToNormalized;
-          openMailToInNewTab(mailTo);
+        this.handleDialogState('manageRequestsDialog',true);
+        // if(!isEmpty(schoolData)) {
+        //   let emailBody = "";
+        //   let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
+        //   let subject ="", message =  "";
+        //   let currentUserName = getUserFullName(Meteor.user());
+        //   emailBody = `Hi, %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
+        //   const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
+        //
+        //   console.info(mailTo,"my mail To data.............");
+        //   // const mailToNormalized = encodeURI(mailTo);
+        //   // window.location.href = mailToNormalized;
+        //   openMailToInNewTab(mailTo);
+        //
+        // } /*else {
+            // this.handleDefaultDialogBox('Login to make price package requests',true);
+        // }*/
+    }
 
-        } /*else {
-            this.handleDefaultDialogBox('Login to make price package requests',true);
-        }*/
+    handleRequest = (text) => {
+      const { toastr, schoolData } = this.props;
+
+      if(!isEmpty(schoolData)) {
+        let emailBody = "";
+        let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
+        let subject ="", message =  "";
+        let currentUserName = getUserFullName(Meteor.user());
+        emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
+        const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
+
+        console.info(mailTo,"my mail To data.............");
+        // const mailToNormalized = encodeURI(mailTo);
+        // window.location.href = mailToNormalized;
+        openMailToInNewTab(mailTo);
+
+      }
     }
 
     handleClassTimeRequest = () => {
         // const { toastr, classTypeData } = this.props;
         // Handle Class time request using mailTo:
-        this.requestPricingInfo('Class Times');
+        this.handleRequest('Class Times');
         // COMMENTED OUT BECAUSE NOW WE HAVE CHNAGED THIS REQUEST WITH MAILTO.
         // if(Meteor.userId() && !isEmpty(classTypeData)) {
         //     this.setState({ isBusy:true });
@@ -386,6 +410,14 @@ class ClassTypeContent extends Component {
           {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolData} ourEmail={ourEmail} open={this.state.emailUsDialog} currentUser={this.props.currentUser} onModalClose={(err, res) => this.handleDialogState('emailUsDialog',false, err, res)}/>}
           {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData && classTypeData.name)} reviewFor='class' reviewForId={classTypeData._id} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
+          {this.state.manageRequestsDialog && <ManageRequestsDialogBox
+            title="Pricing"
+            open={this.state.manageRequestsDialog}
+            onModalClose={() => this.handleDialogState('manageRequestsDialog',false)}
+            requestFor="price"
+            schoolData={schoolData}
+            classTypeId={classTypeData._id}
+            />}
           {this.state.isBusy && <ContainerLoader/>}
 
           {/* Class Type Cover includes description, map, foreground image, class type information*/}

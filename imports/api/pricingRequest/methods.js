@@ -8,17 +8,17 @@ Meteor.methods({
     if(this.userId) {
       data.existingUser = true;
       data.userId = this.userId;
-      data.emailId = Meteor.users.findOne({_id: this.userId}).emails[0].address;
+      data.email = Meteor.users.findOne({_id: this.userId}).emails[0].address;
     }else {
       data.existingUser = false;
     }
 
     if(isValid) {
       // console.log('adding price request..');
-      const pricingRequestAlreadyPresent = PricingRequest.findOne({emailId: data.emailId});
+      const pricingRequestAlreadyPresent = PricingRequest.find({email: data.email}).fetch()[0];
       if(pricingRequestAlreadyPresent) {
         return {
-          message: 'Already requested for price with this emailId'
+          message: 'Already requested for price with this email address'
         }
       }else {
         return PricingRequest.insert(data);
