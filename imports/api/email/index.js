@@ -57,7 +57,7 @@ export const sendClaimASchoolEmail = function(
 ) {
     if (Meteor.isServer) {
         const schoolOwnerName = getUserFullName(schoolAdminRec);
-        console.log("To====>",To)
+        // console.log("To====>",To)
         if(!To) {
             To = "sam@skillshape.com";
         }

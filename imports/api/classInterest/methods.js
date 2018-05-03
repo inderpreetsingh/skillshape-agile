@@ -54,7 +54,7 @@ Meteor.methods({
         }
     },
     "classInterest.removeClassInterestByClassTimeId": function({classTimeId}) {
-        console.log("classInterest.removeClassInterestByClassTimeId -->>",classTimeId)
+        // console.log("classInterest.removeClassInterestByClassTimeId -->>",classTimeId)
         if (this.userId && classTimeId) {
             return ClassInterest.remove({ userId: this.userId, classTimeId });
         } else {

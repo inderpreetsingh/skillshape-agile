@@ -94,7 +94,7 @@ class ClaimSchool extends ClaimSchoolBase {
     };
 
     render() {
-        console.log("this.props claimSchoolRender",this)
+        // console.log("this.props claimSchoolRender",this)
         return ClaimSchoolRender.call(this, this.props, this.state)
     }
 

@@ -9,10 +9,10 @@ Meteor.methods({
         // console.log("classTimes.getClassTimes -->>",schoolId, classTypeId, classTimeId)
         // console.log("SchoolSchool -->>",School.find({ _id: schoolId}))
         return {
-            school: School.findOne({ _id: schoolId}), 
-            classTimes: ClassTimes.findOne({ _id: classTimeId}), 
-            classType: ClassType.findOne({ _id: classTypeId}), 
-            location: SLocation.findOne({ _id: locationId}), 
+            school: School.findOne({ _id: schoolId}),
+            classTimes: ClassTimes.findOne({ _id: classTimeId}),
+            classType: ClassType.findOne({ _id: classTypeId}),
+            location: SLocation.findOne({ _id: locationId}),
         }
     },
     "classTimes.addClassTimes": function({doc}) {
@@ -31,7 +31,7 @@ Meteor.methods({
         const user = Meteor.users.findOne(this.userId);
         // console.log("classTimes.editClassTimes methods called!!!",doc_id, doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "ClassTimes_CUD" })) {
-            console.log(doc);
+            // console.log(doc);
             return ClassTimes.update({ _id: doc_id }, { $set: doc });
         } else {
             throw new Meteor.Error("Permission denied!!");

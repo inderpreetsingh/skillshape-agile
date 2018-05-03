@@ -240,7 +240,7 @@ class SideNavItems extends React.Component {
     loadConnectedSchool = () => {
         Meteor.call("school.getConnectedSchool", Meteor.userId(), (error, result) => {
             if(error){
-              console.log("error", error);
+              // console.log("error", error);
             }
             if(result){
                 const connectedSchool = result.map((school, index) => {
@@ -261,7 +261,7 @@ class SideNavItems extends React.Component {
         if(Meteor.userId()) {
             Meteor.call("school.getMySchool", (error, result) => {
                 if(error){
-                    console.log("error", error);
+                    // console.log("error", error);
                 }
                 if(result){
                     const mySchool = result.map((school, index) => {
@@ -279,7 +279,7 @@ class SideNavItems extends React.Component {
     }
 
     handleChildItemOnClick = (link)=> {
-        console.log("handleChildItemOnClick")
+        // console.log("handleChildItemOnClick")
         browserHistory.push(link);
         this.props.handleDrawer();
     }

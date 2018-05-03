@@ -69,11 +69,11 @@ Meteor.publish("school.getSchoolClasses", function ({
     limit,
     selectedTag
 }) {
-    console.log("schoolId-->>", schoolId);
-    console.log("is_map_view-->>", is_map_view);
-    console.log("_monthPrice", _monthPrice);
-    console.log("coords", coords);
-    console.log("NEPoint", NEPoint);
+    // console.log("schoolId-->>", schoolId);
+    // console.log("is_map_view-->>", is_map_view);
+    // console.log("_monthPrice", _monthPrice);
+    // console.log("coords", coords);
+    // console.log("NEPoint", NEPoint);
     const classfilter = { isPublish: true };
     if (is_map_view && schoolId) {
         classfilter["schoolId"] = schoolId;
@@ -140,15 +140,15 @@ Meteor.publish("school.getSchoolClasses", function ({
             }
         ];
     }
-    console.log(
-        "<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>",
-        JSON.stringify(classfilter, null, "  ")
-    );
+    // console.log(
+    //     "<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>",
+    //     JSON.stringify(classfilter, null, "  ")
+    // );
     // console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", SLocation.find({loc: classfilter["filters.location"]}, { limit: limit || 10 }).fetch());
-    console.log(
-        "<<<<<<<<<<<<<<<<class type data >>>>>>>>>>>>>>>",
-        ClassType.find(classfilter).fetch()
-    );
+    // console.log(
+    //     "<<<<<<<<<<<<<<<<class type data >>>>>>>>>>>>>>>",
+    //     ClassType.find(classfilter).fetch()
+    // );
     let classTypeCursor = ClassType.find(classfilter, {
         limit: is_map_view ? undefined : limit
     });
@@ -389,8 +389,8 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     // locationText is a text value that search on classType data.
     if (locationText) {
         classfilter["$or"].push({ ["$text"]: { $search: locationText } });
-        console.log("classfilter", JSON.stringify(classfilter, null, "  "))
-        console.log("data with filter", ClassType.findOne(classfilter))
+        // console.log("classfilter", JSON.stringify(classfilter, null, "  "))
+        // console.log("data with filter", ClassType.findOne(classfilter))
         const classTypeExitWithLocationFilter = ClassType.findOne(classfilter);
         // if there is not data found corresponding to locationText filter then remove this filter from classType filter.
         // if (!classTypeExitWithLocationFilter) {
@@ -404,8 +404,8 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     if (_.isEmpty(classfilter["$or"])) {
         delete classfilter["$or"];
     }
-    console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", JSON.stringify(classfilter, null, "  "));
-    console.log("<<<<<<<<<<<<<<<<skillCategoryFilter>>>>>>>>>>>>>>>", JSON.stringify(skillCategoryFilter, null, "  "));
+    // console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", JSON.stringify(classfilter, null, "  "));
+    // console.log("<<<<<<<<<<<<<<<<skillCategoryFilter>>>>>>>>>>>>>>>", JSON.stringify(skillCategoryFilter, null, "  "));
     // console.log("<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>", SLocation.find({loc: classfilter["filters.location"]}, { limit: limit || 10 }).fetch());
     // console.log("<<<<<<<<<<<<<<<<class type data >>>>>>>>>>>>>>>", ClassType.find(classfilter).fetch());
 
@@ -447,9 +447,9 @@ Meteor.publish("school.getClassTypesByCategory", function ({
 
     /*If there is no filter and no class type data found correspond to user's location
     then need to show default classes to user.*/
-    console.log("applyFilterStatus", applyFilterStatus);
+    // console.log("applyFilterStatus", applyFilterStatus);
     if (!applyFilterStatus && _.isEmpty(ClassType.find({ _id: { $in: classTypeIds } }).fetch())) {
-        console.log("applyFilterStatus>>>>>>>>>>>>>>", applyFilterStatus);
+        // console.log("applyFilterStatus>>>>>>>>>>>>>>", applyFilterStatus);
         //delete location filter from classType filter, Because initially corresponding to user location data not found then show our featured classType.
         if (classfilter["filters.location"]) {
             delete classfilter["filters.location"]
@@ -492,7 +492,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     }
 
     // console.log("collectSkillCategoriesIds --->>",collectSkillCategoriesIds)
-    console.log("Final ClassType Data -->>", ClassType.find({ _id: { $in: classTypeIds } }).count());
+    // console.log("Final ClassType Data -->>", ClassType.find({ _id: { $in: classTypeIds } }).count());
     const cursors = [
         ClassType.find({ _id: { $in: uniq(classTypeIds) } }),
         SLocation.find({ _id: { $in: uniq(locationIds) } }),
@@ -507,7 +507,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
 
 Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
 
-    console.log("Before tempFilter -->>", tempFilter)
+    // console.log("Before tempFilter -->>", tempFilter)
 
     const filterObj = removeKeyValue(tempFilter)
 
@@ -526,7 +526,7 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
         locationName
     } = filterObj
 
-    console.log("After filterObj -->>", filterObj, limit)
+    // console.log("After filterObj -->>", filterObj, limit)
 
 
     const schoolFilter = { isPublish: true };
@@ -648,8 +648,8 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
         schoolFilter['_id'] = { '$in': schoolIds }
     }
 
-    console.log("classTypeFilter -->>", JSON.stringify(classTypeFilter, null, "  "));
-    console.log("schoolFilter -->>", JSON.stringify(schoolFilter, null, "  "));
+    // console.log("classTypeFilter -->>", JSON.stringify(classTypeFilter, null, "  "));
+    // console.log("schoolFilter -->>", JSON.stringify(schoolFilter, null, "  "));
 
     if (_.isEmpty(classTypeFilter)) {
         return School.find(schoolFilter, limit);
@@ -657,7 +657,7 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
         let classTypeData = ClassType.find(classTypeFilter).fetch();
         classTypeData.map((data) => schoolIds.push(data.schoolId));
         schoolFilter['_id'] = { '$in': uniq(schoolIds) };
-        console.log("schoolIds inside-->>", uniq(schoolIds));
+        // console.log("schoolIds inside-->>", uniq(schoolIds));
 
         return School.find(schoolFilter, limit);
     }

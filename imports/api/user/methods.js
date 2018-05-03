@@ -52,7 +52,7 @@ Meteor.methods({
 		}
 	},
 	"user.onSocialSignUp": function({ name, email, userType, sendMeSkillShapeNotification }) {
-	    console.log("user.onSocialSignUp userId", this.userId, userType);
+	    // console.log("user.onSocialSignUp userId", this.userId, userType);
 	    if (this.userId) {
 	        const accessType = userType || "Anonymous";
 	        let userData = Meteor.users.findOne({_id: this.userId});
@@ -99,11 +99,11 @@ Meteor.methods({
     	throw new Meteor.Error("Invalid email address!!");
     },
     "user.getUsers": function({limit,skip}) {
-    	console.log("user.getUsers limit -->>",limit)
-    	console.log("user.getUsers skip -->>",skip)
+    	// console.log("user.getUsers limit -->>",limit)
+    	// console.log("user.getUsers skip -->>",skip)
     	if(this.userId && Roles.userIsInRole(this.userId,"Superadmin")) {
     		const filters = {}
-    		console.log(Meteor.users.find(filters,{ limit:limit, skip: skip}).fetch())
+    		// console.log(Meteor.users.find(filters,{ limit:limit, skip: skip}).fetch())
     		return {
     			usersData : Meteor.users.find(filters,{ limit:limit, skip: skip}).fetch(),
     			usersCount: Meteor.users.find(filters).count(),
@@ -132,7 +132,7 @@ Meteor.methods({
              throw new Meteor.Error("No User Found with this Email!!!");
            }
        } else {
-           console.log("else part in server" );
+           // console.log("else part in server" );
            throw new Meteor.Error("Email Address not found!!");
        }
     }
