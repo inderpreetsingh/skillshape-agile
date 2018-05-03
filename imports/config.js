@@ -35,6 +35,7 @@ export default config = Object.freeze({
 		claimSchoolRequest: "ClaimSchoolRequest",
 		classTimesRequest: "ClassTimesRequest",
 		PriceInfoRequest: "PriceInfoRequest",
+		pricingRequest: "PricingRequest",
 		schoolMemberDetails: "SchoolMemberDetails",
 		classTypeLocationRequest: "ClassTypeLocationRequest"
 	},
