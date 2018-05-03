@@ -6,9 +6,9 @@ import School from "/imports/api/school/fields.js";
 
 Meteor.methods({
     "schoolMemberDetails.acceptInvitation": function({ memberId, schoolId, acceptInvite}) {
-    	console.log("schoolMemberDetailsData -->>",memberId, schoolId, acceptInvite)
+    	// console.log("schoolMemberDetailsData -->>",memberId, schoolId, acceptInvite)
     	let schoolMemberDetailsData = SchoolMemberDetails.findOne({_id: memberId, schoolId: schoolId})
-    	console.log("schoolMemberDetailsData -->>",schoolMemberDetailsData, this.userId)
+    	// console.log("schoolMemberDetailsData -->>",schoolMemberDetailsData, this.userId)
     	if(schoolMemberDetailsData && this.userId === schoolMemberDetailsData.activeUserId) {
 
     		if(schoolMemberDetailsData.inviteAccepted) {
@@ -37,7 +37,7 @@ Meteor.methods({
     },
     "schoolMemberDetails.editSchoolMemberDetails": function({doc_id, doc}) {
         const user = Meteor.users.findOne(this.userId);
-        console.log("EditSchoolMemberDetails -->>",doc)
+        // console.log("EditSchoolMemberDetails -->>",doc)
         const memberData = SchoolMemberDetails.findOne({ _id: doc_id });
         // We are editing a school member without email here so need to check if entered email already exist OR not.
         if(doc && doc.studentWithoutEmail && doc.email) {
@@ -45,7 +45,7 @@ Meteor.methods({
             const userRecExist = Meteor.users.findOne({ "emails.address": doc.email });
             // Need to update these things in school member so that Admin can not edit the user again. Make sense ?
             doc.studentWithoutEmail = false;
-            console.log("userRecExist===>",userRecExist)
+            // console.log("userRecExist===>",userRecExist)
             if(!userRecExist) {
                 let newlyCreatedUser;
                 doc.sendMeSkillShapeNotification = true;
@@ -80,9 +80,9 @@ Meteor.methods({
         return SchoolMemberDetails.update({ _id: doc_id }, { $set: doc });
     },
     "schoolMemberDetails.rejectInvitation": function({ memberId, schoolId}) {
-        console.log("schoolMemberDetailsData -->>",memberId, schoolId)
+        // console.log("schoolMemberDetailsData -->>",memberId, schoolId)
         let schoolMemberDetailsData = SchoolMemberDetails.findOne({_id: memberId, schoolId: schoolId})
-        console.log("schoolMemberDetailsData -->>",schoolMemberDetailsData, this.userId)
+        // console.log("schoolMemberDetailsData -->>",schoolMemberDetailsData, this.userId)
         if(schoolMemberDetailsData && this.userId === schoolMemberDetailsData.activeUserId) {
             if(schoolMemberDetailsData.inviteAccepted) {
                 throw new Meteor.Error("You already accepted the Invitation!");

@@ -38,7 +38,7 @@ class ClassTypeCard extends Component {
     }
     handleDialogState = (state) => (e) => {
         e.stopPropagation();
-        console.log(e,e.stopPropagation(),"clickced");
+        // console.log(e,e.stopPropagation(),"clickced");
         this.setState({
             dialogOpen: state,
             classTimesDialogBoxError: null,
@@ -57,7 +57,7 @@ class ClassTypeCard extends Component {
 
     handleClassTimeRequest = (schoolId) => {
         // const { schoolData } = this.props;
-        console.log("handleClassTimeRequest --->>",schoolId);
+        // console.log("handleClassTimeRequest --->>",schoolId);
         let schoolData  = this.getSchoolData(schoolId);
         if(!isEmpty(schoolData)) {
           let emailBody = "";

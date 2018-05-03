@@ -352,7 +352,7 @@ class ClassTypeContent extends Component {
     }
 
 	render() {
-		console.log("ClassTypeContent props --->>",this.props);
+		// console.log("ClassTypeContent props --->>",this.props);
 
 		const {
       bgImg,

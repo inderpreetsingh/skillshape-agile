@@ -14,7 +14,7 @@ Meteor.methods({
 
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {
 
-            console.log("addClassPricing doc-->>",doc);
+            // console.log("addClassPricing doc-->>",doc);
             if(doc.classTypeId && _.isArray(doc.classTypeId)) {
 
                 ClassType.update({ _id: { $in: doc.classTypeId } }, { $set: {"filters.classPriceCost": doc.cost} }, {multi: true});

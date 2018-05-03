@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 
 class ClassTypeView extends Component {
     render() {
-        console.log("ClassTypeView .props-->>",this.props)
+        // console.log("ClassTypeView .props-->>",this.props)
 
 		return(<Wrapper className="classtype-page">
         {/*<DocumentTitle title={get(this.props,"params.classTypeName","untitled")}> */}
@@ -50,7 +50,7 @@ ClassTypeView.defaultProps = {
 }
 
 export default createContainer(props => {
-	console.log("ClassType createContainer props -->>",props);
+	// console.log("ClassType createContainer props -->>",props);
 	const { classTypeId } = props.params;
 	let subscription;
   let reviewsSubscription;
@@ -79,11 +79,11 @@ export default createContainer(props => {
     let mediaData = Media.find().fetch();
     let reviewsData = Reviews.find().fetch();
     let enrollmentFeeData = EnrollmentFees.find().fetch();
-  	console.log("ClassType classTypeData -->>>",classTypeData)
-    console.log("ClassType classTimesData -->>>",classTimesData)
-    console.log("ClassType schoolData -->>>",schoolData)
-    console.log("ClassType classPricingData -->>>",classPricingData)
-  	console.log("ClassType monthlyPricingData -->>>",monthlyPricingData)
+  	// console.log("ClassType classTypeData -->>>",classTypeData)
+    // console.log("ClassType classTimesData -->>>",classTimesData)
+    // console.log("ClassType schoolData -->>>",schoolData)
+    // console.log("ClassType classPricingData -->>>",classPricingData)
+  	// console.log("ClassType monthlyPricingData -->>>",monthlyPricingData)
 	return {
   		...props,
   		isLoading,

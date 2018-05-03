@@ -1,8 +1,8 @@
 import Media from "../fields";
 
 Meteor.publish("media.getMedia", function({ schoolId, mediaName, startDate, endDate, limit, $or }) {
-	console.log("<<<< media.getMedia called--->>>",schoolId, mediaName, startDate, endDate)
-    console.log("<<<<<<<<<<<<<<<<media.getMediafilter>>>>>>>>>>>>>>>", JSON.stringify($or, null, "  "));
+	// console.log("<<<< media.getMedia called--->>>",schoolId, mediaName, startDate, endDate)
+    // console.log("<<<<<<<<<<<<<<<<media.getMediafilter>>>>>>>>>>>>>>>", JSON.stringify($or, null, "  "));
 
 	let filters = {
 		schoolId: schoolId
