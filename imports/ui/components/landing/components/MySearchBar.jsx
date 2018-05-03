@@ -132,9 +132,9 @@ class MySearchBar extends Component {
   render () {
     const { value } = this.state;
     let self = this;
-    console.log('value in MySearchBar===>',value);
-    console.log('state in MySearchBar===>',this.state);
-    console.log('props in MySearchBar===>',this.props);
+    // console.log('value in MySearchBar===>',value);
+    // console.log('state in MySearchBar===>',this.state);
+    // console.log('props in MySearchBar===>',this.props);
     const {
       closeIcon,
       disabled,

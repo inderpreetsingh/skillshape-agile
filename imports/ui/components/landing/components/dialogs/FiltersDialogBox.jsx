@@ -103,7 +103,7 @@ const DialogTitleWrapper = styled.h1`
 class FiltersDialogBox extends Component {
 
     render() {
-        console.log("FiltersDialogBox props--->>",this.props);
+        // console.log("FiltersDialogBox props--->>",this.props);
         const {
             classes,
             open,

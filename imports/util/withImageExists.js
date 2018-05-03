@@ -37,7 +37,7 @@ export default withImageExists = (WrappedComponent,config) => {
   	}
 
     render() {
-      console.info("with image exists ,hoc",config);
+      // console.info("with image exists ,hoc",config);
       return(<WrappedComponent {...this.props} bgImg={this.state.bgImg} />)
     }
   }
