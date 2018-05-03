@@ -18,7 +18,7 @@ const OuterWrapper = styled.div`
 const InnerWrapper = styled.div`
   ${helpers.flexCenter}
   width: 100%;
-  min-height: 170px;
+  min-height: 160px;
   position: relative;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -239,6 +239,8 @@ class ClassTimeClockManager extends Component {
                   currentDay={day}
                   scheduleType={this.props.scheduleType}
                   scheduleData={formattedClassTimes[day]}
+                  scheduleStartDate={this.props.scheduleStartDate}
+                  scheduleEndDate={this.props.scheduleEndDate}
                   visible={i === this.state.currentIndex}
                   clockProps={this.props.clockProps} />
               }

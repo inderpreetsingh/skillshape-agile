@@ -164,6 +164,10 @@ const CenterCapsule = styled.div`
 
 const FilterPanelWrapper = styled.div`
   position: relative;
+  width: 100%;
+  height: 80px;
+  left: 0;
+  z-index: 5;
   height: ${props => props.height}px;
  `;
 
@@ -209,6 +213,12 @@ const FilterAppliedDivs = styled.div`
 
 const ClassTypeOuterWrapper = styled.div`
   padding-top: ${props => props.padding}px;
+`;
+
+const FakeFilterBar = styled.div`
+  height: 80px;
+  width: 100%;
+  position: relative;
 `;
 
 class Landing extends Component {
@@ -278,6 +288,11 @@ class Landing extends Component {
         }
     }
 
+    componentDidUpdate() {
+      // Have to manually set it , otherwise it resets automatically in mapView.
+      document.title = "Skillshape";
+    }
+
     handleStickyStateChange = (status) => {
         // console.log(status, "status..")
         if (status.status === 2) {
@@ -316,7 +331,7 @@ class Landing extends Component {
         scroller.scrollTo((name || 'content-container'), {
             duration: 800,
             delay: 0,
-            offset: 2,
+            offset: 5,
             smooth: 'easeInOutQuart'
         });
     }
@@ -679,9 +694,8 @@ class Landing extends Component {
         // console.log("Landing state -->>",this.state);
         // console.log("Landing state -->>", this.state);
         // console.log("Landing props -->>", this.props);
-        return (
+        return (<DocumentTitle title={this.props.route.name}>
                 <div>
-                {/*<DocumentTitle title={this.props.route.name}> */}
                     <FiltersDialogBox
                         open={this.state.filterPanelDialogBox}
                         onModalClose={() => this.handleFiltersDialogBoxState(false)}
@@ -729,7 +743,7 @@ class Landing extends Component {
                                 filters={this.state.filters}
                                 onLocationChange={this.onLocationChange}
                                 currentFilterState={this.state.filters}
-                                onSearchIconClick={() => this.scrollTo('content-container')}
+                                onSearchIconClick={() => this.scrollTo()}
                             />
                         </Cover>
                     </CoverWrapper>
@@ -822,9 +836,9 @@ class Landing extends Component {
                     onListButtonClick={this.handleToggleMapView} />)
                   }
                 </SwitchViewWrapper>
-              */}
-              {/*</DocumentTitle> */}
-                </div>
+                */}
+              </div>
+          </DocumentTitle>
         )
     }
 }
