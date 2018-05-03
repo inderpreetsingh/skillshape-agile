@@ -165,7 +165,7 @@ const SearchInputsSection = (props) => (
       <InputWrapper>
         <MySearchBar
           placeholder="Skill Type"
-          defaultBorderRadius
+          defaultBorderRadius={true}
           onChange={props.onSkillTypeChange}
           withIcon={false}
           rightAlign
@@ -178,7 +178,7 @@ const SearchInputsSection = (props) => (
         <MySearchBar
           placeholder="Location"
           defaultValue={props.currentAddress}
-          defaultBorderRadius
+          defaultBorderRadius={true}
           withIcon={false}
           onSearchIconClick={props.onSearchIconClick}
           noCloseIcon
@@ -298,7 +298,7 @@ class SearchArea extends Component {
 
   render() {
 
-    console.log("this.props in SearchArea",this.props);
+    // console.log("this.props in SearchArea",this.props);
 
     return (
       <SearchAreaPanel width={this.props.width} textAlign={this.props.textAlign} itemScope itemType="http://schema.org/SearchAction">

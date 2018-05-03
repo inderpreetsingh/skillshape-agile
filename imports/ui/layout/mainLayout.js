@@ -18,7 +18,7 @@ class MainLayout extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("MainLayout componentWillReceiveProps",nextProps)
+        // console.log("MainLayout componentWillReceiveProps",nextProps)
         let invite = get(nextProps, "location.query.acceptInvite");
         let inviteRejected = get(nextProps, "location.query.rejectInvite");
         // Handle Accept member invitation.
@@ -34,7 +34,7 @@ class MainLayout extends React.Component {
     componentDidUpdate() {
         const { currentUser, isUserSubsReady } = this.props
         let invite = get(this.props, "location.query.acceptInvite");
-        console.log("MainLayout componentDidUpdate -->>",this.props)
+        // console.log("MainLayout componentDidUpdate -->>",this.props)
         if(invite && !currentUser && isUserSubsReady) {
             Events.trigger("loginAsSchoolAdmin",{redirectUrl: this.props.location.search});
         }
@@ -42,9 +42,9 @@ class MainLayout extends React.Component {
 
     acceptMemberInvitation = (invitationObj)=> {
         const { toastr } = this.props;
-        console.log("Landing acceptMemberInvitation")
+        // console.log("Landing acceptMemberInvitation")
         Meteor.call("schoolMemberDetails.acceptInvitation", invitationObj, (err, res) => {
-            console.log("acceptMemberInvitation res",res,err)
+            // console.log("acceptMemberInvitation res",res,err)
             if(err) {
                 let errorText = err.error || err.reason || err.message;
                 this.setState({memberInvitation: false},()=> {
@@ -64,10 +64,10 @@ class MainLayout extends React.Component {
     }
 
     rejectMemberInvitation = (invitationObj) => {
-        console.log("Reject invitation");
+        // console.log("Reject invitation");
         const { toastr } = this.props;
         Meteor.call("schoolMemberDetails.rejectInvitation", invitationObj, (err, res) => {
-            console.log("acceptMemberInvitation res", res, err)
+            // console.log("acceptMemberInvitation res", res, err)
             if (err) {
                 let errorText = err.error || err.reason || err.message;
                 this.setState({ memberInvitation: false }, () => {
@@ -96,7 +96,7 @@ class MainLayout extends React.Component {
 
     render( ) {
         const { currentUser, isUserSubsReady, classes} = this.props;
-        console.log(this.props.route,"main layout.......................")
+        // console.log(this.props.route,"main layout.......................")
         return (
             <div>
                 {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}

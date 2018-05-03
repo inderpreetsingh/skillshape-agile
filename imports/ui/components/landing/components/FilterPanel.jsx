@@ -146,7 +146,7 @@ class FilterPanel extends Component {
       }
 
       componentWillReceiveProps = (nextProps, nextState) => {
-        console.log("componentWillReceiveProps",nextProps, nextState)
+        // console.log("componentWillReceiveProps",nextProps, nextState)
         if((this.props.skillTypeText) !== (nextProps.skillTypeText)) {
             this.setState({skillTypeText:nextProps.skillTypeText});
         }
@@ -154,7 +154,7 @@ class FilterPanel extends Component {
 
     componentWillMount() {
         const dataSourceCategories = Meteor.call('getAllSkillCategories', (err,result) => {
-            console.log(result,'result');
+            // console.log(result,'result');
             this.setState({skillCategoryData:result})
         });
     }
@@ -169,21 +169,21 @@ class FilterPanel extends Component {
         let skillCategoryIds = this.props.filters.skillCategoryIds;
             Meteor.call("getSkillSubjectBySkillCategory",{skillCategoryIds: skillCategoryIds, textSearch: text}, (err,res) => {
                 if(res) {
-                    console.log("result",res)
+                    // console.log("result",res)
                     this.setState({skillSubjectData: res || []});
                 }
             })
     }
 
     handleSkillTypeText = (event) => {
-      console.log("handleSkillTypeText", event.target.value);
+      // console.log("handleSkillTypeText", event.target.value);
 
       this.setState({skillTypeText:event.target.value});
       this.props.handleSkillTypeSearch(event.target.value);
     }
 
     renderFilterBar = () => {
-      console.log("------ renderFilterBar -----",this.props.filters)
+      // console.log("------ renderFilterBar -----",this.props.filters)
       return (<GridContainerWrapper>
         {this.props.displayChangeViewButton && <MapChangeButtonWrapper>
         {this.props.mapView ?
@@ -249,7 +249,7 @@ class FilterPanel extends Component {
     }
 
     renderFiltersForDialogBox = () => {
-      console.log("------ renderFiltersForDialogBox -----",this.props)
+      // console.log("------ renderFiltersForDialogBox -----",this.props)
       return (
         <Grid container spacing={24}>
             {/* 1rst Row */}
@@ -402,8 +402,8 @@ class FilterPanel extends Component {
     render() {
       const { showMoreFilters } = this.state;
       const { stickyPosition, mapView, filtersInDialogBox , fullWidth } = this.props;
-      console.log("FilterPanel props  -->>",this.props);
-      console.log("FilterPanel state  -->>",this.state);
+      // console.log("FilterPanel props  -->>",this.props);
+      // console.log("FilterPanel state  -->>",this.state);
       return (
           <MuiThemeProvider theme={muiTheme}>
             <FilterPanelOuterContainer mapView={mapView}>

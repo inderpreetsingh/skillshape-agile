@@ -95,7 +95,7 @@ class ClassTypeCard extends Component {
     }
 
     render() {
-        console.log("ClassTypeCard props --->>",this.props);
+        // console.log("ClassTypeCard props --->>",this.props);
         let ratings,reviews;
         const cardRevealData = {
           _id:this.props._id,

@@ -26,7 +26,7 @@ const styles = theme => ({
   }
 });
 
-console.log("styles",styles);
+// console.log("styles",styles);
 
 class ClaimSchool extends ClaimSchoolBase {
 
