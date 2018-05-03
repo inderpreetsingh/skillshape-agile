@@ -676,7 +676,7 @@ class Landing extends Component {
     }
 
     render() {
-        console.log("Landing state -->>",this.state);
+        // console.log("Landing state -->>",this.state);
         // console.log("Landing state -->>", this.state);
         // console.log("Landing props -->>", this.props);
         return (

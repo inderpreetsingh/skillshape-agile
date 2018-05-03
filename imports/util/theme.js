@@ -79,7 +79,6 @@ lightBlue.rgba = 'rgba(3, 169, 244, 0.34)'
 lightBlue.main = lightBlue.A700;
 lightBlue.default = lightBlue.A700;
 
-console.log(muiTheme,"muiTheme...")
 export const material_ui_next_theme = {
     palette: {
         // primary: lightBlue,
