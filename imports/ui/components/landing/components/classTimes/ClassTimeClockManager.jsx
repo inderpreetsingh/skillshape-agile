@@ -262,7 +262,7 @@ class ClassTimeClockManager extends Component {
           </Days>
         </ChangeSlide>}
 
-        <Schedule>{ this.props.scheduleType}</Schedule>
+        <Schedule>{ this.props.scheduleType.toLowerCase()}</Schedule>
       </Fragment>
     )
   }

@@ -75,11 +75,9 @@ const Description = styled.p`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
-  max-height: 100px;
   padding: 0 ${helpers.rhythmDiv * 2}px;
   overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
 `;
-
 
 const Read = styled.span`
   font-style: italic;
