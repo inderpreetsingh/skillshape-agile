@@ -11,6 +11,28 @@ import { sendEmailToStudentForClassTypeUpdation, sendClassTypeLocationRequestEma
 import { sendEmailToSchool } from "/imports/api/email";
 import { getUserFullName } from '/imports/util/getUserData';
 
+
+
+// Need to update Class Times so that we can show ageMin,gender,experienceLevel on class details modal.
+function updateHookForClassTimes({ classTimesIds, classTypeData, doc }) {
+
+    let classTimeUpdateObj = {};
+    // Need to edit changes in ClassTimes like edit `gender`,`experienceLevel`,`ageMin`.
+    if (classTypeData && classTypeData.ageMin !== doc.ageMin) {
+        classTimeUpdateObj.ageMin = doc.ageMin
+    }
+    if (classTypeData && classTypeData.experienceLevel !== doc.experienceLevel) {
+        classTimeUpdateObj.experienceLevel = doc.experienceLevel
+    }
+    if (classTypeData && classTypeData.gender !== doc.gender) {
+        classTimeUpdateObj.gender = doc.gender
+    }
+    if (!isEmpty(classTimeUpdateObj) && !isEmpty(classTimesIds)) {
+        ClassTimes.update({ _id: { $in: classTimesIds } }, { $set: classTimeUpdateObj }, { multi: true });
+    }
+
+}
+
 Meteor.methods({
     "classType.getClassType": function({schoolId}) {
 
@@ -62,21 +84,9 @@ Meteor.methods({
                 // temp.filters["state"] = location.state;
                 temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${location.country}`;
             }
-            let classTimeUpdateObj = {};
-            // Need to edit changes in ClassTimes like edit `gender`,`experienceLevel`,`ageMin`.
-            if(classTypeData && classTypeData.ageMin!== doc.ageMin) {
-                classTimeUpdateObj.ageMin = doc.ageMin
-            }
-            if(classTypeData && classTypeData.experienceLevel!== doc.experienceLevel) {
-                classTimeUpdateObj.experienceLevel = doc.experienceLevel
-            }
-            if(classTypeData && classTypeData.gender!== doc.gender) {
-                classTimeUpdateObj.gender = doc.gender
-            }
-            let classTimesIds = ClassTimes.find({classTypeId:doc_id}).map(data => data._id);
-            // Need to update Class Times so that we can show ageMin,gender,experienceLevel on class details modal.
-            if(!isEmpty(classTimeUpdateObj) && !isEmpty(classTimesIds)) {
-                ClassTimes.update({_id: {$in: classTimesIds}},{$set: classTimeUpdateObj},{multi:true});
+            let classTimesIds = ClassTimes.find({ classTypeId: doc_id }).map(data => data._id);
+            if (!isEmpty(classTimesIds)) {
+                updateHookForClassTimes({classTimesIds, classTypeData, doc});
             }
             return ClassType.update({ _id: doc_id }, { $set: temp });
         } else {
