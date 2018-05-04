@@ -103,6 +103,9 @@ class ClassTimeForm extends React.Component {
             name: this.classTimeName.value,
             desc: this.desc.value,
             locationId: locationId,
+            gender: parentData && parentData.gender,
+            ageMin:parentData && parentData.ageMin,
+            experienceLevel: parentData && parentData.experienceLevel
         }
 
         if(tabValue === 0) {
