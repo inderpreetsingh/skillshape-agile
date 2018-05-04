@@ -331,6 +331,7 @@ export default function() {
               splitByCategory={false}
               classTypeBySchool='classTypeBySchool'
               handleSeeMore={this.handleSeeMore}
+              schoolView={true}
             />
         </ClassTypeListWrapper>
 
