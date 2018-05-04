@@ -175,11 +175,11 @@ const SolutionContentWrapper = styled.div`
   ${helpers.flexCenter};
   flex-direction: column;
   padding: 0 ${helpers.rhythmDiv * 2}px;
-  max-width: 500px;
   width: 100%;
   min-height: 300px;
   flex-shrink: 1;
   position: relative;
+  margin: 0;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     justify-content: flex-start;
@@ -302,6 +302,7 @@ const TOTAL_NUMBER_OF_SOLUTIONS = 3;
 
 const MySwipe = styled.div`
   width: 100%;
+  max-width: 500px;
 `;
 
 let myPosition = {
