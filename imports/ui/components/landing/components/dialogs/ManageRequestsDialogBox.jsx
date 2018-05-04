@@ -1,6 +1,7 @@
 import React, {Fragment,Component} from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, FormControlLabel } from 'material-ui/Form';
+import { FormControlLabel } from 'material-ui/Form';
+import {FormLabel} from 'material-ui/Form';
 import Checkbox from 'material-ui/Checkbox';
 
 import { getUserFullName } from '/imports/util/getUserData';
@@ -59,21 +60,22 @@ const styles = theme => {
       paddingLeft: `${helpers.rhythmDiv * 2}px`
     },
     dialogRoot: {
+      maxWidth: '500px',
+      overflow: 'hidden',
       width: '100%'
     },
     iconButton: {
       height: 'auto',
       width: 'auto'
+    },
+    labelText: {
+      display: 'flex',
+      alignItems: 'flex-end',
+      marginLeft: -14,
+      marginRight: helpers.rhythmDiv * 2
     }
   }
 }
-
-const Link = styled.a`
-  color:${helpers.textColor};
-  &:hover {
-    color:${helpers.focalColor};
-  }
-`;
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -81,34 +83,41 @@ const DialogTitleWrapper = styled.div`
   width: 100%;
 `;
 
-
 const ButtonWrapper = styled.div`
   ${helpers.flexCenter}
   margin: ${helpers.rhythmDiv * 4}px 0;
 `;
 
-const DialogActionText = styled.p`
-  margin: 0;
-  margin-right: ${helpers.rhythmDiv}px;
-  flex-shrink: 0;
-`;
-
-const ActionWrapper = styled.div`
-  width: 100%;
-  ${helpers.flexCenter}
-  justify-content: flex-end;
-`;
-
 const InputWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
   display: flex;
-  justify-content: ${props => props.stars ? 'center' : 'flex-start'}
+  flex-direction: column;
 `;
 
 const Title = styled.span`
   display: inline-block;
   width: 100%;
   text-align: center;
+`;
+
+const FormText = styled.p`
+  font-family: ${helpers.commonFont};
+  color: ${helpers.black};
+  line-height: 1;
+  font-size: ${helpers.baseFontSize}px;
+  margin: 0;
+  cursor: pointer;
+`;
+
+const LabelText = FormText.extend`
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.87);
+  line-height: 1.3;
+`;
+
+const SubscriptionNotes = FormText.extend`
+  font-size: 12px;
+  font-weight: 400;
 `;
 
 class ManageRequestsDialogBox extends Component {
@@ -185,25 +194,23 @@ class ManageRequestsDialogBox extends Component {
         this.setState({isBusy: true});
         Meteor.call(methodNameToCall, data, (err,res) => {
           this.setState({isBusy: false}, () => {
-            // console.log(this,this.props,"this .props")
-            debugger;
-              if(err) {
-                toastr.error(err.reason || err.message,"Error");
-              }else if(res.message) {
-                toastr.error(res.message,'Error');
-                // this.props.onModalClose();
-              }
-              else if(res) {
-                // toastr.success('Your request have been added, will be notified shortly','success');
-                this.props.onModalClose();
-                setTimeout(() => {
-                  this.handleRequest(text);
-                })
-              }
+            if(err) {
+              toastr.error(err.reason || err.message,"Error");
+            }else if(res.message) {
+              toastr.error(res.message,'Error');
+              // this.props.onModalClose();
+            }
+            else if(res) {
+              // toastr.success('Your request have been added, will be notified shortly','success');
+              this.props.onModalClose();
+              setTimeout(() => {
+                this.handleRequest(text);
+              })
+            }
 
-              if(this.props.onFormSubmit) {
-                this.props.onFormSubmit();
-              }
+            if(this.props.onFormSubmit) {
+              this.props.onFormSubmit();
+            }
           });
         });
 
@@ -280,17 +287,13 @@ class ManageRequestsDialogBox extends Component {
               </InputWrapper>
 
               <InputWrapper>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.subscribe}
-                      onChange={this.handleChange('subscribe')}
-                      value={true}
-                      color="primary"
-                    />
-                  }
-                  label="Subscribe me to updates"
-                />
+                <FormLabel classes={{root: props.classes.labelText}}>
+                  <Checkbox checked={this.state.subscribe} onChange={this.handleChange('subscribe')} color="primary" />
+                  <div>
+                    <LabelText>Subscribe me to updates of {props.classTypeName} class </LabelText>
+                    <SubscriptionNotes>(In order to give you regular updates, we will save your name and email id in our database)</SubscriptionNotes>
+                  </div>
+                </FormLabel>
               </InputWrapper>
 
               <ButtonWrapper>
@@ -318,6 +321,7 @@ ManageRequestsDialogBox.propTypes = {
   requestFor: PropTypes.string,
   userProfile: PropTypes.object,
   title: PropTypes.string,
+  classTypeName: PropTypes.string,
   submitBtnLabel: PropTypes.string,
 }
 

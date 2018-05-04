@@ -204,7 +204,7 @@ class SchoolSolutionCard extends Component {
 
   render() {
     // console.log(this.state,"adsljfj")
-    return (<SolutionCardOuterWrapper active={this.props.active} heightSet={this.props.heightSet}>
+    return (<SolutionCardOuterWrapper active={this.props.active}>
       <SolutionCardWrapper
         downwards={this.props.downwards}
         marginLeft={this.props.marginLeft}

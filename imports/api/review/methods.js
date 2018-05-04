@@ -11,7 +11,7 @@ Meteor.methods({
         const isValid = validationContext.validate(data);
 
         if(isValid) {
-          console.log('\n.... Review being added... \n');
+          //console.log('\n.... Review being added... \n');
           const reviewExists = Reviews.find({reviewerId: this.userId , reviewForId: data.reviewForId}).fetch()[0];
           if(reviewExists) {
             return Reviews.update({_id: reviewExists._id},{$set: data});

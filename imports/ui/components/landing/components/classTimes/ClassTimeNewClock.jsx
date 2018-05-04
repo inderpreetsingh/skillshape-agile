@@ -1,13 +1,10 @@
 import React , {Component , Fragment} from 'react';
 import styled from 'styled-components';
-
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
-import SliderDots from '../helpers/SliderDots.jsx';
 import * as helpers from '../jss/helpers.js';
-
-const ONE_TIME = 'onetime';
+import SliderDots from '../helpers/SliderDots.jsx';
 
 const ClockOuterWrapper = styled.div`
   ${helpers.flexCenter}
@@ -44,7 +41,7 @@ const ClockWrapper = styled.div`
   border-radius: 50%;
   background: white;
   margin-bottom: ${helpers.rhythmDiv}px;
-  transition: .1s linear width;
+  transition: .2s ease-in width;
   ${props => !props.active ? `width: 50px;
     height: 50px;` : ''}
 `;
@@ -55,11 +52,12 @@ const TimeContainer = styled.div`
   flex-direction: column;
   align-items: flex-end;
   padding-top: ${props => props.active ? 10 : 5}px;
-  transition: opacity .2s ease-out;
+  transition: .2s ease-in padding-top, opacity .2s ease-out;
 `;
 
 const Time = styled.p`
   margin: 0;
+  transition: .2s ease-in font-size;
   font-size: ${props => props.active ? helpers.baseFontSize * 2 : helpers.baseFontSize}px;
   color: inherit;
 `;
@@ -68,8 +66,10 @@ const TimePeriod = styled.span`
   display: inline-block;
   font-weight: 400;
   font-size: ${props => props.active ? helpers.baseFontSize : 12}px;
-  transform: translateY(${props => props.active ? -10 : -5}px);
+  line-height: 1;
   color: inherit;
+  transform: translateY(${props => props.active ? -8 : -4}px);
+  padding-right: ${helpers.rhythmDiv/2}px;
 `;
 
 const Duration = styled.span`
@@ -91,7 +91,8 @@ const DayDateContainer = styled.div`
 const MutipleDatesContainer = DayDateContainer.extend`
   position: relative;
   ${helpers.flexCenter}
-  min-height: 32px;
+  margin: ${helpers.rhythmDiv}px 0;
+  height: ${props => props.height}px;
 `;
 
 const DayDateInfo = styled.p`
@@ -100,11 +101,10 @@ const DayDateInfo = styled.p`
   font-size: 14px;
   font-weight: 400;
   margin: 0;
-  width: 100%;
-  text-align: center;
+  text-align: left;
   opacity: 1;
+  line-height: 1.3; // With this line-height font-size is approx 18px.
   transition: opacity .2s ease-out;
-  text-transform: capitalize;
 `;
 
 const CurrentDate = DayDateInfo.extend`
@@ -141,7 +141,6 @@ const ScheduleLabel = styled.p`
   font-weight: 500;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv/2}px;
-  text-transform: capitalize;
   font-style: normal;
 `;
 
@@ -170,7 +169,11 @@ const MyClock = (props) => (<MyClockWrapper
   </ClockWrapper>
 </MyClockWrapper>);
 
+const dateFontSize = 18;
+const margin = 2 * helpers.rhythmDiv;
+
 class ClassTimeNewClock extends Component {
+
   state = {
     currentClockIndex: 0,
   }
@@ -188,8 +191,6 @@ class ClassTimeNewClock extends Component {
     const scheduleType = this.props.scheduleType.toLowerCase();
     const eventTime = `${this.formatTime(eventStartTime)} ${this.formatAmPm(eventStartTime)}`;
 
-    // console.info(scheduleType,scheduleData,eventTime,"============");
-    // debugger;
     if(scheduleType === 'ongoing') {
       return `Every ${currentDay} at ${eventTime}`;
     }else if(scheduleType === 'recurring') {
@@ -217,13 +218,56 @@ class ClassTimeNewClock extends Component {
     return moment(date).format('DD-MM-YYYY');
   }
 
+  computeContainerHeight = (clocks,scheduleType) => {
+    let computedHeight = 100 + (dateFontSize + margin); // 18 font size + 2 * margintop and bottom.
+    if(clocks === 'multiple') {
+      computedHeight += 20; // Adding 20 more for the slider dots..
+    }
+
+    if(scheduleType === 'recurring') {
+      // We already have added fontsize for 1 line of date , now this is for another..
+      // since in recurring we have multiple lines for dates..
+      computedHeight += dateFontSize;
+    }
+    console.info('----------------------- updating...')
+    this.props.updateContainerHeight(computedHeight);
+  }
+
+  computeDateContainerHeight = (scheduleType) => {
+    let computedHeight = dateFontSize;
+
+    if(scheduleType === 'recurring') {
+      computedHeight += dateFontSize;
+    }
+    return computedHeight;
+  }
+
+  componentDidUpdate = () => {
+    const type = this.props.scheduleData.length > 1 ? 'multiple' : 'single';
+    const { visible, scheduleType, currentDay} = this.props;
+    // debugger;
+    if(visible) {
+      this.computeContainerHeight(type,scheduleType);
+    }
+  }
+
+  componentDidMount = () => {
+    const type = this.props.scheduleData.length > 1 ? 'multiple' : 'single';
+    const { visible, scheduleType, currentDay} = this.props;
+    // debugger;
+    if(visible) {
+      this.computeContainerHeight(type,scheduleType);
+    }
+  }
+
   render() {
     // console.log("Clock Outer wrapper",this.props,"..............");
     const type = this.props.scheduleData.length > 1 ? 'multiple' : 'single';
-    const { scheduleData, scheduleType, currentDay } = this.props;
-    console.info(" clock outer wrapper........",this.props);
+    const { scheduleData, visible, scheduleType, currentDay, updateContainerHeight } = this.props;
+    // console.info(" clock outer wrapper........",this.props);
+
     return (<ClockOuterWrapper
-              visible={this.props.visible}
+              visible={visible}
               clockType={type}
               currentClockIndex={this.state.currentClockIndex}>
               <ClockInnerWrapper
@@ -251,7 +295,7 @@ class ClassTimeNewClock extends Component {
                   noOfDots={this.props.scheduleData.length}
                   dotColor={this.props.clockProps.dotColor}
                   onDotClick={this.handleClockClick} /></DotsWrapper> }
-              {scheduleType && <MutipleDatesContainer>
+              {scheduleType && <MutipleDatesContainer height={this.computeDateContainerHeight(scheduleType)}>
                 {scheduleData.map((schedule,i) => {
                   const eventStartTime = new Date(schedule.startTime);
                   // console.info(eventStartTime,"===========================");
