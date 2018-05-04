@@ -94,7 +94,7 @@ class ClassTimeForm extends React.Component {
         console.log("--------------------- ClassTimes from submit----------------")
         event.preventDefault()
         // console.log("onSubmit state -->>",this.state);
-        const { schoolId, data, parentKey, } = this.props;
+        const { schoolId, data, parentKey, parentData} = this.props;
         const { tabValue, locationId } = this.state;
 
         const payload = {
@@ -103,6 +103,9 @@ class ClassTimeForm extends React.Component {
             name: this.classTimeName.value,
             desc: this.desc.value,
             locationId: locationId,
+            gender: parentData && parentData.gender,
+            ageMin:parentData && parentData.ageMin,
+            experienceLevel: parentData && parentData.experienceLevel
         }
 
         if(tabValue === 0) {

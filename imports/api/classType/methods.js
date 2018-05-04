@@ -49,7 +49,7 @@ Meteor.methods({
     },
     "classType.editClassType": function({doc_id, doc}) {
         const user = Meteor.users.findOne(this.userId);
-        // console.log("classType.editClassType methods called!!!",doc_id, doc);
+        console.log("classType.editClassType methods called!!!",doc_id, doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
             let classTypeData = ClassType.findOne({_id: doc_id});
 
@@ -62,7 +62,22 @@ Meteor.methods({
                 // temp.filters["state"] = location.state;
                 temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${location.country}`;
             }
-
+            let classTimeUpdateObj = {};
+            // Need to edit changes in ClassTimes like edit `gender`,`experienceLevel`,`ageMin`.
+            if(classTypeData && classTypeData.ageMin!== doc.ageMin) {
+                classTimeUpdateObj.ageMin = doc.ageMin
+            }
+            if(classTypeData && classTypeData.experienceLevel!== doc.experienceLevel) {
+                classTimeUpdateObj.experienceLevel = doc.experienceLevel
+            }
+            if(classTypeData && classTypeData.gender!== doc.gender) {
+                classTimeUpdateObj.gender = doc.gender
+            }
+            let classTimesIds = ClassTimes.find({classTypeId:doc_id}).map(data => data._id);
+            // Need to update Class Times so that we can show ageMin,gender,experienceLevel on class details modal.
+            if(!isEmpty(classTimeUpdateObj) && !isEmpty(classTimesIds)) {
+                ClassTimes.update({_id: {$in: classTimesIds}},{$set: classTimeUpdateObj},{multi:true});
+            }
             return ClassType.update({ _id: doc_id }, { $set: temp });
         } else {
             throw new Meteor.Error("Permission denied!!");
