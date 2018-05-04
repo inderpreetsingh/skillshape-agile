@@ -168,7 +168,8 @@ const FilterPanelWrapper = styled.div`
   height: 80px;
   left: 0;
   z-index: 5;
-  height: ${props => props.height}px;
+  // height: ${props => props.height}px;
+  height: 0;
  `;
 
 
@@ -749,7 +750,7 @@ class Landing extends Component {
                     </CoverWrapper>
 
                     {/* Filter Panel */}
-                    <FilterPanelWrapper height={!this.state.mapView && '0'}>
+                    <FilterPanelWrapper>
                         <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
                           {this.state.mapView ? this.renderFilterPanel() :
                             <FilterBarDisplayWrapper sticky={this.state.sticky}>
