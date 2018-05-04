@@ -1,15 +1,15 @@
 import React , {Component,Fragment} from 'react';
 import {isEqual,isEmpty} from 'lodash';
-import { findDOMNode } from 'react-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import * as helpers from '../jss/helpers.js';
-import ClassTimeClock from './ClassTimeClock.jsx';
 import ClassTimeNewClock from './ClassTimeNewClock.jsx';
+import ClassTimeNewClocksContainer from './ClassTimeNewClocksContainer.jsx';
+
+import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/daysInWeek.js';
 
 const ONE_TIME = 'onetime';
-const DAYS_IN_WEEK = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 const OuterWrapper = styled.div`
   width: ${props => props.width || 250}px;
@@ -33,22 +33,7 @@ const ChangeSlide = styled.div`
   width: 100%;
   font-family: ${helpers.specialFont};
   ${helpers.flexCenter}
-`;
-
-const ScheduleSeperator = styled.span`
-  font-weight: 600;
-  margin: 0 ${helpers.rhythmDiv/2}px;
-`;
-
-const Schedule = styled.p`
-  display: inline-block;
-  width: 100%;
-  text-align: center;
-  margin: 0;
-  margin-top: ${helpers.rhythmDiv}px;
-  font-weight: 400;
-  font-size: ${helpers.baseFontSize}px;
-  text-transform: capitalize;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const Days = styled.p`
@@ -77,6 +62,22 @@ const Day = styled.p`
     margin-right: 0;
   }
 `;
+
+const ScheduleSeperator = styled.span`
+  font-weight: 600;
+  margin: 0 ${helpers.rhythmDiv/2}px;
+`;
+
+const Schedule = styled.p`
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  font-weight: 400;
+  font-size: ${helpers.baseFontSize}px;
+  text-transform: capitalize;
+`;
+
 
 const Seperator = styled.span`
   font-weight: 400;
@@ -206,7 +207,7 @@ class ClassTimeClockManager extends Component {
       });
 
       if(this.state.currentIndex !== selectedDay)
-      this.setState({ currentIndex: selectedDay});
+        this.setState({ currentIndex: selectedDay});
     }
   }
 
@@ -223,35 +224,30 @@ class ClassTimeClockManager extends Component {
   }
 
   render() {
-    console.log(' clock times clock manager -----> ',this.props.formattedClassTimes,".....");
-    const formattedClassTimes = this.props.formattedClassTimes;
-    console.log('formattedClassTimes',formattedClassTimes);
+    // console.log(' clock times clock manager -----> ',this.props.formattedClassTimes,".....");
+    const { formattedClassTimes } = this.props;
+    // console.log('formattedClassTimes',formattedClassTimes);
     return (<Fragment>
         {/*Clock Times*/}
         <OuterWrapper width={this.props.outerWidth}>
-          <InnerWrapper>
+
             {/* NOTE : This is not to be used when we are using the ClassTimeNewClock */}
             {/* <ClassTimeClock data={this.props.data} visible={this.state.currentIndex} {...this.props.clockProps} /> */}
 
-            {formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
-              if(formattedClassTimes[day]) {
-                return <ClassTimeNewClock
-                  currentDay={day}
-                  scheduleType={this.props.scheduleType}
-                  scheduleData={formattedClassTimes[day]}
-                  scheduleStartDate={this.props.scheduleStartDate}
-                  scheduleEndDate={this.props.scheduleEndDate}
-                  visible={i === this.state.currentIndex}
-                  clockProps={this.props.clockProps} />
-              }
-              return null;
-            })}
-          </InnerWrapper>
+            <ClassTimeNewClocksContainer
+              formattedClassTimes={formattedClassTimes}
+              scheduleType={this.props.scheduleType}
+              scheduleStartDate={this.props.scheduleStartDate}
+              scheduleEndDate={this.props.scheduleEndDate}
+              currentIndex={this.state.currentIndex}
+              clockProps={this.props.clockProps}
+             />
+
         </OuterWrapper>
 
-        <ChangeSlide>
+        {formattedClassTimes && Object.keys(formattedClassTimes).length > 1 && <ChangeSlide>
           <Days>
-            {formattedClassTimes && Object.keys(formattedClassTimes).length > 1 && DAYS_IN_WEEK.map((day,i) => {
+            {DAYS_IN_WEEK.map((day,i) => {
               // console.log(this.props,'this.props......')
               if(formattedClassTimes[day]){
                 return(<Day
@@ -264,9 +260,9 @@ class ClassTimeClockManager extends Component {
               return null;
             })}
           </Days>
-        </ChangeSlide>
+        </ChangeSlide>}
 
-        {<Schedule>{ this.props.scheduleType}</Schedule>}
+        <Schedule>{ this.props.scheduleType}</Schedule>
       </Fragment>
     )
   }
