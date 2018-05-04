@@ -20,6 +20,7 @@ import { withStyles } from 'material-ui/styles';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import { browserHistory, Link } from 'react-router';
 import ClassType from "/imports/api/classType/fields";
+import ClassTimes from "/imports/api/classTimes/fields";
 import SLocation from "/imports/api/sLocation/fields";
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
@@ -200,7 +201,7 @@ class ClassDetailModal extends React.Component{
     const { isLoading, error, school, classType, classTimes, location, addToMyCalender } = this.state;
     const { eventData, fullScreen, classes, clickedDate } = this.props;
     console.log("eventData____________", eventData);
-    let classTypeData = ClassType.findOne({_id:eventData.classTypeId});
+    let classTypeData = ClassTimes.findOne({_id:eventData.classTimeId});
     return (
         <Dialog
           fullScreen={fullScreen}
