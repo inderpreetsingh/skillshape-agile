@@ -417,6 +417,7 @@ class ClassTypeContent extends Component {
             requestFor="price"
             schoolData={schoolData}
             classTypeId={classTypeData._id}
+            classTypeName={classTypeData.name}
             />}
           {this.state.isBusy && <ContainerLoader/>}
 
