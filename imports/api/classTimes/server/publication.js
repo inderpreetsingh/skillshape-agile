@@ -75,11 +75,11 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({schoolId, classT
         }
         // console.log("schoolIds====>",schoolIds)
         let classTimeCursor = ClassTimes.find(condition);
-        let classTypeData = ClassType.find({schoolId: { $in: schoolIds }})
+        // let classTypeData = ClassType.find({schoolId: { $in: schoolIds }})
         // console.log("view", view);
         result.push(classInterestCursor);
         result.push(classTimeCursor);
-        result.push(classTypeData);
+        // result.push(classTypeData);
     } else {
         // User is not login then show only class times of that School only.
         let schoolIds= [];
