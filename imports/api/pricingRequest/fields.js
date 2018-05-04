@@ -23,6 +23,9 @@ export const PricingRequestSchema = new SimpleSchema({
   userId: {
     type: String,
     optional: true
+  },
+  createdAt: {
+    type: Date,
   }
 });
 

@@ -15,12 +15,13 @@ import {getContainerMaxWidth,getAverageNoOfRatings} from '/imports/util';
 import Reviews from '/imports/api/review/fields.js';
 import * as helpers from '../jss/helpers.js';
 
+const SPACING = helpers.rhythmDiv * 3;
+const CARD_WIDTH = 280;
+
 const CardsListWrapper = styled.div`
   padding: 0;
 `;
 
-const SPACING = helpers.rhythmDiv * 3;
-const CARD_WIDTH = 280;
 
 const GridContainer = styled.div`
   ${helpers.flexCenter}

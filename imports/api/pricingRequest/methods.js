@@ -4,6 +4,7 @@ Meteor.methods({
   'pricingRequest.addRequest': function(data) {
     const validationContext = PricingRequestSchema.newContext();
     const isValid = validationContext.validate(data);
+    data.createdAt = new Date();
 
     if(this.userId) {
       data.existingUser = true;

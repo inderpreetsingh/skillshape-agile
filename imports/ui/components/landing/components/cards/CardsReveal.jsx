@@ -81,7 +81,8 @@ const CardContentTitle = styled.h2`
   line-height: 1;
   margin: 0;
   text-transform: capitalize;
-  
+  ${props => props.description ? `padding: 0 ${helpers.rhythmDiv}px` : ''};
+
   @media screen and (max-width : ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
   }
@@ -104,7 +105,7 @@ const CardDescriptionWrapper = styled.div`
   position: absolute;
   background-color: white;
   width: 100%;
-  z-index: 9;
+  z-index: 4;
   top: 0;
   right: 0;
   left: 0;
