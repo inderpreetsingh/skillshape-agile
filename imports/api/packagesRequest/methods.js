@@ -30,9 +30,9 @@ Meteor.methods({
             const packageName =
                 typeOfTable == "EP" ? packageData.name : packageData.packageName;
             console.log("typeOfTable, tableId, schoolId", typeOfTable, tableId, schoolId);
-            const pricingRequestAlreadyPresent = PackageRequest.findOne({ userId: this.userId, packageId: packageData._id });
+            const purchaseRequestAlreadyPresent = PackageRequest.findOne({ userId: this.userId, packageId: packageData._id });
             const schoolData = School.findOne(schoolId);
-            if (pricingRequestAlreadyPresent) {
+            if (purchaseRequestAlreadyPresent) {
                 throw new Meteor.Error(`You are currently unable to purchase this package from here. ${schoolData && schoolData.name} has been notified of your interest in ${packageName} class package.`)
             } else {
                 let data = {};
