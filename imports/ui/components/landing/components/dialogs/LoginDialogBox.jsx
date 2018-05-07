@@ -142,7 +142,7 @@ const LoginDialog = (props) => (
   <MuiThemeProvider theme={muiTheme}>
     <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
       <DialogTitleWrapper>
-          <span itemProp="name">Log In to SkillShape</span>
+          <span itemProp="name">{props.title || 'Log In to SkillShape'}</span>
 
           <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
             <ClearIcon/>
@@ -226,6 +226,7 @@ LoginDialog.propTypes = {
   onSignInButtonClick: PropTypes.func,
   onModalClose: PropTypes.func,
   loading: PropTypes.bool,
+  title: PropTypes.string
 }
 
 export default withMobileDialog()(withStyles(styles)(LoginDialog));

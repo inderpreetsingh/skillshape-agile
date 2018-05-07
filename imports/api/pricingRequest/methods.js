@@ -1,7 +1,7 @@
 import PricingRequest,{PricingRequestSchema} from './fields.js';
 
 Meteor.methods({
-  'pricingRequest.addRequest': function(data) {
+  'pricingRequest.addRequest': function(data, subscriptionRequest) {
     const validationContext = PricingRequestSchema.newContext();
     const isValid = validationContext.validate(data);
     data.createdAt = new Date();
@@ -13,13 +13,19 @@ Meteor.methods({
     }else {
       data.existingUser = false;
     }
-
-    if(isValid) {
+    console.log('checking for existing user....');
+    if(!this.userId) {
+      // check for user
+      const userData = Meteor.users.findOne({"emails.address": data.email});
+      if(userData) {
+        throw new Meteor.Error("user exists","user data already exists with this email account");
+      }
+    }else if (isValid) {
       // console.log('adding price request..');
       const pricingRequestAlreadyPresent = PricingRequest.find({email: data.email}).fetch()[0];
       if(pricingRequestAlreadyPresent) {
         return {
-          message: 'Already requested for price with this email address'
+          message: "Already requested for price with this email address"
         }
       }else {
         return PricingRequest.insert(data);
