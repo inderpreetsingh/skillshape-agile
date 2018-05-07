@@ -138,12 +138,6 @@ class ClassTime extends Component {
     // console.info('Show me state',this.state);
   }
 
-  // handleToggleAddToCalendar = () => {
-  //   this.setState({
-  //     addToCalendar: !this.state.addToCalendar
-  //   });
-  // }
-
   handleAddToMyCalendarButtonClick = () => {
     // console.log("this.props.handleAddToMyCalendarButtonClick",this.props);
     this.addToMyCalender(this.props.classTimeData);
@@ -272,7 +266,6 @@ class ClassTime extends Component {
     })
   }
 
-
   _getWrapperClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar' : 'remove-from-calendar';
 
   _getOuterClockClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
@@ -309,6 +302,7 @@ class ClassTime extends Component {
 
   render() {
     console.log("ClassTime props -->>",this.props);
+    const { desc } = this.props;
     const classNameForClock = this._getOuterClockClassName(this.props.addToCalendar);
     const dotColor = this._getDotColor(this.props.addToCalendar);
     return (<Fragment>
@@ -331,7 +325,7 @@ class ClassTime extends Component {
           </ScheduleWrapper>
 
           <DescriptionWrapper>
-            {this.props.showReadMore ?
+            {/*this.props.showReadMore ?
               <Description fullTextState={this.state.fullTextState}>
                 {this.props.getDescriptionText()}
                 {this.props.getShowMoreText()}
@@ -339,7 +333,10 @@ class ClassTime extends Component {
               :
               <Description>
                 {this.props.fullText}
-              </Description>}
+              </Description> */}
+              <Description>
+                {desc}
+              </Description>
           </DescriptionWrapper>
         </ScheduleAndDescriptionWrapper>
 
@@ -364,4 +361,5 @@ ClassTime.propTypes = {
 }
 
 
-export default toastrModal(withShowMoreText(ClassTime, { description: "desc"}));
+// export default toastrModal(withShowMoreText(ClassTime, { description: "desc"}));
+export default toastrModal(ClassTime);
