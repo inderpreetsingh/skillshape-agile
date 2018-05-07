@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import ReactHtmlParser from 'react-html-parser';
 
 import StarsBar from '../StarsBar.jsx';
@@ -66,13 +67,40 @@ const Reviews = styled.a`
   line-height: 1;
 `;
 
+const SchoolLink = styled(Link)`
+  color: ${helpers.black};
+  position: relative;
+  display: inline-block;
+
+  &:visited, &:active {
+    color: currentColor;
+  }
+
+  &::after {
+    content: '';
+    left: 0;
+    position: absolute;
+    bottom: 4px;
+    height: 2px;
+    background: currentColor;
+    width: 100%;
+    transition: .1s ease-in transform;
+    transform: scaleX(0);
+  }
+
+  &:hover:after {
+    transform: scaleX(1);
+  }
+`;
+
 const ClassTypeDescription = (props) => {
   const PublishStatusButton = props.publishStatusButton;
   return (
     <Wrapper isEdit={props.isEdit}>
         {props.isClassTypeNameAvailable ?
         <Title>{props.classTypeName.toLowerCase()}
-          {props.schoolName && props.classTypeName ? <span> in </span> : ''} {props.schoolName.toLowerCase()}
+          {props.schoolName && props.classTypeName ? <span> in </span> : ''}
+          <SchoolLink to={`/schools/${props.friendlySlug}`} target="_blank">{props.schoolName.toLowerCase()}</SchoolLink>
         </Title>
         :
         <Title>{props.schoolName.toLowerCase()}
