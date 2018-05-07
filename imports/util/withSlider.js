@@ -41,13 +41,13 @@ const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) 
     infinite: true,
     beforeChange: (current, next) => {
       const {sliderProps} = props;
-      if(sliderProps.onBeforeSlideChange)
+      if(sliderProps&& sliderProps.onBeforeSlideChange)
         sliderProps.onBeforeSlideChange(next);
     },
     afterChange: (index) => {
       // console.log(index);
       const {sliderProps} = props;
-      if(sliderProps.onAfterSlideChange)
+      if(sliderProps && sliderProps.onAfterSlideChange)
         sliderProps.onAfterSlideChange(index);
     },
     slidesToShow: sliderConfig.desktop,

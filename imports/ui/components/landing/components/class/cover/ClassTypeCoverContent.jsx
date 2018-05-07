@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {isEmpty} from 'lodash';
 
+import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
-import { withStyles } from 'material-ui/styles';
 
 import { createMarkersOnMap, toastrModal } from '/imports/util';
 
@@ -60,7 +60,7 @@ const ClassTypeInfoWrapper = styled.div`
 
 const MapContainer = styled.div`
   min-height: 320px;
-  max-width: 496px;
+  width: 496px;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   border-radius: 5px;
   background-color: #e0e0e0;
@@ -295,6 +295,7 @@ class ClassTypeCoverContent extends React.Component {
                   isEdit={props.isEdit}
                   publishStatusButton={props.publishStatusButton}
                   schoolName={props.schoolDetails.name}
+                  friendlySlug={props.schoolDetails.friendlySlugs.slug.base}
                   description={description}
                   isClassTypeNameAvailable={!props.noClassTypeData}
                   classTypeName={classTypeName}

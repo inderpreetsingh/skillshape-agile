@@ -1,7 +1,7 @@
 import React, {Fragment,Component} from 'react';
 import PropTypes from 'prop-types';
-import { FormControlLabel } from 'material-ui/Form';
-import {FormLabel} from 'material-ui/Form';
+import Radio, { RadioGroup } from 'material-ui/Radio';
+import { FormControlLabel} from 'material-ui/Form';
 import Checkbox from 'material-ui/Checkbox';
 
 import { getUserFullName } from '/imports/util/getUserData';
@@ -126,21 +126,16 @@ class ManageRequestsDialogBox extends Component {
     userExists: false,
     name: '',
     email: '',
+    subscriptionRequest: 'save',
     subscribe: true,
     readyToSubmit: false,
     inputsName: ['name','email'],
   }
 
-  handleInputChange = name => e => {
+  handleChange = name => e => {
     this.setState({
       [name] : e.target.value
     });
-  }
-
-  handleChange = name => e => {
-    this.setState({
-      [name]: e.target.checked
-    })
   }
 
   handleRequest = (text) => {
@@ -167,12 +162,14 @@ class ManageRequestsDialogBox extends Component {
     e.preventDefault();
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     const {toastr,requestFor} = this.props;
+    const subscriptionRequest = this.state.subscriptionRequest;
     const data = {
       name: this.state.name,
       email: this.state.email,
       classTypeId: this.props.classTypeId,
-      schoolId: this.props.schoolData._id
+      schoolId: this.props.schoolData._id,
     }
+
     let methodNameToCall = 'classTimesRequest.addRequest';
     let text = 'class times';
     if(requestFor === 'price') {
@@ -180,7 +177,9 @@ class ManageRequestsDialogBox extends Component {
       text = 'pricing';
     }
 
-    if(this.state.readyToSubmit && this.state.subscribe) {
+    console.info(data,"data...");
+
+    if(this.state.readyToSubmit) {
       if (!data.email) {
           toastr.error('Please enter your email.', 'Error');
           return false;
@@ -192,9 +191,12 @@ class ManageRequestsDialogBox extends Component {
           return false;
       }else {
         this.setState({isBusy: true});
-        Meteor.call(methodNameToCall, data, (err,res) => {
-          this.setState({isBusy: false}, () => {
-            if(err) {
+        Meteor.call(methodNameToCall, data, subscriptionRequest, (err,res) => {
+          const userExistsError = 'user exists';
+          this.setState({isBusy: false} , () => {
+            if(err.error === userExistsError) {
+              Events.trigger('loginAsUser',{email: data.email, loginModalTitle: `We have ${data.email} as registered user. kindly log in your account.`});
+            }else if(err) {
               toastr.error(err.reason || err.message,"Error");
             }else if(res.message) {
               toastr.error(res.message,'Error');
@@ -238,17 +240,10 @@ class ManageRequestsDialogBox extends Component {
     }
   }
 
-  _addExistingUserDetails = () => {
-    this.setState({
-      userExists: true,
-      email: Meteor.user().emails[0].address,
-      name: getUserFullName(Meteor.user())
-    })
-  }
-
   componentDidMount = () => {
     if(Meteor.userId()) {
-      this._addExistingUserDetails();
+      if(!this.state.userExists)
+        this.setState({userExists: true});
     }
   }
 
@@ -279,22 +274,26 @@ class ManageRequestsDialogBox extends Component {
           <DialogContent classes={{root : props.classes.dialogContent}}>
             <form onSubmit={this.handleFormSubmit}>
               <InputWrapper stars>
-                <IconInput inputId="name" labelText="Your name" value={this.state.name} disabled={this.state.userExists} onChange={this.handleInputChange('name')} />
+                <IconInput inputId="name" labelText="Your name" value={this.state.name} onChange={this.handleChange('name')} />
               </InputWrapper>
 
               <InputWrapper>
-                <IconInput inputId="message" type='email' labelText="Your email address" disabled={this.state.userExists} value={this.state.email} onChange={this.handleInputChange('email')} />
+                <IconInput inputId="message" type='email' labelText="Your email address" value={this.state.email} onChange={this.handleChange('email')} />
               </InputWrapper>
 
-              <InputWrapper>
-                <FormLabel classes={{root: props.classes.labelText}}>
-                  <Checkbox checked={this.state.subscribe} onChange={this.handleChange('subscribe')} color="primary" />
-                  <div>
-                    <LabelText>Subscribe me to updates of {props.classTypeName} class </LabelText>
-                    <SubscriptionNotes>(In order to give you regular updates, we will save your name and email id in our database)</SubscriptionNotes>
-                  </div>
-                </FormLabel>
-              </InputWrapper>
+              {!this.state.userExists && <InputWrapper>
+                <RadioGroup
+                  aria-label="manage-request"
+                  name="manage-request"
+                  className={props.classes.subscriptionRequest}
+                  value={this.state.subscriptionRequest}
+                  onChange={this.handleChange('subscriptionRequest')}
+                >
+                  <FormControlLabel value="no-save" control={<Radio />} label="This is correspondence between you and school directly. We wont save your data" />
+                  <FormControlLabel value="save" control={<Radio />} label="Stay updated on the classes you are interested. This will require we save your email address." />
+                  <FormControlLabel value="sign-up" control={<Radio />} label="Join Skillshape to register for classes, manage your media, and connect with other members. (FREE Memebership!)" />
+                </RadioGroup>
+              </InputWrapper>}
 
               <ButtonWrapper>
                 {this.state.readyToSubmit ?
@@ -319,8 +318,8 @@ class ManageRequestsDialogBox extends Component {
 ManageRequestsDialogBox.propTypes = {
   onFormSubmit: PropTypes.func,
   requestFor: PropTypes.string,
-  userProfile: PropTypes.object,
   title: PropTypes.string,
+  schoolData: PropTypes.object,
   classTypeName: PropTypes.string,
   submitBtnLabel: PropTypes.string,
 }
