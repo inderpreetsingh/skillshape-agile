@@ -318,8 +318,8 @@ class ManageRequestsDialogBox extends Component {
 ManageRequestsDialogBox.propTypes = {
   onFormSubmit: PropTypes.func,
   requestFor: PropTypes.string,
-  userProfile: PropTypes.object,
   title: PropTypes.string,
+  schoolData: PropTypes.object,
   classTypeName: PropTypes.string,
   submitBtnLabel: PropTypes.string,
 }

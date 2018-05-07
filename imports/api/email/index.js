@@ -186,7 +186,9 @@ export const userRegistrationAndVerifyEmail = function(
 export const sendPriceInfoRequestEmail = function({
     toEmail,
     fromEmail,
+    schoolPageLink,
     updatePriceLink,
+    memberLink,
     ownerName,
     currentUserName
 }) {
@@ -196,8 +198,11 @@ export const sendPriceInfoRequestEmail = function({
             from: fromEmail,
             replyTo: "Notices@SkillShape.com",
             subject: "Pricing info request received",
-            html: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
-            \n\nThanks, \n\n${EmailSignature}`
+            html: `Dear ${ownerName}, \n${currentUserName} ${memberLink || ''} saw your listing on SkillShape.com \n${schoolPageLink} \n and would like to update your pricing \n${updatePriceLink}
+            \n\nThanks, \n\n${EmailSignature}
+            `
+            // html: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
+            // \n\nThanks, \n\n${EmailSignature}`
         });
     }
 };
