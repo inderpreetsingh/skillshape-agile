@@ -4,6 +4,7 @@ export default config = Object.freeze({
 	defaultSchoolLogo: "/images/new-logo.png",
 	fromEmailForPurchasePackage: "Notices@SkillShape.com",
 	fromEmailForJoiningClass: "Notices@SkillShape.com",
+	skillshapeAdminEmail: "sam@skillshape.com",
 	themeColor: {
 		yellow: '#E9B942',
 		green: '#9DC161',
@@ -37,7 +38,8 @@ export default config = Object.freeze({
 		PriceInfoRequest: "PriceInfoRequest",
 		pricingRequest: "PricingRequest",
 		schoolMemberDetails: "SchoolMemberDetails",
-		classTypeLocationRequest: "ClassTypeLocationRequest"
+		classTypeLocationRequest: "ClassTypeLocationRequest",
+		PackageRequest: "PackageRequest"
 	},
 	gender : [
 		{ label: "Other", value: "Other"},
