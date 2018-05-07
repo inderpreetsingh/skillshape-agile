@@ -8,12 +8,13 @@ import EmailSignature from './signature.js';
 import { getUserFullName } from '/imports/util/getUserData';
 
 
-export const sendPackagePurchaseEmail = function({ to, buyer, packageName }) {
+
+export const sendPackagePurchaseEmail = function({ to, buyer, packageName, schoolAdminName }) {
     Email.send({
-        to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
+        to: config.skillshapeAdminEmail, // Replace value of `to` with Admin email if Admin exists.
         from: config.fromEmailForPurchasePackage,
         subject: "Package Purchase Request Recieved",
-        html: `<b>${buyer}</b> has requested this package : <b>${packageName}</b>
+        html: `Dear ${schoolAdminName},<br/><b>${buyer}</b> has expressed interest in <b>${packageName}</b> class package.
             <br/><br/>
             <br/><br/>
             ${EmailSignature}`
@@ -31,7 +32,7 @@ export const sendJoinClassEmail = function({
 }) {
     if (Meteor.isServer) {
         Email.send({
-            to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
+            to: config.skillshapeAdminEmail, // Replace value of `to` with Admin email if Admin exists.
             from: config.fromEmailForJoiningClass,
             subject: "Join Class Request Recieved",
             html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your class: <b>${classTypeName}</b> , <b>${classTimeName}</b>.
@@ -59,7 +60,7 @@ export const sendClaimASchoolEmail = function(
         const schoolOwnerName = getUserFullName(schoolAdminRec);
         // console.log("To====>",To)
         if(!To) {
-            To = "sam@skillshape.com";
+            To = config.skillshapeAdminEmail;
         }
         Email.send({
             to: To, // Replace value of `to` with Admin email if Admin exists.
@@ -85,7 +86,7 @@ export const sendClaimASchoolEmail = function(
 export const sendConfirmationEmail = function(userRec, school) {
     if (Meteor.isServer) {
         Email.send({
-            to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
+            to: config.skillshapeAdminEmail, // Replace value of `to` with Admin email if Admin exists.
             from: config.fromEmailForJoiningClass,
             subject:
                 "Confirmation regarding your school claim request received",
@@ -122,7 +123,7 @@ export const sendClassTimesRequest = function({
     }
     if (Meteor.isServer) {
         Email.send({
-            to: "sam@skillshape.com", //emailObj.to
+            to: config.skillshapeAdminEmail, //emailObj.to
             from: "Notices@SkillShape.com",
             replyTo: "Notices@SkillShape.com",
             subject: emailObj.subject,
@@ -139,7 +140,7 @@ export const sendEmailToStudentForClassTypeUpdation = function(
     if (Meteor.isServer) {
         const userName = getUserFullName(userData);
         Email.send({
-            to: "sam@skillshape.com",//userData.emails[0].address
+            to: config.skillshapeAdminEmail,//userData.emails[0].address
             from: "Notices@SkillShape.com",
             subject: "School Updated",
             html: `${userName}, <br/>${schoolData.name} has updated their listing for ${classTypeName}. Please go to <br/> ${Meteor.absoluteUrl(
@@ -159,7 +160,7 @@ export const userRegistrationAndVerifyEmail = function(
 ) {
     Email.send({
         from: fromEmail,
-        to: toEmail,
+        to: config.skillshapeAdminEmail,
         replyTo: fromEmail,
         subject: "skillshape Registration",
         html: `Hi ${user.profile.name},
