@@ -41,7 +41,7 @@ const ClockWrapper = styled.div`
   border-radius: 50%;
   background: white;
   margin-bottom: ${helpers.rhythmDiv}px;
-  transition: .2s ease-in width;
+  transition: .2s ease-in width, .2s ease-in height;
   ${props => !props.active ? `width: 50px;
     height: 50px;` : ''}
 `;
@@ -68,6 +68,7 @@ const TimePeriod = styled.span`
   font-size: ${props => props.active ? helpers.baseFontSize : 12}px;
   line-height: 1;
   color: inherit;
+  transition: .2 ease-in transform;
   transform: translateY(${props => props.active ? -8 : -4}px);
   padding-right: ${helpers.rhythmDiv/2}px;
 `;
@@ -132,6 +133,8 @@ const convertDurationToHours = (duration) => {
 const MyClockWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
+  justify-content: center;
+  height: 110px;
   margin-left: ${props => (props.clockType === 'multiple') ? (props.currentClock === 0) ? '60px' : '10px' : '0px'}; // IF the currentClock is 0
   cursor: ${props => props.clockType === 'multiple' ? 'pointer' : 'initial'};
 `;

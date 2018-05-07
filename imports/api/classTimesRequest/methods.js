@@ -33,7 +33,7 @@ Meteor.methods({
             }
 
     	} else {
-			throw new Meteor.Error("Permission denied!!");
+			     throw new Meteor.Error("Permission denied!!");
     	}
     }
 })
