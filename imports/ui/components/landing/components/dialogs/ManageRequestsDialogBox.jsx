@@ -195,7 +195,7 @@ class ManageRequestsDialogBox extends Component {
         Meteor.call(methodNameToCall, data, schoolData,subscriptionRequest, (err,res) => {
           const userExistsError = 'user exists';
           this.setState({isBusy: false} , () => {
-            if(err.error === userExistsError) {
+            if(err && err.error === userExistsError) {
               Events.trigger('loginAsUser',{email: data.email, loginModalTitle: `We have ${data.email} as registered user. kindly log in your account.`});
             }else if(err) {
               toastr.error(err.reason || err.message,"Error");
