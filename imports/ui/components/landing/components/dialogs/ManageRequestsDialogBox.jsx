@@ -1,20 +1,20 @@
 import React, {Fragment,Component} from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import { FormControlLabel} from 'material-ui/Form';
-import Checkbox from 'material-ui/Checkbox';
+import { isEmpty} from 'lodash';
 
+import Events from '/imports/util/events';
 import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
-import { isEmpty} from 'lodash';
 
 import PrimaryButton from '../buttons/PrimaryButton';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
 import TextField from 'material-ui/TextField';
-import styled from 'styled-components';
 
 import IconInput from '../form/IconInput.jsx';
 
@@ -162,6 +162,7 @@ class ManageRequestsDialogBox extends Component {
     e.preventDefault();
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     const {toastr,requestFor} = this.props;
+    const schoolData = this.props.schoolData;
     const subscriptionRequest = this.state.subscriptionRequest;
     const data = {
       name: this.state.name,
@@ -177,7 +178,7 @@ class ManageRequestsDialogBox extends Component {
       text = 'pricing';
     }
 
-    console.info(data,"data...");
+    // console.info(data,"data...");
 
     if(this.state.readyToSubmit) {
       if (!data.email) {
@@ -191,23 +192,26 @@ class ManageRequestsDialogBox extends Component {
           return false;
       }else {
         this.setState({isBusy: true});
-        Meteor.call(methodNameToCall, data, subscriptionRequest, (err,res) => {
+        Meteor.call(methodNameToCall, data, schoolData,subscriptionRequest, (err,res) => {
           const userExistsError = 'user exists';
           this.setState({isBusy: false} , () => {
-            if(err.error === userExistsError) {
+            if(err && err.error === userExistsError) {
               Events.trigger('loginAsUser',{email: data.email, loginModalTitle: `We have ${data.email} as registered user. kindly log in your account.`});
             }else if(err) {
               toastr.error(err.reason || err.message,"Error");
             }else if(res.message) {
               toastr.error(res.message,'Error');
-              // this.props.onModalClose();
             }
             else if(res) {
-              // toastr.success('Your request have been added, will be notified shortly','success');
-              this.props.onModalClose();
-              setTimeout(() => {
+              if(subscriptionRequest === 'sign-up') {
+                // User wants to join the skillshape now..
+                Events.trigger('registerAsSchool',{userType: 'Student', userEmail: this.state.email, userName: this.state.name});
                 this.handleRequest(text);
-              })
+                this.props.onModalClose();
+              }else{
+                toastr.success('Your request have been processed, will be notified shortly','success');
+                this.handleRequest(text);
+              }
             }
 
             if(this.props.onFormSubmit) {

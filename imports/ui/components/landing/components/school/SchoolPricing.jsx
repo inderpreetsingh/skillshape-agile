@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import * as helpers from '../jss/helpers.js';
 
-import SchoolPriceCard from './SchoolPriceCard.jsx';
+import SchoolPriceCard from '/imports/ui/components/landing/components/cards/SchoolPriceCard.jsx';
 
 const Wrapper = styled.div`
   max-width: 100vw;

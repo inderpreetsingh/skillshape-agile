@@ -191,6 +191,7 @@ export const sendPriceInfoRequestEmail = function({
     updatePriceLink,
     memberLink,
     ownerName,
+    classTypeName,
     currentUserName
 }) {
     if (Meteor.isServer) {
@@ -199,13 +200,48 @@ export const sendPriceInfoRequestEmail = function({
             from: fromEmail,
             replyTo: "Notices@SkillShape.com",
             subject: "Pricing info request received",
-            html: `Dear ${ownerName}, \n${currentUserName} ${memberLink || ''} saw your listing on SkillShape.com \n${schoolPageLink} \n and would like to update your pricing \n${updatePriceLink}
-            \n\nThanks, \n\n${EmailSignature}
-            `
+            html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''} saw your listing on SkillShape.com for ${classTypeName} at <br />${schoolPageLink} <br /> and would you like to update your pricing <br />${updatePriceLink}
+            <br />
+            <br />
+            Thanks,
+            <br />
+            <br />
+            ${EmailSignature}`
             // html: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
             // \n\nThanks, \n\n${EmailSignature}`
         });
     }
+};
+
+export const sendEmailForSubscription = function({
+  toEmail,
+  fromEmail,
+  subject,
+  updateFor,
+  currentUserName,
+  unsubscribeLink,
+  joinSkillShapeLink,
+}) {
+  if (Meteor.isServer) {
+      Email.send({
+          to: toEmail, //emailObj.to
+          from: fromEmail,
+          replyTo: "Notices@SkillShape.com",
+          subject: subject,
+          html: `Dear ${currentUserName},<br /> You have joined the SkillShape list in order to get updates for ${updateFor}.
+          <br />If you don't remember signing up, click here:
+          <br />${unsubscribeLink}
+          <br />
+          <br />
+          If you want to join SkillShape to register for classes, manage your media, and connect with other members. (FREE membership!), click here:
+          <br />${joinSkillShapeLink}
+          <br />
+          <br />Thanks,
+          <br />
+          <br />
+          ${EmailSignature}`
+      });
+  }
 };
 
 export const sendEmailToStudentForPriceInfoUpdate = function(

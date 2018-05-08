@@ -98,9 +98,9 @@ const ClassTypeDescription = (props) => {
   return (
     <Wrapper isEdit={props.isEdit}>
         {props.isClassTypeNameAvailable ?
-        <Title>{props.classTypeName.toLowerCase()}
-          {props.schoolName && props.classTypeName ? <span> in </span> : ''}
+        <Title>
           <SchoolLink to={`/schools/${props.friendlySlug}`} target="_blank">{props.schoolName.toLowerCase()}</SchoolLink>
+          {props.classTypeName && `: ${props.classTypeName.toLowerCase()}`}
         </Title>
         :
         <Title>{props.schoolName.toLowerCase()}

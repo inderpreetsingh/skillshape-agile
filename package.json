@@ -30,6 +30,7 @@
     "moment": "^2.20.1",
     "momentjs": "^2.0.0",
     "prop-types": "^15.6.0",
+    "query-string": "^6.1.0",
     "rc-slider": "^8.5.0",
     "rc-tooltip": "^3.7.0",
     "react": "^16.2.0",

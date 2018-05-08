@@ -518,11 +518,6 @@ class SolutionBox extends Component {
   }
 }
 
-{/*
-  marginTop={(i == 1 && helpers.rhythmDiv * 4) || (i == 2 && -1 * helpers.rhythmDiv * 4)}
-  marginLeft={i === 2 && helpers.rhythmDiv * 2}
-*/}
-
 SolutionBox.propTypes = {
   content: PropTypes.string,
   active: PropTypes.bool,
