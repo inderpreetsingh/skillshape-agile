@@ -105,7 +105,7 @@ export class WeekDaysRow extends React.Component {
 		        		return (<Grid style={{border: '1px solid black', marginBottom: 15,padding: 5, backgroundColor: 'antiquewhite'}} key={index} container>
 		                    <Grid item sm={6} xs={12}>
 		                		<FormControl fullWidth margin='dense'>
-                                    <InputLabel htmlFor="weekDay">WeekDay</InputLabel>
+                                    <InputLabel htmlFor="weekDay" shrink={true}>WeekDay</InputLabel>
                                     <Select
     								    input={<Input id="weekDay"/>}
     								    value={data ? data.key : ""}
