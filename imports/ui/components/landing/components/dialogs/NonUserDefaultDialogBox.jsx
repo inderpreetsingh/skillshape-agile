@@ -31,7 +31,7 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 const styles = theme => {
   return {
     dialogTitleRoot: {
-      padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+      padding: `${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
       marginBottom: `${helpers.rhythmDiv * 2}px`,
       '@media screen and (max-width : 500px)': {
         padding: `0 ${helpers.rhythmDiv * 3}px`
@@ -43,6 +43,10 @@ const styles = theme => {
       '@media screen and (max-width : 500px)': {
         minHeight: '150px'
       }
+    },
+    dialogActionsRoot: {
+      justifyContent: 'center',
+      margin: 0
     },
     dialogRoot: {
 
@@ -111,6 +115,9 @@ const NonUserDefaultDialogBox = (props) => {
 
         <DialogContent classes={{root : props.classes.dialogContent}}>
           <ContentWrapper>Press <Bold>Login</Bold> if already a member, or <Bold>Sign up</Bold> to become a member.</ContentWrapper>
+        </DialogContent>
+
+        <DialogActions classes={{root: props.classes.dialogActionsRoot}}>
           <ButtonsWrapper>
             <ButtonWrapper>
               <LoginButton />
@@ -119,9 +126,10 @@ const NonUserDefaultDialogBox = (props) => {
               <JoinButton label="Sign Up"/>
             </ButtonWrapper>
           </ButtonsWrapper>
-        </DialogContent>
-        </MuiThemeProvider>
-      </Dialog>
+        </DialogActions>
+
+      </MuiThemeProvider>
+    </Dialog>
     );
 }
 
