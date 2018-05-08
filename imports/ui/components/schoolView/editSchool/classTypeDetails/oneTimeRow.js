@@ -10,6 +10,7 @@ import Button from 'material-ui/Button';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
 import Typography from 'material-ui/Typography';
+import config from '/imports/config';
 
 
 export class OneTimeRow extends React.Component {
@@ -31,6 +32,7 @@ export class OneTimeRow extends React.Component {
 	    				startTime: new Date(),
 	    				duration: "",
 	    				roomId: "",
+                        timeUnits: "Minutes"
 	    			}
 	    		]
 	    	}
@@ -111,15 +113,41 @@ export class OneTimeRow extends React.Component {
 		                            />
 		                        </Grid>
 		                        <Grid item sm={6} xs={12}>
-		                            <TextField
-		                                required={true}
-		                                defaultValue={data ? data.duration: ""}
-		                                margin="dense"
-		                                label="Length"
-		                                type="number"
-		                                onChange={this.handleSelectInputChange.bind(this, index, "duration")}
-		                                fullWidth
-		                            />
+                                    <Grid container style={{display: 'flex',alignItems: 'baseline',padding: '3px'}}>
+                                        <Grid  sm={6}>
+        		                            <TextField
+        		                                required={true}
+        		                                defaultValue={data ? data.duration: ""}
+        		                                margin="dense"
+        		                                label="Length"
+        		                                type="number"
+        		                                onChange={this.handleSelectInputChange.bind(this, index, "duration")}
+        		                                fullWidth
+                                                defaultValue={data && data.duration}
+        		                            />
+                                        </Grid>
+                                        <Grid  sm={6}>
+                                            <FormControl fullWidth margin='dense' style={{padding:'4px'}}>
+                                                <InputLabel htmlFor="weekDay" shrink={true}>Units</InputLabel>
+                                                <Select
+                                                    input={<Input id="duration"/>}
+                                                    value={data && data.timeUnits || "Minutes"}
+                                                    onChange={this.handleSelectInputChange.bind(this, index, "timeUnits")}
+                                                    fullWidth
+                                                >
+                                                    {
+                                                        config.duration.map((data, index)=> {
+                                                            return <MenuItem
+                                                                key={`${index}-${data.value}`}
+                                                                value={data.value}>
+                                                                {data.label}
+                                                            </MenuItem>
+                                                        })
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
 		                        </Grid>
 		                        <Grid item sm={6} xs={12}>
 		                            <FormControl fullWidth margin='dense'>
