@@ -95,6 +95,7 @@ export default function (props) {
             <NoResultContainer>
                 <NoResults
                     removeAllFiltersButtonClick={this.props.removeAllFilters}
+                    addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
                 />
             </NoResultContainer>
         )

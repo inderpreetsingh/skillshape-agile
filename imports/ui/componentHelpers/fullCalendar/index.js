@@ -17,6 +17,7 @@ class FullCalendar extends React.Component {
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay,listWeek'
             },
+            height: 1200, // Sets the height of the entire calendar, including header and footer.
             defaultDate: new Date(),
             selectable: true,
             selectHelper: true,
@@ -117,7 +118,7 @@ class FullCalendar extends React.Component {
                         sevent.start = obj.startDate;
                         sevent.roomId = obj.roomId;
                         sevent.eventStartTime = moment(obj.startTime).format("hh:mm");
-                        sevent.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
+                        sevent.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, obj.timeUnits && obj.timeUnits.toLowerCase() || "minutes").format("hh:mm");
                         sevent.title = classTime.name + " " + sevent.eventStartTime + " to " + sevent.eventEndTime;
                         // sevent.age = classTypeData && classTypeData.ageMin;
                         // sevent.gender = classTypeData && classTypeData.gender;
@@ -139,7 +140,7 @@ class FullCalendar extends React.Component {
                             temp.start = moment(obj.startTime).format("hh:mm");
                             temp.end = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
                             temp.eventStartTime = moment(obj.startTime).format("hh:mm");
-                            temp.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
+                            temp.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, obj.timeUnits && obj.timeUnits.toLowerCase() || "minutes").format("hh:mm");
                             temp.title = classTime.name + " " + temp.eventStartTime + " to " + temp.eventEndTime;
                             temp.roomId = obj.roomId;
                             // sevent.age = classTypeData && classTypeData.ageMin;
