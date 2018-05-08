@@ -17,6 +17,7 @@ class FullCalendar extends React.Component {
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay,listWeek'
             },
+            height: 1200, // Sets the height of the entire calendar, including header and footer.
             defaultDate: new Date(),
             selectable: true,
             selectHelper: true,
