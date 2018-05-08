@@ -64,6 +64,10 @@ export default config = Object.freeze({
 		{ label: "INR", value: "₹"},
 		{ label: "EUR", value: "€"},
 	],
+	duration: [
+		{ label: "Minutes", value: "Minutes"},
+		{ label: "Hours", value: "Hours"},
+	],
 	// Show only 4 classes initially to Users. This count will increase when user clicks on see more on dash route.
 	seeMoreCount: 4,
 	// CAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", //test key
