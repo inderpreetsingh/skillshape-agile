@@ -36,8 +36,8 @@ Meteor.methods({
          */
 
          // Send Email to Admin of School if admin available
-         let ownerName;
-         const toEmail = 'sam@skillshape.com'; // Needs to replace by Admin of School
+         let ownerName = "";
+         let toEmail = 'sam@skillshape.com'; // Needs to replace by Admin of School
          const fromEmail = 'Notices@SkillShape.com';
          const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${data.schoolId}/edit`;
          if(schoolAdminId) {
@@ -45,10 +45,6 @@ Meteor.methods({
              let adminUser = Meteor.users.findOne(schoolAdminId);
              ownerName= getUserFullName(adminUser);
              toEmail = adminUser.emails[0].address;
-         }
-         if(!ownerName) {
-             // Owner Name will be Sam
-             ownerName = 'Sam'
          }
          let currentUser = Meteor.users.findOne(this.userId);
          let currentUserName = getUserFullName(currentUser) || data.name;
