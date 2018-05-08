@@ -418,6 +418,7 @@ class ClassTypeContent extends Component {
             requestFor="price"
             schoolData={schoolData}
             classTypeId={classTypeData._id}
+            onToastrClose={() => this.handleDialogState('manageRequestsDialog',false)}
             />}
           {this.state.isBusy && <ContainerLoader/>}
 

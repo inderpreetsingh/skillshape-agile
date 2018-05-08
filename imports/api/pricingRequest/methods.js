@@ -105,7 +105,7 @@ Meteor.methods({
         schoolName: School.findOne({_id: pricingRequestData.schoolId}).name
       }
     },
-   'pricingRequest.removeSubscription': function(requestId) {
+   'pricingRequest.removeRequest': function(requestId) {
      return PricingRequest.remove({_id: requestId});
    }
 })

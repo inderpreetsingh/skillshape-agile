@@ -16,7 +16,7 @@ const UnsubscribeUser = (props) => {
           open={true}
           onToastrClose={redirectUser}
           requestId={requestId}
-          requestFor={pricingRequest ? 'pricing details' : 'class times'}
+          requestFor={pricingRequest ? 'price details' : 'class times'}
           />
       </div>);
 }

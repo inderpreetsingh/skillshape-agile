@@ -108,11 +108,16 @@ class ManageUnsubscriptionDialogBox extends Component {
     schoolName: '',
   }
 
+  _redirectUser = () => {
+    browserHistory.push('/');
+  }
+
   handleButtonClick = (buttonName) => (e)=> {
     const {toastr,requestId} = this.props;
+    const methodNameToCall = requestFor === 'price details' ? 'pricingRequest.removeRequest' : 'classTimesRequest.removeRequest';
     if(buttonName === 'yes') {
       this.setState({isBusy: true});
-      Meteor.call("pricingRequest.removeSubscription",requestId,(err,res) => {
+      Meteor.call(methodNameToCall,requestId,(err,res) => {
         this.setState({isBusy: false}, () => {
           if(err) {
             toastr.error(err.reason || err.message);
@@ -122,18 +127,14 @@ class ManageUnsubscriptionDialogBox extends Component {
         })
       });
     }else {
-      this.redirectUser();
+      this._redirectUser();
     }
   }
 
-  redirectUser = () => {
-    browserHistory.push('/');
-  }
-
   componentDidMount = () => {
-    const { toastr, requestId } = this.props;
-    debugger;
-    Meteor.call('pricingRequest.getSubscriptionData',requestId,(err,res) => {
+    const { toastr, requestFor, requestId } = this.props;
+    const methodNameToCall = requestFor === 'price details' ? 'pricingRequest.getSubscriptionData' : 'classTimesRequest.getRequestData';
+    Meteor.call(methodNameToCall,requestId,(err,res) => {
       if(err) {
         toastr.error("There was no data found with this request id","Error");
       }else {
