@@ -216,6 +216,11 @@ class ClassTypeContent extends Component {
       },
     }
 
+    _setDefaultDialogBoxTitle = (title) => {
+      const newState = {...this.state, defaultDialogBoxTitle : title};
+      this.setState(newState);
+    }
+
     getContactNumbers = () => {
       return this.props.schoolData.phone && this.props.schoolData.phone.split(/[\|\,\\]/);
     }
@@ -355,10 +360,6 @@ class ClassTypeContent extends Component {
       }
     }
 
-    _setDefaultDialogBoxTitle = (title) => {
-      const newState = {...this.state, defaultDialogBoxTitle : title};
-      this.setState(newState);
-    }
 
     getReviewTitle = (name) => {
       return `Give review for ${capitalizeString(name)}`;
@@ -417,7 +418,6 @@ class ClassTypeContent extends Component {
             requestFor="price"
             schoolData={schoolData}
             classTypeId={classTypeData._id}
-            classTypeName={classTypeData.name}
             />}
           {this.state.isBusy && <ContainerLoader/>}
 

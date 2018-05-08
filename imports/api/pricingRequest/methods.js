@@ -1,10 +1,15 @@
 import PricingRequest,{PricingRequestSchema} from './fields.js';
+import {sendPriceInfoRequestEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
+import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields.js';
+import ClassType from '/imports/api/classType/fields.js';
+
+import {getUserFullName} from '/imports/util';
 
 Meteor.methods({
-  'pricingRequest.addRequest': function(data,schoolAdminId,subscriptionRequest) {
+  'pricingRequest.addRequest': function(data,schoolData,subscriptionRequest) {
     const validationContext = PricingRequestSchema.newContext();
-    const isValid = validationContext.validate(data);
     data.createdAt = new Date();
+    const isValid = validationContext.validate(data);
 
     if(!this.userId) {
       // check for user
@@ -23,37 +28,60 @@ Meteor.methods({
     // Verfiying the data send..
     if (isValid) {
       // console.log('adding price request..');
-      const pricingRequestAlreadyPresent = PricingRequest.find({email: data.email}).fetch()[0];
+      const pricingRequestAlreadyPresent = PricingRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
+
       if(pricingRequestAlreadyPresent) {
+
         return {
-          message: "Already requested for price with this email address"
+          message: "Already requested for price for this class, with this email address"
         }
       }else {
+        const fromEmail = 'Notices@SkillShape.com';
+        const ClassTypeName = ClassType.findOne({_id: data.classTypeId});
+        const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData.schoolId}/edit`;
         /**
          * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
-         * 2. Then sending a new mail in case the request is for subscribing to the updates..
-         *
+         * 2. Then sending a new mail to user in case the request is for subscribing to the updates..
          */
 
-         // Send Email to Admin of School if admin available
+         // 1. sending mail to the school owner.
          let ownerName = "";
+         let memberLink = "";
+         let pricingRequestId = ''
          let toEmail = 'sam@skillshape.com'; // Needs to replace by Admin of School
-         const fromEmail = 'Notices@SkillShape.com';
-         const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${data.schoolId}/edit`;
-         if(schoolAdminId) {
+         if(schoolData) {
              // Get Admin of School As school Owner
-             let adminUser = Meteor.users.findOne(schoolAdminId);
+             const adminUser = Meteor.users.findOne(schoolData.userId);
              ownerName= getUserFullName(adminUser);
              toEmail = adminUser.emails[0].address;
          }
          let currentUser = Meteor.users.findOne(this.userId);
          let currentUserName = getUserFullName(currentUser) || data.name;
-        //  sendPriceInfoRequestEmail({toEmail,fromEmail,updatePriceLink, ownerName, currentUserName});
-         return {emailSent:true};
+         let schoolMemberData = SchoolMemberDetails.findOne({activeUserId: this.userId});
 
-         if(subscriptionRequest === 'save')
-             PricingRequest.insert(data);
+         if(schoolMemberData) {
+             memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
+         }
 
+         //sendPriceInfoRequestEmail({toEmail,fromEmail,ownerName, classTypeName,currentUserName,updatePriceLink, memberLink});
+
+         if(subscriptionRequest === 'save' || this.userId)
+            pricingRequestId = pricingRequestId = PricingRequest.insert(data);
+
+         //2. sending mail to the user.
+         if(subscriptionRequest === 'save') {
+           const toEmail = data.email;
+           const updateFor = `Pricing details for ${classTypeName}`;
+           const currentUserName = data.name;
+           const unsubscribeLink = `${Meteor.absoluteUrl}unsubscribe/${pricingRequestId}`;
+           const subject = `Subscription for prices of ${classTypeName}`;
+           const joinSkillShapeLink = `${Meteor.absoluteUrl}`;
+           sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+         }
+
+         return {
+           'success': 'Your request has been received'
+         }
       }
     }else {
       // Return the errors in case something is invalid.

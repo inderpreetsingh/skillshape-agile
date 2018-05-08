@@ -162,6 +162,7 @@ class ManageRequestsDialogBox extends Component {
     e.preventDefault();
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     const {toastr,requestFor} = this.props;
+    const schoolData = this.props.schoolData;
     const subscriptionRequest = this.state.subscriptionRequest;
     const data = {
       name: this.state.name,
@@ -191,7 +192,7 @@ class ManageRequestsDialogBox extends Component {
           return false;
       }else {
         this.setState({isBusy: true});
-        Meteor.call(methodNameToCall, data, subscriptionRequest, (err,res) => {
+        Meteor.call(methodNameToCall, data, schoolData,subscriptionRequest, (err,res) => {
           const userExistsError = 'user exists';
           this.setState({isBusy: false} , () => {
             if(err.error === userExistsError) {

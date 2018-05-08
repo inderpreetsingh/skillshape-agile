@@ -208,6 +208,31 @@ export const sendPriceInfoRequestEmail = function({
     }
 };
 
+export const sendEmailForSubscription = function({
+  toEmail,
+  fromEmail,
+  subject,
+  updateFor,
+  currentUserName,
+  unsubscribeLink,
+  joinSkillShapeLink,
+}) {
+  if (Meteor.isServer) {
+      Email.send({
+          to: toEmail, //emailObj.to
+          from: fromEmail,
+          replyTo: "Notices@SkillShape.com",
+          subject: subject,
+          html: `Dear ${currentUserName},\n You have joined the SkillShape list in order to get updates for ${updateFor}.
+          \nIf you don't remember signing up, click here:
+          \n${unsubscribeLink}
+          \n\n If you want to join SkillShape to register for classes, manage your media, and connect with other members. (FREE membership!), click here:
+          \n${joinSkillShapeLink}
+          \n\nThanks, \n\n${EmailSignature}`
+      });
+  }
+};
+
 export const sendEmailToStudentForPriceInfoUpdate = function(
     userData,
     schoolData
