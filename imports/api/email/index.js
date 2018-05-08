@@ -191,6 +191,7 @@ export const sendPriceInfoRequestEmail = function({
     updatePriceLink,
     memberLink,
     ownerName,
+    classTypeName,
     currentUserName
 }) {
     if (Meteor.isServer) {
@@ -199,7 +200,7 @@ export const sendPriceInfoRequestEmail = function({
             from: fromEmail,
             replyTo: "Notices@SkillShape.com",
             subject: "Pricing info request received",
-            html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''} saw your listing on SkillShape.com <br />${schoolPageLink} <br /> and would like to update your pricing <br />${updatePriceLink}
+            html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''} saw your listing on SkillShape.com for ${classTypeName} at <br />${schoolPageLink} <br /> and would you like to update your pricing <br />${updatePriceLink}
             <br />
             <br />
             Thanks,

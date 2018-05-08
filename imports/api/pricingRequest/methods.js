@@ -40,33 +40,32 @@ Meteor.methods({
         const fromEmail = 'Notices@SkillShape.com';
         const classTypeName = ClassType.findOne({_id: data.classTypeId}).name;
         const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData.schoolId}/edit`;
+        const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
+        const currentUserName = data.name;
+
+        let ownerName = "sam";
+        let memberLink = "";
+        let pricingRequestId = ''
+        let toEmail = 'sam@skillshape.com'; // Needs to replace by Admin of School
+
         /**
          * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
          * 2. Then sending a new mail to user in case the request is for subscribing to the updates..
          */
 
          // 1. sending mail to the school owner.
-         let ownerName = "";
-         let memberLink = "";
-         let pricingRequestId = ''
-         let toEmail = 'sam@skillshape.com'; // Needs to replace by Admin of School
          if(schoolData) {
              // Get Admin of School As school Owner
              const adminUser = Meteor.users.findOne(schoolData.admins[0] || schoolData.superAdmin);
-             console.log(adminUser,"admin user");
              ownerName= getUserFullName(adminUser);
-             console.log(ownerName,"ownerName")
              toEmail = ownerName && adminUser.emails[0].address;
          }
-         let currentUser = Meteor.users.findOne(this.userId);
-         let currentUserName = getUserFullName(currentUser) || data.name;
-         let schoolMemberData = SchoolMemberDetails.findOne({activeUserId: this.userId});
 
-         if(schoolMemberData) {
+         if(this.userId) {
              memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
          }
          toEmail = 'singhs.ishwer@gmail.com';
-         sendPriceInfoRequestEmail({toEmail,fromEmail,ownerName, classTypeName,currentUserName,updatePriceLink, memberLink});
+         sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, classTypeName, currentUserName, updatePriceLink, memberLink});
 
          if(subscriptionRequest === 'save' || this.userId)
             pricingRequestId = pricingRequestId = PricingRequest.insert(data);
@@ -74,13 +73,12 @@ Meteor.methods({
          //2. sending mail to the user.
          if(subscriptionRequest === 'save') {
            const toEmail = data.email;
-           const updateFor = `Pricing details for ${classTypeName}`;
-           const currentUserName = data.name;
+           const updateFor = `pricing details of ${classTypeName}`;
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?pricingRequest=true&requestId=${pricingRequestId}`;
            const subject = `Subscription for prices of ${classTypeName}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
            console.log(subject,joinSkillShapeLink,unsubscribeLink,currentUserName,updateFor,toEmail);
-           sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+          //  sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
          return {
