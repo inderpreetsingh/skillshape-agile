@@ -1,11 +1,8 @@
 import React, {Fragment,Component} from 'react';
 import PropTypes from 'prop-types';
-import Radio, { RadioGroup } from 'material-ui/Radio';
-import { FormControlLabel} from 'material-ui/Form';
-import Checkbox from 'material-ui/Checkbox';
+import {browserHistory} from 'react-router';
 
-import { getUserFullName } from '/imports/util/getUserData';
-import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { isEmpty} from 'lodash';
@@ -35,7 +32,7 @@ import Dialog , {
 const styles = theme => {
   return {
     dialogTitleRoot: {
-      padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+      padding: `${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
       marginBottom: `${helpers.rhythmDiv * 2}px`,
       '@media screen and (max-width : 500px)': {
         padding: `0 ${helpers.rhythmDiv * 3}px`
@@ -43,36 +40,22 @@ const styles = theme => {
     },
     dialogContent: {
       padding: `0 ${helpers.rhythmDiv * 3}px`,
+      marginBottom: helpers.rhythmDiv * 2,
       flexShrink: 0,
       '@media screen and (max-width : 500px)': {
         minHeight: '150px'
       }
     },
     dialogActionsRoot: {
-      padding: '0 8px',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-end',
-      justifyContent: 'flex-start'
-    },
-    dialogActions: {
-      width: '100%',
-      paddingLeft: `${helpers.rhythmDiv * 2}px`
+      justifyContent: 'center',
+      margin: 0,
     },
     dialogRoot: {
-      maxWidth: '500px',
-      overflow: 'hidden',
-      width: '100%'
+
     },
     iconButton: {
       height: 'auto',
       width: 'auto'
-    },
-    labelText: {
-      display: 'flex',
-      alignItems: 'flex-end',
-      marginLeft: -14,
-      marginRight: helpers.rhythmDiv * 2
     }
   }
 }
@@ -83,15 +66,26 @@ const DialogTitleWrapper = styled.div`
   width: 100%;
 `;
 
-const ButtonWrapper = styled.div`
-  ${helpers.flexCenter}
-  margin: ${helpers.rhythmDiv * 4}px 0;
+const ContentWrapper = styled.p`
+  margin: 0;
+  font-family: ${helpers.commonFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
-const InputWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv}px;
-  display: flex;
-  flex-direction: column;
+const Bold = styled.span`
+  font-weight: 500;
+`;
+
+const ButtonsWrapper = styled.div`
+  ${helpers.flexCenter}
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+`;
+
+const ButtonWrapper = styled.div`
+  ${helpers.flexCenter}
 `;
 
 const Title = styled.span`
@@ -100,56 +94,58 @@ const Title = styled.span`
   text-align: center;
 `;
 
-const FormText = styled.p`
-  font-family: ${helpers.commonFont};
-  color: ${helpers.black};
-  line-height: 1;
-  font-size: ${helpers.baseFontSize}px;
+const Content = styled.p`
   margin: 0;
-  cursor: pointer;
+  font-size: ${helpers.baseFontSize}px;
+  color: ${helpers.black};
 `;
 
-const LabelText = FormText.extend`
-  font-weight: 400;
-  color: rgba(0, 0, 0, 0.87);
-  line-height: 1.3;
-`;
-
-const SubscriptionNotes = FormText.extend`
-  font-size: 12px;
-  font-weight: 400;
-`;
 
 class ManageUnsubscriptionDialogBox extends Component {
   state = {
     isBusy: false,
-    title: ''
+    classTypeName: '',
+    schoolName: '',
   }
 
-  handleClickOnYesButton = () => {
-
+  handleButtonClick = (buttonName) => (e)=> {
+    const {toastr,requestId} = this.props;
+    if(buttonName === 'yes') {
+      this.setState({isBusy: true});
+      Meteor.call("pricingRequest.removeSubscription",requestId,(err,res) => {
+        this.setState({isBusy: false}, () => {
+          if(err) {
+            toastr.error(err.reason || err.message);
+          }else {
+            toastr.success("You have been successfully unsubscribed");
+          }
+        })
+      });
+    }else {
+      this.redirectUser();
+    }
   }
 
-  handleClickOnNoButton = () => {
-
+  redirectUser = () => {
+    browserHistory.push('/');
   }
 
   componentDidMount = () => {
-    const { taostr, requestId } = this.props;
-    // Meteor.call('pricingRequest.getSubscriptionData',requestId,(err,res) => {
-    //   if(err) {
-    //
-    //   }else {
-    //     this.setState({ title: res.title});
-    //   }
-    // });
+    const { toastr, requestId } = this.props;
+    debugger;
+    Meteor.call('pricingRequest.getSubscriptionData',requestId,(err,res) => {
+      if(err) {
+        toastr.error("There was no data found with this request id","Error");
+      }else {
+        this.setState({ classTypeName: res.classTypeName, schoolName: res.schoolName});
+      }
+    });
   }
 
   render() {
     const {props} = this;
     // console.log(props,"...");
-    return (
-      <Fragment>
+    return (<Fragment>
         {this.state.isBusy && <ContainerLoader />}
         <Dialog
           fullScreen={props.fullScreen}
@@ -170,11 +166,19 @@ class ManageUnsubscriptionDialogBox extends Component {
           </DialogTitle>
 
           <DialogContent classes={{root : props.classes.dialogContent}}>
-
+            <Content>You have requested for unsubscription from {props.requestFor} of {this.state.classTypeName} class of {this.state.schoolName} school. </Content>
+            <Content>Click <Bold>Yes</Bold> to continue or <Bold>No</Bold> to cancel your request.</Content>
           </DialogContent>
 
-          <DialogActions>
-
+          <DialogActions classes={{root: props.classes.dialogActionsRoot}}>
+            <ButtonsWrapper>
+              <ButtonWrapper>
+                <PrimaryButton label="Yes" onClick={this.handleButtonClick('yes')} />
+              </ButtonWrapper>
+              <ButtonWrapper>
+                <PrimaryButton label="No" onClick={this.handleButtonClick('no')}/>
+              </ButtonWrapper>
+            </ButtonsWrapper>
           </DialogActions>
           </MuiThemeProvider>
         </Dialog>

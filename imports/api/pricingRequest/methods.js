@@ -2,6 +2,7 @@ import PricingRequest,{PricingRequestSchema} from './fields.js';
 import {sendPriceInfoRequestEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
 import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields.js';
 import ClassType from '/imports/api/classType/fields.js';
+import School from '/imports/api/school/fields.js';
 
 import { getUserFullName } from '/imports/util/getUserData';
 
@@ -69,7 +70,7 @@ Meteor.methods({
          sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
 
          if(subscriptionRequest === 'save' || this.userId)
-            pricingRequestId = pricingRequestId = PricingRequest.insert(data);
+            pricingRequestId = PricingRequest.insert(data);
 
          //2. sending mail to the user.
          if(subscriptionRequest === 'save') {
@@ -92,5 +93,19 @@ Meteor.methods({
       console.log("validation errors...",validationContext.invalidKeys());
       throw new Meteor.Error(invalidData.name +' is '+ invalidData.value);
     }
-  }
+  },
+  'pricingRequest.getSubscriptionData': function(requestId) {
+      const pricingRequestData = PricingRequest.findOne({_id: requestId});
+      if(!pricingRequestData) {
+        throw new Meteor.Error('no pricing data has been found with this id.');
+      }
+
+      return {
+        classTypeName: ClassType.findOne({_id: pricingRequestData.classTypeId}).name,
+        schoolName: School.findOne({_id: pricingRequestData.schoolId}).name
+      }
+    },
+   'pricingRequest.removeSubscription': function(requestId) {
+     return PricingRequest.remove({_id: requestId});
+   }
 })
