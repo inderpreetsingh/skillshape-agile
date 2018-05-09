@@ -33,8 +33,10 @@ import ClassTypeList from '/imports/ui/components/landing/components/classType/c
 import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+
 import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
 import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
+import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx';
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
@@ -259,7 +261,14 @@ export default function() {
           }
           {this.state.giveReviewDialog && <GiveReviewDialogBox reviewForId={schoolId} reviewFor='school' title={this.getReviewTitle(schoolData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
-
+          {this.state.manageRequestsDialog && <ManageRequestsDialogBox
+            title="Pricing"
+            open={this.state.manageRequestsDialog}
+            onModalClose={() => this.handleDialogState('manageRequestsDialog',false)}
+            requestFor="price"
+            schoolData={schoolData}
+            onToastrClose={() => this.handleDialogState('manageRequestsDialog',false)}
+            />}
           {
             this.state.showConfirmationModal && <ConfirmationModal
                 open={this.state.showConfirmationModal}
@@ -342,7 +351,7 @@ export default function() {
           {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
             <ButtonWrapper>
               <ClassTimeButton
-                onClick={this.handlePricingInfoRequestModal}
+                onClick={this.handlePricingRequest}
                 icon
                 iconName="attach_money"
                 label="Request pricing info" />

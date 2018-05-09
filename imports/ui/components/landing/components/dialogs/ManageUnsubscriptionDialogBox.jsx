@@ -167,7 +167,7 @@ class ManageUnsubscriptionDialogBox extends Component {
           </DialogTitle>
 
           <DialogContent classes={{root : props.classes.dialogContent}}>
-            <Content>You have requested for unsubscription from {props.requestFor} of {this.state.classTypeName} class of {this.state.schoolName} school. </Content>
+            <Content>You have requested for unsubscription from {props.requestFor} of {this.state.classTypeName && `${this.state.classTypeName} class of`} {this.state.schoolName} school. </Content>
             <Content>Click <Bold>Yes</Bold> to continue or <Bold>No</Bold> to cancel your request.</Content>
           </DialogContent>
 

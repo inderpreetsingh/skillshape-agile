@@ -141,18 +141,20 @@ class ManageRequestsDialogBox extends Component {
   handleFormSubmit = (e) => {
     e.preventDefault();
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    const {toastr,requestFor} = this.props;
-    const schoolData = this.props.schoolData;
+    const {toastr,requestFor,schoolData,classTypeId} = this.props;
     const subscriptionRequest = this.state.subscriptionRequest;
     const data = {
       name: this.state.name,
       email: this.state.email,
-      classTypeId: this.props.classTypeId,
       schoolId: this.props.schoolData._id,
     }
-
-    let methodNameToCall = 'classTimesRequest.addRequest';
     let text = 'class times';
+    let methodNameToCall = 'classTimesRequest.addRequest';
+
+    if(classTypeId) {
+      data.classTypeId = classTypeId
+    }
+
     if(requestFor === 'price') {
       methodNameToCall = 'pricingRequest.addRequest';
       text = 'pricing';

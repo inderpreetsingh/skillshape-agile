@@ -334,15 +334,15 @@ export default class SchoolViewBase extends React.Component {
         const node = ReactDOM.findDOMNode(ref);
         node.scrollIntoView({ behavior: "smooth"});
     }
-
-    // This function is used to Open pricing info request Modal
-    handlePricingInfoRequestModal = () => {
-      console.log("handlePricingInfoRequestModal")
-        // Set state for opening Price info Request Modal.
-        this.setState({
-            showConfirmationModal: true,
-        });
-    }
+    // ADDING A NEW FLOW FOR REQUEST PRICING
+    // // This function is used to Open pricing info request Modal
+    // handlePricingInfoRequestModal = () => {
+    //   console.log("handlePricingInfoRequestModal")
+    //     // Set state for opening Price info Request Modal.
+    //     this.setState({
+    //         showConfirmationModal: true,
+    //     });
+    // }
 
     getOurEmail = () => {
       return this.props.schoolData.email;
@@ -350,6 +350,49 @@ export default class SchoolViewBase extends React.Component {
 
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
+    handleRequest = (text = 'pricing') => {
+      const { toastr, schoolData } = this.props;
+
+      if(!isEmpty(schoolData)) {
+        let emailBody = "";
+        let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
+        let subject ="", message =  "";
+        let currentUserName = getUserFullName(Meteor.user());
+        emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
+        const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
+
+        console.info(mailTo,"my mail To data.............");
+        // const mailToNormalized = encodeURI(mailTo);
+        // window.location.href = mailToNormalized;
+        openMailToInNewTab(mailTo);
+
+      }
+    }
+
+    handlePricingRequest = () => {
+      const { toastr,  schoolData } = this.props;
+      if(!Meteor.userId()) {
+        this.handleDialogState('manageRequestsDialog',true);
+      }else {
+        const data = {
+          schoolId: schoolData._id
+        };
+
+        Meteor.call('pricingRequest.addRequest', data, schoolData, (err,res) => {
+          this.setState({isBusy: false} , () => {
+            if(err) {
+              toastr.error(err.reason || err.message,"Error", {}, false);
+            }else if(res.message) {
+              toastr.error(res.message,'Error');
+            }
+            else if(res) {
+              toastr.success('Your request has been processed','success');
+              this.handleRequest('pricing');
+            }
+          });
+        });
+      }
+    }
 
     // Request Pricing info using this function
     requestPricingInfo = (schoolData) => {

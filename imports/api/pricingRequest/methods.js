@@ -45,7 +45,7 @@ Meteor.methods({
         }
       }else {
         const fromEmail = 'Notices@SkillShape.com';
-        const classTypeName = ClassType.findOne({_id: data.classTypeId}).name;
+        const classTypeName = data.classTypeId && ClassType.findOne({_id: data.classTypeId}).name;
         const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
@@ -81,9 +81,9 @@ Meteor.methods({
          //2. sending mail to the user.
          if(subscriptionRequest === 'save') {
            const toEmail = data.email;
-           const updateFor = `pricing details of ${classTypeName}`;
+           const updateFor = `pricing details of ${classTypeName || schoolData.name}`;
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?pricingRequest=true&requestId=${pricingRequestId}`;
-           const subject = `Subscription for prices of ${classTypeName}`;
+           const subject = `Subscription for prices of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
           //  sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
