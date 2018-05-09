@@ -24,19 +24,21 @@ export function toastrModal(WrappedComponent) {
 
   class toastr extends React.Component {
     state = {
-        open: false
+        open: false,
+        applyClose: true
     }
     onClose = ()=> {
         this.setState({open: false});
 
-        if(this.props.onToastrClose)
+        if(this.props.onToastrClose && this.state.applyClose)
           this.props.onToastrClose();
     }
-    show = (message, isErrorMessage, elements)=> {
+    show = (message, isErrorMessage, elements, applyClose = true)=> {
         this.setState({
           message,
           isErrorMessage: isErrorMessage == "Error",
           open: true,
+          applyClose: applyClose,
           elementObj: elements
         })
     }

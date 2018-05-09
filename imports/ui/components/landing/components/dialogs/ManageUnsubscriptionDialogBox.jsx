@@ -113,7 +113,7 @@ class ManageUnsubscriptionDialogBox extends Component {
   }
 
   handleButtonClick = (buttonName) => (e)=> {
-    const {toastr,requestId} = this.props;
+    const {toastr,requestFor,requestId} = this.props;
     const methodNameToCall = requestFor === 'price details' ? 'pricingRequest.removeRequest' : 'classTimesRequest.removeRequest';
     if(buttonName === 'yes') {
       this.setState({isBusy: true});
@@ -136,7 +136,7 @@ class ManageUnsubscriptionDialogBox extends Component {
     const methodNameToCall = requestFor === 'price details' ? 'pricingRequest.getSubscriptionData' : 'classTimesRequest.getRequestData';
     Meteor.call(methodNameToCall,requestId,(err,res) => {
       if(err) {
-        toastr.error("There was no data found with this request id","Error");
+        toastr.error("There was no data found with this request id, you have already unsubscribed.","Error");
       }else {
         this.setState({ classTypeName: res.classTypeName, schoolName: res.schoolName});
       }

@@ -46,7 +46,7 @@ class SchoolView extends SchoolViewBase {
       this.setState({seeMoreCount:(config.seeMoreCount + currentCount)})
     }
     componentDidUpdate = () => {
-      document.title = this.props.routeParams.slug;
+      document.title = this.props.schoolData && this.props.schoolData.name.toLowerCase();
     }
 
     render() {

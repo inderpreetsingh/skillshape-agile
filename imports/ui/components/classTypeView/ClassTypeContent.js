@@ -34,9 +34,9 @@ import PrimaryButton from '/imports/ui/components/landing/components/buttons/Pri
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
 
 import { capitalizeString } from '/imports/util';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const imageExistsConfig = {
   originalImagePath: 'classTypeData.classTypeImg',
@@ -275,8 +275,30 @@ class ClassTypeContent extends Component {
     }
 
     requestPricingInfo = (text) => {
-        const { toastr, schoolData } = this.props;
-        this.handleDialogState('manageRequestsDialog',true);
+        const { toastr, classTypeData, schoolData } = this.props;
+        if(!Meteor.userId()) {
+          this.handleDialogState('manageRequestsDialog',true);
+        }else {
+          const data = {
+            classTypeId: classTypeData._id,
+            schoolId: schoolData._id
+          };
+
+          Meteor.call('pricingRequest.addRequest', data, schoolData, (err,res) => {
+            this.setState({isBusy: false} , () => {
+              if(err) {
+                toastr.error(err.reason || err.message,"Error", {}, false);
+              }else if(res.message) {
+                toastr.error(res.message,'Error');
+              }
+              else if(res) {
+                toastr.success('Your request has been processed','success');
+                this.handleRequest('pricing');
+              }
+            });
+          });
+
+        }
         // if(!isEmpty(schoolData)) {
         //   let emailBody = "";
         //   let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`

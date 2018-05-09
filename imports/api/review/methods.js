@@ -12,7 +12,7 @@ Meteor.methods({
 
         if(isValid) {
           //console.log('\n.... Review being added... \n');
-          const reviewExists = Reviews.find({reviewerId: this.userId , reviewForId: data.reviewForId}).fetch()[0];
+          const reviewExists = Reviews.findOne({reviewerId: this.userId , reviewForId: data.reviewForId});
           if(reviewExists) {
             return Reviews.update({_id: reviewExists._id},{$set: data});
           }
@@ -27,7 +27,7 @@ Meteor.methods({
       }
     },
     'reviews.getMyReview' : function(reviewForId) {
-      const myReview =  Reviews.find({reviewerId: this.userId , reviewForId: reviewForId}).fetch()[0];
+      const myReview =  Reviews.findOne({reviewerId: this.userId , reviewForId: reviewForId});
       return {
         ratings: myReview.ratings,
         comment: myReview.comment
