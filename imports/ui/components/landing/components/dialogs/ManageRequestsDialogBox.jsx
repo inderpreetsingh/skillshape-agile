@@ -100,26 +100,6 @@ const Title = styled.span`
   text-align: center;
 `;
 
-const FormText = styled.p`
-  font-family: ${helpers.commonFont};
-  color: ${helpers.black};
-  line-height: 1;
-  font-size: ${helpers.baseFontSize}px;
-  margin: 0;
-  cursor: pointer;
-`;
-
-const LabelText = FormText.extend`
-  font-weight: 400;
-  color: rgba(0, 0, 0, 0.87);
-  line-height: 1.3;
-`;
-
-const SubscriptionNotes = FormText.extend`
-  font-size: 12px;
-  font-weight: 400;
-`;
-
 class ManageRequestsDialogBox extends Component {
   state = {
     isBusy: false,
@@ -161,18 +141,20 @@ class ManageRequestsDialogBox extends Component {
   handleFormSubmit = (e) => {
     e.preventDefault();
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    const {toastr,requestFor} = this.props;
-    const schoolData = this.props.schoolData;
+    const {toastr,requestFor,schoolData,classTypeId} = this.props;
     const subscriptionRequest = this.state.subscriptionRequest;
     const data = {
       name: this.state.name,
       email: this.state.email,
-      classTypeId: this.props.classTypeId,
       schoolId: this.props.schoolData._id,
     }
-
-    let methodNameToCall = 'classTimesRequest.addRequest';
     let text = 'class times';
+    let methodNameToCall = 'classTimesRequest.addRequest';
+
+    if(classTypeId) {
+      data.classTypeId = classTypeId
+    }
+
     if(requestFor === 'price') {
       methodNameToCall = 'pricingRequest.addRequest';
       text = 'pricing';
@@ -182,23 +164,23 @@ class ManageRequestsDialogBox extends Component {
 
     if(this.state.readyToSubmit) {
       if (!data.email) {
-          toastr.error('Please enter your email.', 'Error');
+          toastr.error('Please enter your email.', 'Error', {}, false);
           return false;
       } else if (!emailReg.test(data.email)) {
-          toastr.error("Please enter valid email address", "Error");
+          toastr.error("Please enter valid email address", "Error", {}, false);
           return false;
       } else if (!data.name) {
-          toastr.error("Please enter a name", "Error");
+          toastr.error("Please enter a name", "Error", {}, false);
           return false;
       }else {
+        const userExistsError = 'user exists';
         this.setState({isBusy: true});
         Meteor.call(methodNameToCall, data, schoolData,subscriptionRequest, (err,res) => {
-          const userExistsError = 'user exists';
           this.setState({isBusy: false} , () => {
             if(err && err.error === userExistsError) {
               Events.trigger('loginAsUser',{email: data.email, loginModalTitle: `We have ${data.email} as registered user. kindly log in your account.`});
             }else if(err) {
-              toastr.error(err.reason || err.message,"Error");
+              toastr.error(err.reason || err.message,"Error", {}, false);
             }else if(res.message) {
               toastr.error(res.message,'Error');
             }
@@ -209,7 +191,7 @@ class ManageRequestsDialogBox extends Component {
                 this.handleRequest(text);
                 this.props.onModalClose();
               }else{
-                toastr.success('Your request have been processed, will be notified shortly','success');
+                toastr.success('Your request has been processed','success');
                 this.handleRequest(text);
               }
             }

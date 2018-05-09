@@ -82,7 +82,7 @@ const CardContentTitle = styled.h2`
   margin: 0;
   text-transform: capitalize;
   ${props => props.description ? `padding: 0 ${helpers.rhythmDiv}px` : ''};
-
+  text-align: ${props => props.description ? 'center' : 'left'};
   @media screen and (max-width : ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
   }
@@ -117,6 +117,7 @@ const CardDescriptionHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 `;
 const CardImageContainer = styled.div`
   display: flex;

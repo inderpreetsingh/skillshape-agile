@@ -94,81 +94,24 @@ class ClassTimeClockManager extends Component {
     return day.substr(0,2);
   }
 
-  /*
-  formatDataBasedOnScheduleType = (data) => {
-    // In this method we basically need to format data
-    /* eg formatted data..
-    classTimes : {
-      'monday': [{
-          time: '07:00',
-          timePeriod: 'am',
-          duration: 120,
-          date: "2018-04-06T06:45:54.289Z"
-      }],
-      'wednesday': [{
-        time: '3:00',
-        timePeriod: 'pm',
-        duration: 145,
-        date: "2018-04-16T06:45:54.289Z"
-      },
-      {
-        time: '05:30',
-        timePeriod: 'am',
-        duration: 175,
-        date: "2018-04-16T06:45:54.289Z"
-      }]
-    }
+  getDaysOfWeekFromFormattedClassTimesData = () => {
+    const {formattedClassTimes} = this.props;
+    return DAYS_IN_WEEK.map((day,i) => {
+      // console.log(this.props,'this.props......')
 
-    NOTE: Recurring, Ongoing scheduleType are already formatted (or easy to format) this way,
-        but for oneTime we need to transform into this format to feed data to clock(s).
+      if(formattedClassTimes[day]){
+        const scheduleData = formattedClassTimes[day];
 
-    const classTimesData = {...data};
-    console.log("formatDataBasedOnScheduleType________", data);
-      let classTimes;
-      if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
-        classTimes = {};
-        let schoolDetails = data.scheduleDetails.oneTime;
-        let startDate, dayOfTheWeek, day, startTime, formattedTime, timePeriod, currentJsonData;
-        schoolDetails.forEach((item) => {
-          startDate = new Date(item.startDate);
-          dayOfTheWeek = startDate.getDay(); // day of the week (from 0 to 6)
-          day = DAYS_IN_WEEK[dayOfTheWeek - 1];
-          startTime = new Date(item.startTime); // Get Time from date time
-          formattedTime = this.formatTime(startTime);
-          timePeriod = this.formatAMPM(startTime);
-          currentJsonData = {
-            time: formattedTime,
-            timePeriod: timePeriod,
-            duration: item.duration,
-            date: `${startDate}`
-          };
-          if(classTimes && classTimes[day]) {
-            let existingTimes = classTimes[day];
-            existingTimes.push(currentJsonData);
-            classTimes[day] = existingTimes;
-          } else {
-            classTimes[day] = [];
-            classTimes[day].push(currentJsonData);
-          }
-          // this.handleSliderState(dayOfTheWeek - 1);
-        })
-        return classTimes;
-      } else {
-        return data.scheduleDetails;
+        return(<Day
+          key={i}
+          active={i === this.state.currentIndex}
+          onClick={this.handleDayClick(i)}>
+          {this.getDayInShortFormat(day)}
+        </Day>)
       }
+      return null;
+    });
   }
-
-  formatAMPM = (startTime) => {
-      let hours = startTime.getHours();
-      let ampm = hours >= 12 ? 'pm' : 'am';
-      return ampm;
-  }
-  formatTime = (startTime) => {
-    let hour  = startTime.getHours();
-    let minutes = startTime.getMinutes();
-    return `${hour}:${minutes}`;
-  }
-  */
 
   startAutoMaticSlider = () => {
     this.sliderInterval = setInterval(() => {
@@ -246,20 +189,7 @@ class ClassTimeClockManager extends Component {
         </OuterWrapper>
 
         {formattedClassTimes && Object.keys(formattedClassTimes).length > 1 && <ChangeSlide>
-          <Days>
-            {DAYS_IN_WEEK.map((day,i) => {
-              // console.log(this.props,'this.props......')
-              if(formattedClassTimes[day]){
-                return(<Day
-                  key={i}
-                  active={i === this.state.currentIndex}
-                  onClick={this.handleDayClick(i)}>
-                  {this.getDayInShortFormat(day)}
-                </Day>)
-              }
-              return null;
-            })}
-          </Days>
+          <Days> {this.getDaysOfWeekFromFormattedClassTimesData()} </Days>
         </ChangeSlide>}
 
         <Schedule>{ this.props.scheduleType.toLowerCase()}</Schedule>

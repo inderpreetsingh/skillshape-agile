@@ -28,11 +28,27 @@ class ClassTimeNewClocksContainer extends Component {
       this.setState({ minHeight: height});
   }
 
+  getTotalNoOfClocks = () => {
+    const {formattedClassTimes} = this.props;
+    let clockCounter = 0;
+
+    DAYS_IN_WEEK.map((day,i) => {
+      const scheduleData = formattedClassTimes[day];
+      if(scheduleData) {
+        scheduleData.forEach((schedule,i) => {
+          ++clockCounter;
+        });
+      }
+    });
+
+    return clockCounter;
+  }
+
   render() {
     const {formattedClassTimes, scheduleType, scheduleStartDate, scheduleEndDate, currentIndex, clockProps} = this.props;
     // console.log(formattedClassTimes,"formattedClassTimes...........");
     return (<Container minHeight={this.state.minHeight}>
-        {formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
+        {/*formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
           if(formattedClassTimes[day]) {
             return (<ClassTimeNewClock
               key={i}
@@ -47,7 +63,18 @@ class ClassTimeNewClocksContainer extends Component {
               />)
           }
           return null;
-        })}
+        })*/}
+
+        <ClassTimeNewClock
+          scheduleType={scheduleType}
+          scheduleStartDate={scheduleStartDate}
+          scheduleEndDate={scheduleEndDate}
+          formattedClassTimes={formattedClassTimes}
+          totalClocks={this.getTotalNoOfClocks()}
+          clockProps={clockProps}
+          updateContainerHeight={this.updateContainerHeight}
+        />
+
       </Container>)
   }
 }

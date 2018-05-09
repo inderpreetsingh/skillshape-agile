@@ -18,19 +18,56 @@ import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 import * as helpers from '../jss/helpers.js';
 import MuiTheme from '../jss/muitheme';
 
+const RatingsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+`;
 
 const Reviews = styled.a`
-    color: ${helpers.primaryColor};
+  color: ${helpers.primaryColor};
 `;
 const NoFoundResultWapper = styled.div`
-    text-align: center;
-`
+  text-align: center;
+`;
+
+const Description = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const DescriptionInnerWrapper = styled.div`
+  padding: ${helpers.rhythmDiv}px;
+  margin: ${helpers.rhythmDiv * 2}px 0;
+  border: 1px solid #ddd;
+  height: 100%;
+  max-height: 250px;
+  display: flex;
+  flex-direction: column;
+  //
+  // @media screen and (max-width: ${helpers.mobile + 100}px) {
+  //   max-height: 250px;
+  // }
+`;
+
+const ClassTypeRequirements = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+`;
+
+const DescriptionContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const ClassDescriptionContent = styled.p`
-  max-height: 100px;
   overflow-y: auto;
   color: ${helpers.black};
   font-size: ${helpers.baseFontSize}px;
+  display: flex;
+  flex-shrink: 1;
 `;
 
 const Text = styled.p`
@@ -39,6 +76,30 @@ const Text = styled.p`
   color: ${helpers.black};
   line-height: 1.2;
   margin: 0;
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+`;
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  padding: 0 ${helpers.rhythmDiv/2}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
+  width: 50%;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: 100%;
+  }
 `;
 
 const styles = {
@@ -62,16 +123,17 @@ const ClassTypeCardDescription = (props) => {
   return(
     <MuiThemeProvider theme={MuiTheme}>
         <Fragment>
-            <div itemScope itemType="http://schema.org/AggregateRating">
+            <RatingsWrapper itemScope itemType="http://schema.org/AggregateRating">
                 <ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount"/>
                 <Reviews href="#">
                     <Typography>
                       <span itemProp="reviewCount">{props.reviews}</span> Reviews</Typography>
                 </Reviews>
-            </div>
+            </RatingsWrapper>
 
-            <div className="description">
-              <Grid container spacing={8}>
+            <Description className="description">
+              {/*
+                <Grid container spacing={8}>
                  <Grid item xs={12} classes={{typeItem: props.classes.gridDescriptionWrapper}}>
                     {cardRevealInfo.ageMin && <Text>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Text>}
                     {cardRevealInfo.gender && <Text>{cardRevealInfo.gender && (cardRevealInfo.gender !== "All") && `${cardRevealInfo.gender}`}</Text>}
@@ -80,44 +142,58 @@ const ClassTypeCardDescription = (props) => {
                     <Typography classes={{root: props.classes.descriptionHeader}}>Class Description: </Typography>
                     {cardRevealInfo.description && <ClassDescriptionContent>{cardRevealInfo.description}</ClassDescriptionContent>}
                  </Grid>
-               </Grid>
+               </Grid> */}
 
-               <Grid item xs={12} sm={6}>
-                    <SecondaryButton
-                      noMarginBottom
-                      fullWidth
-                      onClick={() => goToClassTypePage(addDelimiter(cardRevealInfo.name),cardRevealInfo._id )}
-                      label="Class Details"/>
-                </Grid>
+               <DescriptionInnerWrapper>
+                 <ClassTypeRequirements>
+                   {cardRevealInfo.ageMin && <Text>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Text>}
+                   {cardRevealInfo.gender && <Text>{cardRevealInfo.gender && (cardRevealInfo.gender !== "All") && `${cardRevealInfo.gender}`}</Text>}
+                   {cardRevealInfo.experienceLevel && <Text>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Text>}
+                 </ClassTypeRequirements>
 
-                <Grid item xs={12} sm={6}>
+                 <DescriptionContentWrapper>
+                   <Typography classes={{root: props.classes.descriptionHeader}}>Class Description: </Typography>
+                   {cardRevealInfo.description && <ClassDescriptionContent>{cardRevealInfo.description}</ClassDescriptionContent>}
+                 </DescriptionContentWrapper>
+               </DescriptionInnerWrapper>
+
+               <Buttons>
+                <ButtonsWrapper>
+                 <ButtonWrapper>
+                   <SecondaryButton
+                    noMarginBottom
+                    fullWidth
+                    onClick={() => goToClassTypePage(addDelimiter(cardRevealInfo.name),cardRevealInfo._id )}
+                    label="Class Details"/>
+                  </ButtonWrapper>
+
+                  <ButtonWrapper>
                     <SecondaryButton
                       noMarginBottom
                       fullWidth
                       label="View School"
                       onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
                     />
-                </Grid>
+                  </ButtonWrapper>
+                </ButtonsWrapper>
 
-                <Grid item xs={12}>
-                    {
-                        props.classTimeCheck ?
-                        <PrimaryButton
-                          label="View Class Times"
-                          fullWidth
-                          onClick={props.onClassTimeButtonClick}
-                          itemScope
-                          itemType="http://schema.org/ViewAction"
-                          />
-                        : <PrimaryButton
-                          label="Request Class Times"
-                          fullWidth
-                          onClick={props.onRequestClassTimeButtonClick}
-                        />
-                    }
-                </Grid>
-              </Grid>
-            </div>
+                {
+                    props.classTimeCheck ?
+                    <PrimaryButton
+                      label="View Class Times"
+                      fullWidth
+                      onClick={props.onClassTimeButtonClick}
+                      itemScope
+                      itemType="http://schema.org/ViewAction"
+                      />
+                    : <PrimaryButton
+                      label="Request Class Times"
+                      fullWidth
+                      onClick={props.onRequestClassTimeButtonClick}
+                    />
+                }
+              </Buttons>
+            </Description>
         </Fragment>
     </MuiThemeProvider>
 )

@@ -95,7 +95,7 @@ const TopSearchBar = (props) => (
     <LogoSearchSection>
       {props.logoArea ? props.logoArea :
       <Logo brandTextShown={false} width={32} height={32} />}
-      <MySearchBarStyled {...props.searchBar}/>
+      {/*<MySearchBarStyled {...props.searchBar}/> */}
     </LogoSearchSection>
 
     <NavRightSection>

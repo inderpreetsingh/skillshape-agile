@@ -6,12 +6,8 @@ import School from '/imports/api/school/fields.js';
 
 import { getUserFullName } from '/imports/util/getUserData';
 
-
 Meteor.methods({
   'pricingRequest.addRequest': function(data,schoolData,subscriptionRequest) {
-    const validationContext = PricingRequestSchema.newContext();
-    data.createdAt = new Date();
-    const isValid = validationContext.validate(data);
 
     if(!this.userId) {
       // check for user
@@ -20,12 +16,22 @@ Meteor.methods({
         throw new Meteor.Error("user exists","user data already exists with this email account");
       }
     }else if(this.userId) {
+      const currentUser = Meteor.users.findOne({_id : this.userId});
+      data.name = getUserFullName(currentUser);
+      data.email = currentUser.emails[0].address;
       data.existingUser = true;
       data.userId = this.userId;
-      data.email = Meteor.users.findOne({_id: this.userId}).emails[0].address;
     }else {
       data.existingUser = false;
     }
+
+    // Now we gonna validate the data..
+    const validationContext = PricingRequestSchema.newContext();
+    data.createdAt = new Date();
+    const isValid = validationContext.validate(data);
+
+
+    console.info(data,"data....................")
 
     // Verfiying the data send..
     if (isValid) {
@@ -39,20 +45,20 @@ Meteor.methods({
         }
       }else {
         const fromEmail = 'Notices@SkillShape.com';
-        const classTypeName = ClassType.findOne({_id: data.classTypeId}).name;
+        const classTypeName = data.classTypeId && ClassType.findOne({_id: data.classTypeId}).name;
         const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
 
         let ownerName = "sam";
         let memberLink = "";
-        let pricingRequestId = ''
+        let pricingRequestId = '';
         let toEmail = 'sam@skillshape.com'; // Needs to replace by Admin of School
 
-        /**
+        /***
          * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
          * 2. Then sending a new mail to user in case the request is for subscribing to the updates..
-         */
+         ***/
 
          // 1. sending mail to the school owner.
          if(schoolData) {
@@ -65,9 +71,8 @@ Meteor.methods({
          if(this.userId) {
              memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
          }
-         //  toEmail = 'singhs.ishwer@gmail.com';
          console.log(updatePriceLink, schoolPageLink, currentUserName, ownerName, fromEmail, toEmail, memberLink);
-         sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
+        //  sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
 
          if(subscriptionRequest === 'save' || this.userId)
             pricingRequestId = PricingRequest.insert(data);
@@ -75,12 +80,11 @@ Meteor.methods({
          //2. sending mail to the user.
          if(subscriptionRequest === 'save') {
            const toEmail = data.email;
-           const updateFor = `pricing details of ${classTypeName}`;
+           const updateFor = `pricing details of ${classTypeName || schoolData.name}`;
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?pricingRequest=true&requestId=${pricingRequestId}`;
-           const subject = `Subscription for prices of ${classTypeName}`;
+           const subject = `Subscription for prices of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-          //  console.log(subject,joinSkillShapeLink,unsubscribeLink,currentUserName,updateFor,toEmail);
-          sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+          //  sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
          return {

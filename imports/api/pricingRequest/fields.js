@@ -17,7 +17,7 @@ export const PricingRequestSchema = new SimpleSchema({
     type: String,
   },
   existingUser: {
-    type: String,
+    type: Boolean,
     optional: true
   },
   userId: {
