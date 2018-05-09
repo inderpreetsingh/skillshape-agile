@@ -181,7 +181,7 @@ export default function () {
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item xs={8}>
+              <Grid item xs={4}>
               </Grid>
               <Grid item xs={4}>
                   <Button
@@ -192,6 +192,17 @@ export default function () {
                       onClick ={this.editSchoolCall}
                       color="accent">
                       Save Changes
+                  </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button
+                      type="submit"
+                      className="btn"
+                      form = "editSchoolDetails"
+                      raised
+                      onClick ={this.editSchoolCall.bind(this, 'nextTab')}
+                      color="accent">
+                      Save and Next
                   </Button>
               </Grid>
             </Grid>

@@ -18,7 +18,6 @@ import EmbedCodes from './embedCodes';
 import MediaDetails from './mediaDetails';
 
 export default function (props) {
-    console.log("school edit render state -->>",this.state);
     // console.log("school edit render props -->>",this.props);
     const {
         selecetdView,
@@ -67,6 +66,8 @@ export default function (props) {
                               moveTab={this.moveTab}
                               currentUser={currentUser}
                               route={this.props.route}
+                              moveToNextTab={(value) => {this.moveToNextTab(value)}}
+
                           />
                       }
                       {

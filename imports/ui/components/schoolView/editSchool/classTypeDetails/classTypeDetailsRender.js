@@ -1,15 +1,16 @@
 import React from 'react';
 import PanelWithTable from '/imports/ui/componentHelpers/panelWithTable';
 import classTypeSettings from './classTypeSettings';
+import isEmpty from "lodash/isEmpty";
 
 export default function() {
 
-	let { 
-		classTypeData, 
-		showFormBuilderModal, 
+	let {
+		classTypeData,
+		showFormBuilderModal,
 		moveTab,
 		schoolId,
-		locationData, 
+		locationData,
 	} = this.props
 
 	return (
@@ -24,6 +25,7 @@ export default function() {
 			    locationData={locationData}
 			    handleImageChange={this.handleImageChange}
 			    handleImageSave={this.handleImageSave}
+			    showClassTypeModal={isEmpty(classTypeData)}
 			/>
 		</div>
 	)

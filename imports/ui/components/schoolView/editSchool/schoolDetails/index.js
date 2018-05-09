@@ -59,7 +59,8 @@ class SchoolDetails extends React.Component {
     }
   }
 
-  editSchoolCall = (imageUpload) => {
+  editSchoolCall = (nextTab, event) => {
+    console.log("nextTab, event=============>",nextTab, event,this);
     // Start loading on when user press button to update school details.
     this.setState({isLoading: true});
     const { schoolId,toastr } = this.props;
@@ -78,6 +79,9 @@ class SchoolDetails extends React.Component {
       }
       // Stop loading on completion of editing school details.
       this.setState({isLoading: false});
+      if(nextTab) {
+        this.props.moveToNextTab(1);
+      }
     });
   }
 

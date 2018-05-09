@@ -43,7 +43,12 @@ class SchoolEditView extends React.Component {
     }
   }
 
-  moveTab = (tabId) => this.refs[tabId].click();
+  moveTab = (tabId) => {
+    this.refs[tabId] && this.refs[tabId].click();
+  }
+  moveToNextTab = (value) => {
+    this.setState({tabValue: value})
+  }
 
   showFormBuilderModal = ({type, tableData, formFieldsValues, parentData}) => {
     console.log("<<<< showEditModal >>>>>",parentData)
