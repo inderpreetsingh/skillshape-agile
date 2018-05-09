@@ -67,14 +67,14 @@ const LogOutUserSideNav = (props) => (
             menuListItemText={props.classes.menuListItemText}
             name="Home"
             iconName="home"
-            onClick={() => browserHistory.push('/')}
+            onClick={() => props.childItemOnClick('/')}
         />
          <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
             name="Find a School"
             iconName="find_in_page"
-            onClick={() => browserHistory.push('/')}
+            onClick={() => props.childItemOnClick('/')}
         />
         <SideNavItem
             button
@@ -97,14 +97,14 @@ const LogOutUserSideNav = (props) => (
             menuListItemText={props.classes.menuListItemText}
             name="Claim A School"
             iconName="check_circle"
-            onClick={() => browserHistory.push('/claimSchool')}
+            onClick={() => props.childItemOnClick('/claimSchool')}
         />
         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
             name="Contact Us"
             iconName="email"
-            onClick={() => browserHistory.push('/contact-us')}
+            onClick={() => props.childItemOnClick('/contact-us')}
         />
     </Fragment>
 )
@@ -140,14 +140,14 @@ const LoginUserSideNav = (props) => (
             menuListItemText={props.classes.menuListItemText}
             name="My Calendar"
             iconName="perm_contact_calendar"
-            onClick={() => browserHistory.push('/MyCalendar')}
+            onClick={() => props.childItemOnClick('/MyCalendar')}
         />
         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
             name="My Classmates"
             iconName="find_in_page"
-            onClick={() => browserHistory.push('/classmates')}
+            onClick={() =>props.childItemOnClick('/classmates')}
         />
         {
             !isEmpty(props.mySchool) && <SchoolSubMenu
@@ -170,28 +170,28 @@ const LoginUserSideNav = (props) => (
             menuListItemText={props.classes.menuListItemText}
             name="Find a School"
             iconName="find_in_page"
-            onClick={() => browserHistory.push('/')}
+            onClick={() => props.childItemOnClick('/')/*browserHistory.push('/')*/}
         />
         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
             name="Claim a School"
             iconName="assignment"
-            onClick={() => browserHistory.push('/claimSchool')}
+            onClick={() => props.childItemOnClick('/claimSchool')/*browserHistory.push('/claimSchool')*/}
         />
         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
             name="Send us feedback"
             iconName="message"
-            onClick={() => browserHistory.push('/contact-us')}
+            onClick={() => props.childItemOnClick('/contact-us')/*browserHistory.push('/contact-us')*/}
         />
         <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
             name="Add Schools"
             iconName="add_box"
-            onClick={() => browserHistory.push('/claimSchool')}
+            onClick={() => props.childItemOnClick('/claimSchool')/*browserHistory.push('/claimSchool')*/}
         />
         {
             checkSuperAdmin(props.currentUser) && (<Fragment>
@@ -200,14 +200,14 @@ const LoginUserSideNav = (props) => (
                         menuListItemText={props.classes.menuListItemText}
                         name="Upload Schools"
                         iconName="file_upload"
-                        onClick={() => browserHistory.push('/SchoolUpload')}
+                        onClick={() => props.childItemOnClick('/SchoolUpload')}
                     />
                     <SideNavItem
                         button
                         menuListItemText={props.classes.menuListItemText}
                         name="Manage Users"
                         iconName="supervisor_account"
-                        onClick={() => browserHistory.push('/manage-users')}
+                        onClick={() => props.childItemOnClick('/manage-users')}
                     />
                 </Fragment>
             )
@@ -240,7 +240,7 @@ class SideNavItems extends React.Component {
     loadConnectedSchool = () => {
         Meteor.call("school.getConnectedSchool", Meteor.userId(), (error, result) => {
             if(error){
-              console.log("error", error);
+              // console.log("error", error);
             }
             if(result){
                 const connectedSchool = result.map((school, index) => {
@@ -249,6 +249,7 @@ class SideNavItems extends React.Component {
                     link: `/schools/${school.slug}`,
                     iconName: "school",
                     nameLimit: 17,
+                    schoolEditLink:`/SchoolAdmin/${school._id}/edit`
                 }
             })
             this.setState({connectedSchool: connectedSchool})
@@ -260,7 +261,7 @@ class SideNavItems extends React.Component {
         if(Meteor.userId()) {
             Meteor.call("school.getMySchool", (error, result) => {
                 if(error){
-                    console.log("error", error);
+                    // console.log("error", error);
                 }
                 if(result){
                     const mySchool = result.map((school, index) => {
@@ -268,6 +269,7 @@ class SideNavItems extends React.Component {
                             name: school.name,
                             link: `/schools/${school.slug}`,
                             iconName: "school",
+                            schoolEditLink:`/SchoolAdmin/${school._id}/edit`
                         }
                     })
                     this.setState({mySchool: mySchool})
@@ -277,8 +279,9 @@ class SideNavItems extends React.Component {
     }
 
     handleChildItemOnClick = (link)=> {
-        console.log("handleChildItemOnClick")
+        // console.log("handleChildItemOnClick")
         browserHistory.push(link);
+        this.props.handleDrawer();
     }
 
     render() {
@@ -294,7 +297,10 @@ class SideNavItems extends React.Component {
                             childItemOnClick={this.handleChildItemOnClick}
                             {...this.props}
                         />
-                        : <LogOutUserSideNav {...this.props}/>
+                        : <LogOutUserSideNav
+                            {...this.props}
+                            childItemOnClick={this.handleChildItemOnClick}
+                            />
                     }
                     <SideNavItem >
                         <LoginButton

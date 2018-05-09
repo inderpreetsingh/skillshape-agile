@@ -8,6 +8,7 @@ import Button from 'material-ui/Button';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
 import Typography from 'material-ui/Typography';
+import config from '/imports/config';
 
 const scheduleDetails = [
 	"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
@@ -35,11 +36,14 @@ export class WeekDaysRow extends React.Component {
         				duration: obj.duration,
         				day: obj.day,
         				roomId: obj.roomId,
+                        timeUnits: obj && obj.timeUnits || "Minutes"
+
         			})
                 }
     		}
     	} else {
-    		state.row.push({ key: "", startTime: new Date(), duration: "", day: null, roomId: ""})
+            // Initial state if we are adding time instead of editing class time
+    		state.row.push({ key: "", startTime: new Date(), duration: "", day: null, roomId: "", timeUnits: "Minutes"})
     	}
     	// console.log("WeekDaysRow initializeFields -->>",state)
     	return state;
@@ -48,7 +52,6 @@ export class WeekDaysRow extends React.Component {
     handleChangeDate = (index, fieldName, date) => {
         const oldRow = [...this.state.row];
         oldRow[index][fieldName] = new Date(date);
-        console.log("handleChangeDate -->>", fieldName, new Date(date))
        	this.setState({ row: oldRow });
     }
 
@@ -66,7 +69,6 @@ export class WeekDaysRow extends React.Component {
 
     handleSelectInputChange = (index, fieldName, event)=> {
     	const oldRow = [...this.state.row];
-    	console.log("handleSelectInputChange -->>",index, fieldName, event.target.value)
     	oldRow[index][fieldName] = event.target.value
 
         if(fieldName === "key") {
@@ -86,11 +88,9 @@ export class WeekDaysRow extends React.Component {
 
     getRowData = ()=> {
         let rowData  = this.state.row.filter((data) => { return data.key})
-        console.log("rowData===>",this.state.row)
         const grouped = _.groupBy(rowData, function(item) {
             return item.key;
         });
-        // console.log("getRowData grouped", grouped)
         return grouped;
     }
 
@@ -104,8 +104,9 @@ export class WeekDaysRow extends React.Component {
         			row.map((data, index) => {
 		        		return (<Grid style={{border: '1px solid black', marginBottom: 15,padding: 5, backgroundColor: 'antiquewhite'}} key={index} container>
 		                    <Grid item sm={6} xs={12}>
+                                {/*Repeating class is useful when you plan to teach the same class multiple times. You can schedule the recurring class at one go without the need to schedule every time you plan to offer the same class.*/}
 		                		<FormControl fullWidth margin='dense'>
-                                    <InputLabel htmlFor="weekDay">WeekDay</InputLabel>
+                                    <InputLabel htmlFor="weekDay" shrink={true}>WeekDay</InputLabel>
                                     <Select
     								    input={<Input id="weekDay"/>}
     								    value={data ? data.key : ""}
@@ -131,15 +132,41 @@ export class WeekDaysRow extends React.Component {
                                 />
 		                	</Grid>
 		                	<Grid item sm={6} xs={12}>
-		                		<TextField
-		                		    defaultValue={data && data.duration}
-                                    margin="dense"
-                                    onChange={this.handleSelectInputChange.bind(this, index, "duration")}
-                                    label="Duration"
-                                    type="number"
-                                    fullWidth
-                                    required={true}
-                                />
+                                <Grid container style={{display: 'flex',alignItems: 'baseline',padding: '3px'}}>
+                                    <Grid item sm={6}>
+        		                		<TextField
+        		                		    defaultValue={data && data.duration}
+                                            margin="dense"
+                                            onChange={this.handleSelectInputChange.bind(this, index, "duration")}
+                                            label="Duration"
+                                            type="number"
+                                            fullWidth
+                                            required={data && data.key  ? true : false} /*Made it mandatory if week day selected*/
+                                            disabled={data && data.key  ? false : true}/*Made it disabled if weekday is not selected*/
+                                        />
+                                    </Grid>
+                                    <Grid  sm={6}>
+                                        <FormControl fullWidth margin='dense'>
+                                            <InputLabel htmlFor="weekDay" shrink={true}>Units</InputLabel>
+                                            <Select
+                                                input={<Input id="duration"/>}
+                                                value={data && data.timeUnits || "Minutes"}
+                                                onChange={this.handleSelectInputChange.bind(this, index, "timeUnits")}
+                                                fullWidth
+                                            >
+                                                {
+                                                    config.duration.map((data, index)=> {
+                                                        return <MenuItem
+                                                            key={`${index}-${data.value}`}
+                                                            value={data.value}>
+                                                            {data.label}
+                                                        </MenuItem>
+                                                    })
+                                                }
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
 		                	</Grid>
 		                	<Grid item sm={6} xs={12}>
 		                		<FormControl fullWidth margin='dense'>

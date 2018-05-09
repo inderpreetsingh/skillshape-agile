@@ -8,12 +8,13 @@ import EmailSignature from './signature.js';
 import { getUserFullName } from '/imports/util/getUserData';
 
 
-export const sendPackagePurchaseEmail = function({ to, buyer, packageName }) {
+
+export const sendPackagePurchaseEmail = function({ to, buyer, packageName, schoolAdminName }) {
     Email.send({
-        to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
+        to: config.skillshapeAdminEmail, // Replace value of `to` with Admin email if Admin exists.
         from: config.fromEmailForPurchasePackage,
         subject: "Package Purchase Request Recieved",
-        html: `<b>${buyer}</b> has requested this package : <b>${packageName}</b>
+        html: `Dear ${schoolAdminName},<br/><b>${buyer}</b> has expressed interest in <b>${packageName}</b> class package.
             <br/><br/>
             <br/><br/>
             ${EmailSignature}`
@@ -25,14 +26,19 @@ export const sendJoinClassEmail = function({
     currentUserName,
     schoolAdminName,
     classTypeName,
-    classTimeName
+    classTimeName,
+    classLink, // Relevant links for class interests.
+    memberLink
 }) {
     if (Meteor.isServer) {
         Email.send({
-            to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
+            to: config.skillshapeAdminEmail, // Replace value of `to` with Admin email if Admin exists.
             from: config.fromEmailForJoiningClass,
             subject: "Join Class Request Recieved",
             html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your class: <b>${classTypeName}</b> , <b>${classTimeName}</b>.
+                <br/>You can visit the following link OR links to know more about this request:
+                ${classLink ? `<a href=${classLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Class</a><br/>` : ""}
+                ${memberLink ? `<a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Member</a><br/>` : ""}
                 <br/><br/>
                 <br/><br/>
                 ${EmailSignature}`
@@ -52,9 +58,9 @@ export const sendClaimASchoolEmail = function(
 ) {
     if (Meteor.isServer) {
         const schoolOwnerName = getUserFullName(schoolAdminRec);
-        console.log("To====>",To)
+        // console.log("To====>",To)
         if(!To) {
-            To = "sam@skillshape.com";
+            To = config.skillshapeAdminEmail;
         }
         Email.send({
             to: To, // Replace value of `to` with Admin email if Admin exists.
@@ -80,7 +86,7 @@ export const sendClaimASchoolEmail = function(
 export const sendConfirmationEmail = function(userRec, school) {
     if (Meteor.isServer) {
         Email.send({
-            to: "sam@skillshape.com", // Replace value of `to` with Admin email if Admin exists.
+            to: config.skillshapeAdminEmail, // Replace value of `to` with Admin email if Admin exists.
             from: config.fromEmailForJoiningClass,
             subject:
                 "Confirmation regarding your school claim request received",
@@ -117,7 +123,7 @@ export const sendClassTimesRequest = function({
     }
     if (Meteor.isServer) {
         Email.send({
-            to: "sam@skillshape.com", //emailObj.to
+            to: config.skillshapeAdminEmail, //emailObj.to
             from: "Notices@SkillShape.com",
             replyTo: "Notices@SkillShape.com",
             subject: emailObj.subject,
@@ -134,7 +140,7 @@ export const sendEmailToStudentForClassTypeUpdation = function(
     if (Meteor.isServer) {
         const userName = getUserFullName(userData);
         Email.send({
-            to: "sam@skillshape.com",//userData.emails[0].address
+            to: config.skillshapeAdminEmail,//userData.emails[0].address
             from: "Notices@SkillShape.com",
             subject: "School Updated",
             html: `${userName}, <br/>${schoolData.name} has updated their listing for ${classTypeName}. Please go to <br/> ${Meteor.absoluteUrl(
@@ -154,7 +160,7 @@ export const userRegistrationAndVerifyEmail = function(
 ) {
     Email.send({
         from: fromEmail,
-        to: toEmail,
+        to: config.skillshapeAdminEmail,
         replyTo: fromEmail,
         subject: "skillshape Registration",
         html: `Hi ${user.profile.name},
@@ -181,8 +187,11 @@ export const userRegistrationAndVerifyEmail = function(
 export const sendPriceInfoRequestEmail = function({
     toEmail,
     fromEmail,
+    schoolPageLink,
     updatePriceLink,
+    memberLink,
     ownerName,
+    classTypeName,
     currentUserName
 }) {
     if (Meteor.isServer) {
@@ -191,10 +200,48 @@ export const sendPriceInfoRequestEmail = function({
             from: fromEmail,
             replyTo: "Notices@SkillShape.com",
             subject: "Pricing info request received",
-            html: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
-            \n\nThanks, \n\n${EmailSignature}`
+            html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''} saw your listing on SkillShape.com for ${classTypeName} at <br />${schoolPageLink} <br /> and would you like to update your pricing <br />${updatePriceLink}
+            <br />
+            <br />
+            Thanks,
+            <br />
+            <br />
+            ${EmailSignature}`
+            // html: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
+            // \n\nThanks, \n\n${EmailSignature}`
         });
     }
+};
+
+export const sendEmailForSubscription = function({
+  toEmail,
+  fromEmail,
+  subject,
+  updateFor,
+  currentUserName,
+  unsubscribeLink,
+  joinSkillShapeLink,
+}) {
+  if (Meteor.isServer) {
+      Email.send({
+          to: toEmail, //emailObj.to
+          from: fromEmail,
+          replyTo: "Notices@SkillShape.com",
+          subject: subject,
+          html: `Dear ${currentUserName},<br /> You have joined the SkillShape list in order to get updates for ${updateFor}.
+          <br />If you don't remember signing up, click here:
+          <br />${unsubscribeLink}
+          <br />
+          <br />
+          If you want to join SkillShape to register for classes, manage your media, and connect with other members. (FREE membership!), click here:
+          <br />${joinSkillShapeLink}
+          <br />
+          <br />Thanks,
+          <br />
+          <br />
+          ${EmailSignature}`
+      });
+  }
 };
 
 export const sendEmailToStudentForPriceInfoUpdate = function(

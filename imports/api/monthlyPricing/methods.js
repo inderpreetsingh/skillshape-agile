@@ -21,7 +21,7 @@ Meteor.methods({
         // console.log("MonthlyPricing.addMonthlyPricing methods called!!!");
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "monthlyPricing_CUD" })) {
             // doc.remoteIP = this.connection.clientAddress;
-            console.log(doc);
+            // console.log(doc);
             updateHookForClassType({classTypeId: doc.classTypeId, doc});
             return MonthlyPricing.insert(doc);
         } else {
@@ -32,7 +32,7 @@ Meteor.methods({
         const user = Meteor.users.findOne(this.userId);
         // console.log("MonthlyPricing.editMonthlyPricing methods called!!!",doc_id, doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "monthlyPricing_CUD" })) {
-       
+
             let monthlyPriceData = MonthlyPricing.findOne({_id:doc_id});
             let diff = _.difference(monthlyPriceData.classTypeId, doc.classTypeId);
             if(diff && diff.length > 0) {

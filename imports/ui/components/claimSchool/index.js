@@ -26,7 +26,7 @@ const styles = theme => ({
   }
 });
 
-console.log("styles",styles);
+// console.log("styles",styles);
 
 class ClaimSchool extends ClaimSchoolBase {
 
@@ -94,7 +94,7 @@ class ClaimSchool extends ClaimSchoolBase {
     };
 
     render() {
-        console.log("this.props claimSchoolRender",this)
+        // console.log("this.props claimSchoolRender",this)
         return ClaimSchoolRender.call(this, this.props, this.state)
     }
 

@@ -76,8 +76,27 @@ const Description = styled.p`
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
   padding: 0 ${helpers.rhythmDiv * 2}px;
-  max-height: 120px;
   overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
+`;
+
+const Read = styled.span`
+  font-style: italic;
+  cursor: pointer;
+`;
+
+const ScheduleAndDescriptionWrapper = styled.div`
+  max-height: 330px; // This is the computed max-height for the container.
+  display: flex;
+  flex-direction: column;
+`;
+
+const ScheduleWrapper = styled.div`
+  flex-shrink: 0;
+`;
+
+const DescriptionWrapper = styled.div`
+  flex-grow: 1;
+  display: flex;
 `;
 
 const TrendingWrapper = styled.div`
@@ -105,11 +124,6 @@ const Trending = () => {
   )
 }
 
-const Read = styled.span`
-    font-style: italic;
-    cursor: pointer;
-`;
-
 // This can be changed according to the data
 _isClassOnGoing = (scheduleType) => scheduleType && scheduleType.toLowerCase().replace(/\-/) === ON_GOING_SCHEDULE;
 
@@ -123,12 +137,6 @@ class ClassTime extends Component {
   componentDidMount = () => {
     // console.info('Show me state',this.state);
   }
-
-  // handleToggleAddToCalendar = () => {
-  //   this.setState({
-  //     addToCalendar: !this.state.addToCalendar
-  //   });
-  // }
 
   handleAddToMyCalendarButtonClick = () => {
     // console.log("this.props.handleAddToMyCalendarButtonClick",this.props);
@@ -258,7 +266,6 @@ class ClassTime extends Component {
     })
   }
 
-
   _getWrapperClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar' : 'remove-from-calendar';
 
   _getOuterClockClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
@@ -295,35 +302,48 @@ class ClassTime extends Component {
 
   render() {
     console.log("ClassTime props -->>",this.props);
+    const { desc } = this.props;
     const classNameForClock = this._getOuterClockClassName(this.props.addToCalendar);
     const dotColor = this._getDotColor(this.props.addToCalendar);
     return (<Fragment>
       {this.state.isLoading && <ContainerLoader />}
-      <ClassTimeContainer className={`class-time-bg-transition ${this._getWrapperClassName(this.props.addToCalendar)}`}
-            key={this.props._id} >
-            <div>
-              <ClassTimeClockManager
-                formattedClassTimes={this.formatDataBasedOnScheduleType(this.props)}
-                scheduleType={this.props.scheduleType}
-                classTimes={this.props.classTimes}
-                clockProps={{ className: classNameForClock, dotColor: dotColor }}
-              />
 
-              {this.props.showReadMore ?
-                <Description fullTextState={this.state.fullTextState}>
-                  {this.props.getDescriptionText()}
-                  {this.props.getShowMoreText()}
-                </Description>
-                :
-                <Description>
-                  {this.props.fullText}
-                </Description>}
-            </div>
+      <ClassTimeContainer
+        className={`class-time-bg-transition ${this._getWrapperClassName(this.props.addToCalendar)}`}
+        key={this.props._id} >
+        <ScheduleAndDescriptionWrapper>
 
-            {this._getCalenderButton(this.props.addToCalendar)}
+          <ScheduleWrapper>
+            <ClassTimeClockManager
+              formattedClassTimes={this.formatDataBasedOnScheduleType(this.props)}
+              scheduleStartDate={this.props.startDate}
+              scheduleEndDate={this.props.endDate}
+              scheduleType={this.props.scheduleType}
+              classTimes={this.props.classTimes}
+              clockProps={{ className: classNameForClock, dotColor: dotColor }}
+            />
+          </ScheduleWrapper>
 
-            {this.props.isTrending && <Trending />}
-        </ClassTimeContainer></Fragment>)
+          <DescriptionWrapper>
+            {/*this.props.showReadMore ?
+              <Description fullTextState={this.state.fullTextState}>
+                {this.props.getDescriptionText()}
+                {this.props.getShowMoreText()}
+              </Description>
+              :
+              <Description>
+                {this.props.fullText}
+              </Description> */}
+              <Description>
+                {desc}
+              </Description>
+          </DescriptionWrapper>
+        </ScheduleAndDescriptionWrapper>
+
+        {this._getCalenderButton(this.props.addToCalendar)}
+
+        {this.props.isTrending && <Trending />}
+      </ClassTimeContainer></Fragment>)
     }
 }
 
@@ -341,4 +361,5 @@ ClassTime.propTypes = {
 }
 
 
-export default toastrModal(withShowMoreText(ClassTime, { description: "desc"}));
+// export default toastrModal(withShowMoreText(ClassTime, { description: "desc"}));
+export default toastrModal(ClassTime);

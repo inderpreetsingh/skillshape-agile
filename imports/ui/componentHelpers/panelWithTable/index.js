@@ -74,15 +74,25 @@ class PanelWithTable extends React.Component {
             open: false,
             expanded: false,
             value: '',
-            showForm: false,
+            showForm: this.props.showLocationDialog,
             showEditForm: false,
             currentTableData:null,
             methodName: "",
             isBusy: false,
+            showClassTimeFormModal: {}
         }
     }
 
-    handleFormModal = ()=> this.setState({showForm: false, formData: null})
+    componentWillReceiveProps(nextProps) {
+        // Open Class Type Dialog Box, if no class type data is available.
+        if(nextProps.showClassTypeModal) {
+            this.setState({showForm: true})
+        }
+    }
+
+    handleFormModal = (classTypeId)=> {
+        this.setState({showForm: false, formData: null, showClassTimeFormModal: {[classTypeId]: true}});
+    }
 
     handleChange = (event, value) => {
         if(value == 0) {

@@ -11,6 +11,28 @@ import { sendEmailToStudentForClassTypeUpdation, sendClassTypeLocationRequestEma
 import { sendEmailToSchool } from "/imports/api/email";
 import { getUserFullName } from '/imports/util/getUserData';
 
+
+
+// Need to update Class Times so that we can show ageMin,gender,experienceLevel on class details modal.
+function updateHookForClassTimes({ classTimesIds, classTypeData, doc }) {
+
+    let classTimeUpdateObj = {};
+    // Need to edit changes in ClassTimes like edit `gender`,`experienceLevel`,`ageMin`.
+    if (classTypeData && classTypeData.ageMin !== doc.ageMin) {
+        classTimeUpdateObj.ageMin = doc.ageMin
+    }
+    if (classTypeData && classTypeData.experienceLevel !== doc.experienceLevel) {
+        classTimeUpdateObj.experienceLevel = doc.experienceLevel
+    }
+    if (classTypeData && classTypeData.gender !== doc.gender) {
+        classTimeUpdateObj.gender = doc.gender
+    }
+    if (!isEmpty(classTimeUpdateObj) && !isEmpty(classTimesIds)) {
+        ClassTimes.update({ _id: { $in: classTimesIds } }, { $set: classTimeUpdateObj }, { multi: true });
+    }
+
+}
+
 Meteor.methods({
     "classType.getClassType": function({schoolId}) {
 
@@ -62,7 +84,10 @@ Meteor.methods({
                 // temp.filters["state"] = location.state;
                 temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${location.country}`;
             }
-
+            let classTimesIds = ClassTimes.find({ classTypeId: doc_id }).map(data => data._id);
+            if (!isEmpty(classTimesIds)) {
+                updateHookForClassTimes({classTimesIds, classTypeData, doc});
+            }
             return ClassType.update({ _id: doc_id }, { $set: temp });
         } else {
             throw new Meteor.Error("Permission denied!!");
@@ -70,7 +95,7 @@ Meteor.methods({
     },
     "classType.removeClassType": function({doc}) {
         const user = Meteor.users.findOne(this.userId);
-        console.log("classType.removeClassType methods called!!!",doc);
+        // console.log("classType.removeClassType methods called!!!",doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })) {
             ClassTimes.remove({classTypeId: doc._id})
             ClassInterest.remove({classTypeId: doc._id})
@@ -103,7 +128,7 @@ Meteor.methods({
     "classType.requestClassTypeLocation": function({schoolId, classTypeId, classTypeName}) {
         if (this.userId && schoolId) {
                 const classTypeLocationRequest = ClassTypeLocationRequest.findOne({schoolId, classTypeId,userId: this.userId });
-                console.log("classTypeLocationRequest -->>",classTypeLocationRequest)
+                // console.log("classTypeLocationRequest -->>",classTypeLocationRequest)
                 // Request Pending
                 if(classTypeLocationRequest) {
                     throw new Meteor.Error("Your Class Type request has already been created!!!");
@@ -120,7 +145,7 @@ Meteor.methods({
                 }
                 let schoolData = School.findOne(schoolId);
                 let ownerName;
-                console.log("schoolData==>",schoolData)
+                // console.log("schoolData==>",schoolData)
                 if(schoolData && schoolData.superAdmin) {
                     // Get Admin of School As school Owner
                     let adminUser = Meteor.users.findOne(schoolData.superAdmin);

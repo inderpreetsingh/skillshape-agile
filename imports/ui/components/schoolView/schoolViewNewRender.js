@@ -103,8 +103,10 @@ const ReviewsButtonWrapper = GenericFixedWidthWrapper.extend`
   padding-bottom: ${helpers.rhythmDiv * 4}px;
   text-align: center;
 
+
   @media screen and (max-width: ${helpers.mobile}px) {
     ${helpers.flexCenter}
+    flex-direction: column;
   }
 `;
 
@@ -145,10 +147,6 @@ const PackagesWrapper = GenericWrapper.extend`
 const MyCalendarWrapper = GenericFixedWidthWrapper.extend`
   margin-bottom: ${helpers.rhythmDiv * 8}px;
   padding: 0 ${helpers.rhythmDiv * 2}px;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    padding: 0;
-  }
 `;
 
 const PricingSection = styled.div`
@@ -254,7 +252,7 @@ export default function() {
         console.info('---------- is publish...',this.props);
 
         return (
-            <DocumentTitle title={this.props.route.name}>
+            <DocumentTitle title={this.props.routeParams.slug}>
             <Wrapper className="content">
           {
             this.state.isLoading && <ContainerLoader />
@@ -333,6 +331,7 @@ export default function() {
               splitByCategory={false}
               classTypeBySchool='classTypeBySchool'
               handleSeeMore={this.handleSeeMore}
+              schoolView={true}
             />
         </ClassTypeListWrapper>
 

@@ -12,7 +12,7 @@ import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import SecondaryButton from '../buttons/SecondaryButton.jsx';
 
 import School from "/imports/api/school/fields";
-import { cutString, goToSchoolPage, goToClassTypePage } from "/imports/util";
+import { cutString, goToSchoolPage, goToClassTypePage, addDelimiter } from "/imports/util";
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 
 import * as helpers from '../jss/helpers.js';
@@ -58,7 +58,7 @@ const styles = {
 const ClassTypeCardDescription = (props) => {
 
   const {cardRevealInfo, schoolData} = props;
-  console.log("ClassTypeCardDescription props-->>",props);
+  // console.log("ClassTypeCardDescription props-->>",props);
   return(
     <MuiThemeProvider theme={MuiTheme}>
         <Fragment>
@@ -86,7 +86,7 @@ const ClassTypeCardDescription = (props) => {
                     <SecondaryButton
                       noMarginBottom
                       fullWidth
-                      onClick={() => goToClassTypePage(cardRevealInfo.name,cardRevealInfo._id )}
+                      onClick={() => goToClassTypePage(addDelimiter(cardRevealInfo.name),cardRevealInfo._id )}
                       label="Class Details"/>
                 </Grid>
 

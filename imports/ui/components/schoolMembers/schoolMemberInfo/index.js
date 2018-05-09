@@ -23,14 +23,12 @@ const styles = theme => ({
     height: '150px',
     backgroundSize: "cover",
     backgroundPosition: "top center",
-    borderRadius: "50%"
   },
   btnBackGround: {
     background: `${helpers.action}`
   },
   avatarContainer: {
     backgroundColor: '#FFFFFF',
-    borderRadius: '50%',
     width: 100,
   }
 });
@@ -225,6 +223,7 @@ class SchoolMemberInfo extends Component {
               memberInfo={ memberInfo }
               classTypeData={ this.props.classTypeData }
               reRender={this.props.handleMemberDetailsToRightPanel}
+              schoolId={this.props.memberInfo && this.props.memberInfo.schoolId}
           />
         }
         <Grid

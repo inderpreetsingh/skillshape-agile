@@ -33,7 +33,7 @@ export default function () {
     monthPrice,
     SLocation,
   } = this.state;
-  console.log("skillClassFilterRender -->>",this.state)
+  // console.log("skillClassFilterRender -->>",this.state)
   return(
     <div className="row " id="scr_affix">
         <div className="col-md-12 card clear-margin-bt custom-card-filter no-padding">

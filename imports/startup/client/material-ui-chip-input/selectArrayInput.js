@@ -99,7 +99,7 @@ export class SelectArrayInput extends Component {
     };
 
     handleDelete = newValue => {
-        console.log("newValue --->>",newValue)
+        // console.log("newValue --->>",newValue)
         const values = this.state.values.filter(v => v[this.props.optionValue] !== newValue);
         this.setState({ values });
         this.handleChange(values);
@@ -108,7 +108,7 @@ export class SelectArrayInput extends Component {
     handleChange = eventOrValue => {
         const extracted = eventOrValue;
         this.props.onChange(extracted);
-        console.log("extracted", extracted)
+        // console.log("extracted", extracted)
         this.props.input.onChange(extracted);
     };
 

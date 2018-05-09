@@ -24,11 +24,12 @@ class LoginButton extends Component {
 
     initializeState = ()=> {
         return {
-            loginModal : false,
-            error: {},
-            email: "",
-            password: "",
-            loading: false,
+          error: {},
+          loginModal : false,
+          loginModalTitle: '',
+          email: "",
+          password: "",
+          loading: false,
         }
     }
 
@@ -36,6 +37,8 @@ class LoginButton extends Component {
         let stateObj = this.initializeState();
         stateObj.loginModal = state;
         if(data) {
+            stateObj.loginModalTitle = data.loginModalTitle || '';
+            stateObj.email = data.email || '';
             stateObj.redirectUrl = data.redirectUrl;
         }
         this.setState(stateObj)
@@ -180,8 +183,8 @@ class LoginButton extends Component {
     render() {
         const {loginModal,error,isBusy} = this.state;
         const {icon,fullWidth,iconName,currentUser} = this.props;
-        console.log("LoginButton props -->>>",this.props);
-        console.log("LoginButton state -->>>",this.state);
+        // console.log("LoginButton props -->>>",this.props);
+        // console.log("LoginButton state -->>>",this.state);
         return(
             <Fragment>
                 <SecondaryButton
@@ -197,6 +200,7 @@ class LoginButton extends Component {
                     <LoginDialogBox
                         {...this.state}
                         open={loginModal}
+                        title={this.state.loginModalTitle}
                         onModalClose={() => this.handleLoginModalState(false)}
                         handleInputChange={this.handleInputChange}
                         onSignInButtonClick={this.onSignInButtonClick}

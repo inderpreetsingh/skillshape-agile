@@ -360,9 +360,9 @@ export default class SchoolViewBase extends React.Component {
           let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
           let subject ="", message =  "";
           let currentUserName = getUserFullName(Meteor.user());
-          emailBody = `Hi, \n\n${currentUserName || "I"} saw your listing on SkillShape.com ${url} and has the following message for you:${message}`
+          emailBody = `Hi, %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend.%0D%0A%0D%0ACan you update your pricing%3F %0D%0A%0D%0A Thanks`
           const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
-          const mailToNormalized = encodeURI(mailTo);
+          const mailToNormalized = mailTo;
           // window.location.href = mailToNormalized;
           openMailToInNewTab(mailToNormalized);
 
@@ -383,7 +383,6 @@ export default class SchoolViewBase extends React.Component {
     // This is used to send purchase request email when user wants to purchase a package.
     handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
         // Start loading
-        this.setState({ isLoading: true });
         console.log(typeOfTable, tableId, schoolId);
         const { toastr } = this.props;
         let self = this;
@@ -395,31 +394,35 @@ export default class SchoolViewBase extends React.Component {
         //   })
         // },2000);
 
-        Meteor.call(
-            "school.purchasePackage", {
-                typeOfTable: typeOfTable,
-                tableId: tableId,
-                schoolId: schoolId
-            },
-            (err, res) => {
-                if (err) {} else {
+        if (Meteor.userId()) {
+            this.setState({ isLoading: true });
+            Meteor.call(
+                "packageRequest.addRequest", {
+                    typeOfTable: typeOfTable,
+                    tableId: tableId,
+                    schoolId: schoolId
+                },
+                (err, res) => {
                     // Stop loading
                     self.setState({ isLoading: false });
-                    // Show confirmation to user that purchase request has been created.
-                    if (res.emailSent) {
-                        toastr.success(
-                            "Your request has been created. We will assist you soon. :)",
-                            "Success"
+                    if (err) {
+                        toastr.error(
+                            err.reason || err.message,
+                            "Error"
                         );
                     } else {
-                        toastr.error(
-                            "Something went wrong!",
-                            "Error"
+                        // Show confirmation to user that purchase request has been created.
+                        console.log("result----------------", res);
+                        toastr.success(
+                            res,
+                            "Success"
                         );
                     }
                 }
-            }
-        );
+            );
+        } else {
+            Events.trigger("loginAsUser");
+        }
     }
 
     checkForHtmlCode = (data) => {

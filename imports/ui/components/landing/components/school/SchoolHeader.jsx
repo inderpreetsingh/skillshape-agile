@@ -1,6 +1,7 @@
-import React from 'react';
+import React,{Component} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Events from '/imports/util/events';
 
 import PrimaryButton from '../buttons/PrimaryButton.jsx';
 import {withStyles} from 'material-ui/styles';
@@ -170,54 +171,73 @@ const ButtonSmallWrapper = styled.div`
   }
 `;
 
-const SchoolHeader = (props) => (
-  <OuterWrapper>
-    <Wrapper bgSrc={props.schoolHeaderImgSrc}>
-      <HeaderContentWrapper>
-        <HeaderContent>
-          <Title>{props.title}</Title>
-          <Content>{props.content}</Content>
-          <InputWrapper>
-            <TextField
-              id="user-email"
-              placeholder="Enter Your Email Id"
-              type="email"
-              color={helpers.lightTextColor}
-              className={props.classes.root}
-              InputProps={{
-                disableUnderline: true,
-                classes: {
-                    root: props.classes.formControl,
-                    input: props.classes.userEmailInput,
-                    inkbar: props.classes.userEmailInputInkBar
-                }
-              }}
-              onChange={props.onEmailFieldChange}/>
-              <ButtonWrapper>
-                <PrimaryButton
-                  label="Sign Up"
-                  increaseHeight
-                  noMarginBottom
-                  onClick={props.onSignUpBtnClick} />
-              </ButtonWrapper>
-              <ButtonSmallWrapper>
-                <PrimaryButton
-                  label="Sign Up"
-                  increaseHeight
-                  noMarginBottom
-                  boxShadow
-                  onClick={props.onSignUpBtnClick} />
-              </ButtonSmallWrapper>
-            </InputWrapper>
-        </HeaderContent>
+class SchoolHeader extends Component {
 
-        <HeaderOverlay>
-          {/* This div adds an overlay over the background in smaller sizes */}
-        </HeaderOverlay>
-      </HeaderContentWrapper>
-    </Wrapper>
-  </OuterWrapper>
-);
+  state = {
+    userEmail: ''
+  }
+
+  handleInputChange = (e) => {
+    console.info('e.target.value',e.target.value);
+    this.setState({ userEmail: e.target.value});
+  }
+
+  handleSignUpButtonClick = () => {
+    console.log('signup buton click..',this.state.myEmail);
+    Events.trigger("registerAsSchool",{userType : 'School', userEmail: this.state.userEmail});
+  }
+
+  render() {
+      const {props} = this;
+      return(<OuterWrapper>
+          <Wrapper bgSrc={props.schoolHeaderImgSrc}>
+            <HeaderContentWrapper>
+              <HeaderContent>
+                <Title>{props.title}</Title>
+                <Content>{props.content}</Content>
+                <InputWrapper>
+                  <TextField
+                    id="user-email"
+                    placeholder="Enter Your Email Id"
+                    type="email"
+                    color={helpers.lightTextColor}
+                    className={props.classes.root}
+                    onChange={this.handleInputChange}
+                    InputProps={{
+                      disableUnderline: true,
+                      classes: {
+                          root: props.classes.formControl,
+                          input: props.classes.userEmailInput,
+                          inkbar: props.classes.userEmailInputInkBar
+                      }
+                    }}
+                    />
+                    <ButtonWrapper>
+                      <PrimaryButton
+                        label="Sign Up"
+                        increaseHeight
+                        noMarginBottom
+                        onClick={this.handleSignUpButtonClick} />
+                    </ButtonWrapper>
+                    <ButtonSmallWrapper>
+                      <PrimaryButton
+                        label="Sign Up"
+                        increaseHeight
+                        noMarginBottom
+                        boxShadow
+                        onClick={this.handleSignUpButtonClick} />
+                    </ButtonSmallWrapper>
+                  </InputWrapper>
+              </HeaderContent>
+
+              <HeaderOverlay>
+                {/* This div adds an overlay over the background in smaller sizes */}
+              </HeaderOverlay>
+            </HeaderContentWrapper>
+          </Wrapper>
+        </OuterWrapper>)
+    }
+}
 
 SchoolHeader.propTypes = {
   title: PropTypes.string,

@@ -49,6 +49,7 @@ const ImgSliderSection = styled.div`
   width: 100%;
   ${helpers.flexCenter}
   align-items: ${props => props.notes ? 'flex-start' : 'center'};
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
 const ImgSliderStudentNotes = styled.div`

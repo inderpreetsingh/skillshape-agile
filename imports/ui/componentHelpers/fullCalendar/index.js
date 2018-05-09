@@ -17,6 +17,7 @@ class FullCalendar extends React.Component {
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay,listWeek'
             },
+            height: 1200, // Sets the height of the entire calendar, including header and footer.
             defaultDate: new Date(),
             selectable: true,
             selectHelper: true,
@@ -93,7 +94,8 @@ class FullCalendar extends React.Component {
                     scheduleType: classTime.scheduleType,
                     name: classTime.name,
                     desc:classTime.desc,
-                    endDate:classTime.endDate
+                    endDate:classTime.endDate,
+                    allDay:false// This property affects whether an event's time is shown.
                 };
 
                 // Three type of class times seperated into different colors.
@@ -107,7 +109,8 @@ class FullCalendar extends React.Component {
                     sevent.className = "event-azure";
                     sevent.attending = false;
                 }
-                let classTypeData = ClassType.findOne({ _id: classTime.classTypeId});
+                // let classTypeData = ClassType.findOne({ _id: classTime.classTypeId});
+                // console.log("classTypeData===>",classTypeData)
                 if (classTime.scheduleType === "oneTime") {
                     let scheduleData = [...classTime.scheduleDetails.oneTime];
                     sevent.scheduleDetails = classTime.scheduleDetails;
@@ -115,11 +118,11 @@ class FullCalendar extends React.Component {
                         sevent.start = obj.startDate;
                         sevent.roomId = obj.roomId;
                         sevent.eventStartTime = moment(obj.startTime).format("hh:mm");
-                        sevent.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
+                        sevent.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, obj.timeUnits && obj.timeUnits.toLowerCase() || "minutes").format("hh:mm");
                         sevent.title = classTime.name + " " + sevent.eventStartTime + " to " + sevent.eventEndTime;
-                        sevent.age = classTypeData && classTypeData.ageMin;
-                        sevent.gender = classTypeData && classTypeData.gender;
-                        sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
+                        // sevent.age = classTypeData && classTypeData.ageMin;
+                        // sevent.gender = classTypeData && classTypeData.gender;
+                        // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
                         sevents.push(sevent);
                     }
                 }
@@ -133,13 +136,16 @@ class FullCalendar extends React.Component {
                         for(let obj of scheduleData[key]) {
                             let temp = {...sevent};
                             temp.dow = [obj.day];
+                            // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
+                            temp.start = moment(obj.startTime).format("hh:mm");
+                            temp.end = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
                             temp.eventStartTime = moment(obj.startTime).format("hh:mm");
-                            temp.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, "minutes").format("hh:mm");
+                            temp.eventEndTime = moment(new Date(obj.startTime)).add(obj.duration, obj.timeUnits && obj.timeUnits.toLowerCase() || "minutes").format("hh:mm");
                             temp.title = classTime.name + " " + temp.eventStartTime + " to " + temp.eventEndTime;
                             temp.roomId = obj.roomId;
-                            sevent.age = classTypeData && classTypeData.ageMin;
-                            sevent.gender = classTypeData && classTypeData.gender;
-                            sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
+                            // sevent.age = classTypeData && classTypeData.ageMin;
+                            // sevent.gender = classTypeData && classTypeData.gender;
+                            // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
                             sevents.push(temp);
                         }
                     }

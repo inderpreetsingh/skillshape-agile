@@ -22,7 +22,7 @@ Meteor.methods({
         }
     },
     "media.editMedia": function(doc_id, doc) {
-        console.log("media.editMedia methods called!!!",doc_id, doc);
+        // console.log("media.editMedia methods called!!!",doc_id, doc);
         let payload = {...doc, accessType: 'public'};
         const mediaData = Media.findOne({ _id: doc_id });
         let userPermissionData = get(mediaData, "mediaData.users_permission", {});
@@ -50,7 +50,7 @@ Meteor.methods({
             delete payload.taggedObj
         }
 
-        console.log("media.editMedia -->>",payload);
+        // console.log("media.editMedia -->>",payload);
         return Media.update({ _id: doc_id }, { $set: payload });
         // return Media.update({ _id: doc_id }, { $set: doc });
         // const user = Meteor.users.findOne(this.userId);

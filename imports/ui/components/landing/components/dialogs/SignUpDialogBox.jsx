@@ -181,8 +181,8 @@ const LogoImg = styled.img`
 class SignUpDialogBox extends Component {
 
     state = {
-        name: "",
-        email: "",
+        name: this.props.userName,
+        email: this.props.userEmail,
         sendMeSkillShapeNotification: true,
         robotOption: false,
         errorEmail: false,

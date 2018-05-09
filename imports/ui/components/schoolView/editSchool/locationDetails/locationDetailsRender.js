@@ -1,6 +1,8 @@
 import React from "react";
 import PanelWithTable from '/imports/ui/componentHelpers/panelWithTable';
-import locationSettings from './locationSettings'
+import locationSettings from './locationSettings';
+import isEmpty from "lodash/isEmpty";
+
 
 export default function () {
 
@@ -22,6 +24,7 @@ export default function () {
 				    mainTableData={locationData}
 				    getChildTableData={this.getChildTableData}
 				    showFormBuilderModal={showFormBuilderModal}
+                    showLocationDialog={isEmpty(locationData)}
 				/>
 			</div>
 		{/*<div className="wizard-footer col-md-12">

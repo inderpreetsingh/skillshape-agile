@@ -9,7 +9,7 @@ import { withStyles } from "material-ui/styles";
 import Typography from 'material-ui/Typography';
 import Select from 'material-ui/Select';
 import Input, { InputLabel } from 'material-ui/Input';
-import { FormControl } from 'material-ui/Form';
+import { FormControl, FormControlLabel } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
 
 import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
@@ -28,6 +28,7 @@ import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import get from "lodash/get";
+import Checkbox from 'material-ui/Checkbox';
 
 
 
@@ -135,6 +136,7 @@ class DashBoardView extends React.Component {
             classTypeIds: [],
             memberName: "",
         },
+        studentWithoutEmail: false,
     };
 
     /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
@@ -144,6 +146,11 @@ class DashBoardView extends React.Component {
             this.setState({ memberInfo:{} })
         }
     }
+
+    handleChange = name => event => {
+        this.setState({ [name]: event.target.checked });
+    };
+
 
     renderStudentAddModal = () => {
         var currentYear = (new Date()).getFullYear();
@@ -184,7 +191,8 @@ class DashBoardView extends React.Component {
                       margin="normal"
                       fullWidth
                       inputRef = {(ref) => {this.email = ref}}
-                      required={true}
+                      required={!this.state.studentWithoutEmail}
+                      disabled={this.state.studentWithoutEmail}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -230,6 +238,18 @@ class DashBoardView extends React.Component {
                     onChange={this.collectSelectedClassTypes}
                   />
                 </Grid>
+                <FormControl fullWidth margin='dense'>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={this.state.studentWithoutEmail}
+                                onChange={this.handleChange('studentWithoutEmail')}
+                                value="studentWithoutEmail"
+                            />
+                        }
+                        label="Student does not have an email"
+                    />
+                </FormControl>
                 <Grid item sm={12} xs={12} md={12} style={{display:'flex',justifyContent: 'flex-end'}}>
                     {this.state.error && <ErrorWrapper>{this.state.error}</ErrorWrapper>}
                     <PrimaryButton formId="addUser" type="submit" label="Add a New Member"/>
@@ -252,6 +272,7 @@ class DashBoardView extends React.Component {
         payload.schoolId = schoolData[0]._id;
         payload.classTypeIds = this.state.selectedClassTypes;
         payload.birthYear = this.state.birthYear;
+        payload.studentWithoutEmail= this.state.studentWithoutEmail;
 
         let state = {
             isLoading:true,
@@ -277,31 +298,53 @@ class DashBoardView extends React.Component {
     }
 
     addNewMember = (event) => {
-        console.log("Add addNewMember",this)
+        console.log("Add addNewMember", this)
         event.preventDefault();
         const { schoolData } = this.props;
-
-        if(!isEmpty(schoolData)) {
-             // Show Loading
-            this.setState({isLoading:true});
+        // Check for existing user only if users has entered their email.
+        if (!isEmpty(schoolData) && !this.state.studentWithoutEmail) {
+            // Show Loading
+            this.setState({ isLoading: true });
             // Check if user with this email already exists If member exists, school admin sees a dialogue.
-            Meteor.call('user.checkForRegisteredUser', {email:this.email.value}, (err,res)=> {
-              console.log("err...",err);
-              console.log("res....",res);
-              let state = {
-              }
-              if(res) {
-                // Open Modal
-                state.showConfirmationModal=true;
-                state.message=res;
-                state.isLoading=false;
-                // this.setState({showConfirmationModal:true, message:res});
-              }
-              if(err) {
-               this.allowAddNewMemberWithThisEmail();
-              }
-              this.setState(state);
+            Meteor.call('user.checkForRegisteredUser', { email: this.email.value }, (err, res) => {
+                console.log("err...", err);
+                console.log("res....", res);
+                let state = {}
+                if (res) {
+                    // Open Modal
+                    state.showConfirmationModal = true;
+                    state.message = res;
+                    state.isLoading = false;
+                    // this.setState({showConfirmationModal:true, message:res});
+                }
+                if (err) {
+                    this.allowAddNewMemberWithThisEmail();
+                }
+                this.setState(state);
             })
+        } else {
+            // Create member without email.
+            let payload = {};
+            payload.firstName = this.firstName.value;
+            payload.lastName = this.lastName.value;
+            // payload.email = this.email.value;
+            payload.phone = this.phone.value;
+            payload.schoolId = schoolData[0]._id;
+            payload.classTypeIds = this.state.selectedClassTypes;
+            payload.birthYear = this.state.birthYear;
+            payload.studentWithoutEmail= this.state.studentWithoutEmail;
+            Meteor.call('school.addNewMemberWithoutEmail', payload, (err, res) => {
+                let state = {
+                    isLoading: false,
+                }
+                if (err) {
+                    state.error = err.reason || err.message;
+                }
+                if (res) {
+                    state.renderStudentModal = false;
+                }
+                this.setState(state);
+            });
         }
     }
 
@@ -358,7 +401,8 @@ class DashBoardView extends React.Component {
                     lastName:memberInfo.lastName,
                     classTypeIds: memberInfo.classTypeIds,
                     firstName:memberInfo.firstName,
-                    pic:memberInfo.pic
+                    pic:memberInfo.pic,
+                    studentWithoutEmail:memberInfo.studentWithoutEmail
                 },
                 schoolMemberDetailsFilters: { _id: memberId }
             }

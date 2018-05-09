@@ -23,6 +23,9 @@ import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import { cardImgSrc } from '../../site-settings.js';
+import { getUserFullName } from '/imports/util/getUserData';
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+import School from "/imports/api/school/fields";
 
 const CardsRevealWrapper = styled.div`
   width: 100%;
@@ -35,7 +38,7 @@ class ClassTypeCard extends Component {
     }
     handleDialogState = (state) => (e) => {
         e.stopPropagation();
-        console.log(e,e.stopPropagation(),"clickced");
+        // console.log(e,e.stopPropagation(),"clickced");
         this.setState({
             dialogOpen: state,
             classTimesDialogBoxError: null,
@@ -47,35 +50,52 @@ class ClassTypeCard extends Component {
             return ClassTimes.find({classTypeId}).fetch();
     }
 
-    handleClassTimeRequest = (schoolId, classTypeId, classTypeName) => {
-        console.log("handleClassTimeRequest --->>",schoolId, classTypeId);
-        if(Meteor.userId()) {
-            this.setState({isLoading:true});
-            const { toastr } = this.props;
-            Meteor.call("classTimesRequest.notifyToSchool", {schoolId, classTypeId, classTypeName}, (err, res) => {
-                console.log("err -->>",err);
-                console.log("handleClassTimeRequest res -->>",res);
-                let modalObj = {
-                    dialogOpen: false
-                }
-                if(res && res.emailSuccess) {
-                    // Need to show message to user when email is send successfully.
-                  toastr.success("Your email has been sent. We will assist you soon.", "Success");
-                }
-                if(res && res.message) {
-                    modalObj.classTimesDialogBoxError = res.message;
-                    modalObj.dialogOpen = true
-                }
-                this.setState({isLoading:false});
-                this.setState(modalObj)
-            })
-        } else {
-            alert("Please login !!!!")
+    getSchoolData = (schoolId) => {
+      let schoolData = School.findOne(schoolId);
+      return schoolData;
+    }
+
+    handleClassTimeRequest = (schoolId) => {
+        // const { schoolData } = this.props;
+        // console.log("handleClassTimeRequest --->>",schoolId);
+        let schoolData  = this.getSchoolData(schoolId);
+        if(!isEmpty(schoolData)) {
+          let emailBody = "";
+          let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
+          let subject ="", message =  "";
+          let currentUserName = getUserFullName(Meteor.user());
+          emailBody = `Hi, %0D%0A%0D%0A I  saw your listing on SkillShape.com ${url} and would like to attend. Can you please update your pricing%3F %0D%0A%0D%0A Thanks`
+          const mailTo = `mailto:${schoolData && schoolData.email}?subject=${subject}&body=${emailBody}`;
+          const mailToNormalized = /*encodeURI(*/mailTo/*)*/;
+          openMailToInNewTab(mailToNormalized);
         }
+        // if(Meteor.userId()) {
+        //     // this.setState({isLoading:true});
+        //     // const { toastr } = this.props;
+        //     // Meteor.call("classTimesRequest.notifyToSchool", {schoolId, classTypeId, classTypeName}, (err, res) => {
+        //     //     console.log("err -->>",err);
+        //     //     console.log("handleClassTimeRequest res -->>",res);
+        //     //     let modalObj = {
+        //     //         dialogOpen: false
+        //     //     }
+        //     //     if(res && res.emailSuccess) {
+        //     //         // Need to show message to user when email is send successfully.
+        //     //       toastr.success("Your email has been sent. We will assist you soon.", "Success");
+        //     //     }
+        //     //     if(res && res.message) {
+        //     //         modalObj.classTimesDialogBoxError = res.message;
+        //     //         modalObj.dialogOpen = true
+        //     //     }
+        //     //     this.setState({isLoading:false});
+        //     //     this.setState(modalObj)
+        //     // })
+        // } else {
+        //     alert("Please login !!!!")
+        // }
     }
 
     render() {
-        console.log("ClassTypeCard props --->>",this.props);
+        // console.log("ClassTypeCard props --->>",this.props);
         let ratings,reviews;
         const cardRevealData = {
           _id:this.props._id,
@@ -102,7 +122,7 @@ class ClassTypeCard extends Component {
                     classesData={classTimesData}
                     open={this.state.dialogOpen}
                     onModalClose={this.handleDialogState(false)}
-                    handleClassTimeRequest={this.handleClassTimeRequest.bind(this, this.props.schoolId, this.props._id, this.props.name)}
+                    handleClassTimeRequest={this.handleClassTimeRequest.bind(this, this.props.schoolId)}
                     errorText={this.state.classTimesDialogBoxError}
                 />
             }

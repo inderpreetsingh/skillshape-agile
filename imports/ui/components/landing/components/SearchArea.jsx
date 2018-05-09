@@ -14,6 +14,7 @@ import MySearchBar from './MySearchBar.jsx';
 
 import NearByClassesButton from './buttons/NearByClassesButton';
 import PrimaryButton from './buttons/PrimaryButton';
+import FormGhostButton from './buttons/FormGhostButton';
 import SecondaryButton from './buttons/SecondaryButton';
 
 import Grade from 'material-ui-icons/Grade';
@@ -42,6 +43,7 @@ const SearchAreaPanel = styled.div`
 
    @media screen and (min-width: 0) and (max-width : ${helpers.mobile}px) {
      max-width: 500px;
+     padding-left: ${helpers.rhythmDiv}px;
      overflow-x: hidden;
   }
 `;
@@ -127,6 +129,13 @@ const InputWrapper = styled.div`
 
 const InputsWrapper = styled.div`
   ${helpers.flexCenter}
+  max-width: 100%;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    padding-right: ${helpers.rhythmDiv}px;
+    margin: 0 auto;
+    max-width: 300px;
+  }
 `;
 
 const MapViewButtonWrapper = GenericButtonWrapper.extend`
@@ -156,7 +165,7 @@ const SearchInputsSection = (props) => (
       <InputWrapper>
         <MySearchBar
           placeholder="Skill Type"
-          defaultBorderRadius
+          defaultBorderRadius={true}
           onChange={props.onSkillTypeChange}
           withIcon={false}
           rightAlign
@@ -169,7 +178,7 @@ const SearchInputsSection = (props) => (
         <MySearchBar
           placeholder="Location"
           defaultValue={props.currentAddress}
-          defaultBorderRadius
+          defaultBorderRadius={true}
           withIcon={false}
           onSearchIconClick={props.onSearchIconClick}
           noCloseIcon
@@ -193,14 +202,14 @@ const SearchInputsSection = (props) => (
 
     <ButtonsWrapper>
       <FilterButtonWrapper>
-        <PrimaryButton fullWidth icon iconName="tune" label="Filters" boxShadow noMarginBottom onClick={props.onFiltersButtonClick} />
+        <PrimaryButton darkGreyColor fullWidth icon iconName="tune" label="Filters" boxShadow noMarginBottom onClick={props.onFiltersButtonClick} />
       </FilterButtonWrapper>
 
       <MapViewButtonWrapper>
       {props.mapView ?
-        <PrimaryButton fullWidth noMarginBottom icon iconName="grid_on" label="List View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />
+        <PrimaryButton darkGreyColor fullWidth noMarginBottom icon iconName="grid_on" label="List View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />
         :
-        <PrimaryButton fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />}
+        <PrimaryButton darkGreyColor fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />}
       </MapViewButtonWrapper>
     </ButtonsWrapper>
 
@@ -289,7 +298,7 @@ class SearchArea extends Component {
 
   render() {
 
-    console.log("this.props in SearchArea",this.props);
+    // console.log("this.props in SearchArea",this.props);
 
     return (
       <SearchAreaPanel width={this.props.width} textAlign={this.props.textAlign} itemScope itemType="http://schema.org/SearchAction">

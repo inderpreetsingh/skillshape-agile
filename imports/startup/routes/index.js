@@ -28,10 +28,12 @@ import SchoolUpload from '/imports/ui/components/schoolUpload';
 import VerifyEmail from '/imports/ui/components/account/verifyEmail';
 import SkillShapeSchool from '/imports/ui/components/skillshape-school';
 import ManageUsers from '/imports/ui/components/manage-users';
+
 //pages
 import AboutUs from '/imports/ui/pages/aboutUs';
 import ContactUs from '/imports/ui/pages/contactUs';
 import ContactUsPage from '/imports/ui/pages/ContactUsPage';
+import UnsubscribeUser from '/imports/ui/pages/UnsubscribeUser';
 
 import {componentLoader} from "/imports/util";
 
@@ -40,9 +42,9 @@ export default Routes = componentLoader((props) => (
     <Route name="SkillShape" path="/" component={MainLayout} >
       <IndexRoute name="SkillShape" component={Landing} />
       <Route path="/classType-dev" name="classtype-dev" component={ClassType} />
-      <Route path="/classType/:classTypeName/:classTypeId" name="ClassType" component={ClassTypeView} />
+      <Route path="/classType/:classTypeName/:classTypeId" name="classtype" component={ClassTypeView} />
       <Route path="/skillshape-for-school" name="Skillshape-for-school" component={School} />
-
+      <Route path="/unsubscribe" name="unsubscribe" component={UnsubscribeUser} />
       <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />
 
@@ -60,18 +62,7 @@ export default Routes = componentLoader((props) => (
               cb(null, SchoolEditView.default);
             });
         }} />
-
-        <Route path="/school-Admin/:schoolId/edit" name="SchoolAdminDev" getComponent={(nextState, cb) => {
-          //set loading:true
-          props.isLoading.show();
-          import('/imports/ui/components/schoolView/editSchool').then((SchoolEditView) => {
-              // set loading false
-              props.isLoading.hide();
-              cb(null, SchoolEditView.default);
-            });
-        }} />
         <Route path="/schools/:slug" name="SchoolView" component={SchoolView} />
-        <Route path="/schools-dev/:slug" name="SchoolViewDeveloping" component={SchoolView} />
         <Route path="/MyCalendar" name="MyCalendar" component={ManageMyCalendar} />
         <Route path="/reset-password/:token" name="ResetPassword" component={ResetPassword}/>
         <Route path="/claimSchool" name="ClaimSchool" component={ClaimSchool}/>

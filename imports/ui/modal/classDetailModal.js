@@ -20,6 +20,7 @@ import { withStyles } from 'material-ui/styles';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import { browserHistory, Link } from 'react-router';
 import ClassType from "/imports/api/classType/fields";
+import ClassTimes from "/imports/api/classTimes/fields";
 import SLocation from "/imports/api/sLocation/fields";
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
@@ -199,7 +200,8 @@ class ClassDetailModal extends React.Component{
     // console.log("ClassDetailModal render state -->>", this.state);
     const { isLoading, error, school, classType, classTimes, location, addToMyCalender } = this.state;
     const { eventData, fullScreen, classes, clickedDate } = this.props;
-    console.log("eventData____________", eventData)
+    console.log("eventData____________", eventData);
+    let classTypeData = ClassTimes.findOne({_id:eventData.classTimeId});
     return (
         <Dialog
           fullScreen={fullScreen}
@@ -356,9 +358,9 @@ class ClassDetailModal extends React.Component{
                                     </div>
                                 </Grid>
                                 <Grid item xs={12} style={{padding: '16px'}}>
-                                    { eventData && eventData.age && <Typography type="caption">Age:{eventData.age}</Typography>}
-                                    { eventData && eventData.gender && (eventData.gender !== "All") && <Typography type="caption">{eventData.gender}</Typography>}
-                                    { eventData && eventData.experienceLevel && eventData.experienceLevel  == "All" ?  <Typography type="caption">Experience: All levels are welcomed</Typography> : <Typography>{eventData.experienceLevel && `Experience: ${eventData.experienceLevel}`}</Typography>}
+                                    { classTypeData && classTypeData.ageMin && <Typography type="caption">Age:{classTypeData.ageMin}</Typography>}
+                                    { classTypeData && classTypeData.gender && (classTypeData.gender !== "All") && <Typography type="caption">{classTypeData.gender}</Typography>}
+                                    { classTypeData && classTypeData.experienceLevel && classTypeData.experienceLevel  == "All" ?  <Typography type="caption">Experience: All levels are welcomed</Typography> : <Typography type="caption">{classTypeData && classTypeData.experienceLevel && `Experience: ${classTypeData.experienceLevel}`}</Typography>}
                                 </Grid>
                                 {/*<Grid item xs={6}>
                                     <div className={classes.iconWithDetailContainer}>

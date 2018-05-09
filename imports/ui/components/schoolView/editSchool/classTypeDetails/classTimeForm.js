@@ -94,7 +94,7 @@ class ClassTimeForm extends React.Component {
         console.log("--------------------- ClassTimes from submit----------------")
         event.preventDefault()
         // console.log("onSubmit state -->>",this.state);
-        const { schoolId, data, parentKey, } = this.props;
+        const { schoolId, data, parentKey, parentData} = this.props;
         const { tabValue, locationId } = this.state;
 
         const payload = {
@@ -158,7 +158,6 @@ class ClassTimeForm extends React.Component {
       <div>
         <Dialog
             open={this.props.open}
-            onClose={this.props.onClose}
             aria-labelledby="form-dialog-title"
             fullScreen={fullScreen}
         >

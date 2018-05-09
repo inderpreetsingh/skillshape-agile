@@ -164,6 +164,12 @@ const CenterCapsule = styled.div`
 
 const FilterPanelWrapper = styled.div`
   position: relative;
+  width: 100%;
+  height: 80px;
+  left: 0;
+  z-index: 5;
+  // height: ${props => props.height}px;
+  height: 0;
  `;
 
 
@@ -208,6 +214,12 @@ const FilterAppliedDivs = styled.div`
 
 const ClassTypeOuterWrapper = styled.div`
   padding-top: ${props => props.padding}px;
+`;
+
+const FakeFilterBar = styled.div`
+  height: 80px;
+  width: 100%;
+  position: relative;
 `;
 
 class Landing extends Component {
@@ -277,6 +289,11 @@ class Landing extends Component {
         }
     }
 
+    componentDidUpdate() {
+      // Have to manually set it , otherwise it resets automatically in mapView.
+      document.title = "Skillshape";
+    }
+
     handleStickyStateChange = (status) => {
         // console.log(status, "status..")
         if (status.status === 2) {
@@ -315,7 +332,7 @@ class Landing extends Component {
         scroller.scrollTo((name || 'content-container'), {
             duration: 800,
             delay: 0,
-            offset: 10,
+            offset: 5,
             smooth: 'easeInOutQuart'
         });
     }
@@ -647,6 +664,7 @@ class Landing extends Component {
 
     checkIfAnyFilterIsApplied = () => {
       const {filters} = this.state;
+      // debugger;
       if(isEmpty(filters)) {
         return false;
       }
@@ -661,12 +679,23 @@ class Landing extends Component {
       }
     }
 
+    getOuterWrapperPadding = () => {
+      if(!this.state.mapView && this.checkIfAnyFilterIsApplied() && this.state.sticky) {
+        return 96; // Size of filter bar + buttons
+      }else if(!this.state.mapView && this.checkIfAnyFilterIsApplied()) {
+        return 96;
+      }else if(!this.state.mapView && this.state.sticky) {
+        return 72;
+      }else {
+        return 0;
+      }
+    }
+
     render() {
-        console.log("Landing state -->>",this.state);
+        // console.log("Landing state -->>",this.state);
         // console.log("Landing state -->>", this.state);
         // console.log("Landing props -->>", this.props);
-        return (
-            <DocumentTitle title={this.props.route.name}>
+        return (<DocumentTitle title={this.props.route.name}>
                 <div>
                     <FiltersDialogBox
                         open={this.state.filterPanelDialogBox}
@@ -697,8 +726,9 @@ class Landing extends Component {
 
                     {/* Cover */}
                     <CoverWrapper>
-                        <Cover itemScope itemType="http://schema.org/WPHeader">
+                        <Cover polytheneVerticalFlow itemScope itemType="http://schema.org/WPHeader">
                             <BrandBar
+                                positionStatic
                                 currentUser={this.props.currentUser}
                             />
                             <SearchArea
@@ -714,7 +744,7 @@ class Landing extends Component {
                                 filters={this.state.filters}
                                 onLocationChange={this.onLocationChange}
                                 currentFilterState={this.state.filters}
-                                onSearchIconClick={() => this.scrollTo('content-container')}
+                                onSearchIconClick={() => this.scrollTo()}
                             />
                         </Cover>
                     </CoverWrapper>
@@ -722,18 +752,18 @@ class Landing extends Component {
                     {/* Filter Panel */}
                     <FilterPanelWrapper>
                         <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
-                            {this.state.mapView ? this.renderFilterPanel() :
-                                <FilterBarDisplayWrapper sticky={this.state.sticky}>
-                                    {this.renderFilterPanel()}
-                                </FilterBarDisplayWrapper>}
+                          {this.state.mapView ? this.renderFilterPanel() :
+                            <FilterBarDisplayWrapper sticky={this.state.sticky}>
+                                {this.renderFilterPanel()}
+                            </FilterBarDisplayWrapper>}
                         </Sticky>
                     </FilterPanelWrapper>
 
                     {/*Cards List */}
                     <Element name="content-container" className="element homepage-content">
                         {/* Applied Filters */}
-                        <ClassTypeOuterWrapper padding={this.checkIfAnyFilterIsApplied() ? '96' : '0'}>
-                          {this.state.filters && this.showAppliedTopFilter()}
+                        <ClassTypeOuterWrapper padding={this.getOuterWrapperPadding()}>
+                          {(!this.state.mapView && this.checkIfAnyFilterIsApplied()) && this.showAppliedTopFilter()}
                           <ClassTypeList
                               defaultLocation={this.state.defaultLocation}
                               mapView={this.state.mapView}
@@ -741,6 +771,7 @@ class Landing extends Component {
                               handleSeeMore={this.handleSeeMore}
                               splitByCategory={true}
                               setSchoolIdFilter={this.setSchoolIdFilter}
+                              appliedTopFilter={this.checkIfAnyFilterIsApplied() && this.showAppliedTopFilter()}
                               removeAllFilters={this.removeAllFilters}
                               {...this.props}
                           />
@@ -763,8 +794,8 @@ class Landing extends Component {
                           </MapOuterContainer>
                          <WithMapCardsContainer>
                             <div>
-                            <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
-                            <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
+                              <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
+                              <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
                             </div>
                             <FooterOuterWrapper>
                               <FooterWrapper>
@@ -806,9 +837,9 @@ class Landing extends Component {
                     onListButtonClick={this.handleToggleMapView} />)
                   }
                 </SwitchViewWrapper>
-              */}
-                </div>
-            </DocumentTitle>
+                */}
+              </div>
+          </DocumentTitle>
         )
     }
 }

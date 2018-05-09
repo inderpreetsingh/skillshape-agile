@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 import { isEmpty } from 'lodash';
 
 export function goToSchoolPage(schoolId) {
-  console.log("goToSchoolPage --->>",schoolId)
+  // console.log("goToSchoolPage --->>",schoolId)
   if(schoolId) {
     const schoolData = School.findOne({_id: schoolId});
     if(schoolData && schoolData.slug) {

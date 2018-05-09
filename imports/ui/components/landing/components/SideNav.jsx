@@ -20,6 +20,8 @@ class SideNav extends Component {
         termsOfServiceDialogBox: false,
         emailConfirmationDialogBox: false,
         userData: {},
+        userName: '',
+        userEmail: '',
         isBusy:false,
         errorText: null,
         changePasswordDialogBox:false
@@ -27,8 +29,10 @@ class SideNav extends Component {
 
     componentWillMount() {
         Events.on("registerAsSchool", "123#567",(data) => {
-          let {userType} = data;
-          this.handleSignUpDialogBoxState(true, userType);
+          let {userType, userEmail, userName} = data;
+          console.info(userType,userEmail);
+          //debugger;
+          this.handleSignUpDialogBoxState(true, userType, userEmail, userName);
         })
         // This will listen if terms and services not accepted by User.
         Events.on("acceptTermsAndServices", "123#567",(data) => {
@@ -43,8 +47,8 @@ class SideNav extends Component {
 
     unsetError = () =>  this.setState({errorText: null});
 
-    handleSignUpDialogBoxState = (state, userType) => {
-        this.setState({signUpDialogBox: state, userData: { userType: userType}, errorText: null});
+    handleSignUpDialogBoxState = (state, userType, userEmail, userName) => {
+        this.setState({signUpDialogBox: state, userData: { userType: userType}, userEmail: userEmail, userName: userName, errorText: null});
     }
     handleChangePasswordDialogBoxState = (state,message) => {
         const { toastr } = this.props;
@@ -89,7 +93,7 @@ class SideNav extends Component {
         this.setState({isBusy: true});
         const { toastr } = this.props;
         Meteor.call("user.createUser", {...this.state.userData, signUpType: 'skillshape-signup'}, (err, res) => {
-            console.log("user.createUser err res -->>",err,res)
+            // console.log("user.createUser err res -->>",err,res)
             let modalObj = {
                 open: false,
                 signUpDialogBox: false,
@@ -163,7 +167,7 @@ class SideNav extends Component {
     }
     render() {
         const { currentUser } = this.props;
-        console.log("SideNav state -->>>",this.state);
+        // console.log("SideNav state -->>>",this.state);
         return (
             <Fragment>
                 {!currentUser && this.state.signUpDialogBox &&
@@ -173,6 +177,8 @@ class SideNav extends Component {
                         onSubmit={this.handleSignUpSubmit}
                         errorText={this.state.errorText}
                         unsetError={this.unsetError}
+                        userName={this.state.userName}
+                        userEmail={this.state.userEmail}
                         onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
                         onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
 

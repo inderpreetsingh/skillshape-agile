@@ -27,14 +27,14 @@ export default class Pagination extends React.Component {
    * @desc Give active page number
    */
 	handlePageClick = (data)=> {
-		console.log("Pagination offSet -->>",data,this.props.perPage)
+		// console.log("Pagination offSet -->>",data,this.props.perPage)
 		let selected = data.selected
 	  	let offSet = Math.ceil(selected * this.props.perPage);
 	  	this.props.onChange({skip: offSet })
 	}
 
 	render() {
-		console.log("Pagination props -->>",this.props)
+		// console.log("Pagination props -->>",this.props)
 	  	return (
 			<div className="pagination-container" style={{...this.props.style}}>
 			   <ReactPaginate

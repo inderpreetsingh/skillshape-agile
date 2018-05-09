@@ -8,7 +8,7 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
   // ...and returns another component...
     let {collection, subscriptionName , recordLimit } = params;
     let Container = createContainer(props => {
-      console.log("createContainer ",props);
+      // console.log("createContainer ",props);
       const query = props.location && props.location.query;
       let filters = props.filters ? props.filters : {};
       if(filters.is_map_view) {

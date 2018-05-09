@@ -205,7 +205,7 @@ class ImageGalleryView extends React.Component {
   showConfirmationModal = () => this.setState({showConfirmationModal: true})
   cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
   showTaggedMemberInfo = () => {
-    console.log("this====>",this);
+    // console.log("this====>",this);
     // const taggedMemberDetails = this.props.images[this._imageGallery.getCurrentIndex()]['media'];
     this.setState({showListOfMembers:true, schoolData:this.props.schoolData });
   }
@@ -213,7 +213,7 @@ class ImageGalleryView extends React.Component {
   }
 
   openEditTaggedModal = () => {
-    console.log("openEditTaggedModal",this);
+    // console.log("openEditTaggedModal",this);
     this.setState(
       {
         openEditTaggedModal:true,

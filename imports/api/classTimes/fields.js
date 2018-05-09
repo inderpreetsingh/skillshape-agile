@@ -58,6 +58,18 @@ ClassTimes.attachSchema(new SimpleSchema({
         type: Date,
         optional: true
     },
+    gender: {
+        type: String,
+        optional: true
+    },
+    ageMin: {
+        type: String,
+        optional: true
+    },
+    experienceLevel: {
+        type: String,
+        optional: true
+    }
 }));
 
 ClassTimes.join(SLocation, "locationId", "selectedLocation", ["rooms"]);

@@ -5,10 +5,10 @@ import { sendClassTimesRequest } from "/imports/api/email";
 Meteor.methods({
     "classTimesRequest.notifyToSchool": function({schoolId, classTypeId, classTypeName}) {
     	if (this.userId && schoolId && classTypeId) {
-    		console.log("classTimesRequest.notifyToSchool -->>", schoolId, classTypeId)
+    		// console.log("classTimesRequest.notifyToSchool -->>", schoolId, classTypeId)
     		// first check your request already have or not
     		const classTimesRequestData = ClassTimesRequest.findOne({schoolId, classTypeId, userId: this.userId });
-    		console.log("classTimesRequestData -->>",classTimesRequestData)
+    		// console.log("classTimesRequestData -->>",classTimesRequestData)
     		if(classTimesRequestData) {
     			return { message: "You already requested for this class"};
     		} else {
@@ -33,7 +33,7 @@ Meteor.methods({
             }
 
     	} else {
-			throw new Meteor.Error("Permission denied!!");
+			     throw new Meteor.Error("Permission denied!!");
     	}
     }
 })

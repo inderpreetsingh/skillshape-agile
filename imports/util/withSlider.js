@@ -21,8 +21,8 @@ const Container = styled.div`
 const defaultPaging = (i) => <button>{i + 1}</button>
 
 const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) => {
-  console.log(sliderBreakPoints,"slider breakPoints");
-  console.log(sliderConfig,props,"slider config");
+  // console.log(sliderBreakPoints,"slider breakPoints");
+  // console.log(sliderConfig,props,"slider config");
   const breakPoints = {
     mobile: (sliderBreakPoints && sliderBreakPoints.mobile) || helpers.mobile,
     tablet: (sliderBreakPoints && sliderBreakPoints.tablet) || helpers.tablet
@@ -41,13 +41,13 @@ const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) 
     infinite: true,
     beforeChange: (current, next) => {
       const {sliderProps} = props;
-      if(sliderProps.onBeforeSlideChange)
+      if(sliderProps&& sliderProps.onBeforeSlideChange)
         sliderProps.onBeforeSlideChange(next);
     },
     afterChange: (index) => {
-      console.log(index);
+      // console.log(index);
       const {sliderProps} = props;
-      if(sliderProps.onAfterSlideChange)
+      if(sliderProps && sliderProps.onAfterSlideChange)
         sliderProps.onAfterSlideChange(index);
     },
     slidesToShow: sliderConfig.desktop,

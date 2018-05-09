@@ -4,6 +4,7 @@ export default config = Object.freeze({
 	defaultSchoolLogo: "/images/new-logo.png",
 	fromEmailForPurchasePackage: "Notices@SkillShape.com",
 	fromEmailForJoiningClass: "Notices@SkillShape.com",
+	skillshapeAdminEmail: "sam@skillshape.com",
 	themeColor: {
 		yellow: '#E9B942',
 		green: '#9DC161',
@@ -35,8 +36,10 @@ export default config = Object.freeze({
 		claimSchoolRequest: "ClaimSchoolRequest",
 		classTimesRequest: "ClassTimesRequest",
 		PriceInfoRequest: "PriceInfoRequest",
+		pricingRequest: "PricingRequest",
 		schoolMemberDetails: "SchoolMemberDetails",
-		classTypeLocationRequest: "ClassTypeLocationRequest"
+		classTypeLocationRequest: "ClassTypeLocationRequest",
+		PackageRequest: "PackageRequest"
 	},
 	gender : [
 		{ label: "Other", value: "Other"},
@@ -60,6 +63,10 @@ export default config = Object.freeze({
 		{ label: "USD", value: "$"},
 		{ label: "INR", value: "₹"},
 		{ label: "EUR", value: "€"},
+	],
+	duration: [
+		{ label: "Minutes", value: "Minutes"},
+		{ label: "Hours", value: "Hours"},
 	],
 	// Show only 4 classes initially to Users. This count will increase when user clicks on see more on dash route.
 	seeMoreCount: 4,

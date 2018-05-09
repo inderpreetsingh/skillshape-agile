@@ -25,7 +25,7 @@ import Dialog, {
   withMobileDialog,
 } from 'material-ui/Dialog';
 
-console.log("Upload mi-version:-26 BottomNavigationButton-->>",BottomNavigationButton);
+// console.log("Upload mi-version:-26 BottomNavigationButton-->>",BottomNavigationButton);
 
 const styles = theme => {
   // console.log("theme", theme);
