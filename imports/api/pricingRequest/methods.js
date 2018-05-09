@@ -71,7 +71,6 @@ Meteor.methods({
          if(this.userId) {
              memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
          }
-         toEmail = 'singhs.ishwer@gmail.com';
          console.log(updatePriceLink, schoolPageLink, currentUserName, ownerName, fromEmail, toEmail, memberLink);
         //  sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
 
