@@ -180,23 +180,20 @@ export default function () {
                 </div>
               </Grid>
             </Grid>
-            <Grid container>
-              <Grid item xs={4}>
-              </Grid>
-              <Grid item xs={4}>
-                  <Button
-                      type="submit"
-                      className="btn"
-                      form = "editSchoolDetails"
-                      raised
-                      onClick ={this.editSchoolCall}
-                      color="accent">
-                      Save Changes
-                  </Button>
-              </Grid>
-              <Grid item xs={4}>
+            <Grid style={{display: 'flex',justifyContent: 'flex-end'}}>
+                <Button
+                    type="submit"
+                    style={{margin: 8}}
+                    className="btn"
+                    form = "editSchoolDetails"
+                    raised
+                    onClick ={this.editSchoolCall}
+                    color="accent">
+                    Save
+                </Button>
                 <Button
                       type="submit"
+                      style={{margin: 8}}
                       className="btn"
                       form = "editSchoolDetails"
                       raised
@@ -204,7 +201,6 @@ export default function () {
                       color="accent">
                       Save and Next
                   </Button>
-              </Grid>
             </Grid>
           </form>
         </Card>
