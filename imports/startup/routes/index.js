@@ -24,7 +24,7 @@ import SchoolEditView from '/imports/ui/components/schoolView/editSchool';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
 // import MyCalender from '/imports/ui/components/users/myCalender';
 import SchoolUpload from '/imports/ui/components/schoolUpload';
-// import SchoolPriceView from '/imports/ui/components/embed/schoolPriceView';
+import SchoolPriceView from '/imports/ui/components/embed/schoolPriceView';
 import VerifyEmail from '/imports/ui/components/account/verifyEmail';
 import SkillShapeSchool from '/imports/ui/components/skillshape-school';
 import ManageUsers from '/imports/ui/components/manage-users';
@@ -68,6 +68,7 @@ export default Routes = componentLoader((props) => (
         <Route path="/claimSchool" name="ClaimSchool" component={ClaimSchool}/>
         <Route path="/verify-email/:token" name="VerifyEmail" component={VerifyEmail}/>
         <Route path="/skillShape-school" name="SkillShapeSchool" component={SkillShapeSchool}/>
+        <Route path="/embed/schools/:slug/pricing" component={SchoolPriceView} />
       </Route>
 
       <Route path="/" component={AdminLayout}>
