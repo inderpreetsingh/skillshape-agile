@@ -257,9 +257,9 @@ class ClassTimeNewClock extends Component {
       computedHeight += 20; // Adding 20 more for the slider dots..
     }
 
-    if(scheduleType === 'recurring') {
+    if(scheduleType === 'recurring' || scheduleType === 'oneTime') {
       // We already have added fontsize for 1 line of date , now this is for another..
-      // since in recurring we have multiple lines for dates..
+      // since in recurring/oneTime we have multiple lines for dates..
       computedHeight += dateFontSize;
     }
     // console.info('----------------------- updating...')

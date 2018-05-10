@@ -33,6 +33,7 @@ const ClassTimeContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   position: relative;
+  z-index: 0;
 
   &:after {
     content: '';
