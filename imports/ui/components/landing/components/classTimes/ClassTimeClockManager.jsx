@@ -7,7 +7,7 @@ import * as helpers from '../jss/helpers.js';
 import ClassTimeNewClock from './ClassTimeNewClock.jsx';
 import ClassTimeNewClocksContainer from './ClassTimeNewClocksContainer.jsx';
 
-import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/daysInWeek.js';
+import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
 
 const ONE_TIME = 'onetime';
 

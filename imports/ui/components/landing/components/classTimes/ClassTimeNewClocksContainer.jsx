@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ClassTimeNewClock from './ClassTimeNewClock.jsx';
 
 import * as helpers from '../jss/helpers.js';
-import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/daysInWeek.js';
+import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
 
 const Container = styled.div`
   ${helpers.flexCenter}

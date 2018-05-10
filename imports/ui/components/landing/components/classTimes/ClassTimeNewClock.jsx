@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import SliderDots from '../helpers/SliderDots.jsx';
 
 import * as helpers from '../jss/helpers.js';
-import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/daysInWeek.js';
+import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
 
 
 const ClockOuterWrapper = styled.div`
