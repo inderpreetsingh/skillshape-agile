@@ -30,20 +30,20 @@ const Title = styled.h2`
   text-align: center;
   position: relative;
 
-  &:after {
-    content: '';
-    position: absolute;
-    height: 2px;
-    width: 100%;
-    transform: scaleX(0);
-    bottom: -2px;
-    left: 0;
-    background-color: currentColor;
-    transition: 0.2s ease-in transform;
-  }
+  // &:after {
+  //   content: '';
+  //   position: absolute;
+  //   height: 2px;
+  //   width: 100%;
+  //   transform: scaleX(0);
+  //   bottom: -2px;
+  //   left: 0;
+  //   background-color: currentColor;
+  //   transition: 0.2s ease-in transform;
+  // }
 
-  &:hover:after {
-    transform: scaleX(1);
+  &:hover {
+    text-decoration: underline;
   }
 
 `;

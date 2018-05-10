@@ -68,28 +68,16 @@ const Reviews = styled.a`
 `;
 
 const SchoolLink = styled(Link)`
-  color: ${helpers.black};
+  color: ${helpers.primaryColor};
   position: relative;
   display: inline-block;
 
   &:visited, &:active {
-    color: currentColor;
+    color: ${helpers.primaryColor};
   }
 
-  &::after {
-    content: '';
-    left: 0;
-    position: absolute;
-    bottom: 4px;
-    height: 2px;
-    background: currentColor;
-    width: 100%;
-    transition: .1s ease-in transform;
-    transform: scaleX(0);
-  }
-
-  &:hover:after {
-    transform: scaleX(1);
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
@@ -99,8 +87,8 @@ const ClassTypeDescription = (props) => {
     <Wrapper isEdit={props.isEdit}>
         {props.isClassTypeNameAvailable ?
         <Title>
-          <SchoolLink to={`/schools/${props.friendlySlug}`} target="_blank">{props.schoolName.toLowerCase()}</SchoolLink>
-          {props.classTypeName && `: ${props.classTypeName.toLowerCase()}`}
+          <SchoolLink to={`/schools/${props.friendlySlug}`} target="_blank">{props.schoolName.toLowerCase()} {props.classTypeName && `: `}</SchoolLink>
+          <span> {props.classTypeName.toLowerCase()}</span>
         </Title>
         :
         <Title>{props.schoolName.toLowerCase()}
