@@ -45,25 +45,18 @@ class ClassTimeNewClocksContainer extends Component {
   }
 
   render() {
-    const {formattedClassTimes, scheduleType, scheduleStartDate, scheduleEndDate, currentIndex, clockProps} = this.props;
+    const {
+      formattedClassTimes,
+      scheduleType,
+      scheduleStartDate,
+      scheduleEndDate,
+      currentIndex,
+      clockProps,
+      currentSelectedIndex,
+      updateClockAndDayIndex
+    } = this.props;
     // console.log(formattedClassTimes,"formattedClassTimes...........");
     return (<Container minHeight={this.state.minHeight}>
-        {/*formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
-          if(formattedClassTimes[day]) {
-            return (<ClassTimeNewClock
-              key={i}
-              currentDay={day}
-              scheduleType={scheduleType}
-              scheduleStartDate={scheduleStartDate}
-              scheduleEndDate={scheduleEndDate}
-              scheduleData={formattedClassTimes[day]}
-              visible={i === this.props.currentIndex}
-              clockProps={clockProps}
-              updateContainerHeight={this.updateContainerHeight}
-              />)
-          }
-          return null;
-        })*/}
 
         <ClassTimeNewClock
           scheduleType={scheduleType}
@@ -73,10 +66,30 @@ class ClassTimeNewClocksContainer extends Component {
           totalClocks={this.getTotalNoOfClocks()}
           clockProps={clockProps}
           updateContainerHeight={this.updateContainerHeight}
+          updateClockAndDayIndex={updateClockAndDayIndex}
+          currentSelectedIndex={currentSelectedIndex}
         />
 
       </Container>)
   }
 }
+
+{/*formattedClassTimes && DAYS_IN_WEEK.map((day,i) => {
+  if(formattedClassTimes[day]) {
+    return (<ClassTimeNewClock
+      key={i}
+      currentDay={day}
+      scheduleType={scheduleType}
+      scheduleStartDate={scheduleStartDate}
+      scheduleEndDate={scheduleEndDate}
+      scheduleData={formattedClassTimes[day]}
+      visible={i === this.props.currentIndex}
+      clockProps={clockProps}
+      updateContainerHeight={this.updateContainerHeight}
+      />)
+  }
+  return null;
+})*/}
+
 
 export default ClassTimeNewClocksContainer;

@@ -85,8 +85,12 @@ const Seperator = styled.span`
 
 class ClassTimeClockManager extends Component {
   state = {
-    currentIndex: 0,
-    lastIndex: 0
+    currentClockIndex: 0,
+    currentDayIndex: 0
+  }
+
+  _getIndexForDay = (day) => {
+    return DAYS_IN_WEEK.indexOf(day);
   }
 
   getDayInShortFormat = (dayDb) => {
@@ -96,61 +100,73 @@ class ClassTimeClockManager extends Component {
 
   getDaysOfWeekFromFormattedClassTimesData = () => {
     const {formattedClassTimes} = this.props;
-    return DAYS_IN_WEEK.map((day,i) => {
-      // console.log(this.props,'this.props......')
+    const daysInWeek = [];
+    let clockCounter = 0;
+
+    DAYS_IN_WEEK.forEach((day,i) => {
 
       if(formattedClassTimes[day]){
         const scheduleData = formattedClassTimes[day];
+        const myStartingClockCount = clockCounter;
+        console.log(scheduleData.length,myStartingClockCount,clockCounter,'this.props......')
 
-        return(<Day
-          key={i}
-          active={i === this.state.currentIndex}
-          onClick={this.handleDayClick(i)}>
+        daysInWeek.push(<Day
+          key={myStartingClockCount}
+          active={this.state.currentDayIndex === this._getIndexForDay(day)}
+          onClick={this.handleDayClick(myStartingClockCount,this._getIndexForDay(day))}>
           {this.getDayInShortFormat(day)}
-        </Day>)
+        </Day>);
+
+        clockCounter += scheduleData.length;
       }
+
       return null;
     });
+
+    return daysInWeek;
   }
 
-  startAutoMaticSlider = () => {
-    this.sliderInterval = setInterval(() => {
-      let newIndex = this.state.currentIndex + 1;
-      // console.log(newIndex,this.state.lastIndex);
+  // startAutoMaticSlider = () => {
+  //   this.sliderInterval = setInterval(() => {
+  //     let newIndex = this.state.currentClockIndex + 1;
+  //     // console.log(newIndex,this.state.lastIndex);
+  //
+  //     if(newIndex === this.state.lastIndex) {
+  //       newIndex = 0;
+  //     }
+  //
+  //     this.handleSliderState(newIndex);
+  //   },this.state.slideTime);
+  // }
 
-      if(newIndex === this.state.lastIndex) {
-        newIndex = 0;
-      }
-
-      this.handleSliderState(newIndex);
-    },this.state.slideTime);
-  }
-
-  handleDayClick = (index) => (e) => {
+  handleDayClick = (clockIndex,dayIndex) => (e) => {
     e.preventDefault();
-    // console.log('clicked',index,"=============");
+    console.log('clicked',clockIndex,dayIndex,"=============");
 
-    this.handleSliderState(index);
+    this.handleSliderState(clockIndex,dayIndex);
   }
 
-  handleSliderState = (newIndex) => {
-    this.setState({
-      currentIndex: newIndex
-    });
+  handleSliderState = (newClockIndex,newDayIndex) => {
+    if(this.state.currentClockIndex !== newClockIndex || this.state.currentDayIndex !== newDayIndex) {
+      this.setState({
+        currentClockIndex: newClockIndex,
+        currentDayIndex: newDayIndex
+      });
+    }
   }
 
   setCurrentSelectedDay = (formattedClassTimes) => {
     let selectedDay = 6;
     if(formattedClassTimes) {
       Object.keys(formattedClassTimes).forEach(day => {
-        const currentDay = DAYS_IN_WEEK.indexOf(day);
+        const currentDay = this._getIndexForDay(day);
 
         if(currentDay < selectedDay) selectedDay = currentDay;
 
       });
 
-      if(this.state.currentIndex !== selectedDay)
-        this.setState({ currentIndex: selectedDay});
+      if(this.state.currentDayIndex !== selectedDay)
+        this.setState({ currentDayIndex: selectedDay});
     }
   }
 
@@ -174,17 +190,19 @@ class ClassTimeClockManager extends Component {
         {/*Clock Times*/}
         <OuterWrapper width={this.props.outerWidth}>
 
-            {/* NOTE : This is not to be used when we are using the ClassTimeNewClock */}
-            {/* <ClassTimeClock data={this.props.data} visible={this.state.currentIndex} {...this.props.clockProps} /> */}
+        {/* NOTE : This is not to be used when we are using the ClassTimeNewClock */}
+        {/* <ClassTimeClock data={this.props.data} visible={this.state.currentClockIndex} {...this.props.clockProps} /> */}
 
-            <ClassTimeNewClocksContainer
-              formattedClassTimes={formattedClassTimes}
-              scheduleType={this.props.scheduleType}
-              scheduleStartDate={this.props.scheduleStartDate}
-              scheduleEndDate={this.props.scheduleEndDate}
-              currentIndex={this.state.currentIndex}
-              clockProps={this.props.clockProps}
-             />
+        <ClassTimeNewClocksContainer
+          formattedClassTimes={formattedClassTimes}
+          scheduleType={this.props.scheduleType}
+          scheduleStartDate={this.props.scheduleStartDate}
+          scheduleEndDate={this.props.scheduleEndDate}
+          currentClockIndex={this.state.currentClockIndex}
+          clockProps={this.props.clockProps}
+          currentSelectedIndex={this.state.currentClockIndex}
+          updateClockAndDayIndex={this.handleSliderState}
+         />
 
         </OuterWrapper>
 
