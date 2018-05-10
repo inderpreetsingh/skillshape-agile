@@ -108,7 +108,7 @@ class ClassTimeClockManager extends Component {
       if(formattedClassTimes[day]){
         const scheduleData = formattedClassTimes[day];
         const myStartingClockCount = clockCounter;
-        console.log(scheduleData.length,myStartingClockCount,clockCounter,'this.props......')
+        // console.log(scheduleData.length,myStartingClockCount,clockCounter,'this.props......')
 
         daysInWeek.push(<Day
           key={myStartingClockCount}
@@ -155,8 +155,10 @@ class ClassTimeClockManager extends Component {
     }
   }
 
-  setCurrentSelectedDay = (formattedClassTimes) => {
+  setCurrentSelectedDay = () => {
+    const {formattedClassTimes} = this.props;
     let selectedDay = 6;
+
     if(formattedClassTimes) {
       Object.keys(formattedClassTimes).forEach(day => {
         const currentDay = this._getIndexForDay(day);
@@ -171,7 +173,7 @@ class ClassTimeClockManager extends Component {
   }
 
   componentDidMount = () => {
-    this.setCurrentSelectedDay(this.props.formattedClassTimes);
+    this.setCurrentSelectedDay();
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -200,7 +202,6 @@ class ClassTimeClockManager extends Component {
           scheduleEndDate={this.props.scheduleEndDate}
           currentClockIndex={this.state.currentClockIndex}
           clockProps={this.props.clockProps}
-          currentSelectedIndex={this.state.currentClockIndex}
           updateClockAndDayIndex={this.handleSliderState}
          />
 

@@ -52,7 +52,7 @@ class ClassTimeNewClocksContainer extends Component {
       scheduleEndDate,
       currentIndex,
       clockProps,
-      currentSelectedIndex,
+      currentClockIndex,
       updateClockAndDayIndex
     } = this.props;
     // console.log(formattedClassTimes,"formattedClassTimes...........");
@@ -67,7 +67,7 @@ class ClassTimeNewClocksContainer extends Component {
           clockProps={clockProps}
           updateContainerHeight={this.updateContainerHeight}
           updateClockAndDayIndex={updateClockAndDayIndex}
-          currentSelectedIndex={currentSelectedIndex}
+          currentClockIndex={currentClockIndex}
         />
 
       </Container>)

@@ -130,7 +130,7 @@ class ClassTime extends Component {
 
   state = {
     isLoading: false,
-    fullTextState: this.props.fullTextState,
+    // fullTextState: this.props.fullTextState,
   }
 
   componentDidMount = () => {
@@ -149,14 +149,14 @@ class ClassTime extends Component {
     this.removeFromMyCalender(this.props.classTimeData);
   }
 
-  componentWillReceiveProps = (newProps) => {
-    if(this.state.fullTextState !== newProps.fullTextState) {
-      this.setState({
-        // addToCalendar: newProps.addToCalendar,
-        fullTextState: newProps.fullTextState,
-      });
-    }
-  }
+  // componentWillReceiveProps = (newProps) => {
+  //   if(this.state.fullTextState !== newProps.fullTextState) {
+  //     this.setState({
+  //       // addToCalendar: newProps.addToCalendar,
+  //       fullTextState: newProps.fullTextState,
+  //     });
+  //   }
+  // }
 
   formatDataBasedOnScheduleType = (data) => {
     const classTimesData = {...data};
@@ -325,18 +325,9 @@ class ClassTime extends Component {
           </ScheduleWrapper>
 
           <DescriptionWrapper>
-            {/*this.props.showReadMore ?
-              <Description fullTextState={this.state.fullTextState}>
-                {this.props.getDescriptionText()}
-                {this.props.getShowMoreText()}
-              </Description>
-              :
-              <Description>
-                {this.props.fullText}
-              </Description> */}
-              <Description>
-                {desc}
-              </Description>
+            <Description>
+              {desc}
+            </Description>
           </DescriptionWrapper>
         </ScheduleAndDescriptionWrapper>
 
