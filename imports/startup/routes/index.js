@@ -26,6 +26,8 @@ import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar';
 import SchoolUpload from '/imports/ui/components/schoolUpload';
 import SchoolPriceView from '/imports/ui/components/embed/schoolPriceView';
 import SchoolClassTypeView from '/imports/ui/components/embed/schoolClassTypeView';
+import SchoolMediaGalleryView from '/imports/ui/components/embed/schoolMediaGalleryView';
+import SchoolMediaSliderView from '/imports/ui/components/embed/schoolMediaSliderView/index.js';
 import VerifyEmail from '/imports/ui/components/account/verifyEmail';
 import SkillShapeSchool from '/imports/ui/components/skillshape-school';
 import ManageUsers from '/imports/ui/components/manage-users';
@@ -71,6 +73,8 @@ export default Routes = componentLoader((props) => (
         <Route path="/skillShape-school" name="SkillShapeSchool" component={SkillShapeSchool}/>
         <Route path="/embed/schools/:slug/pricing" component={SchoolPriceView} />
         <Route path="/embed/schools/:slug/classtype" component={SchoolClassTypeView} />
+        <Route path="/embed/schools/:slug/mediagallery" name="EmbedMediaGalleryView" component={SchoolMediaGalleryView} />
+        <Route path="/embed/schools/:slug/mediaslider" name="EmbedMediaSliderView" component={SchoolMediaSliderView} />
       </Route>
 
       <Route path="/" component={AdminLayout}>

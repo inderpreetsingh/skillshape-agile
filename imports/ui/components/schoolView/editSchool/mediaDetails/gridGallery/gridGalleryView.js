@@ -53,7 +53,7 @@ class ImageGridGallery extends React.Component {
             thumbnail:media.sourcePath,
             media: media,
             isSelected: false,
-            customOverlay: this.renderCustomControls(media),
+            customOverlay: !this.props.hideCustomControls && this.renderCustomControls(media),
             scaletwidth:100
         }
     })
