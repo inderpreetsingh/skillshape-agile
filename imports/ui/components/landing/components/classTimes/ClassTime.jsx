@@ -8,7 +8,6 @@ import TrendingIcon from '../icons/Trending.jsx';
 import ShowMore from '../icons/ShowMore.jsx';
 import withShowMoreText from '../../../../../util/withShowMoreText.js';
 
-import ClassTimeClock from './ClassTimeClock.jsx';
 import ClassTimeClockManager from './ClassTimeClockManager.jsx';
 
 import PrimaryButton from '../buttons/PrimaryButton';
@@ -19,10 +18,10 @@ import {toastrModal} from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import Events from '/imports/util/events';
 
+import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
 import * as helpers from '../jss/helpers.js';
 
 const ON_GOING_SCHEDULE = 'ongoing';
-const DAYS_IN_WEEK = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 const ClassTimeContainer = styled.div`
   width: 250px;
@@ -34,6 +33,7 @@ const ClassTimeContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   position: relative;
+  z-index: 0;
 
   &:after {
     content: '';
@@ -131,7 +131,7 @@ class ClassTime extends Component {
 
   state = {
     isLoading: false,
-    fullTextState: this.props.fullTextState,
+    // fullTextState: this.props.fullTextState,
   }
 
   componentDidMount = () => {
@@ -150,14 +150,14 @@ class ClassTime extends Component {
     this.removeFromMyCalender(this.props.classTimeData);
   }
 
-  componentWillReceiveProps = (newProps) => {
-    if(this.state.fullTextState !== newProps.fullTextState) {
-      this.setState({
-        // addToCalendar: newProps.addToCalendar,
-        fullTextState: newProps.fullTextState,
-      });
-    }
-  }
+  // componentWillReceiveProps = (newProps) => {
+  //   if(this.state.fullTextState !== newProps.fullTextState) {
+  //     this.setState({
+  //       // addToCalendar: newProps.addToCalendar,
+  //       fullTextState: newProps.fullTextState,
+  //     });
+  //   }
+  // }
 
   formatDataBasedOnScheduleType = (data) => {
     const classTimesData = {...data};
@@ -203,9 +203,10 @@ class ClassTime extends Component {
   }
   formatTime = (startTime) => {
     const hours = startTime.getHours();
+    const mins = startTime.getMinutes();
     let hour  = hours > 12 ? hours - 12 : hours;
     hour = hour < 10 ? '0' + hour : hour;
-    let minutes = startTime.getMinutes() === 0 ? "00" : startTime.getMinutes();
+    let minutes = mins < 10 ? "0"+ mins : mins;
     return `${hour}:${minutes}`;
   }
 
@@ -325,18 +326,9 @@ class ClassTime extends Component {
           </ScheduleWrapper>
 
           <DescriptionWrapper>
-            {/*this.props.showReadMore ?
-              <Description fullTextState={this.state.fullTextState}>
-                {this.props.getDescriptionText()}
-                {this.props.getShowMoreText()}
-              </Description>
-              :
-              <Description>
-                {this.props.fullText}
-              </Description> */}
-              <Description>
-                {desc}
-              </Description>
+            <Description>
+              {desc}
+            </Description>
           </DescriptionWrapper>
         </ScheduleAndDescriptionWrapper>
 

@@ -7,8 +7,8 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { isEmpty } from 'lodash';
 
-import ClassTime from './ClassTime.jsx';
 import classTime from '../../constants/structure/classTime.js';
+import ClassTime from './ClassTime.jsx';
 import ClassInterest from "/imports/api/classInterest/fields";
 
 import  {getContainerMaxWidth} from '../../../../../util/cards.js';

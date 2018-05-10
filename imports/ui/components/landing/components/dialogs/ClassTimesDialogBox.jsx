@@ -14,6 +14,8 @@ import {withStyles} from 'material-ui/styles';
 import { MuiThemeProvider} from 'material-ui/styles';
 import ClearIcon from 'material-ui-icons/Clear';
 
+import ClassTimesBoxes from '/imports/ui/components/landing/components/classTimes/ClassTimesBoxes';
+
 import PrimaryButton from '../buttons/PrimaryButton';
 import SecondaryButton from '../buttons/SecondaryButton';
 
@@ -34,10 +36,16 @@ import Events from '/imports/util/events';
 
 const styles = {
   dialog: {
-    padding: `${helpers.rhythmDiv}px`
+    padding: `${helpers.rhythmDiv}px`,
+    overflowX: 'hidden'
   },
   dialogPaper: {
-    background: helpers.panelColor,
+    maxWidth: 600,
+    background: 'white',
+  },
+  dialogContent: {
+    overflowX: 'hidden',
+    padding: 0
   },
   chip: {
     background: helpers.lightTextColor,
@@ -242,7 +250,7 @@ class ClassTimesDialogBox extends React.Component {
 
     render() {
         // const classTimesData = this.normalizeScheduledetails(this.props.classesData);
-
+        const {classInterestData, classTimesData, classes} = this.props;
         console.log("ClassTimesDialogBox props--->>",this.props)
         return (
             <Dialog
@@ -250,7 +258,7 @@ class ClassTimesDialogBox extends React.Component {
                 open={this.props.open}
                 onClose={this.props.onModalClose}
                 aria-labelledby="modal"
-                classes={{root: this.props.classes.dialog, paper: this.props.classes.dialogPaper}}
+                classes={{root: classes.dialog, paper: classes.dialogPaper}}
             >
             <MuiThemeProvider theme={muiTheme}>
                 <DialogTitle>
@@ -261,28 +269,31 @@ class ClassTimesDialogBox extends React.Component {
                       </IconButton>
                     </DialogTitleWrapper>
                 </DialogTitle>
-                <DialogContent>
-                    {
-                        isEmpty(this.props.classesData) ? (
-                            <ClassContainer>
-                                <Typography caption="p">
-                                    No class times have been given by the school. Please click this button to request the school complete their listing
-                                </Typography>
-                                <br>
-                                </br>
-                                <PrimaryButton
-                                    icon
-                                    onClick={this.props.handleClassTimeRequest}
-                                    iconName="perm_contact_calendar"
-                                    label="Request class times"
-                                />
-                            </ClassContainer>
-                        )
-                        : this.getSchedules(this.props.classesData)
-                    }
-                    {
-                      this.props.errorText && <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
-                    }
+                <DialogContent classes={{root: classes.dialogContent}}>
+                  {
+                    isEmpty(classTimesData) ? (
+                        <ClassContainer>
+                            <Typography caption="p">
+                                No class times have been given by the school. Please click this button to request the school complete their listing
+                            </Typography>
+                            <br>
+                            </br>
+                            <PrimaryButton
+                                icon
+                                onClick={this.props.handleClassTimeRequest}
+                                iconName="perm_contact_calendar"
+                                label="Request class times"
+                            />
+                        </ClassContainer>
+                    )
+                      : <ClassTimesBoxes
+                        classTimesData={classTimesData}
+                        classInterestData={classInterestData}
+                      />
+                  }
+                  {
+                    this.props.errorText && <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
+                  }
                 </DialogContent>
             </MuiThemeProvider>
           </Dialog>

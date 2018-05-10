@@ -108,7 +108,7 @@ class ClassTypeCard extends Component {
           name:this.props.name,
         }
         const classTimesData = this.getClassTimes(get(this.props, "_id", null))
-        const {reviewsStats} = this.props;
+        const {reviewsStats, classInterestData} = this.props;
         if(!isEmpty(reviewsStats)) {
           ratings = reviewsStats.ratings;
           reviews = reviewsStats.reviews;
@@ -119,7 +119,8 @@ class ClassTypeCard extends Component {
             {
                 this.state.dialogOpen &&
                 <ClassTimesDialogBox
-                    classesData={classTimesData}
+                    classInterestData={classInterestData}
+                    classTimesData={classTimesData}
                     open={this.state.dialogOpen}
                     onModalClose={this.handleDialogState(false)}
                     handleClassTimeRequest={this.handleClassTimeRequest.bind(this, this.props.schoolId)}

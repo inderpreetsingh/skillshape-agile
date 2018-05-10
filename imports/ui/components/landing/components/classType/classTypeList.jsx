@@ -204,7 +204,7 @@ class ClassTypeList extends Component {
     }
 
 	render() {
-		const { mapView, classTypeData, reviewsData, skillCategoryData, splitByCategory, filters, isLoading, classTimesData } = this.props;
+		const { mapView, classTypeData, classInterestData, reviewsData, skillCategoryData, splitByCategory, filters, isLoading, classTimesData } = this.props;
     // console.log("ClassTypeList props -->>",this.props);
     return (<MainContentWrapper>
 				{
@@ -227,7 +227,7 @@ class ClassTypeList extends Component {
                               mapView={this.props.mapView}
                               cardsData={classTypeData}
                               reviewsData={reviewsData || []}
-                              classInterestData={this.props.classInterestData}
+                              classInterestData={classInterestData}
                               handleSeeMore={this.props.handleSeeMore}
                               filters={this.props.filters}
                             />
@@ -254,7 +254,7 @@ class ClassTypeList extends Component {
                           mapView={this.props.mapView}
                           cardsData={classTypeData}
                           reviewsData={reviewsData || [] }
-                          classInterestData={this.props.classInterestData}
+                          classInterestData={classInterestData}
                           handleSeeMore={this.props.handleSeeMore}
                           filters={this.props.filters}
                           classTimesData={ classTimesData || [] }
