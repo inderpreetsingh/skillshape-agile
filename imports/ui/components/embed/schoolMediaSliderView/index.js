@@ -1,8 +1,6 @@
 import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import School from "/imports/api/school/fields";
-import ClassType from "/imports/api/classType/fields";
-import ClassTypeList from "/imports/ui/components/landing/components/classType/classTypeList.jsx";
 import MediaList from "/imports/ui/components/schoolView/editSchool/mediaDetails/mediaList/index.js";
 
 class SchoolMediaSliderView extends React.Component {
