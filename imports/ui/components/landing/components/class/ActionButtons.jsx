@@ -10,10 +10,8 @@ import ClassTimeButton from '/imports/ui/components/landing/components/buttons/C
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ActionButtonsWrapper = styled.div`
-  left: ${props => props.rightSide ? 'auto' : helpers.rhythmDiv * 2}px;
-  bottom: ${helpers.rhythmDiv * 2}px;
-  right: ${props => props.rightSide ? helpers.rhythmDiv * 2 + 'px' : 'auto'};
   ${helpers.flexCenter}
+  padding-bottom: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     flex-direction: column;
@@ -31,30 +29,25 @@ const ActionButtonsWrapper = styled.div`
 `;
 
 const ActionButtonsRightSideWrapper = styled.div`
-  left: 'auto';
-  bottom: ${helpers.rhythmDiv * 2}px;
-  right: ${helpers.rhythmDiv * 2 + 'px'};
   ${helpers.flexCenter}
+  padding-bottom: ${helpers.rhythmDiv * 2}px;
+  align-items: flex-end;
 
-  @media screen and (max-width: 1100px) {
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    flex-wrap: wrap;
+  @media screen and (max-width: ${helpers.tablet + 150}px) {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-
   @media screen and (max-width: ${helpers.tablet}px) {
-    position: initial;
     align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
   }
-
 `;
 
 const ActionButton = styled.div`
   margin-right: ${helpers.rhythmDiv}px;
+  min-height: ${helpers.rhythmDiv * 4}px;
 
   @media screen and (max-width: 1100px) {
     margin-bottom: ${props => props.rightSide ? helpers.rhythmDiv * 2 : 0}px;
@@ -70,49 +63,44 @@ const ActionButton = styled.div`
   }
 `;
 
-const LogoWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  position: absolute;
-  padding: ${helpers.rhythmDiv * 2}px;
-  left: 0;
-  bottom: 0;
+const ShowOnSmallScreen = styled.div`
+  display: none;
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: block;
+  }
 `;
 
-
 const ActionButtons = (props) => {
-  const ActionButtonsContainer = props.showLogo ? ActionButtonsRightSideWrapper : ActionButtonsWrapper;
-  return(<LogoWrapper>
-      <ClassTypeLogo
-        publicView
-        position={'static'}
-        logoSrc={props.logoSrc}/>
-
-      <ActionButtonsContainer>
+  const ActionButtonsContainer = props.rightSide ? ActionButtonsRightSideWrapper : ActionButtonsWrapper;
+  const EditButton = props.editButton;
+  return(<ActionButtonsContainer>
       {props.isEdit ? <Fragment></Fragment> :
       <Fragment>
-        {props.callUsButton && <ActionButton rightSide={props.showLogo}>
+        {props.editButton && <ShowOnSmallScreen><ActionButton rightSide={props.rightSide}>
+          <EditButton />
+        </ActionButton></ShowOnSmallScreen>}
+
+        {props.callUsButton && <ActionButton rightSide={props.rightSide}>
           <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
         </ActionButton>}
 
-        {props.emailUsButton && <ActionButton rightSide={props.showLogo}>
+        {props.emailUsButton && <ActionButton rightSide={props.rightSide}>
           <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
         </ActionButton>}
 
-        {props.pricingButton && <ActionButton rightSide={props.showLogo}>
+        {props.pricingButton && <ActionButton rightSide={props.rightSide}>
           <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
         </ActionButton>}
 
-        {props.scheduleButton && <ActionButton rightSide={props.showLogo}>
+        {props.scheduleButton && <ActionButton rightSide={props.rightSide}>
           <ClassTimeButton secondary noMarginBottom label="Schedule" icon iconName="schedule" onClick={props.onScheduleButtonClick} />
         </ActionButton>}
 
-        {props.visitSiteButton && <a href={props.siteLink} target="_blank"><ActionButton rightSide={props.showLogo}>
+        {props.visitSiteButton && <a href={props.siteLink} target="_blank"><ActionButton rightSide={props.rightSide}>
           <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" onClick={handleOutBoundLink}/>
         </ActionButton></a>}
       </Fragment>}
-    </ActionButtonsContainer></LogoWrapper>)
+    </ActionButtonsContainer>)
 }
 
 ActionButtons.propTypes = {
@@ -126,7 +114,8 @@ ActionButtons.propTypes = {
   pricingButton: PropTypes.bool,
   scheduleButton: PropTypes.bool,
   visitSiteButton: PropTypes.bool,
-  showLogo: PropTypes.bool
+  rightSide: PropTypes.bool,
+  editButton: PropTypes.element
 }
 
 ActionButtons.defaultProps = {

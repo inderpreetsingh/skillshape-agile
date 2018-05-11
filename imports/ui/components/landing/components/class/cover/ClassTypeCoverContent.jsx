@@ -98,8 +98,8 @@ const LogoContainer = styled.div`
     width: 100%;
   }
   @media screen and (max-width: ${helpers.mobile}px) {
+    // min-width: 300px;
     width: 100%;
-    min-width: 300px;
   }
 `;
 
@@ -148,6 +148,29 @@ const EditButtonWrapper = styled.div`
   top: 0;
   margin: ${helpers.rhythmDiv * 2}px;
 `;
+
+const HideOnSmallScreen = styled.div`
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: none;
+  }
+`;
+
+const LogoAndActionButtons = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+  left: 0;
+  bottom: 0;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    position: static;
+    padding: 0;
+  }
+`;
+
 
 class ClassTypeCoverContent extends React.Component {
 
@@ -316,6 +339,14 @@ class ClassTypeCoverContent extends React.Component {
 
               <ClassTypeForegroundImage coverSrc={props.coverSrc} >
                 <Fragment>
+                <LogoAndActionButtons>
+                  {props.noClassTypeData && !props.isEdit && props.logoSrc && <HideOnSmallScreen>
+                    <ClassTypeLogo
+                      publicView
+                      position={'static'}
+                      logoSrc={props.logoSrc}/>
+                  </HideOnSmallScreen>}
+
                   {props.actionButtons || <ActionButtons
                     isEdit={props.isEdit}
                     emailUsButton={props.actionButtonProps.emailUsButton}
@@ -328,16 +359,9 @@ class ClassTypeCoverContent extends React.Component {
                     onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
                     onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
                     siteLink={props.actionButtonProps.siteLink}
-                    showLogo={props.noClassTypeData && props.logoSrc}
-                    logoSrc={props.logoSrc}
+                    rightSide={props.noClassTypeData && props.logoSrc}
                     />}
-
-                  {/*props.logoSrc && !props.isEdit && <ClassTypeLogo
-                      left={helpers.rhythmDiv * 2}
-                      bottom={helpers.rhythmDiv * 2}
-                      logoSrc={props.logoSrc}
-                      publicView
-                    />*/}
+                  </LogoAndActionButtons>
 
                   {props.editButton && (props.isEdit ? <EditButtonWrapper>
                     <ClassTimeButton icon iconName="photo_camera" label="Background" onClick={props.onEditBgButtonClick} />
@@ -360,6 +384,7 @@ class ClassTypeCoverContent extends React.Component {
                 <ShowOnMobile>
                   {props.actionButtons || <ActionButtons
                     isEdit={props.isEdit}
+                    editButton={props.editButton}
                     emailUsButton={props.actionButtonProps.emailUsButton}
                     pricingButton={props.actionButtonProps.pricingButton}
                     callUsButton={props.actionButtonProps.callUsButton}
