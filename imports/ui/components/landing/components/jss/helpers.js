@@ -49,6 +49,7 @@ export const
     /********** SPECIFIC COLORS **************/
     defaultBoxColor = "#f2f2f2",
     schoolPageColor = '#f2f2f2',
+    noMediaFound = '#f9fbe7',
     classTimeClockButtonColor = '152,151,151', // So that it can be used as rgba with varying opacity
 
     /*******BREAKPOINTS*********/

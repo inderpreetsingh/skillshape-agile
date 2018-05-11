@@ -13,7 +13,7 @@ const styles = {
   classTimeButton: {
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
-    padding: '0 16px',
+    padding: '0 12px',
     backgroundColor: helpers.primaryColor,
     height: 32,
     minHeight: 'auto',
@@ -25,7 +25,7 @@ const styles = {
   },
   classTimeSecondaryButton: {
     fontSize: helpers.baseFontSize,
-    padding: '0 16px',
+    padding: '0 12px',
     height: 32,
     minHeight: 'auto',
     fontFamily: helpers.specialFont,
