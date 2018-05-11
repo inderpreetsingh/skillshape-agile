@@ -16,7 +16,7 @@ const Logo = styled.div`
   background-position: center center;
   background-image: url('${props => props.logoSrc}');
 
-  @media screen and (max-width: 1100px) {
+  @media screen and (max-width: 1120px) {
     bottom: ${props => props.publicView ? props.bottom + 64 : 0}px;
     left: ${props => props.publicView ? '50%' : (props.left || 0)+'px'};
     transform: translateX(${props => props.publicView ? '-50%' : 0});

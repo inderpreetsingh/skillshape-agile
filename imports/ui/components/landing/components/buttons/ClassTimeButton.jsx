@@ -12,7 +12,7 @@ import * as helpers from '../jss/helpers.js';
 const styles = {
   classTimeButton: {
     fontFamily: helpers.specialFont,
-    fontSize: 14,
+    fontSize: helpers.baseFontSize,
     padding: '0 16px',
     backgroundColor: helpers.primaryColor,
     height: 32,
@@ -22,13 +22,9 @@ const styles = {
     '&:hover': {
       backgroundColor: helpers.primaryColor,
     },
-
-    '@media screen and (max-width: 800px)': {
-      fontSize: 12
-    }
   },
   classTimeSecondaryButton: {
-    fontSize: 14,
+    fontSize: helpers.baseFontSize,
     padding: '0 16px',
     height: 32,
     minHeight: 'auto',

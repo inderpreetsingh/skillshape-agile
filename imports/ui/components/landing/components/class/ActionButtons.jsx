@@ -1,16 +1,15 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
 import { Link } from 'react-router';
+
 import { handleOutBoundLink } from '/imports/util';
 
-import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
-
-import * as helpers from '../jss/helpers.js';
+import ClassTypeLogo from './ClassTypeLogo.jsx';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ActionButtonsWrapper = styled.div`
-  position: absolute;
   left: ${props => props.rightSide ? 'auto' : helpers.rhythmDiv * 2}px;
   bottom: ${helpers.rhythmDiv * 2}px;
   right: ${props => props.rightSide ? helpers.rhythmDiv * 2 + 'px' : 'auto'};
@@ -32,7 +31,6 @@ const ActionButtonsWrapper = styled.div`
 `;
 
 const ActionButtonsRightSideWrapper = styled.div`
-  position: absolute;
   left: 'auto';
   bottom: ${helpers.rhythmDiv * 2}px;
   right: ${helpers.rhythmDiv * 2 + 'px'};
@@ -44,7 +42,6 @@ const ActionButtonsRightSideWrapper = styled.div`
     width: 100%;
     flex-wrap: wrap;
   }
-
 
 
   @media screen and (max-width: ${helpers.tablet}px) {
@@ -73,33 +70,49 @@ const ActionButton = styled.div`
   }
 `;
 
+const LogoWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  position: absolute;
+  padding: ${helpers.rhythmDiv * 2}px;
+  left: 0;
+  bottom: 0;
+`;
+
 
 const ActionButtons = (props) => {
-  const ActionButtonsContainer = props.rightSide ? ActionButtonsRightSideWrapper : ActionButtonsWrapper;
-  return(<ActionButtonsContainer>
-    {props.isEdit ? <Fragment></Fragment> :
-    <Fragment>
-      {props.callUsButton && <ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
-      </ActionButton>}
+  const ActionButtonsContainer = props.showLogo ? ActionButtonsRightSideWrapper : ActionButtonsWrapper;
+  return(<LogoWrapper>
+      <ClassTypeLogo
+        publicView
+        position={'static'}
+        logoSrc={props.logoSrc}/>
 
-      {props.emailUsButton && <ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
-      </ActionButton>}
+      <ActionButtonsContainer>
+      {props.isEdit ? <Fragment></Fragment> :
+      <Fragment>
+        {props.callUsButton && <ActionButton rightSide={props.showLogo}>
+          <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
+        </ActionButton>}
 
-      {props.pricingButton && <ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
-      </ActionButton>}
+        {props.emailUsButton && <ActionButton rightSide={props.showLogo}>
+          <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
+        </ActionButton>}
 
-      {props.scheduleButton && <ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton secondary noMarginBottom label="Schedule" icon iconName="schedule" onClick={props.onScheduleButtonClick} />
-      </ActionButton>}
+        {props.pricingButton && <ActionButton rightSide={props.showLogo}>
+          <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
+        </ActionButton>}
 
-      {props.visitSiteButton && <a href={props.siteLink} target="_blank"><ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" onClick={handleOutBoundLink}/>
-      </ActionButton></a>}
-    </Fragment>}
-  </ActionButtonsContainer>)
+        {props.scheduleButton && <ActionButton rightSide={props.showLogo}>
+          <ClassTimeButton secondary noMarginBottom label="Schedule" icon iconName="schedule" onClick={props.onScheduleButtonClick} />
+        </ActionButton>}
+
+        {props.visitSiteButton && <a href={props.siteLink} target="_blank"><ActionButton rightSide={props.showLogo}>
+          <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" onClick={handleOutBoundLink}/>
+        </ActionButton></a>}
+      </Fragment>}
+    </ActionButtonsContainer></LogoWrapper>)
 }
 
 ActionButtons.propTypes = {
@@ -113,7 +126,7 @@ ActionButtons.propTypes = {
   pricingButton: PropTypes.bool,
   scheduleButton: PropTypes.bool,
   visitSiteButton: PropTypes.bool,
-  rightSide: PropTypes.bool
+  showLogo: PropTypes.bool
 }
 
 ActionButtons.defaultProps = {

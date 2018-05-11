@@ -328,15 +328,16 @@ class ClassTypeCoverContent extends React.Component {
                     onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
                     onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
                     siteLink={props.actionButtonProps.siteLink}
-                    rightSide={props.noClassTypeData && props.logoSrc}
+                    showLogo={props.noClassTypeData && props.logoSrc}
+                    logoSrc={props.logoSrc}
                     />}
 
-                  {props.logoSrc && !props.isEdit && <ClassTypeLogo
+                  {/*props.logoSrc && !props.isEdit && <ClassTypeLogo
                       left={helpers.rhythmDiv * 2}
                       bottom={helpers.rhythmDiv * 2}
                       logoSrc={props.logoSrc}
                       publicView
-                    />}
+                    />*/}
 
                   {props.editButton && (props.isEdit ? <EditButtonWrapper>
                     <ClassTimeButton icon iconName="photo_camera" label="Background" onClick={props.onEditBgButtonClick} />
