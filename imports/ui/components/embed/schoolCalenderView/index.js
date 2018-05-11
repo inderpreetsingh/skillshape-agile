@@ -1,9 +1,7 @@
 import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import School from "/imports/api/school/fields";
-import ClassType from "/imports/api/classType/fields";
-import ClassTypeList from "/imports/ui/components/landing/components/classType/classTypeList.jsx";
-import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
+import ManageMyCalendar from "/imports/ui/components/users/manageMyCalendar/index.js";
 
 class SchoolCalenderView extends React.Component {
   constructor(props) {
@@ -11,13 +9,11 @@ class SchoolCalenderView extends React.Component {
   }
 
   render() {
-    console.log("SchoolClassTypeView props-->>", this.props);
-    const { schoolId } = this.props;
     return (
       <div className="wrapper" style={{ padding: 20 }}>
-        {this.props.subsReady &&
-          <ManageMyCalendar schoolCalendar={true} {...this.props}/>
-        }
+        {this.props.subsReady && (
+          <ManageMyCalendar schoolCalendar={true} {...this.props} />
+        )}
       </div>
     );
   }
@@ -34,7 +30,7 @@ export default createContainer(props => {
   return {
     ...props,
     schoolId: schoolId,
-    schoolData:schoolData,
+    schoolData: schoolData,
     subsReady: subsReady
   };
 }, SchoolCalenderView);
