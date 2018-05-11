@@ -205,6 +205,7 @@ class ClassTypeContent extends Component {
       manageRequestsDialog: false,
       nonUserDefaultDialog: false,
       defaultDialogBoxTitle: '',
+      manageRequestTitle: '',
       type: "both",
       classTimesData: [],
       myClassTimes: [],
@@ -215,11 +216,11 @@ class ClassTypeContent extends Component {
         classTimesIdsForCI: [],
       },
     }
-
-    _setDefaultDialogBoxTitle = (title) => {
-      const newState = {...this.state, defaultDialogBoxTitle : title};
-      this.setState(newState);
-    }
+    //
+    // _setDefaultDialogBoxTitle = (title) => {
+    //   const newState = {...this.state, defaultDialogBoxTitle : title};
+    //   this.setState(newState);
+    // }
 
     getContactNumbers = () => {
       return this.props.schoolData.phone && this.props.schoolData.phone.split(/[\|\,\\]/);
@@ -277,7 +278,8 @@ class ClassTypeContent extends Component {
     requestPricingInfo = (text) => {
         const { toastr, classTypeData, schoolData } = this.props;
         if(!Meteor.userId()) {
-          this.handleDialogState('manageRequestsDialog',true);
+          this.handleManageRequestsDialogBox('Pricing',true);
+          // this.handleDialogState('manageRequestsDialog',true);
         }else {
           const data = {
             classTypeId: classTypeData._id,
@@ -337,9 +339,10 @@ class ClassTypeContent extends Component {
     }
 
     handleClassTimeRequest = () => {
+        this.handleManageRequestsDialogBox('Schedule Info',true);
         // const { toastr, classTypeData } = this.props;
         // Handle Class time request using mailTo:
-        this.handleRequest('Class Times');
+        // this.handleRequest('Class Times');
         // COMMENTED OUT BECAUSE NOW WE HAVE CHNAGED THIS REQUEST WITH MAILTO.
         // if(Meteor.userId() && !isEmpty(classTypeData)) {
         //     this.setState({ isBusy:true });
@@ -369,7 +372,13 @@ class ClassTypeContent extends Component {
     }
 
     handleDefaultDialogBox = (title, state) => {
-      const newState = {...state, defaultDialogBoxTitle: title, nonUserDefaultDialog: state};
+      const newState = {...this.state, defaultDialogBoxTitle: title, nonUserDefaultDialog: state};
+      this.setState(newState);
+    }
+
+    handleManageRequestsDialogBox = (title, state) => {
+      const newState = {...this.state, manageRequestTitle: title, manageRequestsDialog: state};
+      console.info(newState,"my new State...");
       this.setState(newState);
     }
 
@@ -425,22 +434,32 @@ class ClassTypeContent extends Component {
         	</Typography>
 		}
 
+    let submitBtnLabel = '';
+    let requestFor = '';
     const ourEmail = this.getOurEmail();
     const emailUsButton = ourEmail ? true : false;
     const isReviewsDataEmpty = isEmpty(reviewsData);
+    const { manageRequestTitle } = this.state;
+    console.info('this.state',this.state);
+    if(manageRequestTitle) {
+      submitBtnLabel = manageRequestTitle != 'pricing' && 'Request class times';
+      requestFor = manageRequestTitle != 'pricing' && 'class times';
+    }
+
 		return (<div>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolData} ourEmail={ourEmail} open={this.state.emailUsDialog} currentUser={this.props.currentUser} onModalClose={(err, res) => this.handleDialogState('emailUsDialog',false, err, res)}/>}
           {this.state.giveReviewDialog && <GiveReviewDialogBox title={this.getReviewTitle(classTypeData && classTypeData.name)} reviewFor='class' reviewForId={classTypeData._id} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.manageRequestsDialog && <ManageRequestsDialogBox
-            title="Pricing"
+            title={this.state.manageRequestTitle}
             open={this.state.manageRequestsDialog}
-            onModalClose={() => this.handleDialogState('manageRequestsDialog',false)}
-            requestFor="price"
+            onModalClose={() => this.handleManageRequestsDialogBox('',false)}
+            requestFor={requestFor}
+            submitBtnLabel={submitBtnLabel}
             schoolData={schoolData}
             classTypeId={classTypeData._id}
-            onToastrClose={() => this.handleDialogState('manageRequestsDialog',false)}
+            onToastrClose={() => this.handleManageRequestsDialogBox('',false)}
             />}
           {this.state.isBusy && <ContainerLoader/>}
 

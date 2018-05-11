@@ -99,6 +99,35 @@ export const sendConfirmationEmail = function(userRec, school) {
     }
 };
 
+export const sendClassTimesRequestEmail = function({
+    toEmail,
+    fromEmail,
+    schoolPageLink,
+    updateClassTimesLink,
+    memberLink,
+    ownerName,
+    classTypeName,
+    currentUserName
+}) {
+    if (Meteor.isServer) {
+        Email.send({
+            to: toEmail, //emailObj.to
+            from: fromEmail,
+            replyTo: "Notices@SkillShape.com",
+            subject: "schedule request received",
+            html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''}
+            saw your listing on SkillShape.com ${classTypeName && `for ${classTypeName}`}
+            at <br />${schoolPageLink} <br /> and would you like to update your schedule <br />${updateClassTimesLink}
+            <br />
+            <br />
+            Thanks,
+            <br />
+            <br />
+            ${EmailSignature}`
+        });
+    }
+};
+
 export const sendClassTimesRequest = function({
     currentUserData,
     schoolOwnerData,

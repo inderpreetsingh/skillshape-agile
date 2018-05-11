@@ -260,6 +260,11 @@ export default function() {
           {
             this.state.isLoading && <ContainerLoader />
           }
+          {this.state.emailUsDialog && <EmailUsDialogBox
+    					ourEmail={ourEmail}
+    					schoolData={schoolData}
+    					open={this.state.emailUsDialog}
+    					onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
           {this.state.giveReviewDialog && <GiveReviewDialogBox reviewForId={schoolId} reviewFor='school' title={this.getReviewTitle(schoolData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.manageRequestsDialog && <ManageRequestsDialogBox
@@ -385,7 +390,7 @@ export default function() {
                 noMediaFound={<NoMediaFound
                     schoolName={schoolData.name}
                     siteLink={schoolData.website}
-                    onEmailButtonClick={this.handleEmailButtonClick} />}
+                    onEmailButtonClick={() => this.handleDialogState('emailUsDialog',true)} />}
                 schoolId={schoolId}
                 schoolView= {true}
               />

@@ -114,7 +114,7 @@ class ManageUnsubscriptionDialogBox extends Component {
 
   handleButtonClick = (buttonName) => (e)=> {
     const {toastr,requestFor,requestId} = this.props;
-    const methodNameToCall = requestFor === 'price details' ? 'pricingRequest.removeRequest' : 'classTimesRequest.removeRequest';
+    const methodNameToCall = requestFor == 'price details' ? 'pricingRequest.removeRequest' : 'classTimesRequest.removeRequest';
     if(buttonName === 'yes') {
       this.setState({isBusy: true});
       Meteor.call(methodNameToCall,requestId,(err,res) => {
@@ -133,7 +133,7 @@ class ManageUnsubscriptionDialogBox extends Component {
 
   componentDidMount = () => {
     const { toastr, requestFor, requestId } = this.props;
-    const methodNameToCall = requestFor === 'price details' ? 'pricingRequest.getSubscriptionData' : 'classTimesRequest.getRequestData';
+    const methodNameToCall = requestFor == 'price details' ? 'pricingRequest.getSubscriptionData' : 'classTimesRequest.getRequestData';
     Meteor.call(methodNameToCall,requestId,(err,res) => {
       if(err) {
         toastr.error("There was no data found with this request id, you have already unsubscribed.","Error");
@@ -167,7 +167,7 @@ class ManageUnsubscriptionDialogBox extends Component {
           </DialogTitle>
 
           <DialogContent classes={{root : props.classes.dialogContent}}>
-            <Content>You have requested for unsubscription from {props.requestFor} of {this.state.classTypeName && `${this.state.classTypeName} class of`} {this.state.schoolName} school. </Content>
+            <Content>You are requesting for unsubscription from {props.requestFor} of {this.state.classTypeName && `${this.state.classTypeName} class of`} {this.state.schoolName} school. </Content>
             <Content>Click <Bold>Yes</Bold> to continue or <Bold>No</Bold> to cancel your request.</Content>
           </DialogContent>
 
