@@ -96,6 +96,10 @@ ClassType.attachSchema(new SimpleSchema({
     "filters.locationTitle": {
         type: String,
         optional: true,
+    },
+    createdAt: {
+        type: new Date(),
+        optional: true
     }
 }));
 

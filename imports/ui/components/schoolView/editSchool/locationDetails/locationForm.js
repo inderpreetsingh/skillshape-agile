@@ -47,7 +47,7 @@ class LocationForm extends React.Component {
 		}
 		this.setState({isBusy: true});
         const sLocationDetail = payload.address + "," + payload.city + "," + payload.zip + "," + payload.country;
-        
+
         getLatLong(sLocationDetail, (data) => {
         	console.log("getLatLong result -->>",data);
 	        if(data) {
@@ -59,7 +59,7 @@ class LocationForm extends React.Component {
 	        } else {
 	            const getLatLongPayload = payload.city + "," + payload.zip + "," + payload.country
 	            getLatLong(getLatLongPayload, (data) => {
-	            
+
 		            if (data == null) {
 		              console.error("Please enter valid address details");
 		              return false;
@@ -91,12 +91,13 @@ class LocationForm extends React.Component {
 			methodName = "location.addLocation";
 			docObj.doc = payload;
 		}
+		this.props.enableParentPanelToDefaultOpen();
 		Meteor.call(methodName, docObj, (error, result) => {
 	      if (error) {
 	        console.error("error", error);
 	      }
 	      if (result) {
-	        this.props.onClose()
+	        this.props.onClose(result)
 	      }
 	      this.setState({isBusy: false, error});
 	    });
@@ -142,7 +143,7 @@ class LocationForm extends React.Component {
 		        >
 		        	<DialogTitle id="form-dialog-title">Add Location</DialogTitle>
 		        	{ this.state.isBusy && <ContainerLoader/>}
-		        	{ 
+		        	{
 	                    this.state.showConfirmationModal && <ConfirmationModal
 	                        open={this.state.showConfirmationModal}
 	                        submitBtnLabel="Yes, Delete"
@@ -152,7 +153,7 @@ class LocationForm extends React.Component {
 	                        onClose={() => this.setState({showConfirmationModal: false})}
 	                    />
 	                }
-		        	{ 
+		        	{
                         this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
 				        	<DialogContent>
 				        		<form id={formId} onSubmit={this.onSubmit}>
@@ -210,7 +211,7 @@ class LocationForm extends React.Component {
 						            />
 				        		</form>
 				        	</DialogContent>
-                        
+
                         )
                     }
 	        		<DialogActions>
@@ -225,13 +226,13 @@ class LocationForm extends React.Component {
                       Cancel
                     </Button>
                     <Button type="submit" form={formId} color="primary">
-                      { data ? "Save" : "Submit" } 
+                      { data ? "Save" : "Submit" }
                     </Button>
                 </DialogActions>
 		        </Dialog>
 			</div>
 		)
 	}
-}  
+}
 
 export default withStyles(styles)(withMobileDialog()(LocationForm));

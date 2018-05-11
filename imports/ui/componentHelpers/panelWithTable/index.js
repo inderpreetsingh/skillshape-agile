@@ -91,7 +91,11 @@ class PanelWithTable extends React.Component {
     }
 
     handleFormModal = (classTypeId)=> {
-        this.setState({showForm: false, formData: null, showClassTimeFormModal: {[classTypeId]: true}});
+        this.setState({showForm: false, formData: null, newLocationAdded: true, showClassTimeFormModal: {[classTypeId]: true}});
+    }
+
+    enableParentPanelToDefaultOpen = () => {
+        this.setState({expansionPanelDefaultOpen: true});
     }
 
     handleChange = (event, value) => {
