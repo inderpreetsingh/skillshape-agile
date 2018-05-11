@@ -10,7 +10,6 @@ class SchoolClassTypeView extends React.Component {
   }
 
   render() {
-    console.log("SchoolClassTypeView props-->>", this.props);
     const { schoolId } = this.props;
     return (
       <div className="wrapper" style={{ padding: 20 }}>
@@ -23,6 +22,7 @@ class SchoolClassTypeView extends React.Component {
           classTypeBySchool="classTypeBySchool"
           handleSeeMore={this.handleSeeMore}
           schoolView={true}
+          hideClassTypeOptions={this.props.route.name == "EmbedClassTypeView"}
         />
       </div>
     );
