@@ -4,6 +4,7 @@ import { Router, Route, browserHistory, DefaultRoute, IndexRoute } from 'react-r
 import MainLayout from '/imports/ui/layout/mainLayout';
 import AdminLayout from '/imports/ui/layout/adminLayout';
 import PublicLayout from '/imports/ui/layout/publicLayout';
+import EmbedLayout from '/imports/ui/layout/embedLayout';
 
 //components
 import Home from '/imports/ui/components/home';
@@ -72,11 +73,6 @@ export default Routes = componentLoader((props) => (
         <Route path="/claimSchool" name="ClaimSchool" component={ClaimSchool}/>
         <Route path="/verify-email/:token" name="VerifyEmail" component={VerifyEmail}/>
         <Route path="/skillShape-school" name="SkillShapeSchool" component={SkillShapeSchool}/>
-        <Route path="/embed/schools/:slug/pricing" component={SchoolPriceView} />
-        <Route path="/embed/schools/:slug/classtype" component={SchoolClassTypeView} />
-        <Route path="/embed/schools/:slug/mediagallery" name="EmbedMediaGalleryView" component={SchoolMediaGalleryView} />
-        <Route path="/embed/schools/:slug/mediaslider" name="EmbedMediaSliderView" component={SchoolMediaSliderView} />
-        <Route path="/embed/schools/:slug/calendar" name="EmbedSchoolCalanderView" component={SchoolCalenderView} />
       </Route>
 
       <Route path="/" component={AdminLayout}>
@@ -84,6 +80,14 @@ export default Routes = componentLoader((props) => (
         <Route path="/schools/:slug/members" name="SchoolMemberView" component={SchoolMemberView} />
         <Route path="/classmates" name="classmates" component={SchoolMemberView} />
         <Route path="/manage-users" name="Manage-Users" component={ManageUsers} />
+      </Route>
+
+      <Route path="/" component={EmbedLayout}>
+        <Route path="/embed/schools/:slug/pricing" component={SchoolPriceView} />
+        <Route path="/embed/schools/:slug/classtype" component={SchoolClassTypeView} />
+        <Route path="/embed/schools/:slug/mediagallery" name="EmbedMediaGalleryView" component={SchoolMediaGalleryView} />
+        <Route path="/embed/schools/:slug/mediaslider" name="EmbedMediaSliderView" component={SchoolMediaSliderView} />
+        <Route path="/embed/schools/:slug/calendar" name="EmbedSchoolCalanderView" component={SchoolCalenderView} />
       </Route>
     </Route>
     <Route path="*" name="NoPageFound" component={NoPageFound} />
