@@ -158,7 +158,7 @@ const ClassTypeCardDescription = (props) => {
                </DescriptionInnerWrapper>
 
                <Buttons>
-                {this.props && !this.props.hideClassTypeOptions &&
+                {props && !props.hideClassTypeOptions &&
                   <ButtonsWrapper>
                    <ButtonWrapper>
                      <SecondaryButton
