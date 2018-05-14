@@ -117,11 +117,15 @@ class ContactUsForm extends Component {
     readyToSumit: false,
   }
 
-  componentDidUpdate = () => {
-    const readyToSumit = this._validateAllInputs(this.state,this.state.inputsName);
-    if(this.state.readyToSumit !== readyToSumit) {
-      this.setState({ readyToSumit : readyToSumit});
+  _validateAllInputs = (data, inputNames) => {
+
+    for(let i = 0; i < inputNames.length; ++i) {
+      if(data[inputNames[i]] == '') {
+        return false;
+      }
     }
+
+    return true;
   }
 
   handleInputFieldChange = (fieldName) => (e) => {
@@ -187,15 +191,11 @@ class ContactUsForm extends Component {
     }
   }
 
-  _validateAllInputs = (data, inputNames) => {
-
-    for(let i = 0; i < inputNames.length; ++i) {
-      if(data[inputNames[i]] == '') {
-        return false;
-      }
+  componentDidUpdate = () => {
+    const readyToSumit = this._validateAllInputs(this.state,this.state.inputsName);
+    if(this.state.readyToSumit !== readyToSumit) {
+      this.setState({ readyToSumit : readyToSumit});
     }
-
-    return true;
   }
 
   render() {

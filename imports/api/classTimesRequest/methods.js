@@ -2,15 +2,14 @@ import ClassTimesRequest, {ClassTimesRequestSchema} from "./fields";
 import ClassType from '/imports/api/classType/fields.js';
 import School from '/imports/api/school/fields.js';
 
-import {sendClassTimesRequestEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
+import {sendRequestReceivedEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
 import { getUserFullName } from '/imports/util/getUserData';
 
 import get from 'lodash/get';
 import { sendClassTimesRequest } from "/imports/api/email";
 
 Meteor.methods({
-  "classTimesRequest.addRequest": function(data,schoolData,subscriptionRequest) {
-
+  "classTimesRequest.addRequest": function(data, subscriptionRequest) {
     if(!this.userId) {
       // check for user
       const userData = Meteor.users.findOne({"emails.address": data.email});
@@ -42,21 +41,22 @@ Meteor.methods({
           message: "Already requested for class times for this class, with this email address"
         }
       }else {
+        /***
+        * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered user)
+        * 2. Then send a mail to user in case the request is for subscribing to the updates..
+        ***/
         const fromEmail = 'Notices@SkillShape.com';
-        const classTypeName = data.classTypeId && ClassType.findOne({_id: data.classTypeId}).name;
+        const schoolData = School.findOne({_id: data.schoolId});
+        const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
+        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members` : '';
         const updateClassTimesLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
+        const requestFor = "Schedule";
 
         let ownerName = '';
-        let memberLink = "";
         let classTimesRequestId = '';
-        let toEmail = ''; // Needs to replace by Admin of School
-
-        /***
-         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
-         * 2. Then sending a new mail to user in case the request is for subscribing to the updates..
-         ***/
+        let toEmail = '';
 
          // 1. sending mail to the school owner.
          if(schoolData) {
@@ -70,11 +70,7 @@ Meteor.methods({
            toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
-         if(this.userId) {
-             memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
-         }
-         toEmail = 'singhs.ishwer@gmail.com';
-         sendClassTimesRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateClassTimesLink, memberLink});
+         sendRequestReceivedEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink: updateClassTimesLink, memberLink, requestFor});
 
          if(subscriptionRequest === 'save' || this.userId)
             classTimesRequestId = ClassTimesRequest.insert(data);
@@ -86,6 +82,7 @@ Meteor.methods({
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?classTimesRequest=true&requestId=${classTimesRequestId}`;
            const subject = `Subscription for schedule of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
+           console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
            sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
@@ -96,7 +93,6 @@ Meteor.methods({
     }else {
       // Return the errors in case something is invalid.
       const invalidData = validationContext.invalidKeys()[0];
-      // console.log("validation errors...",validationContext.invalidKeys());
       throw new Meteor.Error(invalidData.name +' is '+ invalidData.value);
     }
   },

@@ -43,6 +43,10 @@ const styles = {
     maxWidth: 600,
     background: 'white',
   },
+  dialogTitle: {
+    padding: `0 ${helpers.rhythmDiv * 3}px`,
+    paddingTop: helpers.rhythmDiv * 2
+  },
   dialogContent: {
     overflowX: 'hidden',
     padding: 0
@@ -65,7 +69,7 @@ const DialogTitleWrapper = styled.div`
 const ClassContainer = styled.div`
   width: 90%;
   padding: ${helpers.rhythmDiv}px;
-  margin: ${helpers.rhythmDiv}px auto;
+  margin: 0 auto;
   border-radius: ${helpers.rhythmDiv}px;
   background: #ffffff;
 `;
@@ -94,10 +98,6 @@ const CalenderButtonWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-const DescriptionContainer = styled.div`
-  display: flex;
-`;
-
 const ErrorWrapper = styled.span`
    color: red;
    float: right;
@@ -113,6 +113,11 @@ const ScheduleType = styled.span`
   color: ${helpers.primaryColor};
   border-radius: 2px;`;
 
+
+const RequestsClassTimes = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const MyClassInfo = (props) => (<ClassContainer>
       <ClassContainerHeader>
@@ -261,7 +266,7 @@ class ClassTimesDialogBox extends React.Component {
                 classes={{root: classes.dialog, paper: classes.dialogPaper}}
             >
             <MuiThemeProvider theme={muiTheme}>
-                <DialogTitle>
+                <DialogTitle classes={{root : classes.dialogTitle}}>
                     <DialogTitleWrapper>
                         Class Times
                       <IconButton color="primary" onClick={this.props.onModalClose}>
@@ -273,17 +278,20 @@ class ClassTimesDialogBox extends React.Component {
                   {
                     isEmpty(classTimesData) ? (
                         <ClassContainer>
-                            <Typography caption="p">
-                                No class times have been given by the school. Please click this button to request the school complete their listing
-                            </Typography>
-                            <br>
-                            </br>
+                          <Typography caption="p">
+                              No class times have been given by the school. Please click this button to request the school complete their listing
+                          </Typography>
+                          <br>
+                          </br>
+
+                          <RequestsClassTimes>
                             <PrimaryButton
                                 icon
                                 onClick={this.props.handleClassTimeRequest}
                                 iconName="perm_contact_calendar"
                                 label="Request class times"
                             />
+                          </RequestsClassTimes>
                         </ClassContainer>
                     )
                       : <ClassTimesBoxes

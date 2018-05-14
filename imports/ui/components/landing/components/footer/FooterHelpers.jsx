@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 //TODO: Automatic imports depending upon variables used - intellij
 import * as helpers from '../jss/helpers.js';
 
-
 const FooterSectionHeader = styled.h2`
     font-family: ${helpers.specialFont};
     font-size: ${helpers.baseFontSize * 1.25}px;

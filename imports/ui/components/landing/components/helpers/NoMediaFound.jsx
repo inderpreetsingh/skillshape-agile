@@ -11,6 +11,13 @@ const Wrapper = styled.div`
   height: 300px;
   background: ${helpers.noMediaFound};
   padding: ${helpers.rhythmDiv * 2}px;
+  display: flex;
+  align-items: center;
+`;
+
+const Content = styled.div`
+  max-width: 350px;
+  margin: 0 auto;
 `;
 
 const LogoWrapper = styled.div`
@@ -34,10 +41,6 @@ const Title = styled.h2`
   font-style: italic;
 `;
 
-const Content = styled.div`
-  max-width: 350px;
-  margin: 0 auto;
-`;
 
 const ActionButtons = styled.div`
   ${helpers.flexCenter}

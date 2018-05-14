@@ -1,15 +1,16 @@
 import React , {Fragment,Component} from 'react';
 import ReactStars from 'react-stars';
 import { get, isEmpty } from 'lodash';
+import styled from 'styled-components';
+
 import { MuiThemeProvider} from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
-import styled from 'styled-components';
-
-import CardsReveal from './CardsReveal.jsx';
-import SecondaryButton from '../buttons/SecondaryButton.jsx';
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import ClassTimesDialogBox from '../dialogs/ClassTimesDialogBox.jsx';
+import CardsReveal from '/imports/ui/components/landing/components/cards/CardsReveal.jsx';
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import ClassTimesDialogBox from '/imports/ui/components/landing/components/dialogs/ClassTimesDialogBox.jsx';
+import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx';
 
 import * as helpers from '../jss/helpers.js';
 import MuiTheme from '../jss/muitheme';
@@ -34,6 +35,7 @@ const CardsRevealWrapper = styled.div`
 class ClassTypeCard extends Component {
     state = {
         dialogOpen: false,
+        manageRequestsDialog: false,
         isLoading:false
     }
     handleDialogState = (state) => (e) => {
@@ -46,8 +48,8 @@ class ClassTypeCard extends Component {
     }
 
     getClassTimes = (classTypeId) => {
-        if(classTypeId)
-            return ClassTimes.find({classTypeId}).fetch();
+      if(classTypeId)
+          return ClassTimes.find({classTypeId}).fetch();
     }
 
     getSchoolData = (schoolId) => {
@@ -55,9 +57,18 @@ class ClassTypeCard extends Component {
       return schoolData;
     }
 
+    handleManageRequestsDialogState = (dialogState) => {
+      this.setState({
+        manageRequestsDialog : dialogState,
+      })
+    }
+
+    handleClassTimesRequest = () => {
+      const newState = {...this.state, dialogOpen: false, manageRequestsDialog: true};
+      this.setState(newState);
+    }
+
     handleClassTimeRequest = (schoolId) => {
-        // const { schoolData } = this.props;
-        // console.log("handleClassTimeRequest --->>",schoolId);
         let schoolData  = this.getSchoolData(schoolId);
         if(!isEmpty(schoolData)) {
           let emailBody = "";
@@ -69,67 +80,48 @@ class ClassTypeCard extends Component {
           const mailToNormalized = /*encodeURI(*/mailTo/*)*/;
           openMailToInNewTab(mailToNormalized);
         }
-        // if(Meteor.userId()) {
-        //     // this.setState({isLoading:true});
-        //     // const { toastr } = this.props;
-        //     // Meteor.call("classTimesRequest.notifyToSchool", {schoolId, classTypeId, classTypeName}, (err, res) => {
-        //     //     console.log("err -->>",err);
-        //     //     console.log("handleClassTimeRequest res -->>",res);
-        //     //     let modalObj = {
-        //     //         dialogOpen: false
-        //     //     }
-        //     //     if(res && res.emailSuccess) {
-        //     //         // Need to show message to user when email is send successfully.
-        //     //       toastr.success("Your email has been sent. We will assist you soon.", "Success");
-        //     //     }
-        //     //     if(res && res.message) {
-        //     //         modalObj.classTimesDialogBoxError = res.message;
-        //     //         modalObj.dialogOpen = true
-        //     //     }
-        //     //     this.setState({isLoading:false});
-        //     //     this.setState(modalObj)
-        //     // })
-        // } else {
-        //     alert("Please login !!!!")
-        // }
     }
 
     render() {
-        // console.log("ClassTypeCard props --->>",this.props);
+       {/*handleClassTimeRequest={this.handleClassTimeRequest.bind(this, this.props.schoolId)} */}
         let ratings,reviews;
+        const {schoolId, _id, ageMin, ageMax, gender, experienceLevel, desc, name, reviewsStats, classInterestData} = this.props;
         const cardRevealData = {
-          _id:this.props._id,
-          schoolId:this.props.schoolId,
-          ageMin:this.props.ageMin,
-          ageMax:this.props.ageMax,
-          gender:this.props.gender,
-          experienceLevel:this.props.experienceLevel,
-          description:this.props.desc,
-          name:this.props.name,
+          _id: _id,
+          schoolId: schoolId,
+          ageMin: ageMin,
+          ageMax: ageMax,
+          gender: gender,
+          experienceLevel: experienceLevel,
+          description: desc,
+          name: name,
         }
-        const classTimesData = this.getClassTimes(get(this.props, "_id", null))
-        const {reviewsStats, classInterestData} = this.props;
+        const classTimesData = this.getClassTimes(get(this.props, "_id", null));
+        const schoolData  = this.getSchoolData(schoolId);
+
         if(!isEmpty(reviewsStats)) {
           ratings = reviewsStats.ratings;
           reviews = reviewsStats.reviews;
         }
 
-        return(
-            <Fragment>
-            {
-                this.state.dialogOpen &&
-                <ClassTimesDialogBox
-                    classInterestData={classInterestData}
-                    classTimesData={classTimesData}
-                    open={this.state.dialogOpen}
-                    onModalClose={this.handleDialogState(false)}
-                    handleClassTimeRequest={this.handleClassTimeRequest.bind(this, this.props.schoolId)}
-                    errorText={this.state.classTimesDialogBoxError}
-                />
-            }
-            {
-                this.state.isLoading && <ContainerLoader />
-            }
+        return(<Fragment>
+            {this.state.dialogOpen && <ClassTimesDialogBox
+                  classInterestData={classInterestData}
+                  classTimesData={classTimesData}
+                  open={this.state.dialogOpen}
+                  onModalClose={this.handleDialogState(false)}
+                  handleClassTimeRequest={this.handleClassTimesRequest}
+                  errorText={this.state.classTimesDialogBoxError} />}
+            {this.state.manageRequestsDialog && <ManageRequestsDialogBox
+              title={"Schedule Info"}
+              open={this.state.manageRequestsDialog}
+              onModalClose={() => this.handleManageRequestsDialogState(false)}
+              requestFor={'class times'}
+              submitBtnLabel={'Requests class times'}
+              schoolData={schoolData}
+              classTypeId={_id}
+              onToastrClose={() => this.handleManageRequestsDialogState(false)} />}
+            {this.state.isLoading && <ContainerLoader />}
             <CardsRevealWrapper>
               <CardsReveal defaultImage={cardImgSrc} originalImage={this.props.classTypeImg} {...this.props}
                   body={

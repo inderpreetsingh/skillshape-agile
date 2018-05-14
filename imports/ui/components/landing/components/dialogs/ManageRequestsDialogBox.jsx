@@ -146,7 +146,7 @@ class ManageRequestsDialogBox extends Component {
     const data = {
       name: this.state.name,
       email: this.state.email,
-      schoolId: this.props.schoolData._id,
+      schoolId: schoolData._id,
     }
     let text = 'class times';
     let methodNameToCall = 'classTimesRequest.addRequest';
@@ -175,7 +175,7 @@ class ManageRequestsDialogBox extends Component {
       }else {
         const userExistsError = 'user exists';
         this.setState({isBusy: true});
-        Meteor.call(methodNameToCall, data, schoolData,subscriptionRequest, (err,res) => {
+        Meteor.call(methodNameToCall, data, subscriptionRequest, (err,res) => {
           this.setState({isBusy: false} , () => {
             if(err && err.error === userExistsError) {
               Events.trigger('loginAsUser',{email: data.email, loginModalTitle: `We have ${data.email} as registered user. kindly log in your account.`});

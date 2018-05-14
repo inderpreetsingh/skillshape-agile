@@ -339,7 +339,32 @@ class ClassTypeContent extends Component {
     }
 
     handleClassTimeRequest = () => {
+      const { toastr, classTypeData, schoolData } = this.props;
+      if(!Meteor.userId()) {
         this.handleManageRequestsDialogBox('Schedule Info',true);
+
+        // this.handleDialogState('manageRequestsDialog',true);
+      }else {
+        const data = {
+          classTypeId: classTypeData._id,
+          schoolId: schoolData._id
+        };
+
+        Meteor.call('classTimesRequest.addRequest', data, schoolData, (err,res) => {
+          this.setState({isBusy: false} , () => {
+            if(err) {
+              toastr.error(err.reason || err.message,"Error", {}, false);
+            }else if(res.message) {
+              toastr.error(res.message,'Error');
+            }
+            else if(res) {
+              toastr.success('Your request has been processed','success');
+              this.handleRequest('Class times');
+            }
+          });
+        });
+
+      }
         // const { toastr, classTypeData } = this.props;
         // Handle Class time request using mailTo:
         // this.handleRequest('Class Times');
@@ -434,18 +459,18 @@ class ClassTypeContent extends Component {
         	</Typography>
 		}
 
-    let submitBtnLabel = '';
-    let requestFor = '';
+    let submitBtnLabel = 'Request pricing';
+    let requestFor = 'price';
     const ourEmail = this.getOurEmail();
     const emailUsButton = ourEmail ? true : false;
     const isReviewsDataEmpty = isEmpty(reviewsData);
     const { manageRequestTitle } = this.state;
     console.info('this.state',this.state);
     if(manageRequestTitle) {
-      submitBtnLabel = manageRequestTitle != 'pricing' && 'Request class times';
-      requestFor = manageRequestTitle != 'pricing' && 'class times';
+      submitBtnLabel = manageRequestTitle != 'Pricing' ? 'Request class times' : submitBtnLabel;
+      requestFor = manageRequestTitle != 'Pricing' ? 'class times' : requestFor;
     }
-
+    debugger;
 		return (<div>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolData} ourEmail={ourEmail} open={this.state.emailUsDialog} currentUser={this.props.currentUser} onModalClose={(err, res) => this.handleDialogState('emailUsDialog',false, err, res)}/>}

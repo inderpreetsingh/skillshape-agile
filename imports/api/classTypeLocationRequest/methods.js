@@ -1,4 +1,4 @@
-import PricingRequest,{PricingRequestSchema} from './fields.js';
+import ClassTypeLocationRequest,{ClassTypeLocationRequestSchema} from './fields.js';
 import {sendRequestReceivedEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
 import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields.js';
 import ClassType from '/imports/api/classType/fields.js';
@@ -7,8 +7,7 @@ import School from '/imports/api/school/fields.js';
 import { getUserFullName } from '/imports/util/getUserData';
 
 Meteor.methods({
-  'pricingRequest.addRequest': function(data,subscriptionRequest) {
-
+  'classTypeLocationRequest.addRequest': function(data,subscriptionRequest) {
     if(!this.userId) {
       // check for user
       const userData = Meteor.users.findOne({"emails.address": data.email});
@@ -26,40 +25,36 @@ Meteor.methods({
     }
 
     // Now we gonna validate the data..
-    const validationContext = PricingRequestSchema.newContext();
+    const validationContext = ClassTimesRequestSchema.newContext();
     data.createdAt = new Date();
     const isValid = validationContext.validate(data);
 
     // Verfiying the data send..
     if (isValid) {
-      let pricingRequestAlreadyPresent;
-      if(data.classTypeId) {
-        pricingRequestAlreadyPresent = PricingRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
-      }else {
-        pricingRequestAlreadyPresent = PricingRequest.findOne({email: data.email, schoolId: data.schoolId , classTypeId : {$exists: false}});
-      }
-      // console.info('pricingRequestAlreadyPresent',pricingRequestAlreadyPresent,PricingRequest.find({email: data.email, schoolId: data.schoolId, classTypeId : {$exists: false}}).fetch(),"request already present..")
-      if(pricingRequestAlreadyPresent) {
+      // console.log('adding price request..');
+      const locationRequest = ClassTypeLocationRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
+
+      if(locationRequest) {
         return {
-          message: "Already requested for price for this class, with this email address"
+          message: "Already requested for location for this class, with this email address"
         }
       }else {
         /***
-        * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
+        * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered user)
         * 2. Then send a mail to user in case the request is for subscribing to the updates..
         ***/
         const fromEmail = 'Notices@SkillShape.com';
         const schoolData = School.findOne({_id: data.schoolId});
         const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
         const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members` : '';
-        const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
+        const updateClassLocationLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
-        const requestFor = "Pricing";
+        const requestFor = "Class Type Location";
 
-        let ownerName = "";
+        let ownerName = '';
+        let locationRequestId = '';
         let toEmail = '';
-        let pricingRequestId = '';
 
          // 1. sending mail to the school owner.
          if(schoolData) {
@@ -73,19 +68,19 @@ Meteor.methods({
            toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
-        //  console.log(updatePriceLink, schoolPageLink, currentUserName, classTypeName, ownerName, fromEmail, toEmail, memberLink);
-         sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink: updatePriceLink, memberLink, requestFor});
+         sendRequestReceivedEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink : updateClassLocationLink, memberLink, requestFor});
 
          if(subscriptionRequest === 'save' || this.userId)
-            pricingRequestId = PricingRequest.insert(data);
+            locationRequestId = ClassTypeLocationRequest.insert(data);
 
          //2. sending mail to the user.
          if(subscriptionRequest === 'save') {
            const toEmail = data.email;
-           const updateFor = `pricing details of ${classTypeName || schoolData.name}`;
-           const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?pricingRequest=true&requestId=${pricingRequestId}`;
-           const subject = `Subscription for prices of ${classTypeName || schoolData.name}`;
+           const updateFor = `class type location details of ${classTypeName || schoolData.name}`;
+           const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?classTypeLocationRequest=true&requestId=${locationRequestId}`;
+           const subject = `Subscription for location request of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
+           //console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
            sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
@@ -96,23 +91,22 @@ Meteor.methods({
     }else {
       // Return the errors in case something is invalid.
       const invalidData = validationContext.invalidKeys()[0];
-      console.log("validation errors...",validationContext.invalidKeys());
       throw new Meteor.Error(invalidData.name +' is '+ invalidData.value);
     }
   },
-  'pricingRequest.getRequestData': function(requestId) {
-      const pricingRequestData = PricingRequest.findOne({_id: requestId});
-      if(!pricingRequestData) {
-        throw new Meteor.Error('no pricing data has been found with this id.');
+  'classTypeLocationRequest.getRequestData': function(requestId) {
+      const locationRequestData = classTypeLocationRequest.findOne({_id: requestId});
+      if(!locationRequestData) {
+        throw new Meteor.Error('no location request data has been found with this id.');
       }
-      const classTypeData = ClassType.findOne({_id: pricingRequestData.classTypeId});
+      const classTypeData = ClassType.findOne({_id: locationRequestData.classTypeId});
 
       return {
         classTypeName: classTypeData && classTypeData.name,
-        schoolName: School.findOne({_id: pricingRequestData.schoolId}).name
+        schoolName: School.findOne({_id: locationRequestData.schoolId}).name
       }
     },
-   'pricingRequest.removeRequest': function(requestId) {
-     return PricingRequest.remove({_id: requestId});
+   'classTypeLocationRequest.removeRequest': function(requestId) {
+     return classTypeLocationRequest.remove({_id: requestId});
    }
 })

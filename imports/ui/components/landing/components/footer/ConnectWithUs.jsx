@@ -2,11 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { SocialIcon } from 'react-social-icons';
 
-
-import * as helpers from '../jss/helpers.js';
-
 import { FooterSectionHeader, FooterText, SocialIconLink } from './FooterHelpers';
 
+import * as helpers from '../jss/helpers.js';
 
 // These are inline styles
 const socialIconStyles = {

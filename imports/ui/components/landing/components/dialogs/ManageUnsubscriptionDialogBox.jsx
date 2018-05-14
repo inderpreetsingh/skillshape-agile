@@ -112,9 +112,27 @@ class ManageUnsubscriptionDialogBox extends Component {
     browserHistory.push('/');
   }
 
+  _getCollectionName = () => {
+    const {requestFor} = this.props;
+
+    if(requestFor == 'price details')  {
+      return 'pricingRequest';
+    }else if(requestFor == 'location') {
+      return 'classTypeLocationRequest';
+    }else {
+      return 'classTimesRequest';
+    }
+  }
+
+  _getCompleteMethodName = (methodName) => {
+    const collectionName = this._getCollectionName();
+    return collectionName + '.' + methodName;
+  }
+
   handleButtonClick = (buttonName) => (e)=> {
     const {toastr,requestFor,requestId} = this.props;
-    const methodNameToCall = requestFor == 'price details' ? 'pricingRequest.removeRequest' : 'classTimesRequest.removeRequest';
+    const methodNameToCall = this._getCompleteMethodName('removeRequest');
+
     if(buttonName === 'yes') {
       this.setState({isBusy: true});
       Meteor.call(methodNameToCall,requestId,(err,res) => {
@@ -133,7 +151,8 @@ class ManageUnsubscriptionDialogBox extends Component {
 
   componentDidMount = () => {
     const { toastr, requestFor, requestId } = this.props;
-    const methodNameToCall = requestFor == 'price details' ? 'pricingRequest.getSubscriptionData' : 'classTimesRequest.getRequestData';
+    const methodNameToCall = this._getCompleteMethodName('getRequestData');
+
     Meteor.call(methodNameToCall,requestId,(err,res) => {
       if(err) {
         toastr.error("There was no data found with this request id, you have already unsubscribed.","Error");
