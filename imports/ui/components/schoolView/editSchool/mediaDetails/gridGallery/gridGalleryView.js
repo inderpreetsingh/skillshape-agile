@@ -69,14 +69,8 @@ class ImageGridGallery extends React.Component {
                   onSubmit={()=>{this.props.onDelete(this.state.selectedMedia);this.setState({showConfirmationModal: false, selectedMedia: false})}}
                   onClose={this.cancelConfirmationModal}
               />
-          }
-            <div style={{
-                display: "block",
-                minHeight: "1px",
-                width: "100%",
-                overflow: "auto"}}>
-                <Gallery rowHeight = {220} enableImageSelection={false} images={images}/>
-            </div>
+            }
+          <Gallery rowHeight = {220} enableImageSelection={false} images={images}/>
         </div>
         )
   }

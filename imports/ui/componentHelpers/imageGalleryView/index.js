@@ -175,14 +175,14 @@ class ImageGalleryView extends React.Component {
                   onClick={this._toggleShowVideo.bind(this, item.embedUrl)}
                 >
                 </a>
-                <iframe
+                {/*<iframe
                   width='560'
                   height='315'
                   src={item.embedUrl}
                   frameBorder='0'
                   allowFullScreen
                 >
-                </iframe>
+                </iframe>*/}
             </div>
           :
             <a onClick={this._toggleShowVideo.bind(this, item.embedUrl)}>
