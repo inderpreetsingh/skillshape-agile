@@ -16,7 +16,7 @@ class SchoolMediaGalleryView extends React.Component {
     const filters = { schoolId: this.props.schoolId };
     console.log("this------------",this)
     return (
-      <div className="wrapper" style={{ padding: 20 }}>
+      <div className="wrapper">
         <ImageGridGallery filters={filters} hideCustomControls={this.props.route && this.props.route.name === "EmbedMediaGalleryView"}/>
       </div>
     );

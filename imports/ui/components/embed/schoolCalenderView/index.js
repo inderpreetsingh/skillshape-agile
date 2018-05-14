@@ -10,7 +10,7 @@ class SchoolCalenderView extends React.Component {
 
   render() {
     return (
-      <div className="wrapper" style={{ padding: 20 }}>
+      <div className="wrapper">
         {this.props.subsReady && (
           <ManageMyCalendar schoolCalendar={true} {...this.props} />
         )}
