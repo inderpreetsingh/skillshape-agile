@@ -98,7 +98,7 @@ class MainLayout extends React.Component {
     render( ) {
         const { currentUser, isUserSubsReady, classes} = this.props;
         console.log(this.props.route,"main layout.......................",this.props)
-        console.log("_.contains(config.pathNameNotSupportFloatingIcon, this.props.location.pathname)......................",_.contains(config.pathNameNotSupportFloatingIcon, this.props.location.pathname))
+        console.log("_.contains(config.pathNameNotSupportFloatingIcon, this.props.location.pathname)......................",this.props.location.pathname.indexOf("embed"))
         console.log("this.props.location.pathname111......................",config.pathNameNotSupportFloatingIcon);
         console.log("this.props.location.pathname222......................",this.props.location.pathname);
         return (
@@ -112,7 +112,7 @@ class MainLayout extends React.Component {
                         onAgreeButtonClick={this.handleServiceAgreementClick}
                     />
                 }
-                {!isEmpty(currentUser) &&  !_.contains(config.pathNameNotSupportFloatingIcon, this.props.location.pathname) && <ContactUsFloatingButton />}
+                {!isEmpty(currentUser) &&  (this.props.location.pathname.indexOf("embed") == -1 && this.props.location.pathname !== "/contact-us")  && <ContactUsFloatingButton />}
             </div>
         )
     }
