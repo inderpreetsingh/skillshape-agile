@@ -33,6 +33,7 @@ import ClassTypeList from '/imports/ui/components/landing/components/classType/c
 import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import NoMediaFound from '/imports/ui/components/landing/components/helpers/NoMediaFound.jsx';
 
 import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
 import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
@@ -187,29 +188,29 @@ const ErrorText = styled.p`
 
 
 // No Media Found
-const NoMediaFound = styled.div`
-	${helpers.flexCenter}
-
-	height: 300px;
-	width: 100%;
-	position: relative;
-	z-index: 1;
-
-	&:after {
-		content: '';
-		position: absolute;
-		z-index : -1;
-		opacity: 0.5;
-		border-radius: 5px;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		background: ${helpers.cancel};
-	}
-`;
+// const NoMediaFound = styled.div`
+// 	${helpers.flexCenter}
+//
+// 	height: 300px;
+// 	width: 100%;
+// 	position: relative;
+// 	z-index: 1;
+//
+// 	&:after {
+// 		content: '';
+// 		position: absolute;
+// 		z-index : -1;
+// 		opacity: 0.5;
+// 		border-radius: 5px;
+// 		width: 100%;
+// 		height: 100%;
+// 		top: 0;
+// 		bottom: 0;
+// 		left: 0;
+// 		right: 0;
+// 		background: ${helpers.cancel};
+// 	}
+// `;
 
 export default function() {
     console.log("SchoolView render-->>",this.props)
@@ -259,6 +260,11 @@ export default function() {
           {
             this.state.isLoading && <ContainerLoader />
           }
+          {this.state.emailUsDialog && <EmailUsDialogBox
+    					ourEmail={ourEmail}
+    					schoolData={schoolData}
+    					open={this.state.emailUsDialog}
+    					onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
           {this.state.giveReviewDialog && <GiveReviewDialogBox reviewForId={schoolId} reviewFor='school' title={this.getReviewTitle(schoolData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
           {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
           {this.state.manageRequestsDialog && <ManageRequestsDialogBox
@@ -381,9 +387,10 @@ export default function() {
 
             <MediaWrapper>
               <MediaDetails
-                noMediaFound={<NoMediaFound>
-        						<ErrorText>No Media Found</ErrorText>
-        					</NoMediaFound>}
+                noMediaFound={<NoMediaFound
+                    schoolName={schoolData.name}
+                    siteLink={schoolData.website}
+                    onEmailButtonClick={() => this.handleDialogState('emailUsDialog',true)} />}
                 schoolId={schoolId}
                 schoolView= {true}
               />

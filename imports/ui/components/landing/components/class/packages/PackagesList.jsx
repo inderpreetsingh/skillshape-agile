@@ -25,6 +25,7 @@ const PackagesListWrapper = styled.section`
   z-index: 1;
   align-items: ${props => props.classPackages ? 'flex-end' : 'flex-start'};
   padding: ${helpers.rhythmDiv * 4}px 0;
+  ${props => props.fullScreen && `width: 100%; align-items: center`};
 
   &:after {
     content: '';
@@ -113,18 +114,14 @@ const FallBackMsg = styled.h3`
 `;
 
 const PackageList = (props) => (
-  <PackagesListWrapper classPackages={props.classPackages}>
+  <PackagesListWrapper fullScreen={props.fullScreen} classPackages={props.classPackages}>
     <PackagesWrapper classPackages={props.classPackages}>
       <Title>{props.packageListName}</Title>
       {console.log(props,"packages list....")}
-      {
-        isEmpty(props.packagesData) ? <FallBackMsg>{`${props.packageListName} not found`}</FallBackMsg>
-        : props.packagesData.map(packageData => (
-          <PackageWrapper key={packageData._id}>
-            <Package classPackages={props.classPackages} {...packageData} {...props.packageProps} />
-          </PackageWrapper>
-        ))
-      }
+      {props.packagesData.map(packageData => (
+        <PackageWrapper key={packageData._id}>
+          <Package classPackages={props.classPackages} {...packageData} {...props.packageProps} />
+        </PackageWrapper>))}
     </PackagesWrapper>
   </PackagesListWrapper>
 );
@@ -133,22 +130,23 @@ const EnrollmentPackagesList = (props) => (
   <EnrollMentListWrapper>
     <PackagesWrapper>
     <Title>{props.packageListName}</Title>
-    {
-      isEmpty(props.packagesData) ? <FallBackMsg>{`${props.packageListName} not found`}</FallBackMsg>
-      : props.packagesData.map(packageData => (
+    {props.packagesData.map(packageData => (
         <PackageWrapper key={packageData._id}>
           <Package classPackages={props.classPackages} {...packageData} {...props.packageProps} />
         </PackageWrapper>
-      ))
-    }
+      ))}
     </PackagesWrapper>
   </EnrollMentListWrapper>
 )
 
 const PackagesList = (props) => {
+  const classPackagesEmpty = isEmpty(props.perClassPackagesData);
+  const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
+  const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
+
   return (
     <Fragment>
-      {props.enrollMentPackages && <Wrapper>
+      {props.enrollMentPackages && !enrollMentPackagesEmpty && <Wrapper>
       <EnrollmentPackagesList
         packageProps={{
           packageType: "EP",
@@ -159,7 +157,7 @@ const PackagesList = (props) => {
         packagesData={props.enrollMentPackagesData} />
       </Wrapper>}
       <Wrapper>
-        <PackageList
+        {!classPackagesEmpty && <PackageList
           packageProps={{
             packageType: "CP",
             onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
@@ -167,17 +165,19 @@ const PackagesList = (props) => {
           }}
           onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
           classPackages
+          fullScreen={monthlyPackagesEmpty}
           packageListName='Class Packages'
-          packagesData={props.perClassPackagesData} />
+          packagesData={props.perClassPackagesData} />}
 
-        <PackageList
+        {!monthlyPackagesEmpty && <PackageList
           packageProps={{
             packageType: "MP",
             onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
             schoolId: props.schoolId
           }}
           packageListName='Monthly Packages'
-          packagesData={props.monthlyPackagesData} />
+          fullScreen={classPackagesEmpty}
+          packagesData={props.monthlyPackagesData} />}
       </Wrapper>
     </Fragment>
   )

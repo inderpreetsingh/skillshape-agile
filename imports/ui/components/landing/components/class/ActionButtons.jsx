@@ -1,20 +1,17 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
 import { Link } from 'react-router';
+
 import { handleOutBoundLink } from '/imports/util';
 
-import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
-
-import * as helpers from '../jss/helpers.js';
+import ClassTypeLogo from './ClassTypeLogo.jsx';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ActionButtonsWrapper = styled.div`
-  position: absolute;
-  left: ${props => props.rightSide ? 'auto' : helpers.rhythmDiv * 2}px;
-  bottom: ${helpers.rhythmDiv * 2}px;
-  right: ${props => props.rightSide ? helpers.rhythmDiv * 2 + 'px' : 'auto'};
   ${helpers.flexCenter}
+  padding-bottom: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     flex-direction: column;
@@ -32,32 +29,25 @@ const ActionButtonsWrapper = styled.div`
 `;
 
 const ActionButtonsRightSideWrapper = styled.div`
-  position: absolute;
-  left: 'auto';
-  bottom: ${helpers.rhythmDiv * 2}px;
-  right: ${helpers.rhythmDiv * 2 + 'px'};
   ${helpers.flexCenter}
+  padding-bottom: ${helpers.rhythmDiv * 2}px;
+  align-items: flex-end;
 
-  @media screen and (max-width: 1100px) {
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    flex-wrap: wrap;
+  @media screen and (max-width: ${helpers.tablet + 150}px) {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-
-
   @media screen and (max-width: ${helpers.tablet}px) {
-    position: initial;
     align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
   }
-
 `;
 
 const ActionButton = styled.div`
   margin-right: ${helpers.rhythmDiv}px;
+  min-height: ${helpers.rhythmDiv * 4}px;
 
   @media screen and (max-width: 1100px) {
     margin-bottom: ${props => props.rightSide ? helpers.rhythmDiv * 2 : 0}px;
@@ -73,33 +63,44 @@ const ActionButton = styled.div`
   }
 `;
 
+const ShowOnSmallScreen = styled.div`
+  display: none;
+  @media screen and (max-width: ${helpers.tablet}px) {
+    display: block;
+  }
+`;
 
 const ActionButtons = (props) => {
   const ActionButtonsContainer = props.rightSide ? ActionButtonsRightSideWrapper : ActionButtonsWrapper;
+  const EditButton = props.editButton;
   return(<ActionButtonsContainer>
-    {props.isEdit ? <Fragment></Fragment> :
-    <Fragment>
-      {props.callUsButton && <ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
-      </ActionButton>}
+      {props.isEdit ? <Fragment></Fragment> :
+      <Fragment>
+        {props.editButton && <ShowOnSmallScreen><ActionButton rightSide={props.rightSide}>
+          <EditButton />
+        </ActionButton></ShowOnSmallScreen>}
 
-      {props.emailUsButton && <ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
-      </ActionButton>}
+        {props.callUsButton && <ActionButton rightSide={props.rightSide}>
+          <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
+        </ActionButton>}
 
-      {props.pricingButton && <ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
-      </ActionButton>}
+        {props.emailUsButton && <ActionButton rightSide={props.rightSide}>
+          <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
+        </ActionButton>}
 
-      {props.scheduleButton && <ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton secondary noMarginBottom label="Schedule" icon iconName="schedule" onClick={props.onScheduleButtonClick} />
-      </ActionButton>}
+        {props.pricingButton && <ActionButton rightSide={props.rightSide}>
+          <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
+        </ActionButton>}
 
-      {props.visitSiteButton && <a href={props.siteLink} target="_blank"><ActionButton rightSide={props.rightSide}>
-        <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" onClick={handleOutBoundLink}/>
-      </ActionButton></a>}
-    </Fragment>}
-  </ActionButtonsContainer>)
+        {props.scheduleButton && <ActionButton rightSide={props.rightSide}>
+          <ClassTimeButton secondary noMarginBottom label="Schedule" icon iconName="schedule" onClick={props.onScheduleButtonClick} />
+        </ActionButton>}
+
+        {props.visitSiteButton && <a href={props.siteLink} target="_blank"><ActionButton rightSide={props.rightSide}>
+          <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" onClick={handleOutBoundLink}/>
+        </ActionButton></a>}
+      </Fragment>}
+    </ActionButtonsContainer>)
 }
 
 ActionButtons.propTypes = {
@@ -113,7 +114,8 @@ ActionButtons.propTypes = {
   pricingButton: PropTypes.bool,
   scheduleButton: PropTypes.bool,
   visitSiteButton: PropTypes.bool,
-  rightSide: PropTypes.bool
+  rightSide: PropTypes.bool,
+  editButton: PropTypes.element
 }
 
 ActionButtons.defaultProps = {

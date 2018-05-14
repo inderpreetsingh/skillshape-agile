@@ -10,13 +10,14 @@ const redirectUser = () => browserHistory.push('/');
 const UnsubscribeUser = (props) => {
     console.log("props for the unsubscribe dialog box...");
     const {pricingRequest, classTimesRequest, requestId} = queryString.parse(props.location.search);
+    const requestFor = (pricingRequest && 'price details') || (classTimesRequest && 'class times');
     return(<div>
         <ManageUnsubscribeDialogBox
           onModalClose={redirectUser}
           open={true}
           onToastrClose={redirectUser}
           requestId={requestId}
-          requestFor={pricingRequest ? 'price details' : 'class times'}
+          requestFor={requestFor}
           />
       </div>);
 }

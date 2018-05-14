@@ -12,15 +12,11 @@ const Logo = styled.div`
   position: ${props => props.position ? props.position : 'absolute'};
   left: ${props => props.left ? props.left : 0}px;
   bottom: ${props => props.bottom ? props.bottom: 0}px;
+  margin-right: ${helpers.rhythmDiv * 2}px;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
   background-color: ${helpers.cancel};
   background-position: center center;
   background-image: url('${props => props.logoSrc}');
-
-  @media screen and (max-width: 1100px) {
-    bottom: ${props => props.publicView ? props.bottom + 64 : 0}px;
-    left: ${props => props.publicView ? '50%' : (props.left || 0)+'px'};
-    transform: translateX(${props => props.publicView ? '-50%' : 0});
-  }
 
   @media screen and (max-width: 875px) {
     bottom: ${props => props.publicView ? props.bottom + 112 : 0}px;

@@ -50,10 +50,10 @@ Meteor.methods({
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
 
-        let ownerName = "sam";
+        let ownerName = "";
         let memberLink = "";
         let pricingRequestId = '';
-        let toEmail = 'sam@skillshape.com'; // Needs to replace by Admin of School
+        let toEmail = ''; // Needs to replace by Admin of School
 
         /***
          * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
@@ -62,17 +62,21 @@ Meteor.methods({
 
          // 1. sending mail to the school owner.
          if(schoolData) {
-             // Get Admin of School As school Owner
-             const adminUser = Meteor.users.findOne(schoolData.admins[0] || schoolData.superAdmin);
-             ownerName= getUserFullName(adminUser);
-             toEmail = ownerName && adminUser.emails[0].address;
+            // Get Admin of School As school Owner
+           const adminUser = Meteor.users.findOne(schoolData.admins[0] || schoolData.superAdmin);
+           ownerName= getUserFullName(adminUser);
+           toEmail = adminUser && adminUser.emails[0].address;
+         }else {
+           const schoolOwnerData = Meteor.users.findOne({"profile.schoolId": data.schoolId});
+           ownerName = getUserFullName(schoolOwnerData);
+           toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
          if(this.userId) {
              memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
          }
-         console.log(updatePriceLink, schoolPageLink, currentUserName, ownerName, fromEmail, toEmail, memberLink);
-        //  sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
+         // console.log(updatePriceLink, schoolPageLink, currentUserName, ownerName, fromEmail, toEmail, memberLink);
+         sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
 
          if(subscriptionRequest === 'save' || this.userId)
             pricingRequestId = PricingRequest.insert(data);
@@ -84,7 +88,7 @@ Meteor.methods({
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?pricingRequest=true&requestId=${pricingRequestId}`;
            const subject = `Subscription for prices of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-          //  sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+           sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
          return {
