@@ -162,18 +162,18 @@ const LoginDialog = (props) => (
 
     <DialogContent classes={{root : props.classes.dialogContent}}>
         <form onSubmit={props.onSignInButtonClick}>
-            <FormControl error={props.error.email} margin="dense" fullWidth aria-describedby="email-error-text">
+            <FormControl error={props && props.error && props.error.email} margin="dense" fullWidth aria-describedby="email-error-text">
               <InputLabel htmlFor="email">Email Address</InputLabel>
               <Input
                 autoFocus
                 id="email"
                 type="email"
                 value={props.email}
-                onChange={props.handleInputChange.bind(this, "email")}
+                onChange={props.handleInputChange && props.handleInputChange.bind(this, "email")}
                 fullWidth
                />
                {
-                    props.error.email && <FormHelperText id="email-error-text">Invalid email address</FormHelperText>
+                    props && props.error && props.error.email && <FormHelperText id="email-error-text">Invalid email address</FormHelperText>
                }
             </FormControl>
             <TextField
@@ -181,12 +181,12 @@ const LoginDialog = (props) => (
               id="password"
               label="Password"
               type="password"
-              value={props.password}
-              onChange={props.handleInputChange.bind(this, "password")}
+              value={props && props.password}
+              onChange={props.handleInputChange && props.handleInputChange.bind(this, "password")}
               fullWidth
             />
             {
-              props.error.message && <ErrorWrapper>
+              props.error && props.error.message && <ErrorWrapper>
                 { props.error.message }
                 { props.showVerficationLink && <a onClick={props.reSendEmailVerificationLink} style={{color: 'blue', cursor: 'pointer'}}> resend e-mail verifcation link </a>}
                 </ErrorWrapper>
@@ -194,7 +194,7 @@ const LoginDialog = (props) => (
             <LoginButtonWrapper>
                 <PrimaryButton
                     type="submit"
-                    disabled={props.error.email}
+                    disabled={props.error && props.error.email}
                     label="Login"
                     noMarginBottom
                 />

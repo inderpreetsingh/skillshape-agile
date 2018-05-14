@@ -9,14 +9,29 @@ import EnrollmentFees from '/imports/api/enrollmentFee/fields';
 import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container';
+import Events from '/imports/util/events';
+import LoginDialogBox from '/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx';
 
 class SchoolPriceView extends React.Component {
 
   constructor( props ) {
     super( props );
     this.state = {
-      isLoading: false
+      isLoading: false,
+      loginModal: false,
+      loginModalTitle: '',
     }
+  }
+
+  componentWillMount() {
+    Events.on("loginAsUser", "123456", (data) => {
+        console.log("loginAsUser========>",data)
+        this.handleLoginModalState(true, data);
+    })
+  }
+
+  handleLoginModalState = () => {
+    this.setState({loginModal: true});
   }
 
   getClassName = (classTypeId) => {
@@ -97,6 +112,21 @@ class SchoolPriceView extends React.Component {
             {
             this.state && this.state.isLoading && <ContainerLoader />
           }
+          {
+            this.state.loginModal  &&
+            <LoginDialogBox
+                {...this.state}
+                open={this.state.loginModal}
+                title={this.state.loginModalTitle}
+                onModalClose={() => this.handleLoginModalState(false)}
+                handleInputChange={this.handleInputChange}
+                onSignInButtonClick={this.onSignInButtonClick}
+                onSignUpButtonClick={this.handleSignUpModal}
+                onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
+                onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
+                reSendEmailVerificationLink={this.reSendEmailVerificationLink}
+            />
+            }
            {(isEmpty(classPricing) && isEmpty(monthlyPricing)) ?
                   '' :
                   <PackagesList
