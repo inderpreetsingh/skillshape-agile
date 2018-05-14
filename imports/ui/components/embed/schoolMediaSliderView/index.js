@@ -21,7 +21,7 @@ class SchoolMediaSliderView extends React.Component {
     // Get media gallery data of any School on the basis of filters.
     const filters = { schoolId: this.props.schoolId };
     return (
-      <div className="wrapper" style={{ padding: 20 }}>
+      <div className="wrapper">
         {this.props.subsReady && (
           <MediaList
             changeLimit={this.changeLimit}

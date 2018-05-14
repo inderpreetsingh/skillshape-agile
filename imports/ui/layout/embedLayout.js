@@ -7,13 +7,10 @@ import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx
 
 const styles = theme => ({
     wrapper : {
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
+
     },
     content: {
         backgroundColor: theme.palette.background.default,
-        paddingTop: theme.spacing.unit*10,
         overflow: 'hidden',
     },
 });

@@ -7,6 +7,7 @@ import ContactUsFloatingButton from '/imports/ui/components/landing/components/b
 
 import { toastrModal } from '/imports/util';
 import TermsOfServiceDialogBox from '/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx'
+import config from "/imports/config"
 
 class MainLayout extends React.Component {
 
@@ -96,7 +97,10 @@ class MainLayout extends React.Component {
 
     render( ) {
         const { currentUser, isUserSubsReady, classes} = this.props;
-        // console.log(this.props.route,"main layout.......................")
+        console.log(this.props.route,"main layout.......................",this.props)
+        console.log("_.contains(config.pathNameNotSupportFloatingIcon, this.props.location.pathname)......................",this.props.location.pathname.indexOf("embed"))
+        console.log("this.props.location.pathname111......................",config.pathNameNotSupportFloatingIcon);
+        console.log("this.props.location.pathname222......................",this.props.location.pathname);
         return (
             <div>
                 {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
@@ -108,7 +112,7 @@ class MainLayout extends React.Component {
                         onAgreeButtonClick={this.handleServiceAgreementClick}
                     />
                 }
-                {!isEmpty(currentUser) && this.props.location.pathname !== '/contact-us' && <ContactUsFloatingButton />}
+                {!isEmpty(currentUser) &&  (this.props.location.pathname.indexOf("embed") == -1 && this.props.location.pathname !== "/contact-us")  && <ContactUsFloatingButton />}
             </div>
         )
     }
