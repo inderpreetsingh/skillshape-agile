@@ -7,11 +7,16 @@ import ClassType from '/imports/api/classType/fields';
 import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 import EnrollmentFees from '/imports/api/enrollmentFee/fields';
 import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
+import { toastrModal } from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container';
 
 class SchoolPriceView extends React.Component {
 
   constructor( props ) {
     super( props );
+    this.state = {
+      isLoading: false
+    }
   }
 
   getClassName = (classTypeId) => {
@@ -27,49 +32,41 @@ class SchoolPriceView extends React.Component {
     }
   }
 
-   // handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
-   //      // Start loading
-   //      console.log(typeOfTable, tableId, schoolId);
-   //      const { toastr } = this.props;
-   //      let self = this;
-
-   //      // Meteor.setTimeout(() => {
-   //      //   console.log("called the method handle purchase package",typeOfTable, tableId, schoolId);
-   //      //   self.setState({
-   //      //     isLoading: false
-   //      //   })
-   //      // },2000);
-
-   //      if (Meteor.userId()) {
-   //          this.setState({ isLoading: true });
-   //          Meteor.call(
-   //              "packageRequest.addRequest", {
-   //                  typeOfTable: typeOfTable,
-   //                  tableId: tableId,
-   //                  schoolId: schoolId
-   //              },
-   //              (err, res) => {
-   //                  // Stop loading
-   //                  self.setState({ isLoading: false });
-   //                  if (err) {
-   //                      toastr.error(
-   //                          err.reason || err.message,
-   //                          "Error"
-   //                      );
-   //                  } else {
-   //                      // Show confirmation to user that purchase request has been created.
-   //                      console.log("result----------------", res);
-   //                      toastr.success(
-   //                          res,
-   //                          "Success"
-   //                      );
-   //                  }
-   //              }
-   //          );
-   //      } else {
-   //          Events.trigger("loginAsUser");
-   //      }
-   //  }
+   handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
+        // Start loading
+        console.log(typeOfTable, tableId, schoolId);
+        const { toastr } = this.props;
+        let self = this;
+        if (Meteor.userId()) {
+            this.setState({ isLoading: true });
+            Meteor.call(
+                "packageRequest.addRequest", {
+                    typeOfTable: typeOfTable,
+                    tableId: tableId,
+                    schoolId: schoolId
+                },
+                (err, res) => {
+                    // Stop loading
+                    self.setState({ isLoading: false });
+                    if (err) {
+                        toastr.error(
+                            err.reason || err.message,
+                            "Error"
+                        );
+                    } else {
+                        // Show confirmation to user that purchase request has been created.
+                        console.log("result----------------", res);
+                        toastr.success(
+                            res,
+                            "Success"
+                        );
+                    }
+                }
+            );
+        } else {
+            Events.trigger("loginAsUser");
+        }
+    }
 
   normalizeMonthlyPricingData = (monthlyPricingData) => {
       if(monthlyPricingData) {
@@ -97,6 +94,9 @@ class SchoolPriceView extends React.Component {
     const { classPricing, monthlyPricing , enrollmentFee, schoolId} = this.props;
     return (
         <div className="wrapper" style={{padding: 20}}>
+            {
+            this.state && this.state.isLoading && <ContainerLoader />
+          }
            {(isEmpty(classPricing) && isEmpty(monthlyPricing)) ?
                   '' :
                   <PackagesList
@@ -135,4 +135,4 @@ export default createContainer(props => {
         enrollmentFee,
         schoolId: schoolId
     }
-}, SchoolPriceView)
+}, toastrModal(SchoolPriceView))

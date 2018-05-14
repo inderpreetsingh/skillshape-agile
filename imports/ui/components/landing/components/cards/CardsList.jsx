@@ -184,7 +184,11 @@ class CardsList extends Component {
 
                         return (
                            <GridItem key={card._id} spacing={24}>
-                               <ClassTypeCard classInterestData={classInterestData} {...card}/>
+                               <ClassTypeCard
+                                  classInterestData={classInterestData}
+                                  {...card}
+                                  hideClassTypeOptions={this.props.hideClassTypeOptions}
+                                />
                            </GridItem>
                          )
                      })}

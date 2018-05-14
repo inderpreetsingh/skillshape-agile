@@ -148,6 +148,7 @@ class ClassTypeCard extends Component {
                       onClassTimeButtonClick={this.handleDialogState(true)}
                       onRequestClassTimeButtonClick={this.handleDialogState(true)}
                       cardRevealInfo={cardRevealData}
+                      hideClassTypeOptions={this.props.hideClassTypeOptions}
                       />
                   } />
                 </CardsRevealWrapper>

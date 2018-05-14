@@ -158,25 +158,26 @@ const ClassTypeCardDescription = (props) => {
                </DescriptionInnerWrapper>
 
                <Buttons>
-                <ButtonsWrapper>
-                 <ButtonWrapper>
-                   <SecondaryButton
-                    noMarginBottom
-                    fullWidth
-                    onClick={() => goToClassTypePage(addDelimiter(cardRevealInfo.name),cardRevealInfo._id )}
-                    label="Class Details"/>
-                  </ButtonWrapper>
-
-                  <ButtonWrapper>
-                    <SecondaryButton
+                {props && !props.hideClassTypeOptions &&
+                  <ButtonsWrapper>
+                   <ButtonWrapper>
+                     <SecondaryButton
                       noMarginBottom
                       fullWidth
-                      label="View School"
-                      onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
-                    />
-                  </ButtonWrapper>
-                </ButtonsWrapper>
+                      onClick={() => goToClassTypePage(addDelimiter(cardRevealInfo.name),cardRevealInfo._id )}
+                      label="Class Details"/>
+                    </ButtonWrapper>
 
+                    <ButtonWrapper>
+                      <SecondaryButton
+                        noMarginBottom
+                        fullWidth
+                        label="View School"
+                        onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
+                      />
+                    </ButtonWrapper>
+                </ButtonsWrapper>
+                }
                 {
                     props.classTimeCheck ?
                     <PrimaryButton

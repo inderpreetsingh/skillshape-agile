@@ -66,6 +66,7 @@ export default function () {
           			data={this.state.formData}
           			open={this.state.showForm}
           			onClose={this.handleFormModal}
+          			enableParentPanelToDefaultOpen={this.enableParentPanelToDefaultOpen}
           			settings={settings}
           			{...this.props}
           		/>
@@ -98,7 +99,7 @@ export default function () {
 						let childTableData = this.props.getChildTableData && this.props.getChildTableData(tableData);
 	          			// console.log("childTableData -->>",childTableData);
 	          			return (
-		          				<ExpansionPanel key={index} className={classes.expansionPanel} key={index} defaultExpanded={this.state.showClassTimeFormModal && this.state.showClassTimeFormModal[tableData._id]}>
+		          				<ExpansionPanel key={tableData._id} className={classes.expansionPanel} key={index} defaultExpanded={this.state.expansionPanelDefaultOpen || this.state.showClassTimeFormModal && this.state.showClassTimeFormModal[tableData._id]}>
 			          				<ExpansionPanelSummary style={{boxShadow: '0 1px 0 rgba(0,0,0,.1)'}} expandIcon={<ExpandMoreIcon />} >
 			              				<div style={{marginLeft: 15}}>
 			                				<Typography className={classes.secondaryHeading}>{this.getExpansionPanelTitle(tableData, settings.mainPanelHeader.titleKey)}</Typography>
@@ -199,7 +200,7 @@ export default function () {
 			            						)
 			            					}
 				            				{
-				            					settings.childTable && <Grid className={classes.classtypeInputContainer} item md={8} sm={12} xs={12}>
+				            					settings.childTable && (childTableData && childTableData.length > 0 || this.state.newLocationAdded) && <Grid className={classes.classtypeInputContainer} item md={8} sm={12} xs={12}>
 									                <ChildTable
 									                	schoolId={schoolId}
 									                	childPanelHeader={settings.childPanelHeader}

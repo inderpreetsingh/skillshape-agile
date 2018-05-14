@@ -177,6 +177,8 @@ class ClassTypeList extends Component {
                         handleSeeMore={this.props.handleSeeMore}
                         filters={this.props.filters}
                         reviewsData={this.props.reviewsData || []}
+                        hideClassTypeOptions={this.props.hideClassTypeOptions}
+
                 	/>
   				}
   			})
@@ -230,6 +232,7 @@ class ClassTypeList extends Component {
                               classInterestData={classInterestData}
                               handleSeeMore={this.props.handleSeeMore}
                               filters={this.props.filters}
+                              hideClassTypeOptions={this.props.hideClassTypeOptions}
                             />
 
                             {/*Hack to get rid of this on school type page*/
@@ -258,6 +261,7 @@ class ClassTypeList extends Component {
                           handleSeeMore={this.props.handleSeeMore}
                           filters={this.props.filters}
                           classTimesData={ classTimesData || [] }
+                          hideClassTypeOptions={this.props.hideClassTypeOptions}
                         />)
 							}
 
