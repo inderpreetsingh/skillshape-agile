@@ -83,7 +83,7 @@ export default Routes = componentLoader((props) => (
       </Route>
 
       <Route path="/" component={EmbedLayout}>
-        <Route path="/embed/schools/:slug/pricing" component={SchoolPriceView} />
+        <Route path="/embed/schools/:slug/pricing" name="SchoolPriceView" component={SchoolPriceView} />
         <Route path="/embed/schools/:slug/classtype" name="EmbedClassTypeView" component={SchoolClassTypeView} />
         <Route path="/embed/schools/:slug/mediagallery" name="EmbedMediaGalleryView" component={SchoolMediaGalleryView} />
         <Route path="/embed/schools/:slug/mediaslider" name="EmbedMediaSliderView" component={SchoolMediaSliderView} />
