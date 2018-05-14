@@ -339,7 +339,32 @@ class ClassTypeContent extends Component {
     }
 
     handleClassTimeRequest = () => {
+      const { toastr, classTypeData, schoolData } = this.props;
+      if(!Meteor.userId()) {
         this.handleManageRequestsDialogBox('Schedule Info',true);
+
+        // this.handleDialogState('manageRequestsDialog',true);
+      }else {
+        const data = {
+          classTypeId: classTypeData._id,
+          schoolId: schoolData._id
+        };
+
+        Meteor.call('classTimesRequest.addRequest', data, schoolData, (err,res) => {
+          this.setState({isBusy: false} , () => {
+            if(err) {
+              toastr.error(err.reason || err.message,"Error", {}, false);
+            }else if(res.message) {
+              toastr.error(res.message,'Error');
+            }
+            else if(res) {
+              toastr.success('Your request has been processed','success');
+              this.handleRequest('Class times');
+            }
+          });
+        });
+
+      }
         // const { toastr, classTypeData } = this.props;
         // Handle Class time request using mailTo:
         // this.handleRequest('Class Times');

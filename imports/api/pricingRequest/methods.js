@@ -7,7 +7,7 @@ import School from '/imports/api/school/fields.js';
 import { getUserFullName } from '/imports/util/getUserData';
 
 Meteor.methods({
-  'pricingRequest.addRequest': function(data,schoolData,subscriptionRequest) {
+  'pricingRequest.addRequest': function(data,subscriptionRequest) {
 
     if(!this.userId) {
       // check for user
@@ -48,8 +48,8 @@ Meteor.methods({
         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
         * 2. Then send a mail to user in case the request is for subscribing to the updates..
         ***/
-        *
         const fromEmail = 'Notices@SkillShape.com';
+        const schoolData = School.findOne({_id: data.schoolId});
         const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
         const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members` : '';
         const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
@@ -72,7 +72,7 @@ Meteor.methods({
            toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
-         console.log(updatePriceLink, schoolPageLink, currentUserName, classTypeName, ownerName, fromEmail, toEmail, memberLink);
+        //  console.log(updatePriceLink, schoolPageLink, currentUserName, classTypeName, ownerName, fromEmail, toEmail, memberLink);
          sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
 
          if(subscriptionRequest === 'save' || this.userId)

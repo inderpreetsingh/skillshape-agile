@@ -9,8 +9,7 @@ import get from 'lodash/get';
 import { sendClassTimesRequest } from "/imports/api/email";
 
 Meteor.methods({
-  "classTimesRequest.addRequest": function(data,schoolData,subscriptionRequest) {
-
+  "classTimesRequest.addRequest": function(data,subscriptionRequest) {
     if(!this.userId) {
       // check for user
       const userData = Meteor.users.findOne({"emails.address": data.email});
@@ -46,8 +45,8 @@ Meteor.methods({
         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered user)
         * 2. Then send a mail to user in case the request is for subscribing to the updates..
         ***/
-
         const fromEmail = 'Notices@SkillShape.com';
+        const schoolData = School.findOne({_id: data.schoolId});
         const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
         const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members` : '';
         const updateClassTimesLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
@@ -57,7 +56,6 @@ Meteor.methods({
         let ownerName = '';
         let classTimesRequestId = '';
         let toEmail = ''; // Needs to replace by Admin of School
-
 
          // 1. sending mail to the school owner.
          if(schoolData) {
@@ -84,7 +82,8 @@ Meteor.methods({
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?classTimesRequest=true&requestId=${classTimesRequestId}`;
            const subject = `Subscription for schedule of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-          //  sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+           console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
+           //sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
          return {
