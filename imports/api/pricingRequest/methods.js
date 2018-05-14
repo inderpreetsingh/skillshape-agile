@@ -30,16 +30,16 @@ Meteor.methods({
     data.createdAt = new Date();
     const isValid = validationContext.validate(data);
 
-
-    console.info(data,"data....................")
-
     // Verfiying the data send..
     if (isValid) {
-      // console.log('adding price request..');
-      const pricingRequestAlreadyPresent = PricingRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
-
+      let pricingRequestAlreadyPresent;
+      if(data.classTypeId) {
+        pricingRequestAlreadyPresent = PricingRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
+      }else {
+        pricingRequestAlreadyPresent = PricingRequest.findOne({email: data.email, schoolId: data.schoolId , classTypeId : {$exists: false}});
+      }
+      // console.info('pricingRequestAlreadyPresent',pricingRequestAlreadyPresent,PricingRequest.find({email: data.email, schoolId: data.schoolId, classTypeId : {$exists: false}}).fetch(),"request already present..")
       if(pricingRequestAlreadyPresent) {
-
         return {
           message: "Already requested for price for this class, with this email address"
         }
@@ -73,10 +73,10 @@ Meteor.methods({
          }
 
          if(this.userId) {
-             memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
+            memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
          }
          // console.log(updatePriceLink, schoolPageLink, currentUserName, ownerName, fromEmail, toEmail, memberLink);
-         sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
+         // sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
 
          if(subscriptionRequest === 'save' || this.userId)
             pricingRequestId = PricingRequest.insert(data);
@@ -88,7 +88,7 @@ Meteor.methods({
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?pricingRequest=true&requestId=${pricingRequestId}`;
            const subject = `Subscription for prices of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-           sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+           //sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
          return {

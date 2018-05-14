@@ -61,18 +61,12 @@ const SolutionCardWrapper = styled.article`
   padding: ${helpers.rhythmDiv * 2}px;
   height: 100%;
   margin: 0;
-  // margin-left: ${props => props.marginLeft}px;
-  // margin-top: ${props => props.marginTop}px;
   background-color: ${props => props.cardBgColor};
   transition: 0.1s background-color ease-in, 0.1s height ease-in;
 
   @media screen and (max-width: ${helpers.tablet}px ) {
-    // margin: 0 ${helpers.rhythmDiv}px;
-    // margin-bottom: ${props => props.noMarginBotton ? 0 : helpers.rhythmDiv * 4}px;
     margin-right: ${helpers.rhythmDiv * 2}px;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
-    // margin-left: ${props => props.marginLeft/2}px;
-    // margin-top: ${props => props.marginTop/2}px;
   }
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -207,9 +201,6 @@ class SchoolSolutionCard extends Component {
     return (<SolutionCardOuterWrapper active={this.props.active}>
       <SolutionCardWrapper
         downwards={this.props.downwards}
-        marginLeft={this.props.marginLeft}
-        marginTop={this.props.marginTop}
-        noMarginBotton={this.props.noMarginBotton}
         cardBgColor={this.props.cardBgColor}
         bgImage={this.props.bgImage}
         active={this.props.active}
@@ -262,8 +253,6 @@ SchoolSolutionCard.propTypes = {
   title: PropTypes.string,
   bgImage: PropTypes.string,
   cardBgColor: PropTypes.string,
-  noMarginBotton: PropTypes.bool,
-  marginLeft: PropTypes.string,
   marginTop: PropTypes.string,
   onCardClick: PropTypes.func
 }
@@ -272,8 +261,6 @@ SchoolSolutionCard.defaultProps = {
    title: 'Patented Media Management',
    tagline: 'Highlights your school and it\'s offerings',
    content: 'And makes it easy for students to search by times, skill levels, location, and other parameters to find the class that truly meets their needs.',
-   noMarginBotton: false,
-   marginLeft: 0,
    marginTop: 0,
 }
 

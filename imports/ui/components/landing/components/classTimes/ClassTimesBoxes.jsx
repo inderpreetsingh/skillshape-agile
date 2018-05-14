@@ -29,8 +29,6 @@ class ClassTimesBoxes extends Component {
 
   checkForAddToCalender = (data) => {
     const userId = Meteor.userId();
-    console.info('All the ClassInterest Data...',this.props.classInterestData,ClassInterest.find().fetch());
-    // debugger;
     if(isEmpty(data) || isEmpty(userId)) {
         return true;
     } else {
@@ -39,7 +37,7 @@ class ClassTimesBoxes extends Component {
   }
 
   render() {
-    console.log("props in ClassTimesBoxes",this.props)
+    // console.log("props in ClassTimesBoxes",this.props)
     const { classTimesData,
             classInterestData
           } = this.props;
@@ -50,7 +48,7 @@ class ClassTimesBoxes extends Component {
       data.addToCalendar = addToCalendar;
       return data;
     });
-    console.log('modifiedClassTimesData',modifiedClassTimesData);
+    // console.log('modifiedClassTimesData',modifiedClassTimesData);
     return (<Fragment>
         <SliderWrapper>
           <ClassTimesSlider
