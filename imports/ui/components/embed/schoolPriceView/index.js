@@ -93,7 +93,7 @@ class SchoolPriceView extends React.Component {
     // console.log("MonthlyPriceTable props-->>",MonthlyPriceTable);
     const { classPricing, monthlyPricing , enrollmentFee, schoolId} = this.props;
     return (
-        <div className="wrapper" style={{padding: 20}}>
+        <div className="wrapper">
             {
             this.state && this.state.isLoading && <ContainerLoader />
           }

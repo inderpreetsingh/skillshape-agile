@@ -12,7 +12,7 @@ class SchoolClassTypeView extends React.Component {
   render() {
     const { schoolId } = this.props;
     return (
-      <div className="wrapper" style={{ padding: 20 }}>
+      <div className="wrapper">
         <ClassTypeList
           containerPaddingTop="0px"
           locationName={null}
