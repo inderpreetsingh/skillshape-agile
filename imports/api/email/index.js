@@ -99,34 +99,35 @@ export const sendConfirmationEmail = function(userRec, school) {
     }
 };
 
-export const sendClassTimesRequestEmail = function({
-    toEmail,
-    fromEmail,
-    schoolPageLink,
-    updateClassTimesLink,
-    memberLink,
-    ownerName,
-    classTypeName,
-    currentUserName
-}) {
-    if (Meteor.isServer) {
-        Email.send({
-            to: toEmail, //emailObj.to
-            from: fromEmail,
-            replyTo: "Notices@SkillShape.com",
-            subject: "Schedule request received",
-            html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''}
-            saw your listing on SkillShape.com ${classTypeName && `for ${classTypeName} `}
-            at <br />${schoolPageLink} <br /> and would you like to update your schedule <br />${updateClassTimesLink}
-            <br />
-            <br />
-            Thanks,
-            <br />
-            <br />
-            ${EmailSignature}`
-        });
-    }
-};
+//NOTE : Unifying the request emails.
+// export const sendClassTimesRequestEmail = function({
+//     toEmail,
+//     fromEmail,
+//     schoolPageLink,
+//     updateClassTimesLink,
+//     memberLink,
+//     ownerName,
+//     classTypeName,
+//     currentUserName
+// }) {
+//     if (Meteor.isServer) {
+//         Email.send({
+//             to: toEmail, //emailObj.to
+//             from: fromEmail,
+//             replyTo: "Notices@SkillShape.com",
+//             subject: "Schedule request received",
+//             html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''}
+//             saw your listing on SkillShape.com ${classTypeName && `for ${classTypeName} `}
+//             at <br />${schoolPageLink} <br /> and would you like to update your schedule <br />${updateClassTimesLink}
+//             <br />
+//             <br />
+//             Thanks,
+//             <br />
+//             <br />
+//             ${EmailSignature}`
+//         });
+//     }
+// };
 
 export const sendClassTimesRequest = function({
     currentUserData,
@@ -212,35 +213,36 @@ export const userRegistrationAndVerifyEmail = function(
     });
 };
 
-export const sendPriceInfoRequestEmail = function({
-    toEmail,
-    fromEmail,
-    schoolPageLink,
-    updatePriceLink,
-    memberLink,
-    ownerName,
-    classTypeName,
-    currentUserName
-}) {
-
-    if (Meteor.isServer) {
-        Email.send({
-            to: toEmail, //emailObj.to
-            from: fromEmail,
-            replyTo: "Notices@SkillShape.com",
-            subject: "Pricing info request received",
-            html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''} saw your listing on SkillShape.com ${classTypeName && `for ${classTypeName} `}at <br />${schoolPageLink} <br /> and would you like to update your pricing <br />${updatePriceLink}
-            <br />
-            <br />
-            Thanks,
-            <br />
-            <br />
-            ${EmailSignature}`
-            // html: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
-            // \n\nThanks, \n\n${EmailSignature}`
-        });
-    }
-};
+//NOTE: Unifying request emals.
+// export const sendPriceInfoRequestEmail = function({
+//     toEmail,
+//     fromEmail,
+//     schoolPageLink,
+//     updatePriceLink,
+//     memberLink,
+//     ownerName,
+//     classTypeName,
+//     currentUserName
+// }) {
+//
+//     if (Meteor.isServer) {
+//         Email.send({
+//             to: toEmail, //emailObj.to
+//             from: fromEmail,
+//             replyTo: "Notices@SkillShape.com",
+//             subject: "Pricing info request received",
+//             html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''} saw your listing on SkillShape.com ${classTypeName && `for ${classTypeName} `}at <br />${schoolPageLink} <br /> and would you like to update your pricing <br />${updatePriceLink}
+//             <br />
+//             <br />
+//             Thanks,
+//             <br />
+//             <br />
+//             ${EmailSignature}`
+//             // html: `Hi ${ownerName}, \n${currentUserName} is interested in learning more about your prices. \nPlease click this link to update your listing: \n${updatePriceLink}
+//             // \n\nThanks, \n\n${EmailSignature}`
+//         });
+//     }
+// };
 
 export const sendEmailForSubscription = function({
   toEmail,
@@ -320,6 +322,36 @@ export const sendEmailToStudentForClaimAsMember = function(
     }
 };
 
+// NOTE: This email is used to send request received in case of class type location, times, and then pricing.
+export const sendRequestReceivedEmail = function({
+    toEmail,
+    fromEmail,
+    schoolPageLink,
+    updateLink,
+    memberLink,
+    ownerName,
+    requestFor,
+    classTypeName,
+    currentUserName
+}) {
+    if (Meteor.isServer) {
+        Email.send({
+            to: toEmail, //emailObj.to
+            from: fromEmail,
+            replyTo: "Notices@SkillShape.com",
+            subject: `${requestFor} request received`,
+            html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''}
+            saw your listing on SkillShape.com ${classTypeName && `for ${classTypeName} `}
+            at <br />${schoolPageLink} <br /> and would you like to update your ${requestFor} <br />${updateLink}
+            <br />
+            <br />
+            Thanks,
+            <br />
+            <br />
+            ${EmailSignature}`
+        });
+    }
+};
 
 export const sendClassTypeLocationRequestEmail = function({
     toEmail,

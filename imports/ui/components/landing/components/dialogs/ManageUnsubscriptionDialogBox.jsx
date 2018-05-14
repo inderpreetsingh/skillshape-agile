@@ -125,7 +125,7 @@ class ManageUnsubscriptionDialogBox extends Component {
   }
 
   _getCompleteMethodName = (methodName) => {
-    const {collectionName} = this._getCollectionName();
+    const collectionName = this._getCollectionName();
     return collectionName + '.' + methodName;
   }
 

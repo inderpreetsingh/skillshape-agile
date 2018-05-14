@@ -1,5 +1,5 @@
 import ClassTypeLocationRequest,{ClassTypeLocationRequestSchema} from './fields.js';
-import {sendClassType, sendEmailForSubscription} from '/imports/api/email/index.js';
+import {sendRequestReceivedEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
 import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields.js';
 import ClassType from '/imports/api/classType/fields.js';
 import School from '/imports/api/school/fields.js';
@@ -47,9 +47,10 @@ Meteor.methods({
         const schoolData = School.findOne({_id: data.schoolId});
         const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
         const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members` : '';
-        const updateClassTimesLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
+        const updateClassLocationLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
+        const requestFor = "Class Type Location";
 
         let ownerName = '';
         let locationRequestId = '';
@@ -67,8 +68,7 @@ Meteor.methods({
            toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
-         toEmail = 'singhs.ishwer@gmail.com';
-         //sendClassTimesRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateClassTimesLink, memberLink});
+         sendRequestReceivedEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink : updateClassLocationLink, memberLink, requestFor});
 
          if(subscriptionRequest === 'save' || this.userId)
             locationRequestId = ClassTypeLocationRequest.insert(data);
@@ -76,12 +76,12 @@ Meteor.methods({
          //2. sending mail to the user.
          if(subscriptionRequest === 'save') {
            const toEmail = data.email;
-           const updateFor = `schedule details of ${classTypeName || schoolData.name}`;
+           const updateFor = `class type location details of ${classTypeName || schoolData.name}`;
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?classTypeLocationRequest=true&requestId=${locationRequestId}`;
            const subject = `Subscription for location request of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-           console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
-           //sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+           //console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
+           sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
          return {

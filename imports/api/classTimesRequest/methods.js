@@ -2,7 +2,7 @@ import ClassTimesRequest, {ClassTimesRequestSchema} from "./fields";
 import ClassType from '/imports/api/classType/fields.js';
 import School from '/imports/api/school/fields.js';
 
-import {sendClassTimesRequestEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
+import {sendRequestReceivedEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
 import { getUserFullName } from '/imports/util/getUserData';
 
 import get from 'lodash/get';
@@ -52,10 +52,11 @@ Meteor.methods({
         const updateClassTimesLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
+        const requestFor = "Schedule";
 
         let ownerName = '';
         let classTimesRequestId = '';
-        let toEmail = ''; // Needs to replace by Admin of School
+        let toEmail = '';
 
          // 1. sending mail to the school owner.
          if(schoolData) {
@@ -69,8 +70,7 @@ Meteor.methods({
            toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
-         toEmail = 'singhs.ishwer@gmail.com';
-         //sendClassTimesRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateClassTimesLink, memberLink});
+         sendRequestReceivedEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink: updateClassTimesLink, memberLink, requestFor});
 
          if(subscriptionRequest === 'save' || this.userId)
             classTimesRequestId = ClassTimesRequest.insert(data);
@@ -83,7 +83,7 @@ Meteor.methods({
            const subject = `Subscription for schedule of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
            console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
-           //sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+           sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
          return {

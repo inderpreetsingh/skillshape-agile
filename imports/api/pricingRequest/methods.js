@@ -1,5 +1,5 @@
 import PricingRequest,{PricingRequestSchema} from './fields.js';
-import {sendPriceInfoRequestEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
+import {sendRequestReceivedEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
 import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields.js';
 import ClassType from '/imports/api/classType/fields.js';
 import School from '/imports/api/school/fields.js';
@@ -55,6 +55,7 @@ Meteor.methods({
         const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
+        const requestFor = "Pricing";
 
         let ownerName = "";
         let toEmail = '';
@@ -73,7 +74,7 @@ Meteor.methods({
          }
 
         //  console.log(updatePriceLink, schoolPageLink, currentUserName, classTypeName, ownerName, fromEmail, toEmail, memberLink);
-         sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
+         sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink: updatePriceLink, memberLink, requestFor});
 
          if(subscriptionRequest === 'save' || this.userId)
             pricingRequestId = PricingRequest.insert(data);

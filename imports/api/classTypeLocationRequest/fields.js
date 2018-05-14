@@ -7,7 +7,7 @@ const ClassTypeLocationRequest = new Mongo.Collection(config.collections.classTy
  * See: https://github.com/aldeed/meteor-autoform#affieldinput
  */
 
- // Once it's fully operational we will make some of the optional fields true back to false.
+ // Once it's fully operational we will make some of the optional fields back to false.
 export const ClassTypeLocationRequestSchema = new SimpleSchema({
   name: {
     type: String,
@@ -30,7 +30,7 @@ export const ClassTypeLocationRequestSchema = new SimpleSchema({
   existingUser: {
     type: String,
     optional: true
-  }
+  },
   notification: {
     type: Boolean,
     optional: true
