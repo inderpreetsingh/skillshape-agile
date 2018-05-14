@@ -69,7 +69,7 @@ const DialogTitleWrapper = styled.div`
 const ClassContainer = styled.div`
   width: 90%;
   padding: ${helpers.rhythmDiv}px;
-  margin: ${helpers.rhythmDiv}px auto;
+  margin: 0 auto;
   border-radius: ${helpers.rhythmDiv}px;
   background: #ffffff;
 `;
