@@ -97,7 +97,7 @@ class MainLayout extends React.Component {
 
     render( ) {
         const { currentUser, isUserSubsReady, classes} = this.props;
-        console.log(this.props.route,"main layout.......................")
+        console.log(this.props.route,"main layout.......................",this.props)
         return (
             <div>
                 {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
