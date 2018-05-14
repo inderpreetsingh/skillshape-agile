@@ -114,9 +114,9 @@ export const sendClassTimesRequestEmail = function({
             to: toEmail, //emailObj.to
             from: fromEmail,
             replyTo: "Notices@SkillShape.com",
-            subject: "schedule request received",
+            subject: "Schedule request received",
             html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''}
-            saw your listing on SkillShape.com ${classTypeName && `for ${classTypeName}`}
+            saw your listing on SkillShape.com ${classTypeName && `for ${classTypeName} `}
             at <br />${schoolPageLink} <br /> and would you like to update your schedule <br />${updateClassTimesLink}
             <br />
             <br />
@@ -222,13 +222,14 @@ export const sendPriceInfoRequestEmail = function({
     classTypeName,
     currentUserName
 }) {
+
     if (Meteor.isServer) {
         Email.send({
             to: toEmail, //emailObj.to
             from: fromEmail,
             replyTo: "Notices@SkillShape.com",
             subject: "Pricing info request received",
-            html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''} saw your listing on SkillShape.com ${classTypeName && `for ${classTypeName}`} at <br />${schoolPageLink} <br /> and would you like to update your pricing <br />${updatePriceLink}
+            html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ''} saw your listing on SkillShape.com ${classTypeName && `for ${classTypeName} `}at <br />${schoolPageLink} <br /> and would you like to update your pricing <br />${updatePriceLink}
             <br />
             <br />
             Thanks,

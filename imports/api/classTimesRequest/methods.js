@@ -42,21 +42,22 @@ Meteor.methods({
           message: "Already requested for class times for this class, with this email address"
         }
       }else {
+        /***
+        * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered user)
+        * 2. Then send a mail to user in case the request is for subscribing to the updates..
+        ***/
+
         const fromEmail = 'Notices@SkillShape.com';
-        const classTypeName = data.classTypeId && ClassType.findOne({_id: data.classTypeId}).name;
+        const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
+        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members` : '';
         const updateClassTimesLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
 
         let ownerName = '';
-        let memberLink = "";
         let classTimesRequestId = '';
         let toEmail = ''; // Needs to replace by Admin of School
 
-        /***
-         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
-         * 2. Then sending a new mail to user in case the request is for subscribing to the updates..
-         ***/
 
          // 1. sending mail to the school owner.
          if(schoolData) {
@@ -70,11 +71,8 @@ Meteor.methods({
            toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
-         if(this.userId) {
-             memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
-         }
          toEmail = 'singhs.ishwer@gmail.com';
-         sendClassTimesRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateClassTimesLink, memberLink});
+         //sendClassTimesRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateClassTimesLink, memberLink});
 
          if(subscriptionRequest === 'save' || this.userId)
             classTimesRequestId = ClassTimesRequest.insert(data);
@@ -86,7 +84,7 @@ Meteor.methods({
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?classTimesRequest=true&requestId=${classTimesRequestId}`;
            const subject = `Subscription for schedule of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-           sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+          //  sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
          return {
@@ -96,7 +94,6 @@ Meteor.methods({
     }else {
       // Return the errors in case something is invalid.
       const invalidData = validationContext.invalidKeys()[0];
-      // console.log("validation errors...",validationContext.invalidKeys());
       throw new Meteor.Error(invalidData.name +' is '+ invalidData.value);
     }
   },

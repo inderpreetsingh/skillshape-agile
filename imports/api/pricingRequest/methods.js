@@ -44,21 +44,21 @@ Meteor.methods({
           message: "Already requested for price for this class, with this email address"
         }
       }else {
+        /***
+        * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
+        * 2. Then send a mail to user in case the request is for subscribing to the updates..
+        ***/
+        *
         const fromEmail = 'Notices@SkillShape.com';
-        const classTypeName = data.classTypeId && ClassType.findOne({_id: data.classTypeId}).name;
+        const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
+        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members` : '';
         const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
 
         let ownerName = "";
-        let memberLink = "";
+        let toEmail = '';
         let pricingRequestId = '';
-        let toEmail = ''; // Needs to replace by Admin of School
-
-        /***
-         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
-         * 2. Then sending a new mail to user in case the request is for subscribing to the updates..
-         ***/
 
          // 1. sending mail to the school owner.
          if(schoolData) {
@@ -72,11 +72,8 @@ Meteor.methods({
            toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
-         if(this.userId) {
-            memberLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members`;
-         }
-         // console.log(updatePriceLink, schoolPageLink, currentUserName, ownerName, fromEmail, toEmail, memberLink);
-         // sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
+         console.log(updatePriceLink, schoolPageLink, currentUserName, classTypeName, ownerName, fromEmail, toEmail, memberLink);
+         sendPriceInfoRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updatePriceLink, memberLink});
 
          if(subscriptionRequest === 'save' || this.userId)
             pricingRequestId = PricingRequest.insert(data);
@@ -88,7 +85,7 @@ Meteor.methods({
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?pricingRequest=true&requestId=${pricingRequestId}`;
            const subject = `Subscription for prices of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-           //sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+           sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
          return {
@@ -107,9 +104,10 @@ Meteor.methods({
       if(!pricingRequestData) {
         throw new Meteor.Error('no pricing data has been found with this id.');
       }
+      const classTypeData = ClassType.findOne({_id: pricingRequestData.classTypeId});
 
       return {
-        classTypeName: ClassType.findOne({_id: pricingRequestData.classTypeId}).name,
+        classTypeName: classTypeData && classTypeData.name,
         schoolName: School.findOne({_id: pricingRequestData.schoolId}).name
       }
     },
