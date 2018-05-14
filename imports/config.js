@@ -81,5 +81,13 @@ export default config = Object.freeze({
 		{ skillType: "Acting", location: "London"},
 		{ skillType: "Painting", location: "Paris"},
 		{ skillType: "Yoga", location: "Delhi"},
+	],
+	pathNameNotSupportFloatingIcon: [
+	"/embed/schools/sammys-aloha-watersports/pricing",
+	"/embed/schools/sammys-aloha-watersports/classtype",
+	"/embed/schools/sammys-aloha-watersports/mediagallery",
+	"/embed/schools/sammys-aloha-watersports/mediaslider",
+	"/embed/schools/sammys-aloha-watersports/calendar",
+	"/contact-us"
 	]
 })
