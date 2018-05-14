@@ -1,15 +1,13 @@
-import ClassTimesRequest, {ClassTimesRequestSchema} from "./fields";
+import ClassTypeLocationRequest,{ClassTypeLocationRequestSchema} from './fields.js';
+import {sendClassType, sendEmailForSubscription} from '/imports/api/email/index.js';
+import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields.js';
 import ClassType from '/imports/api/classType/fields.js';
 import School from '/imports/api/school/fields.js';
 
-import {sendClassTimesRequestEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
 import { getUserFullName } from '/imports/util/getUserData';
 
-import get from 'lodash/get';
-import { sendClassTimesRequest } from "/imports/api/email";
-
 Meteor.methods({
-  "classTimesRequest.addRequest": function(data, subscriptionRequest) {
+  'classTypeLocationRequest.addRequest': function(data,subscriptionRequest) {
     if(!this.userId) {
       // check for user
       const userData = Meteor.users.findOne({"emails.address": data.email});
@@ -34,11 +32,11 @@ Meteor.methods({
     // Verfiying the data send..
     if (isValid) {
       // console.log('adding price request..');
-      const classTimesRequestAlreadyPresent = ClassTimesRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
+      const locationRequest = ClassTypeLocationRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
 
-      if(classTimesRequestAlreadyPresent) {
+      if(locationRequest) {
         return {
-          message: "Already requested for class times for this class, with this email address"
+          message: "Already requested for location for this class, with this email address"
         }
       }else {
         /***
@@ -54,8 +52,8 @@ Meteor.methods({
         const currentUserName = data.name;
 
         let ownerName = '';
-        let classTimesRequestId = '';
-        let toEmail = ''; // Needs to replace by Admin of School
+        let locationRequestId = '';
+        let toEmail = '';
 
          // 1. sending mail to the school owner.
          if(schoolData) {
@@ -73,14 +71,14 @@ Meteor.methods({
          //sendClassTimesRequestEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateClassTimesLink, memberLink});
 
          if(subscriptionRequest === 'save' || this.userId)
-            classTimesRequestId = ClassTimesRequest.insert(data);
+            locationRequestId = ClassTypeLocationRequest.insert(data);
 
          //2. sending mail to the user.
          if(subscriptionRequest === 'save') {
            const toEmail = data.email;
            const updateFor = `schedule details of ${classTypeName || schoolData.name}`;
-           const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?classTimesRequest=true&requestId=${classTimesRequestId}`;
-           const subject = `Subscription for schedule of ${classTypeName || schoolData.name}`;
+           const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?classTypeLocationRequest=true&requestId=${locationRequestId}`;
+           const subject = `Subscription for location request of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
            console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
            //sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
@@ -96,51 +94,19 @@ Meteor.methods({
       throw new Meteor.Error(invalidData.name +' is '+ invalidData.value);
     }
   },
-  'classTimesRequest.getRequestData': function(requestId) {
-      const classTimesRequestData = ClassTimesRequest.findOne({_id: requestId});
-      if(!classTimesRequestData) {
-        throw new Meteor.Error('no class times data has been found with this id.');
+  'classTypeLocationRequest.getRequestData': function(requestId) {
+      const locationRequestData = classTypeLocationRequest.findOne({_id: requestId});
+      if(!locationRequestData) {
+        throw new Meteor.Error('no location request data has been found with this id.');
       }
+      const classTypeData = ClassType.findOne({_id: locationRequestData.classTypeId});
 
       return {
-        classTypeName: ClassType.findOne({_id: classTimesRequestData.classTypeId}).name,
-        schoolName: School.findOne({_id: classTimesRequestData.schoolId}).name
+        classTypeName: classTypeData && classTypeData.name,
+        schoolName: School.findOne({_id: locationRequestData.schoolId}).name
       }
     },
-   'classTimesRequest.removeRequest': function(requestId) {
-     return ClassTimesRequest.remove({_id: requestId});
-    },
-    "classTimesRequest.notifyToSchool": function({schoolId, classTypeId, classTypeName}) {
-    	if (this.userId && schoolId && classTypeId) {
-    		// console.log("classTimesRequest.notifyToSchool -->>", schoolId, classTypeId)
-    		// first check your request already have or not
-    		const classTimesRequestData = ClassTimesRequest.findOne({schoolId, classTypeId, userId: this.userId });
-    		// console.log("classTimesRequestData -->>",classTimesRequestData)
-    		if(classTimesRequestData) {
-    			return { message: "You already requested for this class"};
-    		} else {
-	    		const requestObj = {
-	    			schoolId,
-	    			classTypeId,
-	    			createdAt: new Date(),
-	    			notification: true,
-	    			userId: this.userId,
-	    		}
-	    		ClassTimesRequest.insert(requestObj);
-
-				let superAdminData;
-	    		const currentUserData = Meteor.users.findOne({_id: this.userId});
-	    		const schoolOwnerData = Meteor.users.findOne({"profile.schoolId": schoolId});
-
-				if(!schoolOwnerData) {
-	    			superAdminData = Meteor.users.findOne({"roles": "Superadmin"});
-				}
-	    		sendClassTimesRequest({currentUserData, schoolOwnerData, superAdminData, schoolId, classTypeName});
-    		    return {emailSuccess:true};
-            }
-
-    	} else {
-			     throw new Meteor.Error("Permission denied!!");
-    	}
-    }
+   'classTypeLocationRequest.removeRequest': function(requestId) {
+     return classTypeLocationRequest.remove({_id: requestId});
+   }
 })

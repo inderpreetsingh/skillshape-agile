@@ -99,7 +99,7 @@ Meteor.methods({
       throw new Meteor.Error(invalidData.name +' is '+ invalidData.value);
     }
   },
-  'pricingRequest.getSubscriptionData': function(requestId) {
+  'pricingRequest.getRequestData': function(requestId) {
       const pricingRequestData = PricingRequest.findOne({_id: requestId});
       if(!pricingRequestData) {
         throw new Meteor.Error('no pricing data has been found with this id.');

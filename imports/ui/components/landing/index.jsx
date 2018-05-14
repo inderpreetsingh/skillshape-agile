@@ -340,38 +340,40 @@ class Landing extends Component {
     getMyCurrentLocation = () => {
         if (navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
-                let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                let geocoder = new google.maps.Geocoder();
-                let coords = [];
-                coords[0] = position.coords.latitude || config.defaultLocation[0];
-                coords[1] = position.coords.longitude || config.defaultLocation[1];
-                geocoder.geocode({ 'latLng': latlng }, (results, status) => {
-                    let sLocation = "near by me";
-                    let oldFilters = { ...this.state.filters };
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        if (results[0]) {
-                            let place = results[0];
-                            // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
-                            // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
-                            sLocation = results[0].formatted_address
-                            oldFilters["coords"] = coords;
-                            oldFilters["locationName"] = sLocation;
-                            oldFilters["applyFilterStatus"] = true;
-                        }
-                    }
-                    this.setState({
-                        filters: oldFilters,
-                        //   locationName: `your location`,
-                        //   defaultLocation: sLocation,
-                        isLoading: false,
-                    })
-                });
-                // Toggle map view on click of `Browse classes near by me`
-                this.handleToggleMapView();
-                // toastr.success("Showing classes around you...","Found your location");
-                // // Session.set("coords",coords)
-            })
+              let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+              let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+              let geocoder = new google.maps.Geocoder();
+              let coords = [];
+              coords[0] = position.coords.latitude || config.defaultLocation[0];
+              coords[1] = position.coords.longitude || config.defaultLocation[1];
+              geocoder.geocode({ 'latLng': latlng }, (results, status) => {
+                  let sLocation = "near by me";
+                  let oldFilters = { ...this.state.filters };
+                  if (status == google.maps.GeocoderStatus.OK) {
+                      if (results[0]) {
+                          let place = results[0];
+                          // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
+                          // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
+                          sLocation = results[0].formatted_address
+                          oldFilters["coords"] = coords;
+                          oldFilters["locationName"] = sLocation;
+                          oldFilters["applyFilterStatus"] = true;
+                      }
+                  }
+                  this.setState({
+                      filters: oldFilters,
+                      //   locationName: `your location`,
+                      //   defaultLocation: sLocation,
+                      isLoading: false,
+                  })
+              });
+              // Toggle map view on click of `Browse classes near by me`
+              this.handleToggleMapView();
+              // toastr.success("Showing classes around you...","Found your location");
+              // // Session.set("coords",coords)
+            }, (err) => {
+            alert(`Your Browser doesnt support this feature. Error ${err.code} : ${err.message}`);
+          })
         }
     }
 
