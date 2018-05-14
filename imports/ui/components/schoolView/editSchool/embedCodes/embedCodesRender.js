@@ -20,7 +20,7 @@ export default function () {
 	        	{
 	        		embedCodeSettings.map((setting, index) => {
 						let code = Meteor.absoluteUrl(`embed/schools/${schoolData.slug}/${setting.codeName}`) + "?height=800";
-	        			let value = `<iframe src=${code} seamless="seamless" id="skillshape-embed" name="skillshape" frameborder="0" scrolling="auto" style="width: 100%;height:840px;"></iframe>`
+	        			let value = `<iframe src=${code} seamless="seamless" id="skillshape-embed" name="skillshape" frameborder="0" scrolling="auto" style="width: 100%;min-height:400px;"></iframe>`
 	        			return (
 	        				<Grid container>
 	        					<Grid item xs={12}>
