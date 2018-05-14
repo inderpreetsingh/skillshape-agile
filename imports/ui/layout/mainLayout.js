@@ -98,6 +98,9 @@ class MainLayout extends React.Component {
     render( ) {
         const { currentUser, isUserSubsReady, classes} = this.props;
         console.log(this.props.route,"main layout.......................",this.props)
+        console.log("_.contains(config.pathNameNotSupportFloatingIcon, this.props.location.pathname)......................",_.contains(config.pathNameNotSupportFloatingIcon, this.props.location.pathname))
+        console.log("this.props.location.pathname111......................",config.pathNameNotSupportFloatingIcon);
+        console.log("this.props.location.pathname222......................",this.props.location.pathname);
         return (
             <div>
                 {React.cloneElement(this.props.children, { currentUser: currentUser, isUserSubsReady: isUserSubsReady })}
