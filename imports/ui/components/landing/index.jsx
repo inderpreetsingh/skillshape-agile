@@ -767,6 +767,7 @@ class Landing extends Component {
                         <ClassTypeOuterWrapper padding={this.getOuterWrapperPadding()}>
                           {(!this.state.mapView && this.checkIfAnyFilterIsApplied()) && this.showAppliedTopFilter()}
                           <ClassTypeList
+                              landingPage={true}
                               defaultLocation={this.state.defaultLocation}
                               mapView={this.state.mapView}
                               filters={this.state.filters}
