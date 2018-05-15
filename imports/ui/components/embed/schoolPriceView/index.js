@@ -30,8 +30,8 @@ class SchoolPriceView extends React.Component {
     })
   }
 
-  handleLoginModalState = () => {
-    this.setState({loginModal: true});
+  handleLoginModalState = (value) => {
+    this.setState({loginModal: value});
   }
 
   getClassName = (classTypeId) => {
