@@ -38,9 +38,7 @@ Meteor.methods({
       const classTimesRequestAlreadyPresent = ClassTimesRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
 
       if(classTimesRequestAlreadyPresent) {
-        return {
-          message: "Already requested for class times for this class, with this email address"
-        }
+        throw new Meteor.Error('Already requested for class times with this email address');
       }else {
         /***
         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered user)

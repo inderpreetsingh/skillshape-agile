@@ -41,9 +41,7 @@ Meteor.methods({
       }
       // console.info('pricingRequestAlreadyPresent',pricingRequestAlreadyPresent,PricingRequest.find({email: data.email, schoolId: data.schoolId, classTypeId : {$exists: false}}).fetch(),"request already present..")
       if(pricingRequestAlreadyPresent) {
-        return {
-          message: "Already requested for price for this class, with this email address"
-        }
+        throw new Meteor.Error("Already requested for price for this class, with this email address");
       }else {
         /***
         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)

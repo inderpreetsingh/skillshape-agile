@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
+import { isEmpty, get } from 'lodash';
 import DocumentTitle from 'react-document-title';
 import {Element, scroller } from 'react-scroll';
-import { isEmpty, get } from 'lodash';
+
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
@@ -286,14 +286,12 @@ class ClassTypeContent extends Component {
             schoolId: schoolData._id
           };
 
-          Meteor.call('pricingRequest.addRequest', data, schoolData, (err,res) => {
+          Meteor.call('pricingRequest.addRequest', data, (err,res) => {
             this.setState({isBusy: false} , () => {
               if(err) {
                 toastr.error(err.reason || err.message,"Error", {}, false);
-              }else if(res.message) {
-                toastr.error(res.message,'Error');
               }
-              else if(res) {
+              else {
                 toastr.success('Your request has been processed','success');
                 this.handleRequest('pricing');
               }
@@ -350,20 +348,16 @@ class ClassTypeContent extends Component {
           schoolId: schoolData._id
         };
 
-        Meteor.call('classTimesRequest.addRequest', data, schoolData, (err,res) => {
+        Meteor.call('classTimesRequest.addRequest', data, (err,res) => {
           this.setState({isBusy: false} , () => {
             if(err) {
               toastr.error(err.reason || err.message,"Error", {}, false);
-            }else if(res.message) {
-              toastr.error(res.message,'Error');
-            }
-            else if(res) {
+            }else {
               toastr.success('Your request has been processed','success');
               this.handleRequest('Class times');
             }
           });
         });
-
       }
         // const { toastr, classTypeData } = this.props;
         // Handle Class time request using mailTo:
@@ -470,7 +464,7 @@ class ClassTypeContent extends Component {
       submitBtnLabel = manageRequestTitle != 'Pricing' ? 'Request class times' : submitBtnLabel;
       requestFor = manageRequestTitle != 'Pricing' ? 'class times' : requestFor;
     }
-    
+
 		return (<div>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolData} ourEmail={ourEmail} open={this.state.emailUsDialog} currentUser={this.props.currentUser} onModalClose={(err, res) => this.handleDialogState('emailUsDialog',false, err, res)}/>}
