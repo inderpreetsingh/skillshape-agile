@@ -64,8 +64,28 @@ class ClassTypeCard extends Component {
     }
 
     handleClassTimesRequest = () => {
-      const newState = {...this.state, dialogOpen: false, manageRequestsDialog: true};
-      this.setState(newState);
+      const {_id, schoolId} = this.props;
+      if(!Meteor.userId()) {
+        const newState = {...this.state, dialogOpen: false, manageRequestsDialog: true};
+        this.setState(newState);
+      }else {
+        const data = {
+          classTypeId: _id,
+          schoolId: schoolId
+        };
+
+        Meteor.call('classTimesRequest.addRequest', data, (err,res) => {
+          this.setState({isBusy: false} , () => {
+            if(err) {
+              toastr.error(err.reason || err.message,"Error", {}, false);
+            }else {
+              toastr.success('Your request has been processed','success');
+              this.handleRequest(schoolId);
+            }
+          });
+        });
+      }
+
     }
 
     handleClassTimeRequest = (schoolId) => {
@@ -75,7 +95,7 @@ class ClassTypeCard extends Component {
           let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
           let subject ="", message =  "";
           let currentUserName = getUserFullName(Meteor.user());
-          emailBody = `Hi, %0D%0A%0D%0A I  saw your listing on SkillShape.com ${url} and would like to attend. Can you please update your pricing%3F %0D%0A%0D%0A Thanks`
+          emailBody = `Hi, %0D%0A%0D%0A I  saw your listing on SkillShape.com ${url} and would like to attend. Can you please update your class times%3F %0D%0A%0D%0A Thanks`
           const mailTo = `mailto:${schoolData && schoolData.email}?subject=${subject}&body=${emailBody}`;
           const mailToNormalized = /*encodeURI(*/mailTo/*)*/;
           openMailToInNewTab(mailToNormalized);

@@ -94,7 +94,7 @@ Meteor.methods({
     }
   },
   'classTypeLocationRequest.getRequestData': function(requestId) {
-      const locationRequestData = classTypeLocationRequest.findOne({_id: requestId});
+      const locationRequestData = ClassTypeLocationRequest.findOne({_id: requestId});
       if(!locationRequestData) {
         throw new Meteor.Error('no location request data has been found with this id.');
       }
@@ -106,6 +106,6 @@ Meteor.methods({
       }
     },
    'classTypeLocationRequest.removeRequest': function(requestId) {
-     return classTypeLocationRequest.remove({_id: requestId});
+     return ClassTypeLocationRequest.remove({_id: requestId});
    }
 })
