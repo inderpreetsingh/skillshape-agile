@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import SearchBar from 'material-ui-search-bar';
-import {browserHistory} from 'react-router';
+import {browserHistory, Link} from 'react-router';
 import MySearchBar from './MySearchBar.jsx';
 
 import Logo from './Logo.jsx';
@@ -90,11 +90,26 @@ const TopBarLink = styled.a`
   }
 `;
 
+const BrandText = styled.h1`
+  font-size: ${helpers.baseFontSize}px;
+  margin: 0;
+  font-weight: 600;
+  line-height: 30px;
+  color: ${helpers.danger};
+`;
+
+const MyLink = styled(Link)`
+  display: flex;
+`;
+
 const TopSearchBar = (props) => (
   <NavBarWrapper >
     <LogoSearchSection>
       {props.logoArea ? props.logoArea :
-      <Logo brandTextShown={false} width={32} height={32} />}
+      <MyLink href="/">
+      <Logo brandTextShown={false} width={32} height={32} />
+        <BrandText>Skillshape</BrandText>
+      </MyLink>}
       {/*<MySearchBarStyled {...props.searchBar}/> */}
     </LogoSearchSection>
 

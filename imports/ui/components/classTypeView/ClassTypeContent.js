@@ -470,7 +470,7 @@ class ClassTypeContent extends Component {
       submitBtnLabel = manageRequestTitle != 'Pricing' ? 'Request class times' : submitBtnLabel;
       requestFor = manageRequestTitle != 'Pricing' ? 'class times' : requestFor;
     }
-    debugger;
+    
 		return (<div>
           {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
           {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolData} ourEmail={ourEmail} open={this.state.emailUsDialog} currentUser={this.props.currentUser} onModalClose={(err, res) => this.handleDialogState('emailUsDialog',false, err, res)}/>}
