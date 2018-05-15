@@ -1,6 +1,6 @@
 import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
-import { isEmpty, get } from 'lodash';
+import { isEmpty, get } from "lodash";
 
 import School from "/imports/api/school/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
@@ -12,43 +12,57 @@ import { toastrModal, emailRegex } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import Events from "/imports/util/events";
 import LoginDialogBox from "/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx";
-import SignUpDialogBox from '/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx';
-import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+import SignUpDialogBox from "/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx";
+import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
+import EmailConfirmationDialogBox from "/imports/ui/components/landing/components/dialogs/EmailConfirmationDialogBox";
+import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 class SchoolPriceView extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initializeState();
   }
 
-  initializeState = ()=> {
-        return {
-          error: {},
-          loginModal : false,
-          loginModalTitle: '',
-          email: "",
-          password: "",
-          loading: false,
-          isLoading: false,
-        }
-    }
+  initializeState = () => {
+    return {
+      error: {},
+      loginModal: false,
+      loginModalTitle: "",
+      email: "",
+      password: "",
+      loading: false,
+      isLoading: false,
+      errorText: null
+    };
+  };
 
   componentWillMount() {
     Events.on("loginAsUser", "123456", data => {
       console.log("loginAsUser========>", data);
       this.handleLoginModalState(true, data);
     });
-    Events.on("registerAsSchool", "123#567",(data) => {
-      let {userType, userEmail, userName} = data;
-      console.info(userType,userEmail);
-      console.info("userType, userEmail, userName",userType, userEmail, userName);
+    Events.on("registerAsSchool", "123#567", data => {
+      let { userType, userEmail, userName } = data;
+      console.info(userType, userEmail);
+      console.info(
+        "userType, userEmail, userName",
+        userType,
+        userEmail,
+        userName
+      );
       //debugger;
       this.handleSignUpDialogBoxState(true, userType, userEmail, userName);
-    })
+    });
   }
 
   handleSignUpDialogBoxState = (state, userType, userEmail, userName) => {
-    this.setState({signUpDialogBox: state, userData: { userType: userType}, userEmail: userEmail, userName: userName, errorText: null});
-  }
+    this.setState({
+      signUpDialogBox: state,
+      userData: { userType: userType },
+      userEmail: userEmail,
+      userName: userName,
+      errorText: null
+    });
+  };
 
   handleLoginModalState = value => {
     this.setState({ loginModal: value });
@@ -75,6 +89,7 @@ class SchoolPriceView extends React.Component {
     const { toastr } = this.props;
     let self = this;
     if (Meteor.userId()) {
+      console.log("Meteor.userId()", Meteor.userId());
       this.setState({ isLoading: true });
       Meteor.call(
         "packageRequest.addRequest",
@@ -96,7 +111,9 @@ class SchoolPriceView extends React.Component {
         }
       );
     } else {
-      Events.trigger("loginAsUser");
+      console.log("Meteor.userId()", Meteor.userId());
+      // Events.trigger("loginAsUser");
+      this.handleLoginModalState(true);
     }
   };
 
@@ -118,19 +135,6 @@ class SchoolPriceView extends React.Component {
       return monthlyPricingData;
     }
   };
-
-  handleLoginModalState = (state, data) => {
-    let stateObj = this.initializeState();
-    stateObj.loginModal = state;
-    if (data) {
-      stateObj.loginModalTitle = data.loginModalTitle || "";
-      stateObj.email = data.email || "";
-      stateObj.redirectUrl = data.redirectUrl;
-    }
-    this.setState(stateObj);
-  };
-
-
 
   handleInputChange = (inputName, event) => {
     if (inputName === "email") {
@@ -177,7 +181,7 @@ class SchoolPriceView extends React.Component {
           } else {
             stateObj.loginModal = false;
           }
-          openMailToInNewTab("/")
+          openMailToInNewTab("/");
           // browserHistory.push();
         }
         this.setState(stateObj);
@@ -274,14 +278,75 @@ class SchoolPriceView extends React.Component {
     );
   };
 
-  handleSignUpModal = (userType)=> {
-        this.setState({joinModal: false},()=> {
-            Events.trigger("registerAsSchool",{userType})
-        });
+  handleSignUpModal = userType => {
+    this.setState({ joinModal: false }, () => {
+      Events.trigger("registerAsSchool", { userType });
+    });
+  };
+  unsetError = () => this.setState({ errorText: null });
+
+  handleSignUpSubmit = (payload, event) => {
+    event.preventDefault();
+    let obj = {};
+    if (!payload.name || !payload.email) {
+      obj.errorText = "* fields are mandatory";
+    } else if (!payload.captchaValue) {
+      obj.errorText = "You can't leave Captcha empty";
+    } else {
+      obj.errorText = null;
+      obj.termsOfServiceDialogBox = true;
+      obj.userData = { ...this.state.userData, ...payload };
     }
+    this.setState(obj);
+  };
+
+  handleServiceAgreementSubmit = () => {
+    this.setState({ emailConfirmationDialogBox: true });
+  };
+
+  handleEmailConfirmationSubmit = () => {
+    this.setState({ isBusy: true });
+    const { toastr } = this.props;
+    Meteor.call(
+      "user.createUser",
+      { ...this.state.userData, signUpType: "skillshape-signup" },
+      (err, res) => {
+        console.log("user.createUser err res -->>", err, res);
+        let modalObj = {
+          open: false,
+          signUpDialogBox: false,
+          termsOfServiceDialogBox: false,
+          emailConfirmationDialogBox: false,
+          isBusy: false
+        };
+        if (err) {
+          modalObj.errorText = err.reason || err.message;
+          modalObj.signUpDialogBox = true;
+          this.setState(modalObj);
+        }
+
+        if (res) {
+          this.setState(modalObj, () => {
+            toastr.success(
+              "Successfully registered, Please check your email.",
+              "success"
+            );
+          });
+        }
+      }
+    );
+  };
+
+  handleTermsOfServiceDialogBoxState = state => {
+    this.setState({ termsOfServiceDialogBox: state });
+  };
+
+  handleEmailConfirmationDialogBoxState = state => {
+    this.setState({ emailConfirmationDialogBox: state });
+  };
 
   render() {
-    console.log("SchoolPriceView props-->>",this);
+    console.log("SchoolPriceView props-->>", this);
     // console.log("ClassPriceTable props-->>",ClassPriceTable);
     // console.log("MonthlyPriceTable props-->>",MonthlyPriceTable);
     const {
@@ -307,21 +372,42 @@ class SchoolPriceView extends React.Component {
             reSendEmailVerificationLink={this.reSendEmailVerificationLink}
           />
         )}
-        {
-          this.state.signUpDialogBox &&
+        {this.state.signUpDialogBox && (
           <SignUpDialogBox
-              open={this.state.signUpDialogBox}
-              onModalClose={() => this.handleSignUpDialogBoxState(false)}
-              onSubmit={this.handleSignUpSubmit}
-              errorText={this.state.errorText}
-              unsetError={this.unsetError}
-              userName={this.state.userName}
-              userEmail={this.state.userEmail}
-              onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
-              onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
-
+            open={this.state.signUpDialogBox}
+            onModalClose={() => this.handleSignUpDialogBoxState(false)}
+            onSubmit={this.handleSignUpSubmit}
+            errorText={this.state.errorText}
+            unsetError={this.unsetError}
+            userName={this.state.userName}
+            userEmail={this.state.userEmail}
+            onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
+            onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
           />
-        }
+        )}
+
+        {this.state.emailConfirmationDialogBox && (
+          <EmailConfirmationDialogBox
+            open={this.state.emailConfirmationDialogBox}
+            schoolEmail={get(this.state, "userData.email")}
+            onModalClose={() =>
+              this.handleEmailConfirmationDialogBoxState(false)
+            }
+            onDisAgreeButtonClick={() =>
+              this.handleEmailConfirmationDialogBoxState(false)
+            }
+            onAgreeButtonClick={this.handleEmailConfirmationSubmit}
+            isLoading={this.state.isBusy}
+          />
+        )}
+
+        {this.state.termsOfServiceDialogBox && (
+          <TermsOfServiceDialogBox
+            open={this.state.termsOfServiceDialogBox}
+            onModalClose={() => this.handleTermsOfServiceDialogBoxState(false)}
+            onAgreeButtonClick={this.handleServiceAgreementSubmit}
+          />
+        )}
         {isEmpty(classPricing) && isEmpty(monthlyPricing) ? (
           ""
         ) : (
