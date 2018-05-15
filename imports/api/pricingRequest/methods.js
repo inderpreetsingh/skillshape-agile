@@ -28,6 +28,7 @@ Meteor.methods({
     // Now we gonna validate the data..
     const validationContext = PricingRequestSchema.newContext();
     data.createdAt = new Date();
+    data.notification = false;
     const isValid = validationContext.validate(data);
 
     // Verfiying the data send..
@@ -96,7 +97,7 @@ Meteor.methods({
     }else {
       // Return the errors in case something is invalid.
       const invalidData = validationContext.invalidKeys()[0];
-      console.log("validation errors...",validationContext.invalidKeys());
+      // console.log("validation errors...",validationContext.invalidKeys());
       throw new Meteor.Error(invalidData.name +' is '+ invalidData.value);
     }
   },

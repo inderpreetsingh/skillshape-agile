@@ -24,6 +24,9 @@ export const PricingRequestSchema = new SimpleSchema({
     type: String,
     optional: true
   },
+  notification: {
+    type: Boolean
+  },
   createdAt: {
     type: Date,
   }

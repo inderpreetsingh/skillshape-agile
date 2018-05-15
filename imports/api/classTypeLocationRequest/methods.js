@@ -27,6 +27,7 @@ Meteor.methods({
     // Now we gonna validate the data..
     const validationContext = ClassTimesRequestSchema.newContext();
     data.createdAt = new Date();
+    data.notification = false;
     const isValid = validationContext.validate(data);
 
     // Verfiying the data send..
