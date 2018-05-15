@@ -254,7 +254,7 @@ class SignUpDialogBox extends Component {
             sendMeSkillShapeNotification
         } = this.state;
 
-        console.log('SignUpDialogBox state -->>',this.state);
+        console.log('SignUpDialogBox state -->>',this);
         //console.log('SignUpDialogBox props -->>',this.props);
         return(
             <Dialog
@@ -266,7 +266,7 @@ class SignUpDialogBox extends Component {
               classes={{paper: classes.dialogPaper}}
             >
                 <MuiThemeProvider theme={muiTheme}>
-                    <form onSubmit={this.props.onSubmit.bind(this, {name, email, captchaValue, sendMeSkillShapeNotification})}>
+                    <form onSubmit={this.props.onSubmit && this.props.onSubmit.bind(this, {name, email, captchaValue, sendMeSkillShapeNotification})}>
 
                       <DialogTitleContainer>
                         <DialogTitleWrapper>
