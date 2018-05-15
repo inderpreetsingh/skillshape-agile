@@ -195,7 +195,7 @@ class CardsList extends Component {
                  </GridContainer>
 
                  {
-                   this.seeMoreStatus(cardsData, filters, name) && (
+                   this.props.landingPage && this.seeMoreStatus(cardsData, filters, name) && (
                        <More>
                           <SecondaryButton label="See More" onClick={() => {handleSeeMore(name)}}/>
                        </More>
