@@ -35,6 +35,7 @@ import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import NoMediaFound from '/imports/ui/components/landing/components/helpers/NoMediaFound.jsx';
 
+import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
 import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
 import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx';
@@ -177,6 +178,7 @@ const SectionTitle = styled.h2`
   text-align: center;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
 const ErrorText = styled.p`
@@ -261,7 +263,7 @@ export default function() {
             this.state.isLoading && <ContainerLoader />
           }
           {this.state.emailUsDialog && <EmailUsDialogBox
-    					ourEmail={ourEmail}
+    					ourEmail={schoolData.email}
     					schoolData={schoolData}
     					open={this.state.emailUsDialog}
     					onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }

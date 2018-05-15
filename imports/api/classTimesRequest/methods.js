@@ -82,7 +82,7 @@ Meteor.methods({
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?classTimesRequest=true&requestId=${classTimesRequestId}`;
            const subject = `Subscription for schedule of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-           console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
+          //  console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
            sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 

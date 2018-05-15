@@ -8,7 +8,8 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 300px;
+  height: 100%;
+  min-height: 300px;
   background: ${helpers.noMediaFound};
   padding: ${helpers.rhythmDiv * 2}px;
   display: flex;
@@ -16,7 +17,7 @@ const Wrapper = styled.div`
 `;
 
 const Content = styled.div`
-  max-width: 350px;
+  max-width: 400px;
   margin: 0 auto;
 `;
 
@@ -44,9 +45,26 @@ const Title = styled.h2`
 
 const ActionButtons = styled.div`
   ${helpers.flexCenter}
-  justify-content: space-between;
+  justify-content: space-around;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+  }
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: 100%;
+    margin-bottom: ${props => props.marginBottom}px;
+  }
+`;
+
+const MyLink = styled.a`
+  text-decoration: none;
+  width: 100%;
+`;
 
 const NoMediaFound = (props)  => (<Wrapper>
   <Content>
@@ -57,11 +75,15 @@ const NoMediaFound = (props)  => (<Wrapper>
   <Title>{props.schoolName} has not uploaded any media yet.</Title>
 
   <ActionButtons>
-    <a href={props.siteLink} target="_blank">
-      <FormGhostButton darkGreyColor label="Visit Site" icon iconName="web" onClick={props.onVisitSiteButtonClick} />
-    </a>
+    <ButtonWrapper marginBottom={helpers.rhythmDiv * 2}>
+      <MyLink href={props.siteLink} target="_blank">
+        <FormGhostButton darkGreyColor fullWidth label="Visit Site" icon iconName="web" onClick={props.onVisitSiteButtonClick} />
+      </MyLink>
+    </ButtonWrapper>
 
-    <FormGhostButton darkGreyColor label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
+    <ButtonWrapper>
+      <FormGhostButton darkGreyColor fullWidth label="Send Email" icon iconName="email" onClick={props.onEmailButtonClick} />
+    </ButtonWrapper>
   </ActionButtons>
   </Content>
 </Wrapper>);

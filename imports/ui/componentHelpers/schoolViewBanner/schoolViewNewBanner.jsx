@@ -22,14 +22,15 @@ import ClassTypeCoverContent from '/imports/ui/components/landing/components/cla
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { withStyles } from "/imports/util";
-import { getUserFullName } from '/imports/util/getUserData';
-import UploadMedia from './uploadMedia';
-import config from '/imports/config';
-import styles from "./style";
 import withImageExists from '/imports/util/withImageExists.js';
 import {imageExists} from '/imports/util';
+import { withStyles } from "/imports/util";
+import { getUserFullName } from '/imports/util/getUserData';
+import config from '/imports/config';
+import styles from "./style";
+import UploadMedia from './uploadMedia';
+
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { schoolDetailsImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 const PublishStatusButtonWrapper = styled.div`
