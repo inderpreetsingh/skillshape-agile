@@ -13,7 +13,7 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import Events from "/imports/util/events";
 import LoginDialogBox from "/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx";
 import SignUpDialogBox from '/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx';
-
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 class SchoolPriceView extends React.Component {
   constructor(props) {
     super(props);
@@ -157,9 +157,9 @@ class SchoolPriceView extends React.Component {
     }
 
     if (email && password) {
-      this.setState({ loading: true });
+      this.setState({ isLoading: true });
       Meteor.loginWithPassword(email, password, (err, res) => {
-        stateObj.loading = false;
+        stateObj.isLoading = false;
         if (err) {
           stateObj.error.message = err.reason || err.message;
         } else {
@@ -177,13 +177,8 @@ class SchoolPriceView extends React.Component {
           } else {
             stateObj.loginModal = false;
           }
-          /*Admin of school was not login while clicking on `No, I will manage the school`
-                    so in this case we need to redirect to school admin page that we are getting in query params*/
-          if (redirectUrl) {
-            browserHistory.push(redirectUrl);
-          } else {
-            browserHistory.push("/");
-          }
+          openMailToInNewTab("/")
+          // browserHistory.push();
         }
         this.setState(stateObj);
       });
