@@ -167,18 +167,18 @@ class ClassTypeList extends Component {
 
   				if(!isEmpty(classType[key])) {
   					return <CardsList
-  						key={index}
+  						      key={index}
                 		mapView={this.props.mapView}
                 		title={title}
                 		name={key}
                 		cardsData={classType[key]}
                 		classInterestData={this.props.classInterestData}
-                        locationName={this.props.locationName}
-                        handleSeeMore={this.props.handleSeeMore}
-                        filters={this.props.filters}
-                        reviewsData={this.props.reviewsData || []}
-                        hideClassTypeOptions={this.props.hideClassTypeOptions}
-
+                    locationName={this.props.locationName}
+                    handleSeeMore={this.props.handleSeeMore}
+                    filters={this.props.filters}
+                    reviewsData={this.props.reviewsData || []}
+                    hideClassTypeOptions={this.props.hideClassTypeOptions}
+                    landingPage={this.props.landingPage}
                 	/>
   				}
   			})
@@ -207,7 +207,7 @@ class ClassTypeList extends Component {
 
 	render() {
 		const { mapView, classTypeData, classInterestData, reviewsData, skillCategoryData, splitByCategory, filters, isLoading, classTimesData } = this.props;
-    // console.log("ClassTypeList props -->>",this.props);
+    // console.log("ClassTypeList props -->>",this);
     return (<MainContentWrapper>
 				{
 					mapView ? (
@@ -233,6 +233,7 @@ class ClassTypeList extends Component {
                               handleSeeMore={this.props.handleSeeMore}
                               filters={this.props.filters}
                               hideClassTypeOptions={this.props.hideClassTypeOptions}
+                              landingPage={this.props.landingPage}
                             />
 
                             {/*Hack to get rid of this on school type page*/
@@ -262,6 +263,7 @@ class ClassTypeList extends Component {
                           filters={this.props.filters}
                           classTimesData={ classTimesData || [] }
                           hideClassTypeOptions={this.props.hideClassTypeOptions}
+                          landingPage={this.props.landingPage}
                         />)
 							}
 
