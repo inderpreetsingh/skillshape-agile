@@ -25,6 +25,7 @@ import "/imports/api/classTimesRequest/methods";
 import "/imports/api/schoolMemberDetails/methods";
 import "/imports/api/pricingRequest/methods";
 import "/imports/api/packagesRequest/methods";
+import "/imports/api/classTypeLocationRequest/methods";
 
 // All publication imported over here
 

@@ -170,7 +170,7 @@ class EmailUsDialogBox extends Component {
 
       const { subject, message } = this.state;
       const name = this.state.name;
-      const { toastr } = this.props;
+      const { toastr ,schoolData } = this.props;
 
       let yourEmail =""
       let yourName = ""
@@ -181,7 +181,6 @@ class EmailUsDialogBox extends Component {
       // const message = this.state.message;
       // const selectedOption = this.state.radioButtonGroupValue;
       const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-      let schoolData = this.props.schoolData;
       if(this.state.readyToSumit) {
       if (!emailReg.test(yourEmail) && !Meteor.user()) {
           toastr.error("Please enter valid email address", "Error");

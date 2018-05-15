@@ -29,6 +29,7 @@ Meteor.methods({
     // Now we gonna validate the data..
     const validationContext = ClassTimesRequestSchema.newContext();
     data.createdAt = new Date();
+    data.notification = false;
     const isValid = validationContext.validate(data);
 
     // Verfiying the data send..
@@ -37,9 +38,7 @@ Meteor.methods({
       const classTimesRequestAlreadyPresent = ClassTimesRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
 
       if(classTimesRequestAlreadyPresent) {
-        return {
-          message: "Already requested for class times for this class, with this email address"
-        }
+        throw new Meteor.Error('Already requested for class times with this email address');
       }else {
         /***
         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered user)
@@ -82,7 +81,7 @@ Meteor.methods({
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?classTimesRequest=true&requestId=${classTimesRequestId}`;
            const subject = `Subscription for schedule of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-           console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
+          //  console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
            sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 

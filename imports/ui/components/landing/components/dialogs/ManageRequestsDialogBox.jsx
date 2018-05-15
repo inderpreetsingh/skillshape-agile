@@ -107,9 +107,25 @@ class ManageRequestsDialogBox extends Component {
     name: '',
     email: '',
     subscriptionRequest: 'save',
-    subscribe: true,
     readyToSubmit: false,
     inputsName: ['name','email'],
+  }
+
+  _getCollectionName = () => {
+    const {requestFor} = this.props;
+
+    if(requestFor == 'price details')  {
+      return 'pricingRequest';
+    }else if(requestFor == 'location') {
+      return 'classTypeLocationRequest';
+    }else {
+      return 'classTimesRequest';
+    }
+  }
+
+  _getCompleteMethodName = (methodName) => {
+    const collectionName = this._getCollectionName();
+    return collectionName + '.' + methodName;
   }
 
   handleChange = name => e => {
@@ -148,19 +164,12 @@ class ManageRequestsDialogBox extends Component {
       email: this.state.email,
       schoolId: schoolData._id,
     }
-    let text = 'class times';
-    let methodNameToCall = 'classTimesRequest.addRequest';
 
     if(classTypeId) {
       data.classTypeId = classTypeId
     }
 
-    if(requestFor === 'price') {
-      methodNameToCall = 'pricingRequest.addRequest';
-      text = 'pricing';
-    }
-
-    // console.info(data,"data...");
+    const methodNameToCall = this._getCompleteMethodName('addRequest');
 
     if(this.state.readyToSubmit) {
       if (!data.email) {
@@ -180,9 +189,7 @@ class ManageRequestsDialogBox extends Component {
             if(err && err.error === userExistsError) {
               Events.trigger('loginAsUser',{email: data.email, loginModalTitle: `We have ${data.email} as registered user. kindly log in your account.`});
             }else if(err) {
-              toastr.error(err.reason || err.message,"Error", {}, false);
-            }else if(res.message) {
-              toastr.error(res.message,'Error');
+              toastr.error(err.reason || err.message, "Error", {}, false);
             }
             else if(res) {
               if(subscriptionRequest === 'sign-up') {
@@ -203,7 +210,7 @@ class ManageRequestsDialogBox extends Component {
         });
 
       }
-    }else if(this.state.readyToSubmit && !this.state.subscribe) {
+    }else if(this.state.readyToSubmit) {
       this.handleRequest(text);
     }
   }

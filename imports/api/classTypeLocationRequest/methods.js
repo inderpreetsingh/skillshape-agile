@@ -25,8 +25,9 @@ Meteor.methods({
     }
 
     // Now we gonna validate the data..
-    const validationContext = ClassTimesRequestSchema.newContext();
+    const validationContext = ClassTypeLocationRequestSchema.newContext();
     data.createdAt = new Date();
+    data.notification = false;
     const isValid = validationContext.validate(data);
 
     // Verfiying the data send..
@@ -35,9 +36,7 @@ Meteor.methods({
       const locationRequest = ClassTypeLocationRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
 
       if(locationRequest) {
-        return {
-          message: "Already requested for location for this class, with this email address"
-        }
+        throw new Meteor.Error('Already requested for Location with this email address');
       }else {
         /***
         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered user)
@@ -50,7 +49,7 @@ Meteor.methods({
         const updateClassLocationLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
-        const requestFor = "Class Type Location";
+        const requestFor = "Class location";
 
         let ownerName = '';
         let locationRequestId = '';
@@ -95,7 +94,7 @@ Meteor.methods({
     }
   },
   'classTypeLocationRequest.getRequestData': function(requestId) {
-      const locationRequestData = classTypeLocationRequest.findOne({_id: requestId});
+      const locationRequestData = ClassTypeLocationRequest.findOne({_id: requestId});
       if(!locationRequestData) {
         throw new Meteor.Error('no location request data has been found with this id.');
       }
@@ -107,6 +106,6 @@ Meteor.methods({
       }
     },
    'classTypeLocationRequest.removeRequest': function(requestId) {
-     return classTypeLocationRequest.remove({_id: requestId});
+     return ClassTypeLocationRequest.remove({_id: requestId});
    }
 })

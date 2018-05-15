@@ -8,6 +8,10 @@ import Sticky from 'react-stickynode';
 import { browserHistory } from 'react-router';
 import ip from 'ip';
 
+import Chip from 'material-ui/Chip';
+import Icon from 'material-ui/Icon';
+import Button from 'material-ui/Button';
+
 import Cover from './components/Cover.jsx';
 import BrandBar from './components/BrandBar.jsx';
 import SearchArea from './components/SearchArea.jsx';
@@ -30,10 +34,6 @@ import { cardsData, cardsData1 } from './constants/cardsData.js';
 import config from '/imports/config';
 import Events from '/imports/util/events';
 import { toastrModal } from '/imports/util';
-import Chip from 'material-ui/Chip';
-import Icon from 'material-ui/Icon';
-import Button from 'material-ui/Button';
-
 
 const MainContentWrapper = styled.div`
   display: flex;
@@ -242,6 +242,27 @@ class Landing extends Component {
         this.handleSkillTypeSearch = debounce(this.handleSkillTypeSearch, 1000);
     }
 
+    _handleGeoLocationError(err) {
+      console.warn(err,"err.message",err.message.indexOf);
+      switch(err.code) {
+        case err.PERMISSION_DENIED :
+          if(err.message.indexOf("User denied") == 0) {
+            return "GeoLocation services dont have permission/ or they need to be switched on in your device/browser settings";
+          }else if(err.message.indexOf("Only secure origins are allowed") == 0) {
+            return "GeoLocation services will only work in case of secured origin (eg https)";
+          }
+          break;
+
+        case err.TIMEOUT:
+          return "Browser geolocation error Timeout.";
+          break;
+
+        case err.POSITION_UNAVAILABLE:
+          return "Browser geolocation error unavailable.";
+          break;
+      }
+    }
+
     componentWillMount() {
         // let url = `https://freegeoip.net/json/${ip.address()}`
         // Meteor.http.get(url, (err, res)=> {
@@ -338,6 +359,7 @@ class Landing extends Component {
     }
 
     getMyCurrentLocation = () => {
+        const {toastr} = this.props;
         if (navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
               let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -372,7 +394,8 @@ class Landing extends Component {
               // toastr.success("Showing classes around you...","Found your location");
               // // Session.set("coords",coords)
             }, (err) => {
-            alert(`Your Browser doesnt support this feature. Error ${err.code} : ${err.message}`);
+              const geolocationError = this._handleGeoLocationError(err);
+              toastr.error(geolocationError,'Error');
           })
         }
     }
@@ -848,4 +871,4 @@ class Landing extends Component {
 }
 
 
-export default Landing;
+export default toastrModal(Landing);

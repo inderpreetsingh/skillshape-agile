@@ -17,16 +17,21 @@ import ActionButtons from '../ActionButtons.jsx';
 import BestPrices from '../BestPrices.jsx';
 import ClassTypeLogo from '../ClassTypeLogo.jsx';
 
-import * as helpers from '../../jss/helpers.js';
-import * as settings from '../../../site-settings.js';
-
-import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
+
+import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
+import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx';
+
+import * as helpers from '../../jss/helpers.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import {schoolLogo} from '/imports/ui/components/landing/site-settings.js';
 
+
 import Events from '/imports/util/events';
+import { getUserFullName } from '/imports/util/getUserData';
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+
 
 const styles = {
   myLocationIcon : {
@@ -238,36 +243,83 @@ class ClassTypeCoverContent extends React.Component {
       this.setState(newState);
     }
 
-    // Request Class type location
-    requestClassTypeLocation = () => {
-        const { toastr, classTypeData } = this.props;
-        if(Meteor.userId() && !isEmpty(classTypeData)) {
-            const payload = {
-                schoolId:classTypeData.schoolId,
-                classTypeId:classTypeData._id,
-                classTypeName:classTypeData.name
-            };
-            // console.log("payload=========>",payload);
-            this.setState({ isBusy:true });
-            Meteor.call('classType.requestClassTypeLocation', payload, (err,res)=> {
+    handleManageRequestsDialogBox = (state) => {
+      this.setState({
+        manageRequestsDialog: state
+      })
+    }
 
-                this.setState({ isBusy: false }, () => {
-                    if(res) {
-                        // Need to show message to user when email is send successfully.
-                        toastr.success("Your email has been sent. We will assist you soon.", "Success");
-                    }
-                    if(err) {
-                        toastr.error( err.reason || err.message,"Error");
-                    }
-                })
+    // Request Class type location
+    // requestClassTypeLocation = () => {
+    //     const { toastr, classTypeData } = this.props;
+    //     if(Meteor.userId() && !isEmpty(classTypeData)) {
+    //         const payload = {
+    //             schoolId:classTypeData.schoolId,
+    //             classTypeId:classTypeData._id,
+    //             classTypeName:classTypeData.name
+    //         };
+    //         // console.log("payload=========>",payload);
+    //         this.setState({ isBusy:true });
+    //         Meteor.call('classType.requestClassTypeLocation', payload, (err,res)=> {
+    //
+    //             this.setState({ isBusy: false }, () => {
+    //                 if(res) {
+    //                     // Need to show message to user when email is send successfully.
+    //                     toastr.success("Your email has been sent. We will assist you soon.", "Success");
+    //                 }
+    //                 if(err) {
+    //                     toastr.error( err.reason || err.message,"Error");
+    //                 }
+    //             })
+    //         });
+    //     } else {
+    //         this.handleDefaultDialogBox('Login to request location',true);
+    //     }
+    // }
+    handleRequest = (text) => {
+      const { toastr, schoolDetails } = this.props;
+
+      if(!isEmpty(schoolData)) {
+        let emailBody = "";
+        let url = `${Meteor.absoluteUrl()}schools/${schoolDetails.slug}`
+        let subject ="", message =  "";
+        let currentUserName = getUserFullName(Meteor.user());
+        emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
+        const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
+
+        console.info(mailTo,"my mail To data.............");
+        // const mailToNormalized = encodeURI(mailTo);
+        // window.location.href = mailToNormalized;
+        openMailToInNewTab(mailTo);
+
+      }
+    }
+
+    requestClassTypeLocation = () => {
+      const { toastr, classTypeData } = this.props;
+      if(Meteor.userId()) {
+          const payload = {
+              schoolId: classTypeData.schoolId,
+              classTypeId: classTypeData._id,
+          };
+          this.setState({ isBusy:true });
+          Meteor.call('classTypeLocationRequest.addRequest', data, (err,res) => {
+            this.setState({isBusy: false} , () => {
+              if(err) {
+                toastr.error(err.reason || err.message, "Error", {}, false);
+              }else {
+                toastr.success('Your request has been processed','success');
+                this.handleRequest('class location');
+              }
             });
-        } else {
-            this.handleDefaultDialogBox('Login to request location',true);
-        }
+          });
+      } else {
+          this.handleManageRequestsDialogBox(true);
+      }
     }
 
   render() {
-    let props = this.props;
+    const props = this.props;
     console.info('this . props ...............',this.props,"...........")
     const classTypeName = props.noClassTypeData ? '' : props.classTypeData.name;
     const selectedLocation = props.noClassTypeData ? props.schoolLocation : props.classTypeData.selectedLocation;
@@ -282,6 +334,16 @@ class ClassTypeCoverContent extends React.Component {
           <CoverContent>
             {this.state.isBusy && <ContainerLoader/>}
             {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
+            {this.state.manageRequestsDialog && <ManageRequestsDialogBox
+              title={'Location Info'}
+              open={this.state.manageRequestsDialog}
+              onModalClose={() => this.handleManageRequestsDialogBox(false)}
+              requestFor={'location'}
+              submitBtnLabel={'Request location'}
+              schoolData={props.schoolDetails}
+              classTypeId={!props.noClassTypeData && props.classTypeData._id}
+              onToastrClose={() => this.handleManageRequestsDialogBox(false)}
+              />}
 
             <ContentSection leftSection>
               {/* Displays map when it's not edit mode*/}
