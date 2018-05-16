@@ -1,15 +1,45 @@
 import React , {Component,Fragment} from 'react';
 import {isEqual,isEmpty} from 'lodash';
+
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import * as helpers from '../jss/helpers.js';
-import ClassTimeNewClock from './ClassTimeNewClock.jsx';
-import ClassTimeNewClocksContainer from './ClassTimeNewClocksContainer.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import ClassTimeNewClock from '/imports/ui/components/landing/components/classTimes/ClassTimeNewClock.jsx';
 
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
 
 const ONE_TIME = 'onetime';
+
+const Container = styled.div`
+  ${helpers.flexCenter}
+  width: 100%;
+  min-height: ${props => props.minHeight}px;
+  position: relative;
+  transition: .2s linear min-height;
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const Text = styled.p`
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
+  line-height: 1;
+  color: ${helpers.black};
+  font-family: ${helpers.specialFont};
+  font-weight: 400;
+`;
+
+const StartEndDate = Text.extend`
+  font-size: ${helpers.baseFontSize}px;
+  font-style: italic;
+  text-align: center;
+`;
+
+const ClassTypeName = Text.extend`
+  font-size: ${helpers.baseFontSize * 1.25}px;
+  text-align: center;
+  text-transform: capitalize;
+`;
 
 const OuterWrapper = styled.div`
   width: ${props => props.width || 250}px;
@@ -21,66 +51,6 @@ const InnerWrapper = styled.div`
   min-height: 160px;
   position: relative;
   margin-bottom: ${helpers.rhythmDiv}px;
-`;
-
-const ClockWrapper = styled.div`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-`;
-
-const ChangeSlide = styled.div`
-  width: 100%;
-  font-family: ${helpers.specialFont};
-  ${helpers.flexCenter}
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
-
-const Days = styled.p`
-  ${helpers.flexCenter}
-  margin: 0;
-`;
-
-const Day = styled.p`
-  ${helpers.flexCenter}
-  margin: 0;
-  margin-right: ${helpers.rhythmDiv/2}px;
-  font-size: 12px;
-  line-height: 1;
-  font-family: ${helpers.specialFont};
-  font-weight: 500;
-  width: 28px;
-  height: 28px;
-  text-transform: capitalize;
-  cursor: pointer;
-  border-radius: 50%;
-  padding: ${helpers.rhythmDiv}px;
-  border: 1px solid ${props => props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)` };
-  color: ${props => props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)` };
-
-  &:last-of-type {
-    margin-right: 0;
-  }
-`;
-
-const ScheduleSeperator = styled.span`
-  font-weight: 600;
-  margin: 0 ${helpers.rhythmDiv/2}px;
-`;
-
-const Schedule = styled.p`
-  display: inline-block;
-  width: 100%;
-  text-align: center;
-  margin: 0;
-  font-weight: 400;
-  font-size: ${helpers.baseFontSize}px;
-  text-transform: capitalize;
-`;
-
-
-const Seperator = styled.span`
-  font-weight: 400;
 `;
 
 class ClassTimeClockManager extends Component {
@@ -98,46 +68,21 @@ class ClassTimeClockManager extends Component {
     return day.substr(0,2);
   }
 
-  getDaysOfWeekFromFormattedClassTimesData = () => {
+  getTotalNoOfClocks = () => {
     const {formattedClassTimes} = this.props;
-    const daysInWeek = [];
     let clockCounter = 0;
 
-    DAYS_IN_WEEK.forEach((day,i) => {
-
-      if(formattedClassTimes[day]){
-        const scheduleData = formattedClassTimes[day];
-        const myStartingClockCount = clockCounter;
-        // console.log(scheduleData.length,myStartingClockCount,clockCounter,'this.props......')
-
-        daysInWeek.push(<Day
-          key={myStartingClockCount}
-          active={this.state.currentDayIndex === this._getIndexForDay(day)}
-          onClick={this.handleDayClick(myStartingClockCount,this._getIndexForDay(day))}>
-          {this.getDayInShortFormat(day)}
-        </Day>);
-
-        clockCounter += scheduleData.length;
+    DAYS_IN_WEEK.map((day,i) => {
+      const scheduleData = formattedClassTimes[day];
+      if(scheduleData) {
+        scheduleData.forEach((schedule,i) => {
+          ++clockCounter;
+        });
       }
-
-      return null;
     });
 
-    return daysInWeek;
+    return clockCounter;
   }
-
-  // startAutoMaticSlider = () => {
-  //   this.sliderInterval = setInterval(() => {
-  //     let newIndex = this.state.currentClockIndex + 1;
-  //     // console.log(newIndex,this.state.lastIndex);
-  //
-  //     if(newIndex === this.state.lastIndex) {
-  //       newIndex = 0;
-  //     }
-  //
-  //     this.handleSliderState(newIndex);
-  //   },this.state.slideTime);
-  // }
 
   handleDayClick = (clockIndex,dayIndex) => (e) => {
     e.preventDefault();
@@ -186,34 +131,35 @@ class ClassTimeClockManager extends Component {
 
   render() {
     // console.log(' clock times clock manager -----> ',this.props.formattedClassTimes,".....");
-    const { formattedClassTimes } = this.props;
+    const { scheduleType, description, scheduleEndDate, scheduleStartDate, clockProps, formattedClassTimes, classTypeName } = this.props;
     // console.log('formattedClassTimes',formattedClassTimes);
+    const scheduleTypeLowerCase = scheduleType.toLowerCase();
     return (<Fragment>
         {/*Clock Times*/}
         <OuterWrapper width={this.props.outerWidth}>
 
-        {/* NOTE : This is not to be used when we are using the ClassTimeNewClock */}
+        {/* class type name */}
+        <ClassTypeName>{classTypeName}</ClassTypeName>
+
+        {/* For recurring schedule only */}
+        {scheduleTypeLowerCase === 'recurring' && <StartEndDate>{scheduleStartDate} - {scheduleEndDate} </StartEndDate>}
+
         {/* <ClassTimeClock data={this.props.data} visible={this.state.currentClockIndex} {...this.props.clockProps} /> */}
-
-        <ClassTimeNewClocksContainer
-          formattedClassTimes={formattedClassTimes}
-          scheduleType={this.props.scheduleType}
-          scheduleStartDate={this.props.scheduleStartDate}
-          scheduleEndDate={this.props.scheduleEndDate}
-          currentClockIndex={this.state.currentClockIndex}
-          clockProps={this.props.clockProps}
-          updateClockAndDayIndex={this.handleSliderState}
-         />
-
+          <Container>
+           <ClassTimeNewClock
+             scheduleType={scheduleType}
+             scheduleStartDate={scheduleStartDate}
+             scheduleEndDate={scheduleEndDate}
+             formattedClassTimes={formattedClassTimes}
+             totalClocks={this.getTotalNoOfClocks()}
+             clockProps={clockProps}
+             updateClockAndDayIndex={this.handleSliderState}
+             currentClockIndex={this.state.currentClockIndex}
+             currentDayIndex={this.state.currentDayIndex}
+           />
+          </Container>
         </OuterWrapper>
-
-        {formattedClassTimes && Object.keys(formattedClassTimes).length > 1 && <ChangeSlide>
-          <Days> {this.getDaysOfWeekFromFormattedClassTimesData()} </Days>
-        </ChangeSlide>}
-
-        <Schedule>{ this.props.scheduleType.toLowerCase()}</Schedule>
-      </Fragment>
-    )
+    </Fragment>)
   }
 }
 

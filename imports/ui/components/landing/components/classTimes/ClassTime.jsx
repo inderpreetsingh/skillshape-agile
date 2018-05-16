@@ -1,31 +1,31 @@
 import React,{Component,Fragment} from 'react';
+import moment from 'moment';
 import styled, {keyframes} from 'styled-components';
 import PropTypes from 'prop-types';
 import { isEmpty, get } from 'lodash';
-import { Transition } from 'react-transition-group';
 
-import TrendingIcon from '../icons/Trending.jsx';
-import ShowMore from '../icons/ShowMore.jsx';
-import withShowMoreText from '../../../../../util/withShowMoreText.js';
+import TrendingIcon from '/imports/ui/components/landing/components/icons/Trending.jsx';
+import ShowMore from '/imports/ui/components/landing/components/icons/ShowMore.jsx';
 
-import ClassTimeClockManager from './ClassTimeClockManager.jsx';
+import ClassTimeClockManager from '/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx';
+import ClassTimesCard from '/imports/ui/components/landing/components/cards/ClassTimesCard.jsx';
 
-import PrimaryButton from '../buttons/PrimaryButton';
-import SecondaryButton from '../buttons/SecondaryButton';
-import ClassTimeButton from '../buttons/ClassTimeButton.jsx';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 
+import Events from '/imports/util/events';
 import {toastrModal} from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
-import Events from '/imports/util/events';
 
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ON_GOING_SCHEDULE = 'ongoing';
 
 const ClassTimeContainer = styled.div`
   width: 250px;
-  min-height: 430px;
+  min-height: 420px;
   padding: ${helpers.rhythmDiv}px;
   padding: ${helpers.rhythmDiv * 2}px;
   display: flex;
@@ -62,28 +62,6 @@ const ClassScheduleWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const Text = styled.p`
-  margin: 0;
-  font-size: ${helpers.baseFontSize}px;
-  font-family: ${helpers.specialFont};
-  font-weight: 600;
-  text-transform: capitalize;
-`;
-
-const Description = styled.p`
-  margin: ${helpers.rhythmDiv}px 0;
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize}px;
-  font-weight: 400;
-  padding: 0 ${helpers.rhythmDiv * 2}px;
-  overflow-y: ${props => props.fullTextState ? 'scroll' : 'auto'};
-`;
-
-const Read = styled.span`
-  font-style: italic;
-  cursor: pointer;
-`;
-
 const ScheduleAndDescriptionWrapper = styled.div`
   max-height: 330px; // This is the computed max-height for the container.
   display: flex;
@@ -99,6 +77,34 @@ const DescriptionWrapper = styled.div`
   display: flex;
 `;
 
+const Description = styled.p`
+  margin: ${helpers.rhythmDiv}px 0;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 400;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+  overflow-y: auto;
+`;
+
+const Text = styled.p`
+  margin: 0;
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 600;
+  text-transform: capitalize;
+`;
+
+const ButtonsWrapper = styled.div`
+
+`;
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
 const TrendingWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -108,13 +114,10 @@ const TrendingWrapper = styled.div`
   left: auto;
 `;
 
-const ClassSchedule = (props) => (
-  <ClassScheduleWrapper>
-    <Text>{props.classDays}</Text>
-    <Seperator> | </Seperator>
-    <Text>{props.schedule}</Text>
-  </ClassScheduleWrapper>
-);
+const ClassTimesCardWrapper = styled.div`
+  position: absolute;
+  bottom: ${helpers.rhythmDiv * 2}px;
+`;
 
 const Trending = () => {
   return (
@@ -134,10 +137,6 @@ class ClassTime extends Component {
     // fullTextState: this.props.fullTextState,
   }
 
-  componentDidMount = () => {
-    // console.info('Show me state',this.state);
-  }
-
   handleAddToMyCalendarButtonClick = () => {
     // console.log("this.props.handleAddToMyCalendarButtonClick",this.props);
     this.addToMyCalender(this.props.classTimeData);
@@ -149,15 +148,6 @@ class ClassTime extends Component {
     // console.log("this.props",this.props);
     this.removeFromMyCalender(this.props.classTimeData);
   }
-
-  // componentWillReceiveProps = (newProps) => {
-  //   if(this.state.fullTextState !== newProps.fullTextState) {
-  //     this.setState({
-  //       // addToCalendar: newProps.addToCalendar,
-  //       fullTextState: newProps.fullTextState,
-  //     });
-  //   }
-  // }
 
   formatDataBasedOnScheduleType = (data) => {
     const classTimesData = {...data};
@@ -201,6 +191,7 @@ class ClassTime extends Component {
       let ampm = hours >= 12 ? 'pm' : 'am';
       return ampm;
   }
+
   formatTime = (startTime) => {
     const hours = startTime.getHours();
     const mins = startTime.getMinutes();
@@ -208,6 +199,27 @@ class ClassTime extends Component {
     hour = hour < 10 ? '0' + hour : hour;
     let minutes = mins < 10 ? "0"+ mins : mins;
     return `${hour}:${minutes}`;
+  }
+
+  formatDate = (date) => {
+    // console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
+    return moment(date).format('MMMM DD, YYYY');
+  }
+
+  showDescription = (formattedClassTimes) => {
+    debugger;
+    dataCounter = 0;
+    for (day in formattedClassTimes) {
+      if(formattedClassTimes.hasOwnProperty(day)) {
+        dataCounter += formattedClassTimes[day].length;
+      }
+
+      if(dataCounter > 1) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   removeFromMyCalender = (classTimeRec) => {
@@ -229,6 +241,7 @@ class ClassTime extends Component {
         alert("Please login !!!!")
     }
   }
+
   addToMyCalender = (data) => {
     // check for user login or not
     console.log("addToMyCalender",data);
@@ -267,6 +280,12 @@ class ClassTime extends Component {
     })
   }
 
+  handleShowCard = (state) => () => {
+    this.setState({
+      showCard: state
+    })
+  }
+
   _getWrapperClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar' : 'remove-from-calendar';
 
   _getOuterClockClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
@@ -302,8 +321,10 @@ class ClassTime extends Component {
   }
 
   render() {
-    console.log("ClassTime props -->>",this.props);
-    const { desc } = this.props;
+    // console.log("ClassTime props -->>",this.props);
+    const { desc , startDate, endDate, scheduleType, name } = this.props;
+    const formattedClassTimes = this.formatDataBasedOnScheduleType(this.props);
+    const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this._getOuterClockClassName(this.props.addToCalendar);
     const dotColor = this._getDotColor(this.props.addToCalendar);
     return (<Fragment>
@@ -312,29 +333,41 @@ class ClassTime extends Component {
       <ClassTimeContainer
         className={`class-time-bg-transition ${this._getWrapperClassName(this.props.addToCalendar)}`}
         key={this.props._id} >
-        <ScheduleAndDescriptionWrapper>
+          <ScheduleAndDescriptionWrapper>
+            <ScheduleWrapper>
+              <ClassTimeClockManager
+                classTypeName={name}
+                formattedClassTimes={formattedClassTimes}
+                scheduleStartDate={this.formatDate(startDate)}
+                scheduleEndDate={this.formatDate(endDate)}
+                scheduleType={scheduleType}
+                clockProps={{ className: classNameForClock, dotColor: dotColor }}
+              />
+            </ScheduleWrapper>
 
-          <ScheduleWrapper>
-            <ClassTimeClockManager
-              formattedClassTimes={this.formatDataBasedOnScheduleType(this.props)}
-              scheduleStartDate={this.props.startDate}
-              scheduleEndDate={this.props.endDate}
-              scheduleType={this.props.scheduleType}
-              classTimes={this.props.classTimes}
-              clockProps={{ className: classNameForClock, dotColor: dotColor }}
-            />
-          </ScheduleWrapper>
+            {showDescription && <DescriptionWrapper>
+              <Description>
+                {desc}
+              </Description>
+            </DescriptionWrapper>}
 
-          <DescriptionWrapper>
-            <Description>
-              {desc}
-            </Description>
-          </DescriptionWrapper>
-        </ScheduleAndDescriptionWrapper>
+          </ScheduleAndDescriptionWrapper>
 
-        {this._getCalenderButton(this.props.addToCalendar)}
+          {/* View All times button */}
+          <ButtonsWrapper>
+            {!showDescription && <ButtonWrapper>
+              <ClassTimeButton white icon iconName="av_timer" onClick={this.handleShowCard(true)} label="View all times" />
+            </ButtonWrapper>}
+            {this._getCalenderButton(this.props.addToCalendar)}
+          </ButtonsWrapper>
 
-        {this.props.isTrending && <Trending />}
+          {this.props.isTrending && <Trending />}
+
+          {this.state.showCard &&
+            <ClassTimesCardWrapper>
+              <ClassTimesCard show={this.state.showCard} onClose={this.handleShowCard(false)}/>
+            </ClassTimesCardWrapper>  
+            }
       </ClassTimeContainer></Fragment>)
     }
 }

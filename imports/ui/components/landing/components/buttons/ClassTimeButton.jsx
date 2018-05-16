@@ -67,6 +67,21 @@ const styles = {
       color: helpers.lightTextColor,
     },
   },
+  classTimeWhiteButton: {
+    backgroundColor: 'white',
+    lineHeight: 1,
+    '&:hover': {
+      backgroundColor: 'white',
+    },
+  },
+  classTimeWhiteButtonLabel: {
+    color: helpers.textColor,
+    lineHeight: 1,
+    textTransform: 'none',
+    '&:hover': {
+      color: helpers.textColor,
+    },
+  },
   fullWidth: {
     width: '100%'
   },
@@ -123,6 +138,11 @@ const ClassTimeButton = (props) => {
   if(props.secondary) {
     rootClass = rootClass +' '+ props.classes.classTimeSecondaryButton;
     labelClass = props.classes.classTimeSecondaryButtonLabel;
+  }
+
+  if(props.white) {
+    rootClass = rootClass +' '+ props.classes.classTimeWhiteButton;
+    labelClass = props.classes.classTimeWhiteButtonLabel;
   }
 
   if(props.itemScope && props.itemType) {
