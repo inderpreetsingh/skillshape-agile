@@ -90,8 +90,13 @@ class PanelWithTable extends React.Component {
         }
     }
 
-    handleFormModal = (classTypeId)=> {
-        this.setState({showForm: false, formData: null, newLocationAdded: true, showClassTimeFormModal: {[classTypeId]: true}});
+    handleFormModal = (MainTableId)=> {
+        this.setState({showForm: false, formData: null, MainTableHandleSubmit: {[MainTableId]: true}, showClassTimeFormModal: {[MainTableId]: true}});
+    }
+
+    handleMainTableState =(MainTableId) => {
+        // console.log("MainTableId------------",MainTableId)
+        this.setState({MainTableHandleSubmit: {[MainTableId]: false}});
     }
 
     enableParentPanelToDefaultOpen = () => {
