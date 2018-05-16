@@ -114,6 +114,11 @@ const TrendingWrapper = styled.div`
   left: auto;
 `;
 
+const ClassTimesCardWrapper = styled.div`
+  position: absolute;
+  bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
 const Trending = () => {
   return (
     <TrendingWrapper>
@@ -358,7 +363,11 @@ class ClassTime extends Component {
 
           {this.props.isTrending && <Trending />}
 
-          <ClassTimesCard show={this.state.showCard} onClose={this.handleShowCard(false)}/>
+          {this.state.showCard &&
+            <ClassTimesCardWrapper>
+              <ClassTimesCard show={this.state.showCard} onClose={this.handleShowCard(false)}/>
+            </ClassTimesCardWrapper>  
+            }
       </ClassTimeContainer></Fragment>)
     }
 }

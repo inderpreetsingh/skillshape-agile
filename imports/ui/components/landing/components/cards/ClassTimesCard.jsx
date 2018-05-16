@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Icon from 'material-ui/Icon';
+import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import Clear from 'material-ui-icons/Clear';
 import MoreVert from 'material-ui-icons/MoreVert';
@@ -15,7 +16,6 @@ const styles = {
   cardWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    position: 'relative',
     cursor: 'pointer'
   },
   cardIconButton : {
@@ -45,33 +45,38 @@ const IconButtonWrapper = styled.div`
   opacity: ${props => props.closeButton && 1};
 `;
 
+const Wrapper = styled.div`
+  opacity: ${props => props.show ? 1 : 0};
+  transition: opacity .1s linear;
+  height: 200px;
+`;
+
 const CardTopArea = styled.div`
   display: flex;
   width: 100%;
   justify-content: flex-end;
 `;
 
-const CardsContent = styled.div`
+const CardContent = styled.div`
 `;
 
 
 const ClassTimesCard = (props) =>  {
   const {classes} = props;
 
-  return (<Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
-    <CardTopArea>
-      <IconButtonWrapper revealCard={props.revealCard} closeButton>
-      <IconButton className={props.classes.cardIconButton} variant="fab" color="secondary" aria-label="close" onClick={props.hideCardContent}>
-        <Icon>clear</Icon>
-      </IconButton>
-      </IconButtonWrapper>
-    </CardTopArea>
+  return (<Wrapper show={props.show}>
+      <CardTopArea>
+        <IconButtonWrapper>
+          <Button className={props.classes.cardIconButton} variant="fab" color="secondary" aria-label="close" onClick={props.onClose}>
+            <Icon>clear</Icon>
+          </Button>
+        </IconButtonWrapper>
+      </CardTopArea>
 
-    <CardContent>
+      <CardContent>
 
-    </CardContent>
-  </Paper>)
-
-}
+      </CardContent>
+    </Wrapper>
+  )}
 
 export default withStyles(styles)(ClassTimesCard);
