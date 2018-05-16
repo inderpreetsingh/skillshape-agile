@@ -31,12 +31,12 @@ export default function (props) {
 	return (
 		<div className="panel-child-table">
 			{
-          		this.state.showForm && <FormComponent
+          		(this.state.showForm || this.props && this.props.MainTableHandleSubmit && this.props.MainTableHandleSubmit[this.props && this.props.parentKey]) && <FormComponent
           			schoolId={schoolId}
           			parentKey={parentKey}
           			parentData={parentData}
           			data={this.state.formData}
-          			open={this.state.showForm}
+          			open={this.state.showForm || this.props.MainTableHandleSubmit && this.props.MainTableHandleSubmit[this.props && this.props.parentKey]}
           			onClose={this.handleFormModal}
           		/>
           	}

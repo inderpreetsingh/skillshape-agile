@@ -80,6 +80,7 @@ class ChildTable extends React.Component {
     }
 
     handleFormModal = ()=> {
+        this.props.handleMainTableState(this.props.parentKey);
         this.setState({showForm: false, formData: null})
     }
 
