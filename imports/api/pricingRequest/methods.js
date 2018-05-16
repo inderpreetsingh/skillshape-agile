@@ -73,7 +73,7 @@ Meteor.methods({
          }
 
         console.log(updatePriceLink, schoolPageLink, currentUserName, classTypeName, ownerName, fromEmail, toEmail, memberLink);
-        //  sendRequestReceivedEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink: updatePriceLink, memberLink, requestFor});
+        sendRequestReceivedEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink: updatePriceLink, memberLink, requestFor});
 
          if(subscriptionRequest === 'save' || this.userId)
             pricingRequestId = PricingRequest.insert(data);
@@ -85,7 +85,7 @@ Meteor.methods({
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?pricingRequest=true&requestId=${pricingRequestId}`;
            const subject = `Subscription for prices of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-          //  sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
+          sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
          return {
