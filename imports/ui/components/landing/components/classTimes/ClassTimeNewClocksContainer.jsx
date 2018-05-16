@@ -56,7 +56,7 @@ class ClassTimeNewClocksContainer extends Component {
       updateClockAndDayIndex
     } = this.props;
     // console.log(formattedClassTimes,"formattedClassTimes...........");
-    return (<Container minHeight={this.state.minHeight}>
+    return (<Container>
 
         <ClassTimeNewClock
           scheduleType={scheduleType}

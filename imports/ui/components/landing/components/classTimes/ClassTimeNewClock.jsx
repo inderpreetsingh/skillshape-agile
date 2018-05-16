@@ -19,9 +19,13 @@ const ClockOuterWrapper = styled.div`
   height: 100%;
   opacity: ${props => props.visible ? 1 : 0};
   pointer-events: ${props => props.visible ? 'all' : 'none'};
-  position: absolute;
   margin-bottom: ${helpers.rhythmDiv}px;
   transition: opacity .2s ease-out;
+`;
+
+const Container = styled.div`
+  ${helpers.flexCenter}
+  flex-direction: column;
 `;
 
 const ClockInnerWrapper = styled.div`
@@ -116,6 +120,15 @@ const CurrentDate = DayDateInfo.extend`
   opacity: ${props => props.visible ? 1 : 0};
 `;
 
+const Schedule = styled.p`
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  font-weight: 400;
+  font-size: ${helpers.baseFontSize}px;
+  text-transform: capitalize;
+`;
 
 // Assuming the duration in mins
 const convertDurationToHours = (duration) => {
@@ -142,14 +155,6 @@ const MyClockWrapper = styled.div`
   cursor: ${props => props.clockType === 'multiple' ? 'pointer' : 'initial'};
 `;
 
-const ScheduleLabel = styled.p`
-  text-align: center;
-  font-weight: 500;
-  margin: 0;
-  margin-bottom: ${helpers.rhythmDiv/2}px;
-  font-style: normal;
-`;
-
 const Date = styled.p`
   text-align: center;
   margin: 0;
@@ -159,6 +164,40 @@ const DotsWrapper = styled.div`
   width: 100%;
   ${helpers.flexCenter}
   margin: ${helpers.rhythmDiv}px 0;
+`;
+
+const ChangeSlide = styled.div`
+  width: 100%;
+  font-family: ${helpers.specialFont};
+  ${helpers.flexCenter}
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const Days = styled.p`
+  ${helpers.flexCenter}
+  margin: 0;
+`;
+
+const Day = styled.p`
+  ${helpers.flexCenter}
+  margin: 0;
+  margin-right: ${helpers.rhythmDiv/2}px;
+  font-size: 12px;
+  line-height: 1;
+  font-family: ${helpers.specialFont};
+  font-weight: 500;
+  width: 28px;
+  height: 28px;
+  text-transform: capitalize;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: ${helpers.rhythmDiv}px;
+  border: 1px solid ${props => props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)` };
+  color: ${props => props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)` };
+
+  &:last-of-type {
+    margin-right: 0;
+  }
 `;
 
 const MyClock = (props) => {
@@ -248,11 +287,20 @@ class ClassTimeNewClock extends Component {
     return moment(date).format('MMMM DD, YYYY');
   }
 
+  handleDayClick = (clockIndex,dayIndex) => (e) => {
+    e.preventDefault();
+    console.log('clicked',clockIndex,dayIndex,"=============");
+
+    this.handleSliderState(clockIndex,dayIndex);
+  }
+
   computeContainerHeight = () => {
     const {scheduleType, totalClocks, updateContainerHeight} = this.props;
     const clocks = totalClocks > 1 ? 'multiple' : 'single';
 
-    let computedHeight = 100 + (dateFontSize + margin); // 18 font size + 2 * margintop and bottom.
+    // scheduleType + 18 datefont size + (2 * 8) margintop and bottom.
+    let computedHeight = 100 + 16 + (dateFontSize + margin);
+
     if(clocks === 'multiple') {
       computedHeight += 20; // Adding 20 more for the slider dots..
     }
@@ -337,39 +385,77 @@ class ClassTimeNewClock extends Component {
     return allClocks;
   }
 
+
+    getDaysOfWeekFromFormattedClassTimesData = () => {
+      const {formattedClassTimes} = this.props;
+      const daysInWeek = [];
+      let clockCounter = 0;
+
+      DAYS_IN_WEEK.forEach((day,i) => {
+
+        if(formattedClassTimes[day]){
+          const scheduleData = formattedClassTimes[day];
+          const myStartingClockCount = clockCounter;
+          // console.log(scheduleData.length,myStartingClockCount,clockCounter,'this.props......')
+
+          daysInWeek.push(<Day
+            key={myStartingClockCount}
+            active={this.props.currentDayIndex === this._getIndexForDay(day)}
+            onClick={this.handleDayClick(myStartingClockCount,this._getIndexForDay(day))}>
+            {this.getDayInShortFormat(day)}
+          </Day>);
+
+          clockCounter += scheduleData.length;
+        }
+
+        return null;
+      });
+
+      return daysInWeek;
+    }
+
   componentDidUpdate = () => {
-    this.computeContainerHeight();
+    // this.computeContainerHeight();
   }
 
   componentDidMount = () => {
-    this.computeContainerHeight();
+    // this.computeContainerHeight();
   }
 
   render() {
-    const { scheduleType, totalClocks, currentClockIndex, clockProps } = this.props;
+    const { scheduleType, totalClocks, currentClockIndex, clockProps, formattedClassTimes } = this.props;
     const type = totalClocks > 1 ? 'multiple' : 'single';
     console.info(type, totalClocks, "type .............");
 
-    return (<ClockOuterWrapper
-              visible={true}
+    return (<Container>
+          {formattedClassTimes && Object.keys(formattedClassTimes).length > 1 && <ChangeSlide>
+            <Days> {this.getDaysOfWeekFromFormattedClassTimesData()} </Days>
+          </ChangeSlide>}
+          <ClockOuterWrapper
+            visible={true}
+            clockType={type}
+            currentClockIndex={currentClockIndex}>
+            <ClockInnerWrapper
               clockType={type}
               currentClockIndex={currentClockIndex}>
-              <ClockInnerWrapper
-                clockType={type}
-                currentClockIndex={currentClockIndex}>
-                {this.getClocksFromFormattedClassTimesData()}
-              </ClockInnerWrapper>
-              {(totalClocks > 1) && <DotsWrapper><SliderDots
-                  currentIndex={currentClockIndex}
-                  noOfDots={totalClocks}
-                  dotColor={clockProps.dotColor}
-                  onDotClick={this.handleClockClick} /></DotsWrapper> }
-              {scheduleType
-                &&
-                <MutipleDatesContainer height={this.computeDateContainerHeight()}>
-                {this.getDatesFromFormattedClassTimesData()}
-                </MutipleDatesContainer>}
-        </ClockOuterWrapper>)
+              {this.getClocksFromFormattedClassTimesData()}
+            </ClockInnerWrapper>
+          </ClockOuterWrapper>
+          {/* Slider Dots */}
+          {(totalClocks > 1) && <DotsWrapper><SliderDots
+            currentIndex={currentClockIndex}
+            noOfDots={totalClocks}
+            dotColor={clockProps.dotColor}
+            onDotClick={this.handleClockClick} /></DotsWrapper>}
+
+            {/* schedule Type */}
+            <Schedule>{ this.props.scheduleType.toLowerCase()}</Schedule>
+
+            {/* All the schedule dates.. */}
+            {scheduleType && <MutipleDatesContainer height={this.computeDateContainerHeight()}>
+            {this.getDatesFromFormattedClassTimesData()}
+          </MutipleDatesContainer>}
+        </Container>)
     }
 }
 
