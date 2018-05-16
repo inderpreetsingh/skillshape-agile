@@ -20,7 +20,8 @@ export default function () {
 	        	{
 	        		embedCodeSettings.map((setting, index) => {
 						let code = Meteor.absoluteUrl(`embed/schools/${schoolData.slug}/${setting.codeName}`) + "?height=800";
-	        			let value = `<iframe src=${code} seamless="seamless" id="skillshape-embed" name="skillshape" frameborder="0" scrolling="auto" style="width: 100%;min-height:400px;"></iframe>`
+	        			let script = `<script type="text/javascript">function setIframeHeightCO(id,ht){var ifrm=document.getElementById(id);ifrm.style.visibility='hidden';ifrm.style.height=ht+4+"px";ifrm.style.visibility='visible'};function handleDocHeightMsg(e){console.log("<<<<<<<<<<<<<---------------------------->>>>>>>>>>>>>",e);if("${Meteor.absoluteUrl()}"==(e.origin+"/")){var data=JSON.parse(e.data);if(data.docHeight){setIframeHeightCO(data.iframeId,data.docHeight)}}};if(window.addEventListener){window.addEventListener('message',handleDocHeightMsg,!1)}else if(window.attachEvent){window.attachEvent('onmessage',handleDocHeightMsg)}</script>`;
+	        			let value = `${script}<iframe id=${setting.id} src=${code} seamless="seamless" name="skillshape" frameborder="0" scrolling="auto" style="width: 100%;min-height:400px;"></iframe>`
 	        			return (
 	        				<Grid container>
 	        					<Grid item xs={12}>

@@ -46,7 +46,7 @@ export default function () {
 	// const EditForm = settings.mainTable.actions.edit.component;
 	// console.log("Panel with table props -->>",this.state);
 	const {currentTableData} = this.state;
-	// console.log("Panel with table state -->>",this.state);
+	console.log("Panel with table state -->>",this.state);
 	return (
 		<div className={`${className} panel-table`}>
           	{ this.state.isBusy && <ContainerLoader/>}
@@ -200,7 +200,7 @@ export default function () {
 			            						)
 			            					}
 				            				{
-				            					settings.childTable && (childTableData && childTableData.length > 0 || this.state.newLocationAdded) && <Grid className={classes.classtypeInputContainer} item md={8} sm={12} xs={12}>
+				            					(settings.childTable || this.state.MainTableHandleSubmit) && <Grid className={classes.classtypeInputContainer} item md={8} sm={12} xs={12}>
 									                <ChildTable
 									                	schoolId={schoolId}
 									                	childPanelHeader={settings.childPanelHeader}
@@ -210,6 +210,8 @@ export default function () {
 									                	showClassTimeFormModal={this.state.showClassTimeFormModal && this.state.showClassTimeFormModal[tableData._id]}
 									                	parentData={tableData}
 									                	updateParentProps={this.updateParentProps}
+									                	handleMainTableState={this.handleMainTableState}
+									                	MainTableHandleSubmit={this.state.MainTableHandleSubmit}
 									                />
 									            </Grid>
 									        }
