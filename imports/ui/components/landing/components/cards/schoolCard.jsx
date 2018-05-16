@@ -21,9 +21,9 @@ import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/C
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import * as helpers from '../jss/helpers';
-import { cardImgSrc } from '../../site-settings.js';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 const styles = {
   cardWrapper: {

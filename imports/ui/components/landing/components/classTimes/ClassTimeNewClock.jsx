@@ -1,13 +1,15 @@
 import React , {Component , Fragment} from 'react';
 import styled from 'styled-components';
+import ReactHtmlParser from 'react-html-parser';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
-import SliderDots from '../helpers/SliderDots.jsx';
+import SliderDots from '/imports/ui/components/landing/components/helpers/SliderDots.jsx';
 
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
 
+const DATE_FONT_SIZE = 18;
 
 const ClockOuterWrapper = styled.div`
   ${helpers.flexCenter}
@@ -47,12 +49,14 @@ const ClockWrapper = styled.div`
   font-family: ${helpers.specialFont};
   border-radius: 50%;
   background: white;
-  margin-bottom: ${helpers.rhythmDiv}px;
   transition: .2s ease-in width, .2s ease-in height;
   ${props => !props.active ? `width: 50px;
     height: 50px;` : ''}
 `;
 
+const Bold = styled.span`
+  font-weight: 500;
+`;
 
 const TimeContainer = styled.div`
   display: flex;
@@ -99,19 +103,18 @@ const DayDateContainer = styled.div`
 const MutipleDatesContainer = DayDateContainer.extend`
   position: relative;
   ${helpers.flexCenter}
-  margin: ${helpers.rhythmDiv}px 0;
-  height: ${props => props.height}px;
+  height: 38px; // This is the height computed from the font size of the date with 1.2 line height.
 `;
 
 const DayDateInfo = styled.p`
   display: inline-block;
-  font-style: italic;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 300;
+  font-family: ${helpers.specialFont};
   margin: 0;
   text-align: left;
   opacity: 1;
-  line-height: 1.3; // With this line-height font-size is approx 18px.
+  line-height: 1.2; // With this line-height font-size is approx 19px.
   transition: opacity .2s ease-out;
 `;
 
@@ -124,8 +127,9 @@ const Schedule = styled.p`
   display: inline-block;
   width: 100%;
   text-align: center;
+  font-weight: 300;
   margin: 0;
-  font-weight: 400;
+  margin-bottom: ${helpers.rhythmDiv}px;
   font-size: ${helpers.baseFontSize}px;
   text-transform: capitalize;
 `;
@@ -150,7 +154,7 @@ const MyClockWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
   justify-content: center;
-  height: 110px;
+  height: 108px;
   margin-left: ${props => (props.clockType === 'multiple') ? (props.currentClock === 0) ? '65px' : '15px' : '0px'};  // IF the currentClock is 0
   cursor: ${props => props.clockType === 'multiple' ? 'pointer' : 'initial'};
 `;
@@ -163,7 +167,7 @@ const Date = styled.p`
 const DotsWrapper = styled.div`
   width: 100%;
   ${helpers.flexCenter}
-  margin: ${helpers.rhythmDiv}px 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const ChangeSlide = styled.div`
@@ -216,13 +220,16 @@ const MyClock = (props) => {
     </MyClockWrapper>);
 }
 
-const dateFontSize = 18;
-const margin = 2 * helpers.rhythmDiv;
 
 class ClassTimeNewClock extends Component {
 
   _getIndexForDay = (day) => {
     return DAYS_IN_WEEK.indexOf(day);
+  }
+
+  _getDayInShortFormat = (dayDb) => {
+    const day = dayDb.toLowerCase();
+    return day.substr(0,2);
   }
 
   _getDayIndexFromCurrentClockIndex = (clockIndex) => {
@@ -246,6 +253,14 @@ class ClassTimeNewClock extends Component {
     return 0;
   }
 
+  handleDayClick = (clockIndex,dayIndex) => (e) => {
+    const {updateClockAndDayIndex} = this.props;
+    e.preventDefault();
+    // console.log('clicked',clockIndex,dayIndex,"=============");
+
+    updateClockAndDayIndex(clockIndex, dayIndex);
+  }
+
   handleClockClick = (currentClockIndex) => {
     const {updateClockAndDayIndex} = this.props;
     const dayIndex = this._getDayIndexFromCurrentClockIndex(currentClockIndex);
@@ -253,18 +268,36 @@ class ClassTimeNewClock extends Component {
     updateClockAndDayIndex(currentClockIndex, dayIndex);
   }
 
-  formatScheduleDisplay = (currentDay, currentDate, eventStartTime, scheduleData) => {
-    const { scheduleStartDate, scheduleEndDate} = this.props;
-    const scheduleType = this.props.scheduleType.toLowerCase();
+  formatScheduleDisplay = (currentDay, currentDate, eventStartTime, duration, scheduleData) => {
+    const { scheduleStartDate, scheduleEndDate, scheduleType} = this.props;
+    const eventScheduleType = scheduleType.toLowerCase();
     const eventTime = `${this.formatTime(eventStartTime)} ${this.formatAmPm(eventStartTime)}`;
+    const stringParts = [];
 
-    if(scheduleType === 'ongoing') {
-      return `Every ${currentDay} at ${eventTime}`;
-    }else if(scheduleType === 'recurring') {
-      return `Every ${currentDay} at ${eventTime} from ${this.formatDate(scheduleStartDate)} to ${this.formatDate(scheduleEndDate)}`;
+    // Adding * in the string in order to break the string easily..
+    if(eventScheduleType === 'recurring' || eventScheduleType === 'ongoing') {
+
+      return `Every * ${currentDay} * at * ${eventTime} * for * ${duration} * minutes`.split('*').map((str,i) => {
+        if(i === 1 || i === 3 || i === 5) {
+          return <Bold>{str}</Bold>;
+        } else {
+          return str
+        }
+      });
+
     }else {
       // oneTime...
-      return `${currentDay} (${currentDate}) at ${scheduleData[0].time} ${scheduleData[0].timePeriod}`;
+      const thisEventDayDate = `${currentDay} (${currentDate})`;
+      const thisEventTime = `${scheduleData[0].time} ${scheduleData[0].timePeriod}`;
+
+      return `On * ${thisEventDayDate} * at * ${thisEventTime} * for * ${scheduleData[0].duration} * minutes`.split('*')
+      .map((str,i) => {
+        if(i === 1 || i === 3 || i === 5) {
+          return <Bold>{str}</Bold>;
+        } else {
+          return str
+        }
+      });
     }
   }
 
@@ -287,42 +320,35 @@ class ClassTimeNewClock extends Component {
     return moment(date).format('MMMM DD, YYYY');
   }
 
-  handleDayClick = (clockIndex,dayIndex) => (e) => {
-    e.preventDefault();
-    console.log('clicked',clockIndex,dayIndex,"=============");
+  // computeContainerHeight = () => {
+  //   const {scheduleType, totalClocks, updateContainerHeight} = this.props;
+  //   const clocks = totalClocks > 1 ? 'multiple' : 'single';
+  //
+  //   // scheduleType + 18 datefont size + (2 * 8) margintop and bottom.
+  //   let computedHeight = 100 + 16 + (DATE_FONT_SIZE + 2 * helpers.rhythmDiv);
+  //
+  //   if(clocks === 'multiple') {
+  //     computedHeight += 20; // Adding 20 more for the slider dots..
+  //   }
+  //
+  //   if(scheduleType === 'recurring' || scheduleType === 'oneTime') {
+  //     // We already have added fontsize for 1 line of date , now this is for another..
+  //     // since in recurring/oneTime we have multiple lines for dates..
+  //     computedHeight += DATE_FONT_SIZE;
+  //   }
+  //   // console.info('----------------------- updating...')
+  //   updateContainerHeight(computedHeight);
+  // }
 
-    this.handleSliderState(clockIndex,dayIndex);
-  }
-
-  computeContainerHeight = () => {
-    const {scheduleType, totalClocks, updateContainerHeight} = this.props;
-    const clocks = totalClocks > 1 ? 'multiple' : 'single';
-
-    // scheduleType + 18 datefont size + (2 * 8) margintop and bottom.
-    let computedHeight = 100 + 16 + (dateFontSize + margin);
-
-    if(clocks === 'multiple') {
-      computedHeight += 20; // Adding 20 more for the slider dots..
-    }
-
-    if(scheduleType === 'recurring' || scheduleType === 'oneTime') {
-      // We already have added fontsize for 1 line of date , now this is for another..
-      // since in recurring/oneTime we have multiple lines for dates..
-      computedHeight += dateFontSize;
-    }
-    // console.info('----------------------- updating...')
-    updateContainerHeight(computedHeight);
-  }
-
-  computeDateContainerHeight = () => {
-    const {scheduleType} = this.props;
-    let computedHeight = dateFontSize;
-
-    if(scheduleType === 'recurring') {
-      computedHeight += dateFontSize;
-    }
-    return computedHeight;
-  }
+  // computeDateContainerHeight = () => {
+  //   const {scheduleType} = this.props;
+  //   let computedHeight = DATE_FONT_SIZE;
+  //
+  //   if(scheduleType === 'recurring') {
+  //     computedHeight += DATE_FONT_SIZE;
+  //   }
+  //   return computedHeight;
+  // }
 
   getDatesFromFormattedClassTimesData = () => {
     const {totalClocks,formattedClassTimes,currentClockIndex} = this.props;
@@ -336,9 +362,10 @@ class ClassTimeNewClock extends Component {
       if(scheduleData) {
         scheduleData.forEach((schedule) => {
           const eventStartTime = new Date(schedule.startTime);
+          const duration = schedule.duration;
           // console.info(eventStartTime,"===========================");
           allDates.push(<CurrentDate clockType={type} visible={clockCounter === currentClockIndex}>
-            {this.formatScheduleDisplay(currentDay, this.formatDate(schedule.date || eventStartTime), eventStartTime, scheduleData) }
+            {this.formatScheduleDisplay(currentDay, this.formatDate(schedule.date || eventStartTime), eventStartTime, duration, scheduleData)}
           </CurrentDate>);
           ++clockCounter;
         }
@@ -402,7 +429,7 @@ class ClassTimeNewClock extends Component {
             key={myStartingClockCount}
             active={this.props.currentDayIndex === this._getIndexForDay(day)}
             onClick={this.handleDayClick(myStartingClockCount,this._getIndexForDay(day))}>
-            {this.getDayInShortFormat(day)}
+            {this._getDayInShortFormat(day)}
           </Day>);
 
           clockCounter += scheduleData.length;
@@ -426,11 +453,14 @@ class ClassTimeNewClock extends Component {
     const { scheduleType, totalClocks, currentClockIndex, clockProps, formattedClassTimes } = this.props;
     const type = totalClocks > 1 ? 'multiple' : 'single';
     console.info(type, totalClocks, "type .............");
+    const schduleTypeLowerCase = scheduleType.toLowerCase()
 
     return (<Container>
+          {/* Days of week in circle format */}
           {formattedClassTimes && Object.keys(formattedClassTimes).length > 1 && <ChangeSlide>
             <Days> {this.getDaysOfWeekFromFormattedClassTimesData()} </Days>
           </ChangeSlide>}
+
           <ClockOuterWrapper
             visible={true}
             clockType={type}
@@ -441,6 +471,7 @@ class ClassTimeNewClock extends Component {
               {this.getClocksFromFormattedClassTimesData()}
             </ClockInnerWrapper>
           </ClockOuterWrapper>
+
           {/* Slider Dots */}
           {(totalClocks > 1) && <DotsWrapper><SliderDots
             currentIndex={currentClockIndex}
@@ -452,7 +483,7 @@ class ClassTimeNewClock extends Component {
             <Schedule>{ this.props.scheduleType.toLowerCase()}</Schedule>
 
             {/* All the schedule dates.. */}
-            {scheduleType && <MutipleDatesContainer height={this.computeDateContainerHeight()}>
+            {scheduleType && <MutipleDatesContainer>
             {this.getDatesFromFormattedClassTimesData()}
           </MutipleDatesContainer>}
         </Container>)

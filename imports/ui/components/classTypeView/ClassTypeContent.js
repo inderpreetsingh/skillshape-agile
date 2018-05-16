@@ -549,7 +549,7 @@ class ClassTypeContent extends Component {
                             ) : (
                                 <ClassTimesBoxes
                                   classTimesData={classTimesData}
-                                  classInterestData={ classInterestData}
+                                  classInterestData={classInterestData}
                                 />
                             )
                           }
