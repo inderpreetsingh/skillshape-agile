@@ -10,7 +10,6 @@ const styles = theme => ({
 
     },
     content: {
-        backgroundColor: theme.palette.background.default,
         overflow: 'hidden',
     },
 });

@@ -259,7 +259,7 @@ class ClassTimesDialogBox extends React.Component {
         console.log("ClassTimesDialogBox props--->>",this.props)
         return (
             <Dialog
-                fullScreen={this.props.fullScreen}
+                fullScreen={false}
                 open={this.props.open}
                 onClose={this.props.onModalClose}
                 aria-labelledby="modal"

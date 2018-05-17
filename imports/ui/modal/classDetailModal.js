@@ -204,7 +204,7 @@ class ClassDetailModal extends React.Component{
     let classTypeData = ClassTimes.findOne({_id:eventData.classTimeId});
     return (
         <Dialog
-          fullScreen={fullScreen}
+          fullScreen={false}
           open={this.props.showModal}
           onClose={() => this.props.closeEventModal(false, null)}
           aria-labelledby="responsive-dialog-title"
@@ -378,12 +378,16 @@ class ClassDetailModal extends React.Component{
                                         </div>
                                     </div>
                                 </Grid>*/}
-                                <Grid item xs={6}>
-                                    <PrimaryButton fullWidth noMarginBottom  label="View Class Type" boxShadow noMarginBottom onClick={()=> goToClassTypePage(classType.name, eventData.classTypeId)} />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <PrimaryButton fullWidth noMarginBottom  label="View School" boxShadow noMarginBottom  onClick={()=> browserHistory.push(`/schools/${school.slug}`)}/>
-                                </Grid>
+                                { this.props.routeName !== "EmbedSchoolCalanderView" &&
+                                  <Grid container style={{padding: 8}}>
+                                    <Grid item xs={6}>
+                                      <PrimaryButton fullWidth noMarginBottom  label="View Class Type" boxShadow noMarginBottom onClick={()=> goToClassTypePage(classType.name, eventData.classTypeId)} />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                      <PrimaryButton fullWidth noMarginBottom  label="View School" boxShadow noMarginBottom  onClick={()=> browserHistory.push(`/schools/${school.slug}`)}/>
+                                    </Grid>
+                                  </Grid>
+                                }
                             </Grid>
                                 {fullScreen && (
                                 <Grid container>
