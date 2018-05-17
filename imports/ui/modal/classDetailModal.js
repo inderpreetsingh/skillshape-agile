@@ -204,7 +204,7 @@ class ClassDetailModal extends React.Component{
     let classTypeData = ClassTimes.findOne({_id:eventData.classTimeId});
     return (
         <Dialog
-          fullScreen={fullScreen}
+          fullScreen={this.props.routeName !== "EmbedSchoolCalanderView"}
           open={this.props.showModal}
           onClose={() => this.props.closeEventModal(false, null)}
           aria-labelledby="responsive-dialog-title"
