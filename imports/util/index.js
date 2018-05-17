@@ -13,6 +13,7 @@ export {
 export { validateImage, getUserFullName } from '/imports/util/getUserData';
 export { initializeMap, setMarkersOnMap, reCenterMap, initializeSchoolEditLocationMap, createMarkersOnMap } from '/imports/util/initializeMap';
 export { cutString } from '/imports/util/cutString';
+export { formatTime, formatAmPm, formatDate, formatDateNoYear} from '/imports/util/formatSchedule.js';
 export { getAverageNoOfRatings } from '/imports/util/averageRatings';
 export { capitalizeString, addDelimiter } from '/imports/util/stringOperations';
 export { withSubscriptionAndPagination } from '/imports/util/subscriptionAndPagination';

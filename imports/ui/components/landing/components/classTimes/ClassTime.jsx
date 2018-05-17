@@ -3,6 +3,7 @@ import moment from 'moment';
 import styled, {keyframes} from 'styled-components';
 import PropTypes from 'prop-types';
 import { isEmpty, get } from 'lodash';
+import { Transition } from 'react-transition-group';
 
 import TrendingIcon from '/imports/ui/components/landing/components/icons/Trending.jsx';
 import ShowMore from '/imports/ui/components/landing/components/icons/ShowMore.jsx';
@@ -20,8 +21,6 @@ import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
-const ON_GOING_SCHEDULE = 'ongoing';
 
 const ClassTimeContainer = styled.div`
   width: 250px;
@@ -116,7 +115,12 @@ const TrendingWrapper = styled.div`
 
 const ClassTimesCardWrapper = styled.div`
   position: absolute;
-  bottom: ${helpers.rhythmDiv * 2}px;
+  padding: 0 ${helpers.rhythmDiv}px;
+  display: flex;
+  flex-direction: column;
+  transition: max-height .2s ease-in-out;
+  max-height: ${props => props.show ? 300 : 0}px;
+  bottom: 60px;
 `;
 
 const Trending = () => {
@@ -126,9 +130,6 @@ const Trending = () => {
     </TrendingWrapper>
   )
 }
-
-// This can be changed according to the data
-_isClassOnGoing = (scheduleType) => scheduleType && scheduleType.toLowerCase().replace(/\-/) === ON_GOING_SCHEDULE;
 
 class ClassTime extends Component {
 
@@ -192,13 +193,19 @@ class ClassTime extends Component {
       return ampm;
   }
 
+  // formatTime = (startTime) => {
+  //   const hours = startTime.getHours();
+  //   const mins = startTime.getMinutes();
+  //   let hour  = hours > 12 ? hours - 12 : hours;
+  //   hour = hour < 10 ? '0' + hour : hour;
+  //   let minutes = mins < 10 ? "0"+ mins : mins;
+  //   console.log(startTime,moment(startTime).format("hh:mm"),`${hour}:${minutes}`,"------------");
+  //   return `${hour}:${minutes}`;
+  // }
+
   formatTime = (startTime) => {
-    const hours = startTime.getHours();
-    const mins = startTime.getMinutes();
-    let hour  = hours > 12 ? hours - 12 : hours;
-    hour = hour < 10 ? '0' + hour : hour;
-    let minutes = mins < 10 ? "0"+ mins : mins;
-    return `${hour}:${minutes}`;
+    console.log(startTime,moment(startTime).format("hh:mm"),`ajsdkjflasjdflj`,"------------");
+    return `${moment(startTime).format("hh:mm")}`;
   }
 
   formatDate = (date) => {
@@ -207,7 +214,6 @@ class ClassTime extends Component {
   }
 
   showDescription = (formattedClassTimes) => {
-    debugger;
     dataCounter = 0;
     for (day in formattedClassTimes) {
       if(formattedClassTimes.hasOwnProperty(day)) {
@@ -223,6 +229,7 @@ class ClassTime extends Component {
   }
 
   removeFromMyCalender = (classTimeRec) => {
+    const {toastr} = this.props;
     console.log("this.props",this.props,classTimeRec);
     const result = this.props.classInterestData.filter(data => data.classTimeId  == classTimeRec._id);
     console.log("result==>",result);
@@ -238,7 +245,7 @@ class ClassTime extends Component {
             data: {doc}
         })
     } else {
-        alert("Please login !!!!")
+        toastr.error("Please login !","Error");
     }
   }
 
@@ -355,7 +362,7 @@ class ClassTime extends Component {
 
           {/* View All times button */}
           <ButtonsWrapper>
-            {!showDescription && <ButtonWrapper>
+            {!showDescription && !this.state.showCard && <ButtonWrapper>
               <ClassTimeButton white icon iconName="av_timer" onClick={this.handleShowCard(true)} label="View all times" />
             </ButtonWrapper>}
             {this._getCalenderButton(this.props.addToCalendar)}
@@ -363,11 +370,14 @@ class ClassTime extends Component {
 
           {this.props.isTrending && <Trending />}
 
-          {this.state.showCard &&
-            <ClassTimesCardWrapper>
-              <ClassTimesCard show={this.state.showCard} onClose={this.handleShowCard(false)}/>
-            </ClassTimesCardWrapper>  
-            }
+          {!showDescription && <ClassTimesCardWrapper show={this.state.showCard}>
+            <ClassTimesCard
+              show={this.state.showCard}
+              formattedClassTimes={formattedClassTimes}
+              scheduleType={scheduleType}
+              description={desc}
+              onClose={this.handleShowCard(false)} />
+          </ClassTimesCardWrapper>}
       </ClassTimeContainer></Fragment>)
     }
 }
