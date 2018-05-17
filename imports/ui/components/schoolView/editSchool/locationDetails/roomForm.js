@@ -78,7 +78,7 @@ class RoomForm extends React.Component {
                 >
                     <DialogTitle id="form-dialog-title">Add Room</DialogTitle>
                     { this.state.isBusy && <ContainerLoader/>}
-                    { 
+                    {
                         this.state.showConfirmationModal && <ConfirmationModal
                             open={this.state.showConfirmationModal}
                             submitBtnLabel="Yes, Delete"
@@ -88,9 +88,12 @@ class RoomForm extends React.Component {
                             onClose={() => this.setState({showConfirmationModal: false})}
                         />
                     }
-                    { 
+                    {
                         this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
                             <DialogContent>
+                                <DialogContentText>
+                                  Please add one room at your location, even if there is only one room or area. You can say "Main Room" or "Main Area" or give the room name.
+                                </DialogContentText>
                                 <form id={formId} onSubmit={this.onSubmit}>
                                     <TextField
                                         required={true}
@@ -125,7 +128,10 @@ class RoomForm extends React.Component {
                       Cancel
                     </Button>
                     <Button type="submit" form={formId} color="primary">
-                      { data ? "Save" : "Submit" } 
+                      { data ? "Save" : "Submit" }
+                    </Button>
+                    <Button type="submit" form={formId} color="primary">
+                      Save and Add Classes
                     </Button>
                 </DialogActions>
                 </Dialog>
