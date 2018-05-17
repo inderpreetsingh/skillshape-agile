@@ -397,6 +397,8 @@ class SchoolPriceView extends React.Component {
             onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
             onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
             reSendEmailVerificationLink={this.reSendEmailVerificationLink}
+            fullScreen={false}
+            title={"In order to make a purchase, you must Create an account or log into SkillShape."}
           />
         )}
         {this.state.signUpDialogBox && (
