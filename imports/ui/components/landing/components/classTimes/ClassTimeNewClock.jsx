@@ -4,6 +4,7 @@ import ReactHtmlParser from 'react-html-parser';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
+
 import SliderDots from '/imports/ui/components/landing/components/helpers/SliderDots.jsx';
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -97,7 +98,7 @@ const Duration = styled.span`
 
 const DayDateContainer = styled.div`
   width: 100%;
-  min-width: 50px;
+  min-width: 220px;
 `;
 
 const MutipleDatesContainer = DayDateContainer.extend`
@@ -120,6 +121,9 @@ const DayDateInfo = styled.p`
 
 const CurrentDate = DayDateInfo.extend`
   position: absolute;
+  width: 100%;
+  left: 0;
+  right: 0;
   opacity: ${props => props.visible ? 1 : 0};
 `;
 
@@ -220,6 +224,16 @@ const MyClock = (props) => {
     </MyClockWrapper>);
 }
 
+const OneTimeScheduleDisplay = (props) => (<Fragment>On <Bold>{props.eventDayDate} </Bold>
+  at <Bold>{props.eventTime} </Bold>
+  for <Bold>{props.duration} </Bold>
+  minutes </Fragment>)
+
+const RecurringScheduleDisplay = (props) => (<Fragment>Every <Bold>{props.eventDay} </Bold>
+  at <Bold>{props.eventTime} </Bold>
+  for <Bold>{props.duration} </Bold>
+  minutes </Fragment>)
+
 
 class ClassTimeNewClock extends Component {
 
@@ -268,36 +282,27 @@ class ClassTimeNewClock extends Component {
     updateClockAndDayIndex(currentClockIndex, dayIndex);
   }
 
-  formatScheduleDisplay = (currentDay, currentDate, eventStartTime, duration, scheduleData) => {
-    const { scheduleStartDate, scheduleEndDate, scheduleType} = this.props;
+  formatScheduleDisplay = (data) => {
+    const { scheduleType} = this.props;
+    const {currentDay, currentDate, eventStartTime, time, timePeriod, duration} = data;
     const eventScheduleType = scheduleType.toLowerCase();
     const eventTime = `${this.formatTime(eventStartTime)} ${this.formatAmPm(eventStartTime)}`;
-    const stringParts = [];
 
-    // Adding * in the string in order to break the string easily..
     if(eventScheduleType === 'recurring' || eventScheduleType === 'ongoing') {
 
-      return `Every * ${currentDay} * at * ${eventTime} * for * ${duration} * minutes`.split('*').map((str,i) => {
-        if(i === 1 || i === 3 || i === 5) {
-          return <Bold>{str}</Bold>;
-        } else {
-          return str
-        }
-      });
-
+      return <RecurringScheduleDisplay
+                eventDay={currentDay}
+                eventTime={eventTime}
+                duration={duration} />
     }else {
       // oneTime...
       const thisEventDayDate = `${currentDay} (${currentDate})`;
-      const thisEventTime = `${scheduleData[0].time} ${scheduleData[0].timePeriod}`;
-
-      return `On * ${thisEventDayDate} * at * ${thisEventTime} * for * ${scheduleData[0].duration} * minutes`.split('*')
-      .map((str,i) => {
-        if(i === 1 || i === 3 || i === 5) {
-          return <Bold>{str}</Bold>;
-        } else {
-          return str
-        }
-      });
+      const thisEventTime = `${time} ${timePeriod}`;
+      // debugger;
+      return <OneTimeScheduleDisplay
+              eventDayDate={thisEventDayDate}
+              eventTime={thisEventTime}
+              duration={duration} />
     }
   }
 
@@ -360,12 +365,19 @@ class ClassTimeNewClock extends Component {
       const scheduleData = formattedClassTimes[day]
       const currentDay = day;
       if(scheduleData) {
-        scheduleData.forEach((schedule) => {
-          const eventStartTime = new Date(schedule.startTime);
-          const duration = schedule.duration;
+        scheduleData.forEach((schedule, i) => {
+           const eventStartTime = new Date(schedule.startTime);
+           const data = {
+             currentDay: day,
+             eventStartTime : eventStartTime,
+             time : schedule.time,
+             timePeriod : schedule.timePeriod,
+             duration : schedule.duration,
+             currentDate : this.formatDate(schedule.date || eventStartTime),
+           }
           // console.info(eventStartTime,"===========================");
           allDates.push(<CurrentDate clockType={type} visible={clockCounter === currentClockIndex}>
-            {this.formatScheduleDisplay(currentDay, this.formatDate(schedule.date || eventStartTime), eventStartTime, duration, scheduleData)}
+            {this.formatScheduleDisplay(data)}
           </CurrentDate>);
           ++clockCounter;
         }

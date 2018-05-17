@@ -113,14 +113,15 @@ class ManageRequestsDialogBox extends Component {
 
   _getCollectionName = () => {
     const {requestFor} = this.props;
-
-    if(requestFor == 'price details')  {
+    
+    if(requestFor == 'price')  {
       return 'pricingRequest';
     }else if(requestFor == 'location') {
       return 'classTypeLocationRequest';
     }else {
       return 'classTimesRequest';
     }
+
   }
 
   _getCompleteMethodName = (methodName) => {
@@ -170,6 +171,7 @@ class ManageRequestsDialogBox extends Component {
     }
 
     const methodNameToCall = this._getCompleteMethodName('addRequest');
+    const text = requestFor;
 
     if(this.state.readyToSubmit) {
       if (!data.email) {

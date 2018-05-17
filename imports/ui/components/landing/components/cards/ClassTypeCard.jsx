@@ -64,7 +64,7 @@ class ClassTypeCard extends Component {
     }
 
     handleClassTimesRequest = () => {
-      const {_id, schoolId} = this.props;
+      const {_id, schoolId, toastr} = this.props;
       if(!Meteor.userId()) {
         const newState = {...this.state, dialogOpen: false, manageRequestsDialog: true};
         this.setState(newState);
@@ -88,14 +88,14 @@ class ClassTypeCard extends Component {
 
     }
 
-    handleClassTimeRequest = (schoolId) => {
+    handleRequest = (schoolId) => {
         let schoolData  = this.getSchoolData(schoolId);
         if(!isEmpty(schoolData)) {
           let emailBody = "";
           let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
           let subject ="", message =  "";
           let currentUserName = getUserFullName(Meteor.user());
-          emailBody = `Hi, %0D%0A%0D%0A I  saw your listing on SkillShape.com ${url} and would like to attend. Can you please update your class times%3F %0D%0A%0D%0A Thanks`
+          emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you please update your class times%3F %0D%0A%0D%0A Thanks`
           const mailTo = `mailto:${schoolData && schoolData.email}?subject=${subject}&body=${emailBody}`;
           const mailToNormalized = /*encodeURI(*/mailTo/*)*/;
           openMailToInNewTab(mailToNormalized);

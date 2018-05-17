@@ -70,11 +70,7 @@ const Reviews = styled.a`
 const SchoolLink = styled(Link)`
   color: ${helpers.primaryColor};
   position: relative;
-  display: inline-block;
-
-  &:visited, &:active {
-    color: ${helpers.primaryColor};
-  }
+  display: inline;
 
   &:hover {
     text-decoration: underline;
@@ -87,8 +83,8 @@ const ClassTypeDescription = (props) => {
     <Wrapper isEdit={props.isEdit}>
         {props.isClassTypeNameAvailable ?
         <Title>
-          <SchoolLink to={`/schools/${props.friendlySlug}`} target="_blank">{props.schoolName.toLowerCase()} {props.classTypeName && `: `}</SchoolLink>
-          <span> {props.classTypeName.toLowerCase()}</span>
+          <SchoolLink to={`/schools/${props.friendlySlug}`} target="_blank">{props.schoolName.toLowerCase()} {props.classTypeName && `:`}</SchoolLink>
+          <span> { props.classTypeName.toLowerCase()}</span>
         </Title>
         :
         <Title>{props.schoolName.toLowerCase()}
