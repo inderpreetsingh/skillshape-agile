@@ -70,6 +70,7 @@ export default createContainer(props => {
     schoolId: schoolId,
     schoolData: schoolData,
     subsReady: subsReady,
-    classTimesData
+    classTimesData,
+    currentUser: Meteor.user()
   };
 }, SchoolCalenderView);

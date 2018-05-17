@@ -174,7 +174,7 @@ export default createContainer(props => {
     const { startDate, endDate, manageMyCalendar, isUserSubsReady, currentUser, manageMyCalendarFilter } = props;
     let view;
     console.log("props.route",props);
-    if(props.route && props.route.name == "SchoolView" ) {
+    if(props.route && props.route.name == "SchoolView" || props.route.name == "EmbedSchoolCalanderView" ) {
         view = "SchoolView";
     } else if (props.route && props.route.name == "ClassType") {
         view = "ClassType";
