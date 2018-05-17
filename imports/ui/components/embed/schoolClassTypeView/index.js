@@ -2,6 +2,7 @@ import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import School from "/imports/api/school/fields";
 import ClassType from "/imports/api/classType/fields";
+import ClassTimes from "/imports/api/classTimes/fields";
 import ClassTypeList from "/imports/ui/components/landing/components/classType/classTypeList.jsx";
 import config from "/imports/config.js";
 
@@ -42,7 +43,7 @@ class SchoolClassTypeView extends React.Component {
 
   handleSeeMore = () => {
     // Attach count with skill cateory name so that see more functionlity can work properly.
-    console.log("handleSeeMore");
+    // console.log("handleSeeMore");
     let currentCount = this.state.seeMoreCount;
     this.setState({seeMoreCount:(config.seeMoreCount + currentCount)})
   }
@@ -61,6 +62,7 @@ class SchoolClassTypeView extends React.Component {
           handleSeeMore={this.handleSeeMore}
           schoolView={true}
           hideClassTypeOptions={this.props.route.name == "EmbedClassTypeView"}
+          classTimesData={this.props.classTimesData}
         />
       </div>
     );
@@ -68,12 +70,26 @@ class SchoolClassTypeView extends React.Component {
 }
 
 export default createContainer(props => {
-  const { slug } = props.params;
-  Meteor.subscribe("UserSchoolbySlug", slug);
-  const schoolData = School.findOne({ slug: slug });
-  const schoolId = schoolData && schoolData._id;
-  return {
-    ...props,
-    schoolId: schoolId
-  };
+	const { slug } = props.params;
+	let classTimesData;
+	Meteor.subscribe("UserSchoolbySlug", slug);
+	const schoolData = School.findOne({ slug: slug });
+	const schoolId = schoolData && schoolData._id;
+	//   console.log("schoolId----------->",schoolId)
+	Meteor.subscribe("classTypeBySchool", { schoolId });
+	if (schoolId) {
+		Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", { schoolId: schoolId });
+		let classType = ClassType.find({ schoolId: schoolId }).fetch();
+		// Class times subscription.
+		let classTypeIds = classType && classType.map((data) => data._id);
+		if (classTypeIds) {
+			Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", { schoolId, classTypeIds });
+		}
+	}
+	//   console.log("classTimesData----------->",classTimesData)
+	return {
+		...props,
+		classTimesData: classTimesData,
+		schoolId: schoolId
+	};
 }, SchoolClassTypeView);
