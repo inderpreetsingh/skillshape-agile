@@ -176,7 +176,7 @@ class ClassTimeForm extends React.Component {
                     {
                         this.state.error ? <div style={{color: 'red'}}>{this.state.error}</div> : (
                             <DialogContent>
-                                DialogContentText>
+                                <DialogContentText>
                                     This name helps differentiate different class times in the same class type. Good examples include "Wednesday Night Swim" or "Weekend Open Training."
                                 </DialogContentText>
                                 <form id={formId} onSubmit={this.onSubmit}>
