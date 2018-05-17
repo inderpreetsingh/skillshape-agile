@@ -40,6 +40,7 @@ export default class MyCalender extends React.Component {
                   closeEventModal={this.handleEventModal}
 									onJoinClassButtonClick={this.props.onJoinClassButtonClick}
                   clickedDate={clickedDate}
+                  routeName={this.props.route && this.props.route.name}
 								/>
             }
         </div>
