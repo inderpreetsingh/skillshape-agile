@@ -116,8 +116,10 @@ const TrendingWrapper = styled.div`
 const ClassTimesCardWrapper = styled.div`
   position: absolute;
   padding: 0 ${helpers.rhythmDiv}px;
-  transition: height .2s ease-in-out;
-  height: ${props => props.show ? 300 : 0}px;
+  display: flex;
+  flex-direction: column;
+  transition: max-height .2s ease-in-out;
+  max-height: ${props => props.show ? 300 : 0}px;
   bottom: 60px;
 `;
 

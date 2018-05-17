@@ -18,3 +18,7 @@ export const  formatDate = (date) => {
   // console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
   return moment(date).format('MMMM DD, YYYY');
 }
+
+export const formatDateNoYear = (date) => {
+  return moment(date).format('MMMM DD');
+}

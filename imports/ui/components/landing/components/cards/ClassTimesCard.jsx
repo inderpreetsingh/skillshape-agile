@@ -10,7 +10,7 @@ import IconButton from 'material-ui/IconButton';
 import Clear from 'material-ui-icons/Clear';
 import MoreVert from 'material-ui-icons/MoreVert';
 
-import {formatTime, formatAmPm, formatDate } from '/imports/util';
+import {formatTime, formatAmPm, formatDate, formatDateNoYear } from '/imports/util';
 import {DAYS_IN_WEEK} from '/imports/ui/components/landing/constants/classTypeConstants.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
@@ -18,7 +18,31 @@ const styles = {
   cardWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    backgroundColor: 'transparent',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    height: '100%',
+    boxShadow: 'none',
+    position: 'relative',
+    paddingTop: helpers.rhythmDiv
+  },
+  cardWrapperHidden: {
+    overflowY: 'hidden'
+  },
+  cardItem: {
+    backgroundColor: 'white',
+    padding: helpers.rhythmDiv,
+    marginBottom: helpers.rhythmDiv,
+    fontWeight: '300',
+    fontSize: helpers.baseFontSize,
+    fontFamily: helpers.specialFont
+  },
+  cardTop: {
+    height: helpers.rhythmDiv * 2,
+    marginBottom: helpers.rhythmDiv,
+    display: 'flex',
+    justifyContent: 'flex-end'
   },
   cardIconButton : {
     minWidth: '0',
@@ -26,29 +50,32 @@ const styles = {
     padding: `0 ${helpers.rhythmDiv}px`,
     height: helpers.rhythmDiv * 4,
     width: helpers.rhythmDiv * 4,
-    backgroundColor: 'white',
-    color: helpers.black
+    color: helpers.black,
+    position: 'absolute',
+    top: 0,
+    right: 16,
+    zIndex: 1,
+    borderRadius: '50%'
   }
 }
 
-const IconButtonWrapper = styled.div``;
-
-const Wrapper = styled.div`
-  padding: ${helpers.rhythmDiv}px;
-  // transform: scaleY(${props => props.show ? 1 : 0});
-  transition: transform .1s linear, opacity .2s ease-out ${props => props.show ? '.1s' : '0s'};
-  // transform-origin: center bottom;
-  height: 100%;
+const OuterWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   position: relative;
-  opacity: ${props => props.show ? 1 : 0};
-  background: white;
-  overflow-y: auto;
+  padding-top: ${props => props.show ? helpers.rhythmDiv : 0}px;
 `;
 
-const CardTopArea = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: flex-end;
+const Wrapper = styled.div`
+  height: 100%;
+  padding: ${helpers.rhythmDiv}px;
+  padding-top: ${helpers.rhythmDiv * 2}px;
+  padding-bottom: 0;
+  transition: transform .1s linear, opacity .2s ease-out ${props => props.show ? '.1s' : '0s'};
+  opacity: ${props => props.show ? 1 : 0};
+  background: transparent;
+  position: relative;
 `;
 
 const CardContent = styled.div`
@@ -65,7 +92,12 @@ const Text = styled.p`
 
 const Day = Text.extend`
   text-align: center;
-  margin-bottom: 0;
+  font-weight: 400;
+  margin-bottom: ${helpers.rhythmDiv/2}px;
+`;
+
+const Heading = Day.extend`
+  text-align: left;
 `;
 
 const DayDetails = styled.div`
@@ -87,7 +119,7 @@ const Bold = styled.span`
 `;
 
 const ScheduleDisplay = (props) => {
-  return <Time>At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> minutes</Time>;
+  return <Time>At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins</Time>;
 }
 
 const ClassTimesCard = (props) =>  {
@@ -130,34 +162,43 @@ const ClassTimesCard = (props) =>  {
         });
 
         if(eventScheduleType == 'recurring' || eventScheduleType == 'ongoing') {
-          return (<DayDetails>
+          return (<Paper className={props.classes.cardItem}>
                 <Day>Every {day}</Day>
                 <Times>{allDatesData}</Times>
-              </DayDetails>);
+              </Paper>);
         }else {
-          return (<DayDetails>
-            <Day>on {day}, {formatDate(eventDate)}</Day>
+          return (<Paper className={props.classes.cardItem}>
+            <Day>On {day}, {formatDateNoYear(eventDate)}</Day>
             <Times>{allDatesData}</Times>
-          </DayDetails>);
+          </Paper>);
         }
 
       }
     })
   }
+  let wrapperClassName = '';
+  if(props.show) {
+    wrapperClassName = props.classes.cardWrapper;
+  }else {
+    wrapperClassName = props.classes.cardWrapper + ' ' + props.classes.cardWrapperHidden;
+  }
 
-  return (<Wrapper show={props.show}>
-      <CardTopArea>
-        <IconButton className={props.classes.cardIconButton} aria-label="close" onClick={props.onClose}>
-          <Icon>clear</Icon>
-        </IconButton>
-      </CardTopArea>
-
+  return (<OuterWrapper show={props.show}>
+    <Button variant="fab" color='secondary' mini className={props.classes.cardIconButton} aria-label="close" onClick={props.onClose}>
+      <Icon>clear</Icon>
+    </Button>
+    <Paper className={wrapperClassName} elevation={3}>
+    <Wrapper show={props.show}>
       <CardContent>
         {getScheduleDetailsFromFormattedClassTimes(props.formattedClassTimes, props.scheduleType)}
-
-        <Text> {props.description} </Text>
+        <Paper className={props.classes.cardItem}>
+          {/*<Heading>Description</Heading> */}
+          {props.description}
+        </Paper>
       </CardContent>
     </Wrapper>
+    </Paper>
+    </OuterWrapper>
   )}
 
 export default withStyles(styles)(ClassTimesCard);
