@@ -77,7 +77,7 @@ class FullCalendar extends React.Component {
         let sevents = [];
         let myClassTimesIds = classInterestData.map(data => data.classTimeId);
         // Class Time Ids managed by current user
-        console.log("classTimesData", classTimesData)
+        // console.log("-----------------manageMyCalendarFilter------------------", manageMyCalendarFilter)
         let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
         // let schoolClassTimesIds = schoolClassTimes.map(data => data._id);
         for (var i = 0; i < classTimesData.length; i++) {
@@ -97,21 +97,25 @@ class FullCalendar extends React.Component {
                     endDate:classTime.endDate,
                     allDay:false// This property affects whether an event's time is shown.
                 };
-
+                let checkedClassTimes=false;
                 // Three type of class times seperated into different colors.
                 if(manageClassTimeIds.indexOf(classTime._id) > -1) {
                     sevent.className="event-rose";
                     sevent.attending = true;
+                    checkedClassTimes=true;
+
                 } else if (myClassTimesIds.indexOf(classTime._id) > -1) {
                     sevent.className = "event-green";
                     sevent.attending = true;
+                    checkedClassTimes=true;
                 } else if(schoolClassTimeId.indexOf(classTime._id) > -1) {
                     sevent.className = "event-azure";
                     sevent.attending = false;
+                    checkedClassTimes=true;
                 }
                 // let classTypeData = ClassType.findOne({ _id: classTime.classTypeId});
                 // console.log("classTypeData===>",classTypeData)
-                if (classTime.scheduleType === "oneTime") {
+                if (classTime.scheduleType === "oneTime" && checkedClassTimes) {
                     let scheduleData = [...classTime.scheduleDetails.oneTime];
                     sevent.scheduleDetails = classTime.scheduleDetails;
                     for(let obj of scheduleData) {
@@ -127,7 +131,7 @@ class FullCalendar extends React.Component {
                     }
                 }
 
-                if(classTime.scheduleDetails && (classTime.scheduleType === "recurring" || classTime.scheduleType === "OnGoing")) {
+                if(checkedClassTimes && classTime.scheduleDetails && (classTime.scheduleType === "recurring" || classTime.scheduleType === "OnGoing")) {
                     let scheduleData = {...classTime.scheduleDetails};
                     sevent.scheduleDetails = classTime.scheduleDetails;
                     sevent.endDate = classTime.endDate && moment(classTime.endDate)

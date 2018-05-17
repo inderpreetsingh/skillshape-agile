@@ -2,6 +2,8 @@ import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import School from "/imports/api/school/fields";
 import ManageMyCalendar from "/imports/ui/components/users/manageMyCalendar/index.js";
+import ClassType from "/imports/api/classType/fields";
+import ClassTimes from "/imports/api/classTimes/fields";
 
 class SchoolCalenderView extends React.Component {
   constructor(props) {
@@ -52,13 +54,22 @@ export default createContainer(props => {
   Meteor.subscribe("UserSchoolbySlug", slug);
   let subscription = Meteor.subscribe("UserSchoolbySlug", slug);
   const subsReady = subscription && subscription.ready();
-  const schoolId = schoolData && schoolData._id;
   const schoolData = School.findOne({ slug: slug });
-
+  const schoolId = schoolData && schoolData._id;
+  let classTimesData;
+  if (schoolId) {
+    Meteor.subscribe("classTypeBySchool", { schoolId });
+    let schoolData = School.findOne({ _id: schoolId })
+    let classType = ClassType.find({ schoolId: schoolId }).fetch();
+    let classTypeIds = classType && classType.map((data) => data._id);
+    Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", { schoolId, classTypeIds });
+    classTimesData = ClassTimes.find({ schoolId }, { sort: { _id: -1 } }).fetch();
+  }
   return {
     ...props,
     schoolId: schoolId,
     schoolData: schoolData,
-    subsReady: subsReady
+    subsReady: subsReady,
+    classTimesData
   };
 }, SchoolCalenderView);
