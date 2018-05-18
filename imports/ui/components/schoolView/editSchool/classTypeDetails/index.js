@@ -65,6 +65,10 @@ class ClassTypeDetails extends React.Component {
         });
     }
 
+    moveToNextTab = () => {
+      this.props.moveToNextTab(3);
+    }
+
     render() {
     	return ClassTypeDetailsRender.call(this, this.props, this.state)
     }

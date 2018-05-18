@@ -26,6 +26,7 @@ export default function() {
 			    handleImageChange={this.handleImageChange}
 			    handleImageSave={this.handleImageSave}
 			    showClassTypeModal={isEmpty(classTypeData)}
+			    moveToNextTab={this.moveToNextTab}
 			/>
 		</div>
 	)

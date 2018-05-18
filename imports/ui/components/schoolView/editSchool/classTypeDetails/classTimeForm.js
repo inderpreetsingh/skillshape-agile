@@ -90,7 +90,7 @@ class ClassTimeForm extends React.Component {
         this.setState({[fieldName]: new Date(date)})
     }
 
-    onSubmit = (event) => {
+    savePricing = (nextTab, event) => {
         console.log("--------------------- ClassTimes from submit----------------")
         event.preventDefault()
         // console.log("onSubmit state -->>",this.state);
@@ -127,14 +127,14 @@ class ClassTimeForm extends React.Component {
         console.log("ClassTimes submit -->>",payload)
 
         if(data && data._id) {
-            this.handleSubmit({ methodName: "classTimes.editClassTimes", doc: payload, doc_id: data._id })
+            this.handleSubmit({ methodName: "classTimes.editClassTimes", doc: payload, doc_id: data._id, nextTab: nextTab })
         } else {
-            this.handleSubmit({ methodName: "classTimes.addClassTimes", doc: payload })
+            this.handleSubmit({ methodName: "classTimes.addClassTimes", doc: payload, nextTab: nextTab })
         }
 
     }
 
-    handleSubmit = ({ methodName, doc, doc_id })=> {
+    handleSubmit = ({ methodName, doc, doc_id, nextTab })=> {
         console.log("handleSubmit methodName-->>",methodName)
         console.log("handleSubmit doc-->>",doc)
         console.log("handleSubmit doc_id-->>",doc_id)
@@ -145,6 +145,9 @@ class ClassTimeForm extends React.Component {
             }
             if (result) {
                 this.props.onClose()
+                if(nextTab) {
+                    this.props.moveToNextTab();
+                }
             }
             this.setState({isBusy: false, error});
         });
@@ -266,8 +269,11 @@ class ClassTimeForm extends React.Component {
                     <Button onClick={() => this.props.onClose()} color="primary">
                       Cancel
                     </Button>
-                    <Button type="submit" form={formId} color="primary">
+                    <Button type="button" form={formId} color="primary" onClick={this.savePricing.bind(this, null)}>
                       { data ? "Save" : "Submit" }
+                    </Button>
+                    <Button type="button" form={formId} color="primary" onClick={this.savePricing.bind(this, 'nextTab')}>
+                      Save and Add Pricing
                     </Button>
                 </DialogActions>
             </Dialog>
