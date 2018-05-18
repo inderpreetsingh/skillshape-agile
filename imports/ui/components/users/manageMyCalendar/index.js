@@ -99,10 +99,10 @@ class ManageMyCalendar extends React.Component {
                 managedClassTimes: managedClassTime,
                 schoolClassTimes: schoolClassTime,
                 filter: {
-                    classTimesIds,
-                    classTimesIdsForCI,
-                    manageClassTimeIds,
-                    schoolClassTimeId
+                    classTimesIds: _.uniq(classTimesIds),
+                    classTimesIdsForCI: _.uniq(classTimesIdsForCI),
+                    manageClassTimeIds: _.uniq(manageClassTimeIds),
+                    schoolClassTimeId:_.uniq(schoolClassTimeId)
                 }
             })
         }
@@ -189,8 +189,9 @@ class ManageMyCalendar extends React.Component {
         // manageAll classTimesData classTimesIds false
         const data = this.state[fieldName]
         console.log("data",data);
+        console.log("This.state----------->",this.state);
         let oldFilter = {...this.state.filter};
-        console.log("oldFilter===>",oldFilter);
+        console.log("oldFilter===>",JSON.stringify(oldFilter));
         let classTimesIds = [...oldFilter.classTimesIds];
         let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
         let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
