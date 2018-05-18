@@ -77,6 +77,7 @@ export default function (props) {
                               showFormBuilderModal={this.showFormBuilderModal}
                               moveTab={this.moveTab}
                               ref="location_details_tab"
+                              moveToNextTab={(value) => {this.moveToNextTab(value)}}
                           />
                       }
                       {
@@ -85,6 +86,7 @@ export default function (props) {
                               schoolId={schoolId}
                               showFormBuilderModal={this.showFormBuilderModal}
                               moveTab={this.moveTab}
+                              moveToNextTab={(value) => {this.moveToNextTab(value)}}
                           />
                       }
                       {

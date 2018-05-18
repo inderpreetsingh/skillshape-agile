@@ -46,7 +46,7 @@ export default function () {
 	// const EditForm = settings.mainTable.actions.edit.component;
 	// console.log("Panel with table props -->>",this.state);
 	const {currentTableData} = this.state;
-	console.log("Panel with table state -->>",this.state);
+	// console.log("Panel with table -->>",this);
 	return (
 		<div className={`${className} panel-table`}>
           	{ this.state.isBusy && <ContainerLoader/>}
@@ -212,6 +212,7 @@ export default function () {
 									                	updateParentProps={this.updateParentProps}
 									                	handleMainTableState={this.handleMainTableState}
 									                	MainTableHandleSubmit={this.state.MainTableHandleSubmit}
+									                	moveToNextTab={this.props.moveToNextTab}
 									                />
 									            </Grid>
 									        }
