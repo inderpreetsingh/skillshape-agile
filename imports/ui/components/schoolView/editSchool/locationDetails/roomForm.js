@@ -33,7 +33,7 @@ class RoomForm extends React.Component {
     	}
     }
 
-    onSubmit = (event) => {
+    saveRoomFormData = (nextTab, event) => {
         event.preventDefault();
         const { data, parentKey } = this.props;
         const payload = {
@@ -43,13 +43,13 @@ class RoomForm extends React.Component {
         this.setState({isBusy: true});
         if(data) {
             payload.id = data.id;
-            this.handleSubmit({ methodName: "location.editRoom", data: payload, locationId: parentKey})
+            this.handleSubmit({ methodName: "location.editRoom", data: payload, locationId: parentKey, nextTab: nextTab});
         } else {
-            this.handleSubmit({ methodName: "location.addRoom", data: payload, locationId: parentKey})
+            this.handleSubmit({ methodName: "location.addRoom", data: payload, locationId: parentKey, nextTab: nextTab});
         }
     }
 
-    handleSubmit = ({methodName, data, locationId})=> {
+    handleSubmit = ({methodName, data, locationId, nextTab})=> {
         console.log("handleSubmit methodName-->>",methodName)
         console.log("handleSubmit data-->>",data)
         console.log("handleSubmit locationId-->>",locationId)
@@ -58,7 +58,10 @@ class RoomForm extends React.Component {
             console.error("error", error);
           }
           if (result) {
-            this.props.onClose()
+            this.props.onClose();
+            if(nextTab) {
+                this.props.moveToNextTab();
+            }
           }
           this.setState({isBusy: false, error});
         });
@@ -127,10 +130,10 @@ class RoomForm extends React.Component {
                     <Button onClick={() => this.props.onClose()} color="primary">
                       Cancel
                     </Button>
-                    <Button type="submit" form={formId} color="primary">
+                    <Button type="button" form={formId} color="primary" onClick={this.saveRoomFormData.bind(this, null)}>
                       { data ? "Save" : "Submit" }
                     </Button>
-                    <Button type="submit" form={formId} color="primary">
+                    <Button type="button" form={formId} color="primary" onClick={this.saveRoomFormData.bind(this,'nextTab')}>
                       Save and Add Classes
                     </Button>
                 </DialogActions>

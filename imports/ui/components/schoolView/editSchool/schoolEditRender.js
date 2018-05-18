@@ -77,6 +77,7 @@ export default function (props) {
                               showFormBuilderModal={this.showFormBuilderModal}
                               moveTab={this.moveTab}
                               ref="location_details_tab"
+                              moveToNextTab={(value) => {this.moveToNextTab(value)}}
                           />
                       }
                       {

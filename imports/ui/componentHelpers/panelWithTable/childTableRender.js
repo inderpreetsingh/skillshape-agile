@@ -25,7 +25,7 @@ import Divider from 'material-ui/Divider';
 export default function (props) {
 	const { classes, childPanelHeader, childTable, childTableData, parentKey, parentData, schoolId } = this.props;
 	const FormComponent = childPanelHeader.actions.component;
-	// console.log("child Table render this.props -->>",this.props)
+	console.log("child Table render this.props -->>",this.props)
 	// console.log("child Table render this.state -->>",this.state)
 	// console.log("child Table render childTableData -->>",childTableData)
 	return (
@@ -38,6 +38,8 @@ export default function (props) {
           			data={this.state.formData}
           			open={this.state.showForm || this.props.MainTableHandleSubmit && this.props.MainTableHandleSubmit[this.props && this.props.parentKey]}
           			onClose={this.handleFormModal}
+        			moveToNextTab={this.props.moveToNextTab}
+
           		/>
           	}
 			<ExpansionPanel>

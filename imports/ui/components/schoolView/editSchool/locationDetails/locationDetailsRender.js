@@ -25,6 +25,7 @@ export default function () {
 				    getChildTableData={this.getChildTableData}
 				    showFormBuilderModal={showFormBuilderModal}
                     showLocationDialog={isEmpty(locationData)}
+                    moveToNextTab={this.moveToNextTab}
 				/>
 			</div>
 		{/*<div className="wizard-footer col-md-12">
