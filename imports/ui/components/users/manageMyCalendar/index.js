@@ -217,6 +217,7 @@ class ManageMyCalendar extends React.Component {
                     let index = classTimesIds.indexOf(data[i]._id);
                     if(index > -1) {
                         classTimesIds.splice(index, 1);
+                        console.log("classTimesIds inside111111====>",classTimesIds)
                     }
                     oldFilter.classTimesIds = classTimesIds;
                 }
@@ -224,6 +225,7 @@ class ManageMyCalendar extends React.Component {
                     let index = manageClassTimeIds.indexOf(data[i]._id);
                     if(index > -1) {
                         manageClassTimeIds.splice(index, 1);
+                        console.log("classTimesIds inside2222222====>",manageClassTimeIds)
                     }
                     oldFilter.manageClassTimeIds = manageClassTimeIds;
                 }
@@ -231,6 +233,7 @@ class ManageMyCalendar extends React.Component {
                     let index = schoolClassTimeId.indexOf(data[i]._id);
                     if(index > -1) {
                         schoolClassTimeId.splice(index, 1);
+                        console.log("classTimesIds inside3333333====>",schoolClassTimeId)
                     }
                     oldFilter.schoolClassTimeId = schoolClassTimeId;
                 }
@@ -243,7 +246,7 @@ class ManageMyCalendar extends React.Component {
         oldFilter.classTimesIds = classTimesIds;
         oldFilter.manageClassTimeIds = manageClassTimeIds;
         oldFilter.schoolClassTimeId = schoolClassTimeId;
-        // console.log("oldFilter -->>",oldFilter)
+        console.log("oldFilter after-->>",oldFilter)
         this.setState({
             [parentKey]: isInputChecked,
             [fieldName]: data,
