@@ -122,8 +122,6 @@ const DayDateInfo = styled.p`
 const CurrentDate = DayDateInfo.extend`
   position: absolute;
   width: 100%;
-  left: 0;
-  right: 0;
   opacity: ${props => props.visible ? 1 : 0};
 `;
 
