@@ -23,6 +23,7 @@ import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
 import { OneTimeRow } from './oneTimeRow';
 import '/imports/api/sLocation/methods';
+import { toastrModal } from '/imports/util';
 
 const formId = "classTimeForm";
 
@@ -90,11 +91,11 @@ class ClassTimeForm extends React.Component {
         this.setState({[fieldName]: new Date(date)})
     }
 
-    savePricing = (nextTab, event) => {
+    saveClassTimes = (nextTab, event) => {
         console.log("--------------------- ClassTimes from submit----------------")
         event.preventDefault()
         // console.log("onSubmit state -->>",this.state);
-        const { schoolId, data, parentKey, parentData} = this.props;
+        const { schoolId, data, parentKey, parentData, toastr} = this.props;
         const { tabValue, locationId } = this.state;
 
         const payload = {
@@ -104,7 +105,10 @@ class ClassTimeForm extends React.Component {
             desc: this.desc.value,
             locationId: locationId,
         }
-
+        if (!this.classTimeName.value) {
+          toastr.error('Please enter Class Time name.', 'Error');
+          return false;
+        }
         if(tabValue === 0) {
 
             payload.scheduleType = "oneTime";
@@ -127,14 +131,13 @@ class ClassTimeForm extends React.Component {
         console.log("ClassTimes submit -->>",payload)
 
         if(data && data._id) {
-            this.handleSubmit({ methodName: "classTimes.editClassTimes", doc: payload, doc_id: data._id, nextTab: nextTab })
+            this.onSubmit({ methodName: "classTimes.editClassTimes", doc: payload, doc_id: data._id, nextTab: nextTab })
         } else {
-            this.handleSubmit({ methodName: "classTimes.addClassTimes", doc: payload, nextTab: nextTab })
+            this.onSubmit({ methodName: "classTimes.addClassTimes", doc: payload, nextTab: nextTab })
         }
-
     }
 
-    handleSubmit = ({ methodName, doc, doc_id, nextTab })=> {
+    onSubmit = ({ methodName, doc, doc_id, nextTab })=> {
         console.log("handleSubmit methodName-->>",methodName)
         console.log("handleSubmit doc-->>",doc)
         console.log("handleSubmit doc_id-->>",doc_id)
@@ -269,10 +272,10 @@ class ClassTimeForm extends React.Component {
                     <Button onClick={() => this.props.onClose()} color="primary">
                       Cancel
                     </Button>
-                    <Button type="button" form={formId} color="primary" onClick={this.savePricing.bind(this, null)}>
+                    <Button type="button" form={formId} name="save-class-times" color="primary" onClick={this.saveClassTimes.bind(this, null, event)}>
                       { data ? "Save" : "Submit" }
                     </Button>
-                    <Button type="button" form={formId} color="primary" onClick={this.savePricing.bind(this, 'nextTab')}>
+                    <Button type="button" form={formId} name="save-and-go-to-pricing" color="primary" onClick={this.saveClassTimes.bind(this, 'nextTab', event)}>
                       Save and Add Pricing
                     </Button>
                 </DialogActions>
@@ -282,4 +285,4 @@ class ClassTimeForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(withMobileDialog()(ClassTimeForm));
+export default withStyles(styles)(toastrModal(withMobileDialog()(ClassTimeForm)));
