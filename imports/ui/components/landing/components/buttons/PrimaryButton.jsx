@@ -6,7 +6,7 @@ import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 /* Because we are extending a material ui button, it us jss instead of styled Components */
 const styles = {

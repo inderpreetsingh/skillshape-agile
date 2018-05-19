@@ -139,7 +139,7 @@ class ClassTimeClockManager extends Component {
         <OuterWrapper width={this.props.outerWidth}>
 
         {/* class type name */}
-        <ClassTypeName>{classTypeName}</ClassTypeName>
+        {/*<ClassTypeName>{classTypeName}</ClassTypeName> */}
 
         {/* For recurring schedule only */}
         {scheduleTypeLowerCase === 'recurring' && <StartEndDate>{scheduleStartDate} - {scheduleEndDate} </StartEndDate>}

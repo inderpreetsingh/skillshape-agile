@@ -1,8 +1,9 @@
 import React, {Component,Fragment} from 'react';
 import isEmpty from 'lodash/isEmpty';
 import PropTypes from 'prop-types';
-import SecondaryButton from './SecondaryButton.jsx';
-import SignUpTypeDialogBox from '../dialogs/SignUpTypeDialogBox.jsx';
+
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
+import SignUpTypeDialogBox from '/imports/ui/components/landing/components/dialogs/SignUpTypeDialogBox.jsx';
 
 class JoinButton extends Component {
 

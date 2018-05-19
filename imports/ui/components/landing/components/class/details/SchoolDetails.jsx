@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
 
-import StudentNotes from './StudentNotes.jsx';
-import AboutSchool from './AboutSchool.jsx';
-import ClassTypeImgSlider from '../ClassTypeImgSlider.jsx';
+import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes.jsx';
+import AboutSchool from '/imports/ui/components/landing/components/class/details/AboutSchool.jsx';
+import ClassTypeImgSlider from '/imports/ui/components/landing/components/class/ClassTypeImgSlider.jsx';
 
-import * as helpers from '../../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const Wrapper = styled.div`
   display: flex;
@@ -66,7 +66,7 @@ const SchoolDetails = (props) => (
         description={props.description}/>
         {!isEmpty(props.images) && <StudentNotes notes={props.notes} />}
     </SchoolSection>
-    <ImgSliderSection notes={isEmpty(props.images)}>
+    {!isEmpty(props.images) && !isEmpty(props.notes) && <ImgSliderSection notes={isEmpty(props.images)}>
       {
         !isEmpty(props.images) ?
         <ClassTypeImgSlider images={props.images} />
@@ -75,7 +75,7 @@ const SchoolDetails = (props) => (
           <StudentNotes notes={props.notes}/>
         </ImgSliderStudentNotes>
       }
-    </ImgSliderSection>
+    </ImgSliderSection>}
   </Wrapper>
 );
 

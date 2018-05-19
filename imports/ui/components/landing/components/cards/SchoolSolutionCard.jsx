@@ -6,13 +6,13 @@ import styled from 'styled-components';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Icon from 'material-ui/Icon';
-
 import Button from 'material-ui/Button';
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
+
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 
 import { lightenDarkenColor } from '/imports/util';
-import * as helpers from '../jss/helpers';
-import { cardImgSrc } from '../../site-settings.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 const styles = {
   cardWrapper: {

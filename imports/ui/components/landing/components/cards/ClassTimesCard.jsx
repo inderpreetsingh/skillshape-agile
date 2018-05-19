@@ -6,11 +6,8 @@ import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import Clear from 'material-ui-icons/Clear';
-import MoreVert from 'material-ui-icons/MoreVert';
 
-import {formatTime, formatAmPm, formatDate, formatDateNoYear } from '/imports/util';
+import {formatTime, formatAmPm, formatDateNoYear } from '/imports/util';
 import {DAYS_IN_WEEK} from '/imports/ui/components/landing/constants/classTypeConstants.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
@@ -18,6 +15,7 @@ const styles = {
   cardWrapper: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     cursor: 'pointer',
     backgroundColor: 'transparent',
     overflowX: 'hidden',
@@ -25,7 +23,7 @@ const styles = {
     height: '100%',
     boxShadow: 'none',
     position: 'relative',
-    paddingTop: helpers.rhythmDiv
+    zIndex: 0,
   },
   cardWrapperHidden: {
     overflowY: 'hidden'
@@ -35,27 +33,29 @@ const styles = {
     padding: helpers.rhythmDiv,
     marginBottom: helpers.rhythmDiv,
     fontWeight: '300',
+    width: 200,
     fontSize: helpers.baseFontSize,
     fontFamily: helpers.specialFont
   },
   cardTop: {
-    height: helpers.rhythmDiv * 2,
-    marginBottom: helpers.rhythmDiv,
-    display: 'flex',
-    justifyContent: 'flex-end'
+    position: 'relative',
+    width: 200 // This is the width we should give to the paper element
   },
   cardIconButton : {
     minWidth: '0',
     minHeight: '0',
-    padding: `0 ${helpers.rhythmDiv}px`,
     height: helpers.rhythmDiv * 4,
     width: helpers.rhythmDiv * 4,
     color: helpers.black,
     position: 'absolute',
     top: 0,
-    right: 16,
-    zIndex: 1,
-    borderRadius: '50%'
+    right: -22,
+    zIndex: 2,
+    borderRadius: '50%',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12)',
+    '&:hover': {
+      backgroundColor: helpers.panelColor
+    }
   }
 }
 
@@ -79,6 +79,7 @@ const Wrapper = styled.div`
 `;
 
 const CardContent = styled.div`
+  padding-right: ${helpers.rhythmDiv}px;
 `;
 
 const Text = styled.p`
@@ -98,10 +99,6 @@ const Day = Text.extend`
 
 const Heading = Day.extend`
   text-align: left;
-`;
-
-const DayDetails = styled.div`
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Times = styled.ul`
@@ -184,17 +181,19 @@ const ClassTimesCard = (props) =>  {
   }
 
   return (<OuterWrapper show={props.show}>
-    <Button variant="fab" color='secondary' mini className={props.classes.cardIconButton} aria-label="close" onClick={props.onClose}>
-      <Icon>clear</Icon>
-    </Button>
+    <Paper className={props.classes.cardTop}>
+      <Button variant="raised" color='secondary' className={props.classes.cardIconButton} aria-label="close" onClick={props.onClose}>
+        <Icon>keyboard_arrow_down</Icon>
+      </Button>
+    </Paper>
     <Paper className={wrapperClassName} elevation={3}>
     <Wrapper show={props.show}>
       <CardContent>
         {getScheduleDetailsFromFormattedClassTimes(props.formattedClassTimes, props.scheduleType)}
-        <Paper className={props.classes.cardItem}>
+        {props.description && <Paper className={props.classes.cardItem}>
           {/*<Heading>Description</Heading> */}
           {props.description}
-        </Paper>
+        </Paper>}
       </CardContent>
     </Wrapper>
     </Paper>

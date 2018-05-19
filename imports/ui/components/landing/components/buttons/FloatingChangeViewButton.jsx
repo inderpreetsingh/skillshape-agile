@@ -8,8 +8,8 @@ import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 
-import muiTheme from '../jss/muitheme.jsx';
-import * as helpers from '../jss/helpers.js';
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = {
   iconStyles: {

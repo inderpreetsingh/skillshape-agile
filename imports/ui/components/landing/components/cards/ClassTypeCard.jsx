@@ -12,21 +12,22 @@ import PrimaryButton from '/imports/ui/components/landing/components/buttons/Pri
 import ClassTimesDialogBox from '/imports/ui/components/landing/components/dialogs/ClassTimesDialogBox.jsx';
 import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx';
 
-import * as helpers from '../jss/helpers.js';
-import MuiTheme from '../jss/muitheme';
+import ClassTypeCardBody from '/imports/ui/components/landing/components/cards/ClassTypeCardBody.jsx';
+import ClassTypeCardDescription from '/imports/ui/components/landing/components/cards/ClassTypeCardDescription.jsx';
 
-import ClassTypeCardBody from './ClassTypeCardBody.jsx';
-import ClassTypeCardDescription from './ClassTypeCardDescription.jsx';
+import classTimesData from '/imports/ui/components/landing/constants/classTimesData';
 
-import classTimesData from '../../constants/classTimesData';
-import ClassTimes from "/imports/api/classTimes/fields";
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
-
-import { cardImgSrc } from '../../site-settings.js';
+import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+
 import School from "/imports/api/school/fields";
+import ClassTimes from "/imports/api/classTimes/fields";
+
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import MuiTheme from '/imports/ui/components/landing/components/jss/muitheme';
 
 const CardsRevealWrapper = styled.div`
   width: 100%;
@@ -142,6 +143,7 @@ class ClassTypeCard extends Component {
               classTypeId={_id}
               onToastrClose={() => this.handleManageRequestsDialogState(false)} />}
             {this.state.isLoading && <ContainerLoader />}
+
             <CardsRevealWrapper>
               <CardsReveal defaultImage={cardImgSrc} originalImage={this.props.classTypeImg} {...this.props}
                   body={

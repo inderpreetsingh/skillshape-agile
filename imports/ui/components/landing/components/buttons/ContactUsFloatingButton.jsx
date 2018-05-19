@@ -7,9 +7,9 @@ import { withStyles } from 'material-ui/styles';
 import Icon from 'material-ui/Icon';
 import MobileDetect from 'mobile-detect';
 
-import ContactUsDialogBox from '../dialogs/ContactUsDialogBox.jsx';
+import ContactUsDialogBox from '/imports/ui/components/landing/components/dialogs/ContactUsDialogBox.jsx';
 
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = {
   iconStyles : {

@@ -6,10 +6,10 @@ import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import { withStyles } from 'material-ui/styles';
 
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import Badge from '../icons/Badge.jsx';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import Badge from '/imports/ui/components/landing/components/icons/Badge.jsx';
 
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = {
   iconButton : {

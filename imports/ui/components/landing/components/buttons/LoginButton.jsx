@@ -1,10 +1,11 @@
 import React, {Component,Fragment} from 'react';
 import { isEmpty, get } from 'lodash';
 import PropTypes from 'prop-types';
-import SecondaryButton from './SecondaryButton.jsx';
-import LoginDialogBox from '../dialogs/LoginDialogBox.jsx';
-import { emailRegex, toastrModal } from '/imports/util';
 import { browserHistory } from 'react-router';
+
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
+import LoginDialogBox from '/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx';
+import { emailRegex, toastrModal } from '/imports/util';
 
 class LoginButton extends Component {
 

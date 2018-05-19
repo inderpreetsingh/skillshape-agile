@@ -3,10 +3,8 @@ import moment from 'moment';
 import styled, {keyframes} from 'styled-components';
 import PropTypes from 'prop-types';
 import { isEmpty, get } from 'lodash';
-import { Transition } from 'react-transition-group';
 
 import TrendingIcon from '/imports/ui/components/landing/components/icons/Trending.jsx';
-import ShowMore from '/imports/ui/components/landing/components/icons/ShowMore.jsx';
 
 import ClassTimeClockManager from '/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx';
 import ClassTimesCard from '/imports/ui/components/landing/components/cards/ClassTimesCard.jsx';
@@ -33,6 +31,7 @@ const ClassTimeContainer = styled.div`
   align-items: center;
   position: relative;
   z-index: 0;
+  ${props => props.showCard ? 'filter: blur(2px)' : ''};
 
   &:after {
     content: '';
@@ -56,6 +55,15 @@ const ClassTimeContainer = styled.div`
   }
 `;
 
+const ClassTimeContainerOuterWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+`;
+
 const ClassScheduleWrapper = styled.div`
   ${helpers.flexCenter}
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -76,6 +84,28 @@ const DescriptionWrapper = styled.div`
   display: flex;
 `;
 
+const ClassTypeName = styled.h4`
+  width: 100%;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
+  line-height: 1;
+  color: ${helpers.black};
+  font-family: ${helpers.specialFont};
+  font-weight: 400;
+  font-size: ${helpers.baseFontSize * 1.25}px;
+  text-align: center;
+  text-transform: capitalize;
+  ${props => props.showCard ? 'opacity: 0' : 'opacity: 1'};
+`;
+
+const ClassTypeNameNoBlurred = ClassTypeName.extend`
+  ${props => !props.showCard ? 'opacity: 0' : 'opacity: 1'};
+  display : ${props => props.showCard ? 'flex' : 'none'};
+  justify-content: center;
+  position: absolute;
+  top: 16px;
+`;
+
 const Description = styled.p`
   margin: ${helpers.rhythmDiv}px 0;
   font-family: ${helpers.specialFont};
@@ -85,16 +115,9 @@ const Description = styled.p`
   overflow-y: auto;
 `;
 
-const Text = styled.p`
-  margin: 0;
-  font-size: ${helpers.baseFontSize}px;
-  font-family: ${helpers.specialFont};
-  font-weight: 600;
-  text-transform: capitalize;
-`;
-
 const ButtonsWrapper = styled.div`
-
+  display: flex;
+  flex-direction: column;
 `;
 
 const ButtonWrapper = styled.div`
@@ -102,6 +125,8 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: ${helpers.rhythmDiv}px;
+  transition: 0.1s ease-in opacity;
+  ${props => props.showCard ? 'opacity: 0' : 'opacity: 1'};
 `;
 
 const TrendingWrapper = styled.div`
@@ -334,51 +359,57 @@ class ClassTime extends Component {
     const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this._getOuterClockClassName(this.props.addToCalendar);
     const dotColor = this._getDotColor(this.props.addToCalendar);
-    return (<Fragment>
+    return (<ClassTimeContainerOuterWrapper>
       {this.state.isLoading && <ContainerLoader />}
-
+      <ClassTypeNameNoBlurred showCard={this.state.showCard}>{name}</ClassTypeNameNoBlurred>
       <ClassTimeContainer
+        showCard={this.state.showCard}
         className={`class-time-bg-transition ${this._getWrapperClassName(this.props.addToCalendar)}`}
         key={this.props._id} >
-          <ScheduleAndDescriptionWrapper>
-            <ScheduleWrapper>
-              <ClassTimeClockManager
-                classTypeName={name}
-                formattedClassTimes={formattedClassTimes}
-                scheduleStartDate={this.formatDate(startDate)}
-                scheduleEndDate={this.formatDate(endDate)}
-                scheduleType={scheduleType}
-                clockProps={{ className: classNameForClock, dotColor: dotColor }}
-              />
-            </ScheduleWrapper>
+          <div>
+            {/* class type name */}
+            <ClassTypeName showCard={this.state.showCard}>{name}</ClassTypeName>
 
-            {showDescription && <DescriptionWrapper>
-              <Description>
-                {desc}
-              </Description>
-            </DescriptionWrapper>}
+            <ScheduleAndDescriptionWrapper>
+              <ScheduleWrapper>
+                <ClassTimeClockManager
+                  classTypeName={name}
+                  formattedClassTimes={formattedClassTimes}
+                  scheduleStartDate={this.formatDate(startDate)}
+                  scheduleEndDate={this.formatDate(endDate)}
+                  scheduleType={scheduleType}
+                  clockProps={{ className: classNameForClock, dotColor: dotColor }}
+                />
+              </ScheduleWrapper>
 
-          </ScheduleAndDescriptionWrapper>
+              {showDescription && <DescriptionWrapper>
+                <Description>
+                  {desc}
+                </Description>
+              </DescriptionWrapper>}
 
+            </ScheduleAndDescriptionWrapper>
+          </div>
           {/* View All times button */}
           <ButtonsWrapper>
-            {!showDescription && !this.state.showCard && <ButtonWrapper>
-              <ClassTimeButton white icon iconName="av_timer" onClick={this.handleShowCard(true)} label="View all times" />
+            {!showDescription && <ButtonWrapper showCard={this.state.showCard}>
+              <ClassTimeButton white lgButton icon iconName="av_timer" onClick={this.handleShowCard(true)} label="View all times" />
             </ButtonWrapper>}
             {this._getCalenderButton(this.props.addToCalendar)}
           </ButtonsWrapper>
 
           {this.props.isTrending && <Trending />}
+      </ClassTimeContainer>
 
-          {!showDescription && <ClassTimesCardWrapper show={this.state.showCard}>
-            <ClassTimesCard
-              show={this.state.showCard}
-              formattedClassTimes={formattedClassTimes}
-              scheduleType={scheduleType}
-              description={desc}
-              onClose={this.handleShowCard(false)} />
-          </ClassTimesCardWrapper>}
-      </ClassTimeContainer></Fragment>)
+      {!showDescription && <ClassTimesCardWrapper show={this.state.showCard}>
+        <ClassTimesCard
+          show={this.state.showCard}
+          formattedClassTimes={formattedClassTimes}
+          scheduleType={scheduleType}
+          description={desc}
+          onClose={this.handleShowCard(false)} />
+      </ClassTimesCardWrapper>}
+      </ClassTimeContainerOuterWrapper>)
     }
 }
 

@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 
 import Grid from 'material-ui/Grid'
 
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import SecondaryButton from '../buttons/SecondaryButton.jsx';
-import * as helpers from '../jss/helpers.js';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ReviewsWrapper = styled.div`
     display: flex;

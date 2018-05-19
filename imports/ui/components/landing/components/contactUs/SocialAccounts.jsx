@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import Twitter from '../icons/social/Twitter.jsx';
-import Facebook from '../icons/social/Facebook.jsx';
-import GooglePlus from '../icons/social/GooglePlus.jsx';
-import Instagram from '../icons/social/Instagram.jsx';
-import Dribbble from '../icons/social/Dribbble.jsx';
+import Twitter from '/imports/ui/components/landing/components/icons/social/Twitter.jsx';
+import Facebook from '/imports/ui/components/landing/components/icons/social/Facebook.jsx';
+import GooglePlus from '/imports/ui/components/landing/components/icons/social/GooglePlus.jsx';
+import Instagram from '/imports/ui/components/landing/components/icons/social/Instagram.jsx';
+import Dribbble from '/imports/ui/components/landing/components/icons/social/Dribbble.jsx';
 
 import * as helpers from '../jss/helpers.js';
 

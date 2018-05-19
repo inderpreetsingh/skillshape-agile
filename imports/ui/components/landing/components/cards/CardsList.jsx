@@ -6,14 +6,14 @@ import isEmpty from 'lodash/isEmpty';
 
 import Grid from 'material-ui/Grid';
 
-import ClassTypeCard from './ClassTypeCard.jsx';
-import CardStructure from '../../constants/structure/card.js';
-import SecondaryButton from '../buttons/SecondaryButton.jsx';
+import Reviews from '/imports/api/review/fields.js';
 
 import {getContainerMaxWidth,getAverageNoOfRatings} from '/imports/util';
+import ClassTypeCard from '/imports/ui/components/landing/components/cards/ClassTypeCard.jsx';
+import CardStructure from '/imports/ui/components/landing/constants/structure/card.js';
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
 
-import Reviews from '/imports/api/review/fields.js';
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const SPACING = helpers.rhythmDiv * 3;
 const CARD_WIDTH = 280;
