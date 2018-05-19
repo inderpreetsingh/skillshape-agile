@@ -12,6 +12,8 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import '/imports/api/sLocation/methods';
+import { toastrModal } from '/imports/util';
+
 
 const formId = "RoomForm";
 
@@ -35,7 +37,15 @@ class RoomForm extends React.Component {
 
     saveRoomFormData = (nextTab, event) => {
         event.preventDefault();
-        const { data, parentKey } = this.props;
+        const { data, parentKey, toastr } = this.props;
+        if (!this.roomName.value) {
+          toastr.error('Please enter room name.', 'Error');
+          return false;
+        }
+        if (!this.capicity.value) {
+          toastr.error('Please enter room capacity.', 'Error');
+          return false;
+        }
         const payload = {
             name: this.roomName.value,
             capicity: this.capicity.value,
@@ -54,8 +64,10 @@ class RoomForm extends React.Component {
         console.log("handleSubmit data-->>",data)
         console.log("handleSubmit locationId-->>",locationId)
         Meteor.call(methodName, { locationId, data }, (error, result) => {
+          let stateObj = {isBusy: false };
           if (error) {
             console.error("error", error);
+            stateObj.error = error.reason || error.message;
           }
           if (result) {
             this.props.onClose();
@@ -63,7 +75,8 @@ class RoomForm extends React.Component {
                 this.props.moveToNextTab();
             }
           }
-          this.setState({isBusy: false, error});
+          this.setState(stateObj);
+          // this.setState();
         });
     }
 
@@ -112,7 +125,7 @@ class RoomForm extends React.Component {
                                         margin="dense"
                                         inputRef={(ref)=> this.capicity = ref}
                                         label="Capicity"
-                                        type="text"
+                                        type="number"
                                         fullWidth
                                     />
                                 </form>
@@ -143,4 +156,4 @@ class RoomForm extends React.Component {
     }
 }
 
-export default withStyles(styles)(withMobileDialog()(RoomForm));
+export default withStyles(styles)(toastrModal(withMobileDialog()(RoomForm)));
