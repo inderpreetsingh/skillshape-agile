@@ -2,7 +2,7 @@ import React ,{Component} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}

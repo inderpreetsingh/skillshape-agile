@@ -4,7 +4,7 @@ import ReactStars from 'react-stars';
 import PropTypes from 'prop-types';
 import ReactHtmlParser from 'react-html-parser';
 
-import * as helpers from '../../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const Wrapper = styled.div`
   display: flex;
@@ -37,10 +37,6 @@ const Notes = styled.div`
   li {
     list-style-position: outside;
     margin-bottom: ${helpers.rhythmDiv}px;
-  }
-
-  ol li {
-    text-indent: 0px;
   }
 `;
 

@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import {withStyles} from 'material-ui/styles';
 import { browserHistory } from 'react-router';
+
+import {withStyles} from 'material-ui/styles';
+import Radio, { RadioGroup } from 'material-ui/Radio';
+import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'material-ui/Form';
 
 import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import IconInput from '../form/IconInput.jsx';
-import Radio, { RadioGroup } from 'material-ui/Radio';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import IconInput from '/imports/ui/components/landing/components/form/IconInput.jsx';
 
-import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'material-ui/Form';
-
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = {
   formGroupWrapper: {
@@ -98,7 +98,7 @@ const SubmitButtonWrapper = styled.div`
   margin: ${helpers.rhythmDiv * 4}px 0;
 `;
 
-const ButtonWidthWrapper = styled.div`
+const ButtonWrapper = styled.div`
   width: 200px;
 `;
 
@@ -230,12 +230,12 @@ class ContactUsForm extends Component {
             </InputWrapper>
 
             <SubmitButtonWrapper>
-              <ButtonWidthWrapper>
+              <ButtonWrapper>
                 {this.state.readyToSumit ?
                 <PrimaryButton fullWidth type="submit" noMarginBottom label="Send Message" onClick={this.handleFormSubmit} />
                 :
                 <button className="cancel-button full-width increase-height" disabled >Send Message</button>}
-              </ButtonWidthWrapper>
+              </ButtonWrapper>
             </SubmitButtonWrapper>
           </Form>
       </FormWrapper>)
