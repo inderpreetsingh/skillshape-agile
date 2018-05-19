@@ -66,7 +66,7 @@ const SchoolDetails = (props) => (
         description={props.description}/>
         {!isEmpty(props.images) && <StudentNotes notes={props.notes} />}
     </SchoolSection>
-    <ImgSliderSection notes={isEmpty(props.images)}>
+    {!isEmpty(props.images) && !isEmpty(props.notes) && <ImgSliderSection notes={isEmpty(props.images)}>
       {
         !isEmpty(props.images) ?
         <ClassTypeImgSlider images={props.images} />
@@ -75,7 +75,7 @@ const SchoolDetails = (props) => (
           <StudentNotes notes={props.notes}/>
         </ImgSliderStudentNotes>
       }
-    </ImgSliderSection>
+    </ImgSliderSection>}
   </Wrapper>
 );
 

@@ -15,6 +15,7 @@ const styles = {
   cardWrapper: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     cursor: 'pointer',
     backgroundColor: 'transparent',
     overflowX: 'hidden',
@@ -23,7 +24,6 @@ const styles = {
     boxShadow: 'none',
     position: 'relative',
     zIndex: 0,
-    paddingTop: helpers.rhythmDiv
   },
   cardWrapperHidden: {
     overflowY: 'hidden'
@@ -33,14 +33,13 @@ const styles = {
     padding: helpers.rhythmDiv,
     marginBottom: helpers.rhythmDiv,
     fontWeight: '300',
+    width: 200,
     fontSize: helpers.baseFontSize,
     fontFamily: helpers.specialFont
   },
   cardTop: {
-    height: helpers.rhythmDiv * 2,
-    marginBottom: helpers.rhythmDiv,
-    display: 'flex',
-    justifyContent: 'flex-end'
+    position: 'relative',
+    width: 200 // This is the width we should give to the paper element
   },
   cardIconButton : {
     minWidth: '0',
@@ -49,8 +48,8 @@ const styles = {
     width: helpers.rhythmDiv * 4,
     color: helpers.black,
     position: 'absolute',
-    top: 8,
-    right: 4,
+    top: 0,
+    right: -22,
     zIndex: 2,
     borderRadius: '50%',
     boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12)',
@@ -80,6 +79,7 @@ const Wrapper = styled.div`
 `;
 
 const CardContent = styled.div`
+  padding-right: ${helpers.rhythmDiv}px;
 `;
 
 const Text = styled.p`
@@ -181,7 +181,7 @@ const ClassTimesCard = (props) =>  {
   }
 
   return (<OuterWrapper show={props.show}>
-    <Paper className={props.classes}>
+    <Paper className={props.classes.cardTop}>
       <Button variant="raised" color='secondary' className={props.classes.cardIconButton} aria-label="close" onClick={props.onClose}>
         <Icon>keyboard_arrow_down</Icon>
       </Button>

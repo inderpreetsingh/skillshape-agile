@@ -59,6 +59,7 @@ const ClassTimeContainerOuterWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  align-items: center;
   flex-direction: column;
   position: relative;
 `;
@@ -84,6 +85,7 @@ const DescriptionWrapper = styled.div`
 `;
 
 const ClassTypeName = styled.h4`
+  width: 100%;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv}px;
   line-height: 1;
@@ -93,6 +95,15 @@ const ClassTypeName = styled.h4`
   font-size: ${helpers.baseFontSize * 1.25}px;
   text-align: center;
   text-transform: capitalize;
+  ${props => props.showCard ? 'opacity: 0' : 'opacity: 1'};
+`;
+
+const ClassTypeNameNoBlurred = ClassTypeName.extend`
+  ${props => !props.showCard ? 'opacity: 0' : 'opacity: 1'};
+  display : ${props => props.showCard ? 'flex' : 'none'};
+  justify-content: center;
+  position: absolute;
+  top: 16px;
 `;
 
 const Description = styled.p`
@@ -105,7 +116,8 @@ const Description = styled.p`
 `;
 
 const ButtonsWrapper = styled.div`
-
+  display: flex;
+  flex-direction: column;
 `;
 
 const ButtonWrapper = styled.div`
@@ -113,6 +125,8 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: ${helpers.rhythmDiv}px;
+  transition: 0.1s ease-in opacity;
+  ${props => props.showCard ? 'opacity: 0' : 'opacity: 1'};
 `;
 
 const TrendingWrapper = styled.div`
@@ -347,14 +361,14 @@ class ClassTime extends Component {
     const dotColor = this._getDotColor(this.props.addToCalendar);
     return (<ClassTimeContainerOuterWrapper>
       {this.state.isLoading && <ContainerLoader />}
-      <ClassTypeName>{name}</ClassTypeName>
+      <ClassTypeNameNoBlurred showCard={this.state.showCard}>{name}</ClassTypeNameNoBlurred>
       <ClassTimeContainer
         showCard={this.state.showCard}
         className={`class-time-bg-transition ${this._getWrapperClassName(this.props.addToCalendar)}`}
         key={this.props._id} >
           <div>
-          {/* class type name */}
-          <ClassTypeName>{name}</ClassTypeName>
+            {/* class type name */}
+            <ClassTypeName showCard={this.state.showCard}>{name}</ClassTypeName>
 
             <ScheduleAndDescriptionWrapper>
               <ScheduleWrapper>
@@ -378,8 +392,8 @@ class ClassTime extends Component {
           </div>
           {/* View All times button */}
           <ButtonsWrapper>
-            {!showDescription && !this.state.showCard && <ButtonWrapper>
-              <ClassTimeButton white icon iconName="av_timer" onClick={this.handleShowCard(true)} label="View all times" />
+            {!showDescription && <ButtonWrapper showCard={this.state.showCard}>
+              <ClassTimeButton white lgButton icon iconName="av_timer" onClick={this.handleShowCard(true)} label="View all times" />
             </ButtonWrapper>}
             {this._getCalenderButton(this.props.addToCalendar)}
           </ButtonsWrapper>

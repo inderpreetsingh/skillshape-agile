@@ -142,6 +142,7 @@ class ClassTypeCard extends Component {
               classTypeId={_id}
               onToastrClose={() => this.handleManageRequestsDialogState(false)} />}
             {this.state.isLoading && <ContainerLoader />}
+
             <CardsRevealWrapper>
               <CardsReveal defaultImage={cardImgSrc} originalImage={this.props.classTypeImg} {...this.props}
                   body={

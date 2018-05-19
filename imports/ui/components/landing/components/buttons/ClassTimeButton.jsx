@@ -82,6 +82,9 @@ const styles = {
       color: helpers.textColor,
     },
   },
+  lgButton: {
+    minWidth: 200 // this is the width of Paper Card
+  },
   fullWidth: {
     width: '100%'
   },
@@ -133,16 +136,16 @@ const ClassTimeButton = (props) => {
   if(props.ghost) {
     rootClass = rootClass +' '+ props.classes.classTimeButtonGhost;
     labelClass = props.classes.classTimeButtonGhostLabel;
-  }
-
-  if(props.secondary) {
+  }else if(props.secondary) {
     rootClass = rootClass +' '+ props.classes.classTimeSecondaryButton;
     labelClass = props.classes.classTimeSecondaryButtonLabel;
-  }
-
-  if(props.white) {
+  }else if(props.white) {
     rootClass = rootClass +' '+ props.classes.classTimeWhiteButton;
     labelClass = props.classes.classTimeWhiteButtonLabel;
+  }
+
+  if(props.lgButton) {
+    rootClass = rootClass +' '+props.classes.lgButton;
   }
 
   if(props.itemScope && props.itemType) {
