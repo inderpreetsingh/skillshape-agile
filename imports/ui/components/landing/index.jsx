@@ -358,7 +358,7 @@ class Landing extends Component {
         });
     }
 
-    getMyCurrentLocation = () => {
+    getMyCurrentLocation = (args) => {
         const {toastr} = this.props;
         if (navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -390,7 +390,9 @@ class Landing extends Component {
                   })
               });
               // Toggle map view on click of `Browse classes near by me`
-              this.handleToggleMapView();
+              if(!args) {
+                this.handleToggleMapView();
+              }
               // toastr.success("Showing classes around you...","Found your location");
               // // Session.set("coords",coords)
             }, (err) => {
@@ -791,6 +793,7 @@ class Landing extends Component {
                           {(!this.state.mapView && this.checkIfAnyFilterIsApplied()) && this.showAppliedTopFilter()}
                           <ClassTypeList
                               landingPage={true}
+                              getMyCurrentLocation={this.getMyCurrentLocation}
                               defaultLocation={this.state.defaultLocation}
                               mapView={this.state.mapView}
                               filters={this.state.filters}

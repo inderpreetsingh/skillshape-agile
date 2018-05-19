@@ -38,7 +38,22 @@ class MapView extends React.Component {
 	}
 
 	componentDidMount() {
-      this.map = initializeMap(this.props.filters.coords || config.defaultLocation);
+      /***
+        Need to handle three cases:
+         - if there is an address in the profile then it should show data according to profile address.
+         - if there is no address in their profile then map view should open location according to IP.
+         - if neither is available then it should go to Amsterdam (default location)
+      */
+      let currentUser = this.props.currentUser;
+      let profileCoords;
+      if(currentUser) {
+      	profileCoords = currentUser.profile && currentUser.profile.coords;
+      }
+      if(!profileCoords) {
+      	// Geolocate
+      	this.props.getMyCurrentLocation({initializedMap: true});
+      }
+      this.map = initializeMap(profileCoords || this.props.filters.coords || config.defaultLocation);
     }
 
 	componentWillReceiveProps(nextProps) {

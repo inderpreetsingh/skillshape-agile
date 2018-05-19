@@ -209,7 +209,7 @@ const SearchInputsSection = (props) => (
       {props.mapView ?
         <PrimaryButton darkGreyColor fullWidth noMarginBottom icon iconName="grid_on" label="List View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />
         :
-        <PrimaryButton darkGreyColor fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.getMyCurrentLocation} />}
+        <PrimaryButton darkGreyColor fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />}
       </MapViewButtonWrapper>
     </ButtonsWrapper>
 
