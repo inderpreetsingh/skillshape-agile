@@ -2,7 +2,7 @@ import React from 'react';
 import SVGInline from "react-svg-inline";
 import PropTypes from 'prop-types';
 
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const TrendingIcon = (props) => (
   <SVGInline

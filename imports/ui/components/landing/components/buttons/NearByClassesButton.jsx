@@ -1,5 +1,6 @@
 import React from 'react';
-import CoaButton from './CoaButton.jsx';
+
+import CoaButton from '/imports/ui/components/landing/components/buttons/CoaButton.jsx';
 
 const askLocationPermission = () => {
 //   navigator.permissions.query({name:'geolocation', userVisibleOnly:true }).then(function(result) {

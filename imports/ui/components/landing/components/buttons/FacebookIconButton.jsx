@@ -5,7 +5,7 @@ import { SocialIcon } from 'react-social-icons';
 import Button from 'material-ui/Button';
 import {withStyles} from 'material-ui/styles';
 
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const iconStyles = {
     height: 25,

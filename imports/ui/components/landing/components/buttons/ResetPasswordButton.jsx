@@ -5,8 +5,8 @@ import { browserHistory } from 'react-router';
 
 import { emailRegex, toastrModal } from '/imports/util';
 
-import SecondaryButton from './SecondaryButton.jsx';
-import ResetPasswordDialogBox from '../dialogs/ResetPasswordDialogBox.jsx';
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
+import ResetPasswordDialogBox from '/imports/ui/components/landing/components/dialogs/ResetPasswordDialogBox.jsx';
 
 class ResetPasswordButton extends Component {
 

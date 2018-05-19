@@ -2,7 +2,7 @@ import React from 'react';
 import SVGInline from 'react-svg-inline';
 import PropTypes from 'prop-types';
 
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ShowMore = (props) => (
   <SVGInline height={props.height} width={props.width} svg={`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"

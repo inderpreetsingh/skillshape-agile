@@ -5,7 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = {
     switchButton: {
@@ -23,12 +23,12 @@ const styles = {
 class SwitchIconButton extends Component {
     state = {
         startIcon : true,
-    } 
+    }
     handleToggleStartIconState = () => {
         this.setState({
             startIcon : !this.state.startIcon
         })
-        
+
         if(this.props.onClick)
             this.props.onClick();
     }
@@ -38,10 +38,10 @@ class SwitchIconButton extends Component {
         return (
             <Button fab className={classes.switchButton} onClick={this.handleToggleStartIconState} >
                 <Icon>{startIcon ? startIconName : endIconName}</Icon>
-            </Button>    
-        )       
+            </Button>
+        )
     }
-    
+
 }
 
 SwitchIconButton.propTypes = {

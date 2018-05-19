@@ -5,18 +5,18 @@ import { CSSTransition, Transition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import { withStyles } from 'material-ui/styles';
-import withImageExists from '/imports/util/withImageExists.js';
-
 import Paper from 'material-ui/Paper';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Clear from 'material-ui-icons/Clear';
 import MoreVert from 'material-ui-icons/MoreVert';
 
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
+import withImageExists from '/imports/util/withImageExists.js';
 
-import * as helpers from '../jss/helpers';
-import { cardImgSrc } from '../../site-settings.js';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 const styles = {
   cardWrapper: {
