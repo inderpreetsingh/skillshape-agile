@@ -390,9 +390,9 @@ class Landing extends Component {
                   })
               });
               // Toggle map view on click of `Browse classes near by me`
-              if(!args) {
+              // if(!args) {
                 this.handleToggleMapView();
-              }
+              // }
               // toastr.success("Showing classes around you...","Found your location");
               // // Session.set("coords",coords)
             }, (err) => {

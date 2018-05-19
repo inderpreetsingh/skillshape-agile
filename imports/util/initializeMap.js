@@ -69,7 +69,7 @@ export function createMarkersOnMap(mapId, locationData) {
 
 export function reCenterMap(map, center) {
     // console.log("reCenterMap center -->>",center)
-    map.panTo(new google.maps.LatLng(center[0], center[1]));
+    map && map.panTo(new google.maps.LatLng(center[0], center[1]));
     return map;
 }
 
@@ -91,6 +91,7 @@ export function initializeSchoolEditLocationMap(location) {
 }
 
 export function initializeMap(center) {
+    console.log("center--------->",center);
     if (document.getElementById('google-map')) {
         import('/imports/ui/components/landing/components/jss/infoBox').then(InfoBox => {
             InfoBoxInstance = InfoBox.InfoBox;
@@ -156,61 +157,64 @@ export function initializeMap(center) {
 }
 
 export function setMarkersOnMap(map, SLocation) {
-    let previousLocation = [...locations];
-    let newMakers = [];
-    let deleteMakers = [];
-    let infoBoxes = [];
-    let oldMarkers = mc.getMarkers() || [];
-    let oldMarkersLocationsIdObj = mc.getMarkers() || [];
-    locations = [];
-    if(mc && googleMarkers.length > 0) {
-        // console.log("Old googleMarkers --->>",googleMarkers)
-        // mc.clearMarkers(googleMarkers);
-        googleMarkers = [];
-    }
-    google.maps.event.addListener(map, 'click', function() {
-        infobox.close();
-    });
-    for(let j=0; j<oldMarkers.length; j++ ) {
-        oldMarkersLocationsIdObj[oldMarkers[j].locationId] = true
-    }
-    for (let i = 0; i < SLocation.length; i++) {
-        let markerAlreadyExist = false;
-        if(oldMarkersLocationsIdObj[SLocation[i]._id]) {
-            markerAlreadyExist = true;
+    if(mc) {
 
+        let previousLocation = [...locations];
+        let newMakers = [];
+        let deleteMakers = [];
+        let infoBoxes = [];
+        let oldMarkers = mc.getMarkers() || [];
+        let oldMarkersLocationsIdObj = mc.getMarkers() || [];
+        locations = [];
+        if(mc && googleMarkers.length > 0) {
+            // console.log("Old googleMarkers --->>",googleMarkers)
+            // mc.clearMarkers(googleMarkers);
+            googleMarkers = [];
         }
-        if(!markerAlreadyExist) {
+        google.maps.event.addListener(map, 'click', function() {
+            infobox.close();
+        });
+        for(let j=0; j<oldMarkers.length; j++ ) {
+            oldMarkersLocationsIdObj[oldMarkers[j].locationId] = true
+        }
+        for (let i = 0; i < SLocation.length; i++) {
+            let markerAlreadyExist = false;
+            if(oldMarkersLocationsIdObj[SLocation[i]._id]) {
+                markerAlreadyExist = true;
 
-            let latLng = new google.maps.LatLng(eval(SLocation[i].geoLat),eval(SLocation[i].geoLong));
-            let marker = new google.maps.Marker({
-                position: latLng,
-                title: SLocation[i].title,
-                schoolId: SLocation[i].schoolId,
-                locationId: SLocation[i]._id,
-                map: map,
-                _id: SLocation[i]._id,
-            });
+            }
+            if(!markerAlreadyExist) {
+
+                let latLng = new google.maps.LatLng(eval(SLocation[i].geoLat),eval(SLocation[i].geoLong));
+                let marker = new google.maps.Marker({
+                    position: latLng,
+                    title: SLocation[i].title,
+                    schoolId: SLocation[i].schoolId,
+                    locationId: SLocation[i]._id,
+                    map: map,
+                    _id: SLocation[i]._id,
+                });
 
 
-            google.maps.event.addListener(marker, 'click', function() {
-                Meteor.call("getClassesForMap",{schoolId: SLocation[i].schoolId},(err,result)=> {
-                    if(result) {
-                        if(infobox) {
-                            infobox.close();
+                google.maps.event.addListener(marker, 'click', function() {
+                    Meteor.call("getClassesForMap",{schoolId: SLocation[i].schoolId},(err,result)=> {
+                        if(result) {
+                            if(infobox) {
+                                infobox.close();
+                            }
+                            infobox = new InfoBoxInstance(ibOptions);
+                            infobox.setContent(infoSchool(result))
+                            infobox.open(map, marker);
+                            map.panTo(infobox.getPosition());
                         }
-                        infobox = new InfoBoxInstance(ibOptions);
-                        infobox.setContent(infoSchool(result))
-                        infobox.open(map, marker);
-                        map.panTo(infobox.getPosition());
-                    }
-                })
-            });
-            newMakers.push(marker);
+                    })
+                });
+                newMakers.push(marker);
+            }
         }
+        mc.addMarkers(newMakers)
+        return
     }
-    mc.addMarkers(newMakers)
-    return
 }
 
 function getSchoolViewOnMap(classTypes,backgroundUrl,schoolName) {

@@ -37,7 +37,7 @@ class MapView extends React.Component {
     	})
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
       /***
         Need to handle three cases:
          - if there is an address in the profile then it should show data according to profile address.
@@ -49,11 +49,16 @@ class MapView extends React.Component {
       if(currentUser) {
       	profileCoords = currentUser.profile && currentUser.profile.coords;
       }
+      let positionCoords;
       if(!profileCoords) {
       	// Geolocate
-      	this.props.getMyCurrentLocation({initializedMap: true});
+      	positionCoords = await this.getMyCurrentLocation();
       }
-      this.map = initializeMap(profileCoords || this.props.filters.coords || config.defaultLocation);
+      if(positionCoords) {
+      	this.map = initializeMap([positionCoords[0], positionCoords[1]]);
+      } else {
+      	this.map = initializeMap(this.props.filters || config.defaultLocation);
+      }
     }
 
 	componentWillReceiveProps(nextProps) {
@@ -64,13 +69,32 @@ class MapView extends React.Component {
 		setMarkersOnMap(this.map, nextProps.sLocationData, nextProps.filters);
 	}
 
+	getMyCurrentLocation = (args) => {
+        return new Promise((resolve, reject) => {
+	        let positionCoords = [];
+	        if (navigator) {
+	            navigator.geolocation.getCurrentPosition((position) => {
+	              let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	              let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	              let geocoder = new google.maps.Geocoder();
+	              positionCoords.push(position.coords.latitude || config.defaultLocation[0]);
+	              positionCoords.push(position.coords.longitude || config.defaultLocation[1]);
+		          resolve(positionCoords);
+	            }, (err) => {
+	              const geolocationError = this._handleGeoLocationError(err);
+	              toastr.error(geolocationError,'Error');
+	          });
+	        } else {
+	        	reject();
+	        }
+        });
+    }
+
 	getSeletedSchoolData = ({school = {}}) => {
-		console.log("getSeletedSchoolData fn called-->>",school);
 		this.props.setSchoolIdFilter({schoolId: school._id})
 	}
 
 	render(){
-		console.log("Mapview props ==>>", this.props);
 		return <MapContainer id="google-map" />
 	}
 }
