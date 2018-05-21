@@ -4,11 +4,11 @@ import ReactHtmlParser from 'react-html-parser';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
-
 import SliderDots from '/imports/ui/components/landing/components/helpers/SliderDots.jsx';
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import {formatDate, formatTime} from '/imports/util';
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const DATE_FONT_SIZE = 18;
 
@@ -215,7 +215,7 @@ const MyClock = (props) => {
     <ClockWrapper active={props.active} className={`class-time-transition ${props.className}`}>
       <TimeContainer active={props.active}>
         {props.active && <Duration active={props.active}>{props.schedule.duration && props.schedule.duration + 'mins'}</Duration>}
-        <Time active={props.active}>{props.schedule.time || props.eventStartTime && props.formatTime(props.eventStartTime)}</Time>
+        <Time active={props.active}>{props.schedule.time || props.eventStartTime && formatTime(props.eventStartTime)}</Time>
         <TimePeriod active={props.active}>{props.schedule.timePeriod  || props.eventStartTime && props.formatAmPm(props.eventStartTime)}</TimePeriod>
       </TimeContainer>
     </ClockWrapper>
@@ -284,7 +284,7 @@ class ClassTimeNewClock extends Component {
     const { scheduleType} = this.props;
     const {currentDay, currentDate, eventStartTime, time, timePeriod, duration} = data;
     const eventScheduleType = scheduleType.toLowerCase();
-    const eventTime = `${this.formatTime(eventStartTime)} ${this.formatAmPm(eventStartTime)}`;
+    const eventTime = `${formatTime(eventStartTime)} ${this.formatAmPm(eventStartTime)}`;
 
     if(eventScheduleType === 'recurring' || eventScheduleType === 'ongoing') {
 
@@ -304,11 +304,11 @@ class ClassTimeNewClock extends Component {
     }
   }
 
-  formatTime = (startTime) => {
-    if(startTime && startTime.props) {
-      return `${moment(startTime.props).format("hh:mm")}`
-    }
-  }
+  // formatTime = (startTime) => {
+  //   if(startTime && startTime.props) {
+  //     return `${moment(startTime.props).format("hh:mm")}`
+  //   }
+  // }
 
   formatAmPm = (startTime) => {
     if(startTime && startTime.props) {
@@ -317,11 +317,11 @@ class ClassTimeNewClock extends Component {
       return `${ampm}`
     }
   }
-
-  formatDate = (date) => {
-    // console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
-    return moment(date).format('MMMM DD, YYYY');
-  }
+  //
+  // formatDate = (date) => {
+  //   // console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
+  //   return moment(date).format('MMMM DD, YYYY');
+  // }
 
   // computeContainerHeight = () => {
   //   const {scheduleType, totalClocks, updateContainerHeight} = this.props;
@@ -371,7 +371,7 @@ class ClassTimeNewClock extends Component {
              time : schedule.time,
              timePeriod : schedule.timePeriod,
              duration : schedule.duration,
-             currentDate : this.formatDate(schedule.date || eventStartTime),
+             currentDate : formatDate(schedule.date || eventStartTime),
            }
           // console.info(eventStartTime,"===========================");
           allDates.push(<CurrentDate clockType={type} visible={clockCounter === currentClockIndex}>
@@ -406,10 +406,9 @@ class ClassTimeNewClock extends Component {
             clockType={type}
             schedule={schedule}
             day={this._getIndexForDay(currentDay)}
-            formattedDate={this.formatDate(schedule.date || schedule.startTime)}
+            formattedDate={formatDate(schedule.date || schedule.startTime)}
             onClockClick={() => this.handleClockClick(myClockValue)}
             eventStartTime={schedule && new Date(schedule.startTime)}
-            formatTime={this.formatTime}
             formatAmPm={this.formatAmPm}
             formatScheduleDisplay={this.formatScheduleDisplay}
             {...this.props.clockProps}

@@ -4,10 +4,10 @@ import {isEqual,isEmpty} from 'lodash';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import ClassTimeNewClock from '/imports/ui/components/landing/components/classTimes/ClassTimeNewClock.jsx';
 
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ONE_TIME = 'onetime';
 
@@ -138,27 +138,24 @@ class ClassTimeClockManager extends Component {
         {/*Clock Times*/}
         <OuterWrapper width={this.props.outerWidth}>
 
-        {/* class type name */}
-        {/*<ClassTypeName>{classTypeName}</ClassTypeName> */}
-
         {/* For recurring schedule only */}
         {scheduleTypeLowerCase === 'recurring' && <StartEndDate>{scheduleStartDate} - {scheduleEndDate} </StartEndDate>}
 
         {/* <ClassTimeClock data={this.props.data} visible={this.state.currentClockIndex} {...this.props.clockProps} /> */}
-          <Container>
-           <ClassTimeNewClock
-             scheduleType={scheduleType}
-             scheduleStartDate={scheduleStartDate}
-             scheduleEndDate={scheduleEndDate}
-             formattedClassTimes={formattedClassTimes}
-             totalClocks={this.getTotalNoOfClocks()}
-             clockProps={clockProps}
-             updateClockAndDayIndex={this.handleSliderState}
-             currentClockIndex={this.state.currentClockIndex}
-             currentDayIndex={this.state.currentDayIndex}
-           />
-          </Container>
-        </OuterWrapper>
+        <Container>
+         <ClassTimeNewClock
+           scheduleType={scheduleType}
+           scheduleStartDate={scheduleStartDate}
+           scheduleEndDate={scheduleEndDate}
+           formattedClassTimes={formattedClassTimes}
+           totalClocks={this.getTotalNoOfClocks()}
+           clockProps={clockProps}
+           updateClockAndDayIndex={this.handleSliderState}
+           currentClockIndex={this.state.currentClockIndex}
+           currentDayIndex={this.state.currentDayIndex}
+         />
+        </Container>
+      </OuterWrapper>
     </Fragment>)
   }
 }

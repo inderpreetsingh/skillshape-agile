@@ -37,6 +37,9 @@ const styles = {
     fontSize: helpers.baseFontSize,
     fontFamily: helpers.specialFont
   },
+  icon: {
+    transform: 'translateY(-2px)'
+  },
   cardTop: {
     position: 'relative',
     width: 200 // This is the width we should give to the paper element
@@ -52,9 +55,12 @@ const styles = {
     right: -22,
     zIndex: 2,
     borderRadius: '50%',
+    backgroundColor: helpers.panelColor,
+    transition: '.1s transform ease-in-out',
     boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12)',
     '&:hover': {
-      backgroundColor: helpers.panelColor
+      backgroundColor: helpers.panelColor,
+      transform: 'translateY(2px)'
     }
   }
 }
@@ -183,7 +189,7 @@ const ClassTimesCard = (props) =>  {
   return (<OuterWrapper show={props.show}>
     <Paper className={props.classes.cardTop}>
       <Button variant="raised" color='secondary' className={props.classes.cardIconButton} aria-label="close" onClick={props.onClose}>
-        <Icon>keyboard_arrow_down</Icon>
+        <Icon className={props.classes.icon}>keyboard_arrow_down</Icon>
       </Button>
     </Paper>
     <Paper className={wrapperClassName} elevation={3}>
