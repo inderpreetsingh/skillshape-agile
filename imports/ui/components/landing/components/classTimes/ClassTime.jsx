@@ -4,17 +4,16 @@ import styled, {keyframes} from 'styled-components';
 import PropTypes from 'prop-types';
 import { isEmpty, get } from 'lodash';
 
-import TrendingIcon from '/imports/ui/components/landing/components/icons/Trending.jsx';
-
 import ClassTimeClockManager from '/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx';
 import ClassTimesCard from '/imports/ui/components/landing/components/cards/ClassTimesCard.jsx';
+import TrendingIcon from '/imports/ui/components/landing/components/icons/Trending.jsx';
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 
 import Events from '/imports/util/events';
-import {toastrModal} from '/imports/util';
+import {toastrModal, formatDate, formatTime} from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
@@ -31,7 +30,7 @@ const ClassTimeContainer = styled.div`
   align-items: center;
   position: relative;
   z-index: 0;
-  ${props => props.showCard ? 'filter: blur(2px)' : ''};
+  // ${props => props.showCard ? 'filter: blur(2px)' : ''};
 
   &:after {
     content: '';
@@ -73,6 +72,7 @@ const ScheduleAndDescriptionWrapper = styled.div`
   max-height: 330px; // This is the computed max-height for the container.
   display: flex;
   flex-direction: column;
+  ${props => props.showCard ? 'filter : blur(2px)' : ''};
 `;
 
 const ScheduleWrapper = styled.div`
@@ -95,16 +95,16 @@ const ClassTypeName = styled.h4`
   font-size: ${helpers.baseFontSize * 1.25}px;
   text-align: center;
   text-transform: capitalize;
-  ${props => props.showCard ? 'opacity: 0' : 'opacity: 1'};
+  // ${props => props.showCard ? 'opacity: 0' : 'opacity: 1'};
 `;
 
-const ClassTypeNameNoBlurred = ClassTypeName.extend`
-  ${props => !props.showCard ? 'opacity: 0' : 'opacity: 1'};
-  display : ${props => props.showCard ? 'flex' : 'none'};
-  justify-content: center;
-  position: absolute;
-  top: 16px;
-`;
+// const ClassTypeNameNoBlurred = ClassTypeName.extend`
+//   ${props => !props.showCard ? 'opacity: 0' : 'opacity: 1'};
+//   display : ${props => props.showCard ? 'flex' : 'none'};
+//   justify-content: center;
+//   position: absolute;
+//   top: 16px;
+// `;
 
 const Description = styled.p`
   margin: ${helpers.rhythmDiv}px 0;
@@ -188,7 +188,7 @@ class ClassTime extends Component {
           dayOfTheWeek = startDate.getDay(); // day of the week (from 0 to 6)
           day = DAYS_IN_WEEK[dayOfTheWeek - 1];
           startTime = new Date(item.startTime); // Get Time from date time
-          formattedTime = this.formatTime(startTime);
+          formattedTime = formatTime(startTime);
           timePeriod = this.formatAMPM(startTime);
           currentJsonData = {
             time: formattedTime,
@@ -228,15 +228,15 @@ class ClassTime extends Component {
   //   return `${hour}:${minutes}`;
   // }
 
-  formatTime = (startTime) => {
-    console.log(startTime,moment(startTime).format("hh:mm"),`ajsdkjflasjdflj`,"------------");
-    return `${moment(startTime).format("hh:mm")}`;
-  }
-
-  formatDate = (date) => {
-    // console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
-    return moment(date).format('MMMM DD, YYYY');
-  }
+  // formatTime = (startTime) => {
+  //   console.log(startTime,moment(startTime).format("hh:mm"),`ajsdkjflasjdflj`,"------------");
+  //   return `${moment(startTime).format("hh:mm")}`;
+  // }
+  //
+  // formatDate = (date) => {
+  //   // console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
+  //   return moment(date).format('MMMM DD, YYYY');
+  // }
 
   showDescription = (formattedClassTimes) => {
     dataCounter = 0;
@@ -361,22 +361,21 @@ class ClassTime extends Component {
     const dotColor = this._getDotColor(this.props.addToCalendar);
     return (<ClassTimeContainerOuterWrapper>
       {this.state.isLoading && <ContainerLoader />}
-      <ClassTypeNameNoBlurred showCard={this.state.showCard}>{name}</ClassTypeNameNoBlurred>
+      {/*<ClassTypeNameNoBlurred showCard={this.state.showCard}>{name}</ClassTypeNameNoBlurred> */}
+
       <ClassTimeContainer
-        showCard={this.state.showCard}
         className={`class-time-bg-transition ${this._getWrapperClassName(this.props.addToCalendar)}`}
         key={this.props._id} >
+          {/* class type name */}
           <div>
-            {/* class type name */}
-            <ClassTypeName showCard={this.state.showCard}>{name}</ClassTypeName>
-
-            <ScheduleAndDescriptionWrapper>
+            <ClassTypeName>{name}</ClassTypeName>
+            <ScheduleAndDescriptionWrapper showCard={this.state.showCard}>
               <ScheduleWrapper>
                 <ClassTimeClockManager
                   classTypeName={name}
                   formattedClassTimes={formattedClassTimes}
-                  scheduleStartDate={this.formatDate(startDate)}
-                  scheduleEndDate={this.formatDate(endDate)}
+                  scheduleStartDate={formatDate(startDate)}
+                  scheduleEndDate={formatDate(endDate)}
                   scheduleType={scheduleType}
                   clockProps={{ className: classNameForClock, dotColor: dotColor }}
                 />
@@ -390,6 +389,7 @@ class ClassTime extends Component {
 
             </ScheduleAndDescriptionWrapper>
           </div>
+
           {/* View All times button */}
           <ButtonsWrapper>
             {!showDescription && <ButtonWrapper showCard={this.state.showCard}>
