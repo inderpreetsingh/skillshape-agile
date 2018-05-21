@@ -37,26 +37,20 @@ class MapView extends React.Component {
     	})
 	}
 
-	async componentDidMount() {
+	componentDidMount() {
       /***
         Need to handle three cases:
          - if there is an address in the profile then it should show data according to profile address.
          - if there is no address in their profile then map view should open location according to IP.
          - if neither is available then it should go to Amsterdam (default location)
       */
-      this.map = initializeMap(this.props.filters.coords || config.defaultLocation);
-
+      let myLocationCoords =  JSON.parse(localStorage.getItem("myLocation"));
       let currentUser = this.props.currentUser;
       let profileCoords;
       if(currentUser) {
       	profileCoords = currentUser.profile && currentUser.profile.coords;
       }
-      let positionCoords;
-      if(!profileCoords) {
-      	// Geolocate
-      	positionCoords = await this.getMyCurrentLocation();
-      	reCenterMap(this.map,positionCoords);
-      }
+      this.map = initializeMap(profileCoords || myLocationCoords || this.props.filters.coords || config.defaultLocation);
     }
 
 	componentWillReceiveProps(nextProps) {
@@ -66,27 +60,6 @@ class MapView extends React.Component {
 		}
 		setMarkersOnMap(this.map, nextProps.sLocationData, nextProps.filters);
 	}
-
-	getMyCurrentLocation = (args) => {
-        return new Promise((resolve, reject) => {
-	        let positionCoords = [];
-	        if (navigator) {
-	            navigator.geolocation.getCurrentPosition((position) => {
-	              let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-	              let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-	              let geocoder = new google.maps.Geocoder();
-	              positionCoords.push(position.coords.latitude || config.defaultLocation[0]);
-	              positionCoords.push(position.coords.longitude || config.defaultLocation[1]);
-		          resolve(positionCoords);
-	            }, (err) => {
-	              const geolocationError = this._handleGeoLocationError(err);
-	              toastr.error(geolocationError,'Error');
-	          });
-	        } else {
-	        	reject();
-	        }
-        });
-    }
 
 	getSeletedSchoolData = ({school = {}}) => {
 		this.props.setSchoolIdFilter({schoolId: school._id})

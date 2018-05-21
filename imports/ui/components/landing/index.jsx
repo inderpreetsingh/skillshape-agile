@@ -264,18 +264,13 @@ class Landing extends Component {
     }
 
     componentWillMount() {
-        // let url = `https://freegeoip.net/json/${ip.address()}`
-        // Meteor.http.get(url, (err, res)=> {
-        //     console.log("freegeoip response -->>",res)
-        //     if(res && !isEmpty(res.data)) {
-        //         let oldFilters = {...this.state.filters};
-        //         oldFilters.coords = [ res.data.latitude, res.data.longitude];
-        //         this.setState({filters: oldFilters})
-        //     }
-        // })
     }
 
     componentDidMount() {
+        let  positionCoords = this.getUsersCurrentLocation();
+        positionCoords.then(function(value) {
+          localStorage.setItem("myLocation", JSON.stringify(value));
+        });
         // console.log("this.props.location.query in componentDidMount", this.props.location.query)
         if (this.props.location.query && this.props.location.query.claimRequest) {
 
@@ -313,6 +308,27 @@ class Landing extends Component {
     componentDidUpdate() {
       // Have to manually set it , otherwise it resets automatically in mapView.
       document.title = "Skillshape";
+    }
+
+    getUsersCurrentLocation = (args) => {
+        return new Promise((resolve, reject) => {
+          let positionCoords = [];
+          if (navigator) {
+              navigator.geolocation.getCurrentPosition((position) => {
+                let geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                let latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                let geocoder = new google.maps.Geocoder();
+                positionCoords.push(position.coords.latitude || config.defaultLocation[0]);
+                positionCoords.push(position.coords.longitude || config.defaultLocation[1]);
+              resolve(positionCoords);
+              }, (err) => {
+                const geolocationError = this._handleGeoLocationError(err);
+                toastr.error(geolocationError,'Error');
+            });
+          } else {
+            reject();
+          }
+        });
     }
 
     handleStickyStateChange = (status) => {
