@@ -209,7 +209,7 @@ const SearchInputsSection = (props) => (
       {props.mapView ?
         <PrimaryButton darkGreyColor fullWidth noMarginBottom icon iconName="grid_on" label="List View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />
         :
-        <PrimaryButton darkGreyColor fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.getMyCurrentLocation} />}
+        <PrimaryButton darkGreyColor fullWidth noMarginBottom icon iconName="map" label="Map View" boxShadow noMarginBottom onClick={props.onMapViewButtonClick} />}
       </MapViewButtonWrapper>
     </ButtonsWrapper>
 
@@ -228,7 +228,7 @@ const BottomSectionContent = (props) => (
    <ButtonsWrapper>
      <GenericButtonWrapper>
        <PrimaryButton
-        onClick={props.getMyCurrentLocation}
+        onClick={props.onMapViewButtonClick}
         icon
         boxShadow
         iconName="room"
@@ -325,7 +325,7 @@ class SearchArea extends Component {
               getMyCurrentLocation={this.props.getMyCurrentLocation}
             />
           )}
-        {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} handleAddSchool={this.handleAddSchool}/> }
+        {this.props.bottomSection ? this.props.bottomSection : <BottomSectionContent getMyCurrentLocation={this.props.getMyCurrentLocation} onMapViewButtonClick={this.props.onMapViewButtonClick} handleAddSchool={this.handleAddSchool}/> }
       </SearchAreaPanel>
     )
   }
