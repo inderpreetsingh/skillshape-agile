@@ -14,6 +14,8 @@ import PanelHeader from '../panelHeader';
 
 export default function () {
 
+    console.log("monthlyPricingData props---->",this.props)
+
      const { classes, schoolId, monthlyPricingData } = this.props;
 
 	return (
@@ -23,7 +25,8 @@ export default function () {
           			schoolId={schoolId}
           			data={this.state.formData}
           			open={this.state.showForm}
-          			onClose={this.handleFormModal}
+                    onClose={this.handleFormModal}
+                    classTypeData={this.props.classTypeData}   
           		/>
           	}
                <PanelHeader btnText="Add Per Month Package" title="Per Month Packages" caption="Different Payment Packages can cover different payment methods, Class Types, or Durations" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />

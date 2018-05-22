@@ -26,7 +26,7 @@ export default function () {
           			data={this.state.formData}
           			open={this.state.showForm}
           			onClose={this.handleFormModal}
-                         classTypeData={this.props.classTypeData}
+                	classTypeData={this.props.classTypeData}
           		/>
           	}
                <div className={classes.notifyExplanation}>

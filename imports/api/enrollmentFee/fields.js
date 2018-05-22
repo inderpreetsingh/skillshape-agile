@@ -20,7 +20,11 @@ EnrollmentFees.attachSchema(new SimpleSchema({
     },
     schoolId: {
         type: String,
-    }
+    },
+    includeAllClassTypes: {
+		type: Boolean,
+		optional: true
+	}
 }));
 
 EnrollmentFees.join(ClassType, "classTypeId", "selectedClassType", ["name"]);
