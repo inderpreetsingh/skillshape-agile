@@ -113,7 +113,7 @@ class RoomForm extends React.Component {
                                 <form id={formId} onSubmit={this.onSubmit}>
                                     <TextField
                                         required={true}
-                                        defaultValue={data && data.name}
+                                        defaultValue={data && data.name || "Main Room"}
                                         margin="dense"
                                         inputRef={(ref)=> this.roomName = ref}
                                         label="Name"

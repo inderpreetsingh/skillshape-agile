@@ -153,7 +153,6 @@ class MonthlyPriceForm extends React.Component {
             <div>
                 <Dialog
                   open={this.props.open}
-                  onClose={this.props.onClose}
                   aria-labelledby="form-dialog-title"
                   fullScreen={fullScreen}
                 >
