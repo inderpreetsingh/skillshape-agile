@@ -18,7 +18,7 @@ import EmbedCodes from './embedCodes';
 import MediaDetails from './mediaDetails';
 
 export default function (props) {
-    // console.log("school edit render props -->>",this.props);
+    console.log("school edit render props -->>",this.props);
     const {
         selecetdView,
         formBuilderModal,
@@ -94,6 +94,7 @@ export default function (props) {
                               schoolId={schoolId}
                               showFormBuilderModal={this.showFormBuilderModal}
                               moveTab={this.moveTab}
+                              classTypeData={this.props.classTypeData}
                           />
                       }
                       {

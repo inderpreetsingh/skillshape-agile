@@ -17,9 +17,11 @@ import Dialog, {
   DialogActions,
   withMobileDialog,
 } from 'material-ui/Dialog';
-import { FormControl } from 'material-ui/Form';
+import { FormControl, FormControlLabel } from 'material-ui/Form';
 import Icon from 'material-ui/Icon';
 import '/imports/api/classPricing/methods';
+import Checkbox from 'material-ui/Checkbox';
+
 
 const formId = "ClassPriceForm";
 
@@ -41,6 +43,8 @@ class ClassPriceForm extends React.Component {
             pymtType: get(this.props, 'data.pymtType', ''),
             selectedClassType: get(this.props, 'data.selectedClassType', null),
             expPeriod: get(this.props, 'data.expPeriod', ""),
+            includeAllClassTypes:get(this.props, 'data.includeAllClassTypes', ""),
+            noExpiration:get(this.props, 'data.noExpiration', ""),
         }
     }
 
@@ -61,19 +65,23 @@ class ClassPriceForm extends React.Component {
 
     onSubmit = (event) => {
         event.preventDefault();
-        const { selectedClassType, expPeriod } = this.state;
+		const { selectedClassType, expPeriod} = this.state;
+		const  {classTypeData} = this.props;
         const { data, schoolId } = this.props;
-        const expDuration = this.expDuration.value && parseInt(this.expDuration.value);
+		const expDuration = this.expDuration.value && parseInt(this.expDuration.value);
+		let allClassTypeIds = classTypeData.map((item) => {return item._id});
         const payload = {
             schoolId: schoolId,
             packageName: this.packageName.value,
-            classTypeId: selectedClassType && selectedClassType.map(data => data._id),
-            expDuration: expDuration,
-            expPeriod: expDuration && expDuration > 1 ? expPeriod : expPeriod.replace('s',''),
+            classTypeId: this.state.includeAllClassTypes ? allClassTypeIds : selectedClassType && selectedClassType.map(data => data._id),
+            expDuration: !this.state.noExpiration && expDuration || null,
+            expPeriod: !this.state.noExpiration && expDuration && expDuration > 1 ? expPeriod : expPeriod.replace('s',''),
             noClasses: this.noClasses.value && parseInt(this.noClasses.value),
             cost: this.classPriceCost.value && parseInt(this.classPriceCost.value),
+            noExpiration: this.state.noExpiration,
+            includeAllClassTypes: this.state.includeAllClassTypes
 
-        }
+		}
         this.setState({isBusy: true});
         if(data && data._id) {
             this.handleSubmit({ methodName: "classPricing.editclassPricing", doc: payload, doc_id: data._id})
@@ -95,18 +103,20 @@ class ClassPriceForm extends React.Component {
             }
             this.setState({isBusy: false, error});
         });
-    }
+	}
+	handleChange = name => event => {
+        this.setState({ [name]: event.target.checked });
+    };
 
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
 	render() {
-		const { fullScreen, data, classes } = this.props;
+        const { fullScreen, data, classes } = this.props;
         const { classTypeData } = this.state;
 
 		return (
 			<Dialog
                 open={this.props.open}
-                onClose={this.props.onClose}
                 aria-labelledby="form-dialog-title"
                 fullScreen={fullScreen}
             >
@@ -149,7 +159,8 @@ class ClassPriceForm extends React.Component {
                                 <Grid container>
                                     <Grid  item xs={12} sm={6}>
                                         <TextField
-                                            required={true}
+                                            required={!this.state.noExpiration}
+                                            disabled={this.state.noExpiration}
                                             defaultValue={data && data.expDuration}
                                             margin="dense"
                                             inputRef={(ref)=> this.expDuration = ref}
@@ -167,6 +178,7 @@ class ClassPriceForm extends React.Component {
                                                 value={this.state.expPeriod}
                                                 onChange={(event) => this.setState({ expPeriod: event.target.value })}
                                                 fullWidth
+                                                disabled={this.state.noExpiration}
                                             >
                                                 <MenuItem value={"Days"}>Days</MenuItem>
                                                 <MenuItem value={"Months"}>Months</MenuItem>
@@ -200,6 +212,30 @@ class ClassPriceForm extends React.Component {
                                         fullWidth
                                     />
                                 </FormControl>
+								<FormControl fullWidth margin='dense'>
+									<FormControlLabel
+										control={
+											<Checkbox
+												checked={this.state.includeAllClassTypes}
+												onChange={this.handleChange('includeAllClassTypes')}
+												value="includeAllClassTypes"
+											/>
+										}
+										label="Include all classes"
+									/>
+								</FormControl>
+                                <FormControl fullWidth margin='dense'>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={this.state.noExpiration}
+                                                onChange={this.handleChange('noExpiration')}
+                                                value="noExpiration"
+                                            />
+                                        }
+                                        label="No Expiration"
+                                    />
+								</FormControl>
                             </form>
                         </DialogContent>
                     )

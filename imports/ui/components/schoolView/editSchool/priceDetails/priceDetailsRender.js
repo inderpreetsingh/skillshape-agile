@@ -6,12 +6,13 @@ import EnrollmentFee from './enrollmentFee';
 
 export default function () {
 	console.log("price details render data -->>>",this.props);
-	let { 
+	let {
 		classPricingData,
 		monthlyPricingData,
 		enrollmentFeeData,
 		moveTab,
-		schoolId, 
+		schoolId,
+        classTypeData
 	} = this.props
 
 	return (
@@ -20,6 +21,7 @@ export default function () {
 				<ClassPrice
 					schoolId={schoolId}
 					classPricingData={classPricingData}
+                    classTypeData={classTypeData}
 				/>
 			</div>
 			<div style={{paddingTop: '20px'}}>

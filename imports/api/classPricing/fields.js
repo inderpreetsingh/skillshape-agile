@@ -8,34 +8,42 @@ const ClassPricing = new Mongo.Collection(config.collections.classPricing);
  * See: https://github.com/aldeed/meteor-autoform#affieldinput
  */
 ClassPricing.attachSchema(new SimpleSchema({
-    packageName: {
-        type: String,
-        optional: true
-    },
-    cost: {
-        type: Number,
-        optional: true
-    },
-    classTypeId: {
-        type: [String],
-        optional: true
-    },
-    noClasses: {
-        type: Number,
-        optional: true
-    },
-    expDuration: {
-        type: Number,
-        optional: true
-    },
-    expPeriod: {
-        type: String,
-        optional: true
-    },
-    schoolId: {
-        type: String,
-        optional: true
-    }
+	packageName: {
+		type: String,
+		optional: true
+	},
+	cost: {
+		type: Number,
+		optional: true
+	},
+	classTypeId: {
+		type: [String],
+		optional: true
+	},
+	noClasses: {
+		type: Number,
+		optional: true
+	},
+	expDuration: {
+		type: String,
+		optional: true
+	},
+	expPeriod: {
+		type: String,
+		optional: true
+	},
+	schoolId: {
+		type: String,
+		optional: true
+	},
+	noExpiration: {
+		type: Boolean,
+		optional: true
+	},
+	includeAllClassTypes: {
+		type: Boolean,
+		optional: true
+	}
 }));
 
 ClassPricing.join(ClassType, "classTypeId", "selectedClassType", ["name"]);
