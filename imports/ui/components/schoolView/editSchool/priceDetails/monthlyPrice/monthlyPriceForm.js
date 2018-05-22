@@ -16,7 +16,7 @@ import Dialog, {
   withMobileDialog,
 } from 'material-ui/Dialog';
 import Checkbox from 'material-ui/Checkbox';
-import { FormControlLabel } from 'material-ui/Form';
+import { FormControl, FormControlLabel } from 'material-ui/Form';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 import AddRow from './addRow';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
@@ -55,7 +55,8 @@ class MonthlyPriceForm extends React.Component {
             autoWithDraw: pymtType && pymtType['autoWithDraw'],
             payAsYouGo: pymtType && pymtType['payAsYouGo'],
             pymtDetails: get(this.props, 'data.pymtDetails', [ { month: null, cost: null} ]),
-            pymtMethod: pymtMethod
+            pymtMethod: pymtMethod,
+            includeAllClassTypes:get(this.props, 'data.includeAllClassTypes', ""),
         }
         if(pymtMethod && pymtMethod === "Pay Up Front")
             state.tabValue = 1;
@@ -65,15 +66,17 @@ class MonthlyPriceForm extends React.Component {
     onSubmit = (event) => {
         event.preventDefault();
         const { selectedClassType, pymtType, tabValue } = this.state;
-        const { data, schoolId, toastr } = this.props;
+        const { data, schoolId, toastr, classTypeData } = this.props;
         // console.log("pymtType -->>",pymtType)
         // console.log("tabValue -->>",tabValue)
+        let allClassTypeIds = classTypeData.map((item) => {return item._id});
         const payload = {
             schoolId: schoolId,
             packageName: this.packageName.value,
-            classTypeId: selectedClassType && selectedClassType.map(data => data._id),
+            classTypeId: this.state.includeAllClassTypes ? allClassTypeIds : selectedClassType && selectedClassType.map(data => data._id),
             pymtMethod: "Pay Up Front",
             pymtDetails: this.refs.AddRow.getRowData(),
+            includeAllClassTypes: this.state.includeAllClassTypes
         }
         if(tabValue === 0) {
             // No option is selected for making payment then need to show this `Please select any payment type`.
@@ -134,6 +137,9 @@ class MonthlyPriceForm extends React.Component {
             pymtType: oldPayment,
         })
     }
+    handleChange = name => event => {
+        this.setState({ [name]: event.target.checked });
+    };
 
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
@@ -187,6 +193,18 @@ class MonthlyPriceForm extends React.Component {
                                         dataSourceConfig={{ text: 'name', value: '_id' }}
                                         choices={classTypeData}
                                     />
+                                    <FormControl fullWidth margin='dense'>
+									<FormControlLabel
+										control={
+											<Checkbox
+												checked={this.state.includeAllClassTypes}
+												onChange={this.handleChange('includeAllClassTypes')}
+												value="includeAllClassTypes"
+											/>
+										}
+										label="Include all classes"
+									/>
+								</FormControl>
                                     <div className="responsive-tab">
                                         <div style={{display: "inline-flex",flexWrap: 'wrap',justifyContent: 'center'}}>
                                             <Button className={classes.button} onClick={() => this.setState({tabValue: 0})} raised color={(this.state.tabValue == 0) && "primary"} >

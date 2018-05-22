@@ -28,12 +28,14 @@ export default function () {
 				<MonthlyPrice
 					schoolId={schoolId}
 					monthlyPricingData={monthlyPricingData}
+					classTypeData={classTypeData}
 				/>
 			</div>
 			<div style={{paddingTop: '20px'}}>
 				<EnrollmentFee
 					schoolId={schoolId}
 					enrollmentFeeData={enrollmentFeeData}
+					classTypeData={classTypeData}
 				/>
 			</div>
 			{/*<div className="wizard-footer col-md-12">

@@ -16,8 +16,9 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
-import { FormControl } from 'material-ui/Form';
+import { FormControl, FormControlLabel } from 'material-ui/Form';
 import '/imports/api/enrollmentFee/methods';
+import Checkbox from 'material-ui/Checkbox';
 
 const formId = "ClassPriceForm";
 
@@ -37,7 +38,8 @@ class EnrollmentFeeForm extends React.Component {
         this.state = {
             isBusy: false,
             pymtType: get(this.props, 'data.pymtType', ''),
-            selectedClassType: get(this.props, 'data.selectedClassType', null)
+            selectedClassType: get(this.props, 'data.selectedClassType', null),
+            includeAllClassTypes:get(this.props, 'data.includeAllClassTypes', ""),
         }
     }
 
@@ -59,12 +61,14 @@ class EnrollmentFeeForm extends React.Component {
     onSubmit = (event) => {
         event.preventDefault();
         const { selectedClassType } = this.state;
-        const { data, schoolId } = this.props;
+        const { data, schoolId, classTypeData } = this.props;
+        let allClassTypeIds = classTypeData.map((item) => {return item._id});
         const payload = {
             schoolId: schoolId,
             name: this.enrollmentName.value,
-            classTypeId: selectedClassType && selectedClassType.map(data => data._id),
+            classTypeId: this.state.includeAllClassTypes ? allClassTypeIds : selectedClassType && selectedClassType.map(data => data._id),
             cost: this.enrollmentCost.value && parseInt(this.enrollmentCost.value),
+            includeAllClassTypes: this.state.includeAllClassTypes
         }
         this.setState({isBusy: true});
         if(data && data._id) {
@@ -89,12 +93,17 @@ class EnrollmentFeeForm extends React.Component {
         });
     }
 
+    handleChange = name => event => {
+        this.setState({ [name]: event.target.checked });
+    };
+
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
     render() {
 		const { fullScreen, data, classes } = this.props;
         const { classTypeData } = this.state;
         console.log("enrollmentFee form state -->>",this.state);
+        console.log("enrollmentFee form props -->>",this.props);
 		return (
 			<Dialog
                 open={this.props.open}
@@ -138,6 +147,18 @@ class EnrollmentFeeForm extends React.Component {
                                     dataSourceConfig={{ text: 'name', value: '_id' }}
                                     choices={classTypeData}
                                 />
+                                <FormControl fullWidth margin='dense'>
+									<FormControlLabel
+										control={
+											<Checkbox
+												checked={this.state.includeAllClassTypes}
+												onChange={this.handleChange('includeAllClassTypes')}
+												value="includeAllClassTypes"
+											/>
+										}
+										label="Include all classes"
+									/>
+								</FormControl>
                                 <FormControl
                                     margin="dense"
                                     required={true}

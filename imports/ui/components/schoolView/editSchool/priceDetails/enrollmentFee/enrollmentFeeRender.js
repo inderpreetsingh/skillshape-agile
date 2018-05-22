@@ -24,7 +24,8 @@ export default function () {
           			schoolId={schoolId}
           			data={this.state.formData}
           			open={this.state.showForm}
-          			onClose={this.handleFormModal}
+					onClose={this.handleFormModal}
+					classTypeData={this.props.classTypeData}  
           		/>
           	}
           	<PanelHeader btnText="Add Enrollment Fee" title="Enrollment Fee Cost" caption="Cost of Enrollment" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />

@@ -34,6 +34,10 @@ MonthlyPricing.attachSchema(new SimpleSchema({
         optional: true,
         blackbox: true
     },
+    includeAllClassTypes: {
+		type: Boolean,
+		optional: true
+	}
 }));
 
 MonthlyPricing.join(ClassType, "classTypeId", "selectedClassType", ["name"]);
