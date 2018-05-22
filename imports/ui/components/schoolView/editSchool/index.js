@@ -76,46 +76,39 @@ class SchoolEditView extends React.Component {
 }
 
 export default createContainer(props => {
- 	const { schoolId } = props.params;
+  const { schoolId } = props.params;
   let subscription;
   let schoolData;
   let locationData;
   let moduleData;
   let isLoading = true;
 
-  if(props.isUserSubsReady) {
-   	subscription = Meteor.subscribe("UserSchool", schoolId);
-   	Meteor.subscribe("location.getSchoolLocation", {schoolId});
+  if (props.isUserSubsReady) {
+    subscription = Meteor.subscribe("UserSchool", schoolId);
+    Meteor.subscribe("location.getSchoolLocation", { schoolId });
     Meteor.subscribe("classtype");
     Meteor.subscribe("SkillType");
     Meteor.subscribe("SkillClassbySchool", schoolId);
     // Meteor.subscribe("modules.getModules", {schoolId});
     // Meteor.subscribe("classType.getclassType", {schoolId});
   }
-
-  if(subscription && subscription.ready()) {
+  let classTypeData;
+  let classTypeSubscription = Meteor.subscribe("classType.getclassType", { schoolId });
+  if (classTypeSubscription && classTypeSubscription.ready()) {
     isLoading = false;
-    schoolData = School.findOne({_id: schoolId});
+    schoolData = School.findOne({ _id: schoolId });
     locationData = SLocation.find().fetch();
-    // moduleData = Modules.find({ schoolId: schoolId }).fetch();
+    classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
   }
 
-  // let classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
-
-  /*Find skills to make this container reactive on skill
-  other wise skills are joined with collections using package
-  perak:joins */
-  // SkillCategory.find().fetch()
-  // SkillSubject.find().fetch()
-  /*****************************************************/
-
   return {
-  	...props,
+    ...props,
     schoolId,
-  	schoolData,
+    schoolData,
     locationData,
     moduleData,
     isLoading,
+    classTypeData
   };
 
 }, SchoolEditView);

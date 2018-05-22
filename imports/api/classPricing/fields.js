@@ -35,6 +35,10 @@ ClassPricing.attachSchema(new SimpleSchema({
     schoolId: {
         type: String,
         optional: true
+    },
+    noExpiration: {
+        type: Boolean,
+        optional: true
     }
 }));
 
