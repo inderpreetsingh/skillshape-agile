@@ -93,7 +93,7 @@ const Postal = styled.p`
 
 
 const addHttpProtocol = (website) => {
-  if(website.match('http')) {
+  if(website && website.match('http')) {
     return website;
   }
   return 'https://'+website;
