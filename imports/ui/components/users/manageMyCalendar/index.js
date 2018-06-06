@@ -119,9 +119,9 @@ class ManageMyCalendar extends React.Component {
           schoolClassTimeId.push(classTimesData[i]._id);
         }
       }
-      for (var i = 0; i < classTypeData.length; i++) {
-        classTypeData[i].isCheck = true;
-      }
+      //   for (var i = 0; i < classTypeData.length; i++) {
+      //     classTypeData[i].isCheck = true;
+      //   }
       classTimesIds = _.union(classTimesIds, myClassTimesIds);
       this.setState({
         classTimesData,
@@ -248,25 +248,24 @@ class ManageMyCalendar extends React.Component {
     console.log("this.state----->", this.state);
     const data = this.state[fieldName];
     console.log("data----->", data);
-    console.log("this.state.filter------------>", this.state.filter);
     let oldFilter = { ...this.state.filter };
     for (let i = 0; i < data.length; i++) {
       if (data[i].classTypeId === classTypeId) {
         data[i].isCheck = isInputChecked;
         if (isInputChecked) {
-          oldFilter[childKey].push(data[i]._id);
+          //   oldFilter[childKey].push(data[i]._id);
         } else {
           let index = oldFilter[childKey].indexOf(data[i]._id);
           if (index > -1) {
-            oldFilter[childKey].splice(index, 1);
+            // oldFilter[childKey].splice(index, 1);
           }
         }
       }
     }
     console.log("oldFilter------------>", oldFilter);
-    this.setState({
-      filter: oldFilter
-    });
+    // this.setState({
+    //   filter: oldFilter
+    // });
   };
   // onChange={this.handleChangeAllClassTime.bind(this, "manageAll", "classTimesData", "classTimesIds")}
   // this, "schoolClassTimes", "myClassTimes", "classTimesIdsForCI"
@@ -398,7 +397,7 @@ class ManageMyCalendar extends React.Component {
 
   filteredClassTypesForSchoolClassType = (schoolClassTimes, classTimesData) => {
     console.log(
-      "managedClassTimes, classTimesData",
+      "schoolClassTimes, classTimesData",
       schoolClassTimes,
       classTimesData
     );
@@ -407,17 +406,17 @@ class ManageMyCalendar extends React.Component {
       schoolClassTimes.forEach((schoolClassTime, index) => {
         classTimesData &&
           classTimesData.forEach(classTime => {
-            schoolClassTimes.forEach((managedClassTime, index) => {
-              if (classTime.classTypeId == schoolClassTime.classTypeId) {
-                let classTypeData = ClassType.findOne(classTime.classTypeId);
-                schoolClassTypes.push(classTypeData);
-              }
-            });
+            if (classTime.classTypeId == schoolClassTime.classTypeId) {
+              let classTypeData = ClassType.findOne(classTime.classTypeId);
+              console.log("classTypeData", classTypeData);
+              schoolClassTypes.push(classTypeData);
+            }
           });
-        schoolClassTypes = _.without(schoolClassTypes, undefined);
-        schoolClassTypes = uniqBy(schoolClassTypes, "_id");
-        return schoolClassTypes;
       });
+    schoolClassTypes = _.without(schoolClassTypes, undefined);
+    schoolClassTypes = uniqBy(schoolClassTypes, "_id");
+    console.log("schoolClassTypes", schoolClassTypes);
+    return schoolClassTypes;
   };
 
   idmatching = (classTypeId, Time, classTypedata) => {
@@ -469,9 +468,13 @@ class ManageMyCalendar extends React.Component {
       managedClassTimes,
       classTimesData
     );
-    let filteredClassTypesForSchoolClassType = this.filteredClassTypesForSchoolClassType(
+    let filteredClassTypesForSchoolClassTypes = this.filteredClassTypesForSchoolClassType(
       schoolClassTimes,
       classTimesData
+    );
+    console.log(
+      "filteredClassTypesForSchoolClassTypes",
+      filteredClassTypesForSchoolClassTypes
     );
     console.log(
       "filteredClassTypesForMyClassTimes====",
@@ -792,6 +795,61 @@ class ManageMyCalendar extends React.Component {
                       </div>
                     </div>
                   </ExpansionPanelSummary>
+                  <ExpansionPanelDetails style={expansionPanelStyle}>
+                    <Fragment>
+                      <div style={inlineDivs}>
+                        <div style={styles.formControl}>
+                          <div style={inputStyle}>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={this.state.attendAll}
+                                  onChange={this.handleChangeAllClassTime.bind(
+                                    this,
+                                    "attendAll",
+                                    "myClassTimes",
+                                    "classTimesIdsForCI"
+                                  )}
+                                  value="classTimesIdsForCI"
+                                />
+                              }
+                              classes={{ label: classes.label }}
+                              label="All"
+                            />
+                          </div>
+                        </div>
+                        {filteredClassTypesForSchoolClassTypes &&
+                          filteredClassTypesForSchoolClassTypes.map(
+                            (classType, index) => {
+                              return (
+                                <div key={index} style={styles.formControl}>
+                                  <div style={inputStyle}>
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={classType.isCheck}
+                                          onChange={this.handleChangeClassType.bind(
+                                            this,
+                                            classType._id,
+                                            "myClassTimes",
+                                            "classTimesIdsForCI"
+                                          )}
+                                          value={classType._id}
+                                        />
+                                      }
+                                      label={classType.name}
+                                      classes={{ label: classes.label }}
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            }
+                          )}
+                      </div>
+
+                      <Divider />
+                    </Fragment>
+                  </ExpansionPanelDetails>
                   <ExpansionPanelDetails>
                     <Typography>
                       <Fragment>
