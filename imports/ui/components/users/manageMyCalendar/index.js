@@ -41,7 +41,8 @@ const expansionPanelStyle = {
 
 const inlineDivs = {
   display: "inline-flex",
-  border: "1px solid rgb(221, 221, 221)"
+  border: "1px solid rgb(221, 221, 221)",
+  flexWrap: "wrap"
 };
 const StrongText = styled.p`
   margin: 0;
