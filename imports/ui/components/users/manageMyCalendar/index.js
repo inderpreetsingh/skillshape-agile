@@ -121,7 +121,7 @@ class ManageMyCalendar extends React.Component {
         }
         if (schoolClassTimeIds.indexOf(classTimesData[i]._id) > -1) {
           schoolClassTime.push({ ...classTimesData[i] });
-          schoolClassTimeId.push(classTimesData[i]._id);
+          // schoolClassTimeId.push(classTimesData[i]._id);
         }
       }
       // Tick check box for class type initially from here
@@ -1055,6 +1055,7 @@ class ManageMyCalendar extends React.Component {
 export default createContainer(props => {
   const classTimesData = ClassTimes.find({}).fetch();
   let classTypeIds = classTimesData.map(item => item.classTypeId);
+  console.log("container props", props);
   Meteor.subscribe("classTime.getclassType", {
     classTypeIds
   });
@@ -1076,9 +1077,12 @@ export default createContainer(props => {
   // Class Times of current School.
   let schoolClassTimes = [];
   let schoolClassTypesData = [];
-  if (props.schoolId) {
-    schoolClassTimes = ClassTimes.find({ schoolId: props.schoolId }).fetch();
-    schoolClassTypesData = ClassType.find({ schoolId: props.schoolId }).fetch();
+  let schoolId = props.schoolId || (props.schoolData && props.schoolData._id);
+  console.log("schoolId-------------------->", schoolId);
+  if (schoolId) {
+    schoolClassTimes = ClassTimes.find({ schoolId: schoolId }).fetch();
+    schoolClassTypesData = ClassType.find({ schoolId: schoolId }).fetch();
+    console.log("inside check-----------------", schoolClassTimes);
   }
   const classInterestData = ClassInterest.find({}).fetch();
   let classInterestClassIds = classInterestData.map(item => {
