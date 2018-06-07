@@ -185,6 +185,18 @@ class ClassPriceForm extends React.Component {
                 dataSourceConfig={{ text: "name", value: "_id" }}
                 choices={classTypeData}
               />
+              <FormControl fullWidth margin="dense">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.state.includeAllClassTypes}
+                      onChange={this.handleChange("includeAllClassTypes")}
+                      value="includeAllClassTypes"
+                    />
+                  }
+                  label="Include all classes"
+                />
+              </FormControl>
               <Grid container>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -220,6 +232,18 @@ class ClassPriceForm extends React.Component {
                   </FormControl>
                 </Grid>
               </Grid>
+              <FormControl fullWidth margin="dense">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.state.noExpiration}
+                      onChange={this.handleChange("noExpiration")}
+                      value="noExpiration"
+                    />
+                  }
+                  label="No Expiration"
+                />
+              </FormControl>
               <TextField
                 required={true}
                 defaultValue={data && data.noClasses}
@@ -243,32 +267,6 @@ class ClassPriceForm extends React.Component {
                   }
                   fullWidth
                 />
-              </FormControl>
-              <FormControl fullWidth margin="dense">
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.includeAllClassTypes}
-                      onChange={this.handleChange("includeAllClassTypes")}
-                      value="includeAllClassTypes"
-                    />
-                  }
-                  label=""
-                />
-                <span style={{ fontSize: "16px" }}> Include all classes</span>
-              </FormControl>
-              <FormControl fullWidth margin="dense">
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.noExpiration}
-                      onChange={this.handleChange("noExpiration")}
-                      value="noExpiration"
-                    />
-                  }
-                  label=""
-                />
-                <span style={{ fontSize: "16px" }}> No Expiration</span>
               </FormControl>
             </form>
           </DialogContent>
