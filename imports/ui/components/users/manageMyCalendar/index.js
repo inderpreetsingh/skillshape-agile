@@ -120,8 +120,21 @@ class ManageMyCalendar extends React.Component {
           manageClassTimeIds.push(classTimesData[i]._id);
         }
         if (schoolClassTimeIds.indexOf(classTimesData[i]._id) > -1) {
-          schoolClassTime.push({ ...classTimesData[i] });
-          // schoolClassTimeId.push(classTimesData[i]._id);
+          if (this.props.params && this.props.params.classTypeId) {
+            if (
+              classTimesData[i].classTypeId === this.props.params.classTypeId
+            ) {
+              schoolClassTime.push({ ...classTimesData[i] });
+              // This is pushed to show event on screen for these class times
+              schoolClassTimeId.push(classTimesData[i]._id);
+            } else {
+              classTimesData[i].isCheck = false;
+              schoolClassTime.push({ ...classTimesData[i] });
+            }
+          } else {
+            schoolClassTime.push({ ...classTimesData[i] });
+            schoolClassTimeId.push(classTimesData[i]._id);
+          }
         }
       }
       // Tick check box for class type initially from here
@@ -452,21 +465,6 @@ class ManageMyCalendar extends React.Component {
     event,
     isInputChecked
   ) => {
-    console.log(
-      "handleChangeAllClassTime -->>",
-      parentKey,
-      fieldName,
-      childKey,
-
-      isInputChecked
-    );
-    // get class interests:
-    // loop over class interests.
-    // get classTypeId from class interest.
-    // myclassTime[classTypeId] = isInputchecked.
-    // filter.classTimeIdsForCI.push(myClassTime._id);
-    // setState filter
-    // parentKey: class interest data/ manageclassTypedata/ schoolclasstypedata.
     let oldFilter = { ...this.state.filter };
     let classTypeData = { ...this.state.fieldName };
     let classTimeData = { ...this.state.childKey };
@@ -499,101 +497,6 @@ class ManageMyCalendar extends React.Component {
     oldFilter.classTimesIds = classTimesIds;
     oldFilter.manageClassTimeIds = manageClassTimeIds;
     oldFilter.schoolClassTimeId = schoolClassTimeId;
-    // this.setState({
-    //   [parentKey]: isInputChecked,
-    //   [fieldName]: classTypeData,
-    //   filter: oldFilter
-    // });
-    // if (parentKey == "attendAll") {
-    //   this.setState({ attendAll: !this.state.attendAll });
-    //   for (let i = 0; i < classTypeForInterests.length; )
-    //     this.state.classTypeForInterests.map(item => {
-    //       console.log("item.isCheck", item.isCheck);
-    //       item.isCheck = isInputChecked;
-    //     });
-    //   console.log("this.state.myClassTimes", this.state.myClassTimes);
-    //   this.state.myClassTimes.map(item => {
-    //     item.isCheck = isInputChecked;
-    //   });
-    // } else if (parentKey == "manageAll") {
-    //   this.setState({ manageAll: !this.state.manageAll });
-
-    //   this.state.managedClassTypes.map(item => {
-    //     item.isCheck = isInputChecked;
-    //   });
-
-    //   this.state.managedClassTimes.map(item => {
-    //     item.isCheck = isInputChecked;
-    //   });
-    // } else {
-    //   this.setState({ schoolAll: !this.state.schoolAll });
-
-    //   this.state.schoolClassTypes.map(item => {
-    //     console.log("item.isCheck", item.isCheck);
-    //     item.isCheck = isInputChecked;
-    //   });
-    //   console.log("this.state.myClassTimes", this.state.myClassTimes);
-    //   this.state.schoolClassTimes.map(item => {
-    //     item.isCheck = isInputChecked;
-    //   });
-    // }
-
-    // manageAll classTimesData classTimesIds false
-    // // const data = this.state[fieldName];
-    // // let oldFilter = { ...this.state.filter };
-    // // let classTimesIds = [...oldFilter.classTimesIds];
-    // // let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
-    // // let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
-    // // oldFilter[childKey] = [];
-    // // for (let i = 0; i < data.length; i++) {
-    // //   data[i].isCheck = isInputChecked;
-
-    // //   if (isInputChecked) {
-    // //     oldFilter[childKey].push(data[i]._id);
-    // //     if (parentKey === "attendAll") {
-    // //       oldFilter.classTimesIds.push(data[i]._id);
-    // //     }
-    // //     if (parentKey === "manageAll") {
-    // //       oldFilter.manageClassTimeIds.push(data[i]._id);
-    // //     }
-    // //     if (parentKey === "schoolClassTime") {
-    // //       oldFilter.schoolClassTimeId.push(data[i]._id);
-    // //     }
-    // //   } else {
-    // //     if (parentKey === "attendAll") {
-    // //       let index = classTimesIds.indexOf(data[i]._id);
-    // //       if (index > -1) {
-    // //         classTimesIds.splice(index, 1);
-    // //       }
-    // //       oldFilter.classTimesIds = classTimesIds;
-    // //     }
-    // //     if (parentKey === "manageAll") {
-    // //       let index = manageClassTimeIds.indexOf(data[i]._id);
-    // //       if (index > -1) {
-    // //         manageClassTimeIds.splice(index, 1);
-    // //       }
-    // //       oldFilter.manageClassTimeIds = manageClassTimeIds;
-    // //     }
-    // //     if (parentKey === "schoolClassTime") {
-    // //       let index = schoolClassTimeId.indexOf(data[i]._id);
-    // //       if (index > -1) {
-    // //         schoolClassTimeId.splice(index, 1);
-    // //       }
-    // //       oldFilter.schoolClassTimeId = schoolClassTimeId;
-    // //     }
-    // //   }
-    // }
-    // classTimesIds = _.uniq(oldFilter.classTimesIds);
-    // manageClassTimeIds = _.uniq(oldFilter.manageClassTimeIds);
-    // schoolClassTimeId = _.uniq(oldFilter.schoolClassTimeId);
-    // oldFilter.classTimesIds = classTimesIds;
-    // oldFilter.manageClassTimeIds = manageClassTimeIds;
-    // oldFilter.schoolClassTimeId = schoolClassTimeId;
-    // this.setState({
-    //   [parentKey]: isInputChecked,
-    //   [fieldName]: data,
-    //   filter: oldFilter
-    // });
   };
   idmatching = (classTypeId, Time, classTypedata) => {
     value = classTypedata.map(index => {
@@ -949,7 +852,9 @@ class ManageMyCalendar extends React.Component {
                             /> */}
                           </div>
                         </div>
-                        {schoolClassTypes &&
+                        {this.props.params &&
+                          !this.props.params.classTypeId &&
+                          schoolClassTypes &&
                           schoolClassTypes.map((classType, index) => {
                             let classTime = ClassTimes.findOne({
                               classTypeId: classType._id
@@ -981,8 +886,6 @@ class ManageMyCalendar extends React.Component {
                             }
                           })}
                       </div>
-
-                      <Divider />
                     </Fragment>
                   </ExpansionPanelDetails>
                   <ExpansionPanelDetails>
