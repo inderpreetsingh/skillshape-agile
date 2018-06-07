@@ -1,30 +1,49 @@
-import React, {Fragment} from 'react';
-import styled from 'styled-components';
-import DocumentTitle from 'react-document-title';
-import { createContainer } from 'meteor/react-meteor-data';
+import React, { Fragment } from "react";
+import styled from "styled-components";
+import DocumentTitle from "react-document-title";
+import { createContainer } from "meteor/react-meteor-data";
 
-import { formStyles, cutString } from '/imports/util';
-import MyCalender from '/imports/ui/components/users/myCalender';
-import ClassTimes from '/imports/api/classTimes/fields';
-import ClassInterest from '/imports/api/classInterest/fields';
+import { formStyles, cutString } from "/imports/util";
+import MyCalender from "/imports/ui/components/users/myCalender";
+import ClassTimes from "/imports/api/classTimes/fields";
+import ClassType from "/imports/api/classType/fields";
+import ClassInterest from "/imports/api/classInterest/fields";
 
-import { withStyles } from 'material-ui/styles';
-import Radio, { RadioGroup } from 'material-ui/Radio';
-import Card  from 'material-ui/Card';
-import Divider from 'material-ui/Divider';
-import Checkbox from 'material-ui/Checkbox';
-import { FormControlLabel, FormControl } from 'material-ui/Form';
+import { withStyles } from "material-ui/styles";
+import Radio, { RadioGroup } from "material-ui/Radio";
+import Card from "material-ui/Card";
+import Divider from "material-ui/Divider";
+import Checkbox from "material-ui/Checkbox";
+import { FormControlLabel, FormControl } from "material-ui/Form";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import ExpansionPanel, {
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+  ExpansionPanelActions
+} from "material-ui/ExpansionPanel";
+import Typography from "material-ui/Typography";
+import PropTypes from "prop-types";
+import ExpandMoreIcon from "material-ui-icons/ExpandMore";
+import uniqBy from "lodash/uniqBy";
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
-import newStyles from './styles.js';
+import newStyles from "./styles.js";
 const styles = formStyles();
 
 const inputStyle = {
-    minWidth: 150,
-    display: 'flex',
-}
+  minWidth: 150,
+  display: "flex"
+};
 
+const expansionPanelStyle = {
+  display: "flex",
+  flexDirection: "column"
+};
+
+const inlineDivs = {
+  display: "inline-flex",
+  border: "1px solid rgb(221, 221, 221)",
+  flexWrap: "wrap"
+};
 const StrongText = styled.p`
   margin: 0;
   font-size: ${helpers.baseFontSize}px;
@@ -34,452 +53,1049 @@ const StrongText = styled.p`
 `;
 
 class ManageMyCalendar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      type: "both",
+      classTimesData: [],
+      myClassTimes: [],
+      manageAll: true,
+      attendAll: true,
+      schollAll: true,
+      schoolClassTime: true,
+      managedClassTimes: [],
+      schoolClassTimes: [],
+      filter: {
+        classTimesIds: [],
+        classTimesIdsForCI: [],
+        manageClassTimeIds: [],
+        schoolClassTimeId: []
+      }
+    };
+  }
 
-	constructor(props) {
-        super(props);
-        this.state = {
-            type: "both",
-            classTimesData: [],
-            myClassTimes: [],
-            manageAll: true,
-            attendAll: true,
-            schoolClassTime: true,
-            managedClassTimes:[],
-            schoolClassTimes:[],
-            filter: {
-                classTimesIds: [],
-                classTimesIdsForCI: [],
-                manageClassTimeIds:[],
-                schoolClassTimeId:[]
-            },
-        };
-    }
+  handleClassOnChange = (event, type) => {
+    this.setState({ type });
+  };
+  componentDidMount() {
+    this.intitializeClassTimeFilterForCalander(this.props);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.intitializeClassTimeFilterForCalander(nextProps);
+  }
+  intitializeClassTimeFilterForCalander = props => {
+    const {
+      classTimesData,
+      classInterestData,
+      managedClassTimes,
+      schoolClassTimes,
+      classTypeData,
+      managedClassTypeData,
+      schoolClassTypesData,
+      classTypeForInterests
+    } = props;
+    if (!_.isEmpty(classTimesData) || !_.isEmpty(classInterestData)) {
+      let {
+        classTimesIds,
+        classTimesIdsForCI,
+        manageClassTimeIds,
+        schoolClassTimeId
+      } = this.state.filter;
+      let myClassTimes = [];
+      let managedClassTime = [];
+      let myClassTimesIds = classInterestData.map(data => data.classTimeId);
+      let managedClassTimeIds = managedClassTimes.map(data => data._id);
+      let schoolClassTimeIds = schoolClassTimes.map(data => data._id);
+      let schoolClassTime = [];
+      for (var i = 0; i < classTimesData.length; i++) {
+        classTimesData[i].isCheck = true;
+        classTimesIds.push(classTimesData[i]._id);
 
-    handleClassOnChange = (event, type) => {
-        this.setState({type});
-    }
-    componentDidMount() {
-        this.intitializeClassTimeFilterForCalander(this.props);
-    }
-    componentWillReceiveProps(nextProps) {
-        this.intitializeClassTimeFilterForCalander(nextProps);
-    }
-    intitializeClassTimeFilterForCalander = (props) => {
-        const { classTimesData, classInterestData, managedClassTimes, schoolClassTimes} = props;
-        if(!_.isEmpty(classTimesData) || !_.isEmpty(classInterestData)) {
-            let { classTimesIds, classTimesIdsForCI, manageClassTimeIds, schoolClassTimeId } = this.state.filter;
-            let myClassTimes = [];
-            let managedClassTime = [];
-            let myClassTimesIds = classInterestData.map(data => data.classTimeId);
-            let managedClassTimeIds = managedClassTimes.map(data => data._id);
-            let schoolClassTimeIds = schoolClassTimes.map(data => data._id);
-            let schoolClassTime =[];
-            for (var i = 0; i < classTimesData.length; i++) {
-
-                classTimesData[i].isCheck = true;
-                classTimesIds.push(classTimesData[i]._id);
-
-                if (myClassTimesIds.indexOf(classTimesData[i]._id) > -1) {
-                    myClassTimes.push({...classTimesData[i]});
-                    classTimesIdsForCI.push(classTimesData[i]._id);
-                }
-                if(managedClassTimeIds.indexOf(classTimesData[i]._id) > -1) {
-                    managedClassTime.push({...classTimesData[i]})
-                    manageClassTimeIds.push(classTimesData[i]._id);
-                }
-                if(schoolClassTimeIds.indexOf(classTimesData[i]._id) > -1) {
-                    schoolClassTime.push({...classTimesData[i]})
-                    schoolClassTimeId.push(classTimesData[i]._id);
-                }
-            }
-            classTimesIds = _.union(classTimesIds,myClassTimesIds);
-            this.setState({
-                classTimesData,
-                myClassTimes,
-                managedClassTimes: managedClassTime,
-                schoolClassTimes: schoolClassTime,
-                filter: {
-                    classTimesIds: _.uniq(classTimesIds),
-                    classTimesIdsForCI: _.uniq(classTimesIdsForCI),
-                    manageClassTimeIds: _.uniq(manageClassTimeIds),
-                    schoolClassTimeId:_.uniq(schoolClassTimeId)
-                }
-            })
+        if (myClassTimesIds.indexOf(classTimesData[i]._id) > -1) {
+          myClassTimes.push({ ...classTimesData[i] });
+          classTimesIdsForCI.push(classTimesData[i]._id);
         }
-    }
-    handleChangeClassTime = (parentKey, fieldName, childKey, classTimeId, event, isInputChecked) => {
-        const data = this.state[fieldName];
-        let oldFilter = {...this.state.filter}
-        let ids = oldFilter[childKey] || [];
-        let classTimesIds = [...oldFilter.classTimesIds];
-        let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
-        let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
-        console.log("handleChangeClassTime data-->>",data);
-        console.log("handleChangeClassTime ids-->>",ids);
-        let bool = true
-        for (let i = 0; i < data.length; i++) {
-
-            if(data[i]._id === classTimeId) {
-                data[i].isCheck = isInputChecked
-
-                if(isInputChecked) {
-                    ids.push(classTimeId);
-                    oldFilter[childKey] = ids;
-                    if(parentKey === "attendAll") {
-                        classTimesIds.push(classTimeId)
-                        oldFilter.classTimesIds = classTimesIds;
-                    }
-                    if(parentKey === "manageAll") {
-                        manageClassTimeIds.push(classTimeId)
-                        oldFilter.manageClassTimeIds = manageClassTimeIds;
-                    }
-                    if(parentKey === "schoolClassTime") {
-                        schoolClassTimeId.push(classTimeId)
-                        oldFilter.schoolClassTimeId = schoolClassTimeId;
-                    }
-
-                } else {
-
-                    let index = classTimesIds.indexOf(classTimeId);
-                    console.log("handleChangeClassTime classTimesIds-->>",index,classTimeId);
-                    if(index > -1) {
-                        classTimesIds.splice(index, 1);
-                    }
-                    oldFilter.classTimesIds = classTimesIds;
-                    console.log("handleChangeClassTime oldFilter-->>",oldFilter);
-
-                    if(parentKey === "attendAll") {
-                        let index = ids.indexOf(classTimeId);
-                        if(index > -1) {
-                            ids.splice(index, 1);
-                        }
-                        oldFilter[childKey] = ids
-                    }
-                    if(parentKey === "manageAll") {
-                        let index = ids.indexOf(classTimeId);
-                        if(index > -1) {
-                            ids.splice(index, 1);
-                        }
-                        oldFilter[childKey] = ids
-                    }
-                    if(parentKey === "schoolClassTime") {
-                        let index = ids.indexOf(classTimeId);
-                        if(index > -1) {
-                            ids.splice(index, 1);
-                        }
-                        oldFilter[childKey] = ids
-                    }
-                }
-            }
-
-            if(!data[i].isCheck) {
-                bool = false;
-            }
+        if (managedClassTimeIds.indexOf(classTimesData[i]._id) > -1) {
+          managedClassTime.push({ ...classTimesData[i] });
+          manageClassTimeIds.push(classTimesData[i]._id);
         }
-
-        this.setState({
-            filter: oldFilter,
-            [parentKey]: bool,
-        })
-    }
-    // onChange={this.handleChangeAllClassTime.bind(this, "manageAll", "classTimesData", "classTimesIds")}
-    // this, "schoolClassTimes", "myClassTimes", "classTimesIdsForCI"
-    handleChangeAllClassTime = (parentKey, fieldName, childKey,event, isInputChecked) => {
-        console.log("handleChangeAllClassTime -->>",parentKey, fieldName, childKey,event, isInputChecked)
-        // manageAll classTimesData classTimesIds false
-        const data = this.state[fieldName]
-        console.log("data",data);
-        console.log("This.state----------->",this.state);
-        let oldFilter = {...this.state.filter};
-        console.log("oldFilter===>",JSON.stringify(oldFilter));
-        let classTimesIds = [...oldFilter.classTimesIds];
-        let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
-        let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
-        oldFilter[childKey] = [];
-        for (let i = 0; i < data.length; i++) {
-            data[i].isCheck = isInputChecked;
-
-            if(isInputChecked) {
-
-                oldFilter[childKey].push(data[i]._id)
-                if(parentKey === "attendAll") {
-                    oldFilter.classTimesIds.push(data[i]._id);
-                }
-                if(parentKey === "manageAll") {
-                    oldFilter.manageClassTimeIds.push(data[i]._id);
-                }
-                if(parentKey === "schoolClassTime") {
-                    oldFilter.schoolClassTimeId.push(data[i]._id);
-                }
-
-            } else {
-
-                if(parentKey === "attendAll") {
-                    let index = classTimesIds.indexOf(data[i]._id);
-                    if(index > -1) {
-                        classTimesIds.splice(index, 1);
-                        console.log("classTimesIds inside111111====>",classTimesIds)
-                    }
-                    oldFilter.classTimesIds = classTimesIds;
-                }
-                if(parentKey === "manageAll") {
-                    let index = manageClassTimeIds.indexOf(data[i]._id);
-                    if(index > -1) {
-                        manageClassTimeIds.splice(index, 1);
-                        console.log("classTimesIds inside2222222====>",manageClassTimeIds)
-                    }
-                    oldFilter.manageClassTimeIds = manageClassTimeIds;
-                }
-                if(parentKey === "schoolClassTime") {
-                    let index = schoolClassTimeId.indexOf(data[i]._id);
-                    if(index > -1) {
-                        schoolClassTimeId.splice(index, 1);
-                        console.log("classTimesIds inside3333333====>",schoolClassTimeId)
-                    }
-                    oldFilter.schoolClassTimeId = schoolClassTimeId;
-                }
-
-            }
+        if (schoolClassTimeIds.indexOf(classTimesData[i]._id) > -1) {
+          schoolClassTime.push({ ...classTimesData[i] });
+          schoolClassTimeId.push(classTimesData[i]._id);
         }
-        classTimesIds = _.uniq(oldFilter.classTimesIds);
-        manageClassTimeIds = _.uniq(oldFilter.manageClassTimeIds);
-        schoolClassTimeId = _.uniq(oldFilter.schoolClassTimeId);
-        oldFilter.classTimesIds = classTimesIds;
-        oldFilter.manageClassTimeIds = manageClassTimeIds;
-        oldFilter.schoolClassTimeId = schoolClassTimeId;
-        console.log("oldFilter after-->>",oldFilter)
-        this.setState({
-            [parentKey]: isInputChecked,
-            [fieldName]: data,
-            filter: oldFilter,
-        })
+      }
+      // Tick check box for class type initially from here
+      for (var i = 0; i < managedClassTypeData.length; i++) {
+        managedClassTypeData[i].isCheck = true;
+      }
+      for (var i = 0; i < schoolClassTypesData.length; i++) {
+        schoolClassTypesData[i].isCheck = true;
+      }
+      for (var i = 0; i < classTypeForInterests.length; i++) {
+        classTypeForInterests[i].isCheck = true;
+      }
+      classTimesIds = _.union(classTimesIds, myClassTimesIds);
+      this.setState({
+        classTimesData,
+        myClassTimes,
+        managedClassTimes: managedClassTime,
+        schoolClassTimes: schoolClassTime,
+        classTypeData: classTypeData,
+        managedClassTypes: managedClassTypeData,
+        schoolClassTypes: schoolClassTypesData,
+        classTypeForInterests,
+        filter: {
+          classTimesIds: _.uniq(classTimesIds),
+          classTimesIdsForCI: _.uniq(classTimesIdsForCI),
+          manageClassTimeIds: _.uniq(manageClassTimeIds),
+          schoolClassTimeId: _.uniq(schoolClassTimeId)
+        }
+      });
+    }
+  };
+  handleChangeClassTime = (
+    parentKey,
+    fieldName,
+    childKey,
+    classTimeId,
+    event,
+    isInputChecked
+  ) => {
+    console.log(
+      parentKey,
+      fieldName,
+      childKey,
+      classTimeId,
+      event,
+      isInputChecked
+    );
+    const data = this.state[fieldName];
+    let oldFilter = { ...this.state.filter };
+    let ids = oldFilter[childKey] || [];
+    let classTimesIds = [...oldFilter.classTimesIds];
+    let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
+    let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
+    let bool = true;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i]._id === classTimeId) {
+        data[i].isCheck = isInputChecked;
+
+        if (isInputChecked) {
+          ids.push(classTimeId);
+          oldFilter[childKey] = ids;
+          if (parentKey === "attendAll") {
+            classTimesIds.push(classTimeId);
+            oldFilter.classTimesIds = classTimesIds;
+          }
+          if (parentKey === "manageAll") {
+            manageClassTimeIds.push(classTimeId);
+            oldFilter.manageClassTimeIds = manageClassTimeIds;
+          }
+          if (parentKey === "schoolClassTime") {
+            schoolClassTimeId.push(classTimeId);
+            oldFilter.schoolClassTimeId = schoolClassTimeId;
+          }
+        } else {
+          let index = classTimesIds.indexOf(classTimeId);
+          if (index > -1) {
+            classTimesIds.splice(index, 1);
+          }
+          oldFilter.classTimesIds = classTimesIds;
+
+          if (parentKey === "attendAll") {
+            let index = ids.indexOf(classTimeId);
+            if (index > -1) {
+              ids.splice(index, 1);
+            }
+            oldFilter[childKey] = ids;
+          }
+          if (parentKey === "manageAll") {
+            let index = ids.indexOf(classTimeId);
+            if (index > -1) {
+              ids.splice(index, 1);
+            }
+            oldFilter[childKey] = ids;
+          }
+          if (parentKey === "schoolClassTime") {
+            let index = ids.indexOf(classTimeId);
+            if (index > -1) {
+              ids.splice(index, 1);
+            }
+            oldFilter[childKey] = ids;
+          }
+        }
+      }
+
+      if (!data[i].isCheck) {
+        bool = false;
+      }
     }
 
-    render() {
-        console.log("ManageMyCalendar props--->>",this.props);
-        console.log("ManageMyCalendar state--->>",this.state);
-        // const { schoolClassTimes } = this.props;
-        const { classes } = this.props;
-        const { type, classTimesData, myClassTimes, filter, managedClassTimes, schoolClassTimes } = this.state;
+    this.setState({
+      filter: oldFilter,
+      [parentKey]: bool
+    });
+  };
 
-        return  (
-            <DocumentTitle title={this.props.route && this.props.route.name}>
-            <div>
-                {/*<Card style={{padding: 10, margin: 15}}> */}
-                <Card style={{padding: 8}}>
-                    <FormControl component="fieldset" required >
-                      <RadioGroup
-                          aria-label="classTimes"
-                          value={this.state.type}
-                          name="classTimes"
-                          style={{width: '100%', padding: 15, display: 'inline', flexWrap: 'wrap'}}
-                          onChange={this.handleClassOnChange}
-                          defaultSelected="Select any one"
-                      >
-                       <FormControlLabel  value="both" control={<Radio />} label="Show All" classes={{label: classes.label}}/>
-                       {(managedClassTimes && managedClassTimes.length > 0) &&
-                          <FormControlLabel  value="managing" control={<Radio />} label="Class I am Managing" classes={{label: classes.label}}/>
-                       }
-                       {(myClassTimes && myClassTimes.length > 0) &&
-                          <FormControlLabel  value="attending" control={<Radio />} label="Class I am Attending" classes={{label: classes.label}}/>
-                       }
-                       { (schoolClassTimes && schoolClassTimes.length > 0 ) &&
-                          <FormControlLabel  value="school" control={<Radio />} label="School Class Times" classes={{label: classes.label}}/>
-                       }
-                      </RadioGroup>
-                    </FormControl>
-                    <Divider/>
-                    {
-                        ( (type === "both" || type === "managing") && managedClassTimes && managedClassTimes.length > 0) && (
-                            <Fragment>
-                                <div style={{...styles.formControlInline, display: 'inline-flex', alignItems: 'center', padding: 10}}>
-                                    <div style={styles.formControl}>
-                                        <div style={inputStyle}>
-                                            <StrongText>Class I am Managing</StrongText>
-                                        </div>
-                                    </div>
-                                    <div style={styles.formControl}>
-                                        <div style={inputStyle}>
-                                            <FormControlLabel
-                                              control={
-                                                <Checkbox
-                                                  checked={this.state.manageAll}
-                                                  onChange={this.handleChangeAllClassTime.bind(this, "manageAll", "managedClassTimes", "classTimesIds")}
-                                                  value="classTimesIds"
-                                                />
-                                              }
-                                              classes={{label: classes.label}}
-                                              label="All"
-                                            />
+  handleChangeClassType = (
+    parentKey,
+    classTypeId,
+    fieldName,
+    childKey,
+    event,
+    isInputChecked
+  ) => {
+    console.log(
+      "handle class type change",
+      parentKey,
+      classTypeId,
+      fieldName,
+      childKey,
+      event,
+      isInputChecked
+    );
+    const data = this.state[fieldName];
+    let oldFilter = { ...this.state.filter };
+    let ids = oldFilter[childKey] || [];
+    console.log("ids------------>", ids);
+    const { classTypeForInterests } = { ...this.state };
+    const { managedClassTypes } = { ...this.state };
+    const { managedClassTimes } = { ...this.state };
+    const { myClassTimes } = { ...this.state };
+    const { schoolClassTypes } = { ...this.state };
+    // Class time Ids of Class Types:
+    let classTimesIds = [...oldFilter.classTimesIds];
+    let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
+    let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
+    console.log(
+      "classTypeForInterests in handle change",
+      classTypeForInterests
+    );
+    console.log("data-------------", data);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].classTypeId === classTypeId) {
+        data[i].isCheck = isInputChecked;
+        if (isInputChecked) {
+          oldFilter[childKey].push(data[i]._id);
+          if (parentKey == "attendingTimePanel") {
+            // Push _ids of ClassTimes records:-
+            if (data[i].classTypeId == classTypeId) {
+              classTimesIds.push(data[i]._id);
+              oldFilter.classTimesIds = classTimesIds;
+              data[i].isCheck = isInputChecked;
+            }
+            // Toggle class type for interests.
+            for (let j = 0; j < classTypeForInterests.length; j++) {
+              if (classTypeForInterests[j]._id == classTypeId) {
+                classTypeForInterests[j].isCheck = isInputChecked;
+                // oldFilter.classTimesIds.push(classTypeForInterests[j].classTimeId);
+              }
+            }
+          } else if (parentKey == "managingTimePanel") {
+            if (data[i].classTypeId == classTypeId) {
+              data[i].isCheck = isInputChecked;
+              manageClassTimeIds.push(data[i]._id);
+              oldFilter.manageClassTimeIds = manageClassTimeIds;
+            }
+            // Toggle class type for interests.
+            for (let j = 0; j < managedClassTypes.length; j++) {
+              if (managedClassTypes[j]._id == classTypeId) {
+                managedClassTypes[j].isCheck = isInputChecked;
+              }
+            }
+          } else if (parentKey == "schoolTimePanel") {
+            // Toggle class type for interests.
+            for (let j = 0; j < schoolClassTypes.length; j++) {
+              if (schoolClassTypes[j]._id == classTypeId) {
+                schoolClassTypes[j].isCheck = isInputChecked;
+              }
+              if (data[i].classTypeId == classTypeId) {
+                data[i].isCheck = isInputChecked;
+                schoolClassTimeId.push(data[i]._id);
+                oldFilter.schoolClassTimeId = schoolClassTimeId;
+              }
+            }
+          } else if (parentKey == "classTimePanel") {
+          }
+        } else {
+          if (parentKey == "attendingTimePanel") {
+            if (data[i].classTypeId == classTypeId) {
+              data[i].isCheck = isInputChecked;
+              let index = ids.indexOf(data[i]._id);
+              if (index > -1) {
+                ids.splice(index, 1);
+              }
+              oldFilter[childKey] = ids;
+            }
+            // Toggle class type for interests.
+            for (let j = 0; j < classTypeForInterests.length; j++) {
+              if (classTypeForInterests[j]._id == classTypeId) {
+                classTypeForInterests[j].isCheck = isInputChecked;
+              }
+            }
+          } else if (parentKey == "managingTimePanel") {
+            // Toggle class type for interests.
+            for (let j = 0; j < managedClassTypes.length; j++) {
+              if (managedClassTypes[j]._id == classTypeId) {
+                managedClassTypes[j].isCheck = isInputChecked;
+              }
+              if (data[i].classTypeId == classTypeId) {
+                data[i].isCheck = isInputChecked;
+                let index = ids.indexOf(data[i]._id);
+                if (index > -1) {
+                  ids.splice(index, 1);
+                }
+                oldFilter[childKey] = ids;
+              }
+            }
+          } else if (parentKey == "schoolTimePanel") {
+            // Toggle class type for interests.
+            for (let j = 0; j < schoolClassTypes.length; j++) {
+              if (schoolClassTypes[j]._id == classTypeId) {
+                console.log("inside if ---->", schoolClassTypes[j]._id);
+                schoolClassTypes[j].isCheck = isInputChecked;
+              }
+              if (data[i].classTypeId == classTypeId) {
+                data[i].isCheck = isInputChecked;
+                let index = ids.indexOf(data[i]._id);
+                if (index > -1) {
+                  ids.splice(index, 1);
+                }
+                oldFilter[childKey] = ids;
+              }
+            }
+          }
+        }
+      }
+    }
+    console.log(
+      "classTypeForInterests after in handle change",
+      classTypeForInterests
+    );
+    this.setState({
+      filter: oldFilter,
+      classTypeForInterests,
+      managedClassTypes,
+      schoolClassTypes,
+      [fieldName]: data
+    });
+  };
+  // onChange={this.handleChangeAllClassTime.bind(this, "manageAll", "classTimesData", "classTimesIds")}
+  // this, "schoolClassTimes", "myClassTimes", "classTimesIdsForCI"
 
-                                        </div>
-                                    </div>
-                                    {
-                                        managedClassTimes && managedClassTimes.map((classTime, index) => {
-                                            console.log("classTime",classTime)
-                                            return (
-                                                <div key={index} style={styles.formControl}>
-                                                    <div style={inputStyle}>
-                                                        <FormControlLabel
-                                                          control={
-                                                            <Checkbox
-                                                              checked={classTime.isCheck}
-                                                              onChange={this.handleChangeClassTime.bind(this, "manageAll", "managedClassTimes", "manageClassTimeIds", classTime._id)}
-                                                              value={classTime._id}
-                                                            />
-                                                          }
-                                                          classes={{label: classes.label}}
-                                                          label={cutString(classTime.name, 12)}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </div>
-                                <Divider/>
-                            </Fragment>
-                        )
-                    }
-                    {
-                        ((type === "both" || type === "attending") && myClassTimes && myClassTimes.length > 0 ) && (
-                            <Fragment>
-                                <div style={{...styles.formControlInline,display: 'inline-flex', alignItems: 'center', padding: 10}}>
-                                    <div style={styles.formControl}>
-                                        <div style={{minWidth: 150, display: 'flex'}}>
-                                            <StrongText>Class I am Attending</StrongText>
-                                        </div>
-                                    </div>
-                                    <div style={styles.formControl}>
-                                        <div style={inputStyle}>
-                                            <FormControlLabel
-                                              control={
-                                                <Checkbox
-                                                  checked={this.state.attendAll}
-                                                  onChange={this.handleChangeAllClassTime.bind(this, "attendAll", "myClassTimes", "classTimesIdsForCI")}
-                                                  value="classTimesIdsForCI"
-                                                />
-                                              }
-                                              classes={{label: classes.label}}
-                                              label="All"
-                                            />
-                                        </div>
-                                    </div>
-                                    {
-                                        myClassTimes.map((classTime, index) => {
-                                            return (
-                                                <div key={index} style={styles.formControl}>
-                                                    <div style={inputStyle}>
-                                                        <FormControlLabel
-                                                          control={
-                                                            <Checkbox
-                                                              checked={classTime.isCheck}
-                                                              onChange={this.handleChangeClassTime.bind(this, "attendAll", "myClassTimes", "classTimesIdsForCI", classTime._id)}
-                                                              value={classTime._id}
-                                                            />
-                                                          }
-                                                          classes={{label: classes.label}}
-                                                          label={cutString(classTime.name, 12)}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </div>
-                                <Divider/>
-                            </Fragment>
-                        )
-                    }
-                    {
-                        ( (type === "both" || type === "school") && schoolClassTimes && schoolClassTimes.length > 0) && (
-                            <Fragment>
-                                <div style={{...styles.formControlInline,display: 'inline-flex', alignItems: 'center', padding: 10}}>
-                                    <div style={styles.formControl}>
-                                        <div style={{minWidth: 150, display: 'flex'}}>
-                                            <StrongText>School Class Times</StrongText>
-                                        </div>
-                                    </div>
-                                    <div style={styles.formControl}>
-                                        <div style={inputStyle}>
-                                            <FormControlLabel
-                                              control={
-                                                <Checkbox
-                                                  checked={this.state.schoolClassTime}
-                                                  onChange={this.handleChangeAllClassTime.bind(this, "schoolClassTime", "schoolClassTimes", "schoolClassTimeId")}
-                                                  value="schoolClassTimeId"
-                                                />
-                                              }
-                                              classes={{label: classes.label}}
-                                              label="All"
-                                            />
-                                        </div>
-                                    </div>
-                                    {
-                                        schoolClassTimes.map((classTime, index) => {
-                                            return (
-                                                <div key={index} style={styles.formControl}>
-                                                    <div style={inputStyle}>
-                                                        <FormControlLabel
-                                                          control={
-                                                            <Checkbox
-                                                              checked={classTime.isCheck}
-                                                              onChange={this.handleChangeClassTime.bind(this, "schoolClassTime", "schoolClassTimes", "schoolClassTimeId", classTime._id)}
-                                                              value={classTime._id}
-                                                            />
-                                                          }
-                                                          classes={{label: classes.label}}
-                                                          label={cutString(classTime.name, 12)}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </div>
-                            </Fragment>
-                        )
-                    }
-                    <MyCalender
-                        manageMyCalendar={ this.props.route && this.props.route.name == "MyCalendar" }
-                        manageMyCalendarFilter={filter}
-                        {...this.props}
+  handleChangeAllClassType = (
+    parentKey,
+    fieldName,
+    childKey,
+    event,
+    isInputChecked
+  ) => {
+    console.log(
+      "handleChangeAllClassTime -->>",
+      parentKey,
+      fieldName,
+      childKey,
+      isInputChecked
+    );
+    // get class interests:
+    // loop over class interests.
+    // get classTypeId from class interest.
+    // myclassTime[classTypeId] = isInputchecked.
+    // filter.classTimeIdsForCI.push(myClassTime._id);
+    // setState filter
+    // parentKey: class interest data/ manageclassTypedata/ schoolclasstypedata.
+    let oldFilter = { ...this.state.filter };
+    let classTypeData = { ...this.state[fieldName] };
+    let classTimeData = { ...this.state[childKey] };
+    let classTimeIds = [...oldFilter.classTimesIds];
+    let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
+    let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
+
+    console.log("classTypeData", classTypeData);
+    console.log("classTimeData", classTimeData);
+    for (let i = 0; i < classTypeData.length; i++) {
+      for (let j = 0; j < classTimeData.length; j++) {
+        classTimeData[j].classTypeId = isInputChecked;
+        if (isInputChecked) {
+          if (parentKey == "attendingPanel") {
+            console.log("in if condition");
+            classTimeIds.push(classTimeData[j]._id);
+            oldFilter.classTimesIds = classTimeIds;
+          }
+        } else {
+          if (parentKey == "attendingPanel") {
+            let index = classTimeIds.indexOf(classTimeData[j]._id);
+            if (index > -1) {
+              classTimeIds.splice(index, 1);
+            }
+            oldFilter[childKey] = classTimeIds;
+          }
+        }
+      }
+    }
+    classTimesIds = _.uniq(oldFilter.classTimesIds);
+    manageClassTimeIds = _.uniq(oldFilter.manageClassTimeIds);
+    schoolClassTimeId = _.uniq(oldFilter.schoolClassTimeId);
+    oldFilter.classTimesIds = classTimesIds;
+    oldFilter.manageClassTimeIds = manageClassTimeIds;
+    oldFilter.schoolClassTimeId = schoolClassTimeId;
+    this.setState({
+      [parentKey]: isInputChecked,
+      [fieldName]: classTypeData,
+      filter: oldFilter
+    });
+  };
+  handleChangeAllClassTime = (
+    parentKey,
+    fieldName,
+    childKey,
+    event,
+    isInputChecked
+  ) => {
+    console.log(
+      "handleChangeAllClassTime -->>",
+      parentKey,
+      fieldName,
+      childKey,
+
+      isInputChecked
+    );
+    // get class interests:
+    // loop over class interests.
+    // get classTypeId from class interest.
+    // myclassTime[classTypeId] = isInputchecked.
+    // filter.classTimeIdsForCI.push(myClassTime._id);
+    // setState filter
+    // parentKey: class interest data/ manageclassTypedata/ schoolclasstypedata.
+    let oldFilter = { ...this.state.filter };
+    let classTypeData = { ...this.state.fieldName };
+    let classTimeData = { ...this.state.childKey };
+    let classTimeIds = [...oldFilter.classTimesIds];
+    let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
+    let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
+
+    for (let i = 0; i < classTypeData.length; i++) {
+      for (let j = 0; j < classTimeData.length; j++) {
+        classTimeData[j].classTypeId = isInputChecked;
+        if (isInputChecked) {
+          if (parentKey == "attendingPanel") {
+            classTimeIds.push(classTimeData[j]._id);
+            oldFilter.classTimesIds = classTimeIds;
+          }
+        } else {
+          if (parentKey == "attendingPanel") {
+            let index = classTimeIds.indexOf(classTimeData[j]._id);
+            if (index > -1) {
+              classTimeIds.splice(index, 1);
+            }
+            oldFilter[childKey] = classTimeIds;
+          }
+        }
+      }
+    }
+    classTimesIds = _.uniq(oldFilter.classTimesIds);
+    manageClassTimeIds = _.uniq(oldFilter.manageClassTimeIds);
+    schoolClassTimeId = _.uniq(oldFilter.schoolClassTimeId);
+    oldFilter.classTimesIds = classTimesIds;
+    oldFilter.manageClassTimeIds = manageClassTimeIds;
+    oldFilter.schoolClassTimeId = schoolClassTimeId;
+    // this.setState({
+    //   [parentKey]: isInputChecked,
+    //   [fieldName]: classTypeData,
+    //   filter: oldFilter
+    // });
+    // if (parentKey == "attendAll") {
+    //   this.setState({ attendAll: !this.state.attendAll });
+    //   for (let i = 0; i < classTypeForInterests.length; )
+    //     this.state.classTypeForInterests.map(item => {
+    //       console.log("item.isCheck", item.isCheck);
+    //       item.isCheck = isInputChecked;
+    //     });
+    //   console.log("this.state.myClassTimes", this.state.myClassTimes);
+    //   this.state.myClassTimes.map(item => {
+    //     item.isCheck = isInputChecked;
+    //   });
+    // } else if (parentKey == "manageAll") {
+    //   this.setState({ manageAll: !this.state.manageAll });
+
+    //   this.state.managedClassTypes.map(item => {
+    //     item.isCheck = isInputChecked;
+    //   });
+
+    //   this.state.managedClassTimes.map(item => {
+    //     item.isCheck = isInputChecked;
+    //   });
+    // } else {
+    //   this.setState({ schoolAll: !this.state.schoolAll });
+
+    //   this.state.schoolClassTypes.map(item => {
+    //     console.log("item.isCheck", item.isCheck);
+    //     item.isCheck = isInputChecked;
+    //   });
+    //   console.log("this.state.myClassTimes", this.state.myClassTimes);
+    //   this.state.schoolClassTimes.map(item => {
+    //     item.isCheck = isInputChecked;
+    //   });
+    // }
+
+    // manageAll classTimesData classTimesIds false
+    // // const data = this.state[fieldName];
+    // // let oldFilter = { ...this.state.filter };
+    // // let classTimesIds = [...oldFilter.classTimesIds];
+    // // let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
+    // // let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
+    // // oldFilter[childKey] = [];
+    // // for (let i = 0; i < data.length; i++) {
+    // //   data[i].isCheck = isInputChecked;
+
+    // //   if (isInputChecked) {
+    // //     oldFilter[childKey].push(data[i]._id);
+    // //     if (parentKey === "attendAll") {
+    // //       oldFilter.classTimesIds.push(data[i]._id);
+    // //     }
+    // //     if (parentKey === "manageAll") {
+    // //       oldFilter.manageClassTimeIds.push(data[i]._id);
+    // //     }
+    // //     if (parentKey === "schoolClassTime") {
+    // //       oldFilter.schoolClassTimeId.push(data[i]._id);
+    // //     }
+    // //   } else {
+    // //     if (parentKey === "attendAll") {
+    // //       let index = classTimesIds.indexOf(data[i]._id);
+    // //       if (index > -1) {
+    // //         classTimesIds.splice(index, 1);
+    // //       }
+    // //       oldFilter.classTimesIds = classTimesIds;
+    // //     }
+    // //     if (parentKey === "manageAll") {
+    // //       let index = manageClassTimeIds.indexOf(data[i]._id);
+    // //       if (index > -1) {
+    // //         manageClassTimeIds.splice(index, 1);
+    // //       }
+    // //       oldFilter.manageClassTimeIds = manageClassTimeIds;
+    // //     }
+    // //     if (parentKey === "schoolClassTime") {
+    // //       let index = schoolClassTimeId.indexOf(data[i]._id);
+    // //       if (index > -1) {
+    // //         schoolClassTimeId.splice(index, 1);
+    // //       }
+    // //       oldFilter.schoolClassTimeId = schoolClassTimeId;
+    // //     }
+    // //   }
+    // }
+    // classTimesIds = _.uniq(oldFilter.classTimesIds);
+    // manageClassTimeIds = _.uniq(oldFilter.manageClassTimeIds);
+    // schoolClassTimeId = _.uniq(oldFilter.schoolClassTimeId);
+    // oldFilter.classTimesIds = classTimesIds;
+    // oldFilter.manageClassTimeIds = manageClassTimeIds;
+    // oldFilter.schoolClassTimeId = schoolClassTimeId;
+    // this.setState({
+    //   [parentKey]: isInputChecked,
+    //   [fieldName]: data,
+    //   filter: oldFilter
+    // });
+  };
+  idmatching = (classTypeId, Time, classTypedata) => {
+    value = classTypedata.map(index => {
+      if (index._id === classTypeId) {
+        return index.name;
+      }
+    });
+    value = value.filter(function(element) {
+      return element !== undefined;
+    });
+    return value[0] + ":" + Time;
+  };
+
+  render() {
+    console.log("ManageMyCalendar props--->>", this.props);
+    console.log("ManageMyCalendar state--->>", this.state);
+    // const { schoolClassTimes } = this.props;
+    const { classes, classInterestData } = this.props;
+    const {
+      type,
+      classTimesData,
+      myClassTimes,
+      filter,
+      managedClassTimes,
+      schoolClassTimes,
+      classTypeData,
+      managedClassTypes,
+      schoolClassTypes,
+      classTypeForInterests
+    } = this.state;
+
+    return (
+      <DocumentTitle title={this.props.route && this.props.route.name}>
+        <div>
+          {/*<Card style={{padding: 10, margin: 15}}> */}
+          <Card style={{ padding: 8 }}>
+            <FormControl component="fieldset" required>
+              <RadioGroup
+                aria-label="classTimes"
+                value={this.state.type}
+                name="classTimes"
+                style={{
+                  width: "100%",
+                  padding: 15,
+                  display: "inline",
+                  flexWrap: "wrap"
+                }}
+                onChange={this.handleClassOnChange}
+                defaultSelected="Select any one"
+              >
+                {classTypeData &&
+                  classTypeData.length > 0 && (
+                    <FormControlLabel
+                      value="both"
+                      control={<Radio />}
+                      label="Show All"
+                      classes={{ label: classes.label }}
                     />
-                </Card>
-            </div>
-            </DocumentTitle>
-        )
-   }
+                  )}
+                {managedClassTimes &&
+                  managedClassTimes.length > 0 && (
+                    <FormControlLabel
+                      value="managing"
+                      control={<Radio />}
+                      label="Class I am Managing"
+                      classes={{ label: classes.label }}
+                    />
+                  )}
+                {myClassTimes &&
+                  myClassTimes.length > 0 && (
+                    <FormControlLabel
+                      value="attending"
+                      control={<Radio />}
+                      label="Class I am Attending"
+                      classes={{ label: classes.label }}
+                    />
+                  )}
+                {schoolClassTimes &&
+                  schoolClassTimes.length > 0 && (
+                    <FormControlLabel
+                      value="school"
+                      control={<Radio />}
+                      label="School Class Times"
+                      classes={{ label: classes.label }}
+                    />
+                  )}
+              </RadioGroup>
+            </FormControl>
+            <Divider />
+            {(type === "both" || type === "attending") &&
+              classTypeForInterests &&
+              classTypeForInterests.length > 0 && (
+                <ExpansionPanel>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography className={classes.heading}>
+                      <div style={styles.formControl}>
+                        <div style={{ minWidth: 150, display: "flex" }}>
+                          <StrongText>Class I am Attending</StrongText>
+                        </div>
+                      </div>
+                    </Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails style={expansionPanelStyle}>
+                    <Fragment>
+                      <div style={inlineDivs}>
+                        <div style={styles.formControl}>
+                          <div style={inputStyle}>
+                            {/* <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={this.state.attendAll}
+                                  onChange={this.handleChangeAllClassType.bind(
+                                    this,
+                                    "attendingPanel",
+                                    "classTypeForInterests",
+                                    "myClassTimes"
+                                  )}
+                                  value="classTimesIdsForCI"
+                                />
+                              }
+                              classes={{ label: classes.label }}
+                              label="All"
+                            /> */}
+                          </div>
+                        </div>
+                        {classTypeForInterests.map((classType, index) => {
+                          return (
+                            <div key={index} style={styles.formControl}>
+                              <div style={inputStyle}>
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox
+                                      checked={classType.isCheck}
+                                      onChange={this.handleChangeClassType.bind(
+                                        this,
+                                        "attendingTimePanel",
+                                        classType._id,
+                                        "myClassTimes",
+                                        "classTimesIdsForCI"
+                                      )}
+                                      value={classType._id}
+                                    />
+                                  }
+                                  label={classType.name}
+                                  classes={{ label: classes.label }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div
+                        style={{
+                          ...styles.formControlInline,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          padding: 10,
+                          border: "solid 1px #ddd"
+                        }}
+                      >
+                        {myClassTimes &&
+                          myClassTimes.map((classTime, index) => {
+                            const result = classTypeData.filter(item => {
+                              if (item._id == classTime.classTypeId) {
+                                return item;
+                              }
+                            });
+                            return (
+                              <div key={index} style={styles.formControl}>
+                                <div style={inputStyle}>
+                                  <FormControlLabel
+                                    control={
+                                      <Checkbox
+                                        checked={classTime.isCheck}
+                                        onChange={this.handleChangeClassTime.bind(
+                                          this,
+                                          "attendAll",
+                                          "myClassTimes",
+                                          "classTimesIdsForCI",
+                                          classTime._id
+                                        )}
+                                        value={classTime._id}
+                                      />
+                                    }
+                                    label={`${result &&
+                                      result[0] &&
+                                      result[0].name}: ${cutString(
+                                      classTime.name,
+                                      12
+                                    )}`}
+                                    classes={{ label: classes.label }}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                      <Divider />
+                    </Fragment>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              )}
+            {(type === "both" || type === "managing") &&
+              managedClassTimes &&
+              managedClassTimes.length > 0 && (
+                <ExpansionPanel>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <div style={styles.formControl}>
+                      <div style={inputStyle}>
+                        <StrongText>Class I am Managing</StrongText>
+                      </div>
+                    </div>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails style={expansionPanelStyle}>
+                    <Fragment>
+                      <div style={inlineDivs}>
+                        <div style={styles.formControl}>
+                          <div style={inputStyle}>
+                            {/* <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={this.state.manageAll}
+                                  onChange={this.handleChangeAllClassTime.bind(
+                                    this,
+                                    "manageAll",
+                                    "myClassTimes",
+                                    "classTimesIdsForCI"
+                                  )}
+                                  value="classTimesIdsForCI"
+                                />
+                              }
+                              classes={{ label: classes.label }}
+                              label="All"
+                            /> */}
+                          </div>
+                        </div>
+                        {managedClassTypes.map((classType, index) => {
+                          let classTime = ClassTimes.findOne({
+                            classTypeId: classType._id
+                          });
+                          if (classTime) {
+                            return (
+                              <div key={index} style={styles.formControl}>
+                                <div style={inputStyle}>
+                                  <FormControlLabel
+                                    control={
+                                      <Checkbox
+                                        checked={classType.isCheck}
+                                        onChange={this.handleChangeClassType.bind(
+                                          this,
+                                          "managingTimePanel",
+                                          classType._id,
+                                          "managedClassTimes",
+                                          "manageClassTimeIds"
+                                        )}
+                                        value={classType._id}
+                                      />
+                                    }
+                                    label={classType.name}
+                                    classes={{ label: classes.label }}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          }
+                        })}
+                      </div>
+                      <ExpansionPanelDetails>
+                        <Fragment>
+                          <div
+                            style={{
+                              ...styles.formControlInline,
+                              display: "inline-flex",
+                              alignItems: "center",
+                              padding: 10,
+                              border: "solid 1px #ddd"
+                            }}
+                          >
+                            {managedClassTimes &&
+                              managedClassTimes.map((classTime, index) => {
+                                const result = classTypeData.filter(item => {
+                                  if (item._id == classTime.classTypeId) {
+                                    if (item) return item;
+                                  }
+                                });
+                                return (
+                                  <div key={index} style={styles.formControl}>
+                                    <div style={inputStyle}>
+                                      <FormControlLabel
+                                        control={
+                                          <Checkbox
+                                            checked={classTime.isCheck}
+                                            onChange={this.handleChangeClassTime.bind(
+                                              this,
+                                              "manageAll",
+                                              "managedClassTimes",
+                                              "manageClassTimeIds",
+                                              classTime._id
+                                            )}
+                                            value={classTime._id}
+                                          />
+                                        }
+                                        classes={{ label: classes.label }}
+                                        label={this.idmatching(
+                                          classTime.classTypeId,
+                                          classTime.name,
+                                          this.props.classTypeData
+                                        )}
+                                      />
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          </div>
+                          <Divider />
+                        </Fragment>
+                      </ExpansionPanelDetails>
+                    </Fragment>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              )}
+            {(type === "both" || type === "school") &&
+              schoolClassTimes &&
+              schoolClassTimes.length > 0 && (
+                <ExpansionPanel>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <div style={styles.formControl}>
+                      <div style={{ minWidth: 150, display: "flex" }}>
+                        <StrongText>School Class Times</StrongText>
+                      </div>
+                    </div>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails style={expansionPanelStyle}>
+                    <Fragment>
+                      <div style={inlineDivs}>
+                        <div style={styles.formControl}>
+                          <div style={inputStyle}>
+                            {/* <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={this.state.schoolAll}
+                                  onChange={this.handleChangeAllClassTime.bind(
+                                    this,
+                                    "schoolAll",
+                                    "myClassTimes",
+                                    "classTimesIdsForCI"
+                                  )}
+                                  value="classTimesIdsForCI"
+                                />
+                              }
+                              classes={{ label: classes.label }}
+                              label="All"
+                            /> */}
+                          </div>
+                        </div>
+                        {schoolClassTypes &&
+                          schoolClassTypes.map((classType, index) => {
+                            let classTime = ClassTimes.findOne({
+                              classTypeId: classType._id
+                            });
+                            if (classTime) {
+                              return (
+                                <div key={index} style={styles.formControl}>
+                                  <div style={inputStyle}>
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={classType.isCheck}
+                                          onChange={this.handleChangeClassType.bind(
+                                            this,
+                                            "schoolTimePanel",
+                                            classType._id,
+                                            "schoolClassTimes",
+                                            "schoolClassTimeId"
+                                          )}
+                                          value={classType._id}
+                                        />
+                                      }
+                                      label={classType.name}
+                                      classes={{ label: classes.label }}
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            }
+                          })}
+                      </div>
+
+                      <Divider />
+                    </Fragment>
+                  </ExpansionPanelDetails>
+                  <ExpansionPanelDetails>
+                    <Typography>
+                      <Fragment>
+                        <div
+                          style={{
+                            ...styles.formControlInline,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            padding: 10,
+                            border: "solid 1px #ddd"
+                          }}
+                        >
+                          {schoolClassTimes.map((classTime, index) => {
+                            const result = classTypeData.filter(item => {
+                              if (item._id == classTime.classTypeId) {
+                                return item;
+                              }
+                            });
+                            return (
+                              <div key={index} style={styles.formControl}>
+                                <div style={inputStyle}>
+                                  <FormControlLabel
+                                    control={
+                                      <Checkbox
+                                        checked={classTime.isCheck}
+                                        onChange={this.handleChangeClassTime.bind(
+                                          this,
+                                          "schoolClassTime",
+                                          "schoolClassTimes",
+                                          "schoolClassTimeId",
+                                          classTime._id
+                                        )}
+                                        value={classTime._id}
+                                      />
+                                    }
+                                    classes={{ label: classes.label }}
+                                    label={`${result &&
+                                      result[0] &&
+                                      result[0].name}: ${cutString(
+                                      classTime.name,
+                                      12
+                                    )}`}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </Fragment>
+                    </Typography>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              )}
+            <MyCalender
+              manageMyCalendar={
+                this.props.route && this.props.route.name == "MyCalendar"
+              }
+              manageMyCalendarFilter={filter}
+              {...this.props}
+            />
+          </Card>
+        </div>
+      </DocumentTitle>
+    );
+  }
 }
 
 export default createContainer(props => {
+  const classTimesData = ClassTimes.find({}).fetch();
+  let classTypeIds = classTimesData.map(item => item.classTypeId);
+  Meteor.subscribe("classTime.getclassType", {
+    classTypeIds
+  });
+  let classTypeData = ClassType.find({ _id: { $in: classTypeIds } }).fetch();
 
-    console.log("props in manageMyCalendar",props)
-    const classTimesData = ClassTimes.find({}).fetch();
-    console.log("classTimesData===>", classTimesData)
-    let managedClassTimes = [];
-    // Class Times that are managed by current user.
-    if(props.currentUser) {
-        let currentUser = props.currentUser;
-        let adminUserSchoolIds = currentUser && currentUser.profile &&  currentUser.profile.schoolId
-        if( adminUserSchoolIds ) {
-           let mangedClassJson =  { schoolId : {$in : adminUserSchoolIds} };
-           managedClassTimes = ClassTimes.find(mangedClassJson).fetch();
-        }
+  let managedClassTimes = [];
+  let managedClassTypeData = [];
+  // Class Times that are managed by current user.
+  if (props.currentUser) {
+    let currentUser = props.currentUser;
+    let adminUserSchoolIds =
+      currentUser && currentUser.profile && currentUser.profile.schoolId;
+    if (adminUserSchoolIds) {
+      let mangedClassJson = { schoolId: { $in: adminUserSchoolIds } };
+      managedClassTimes = ClassTimes.find(mangedClassJson).fetch();
+      managedClassTypeData = ClassType.find(mangedClassJson).fetch();
     }
-    // Class Times of current School.
-    let schoolClassTimes = [];
-    if(props.schoolId) {
-        schoolClassTimes = ClassTimes.find({ schoolId:props.schoolId }).fetch();
-    }
-    const classInterestData = ClassInterest.find({}).fetch();
-    console.log("managedClassTimes", managedClassTimes)
-    return {
-        ...props,
-        classTimesData,
-        classInterestData,
-        managedClassTimes,
-        schoolClassTimes
-    };
-
+  }
+  // Class Times of current School.
+  let schoolClassTimes = [];
+  let schoolClassTypesData = [];
+  if (props.schoolId) {
+    schoolClassTimes = ClassTimes.find({ schoolId: props.schoolId }).fetch();
+    schoolClassTypesData = ClassType.find({ schoolId: props.schoolId }).fetch();
+  }
+  const classInterestData = ClassInterest.find({}).fetch();
+  let classInterestClassIds = classInterestData.map(item => {
+    return item.classTypeId;
+  });
+  let classTypeForInterests = ClassType.find({
+    _id: { $in: classInterestClassIds }
+  }).fetch();
+  return {
+    ...props,
+    classTimesData,
+    classInterestData,
+    managedClassTimes,
+    schoolClassTimes,
+    classTypeData,
+    schoolClassTypesData,
+    managedClassTypeData,
+    classTypeForInterests
+  };
 }, withStyles(newStyles)(ManageMyCalendar));

@@ -1,24 +1,24 @@
-import React, {Component, Fragment} from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
-import styled from 'styled-components';
-import { findIndex, isEmpty, find } from 'lodash';
-import Typography from 'material-ui/Typography';
+import React, { Component, Fragment } from "react";
+import { createContainer } from "meteor/react-meteor-data";
+import styled from "styled-components";
+import { findIndex, isEmpty, find } from "lodash";
+import Typography from "material-ui/Typography";
 //import `Sticky` from 'react-sticky-el';
-import Sticky from 'react-stickynode';
-import { browserHistory } from 'react-router';
+import Sticky from "react-stickynode";
+import { browserHistory } from "react-router";
 
-import {getAverageNoOfRatings} from '/imports/util';
+import { getAverageNoOfRatings } from "/imports/util";
 
-import NoResults from '../NoResults.jsx';
-import ClassMap from '../map/ClassMap.jsx';
-import MapView from '../map/mapView.jsx';
-import CardsList from '../cards/CardsList.jsx';
-import SearchBarStyled from '../SearchBarStyled.jsx';
-import Footer from '../footer/index.jsx';
-import { cardsData, cardsData1} from '../../constants/cardsData.js';
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
-import * as helpers from '../jss/helpers.js';
+import NoResults from "../NoResults.jsx";
+import ClassMap from "../map/ClassMap.jsx";
+import MapView from "../map/mapView.jsx";
+import CardsList from "../cards/CardsList.jsx";
+import SearchBarStyled from "../SearchBarStyled.jsx";
+import Footer from "../footer/index.jsx";
+import { cardsData, cardsData1 } from "../../constants/cardsData.js";
+import PrimaryButton from "../buttons/PrimaryButton.jsx";
+import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
+import * as helpers from "../jss/helpers.js";
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
@@ -31,12 +31,11 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 
 const MainContentWrapper = styled.div`
-  // margin-top: ${props => props.isAnyFilterApplied ? -56 : 0}px;
+  // margin-top: ${props => (props.isAnyFilterApplied ? -56 : 0)}px;
 `;
 
 const PreloaderWrapper = styled.div`
-  ${helpers.flexCenter}
-  height: 100vh;
+  ${helpers.flexCenter} height: 100vh;
 `;
 
 const ContentContainer = styled.div`
@@ -57,15 +56,17 @@ const SearchBarWrapper = styled.div`
 
 const CardsContainer = styled.div`
   width: 100%;
-  padding-top: ${props => props.containerPaddingTop ? props.containerPaddingTop : (helpers.rhythmDiv * 3) + 'px'};
+  padding-top: ${props =>
+    props.containerPaddingTop
+      ? props.containerPaddingTop
+      : helpers.rhythmDiv * 3 + "px"};
 `;
 
 const NoResultContainer = styled.div`
   text-align: center;
   width: 100%;
   height: 100vh;
-  ${helpers.flexCenter}
-  flex-direction: column;
+  ${helpers.flexCenter} flex-direction: column;
 `;
 
 const MapOuterContainer = styled.div`
@@ -85,8 +86,7 @@ const MapContainer = styled.div`
 const WithMapCardsContainer = styled.div`
   width: 60%;
 
-  ${helpers.flexDirectionColumn}
-  justify-content: space-between;
+  ${helpers.flexDirectionColumn} justify-content: space-between;
   transform: translateY(80px);
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
@@ -101,7 +101,7 @@ const FooterOuterWrapper = styled.div`
   justify-content: flex-end;
   width: 100%;
 
-  @media screen and (max-width : ${helpers.tablet + 100}px) {
+  @media screen and (max-width: ${helpers.tablet + 100}px) {
     display: none;
     width: 0;
     height: 0;
@@ -121,233 +121,261 @@ const RevertSearch = styled.span`
 `;
 
 class ClassTypeList extends Component {
-
-	constructor(props) {
-	    super(props);
-	    this.state = {
-	      filters: {}
-	    }
-	}
-
-  handleAddSchool = () => {
-    if(Meteor.userId()) {
-      browserHistory.push('/claimSchool');
-    } else {
-      Events.trigger("registerAsSchool",{userType: "School"})
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      filters: {}
+    };
   }
 
-	makeCategorization = ({classTypeData = [], skillCategoryData}) => {
-	    let data = {};
-	    for(skillCategoryObj of skillCategoryData) {
-	    	data[skillCategoryObj.name] = [];
-	    	for(classTypeObj of classTypeData) {
-	    		if(!isEmpty(classTypeObj.selectedSkillCategory)) {
-	    			let index = findIndex(classTypeObj.selectedSkillCategory,{_id: skillCategoryObj._id})
-	    			if(index > -1) {
-	    				data[skillCategoryObj.name].push(classTypeObj)
-	    			}
-	    		}
-	    	}
-	    }
-	    return data;
-  	}
+  handleAddSchool = () => {
+    if (Meteor.userId()) {
+      browserHistory.push("/claimSchool");
+    } else {
+      Events.trigger("registerAsSchool", { userType: "School" });
+    }
+  };
 
-  	showClassTypes = ({classType}) => {
-  		// console.log("showClassTypes classType -->>>",classType, this.props)
-  		if(!isEmpty(classType)) {
-            return Object.keys(classType).map((key, index)=> {
+  makeCategorization = ({ classTypeData = [], skillCategoryData }) => {
+    let data = {};
+    for (skillCategoryObj of skillCategoryData) {
+      data[skillCategoryObj.name] = [];
+      for (classTypeObj of classTypeData) {
+        if (!isEmpty(classTypeObj.selectedSkillCategory)) {
+          let index = findIndex(classTypeObj.selectedSkillCategory, {
+            _id: skillCategoryObj._id
+          });
+          if (index > -1) {
+            data[skillCategoryObj.name].push(classTypeObj);
+          }
+        }
+      }
+    }
+    return data;
+  };
 
-                let title = key;
-                if(this.props.locationName == "your location") {
-                    title = `${key} in your location`
-                } else if(this.props.locationName) {
-                    title = `${key} in ${this.props.locationName}`
-                }
+  showClassTypes = ({ classType }) => {
+    // console.log("showClassTypes classType -->>>",classType, this.props)
+    if (!isEmpty(classType)) {
+      return Object.keys(classType).map((key, index) => {
+        let title = key;
+        if (this.props.locationName == "your location") {
+          title = `${key} in your location`;
+        } else if (this.props.locationName) {
+          title = `${key} in ${this.props.locationName}`;
+        }
 
-  				if(!isEmpty(classType[key])) {
-  					return <CardsList
-  						      key={index}
-                		mapView={this.props.mapView}
-                		title={title}
-                		name={key}
-                		cardsData={classType[key]}
-                		classInterestData={this.props.classInterestData}
-                    locationName={this.props.locationName}
+        if (!isEmpty(classType[key])) {
+          return (
+            <CardsList
+              key={index}
+              mapView={this.props.mapView}
+              title={title}
+              name={key}
+              cardsData={classType[key]}
+              classInterestData={this.props.classInterestData}
+              locationName={this.props.locationName}
+              handleSeeMore={this.props.handleSeeMore}
+              filters={this.props.filters}
+              reviewsData={this.props.reviewsData || []}
+              hideClassTypeOptions={this.props.hideClassTypeOptions}
+              landingPage={this.props.landingPage}
+            />
+          );
+        }
+      });
+    }
+  };
+
+  getNoResultMsg = (isLoading, filters, classTypeData) => {
+    if (isLoading) {
+      return (
+        <PreloaderWrapper>
+          <Preloader />
+        </PreloaderWrapper>
+      );
+    } else if (isEmpty(classTypeData)) {
+      return (
+        <NoResultContainer>
+          {console.log(this.props.appliedTopFilter, "appliedTopFilter...")}
+          <NoResults
+            removeAllFiltersButtonClick={this.props.removeAllFilters}
+            addYourSchoolButtonClick={this.handleAddSchool}
+          />
+          <RevertSearch>
+            {this.props.mapView
+              ? "No results in this area. Try a different area?"
+              : "Try changing your search"}
+          </RevertSearch>
+        </NoResultContainer>
+      );
+    }
+  };
+
+  render() {
+    const {
+      mapView,
+      classTypeData,
+      classInterestData,
+      reviewsData,
+      skillCategoryData,
+      splitByCategory,
+      filters,
+      isLoading,
+      classTimesData
+    } = this.props;
+    // console.log("ClassTypeList props -->>",this);
+    return (
+      <MainContentWrapper>
+        {mapView ? (
+          <ContentContainer>
+            <MapContentContainer>
+              <MapOuterContainer>
+                <Sticky top={10}>
+                  <MapContainer>
+                    <MapView {...this.props} />
+                  </MapContainer>
+                </Sticky>
+              </MapOuterContainer>
+
+              <WithMapCardsContainer>
+                <div>
+                  {this.props.appliedTopFilter &&
+                    React.cloneElement(this.props.appliedTopFilter)}
+                  <CardsList
+                    schoolData={this.props.schoolData}
+                    mapView={this.props.mapView}
+                    cardsData={classTypeData}
+                    reviewsData={reviewsData || []}
+                    classInterestData={classInterestData}
                     handleSeeMore={this.props.handleSeeMore}
                     filters={this.props.filters}
-                    reviewsData={this.props.reviewsData || []}
                     hideClassTypeOptions={this.props.hideClassTypeOptions}
                     landingPage={this.props.landingPage}
-                	/>
-  				}
-  			})
-  		}
-  	}
+                  />
 
-    getNoResultMsg = (isLoading, filters, classTypeData) => {
-        if(isLoading) {
+                  {/*Hack to get rid of this on school type page*/
+                  !this.props.schoolView &&
+                    this.getNoResultMsg(isLoading, filters, classTypeData)}
+                </div>
 
-            return <PreloaderWrapper><Preloader/></PreloaderWrapper>
+                <FooterOuterWrapper>
+                  <FooterWrapper>
+                    <Footer mapView={this.props.mapView} />
+                  </FooterWrapper>
+                </FooterOuterWrapper>
+              </WithMapCardsContainer>
+            </MapContentContainer>
+          </ContentContainer>
+        ) : (
+          <CardsContainer containerPaddingTop={this.props.containerPaddingTop}>
+            {splitByCategory ? (
+              this.showClassTypes({
+                classType: this.makeCategorization({
+                  classTypeData: classTypeData,
+                  skillCategoryData: skillCategoryData
+                })
+              })
+            ) : (
+              <CardsList
+                mapView={this.props.mapView}
+                cardsData={classTypeData}
+                reviewsData={reviewsData || []}
+                classInterestData={classInterestData}
+                handleSeeMore={this.props.handleSeeMore}
+                filters={this.props.filters}
+                classTimesData={classTimesData || []}
+                hideClassTypeOptions={this.props.hideClassTypeOptions}
+                landingPage={this.props.landingPage}
+              />
+            )}
 
-        } else if(isEmpty(classTypeData)) {
-
-            return <NoResultContainer>
-                {console.log(this.props.appliedTopFilter,"appliedTopFilter...")}
-                <NoResults
-                    removeAllFiltersButtonClick={this.props.removeAllFilters}
-                    addYourSchoolButtonClick={this.handleAddSchool}
-                />
-                <RevertSearch>
-                  {this.props.mapView ? 'No results in this area. Try a different area?' : 'Try changing your search'}
-                </RevertSearch>
-            </NoResultContainer>
-        }
-    }
-
-	render() {
-		const { mapView, classTypeData, classInterestData, reviewsData, skillCategoryData, splitByCategory, filters, isLoading, classTimesData } = this.props;
-    // console.log("ClassTypeList props -->>",this);
-    return (<MainContentWrapper>
-				{
-					mapView ? (
-                <ContentContainer >
-                    <MapContentContainer>
-                      <MapOuterContainer>
-                        <Sticky top={10}>
-                          <MapContainer>
-                            <MapView {...this.props} />
-                          </MapContainer>
-                        </Sticky>
-                      </MapOuterContainer>
-
-                      <WithMapCardsContainer>
-                          <div>
-                            {this.props.appliedTopFilter && React.cloneElement(this.props.appliedTopFilter)}
-                            <CardsList
-                              schoolData={this.props.schoolData}
-                              mapView={this.props.mapView}
-                              cardsData={classTypeData}
-                              reviewsData={reviewsData || []}
-                              classInterestData={classInterestData}
-                              handleSeeMore={this.props.handleSeeMore}
-                              filters={this.props.filters}
-                              hideClassTypeOptions={this.props.hideClassTypeOptions}
-                              landingPage={this.props.landingPage}
-                            />
-
-                            {/*Hack to get rid of this on school type page*/
-                                !this.props.schoolView && this.getNoResultMsg(isLoading, filters, classTypeData)
-                            }
-                          </div>
-
-                          <FooterOuterWrapper>
-                            <FooterWrapper>
-                              <Footer mapView={this.props.mapView}/>
-                            </FooterWrapper>
-                          </FooterOuterWrapper>
-                      </WithMapCardsContainer>
-                    </MapContentContainer>
-                </ContentContainer>
-					) : (
-						<CardsContainer containerPaddingTop={this.props.containerPaddingTop}>
-							{
-								splitByCategory ? this.showClassTypes({
-									classType: this.makeCategorization({classTypeData: classTypeData, skillCategoryData: skillCategoryData})
-								}) : ( <CardsList
-                          mapView={this.props.mapView}
-                          cardsData={classTypeData}
-                          reviewsData={reviewsData || [] }
-                          classInterestData={classInterestData}
-                          handleSeeMore={this.props.handleSeeMore}
-                          filters={this.props.filters}
-                          classTimesData={ classTimesData || [] }
-                          hideClassTypeOptions={this.props.hideClassTypeOptions}
-                          landingPage={this.props.landingPage}
-                        />)
-							}
-
-                            {
-                                !this.props.schoolView && this.getNoResultMsg(isLoading, filters, classTypeData)
-                            }
-                        	{/*<CardsList
+            {!this.props.schoolView &&
+              this.getNoResultMsg(isLoading, filters, classTypeData)}
+            {/*<CardsList
                         		mapView={mapView}
                         		title={'Yoga in Delhi'}
                         		name={'yoga-in-delhi'}
                         		cardsData={cardsData}
                         	/>*/}
-						</CardsContainer>
-					)
-				}
-			</MainContentWrapper>
-		)
-	}
+          </CardsContainer>
+        )}
+      </MainContentWrapper>
+    );
+  }
 }
 
 export default createContainer(props => {
-	// console.log("ClassTypeList createContainer -->>",props)
-  	let classTypeData = [];
-    let reviewsData = [];
-    let classTypeIds = [];
-    let schoolData = [];
-  	let skillCategoryData = [];
-  	let classTimesData = [];
-  	let classInterestData = [];
-    let sLocationData = [];
-    let isLoading = true;
-    let subscription, reviewsSubscription;
-    let filters = props.filters ? props.filters : {};
+  console.log("ClassTypeList createContainer -->>", props);
+  let classTypeData = [];
+  let reviewsData = [];
+  let classTypeIds = [];
+  let schoolData = [];
+  let skillCategoryData = [];
+  let classTimesData = [];
+  let classInterestData = [];
+  let sLocationData = [];
+  let isLoading = true;
+  let subscription, reviewsSubscription;
+  let filters = props.filters ? props.filters : {};
 
-    if(props.mapView) {
-        const query = props.location && props.location.query;
-        if(query && query.NEPoint && query.SWPoint) {
-          filters.NEPoint = query.NEPoint.split(",").map(Number)
-          filters.SWPoint = query.SWPoint.split(",").map(Number)
-        }
+  if (props.mapView) {
+    const query = props.location && props.location.query;
+    if (query && query.NEPoint && query.SWPoint) {
+      filters.NEPoint = query.NEPoint.split(",").map(Number);
+      filters.SWPoint = query.SWPoint.split(",").map(Number);
     }
+  }
 
-    if(props.splitByCategory) {
-        subscription = Meteor.subscribe("school.getClassTypesByCategory", filters);
-    } else {
-        // This is used to grab `ClassTypes` on the basis of `schoolId`
-        subscription = Meteor.subscribe(props.classTypeBySchool, props.filters);
-    }
+  if (props.splitByCategory) {
+    subscription = Meteor.subscribe("school.getClassTypesByCategory", filters);
+  } else {
+    // This is used to grab `ClassTypes` on the basis of `schoolId`
+    subscription = Meteor.subscribe(props.classTypeBySchool, props.filters);
+  }
 
-	   Meteor.subscribe("classInterest.getClassInterest");
+  Meteor.subscribe("classInterest.getClassInterest");
+  if (props.filters.schoolId) {
+    classTypeData = ClassType.find({
+      schoolId: props.filters.schoolId
+    }).fetch();
+  } else {
+    classTypeData = ClassType.find().fetch();
+  }
 
-  	classTypeData = ClassType.find().fetch();
-    classTypeIds = classTypeData.map(data => data._id);
-    // We will subscribe only those reviews with classtype ids
-    reviewsSubscription = Meteor.subscribe("review.getReviewsWithReviewForIds",classTypeIds);
+  classTypeIds = classTypeData.map(data => data._id);
+  // We will subscribe only those reviews with classtype ids
+  reviewsSubscription = Meteor.subscribe(
+    "review.getReviewsWithReviewForIds",
+    classTypeIds
+  );
 
-    schoolData = School.find().fetch();
-  	skillCategoryData = SkillCategory.find().fetch();
-  	classTimesData = ClassTimes.find().fetch();
-  	classInterestData = ClassInterest.find().fetch();
-  	sLocationData = SLocation.find().fetch();
+  schoolData = School.find().fetch();
+  skillCategoryData = SkillCategory.find().fetch();
+  classTimesData = ClassTimes.find().fetch();
+  classInterestData = ClassInterest.find().fetch();
+  sLocationData = SLocation.find().fetch();
 
-    /*Find SkillCategory,SkillSubject and SLocation to make this container reactive on these collection
+  /*Find SkillCategory,SkillSubject and SLocation to make this container reactive on these collection
     other wise skills are joined with collections using package
     perak:joins */
-    SkillSubject.find().fetch();
+  SkillSubject.find().fetch();
 
-    if(subscription.ready() && reviewsSubscription.ready()) {
-
-        reviewsData = Reviews.find().fetch()
-        // console.info("class type data...................................................",classTypeData);
-        isLoading = false;
-    }
-  	// console.log("classInterestData --->>",classInterestData)
-  	return {
-  		...props,
-  		classTypeData,
-  		schoolData,
-      reviewsData,
-  		skillCategoryData,
-  		classTimesData,
-  		classInterestData,
-      sLocationData,
-      isLoading,
-  	};
-
+  if (subscription.ready() && reviewsSubscription.ready()) {
+    reviewsData = Reviews.find().fetch();
+    // console.info("class type data...................................................",classTypeData);
+    isLoading = false;
+  }
+  // console.log("classInterestData --->>",classInterestData)
+  return {
+    ...props,
+    classTypeData,
+    schoolData,
+    reviewsData,
+    skillCategoryData,
+    classTimesData,
+    classInterestData,
+    sLocationData,
+    isLoading
+  };
 }, ClassTypeList);
