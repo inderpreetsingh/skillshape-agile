@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
-import ReactStars from 'react-stars';
-import PropTypes from 'prop-types';
-import ReactHtmlParser from 'react-html-parser';
+import React from "react";
+import styled from "styled-components";
+import ReactStars from "react-stars";
+import PropTypes from "prop-types";
+import ReactHtmlParser from "react-html-parser";
 
-import { cutString } from '/imports/util';
+import { cutString } from "/imports/util";
 
-import * as helpers from '../../jss/helpers.js';
+import * as helpers from "../../jss/helpers.js";
 
 const Wrapper = styled.div`
   display: flex;
@@ -15,8 +15,7 @@ const Wrapper = styled.div`
 `;
 
 const MainHeading = styled.div`
-  ${helpers.flexCenter}
-  flex-wrap : wrap;
+  ${helpers.flexCenter} flex-wrap : wrap;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
@@ -45,7 +44,6 @@ const Title = styled.h2`
   &:hover {
     text-decoration: underline;
   }
-
 `;
 
 const Heading = styled.h2`
@@ -91,15 +89,14 @@ const Postal = styled.p`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
-
-const addHttpProtocol = (website) => {
-  if(website && website.match('http')) {
+const addHttpProtocol = website => {
+  if (website && website.match("http")) {
     return website;
   }
-  return 'https://'+website;
-}
+  return "https://" + website;
+};
 
-const AboutSchool = (props) => (
+const AboutSchool = props => (
   <Wrapper>
     <SchoolWrapper>
       <MainHeading>
@@ -113,7 +110,9 @@ const AboutSchool = (props) => (
         {/*props.website && <Website href={addHttpProtocol(props.website)} target="_blank"> {cutString(props.website,60)} </Website>*/}
       </Address>
     </SchoolWrapper>
-    <Description>{props.description && ReactHtmlParser(props.description)}</Description>
+    <Description>
+      {props.description && ReactHtmlParser(props.description)}
+    </Description>
   </Wrapper>
 );
 
@@ -122,6 +121,6 @@ AboutSchool.propTypes = {
   address: PropTypes.string,
   website: PropTypes.string,
   description: PropTypes.string
-}
+};
 
 export default AboutSchool;
