@@ -106,10 +106,10 @@ export default createContainer(props => {
     // Meteor.subscribe("classType.getclassType", {schoolId});
   }
   let classTypeData;
-  let classTypeSubscription = Meteor.subscribe("classType.getclassType", {
+  Meteor.subscribe("classType.getclassType", {
     schoolId
   });
-  if (classTypeSubscription) {
+  if (subscription && subscription.ready()) {
     isLoading = false;
     schoolData = School.findOne({ _id: schoolId });
     locationData = SLocation.find().fetch();
