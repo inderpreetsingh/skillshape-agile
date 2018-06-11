@@ -90,10 +90,14 @@ class ClassTimeForm extends React.Component {
     this.setState({ [fieldName]: new Date(date) });
   };
 
-  saveClassTimes = (nextTab, event) => {
-    console.log("--------------------- ClassTimes from submit----------------");
+  saveClassTimes = (nextTab, addSeperateTimeJson, event) => {
     event.preventDefault();
-    // console.log("onSubmit state -->>",this.state);
+    console.log(
+      "nextTab, addSeperateTimeJson, event",
+      nextTab,
+      addSeperateTimeJson,
+      event
+    );
     const { schoolId, data, parentKey, parentData, toastr } = this.props;
     const { tabValue, locationId } = this.state;
 
@@ -128,35 +132,38 @@ class ClassTimeForm extends React.Component {
         methodName: "classTimes.editClassTimes",
         doc: payload,
         doc_id: data._id,
-        nextTab: nextTab
+        nextTab: nextTab,
+        value: addSeperateTimeJson
       });
     } else {
       this.onSubmit({
         methodName: "classTimes.addClassTimes",
         doc: payload,
-        nextTab: nextTab
+        nextTab: nextTab,
+        value: addSeperateTimeJson
       });
     }
   };
 
-  onSubmit = ({ methodName, doc, doc_id, nextTab }) => {
-    console.log("handleSubmit methodName-->>", methodName);
-    console.log("handleSubmit doc-->>", doc);
-    console.log("handleSubmit doc_id-->>", doc_id);
+  onSubmit = ({ methodName, doc, doc_id, nextTab, value }) => {
     this.setState({ isBusy: true });
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
       if (error) {
-        console.error("error", error);
       }
       if (result) {
-        this.props.onClose();
-        if (nextTab) {
+        if (value.addSeperateTime == false) {
+          this.props.onClose();
+        } else if (value.addSeperateTime == true) {
+          this.props.onClose(value.addSeperateTime);
+        } else {
+          this.props.onClose();
           this.props.moveToNextTab();
         }
       }
       this.setState({ isBusy: false, error });
     });
   };
+  //onsubmit1 for the handling again opening new classtime form
 
   render() {
     const { fullScreen, data, classes, locationData } = this.props;
@@ -229,6 +236,7 @@ class ClassTimeForm extends React.Component {
                         data.scheduleDetails.oneTime
                       }
                       roomData={this.state.roomData}
+                      saveClassTimes={this.saveClassTimes}
                     />
                   </div>
                 )}
@@ -291,7 +299,9 @@ class ClassTimeForm extends React.Component {
               form={formId}
               name="save-class-times"
               color="primary"
-              onClick={this.saveClassTimes.bind(this, null, event)}
+              onClick={this.saveClassTimes.bind(this, event, {
+                addSeperateTime: false
+              })}
             >
               {data ? "Save" : "Submit"}
             </Button>
