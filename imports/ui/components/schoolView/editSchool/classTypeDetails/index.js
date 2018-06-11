@@ -75,10 +75,11 @@ class ClassTypeDetails extends React.Component {
 export default createContainer(props => {
   const { schoolId } = props;
   let classTimesData = [];
-  let classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
+  let classTypeData = [];
   let subscription = Meteor.subscribe("classType.getclassType", { schoolId });
 
   if (subscription.ready()) {
+    classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
     let classTypeIds = classTypeData && classTypeData.map(data => data._id);
 
     Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {

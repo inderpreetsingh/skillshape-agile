@@ -171,7 +171,7 @@ class ClassTypeForm extends React.Component {
     console.log("handleSubmit methodName-->>", methodName);
     console.log("handleSubmit doc-->>", doc);
     console.log("handleSubmit doc_id-->>", doc_id);
-    this.props.enableParentPanelToDefaultOpen();
+    //this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
       if (error) {
         console.error("error", error);
