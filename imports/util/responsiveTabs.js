@@ -1,8 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-
+import React from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "material-ui/styles";
+import Button from "material-ui/Button";
 
 const styles = theme => {
   // console.log("theme", theme);
@@ -10,10 +9,10 @@ const styles = theme => {
     btn: {
       margin: 5,
       width: 165,
-      display: 'inline-block',
-      borderRadius: '4px',
-      position: 'relative',
-      background:'#c0c1c0'
+      display: "inline-block",
+      borderRadius: "4px",
+      position: "relative",
+      background: "#c0c1c0"
     },
     btnActive: {
       margin: 5,
@@ -21,52 +20,74 @@ const styles = theme => {
       color: "#fff"
     },
     muiLabel: {
-      color: '#fff',
-      fontSize: '14px',
-      fontWeight: 'bold',
+      color: "#fff",
+      fontSize: "14px",
+      fontWeight: "bold"
     }
-  }
-}
-
-
+  };
+};
 
 class ResponsiveTabs extends React.Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
     let { defaultValue } = this.props;
+
     this.state = {
-      tabValue: defaultValue || 0
+      tabValue: this.props.tabValue
     };
   }
   componentWillReceiveProps(nextProps) {
     // We should set state for class details tab so that it opens automatically.
-    if(this.props.tabValue !== nextProps.tabValue) {
-      this.setState({tabValue:nextProps.tabValue})
+    if (this.props.tabValue !== nextProps.tabValue) {
+      this.setState({ tabValue: nextProps.tabValue });
     }
   }
   componentDidMount() {
-    let { defaultValue } = this.props;
-    this.props.onTabChange(defaultValue || 0);
+    if (this.props.tabValue == undefined) {
+      this.props.onTabChange(0);
+    } else {
+      this.props.onTabChange(this.props.tabValue);
+    }
   }
   render() {
     const { classes, defaultValue } = this.props;
     return (
       <div className="responsive-tab">
-          <div style={{display: "inline-flex",flexWrap: 'wrap',justifyContent: 'center', width: "100%", marginBottom: 25}}>
-              {this.props.tabs.map((tab,index)=> {
-                return <Button classes={{label: classes.muiLabel}} className={index == this.state.tabValue ? classes.btnActive : classes.btn} raised color={index == this.state.tabValue && this.props.color } onClick={()=> {this.props.onTabChange(index);this.setState({tabValue: index})}} >
-                   {tab}
-                </Button>
-              })}
-          </div>
+        <div
+          style={{
+            display: "inline-flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            width: "100%",
+            marginBottom: 25
+          }}
+        >
+          {this.props.tabs.map((tab, index) => {
+            return (
+              <Button
+                classes={{ label: classes.muiLabel }}
+                className={
+                  index == this.state.tabValue ? classes.btnActive : classes.btn
+                }
+                raised
+                color={index == this.state.tabValue && this.props.color}
+                onClick={() => {
+                  this.props.onTabChange(index);
+                  this.setState({ tabValue: index });
+                }}
+              >
+                {tab}
+              </Button>
+            );
+          })}
+        </div>
       </div>
     );
   }
 }
 
 ResponsiveTabs.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(ResponsiveTabs);
