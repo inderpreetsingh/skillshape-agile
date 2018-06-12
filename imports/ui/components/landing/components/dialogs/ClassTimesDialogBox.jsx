@@ -32,6 +32,8 @@ import Dialog, {
 
 import ClassInterest from "/imports/api/classInterest/fields";
 import Events from "/imports/util/events";
+import { Element } from "react-scroll";
+import { scroller } from "react-scroll";
 
 const styles = {
   dialog: {
@@ -154,6 +156,10 @@ const MyClassInfo = props => (
 );
 
 class ClassTimesDialogBox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.scrollTo("myScrollToElement");
+  }
   checkForAddToCalender = data => {
     const userId = Meteor.userId();
     if (isEmpty(data) || isEmpty(userId)) {
@@ -164,6 +170,14 @@ class ClassTimesDialogBox extends React.Component {
       );
     }
   };
+
+  scrollTo(name) {
+    scroller.scrollTo(name || "content-container", {
+      duration: 800,
+      delay: 0,
+      smooth: "easeInOutQuart"
+    });
+  }
 
   getDatesBasedOnScheduleType = data => {
     let startDate = "";
@@ -267,50 +281,50 @@ class ClassTimesDialogBox extends React.Component {
     console.log("ClassTimesDialogBox props--->>", this.props);
     return (
       <Dialog
-        fullScreen={true}
-        PaperProps={{ paperFullScreen: true }}
         open={this.props.open}
         onClose={this.props.onModalClose}
         aria-labelledby="modal"
         classes={{ root: classes.dialog, paper: classes.dialogPaper }}
       >
         <MuiThemeProvider theme={muiTheme}>
-          <DialogTitle classes={{ root: classes.dialogTitle }}>
-            <DialogTitleWrapper name="myScrollToElement">
-              Class Times
-              <IconButton color="primary" onClick={this.props.onModalClose}>
-                <ClearIcon />
-              </IconButton>
-            </DialogTitleWrapper>
-          </DialogTitle>
-          <DialogContent classes={{ root: classes.dialogContent }}>
-            {isEmpty(classTimesData) ? (
-              <ClassContainer>
-                <Typography caption="p">
-                  No class times have been given by the school. Please click
-                  this button to request the school complete their listing
-                </Typography>
-                <br />
+          <Element name="myScrollToElement">
+            <DialogTitle classes={{ root: classes.dialogTitle }}>
+              <DialogTitleWrapper name="myScrollToElement">
+                Class Times
+                <IconButton color="primary" onClick={this.props.onModalClose}>
+                  <ClearIcon />
+                </IconButton>
+              </DialogTitleWrapper>
+            </DialogTitle>
+            <DialogContent classes={{ root: classes.dialogContent }}>
+              {isEmpty(classTimesData) ? (
+                <ClassContainer>
+                  <Typography caption="p">
+                    No class times have been given by the school. Please click
+                    this button to request the school complete their listing
+                  </Typography>
+                  <br />
 
-                <RequestsClassTimes>
-                  <PrimaryButton
-                    icon
-                    onClick={this.props.handleClassTimeRequest}
-                    iconName="perm_contact_calendar"
-                    label="Request class times"
-                  />
-                </RequestsClassTimes>
-              </ClassContainer>
-            ) : (
-              <ClassTimesBoxes
-                classTimesData={classTimesData}
-                classInterestData={classInterestData}
-              />
-            )}
-            {this.props.errorText && (
-              <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
-            )}
-          </DialogContent>
+                  <RequestsClassTimes>
+                    <PrimaryButton
+                      icon
+                      onClick={this.props.handleClassTimeRequest}
+                      iconName="perm_contact_calendar"
+                      label="Request class times"
+                    />
+                  </RequestsClassTimes>
+                </ClassContainer>
+              ) : (
+                <ClassTimesBoxes
+                  classTimesData={classTimesData}
+                  classInterestData={classInterestData}
+                />
+              )}
+              {this.props.errorText && (
+                <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
+              )}
+            </DialogContent>
+          </Element>
         </MuiThemeProvider>
       </Dialog>
     );
