@@ -78,13 +78,13 @@ li {
 .bg-stretch {
   background-size: cover;
   background-position: 50% 50%;
-  background-color:#0288d1;
+  background-color: #0288d1;
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  filter: opacity(.2);
+  filter: opacity(0.2);
 }
 
 .table-view {
@@ -93,7 +93,7 @@ li {
   border-collapse: collapse;
   border-spacing: 0px;
   table-layout: fixed;
-  font-family: 'circular', sans-serif !important;
+  font-family: "circular", sans-serif !important;
   width: 90% !important;
   margin: auto;
 }
@@ -116,4 +116,8 @@ thead {
 
 .table-body tr:nth-child(even) {
   background-color: #fff;
+}
+
+.block {
+  display: block !important;
 }

@@ -67,6 +67,10 @@ class ClassTypeDetails extends React.Component {
     this.props.moveToNextTab(3);
   };
 
+  moveToPreviousTab = () => {
+    this.props.moveToNextTab(1);
+  };
+
   render() {
     return ClassTypeDetailsRender.call(this, this.props, this.state);
   }
@@ -76,6 +80,7 @@ export default createContainer(props => {
   const { schoolId } = props;
   let classTimesData = [];
   let classTypeData = [];
+
   let subscription = Meteor.subscribe("classType.getclassType", { schoolId });
 
   if (subscription.ready()) {
