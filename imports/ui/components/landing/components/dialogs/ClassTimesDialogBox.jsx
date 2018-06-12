@@ -267,7 +267,6 @@ class ClassTimesDialogBox extends React.Component {
     console.log("ClassTimesDialogBox props--->>", this.props);
     return (
       <Dialog
-        fullScreen={true}
         open={this.props.open}
         onClose={this.props.onModalClose}
         aria-labelledby="modal"
@@ -329,4 +328,4 @@ ClassTimesDialogBox.propTypes = {
   errorText: PropTypes.string
 };
 
-export default withMobileDialog()(withStyles(styles)(ClassTimesDialogBox));
+export default withStyles(styles)(ClassTimesDialogBox);
