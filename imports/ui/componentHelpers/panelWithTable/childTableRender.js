@@ -103,112 +103,111 @@ export default function(props) {
             {_.isArray(childTableData) &&
               childTableData.map((tableData, index) => {
                 return (
-                  <ExpansionPanelDetails
-                    key={index}
-                    className={classes.details}
+                  <div
+                    className={classes.classtimeFormOuter}
+                    style={{ margin: "9px" }}
                   >
-                    <div className={classes.classtimeFormOuter}>
-                      <div className={classes.classtypeForm}>
-                        <Grid
-                          container
-                          className={classes.classtypeInputContainer}
-                        >
-                          <ExpansionPanel>
-                            <ExpansionPanelSummary
-                              classes={{ content: "block" }}
-                              expandIcon={<ExpandMoreIcon />}
-                            >
-                              <div style={{ float: "right" }}>
-                                <Button
-                                  onClick={() =>
-                                    this.setState({
-                                      showForm: true,
-                                      formData: tableData
-                                    })
-                                  }
-                                  color="accent"
-                                  raised
-                                  dense
-                                >
-                                  <Edit style={{ marginRight: 2 }} />
-                                  {childTable.actions.edit.title}
-                                </Button>
-                              </div>
-                              {this.props.parentData.name}
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails style={{ flexWrap: "wrap" }}>
-                              {childTable &&
-                                childTable.tableFields.map((field, index) => {
-                                  // console.log("childTable Field Name -->>",field);
-                                  return (
-                                    <Fragment key={index}>
-                                      <Grid
-                                        item
-                                        xs={12}
-                                        sm={field.labelSm ? field.labelSm : 3}
-                                        md={field.lableMd ? field.lableMd : 3}
-                                      >
-                                        <div> {field.label} </div>
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        xs={12}
-                                        sm={field.valueSm ? field.valueSm : 9}
-                                        md={field.valueMd ? field.valueMd : 9}
-                                      >
-                                        {field.nestedObjectOfArray ? (
-                                          tableData[field.key] &&
-                                          Object.keys(tableData[field.key]).map(
-                                            (itemkey, index) => {
-                                              const itemData =
-                                                tableData[field.key][itemkey];
-                                              let fields = [
-                                                {
-                                                  label: "Start Time",
-                                                  key: "startTime"
-                                                },
-                                                {
-                                                  label: "Duration",
-                                                  key: "duration"
-                                                },
-                                                { label: "Room", key: "roomId" }
-                                              ];
-                                              if (itemkey === "oneTime") {
-                                                fields.unshift({
-                                                  label: "Date",
-                                                  key: "startDate"
-                                                });
-                                              } else {
-                                                fields.unshift({
-                                                  label: "Day",
-                                                  value: itemkey
-                                                });
-                                              }
-                                              return this.renderScheduleTypeData(
-                                                classes,
-                                                parentData,
-                                                itemData,
-                                                fields
-                                              );
+                    <div className={classes.classtypeForm}>
+                      <Grid
+                        container
+                        className={classes.classtypeInputContainer}
+                      >
+                        <ExpansionPanel>
+                          <ExpansionPanelSummary
+                            classes={{ content: "block" }}
+                            expandIcon={<ExpandMoreIcon />}
+                          >
+                            <div style={{ float: "right" }}>
+                              <Button
+                                onClick={() =>
+                                  this.setState({
+                                    showForm: true,
+                                    formData: tableData
+                                  })
+                                }
+                                color="accent"
+                                raised
+                                dense
+                              >
+                                <Edit style={{ marginRight: 2 }} />
+                                {childTable.actions.edit.title}
+                              </Button>
+                            </div>
+                            {this.props.parentData.name}
+                          </ExpansionPanelSummary>
+                          <ExpansionPanelDetails style={{ flexWrap: "wrap" }}>
+                            {childTable &&
+                              childTable.tableFields.map((field, index) => {
+                                // console.log("childTable Field Name -->>",field);
+                                return (
+                                  <Fragment key={index}>
+                                    <Grid
+                                      item
+                                      xs={12}
+                                      sm={field.labelSm ? field.labelSm : 3}
+                                      md={field.lableMd ? field.lableMd : 3}
+                                    >
+                                      <div> {field.label} </div>
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      xs={12}
+                                      sm={field.valueSm ? field.valueSm : 9}
+                                      md={field.valueMd ? field.valueMd : 9}
+                                    >
+                                      {field.nestedObjectOfArray ? (
+                                        tableData[field.key] &&
+                                        Object.keys(tableData[field.key]).map(
+                                          (itemkey, index) => {
+                                            const itemData =
+                                              tableData[field.key][itemkey];
+                                            let fields = [
+                                              {
+                                                label: "Start Time",
+                                                key: "startTime"
+                                              },
+                                              {
+                                                label: "Duration",
+                                                key: "duration"
+                                              },
+                                              { label: "Room", key: "roomId" }
+                                            ];
+                                            if (itemkey === "oneTime") {
+                                              fields.unshift({
+                                                label: "Date",
+                                                key: "startDate"
+                                              });
+                                            } else {
+                                              fields.unshift({
+                                                label: "Day",
+                                                value: itemkey
+                                              });
                                             }
-                                          )
-                                        ) : (
-                                          <div
-                                            className={classes.inputDisableBox}
-                                          >
-                                            <span>{tableData[field.key]}</span>
-                                          </div>
-                                        )}
-                                      </Grid>
-                                    </Fragment>
-                                  );
-                                })}
-                            </ExpansionPanelDetails>
-                          </ExpansionPanel>
-                        </Grid>
-                      </div>
+                                            return this.renderScheduleTypeData(
+                                              classes,
+                                              parentData,
+                                              itemData,
+                                              fields
+                                            );
+                                          }
+                                        )
+                                      ) : (
+                                        <div
+                                          className={classes.inputDisableBox}
+                                        >
+                                          <span>{tableData[field.key]}</span>
+                                        </div>
+                                      )}
+                                    </Grid>
+                                  </Fragment>
+                                );
+                              })}
+                          </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                        <Divider />
+                      </Grid>
                     </div>
-                  </ExpansionPanelDetails>
+                  </div>
                 );
               })}
           </ExpansionPanel>
