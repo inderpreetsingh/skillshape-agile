@@ -228,49 +228,49 @@ export class OneTimeRow extends React.Component {
           );
         })}
         <div>
-          <table>
-            <tr>
-              <td>
-                <Button
-                  onClick={this.addNewRow}
-                  style={{ width: 162 }}
-                  raised
-                  color="secondary"
-                >
-                  Add Linked Class Time
-                </Button>
-              </td>
-              <td>
-                <Button
-                  onClick={this.props.saveClassTimes.bind(this, event, {
-                    addSeperateTime: true
-                  })}
-                  style={{ width: 162, marginLeft: 165 }}
-                  raised
-                  color="secondary"
-                >
-                  Add Separate Class Time
-                </Button>
-              </td>
-            </tr>
-            <tr>
-              <td style={{ width: 162 }}>
-                <Typography type="caption" style={{ width: 162 }}>
-                  Use this if students are expected to attend all class times in
-                  this group.
-                </Typography>
-              </td>
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between"
+              }}
+            >
+              <Typography
+                type="caption"
+                style={{ maxWidth: "188px", padding: "8px" }}
+              >
+                Use this if students are expected to attend all class times in
+                this group.
+              </Typography>
 
-              <td style={{ width: 162 }}>
-                <Typography
-                  type="caption"
-                  style={{ width: 162, marginLeft: 165 }}
-                >
-                  If students can come to any class time available.
-                </Typography>
-              </td>
-            </tr>
-          </table>
+              <Typography
+                type="caption"
+                style={{ maxWidth: "188px", padding: "8px" }}
+              >
+                Use this if students can come to any class time available.
+              </Typography>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between"
+              }}
+            >
+              <Button onClick={this.addNewRow} raised color="secondary">
+                Add Linked Class Time
+              </Button>
+
+              <Button
+                onClick={this.props.saveClassTimes.bind(this, event, {
+                  addSeperateTime: true
+                })}
+                raised
+                color="secondary"
+              >
+                Add Separate Class Time
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     );
