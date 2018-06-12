@@ -62,10 +62,7 @@ export default function(props) {
               moveToNextTab={this.props.moveToNextTab}
             />
           )}
-          {console.log(
-            "this.props in childtable render",
-            this.props.childTable.title
-          )}
+
           <ExpansionPanel>
             <ExpansionPanelSummary
               className={classes.classtimeHeader}
@@ -121,25 +118,23 @@ export default function(props) {
                               classes={{ content: "block" }}
                               expandIcon={<ExpandMoreIcon />}
                             >
-                              <Typography className={classes.heading}>
-                                <div style={{ float: "right", margin: 10 }}>
-                                  <Button
-                                    onClick={() =>
-                                      this.setState({
-                                        showForm: true,
-                                        formData: tableData
-                                      })
-                                    }
-                                    color="accent"
-                                    raised
-                                    dense
-                                  >
-                                    <Edit style={{ marginRight: 2 }} />
-                                    {childTable.actions.edit.title}
-                                  </Button>
-                                </div>{" "}
-                                {this.props.parentData.name}
-                              </Typography>
+                              <div style={{ float: "right" }}>
+                                <Button
+                                  onClick={() =>
+                                    this.setState({
+                                      showForm: true,
+                                      formData: tableData
+                                    })
+                                  }
+                                  color="accent"
+                                  raised
+                                  dense
+                                >
+                                  <Edit style={{ marginRight: 2 }} />
+                                  {childTable.actions.edit.title}
+                                </Button>
+                              </div>
+                              {this.props.parentData.name}
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails style={{ flexWrap: "wrap" }}>
                               {childTable &&
