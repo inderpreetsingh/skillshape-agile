@@ -47,7 +47,8 @@ class ClassTypeCard extends Component {
       dialogOpen: state,
       classTimesDialogBoxError: null
     });
-    this.scrollTo("myScrollToElement");
+
+    // this.scrollTo("myScrollToElement");
   };
   scrollTo(name) {
     console.log("scrollTo");
