@@ -267,6 +267,8 @@ class ClassTimesDialogBox extends React.Component {
     console.log("ClassTimesDialogBox props--->>", this.props);
     return (
       <Dialog
+        fullScreen={true}
+        PaperProps={{ paperFullScreen: true }}
         open={this.props.open}
         onClose={this.props.onModalClose}
         aria-labelledby="modal"
@@ -274,7 +276,7 @@ class ClassTimesDialogBox extends React.Component {
       >
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{ root: classes.dialogTitle }}>
-            <DialogTitleWrapper>
+            <DialogTitleWrapper name="myScrollToElement">
               Class Times
               <IconButton color="primary" onClick={this.props.onModalClose}>
                 <ClearIcon />
@@ -328,4 +330,4 @@ ClassTimesDialogBox.propTypes = {
   errorText: PropTypes.string
 };
 
-export default withStyles(styles)(ClassTimesDialogBox);
+export default withMobileDialog()(withStyles(styles)(ClassTimesDialogBox));
