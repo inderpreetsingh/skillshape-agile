@@ -70,12 +70,33 @@ class ManageMyCalendar extends React.Component {
         classTimesIdsForCI: [],
         manageClassTimeIds: [],
         schoolClassTimeId: []
+      },
+      copyFilter: {
+        classTimesIds: [],
+        classTimesIdsForCI: [],
+        manageClassTimeIds: [],
+        schoolClassTimeId: []
       }
     };
   }
 
   handleClassOnChange = (event, type) => {
-    this.setState({ type });
+    let oldFilter = { ...this.state.copyFilter };
+    if (type == "attending") {
+      oldFilter.manageClassTimeIds = [];
+      oldFilter.schoolClassTimeId = [];
+    } else if (type == "managing") {
+      oldFilter.classTimesIdsForCI = [];
+      oldFilter.schoolClassTimeId = [];
+    } else if (type == "school") {
+      oldFilter.manageClassTimeIds = [];
+      oldFilter.classTimesIdsForCI = [];
+    } else if (type == "both") {
+      oldFilter.manageClassTimeIds = this.state.copyFilter.manageClassTimeIds;
+      oldFilter.schoolClassTimeId = this.state.copyFilter.schoolClassTimeId;
+      oldFilter.classTimesIdsForCI = this.state.copyFilter.classTimesIdsForCI;
+    }
+    this.setState({ filter: oldFilter, type });
   };
   componentDidMount() {
     this.intitializeClassTimeFilterForCalander(this.props);
@@ -158,6 +179,12 @@ class ManageMyCalendar extends React.Component {
         schoolClassTypes: schoolClassTypesData,
         classTypeForInterests,
         filter: {
+          classTimesIds: _.uniq(classTimesIds),
+          classTimesIdsForCI: _.uniq(classTimesIdsForCI),
+          manageClassTimeIds: _.uniq(manageClassTimeIds),
+          schoolClassTimeId: _.uniq(schoolClassTimeId)
+        },
+        copyFilter: {
           classTimesIds: _.uniq(classTimesIds),
           classTimesIdsForCI: _.uniq(classTimesIdsForCI),
           manageClassTimeIds: _.uniq(manageClassTimeIds),
@@ -711,6 +738,7 @@ class ManageMyCalendar extends React.Component {
                     </div>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails style={expansionPanelStyle}>
+                    {}
                     <Fragment>
                       <div style={inlineDivs}>
                         <div style={styles.formControl}>
@@ -733,6 +761,7 @@ class ManageMyCalendar extends React.Component {
                             /> */}
                           </div>
                         </div>
+
                         {managedClassTypes.map((classType, index) => {
                           let classTime = ClassTimes.findOne({
                             classTypeId: classType._id
