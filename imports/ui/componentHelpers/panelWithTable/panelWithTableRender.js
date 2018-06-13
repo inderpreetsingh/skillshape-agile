@@ -245,7 +245,13 @@ export default function() {
                                       sm={field.valueSm ? field.valueSm : 12}
                                       md={field.valueMd ? field.valueMd : 9}
                                     >
-                                      <div className={classes.inputDisableBox}>
+                                      <div
+                                        style={{
+                                          minHeight: 31,
+                                          marginTop: 5
+                                        }}
+                                        className={classes.inputDisableBox}
+                                      >
                                         {field.chipInput ? (
                                           <div
                                             style={{
