@@ -148,7 +148,10 @@ export default function(props) {
                                         sm={field.labelSm ? field.labelSm : 3}
                                         md={field.lableMd ? field.lableMd : 3}
                                       >
-                                        <div> {field.label} </div>
+                                        <div style={{ height: "20px" }}>
+                                          {" "}
+                                          {field.label}{" "}
+                                        </div>
                                       </Grid>
                                       <Grid
                                         item
@@ -194,6 +197,10 @@ export default function(props) {
                                           )
                                         ) : (
                                           <div
+                                            style={{
+                                              minHeight: 31,
+                                              marginTop: 5
+                                            }}
                                             className={classes.inputDisableBox}
                                           >
                                             <span>{tableData[field.key]}</span>
@@ -342,7 +349,13 @@ export default function(props) {
                                         }
                                       )
                                     ) : (
-                                      <div className={classes.inputDisableBox}>
+                                      <div
+                                        style={{
+                                          minHeight: 31,
+                                          marginTop: 5
+                                        }}
+                                        className={classes.inputDisableBox}
+                                      >
                                         <span>{tableData[field.key]}</span>
                                       </div>
                                     )}
