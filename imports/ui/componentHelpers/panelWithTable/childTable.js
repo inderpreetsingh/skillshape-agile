@@ -141,7 +141,11 @@ class ChildTable extends React.Component {
     if (_.isArray(itemData)) {
       return itemData.map((x, index) => {
         return (
-          <div key={index} className={classes.childTableSubData}>
+          <div
+            style={{ marginTop: 5 }}
+            key={index}
+            className={classes.childTableSubData}
+          >
             <Grid className={classes.classtypeInputContainer} container>
               <Grid item xs={12} sm={3} md={2}>
                 <div>{field[0].label}</div>
@@ -174,7 +178,13 @@ class ChildTable extends React.Component {
                 <div>{field[2].label}</div>
               </Grid>
               <Grid item xs={12} sm={9} md={4}>
-                <div className={classes.inputDisableBox}>
+                <div
+                  style={{
+                    minHeight: 31,
+                    marginTop: 5
+                  }}
+                  className={classes.inputDisableBox}
+                >
                   <span>{x[field[2]["key"]]}</span>
                 </div>
               </Grid>
@@ -182,7 +192,13 @@ class ChildTable extends React.Component {
                 <div>{field[3].label}</div>
               </Grid>
               <Grid item xs={12} sm={9} md={4}>
-                <div className={classes.inputDisableBox}>
+                <div
+                  style={{
+                    minHeight: 31,
+                    marginTop: 5
+                  }}
+                  className={classes.inputDisableBox}
+                >
                   <span>
                     {x[field[3]["key"]] &&
                       this.getRoomName(x[field[3]["key"]], parentData)}
