@@ -167,10 +167,10 @@ class ClassTimesDialogBox extends React.Component {
     }
     setTimeout(() => {
       console.log("myScrollToElement", this.myDiv);
-      let divElement = document.getElementById("UserMainPanel");
+      let divElement = $("#myScrollToElement").offset();
       console.log("popUpElement", divElement);
       // let height = divElement.offsetHeight
-      let offset = divElement.offsetHeight;
+      let offset = divElement.top;
       console.log("offset", offset);
       // send docHeight onload
       function sendTopOfPopup(e) {
