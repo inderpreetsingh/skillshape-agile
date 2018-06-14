@@ -279,54 +279,64 @@ class ClassTimesDialogBox extends React.Component {
     // const classTimesData = this.normalizeScheduledetails(this.props.classesData);
     const { classInterestData, classTimesData, classes } = this.props;
     console.log("ClassTimesDialogBox props--->>", this.props);
+    {
+      console.log(this.props.x, this.props.y);
+    }
     return (
-      <Dialog
-        open={this.props.open}
-        onClose={this.props.onModalClose}
-        aria-labelledby="modal"
-        classes={{ root: classes.dialog, paper: classes.dialogPaper }}
-      >
-        <MuiThemeProvider theme={muiTheme}>
-          <Element name="myScrollToElement">
-            <DialogTitle classes={{ root: classes.dialogTitle }}>
-              <DialogTitleWrapper name="myScrollToElement">
-                Class Times
-                <IconButton color="primary" onClick={this.props.onModalClose}>
-                  <ClearIcon />
-                </IconButton>
-              </DialogTitleWrapper>
-            </DialogTitle>
-            <DialogContent classes={{ root: classes.dialogContent }}>
-              {isEmpty(classTimesData) ? (
-                <ClassContainer>
-                  <Typography caption="p">
-                    No class times have been given by the school. Please click
-                    this button to request the school complete their listing
-                  </Typography>
-                  <br />
+      <div id="dialog">
+        <Dialog
+          open={this.props.open}
+          onClose={this.props.onModalClose}
+          aria-labelledby="modal"
+          classes={{ root: classes.dialog, paper: classes.dialogPaper }}
+          style={{
+            top: this.props.y,
+            margin: "auto 3vw",
+            display: "block"
+          }}
+        >
+          <MuiThemeProvider theme={muiTheme}>
+            <Element name="myScrollToElement">
+              <DialogTitle classes={{ root: classes.dialogTitle }}>
+                <DialogTitleWrapper name="myScrollToElement">
+                  Class Times
+                  <IconButton color="primary" onClick={this.props.onModalClose}>
+                    <ClearIcon />
+                  </IconButton>
+                </DialogTitleWrapper>
+              </DialogTitle>
+              <DialogContent classes={{ root: classes.dialogContent }}>
+                {isEmpty(classTimesData) ? (
+                  <ClassContainer>
+                    <Typography caption="p">
+                      No class times have been given by the school. Please click
+                      this button to request the school complete their listing
+                    </Typography>
+                    <br />
 
-                  <RequestsClassTimes>
-                    <PrimaryButton
-                      icon
-                      onClick={this.props.handleClassTimeRequest}
-                      iconName="perm_contact_calendar"
-                      label="Request class times"
-                    />
-                  </RequestsClassTimes>
-                </ClassContainer>
-              ) : (
-                <ClassTimesBoxes
-                  classTimesData={classTimesData}
-                  classInterestData={classInterestData}
-                />
-              )}
-              {this.props.errorText && (
-                <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
-              )}
-            </DialogContent>
-          </Element>
-        </MuiThemeProvider>
-      </Dialog>
+                    <RequestsClassTimes>
+                      <PrimaryButton
+                        icon
+                        onClick={this.props.handleClassTimeRequest}
+                        iconName="perm_contact_calendar"
+                        label="Request class times"
+                      />
+                    </RequestsClassTimes>
+                  </ClassContainer>
+                ) : (
+                  <ClassTimesBoxes
+                    classTimesData={classTimesData}
+                    classInterestData={classInterestData}
+                  />
+                )}
+                {this.props.errorText && (
+                  <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
+                )}
+              </DialogContent>
+            </Element>
+          </MuiThemeProvider>
+        </Dialog>
+      </div>
     );
   }
 }
