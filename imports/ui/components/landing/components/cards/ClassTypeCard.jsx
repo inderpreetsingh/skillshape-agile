@@ -38,14 +38,19 @@ class ClassTypeCard extends Component {
   state = {
     dialogOpen: false,
     manageRequestsDialog: false,
-    isLoading: false
+    isLoading: false,
+    x: null,
+    y: null
   };
   handleDialogState = state => e => {
     e.stopPropagation();
+    console.log("e in handle dialogue type card", e.clientX, e.clientY, state);
     // console.log(e,e.stopPropagation(),"clickced");
     this.setState({
       dialogOpen: state,
-      classTimesDialogBoxError: null
+      classTimesDialogBoxError: null,
+      x: e.pageX - 500,
+      y: e.clientY - 200
     });
 
     // this.scrollTo("myScrollToElement");
@@ -163,6 +168,8 @@ class ClassTypeCard extends Component {
             onModalClose={this.handleDialogState(false)}
             handleClassTimeRequest={this.handleClassTimesRequest}
             errorText={this.state.classTimesDialogBoxError}
+            x={this.state.x}
+            y={this.state.y}
           />
         )}
         {this.state.manageRequestsDialog && (
