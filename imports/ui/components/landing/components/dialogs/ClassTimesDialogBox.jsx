@@ -167,17 +167,14 @@ class ClassTimesDialogBox extends React.Component {
     }
     setTimeout(() => {
       console.log("myScrollToElement", this.myDiv);
-      let divElement = document.getElementById("UserMainPanel");
-      console.log("popUpElement", divElement);
-      // let height = divElement.offsetHeight
-      let offset = divElement.offsetHeight;
+      let divElement = $("#myScrollToElement").offset();
+      let offset = divElement.top;
       console.log("offset", offset);
-      // send docHeight onload
+      // send offset of modal to iframe script
       function sendTopOfPopup(e) {
-        console.log("parent----->", parent);
         parent.postMessage(JSON.stringify({ popUpOpened: true, offset }), "*");
       }
-      // assign onload handler
+      // Call sendTopOfPopup()
       sendTopOfPopup();
     }, 0);
   }
