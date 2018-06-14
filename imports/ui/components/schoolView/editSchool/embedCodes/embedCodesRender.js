@@ -24,10 +24,10 @@ export default function() {
             Meteor.absoluteUrl(
               `embed/schools/${schoolData.slug}/${setting.codeName}`
             ) + "?height=800";
-          let script = `<script type="text/javascript">function calculateTopOfModal(offset) { console.log("offset from parent",offset);var windowOffset = window.pageYOffset; console.log("windowOffset",windowOffset);window.scrollTo(0,offset/2);};function setIframeHeightCO(id,ht){var ifrm=document.getElementById(id);ifrm.style.visibility='hidden';ifrm.style.height=ht+80+"px";ifrm.style.visibility='visible'};function handleDocHeightMsg(e){console.log("<<<<<<<<<<<<<---------------------------->>>>>>>>>>>>>",e);if( "${Meteor.absoluteUrl()}"==(e.origin+"/")){var data=JSON.parse(e.data);if(data.popUpOpened) {calculateTopOfModal(data.offset);}if(data.docHeight){setIframeHeightCO(data.iframeId,data.docHeight)}}};if(window.addEventListener){window.addEventListener('message',handleDocHeightMsg,!1)}else if(window.attachEvent){window.attachEvent('onmessage',handleDocHeightMsg)}</script>`;
+          let script = `<script type="text/javascript">function calculateTopOfModal(offset) { console.log("offset from parent",offset);var windowOffset = window.pageYOffset; console.log("windowOffset",windowOffset);window.scrollTo(0,offset/2);};function setIframeHeightCO(id,ht){var ifrm=document.getElementById(id);ifrm.style.visibility='hidden';ifrm.style.height=ht+4+"px";ifrm.style.visibility='visible'};function handleDocHeightMsg(e){console.log("<<<<<<<<<<<<<---------------------------->>>>>>>>>>>>>",e);if( "${Meteor.absoluteUrl()}"==(e.origin+"/")){var data=JSON.parse(e.data);if(data.popUpOpened) {calculateTopOfModal(data.offset);}if(data.docHeight){setIframeHeightCO(data.iframeId,data.docHeight)}}};if(window.addEventListener){window.addEventListener('message',handleDocHeightMsg,!1)}else if(window.attachEvent){window.attachEvent('onmessage',handleDocHeightMsg)}</script>`;
           let value = `${script}<iframe id=${
             setting.id
-          } src=${code} seamless="seamless" name="skillshape" frameborder="0" scrolling="no" style="width: 100%;min-height:400px;"></iframe>`;
+          } src=${code} seamless="seamless" name="skillshape" frameborder="0" scrolling="auto" style="width: 100%;min-height:400px;"></iframe>`;
           return (
             <Grid container>
               <Grid item xs={12}>
