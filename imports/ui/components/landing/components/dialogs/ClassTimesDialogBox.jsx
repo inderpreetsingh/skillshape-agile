@@ -160,6 +160,27 @@ class ClassTimesDialogBox extends React.Component {
     super(props);
     this.scrollTo("myScrollToElement");
   }
+  componentDidMount() {
+    console.log("this--------->", this);
+    if (this.myDiv) {
+      this.myDiv.style.backgroundColor = "red";
+    }
+    setTimeout(() => {
+      console.log("myScrollToElement", this.myDiv);
+      let divElement = document.getElementById("UserMainPanel");
+      console.log("popUpElement", divElement);
+      // let height = divElement.offsetHeight
+      let offset = divElement.offsetHeight;
+      console.log("offset", offset);
+      // send docHeight onload
+      function sendTopOfPopup(e) {
+        console.log("parent----->", parent);
+        parent.postMessage(JSON.stringify({ popUpOpened: true, offset }), "*");
+      }
+      // assign onload handler
+      sendTopOfPopup();
+    }, 0);
+  }
   checkForAddToCalender = data => {
     const userId = Meteor.userId();
     if (isEmpty(data) || isEmpty(userId)) {
@@ -287,9 +308,9 @@ class ClassTimesDialogBox extends React.Component {
         classes={{ root: classes.dialog, paper: classes.dialogPaper }}
       >
         <MuiThemeProvider theme={muiTheme}>
-          <Element name="myScrollToElement">
+          <div id="myScrollToElement" ref={c => (this.myDiv = c)}>
             <DialogTitle classes={{ root: classes.dialogTitle }}>
-              <DialogTitleWrapper name="myScrollToElement">
+              <DialogTitleWrapper>
                 Class Times
                 <IconButton color="primary" onClick={this.props.onModalClose}>
                   <ClearIcon />
@@ -324,7 +345,7 @@ class ClassTimesDialogBox extends React.Component {
                 <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
               )}
             </DialogContent>
-          </Element>
+          </div>
         </MuiThemeProvider>
       </Dialog>
     );
