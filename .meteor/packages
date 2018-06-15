@@ -18,7 +18,7 @@ shell-server@0.2.4            # Server-side component of the `meteor shell` comm
 
 react-meteor-data
 aldeed:collection2
-cfs:autoform
+#cfs:autoform
 cfs:gridfs@0.0.32
 matb33:collection-hooks
 todda00:friendly-slugs
