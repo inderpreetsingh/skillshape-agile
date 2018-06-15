@@ -63,11 +63,8 @@ export default function(props) {
             />
           )}
 
-          <ExpansionPanel>
-            <ExpansionPanelSummary
-              className={classes.classtimeHeader}
-              expandIcon={<ExpandMoreIcon style={{ color: "#fff" }} />}
-            >
+          <ExpansionPanel expanded={true}>
+            <ExpansionPanelSummary className={classes.classtimeHeader}>
               <Grid container>
                 <Grid
                   item
@@ -99,7 +96,7 @@ export default function(props) {
                 </Grid>
               </Grid>
             </ExpansionPanelSummary>
-
+            {console.log("childTableData", childTableData)}
             {_.isArray(childTableData) &&
               childTableData.map((tableData, index) => {
                 return (
@@ -113,7 +110,7 @@ export default function(props) {
                           container
                           className={classes.classtypeInputContainer}
                         >
-                          <ExpansionPanel>
+                          <ExpansionPanel style={{ width: "100%" }}>
                             <ExpansionPanelSummary
                               classes={{ content: "block" }}
                               expandIcon={<ExpandMoreIcon />}
@@ -134,7 +131,7 @@ export default function(props) {
                                   {childTable.actions.edit.title}
                                 </Button>
                               </div>
-                              {this.props.parentData.name}
+                              {tableData.name}
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails style={{ flexWrap: "wrap" }}>
                               {childTable &&
