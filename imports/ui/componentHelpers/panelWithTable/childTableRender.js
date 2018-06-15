@@ -132,7 +132,12 @@ export default function(props) {
                                 </Button>
                               </div>
                               {console.log("tableData", tableData)}
-                              {tableData.name} : {tableData.scheduleType}
+                              {tableData.scheduleType == "oneTime" &&
+                                tableData.name + ": One Time"}
+                              {tableData.scheduleType == "OnGoing" &&
+                                tableData.name + ": Ongoing"}
+                              {tableData.scheduleType == "recurring" &&
+                                tableData.name + ": Recurring"}
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails style={{ flexWrap: "wrap" }}>
                               {childTable &&

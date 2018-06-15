@@ -239,7 +239,8 @@ export class OneTimeRow extends React.Component {
                 type="caption"
                 style={{ maxWidth: "188px", padding: "8px" }}
               >
-                Use this if students are expected to attend all class times in
+                Use this if there is another class with the same repeating
+                pattern and students are expected to attend all class times in
                 this group.
               </Typography>
 
@@ -247,7 +248,8 @@ export class OneTimeRow extends React.Component {
                 type="caption"
                 style={{ maxWidth: "188px", padding: "8px" }}
               >
-                Use this if students can come to any class time available.
+                Use this if there is a different repeating type or students can
+                come to any class time available.
               </Typography>
             </div>
             <div
