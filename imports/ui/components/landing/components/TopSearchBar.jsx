@@ -106,7 +106,7 @@ const TopSearchBar = (props) => (
   <NavBarWrapper >
     <LogoSearchSection>
       {props.logoArea ? props.logoArea :
-      <MyLink href="/">
+      <MyLink to="/">
       <Logo brandTextShown={false} width={32} height={32} />
         <BrandText>Skillshape</BrandText>
       </MyLink>}
