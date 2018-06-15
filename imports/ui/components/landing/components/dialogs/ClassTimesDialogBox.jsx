@@ -317,7 +317,10 @@ class ClassTimesDialogBox extends React.Component {
                 </IconButton>
               </DialogTitleWrapper>
             </DialogTitle>
-            <DialogContent classes={{ root: classes.dialogContent }}>
+            <DialogContent
+              classes={{ root: classes.dialogContent }}
+              style={{ overflow: "hidden" }}
+            >
               {isEmpty(classTimesData) ? (
                 <ClassContainer>
                   <Typography caption="p">

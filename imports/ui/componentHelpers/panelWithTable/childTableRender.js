@@ -242,11 +242,8 @@ export default function(props) {
               moveToNextTab={this.props.moveToNextTab}
             />
           )}
-          <ExpansionPanel>
-            <ExpansionPanelSummary
-              className={classes.classtimeHeader}
-              expandIcon={<ExpandMoreIcon style={{ color: "#fff" }} />}
-            >
+          <ExpansionPanel expanded={true}>
+            <ExpansionPanelSummary className={classes.classtimeHeader}>
               <Grid container>
                 <Grid
                   item
@@ -284,6 +281,10 @@ export default function(props) {
                   <ExpansionPanelDetails
                     key={index}
                     className={classes.details}
+                    style={{
+                      boxShadow: "0px 0px 0px 3px #bdbdbd",
+                      border: "0px solid #bdbdbd"
+                    }}
                   >
                     <div className={classes.classtimeFormOuter}>
                       <div className={classes.classtypeForm}>
