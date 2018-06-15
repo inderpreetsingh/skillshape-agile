@@ -96,7 +96,7 @@ export default function(props) {
                 </Grid>
               </Grid>
             </ExpansionPanelSummary>
-            {console.log("childTableData", childTableData)}
+
             {_.isArray(childTableData) &&
               childTableData.map((tableData, index) => {
                 return (
@@ -131,7 +131,8 @@ export default function(props) {
                                   {childTable.actions.edit.title}
                                 </Button>
                               </div>
-                              {tableData.name}
+                              {console.log("tableData", tableData)}
+                              {tableData.name} : {tableData.scheduleType}
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails style={{ flexWrap: "wrap" }}>
                               {childTable &&
