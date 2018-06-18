@@ -22,8 +22,9 @@ import SLocation from "/imports/api/sLocation/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import {
   flexCenter,
-  rhythmDiv
+  rhythmDiv,
 } from "/imports/ui/components/landing/components/jss/helpers";
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 import "/imports/api/classInterest/methods";
 import "/imports/api/classTimes/methods";
@@ -38,6 +39,14 @@ const formStyle = formStyles();
 const styles = theme => {
   console.log("theme", theme);
   return {
+    dialogPaper: {
+      overflowX: 'hidden',
+      padding: helpers.rhythmDiv * 2,
+      maxWidth: 400
+    },
+    gridItem: {
+      padding: 0
+    },
     image: {
       verticalAlign: "middle",
       width: "100%",
@@ -63,6 +72,8 @@ const styles = theme => {
     }
   };
 };
+
+
 const ButtonWrapper = styled.div`
   width: 100%;
   ${flexCenter}
@@ -89,6 +100,22 @@ const scheduleDetails = [
   "Saturday",
   "Sunday"
 ];
+
+const ImageContent = styled.p`
+  margin: 0;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 400;
+`;
+
+const EventName = ImageContent.extend`
+  margin: ${helpers.rhythmDiv}px 0;
+  color: ${helpers.primaryColor};
+  font-size: ${helpers.baseFontSize * 2}px;
+`;
+
+const EventDesc = ImageContent.extend`
+`;
 
 class ClassDetailModal extends React.Component {
   constructor(props) {
@@ -243,14 +270,17 @@ class ClassDetailModal extends React.Component {
         open={this.props.showModal}
         onClose={() => this.props.closeEventModal(false, null)}
         aria-labelledby="responsive-dialog-title"
+        classes={{
+          paper: classes.dialogPaper
+        }}
       >
         {isLoading && <ContainerLoader />}
         {error && <div style={{ color: "red" }}>{error}</div>}
         {!isLoading &&
           !error && (
-            <Grid container style={{ padding: "24px" }}>
-              <Grid container style={{ background: "#ddd" }}>
-                <Grid item sm={6} md={6} xs={12}>
+            <Grid container style={{ padding: "16px" }}>
+              <Grid container classes={{typeItem: classes.gridItem}}>
+                <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>
                   <CardMedia style={{ height: 200 }}>
                     <div className={classes.imageContainer}>
                       {/*<div style={{position: "absolute", top: 10, right: 10}}>
@@ -274,15 +304,15 @@ class ClassDetailModal extends React.Component {
                     </div>
                   </CardMedia>
                 </Grid>
-                <Grid item sm={6} md={6} xs={12}>
+                <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>
                   <Grid item sm={12} md={12} xs={12}>
-                    <div>{eventData.name}</div>
+                    <EventName>{eventData.name}</EventName>
                   </Grid>
                   <Grid item sm={12} md={12} xs={12}>
-                    <div>{eventData.desc || ""}</div>
+                    <EventDesc>{eventData.desc || ""}</EventDesc>
                   </Grid>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={6} classes={{typeItem: classes.gridItem}}>
                   <div className={classes.iconWithDetailContainer}>
                     <div className="circle-icon" className={classes.iconStyle}>
                       <Icon className="material-icons" color="primary">

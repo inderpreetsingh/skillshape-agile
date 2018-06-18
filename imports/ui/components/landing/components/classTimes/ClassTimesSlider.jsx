@@ -3,13 +3,15 @@ import Slider from 'react-slick';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import ClassTime from './ClassTime';
-import withSlider from '../../../../../util/withSlider.js';
+import ClassTime from '/imports/ui/components/landing/components/classTimes/ClassTime';
+import withSlider from '/imports/util/withSlider.js';
 
 const config = {
   desktop: 4,
   tablet: 2,
-  mobile: 1
+  mobile: 1,
+  autoplay: false,
+  arrows: true
 }
 
 const breakPoints = {

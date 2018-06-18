@@ -42,7 +42,8 @@ const styles = {
   },
   dialogPaper: {
     maxWidth: 600,
-    background: "white"
+    background: "white",
+    margin: 8,
   },
   dialogTitle: {
     padding: `0 ${helpers.rhythmDiv * 3}px`,
@@ -50,7 +51,11 @@ const styles = {
   },
   dialogContent: {
     overflowX: "hidden",
-    padding: 0
+    padding: 0,
+    [`@media screen and (max-width : ${helpers.mobile + 100}px)`]: {
+      padding: `0 ${helpers.rhythmDiv}px`,
+    },
+    paddingBottom: helpers.rhythmDiv * 3
   },
   chip: {
     background: helpers.lightTextColor,

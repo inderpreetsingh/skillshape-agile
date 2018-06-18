@@ -54,7 +54,7 @@ class ClassTimesBoxes extends Component {
           <ClassTimesSlider
             data={modifiedClassTimesData}
             componentProps={{classInterestData: classInterestData}}
-            padding={helpers.rhythmDiv} />
+             />
         </SliderWrapper>
         <BarWrapper>
           <ClassTimesBar
