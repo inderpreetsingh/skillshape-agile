@@ -44,6 +44,9 @@ const styles = theme => {
       padding: helpers.rhythmDiv * 2,
       maxWidth: 400
     },
+    gridItem: {
+      padding: 0
+    },
     image: {
       verticalAlign: "middle",
       width: "100%",
@@ -106,7 +109,7 @@ const ImageContent = styled.p`
 `;
 
 const EventName = ImageContent.extend`
-  margin: ${helpers.rhythmDiv * 2}px 0;
+  margin: ${helpers.rhythmDiv}px 0;
   color: ${helpers.primaryColor};
   font-size: ${helpers.baseFontSize * 2}px;
 `;
@@ -276,8 +279,8 @@ class ClassDetailModal extends React.Component {
         {!isLoading &&
           !error && (
             <Grid container style={{ padding: "16px" }}>
-              <Grid container>
-                <Grid item sm={12} md={12} xs={12}>
+              <Grid container classes={{typeItem: classes.gridItem}}>
+                <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>
                   <CardMedia style={{ height: 200 }}>
                     <div className={classes.imageContainer}>
                       {/*<div style={{position: "absolute", top: 10, right: 10}}>
@@ -301,7 +304,7 @@ class ClassDetailModal extends React.Component {
                     </div>
                   </CardMedia>
                 </Grid>
-                <Grid item sm={12} md={12} xs={12}>
+                <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>
                   <Grid item sm={12} md={12} xs={12}>
                     <EventName>{eventData.name}</EventName>
                   </Grid>
@@ -309,7 +312,7 @@ class ClassDetailModal extends React.Component {
                     <EventDesc>{eventData.desc || ""}</EventDesc>
                   </Grid>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={6} classes={{typeItem: classes.gridItem}}>
                   <div className={classes.iconWithDetailContainer}>
                     <div className="circle-icon" className={classes.iconStyle}>
                       <Icon className="material-icons" color="primary">
