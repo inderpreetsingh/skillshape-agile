@@ -31,6 +31,7 @@ import { checkForAddToCalender } from "/imports/util";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx";
 import Events from "/imports/util/events";
+import * as settings from "/imports/ui/components/landing/site-settings.js";
 
 const formStyle = formStyles();
 
@@ -142,10 +143,8 @@ class ClassDetailModal extends React.Component {
 
     if (classType && classType.classTypeImg) {
       return classType.classTypeImg;
-    } else if (school && school.mainImage) {
-      return school.mainImage;
     } else {
-      return "/images/logo-location.png";
+      return settings.classTypeImgSrc;
     }
   };
 
