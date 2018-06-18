@@ -45,14 +45,14 @@ const SliderLeftArrow = Arrow.extend`
   left: 0px;
 
   @media screen and (max-width: ${helpers.mobile - 100}px) {
-    left: -25px;
+    left: -15px;
   }
 `;
 
 const SliderRightArrow = Arrow.extend`
   right: 0px;
   @media screen and (max-width: ${helpers.mobile - 100}px) {
-    right: -25px;
+    right: -15px;
   }
 `;
 
