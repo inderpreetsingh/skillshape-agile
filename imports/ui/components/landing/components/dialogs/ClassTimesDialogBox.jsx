@@ -42,7 +42,10 @@ const styles = {
   },
   dialogPaper: {
     maxWidth: 600,
-    background: "white"
+    background: "white",
+    [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+      margin: 0
+    }
   },
   dialogTitle: {
     padding: `0 ${helpers.rhythmDiv * 3}px`,

@@ -275,7 +275,9 @@ const Arrows = styled.div`
   align-items: flex-start;
 `;
 
-const Arrow = styled.p`
+const Arrow = styled.button`
+  background: none;
+  border: none;
   display: flex;
   flex-direction: column;
   // flex-grow: 1;

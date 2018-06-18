@@ -3,29 +3,70 @@ import Slider from 'react-slick';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import * as helpers from '../ui/components/landing/components/jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const OuterWrapper = styled.div`
   padding-right: ${props => props.padding}px;
   padding-left: ${props => props.paddingLeft}px;
 `;
 
-const Wrapper = styled.div`
+const Container = styled.div``;
+const Wrapper = styled.div``;
 
+const Arrow = styled.button`
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  position: absolute;
+  align-items: center;
+  font-size: ${helpers.rhythmDiv * 6}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  z-index: 1;
+  width: auto;
+  height: auto;
+  color: ${helpers.primaryColor};
+  padding: 0 ${helpers.rhythmDiv}px;
+
+  &:hover {
+    color: ${helpers.primaryColor};
+  }
+
+  &:before {
+    position: absolute;
+    color: transparent;
+  }
 `;
 
-const Container = styled.div`
-
+const SliderLeftArrow = Arrow.extend`
+  left: 0px;
 `;
+
+const SliderRightArrow = Arrow.extend`
+  right: 0px;
+`;
+
+
+const SliderNextArrow = (props) => <SliderRightArrow {...props} onClick={props.onClick} className={props.className} > {">"} </SliderRightArrow>
+const SliderPreviousArrow = (props) => (<SliderLeftArrow {...props} onClick={props.onClick} className={props.className}>{"<"}</SliderLeftArrow>)
 
 const defaultPaging = (i) => <button>{i + 1}</button>
 
 const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) => {
-  // console.log(sliderBreakPoints,"slider breakPoints");
-  // console.log(sliderConfig,props,"slider config");
+  // debugger;
+  console.log(sliderBreakPoints,"slider breakPoints");
+  console.log(sliderConfig,props,"slider config");
   const breakPoints = {
     mobile: (sliderBreakPoints && sliderBreakPoints.mobile) || helpers.mobile,
     tablet: (sliderBreakPoints && sliderBreakPoints.tablet) || helpers.tablet
+  }
+  let autoplay = true;
+
+  if(sliderConfig.autoplay !== 'undefined') {
+    autoplay = sliderConfig.autoplay;
   }
 
   const settings = {
@@ -37,8 +78,11 @@ const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) 
     speed: sliderConfig.speed || 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
+    arrows: sliderConfig.arrows || false,
+    autoplay: autoplay,
     infinite: true,
+    nextArrow: <SliderNextArrow />,
+    prevArrow: <SliderPreviousArrow />,
     beforeChange: (current, next) => {
       const {sliderProps} = props;
       if(sliderProps&& sliderProps.onBeforeSlideChange)
