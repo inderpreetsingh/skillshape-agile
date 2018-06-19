@@ -46,13 +46,21 @@ const styles = theme => {
       padding: helpers.rhythmDiv * 2,
       maxWidth: 400
     },
+    dialogAction: {
+      width: '100%',
+      marginTop: helpers.rhythmDiv * 2
+    },
     gridItem: {
       padding: 0
+    },
+    gridContainer: {
+      padding: helpers.rhythmDiv
     },
     image: {
       verticalAlign: "middle",
       width: "100%",
-      height: "100%"
+      height: "100%",
+      objectFit: 'cover'
     },
     imageContainer: {
       backgroundColor: "#000",
@@ -113,6 +121,8 @@ const Heading = styled.h2`
   text-transform: capitalize;
   text-align: center;
   width: 100%;
+  line-height: 1;
+  margin-top: ${props => props.marginTop}px;
 `;
 
 const Text = styled.p`
@@ -120,10 +130,13 @@ const Text = styled.p`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
+  line-height: 1;
+  margin-bottom: ${props => props.marginBottom}px;
 `;
 
 const EventName = Heading.extend`
-  margin: ${helpers.rhythmDiv}px 0;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const EventDesc = Text.extend`
@@ -329,8 +342,8 @@ class ClassDetailModal extends React.Component {
                       </Icon>
                     </div>
                     <div>
-                      <Typography type="caption">DATE</Typography>
-                      <Typography type="caption">{clickedDate}</Typography>
+                      <Text>DATE</Text>
+                      <Text>{clickedDate}</Text>
                     </div>
                   </div>
                 </Grid>
@@ -342,10 +355,10 @@ class ClassDetailModal extends React.Component {
                       </Icon>
                     </div>
                     <div>
-                      <Typography type="caption">TIME</Typography>
-                      <Typography type="caption">{`${
+                      <Text>TIME</Text>
+                      <Text>{`${
                         eventData.eventStartTime
-                      }`}</Typography>
+                      }`}</Text>
                     </div>
                   </div>
                 </Grid>
@@ -359,21 +372,21 @@ class ClassDetailModal extends React.Component {
               >
                 <Grid item xs={12}>
                   {eventData.scheduleType == "OnGoing" ? (
-                    <Typography component="p">
+                    <Text>
                       This is an Ongoing class.
-                    </Typography>
+                    </Text>
                   ) : (
                     ""
                   )}
                   {eventData.scheduleType == "oneTime" ? (
-                    <Typography>This is a non-repeating class.</Typography>
+                    <Text>This is a non-repeating class.</Text>
                   ) : (
                     ""
                   )}
                   {eventData.scheduleType == "recurring" ? (
-                    <Typography>
-                      This is a Repeating Class with START/END.
-                    </Typography>
+                    <Text>
+                      This is a repeating class with START/END.
+                    </Text>
                   ) : (
                     ""
                   )}
@@ -385,7 +398,7 @@ class ClassDetailModal extends React.Component {
                       {Object.keys(eventData.scheduleDetails).map(
                         (day, index) => {
                           return (
-                            <Text type="caption">
+                            <Text marginBottom={helpers.rhythmDiv/2}>
                               {this.renderdaySchedule(
                                 eventData.scheduleDetails[day],
                                 eventData
@@ -408,6 +421,7 @@ class ClassDetailModal extends React.Component {
                   ) : (
                     <ClassTimeButton
                       icon
+                      ghost
                       onClick={event =>
                         this.removeMyClassInterest(event, eventData.classTimeId)
                       }
@@ -421,7 +435,7 @@ class ClassDetailModal extends React.Component {
                 container
                 style={{ border: "2px solid #ccc", marginTop: "16px" }}
               >
-                <Heading>
+                <Heading marginTop={helpers.rhythmDiv}>
                   {classType && classType.name.toLowerCase()}
                 </Heading>
                   {/*<Typography component="p" style={{marginBottom:'20px'}}>
@@ -498,11 +512,9 @@ class ClassDetailModal extends React.Component {
                 {this.props.routeName !== "EmbedSchoolCalanderView" && (
                   <Grid container style={{ padding: 8 }}>
                     <Grid item xs={6}>
-                      <PrimaryButton
+                      <ClassTimeButton
                         fullWidth
-                        noMarginBottom
                         label="View Class Type"
-                        boxShadow
                         noMarginBottom
                         onClick={() =>
                           this.goToClassTypePage(
@@ -513,12 +525,10 @@ class ClassDetailModal extends React.Component {
                       />
                     </Grid>
                     <Grid item xs={6}>
-                      <PrimaryButton
+                      <ClassTimeButton
                         fullWidth
                         noMarginBottom
                         label="View School"
-                        boxShadow
-                        noMarginBottom
                         onClick={() => this.goToSchoolPage(school)}
                       />
                     </Grid>
@@ -526,20 +536,16 @@ class ClassDetailModal extends React.Component {
                 )}
               </Grid>
               {fullScreen && (
-                <Grid container>
-                  <Grid item xs={12}>
-                    <DialogActions>
-                      <Button
-                        onClick={() => {
-                          this.props.closeEventModal(false, null);
-                        }}
-                        color="primary"
-                      >
-                        Close
-                      </Button>
-                    </DialogActions>
-                  </Grid>
-                </Grid>
+                <DialogActions className={classes.dialogAction}>
+                  <Button
+                    onClick={() => {
+                      this.props.closeEventModal(false, null);
+                    }}
+                    color="primary"
+                  >
+                    Close
+                  </Button>
+                </DialogActions>
               )}
               {/*<Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
 								Entire Class Dates

@@ -14,7 +14,7 @@ const InfoCapsule = styled.div`
   font-weight: 400;
   font-size: ${helpers.baseFontSize}px;
   margin-right: ${helpers.rhythmDiv}px;
-  margin-top: ${helpers.rhythmDiv * 2}px;
+  margin-top: ${props => props.marginTop || helpers.rhythmDiv * 2}px;
   min-height: ${helpers.rhythmDiv * 4}px;
   line-height: 1;
 `;
