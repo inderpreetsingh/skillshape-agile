@@ -44,31 +44,41 @@ const styles = {
     maxWidth: 600,
     background: "white",
     margin: 8,
+    overflowY: 'auto'
   },
   dialogTitle: {
-    padding: `0 ${helpers.rhythmDiv * 3}px`,
-    paddingTop: helpers.rhythmDiv * 2
+    // padding: `0 ${helpers.rhythmDiv * 3}px`,
+    // paddingTop: helpers.rhythmDiv * 2
+    padding: 0,
+    marginBottom: helpers.rhythmDiv * 2
   },
   dialogContent: {
     overflowX: "hidden",
     padding: 0,
-    [`@media screen and (max-width : ${helpers.mobile + 100}px)`]: {
-      padding: `0 ${helpers.rhythmDiv}px`,
-    },
-    paddingBottom: helpers.rhythmDiv * 3
   },
-  chip: {
-    background: helpers.lightTextColor,
-    marginRight: helpers.rhythmDiv
-  },
-  chipLabel: {
-    color: helpers.textColor,
-    fontSize: helpers.baseFontSize * 0.75
+  iconButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    background: 'white',
+    zIndex: 3,
+    // boxShadow: helpers.buttonBoxShadow
   }
 };
 
 const DialogTitleWrapper = styled.div`
-  ${helpers.flexHorizontalSpaceBetween} width: 100%;
+  ${helpers.flexCenter}
+  width: 100%;
+  padding: 0;
+`;
+
+const MyScrollToElement = styled.div`
+  overflow-y: auto;
+  // padding: ${helpers.rhythmDiv * 2}px 0;
+  padding-top: ${helpers.rhythmDiv * 2}px;
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
+    padding: ${helpers.rhythmDiv * 2}px;
+  }
 `;
 
 const ClassContainer = styled.div`
@@ -123,42 +133,42 @@ const RequestsClassTimes = styled.div`
   justify-content: center;
 `;
 
-const MyClassInfo = props => (
-  <ClassContainer>
-    <ClassContainerHeader>
-      <ClassTimings>{props.data.name}</ClassTimings>
-
-      {/*<Chip label={props.data.scheduleType} classes={{root: this.props.classes.chip, label: this.props.classes.chipLabel}}/> */}
-      <ScheduleType>
-        {props.getDatesBasedOnScheduleType(props.data)}
-      </ScheduleType>
-    </ClassContainerHeader>
-    <Typography>{props.data.desc}</Typography>
-
-    <CalenderButtonWrapper>
-      {props.addToCalender ? (
-        <PrimaryButton
-          icon
-          onClick={() => props.addToMyCalender(props.data)}
-          iconName="perm_contact_calendar"
-          label="Add to my Calender"
-        />
-      ) : (
-        <SecondaryButton
-          icon
-          onClick={() =>
-            props.handleClassInterest({
-              methodName: "classInterest.removeClassInterestByClassTimeId",
-              data: { classTimeId: props.data._id }
-            })
-          }
-          iconName="delete"
-          label="Remove from my Calender"
-        />
-      )}
-    </CalenderButtonWrapper>
-  </ClassContainer>
-);
+// const MyClassInfo = props => (
+//   <ClassContainer>
+//     <ClassContainerHeader>
+//       <ClassTimings>{props.data.name}</ClassTimings>
+//
+//       {/*<Chip label={props.data.scheduleType} classes={{root: this.props.classes.chip, label: this.props.classes.chipLabel}}/> */}
+//       <ScheduleType>
+//         {props.getDatesBasedOnScheduleType(props.data)}
+//       </ScheduleType>
+//     </ClassContainerHeader>
+//     <Typography>{props.data.desc}</Typography>
+//
+//     <CalenderButtonWrapper>
+//       {props.addToCalender ? (
+//         <PrimaryButton
+//           icon
+//           onClick={() => props.addToMyCalender(props.data)}
+//           iconName="perm_contact_calendar"
+//           label="Add to my Calender"
+//         />
+//       ) : (
+//         <SecondaryButton
+//           icon
+//           onClick={() =>
+//             props.handleClassInterest({
+//               methodName: "classInterest.removeClassInterestByClassTimeId",
+//               data: { classTimeId: props.data._id }
+//             })
+//           }
+//           iconName="delete"
+//           label="Remove from my Calender"
+//         />
+//       )}
+//     </CalenderButtonWrapper>
+//   </ClassContainer>
+// );
 
 class ClassTimesDialogBox extends React.Component {
   constructor(props) {
@@ -313,11 +323,11 @@ class ClassTimesDialogBox extends React.Component {
         classes={{ root: classes.dialog, paper: classes.dialogPaper }}
       >
         <MuiThemeProvider theme={muiTheme}>
-          <div id="myScrollToElement" ref={c => (this.myDiv = c)}>
+          <MyScrollToElement id="myScrollToElement" ref={c => (this.myDiv = c)}>
             <DialogTitle classes={{ root: classes.dialogTitle }}>
               <DialogTitleWrapper>
                 Class Times
-                <IconButton color="primary" onClick={this.props.onModalClose}>
+                <IconButton color="primary" className={classes.iconButton} onClick={this.props.onModalClose}>
                   <ClearIcon />
                 </IconButton>
               </DialogTitleWrapper>
@@ -353,7 +363,7 @@ class ClassTimesDialogBox extends React.Component {
                 <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
               )}
             </DialogContent>
-          </div>
+          </MyScrollToElement>
         </MuiThemeProvider>
       </Dialog>
     );
