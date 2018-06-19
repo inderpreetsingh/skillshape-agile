@@ -62,7 +62,7 @@ const styles = {
     right: 0,
     background: 'white',
     zIndex: 3,
-    boxShadow: helpers.buttonBoxShadow
+    // boxShadow: helpers.buttonBoxShadow
   }
 };
 

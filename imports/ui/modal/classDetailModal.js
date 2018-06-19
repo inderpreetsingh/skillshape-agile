@@ -78,7 +78,10 @@ const styles = theme => {
     },
     iconWithDetailContainer: {
       display: "inline-flex",
-      alignItems: "center"
+      alignItems: "center",
+    },
+    bottomSpace: {
+      marginBottom: helpers.rhythmDiv * 2
     }
   };
 };
@@ -441,40 +444,35 @@ class ClassDetailModal extends React.Component {
                   {/*<Typography component="p" style={{marginBottom:'20px'}}>
 										{classType && classType.desc}
 									</Typography>*/}
-
-                <Grid item xs={12}>
-                  <div className={classes.iconWithDetailContainer}>
-                    <div className="circle-icon" className={classes.iconStyle}>
-                      <Icon className="material-icons" color="primary">
-                        account_balance
-                      </Icon>
-                    </div>
-                    <div>
-                      <Text>SCHOOL</Text>
-                      <Text>
-                        {school && school.name}
-                      </Text>
-                    </div>
+                <div className={classes.iconWithDetailContainer + ' ' + classes.bottomSpace}>
+                  <div className="circle-icon" className={classes.iconStyle}>
+                    <Icon className="material-icons" color="primary">
+                      account_balance
+                    </Icon>
                   </div>
-                </Grid>
-                <Grid item xs={12}>
-                  <div className={classes.iconWithDetailContainer}>
-                    <div className="circle-icon" className={classes.iconStyle}>
-                      <Icon className="material-icons" color="primary">
-                        location_on
-                      </Icon>
-                    </div>
-                    <div>
-                      <Text>LOCATION</Text>
-                      <Text>
-                        {location &&
-                          `${location.address}, ${location.city}, ${
-                            location.state
-                          }`}
-                      </Text>
-                    </div>
+                  <div>
+                    <Text>SCHOOL</Text>
+                    <Text>
+                      {school && school.name}
+                    </Text>
                   </div>
-                </Grid>
+                </div>
+                <div className={classes.iconWithDetailContainer}>
+                  <div className="circle-icon" className={classes.iconStyle}>
+                    <Icon className="material-icons" color="primary">
+                      location_on
+                    </Icon>
+                  </div>
+                  <div>
+                    <Text>LOCATION</Text>
+                    <Text>
+                      {location &&
+                        `${location.address}, ${location.city}, ${
+                          location.state
+                        }`}
+                    </Text>
+                  </div>
+                </div>
                 <Grid item xs={12}>
                   {classTypeData &&
                     classTypeData.ageMin && (
