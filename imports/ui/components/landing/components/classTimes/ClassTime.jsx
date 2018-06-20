@@ -165,14 +165,16 @@ class ClassTime extends Component {
 
   handleAddToMyCalendarButtonClick = () => {
     // console.log("this.props.handleAddToMyCalendarButtonClick",this.props);
-    this.addToMyCalender(this.props.classTimeData);
+    const classTimeData = {...this.props};
+    this.addToMyCalender(classTimeData);
   }
 
   handleRemoveFromCalendarButtonClick = () => {
 
     // this.setState({ addToCalendar: true });
-    // console.log("this.props",this.props);
-    this.removeFromMyCalender(this.props.classTimeData);
+    // console.log("this.props",this.props)
+    const classTimeData = {...this.props};
+    this.removeFromMyCalender(classTimeData);
   }
 
   formatDataBasedOnScheduleType = (data) => {

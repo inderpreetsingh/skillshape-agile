@@ -195,6 +195,7 @@ class ClassTypeCard extends Component {
               <ClassTypeCardBody
                 ratings={ratings}
                 reviews={reviews}
+                hideClassTypeOptions={this.props.hideClassTypeOptions}
                 onJoinClassButtonClick={this.handleDialogState(true)}
               />
             }

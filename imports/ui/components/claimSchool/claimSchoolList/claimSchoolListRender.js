@@ -22,6 +22,11 @@ const NoResultContainer = styled.div`
   height: 100vh;
   ${helpers.flexCenter}
   flex-direction: column;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    min-height: 100vh;
+    height: auto;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -90,31 +95,34 @@ const CardsListGridWrapper = styled.div`
 export default function (props) {
     let schools = this.props.collectionData || [];
 
+    const NoneOfMyLisiting = (props) => (<Wrapper>
+        <TextWrapper>
+            Check to see if any of these are your school. The filters can help you search!
+            If you find your school, press the <b>claim</b> button.
+            If you do not find it, click the button to the right to open a new listing!
+        </TextWrapper>
+        <FormSubmitButtonWrapper>
+          <Button className={props.classes.buttonStyles} onClick={props.onStartNewListingButtonClick}>
+            None of these are my school. <br/>Start a new Listing!
+          </Button>
+        </FormSubmitButtonWrapper>
+      </Wrapper>)
+
     if(isEmpty(schools)) {
         return (
             <NoResultContainer>
-                <NoResults
-                    removeAllFiltersButtonClick={this.props.removeAllFilters}
-                    addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
-                />
+              <NoneOfMyLisiting {...props} />
+              <NoResults
+                  removeAllFiltersButtonClick={this.props.removeAllFilters}
+                  addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
+              />
             </NoResultContainer>
         )
     } else {
         return (
             <div>
                 <CardsListGridWrapper>
-                  <Wrapper>
-                    <TextWrapper>
-                        Check to see if any of these are your school. The filters can help you search!
-                        If you find your school, press the <b>claim</b> button.
-                        If you do not find it, click the button to the right to open a new listing!
-                    </TextWrapper>
-                    <FormSubmitButtonWrapper>
-                      <Button className={props.classes.buttonStyles} onClick={props.onStartNewListingButtonClick}>
-                        None of these are my school. <br/>Start a new Listing!
-                      </Button>
-                    </FormSubmitButtonWrapper>
-                  </Wrapper>
+                  <NoneOfMyLisiting {...props} />
                   <GridContainer>
                     {
                       schools.map((school, index) => {
