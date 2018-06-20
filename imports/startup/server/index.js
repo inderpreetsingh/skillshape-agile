@@ -1,5 +1,5 @@
 // oath services
-import "./oauth.js"
+import "./oauth.js";
 
 // All methods imported over here
 
@@ -26,6 +26,7 @@ import "/imports/api/schoolMemberDetails/methods";
 import "/imports/api/pricingRequest/methods";
 import "/imports/api/packagesRequest/methods";
 import "/imports/api/classTypeLocationRequest/methods";
+import "/imports/api/stripe/methods";
 
 // All publication imported over here
 
@@ -47,3 +48,4 @@ import "/imports/api/schoolMemberDetails/server/publication";
 import "/imports/api/user/server/publication";
 import "/imports/api/review/server/publication";
 import "/imports/api/claimSchoolRequest/cronjob";
+import "/imports/api/stripe/server/publication";

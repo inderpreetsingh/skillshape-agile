@@ -39,6 +39,7 @@ import AboutUs from "/imports/ui/pages/aboutUs";
 import ContactUs from "/imports/ui/pages/contactUs";
 import ContactUsPage from "/imports/ui/pages/ContactUsPage";
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
+import StripeConnectModal from "./../../ui/modal/stripeConnectModal";
 
 import { componentLoader } from "/imports/util";
 export default (Routes = componentLoader(props => (
@@ -60,6 +61,11 @@ export default (Routes = componentLoader(props => (
         path="/unsubscribe"
         name="unsubscribe"
         component={UnsubscribeUser}
+      />
+      <Route
+        path="/redirect-to-stripe"
+        name="redirect-to-stripe"
+        component={StripeConnectModal}
       />
       <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />

@@ -42,3 +42,5 @@ okgrow:analytics
 percolate:synced-cron
 force-ssl
 abernix:standard-minifier-js
+mrgalaxy:stripe
+http

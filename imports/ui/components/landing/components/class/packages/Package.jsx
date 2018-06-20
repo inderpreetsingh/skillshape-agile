@@ -1,17 +1,16 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
-import Cart from '../../icons/Cart.jsx';
+import React, { Fragment } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import isEmpty from "lodash/isEmpty";
+import Cart from "../../icons/Cart.jsx";
 
-import PrimaryButton from '../../buttons/PrimaryButton';
+import PrimaryButton from "../../buttons/PrimaryButton";
 
 //TODO: Automatic imports depending upon variables used - intellij
-import * as helpers from '../../jss/helpers.js';
+import * as helpers from "../../jss/helpers.js";
 
 const Wrapper = styled.div`
-  ${helpers.flexCenter}
-  justify-content: space-between;
+  ${helpers.flexCenter} justify-content: space-between;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     flex-direction: column;
@@ -33,7 +32,6 @@ const OuterWrapper = styled.div`
     width: 100%;
     margin: 0 auto;
   }
-
 `;
 
 const Title = styled.h2`
@@ -43,7 +41,7 @@ const Title = styled.h2`
   font-weight: 700;
   text-transform: uppercase;
   margin: 0;
-  color: rgba(0,0,0,1);
+  color: rgba(0, 0, 0, 1);
   line-height: 1;
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -56,8 +54,7 @@ const Body = styled.section`
 `;
 
 const ClassDetailsSection = styled.div`
-  ${helpers.flexDirectionColumn}
-  max-width: 65%;
+  ${helpers.flexDirectionColumn} max-width: 65%;
   padding-right: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -80,10 +77,9 @@ const ClassDetailsText = styled.p`
 `;
 
 const PriceSection = styled.div`
-  ${helpers.flexDirectionColumn}
-  margin: 0;
+  ${helpers.flexDirectionColumn} margin: 0;
   padding-right: ${helpers.rhythmDiv}px;
-  padding-bottom: ${helpers.rhythmDiv/2}px;
+  padding-bottom: ${helpers.rhythmDiv / 2}px;
 `;
 
 const Price = styled.p`
@@ -110,12 +106,12 @@ const AddToCartSection = styled.div`
 `;
 
 const RightSection = styled.div`
-  ${helpers.flexCenter}
+  ${helpers.flexCenter};
 `;
 
 function getCovers(data) {
-  let str = ""
-  if(!isEmpty(data)) {
+  let str = "";
+  if (!isEmpty(data)) {
     str = data.map(classType => classType.name);
     str = str.join(", ");
   }
@@ -124,72 +120,98 @@ function getCovers(data) {
 
 function getPaymentType(payment) {
   let paymentType = "";
-  if(payment) {
-    if(payment['autoWithDraw'] && payment['payAsYouGo']) {
-      paymentType += 'Automatic Withdrawal and Pay As You Go';
-    } else if(payment['autoWithDraw']) {
-      paymentType += 'Automatic Withdrawal';
-
-    } else if(payment['payAsYouGo']) {
-      paymentType += 'Pay As You Go';
-
-    } else if(payment['payUpFront']) {
-      paymentType += 'Pay Up Front';
+  if (payment) {
+    if (payment["autoWithDraw"] && payment["payAsYouGo"]) {
+      paymentType += "Automatic Withdrawal and Pay As You Go";
+    } else if (payment["autoWithDraw"]) {
+      paymentType += "Automatic Withdrawal";
+    } else if (payment["payAsYouGo"]) {
+      paymentType += "Pay As You Go";
+    } else if (payment["payUpFront"]) {
+      paymentType += "Pay Up Front";
     }
   }
-  return paymentType
+  return paymentType;
 }
 
-const Package = (props) => (
+const Package = props => (
   <OuterWrapper>
     <Wrapper>
       <ClassDetailsSection>
         <Title>{props.packageName || props.name}</Title>
-        {props.packageType !== 'EP' && <Fragment>
-        {
-          props.classPackages ? (
-            <ClassDetailsText>Expiration: {(props.expDuration && props.expPeriod) ? `${props.expDuration} ${props.expPeriod}` : "None"}</ClassDetailsText>
-          ) : (
-            <Fragment>
+        {props.packageType !== "EP" && (
+          <Fragment>
+            {props.classPackages ? (
               <ClassDetailsText>
-               {props.pymtMethod || "NA"}
+                Expiration:{" "}
+                {props.expDuration && props.expPeriod
+                  ? `${props.expDuration} ${props.expPeriod}`
+                  : "None"}
               </ClassDetailsText>
-              <ClassDetailsText>
-                {getPaymentType(props.pymtType) || "NA"}
-              </ClassDetailsText>
-            </Fragment>
-          )
-        }
-        </Fragment>}
-        <ClassDetailsText>Covers: {getCovers(props.selectedClassType)}</ClassDetailsText>
+            ) : (
+              <Fragment>
+                <ClassDetailsText>{props.pymtMethod || "NA"}</ClassDetailsText>
+                <ClassDetailsText>
+                  {getPaymentType(props.pymtType) || "NA"}
+                </ClassDetailsText>
+              </Fragment>
+            )}
+          </Fragment>
+        )}
+        <ClassDetailsText>
+          Covers: {getCovers(props.selectedClassType)}
+        </ClassDetailsText>
       </ClassDetailsSection>
 
       <RightSection>
-        {props.packageType !== 'EP' ? <Fragment>
-          {
-            props.classPackages ? (
+        {props.packageType !== "EP" ? (
+          <Fragment>
+            {props.classPackages ? (
               <PriceSection>
                 <Price>{props.cost && `${props.cost}$`}</Price>
-                <NoOfClasses>{props.noClasses && `for ${props.noClasses} classes`}</NoOfClasses>
+                <NoOfClasses>
+                  {props.noClasses && `for ${props.noClasses} classes`}
+                </NoOfClasses>
               </PriceSection>
             ) : (
-              !isEmpty(props.pymtDetails) && (
-                props.pymtDetails.map((payment, index)=> {
-                  return <PriceSection key={`${payment.cost}-${index}`}>
-                      <Price>{payment.cost && `${payment.cost}$`}</Price>
-                      <NoOfClasses>{payment.month && `per month for ${payment.month} months`}</NoOfClasses>
-                    </PriceSection>
-                })
-              )
-            )
-          }
-          </Fragment> : <PriceSection> {/* used for enrollment packages */}
+              !isEmpty(props.pymtDetails) &&
+              props.pymtDetails.map((payment, index) => {
+                return (
+                  <PriceSection key={`${payment.cost}-${index}`}>
+                    <Price>{payment.cost && `${payment.cost}$`}</Price>
+                    <NoOfClasses>
+                      {payment.month && `per month for ${payment.month} months`}
+                    </NoOfClasses>
+                  </PriceSection>
+                );
+              })
+            )}
+          </Fragment>
+        ) : (
+          <PriceSection>
+            {" "}
+            {/* used for enrollment packages */}
             <Price>{props.cost && `${props.cost}$`}</Price>
-            <NoOfClasses>${props.cost && 'For Enrollment'}</NoOfClasses>
-          </PriceSection>}
+            <NoOfClasses>${props.cost && "For Enrollment"}</NoOfClasses>
+          </PriceSection>
+        )}
 
-        <AddToCartSection >
-          <Cart onClick={() => props.onAddToCartIconButtonClick(props.packageType, props._id, props.schoolId)} />
+        <AddToCartSection>
+          {/* <a
+            href={`https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${
+              Meteor.settings.public.stripeClientId
+            }&scope=read_write`}
+          > */}
+          <Cart
+            onClick={() =>
+              props.onAddToCartIconButtonClick(
+                props.packageType,
+                props._id,
+                props.schoolId
+              )
+            }
+          />
+          {/* </a> */}
         </AddToCartSection>
       </RightSection>
     </Wrapper>
@@ -203,11 +225,11 @@ Package.propTypes = {
   noOfClasses: PropTypes.number,
   classesCovered: PropTypes.string,
   onAddToCartIconButtonClick: PropTypes.func
-}
+};
 
 Package.defaultProps = {
   packagePerClass: false,
-  onAddToCartIconButtonClick: () => console.log('cart Icon Clicked')
-}
+  onAddToCartIconButtonClick: () => console.log("cart Icon Clicked")
+};
 
 export default Package;
