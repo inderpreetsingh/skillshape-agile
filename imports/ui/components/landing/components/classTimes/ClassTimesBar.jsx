@@ -68,13 +68,13 @@ const ClassTimesBar = (props) => {
     }
   }
   console.log("props in ClassTimesBar",props);
-  const { handleAddToMyCalendarButtonClick, classInterestData, handleRemoveFromCalendarButtonClick } = props;
+  const { handleAddToMyCalendarButtonClick, classTimesData, classInterestData, handleRemoveFromCalendarButtonClick } = props;
   let addToCalender;
   return (
     <Wrapper>
        <ClassTimesWrapper spacing={32}>
         <GridContainer>
-          {props.classTimesData.map(classTimeObj => {
+          {classTimesData.map(classTimeObj => {
             // addToCalender  = this.checkForAddToCalender(classTimeObj)
             return (
               <GridItem key={classTimeObj._id} spacing={32}>
