@@ -1,16 +1,28 @@
 import UserStripeData from "./fields";
 Meteor.methods({
   chargeCard: function(stripeToken) {
-    var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
-    const token = stripeToken;
-
-    const charge = stripe.charges.create({
-      amount: 999,
-      currency: "usd",
-      description: "Example charge",
-      source: token
+    var Stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
+    // Get Stripe Account id of customer
+    let stripe_Account_Id = UserStripeData.findOne({
+      userId: this.userId
     });
-    console.log("charge------------>", charge);
+    let account_id = stripe_Account_Id.stripe_user_id;
+    console.log("stripe_Account_Id", stripe_Account_Id.stripe_user_id);
+    Stripe.charges
+      .create(
+        {
+          amount: 1000,
+          currency: "usd",
+          source: "tok_visa"
+        },
+        {
+          stripe_account: account_id
+        }
+      )
+      .then(function(charge) {
+        // asynchronously called
+        console.log("charge------------>", charge);
+      });
   },
   getStripeToken: function(code) {
     Meteor.http.call(
@@ -21,8 +33,16 @@ Meteor.methods({
       (error, result) => {
         console.log("result--------->", result, this.userId);
         console.log("error--->", error);
-
-        if (result && result.data && result.data.stripe_user_id) {
+        if (result && result.statusCode == 400) {
+          // if (result && result.data.error) {
+          //   throw new Meteor.Error(result.data.error_description);
+          // }
+        } else if (
+          !error &&
+          result &&
+          result.data &&
+          result.data.stripe_user_id
+        ) {
           let payload = {
             userId: this.userId,
             stripe_user_id: result.data.stripe_user_id,
