@@ -502,30 +502,33 @@ export default class SchoolViewBase extends React.Component {
     console.log("handlePurchase Package called in schoolview");
     const { toastr } = this.props;
     let self = this;
-    var handler = StripeCheckout.configure({
-      key: "pk_test_g6do5S237ekq10r65BnxO6S0",
-      image: "https://stripe.com/img/documentation/checkout/marketplace.png",
-      locale: "auto",
-      token: function(token) {
-        // You can access the token ID with `token.id`.
-        // Get the token ID to your server-side code for use.
-        console.log("token id is", token);
-        Meteor.call("chargeCard", token.id);
-      }
-    });
+    let schoolAccountConnected; // Needs to pay through card if school's stripe account is connected.
+    if (schoolAccountConnected) {
+      var handler = StripeCheckout.configure({
+        key: Meteor.settings.public.stripe.PUBLIC_KEY,
+        image: "https://stripe.com/img/documentation/checkout/marketplace.png",
+        locale: "auto",
+        token: function(token) {
+          // You can access the token ID with `token.id`.
+          // Get the token ID to your server-side code for use.
+          console.log("token id is", token);
+          Meteor.call("chargeCard", token.id);
+        }
+      });
 
-    // Open Checkout with further options:
-    handler.open({
-      name: "Stripe.com",
-      description: "Skill",
-      zipCode: true,
-      amount: 2000
-    });
+      // Open Checkout with further options:
+      handler.open({
+        name: "Stripe.com",
+        description: "Skill",
+        zipCode: true,
+        amount: 2000
+      });
 
-    // Close Checkout on page navigation:
-    window.addEventListener("popstate", function() {
-      handler.close();
-    });
+      // Close Checkout on page navigation:
+      window.addEventListener("popstate", function() {
+        handler.close();
+      });
+    }
 
     // Meteor.setTimeout(() => {
     //   console.log("called the method handle purchase package",typeOfTable, tableId, schoolId);

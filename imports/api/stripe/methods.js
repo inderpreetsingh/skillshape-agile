@@ -1,27 +1,16 @@
 import UserStripeData from "./fields";
 Meteor.methods({
   chargeCard: function(stripeToken) {
-    var Stripe = StripeAPI(Meteor.settings.stripe.PRIVATE_KEY);
-    let stripe_Account_Id = UserStripeData.findOne({
-      userId: this.userId
+    var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
+    const token = stripeToken;
+
+    const charge = stripe.charges.create({
+      amount: 999,
+      currency: "usd",
+      description: "Example charge",
+      source: token
     });
-    let account_id = stripe_Account_Id.stripe_user_id;
-    console.log("stripe_Account_Id", stripe_Account_Id.stripe_user_id);
-    Stripe.charges
-      .create(
-        {
-          amount: 1000,
-          currency: "usd",
-          source: "tok_visa"
-        },
-        {
-          stripe_account: account_id
-        }
-      )
-      .then(function(charge) {
-        // asynchronously called
-        console.log("charge------------>", charge);
-      });
+    console.log("charge------------>", charge);
   },
   getStripeToken: function(code) {
     Meteor.http.call(
