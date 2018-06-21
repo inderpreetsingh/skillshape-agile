@@ -496,17 +496,22 @@ export default class SchoolViewBase extends React.Component {
   };
 
   // This is used to send purchase request email when user wants to purchase a package.
-  handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
+  handlePurcasePackage = (
+    typeOfTable,
+    tableId,
+    schoolId,
+    packageName,
+    amount
+  ) => {
     // Start loading
 
-    console.log("handlePurchase Package called in schoolview");
     const { toastr } = this.props;
     let self = this;
-    let schoolAccountConnected; // Needs to pay through card if school's stripe account is connected.
+    let schoolAccountConnected = true; // Needs to pay through card if school's stripe account is connected.
     if (schoolAccountConnected) {
       var handler = StripeCheckout.configure({
         key: Meteor.settings.public.stripe.PUBLIC_KEY,
-        image: "https://stripe.com/img/documentation/checkout/marketplace.png",
+        image: "/images/logo-location.png",
         locale: "auto",
         token: function(token) {
           // You can access the token ID with `token.id`.
@@ -518,10 +523,10 @@ export default class SchoolViewBase extends React.Component {
 
       // Open Checkout with further options:
       handler.open({
-        name: "Stripe.com",
-        description: "Skill",
+        name: "Skillshape.com",
+        description: packageName,
         zipCode: true,
-        amount: 2000
+        amount: amount * 100
       });
 
       // Close Checkout on page navigation:

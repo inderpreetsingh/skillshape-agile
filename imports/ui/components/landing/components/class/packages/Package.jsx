@@ -191,6 +191,7 @@ const Package = props => (
           <PriceSection>
             {" "}
             {/* used for enrollment packages */}
+            {console.log("enrollment packages")}
             <Price>{props.cost && `${props.cost}$`}</Price>
             <NoOfClasses>${props.cost && "For Enrollment"}</NoOfClasses>
           </PriceSection>
@@ -207,7 +208,9 @@ const Package = props => (
               props.onAddToCartIconButtonClick(
                 props.packageType,
                 props._id,
-                props.schoolId
+                props.schoolId,
+                props.packageName,
+                props.cost
               )
             }
           />
