@@ -191,7 +191,6 @@ const Package = props => (
           <PriceSection>
             {" "}
             {/* used for enrollment packages */}
-            {console.log("enrollment packages")}
             <Price>{props.cost && `${props.cost}$`}</Price>
             <NoOfClasses>${props.cost && "For Enrollment"}</NoOfClasses>
           </PriceSection>
@@ -203,6 +202,7 @@ const Package = props => (
               Meteor.settings.public.stripeClientId
             }&scope=read_write`}
           > */}
+          {console.log("package in package", props)}
           <Cart
             onClick={() =>
               props.onAddToCartIconButtonClick(
@@ -210,7 +210,10 @@ const Package = props => (
                 props._id,
                 props.schoolId,
                 props.packageName,
-                props.cost
+                props.cost,
+                props._id,
+                props.packageType,
+                props.pymtDetails
               )
             }
           />

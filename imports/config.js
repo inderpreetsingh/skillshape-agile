@@ -40,7 +40,8 @@ export default (config = Object.freeze({
     schoolMemberDetails: "SchoolMemberDetails",
     classTypeLocationRequest: "ClassTypeLocationRequest",
     PackageRequest: "PackageRequest",
-    userStripeData: "UserStripeData"
+    userStripeData: "UserStripeData",
+    purchases: "Purchases"
   },
   gender: [
     { label: "Other", value: "Other" },

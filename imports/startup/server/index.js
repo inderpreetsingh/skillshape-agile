@@ -27,7 +27,7 @@ import "/imports/api/pricingRequest/methods";
 import "/imports/api/packagesRequest/methods";
 import "/imports/api/classTypeLocationRequest/methods";
 import "/imports/api/stripe/methods";
-
+import "/imports/api/purchases/methods";
 // All publication imported over here
 
 import "/imports/api/modules/server/publication";

@@ -1,24 +1,47 @@
 import UserStripeData from "./fields";
 Meteor.methods({
-  chargeCard: function(stripeToken) {
+  chargeCard: async function(
+    stripeToken,
+    amount,
+    desc,
+    packageId,
+    packageType
+  ) {
+    console.log(
+      "amount, desc",
+      stripeToken,
+      amount,
+      desc,
+      packageId,
+      packageType
+    );
     var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
     const token = stripeToken;
-
-    stripe.charges
-      .create({
-        amount: 999,
-        currency: "usd",
-        description: "Example charge",
-        source: token,
-        destination: {
-          account: "acct_1CezDcCfNNL9TPqv"
-        }
-      })
-
-      .then(function(charge) {
-        // asynchronously called
-        console.log("charge------------>", charge);
-      });
+    let stripe_Request = {
+      amount: amount,
+      currency: "usd",
+      description: desc,
+      source: token,
+      destination: {
+        account: "acct_1CezDcCfNNL9TPqv"
+      }
+    };
+    let userId = this.userId;
+    try {
+      let charge = await stripe.charges.create(stripe_Request);
+      let payload = {
+        userId: userId,
+        stripe_Request: stripe_Request,
+        stripe_Response: charge,
+        createdOn: new Date(),
+        packageId: packageId,
+        packageType: packageType
+      };
+      console.log("================", payload);
+      Meteor.call("addPurchase", payload);
+    } catch (error) {
+      console.log(error);
+    }
   },
   getStripeToken: function(code) {
     Meteor.http.call(

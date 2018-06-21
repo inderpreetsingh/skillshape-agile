@@ -501,23 +501,44 @@ export default class SchoolViewBase extends React.Component {
     tableId,
     schoolId,
     packageName,
-    amount
+    amount,
+    packageId,
+    packageType,
+    monthlyPymtDetails
   ) => {
     // Start loading
-
     const { toastr } = this.props;
     let self = this;
+    console.log(
+      "schoolbaseview",
+      typeOfTable,
+      tableId,
+      schoolId,
+      packageName,
+      amount,
+      packageId,
+      packageType,
+      monthlyPymtDetails
+    );
     let schoolAccountConnected = true; // Needs to pay through card if school's stripe account is connected.
     if (schoolAccountConnected) {
+      if (monthlyPymtDetails) {
+        amount = monthlyPymtDetails[0].cost;
+      }
+      amount = amount * 100;
       var handler = StripeCheckout.configure({
         key: Meteor.settings.public.stripe.PUBLIC_KEY,
         image: "/images/logo-location.png",
         locale: "auto",
         token: function(token) {
-          // You can access the token ID with `token.id`.
-          // Get the token ID to your server-side code for use.
-          console.log("token id is", token);
-          Meteor.call("chargeCard", token.id);
+          Meteor.call(
+            "chargeCard",
+            token.id,
+            amount,
+            packageName,
+            packageId,
+            packageType
+          );
         }
       });
 
@@ -526,7 +547,7 @@ export default class SchoolViewBase extends React.Component {
         name: "Skillshape.com",
         description: packageName,
         zipCode: true,
-        amount: amount * 100
+        amount: amount
       });
 
       // Close Checkout on page navigation:
