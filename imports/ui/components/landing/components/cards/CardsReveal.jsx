@@ -24,7 +24,6 @@ const styles = {
     flexDirection: 'column',
     position: 'relative',
     cursor: 'pointer',
-    minHeight: 420
   },
   cardIcon : {
     cursor: 'pointer',
