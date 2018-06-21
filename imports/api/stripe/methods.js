@@ -14,6 +14,7 @@ Meteor.methods({
           account: "acct_1CezDcCfNNL9TPqv"
         }
       })
+
       .then(function(charge) {
         // asynchronously called
         console.log("charge------------>", charge);
@@ -28,8 +29,16 @@ Meteor.methods({
       (error, result) => {
         console.log("result--------->", result, this.userId);
         console.log("error--->", error);
-
-        if (result && result.data && result.data.stripe_user_id) {
+        if (result && result.statusCode == 400) {
+          // if (result && result.data.error) {
+          //   throw new Meteor.Error(result.data.error_description);
+          // }
+        } else if (
+          !error &&
+          result &&
+          result.data &&
+          result.data.stripe_user_id
+        ) {
           let payload = {
             userId: this.userId,
             stripe_user_id: result.data.stripe_user_id,
