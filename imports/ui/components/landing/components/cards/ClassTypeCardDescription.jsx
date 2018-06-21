@@ -126,11 +126,13 @@ const ClassTypeCardDescription = (props) => {
     <MuiThemeProvider theme={MuiTheme}>
         <Fragment>
             <RatingsWrapper itemScope itemType="http://schema.org/AggregateRating">
+                {!props.hideClassTypeOptions &&
+                <Fragment>
                 <ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount"/>
                 <Reviews href="#">
                     <Typography>
                       <span itemProp="reviewCount">{props.reviews}</span> Reviews</Typography>
-                </Reviews>
+                </Reviews></Fragment>}
             </RatingsWrapper>
 
             <ClassDescription className="description">
