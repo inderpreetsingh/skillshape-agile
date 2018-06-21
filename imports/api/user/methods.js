@@ -73,10 +73,13 @@ Meteor.methods({
 	        }
 	    }
 	},
-	"user.setPassword": function({password}) {
+	"user.setPassword": function({password, logout}) {
+		console.log(this.userId,"Meteor.userId");
+		let userLogout = true;
+		if(logout === false) userLogout = false;
 		if(this.userId) {
 			Meteor.users.update({ _id: this.userId},{ $set: { "profile.passwordSetByUser": true } });
-			return Accounts.setPassword(this.userId, password)
+			return Accounts.setPassword(this.userId, password, {logout : userLogout});
 		} else {
 			throw new Meteor.Error("User not found!!");
 		}

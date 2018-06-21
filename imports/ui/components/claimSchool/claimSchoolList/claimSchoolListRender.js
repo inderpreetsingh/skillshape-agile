@@ -19,14 +19,10 @@ const CARD_WIDTH = 300;
 const NoResultContainer = styled.div`
   text-align: center;
   width: 100%;
-  height: 100vh;
-  ${helpers.flexCenter}
+  min-height: 100vh;
+  display: flex;
   flex-direction: column;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    min-height: 100vh;
-    height: auto;
-  }
+  padding: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Wrapper = styled.div`
