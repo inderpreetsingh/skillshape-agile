@@ -4,13 +4,20 @@ Meteor.methods({
     var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
     const token = stripeToken;
 
-    const charge = stripe.charges.create({
-      amount: 999,
-      currency: "usd",
-      description: "Example charge",
-      source: token
-    });
-    console.log("charge------------>", charge);
+    stripe.charges
+      .create({
+        amount: 999,
+        currency: "usd",
+        description: "Example charge",
+        source: token,
+        destination: {
+          account: "acct_1CezDcCfNNL9TPqv"
+        }
+      })
+      .then(function(charge) {
+        // asynchronously called
+        console.log("charge------------>", charge);
+      });
   },
   getStripeToken: function(code) {
     Meteor.http.call(
