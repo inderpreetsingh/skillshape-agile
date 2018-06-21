@@ -40,7 +40,7 @@ import ContactUs from "/imports/ui/pages/contactUs";
 import ContactUsPage from "/imports/ui/pages/ContactUsPage";
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
 import StripeConnectModal from "./../../ui/modal/stripeConnectModal";
-
+import Financials from "/imports/ui/components/financials";
 import { componentLoader } from "/imports/util";
 export default (Routes = componentLoader(props => (
   <Router history={browserHistory}>
@@ -124,6 +124,11 @@ export default (Routes = componentLoader(props => (
           path="/schools/:slug/members"
           name="SchoolMemberView"
           component={SchoolMemberView}
+        />
+        <Route
+          path="/schools/:slug/financials"
+          name="Financials"
+          component={Financials}
         />
         <Route
           path="/classmates"

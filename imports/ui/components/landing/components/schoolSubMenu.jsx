@@ -49,7 +49,7 @@ class SchoolSubMenu extends React.Component {
                   },
                   {
                     name: "Financials",
-                    link: `${school.link}/members`,
+                    link: `${school.link}/financials`,
                     iconName: "attach_money"
                   }
                 ]}
@@ -103,7 +103,7 @@ class SchoolSubMenu extends React.Component {
                         },
                         {
                           name: "Financials",
-                          link: `${school.link}/members`,
+                          link: `${school.link}/financials`,
                           iconName: "attach_money"
                         }
                       ]}

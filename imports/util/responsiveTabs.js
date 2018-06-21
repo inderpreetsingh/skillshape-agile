@@ -43,10 +43,12 @@ class ResponsiveTabs extends React.Component {
     }
   }
   componentDidMount() {
-    if (this.props.tabValue == undefined) {
-      this.props.onTabChange(0);
-    } else {
-      this.props.onTabChange(this.props.tabValue);
+    if (this.props.page == !"Financials") {
+      if (this.props.tabValue == undefined) {
+        this.props.onTabChange(0);
+      } else {
+        this.props.onTabChange(this.props.tabValue);
+      }
     }
   }
   render() {
