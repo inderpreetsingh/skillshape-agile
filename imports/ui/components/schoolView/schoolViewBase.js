@@ -12,11 +12,11 @@ import { Loading } from "/imports/ui/loading";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import { isEmpty } from "lodash";
 import { getUserFullName } from "/imports/util/getUserData";
-
+import { toastrModal } from "/imports/util";
 export default class SchoolViewBase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { chargeResult: null };
   }
 
   componentWillMount() {
@@ -525,7 +525,7 @@ export default class SchoolViewBase extends React.Component {
       if (monthlyPymtDetails) {
         amount = monthlyPymtDetails[0].cost;
       }
-      amount = amount * 100;
+      amount = amount;
       var handler = StripeCheckout.configure({
         key: Meteor.settings.public.stripe.PUBLIC_KEY,
         image: "/images/logo-location.png",
@@ -538,7 +538,14 @@ export default class SchoolViewBase extends React.Component {
             packageName,
             packageId,
             packageType,
-            schoolId
+            schoolId,
+            (error, result) => {
+              if (result == "Payment Successfully Done") {
+                toastr.success(result, "Success");
+              } else {
+                toastr.error(result.message, "Error");
+              }
+            }
           );
         }
       });

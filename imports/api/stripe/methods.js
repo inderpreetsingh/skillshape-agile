@@ -8,15 +8,6 @@ Meteor.methods({
     packageType,
     schoolId
   ) {
-    console.log(
-      "amount, desc",
-      stripeToken,
-      amount,
-      desc,
-      packageId,
-      packageType,
-      schoolId
-    );
     var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
     const token = stripeToken;
     let stripe_Request = {
@@ -40,10 +31,11 @@ Meteor.methods({
         packageType: packageType,
         schoolId: schoolId
       };
-      console.log("================", payload);
+
       Meteor.call("addPurchase", payload);
+      return "Payment Successfully Done";
     } catch (error) {
-      console.log(error);
+      return error;
     }
   },
   getStripeToken: function(code) {
@@ -59,7 +51,7 @@ Meteor.methods({
         stripe_user_id: result.data.stripe_user_id,
         stripe_user_refresh_token: result.data.refresh_token
       };
-      console.log("payload------------", payload);
+
       let userData = UserStripeData.findOne({
         stripe_user_id: payload.stripe_user_id
       });
