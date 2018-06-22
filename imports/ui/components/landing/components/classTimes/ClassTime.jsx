@@ -16,11 +16,11 @@ import Events from '/imports/util/events';
 import {toastrModal, formatDate, formatTime} from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
-import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
+import { DAYS_IN_WEEK, CLASS_TIMES_CARD_WIDTH } from '/imports/ui/components/landing/constants/classTypeConstants.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ClassTimeContainer = styled.div`
-  width: 250px;
+  width: ${CLASS_TIMES_CARD_WIDTH}px;
   height: 420px;
   padding: ${helpers.rhythmDiv}px;
   padding: ${helpers.rhythmDiv * 2}px;
@@ -47,13 +47,9 @@ const ClassTimeContainer = styled.div`
   }
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
-    max-width: 250px;
-    width: 100%;
     margin: 0 auto;
   }
 
-  @media screen and (max-width: ${helpers.mobile}px) {
-  }
 `;
 
 const ClassTimeContainerOuterWrapper = styled.div`
@@ -334,7 +330,7 @@ class ClassTime extends Component {
   _getCalenderButton = (addToCalender) => {
     const iconName = addToCalender ? "add_circle_outline": "delete";
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
-    if(addToCalender) {
+    if(addToCalender || !Meteor.userId()) {
       return (
          <ClassTimeButton
               icon

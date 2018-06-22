@@ -282,4 +282,4 @@ CardsReveal.defaultProps = {
    name: 'Card Title'
 }
 
-export default withStyles(styles)(withImageExists(CardsReveal,imageExistsConfig));
+export default withStyles(styles)(CardsReveal);
