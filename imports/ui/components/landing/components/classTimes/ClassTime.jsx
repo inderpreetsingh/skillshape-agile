@@ -149,8 +149,8 @@ const ClassTimesCardWrapper = styled.div`
   padding: 0 ${helpers.rhythmDiv}px;
   display: flex;
   flex-direction: column;
-  max-height: 304px;
-  bottom: 60px;
+  max-height: 296px;
+  top: 64px;
 `;
 
 const Trending = () => {

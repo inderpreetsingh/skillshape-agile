@@ -30,10 +30,10 @@ const styles = {
   },
   cardItem: {
     backgroundColor: 'white',
-    padding: helpers.rhythmDiv,
+    padding: `${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px`,
     marginBottom: helpers.rhythmDiv,
     fontWeight: '300',
-    width: 200,
+    width: '100%',
     fontSize: helpers.baseFontSize,
     fontFamily: helpers.specialFont
   },
@@ -75,9 +75,9 @@ const OuterWrapper = styled.div`
 
 const Wrapper = styled.div`
   height: 100%;
-  padding: ${helpers.rhythmDiv}px;
-  padding-top: ${helpers.rhythmDiv * 2}px;
-  padding-bottom: 0;
+  padding: 0 ${helpers.rhythmDiv}px;
+  // padding-top: ${helpers.rhythmDiv * 2}px;
+  // padding-bottom: 0;
   transition: transform .1s linear, opacity .2s ease-out ${props => props.show ? '.1s' : '0s'};
   opacity: ${props => props.show ? 1 : 0};
   background: transparent;
@@ -100,7 +100,7 @@ const Text = styled.p`
 const Day = Text.extend`
   text-align: center;
   font-weight: 400;
-  margin-bottom: ${helpers.rhythmDiv/2}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const Heading = Day.extend`
@@ -114,7 +114,7 @@ const Times = styled.ul`
 
 const Time = Text.withComponent('li').extend`
   list-style: none;
-  margin-bottom: ${helpers.rhythmDiv/2}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const Bold = styled.span`
@@ -190,7 +190,7 @@ const ClassTimesCard = (props) =>  {
     {/*<Paper className={props.classes.cardTop}>
       <Button variant="raised" color='secondary' className={props.classes.cardIconButton} aria-label="close" onClick={props.onClose}>
         <Icon className={props.classes.icon}>keyboard_arrow_down</Icon>
-      </Button> 
+      </Button>
     </Paper>*/}
     <Paper className={wrapperClassName} elevation={3}>
     <Wrapper show={props.show}>
