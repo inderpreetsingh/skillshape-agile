@@ -33,7 +33,7 @@ import ClassTimeButton from "/imports/ui/components/landing/components/buttons/C
 import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx";
 import Events from "/imports/util/events";
 import * as settings from "/imports/ui/components/landing/site-settings.js";
-
+import { toastrModal } from "/imports/util";
 const formStyle = formStyles();
 
 const styles = theme => {
@@ -98,7 +98,19 @@ class StripeConnectModal extends React.Component {
     };
   }
   componentWillMount() {
-    Meteor.call("getStripeToken", this.props.location.query.code);
+    if (this.props.location.query && this.props.location.query.code) {
+      const { toastr } = this.props;
+      Meteor.call(
+        "getStripeToken",
+        this.props.location.query.code,
+        (err, res) => {
+          if (err) {
+            toastr.error(err.message || err.reason, "Error");
+          } else if (res) {
+          }
+        }
+      );
+    }
   }
   render() {
     {
@@ -112,4 +124,6 @@ class StripeConnectModal extends React.Component {
   }
 }
 
-export default withMobileDialog()(withStyles(styles)(StripeConnectModal));
+export default withMobileDialog()(
+  withStyles(styles)(toastrModal(StripeConnectModal))
+);
