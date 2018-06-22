@@ -525,7 +525,7 @@ export default class SchoolViewBase extends React.Component {
       if (monthlyPymtDetails) {
         amount = monthlyPymtDetails[0].cost;
       }
-      amount = amount;
+      amount = amount * 100;
       var handler = StripeCheckout.configure({
         key: Meteor.settings.public.stripe.PUBLIC_KEY,
         image: "/images/logo-location.png",
