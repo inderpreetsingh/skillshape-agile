@@ -40,7 +40,7 @@ export default class Financials extends React.Component {
               {this.state.tabValue === 0 && <Settings />}
               {this.state.tabValue === 1 && <Payouts {...this.props} />}
               {this.state.tabValue === 2 && <Transactions {...this.props} />}
-              {this.state.tabValue === 3 && <Students />}
+              {this.state.tabValue === 3 && <Students {...this.props} />}
             </div>
           </div>
         ) : (

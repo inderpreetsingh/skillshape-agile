@@ -35,5 +35,8 @@ export const PurchasesSchema = new SimpleSchema({
 });
 
 Purchases.attachSchema(PurchasesSchema);
-
+Purchases.join(Meteor.users, "userId", "profile", [
+  "profile.name",
+  "emails.address"
+]);
 export default Purchases;

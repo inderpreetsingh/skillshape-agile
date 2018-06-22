@@ -21,7 +21,13 @@ class Transactions extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      PurchaseData: []
+      PurchaseData: [],
+      isBusy: true,
+      perPage: 10,
+
+      usersCount: 0,
+      errorText: null,
+      pageCount: 0
     };
   }
   componentWillMount() {
@@ -32,14 +38,10 @@ class Transactions extends React.Component {
     //   this.setState({ PurchaseData: res });
     // });
   }
-  handlePageClick = ({ skip }) => {
-    console.log("skip -->>", skip);
-    this.setState({ isBusy: true });
-    this.getUsers({ limit: this.state.perPage, skip: skip });
-  };
 
   render() {
-    const { purchaseData } = this.props;
+    const { isBusy, pageCount, usersCount } = this.state;
+    const { purchaseData, handlePageClick } = this.props;
     console.log("PurchaseData--->", this.props);
     return (
       <div>
@@ -88,6 +90,11 @@ class Transactions extends React.Component {
                 );
               })}
         </TransactionDetailsTable>
+        <Pagination
+          {...this.state}
+          pageCount={pageCount}
+          onChange={handlePageClick}
+        />
       </div>
     );
   }
@@ -102,9 +109,14 @@ export default createContainer(props => {
   // if (purchaseSubscription.ready()) {
   let purchaseData = Purchases.find().fetch();
   // }
-
+  handlePageClick = ({ skip }) => {
+    console.log("skip -->>", skip);
+    this.setState({ isBusy: true });
+    this.getUsers({ limit: this.state.perPage, skip: skip });
+  };
   return {
     purchaseData,
-    props
+    props,
+    handlePageClick
   };
 }, Transactions);

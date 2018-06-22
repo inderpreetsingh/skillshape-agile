@@ -16,6 +16,7 @@ Meteor.methods({
       description: desc,
       source: token,
       destination: {
+        amount: 5,
         account: "acct_1CezDcCfNNL9TPqv"
       }
     };

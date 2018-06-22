@@ -51,14 +51,15 @@ class Payouts extends React.Component {
                 return (
                   <TableRow key={purchase._id} selectable={false}>
                     <TableCell style={style.w150}>
-                      {purchase.stripe_Response.amount || "Unavailable"}
+                      {purchase.stripe_Response.amount}
                     </TableCell>
                     <TableCell style={style.w211}>
-                      {purchase.stripe_Response.source.last4 || "Unavailable"}
+                      {purchase.stripe_Response.source.last4}
                     </TableCell>
                     <TableCell style={style.w150}>
-                      {moment(purchase.createdOn).format("YYYY-MM-DD") ||
-                        "Unavailable"}
+                      {moment(purchase.createdOn).format(
+                        "MMMM Do YYYY, h:mm:ss a"
+                      )}
                     </TableCell>
                   </TableRow>
                 );
