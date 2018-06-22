@@ -537,7 +537,8 @@ export default class SchoolViewBase extends React.Component {
             amount,
             packageName,
             packageId,
-            packageType
+            packageType,
+            schoolId
           );
         }
       });

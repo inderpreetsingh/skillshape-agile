@@ -5,7 +5,8 @@ Meteor.methods({
     amount,
     desc,
     packageId,
-    packageType
+    packageType,
+    schoolId
   ) {
     console.log(
       "amount, desc",
@@ -13,7 +14,8 @@ Meteor.methods({
       amount,
       desc,
       packageId,
-      packageType
+      packageType,
+      schoolId
     );
     var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
     const token = stripeToken;
@@ -35,7 +37,8 @@ Meteor.methods({
         stripe_Response: charge,
         createdOn: new Date(),
         packageId: packageId,
-        packageType: packageType
+        packageType: packageType,
+        schoolId: schoolId
       };
       console.log("================", payload);
       Meteor.call("addPurchase", payload);
