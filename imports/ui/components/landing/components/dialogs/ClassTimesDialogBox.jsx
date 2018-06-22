@@ -44,7 +44,7 @@ const styles = {
   dialogPaper: {
     maxWidth: 600,
     background: "white",
-    margin: 8,
+    margin: helpers.rhythmDiv,
     overflowY: 'auto'
   },
   dialogTitle: {
@@ -78,7 +78,7 @@ const MyScrollToElement = styled.div`
   // padding: ${helpers.rhythmDiv * 2}px 0;
   padding-top: ${helpers.rhythmDiv * 2}px;
   @media screen and (max-width: ${helpers.mobile + 100}px) {
-    padding: ${helpers.rhythmDiv * 2}px;
+    padding: ${helpers.rhythmDiv * 2}px 0;
   }
 `;
 
@@ -381,6 +381,7 @@ class ClassTimesDialogBox extends React.Component {
                   <ClassTypeCoverImg src={this.props.classTypeImg} />
                   <ClassTypeName>{this.props.classTypeName.toLowerCase()}</ClassTypeName>
                   <ClassTimesBoxes
+                    withSlider={false}
                     classTimesData={classTimesData}
                     classInterestData={classInterestData}
                   />

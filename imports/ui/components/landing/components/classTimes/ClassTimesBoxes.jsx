@@ -21,7 +21,7 @@ const SliderWrapper = styled.div`
 const BarWrapper = styled.div`
   display: block;
   @media screen and (max-width: ${helpers.mobile + 100}px) {
-    display: ${props => props.withSlider ? 'none' : 'block'};
+    display: ${props => props.show ? 'none' : 'block'};
   }
 `;
 
@@ -71,7 +71,7 @@ ClassTimesBoxes.propTypes = {
   classTimesData: PropTypes.arrayOf(classTime),
 }
 
-ClassTimesBoxes.propTypes = {
+ClassTimesBoxes.defaultProps = {
   withSlider: true
 }
 

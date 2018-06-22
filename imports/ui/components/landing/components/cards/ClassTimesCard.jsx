@@ -8,7 +8,7 @@ import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
 
 import {formatTime, formatAmPm, formatDateNoYear } from '/imports/util';
-import {DAYS_IN_WEEK} from '/imports/ui/components/landing/constants/classTypeConstants.js';
+import {DAYS_IN_WEEK, CLASS_TIMES_CARD_WIDTH} from '/imports/ui/components/landing/constants/classTypeConstants.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = {
@@ -66,6 +66,8 @@ const styles = {
 }
 
 const OuterWrapper = styled.div`
+  max-width: ${CLASS_TIMES_CARD_WIDTH}px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -74,6 +76,7 @@ const OuterWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
+  max-width: 100%;
   height: 100%;
   padding: 0 ${helpers.rhythmDiv}px;
   // padding-top: ${helpers.rhythmDiv * 2}px;

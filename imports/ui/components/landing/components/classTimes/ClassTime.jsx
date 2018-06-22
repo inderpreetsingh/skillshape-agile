@@ -50,6 +50,11 @@ const ClassTimeContainer = styled.div`
     margin: 0 auto;
   }
 
+  @media screen and (max-width: ${helpers.mobile}px ) {
+    // max-width: ${CLASS_TIMES_CARD_WIDTH}px;
+    // width: 100%;
+  }
+
 `;
 
 const ClassTimeContainerOuterWrapper = styled.div`
