@@ -49,3 +49,4 @@ import "/imports/api/user/server/publication";
 import "/imports/api/review/server/publication";
 import "/imports/api/claimSchoolRequest/cronjob";
 import "/imports/api/stripe/server/publication";
+import "/imports/api/purchases/server/publication";

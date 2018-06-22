@@ -525,7 +525,7 @@ export default class SchoolViewBase extends React.Component {
       if (monthlyPymtDetails) {
         amount = monthlyPymtDetails[0].cost;
       }
-
+      amount = amount * 100;
       var handler = StripeCheckout.configure({
         key: Meteor.settings.public.stripe.PUBLIC_KEY,
         image: "/images/logo-location.png",
@@ -548,7 +548,7 @@ export default class SchoolViewBase extends React.Component {
         name: "Skillshape.com",
         description: packageName,
         zipCode: true,
-        amount: amount * 100
+        amount: amount
       });
 
       // Close Checkout on page navigation:

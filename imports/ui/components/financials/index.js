@@ -22,24 +22,34 @@ export default class Financials extends React.Component {
   };
 
   render() {
+    console.log("this.props in finanicals", this.props);
+    let { currentUser } = this.props;
     return (
       <DocumentTitle title="Financials">
-        <div>
-          <ResponsiveTabs
-            tabs={["Settings", "Payouts", "Transactions", "Students"]}
-            color="primary"
-            onTabChange={this.onTabChange}
-            tabValue={this.state.tabValue}
-            queryTabValue={this.state.queryTabValue}
-            page="Financials"
-          />
+        {checkMyAccess({ user: currentUser }) ? (
           <div>
-            {this.state.tabValue === 0 && <Settings />}
-            {this.state.tabValue === 1 && <Payouts />}
-            {this.state.tabValue === 2 && <Transactions />}
-            {this.state.tabValue === 3 && <Students />}
+            <ResponsiveTabs
+              tabs={["Settings", "Payouts", "Transactions", "Students"]}
+              color="primary"
+              onTabChange={this.onTabChange}
+              tabValue={this.state.tabValue}
+              queryTabValue={this.state.queryTabValue}
+              page="Financials"
+            />
+            <div>
+              {this.state.tabValue === 0 && <Settings />}
+              {this.state.tabValue === 1 && <Payouts {...this.props} />}
+              {this.state.tabValue === 2 && <Transactions {...this.props} />}
+              {this.state.tabValue === 3 && <Students />}
+            </div>
           </div>
-        </div>
+        ) : (
+          <center>
+            <div>
+              <h1>Access Denied</h1>
+            </div>
+          </center>
+        )}
       </DocumentTitle>
     );
   }

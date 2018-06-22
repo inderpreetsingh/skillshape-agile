@@ -4,6 +4,8 @@ import { PayoutDetailsTable } from "./payoutDetailsTable";
 import { TableRow, TableCell } from "material-ui/Table";
 import isEmpty from "lodash/isEmpty";
 import moment from "moment";
+import { createContainer } from "meteor/react-meteor-data";
+import Purchases from "/imports/api/purchases/fields";
 const style = {
   w211: {
     width: 211
@@ -15,7 +17,7 @@ const style = {
     width: 150
   }
 };
-export default class Payouts extends React.Component {
+class Payouts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,10 +25,12 @@ export default class Payouts extends React.Component {
     };
   }
   componentWillMount() {
-    Meteor.call("getAllPurchaseData", (err, res) => {
-      console.log("------------->AllPurchaseData<---------", res);
-      this.setState({ PurchaseData: res });
-    });
+    console.log("this.props in payout", this.props);
+
+    // Meteor.call("getAllPurchaseData", this.props.params.slug, (err, res) => {
+    //   console.log("------------->AllPurchaseData<---------", res);
+    //   this.setState({ PurchaseData: res });
+    // });
   }
   handlePageClick = ({ skip }) => {
     console.log("skip -->>", skip);
@@ -35,15 +39,15 @@ export default class Payouts extends React.Component {
   };
 
   render() {
-    const { PurchaseData } = this.state;
-    console.log("PurchaseData--->", PurchaseData);
+    const { purchaseData } = this.props;
+    console.log("PurchaseData--->", this.props);
     return (
       <div>
         <h1>Payouts</h1>
         <PayoutDetailsTable>
-          {isEmpty(PurchaseData)
+          {isEmpty(purchaseData)
             ? "No payout found"
-            : PurchaseData.map(purchase => {
+            : purchaseData.map(purchase => {
                 return (
                   <TableRow key={purchase._id} selectable={false}>
                     <TableCell style={style.w150}>
@@ -64,3 +68,19 @@ export default class Payouts extends React.Component {
     );
   }
 }
+export default createContainer(props => {
+  console.log("payout props----->", props);
+  let purchaseSubscription = Meteor.subscribe(
+    "getAllPurchaseData",
+    props.params.slug
+  );
+  // let purchaseData = [];
+  // if (purchaseSubscription.ready()) {
+  let purchaseData = Purchases.find().fetch();
+  // }
+
+  return {
+    purchaseData,
+    props
+  };
+}, Payouts);
