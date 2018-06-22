@@ -85,7 +85,7 @@ const Wrapper = styled.div`
 `;
 
 const CardContent = styled.div`
-  padding-right: ${helpers.rhythmDiv}px;
+  // padding-right: ${helpers.rhythmDiv}px;
 `;
 
 const Text = styled.p`
@@ -187,11 +187,11 @@ const ClassTimesCard = (props) =>  {
   }
 
   return (<OuterWrapper show={props.show}>
-    <Paper className={props.classes.cardTop}>
+    {/*<Paper className={props.classes.cardTop}>
       <Button variant="raised" color='secondary' className={props.classes.cardIconButton} aria-label="close" onClick={props.onClose}>
         <Icon className={props.classes.icon}>keyboard_arrow_down</Icon>
-      </Button>
-    </Paper>
+      </Button> 
+    </Paper>*/}
     <Paper className={wrapperClassName} elevation={3}>
     <Wrapper show={props.show}>
       <CardContent>
