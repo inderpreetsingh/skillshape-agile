@@ -7,13 +7,17 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { isEmpty } from 'lodash';
 
-import classTime from '../../constants/structure/classTime.js';
-import ClassTime from './ClassTime.jsx';
+import ClassTime from '/imports/ui/components/landing/components/classTimes/ClassTime.jsx';
+
 import ClassInterest from "/imports/api/classInterest/fields";
 
-import  {getContainerMaxWidth} from '../../../../../util/cards.js';
+import classTime from '/imports/ui/components/landing/constants/structure/classTime.js';
+import { CLASS_TIMES_CARD_WIDTH } from '/imports/ui/components/landing/constants/classTypeConstants.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-import * as helpers from '../jss/helpers.js';
+import  {getContainerMaxWidth} from '/imports/util/cards.js';
+
+const CARD_WIDTH = CLASS_TIMES_CARD_WIDTH;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -25,10 +29,6 @@ const styles = {
     justifyContent: 'center'
   }
 }
-
-
-const CARD_WIDTH = 250;
-
 
 const ClassTimesWrapper = styled.div`
   max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,4)}px;

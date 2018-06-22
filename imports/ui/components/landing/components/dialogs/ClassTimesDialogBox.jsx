@@ -14,13 +14,14 @@ import { withStyles } from "material-ui/styles";
 import { MuiThemeProvider } from "material-ui/styles";
 import ClearIcon from "material-ui-icons/Clear";
 
+import ClassTimesBar from "/imports/ui/components/landing/components/classTimes/ClassTimesBar";
 import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
 
-import PrimaryButton from "../buttons/PrimaryButton";
-import SecondaryButton from "../buttons/SecondaryButton";
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
+import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
 
-import * as helpers from "../jss/helpers.js";
-import muiTheme from "../jss/muitheme.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 
 import Dialog, {
   DialogActions,
@@ -43,7 +44,7 @@ const styles = {
   dialogPaper: {
     maxWidth: 600,
     background: "white",
-    margin: 8,
+    margin: helpers.rhythmDiv,
     overflowY: 'auto'
   },
   dialogTitle: {
@@ -77,7 +78,7 @@ const MyScrollToElement = styled.div`
   // padding: ${helpers.rhythmDiv * 2}px 0;
   padding-top: ${helpers.rhythmDiv * 2}px;
   @media screen and (max-width: ${helpers.mobile + 100}px) {
-    padding: ${helpers.rhythmDiv * 2}px;
+    padding: ${helpers.rhythmDiv * 2}px 0;
   }
 `;
 
@@ -99,6 +100,28 @@ const ClassContainerHeader = styled.div`
     flex-direction: column;
     align-items: flex-start;
   }
+`;
+
+const ContentWrapper = styled.div`
+
+`;
+
+const ClassTypeCoverImg = styled.div`
+  ${helpers.coverBg}
+  background-position: center center;
+  width: 100%;
+  height: ${helpers.rhythmDiv * 30}px;
+  background-image: url(${props => props.src});
+`;
+
+const ClassTypeName = styled.h2`
+  margin: ${helpers.rhythmDiv * 2}px 0;
+  text-align: center;
+  font-weight: 400;
+  font-size: ${helpers.baseFontSize * 2}px;
+  color: ${helpers.primaryColor};
+  text-transform: capitalize;
+  font-family: ${helpers.specialFont};
 `;
 
 const ClassTimings = styled.p`
@@ -354,10 +377,15 @@ class ClassTimesDialogBox extends React.Component {
                   </RequestsClassTimes>
                 </ClassContainer>
               ) : (
-                <ClassTimesBoxes
-                  classTimesData={classTimesData}
-                  classInterestData={classInterestData}
-                />
+                <ContentWrapper>
+                  <ClassTypeCoverImg src={this.props.classTypeImg} />
+                  <ClassTypeName>{this.props.classTypeName.toLowerCase()}</ClassTypeName>
+                  <ClassTimesBoxes
+                    withSlider={false}
+                    classTimesData={classTimesData}
+                    classInterestData={classInterestData}
+                  />
+                </ContentWrapper>
               )}
               {this.props.errorText && (
                 <ErrorWrapper>{this.props.errorText}</ErrorWrapper>

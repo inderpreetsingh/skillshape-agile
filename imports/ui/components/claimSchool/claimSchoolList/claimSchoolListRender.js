@@ -22,7 +22,6 @@ const NoResultContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Wrapper = styled.div`
@@ -42,12 +41,13 @@ const FormSubmitButtonWrapper =styled.div`
 
 const TextWrapper =styled.div`
   font-size: ${helpers.baseFontSize * 1.25}px;
+  text-align: left;
   max-width: 900px;
   margin-left: ${helpers.rhythmDiv * 2}px;
 `;
 
 
-const GridContainer = styled.div`
+const GridInnerWrapper = styled.div`
   ${helpers.flexCenter}
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -67,7 +67,7 @@ const GridItem = styled.div`
   }
 `;
 
-const CardsListGridWrapper = styled.div`
+const GridWrapper = styled.div`
     padding: ${SPACING/2}px;
     margin: 0 auto;
     max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
@@ -106,20 +106,22 @@ export default function (props) {
 
     if(isEmpty(schools)) {
         return (
-            <NoResultContainer>
-              <NoneOfMyLisiting {...props} />
-              <NoResults
-                  removeAllFiltersButtonClick={this.props.removeAllFilters}
-                  addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
-              />
-            </NoResultContainer>
+            <GridWrapper>
+              <NoResultContainer>
+                <NoneOfMyLisiting {...props} />
+                <NoResults
+                    removeAllFiltersButtonClick={this.props.removeAllFilters}
+                    addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
+                />
+              </NoResultContainer>
+            </GridWrapper>
         )
     } else {
         return (
             <div>
-                <CardsListGridWrapper>
+                <GridWrapper>
                   <NoneOfMyLisiting {...props} />
-                  <GridContainer>
+                  <GridInnerWrapper>
                     {
                       schools.map((school, index) => {
                           return (
@@ -129,8 +131,8 @@ export default function (props) {
                           )
                       })
                     }
-                    </GridContainer>
-                </CardsListGridWrapper>
+                    </GridInnerWrapper>
+                </GridWrapper>
             </div>
         )
     }

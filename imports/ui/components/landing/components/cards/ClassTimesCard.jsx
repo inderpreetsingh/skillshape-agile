@@ -8,7 +8,7 @@ import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
 
 import {formatTime, formatAmPm, formatDateNoYear } from '/imports/util';
-import {DAYS_IN_WEEK} from '/imports/ui/components/landing/constants/classTypeConstants.js';
+import {DAYS_IN_WEEK, CLASS_TIMES_CARD_WIDTH} from '/imports/ui/components/landing/constants/classTypeConstants.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = {
@@ -30,10 +30,10 @@ const styles = {
   },
   cardItem: {
     backgroundColor: 'white',
-    padding: helpers.rhythmDiv,
+    padding: `${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px`,
     marginBottom: helpers.rhythmDiv,
     fontWeight: '300',
-    width: 200,
+    width: '100%',
     fontSize: helpers.baseFontSize,
     fontFamily: helpers.specialFont
   },
@@ -66,6 +66,8 @@ const styles = {
 }
 
 const OuterWrapper = styled.div`
+  max-width: ${CLASS_TIMES_CARD_WIDTH}px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -74,10 +76,11 @@ const OuterWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
+  max-width: 100%;
   height: 100%;
-  padding: ${helpers.rhythmDiv}px;
-  padding-top: ${helpers.rhythmDiv * 2}px;
-  padding-bottom: 0;
+  padding: 0 ${helpers.rhythmDiv}px;
+  // padding-top: ${helpers.rhythmDiv * 2}px;
+  // padding-bottom: 0;
   transition: transform .1s linear, opacity .2s ease-out ${props => props.show ? '.1s' : '0s'};
   opacity: ${props => props.show ? 1 : 0};
   background: transparent;
@@ -85,7 +88,7 @@ const Wrapper = styled.div`
 `;
 
 const CardContent = styled.div`
-  padding-right: ${helpers.rhythmDiv}px;
+  // padding-right: ${helpers.rhythmDiv}px;
 `;
 
 const Text = styled.p`
@@ -100,7 +103,7 @@ const Text = styled.p`
 const Day = Text.extend`
   text-align: center;
   font-weight: 400;
-  margin-bottom: ${helpers.rhythmDiv/2}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const Heading = Day.extend`
@@ -114,7 +117,7 @@ const Times = styled.ul`
 
 const Time = Text.withComponent('li').extend`
   list-style: none;
-  margin-bottom: ${helpers.rhythmDiv/2}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const Bold = styled.span`
@@ -187,11 +190,11 @@ const ClassTimesCard = (props) =>  {
   }
 
   return (<OuterWrapper show={props.show}>
-    <Paper className={props.classes.cardTop}>
+    {/*<Paper className={props.classes.cardTop}>
       <Button variant="raised" color='secondary' className={props.classes.cardIconButton} aria-label="close" onClick={props.onClose}>
         <Icon className={props.classes.icon}>keyboard_arrow_down</Icon>
       </Button>
-    </Paper>
+    </Paper>*/}
     <Paper className={wrapperClassName} elevation={3}>
     <Wrapper show={props.show}>
       <CardContent>
