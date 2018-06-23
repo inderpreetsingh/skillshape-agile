@@ -120,18 +120,26 @@ const Time = Text.withComponent('li').extend`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
+const DateTime = Time.extend``;
+
 const Bold = styled.span`
   font-weight: 500;
 `;
 
-const ScheduleDisplay = (props) => {
-  return <Time>At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins</Time>;
+const ScheduleDisplay = (props) => <Time>At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins</Time>;
+
+const ScheduleDisplaySingleLine = (props) => {
+  if(props.scheduleType === 'recurring' || props.scheduleType === 'ongoing') {
+    return <DateTime> {props.day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins </DateTime>;
+  }else {
+    return <DateTime> {props.day.substr(0,3)}, {formatDateNoYear(props.eventDate)} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins </DateTime>
+  }
 }
 
 const ClassTimesCard = (props) =>  {
   const {classes} = props;
 
-  const formatScheduleDisplay = (data, scheduleType) => {
+  const formatScheduleDisplay = (data, scheduleType, displayScheduleSingleLine) => {
     const {eventStartTime, time, timePeriod, duration} = data;
 
     let eventTime;
@@ -142,10 +150,20 @@ const ClassTimesCard = (props) =>  {
       eventTime = `${time} ${timePeriod}`;
     }
 
+    if(displayScheduleSingleLine) {
+      return <ScheduleDisplaySingleLine
+      time={eventTime}
+      duration={duration}
+      scheduleType={scheduleType}
+      day={data.day}
+      eventDate={data.eventDate}
+      />
+    }
+
     return <ScheduleDisplay time={eventTime} duration={duration} />
   }
 
-  const getScheduleDetailsFromFormattedClassTimes = (formattedClassTimes, scheduleType) => {
+  const getScheduleDetailsFromFormattedClassTimes = (formattedClassTimes, scheduleType, displayScheduleSingleLine) => {
     const eventScheduleType = scheduleType.toLowerCase();
     return DAYS_IN_WEEK.map(day => {
       const scheduleData = formattedClassTimes[day]
@@ -162,23 +180,24 @@ const ClassTimesCard = (props) =>  {
              time : schedule.time,
              timePeriod : schedule.timePeriod,
              duration : schedule.duration,
+             day: day,
+             eventDate: eventDate
            }
           // console.info(eventStartTime,"===========================");
-          allDatesData.push(formatScheduleDisplay(data, eventScheduleType));
+          allDatesData.push(formatScheduleDisplay(data, eventScheduleType, displayScheduleSingleLine));
         });
 
         if(eventScheduleType == 'recurring' || eventScheduleType == 'ongoing') {
           return (<Paper className={props.classes.cardItem}>
-                <Day>Every {day}</Day>
+                {!props.displayScheduleSingleLine && <Day>Every {day}</Day>}
                 <Times>{allDatesData}</Times>
               </Paper>);
         }else {
           return (<Paper className={props.classes.cardItem}>
-            <Day>On {day}, {formatDateNoYear(eventDate)}</Day>
+            {!props.displayScheduleSingleLine && <Day>On {day}, {formatDateNoYear(eventDate)}</Day>}
             <Times>{allDatesData}</Times>
           </Paper>);
         }
-
       }
     })
   }
@@ -195,18 +214,30 @@ const ClassTimesCard = (props) =>  {
         <Icon className={props.classes.icon}>keyboard_arrow_down</Icon>
       </Button>
     </Paper>*/}
-    <Paper className={wrapperClassName} elevation={3}>
-    <Wrapper show={props.show}>
-      <CardContent>
-        {getScheduleDetailsFromFormattedClassTimes(props.formattedClassTimes, props.scheduleType)}
-        {props.description && <Paper className={props.classes.cardItem}>
-          {/*<Heading>Description</Heading> */}
-          {props.description}
-        </Paper>}
-      </CardContent>
-    </Wrapper>
-    </Paper>
+      <Paper className={wrapperClassName} elevation={3}>
+        <Wrapper show={props.show}>
+          <CardContent>
+            {getScheduleDetailsFromFormattedClassTimes(props.formattedClassTimes, props.scheduleType, props.displayScheduleSingleLine)}
+            {props.description && <Paper className={props.classes.cardItem}>
+              {/*<Heading>Description</Heading> */}
+              {props.description}
+            </Paper>}
+          </CardContent>
+        </Wrapper>
+      </Paper>
     </OuterWrapper>
   )}
+
+  ClassTimesCard.propTypes = {
+    displayScheduleSingleLine: PropTypes.bool,
+    description: PropTypes.string,
+    scheduleType: PropTypes.string,
+    formattedClassTimes: PropTypes.shape,
+    show: PropTypes.bool
+  }
+
+  ClassTimesCard.defaultProps = {
+    displayScheduleSingleLine: false,
+  }
 
 export default withStyles(styles)(ClassTimesCard);

@@ -146,12 +146,10 @@ const TrendingWrapper = styled.div`
 `;
 
 const ClassTimesCardWrapper = styled.div`
-  position: absolute;
-  padding: 0 ${helpers.rhythmDiv}px;
   display: flex;
   flex-direction: column;
+  padding: 0 ${helpers.rhythmDiv}px;
   max-height: 296px;
-  top: 64px;
 `;
 
 const Trending = () => {
@@ -225,41 +223,6 @@ class ClassTime extends Component {
       let ampm = hours >= 12 ? 'pm' : 'am';
       return ampm;
   }
-
-  // formatTime = (startTime) => {
-  //   const hours = startTime.getHours();
-  //   const mins = startTime.getMinutes();
-  //   let hour  = hours > 12 ? hours - 12 : hours;
-  //   hour = hour < 10 ? '0' + hour : hour;
-  //   let minutes = mins < 10 ? "0"+ mins : mins;
-  //   console.log(startTime,moment(startTime).format("hh:mm"),`${hour}:${minutes}`,"------------");
-  //   return `${hour}:${minutes}`;
-  // }
-
-  // formatTime = (startTime) => {
-  //   console.log(startTime,moment(startTime).format("hh:mm"),`ajsdkjflasjdflj`,"------------");
-  //   return `${moment(startTime).format("hh:mm")}`;
-  // }
-  //
-  // formatDate = (date) => {
-  //   // console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
-  //   return moment(date).format('MMMM DD, YYYY');
-  // }
-
-  // showDescription = (formattedClassTimes) => {
-  //   dataCounter = 0;
-  //   for (day in formattedClassTimes) {
-  //     if(formattedClassTimes.hasOwnProperty(day)) {
-  //       dataCounter += formattedClassTimes[day].length;
-  //     }
-  //
-  //     if(dataCounter > 1) {
-  //       return false;
-  //     }
-  //   }
-  //
-  //   return true;
-  // }
 
   removeFromMyCalender = (classTimeRec) => {
     const {toastr} = this.props;
@@ -362,7 +325,7 @@ class ClassTime extends Component {
 
   render() {
     // console.log("ClassTime props -->>",this.props);
-    const { desc , startDate, endDate, scheduleType, name } = this.props;
+    const { desc , startDate, endDate, scheduleType, name, displayScheduleSingleLine } = this.props;
     const formattedClassTimes = this.formatDataBasedOnScheduleType(this.props);
     // const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this._getOuterClockClassName(this.props.addToCalendar);
@@ -380,6 +343,16 @@ class ClassTime extends Component {
             <ScheduleType>{scheduleType}</ScheduleType>
           </div>
 
+          <ClassTimesCardWrapper>
+            <ClassTimesCard
+              displayScheduleSingleLine={displayScheduleSingleLine}
+              show={true}
+              formattedClassTimes={formattedClassTimes}
+              scheduleType={scheduleType}
+              description={desc}
+              onClose={this.handleShowCard(false)} />
+          </ClassTimesCardWrapper>
+
           {/* View All times button */}
           <ButtonsWrapper>
             {this._getCalenderButton(this.props.addToCalendar)}
@@ -387,15 +360,6 @@ class ClassTime extends Component {
 
           {this.props.isTrending && <Trending />}
       </ClassTimeContainer>
-
-      <ClassTimesCardWrapper>
-        <ClassTimesCard
-          show={true}
-          formattedClassTimes={formattedClassTimes}
-          scheduleType={scheduleType}
-          description={desc}
-          onClose={this.handleShowCard(false)} />
-      </ClassTimesCardWrapper>
       </ClassTimeContainerOuterWrapper>)
     }
 }

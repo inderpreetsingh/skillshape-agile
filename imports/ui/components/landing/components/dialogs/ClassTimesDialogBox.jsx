@@ -381,6 +381,7 @@ class ClassTimesDialogBox extends React.Component {
                   <ClassTypeCoverImg src={this.props.classTypeImg} />
                   <ClassTypeName>{this.props.classTypeName.toLowerCase()}</ClassTypeName>
                   <ClassTimesBoxes
+                    displayScheduleSingleLine={true}
                     withSlider={false}
                     classTimesData={classTimesData}
                     classInterestData={classInterestData}
