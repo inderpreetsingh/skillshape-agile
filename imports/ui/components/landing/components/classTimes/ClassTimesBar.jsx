@@ -7,13 +7,17 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { isEmpty } from 'lodash';
 
-import classTime from '../../constants/structure/classTime.js';
-import ClassTime from './ClassTime.jsx';
+import ClassTime from '/imports/ui/components/landing/components/classTimes/ClassTime.jsx';
+
 import ClassInterest from "/imports/api/classInterest/fields";
 
-import  {getContainerMaxWidth} from '../../../../../util/cards.js';
+import classTime from '/imports/ui/components/landing/constants/structure/classTime.js';
+import { CLASS_TIMES_CARD_WIDTH } from '/imports/ui/components/landing/constants/classTypeConstants.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-import * as helpers from '../jss/helpers.js';
+import  {getContainerMaxWidth} from '/imports/util/cards.js';
+
+const CARD_WIDTH = CLASS_TIMES_CARD_WIDTH;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -26,10 +30,6 @@ const styles = {
   }
 }
 
-
-const CARD_WIDTH = 250;
-
-
 const ClassTimesWrapper = styled.div`
   max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,4)}px;
   margin: 0 auto;
@@ -38,7 +38,7 @@ const ClassTimesWrapper = styled.div`
     max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,3)}px;
   }
 
-  @media screen and (max-width : 960px) {
+  @media screen and (max-width : 1000px) {
     max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,2)}px;
   }
 
@@ -68,18 +68,19 @@ const ClassTimesBar = (props) => {
     }
   }
   console.log("props in ClassTimesBar",props);
-  const { handleAddToMyCalendarButtonClick, classInterestData, handleRemoveFromCalendarButtonClick } = props;
+  const { handleAddToMyCalendarButtonClick, inPopUp, classTimesData, classInterestData, handleRemoveFromCalendarButtonClick } = props;
   let addToCalender;
   return (
     <Wrapper>
        <ClassTimesWrapper spacing={32}>
         <GridContainer>
-          {props.classTimesData.map(classTimeObj => {
+          {classTimesData.map(classTimeObj => {
             // addToCalender  = this.checkForAddToCalender(classTimeObj)
             return (
               <GridItem key={classTimeObj._id} spacing={32}>
                 <ClassTime
                   {...classTimeObj}
+                  inPopUp={inPopUp}
                   classTimeData={ classTimeObj }
                   classInterestData={classInterestData}
                  />
@@ -93,7 +94,12 @@ const ClassTimesBar = (props) => {
 }
 
 ClassTimesBar.propTypes = {
+  inPopUp: PropTypes.bool,
   classTimesData: PropTypes.arrayOf(classTime),
+}
+
+ClassTimesBar.defaultProps = {
+  inPopUp: false
 }
 
 export default withStyles(styles)(ClassTimesBar);

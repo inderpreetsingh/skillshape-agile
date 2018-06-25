@@ -19,8 +19,8 @@ const CARD_WIDTH = 300;
 const NoResultContainer = styled.div`
   text-align: center;
   width: 100%;
-  height: 100vh;
-  ${helpers.flexCenter}
+  min-height: 100vh;
+  display: flex;
   flex-direction: column;
 `;
 
@@ -41,12 +41,13 @@ const FormSubmitButtonWrapper =styled.div`
 
 const TextWrapper =styled.div`
   font-size: ${helpers.baseFontSize * 1.25}px;
+  text-align: left;
   max-width: 900px;
   margin-left: ${helpers.rhythmDiv * 2}px;
 `;
 
 
-const GridContainer = styled.div`
+const GridInnerWrapper = styled.div`
   ${helpers.flexCenter}
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -66,7 +67,7 @@ const GridItem = styled.div`
   }
 `;
 
-const CardsListGridWrapper = styled.div`
+const GridWrapper = styled.div`
     padding: ${SPACING/2}px;
     margin: 0 auto;
     max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
@@ -90,32 +91,37 @@ const CardsListGridWrapper = styled.div`
 export default function (props) {
     let schools = this.props.collectionData || [];
 
+    const NoneOfMyLisiting = (props) => (<Wrapper>
+        <TextWrapper>
+            Check to see if any of these are your school. The filters can help you search!
+            If you find your school, press the <b>claim</b> button.
+            If you do not find it, click the button to the right to open a new listing!
+        </TextWrapper>
+        <FormSubmitButtonWrapper>
+          <Button className={props.classes.buttonStyles} onClick={props.onStartNewListingButtonClick}>
+            None of these are my school. <br/>Start a new Listing!
+          </Button>
+        </FormSubmitButtonWrapper>
+      </Wrapper>)
+
     if(isEmpty(schools)) {
         return (
-            <NoResultContainer>
+            <GridWrapper>
+              <NoResultContainer>
+                <NoneOfMyLisiting {...props} />
                 <NoResults
                     removeAllFiltersButtonClick={this.props.removeAllFilters}
                     addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
                 />
-            </NoResultContainer>
+              </NoResultContainer>
+            </GridWrapper>
         )
     } else {
         return (
             <div>
-                <CardsListGridWrapper>
-                  <Wrapper>
-                    <TextWrapper>
-                        Check to see if any of these are your school. The filters can help you search!
-                        If you find your school, press the <b>claim</b> button.
-                        If you do not find it, click the button to the right to open a new listing!
-                    </TextWrapper>
-                    <FormSubmitButtonWrapper>
-                      <Button className={props.classes.buttonStyles} onClick={props.onStartNewListingButtonClick}>
-                        None of these are my school. <br/>Start a new Listing!
-                      </Button>
-                    </FormSubmitButtonWrapper>
-                  </Wrapper>
-                  <GridContainer>
+                <GridWrapper>
+                  <NoneOfMyLisiting {...props} />
+                  <GridInnerWrapper>
                     {
                       schools.map((school, index) => {
                           return (
@@ -125,8 +131,8 @@ export default function (props) {
                           )
                       })
                     }
-                    </GridContainer>
-                </CardsListGridWrapper>
+                    </GridInnerWrapper>
+                </GridWrapper>
             </div>
         )
     }

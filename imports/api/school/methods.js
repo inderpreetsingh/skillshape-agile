@@ -460,6 +460,7 @@ Meteor.methods({
         return {inviteAccepted:true};
     },
     "school.addNewSchool": function(doc) {
+        const currentUser = doc || Meteor.users.findOne(this.userId);
         if(!this.userId) {
             throw new Meteor.Error(
                 "Access denied",
@@ -467,10 +468,10 @@ Meteor.methods({
             );
         }
         const schoolInsertDoc = {
-            email: doc.emails.address,
+            email: currentUser.emails.address,
             isPublish: true,
-            superAdmin: doc._id,
-            admins: [doc._id],
+            superAdmin: currentUser._id,
+            admins: [currentUser._id],
             aboutHtml:"",
             descHtml:"",
             name:"my-school"

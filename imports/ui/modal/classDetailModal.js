@@ -31,6 +31,8 @@ import "/imports/api/classTimes/methods";
 import { checkForAddToCalender } from "/imports/util";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx";
+import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
+
 import Events from "/imports/util/events";
 import * as settings from "/imports/ui/components/landing/site-settings.js";
 
@@ -44,13 +46,21 @@ const styles = theme => {
       padding: helpers.rhythmDiv * 2,
       maxWidth: 400
     },
+    dialogAction: {
+      width: '100%',
+      marginTop: helpers.rhythmDiv * 2
+    },
     gridItem: {
       padding: 0
+    },
+    gridContainer: {
+      padding: helpers.rhythmDiv
     },
     image: {
       verticalAlign: "middle",
       width: "100%",
-      height: "100%"
+      height: "100%",
+      objectFit: 'cover'
     },
     imageContainer: {
       backgroundColor: "#000",
@@ -68,7 +78,10 @@ const styles = theme => {
     },
     iconWithDetailContainer: {
       display: "inline-flex",
-      alignItems: "center"
+      alignItems: "center",
+    },
+    bottomSpace: {
+      marginBottom: helpers.rhythmDiv * 2
     }
   };
 };
@@ -101,20 +114,35 @@ const scheduleDetails = [
   "Sunday"
 ];
 
-const ImageContent = styled.p`
+const Heading = styled.h2`
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 400;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  color: ${helpers.primaryColor};
+  text-transform: capitalize;
+  text-align: center;
+  width: 100%;
+  line-height: 1;
+  margin-top: ${props => props.marginTop}px;
+`;
+
+const Text = styled.p`
   margin: 0;
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-weight: 400;
+  line-height: 1;
+  margin-bottom: ${props => props.marginBottom}px;
 `;
 
-const EventName = ImageContent.extend`
-  margin: ${helpers.rhythmDiv}px 0;
-  color: ${helpers.primaryColor};
-  font-size: ${helpers.baseFontSize * 2}px;
+const EventName = Heading.extend`
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const EventDesc = ImageContent.extend`
+const EventDesc = Text.extend`
 `;
 
 class ClassDetailModal extends React.Component {
@@ -280,30 +308,27 @@ class ClassDetailModal extends React.Component {
           !error && (
             <Grid container style={{ padding: "16px" }}>
               <Grid container classes={{typeItem: classes.gridItem}}>
-                <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>
-                  <CardMedia style={{ height: 200 }}>
-                    <div className={classes.imageContainer}>
-                      {/*<div style={{position: "absolute", top: 10, right: 10}}>
-											{
-												eventData.attending && (
-													<Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
-													   <Icon
-															className="material-icons"
-														>
-															delete
-														</Icon>
-													</Button>
-												)
-											}
-										</div>*/}
+                  <div className={classes.imageContainer}>
+                    {/*<div style={{position: "absolute", top: 10, right: 10}}>
+										{
+											eventData.attending && (
+												<Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
+												   <Icon
+														className="material-icons"
+													>
+														delete
+													</Icon>
+												</Button>
+											)
+										}
+									</div>*/}
 
-                      <img
-                        className={classes.image}
-                        src={this.getImageSrc(classType, school)}
-                      />
-                    </div>
-                  </CardMedia>
-                </Grid>
+                    <img
+                      className={classes.image}
+                      src={this.getImageSrc(classType, school)}
+                    />
+                  </div>
+
                 <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>
                   <Grid item sm={12} md={12} xs={12}>
                     <EventName>{eventData.name}</EventName>
@@ -320,8 +345,8 @@ class ClassDetailModal extends React.Component {
                       </Icon>
                     </div>
                     <div>
-                      <Typography type="caption">DATE</Typography>
-                      <Typography type="caption">{clickedDate}</Typography>
+                      <Text>DATE</Text>
+                      <Text>{clickedDate}</Text>
                     </div>
                   </div>
                 </Grid>
@@ -333,10 +358,10 @@ class ClassDetailModal extends React.Component {
                       </Icon>
                     </div>
                     <div>
-                      <Typography type="caption">TIME</Typography>
-                      <Typography type="caption">{`${
+                      <Text>TIME</Text>
+                      <Text>{`${
                         eventData.eventStartTime
-                      }`}</Typography>
+                      }`}</Text>
                     </div>
                   </div>
                 </Grid>
@@ -344,28 +369,27 @@ class ClassDetailModal extends React.Component {
               <Grid
                 container
                 style={{
-                  padding: "16px",
                   border: "2px solid #ccc",
                   marginTop: "16px"
                 }}
               >
                 <Grid item xs={12}>
                   {eventData.scheduleType == "OnGoing" ? (
-                    <Typography component="p">
+                    <Text>
                       This is an Ongoing class.
-                    </Typography>
+                    </Text>
                   ) : (
                     ""
                   )}
                   {eventData.scheduleType == "oneTime" ? (
-                    <Typography>This is a non-repeating class.</Typography>
+                    <Text>This is a non-repeating class.</Text>
                   ) : (
                     ""
                   )}
                   {eventData.scheduleType == "recurring" ? (
-                    <Typography>
-                      This is a Repeating Class with START/END.
-                    </Typography>
+                    <Text>
+                      This is a repeating class with START/END.
+                    </Text>
                   ) : (
                     ""
                   )}
@@ -373,22 +397,16 @@ class ClassDetailModal extends React.Component {
                 <Grid item xs={12}>
                   {eventData.scheduleDetails && (
                     <Fragment>
-                      <Typography
-                        type="headline"
-                        style={{ marginBottom: "20px", marginTop: "20px" }}
-                        component="h2"
-                      >
-                        Times:
-                      </Typography>
+                      <Heading> Times </Heading>
                       {Object.keys(eventData.scheduleDetails).map(
                         (day, index) => {
                           return (
-                            <Typography type="caption">
+                            <Text marginBottom={helpers.rhythmDiv/2}>
                               {this.renderdaySchedule(
                                 eventData.scheduleDetails[day],
                                 eventData
                               )}
-                            </Typography>
+                            </Text>
                           );
                         }
                       )}
@@ -406,6 +424,7 @@ class ClassDetailModal extends React.Component {
                   ) : (
                     <ClassTimeButton
                       icon
+                      ghost
                       onClick={event =>
                         this.removeMyClassInterest(event, eventData.classTimeId)
                       }
@@ -419,74 +438,58 @@ class ClassDetailModal extends React.Component {
                 container
                 style={{ border: "2px solid #ccc", marginTop: "16px" }}
               >
-                <Grid item sm={12} md={12} xs={12}>
-                  <Typography type="headline" component="h2">
-                    {classType && classType.name}
-                  </Typography>
+                <Heading marginTop={helpers.rhythmDiv}>
+                  {classType && classType.name.toLowerCase()}
+                </Heading>
                   {/*<Typography component="p" style={{marginBottom:'20px'}}>
 										{classType && classType.desc}
 									</Typography>*/}
-                </Grid>
-                <Grid item xs={12}>
-                  <div className={classes.iconWithDetailContainer}>
-                    <div className="circle-icon" className={classes.iconStyle}>
-                      <Icon className="material-icons" color="primary">
-                        account_balance
-                      </Icon>
-                    </div>
-                    <div>
-                      <Typography type="caption">SCHOOL</Typography>
-                      <Typography type="caption">
-                        {school && school.name}
-                      </Typography>
-                    </div>
+                <div className={classes.iconWithDetailContainer + ' ' + classes.bottomSpace}>
+                  <div className="circle-icon" className={classes.iconStyle}>
+                    <Icon className="material-icons" color="primary">
+                      account_balance
+                    </Icon>
                   </div>
-                </Grid>
-                <Grid item xs={12}>
-                  <div className={classes.iconWithDetailContainer}>
-                    <div className="circle-icon" className={classes.iconStyle}>
-                      <Icon className="material-icons" color="primary">
-                        location_on
-                      </Icon>
-                    </div>
-                    <div>
-                      <Typography type="caption">LOCATION</Typography>
-                      <Typography type="caption">
-                        {location &&
-                          `${location.address}, ${location.city}, ${
-                            location.state
-                          }`}
-                      </Typography>
-                    </div>
+                  <div>
+                    <Text>SCHOOL</Text>
+                    <Text>
+                      {school && school.name}
+                    </Text>
                   </div>
-                </Grid>
-                <Grid item xs={12} style={{ padding: "16px" }}>
+                </div>
+                <div className={classes.iconWithDetailContainer}>
+                  <div className="circle-icon" className={classes.iconStyle}>
+                    <Icon className="material-icons" color="primary">
+                      location_on
+                    </Icon>
+                  </div>
+                  <div>
+                    <Text>LOCATION</Text>
+                    <Text>
+                      {location &&
+                        `${location.address}, ${location.city}, ${
+                          location.state
+                        }`}
+                    </Text>
+                  </div>
+                </div>
+                <Grid item xs={12}>
                   {classTypeData &&
                     classTypeData.ageMin && (
-                      <Typography type="caption">
-                        Age:{classTypeData.ageMin}
-                      </Typography>
-                    )}
+                      <MetaInfo data={classTypeData.ageMin} title="Age: " />
+                  )}
                   {classTypeData &&
                     classTypeData.gender &&
                     classTypeData.gender !== "All" && (
-                      <Typography type="caption">
-                        {classTypeData.gender}
-                      </Typography>
-                    )}
+                      <MetaInfo data={classTypeData.gender} title="Gender: " />
+                  )}
+
                   {classTypeData &&
                   classTypeData.experienceLevel &&
                   classTypeData.experienceLevel == "All" ? (
-                    <Typography type="caption">
-                      Experience: All levels are welcomed
-                    </Typography>
-                  ) : (
-                    <Typography type="caption">
-                      {classTypeData &&
-                        classTypeData.experienceLevel &&
-                        `Experience: ${classTypeData.experienceLevel}`}
-                    </Typography>
-                  )}
+                    <MetaInfo data={"All levels are welcomed"} title="Experience: " />
+                  ) :
+                  (<MetaInfo data={classTypeData.experienceLevel} title="Experience: " />)}
                 </Grid>
                 {/*<Grid item xs={6}>
 									<div className={classes.iconWithDetailContainer}>
@@ -507,11 +510,9 @@ class ClassDetailModal extends React.Component {
                 {this.props.routeName !== "EmbedSchoolCalanderView" && (
                   <Grid container style={{ padding: 8 }}>
                     <Grid item xs={6}>
-                      <PrimaryButton
+                      <ClassTimeButton
                         fullWidth
-                        noMarginBottom
                         label="View Class Type"
-                        boxShadow
                         noMarginBottom
                         onClick={() =>
                           this.goToClassTypePage(
@@ -522,12 +523,10 @@ class ClassDetailModal extends React.Component {
                       />
                     </Grid>
                     <Grid item xs={6}>
-                      <PrimaryButton
+                      <ClassTimeButton
                         fullWidth
                         noMarginBottom
                         label="View School"
-                        boxShadow
-                        noMarginBottom
                         onClick={() => this.goToSchoolPage(school)}
                       />
                     </Grid>
@@ -535,20 +534,16 @@ class ClassDetailModal extends React.Component {
                 )}
               </Grid>
               {fullScreen && (
-                <Grid container>
-                  <Grid item xs={12}>
-                    <DialogActions>
-                      <Button
-                        onClick={() => {
-                          this.props.closeEventModal(false, null);
-                        }}
-                        color="primary"
-                      >
-                        Close
-                      </Button>
-                    </DialogActions>
-                  </Grid>
-                </Grid>
+                <DialogActions className={classes.dialogAction}>
+                  <Button
+                    onClick={() => {
+                      this.props.closeEventModal(false, null);
+                    }}
+                    color="primary"
+                  >
+                    Close
+                  </Button>
+                </DialogActions>
               )}
               {/*<Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
 								Entire Class Dates

@@ -3,9 +3,12 @@ import {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import * as helpers from '../jss/helpers.js';
-
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
 import SchoolPriceCard from '/imports/ui/components/landing/components/cards/SchoolPriceCard.jsx';
+
+import Events from '/imports/util/events';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
 
 const Wrapper = styled.div`
   max-width: 100vw;
@@ -15,16 +18,23 @@ const Wrapper = styled.div`
   background-color: ${helpers.schoolPageColor};
 `;
 
-
-const Title = styled.h2`
-  font-style: italic;
+const Text = styled.p`
   font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize * 1.5}px;
+  font-size: ${helpers.baseFontSize}px;
   font-weight: 300;
+`;
+
+const Title = Text.withComponent('h2').extend`
+  font-style: italic;
+  font-size: ${helpers.baseFontSize * 1.5}px;
   color: white;
   margin: 0 auto;
   max-width: 500px;
 `;
+
+// const ComingSoon = Text.extend`
+//   color: ${helpers.primaryColor};
+// `;
 
 const TitleWrapper = styled.div`
   background-color: ${helpers.black};
@@ -52,13 +62,25 @@ const PricingWrapper = styled.div`
   }
 `;
 
+const onJoinNowButtonClick = () => {
+  Events.trigger("registerAsSchool",{userType : 'School'});
+}
+
+const ComingSoon = () => <SecondaryButton noMarginBottom label="Coming Soon" disabled/>
 
 const SchoolPricing = (props) => {
   return(<Wrapper>
     <TitleWrapper><Title>{props.title}</Title></TitleWrapper>
     <PricingBoxWrapper>
       <PricingWrapper>
-        {props.cardsData && props.cardsData.map( (card, index) => <SchoolPriceCard key={index} {...card} />) }
+        {props.cardsData && props.cardsData.map((card, index) => {
+          if(index > 0) {
+            return <SchoolPriceCard key={index} {...card} myCustomComponent={<ComingSoon />}/>
+          }
+          else{
+            return <SchoolPriceCard key={index} {...card} onButtonClick={onJoinNowButtonClick} />
+          }
+        })}
       </PricingWrapper>
     </PricingBoxWrapper>
   </Wrapper>)

@@ -27,12 +27,19 @@ import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import School from "/imports/api/school/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import MuiTheme from "/imports/ui/components/landing/components/jss/muitheme";
+
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const CardsRevealWrapper = styled.div`
   width: 100%;
 `;
+
+const imageExistsConfig = {
+  originalImagePath: 'classTypeImg',
+  defaultImage: cardImgSrc
+}
+
 
 class ClassTypeCard extends Component {
   state = {
@@ -138,7 +145,8 @@ class ClassTypeCard extends Component {
       desc,
       name,
       reviewsStats,
-      classInterestData
+      classInterestData,
+      bgImg
     } = this.props;
     const cardRevealData = {
       _id: _id,
@@ -162,8 +170,10 @@ class ClassTypeCard extends Component {
       <Fragment>
         {this.state.dialogOpen && (
           <ClassTimesDialogBox
+            classTypeImg={bgImg}
             classInterestData={classInterestData}
             classTimesData={classTimesData}
+            classTypeName={name}
             open={this.state.dialogOpen}
             onModalClose={this.handleDialogState(false)}
             handleClassTimeRequest={this.handleClassTimesRequest}
@@ -188,13 +198,13 @@ class ClassTypeCard extends Component {
 
         <CardsRevealWrapper>
           <CardsReveal
-            defaultImage={cardImgSrc}
-            originalImage={this.props.classTypeImg}
             {...this.props}
+            bgImg={this.props.bgImg}
             body={
               <ClassTypeCardBody
                 ratings={ratings}
                 reviews={reviews}
+                hideClassTypeOptions={this.props.hideClassTypeOptions}
                 onJoinClassButtonClick={this.handleDialogState(true)}
               />
             }
@@ -218,4 +228,4 @@ class ClassTypeCard extends Component {
   }
 }
 
-export default toastrModal(ClassTypeCard);
+export default toastrModal(withImageExists(ClassTypeCard,imageExistsConfig));

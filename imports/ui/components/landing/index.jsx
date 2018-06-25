@@ -216,12 +216,6 @@ const ClassTypeOuterWrapper = styled.div`
   padding-top: ${props => props.padding}px;
 `;
 
-const FakeFilterBar = styled.div`
-  height: 80px;
-  width: 100%;
-  position: relative;
-`;
-
 class Landing extends Component {
 
     constructor(props) {

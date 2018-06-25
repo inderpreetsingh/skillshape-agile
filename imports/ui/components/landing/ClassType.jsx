@@ -76,12 +76,6 @@ const ClassTypeDetailsWrapper = styled.div`
   ${helpers.flexDirectionColumn}
 `;
 
-const DescriptionText = styled.p`
-  font-family: ${helpers.commonFont};
-  font-size: ${helpers.baseFontSize}px;
-  line-height: 1;
-`;
-
 const ClassWrapper = styled.div`
   max-width: 1200px;
   width: 100%;

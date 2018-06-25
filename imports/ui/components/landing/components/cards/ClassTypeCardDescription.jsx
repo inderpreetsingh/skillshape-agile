@@ -31,18 +31,18 @@ const NoFoundResultWapper = styled.div`
   text-align: center;
 `;
 
-const Description = styled.div`
+const ClassDescription = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
 `;
 
-const DescriptionInnerWrapper = styled.div`
+const ClassDescriptionInnerWrapper = styled.div`
   padding: ${helpers.rhythmDiv}px;
   margin: ${helpers.rhythmDiv * 2}px 0;
   border: 1px solid #ddd;
   height: 100%;
-  max-height: 250px;
+  max-height: 200px;
   display: flex;
   flex-direction: column;
   //
@@ -57,9 +57,11 @@ const ClassTypeRequirements = styled.div`
   flex-shrink: 0;
 `;
 
-const DescriptionContentWrapper = styled.div`
+const ClassDescriptionContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  max-height: 100%;
+  overflow-y: auto;
 `;
 
 const ClassDescriptionContent = styled.p`
@@ -124,14 +126,16 @@ const ClassTypeCardDescription = (props) => {
     <MuiThemeProvider theme={MuiTheme}>
         <Fragment>
             <RatingsWrapper itemScope itemType="http://schema.org/AggregateRating">
+                {!props.hideClassTypeOptions &&
+                <Fragment>
                 <ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount"/>
                 <Reviews href="#">
                     <Typography>
                       <span itemProp="reviewCount">{props.reviews}</span> Reviews</Typography>
-                </Reviews>
+                </Reviews></Fragment>}
             </RatingsWrapper>
 
-            <Description className="description">
+            <ClassDescription className="description">
               {/*
                 <Grid container spacing={8}>
                  <Grid item xs={12} classes={{typeItem: props.classes.gridDescriptionWrapper}}>
@@ -140,22 +144,22 @@ const ClassTypeCardDescription = (props) => {
                     {cardRevealInfo.experienceLevel && <Text>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Text>}
                  <Grid item xs={12}>
                     <Typography classes={{root: props.classes.descriptionHeader}}>Class Description: </Typography>
-                    {cardRevealInfo.description && <ClassDescriptionContent>{cardRevealInfo.description}</ClassDescriptionContent>}
+                    {cardRevealInfo.description && <DescriptionContent>{cardRevealInfo.description}</DescriptionContent>}
                  </Grid>
                </Grid> */}
 
-               <DescriptionInnerWrapper>
+               <ClassDescriptionInnerWrapper>
                  <ClassTypeRequirements>
                    {cardRevealInfo.ageMin && <Text>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Text>}
                    {cardRevealInfo.gender && <Text>{cardRevealInfo.gender && (cardRevealInfo.gender !== "All") && `${cardRevealInfo.gender}`}</Text>}
                    {cardRevealInfo.experienceLevel && <Text>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Text>}
                  </ClassTypeRequirements>
 
-                 <DescriptionContentWrapper>
+                 <ClassDescriptionContentWrapper>
                    <Typography classes={{root: props.classes.descriptionHeader}}>Class Description: </Typography>
                    {cardRevealInfo.description && <ClassDescriptionContent>{cardRevealInfo.description}</ClassDescriptionContent>}
-                 </DescriptionContentWrapper>
-               </DescriptionInnerWrapper>
+                 </ClassDescriptionContentWrapper>
+               </ClassDescriptionInnerWrapper>
 
                <Buttons>
                 {props && !props.hideClassTypeOptions &&
@@ -194,7 +198,7 @@ const ClassTypeCardDescription = (props) => {
                     />
                 }
               </Buttons>
-            </Description>
+            </ClassDescription>
         </Fragment>
     </MuiThemeProvider>
 )
