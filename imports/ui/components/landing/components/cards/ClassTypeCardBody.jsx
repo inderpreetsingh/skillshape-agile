@@ -35,13 +35,15 @@ const handleReviewsClick = (e) => {
 const ClassTypeCardBody = (props) =>(
     <Fragment>
         <ReviewsWrapper itemProp="aggregateRating" itemScope itemType="http://schema.org/AggregateRating">
+          {!props.hideClassTypeOptions &&
+          <Fragment>
           <div onClick={handleStarsClick}>
               <ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount" />
           </div>
           <Reviews
             href="#"
             onClick={handleReviewsClick}>
-            <span itemProp="reviewCount">{props.reviews}</span> Reviews</Reviews>
+            <span itemProp="reviewCount">{props.reviews}</span> Reviews</Reviews></Fragment>}
         </ReviewsWrapper>
 
         <Grid container spacing={8}>

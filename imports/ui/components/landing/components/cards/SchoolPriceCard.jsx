@@ -170,7 +170,9 @@ const SchoolPriceCard = (props) => (<Wrapper extended={props.extended}>
       </ContentWrapper>
       <ButtonAreaWrapper>
         <ButtonWrapper>
-          <PrimaryButton noMarginBottom label="Join now" onClick={props.onJoinNowButtonClick}/>
+          {props.myCustomComponent ?
+            React.cloneElement(props.myCustomComponent) :
+            <PrimaryButton noMarginBottom label="Join now" onClick={props.onButtonClick}/>}
         </ButtonWrapper>
       </ButtonAreaWrapper>
     </SchoolCardContent>
@@ -178,7 +180,8 @@ const SchoolPriceCard = (props) => (<Wrapper extended={props.extended}>
 );
 
 SchoolPriceCard.propTypes = {
-  onJoinNowButtonClick: PropTypes.func,
+  onButtonClick: PropTypes.func,
+  myCustomComponent: PropTypes.node,
   classes: PropTypes.object
 }
 
