@@ -68,7 +68,7 @@ const ClassTimesBar = (props) => {
     }
   }
   console.log("props in ClassTimesBar",props);
-  const { handleAddToMyCalendarButtonClick, displayScheduleSingleLine, classTimesData, classInterestData, handleRemoveFromCalendarButtonClick } = props;
+  const { handleAddToMyCalendarButtonClick, inPopUp, classTimesData, classInterestData, handleRemoveFromCalendarButtonClick } = props;
   let addToCalender;
   return (
     <Wrapper>
@@ -80,7 +80,7 @@ const ClassTimesBar = (props) => {
               <GridItem key={classTimeObj._id} spacing={32}>
                 <ClassTime
                   {...classTimeObj}
-                  displayScheduleSingleLine={displayScheduleSingleLine}
+                  inPopUp={inPopUp}
                   classTimeData={ classTimeObj }
                   classInterestData={classInterestData}
                  />
@@ -94,12 +94,12 @@ const ClassTimesBar = (props) => {
 }
 
 ClassTimesBar.propTypes = {
-  displayScheduleSingleLine: PropTypes.bool,
+  inPopUp: PropTypes.bool,
   classTimesData: PropTypes.arrayOf(classTime),
 }
 
 ClassTimesBar.defaultProps = {
-  displayScheduleSingleLine: false
+  inPopUp: false
 }
 
 export default withStyles(styles)(ClassTimesBar);

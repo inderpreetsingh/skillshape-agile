@@ -42,8 +42,7 @@ const styles = {
     overflowX: "hidden"
   },
   dialogPaper: {
-    maxWidth: 600,
-    width: '100%',
+    maxWidth: 500,
     background: "white",
     margin: helpers.rhythmDiv,
     overflowY: 'auto'
@@ -60,7 +59,7 @@ const styles = {
   },
   iconButton: {
     position: 'absolute',
-    top: 0,
+    top: -20,
     right: 0,
     background: 'white',
     zIndex: 3,
@@ -72,6 +71,7 @@ const DialogTitleWrapper = styled.div`
   ${helpers.flexCenter}
   width: 100%;
   padding: 0;
+  position: relative;
 `;
 
 const MyScrollToElement = styled.div`
@@ -104,21 +104,39 @@ const ClassContainerHeader = styled.div`
 `;
 
 const ContentWrapper = styled.div`
-
-`;
-
-const ClassTimesBoxesWrapper = styled.div`
-  max-width: 500px; //Max width which we want for the class time cards
+  max-width: 400px; //Max width which we want for the class time cards
   width: 100%;
   margin: 0 auto;
+`;
+
+const ContentHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    ${helpers.flexCenter}
+    flex-direction: column;
+  }
 `;
 
 const ClassTypeCoverImg = styled.div`
   ${helpers.coverBg}
   background-position: center center;
-  width: 100%;
-  height: ${helpers.rhythmDiv * 30}px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
   background-image: url(${props => props.src});
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    margin-bottom: ${helpers.rhythmDiv}px;
+  }
+`;
+
+const ClassTimes = styled.div`
+  ${helpers.flexCenter}
+  flex-direction: column;
+  padding-right: ${helpers.rhythmDiv * 2}px;
 `;
 
 const ClassTypeName = styled.h2`
@@ -133,9 +151,12 @@ const ClassTypeName = styled.h2`
   line-height: 1;
 `;
 
-const ClassTimings = styled.p`
-  margin: 0 ${helpers.rhythmDiv}px 0 0;
-  font-weight: 600;
+const ClassTimesFor = styled.p`
+  margin: 0;
+  margin-bottom ${helpers.rhythmDiv}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 400;
+  font-size: ${helpers.baseFontSize}px;
   color: ${helpers.headingColor};
   line-height: 1;
 `;
@@ -166,42 +187,6 @@ const RequestsClassTimes = styled.div`
   justify-content: center;
 `;
 
-// const MyClassInfo = props => (
-//   <ClassContainer>
-//     <ClassContainerHeader>
-//       <ClassTimings>{props.data.name}</ClassTimings>
-//
-//       {/*<Chip label={props.data.scheduleType} classes={{root: this.props.classes.chip, label: this.props.classes.chipLabel}}/> */}
-//       <ScheduleType>
-//         {props.getDatesBasedOnScheduleType(props.data)}
-//       </ScheduleType>
-//     </ClassContainerHeader>
-//     <Typography>{props.data.desc}</Typography>
-//
-//     <CalenderButtonWrapper>
-//       {props.addToCalender ? (
-//         <PrimaryButton
-//           icon
-//           onClick={() => props.addToMyCalender(props.data)}
-//           iconName="perm_contact_calendar"
-//           label="Add to my Calender"
-//         />
-//       ) : (
-//         <SecondaryButton
-//           icon
-//           onClick={() =>
-//             props.handleClassInterest({
-//               methodName: "classInterest.removeClassInterestByClassTimeId",
-//               data: { classTimeId: props.data._id }
-//             })
-//           }
-//           iconName="delete"
-//           label="Remove from my Calender"
-//         />
-//       )}
-//     </CalenderButtonWrapper>
-//   </ClassContainer>
-// );
 
 class ClassTimesDialogBox extends React.Component {
   constructor(props) {
@@ -343,15 +328,25 @@ class ClassTimesDialogBox extends React.Component {
 
   render() {
     // const classTimesData = this.normalizeScheduledetails(this.props.classesData);
-    const { classInterestData, classTimesData, classes } = this.props;
-    console.log("ClassTimesDialogBox props--->>", this.props);
+    const {
+        classInterestData,
+        classTimesData,
+        classes,
+        open,
+        onModalClose,
+        classTypeName,
+        classTypeImg,
+        errorText,
+        handleClassTimeRequest
+      } = this.props;
+    // console.log("ClassTimesDialogBox props--->>", this.props);
     {
       console.log(this.props.x, this.props.y);
     }
     return (
       <Dialog
-        open={this.props.open}
-        onClose={this.props.onModalClose}
+        open={open}
+        onClose={onModalClose}
         aria-labelledby="modal"
         classes={{ root: classes.dialog, paper: classes.dialogPaper }}
       >
@@ -359,8 +354,7 @@ class ClassTimesDialogBox extends React.Component {
           <MyScrollToElement id="myScrollToElement" ref={c => (this.myDiv = c)}>
             <DialogTitle classes={{ root: classes.dialogTitle }}>
               <DialogTitleWrapper>
-                Class Times
-                <IconButton color="primary" className={classes.iconButton} onClick={this.props.onModalClose}>
+                <IconButton color="primary" className={classes.iconButton} onClick={onModalClose}>
                   <ClearIcon />
                 </IconButton>
               </DialogTitleWrapper>
@@ -380,7 +374,7 @@ class ClassTimesDialogBox extends React.Component {
                   <RequestsClassTimes>
                     <PrimaryButton
                       icon
-                      onClick={this.props.handleClassTimeRequest}
+                      onClick={handleClassTimeRequest}
                       iconName="perm_contact_calendar"
                       label="Request class times"
                     />
@@ -388,20 +382,23 @@ class ClassTimesDialogBox extends React.Component {
                 </ClassContainer>
               ) : (
                 <ContentWrapper>
-                  <ClassTypeName>{this.props.classTypeName.toLowerCase()}</ClassTypeName>
-                  <ClassTypeCoverImg src={this.props.classTypeImg} />
-                  <ClassTimesBoxesWrapper>
-                    <ClassTimesBoxes
-                      displayScheduleSingleLine={true}
-                      withSlider={false}
-                      classTimesData={classTimesData}
-                      classInterestData={classInterestData}
-                    />
-                  </ClassTimesBoxesWrapper>
+                  <ContentHeader>
+                    <ClassTypeCoverImg src={classTypeImg} />
+                    <ClassTimes>
+                      <ClassTimesFor>Class Times for</ClassTimesFor>
+                      <ClassTypeName>{classTypeName.toLowerCase()}</ClassTypeName>
+                    </ClassTimes>
+                  </ContentHeader>
+                  <ClassTimesBoxes
+                    inPopUp={true}
+                    withSlider={false}
+                    classTimesData={classTimesData}
+                    classInterestData={classInterestData}
+                  />
                 </ContentWrapper>
               )}
               {this.props.errorText && (
-                <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
+                <ErrorWrapper>{errorText}</ErrorWrapper>
               )}
             </DialogContent>
           </MyScrollToElement>

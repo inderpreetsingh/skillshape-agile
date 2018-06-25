@@ -22,9 +22,9 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 const ClassTimeContainer = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   flex-direction: column;
-  max-width: ${props => props.displayScheduleSingleLine ? '100%' : CLASS_TIMES_CARD_WIDTH}px;
+  max-width: ${props => props.inPopUp ? '100%' : CLASS_TIMES_CARD_WIDTH}px;
   width: '100%';
-  height: ${props => props.displayScheduleSingleLine ? 'auto' : '420px'};
+  height: ${props => props.inPopUp ? 'auto' : '420px'};
   padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
   z-index: 0;
@@ -68,15 +68,13 @@ const DescriptionWrapper = styled.div`
 const ClassTypeName = styled.h4`
   width: 100%;
   margin: 0;
-  margin-bottom: ${helpers.rhythmDiv}px;
   line-height: 1;
   color: ${helpers.black};
   font-family: ${helpers.specialFont};
   font-weight: 400;
-  font-size: ${helpers.baseFontSize}px;
+  font-size: ${props => props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize}px;
   text-align: center;
   text-transform: capitalize;
-  // ${props => props.showCard ? 'opacity: 0' : 'opacity: 1'};
 `;
 
 const ScheduleType = ClassTypeName.withComponent('p').extend`
@@ -119,12 +117,11 @@ const ClassTimesCardWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  max-height: ${props => props.displayScheduleSingleLine ? 'auto' : '296px'}; // computed height
+  max-height: ${props => props.inPopUp ? 'auto' : '296px'}; // computed height
 `;
 
-const BItalic = styled.span`
-  font-style: italic;
-  font-weight: 400;
+const B = styled.span`
+  font-weight: 500;
 `;
 
 const Trending = () => {
@@ -258,16 +255,10 @@ class ClassTime extends Component {
     })
   }
 
-  handleShowCard = (state) => () => {
-    this.setState({
-      showCard: state
-    })
-  }
-
   getScheduleTypeFormatted = () => {
       const {startDate, endDate, scheduleType} = this.props;
       if(scheduleType.toLowerCase() === 'recurring')
-        return (<ScheduleType><BItalic>{formatDate(startDate)}</BItalic> - <BItalic>{formatDate(endDate)}</BItalic></ScheduleType>)
+        return (<ScheduleType>{formatDate(startDate)} - {formatDate(endDate)}</ScheduleType>)
 
       return <ScheduleType>{scheduleType}</ScheduleType>
   }
@@ -307,7 +298,7 @@ class ClassTime extends Component {
   }
 
   render() {
-    const { desc , startDate, endDate, scheduleType, name, displayScheduleSingleLine } = this.props;
+    const { desc , startDate, endDate, scheduleType, name, inPopUp } = this.props;
     const formattedClassTimes = this.formatDataBasedOnScheduleType(this.props);
     // const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(this.props.addToCalendar);
@@ -317,24 +308,24 @@ class ClassTime extends Component {
       {/*<ClassTypeNameNoBlurred showCard={this.state.showCard}>{name}</ClassTypeNameNoBlurred> */}
 
       <ClassTimeContainer
-        displayScheduleSingleLine={displayScheduleSingleLine}
+        inPopUp={inPopUp}
         className={`class-time-bg-transition ${this.getWrapperClassName(this.props.addToCalendar)}`}
         key={this.props._id} >
           <div>
             {/*Class type name */}
-            <ClassTypeName>{name}</ClassTypeName>
+            <ClassTypeName inPopUp={inPopUp}>{name}</ClassTypeName>
 
             {/* Schedule type */}
             {this.getScheduleTypeFormatted()}
 
-            <ClassTimesCardWrapper displayScheduleSingleLine={displayScheduleSingleLine}>
+            <ClassTimesCardWrapper inPopUp={inPopUp}>
               <ClassTimesCard
-                displayScheduleSingleLine={displayScheduleSingleLine}
+                inPopUp={inPopUp}
                 show={true}
                 formattedClassTimes={formattedClassTimes}
                 scheduleType={scheduleType}
                 description={desc}
-                onClose={this.handleShowCard(false)} />
+               />
             </ClassTimesCardWrapper>
           </div>
 
