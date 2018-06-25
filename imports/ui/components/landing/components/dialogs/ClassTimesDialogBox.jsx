@@ -122,7 +122,8 @@ const ClassTypeCoverImg = styled.div`
 `;
 
 const ClassTypeName = styled.h2`
-  margin: ${helpers.rhythmDiv * 2}px 0;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
   text-align: center;
   font-weight: 400;
   font-size: ${helpers.baseFontSize * 2}px;

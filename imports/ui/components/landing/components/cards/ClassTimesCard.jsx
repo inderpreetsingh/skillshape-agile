@@ -30,7 +30,7 @@ const styles = {
   },
   cardItem: {
     backgroundColor: 'white',
-    padding: `${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px`,
+    padding: `${helpers.rhythmDiv}px`,
     marginBottom: helpers.rhythmDiv,
     fontWeight: '300',
     width: '100%',
@@ -39,7 +39,7 @@ const styles = {
   },
   icon: {
     fontSize: helpers.baseFontSize,
-    transform: 'translateY(2px)'
+    transform: `translateY(${helpers.rhythmDiv/2}px)`
   },
 }
 
@@ -57,8 +57,6 @@ const Wrapper = styled.div`
   height: 100%;
   // padding: 0 ${helpers.rhythmDiv}px;
   padding-right: ${helpers.rhythmDiv}px;
-  transition: transform .1s linear, opacity .2s ease-out ${props => props.show ? '.1s' : '0s'};
-  opacity: ${props => props.show ? 1 : 0};
   background: transparent;
   position: relative;
 `;
@@ -74,6 +72,10 @@ const Text = styled.p`
   line-height: 1;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const Description = Text.extend`
+  padding: ${helpers.rhythmDiv};
 `;
 
 const Day = Text.extend`
@@ -102,7 +104,7 @@ const Bold = styled.span`
   font-weight: 500;
 `;
 
-const ScheduleDisplay = (props) => <Time> <MyIcon iconName={'av_timer'} /> At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins</Time>;
+const ScheduleDisplay = (props) => <Time> <MyIcon iconName={'access_time'} /> At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins</Time>;
 
 const IconWithStyles = (props) => <Icon classes={{root: props.classes.icon}} >{props.iconName}</Icon>
 const MyIcon = withStyles(styles)(IconWithStyles);
@@ -197,10 +199,10 @@ const ClassTimesCard = (props) =>  {
         <Wrapper show={props.show}>
           <CardContent>
             {getScheduleDetailsFromFormattedClassTimes(props.formattedClassTimes, props.scheduleType, props.displayScheduleSingleLine)}
-            {props.description && <Paper className={props.classes.cardItem}>
+            {props.description && <Description>
               {/*<Heading>Description</Heading> */}
               {props.description}
-            </Paper>}
+            </Description>}
           </CardContent>
         </Wrapper>
       </Paper>
