@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import Pagination from "/imports/ui/componentHelpers/pagination";
 import { TransactionDetailsTable } from "./transactionDetailsTable";
 import { TableRow, TableCell } from "material-ui/Table";
 import isEmpty from "lodash/isEmpty";
@@ -27,7 +26,7 @@ class Transactions extends React.Component {
 
       usersCount: 0,
       errorText: null,
-      pageCount: 0
+      pageCount: 10
     };
   }
   componentWillMount() {
@@ -41,7 +40,7 @@ class Transactions extends React.Component {
 
   render() {
     const { isBusy, pageCount, usersCount } = this.state;
-    const { purchaseData, handlePageClick } = this.props;
+    const { purchaseData } = this.props;
     console.log("PurchaseData--->", this.props);
     return (
       <div>
@@ -49,7 +48,7 @@ class Transactions extends React.Component {
         <TransactionDetailsTable>
           {isEmpty(purchaseData)
             ? "No payout found"
-            : purchaseData.map(purchase => {
+            : purchaseData.reverse().map(purchase => {
                 return (
                   <Fragment>
                     <TableRow key={purchase._id} selectable={false}>
@@ -90,11 +89,6 @@ class Transactions extends React.Component {
                 );
               })}
         </TransactionDetailsTable>
-        <Pagination
-          {...this.state}
-          pageCount={pageCount}
-          onChange={handlePageClick}
-        />
       </div>
     );
   }
@@ -109,14 +103,9 @@ export default createContainer(props => {
   // if (purchaseSubscription.ready()) {
   let purchaseData = Purchases.find().fetch();
   // }
-  handlePageClick = ({ skip }) => {
-    console.log("skip -->>", skip);
-    this.setState({ isBusy: true });
-    this.getUsers({ limit: this.state.perPage, skip: skip });
-  };
+
   return {
     purchaseData,
-    props,
-    handlePageClick
+    props
   };
 }, Transactions);

@@ -47,14 +47,14 @@ class Payouts extends React.Component {
         <PayoutDetailsTable>
           {isEmpty(purchaseData)
             ? "No payout found"
-            : purchaseData.map(purchase => {
+            : purchaseData.reverse().map(purchase => {
                 return (
                   <TableRow key={purchase._id} selectable={false}>
                     <TableCell style={style.w150}>
-                      {purchase.stripe_Response.amount}
+                      {purchase.stripe_Request.destination.amount}
                     </TableCell>
                     <TableCell style={style.w211}>
-                      {purchase.stripe_Response.source.last4}
+                      {purchase.stripe_Request.destination.account}
                     </TableCell>
                     <TableCell style={style.w150}>
                       {moment(purchase.createdOn).format(

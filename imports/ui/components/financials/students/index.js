@@ -47,7 +47,7 @@ class Students extends React.Component {
         <StudentsDetailsTable>
           {isEmpty(purchaseData)
             ? "No payout found"
-            : purchaseData.map(purchase => {
+            : purchaseData.reverse().map(purchase => {
                 return (
                   <Fragment>
                     <TableRow key={purchase._id} selectable={false}>
