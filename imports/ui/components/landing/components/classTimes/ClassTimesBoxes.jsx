@@ -40,6 +40,7 @@ class ClassTimesBoxes extends Component {
     // console.log("props in ClassTimesBoxes",this.props)
     const { classTimesData,
             classInterestData,
+            inPopUp,
             withSlider
           } = this.props;
     // console.log("ClassTimesBoxes props-->>",this.props, slider);
@@ -58,6 +59,7 @@ class ClassTimesBoxes extends Component {
         </SliderWrapper>}
         <BarWrapper show={withSlider}>
           <ClassTimesBar
+            inPopUp={inPopUp}
             classTimesData={modifiedClassTimesData}
             classInterestData={classInterestData}
           />
@@ -68,11 +70,13 @@ class ClassTimesBoxes extends Component {
 
 ClassTimesBoxes.propTypes = {
   withSlider: PropTypes.bool,
+  inPopUp: PropTypes.bool,
   classTimesData: PropTypes.arrayOf(classTime),
 }
 
 ClassTimesBoxes.defaultProps = {
-  withSlider: true
+  withSlider: true,
+  inPopUp: false
 }
 
 export default ClassTimesBoxes;

@@ -20,19 +20,14 @@ import { DAYS_IN_WEEK, CLASS_TIMES_CARD_WIDTH } from '/imports/ui/components/lan
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ClassTimeContainer = styled.div`
-  width: ${CLASS_TIMES_CARD_WIDTH}px;
-  height: 420px;
-  padding: ${helpers.rhythmDiv}px;
-  padding: ${helpers.rhythmDiv * 2}px;
-  display: flex;
+  ${helpers.flexHorizontalSpaceBetween}
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  max-width: ${props => props.inPopUp ? '100%' : CLASS_TIMES_CARD_WIDTH}px;
+  width: '100%';
+  height: ${props => props.inPopUp ? 'auto' : '420px'};
+  padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
   z-index: 0;
-  // overflow-y: auto;
-
-  // ${props => props.showCard ? 'filter: blur(2px)' : ''};
 
   &:after {
     content: '';
@@ -49,33 +44,16 @@ const ClassTimeContainer = styled.div`
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     margin: 0 auto;
   }
-
-  @media screen and (max-width: ${helpers.mobile}px ) {
-    // max-width: ${CLASS_TIMES_CARD_WIDTH}px;
-    // width: 100%;
-  }
-
-`;
-
-const ClassTimeContainerOuterWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
 `;
 
 const ClassScheduleWrapper = styled.div`
   ${helpers.flexCenter}
-  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const ScheduleAndDescriptionWrapper = styled.div`
   max-height: 330px; // This is the computed max-height for the container.
   display: flex;
   flex-direction: column;
-  ${props => props.showCard ? 'filter : blur(2px)' : ''};
 `;
 
 const ScheduleWrapper = styled.div`
@@ -90,28 +68,18 @@ const DescriptionWrapper = styled.div`
 const ClassTypeName = styled.h4`
   width: 100%;
   margin: 0;
-  margin-bottom: ${helpers.rhythmDiv}px;
   line-height: 1;
   color: ${helpers.black};
   font-family: ${helpers.specialFont};
   font-weight: 400;
-  font-size: ${helpers.baseFontSize * 1.25}px;
+  font-size: ${props => props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize}px;
   text-align: center;
   text-transform: capitalize;
-  // ${props => props.showCard ? 'opacity: 0' : 'opacity: 1'};
 `;
 
 const ScheduleType = ClassTypeName.withComponent('p').extend`
   font-weight: 300;
 `;
-
-// const ClassTypeNameNoBlurred = ClassTypeName.extend`
-//   ${props => !props.showCard ? 'opacity: 0' : 'opacity: 1'};
-//   display : ${props => props.showCard ? 'flex' : 'none'};
-//   justify-content: center;
-//   position: absolute;
-//   top: 16px;
-// `;
 
 const Description = styled.p`
   margin: ${helpers.rhythmDiv}px 0;
@@ -146,12 +114,14 @@ const TrendingWrapper = styled.div`
 `;
 
 const ClassTimesCardWrapper = styled.div`
-  position: absolute;
-  padding: 0 ${helpers.rhythmDiv}px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  max-height: 296px;
-  top: 64px;
+  max-height: ${props => props.inPopUp ? 'auto' : '296px'}; // computed height
+`;
+
+const B = styled.span`
+  font-weight: 500;
 `;
 
 const Trending = () => {
@@ -226,41 +196,6 @@ class ClassTime extends Component {
       return ampm;
   }
 
-  // formatTime = (startTime) => {
-  //   const hours = startTime.getHours();
-  //   const mins = startTime.getMinutes();
-  //   let hour  = hours > 12 ? hours - 12 : hours;
-  //   hour = hour < 10 ? '0' + hour : hour;
-  //   let minutes = mins < 10 ? "0"+ mins : mins;
-  //   console.log(startTime,moment(startTime).format("hh:mm"),`${hour}:${minutes}`,"------------");
-  //   return `${hour}:${minutes}`;
-  // }
-
-  // formatTime = (startTime) => {
-  //   console.log(startTime,moment(startTime).format("hh:mm"),`ajsdkjflasjdflj`,"------------");
-  //   return `${moment(startTime).format("hh:mm")}`;
-  // }
-  //
-  // formatDate = (date) => {
-  //   // console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
-  //   return moment(date).format('MMMM DD, YYYY');
-  // }
-
-  // showDescription = (formattedClassTimes) => {
-  //   dataCounter = 0;
-  //   for (day in formattedClassTimes) {
-  //     if(formattedClassTimes.hasOwnProperty(day)) {
-  //       dataCounter += formattedClassTimes[day].length;
-  //     }
-  //
-  //     if(dataCounter > 1) {
-  //       return false;
-  //     }
-  //   }
-  //
-  //   return true;
-  // }
-
   removeFromMyCalender = (classTimeRec) => {
     const {toastr} = this.props;
     console.log("this.props",this.props,classTimeRec);
@@ -320,19 +255,21 @@ class ClassTime extends Component {
     })
   }
 
-  handleShowCard = (state) => () => {
-    this.setState({
-      showCard: state
-    })
+  getScheduleTypeFormatted = () => {
+      const {startDate, endDate, scheduleType} = this.props;
+      if(scheduleType.toLowerCase() === 'recurring')
+        return (<ScheduleType>{formatDate(startDate)} - {formatDate(endDate)}</ScheduleType>)
+
+      return <ScheduleType>{scheduleType}</ScheduleType>
   }
 
-  _getWrapperClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar' : 'remove-from-calendar';
+  getWrapperClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar' : 'remove-from-calendar';
 
-  _getOuterClockClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
+  getOuterClockClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
 
-  _getDotColor = (addToCalendar) => (addToCalendar) ? helpers.primaryColor : helpers.cancel;
+  getDotColor = (addToCalendar) => (addToCalendar) ? helpers.primaryColor : helpers.cancel;
 
-  _getCalenderButton = (addToCalender) => {
+  getCalenderButton = (addToCalender) => {
     const iconName = addToCalender ? "add_circle_outline": "delete";
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
     if(addToCalender || !Meteor.userId()) {
@@ -361,42 +298,44 @@ class ClassTime extends Component {
   }
 
   render() {
-    // console.log("ClassTime props -->>",this.props);
-    const { desc , startDate, endDate, scheduleType, name } = this.props;
+    const { desc , startDate, endDate, scheduleType, name, inPopUp } = this.props;
     const formattedClassTimes = this.formatDataBasedOnScheduleType(this.props);
     // const showDescription = this.showDescription(formattedClassTimes);
-    const classNameForClock = this._getOuterClockClassName(this.props.addToCalendar);
-    const dotColor = this._getDotColor(this.props.addToCalendar);
-    return (<ClassTimeContainerOuterWrapper>
+    const classNameForClock = this.getOuterClockClassName(this.props.addToCalendar);
+    const dotColor = this.getDotColor(this.props.addToCalendar);
+    return (<Fragment>
       {this.state.isLoading && <ContainerLoader />}
       {/*<ClassTypeNameNoBlurred showCard={this.state.showCard}>{name}</ClassTypeNameNoBlurred> */}
 
       <ClassTimeContainer
-        className={`class-time-bg-transition ${this._getWrapperClassName(this.props.addToCalendar)}`}
+        inPopUp={inPopUp}
+        className={`class-time-bg-transition ${this.getWrapperClassName(this.props.addToCalendar)}`}
         key={this.props._id} >
-          {/* class type name */}
           <div>
-            <ClassTypeName>{name}</ClassTypeName>
-            <ScheduleType>{scheduleType}</ScheduleType>
+            {/*Class type name */}
+            <ClassTypeName inPopUp={inPopUp}>{name}</ClassTypeName>
+
+            {/* Schedule type */}
+            {this.getScheduleTypeFormatted()}
+
+            <ClassTimesCardWrapper inPopUp={inPopUp}>
+              <ClassTimesCard
+                inPopUp={inPopUp}
+                show={true}
+                formattedClassTimes={formattedClassTimes}
+                scheduleType={scheduleType}
+                description={desc}
+               />
+            </ClassTimesCardWrapper>
           </div>
 
           {/* View All times button */}
           <ButtonsWrapper>
-            {this._getCalenderButton(this.props.addToCalendar)}
+            {this.getCalenderButton(this.props.addToCalendar)}
           </ButtonsWrapper>
 
           {this.props.isTrending && <Trending />}
-      </ClassTimeContainer>
-
-      <ClassTimesCardWrapper>
-        <ClassTimesCard
-          show={true}
-          formattedClassTimes={formattedClassTimes}
-          scheduleType={scheduleType}
-          description={desc}
-          onClose={this.handleShowCard(false)} />
-      </ClassTimesCardWrapper>
-      </ClassTimeContainerOuterWrapper>)
+      </ClassTimeContainer></Fragment>)
     }
 }
 

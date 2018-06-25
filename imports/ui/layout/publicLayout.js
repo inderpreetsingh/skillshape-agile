@@ -81,33 +81,17 @@ class PublicLayout extends React.Component {
                 //     }
                 // });
 
-                Meteor.call("user.setPassword",{password, logout: false}, (err,res) => {
+                Meteor.call("user.setPassword", {password, logout: false}, (err,res) => {
                     if (err) {
                         errorMessage = err.reason || err.message
                         this.setState({ isBusy : false })
                     } else {
-                        this.setState({ showSetPasswordDialogBox : false }, ()=> {
+                        this.setState({ showSetPasswordDialogBox : false , isBusy: false }, () => {
 
                             if(currentUser.roles.indexOf('School') !== -1) {
-                              Meteor.call("school.addNewSchool", (err, res) => {
-                                if(err) {
-                                  errorMessage = err.reason || err.message;
-                                }else {
-                                  this.setState({isBusy: false},() => {
-                                    // Redirect to school Edit view
-                                    if(res) {
-                                      browserHistory.push(res);
-                                    }
-                                  })
-                                }
-                              })
+                              browserHistory.push(`/claimSchool`);
                             }
-                            else {
-                              this.setState({isBusy: false}, () => {
-                                //  Events.trigger("loginAsSchoolAdmin");
-                              })
-                            }
-                        })
+                        });
                     }
                 });
             }

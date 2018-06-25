@@ -68,7 +68,7 @@ const ClassTimesBar = (props) => {
     }
   }
   console.log("props in ClassTimesBar",props);
-  const { handleAddToMyCalendarButtonClick, classTimesData, classInterestData, handleRemoveFromCalendarButtonClick } = props;
+  const { handleAddToMyCalendarButtonClick, inPopUp, classTimesData, classInterestData, handleRemoveFromCalendarButtonClick } = props;
   let addToCalender;
   return (
     <Wrapper>
@@ -80,6 +80,7 @@ const ClassTimesBar = (props) => {
               <GridItem key={classTimeObj._id} spacing={32}>
                 <ClassTime
                   {...classTimeObj}
+                  inPopUp={inPopUp}
                   classTimeData={ classTimeObj }
                   classInterestData={classInterestData}
                  />
@@ -93,7 +94,12 @@ const ClassTimesBar = (props) => {
 }
 
 ClassTimesBar.propTypes = {
+  inPopUp: PropTypes.bool,
   classTimesData: PropTypes.arrayOf(classTime),
+}
+
+ClassTimesBar.defaultProps = {
+  inPopUp: false
 }
 
 export default withStyles(styles)(ClassTimesBar);

@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Events from '/imports/util/events';
 
-import PrimaryButton from '../../buttons/PrimaryButton.jsx';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 
-import SchoolSolutionCard from '../../cards/SchoolSolutionCard.jsx';
-import SchoolSolutionSlider from './SchoolCardsSlider.jsx';
+import SchoolSolutionCard from '/imports/ui/components/landing/components/cards/SchoolSolutionCard.jsx';
+import SchoolSolutionSlider from '/imports/ui/components/landing/components/school/issuesSection/SchoolCardsSlider.jsx';
 
 import ContactUsDialogBox from '/imports/ui/components/landing/components/dialogs/ContactUsDialogBox.jsx';
 
-import * as helpers from '../../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const BoxWrapper = styled.div`
   ${helpers.flexCenter}
