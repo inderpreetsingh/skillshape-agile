@@ -1,5 +1,7 @@
 import UserStripeData from "./fields";
 import School from "../school/fields";
+//chargeCard for  creating charge and purchasing package
+//getStripeToken for getting stripe account id
 Meteor.methods({
   chargeCard: async function(
     stripeToken,
