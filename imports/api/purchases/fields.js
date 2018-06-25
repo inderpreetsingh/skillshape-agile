@@ -31,6 +31,10 @@ export const PurchasesSchema = new SimpleSchema({
   schoolId: {
     type: String,
     optional: true
+  },
+  status: {
+    type: String,
+    optional: true
   }
 });
 

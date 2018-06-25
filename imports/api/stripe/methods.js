@@ -1,4 +1,5 @@
 import UserStripeData from "./fields";
+import School from "../school/fields";
 Meteor.methods({
   chargeCard: async function(
     stripeToken,
@@ -8,6 +9,13 @@ Meteor.methods({
     packageType,
     schoolId
   ) {
+    let superAdminId = School.findOne({ _id: schoolId });
+    superAdminId = superAdminId.superAdmin;
+    console.log("superAdminId", superAdminId);
+    // let stripeAccountId = UserStripeData.findOne({ userId: superAdminId });
+    // console.log("stripeAccountId", stripeAccountId);
+    // stripeAccountId = stripeAccountId.stripe_user_id;
+    //console.log("stripeAccountId", stripeAccountId);
     var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
     const token = stripeToken;
     let stripe_Request = {
@@ -21,21 +29,34 @@ Meteor.methods({
       }
     };
     let userId = this.userId;
+    let payload = {
+      userId: userId,
+      stripe_Request: stripe_Request,
+      createdOn: new Date(),
+      packageId: packageId,
+      packageType: packageType,
+      schoolId: schoolId,
+      status: "In_Progress"
+    };
+    let recordId = Meteor.call("addPurchase", payload);
+    console.log("recordId", recordId);
     try {
       let charge = await stripe.charges.create(stripe_Request);
-      let payload = {
-        userId: userId,
-        stripe_Request: stripe_Request,
+      console.log("charge=====>", charge);
+      payload = {
         stripe_Response: charge,
-        createdOn: new Date(),
-        packageId: packageId,
-        packageType: packageType,
-        schoolId: schoolId
+        status: "Succeeded"
       };
-
-      Meteor.call("addPurchase", payload);
+      console.log("=============>payload<=============", payload);
+      Meteor.call("updatePurchases", payload, recordId);
       return "Payment Successfully Done";
     } catch (error) {
+      console.log("error------------>", error);
+      payload = {
+        stripe_Response: error,
+        status: "Error"
+      };
+      Meteor.call("updatePurchases", payload, recordId);
       return error;
     }
   },
