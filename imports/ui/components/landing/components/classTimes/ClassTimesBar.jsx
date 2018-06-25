@@ -38,7 +38,7 @@ const ClassTimesWrapper = styled.div`
     max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,3)}px;
   }
 
-  @media screen and (max-width : 960px) {
+  @media screen and (max-width : 1000px) {
     max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,2)}px;
   }
 

@@ -44,6 +44,15 @@ const ClassTimeContainer = styled.div`
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     margin: 0 auto;
   }
+
+  // As it would prevent the cards to turn into single
+  @media screen and (max-width: 700px) {
+    max-width: 260px;
+  }
+
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
+    max-width: ${props => props.inPopUp ? '100%' : CLASS_TIMES_CARD_WIDTH}px;
+  }
 `;
 
 const ClassScheduleWrapper = styled.div`
