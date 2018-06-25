@@ -20,8 +20,9 @@ import { DAYS_IN_WEEK, CLASS_TIMES_CARD_WIDTH } from '/imports/ui/components/lan
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ClassTimeContainer = styled.div`
-  width: ${CLASS_TIMES_CARD_WIDTH}px;
-  height: 420px;
+  max-width: ${props => props.displayScheduleSingleLine ? '100%' : CLASS_TIMES_CARD_WIDTH}px;
+  width: '100%';
+  height: ${props => props.displayScheduleSingleLine ? 'auto' : '420px'};
   padding: ${helpers.rhythmDiv}px;
   padding: ${helpers.rhythmDiv * 2}px;
   display: flex;
@@ -30,9 +31,6 @@ const ClassTimeContainer = styled.div`
   align-items: center;
   position: relative;
   z-index: 0;
-  // overflow-y: auto;
-
-  // ${props => props.showCard ? 'filter: blur(2px)' : ''};
 
   &:after {
     content: '';
@@ -49,21 +47,6 @@ const ClassTimeContainer = styled.div`
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     margin: 0 auto;
   }
-
-  @media screen and (max-width: ${helpers.mobile}px ) {
-    // max-width: ${CLASS_TIMES_CARD_WIDTH}px;
-    // width: 100%;
-  }
-
-`;
-
-const ClassTimeContainerOuterWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
 `;
 
 const ClassScheduleWrapper = styled.div`
@@ -105,14 +88,6 @@ const ScheduleType = ClassTypeName.withComponent('p').extend`
   font-weight: 300;
 `;
 
-// const ClassTypeNameNoBlurred = ClassTypeName.extend`
-//   ${props => !props.showCard ? 'opacity: 0' : 'opacity: 1'};
-//   display : ${props => props.showCard ? 'flex' : 'none'};
-//   justify-content: center;
-//   position: absolute;
-//   top: 16px;
-// `;
-
 const Description = styled.p`
   margin: ${helpers.rhythmDiv}px 0;
   font-family: ${helpers.specialFont};
@@ -146,10 +121,11 @@ const TrendingWrapper = styled.div`
 `;
 
 const ClassTimesCardWrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 ${helpers.rhythmDiv}px;
-  max-height: 296px;
+  max-height: ${props => props.displayScheduleSingleLine ? 'auto' : '296px'}; // computed height
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const Trending = () => {
@@ -330,37 +306,36 @@ class ClassTime extends Component {
     // const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this._getOuterClockClassName(this.props.addToCalendar);
     const dotColor = this._getDotColor(this.props.addToCalendar);
-    return (<ClassTimeContainerOuterWrapper>
+    return (<Fragment>
       {this.state.isLoading && <ContainerLoader />}
       {/*<ClassTypeNameNoBlurred showCard={this.state.showCard}>{name}</ClassTypeNameNoBlurred> */}
 
       <ClassTimeContainer
+        displayScheduleSingleLine={displayScheduleSingleLine}
         className={`class-time-bg-transition ${this._getWrapperClassName(this.props.addToCalendar)}`}
         key={this.props._id} >
           {/* class type name */}
           <div>
             <ClassTypeName>{name}</ClassTypeName>
             <ScheduleType>{scheduleType}</ScheduleType>
+            <ClassTimesCardWrapper displayScheduleSingleLine={displayScheduleSingleLine}>
+              <ClassTimesCard
+                displayScheduleSingleLine={displayScheduleSingleLine}
+                show={true}
+                formattedClassTimes={formattedClassTimes}
+                scheduleType={scheduleType}
+                description={desc}
+                onClose={this.handleShowCard(false)} />
+            </ClassTimesCardWrapper>
           </div>
-
-          <ClassTimesCardWrapper>
-            <ClassTimesCard
-              displayScheduleSingleLine={displayScheduleSingleLine}
-              show={true}
-              formattedClassTimes={formattedClassTimes}
-              scheduleType={scheduleType}
-              description={desc}
-              onClose={this.handleShowCard(false)} />
-          </ClassTimesCardWrapper>
-
+          
           {/* View All times button */}
           <ButtonsWrapper>
             {this._getCalenderButton(this.props.addToCalendar)}
           </ButtonsWrapper>
 
           {this.props.isTrending && <Trending />}
-      </ClassTimeContainer>
-      </ClassTimeContainerOuterWrapper>)
+      </ClassTimeContainer></Fragment>)
     }
 }
 

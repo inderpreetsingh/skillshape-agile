@@ -38,35 +38,12 @@ const styles = {
     fontFamily: helpers.specialFont
   },
   icon: {
-    transform: 'translateY(-2px)'
+    fontSize: helpers.baseFontSize,
+    transform: 'translateY(2px)'
   },
-  cardTop: {
-    position: 'relative',
-    width: 200 // This is the width we should give to the paper element
-  },
-  cardIconButton : {
-    minWidth: '0',
-    minHeight: '0',
-    height: helpers.rhythmDiv * 4,
-    width: helpers.rhythmDiv * 4,
-    color: helpers.black,
-    position: 'absolute',
-    top: 0,
-    right: -22,
-    zIndex: 2,
-    borderRadius: '50%',
-    backgroundColor: helpers.panelColor,
-    transition: '.1s transform ease-in-out',
-    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12)',
-    '&:hover': {
-      backgroundColor: helpers.panelColor,
-      transform: 'translateY(2px)'
-    }
-  }
 }
 
 const OuterWrapper = styled.div`
-  max-width: ${CLASS_TIMES_CARD_WIDTH}px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -78,9 +55,8 @@ const OuterWrapper = styled.div`
 const Wrapper = styled.div`
   max-width: 100%;
   height: 100%;
-  padding: 0 ${helpers.rhythmDiv}px;
-  // padding-top: ${helpers.rhythmDiv * 2}px;
-  // padding-bottom: 0;
+  // padding: 0 ${helpers.rhythmDiv}px;
+  padding-right: ${helpers.rhythmDiv}px;
   transition: transform .1s linear, opacity .2s ease-out ${props => props.show ? '.1s' : '0s'};
   opacity: ${props => props.show ? 1 : 0};
   background: transparent;
@@ -126,7 +102,10 @@ const Bold = styled.span`
   font-weight: 500;
 `;
 
-const ScheduleDisplay = (props) => <Time>At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins</Time>;
+const ScheduleDisplay = (props) => <Time> <MyIcon iconName={'av_timer'} /> At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins</Time>;
+
+const IconWithStyles = (props) => <Icon classes={{root: props.classes.icon}} >{props.iconName}</Icon>
+const MyIcon = withStyles(styles)(IconWithStyles);
 
 const ScheduleDisplaySingleLine = (props) => {
   if(props.scheduleType === 'recurring' || props.scheduleType === 'ongoing') {
@@ -184,7 +163,7 @@ const ClassTimesCard = (props) =>  {
              eventDate: eventDate
            }
           // console.info(eventStartTime,"===========================");
-          allDatesData.push(formatScheduleDisplay(data, eventScheduleType, displayScheduleSingleLine));
+          allDatesData.push(formatScheduleDisplay(data, eventScheduleType, displayScheduleSingleLine, classes));
         });
 
         if(eventScheduleType == 'recurring' || eventScheduleType == 'ongoing') {

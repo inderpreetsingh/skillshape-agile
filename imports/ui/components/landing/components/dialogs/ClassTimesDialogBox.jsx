@@ -43,6 +43,7 @@ const styles = {
   },
   dialogPaper: {
     maxWidth: 600,
+    width: '100%',
     background: "white",
     margin: helpers.rhythmDiv,
     overflowY: 'auto'
@@ -106,6 +107,12 @@ const ContentWrapper = styled.div`
 
 `;
 
+const ClassTimesBoxesWrapper = styled.div`
+  max-width: 500px; //Max width which we want for the class time cards
+  width: 100%;
+  margin: 0 auto;
+`;
+
 const ClassTypeCoverImg = styled.div`
   ${helpers.coverBg}
   background-position: center center;
@@ -122,12 +129,14 @@ const ClassTypeName = styled.h2`
   color: ${helpers.primaryColor};
   text-transform: capitalize;
   font-family: ${helpers.specialFont};
+  line-height: 1;
 `;
 
 const ClassTimings = styled.p`
   margin: 0 ${helpers.rhythmDiv}px 0 0;
   font-weight: 600;
   color: ${helpers.headingColor};
+  line-height: 1;
 `;
 
 const CalenderButtonWrapper = styled.div`
@@ -378,14 +387,16 @@ class ClassTimesDialogBox extends React.Component {
                 </ClassContainer>
               ) : (
                 <ContentWrapper>
-                  <ClassTypeCoverImg src={this.props.classTypeImg} />
                   <ClassTypeName>{this.props.classTypeName.toLowerCase()}</ClassTypeName>
-                  <ClassTimesBoxes
-                    displayScheduleSingleLine={true}
-                    withSlider={false}
-                    classTimesData={classTimesData}
-                    classInterestData={classInterestData}
-                  />
+                  <ClassTypeCoverImg src={this.props.classTypeImg} />
+                  <ClassTimesBoxesWrapper>
+                    <ClassTimesBoxes
+                      displayScheduleSingleLine={true}
+                      withSlider={false}
+                      classTimesData={classTimesData}
+                      classInterestData={classInterestData}
+                    />
+                  </ClassTimesBoxesWrapper>
                 </ContentWrapper>
               )}
               {this.props.errorText && (

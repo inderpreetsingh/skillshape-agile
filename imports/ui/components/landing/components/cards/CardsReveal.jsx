@@ -73,7 +73,7 @@ const CardContentHeader = styled.div`
   flex-shrink: 0;
 `;
 
-const CardContentTitle = styled.h2`
+const CardContentTitle = styled.h3`
   font-size: ${helpers.baseFontSize * 1.5}px;
   font-weight: 300;
   font-family: ${helpers.specialFont};
