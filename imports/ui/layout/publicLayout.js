@@ -44,6 +44,7 @@ class PublicLayout extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        debugger;
         // console.log("PublicLayout nextProps -->>",nextProps);
         if(nextProps.currentUser) {
           const passwordSetByUser = get(nextProps, "currentUser.profile.passwordSetByUser", true);
@@ -58,6 +59,7 @@ class PublicLayout extends React.Component {
         let errorMessage;
         const { token } = this.props.params;
         const { password, confirmPassword } = payload;
+        const { currentUser } = this.props;
 
         if(!password || !confirmPassword) {
             errorMessage = "Please enter a password";
@@ -66,14 +68,30 @@ class PublicLayout extends React.Component {
                 errorMessage = "password not match!!!";
             } else {
                 this.setState({ isBusy : true })
-                Meteor.call("user.setPassword",{password}, (err,res) => {
+
+                // this.setState({ isBusy : true })
+                // Meteor.call("user.setPassword",{password}, (err,res) => {
+                //     if (err) {
+                //         errorMessage = err.reason || err.message
+                //         this.setState({ isBusy : false })
+                //     } else {
+                //         this.setState({ showSetPasswordDialogBox : false, isBusy : false }, ()=> {
+                //             Events.trigger("loginAsSchoolAdmin");
+                //         })
+                //     }
+                // });
+
+                Meteor.call("user.setPassword", {password, logout: false}, (err,res) => {
                     if (err) {
                         errorMessage = err.reason || err.message
                         this.setState({ isBusy : false })
                     } else {
-                        this.setState({ showSetPasswordDialogBox : false, isBusy : false }, ()=> {
-                            Events.trigger("loginAsSchoolAdmin");
-                        })
+                        this.setState({ showSetPasswordDialogBox : false , isBusy: false }, () => {
+
+                            if(currentUser.roles.indexOf('School') !== -1) {
+                              browserHistory.push(`/claimSchool`);
+                            }
+                        });
                     }
                 });
             }

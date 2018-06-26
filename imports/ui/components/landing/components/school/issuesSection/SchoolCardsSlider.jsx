@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import SchoolSolutionCard from '../../cards/SchoolSolutionCard.jsx';
+import SchoolSolutionCard from '/imports/ui/components/landing/components/cards/SchoolSolutionCard.jsx';
 import withSlider from '/imports/util/withSlider.js';
 
 const config = {
