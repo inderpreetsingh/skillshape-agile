@@ -56,13 +56,22 @@ class Transactions extends React.Component {
                         {"Payout" || "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Response.amount || "Unavailable"}
+                        {purchase.stripe_Response &&
+                        purchase.stripe_Response.amount
+                          ? purchase.stripe_Response.amount
+                          : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Response.amount || "Unavailable"}
+                        {purchase.stripe_Response &&
+                        purchase.stripe_Response.amount
+                          ? purchase.stripe_Response.amount
+                          : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w211}>
-                        {purchase.stripe_Response.source.last4 || "Unavailable"}
+                        {purchase.stripe_Response &&
+                        purchase.stripe_Response.source
+                          ? purchase.stripe_Response.source.last4
+                          : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
                         {"Stripe Transfer" || "Unavailable"}
@@ -73,16 +82,27 @@ class Transactions extends React.Component {
                         {"Charge" || "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Response.amount || "Unavailable"}
+                        {purchase.stripe_Response &&
+                        purchase.stripe_Response.amount
+                          ? purchase.stripe_Response.amount
+                          : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Response.amount || "Unavailable"}
+                        {purchase.stripe_Response &&
+                        purchase.stripe_Response.amount
+                          ? purchase.stripe_Response.amount
+                          : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w211}>
-                        {purchase.stripe_Response.source.last4 || "Unavailable"}
+                        {purchase.stripe_Response &&
+                        purchase.stripe_Response.source
+                          ? purchase.stripe_Response.source.last4
+                          : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Response.description || "Unavailable"}
+                        {purchase.stripe_Response
+                          ? purchase.stripe_Response.description
+                          : "Unavailable"}
                       </TableCell>
                     </TableRow>
                   </Fragment>

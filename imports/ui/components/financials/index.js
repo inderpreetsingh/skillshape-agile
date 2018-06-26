@@ -14,19 +14,31 @@ export default class Financials extends React.Component {
     this.state = {
       selecetdView: "Settings",
       queryTabValue: null,
-      tabValue: 0
+      tabValue: 0,
+      adminPermission: false
     };
   }
   onTabChange = tabValue => {
     this.setState({ tabValue });
   };
+  componentWillMount() {
+    Meteor.call(
+      "school.findSuperAdmin",
+      this.props.currentUser._id,
+      this.props.routeParams.slug,
+      (error, result) => {
+        this.setState({ adminPermission: result });
+        console.log("result----------------", result);
+      }
+    );
+  }
 
   render() {
-    console.log("this.props in finanicals", this.props);
+    const role = _.indexOf(Meteor.user().roles, "Superadmin");
     let { currentUser } = this.props;
     return (
       <DocumentTitle title="Financials">
-        {checkMyAccess({ user: currentUser }) ? (
+        {this.state.adminPermission || role != -1 ? (
           <div>
             <ResponsiveTabs
               tabs={["Settings", "Payouts", "Transactions", "Students"]}

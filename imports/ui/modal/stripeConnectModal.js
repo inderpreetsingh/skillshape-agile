@@ -97,16 +97,15 @@ class StripeConnectModal extends React.Component {
       error: false
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.location.query && this.props.location.query.code) {
       const { toastr } = this.props;
       Meteor.call(
         "getStripeToken",
         this.props.location.query.code,
-        (err, res) => {
-          if (err) {
-            toastr.error(err.message || err.reason, "Error");
-          } else if (res) {
+        (error, result) => {
+          if (result) {
+            toastr.success(result, "Success");
           }
         }
       );
@@ -118,7 +117,7 @@ class StripeConnectModal extends React.Component {
     }
     return (
       <div>
-        <h1>Payment Page{this.props.location.query.code}</h1>
+        <h1>Stribe id " "{this.props.location.query.code}</h1>
       </div>
     );
   }
