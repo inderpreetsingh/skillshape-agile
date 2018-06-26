@@ -42,6 +42,7 @@ export default function(props) {
       return (
         <DocumentTitle title={this.props.route.name}>
           <div id="editRender" style={{ overflow: "hidden" }}>
+
             <FormBuilderModal
               {...formBuilderModal}
               {...this.props}

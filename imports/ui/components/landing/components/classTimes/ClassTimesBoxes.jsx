@@ -5,11 +5,11 @@ import { isEmpty } from 'lodash';
 
 import ClassInterest from "/imports/api/classInterest/fields";
 
-import ClassTimesSlider from './ClassTimesSlider.jsx';
-import ClassTimesBar from './ClassTimesBar.jsx';
+import ClassTimesSlider from '/imports/ui/components/landing/components/classTimes/ClassTimesSlider.jsx';
+import ClassTimesBar from '/imports/ui/components/landing/components/classTimes/ClassTimesBar.jsx';
+import classTime from '/imports/ui/components/landing/constants/structure/classTime.js';
 
-import classTime from '../../constants/structure/classTime.js';
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const SliderWrapper = styled.div`
   display: none;
@@ -21,13 +21,13 @@ const SliderWrapper = styled.div`
 const BarWrapper = styled.div`
   display: block;
   @media screen and (max-width: ${helpers.mobile + 100}px) {
-    display: none;
+    display: ${props => props.show ? 'none' : 'block'};
   }
 `;
 
 class ClassTimesBoxes extends Component {
 
-  checkForAddToCalender = (data) => {
+  _checkForAddToCalender = (data) => {
     const userId = Meteor.userId();
     if(isEmpty(data) || isEmpty(userId)) {
         return true;
@@ -39,25 +39,27 @@ class ClassTimesBoxes extends Component {
   render() {
     // console.log("props in ClassTimesBoxes",this.props)
     const { classTimesData,
-            classInterestData
+            classInterestData,
+            inPopUp,
+            withSlider
           } = this.props;
     // console.log("ClassTimesBoxes props-->>",this.props, slider);
 
     const modifiedClassTimesData = classTimesData.map(data => {
-      let addToCalendar = this.checkForAddToCalender(data);
-      data.addToCalendar = addToCalendar;
+      data.addToCalendar = this._checkForAddToCalender(data);
       return data;
     });
     // console.log('modifiedClassTimesData',modifiedClassTimesData);
     return (<Fragment>
-        <SliderWrapper>
+        {withSlider && <SliderWrapper>
           <ClassTimesSlider
             data={modifiedClassTimesData}
             componentProps={{classInterestData: classInterestData}}
              />
-        </SliderWrapper>
-        <BarWrapper>
+        </SliderWrapper>}
+        <BarWrapper show={withSlider}>
           <ClassTimesBar
+            inPopUp={inPopUp}
             classTimesData={modifiedClassTimesData}
             classInterestData={classInterestData}
           />
@@ -67,7 +69,14 @@ class ClassTimesBoxes extends Component {
 }
 
 ClassTimesBoxes.propTypes = {
+  withSlider: PropTypes.bool,
+  inPopUp: PropTypes.bool,
   classTimesData: PropTypes.arrayOf(classTime),
+}
+
+ClassTimesBoxes.defaultProps = {
+  withSlider: true,
+  inPopUp: false
 }
 
 export default ClassTimesBoxes;
