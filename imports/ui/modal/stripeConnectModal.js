@@ -5,7 +5,7 @@ import { formStyles } from "/imports/util";
 // import { blue500 } from 'material-ui/styles/colors';
 
 import Dialog, { DialogActions, withMobileDialog } from "material-ui/Dialog";
-
+import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import Icon from "material-ui/Icon";
 import Card, { CardActions, CardContent, CardMedia } from "material-ui/Card";
 import Button from "material-ui/Button";
@@ -98,26 +98,35 @@ class StripeConnectModal extends React.Component {
     };
   }
   componentDidMount() {
+    console.log("in stripe connect modal this.props", this.props);
     if (this.props.location.query && this.props.location.query.code) {
       const { toastr } = this.props;
       Meteor.call(
         "getStripeToken",
         this.props.location.query.code,
         (error, result) => {
+          console.log("-------------------", error, result);
           if (result) {
             toastr.success(result, "Success");
+            setTimeout(() => {
+              window.location.replace("http://localhost:3000/");
+            }, 3000);
+          } else {
+            toastr.success(error.reason, "Success");
+            setTimeout(() => {
+              window.location.replace("http://localhost:3000/");
+            }, 3000);
           }
         }
       );
     }
   }
   render() {
-    {
-      console.log("this.props in stripeconnectmodal", this.props);
-    }
     return (
       <div>
-        <h1>Stribe id " "{this.props.location.query.code}</h1>
+        <center style={{ top: "50%" }}>
+          <Preloader />
+        </center>
       </div>
     );
   }

@@ -93,5 +93,18 @@ Meteor.methods({
   },
   addStripeJsonForUser: function(data) {
     let customer_id = UserStripeData.insert(data);
+    Meteor.users.update(
+      { _id: this.userId },
+      { $set: { "profile.stripeStatus": true } }
+    );
+  },
+  disconnectStripeUser: function() {
+    console.log("in disconnectStripeUser");
+    Meteor.users.update(
+      { _id: this.userId },
+      { $set: { "profile.stripeStatus": false } }
+    );
+    UserStripeData.remove({ userId: this.userId });
+    return "Successfully Disconnected";
   }
 });
