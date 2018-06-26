@@ -22,8 +22,8 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 const ClassTimeContainer = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   flex-direction: column;
-  max-width: ${props => props.inPopUp ? '100%' : CLASS_TIMES_CARD_WIDTH}px;
-  width: '100%';
+  max-width: 100%;
+  width: 100%;
   height: ${props => props.inPopUp ? 'auto' : '420px'};
   padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
@@ -43,11 +43,6 @@ const ClassTimeContainer = styled.div`
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
     margin: 0 auto;
-  }
-
-  // As it would prevent the cards to turn into single
-  @media screen and (max-width: 700px) {
-    max-width: 260px;
   }
 
   @media screen and (max-width: ${helpers.mobile + 100}px) {
@@ -81,13 +76,16 @@ const ClassTypeName = styled.h4`
   color: ${helpers.black};
   font-family: ${helpers.specialFont};
   font-weight: 400;
-  font-size: ${props => props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize}px;
+  font-size: ${props => props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize * 1.25}px;
   text-align: center;
   text-transform: capitalize;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const ScheduleType = ClassTypeName.withComponent('p').extend`
   font-weight: 300;
+  font-size: 18px;
+  text-transform: capitalize;
 `;
 
 const Description = styled.p`
@@ -129,9 +127,6 @@ const ClassTimesCardWrapper = styled.div`
   max-height: ${props => props.inPopUp ? 'auto' : '296px'}; // computed height
 `;
 
-const B = styled.span`
-  font-weight: 500;
-`;
 
 const Trending = () => {
   return (
@@ -266,10 +261,15 @@ class ClassTime extends Component {
 
   getScheduleTypeFormatted = () => {
       const {startDate, endDate, scheduleType} = this.props;
-      if(scheduleType.toLowerCase() === 'recurring')
-        return (<ScheduleType>{formatDate(startDate)} - {formatDate(endDate)}</ScheduleType>)
+      const classScheduleType = scheduleType.toLowerCase();
 
-      return <ScheduleType>{scheduleType}</ScheduleType>
+      if(classScheduleType === 'recurring')
+        return (<ScheduleType>{formatDate(startDate)} - {formatDate(endDate)}</ScheduleType>)
+      else if (classScheduleType === 'onetime') {
+        {/* Adding manual small letters splitted schedule type one time*/}
+        return <ScheduleType>{"one time"}</ScheduleType>
+      }
+      return <ScheduleType>{classScheduleType}</ScheduleType>
   }
 
   getWrapperClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar' : 'remove-from-calendar';
@@ -314,7 +314,6 @@ class ClassTime extends Component {
     const dotColor = this.getDotColor(this.props.addToCalendar);
     return (<Fragment>
       {this.state.isLoading && <ContainerLoader />}
-      {/*<ClassTypeNameNoBlurred showCard={this.state.showCard}>{name}</ClassTypeNameNoBlurred> */}
 
       <ClassTimeContainer
         inPopUp={inPopUp}

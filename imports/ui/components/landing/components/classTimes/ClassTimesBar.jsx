@@ -55,6 +55,17 @@ const GridContainer = styled.div`
 
 const GridItem = styled.div`
   padding: ${props => props.spacing ? props.spacing/2 : '16'}px;
+  flex-grow: 1;
+  width: 100%;
+  max-width: ${props => props.inPopUp ? '100%' : CARD_WIDTH + props.spacing + 'px'};
+
+  @media screen and (max-width: 700px) {
+    max-width: ${props => props.inPopUp ? '100%' : CARD_WIDTH + 'px'}
+  }
+
+  media screen and (max-width: 600px) {
+    max-width: ${props => props.inPopUp ? '100%' : CARD_WIDTH + props.spacing + 'px'};
+  }
 `;
 
 const ClassTimesBar = (props) => {
@@ -77,7 +88,7 @@ const ClassTimesBar = (props) => {
           {classTimesData.map(classTimeObj => {
             // addToCalender  = this.checkForAddToCalender(classTimeObj)
             return (
-              <GridItem key={classTimeObj._id} spacing={32}>
+              <GridItem key={classTimeObj._id} spacing={32} inPopUp={inPopUp}>
                 <ClassTime
                   {...classTimeObj}
                   inPopUp={inPopUp}
