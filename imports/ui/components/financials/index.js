@@ -22,6 +22,7 @@ export default class Financials extends React.Component {
     this.setState({ tabValue });
   };
   componentWillMount() {
+    console.log("this-------->", this.props);
     Meteor.call(
       "school.findSuperAdmin",
       this.props.currentUser._id,
@@ -34,8 +35,9 @@ export default class Financials extends React.Component {
   }
 
   render() {
-    const role = _.indexOf(Meteor.user().roles, "Superadmin");
     let { currentUser } = this.props;
+    const role = currentUser && _.indexOf(currentUser.roles, "Superadmin");
+
     return (
       <DocumentTitle title="Financials">
         {this.state.adminPermission || role != -1 ? (
