@@ -110,6 +110,7 @@ const ContentWrapper = styled.div`
 `;
 
 const ContentHeader = styled.div`
+  max-width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 0 ${helpers.rhythmDiv * 2}px;
@@ -127,6 +128,7 @@ const ClassTypeCoverImg = styled.div`
   height: 100px;
   border-radius: 50%;
   background-image: url(${props => props.src});
+  flex-shrink: 0;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-bottom: ${helpers.rhythmDiv}px;
@@ -137,6 +139,7 @@ const ClassTimes = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
   padding-right: ${helpers.rhythmDiv * 2}px;
+  flex-shrink: 1;
 `;
 
 const ClassTypeName = styled.h2`
