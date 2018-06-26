@@ -51,7 +51,6 @@ const styles = {
     // padding: `0 ${helpers.rhythmDiv * 3}px`,
     // paddingTop: helpers.rhythmDiv * 2
     padding: 0,
-    marginBottom: helpers.rhythmDiv * 2
   },
   dialogContent: {
     overflowX: "hidden",
@@ -126,6 +125,7 @@ const ClassTypeCoverImg = styled.div`
   background-position: center center;
   width: 100px;
   height: 100px;
+  margin-right: ${helpers.rhythmDiv}px;
   border-radius: 50%;
   background-image: url(${props => props.src});
   flex-shrink: 0;

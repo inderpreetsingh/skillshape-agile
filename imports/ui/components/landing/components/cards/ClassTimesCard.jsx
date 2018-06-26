@@ -118,8 +118,10 @@ const ClassTimesCard = (props) =>  {
   const ScheduleDisplay = (props) => <Time> <MyIcon iconName={'access_time'} /> At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins</Time>;
 
   const SchedulePopUp = (props) => {
+    let {day} = props;
+    if(props.scheduleType === 'recurring') day += 's';
     if(props.scheduleType === 'recurring' || props.scheduleType === 'ongoing') {
-      return <DateTime> {props.day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins </DateTime>;
+      return <DateTime> {day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins </DateTime>;
     }else {
       return <DateTime> {props.day.substr(0,3)}, {formatDateNoYear(props.eventDate)} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins </DateTime>
     }
