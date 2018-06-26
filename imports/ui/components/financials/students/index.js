@@ -52,10 +52,14 @@ class Students extends React.Component {
                   <Fragment>
                     <TableRow key={purchase._id} selectable={false}>
                       <TableCell style={style.w150}>
-                        {purchase.profile.emails[0].address}
+                        {purchase.profile && purchase.profile.emails
+                          ? purchase.profile.emails[0].address
+                          : "Unavilable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.profile.profile.name}
+                        {purchase.profile && purchase.profile.profile
+                          ? purchase.profile.profile.name
+                          : "Unavilable"}
                       </TableCell>
                       <TableCell style={style.w150}>
                         {moment(purchase.createdOn).format(

@@ -509,17 +509,8 @@ export default class SchoolViewBase extends React.Component {
     // Start loading
     const { toastr } = this.props;
     let self = this;
-    console.log(
-      "schoolbaseview",
-      typeOfTable,
-      tableId,
-      schoolId,
-      packageName,
-      amount,
-      packageId,
-      packageType,
-      monthlyPymtDetails
-    );
+
+    console.log("result of scholl.info", this.props);
     let schoolAccountConnected = true; // Needs to pay through card if school's stripe account is connected.
     if (schoolAccountConnected) {
       if (monthlyPymtDetails) {
@@ -528,9 +519,10 @@ export default class SchoolViewBase extends React.Component {
       amount = amount * 100;
       var handler = StripeCheckout.configure({
         key: Meteor.settings.public.stripe.PUBLIC_KEY,
-        image: "/images/logo-location.png",
+        image: this.props.schoolData.mainImage,
         locale: "auto",
         token: function(token) {
+          toastr.success("Please wait transaction in Progress", "Success");
           Meteor.call(
             "chargeCard",
             token.id,
@@ -552,7 +544,7 @@ export default class SchoolViewBase extends React.Component {
 
       // Open Checkout with further options:
       handler.open({
-        name: "Skillshape.com",
+        name: this.props.schoolData.name,
         description: packageName,
         zipCode: true,
         amount: amount
@@ -584,11 +576,11 @@ export default class SchoolViewBase extends React.Component {
           // Stop loading
           self.setState({ isLoading: false });
           if (err) {
-            toastr.error(err.reason || err.message, "Error");
+            // toastr.error(err.reason || err.message, "Error");
           } else {
             // Show confirmation to user that purchase request has been created.
             console.log("result----------------", res);
-            toastr.success(res, "Success");
+            //  toastr.success(res, "Success");
           }
         }
       );
