@@ -69,6 +69,10 @@ const DescriptionWrapper = styled.div`
   display: flex;
 `;
 
+const ClassTimeContent = styled.div`
+  width: 100%;
+`;
+
 const ClassTypeName = styled.h4`
   width: 100%;
   margin: 0;
@@ -158,8 +162,9 @@ class ClassTime extends Component {
   }
 
   formatDataBasedOnScheduleType = (data) => {
-    const classTimesData = {...data};
-    // console.log("formatDataBasedOnScheduleType________", data);
+     const classTimesData = {...data};
+      debugger;
+      console.log("formatDataBasedOnScheduleType________", data);
       let classTimes;
       if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
         classTimes = {};
@@ -168,6 +173,8 @@ class ClassTime extends Component {
         schoolDetails.forEach((item) => {
           startDate = new Date(item.startDate);
           dayOfTheWeek = startDate.getDay(); // day of the week (from 0 to 6)
+          if(dayOfTheWeek === 0)
+            dayOfTheWeek = 7;
           day = DAYS_IN_WEEK[dayOfTheWeek - 1];
           startTime = new Date(item.startTime); // Get Time from date time
           formattedTime = formatTime(startTime);
@@ -319,7 +326,7 @@ class ClassTime extends Component {
         inPopUp={inPopUp}
         className={`class-time-bg-transition ${this.getWrapperClassName(this.props.addToCalendar)}`}
         key={this.props._id} >
-          <div>
+          <ClassTimeContent>
             {/*Class type name */}
             <ClassTypeName inPopUp={inPopUp}>{name}</ClassTypeName>
 
@@ -335,7 +342,7 @@ class ClassTime extends Component {
                 description={desc}
                />
             </ClassTimesCardWrapper>
-          </div>
+          </ClassTimeContent>
 
           {/* View All times button */}
           <ButtonsWrapper>
