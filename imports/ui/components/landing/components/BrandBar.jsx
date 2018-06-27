@@ -1,4 +1,5 @@
 import React from 'react';
+import isEmpty from 'lodash/isEmpty';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -69,7 +70,7 @@ const BrandBar = (props) => (
           {props.barButton ? props.barButton
           :
           (<ButtonsWrapper>
-            <AddSchoolButton />
+            {isEmpty(props.currentUser) && <AddSchoolButton />}
             <JoinButton label="Sign Up" {...props}/>
             <LoginButton icon={true} {...props}/>
           </ButtonsWrapper>)}

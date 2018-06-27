@@ -1,4 +1,6 @@
-import React from 'react';
+import React,{Fragment} from 'react';
+import isEmpty from 'lodash/isEmpty';
+
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import { browserHistory } from 'react-router';
 
