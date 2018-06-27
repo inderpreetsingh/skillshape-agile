@@ -13,7 +13,7 @@ import SecondaryButton from '/imports/ui/components/landing/components/buttons/S
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 
 import Events from '/imports/util/events';
-import {toastrModal, formatDate, formatTime} from '/imports/util';
+import {toastrModal, formatDate, formatTime, formatDataBasedOnScheduleType} from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import { DAYS_IN_WEEK, CLASS_TIMES_CARD_WIDTH } from '/imports/ui/components/landing/constants/classTypeConstants.js';
@@ -67,6 +67,10 @@ const ScheduleWrapper = styled.div`
 const DescriptionWrapper = styled.div`
   flex-grow: 1;
   display: flex;
+`;
+
+const ClassTimeContent = styled.div`
+  width: 100%;
 `;
 
 const ClassTypeName = styled.h4`
@@ -155,49 +159,6 @@ class ClassTime extends Component {
     // console.log("this.props",this.props)
     const classTimeData = {...this.props};
     this.removeFromMyCalender(classTimeData);
-  }
-
-  formatDataBasedOnScheduleType = (data) => {
-    const classTimesData = {...data};
-    // console.log("formatDataBasedOnScheduleType________", data);
-      let classTimes;
-      if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
-        classTimes = {};
-        let schoolDetails = data.scheduleDetails.oneTime;
-        let startDate, dayOfTheWeek, day, startTime, formattedTime, timePeriod, currentJsonData;
-        schoolDetails.forEach((item) => {
-          startDate = new Date(item.startDate);
-          dayOfTheWeek = startDate.getDay(); // day of the week (from 0 to 6)
-          day = DAYS_IN_WEEK[dayOfTheWeek - 1];
-          startTime = new Date(item.startTime); // Get Time from date time
-          formattedTime = formatTime(startTime);
-          timePeriod = this.formatAMPM(startTime);
-          currentJsonData = {
-            time: formattedTime,
-            timePeriod: timePeriod,
-            duration: item.duration,
-            date: `${startDate}`
-          };
-          if(classTimes && classTimes[day]) {
-            let existingTimes = classTimes[day];
-            existingTimes.push(currentJsonData);
-            classTimes[day] = existingTimes;
-          } else {
-            classTimes[day] = [];
-            classTimes[day].push(currentJsonData);
-          }
-          // this.handleSliderState(dayOfTheWeek - 1);
-        })
-        return classTimes;
-      } else {
-        return data.scheduleDetails;
-      }
-  }
-
-  formatAMPM = (startTime) => {
-      let hours = startTime.getHours();
-      let ampm = hours >= 12 ? 'pm' : 'am';
-      return ampm;
   }
 
   removeFromMyCalender = (classTimeRec) => {
@@ -308,7 +269,7 @@ class ClassTime extends Component {
 
   render() {
     const { desc , startDate, endDate, scheduleType, name, inPopUp } = this.props;
-    const formattedClassTimes = this.formatDataBasedOnScheduleType(this.props);
+    const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     // const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(this.props.addToCalendar);
     const dotColor = this.getDotColor(this.props.addToCalendar);
@@ -319,7 +280,7 @@ class ClassTime extends Component {
         inPopUp={inPopUp}
         className={`class-time-bg-transition ${this.getWrapperClassName(this.props.addToCalendar)}`}
         key={this.props._id} >
-          <div>
+          <ClassTimeContent>
             {/*Class type name */}
             <ClassTypeName inPopUp={inPopUp}>{name}</ClassTypeName>
 
@@ -335,7 +296,7 @@ class ClassTime extends Component {
                 description={desc}
                />
             </ClassTimesCardWrapper>
-          </div>
+          </ClassTimeContent>
 
           {/* View All times button */}
           <ButtonsWrapper>

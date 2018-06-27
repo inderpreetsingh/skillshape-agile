@@ -59,13 +59,14 @@ const OuterWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 100%;
+  width: 100%;
   height: 100%;
   background: transparent;
   position: relative;
 `;
 
 const CardContent = styled.div`
+  width: 100%;
   // padding-right: ${helpers.rhythmDiv}px;
 `;
 

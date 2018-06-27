@@ -42,7 +42,7 @@ const styles = {
     overflowX: "hidden"
   },
   dialogPaper: {
-    maxWidth: 500,
+    maxWidth: 400,
     background: "white",
     margin: helpers.rhythmDiv,
     overflowY: 'auto'

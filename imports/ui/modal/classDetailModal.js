@@ -28,7 +28,8 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers'
 
 import "/imports/api/classInterest/methods";
 import "/imports/api/classTimes/methods";
-import { checkForAddToCalender } from "/imports/util";
+
+import {checkForAddToCalender ,formatDate, formatTime, formatDataBasedOnScheduleType} from '/imports/util';
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx";
 import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
@@ -137,13 +138,36 @@ const Text = styled.p`
   margin-bottom: ${props => props.marginBottom}px;
 `;
 
+const EventWrapper = styled.div`
+  ${helpers.flexHorizontalSpaceBetween};
+  max-width: 400px;
+  width: 100%;
+`;
+
+const ImageContainer = styled.div`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  ${helpers.coverBg};
+  background-position: 50% 50%;
+  background-image: url('${props => props.src}');
+`;
+
 const EventName = Heading.extend`
+  font-size: ${helpers.baseFontSize * 1.5}px;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const EventDesc = Text.extend`
+const Event = styled.div`
+  ${helpers.flexCenter}
+  flex-direction: column;
+  padding-right: ${helpers.rhythmDiv*2}px;
 `;
+
+const ScheduleType = Text.extend``;
+
+const EventDesc = Text.extend``;
 
 class ClassDetailModal extends React.Component {
   constructor(props) {
@@ -202,6 +226,8 @@ class ClassDetailModal extends React.Component {
       return settings.classTypeImgSrc;
     }
   };
+
+
 
   removeMyClassInterest = (event, classTimeId) => {
     console.log("<<_____removeMyClassInterest-->>>>", classTimeId);
@@ -292,6 +318,8 @@ class ClassDetailModal extends React.Component {
     const { eventData, fullScreen, classes, clickedDate } = this.props;
     console.log("eventData____________", eventData);
     let classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
+    const formattedClassTimes = formatDataBasedOnScheduleType(eventData);
+    console.log(formattedClassTimes,"event ................................. data");
     return (
       <Dialog
         fullScreen={false}
@@ -308,34 +336,34 @@ class ClassDetailModal extends React.Component {
           !error && (
             <Grid container style={{ padding: "16px" }}>
               <Grid container classes={{typeItem: classes.gridItem}}>
-                  <div className={classes.imageContainer}>
+                <EventWrapper>
+                  <ImageContainer src={this.getImageSrc(classType, school)}>
                     {/*<div style={{position: "absolute", top: 10, right: 10}}>
-										{
-											eventData.attending && (
-												<Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
-												   <Icon
-														className="material-icons"
-													>
-														delete
-													</Icon>
-												</Button>
-											)
-										}
-									</div>*/}
+  									{
+  										eventData.attending && (
+  											<Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
+  											   <Icon
+  													className="material-icons"
+  												>
+  													delete
+  												</Icon>
+  											</Button>
+  										)
+  									}
+  								</div>*/}
 
-                    <img
+                    {/*<img
                       className={classes.image}
                       src={this.getImageSrc(classType, school)}
-                    />
-                  </div>
-
-                <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>
-                  <Grid item sm={12} md={12} xs={12}>
+                    />*/}
+                  </ImageContainer>
+                  <Event>
                     <EventName>{eventData.name}</EventName>
-                  </Grid>
-                  <Grid item sm={12} md={12} xs={12}>
-                    <EventDesc>{eventData.desc || ""}</EventDesc>
-                  </Grid>
+                    <ScheduleType>{eventData.scheduleType}</ScheduleType>
+                  </Event>
+                </EventWrapper>
+                <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>
+                  <EventDesc>{eventData.desc || ""}</EventDesc>
                 </Grid>
                 <Grid item xs={6} classes={{typeItem: classes.gridItem}}>
                   <div className={classes.iconWithDetailContainer}>
@@ -366,74 +394,7 @@ class ClassDetailModal extends React.Component {
                   </div>
                 </Grid>
               </Grid>
-              <Grid
-                container
-                style={{
-                  border: "2px solid #ccc",
-                  marginTop: "16px"
-                }}
-              >
-                <Grid item xs={12}>
-                  {eventData.scheduleType == "OnGoing" ? (
-                    <Text>
-                      This is an Ongoing class.
-                    </Text>
-                  ) : (
-                    ""
-                  )}
-                  {eventData.scheduleType == "oneTime" ? (
-                    <Text>This is a non-repeating class.</Text>
-                  ) : (
-                    ""
-                  )}
-                  {eventData.scheduleType == "recurring" ? (
-                    <Text>
-                      This is a repeating class with START/END.
-                    </Text>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-                <Grid item xs={12}>
-                  {eventData.scheduleDetails && (
-                    <Fragment>
-                      <Heading> Times </Heading>
-                      {Object.keys(eventData.scheduleDetails).map(
-                        (day, index) => {
-                          return (
-                            <Text marginBottom={helpers.rhythmDiv/2}>
-                              {this.renderdaySchedule(
-                                eventData.scheduleDetails[day],
-                                eventData
-                              )}
-                            </Text>
-                          );
-                        }
-                      )}
-                    </Fragment>
-                  )}
-                  {addToMyCalender ? (
-                    <ClassTimeButton
-                      icon
-                      onClick={event => {
-                        this.handleClassInterest(event, eventData);
-                      }}
-                      label="Add to my Calender"
-                      iconName="add_circle_outline"
-                    />
-                  ) : (
-                    <ClassTimeButton
-                      icon
-                      ghost
-                      onClick={event =>
-                        this.removeMyClassInterest(event, eventData.classTimeId)
-                      }
-                      label="Remove from calendar"
-                      iconName="delete"
-                    />
-                  )}
-                </Grid>
-              </Grid>
+
               <Grid
                 container
                 style={{ border: "2px solid #ccc", marginTop: "16px" }}
@@ -533,18 +494,90 @@ class ClassDetailModal extends React.Component {
                   </Grid>
                 )}
               </Grid>
-              {fullScreen && (
-                <DialogActions className={classes.dialogAction}>
-                  <Button
-                    onClick={() => {
-                      this.props.closeEventModal(false, null);
-                    }}
-                    color="primary"
-                  >
-                    Close
-                  </Button>
-                </DialogActions>
-              )}
+
+              <Grid
+                container
+                style={{
+                  border: "2px solid #ccc",
+                  marginTop: "16px"
+                }}
+              >
+                {/*<Grid item xs={12}>
+                  {eventData.scheduleType == "OnGoing" ? (
+                    <Text>
+                      This is an Ongoing class.
+                    </Text>
+                  ) : (
+                    ""
+                  )}
+                  {eventData.scheduleType == "oneTime" ? (
+                    <Text>This is a non-repeating class.</Text>
+                  ) : (
+                    ""
+                  )}
+                  {eventData.scheduleType == "recurring" ? (
+                    <Text>
+                      This is a repeating class with START/END.
+                    </Text>
+                  ) : (
+                    ""
+                  )}
+                </Grid> */}
+                <Grid item xs={12}>
+                  {eventData.scheduleDetails && (
+                    <Fragment>
+                      <Heading> Times </Heading>
+                      {Object.keys(eventData.scheduleDetails).map(
+                        (day, index) => {
+                          return (
+                            <Text marginBottom={helpers.rhythmDiv/2}>
+                              {this.renderdaySchedule(
+                                eventData.scheduleDetails[day],
+                                eventData
+                              )}
+                            </Text>
+                          );
+                        }
+                      )}
+                    </Fragment>
+                  )}
+                  {addToMyCalender ? (
+                    <ClassTimeButton
+                      icon
+                      onClick={event => {
+                        this.handleClassInterest(event, eventData);
+                      }}
+                      label="Add to my Calender"
+                      iconName="add_circle_outline"
+                    />
+                  ) : (
+                    <ClassTimeButton
+                      icon
+                      ghost
+                      onClick={event =>
+                        this.removeMyClassInterest(event, eventData.classTimeId)
+                      }
+                      label="Remove from calendar"
+                      iconName="delete"
+                    />
+                  )}
+                </Grid>
+              </Grid>
+
+              <DialogActions className={classes.dialogAction}>
+                <Button
+                  onClick={() => {
+                    this.props.closeEventModal(false, null);
+                  }}
+                  color="primary"
+                >
+                  Close
+                </Button>
+              </DialogActions>
+
+              {/*fullScreen && (
+
+              )*/}
               {/*<Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
 								Entire Class Dates
 							</Typography>
