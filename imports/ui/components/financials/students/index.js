@@ -21,7 +21,8 @@ class Students extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      PurchaseData: []
+      PurchaseData: [],
+      perPage: 10
     };
   }
   componentWillMount() {
@@ -40,6 +41,7 @@ class Students extends React.Component {
 
   render() {
     const { purchaseData } = this.props;
+    const { pageCount } = this.props;
     console.log("PurchaseData in students--->", this.props);
     return (
       <div>
@@ -71,6 +73,13 @@ class Students extends React.Component {
                 );
               })}
         </StudentsDetailsTable>
+        <Pagination
+          {...this.state}
+          pageCount={pageCount}
+          onChange={skip => {
+            this.props.ChangePageClick(skip);
+          }}
+        />
       </div>
     );
   }
@@ -80,7 +89,7 @@ export default createContainer(props => {
   let purchaseSubscription = Meteor.subscribe(
     "getAllPurchaseData",
     props.params.slug,
-    "student"
+    props.filters
   );
   // let purchaseData = [];
   // if (purchaseSubscription.ready()) {

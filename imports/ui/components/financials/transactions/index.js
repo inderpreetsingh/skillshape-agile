@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import Pagination from "/imports/ui/componentHelpers/pagination";
 import { TransactionDetailsTable } from "./transactionDetailsTable";
 import { TableRow, TableCell } from "material-ui/Table";
 import isEmpty from "lodash/isEmpty";
@@ -21,37 +22,23 @@ class Transactions extends React.Component {
     super(props);
     this.state = {
       PurchaseData: [],
-      isBusy: true,
-      perPage: 10,
-
-      usersCount: 0,
-      errorText: null,
-      pageCount: 10
+      perPage: 10
     };
-  }
-  componentWillMount() {
-    console.log("this.props in payout", this.props);
-
-    // Meteor.call("getAllPurchaseData", this.props.params.slug, (err, res) => {
-    //   console.log("------------->AllPurchaseData<---------", res);
-    //   this.setState({ PurchaseData: res });
-    // });
   }
 
   render() {
-    const { isBusy, pageCount, usersCount } = this.state;
     const { purchaseData } = this.props;
-    console.log("PurchaseData--->", this.props);
+    const { pageCount } = this.props;
     return (
       <div>
         <h1>Payouts</h1>
         <TransactionDetailsTable>
           {isEmpty(purchaseData)
             ? "No payout found"
-            : purchaseData.reverse().map(purchase => {
+            : purchaseData.reverse().map((purchase, index) => {
                 return (
                   <Fragment>
-                    <TableRow key={purchase._id} selectable={false}>
+                    <TableRow key={index} selectable={false}>
                       <TableCell style={style.w150}>
                         {"Payout" || "Unavailable"}
                       </TableCell>
@@ -77,7 +64,7 @@ class Transactions extends React.Component {
                         {"Stripe Transfer" || "Unavailable"}
                       </TableCell>
                     </TableRow>
-                    <TableRow key={purchase._id} selectable={false}>
+                    <TableRow selectable={false}>
                       <TableCell style={style.w150}>
                         {"Charge" || "Unavailable"}
                       </TableCell>
@@ -109,6 +96,13 @@ class Transactions extends React.Component {
                 );
               })}
         </TransactionDetailsTable>
+        <Pagination
+          {...this.state}
+          pageCount={pageCount}
+          onChange={skip => {
+            this.props.ChangePageClick(skip);
+          }}
+        />
       </div>
     );
   }
@@ -117,11 +111,12 @@ export default createContainer(props => {
   console.log("payout props----->", props);
   let purchaseSubscription = Meteor.subscribe(
     "getAllPurchaseData",
-    props.params.slug
+    props.params.slug,
+    props.filters
   );
-  // let purchaseData = [];
-  // if (purchaseSubscription.ready()) {
+
   let purchaseData = Purchases.find().fetch();
+  console.log("purchaseData----------->", purchaseData);
   // }
 
   return {

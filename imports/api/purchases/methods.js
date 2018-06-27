@@ -4,9 +4,14 @@ Meteor.methods({
   addPurchase: function(payload) {
     return Purchases.insert(payload);
   },
-  getAllPurchaseData: function(slug) {
+  getAllPurchaseData: function(slug, filters) {
+    console.log("AllPurchaseData", filters);
     let schoolId = School.findOne({ slug: slug });
-    let AllPurchaseData = Purchases.find({ schoolId: schoolId._id }).fetch();
+    let AllPurchaseData = Purchases.find(
+      { schoolId: schoolId._id },
+      { limit: filters.limit, skip: filters.skip }
+    ).fetch();
+
     return AllPurchaseData;
   },
   updatePurchases: function(payload, recordId) {
@@ -20,5 +25,8 @@ Meteor.methods({
         }
       }
     );
+  },
+  purchasePageCount: function() {
+    return Purchases.find().count();
   }
 });
