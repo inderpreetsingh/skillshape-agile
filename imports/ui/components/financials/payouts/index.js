@@ -21,26 +21,15 @@ class Payouts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      PurchaseData: []
+      PurchaseData: [],
+      perPage: 10
     };
   }
-  componentWillMount() {
-    console.log("this.props in payout", this.props);
-
-    // Meteor.call("getAllPurchaseData", this.props.params.slug, (err, res) => {
-    //   console.log("------------->AllPurchaseData<---------", res);
-    //   this.setState({ PurchaseData: res });
-    // });
-  }
-  handlePageClick = ({ skip }) => {
-    console.log("skip -->>", skip);
-    this.setState({ isBusy: true });
-    this.getUsers({ limit: this.state.perPage, skip: skip });
-  };
 
   render() {
     const { purchaseData } = this.props;
-    console.log("PurchaseData--->", this.props);
+    const { pageCount } = this.props;
+    console.log("this.props.filters", this.props.filters);
     return (
       <div>
         <h1>Payouts</h1>
@@ -65,15 +54,22 @@ class Payouts extends React.Component {
                 );
               })}
         </PayoutDetailsTable>
+        <Pagination
+          {...this.state}
+          pageCount={pageCount}
+          onChange={skip => {
+            this.props.ChangePageClick(skip);
+          }}
+        />
       </div>
     );
   }
 }
 export default createContainer(props => {
-  console.log("payout props----->", props);
   let purchaseSubscription = Meteor.subscribe(
     "getAllPurchaseData",
-    props.params.slug
+    props.params.slug,
+    props.filters
   );
   // let purchaseData = [];
   // if (purchaseSubscription.ready()) {

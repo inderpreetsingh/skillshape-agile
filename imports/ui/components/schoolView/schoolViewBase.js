@@ -532,10 +532,15 @@ export default class SchoolViewBase extends React.Component {
             packageType,
             schoolId,
             (error, result) => {
-              if (result == "Payment Successfully Done") {
-                toastr.success(result, "Success");
+              console.log("error and result", error, result);
+              if (result) {
+                if (result == "Payment Successfully Done") {
+                  toastr.success(result, "Success");
+                } else {
+                  toastr.success(result.message, "Success");
+                }
               } else {
-                toastr.error(result.message, "Error");
+                toastr.error(error.message, "Error");
               }
             }
           );

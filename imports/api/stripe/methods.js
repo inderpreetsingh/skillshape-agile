@@ -17,13 +17,21 @@ Meteor.methods({
     stripeAccountId = stripeAccountId.stripe_user_id;
     var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
     const token = stripeToken;
+    const skillshapeAmount = Math.round(amount * (2.9 / 100) + 40);
+    const destinationAmount = Math.round(amount - skillshapeAmount);
+    console.log(
+      "amount,skillshapeAmount,destinationAmount,",
+      amount,
+      skillshapeAmount,
+      destinationAmount
+    );
     let stripe_Request = {
       amount: amount,
       currency: "usd",
       description: desc,
       source: token,
       destination: {
-        amount: 5,
+        amount: destinationAmount,
         account: stripeAccountId
       }
     };
@@ -56,6 +64,7 @@ Meteor.methods({
         status: "Error"
       };
       Meteor.call("updatePurchases", payload, recordId);
+
       return error;
     }
   },
