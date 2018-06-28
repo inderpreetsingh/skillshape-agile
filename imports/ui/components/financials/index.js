@@ -69,7 +69,12 @@ export default class Financials extends React.Component {
               page="Financials"
             />
             <div>
-              {this.state.tabValue === 0 && <Settings />}
+              {this.state.tabValue === 0 && (
+                <Settings
+                  {...this.props}
+                  adminPermission={this.state.adminPermission}
+                />
+              )}
               {this.state.tabValue === 1 && (
                 <Payouts
                   {...this.props}
