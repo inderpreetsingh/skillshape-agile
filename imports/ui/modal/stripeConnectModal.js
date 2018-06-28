@@ -101,22 +101,22 @@ class StripeConnectModal extends React.Component {
     console.log("in stripe connect modal this.props", this.props);
     if (this.props.location.query && this.props.location.query.code) {
       const { toastr } = this.props;
+      let ROOT_URL = Meteor.absoluteUrl();
       Meteor.call(
-        "getStripeToken",
+        "stripe.getStripeToken",
         this.props.location.query.code,
         (error, result) => {
           console.log("-------------------", error, result);
           if (result) {
             toastr.success(result, "Success");
-            setTimeout(() => {
-              window.location.replace("http://localhost:3000/");
-            }, 3000);
           } else {
-            toastr.success(error.reason, "Success");
-            setTimeout(() => {
-              window.location.replace("http://localhost:3000/");
-            }, 3000);
+            if (error) {
+              toastr.success(error.reason, "Success");
+            }
           }
+          setTimeout(() => {
+            window.location.replace(ROOT_URL);
+          }, 3000);
         }
       );
     }

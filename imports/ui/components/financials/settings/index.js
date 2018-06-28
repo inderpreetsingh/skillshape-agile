@@ -70,7 +70,7 @@ class Settings extends React.Component {
                     onClick={() => {
                       location.href = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${
                         Meteor.settings.public.stripeClientId
-                      }&scope=read_write`;
+                      }&scope=read_write&redirect_uri=${Meteor.absoluteUrl()}redirect-to-stripe`;
                     }}
                   >
                     Connect Stripe
