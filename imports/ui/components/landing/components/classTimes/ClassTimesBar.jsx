@@ -34,16 +34,16 @@ const ClassTimesWrapper = styled.div`
   max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,4)}px;
   margin: 0 auto;
 
-  @media screen and (max-width : 1200px) {
+  @media screen and (max-width : ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,4)}px) {
     max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,3)}px;
   }
 
-  @media screen and (max-width : 1000px) {
+  @media screen and (max-width : ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,3)}px) {
     max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,2)}px;
   }
 
-  @media screen and (max-width : 600px) {
-    max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,1)}px;
+  @media screen and (max-width : ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,2)}px) {
+    max-width: 600px;
   }
 `;
 
@@ -59,7 +59,7 @@ const GridItem = styled.div`
   width: 100%;
   max-width: ${props => props.inPopUp ? '100%' : CARD_WIDTH + props.spacing + 'px'};
 
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: ${props => getContainerMaxWidth(CARD_WIDTH,props.spacing,2)}px) {
     max-width: ${props => props.inPopUp ? '100%' : CARD_WIDTH + 'px'}
   }
 

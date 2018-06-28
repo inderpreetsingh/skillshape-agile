@@ -26,9 +26,9 @@ export const formatDateNoYear = (date) => {
   return moment(date).format('MMMM DD');
 }
 
-export const formatDataBasedOnScheduleType = (data) => {
+export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
    const classTimesData = {...data};
-    debugger;
+    // debugger;
     console.log("formatDataBasedOnScheduleType________", data);
     let classTimes;
     if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
@@ -45,6 +45,7 @@ export const formatDataBasedOnScheduleType = (data) => {
         formattedTime = formatTime(startTime);
         timePeriod = _formatAMPM(startTime);
         currentJsonData = {
+          startTime: startTime,
           time: formattedTime,
           timePeriod: timePeriod,
           duration: item.duration,
@@ -60,10 +61,46 @@ export const formatDataBasedOnScheduleType = (data) => {
         }
         // this.handleSliderState(dayOfTheWeek - 1);
       })
-      return classTimes;
+      classTimes;
     } else {
-      return data.scheduleDetails;
+      classTimes = data.scheduleDetails;
     }
+    if(hidePastDates)
+      return removePastTimesFromSchedule(classTimes , data.scheduleType.toLowerCase(), {startDate: data.startDate, endDate: data.endDate});
+
+    return classTimes;
+}
+
+
+const removePastTimesFromSchedule = (classTimes,scheduleType,scheduleData) => {
+  // console.log(classTimes);
+  /*
+  const currentDate = new Date();
+  if(scheduleType === 'recurring') {
+    console.log(moment(currentDate),moment(currentDate).isBetween(moment(scheduleData.startDate), moment(scheduleData.endDate)));
+    if(moment(currentDate).isBetween(moment(scheduleData.startDate), moment(scheduleData.endDate)) ) {
+        // now we need don't need to check anything
+      return classTimes;
+    }
+    else if(moment(currentDate).isAfter(moment(scheduleData.startDate)) || moment(currentDate).isBefore(moment(scheduleData.endDate)) )
+      Object.keys(classTimes).forEach(day => {
+        classTimes[day] = classTimes[day].filter(classTime => {
+          if(moment(currentDate).isBefore(moment(classTime.startTime))) {
+            return true;
+          }
+          return false;
+        })
+      });
+
+      console.log(classTimes,"after filtering.........");
+
+      return classTimes;
+    }
+
+    return {};
+    */
+
+    return classTimes;
 }
 
 export const _formatAMPM = (startTime) => {

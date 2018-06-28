@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import isEmpty from 'lodash/isEmpty';
 // import SearchBar from 'material-ui-search-bar';
 import {browserHistory, Link} from 'react-router';
 import MySearchBar from './MySearchBar.jsx';
@@ -115,7 +116,7 @@ const TopSearchBar = (props) => (
 
     <NavRightSection>
       <LinksWrapper>
-        <TopBarLink onClick={props.onSkillShapeForSchoolsClick}>SkillShape For Schools</TopBarLink>
+        {isEmpty(props.currentUser) && <TopBarLink onClick={props.onSkillShapeForSchoolsClick}>SkillShape For Schools</TopBarLink>}
         {/*<TopBarLink onClick={props.onSignUpLinkClick}>Sign Up</TopBarLink>
         <TopBarLink onClick={props.onLoginLinkClick}>Log In</TopBarLink>*/}
         <JoinButton label="Sign Up" {...props}/>
