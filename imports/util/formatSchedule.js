@@ -28,7 +28,7 @@ export const formatDateNoYear = (date) => {
 
 export const formatDataBasedOnScheduleType = (data) => {
    const classTimesData = {...data};
-    debugger;
+    // debugger;
     console.log("formatDataBasedOnScheduleType________", data);
     let classTimes;
     if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
