@@ -12,8 +12,8 @@ Meteor.methods({
     schoolId
   ) {
     try {
-      let superAdminId = School.findOne({ _id: schoolId });
-      superAdminId = superAdminId.superAdmin;
+      let schoolData = School.findOne({ _id: schoolId });
+      let superAdminId = schoolData.superAdmin;
       let stripeAccountId = UserStripeData.findOne({ userId: superAdminId });
       stripeAccountId = stripeAccountId.stripe_user_id;
       var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
@@ -88,9 +88,7 @@ Meteor.methods({
       let userData = UserStripeData.findOne({
         userId: this.userId
       });
-      console.log("userData", userData);
       if (!userData) {
-        // Store User's data into our DB.
         Meteor.call("stripe.addStripeJsonForUser", payload);
         return "Successfully Connected";
       } else {
@@ -120,5 +118,15 @@ Meteor.methods({
     );
     UserStripeData.remove({ userId: this.userId });
     return "Successfully Disconnected";
+  },
+  "stripe.findAdminStripeAccount": function(superAdminId) {
+    let result = UserStripeData.findOne({ userId: superAdminId });
+    console.log("------------in stripe method----------", result);
+
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
   }
 });
