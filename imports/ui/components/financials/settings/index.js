@@ -11,7 +11,6 @@ class Settings extends React.Component {
     };
   }
   disconnectStripe = () => {
-    console.log("this.disconnectStripe clicked", this.props);
     const { toastr } = this.props;
     Meteor.call("disconnectStripeUser", (error, result) => {
       toastr.success(result, "Success");
@@ -19,9 +18,10 @@ class Settings extends React.Component {
   };
 
   render() {
+    console.log("in student section", this.props.adminPermission);
     return (
       <div>
-        {Meteor.user().profile.stripeStatus ? (
+        {Meteor.user().profile.stripeStatus && this.props.adminPermission ? (
           <center>
             <Card>
               {" "}
