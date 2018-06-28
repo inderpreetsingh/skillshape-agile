@@ -12,16 +12,20 @@ class Settings extends React.Component {
   }
   disconnectStripe = () => {
     const { toastr } = this.props;
-    Meteor.call("disconnectStripeUser", (error, result) => {
+    Meteor.call("stripe.disconnectStripeUser", (error, result) => {
       toastr.success(result, "Success");
     });
   };
 
   render() {
-    console.log("in student section", this.props.adminPermission);
+    console.log(
+      "this.props------------->",
+      this.props.currentUser.profile.stripeStatus,
+      this.props.adminPermission
+    );
     return (
       <div>
-        {Meteor.user().profile.stripeStatus && this.props.adminPermission ? (
+        {this.props.currentUser.profile.stripeStatus ? (
           <center>
             <Card>
               {" "}

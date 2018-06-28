@@ -110,7 +110,7 @@ class Transactions extends React.Component {
 export default createContainer(props => {
   console.log("payout props----->", props);
   let purchaseSubscription = Meteor.subscribe(
-    "getAllPurchaseData",
+    "stripe.getAllPurchaseData",
     props.params.slug,
     props.filters
   );

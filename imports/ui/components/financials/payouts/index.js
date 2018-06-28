@@ -67,7 +67,7 @@ class Payouts extends React.Component {
 }
 export default createContainer(props => {
   let purchaseSubscription = Meteor.subscribe(
-    "getAllPurchaseData",
+    "stripe.getAllPurchaseData",
     props.params.slug,
     props.filters
   );

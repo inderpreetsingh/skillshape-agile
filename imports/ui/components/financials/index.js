@@ -44,7 +44,7 @@ export default class Financials extends React.Component {
         console.log("result----------------", result);
       }
     );
-    Meteor.call("purchasePageCount", (error, result) => {
+    Meteor.call("stripe.purchasePageCount", (error, result) => {
       this.setState({
         pageCount: Math.ceil(result / this.state.perPage)
       });
