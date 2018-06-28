@@ -509,57 +509,89 @@ export default class SchoolViewBase extends React.Component {
     // Start loading
     const { toastr } = this.props;
     let self = this;
-
-    console.log("result of scholl.info", this.props);
-    let schoolAccountConnected = true; // Needs to pay through card if school's stripe account is connected.
-    if (schoolAccountConnected) {
-      if (monthlyPymtDetails) {
-        amount = monthlyPymtDetails[0].cost;
-      }
-      amount = amount * 100;
-      var handler = StripeCheckout.configure({
-        key: Meteor.settings.public.stripe.PUBLIC_KEY,
-        image: this.props.schoolData.mainImage,
-        locale: "auto",
-        token: function(token) {
-          toastr.success("Please wait transaction in Progress", "Success");
-          Meteor.call(
-            "stripe.chargeCard",
-            token.id,
-            amount,
-            packageName,
-            packageId,
-            packageType,
-            schoolId,
-            (error, result) => {
-              console.log("error and result", error, result);
-              if (result) {
-                if (result == "Payment Successfully Done") {
-                  toastr.success(result, "Success");
-                } else {
-                  toastr.success(result.message, "Success");
+    console.log(
+      "this.props.schoolData.superAdmin",
+      this.props.schoolData.superAdmin
+    );
+    Meteor.call(
+      "stripe.findAdminStripeAccount",
+      this.props.schoolData.superAdmin,
+      (error, result) => {
+        console.log("result and error", error, result);
+        if (result) {
+          if (monthlyPymtDetails) {
+            amount = monthlyPymtDetails[0].cost;
+          }
+          amount = amount * 100;
+          var handler = StripeCheckout.configure({
+            key: Meteor.settings.public.stripe.PUBLIC_KEY,
+            image: this.props.schoolData.mainImage,
+            locale: "auto",
+            token: function(token) {
+              toastr.success("Please wait transaction in Progress", "Success");
+              Meteor.call(
+                "stripe.chargeCard",
+                token.id,
+                amount,
+                packageName,
+                packageId,
+                packageType,
+                schoolId,
+                (error, result) => {
+                  console.log("error and result", error, result);
+                  if (result) {
+                    if (result == "Payment Successfully Done") {
+                      toastr.success(result, "Success");
+                    } else {
+                      toastr.success(result.message, "Success");
+                    }
+                  } else {
+                    toastr.error(error.message, "Error");
+                  }
                 }
-              } else {
-                toastr.error(error.message, "Error");
-              }
+              );
             }
-          );
+          });
+
+          // Open Checkout with further options:
+          handler.open({
+            name: this.props.schoolData.name,
+            description: packageName,
+            zipCode: true,
+            amount: amount
+          });
+
+          // Close Checkout on page navigation:
+          window.addEventListener("popstate", function() {
+            handler.close();
+          });
+        } else {
+          if (Meteor.userId()) {
+            this.setState({ isLoading: true });
+            Meteor.call(
+              "packageRequest.addRequest",
+              {
+                typeOfTable: typeOfTable,
+                tableId: tableId,
+                schoolId: schoolId
+              },
+              (err, res) => {
+                // Stop loading
+                self.setState({ isLoading: false });
+                if (err) {
+                  toastr.error(err.reason || err.message, "Error");
+                } else {
+                  console.log("result----------------", res);
+                  toastr.success(res, "Success");
+                }
+              }
+            );
+          } else {
+            Events.trigger("loginAsUser");
+          }
         }
-      });
-
-      // Open Checkout with further options:
-      handler.open({
-        name: this.props.schoolData.name,
-        description: packageName,
-        zipCode: true,
-        amount: amount
-      });
-
-      // Close Checkout on page navigation:
-      window.addEventListener("popstate", function() {
-        handler.close();
-      });
-    }
+      }
+    );
 
     // Meteor.setTimeout(() => {
     //   console.log("called the method handle purchase package",typeOfTable, tableId, schoolId);
@@ -567,31 +599,6 @@ export default class SchoolViewBase extends React.Component {
     //     isLoading: false
     //   })
     // },2000);
-
-    if (Meteor.userId()) {
-      this.setState({ isLoading: true });
-      Meteor.call(
-        "packageRequest.addRequest",
-        {
-          typeOfTable: typeOfTable,
-          tableId: tableId,
-          schoolId: schoolId
-        },
-        (err, res) => {
-          // Stop loading
-          self.setState({ isLoading: false });
-          if (err) {
-            // toastr.error(err.reason || err.message, "Error");
-          } else {
-            // Show confirmation to user that purchase request has been created.
-            console.log("result----------------", res);
-            //  toastr.success(res, "Success");
-          }
-        }
-      );
-    } else {
-      Events.trigger("loginAsUser");
-    }
   };
 
   checkForHtmlCode = data => {
