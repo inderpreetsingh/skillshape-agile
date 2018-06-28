@@ -524,7 +524,7 @@ export default class SchoolViewBase extends React.Component {
         token: function(token) {
           toastr.success("Please wait transaction in Progress", "Success");
           Meteor.call(
-            "chargeCard",
+            "stripe.chargeCard",
             token.id,
             amount,
             packageName,

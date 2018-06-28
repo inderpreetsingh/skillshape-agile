@@ -3,7 +3,7 @@ import School from "../school/fields";
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
 Meteor.methods({
-  chargeCard: async function(
+  "stripe.chargeCard": async function(
     stripeToken,
     amount,
     desc,
@@ -64,41 +64,45 @@ Meteor.methods({
         status: "Error"
       };
       Meteor.call("updatePurchases", payload, recordId);
-
-      return error;
+      throw new Meteor.Error(
+        (error && error.message) || "Something went wrong!!!"
+      );
     }
   },
-  getStripeToken: function(code) {
-    // try {
-    let result = Meteor.http.call(
-      "POST",
-      `https://connect.stripe.com/oauth/token?client_secret=${
-        Meteor.settings.stripe.PRIVATE_KEY
-      }&code=${code}&grant_type=authorization_code`
-    );
+  "stripe.getStripeToken": function(code) {
+    try {
+      let result = Meteor.http.call(
+        "POST",
+        `https://connect.stripe.com/oauth/token?client_secret=${
+          Meteor.settings.stripe.PRIVATE_KEY
+        }&code=${code}&grant_type=authorization_code`
+      );
 
-    let payload = {
-      userId: this.userId,
-      stripe_user_id: result.data.stripe_user_id,
-      stripe_user_refresh_token: result.data.refresh_token
-    };
+      let payload = {
+        userId: this.userId,
+        stripe_user_id: result.data.stripe_user_id,
+        stripe_user_refresh_token: result.data.refresh_token
+      };
 
-    let userData = UserStripeData.findOne({
-      userId: this.userId
-    });
-    console.log("userData", userData);
-    if (!userData) {
-      Meteor.call("addStripeJsonForUser", payload);
-      return "Successfully Connected";
+      let userData = UserStripeData.findOne({
+        userId: this.userId
+      });
+      console.log("userData", userData);
+      if (!userData) {
+        // Store User's data into our DB.
+        Meteor.call("addStripeJsonForUser", payload);
+        return "Successfully Connected";
+      } else {
+        return "Your acoount is already connected!!";
+      }
+    } catch (error) {
+      throw new Meteor.Error(
+        error.response.statusCode,
+        error.response &&
+          error.response.data &&
+          error.response.data.error_description
+      );
     }
-    // } catch (error) {
-    //   throw new Meteor.Error(
-    //     error.response &&
-    //       error.response.data &&
-    //       error.response.data.error_description,
-    //     error.response.statusCode
-    //   );
-    // }
   },
   addStripeJsonForUser: function(data) {
     let customer_id = UserStripeData.insert(data);
