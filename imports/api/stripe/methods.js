@@ -11,43 +11,44 @@ Meteor.methods({
     packageType,
     schoolId
   ) {
-    let superAdminId = School.findOne({ _id: schoolId });
-    superAdminId = superAdminId.superAdmin;
-    let stripeAccountId = UserStripeData.findOne({ userId: superAdminId });
-    stripeAccountId = stripeAccountId.stripe_user_id;
-    var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
-    const token = stripeToken;
-    const skillshapeAmount = Math.round(amount * (2.9 / 100) + 40);
-    const destinationAmount = Math.round(amount - skillshapeAmount);
-    console.log(
-      "amount,skillshapeAmount,destinationAmount,",
-      amount,
-      skillshapeAmount,
-      destinationAmount
-    );
-    let stripe_Request = {
-      amount: amount,
-      currency: "usd",
-      description: desc,
-      source: token,
-      destination: {
-        amount: destinationAmount,
-        account: stripeAccountId
-      }
-    };
-    let userId = this.userId;
-    let payload = {
-      userId: userId,
-      stripe_Request: stripe_Request,
-      createdOn: new Date(),
-      packageId: packageId,
-      packageType: packageType,
-      schoolId: schoolId,
-      status: "In_Progress"
-    };
-    let recordId = Meteor.call("addPurchase", payload);
-    console.log("recordId", recordId);
     try {
+      let superAdminId = School.findOne({ _id: schoolId });
+      superAdminId = superAdminId.superAdmin;
+      let stripeAccountId = UserStripeData.findOne({ userId: superAdminId });
+      stripeAccountId = stripeAccountId.stripe_user_id;
+      var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
+      const token = stripeToken;
+      const skillshapeAmount = Math.round(amount * (2.9 / 100) + 40);
+      const destinationAmount = Math.round(amount - skillshapeAmount);
+      console.log(
+        "amount,skillshapeAmount,destinationAmount,",
+        amount,
+        skillshapeAmount,
+        destinationAmount
+      );
+      let stripe_Request = {
+        amount: amount,
+        currency: "usd",
+        description: desc,
+        source: token,
+        destination: {
+          amount: destinationAmount,
+          account: stripeAccountId
+        }
+      };
+      let userId = this.userId;
+      let payload = {
+        userId: userId,
+        stripe_Request: stripe_Request,
+        createdOn: new Date(),
+        packageId: packageId,
+        packageType: packageType,
+        schoolId: schoolId,
+        status: "In_Progress"
+      };
+      let recordId = Meteor.call("stripe.addPurchase", payload);
+      console.log("recordId", recordId);
+
       let charge = await stripe.charges.create(stripe_Request);
       console.log("charge=====>", charge);
       payload = {
@@ -55,7 +56,7 @@ Meteor.methods({
         status: "Succeeded"
       };
       console.log("=============>payload<=============", payload);
-      Meteor.call("updatePurchases", payload, recordId);
+      Meteor.call("stripe.updatePurchases", payload, recordId);
       return "Payment Successfully Done";
     } catch (error) {
       console.log("error------------>", error);
@@ -63,7 +64,7 @@ Meteor.methods({
         stripe_Response: error,
         status: "Error"
       };
-      Meteor.call("updatePurchases", payload, recordId);
+      Meteor.call("stripe.updatePurchases", payload, recordId);
       throw new Meteor.Error(
         (error && error.message) || "Something went wrong!!!"
       );
@@ -90,7 +91,7 @@ Meteor.methods({
       console.log("userData", userData);
       if (!userData) {
         // Store User's data into our DB.
-        Meteor.call("addStripeJsonForUser", payload);
+        Meteor.call("stripe.addStripeJsonForUser", payload);
         return "Successfully Connected";
       } else {
         return "Your acoount is already connected!!";
@@ -104,15 +105,15 @@ Meteor.methods({
       );
     }
   },
-  addStripeJsonForUser: function(data) {
+  "stripe.addStripeJsonForUser": function(data) {
     let customer_id = UserStripeData.insert(data);
     Meteor.users.update(
       { _id: this.userId },
       { $set: { "profile.stripeStatus": true } }
     );
   },
-  disconnectStripeUser: function() {
-    console.log("in disconnectStripeUser");
+  "stripe.disconnectStripeUser": function() {
+    console.log("in stripe.disconnectStripeUser");
     Meteor.users.update(
       { _id: this.userId },
       { $set: { "profile.stripeStatus": false } }
