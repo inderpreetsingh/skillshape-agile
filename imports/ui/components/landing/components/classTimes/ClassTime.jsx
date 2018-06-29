@@ -268,14 +268,17 @@ class ClassTime extends Component {
   }
 
   render() {
-    const { desc , startDate, endDate, scheduleType, name, inPopUp } = this.props;
-    const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
+    // debugger;
+    const { desc , startDate, endDate, scheduleType, name, inPopUp, formattedClassTimesDetails} = this.props;
+    // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
+
+    console.log(formattedClassTimesDetails,"Formatted Class Times.........");
     // const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(this.props.addToCalendar);
     const dotColor = this.getDotColor(this.props.addToCalendar);
-    return (<Fragment>
+    return (<Fragment> {formattedClassTimesDetails.totalClassTimes > 0 &&
+      <Fragment>
       {this.state.isLoading && <ContainerLoader />}
-
       <ClassTimeContainer
         inPopUp={inPopUp}
         className={`class-time-bg-transition ${this.getWrapperClassName(this.props.addToCalendar)}`}
@@ -291,7 +294,7 @@ class ClassTime extends Component {
               <ClassTimesCard
                 inPopUp={inPopUp}
                 show={true}
-                formattedClassTimes={formattedClassTimes}
+                formattedClassTimes={formattedClassTimesDetails}
                 scheduleType={scheduleType}
                 description={desc}
                />
@@ -304,7 +307,7 @@ class ClassTime extends Component {
           </ButtonsWrapper>
 
           {this.props.isTrending && <Trending />}
-      </ClassTimeContainer></Fragment>)
+      </ClassTimeContainer> </Fragment>}</Fragment>)
     }
 }
 
