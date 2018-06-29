@@ -30,6 +30,8 @@ import "/imports/api/classInterest/methods";
 import "/imports/api/classTimes/methods";
 
 import {checkForAddToCalender ,formatDate, formatTime, formatDataBasedOnScheduleType} from '/imports/util';
+
+import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes.jsx";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx";
 import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
@@ -315,11 +317,12 @@ class ClassDetailModal extends React.Component {
       location,
       addToMyCalender
     } = this.state;
-    const { eventData, fullScreen, classes, clickedDate } = this.props;
+    const { eventData, fullScreen, classes, clickedDate, classInterestData, classTimesData } = this.props;
     console.log("eventData____________", eventData);
     let classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
-    const formattedClassTimes = formatDataBasedOnScheduleType(eventData);
-    console.log(formattedClassTimes,"event ................................. data");
+    const formattedClassTimesDetails = formatDataBasedOnScheduleType(eventData,false); // false is for not hiding the past schedule types.
+    classTypeData.formattedClassTimesDetails = formattedClassTimesDetails;
+    console.log(classTypeData,eventData,formattedClassTimesDetails,"event ................................. data");
     return (
       <Dialog
         fullScreen={false}
@@ -524,7 +527,9 @@ class ClassDetailModal extends React.Component {
                   )}
                 </Grid> */}
                 <Grid item xs={12}>
-                  {eventData.scheduleDetails && (
+                  {/*
+
+                  eventData.scheduleDetails && (
                     <Fragment>
                       <Heading> Times </Heading>
                       {Object.keys(eventData.scheduleDetails).map(
@@ -540,8 +545,9 @@ class ClassDetailModal extends React.Component {
                         }
                       )}
                     </Fragment>
-                  )}
-                  {addToMyCalender ? (
+                  )
+
+                  addToMyCalender ? (
                     <ClassTimeButton
                       icon
                       onClick={event => {
@@ -560,7 +566,14 @@ class ClassDetailModal extends React.Component {
                       label="Remove from calendar"
                       iconName="delete"
                     />
-                  )}
+                  )
+                  */}
+                  <ClassTimesBoxes
+                    inPopUp={true}
+                    withSlider={false}
+                    classTimesData={[classTypeData]}
+                    classInterestData={classInterestData}
+                  />
                 </Grid>
               </Grid>
 

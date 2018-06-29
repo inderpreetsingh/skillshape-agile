@@ -15,7 +15,6 @@ import Card from "material-ui/Card";
 import Divider from "material-ui/Divider";
 import Checkbox from "material-ui/Checkbox";
 import { FormControlLabel, FormControl } from "material-ui/Form";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import ExpansionPanel, {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
@@ -27,6 +26,7 @@ import ExpandMoreIcon from "material-ui-icons/ExpandMore";
 import uniqBy from "lodash/uniqBy";
 
 import newStyles from "./styles.js";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 const styles = formStyles();
 
 const inputStyle = {

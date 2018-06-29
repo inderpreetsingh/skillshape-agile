@@ -76,9 +76,10 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
     }
 
     if(hidePastDates)
-      classTimes = removePastTimesFromSchedule(classTimes , data.scheduleType.toLowerCase(), {startDate: data.startDate, endDate: data.endDate});
+      return removePastTimesFromSchedule(classTimes , data.scheduleType.toLowerCase(), {startDate: data.startDate, endDate: data.endDate});
+    else 
+      return addTotalClassTimes(classTimes);
 
-    return classTimes;
 }
 
 const addTotalClassTimes = (classTimes) => {
