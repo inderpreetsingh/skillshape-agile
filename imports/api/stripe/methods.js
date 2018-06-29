@@ -41,14 +41,14 @@ Meteor.methods({
         status: "In_Progress",
         fee: Math.round(amount * (2.9 / 100) + 30)
       };
-      let recordId = Meteor.call("stripe.addPurchase", payload);
+      let recordId = Meteor.call("purchases.addPurchase", payload);
       let charge = await stripe.charges.create(stripe_Request);
 
       payload = {
         stripe_Response: charge,
         status: "Succeeded"
       };
-      Meteor.call("stripe.updatePurchases", payload, recordId);
+      Meteor.call("purchases.updatePurchases", payload, recordId);
       stripe.balance.retrieve(function(err, balance) {
         console.log("------------balace--------------", balance);
       });
@@ -58,7 +58,7 @@ Meteor.methods({
         stripe_Response: error,
         status: "Error"
       };
-      Meteor.call("stripe.updatePurchases", payload, recordId);
+      Meteor.call("purchases.updatePurchases", payload, recordId);
       throw new Meteor.Error(
         (error && error.message) || "Something went wrong!!!"
       );

@@ -47,7 +47,7 @@ export default class Financials extends React.Component {
       }
     );
 
-    Meteor.call("stripe.purchasePageCount", (error, result) => {
+    Meteor.call("purchases.purchasePageCount", (error, result) => {
       this.setState({
         pageCount: Math.ceil(result / this.state.perPage)
       });
@@ -64,7 +64,7 @@ export default class Financials extends React.Component {
         {this.state.adminPermission || role != -1 ? (
           <div>
             <ResponsiveTabs
-              tabs={["Settings", "Payouts", "Transactions", "Students"]}
+              tabs={["Students", "Payouts", "Transactions", "Settings"]}
               color="primary"
               onTabChange={this.onTabChange}
               tabValue={this.state.tabValue}
@@ -73,9 +73,11 @@ export default class Financials extends React.Component {
             />
             <div>
               {this.state.tabValue === 0 && (
-                <Settings
+                <Students
                   {...this.props}
-                  adminPermission={this.state.adminPermission}
+                  filters={this.state.filter}
+                  ChangePageClick={this.changePageHandler}
+                  pageCount={this.state.pageCount}
                 />
               )}
               {this.state.tabValue === 1 && (
@@ -95,11 +97,9 @@ export default class Financials extends React.Component {
                 />
               )}
               {this.state.tabValue === 3 && (
-                <Students
+                <Settings
                   {...this.props}
-                  filters={this.state.filter}
-                  ChangePageClick={this.changePageHandler}
-                  pageCount={this.state.pageCount}
+                  adminPermission={this.state.adminPermission}
                 />
               )}
             </div>
