@@ -20,6 +20,16 @@ const getTableProps = () => {
       className: "wd-150"
     },
     {
+      columnName: "Package Name",
+      tooltip: "",
+      className: "wd-150"
+    },
+    {
+      columnName: "Package Type",
+      tooltip: "",
+      className: "wd-150"
+    },
+    {
       columnName: "Card",
       tooltip: "",
       className: "wd-150"

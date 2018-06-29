@@ -38,6 +38,11 @@ const getTableProps = () => {
       columnName: "Description",
       tooltip: "",
       className: "wd-100"
+    },
+    {
+      columnName: "Date",
+      tooltip: "",
+      className: "wd-100"
     }
   ];
   const tableHeaderColumnProps = {
