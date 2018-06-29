@@ -527,9 +527,7 @@ class ClassDetailModal extends React.Component {
                   )}
                 </Grid> */}
                 <Grid item xs={12}>
-                  {/*
-
-                  eventData.scheduleDetails && (
+                  {/*eventData.scheduleDetails && (
                     <Fragment>
                       <Heading> Times </Heading>
                       {Object.keys(eventData.scheduleDetails).map(
@@ -566,8 +564,7 @@ class ClassDetailModal extends React.Component {
                       label="Remove from calendar"
                       iconName="delete"
                     />
-                  )
-                  */}
+                  )*/}
                   <ClassTimesBoxes
                     inPopUp={true}
                     withSlider={false}
