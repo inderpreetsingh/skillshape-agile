@@ -122,6 +122,7 @@ const LogOutUserSideNav = props => (
 
 const LoginUserSideNav = props => (
   <Fragment>
+    {console.log("this.props in side navitems", props)}
     <NestedNavItems
       button
       name={getUserFullName(props.currentUser)}
@@ -165,6 +166,7 @@ const LoginUserSideNav = props => (
         data={props.mySchool}
         classes={props.classes}
         onClick={props.childItemOnClick}
+        currentUser={props.currentUser}
       />
     )}
 
@@ -292,13 +294,17 @@ class SideNavItems extends React.Component {
           // console.log("error", error);
         }
         if (result) {
+          {
+            console.log("result os getmyscgool", result);
+          }
           const mySchool = result.map((school, index) => {
             return {
               name: school.name,
               link: `/schools/${school.slug}`,
               iconName: "school",
               schoolEditLink: `/SchoolAdmin/${school._id}/edit`,
-              superAdmin: school && school.superAdmin
+              superAdmin: school && school.superAdmin,
+              admins: school.admins
             };
           });
           this.setState({ mySchool: mySchool });
