@@ -28,7 +28,7 @@ class Students extends React.Component {
   componentWillMount() {
     console.log("this.props in payout", this.props);
 
-    // Meteor.call("stripe.getAllPurchaseData", this.props.params.slug, (err, res) => {
+    // Meteor.call("purchases.getAllPurchaseData", this.props.params.slug, (err, res) => {
     //   console.log("------------->AllPurchaseData<---------", res);
     //   this.setState({ PurchaseData: res });
     // });
@@ -45,7 +45,10 @@ class Students extends React.Component {
     console.log("PurchaseData in students--->", this.props);
     return (
       <div>
-        <h1>Payouts</h1>
+        <center>
+          {" "}
+          <h1>Students</h1>
+        </center>
         <StudentsDetailsTable>
           {isEmpty(purchaseData)
             ? "No payout found"
@@ -98,7 +101,7 @@ class Students extends React.Component {
 export default createContainer(props => {
   console.log("payout props----->", props);
   let purchaseSubscription = Meteor.subscribe(
-    "stripe.getAllPurchaseData",
+    "purchases.getAllPurchaseData",
     props.params.slug,
     props.filters
   );

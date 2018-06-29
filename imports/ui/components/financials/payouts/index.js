@@ -32,7 +32,10 @@ class Payouts extends React.Component {
     console.log("this.props.filters", this.props.filters);
     return (
       <div>
-        <h1>Payouts</h1>
+        <center>
+          {" "}
+          <h1>Payouts</h1>
+        </center>
         <PayoutDetailsTable>
           {isEmpty(purchaseData)
             ? "No payout found"
@@ -67,7 +70,7 @@ class Payouts extends React.Component {
 }
 export default createContainer(props => {
   let purchaseSubscription = Meteor.subscribe(
-    "stripe.getAllPurchaseData",
+    "purchases.getAllPurchaseData",
     props.params.slug,
     props.filters
   );

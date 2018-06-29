@@ -31,7 +31,10 @@ class Transactions extends React.Component {
     const { pageCount } = this.props;
     return (
       <div>
-        <h1>Payouts</h1>
+        <center>
+          {" "}
+          <h1>Transactions</h1>
+        </center>
         <TransactionDetailsTable>
           {isEmpty(purchaseData)
             ? "No payout found"
@@ -118,7 +121,7 @@ class Transactions extends React.Component {
 export default createContainer(props => {
   console.log("payout props----->", props);
   let purchaseSubscription = Meteor.subscribe(
-    "stripe.getAllPurchaseData",
+    "purchases.getAllPurchaseData",
     props.params.slug,
     props.filters
   );

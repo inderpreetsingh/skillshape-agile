@@ -541,6 +541,26 @@ export default class SchoolViewBase extends React.Component {
                   console.log("error and result", error, result);
                   if (result) {
                     if (result == "Payment Successfully Done") {
+                      let memberData = {
+                        firstName: self.props.currentUser.profile.name,
+                        lastName: "",
+                        email: self.props.currentUser.emails[0].address,
+                        phone: "",
+                        schoolId: self.props.schoolId,
+                        classTypeIds: self.props.classType._id,
+                        birthYear: "",
+                        studentWithoutEmail: false,
+                        sendMeSkillShapeNotification: true,
+                        activeUserId: self.props.currentUser._id,
+                        createdBy: "",
+                        inviteAccepted: false,
+                        packageName: packageName,
+                        createdOn:new Date(),
+                      };
+                      Meteor.call(
+                        "schoolMemberDetails.addNewMember",
+                        memberData
+                      );
                       toastr.success(result, "Success");
                     } else {
                       toastr.success(result.message, "Success");
