@@ -1,10 +1,10 @@
 import Purchases from "./fields";
 import School from "../school/fields";
 Meteor.methods({
-  "stripe.addPurchase": function(payload) {
+  "purchases.addPurchase": function(payload) {
     return Purchases.insert(payload);
   },
-  "stripe.getAllPurchaseData": function(slug, filters) {
+  "purchases.getAllPurchaseData": function(slug, filters) {
     console.log("AllPurchaseData", filters);
     let schoolId = School.findOne({ slug: slug });
     let AllPurchaseData = Purchases.find(
@@ -14,7 +14,7 @@ Meteor.methods({
 
     return AllPurchaseData;
   },
-  "stripe.updatePurchases": function(payload, recordId) {
+  "purchases.updatePurchases": function(payload, recordId) {
     console.log("payload and recordid inupdate Purchases ", payload, recordId);
     Purchases.update(
       { _id: recordId },
@@ -26,7 +26,7 @@ Meteor.methods({
       }
     );
   },
-  "stripe.purchasePageCount": function() {
+  "purchases.purchasePageCount": function() {
     return Purchases.find().count();
   }
 });
