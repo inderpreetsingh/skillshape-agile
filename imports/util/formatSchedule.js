@@ -143,13 +143,13 @@ export const _formatAMPM = (startTime) => {
     return ampm;
 }
 
-export const isScheduleEmpty = (formattedClassTimesData) => {
-  // debugger;
-  for(let i = 0; i < formattedClassTimesData.length; ++i) {
-    const currentClassTime = formattedClassTimesData[i];
-    if(currentClassTime.formattedClassTimesDetails.totalClassTimes > 0) {
-      return true;
-    }
-  }
-  return false;
-}
+// export const isScheduleEmpty = (formattedClassTimesData) => {
+//   // debugger;
+//   for(let i = 0; i < formattedClassTimesData.length; ++i) {
+//     const currentClassTime = formattedClassTimesData[i];
+//     if(currentClassTime.formattedClassTimesDetails.totalClassTimes > 0) {
+//       return true;
+//     }
+//   }
+//   return false;
+// }

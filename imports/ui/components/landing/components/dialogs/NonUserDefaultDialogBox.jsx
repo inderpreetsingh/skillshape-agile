@@ -31,7 +31,7 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 const styles = theme => {
   return {
     dialogTitleRoot: {
-      padding: `${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+      padding: `${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
       marginBottom: `${helpers.rhythmDiv * 2}px`,
       '@media screen and (max-width : 500px)': {
         padding: `0 ${helpers.rhythmDiv * 3}px`
@@ -39,7 +39,7 @@ const styles = theme => {
     },
     dialogContent: {
       padding: `0 ${helpers.rhythmDiv * 3}px`,
-      flexShrink: 0,
+      flexGrow: 0,
       '@media screen and (max-width : 500px)': {
         minHeight: '150px'
       }
@@ -79,7 +79,7 @@ const Bold = styled.span`
 
 const ButtonsWrapper = styled.div`
   ${helpers.flexCenter}
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -114,7 +114,7 @@ const NonUserDefaultDialogBox = (props) => {
         </DialogTitle>
 
         <DialogContent classes={{root : props.classes.dialogContent}}>
-          <ContentWrapper>Press <Bold>Login</Bold> if already a member, or <Bold>Sign up</Bold> to become a member.</ContentWrapper>
+          <ContentWrapper>{props.content || <span>Press <Bold>Login</Bold> if already a member, or <Bold>Sign up</Bold> to become a member.</span>}</ContentWrapper>
         </DialogContent>
 
         <DialogActions classes={{root: props.classes.dialogActionsRoot}}>
@@ -137,6 +137,7 @@ const NonUserDefaultDialogBox = (props) => {
 NonUserDefaultDialogBox.propTypes = {
   title: PropTypes.string,
   loading: PropTypes.bool,
+  content: PropTypes.node
 }
 
 NonUserDefaultDialogBox.defaultProps = {

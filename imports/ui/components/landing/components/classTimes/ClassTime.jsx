@@ -12,8 +12,10 @@ import PrimaryButton from '/imports/ui/components/landing/components/buttons/Pri
 import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 
+import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
+
 import Events from '/imports/util/events';
-import {toastrModal, formatDate, formatTime, formatDataBasedOnScheduleType} from '/imports/util';
+import {toastrModal, formatDate, formatTime, formatDataBasedOnScheduleType, getUserFullName} from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import { DAYS_IN_WEEK, CLASS_TIMES_CARD_WIDTH } from '/imports/ui/components/landing/constants/classTypeConstants.js';
@@ -153,6 +155,12 @@ class ClassTime extends Component {
     this.addToMyCalender(classTimeData);
   }
 
+  handleNonUserDialogBoxState = (state) => e => {
+    this.setState({
+      nonUserDialogBox: state
+    })
+  }
+
   handleRemoveFromCalendarButtonClick = () => {
 
     // this.setState({ addToCalendar: true });
@@ -178,7 +186,10 @@ class ClassTime extends Component {
             data: {doc}
         })
     } else {
-        toastr.error("Please login !","Error");
+        // toastr.error("Please login !","Error");
+        this.setState({
+          nonUserDialogBox: true
+        });
     }
   }
 
@@ -199,13 +210,18 @@ class ClassTime extends Component {
         })
     } else {
         // alert("Please login !!!!")
-        Events.trigger("loginAsUser");
+        //Events.trigger("loginAsUser");
+        this.setState({
+          nonUserDialogBox: true
+        });
     }
   }
 
   handleClassInterest = ({methodName, data}) => {
     console.log("handleClassInterest",methodName,data);
     this.setState({isLoading: true});
+    const currentUser = Meteor.user();
+    const userName = getUserFullName(currentUser);
     Meteor.call(methodName, data, (err, res) => {
       const {toastr} = this.props;
       this.setState({isLoading: false});
@@ -213,9 +229,9 @@ class ClassTime extends Component {
         toastr.error(err.message,"Error");
       }else {
         if(methodName.indexOf('remove') !== -1)
-          toastr.success("Class removed successfully","Success");
+          toastr.success(`Hi ${userName}, Class removed successfully from your calendar`,"Success");
         else
-          toastr.success("Class added to your calendar","Success");
+          toastr.success(`Hi ${userName}, Class added to your calendar`,"Success");
       }
     })
   }
@@ -279,6 +295,11 @@ class ClassTime extends Component {
     return (<Fragment> {formattedClassTimesDetails.totalClassTimes > 0 &&
       <Fragment>
       {this.state.isLoading && <ContainerLoader />}
+      {this.state.nonUserDialogBox && <NonUserDefaultDialogBox
+        title={"Sign In"}
+        content={"You need to sign in to add classes"}
+        open={this.state.nonUserDialogBox}
+        onModalClose={this.handleNonUserDialogBoxState(false)}/>}
       <ClassTimeContainer
         inPopUp={inPopUp}
         className={`class-time-bg-transition ${this.getWrapperClassName(this.props.addToCalendar)}`}

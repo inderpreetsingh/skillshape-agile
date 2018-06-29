@@ -10,6 +10,7 @@ import Typography from "material-ui/Typography";
 import CardsReveal from "/imports/ui/components/landing/components/cards/CardsReveal.jsx";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+
 import ClassTimesDialogBox from "/imports/ui/components/landing/components/dialogs/ClassTimesDialogBox.jsx";
 import ManageRequestsDialogBox from "/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx";
 
