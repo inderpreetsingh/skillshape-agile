@@ -1,4 +1,5 @@
 import moment from 'moment';
+import isEmpty from 'lodash/isEmpty';
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
 
 export const formatTime = (startTime) => {
@@ -26,10 +27,18 @@ export const formatDateNoYear = (date) => {
   return moment(date).format('MMMM DD');
 }
 
+export const formatClassTimesData = (classTimesData, hidePastDates = true) => {
+  return classTimesData.map(data => {
+    const formattedClassTimesDetails = formatDataBasedOnScheduleType(data, hidePastDates);
+    data.formattedClassTimesDetails = formattedClassTimesDetails;
+    return data;
+  })
+}
+
 export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
    const classTimesData = {...data};
     // debugger;
-    console.log("formatDataBasedOnScheduleType________", data);
+    // console.log("formatDataBasedOnScheduleType________", data);
     let classTimes;
     if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
       classTimes = {};
@@ -61,46 +70,72 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
         }
         // this.handleSliderState(dayOfTheWeek - 1);
       })
-      classTimes;
-    } else {
+    }else {
+
       classTimes = data.scheduleDetails;
     }
+
     if(hidePastDates)
       return removePastTimesFromSchedule(classTimes , data.scheduleType.toLowerCase(), {startDate: data.startDate, endDate: data.endDate});
+    else 
+      return addTotalClassTimes(classTimes);
 
-    return classTimes;
+}
+
+const addTotalClassTimes = (classTimes) => {
+  let classTimesCounter = 0;
+  Object.keys(classTimes).forEach(day => {
+    // console.log(classTimes[day],classTimes,day,classTimes[day],"----");
+    if(typeof classTimes[day] == 'object') {
+      classTimes[day].filter(classTime => {
+        if(!isEmpty(classTime)) {
+          ++classTimesCounter;
+        }
+      });
+    }
+  });
+  classTimes.totalClassTimes = classTimesCounter;
+
+  return classTimes;
+}
+
+const filterOutAndAddTotalClassTimes = (classTimes) => {
+  const currentDate = new Date();
+  debugger;
+  Object.keys(classTimes).forEach(day => {
+    if(typeof classTimes[day] == 'object') {
+      classTimes[day] = classTimes[day].filter(classTime => {
+        if(moment(currentDate).isBefore(moment(classTime.startTime))) {
+          return true;
+
+        }
+        return false;
+      });
+    }
+  });
+
+  return addTotalClassTimes(classTimes);
 }
 
 
 const removePastTimesFromSchedule = (classTimes,scheduleType,scheduleData) => {
   // console.log(classTimes);
-  /*
   const currentDate = new Date();
+
   if(scheduleType === 'recurring') {
-    console.log(moment(currentDate),moment(currentDate).isBetween(moment(scheduleData.startDate), moment(scheduleData.endDate)));
+    // console.log(moment(currentDate),moment(currentDate).isBetween(moment(scheduleData.startDate), moment(scheduleData.endDate)));
     if(moment(currentDate).isBetween(moment(scheduleData.startDate), moment(scheduleData.endDate)) ) {
         // now we need don't need to check anything
-      return classTimes;
-    }
-    else if(moment(currentDate).isAfter(moment(scheduleData.startDate)) || moment(currentDate).isBefore(moment(scheduleData.endDate)) )
-      Object.keys(classTimes).forEach(day => {
-        classTimes[day] = classTimes[day].filter(classTime => {
-          if(moment(currentDate).isBefore(moment(classTime.startTime))) {
-            return true;
-          }
-          return false;
-        })
-      });
-
-      console.log(classTimes,"after filtering.........");
-
-      return classTimes;
+        return addTotalClassTimes(classTimes);
     }
 
     return {};
-    */
+  }else if(scheduleType === 'onetime') {
+    return filterOutAndAddTotalClassTimes(classTimes);
+    // console.log('classTimes,,,,,,,,,,,,', classTimes);
+  }
 
-    return classTimes;
+    return addTotalClassTimes(classTimes);
 }
 
 export const _formatAMPM = (startTime) => {
@@ -108,3 +143,14 @@ export const _formatAMPM = (startTime) => {
     let ampm = hours >= 12 ? 'pm' : 'am';
     return ampm;
 }
+
+// export const isScheduleEmpty = (formattedClassTimesData) => {
+//   // debugger;
+//   for(let i = 0; i < formattedClassTimesData.length; ++i) {
+//     const currentClassTime = formattedClassTimesData[i];
+//     if(currentClassTime.formattedClassTimesDetails.totalClassTimes > 0) {
+//       return true;
+//     }
+//   }
+//   return false;
+// }

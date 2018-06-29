@@ -343,9 +343,10 @@ class ClassTimesDialogBox extends React.Component {
         handleClassTimeRequest
       } = this.props;
     // console.log("ClassTimesDialogBox props--->>", this.props);
-    {
+    {/*
       console.log(this.props.x, this.props.y);
-    }
+    */}
+
     return (
       <Dialog
         open={open}

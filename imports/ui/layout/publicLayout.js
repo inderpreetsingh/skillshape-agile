@@ -44,7 +44,7 @@ class PublicLayout extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        debugger;
+        // debugger;
         // console.log("PublicLayout nextProps -->>",nextProps);
         if(nextProps.currentUser) {
           const passwordSetByUser = get(nextProps, "currentUser.profile.passwordSetByUser", true);

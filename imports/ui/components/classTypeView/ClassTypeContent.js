@@ -33,7 +33,7 @@ import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/inde
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
 
-import { capitalizeString } from '/imports/util';
+import { capitalizeString, formatClassTimesData } from '/imports/util';
 import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -459,6 +459,8 @@ class ClassTypeContent extends Component {
     const emailUsButton = ourEmail ? true : false;
     const isReviewsDataEmpty = isEmpty(reviewsData);
     const { manageRequestTitle } = this.state;
+    const formattedClassTimesData = formatClassTimesData(classTimesData).filter(data => data.formattedClassTimesDetails.totalClassTimes > 0);
+    
     console.info('this.state',this.state);
     if(manageRequestTitle) {
       submitBtnLabel = manageRequestTitle != 'Pricing' ? 'Request class times' : submitBtnLabel;
@@ -530,7 +532,7 @@ class ClassTypeContent extends Component {
 			                <ClassTimesWrapper paddingBottom="48">
 			                	<ClassTimesTitle>Class times for <ClassTimesName>{classTypeData && classTypeData.name.toLowerCase()}</ClassTimesName></ClassTimesTitle>
 			                	{
-                            isEmpty(classTimesData) ? (
+                            isEmpty(formattedClassTimesData)  ? (
                                 <ClassContainer paddingBottom="16" smallPadding="0">
                                     <Typography caption="p">
                                         No class times have been given by the school. Please click this button to request the school complete their listing.
@@ -548,7 +550,7 @@ class ClassTypeContent extends Component {
                                 </ClassContainer>
                             ) : (
                                 <ClassTimesBoxes
-                                  classTimesData={classTimesData}
+                                  classTimesData={formattedClassTimesData}
                                   classInterestData={classInterestData}
                                 />
                             )
