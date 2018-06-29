@@ -20,12 +20,6 @@ Meteor.methods({
       const token = stripeToken;
       const skillshapeAmount = Math.round(amount * (2.9 / 100) + 40);
       const destinationAmount = Math.round(amount - skillshapeAmount);
-      console.log(
-        "amount,skillshapeAmount,destinationAmount,",
-        amount,
-        skillshapeAmount,
-        destinationAmount
-      );
       let stripe_Request = {
         amount: amount,
         currency: "usd",
@@ -47,19 +41,18 @@ Meteor.methods({
         status: "In_Progress"
       };
       let recordId = Meteor.call("stripe.addPurchase", payload);
-      console.log("recordId", recordId);
-
       let charge = await stripe.charges.create(stripe_Request);
-      console.log("charge=====>", charge);
+
       payload = {
         stripe_Response: charge,
         status: "Succeeded"
       };
-      console.log("=============>payload<=============", payload);
       Meteor.call("stripe.updatePurchases", payload, recordId);
+      stripe.balance.retrieve(function(err, balance) {
+        console.log("------------balace--------------", balance);
+      });
       return "Payment Successfully Done";
     } catch (error) {
-      console.log("error------------>", error);
       payload = {
         stripe_Response: error,
         status: "Error"
@@ -111,7 +104,6 @@ Meteor.methods({
     );
   },
   "stripe.disconnectStripeUser": function() {
-    console.log("in stripe.disconnectStripeUser");
     Meteor.users.update(
       { _id: this.userId },
       { $set: { "profile.stripeStatus": false } }
@@ -121,8 +113,6 @@ Meteor.methods({
   },
   "stripe.findAdminStripeAccount": function(superAdminId) {
     let result = UserStripeData.findOne({ userId: superAdminId });
-    console.log("------------in stripe method----------", result);
-
     if (result) {
       return true;
     } else {
