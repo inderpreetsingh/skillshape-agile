@@ -35,6 +35,8 @@ export default class Financials extends React.Component {
     this.setState({ tabValue });
   };
   componentWillMount() {
+    console.log("in financial", this.props.currentUser);
+
     Meteor.call(
       "school.findSuperAdmin",
       this.props.currentUser._id,
@@ -44,6 +46,7 @@ export default class Financials extends React.Component {
         console.log("result----------------", result);
       }
     );
+
     Meteor.call("stripe.purchasePageCount", (error, result) => {
       this.setState({
         pageCount: Math.ceil(result / this.state.perPage)
