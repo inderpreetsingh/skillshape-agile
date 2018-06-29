@@ -45,13 +45,15 @@ class Transactions extends React.Component {
                       <TableCell style={style.w150}>
                         {purchase.stripe_Response &&
                         purchase.stripe_Response.amount
-                          ? purchase.stripe_Request.destination.amount / 100
+                          ? "$" +
+                            purchase.stripe_Request.destination.amount / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
                         {purchase.stripe_Response &&
                         purchase.stripe_Response.amount
-                          ? purchase.stripe_Request.destination.amount / 100
+                          ? "$" +
+                            purchase.stripe_Request.destination.amount / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w211}>-----</TableCell>
@@ -71,19 +73,20 @@ class Transactions extends React.Component {
                       <TableCell style={style.w150}>
                         {purchase.stripe_Response &&
                         purchase.stripe_Response.amount
-                          ? purchase.stripe_Response.amount / 100 -
+                          ? "$" +
+                            purchase.stripe_Response.amount / 100 -
                             purchase.fee / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
                         {purchase.stripe_Response &&
                         purchase.stripe_Response.amount
-                          ? purchase.stripe_Response.amount / 100
+                          ? "$" + purchase.stripe_Response.amount / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w211}>
                         {purchase && purchase.fee
-                          ? purchase.fee / 100
+                          ? "$" + purchase.fee / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
