@@ -35,6 +35,10 @@ export const PurchasesSchema = new SimpleSchema({
   status: {
     type: String,
     optional: true
+  },
+  fee: {
+    type: Number,
+    optional: true
   }
 });
 

@@ -45,23 +45,23 @@ class Transactions extends React.Component {
                       <TableCell style={style.w150}>
                         {purchase.stripe_Response &&
                         purchase.stripe_Response.amount
-                          ? purchase.stripe_Response.amount
+                          ? purchase.stripe_Request.destination.amount / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
                         {purchase.stripe_Response &&
                         purchase.stripe_Response.amount
-                          ? purchase.stripe_Response.amount
+                          ? purchase.stripe_Request.destination.amount / 100
                           : "Unavailable"}
                       </TableCell>
-                      <TableCell style={style.w211}>
-                        {purchase.stripe_Response &&
-                        purchase.stripe_Response.source
-                          ? purchase.stripe_Response.source.last4
-                          : "Unavailable"}
-                      </TableCell>
+                      <TableCell style={style.w211}>-----</TableCell>
                       <TableCell style={style.w150}>
                         {"Stripe Transfer" || "Unavailable"}
+                      </TableCell>
+                      <TableCell style={style.w150}>
+                        {moment(purchase.createdOn).format(
+                          "MMMM Do YYYY, h:mm:ss a"
+                        )}
                       </TableCell>
                     </TableRow>
                     <TableRow selectable={false}>
@@ -71,25 +71,30 @@ class Transactions extends React.Component {
                       <TableCell style={style.w150}>
                         {purchase.stripe_Response &&
                         purchase.stripe_Response.amount
-                          ? purchase.stripe_Response.amount
+                          ? purchase.stripe_Response.amount / 100 -
+                            purchase.fee / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
                         {purchase.stripe_Response &&
                         purchase.stripe_Response.amount
-                          ? purchase.stripe_Response.amount
+                          ? purchase.stripe_Response.amount / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w211}>
-                        {purchase.stripe_Response &&
-                        purchase.stripe_Response.source
-                          ? purchase.stripe_Response.source.last4
+                        {purchase && purchase.fee
+                          ? purchase.fee / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
                         {purchase.stripe_Response
                           ? purchase.stripe_Response.description
                           : "Unavailable"}
+                      </TableCell>
+                      <TableCell style={style.w150}>
+                        {moment(purchase.createdOn).format(
+                          "MMMM Do YYYY, h:mm:ss a"
+                        )}
                       </TableCell>
                     </TableRow>
                   </Fragment>

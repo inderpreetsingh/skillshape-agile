@@ -38,7 +38,8 @@ Meteor.methods({
         packageId: packageId,
         packageType: packageType,
         schoolId: schoolId,
-        status: "In_Progress"
+        status: "In_Progress",
+        fee: Math.round(amount * (2.9 / 100) + 30)
       };
       let recordId = Meteor.call("stripe.addPurchase", payload);
       let charge = await stripe.charges.create(stripe_Request);
