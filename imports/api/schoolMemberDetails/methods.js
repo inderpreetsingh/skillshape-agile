@@ -131,6 +131,29 @@ Meteor.methods({
     }
   },
   "schoolMemberDetails.addNewMember": function(memberData) {
-    SchoolMemberDetails.insert(memberData);
+    console.log(memberData, "memberData-=-=-=-=-=-=-=-=-=");
+    let userData = SchoolMemberDetails.findOne({
+      schoolId: memberData.schoolId,
+      activeUserId: memberData.activeUserId
+    });
+    if (userData) {
+      if (memberData && memberData.packageDetails) {
+        let packageDetails = userData.packageDetails || {};
+        memberData.packageDetails = {
+          ...packageDetails,
+          ...memberData.packageDetails
+        };
+        console.log("memberData---->", memberData);
+        SchoolMemberDetails.update(
+          {
+            schoolId: memberData.schoolId,
+            activeUserId: memberData.activeUserId
+          },
+          { $set: { ...memberData } }
+        );
+      }
+    } else {
+      SchoolMemberDetails.insert(memberData);
+    }
   }
 });
