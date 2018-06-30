@@ -140,6 +140,11 @@ const LoginUserSideNav = props => (
           iconName: "collections"
         },
         {
+          name: "My Subscriptions",
+          link: `/subsciptions/${Meteor.userId()}`,
+          iconName: "collections"
+        },
+        {
           name: "Change Password",
           iconName: "lock_open",
           onClick: props.showChangePassword

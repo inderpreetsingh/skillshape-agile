@@ -23,6 +23,7 @@ import NoPageFound from "/imports/ui/components/landing/components/NoPageFound";
 import ResetPassword from "/imports/ui/components/account/resetPassword";
 import MyProfile from "/imports/ui/components/users/myProfile";
 import MyMedia from "/imports/ui/components/users/myMedia";
+import MySubsciption from "/imports/ui/components/users/mySubscriptions";
 import SchoolView from "/imports/ui/components/schoolView";
 import SchoolMemberView from "/imports/ui/components/schoolMembers";
 import ClaimSchool from "/imports/ui/components/claimSchool";
@@ -75,6 +76,11 @@ export default (Routes = componentLoader(props => (
         <Route path="/Contactus" name="Contactus" component={ContactUs} />
         <Route path="/profile/:id" name="MyProfile" component={MyProfile} />
         <Route path="/media/:id" name="MyMedia" component={MyMedia} />
+        <Route
+          path="/subsciptions/:id"
+          name="MySubscriptions"
+          component={MySubsciption}
+        />
         <Route
           path="/schoolAdmin/:schoolId/edit"
           name="SchoolAdmin-Edit"

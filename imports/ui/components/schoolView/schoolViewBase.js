@@ -541,9 +541,17 @@ export default class SchoolViewBase extends React.Component {
                   console.log("error and result", error, result);
                   if (result) {
                     if (result == "Payment Successfully Done") {
+                      console.log(
+                        "self.props.currentUser.profile.name",
+                        self.props
+                      );
+                      let x = new Date().getTime();
                       let memberData = {
-                        firstName: self.props.currentUser.profile.name,
-                        lastName: "",
+                        firstName:
+                          self.props.currentUser.profile.name ||
+                          self.props.currentUser.profile.firstName,
+                        lastName:
+                          self.props.currentUser.profile.firstName || "",
                         email: self.props.currentUser.emails[0].address,
                         phone: "",
                         schoolId: self.props.schoolId,
@@ -554,8 +562,12 @@ export default class SchoolViewBase extends React.Component {
                         activeUserId: self.props.currentUser._id,
                         createdBy: "",
                         inviteAccepted: false,
-                        packageName: packageName,
-                        createdOn:new Date(),
+                        packageDetails: {
+                          [x]: {
+                            packageName: packageName,
+                            createdOn: new Date()
+                          }
+                        }
                       };
                       Meteor.call(
                         "schoolMemberDetails.addNewMember",
