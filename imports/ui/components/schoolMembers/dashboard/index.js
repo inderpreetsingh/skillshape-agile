@@ -29,7 +29,7 @@ import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import get from "lodash/get";
 import Checkbox from "material-ui/Checkbox";
-
+import { dateFriendly } from "/imports/util";
 import { phoneRegex } from "/imports/util";
 import SchoolMemberListItems from "/imports/ui/components/schoolMembers/schoolMemberList/index.js";
 import SchoolMemberFilter from "../filter";
@@ -440,7 +440,7 @@ class DashBoardView extends React.Component {
         firstName: memberInfo.firstName,
         pic: memberInfo.pic,
         studentWithoutEmail: memberInfo.studentWithoutEmail,
-        packageName: memberInfo.packageName
+        packageDetails: memberInfo.packageDetails
       },
       schoolMemberDetailsFilters: { _id: memberId }
     });
@@ -713,21 +713,64 @@ class DashBoardView extends React.Component {
                     Package Type
                   </div>
                 </center>
-                <PackageDetailsTable>
-                  <TableRow>
-                    <TableCell style={style.w150}>
-                      {memberInfo && memberInfo.createdOn
-                        ? moment(memberInfo.createdOn).format(
-                            "MMMM Do YYYY, h:mm:ss a"
-                          )
-                        : "Unavilable"}
-                    </TableCell>
-                    <TableCell style={style.w150}>
-                    {memberInfo&&memberInfo.packageName?memberInfo.packageName:'Unavilable'}
-                     
-                    </TableCell>
-                  </TableRow>
-                </PackageDetailsTable>
+                {memberInfo &&
+                  memberInfo.packageDetails &&
+                  Object.values(memberInfo.packageDetails).map(value => {
+                    return (
+                      <div
+                        style={{
+                          border: "solid 2px",
+                          backgroundColor: "green",
+                          display: "flex",
+                          justifyContent: "space-evenly"
+                        }}
+                      >
+                        <div>
+                          {value && value.createdOn
+                            ? dateFriendly(
+                                value.createdOn,
+                                "MMMM Do YYYY, h:mm:ss a"
+                              )
+                            : "Unavilable"}
+                        </div>
+                        {"  "}
+                        <div>
+                          {value && value.packageName
+                            ? value.packageName
+                            : "Unavilable"}
+                        </div>
+                      </div>
+                    );
+                  })}
+                {/* old subscription code */}
+                {/* <PackageDetailsTable>
+                  {memberInfo &&
+                    memberInfo.packageDetails &&
+                    Object.values(memberInfo.packageDetails).map(value => {
+                      return (
+                        <TableRow>
+                          <TableCell style={style.w150}>
+                            {}
+                            {value && value.createdOn
+                              ? dateFriendly(
+                                  value.createdOn,
+                                  "MMMM Do YYYY, h:mm:ss a"
+                                )
+                              : "Unavilable"}
+                          </TableCell> */}
+                {/* <TableCell style={style.w150}>
+                            {value && value.packageName
+                              ? value.packageName
+                              : "Unavilable"}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {/* 
+                        
+                      );
+                    })} */}
+                {/* </PackageDetailsTable> */}
               </div>
               {this.renderSchoolMedia(schoolData, memberInfo, slug)}
             </Fragment>

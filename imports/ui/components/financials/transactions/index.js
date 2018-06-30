@@ -3,9 +3,9 @@ import Pagination from "/imports/ui/componentHelpers/pagination";
 import { TransactionDetailsTable } from "./transactionDetailsTable";
 import { TableRow, TableCell } from "material-ui/Table";
 import isEmpty from "lodash/isEmpty";
-import moment from "moment";
 import { createContainer } from "meteor/react-meteor-data";
 import Purchases from "/imports/api/purchases/fields";
+import { dateFriendly } from "/imports/util";
 const style = {
   w211: {
     width: 211
@@ -64,7 +64,8 @@ class Transactions extends React.Component {
                         {"Stripe Transfer" || "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {moment(purchase.createdOn).format(
+                        {dateFriendly(
+                          purchase.createdOn,
                           "MMMM Do YYYY, h:mm:ss a"
                         )}
                       </TableCell>
@@ -98,7 +99,8 @@ class Transactions extends React.Component {
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {moment(purchase.createdOn).format(
+                        {dateFriendly(
+                          purchase.createdOn,
                           "MMMM Do YYYY, h:mm:ss a"
                         )}
                       </TableCell>

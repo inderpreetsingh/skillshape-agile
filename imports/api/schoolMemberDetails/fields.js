@@ -76,11 +76,6 @@ SchoolMemberDetails.attachSchema(
       type: String,
       optional: true
     },
-    packageName: {
-      // Students can have package name.
-      type: String,
-      optional: true
-    },
     activeUserId: {
       type: String,
       optional: true
@@ -100,6 +95,11 @@ SchoolMemberDetails.attachSchema(
     },
     studentWithoutEmail: {
       type: Boolean,
+      optional: true
+    },
+    packageDetails: {
+      type: Object,
+      blackbox: true,
       optional: true
     }
   })

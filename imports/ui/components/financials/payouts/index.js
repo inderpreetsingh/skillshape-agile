@@ -3,7 +3,7 @@ import Pagination from "/imports/ui/componentHelpers/pagination";
 import { PayoutDetailsTable } from "./payoutDetailsTable";
 import { TableRow, TableCell } from "material-ui/Table";
 import isEmpty from "lodash/isEmpty";
-import moment from "moment";
+import { dateFriendly } from "/imports/util";
 import { createContainer } from "meteor/react-meteor-data";
 import Purchases from "/imports/api/purchases/fields";
 const style = {
@@ -49,7 +49,8 @@ class Payouts extends React.Component {
                       {purchase.stripe_Request.destination.account}
                     </TableCell>
                     <TableCell style={style.w150}>
-                      {moment(purchase.createdOn).format(
+                      {dateFriendly(
+                        purchase.createdOn,
                         "MMMM Do YYYY, h:mm:ss a"
                       )}
                     </TableCell>
