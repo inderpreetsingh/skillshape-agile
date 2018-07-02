@@ -11,36 +11,35 @@ class SubscriptionsDetails extends React.Component {
   render() {
     const { memberInfo } = this.props;
     return (
-      <div>
-        <center>
-          <div
-            style={{
-              height: "300px",
-              width: "400px",
-              border: "solid 2px",
-              margin: "20px"
-            }}
-          >
-            Subscription
-            <center>
-              <div style={{ border: "solid 2px", backgroundColor: "green" }}>
-                Package Name<br />
-                Package Type
-              </div>
-            </center>{" "}
-            {memberInfo &&
-              memberInfo.packageDetails &&
-              Object.values(memberInfo.packageDetails).map(value => {
-                return (
+      <div
+        style={{
+          height: "300px",
+          width: "400px",
+          border: "solid 2px",
+          margin: "20px"
+        }}
+      >
+        <div style={{ margin: "10px" }}>Active Subscription</div>
+        {memberInfo &&
+          memberInfo.packageDetails &&
+          Object.values(memberInfo.packageDetails)
+            .slice(0, 4)
+            .map(value => {
+              return (
+                <center>
                   <div
                     style={{
                       border: "solid 2px",
                       backgroundColor: "green",
                       display: "flex",
-                      justifyContent: "space-evenly"
+                      justifyContent: "space-between",
+                      width: "368px",
+                      height: "50px",
+                      borderRadius: "16px",
+                      marginBottom: "2px"
                     }}
                   >
-                    <div>
+                    <div style={{ margin: "10px" }}>
                       {value && value.createdOn
                         ? dateFriendly(
                             value.createdOn,
@@ -49,16 +48,56 @@ class SubscriptionsDetails extends React.Component {
                         : "Unavilable"}
                     </div>
                     {"  "}
-                    <div>
+                    <div style={{ margin: "10px" }}>
                       {value && value.packageName
                         ? value.packageName
                         : "Unavilable"}
                     </div>
+                    <div
+                      style={{
+                        border: "solid 2px",
+                        width: "48px",
+                        height: "41px",
+                        marginTop: "3px",
+                        borderRadius: "14px"
+                      }}
+                    />
                   </div>
-                );
-              })}
-          </div>
-        </center>
+                </center>
+              );
+            })}
+        {/* old subscription code */}
+        {/* <PackageDetailsTable>
+        {memberInfo &&
+          memberInfo.packageDetails &&
+          Object.values(memberInfo.packageDetails).map(value => {
+            return (
+              <TableRow>
+                <TableCell style={style.w150}>
+                  {}
+                  {value && value.createdOn
+                    ? dateFriendly(
+                        value.createdOn,
+                        "MMMM Do YYYY, h:mm:ss a"
+                      )
+                    : "Unavilable"}
+                </TableCell> */}
+        {/* <TableCell style={style.w150}>
+                  {value && value.packageName
+                    ? value.packageName
+                    : "Unavilable"}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        {/* 
+              
+            );
+          })} */}
+        {/* </PackageDetailsTable> */}
+        <a href="#" style={{ float: "right" }}>
+          See Past Purchases
+        </a>
       </div>
     );
   }
