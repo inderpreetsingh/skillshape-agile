@@ -565,7 +565,9 @@ export default class SchoolViewBase extends React.Component {
                         packageDetails: {
                           [x]: {
                             packageName: packageName,
-                            createdOn: new Date()
+                            createdOn: new Date(),
+                            packageType: packageType,
+                            packageId: packageId
                           }
                         }
                       };
