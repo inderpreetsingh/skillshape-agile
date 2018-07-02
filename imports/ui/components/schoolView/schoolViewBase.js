@@ -504,7 +504,10 @@ export default class SchoolViewBase extends React.Component {
     amount,
     packageId,
     packageType,
-    monthlyPymtDetails
+    monthlyPymtDetails,
+    expDuration,
+    expPeriod,
+    noClasses
   ) => {
     // Start loading
     const { toastr } = this.props;
@@ -565,7 +568,12 @@ export default class SchoolViewBase extends React.Component {
                         packageDetails: {
                           [x]: {
                             packageName: packageName,
-                            createdOn: new Date()
+                            createdOn: new Date(),
+                            packageType: packageType,
+                            packageId: packageId,
+                            expDuration: expDuration,
+                            expPeriod: expPeriod,
+                            noClasses: noClasses
                           }
                         }
                       };
@@ -573,7 +581,7 @@ export default class SchoolViewBase extends React.Component {
                         "schoolMemberDetails.addNewMember",
                         memberData
                       );
-                      toastr.success(result, "Success");
+                      toastr.success("Payment Successful", "Success");
                     } else {
                       toastr.success(result.message, "Success");
                     }
@@ -614,7 +622,10 @@ export default class SchoolViewBase extends React.Component {
                   toastr.error(err.reason || err.message, "Error");
                 } else {
                   console.log("result----------------", res);
-                  toastr.success(res, "Success");
+                  toastr.success(
+                    "SchoolName is not accepting payments from here at this time, but they have been notified of your interest and will get back to you as soon as they can",
+                    "Success"
+                  );
                 }
               }
             );

@@ -40,7 +40,7 @@ import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-
+import SubscriptionDetails from "/imports/ui/componentHelpers/subscriptionDetails";
 const drawerWidth = 400;
 const style = {
   w211: {
@@ -696,7 +696,8 @@ class DashBoardView extends React.Component {
                   this.handleMemberDetailsToRightPanel
                 }
               />
-              <div
+              {memberInfo && <SubscriptionDetails memberInfo={memberInfo} />}
+              {/* <div
                 style={{
                   height: "300px",
                   width: "400px",
@@ -704,46 +705,53 @@ class DashBoardView extends React.Component {
                   margin: "20px"
                 }}
               >
-                Subscription
-                <center>
-                  <div
-                    style={{ border: "solid 2px", backgroundColor: "green" }}
-                  >
-                    Package Name<br />
-                    Package Type
-                  </div>
-                </center>
+                <div style={{ margin: "10px" }}>Active Subscription</div>
                 {memberInfo &&
                   memberInfo.packageDetails &&
                   Object.values(memberInfo.packageDetails).map(value => {
                     return (
-                      <div
-                        style={{
-                          border: "solid 2px",
-                          backgroundColor: "green",
-                          display: "flex",
-                          justifyContent: "space-evenly"
-                        }}
-                      >
-                        <div>
-                          {value && value.createdOn
-                            ? dateFriendly(
-                                value.createdOn,
-                                "MMMM Do YYYY, h:mm:ss a"
-                              )
-                            : "Unavilable"}
+                      <center>
+                        <div
+                          style={{
+                            border: "solid 2px",
+                            backgroundColor: "green",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            width: "368px",
+                            height: "50px",
+                            borderRadius: "16px",
+                            marginBottom: "2px"
+                          }}
+                        >
+                          <div style={{ margin: "10px" }}>
+                            {value && value.createdOn
+                              ? dateFriendly(
+                                  value.createdOn,
+                                  "MMMM Do YYYY, h:mm:ss a"
+                                )
+                              : "Unavilable"}
+                          </div>
+                          {"  "}
+                          <div style={{ margin: "10px" }}>
+                            {value && value.packageName
+                              ? value.packageName
+                              : "Unavilable"}
+                          </div>
+                          <div
+                            style={{
+                              border: "solid 2px",
+                              width: "48px",
+                              height: "41px",
+                              marginTop: "3px",
+                              borderRadius: "14px"
+                            }}
+                          />
                         </div>
-                        {"  "}
-                        <div>
-                          {value && value.packageName
-                            ? value.packageName
-                            : "Unavilable"}
-                        </div>
-                      </div>
+                      </center>
                     );
-                  })}
-                {/* old subscription code */}
-                {/* <PackageDetailsTable>
+                  })} */}
+              {/* old subscription code */}
+              {/* <PackageDetailsTable>
                   {memberInfo &&
                     memberInfo.packageDetails &&
                     Object.values(memberInfo.packageDetails).map(value => {
@@ -758,7 +766,7 @@ class DashBoardView extends React.Component {
                                 )
                               : "Unavilable"}
                           </TableCell> */}
-                {/* <TableCell style={style.w150}>
+              {/* <TableCell style={style.w150}>
                             {value && value.packageName
                               ? value.packageName
                               : "Unavilable"}
@@ -770,8 +778,8 @@ class DashBoardView extends React.Component {
                         
                       );
                     })} */}
-                {/* </PackageDetailsTable> */}
-              </div>
+              {/* </PackageDetailsTable> */}
+              {/* </div> */}
               {this.renderSchoolMedia(schoolData, memberInfo, slug)}
             </Fragment>
           )}
