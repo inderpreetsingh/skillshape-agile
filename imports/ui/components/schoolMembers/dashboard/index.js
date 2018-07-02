@@ -40,7 +40,7 @@ import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-
+import SubscriptionDetails from "/imports/ui/componentHelpers/subscriptionDetails";
 const drawerWidth = 400;
 const style = {
   w211: {
@@ -696,7 +696,8 @@ class DashBoardView extends React.Component {
                   this.handleMemberDetailsToRightPanel
                 }
               />
-              <div
+              {memberInfo && <SubscriptionDetails memberInfo={memberInfo} />}
+              {/* <div
                 style={{
                   height: "300px",
                   width: "400px",
@@ -748,9 +749,9 @@ class DashBoardView extends React.Component {
                         </div>
                       </center>
                     );
-                  })}
-                {/* old subscription code */}
-                {/* <PackageDetailsTable>
+                  })} */}
+              {/* old subscription code */}
+              {/* <PackageDetailsTable>
                   {memberInfo &&
                     memberInfo.packageDetails &&
                     Object.values(memberInfo.packageDetails).map(value => {
@@ -765,7 +766,7 @@ class DashBoardView extends React.Component {
                                 )
                               : "Unavilable"}
                           </TableCell> */}
-                {/* <TableCell style={style.w150}>
+              {/* <TableCell style={style.w150}>
                             {value && value.packageName
                               ? value.packageName
                               : "Unavilable"}
@@ -777,8 +778,8 @@ class DashBoardView extends React.Component {
                         
                       );
                     })} */}
-                {/* </PackageDetailsTable> */}
-              </div>
+              {/* </PackageDetailsTable> */}
+              {/* </div> */}
               {this.renderSchoolMedia(schoolData, memberInfo, slug)}
             </Fragment>
           )}

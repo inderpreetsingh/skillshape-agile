@@ -213,7 +213,10 @@ const Package = props => (
                 props.cost,
                 props._id,
                 props.packageType,
-                props.pymtDetails
+                props.pymtDetails,
+                props.expDuration,
+                props.expPeriod,
+                props.noClasses
               )
             }
           />

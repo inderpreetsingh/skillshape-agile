@@ -10,10 +10,10 @@ class SubscriptionsDetails extends React.Component {
 
   render() {
     const { memberInfo } = this.props;
+    console.log("memberinfo=====>>>>>>>>", memberInfo);
     return (
       <div
         style={{
-          height: "300px",
           width: "400px",
           border: "solid 2px",
           margin: "20px"
@@ -22,50 +22,62 @@ class SubscriptionsDetails extends React.Component {
         <div style={{ margin: "10px" }}>Active Subscription</div>
         {memberInfo &&
           memberInfo.packageDetails &&
-          Object.values(memberInfo.packageDetails)
-            .slice(0, 4)
-            .map(value => {
-              return (
-                <center>
+          Object.values(memberInfo.packageDetails).map(value => {
+            return (
+              <center>
+                <div
+                  style={{
+                    border: "solid 2px",
+                    backgroundColor: "#90EE90",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "368px",
+                    height: "50px",
+                    borderRadius: "16px",
+                    marginBottom: "2px"
+                  }}
+                >
+                  <div style={{ margin: "10px" }}>
+                    {value && value.packageName
+                      ? value.packageName
+                      : "Unavilable"}
+                    <br />
+                    {value && value.createdOn
+                      ? dateFriendly(value.createdOn, "MMMM Do YYYY, h:mm:ss a")
+                      : "Unavilable"}
+                  </div>
+                  {"  "}
+
                   <div
                     style={{
                       border: "solid 2px",
-                      backgroundColor: "green",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      width: "368px",
-                      height: "50px",
-                      borderRadius: "16px",
-                      marginBottom: "2px"
+                      width: "155px",
+                      height: "41px",
+                      marginTop: "3px",
+                      borderRadius: "14px"
                     }}
                   >
-                    <div style={{ margin: "10px" }}>
-                      {value && value.createdOn
-                        ? dateFriendly(
-                            value.createdOn,
-                            "MMMM Do YYYY, h:mm:ss a"
-                          )
-                        : "Unavilable"}
-                    </div>
-                    {"  "}
-                    <div style={{ margin: "10px" }}>
-                      {value && value.packageName
-                        ? value.packageName
-                        : "Unavilable"}
-                    </div>
-                    <div
-                      style={{
-                        border: "solid 2px",
-                        width: "48px",
-                        height: "41px",
-                        marginTop: "3px",
-                        borderRadius: "14px"
-                      }}
-                    />
+                    {(value &&
+                      value.expDuration &&
+                      "Duration  " + value.expDuration + ",") ||
+                      " "}
+                    {(value &&
+                      value.expPeriod &&
+                      "Period " + value.expPeriod + ",") ||
+                      ""}
+                    {(value &&
+                      value.noClasses &&
+                      "Classes " + value.noClasses) ||
+                      ""}
+                    {!value.expDuration &&
+                      !value.expPeriod &&
+                      !value.noClasses &&
+                      "1 Month"}
                   </div>
-                </center>
-              );
-            })}
+                </div>
+              </center>
+            );
+          })}
         {/* old subscription code */}
         {/* <PackageDetailsTable>
         {memberInfo &&
@@ -95,9 +107,9 @@ class SubscriptionsDetails extends React.Component {
             );
           })} */}
         {/* </PackageDetailsTable> */}
-        <a href="#" style={{ float: "right" }}>
+        {/* <a href="#" style={{ float: "right" }}>
           See Past Purchases
-        </a>
+        </a> */}
       </div>
     );
   }
@@ -106,11 +118,17 @@ export default createContainer(props => {
   const filter = {
     activeUserId: props.activeUserId
   };
-  let subscription = Meteor.subscribe(
-    "schoolMemberDetails.getschoolMemberDetailsByMemberId",
-    filter
-  );
-  const memberInfo = SchoolMemberDetails.findOne();
+  let memberInfo = [];
+  if (props && props.activeUserId) {
+    let subscription = Meteor.subscribe(
+      "schoolMemberDetails.getschoolMemberDetailsByMemberId",
+      filter
+    );
+    memberInfo = SchoolMemberDetails.findOne();
+  }
+  if (props && props.memberInfo) {
+    memberInfo = props.memberInfo;
+  }
 
   return {
     memberInfo,
