@@ -29,7 +29,7 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers'
 import "/imports/api/classInterest/methods";
 import "/imports/api/classTimes/methods";
 
-import {checkForAddToCalender ,formatDate, formatTime, formatDataBasedOnScheduleType} from '/imports/util';
+import {checkForAddToCalender ,formatDate, formatTime, formatClassTimesData, formatDataBasedOnScheduleType} from '/imports/util';
 
 import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes.jsx";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
@@ -118,13 +118,13 @@ const scheduleDetails = [
 ];
 
 const Heading = styled.h2`
-  font-size: ${helpers.baseFontSize * 2}px;
+  font-size: ${helpers.baseFontSize * 1.5}px;
   font-family: ${helpers.specialFont};
   font-weight: 400;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   color: ${helpers.primaryColor};
-  text-transform: capitalize;
+  text-transform: ${props => props.textTransform ? props.textTransform : 'capitalize'};
   text-align: center;
   width: 100%;
   line-height: 1;
@@ -138,6 +138,7 @@ const Text = styled.p`
   font-weight: 400;
   line-height: 1;
   margin-bottom: ${props => props.marginBottom}px;
+  text-align: ${props => props.center ? 'center' : 'left'};
 `;
 
 const EventWrapper = styled.div`
@@ -170,6 +171,10 @@ const Event = styled.div`
 const ScheduleType = Text.extend``;
 
 const EventDesc = Text.extend``;
+
+const Capitalize = styled.span`
+  text-transform: capitalize;
+`;
 
 class ClassDetailModal extends React.Component {
   constructor(props) {
@@ -228,8 +233,6 @@ class ClassDetailModal extends React.Component {
       return settings.classTypeImgSrc;
     }
   };
-
-
 
   removeMyClassInterest = (event, classTimeId) => {
     console.log("<<_____removeMyClassInterest-->>>>", classTimeId);
@@ -318,9 +321,10 @@ class ClassDetailModal extends React.Component {
       addToMyCalender
     } = this.state;
     const { eventData, fullScreen, classes, clickedDate, classInterestData, classTimesData } = this.props;
-    console.log("eventData____________", eventData);
+    console.log("eventData____________", classTimesData,eventData);
     let classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(eventData,false); // false is for not hiding the past schedule types.
+    const allFormattedClassTimeDetails = formatClassTimesData(classTimesData,false).filter(classTime => classTime._id != eventData.classTimeId) //false is for not hiding the past schedule types;
     classTypeData.formattedClassTimesDetails = formattedClassTimesDetails;
     console.log(classTypeData,eventData,formattedClassTimesDetails,"event ................................. data");
     return (
@@ -400,7 +404,7 @@ class ClassDetailModal extends React.Component {
 
               <Grid
                 container
-                style={{ border: "2px solid #ccc", marginTop: "16px" }}
+                style={{ marginTop: "16px" }}
               >
                 <Heading marginTop={helpers.rhythmDiv}>
                   {classType && classType.name.toLowerCase()}
@@ -500,78 +504,27 @@ class ClassDetailModal extends React.Component {
 
               <Grid
                 container
-                style={{
-                  border: "2px solid #ccc",
-                  marginTop: "16px"
-                }}
+                style={{ marginTop: "16px" }}
               >
-                {/*<Grid item xs={12}>
-                  {eventData.scheduleType == "OnGoing" ? (
-                    <Text>
-                      This is an Ongoing class.
-                    </Text>
-                  ) : (
-                    ""
-                  )}
-                  {eventData.scheduleType == "oneTime" ? (
-                    <Text>This is a non-repeating class.</Text>
-                  ) : (
-                    ""
-                  )}
-                  {eventData.scheduleType == "recurring" ? (
-                    <Text>
-                      This is a repeating class with START/END.
-                    </Text>
-                  ) : (
-                    ""
-                  )}
-                </Grid> */}
-                <Grid item xs={12}>
-                  {/*eventData.scheduleDetails && (
-                    <Fragment>
-                      <Heading> Times </Heading>
-                      {Object.keys(eventData.scheduleDetails).map(
-                        (day, index) => {
-                          return (
-                            <Text marginBottom={helpers.rhythmDiv/2}>
-                              {this.renderdaySchedule(
-                                eventData.scheduleDetails[day],
-                                eventData
-                              )}
-                            </Text>
-                          );
-                        }
-                      )}
-                    </Fragment>
-                  )
-
-                  addToMyCalender ? (
-                    <ClassTimeButton
-                      icon
-                      onClick={event => {
-                        this.handleClassInterest(event, eventData);
-                      }}
-                      label="Add to my Calender"
-                      iconName="add_circle_outline"
-                    />
-                  ) : (
-                    <ClassTimeButton
-                      icon
-                      ghost
-                      onClick={event =>
-                        this.removeMyClassInterest(event, eventData.classTimeId)
-                      }
-                      label="Remove from calendar"
-                      iconName="delete"
-                    />
-                  )*/}
+                <div>
+                  <Heading marginTop={helpers.rhythmDiv} textTransform="none">This class time is part of</Heading>
                   <ClassTimesBoxes
                     inPopUp={true}
                     withSlider={false}
                     classTimesData={[classTypeData]}
                     classInterestData={classInterestData}
                   />
-                </Grid>
+                </div>
+
+                <div>
+                  <Heading marginTop={helpers.rhythmDiv} textTransform="none">More class times for <Capitalize>{eventData.name}</Capitalize></Heading>
+                  <ClassTimesBoxes
+                    inPopUp={true}
+                    withSlider={false}
+                    classTimesData={allFormattedClassTimeDetails}
+                    classInterestData={classInterestData}
+                  />
+                </div>
               </Grid>
 
               <DialogActions className={classes.dialogAction}>

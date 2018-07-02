@@ -77,7 +77,7 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
 
     if(hidePastDates)
       return removePastTimesFromSchedule(classTimes , data.scheduleType.toLowerCase(), {startDate: data.startDate, endDate: data.endDate});
-    else 
+    else
       return addTotalClassTimes(classTimes);
 
 }
@@ -101,7 +101,6 @@ const addTotalClassTimes = (classTimes) => {
 
 const filterOutAndAddTotalClassTimes = (classTimes) => {
   const currentDate = new Date();
-  debugger;
   Object.keys(classTimes).forEach(day => {
     if(typeof classTimes[day] == 'object') {
       classTimes[day] = classTimes[day].filter(classTime => {
