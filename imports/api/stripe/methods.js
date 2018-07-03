@@ -9,9 +9,23 @@ Meteor.methods({
     desc,
     packageId,
     packageType,
-    schoolId
+    schoolId,
+    expDuration,
+    expPeriod,
+    noClasses,
+    classTypeIds
   ) {
     let recordId;
+    console.log(
+      "stripe.chargecard arugments",
+      stripeToken,
+      amount,
+      desc,
+      packageId,
+      packageType,
+      schoolId,
+      classTypeIds
+    );
     try {
       let schoolData = School.findOne({ _id: schoolId });
       let superAdminId = schoolData.superAdmin;
@@ -40,6 +54,11 @@ Meteor.methods({
         packageType: packageType,
         schoolId: schoolId,
         status: "In_Progress",
+        memberStatus: "Inactive",
+        startDate: new Date(),
+        endDate: expPeriod + expDuration,
+        noOfClasses: noClasses,
+        classTypeIds: classTypeIds,
         fee: Math.round(amount * (2.9 / 100) + 30)
       };
       recordId = Meteor.call("purchases.addPurchase", payload);
@@ -49,7 +68,41 @@ Meteor.methods({
         stripe_Response: charge,
         status: "Succeeded"
       };
-      Meteor.call("purchases.updatePurchases", payload, recordId);
+      let currentUserRec = Meteor.users.findOne(this.userId);
+      Meteor.call("purchases.updatePurchases", { payload, recordId });
+      let x = new Date().getTime();
+      let memberData = {
+        firstName:
+          currentUserRec.profile.name || currentUserRec.profile.firstName,
+        lastName: currentUserRec.profile.firstName || "",
+        email: currentUserRec.emails[0].address,
+        phone: "",
+        schoolId: schoolId,
+        classTypeIds: classTypeIds,
+        birthYear: "",
+        studentWithoutEmail: false,
+        sendMeSkillShapeNotification: true,
+        activeUserId: currentUserRec._id,
+        createdBy: "",
+        inviteAccepted: false,
+        packageDetails: {
+          [x]: {
+            packageName: desc,
+            createdOn: new Date(),
+            packageType: packageType,
+            packageId: packageId,
+            expDuration: expDuration,
+            expPeriod: expPeriod,
+            noClasses: noClasses
+          }
+        }
+      };
+      Meteor.call("schoolMemberDetails.addNewMember", memberData, memberId => {
+        console.log("memberId-------->", memberId);
+        payload = { memberId: memberId };
+        consol.log("payload11111111111", payload);
+        Meteor.call("purchases.updatePurchases", { payload, recordId });
+      });
       stripe.balance.retrieve(function(err, balance) {
         console.log("------------balace--------------", balance);
       });
@@ -59,7 +112,8 @@ Meteor.methods({
         stripe_Response: error,
         status: "Error"
       };
-      Meteor.call("purchases.updatePurchases", payload, recordId);
+      console.log("error---->", error);
+      Meteor.call("purchases.updatePurchases", { payload, recordId });
       throw new Meteor.Error(
         (error && error.message) || "Something went wrong!!!"
       );
