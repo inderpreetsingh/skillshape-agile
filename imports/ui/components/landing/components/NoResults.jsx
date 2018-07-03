@@ -39,6 +39,7 @@ const ButtonsWrapper = styled.div`
   ${helpers.flexCenter}
   align-items: stretch;
   width: 100%;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     flex-direction: column;
@@ -88,13 +89,24 @@ const NoResults = (props) => (
       <OrText> or </OrText>
       <SecondaryButton fullWidth={true} onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom/>
     </ButtonsWrapper>
+    {props.showSchoolSuggestion && <ButtonsWrapper>
+    <PrimaryButton
+      fullWidth={true}
+      onClick={props.schoolSuggestionButtonClick}
+      label="Give Suggestion"
+      icon
+      iconName="sentiment_satisfied"
+      noMarginBottom />
+    </ButtonsWrapper>}
   </Wrapper>
   </DocumentTitle>
 );
 
 NoResults.propTypes = {
   imgSrc: PropTypes.string,
-  removeAllFiltersButtonClick: PropTypes.func
+  removeAllFiltersButtonClick: PropTypes.func,
+  addYourSchoolButtonClick: PropTypes.func,
+  schoolSuggestionButtonClick: PropTypes.func
 }
 
 NoResults.defaultProps = {
