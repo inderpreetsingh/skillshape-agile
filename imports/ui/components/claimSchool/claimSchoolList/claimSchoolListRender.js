@@ -9,6 +9,7 @@ import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import SchoolCard from "/imports/ui/components/landing/components/cards/schoolCard";
 import NoResults from '/imports/ui/components/landing/components/NoResults';
+import SchoolSuggestionDialogBox from "/imports/ui/components/landing/components/dialogs/SchoolSuggestionDialogBox.jsx";
 
 import {getContainerMaxWidth} from '/imports/util/cards.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -87,7 +88,6 @@ const GridWrapper = styled.div`
 
 `;
 
-
 export default function (props) {
     let schools = this.props.collectionData || [];
 
@@ -108,10 +108,16 @@ export default function (props) {
         return (
             <GridWrapper>
               <NoResultContainer>
+                {this.state.schoolSuggestionDialog && <SchoolSuggestionDialogBox
+                  open={this.state.schoolSuggestionDialog}
+                  onModalClose={this.handleSchoolSuggestionDialogState(false)}
+                  /> }
                 <NoneOfMyLisiting {...props} />
                 <NoResults
-                    removeAllFiltersButtonClick={this.props.removeAllFilters}
-                    addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
+                  removeAllFiltersButtonClick={this.props.removeAllFilters}
+                  addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
+                  schoolSuggestionButtonClick={this.handleSchoolSuggestionDialogState(true)}
+                  showSchoolSuggestion={true}
                 />
               </NoResultContainer>
             </GridWrapper>
@@ -119,6 +125,7 @@ export default function (props) {
     } else {
         return (
             <div>
+
                 <GridWrapper>
                   <NoneOfMyLisiting {...props} />
                   <GridInnerWrapper>

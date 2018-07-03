@@ -268,7 +268,7 @@ export default _skillCategoryObj = {
         "Emotional Intelligence",
         "Vocational Skills",
         "Reading/ Literacy",
-        "Mediation",
+        "Conflict Resolution",
         "Leadership",
         "Bullying Prevention",
         "Various Life Skills"

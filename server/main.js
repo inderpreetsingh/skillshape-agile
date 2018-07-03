@@ -175,7 +175,7 @@ if (Meteor.isServer) {
         return user;
     });
 
-    var userFeedBack = function(user, email, message, request) {
+    var userFeedBack = function(user, email, message, request, subject) {
         var fromEmail = "Notices@SkillShape.com";
         var toEmail = "Notices@SkillShape.com";
         Email.send({
@@ -185,6 +185,7 @@ if (Meteor.isServer) {
             subject: "skillshape Feedback",
             text: "Hi ,\nWe have feedback from : " + user + "(" + email + ")" +
                 "\nHis feedback request is : " + request + "\n" +
+                + (subject ? `\nSubject: ${subject} \n\n` : '') +
                 "\nMessage : " + message + "\n\n" +
                 "Thank you.\n" +
                 "The skillshape Team.\n" + Meteor.absoluteUrl() + "\n"
