@@ -1,5 +1,6 @@
 import UserStripeData from "./fields";
 import School from "../school/fields";
+import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 Meteor.methods({
   "stripe.chargeCard": async function(
     stripeToken,
@@ -14,7 +15,12 @@ Meteor.methods({
     classTypeIds
   ) {
     let recordId;
+    if (packageType == "EP") {
+      desc = "Enrollment Fee";
+    }
     let userId = this.userId;
+    let endDate;
+    let startDate;
     try {
       let schoolData = School.findOne({ _id: schoolId });
       let superAdminId = schoolData.superAdmin;
@@ -34,6 +40,10 @@ Meteor.methods({
           account: stripeAccountId
         }
       };
+      startDate = getExpiryDateForPackages(new Date());
+      console.log("startdate---------->", startDate);
+      endDate = getExpiryDateForPackages(startDate, expPeriod, expDuration);
+      console.log("enddate---------->", endDate);
       let payload = {
         userId: userId,
         stripe_Request: stripe_Request,
@@ -42,8 +52,8 @@ Meteor.methods({
         packageType: packageType,
         schoolId: schoolId,
         status: "In_Progress",
-        startDate: new Date(),
-        endDate: expPeriod + expDuration,
+        startDate: startDate,
+        endDate: endDate,
         noOfClasses: noClasses,
         classTypeIds: classTypeIds,
         fee: Math.round(amount * (2.9 / 100) + 30)

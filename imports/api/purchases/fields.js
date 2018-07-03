@@ -53,7 +53,7 @@ export const PurchasesSchema = new SimpleSchema({
     optional: true
   },
   endDate: {
-    type: String,
+    type: Date,
     optional: true
   },
   memberId: {
