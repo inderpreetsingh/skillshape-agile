@@ -517,7 +517,7 @@ class ClassDetailModal extends React.Component {
                 </div>
 
                 <div>
-                  <Heading marginTop={helpers.rhythmDiv} textTransform="none">More class times for <Capitalize>{eventData.name}</Capitalize></Heading>
+                  <Heading marginTop={helpers.rhythmDiv} textTransform="none">More class times for <Capitalize>{classType.name.toLowerCase()}</Capitalize></Heading>
                   <ClassTimesBoxes
                     inPopUp={true}
                     withSlider={false}
