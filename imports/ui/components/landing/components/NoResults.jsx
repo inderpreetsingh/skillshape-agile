@@ -30,7 +30,7 @@ const Title = styled.h1`
   font-size: ${helpers.baseFontSize * 3}px;
   font-style: italic;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
     font-size: ${helpers.baseFontSize * 2}px;
   }
 `;
@@ -41,7 +41,7 @@ const ButtonsWrapper = styled.div`
   width: 100%;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.mobile + 150}px) {
     flex-direction: column;
     align-items: center;
     padding: 0 0 0 ${helpers.rhythmDiv}px;
@@ -70,7 +70,7 @@ const OrText = styled.p`
   font-size: 28px;
   margin: 0 ${helpers.rhythmDiv * 2}px 0 ${helpers.rhythmDiv}px;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
     margin-bottom: ${helpers.rhythmDiv}px;
   }
 `;
