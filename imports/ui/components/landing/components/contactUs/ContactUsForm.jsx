@@ -16,7 +16,7 @@ import IconInput from '/imports/ui/components/landing/components/form/IconInput.
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = {
-  formGroupWrapper: {
+  radioGroupWrapper: {
     width: '100%',
     margin: `${helpers.rhythmDiv * 2}px 0`,
     marginTop: helpers.rhythmDiv * 4,
@@ -24,6 +24,9 @@ const styles = {
     [`@media screen and (max-width: ${helpers.mobile + 100}px)`] : {
       width: 'auto'
     }
+  },
+  radioGroupNoMarginTop: {
+    marginTop: 0
   },
   radioLabelRoot: {
     marginRight: helpers.rhythmDiv * 3
@@ -111,9 +114,10 @@ class ContactUsForm extends Component {
     isLoading: false,
     name: '',
     email: '',
+    subject: '',
     message: '',
     radioButtonGroupValue: 'feature',
-    inputsName: ['email','name','message'],
+    inputsName: ['email','name','subject','message'],
     readyToSumit: false,
   }
 
@@ -155,6 +159,7 @@ class ContactUsForm extends Component {
     const name = this.state.name;
     const email = this.state.email;
     const message = this.state.message;
+    const subject = this.state.subject;
     const selectedOption = this.state.radioButtonGroupValue;
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     // console.info(message,selectedOption,email,name);
@@ -170,10 +175,12 @@ class ContactUsForm extends Component {
       } else if (!message) {
           toastr.error("Please enter a message.", "Error");
           return false;
-      } else {
+      }
+      else {
           // Start loading
           this.setState({ isLoading: true });
-          Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
+          // console.log(name,email,message,subject,selectedOption<'....')
+          Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, subject, (error, result) => {
             if (error) {
                 console.log("error", error);
             } else {
@@ -211,19 +218,34 @@ class ContactUsForm extends Component {
               <IconInput inputId="email" type="email" labelText="Enter your email address" value={this.state.email} onChange={this.handleInputFieldChange('email')} />
             </InputWrapper>
 
-            <FormControl component="fieldset" required classes={{root: this.props.classes.formGroupWrapper}}>
-                <RadioGroup
-                    aria-label="contactRequest"
-                    name="contactRequest"
-                    value={this.state.radioButtonGroupValue}
-                    className={this.props.classes.radioButtonGroup}
-                    onChange={this.handleRadioChange}
-                  >
-                    <FormControlLabel classes={{root: this.props.classes.radioLabelRoot +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="feature" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Feature request" />
-                    <FormControlLabel classes={{root: this.props.classes.radioLabelRoot +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="somethingBroken" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Something broken" />
-                    <FormControlLabel classes={{root: this.props.classes.radioLabelRootZeroMargin +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="other" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="I love it!" />
-                </RadioGroup>
+            <FormControl component="fieldset" required classes={{root: this.props.classes.radioGroupWrapper}}>
+              <RadioGroup
+                  aria-label="contactRequest"
+                  name="contactRequest"
+                  value={this.state.radioButtonGroupValue}
+                  className={this.props.classes.radioButtonGroup}
+                  onChange={this.handleRadioChange} >
+
+                  <FormControlLabel classes={{root: this.props.classes.radioLabelRoot +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="feature" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Feature request" />
+                  <FormControlLabel classes={{root: this.props.classes.radioLabelRoot +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="somethingBroken" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Something broken" />
+                  <FormControlLabel classes={{root: this.props.classes.radioLabelRootZeroMargin +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="liked" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="I love it!" />
+              </RadioGroup>
             </FormControl>
+
+            <FormControl component="fieldset" required classes={{root: this.props.classes.radioGroupWrapper + ' ' + this.props.classes.radioGroupNoMarginTop}}>
+              <RadioGroup
+                  aria-label="contactRequest"
+                  name="contactRequestOther"
+                  value={this.state.radioButtonGroupValue}
+                  className={this.props.classes.radioButtonGroup}
+                  onChange={this.handleRadioChange} >
+                  <FormControlLabel classes={{root: this.props.classes.radioLabelRoot + ' ' + this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="other" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="other" />
+              </RadioGroup>
+            </FormControl>
+
+            <InputWrapper>
+              <IconInput inputId="subject" labelText="What's on your mind" value={this.state.subject} onChange={this.handleInputFieldChange('subject')} />
+            </InputWrapper>
 
             <InputWrapper>
               <IconInput inputId="message" labelText="Your message goes here" multiline={true} value={this.state.message} onChange={this.handleInputFieldChange('message')} />
