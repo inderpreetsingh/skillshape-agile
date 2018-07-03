@@ -26,6 +26,7 @@ Meteor.methods({
       schoolId,
       classTypeIds
     );
+    let recordId;
     try {
       let schoolData = School.findOne({ _id: schoolId });
       let superAdminId = schoolData.superAdmin;
