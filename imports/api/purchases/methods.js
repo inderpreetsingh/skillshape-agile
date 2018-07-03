@@ -15,7 +15,7 @@ Meteor.methods({
     return AllPurchaseData;
   },
   "purchases.updatePurchases": function({ payload, recordId }) {
-    // console.log("payload and recordid inupdate Purchases ", payload, recordId);
+    console.log("payload and recordid inupdate Purchases ", payload, recordId);
     Purchases.update(
       { _id: recordId },
       {
