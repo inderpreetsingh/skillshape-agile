@@ -97,12 +97,16 @@ Meteor.methods({
           }
         }
       };
-      Meteor.call("schoolMemberDetails.addNewMember", memberData, memberId => {
-        console.log("memberId-------->", memberId);
-        payload = { memberId: memberId };
-        consol.log("payload11111111111", payload);
-        Meteor.call("purchases.updatePurchases", { payload, recordId });
-      });
+      Meteor.call(
+        "schoolMemberDetails.addNewMember",
+        memberData,
+        (error, result) => {
+          console.log("result of addnewmember", result);
+          payload = { memberId: result, memberStatus: "Active" };
+          console.log("payload11111111111", payload);
+          Meteor.call("purchases.updatePurchases", { payload, recordId });
+        }
+      );
       stripe.balance.retrieve(function(err, balance) {
         console.log("------------balace--------------", balance);
       });
