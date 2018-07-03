@@ -591,6 +591,7 @@ class DashBoardView extends React.Component {
               </Button>
             </Grid>
           )}
+          {console.log("schoolMemberListFilters", schoolMemberListFilters)}
           <SchoolMemberListItems
             filters={schoolMemberListFilters}
             handleMemberDetailsToRightPanel={
@@ -696,7 +697,9 @@ class DashBoardView extends React.Component {
                   this.handleMemberDetailsToRightPanel
                 }
               />
-              {memberInfo && <SubscriptionDetails memberInfo={memberInfo} />}
+              {memberInfo &&
+                schoolAdmin &&
+                slug && <SubscriptionDetails memberInfo={memberInfo} />}
               {/* <div
                 style={{
                   height: "300px",
@@ -820,7 +823,6 @@ export default createContainer(props => {
       }
     }
   }
-
   return {
     ...props,
     schoolData,

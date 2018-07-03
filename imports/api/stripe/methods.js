@@ -1,7 +1,5 @@
 import UserStripeData from "./fields";
 import School from "../school/fields";
-//chargeCard for  creating charge and purchasing package
-//getStripeToken for getting stripe account id
 Meteor.methods({
   "stripe.chargeCard": async function(
     stripeToken,
@@ -15,17 +13,8 @@ Meteor.methods({
     noClasses,
     classTypeIds
   ) {
-    console.log(
-      "stripe.chargecard arugments",
-      stripeToken,
-      amount,
-      desc,
-      packageId,
-      packageType,
-      schoolId,
-      classTypeIds
-    );
     let recordId;
+    let userId = this.userId;
     try {
       let schoolData = School.findOne({ _id: schoolId });
       let superAdminId = schoolData.superAdmin;
@@ -45,7 +34,6 @@ Meteor.methods({
           account: stripeAccountId
         }
       };
-      let userId = this.userId;
       let payload = {
         userId: userId,
         stripe_Request: stripe_Request,
@@ -54,7 +42,6 @@ Meteor.methods({
         packageType: packageType,
         schoolId: schoolId,
         status: "In_Progress",
-        memberStatus: "Inactive",
         startDate: new Date(),
         endDate: expPeriod + expDuration,
         noOfClasses: noClasses,
@@ -101,10 +88,18 @@ Meteor.methods({
         "schoolMemberDetails.addNewMember",
         memberData,
         (error, result) => {
-          console.log("result of addnewmember", result);
-          payload = { memberId: result, memberStatus: "Active" };
-          console.log("payload11111111111", payload);
-          Meteor.call("purchases.updatePurchases", { payload, recordId });
+          let memberId = result;
+          Meteor.call(
+            "purchases.checkExisitingPackagePurchases",
+            userId,
+            packageId,
+            (error, result) => {
+              console.log("error and result", error, result);
+              status = result;
+              payload = { memberId: memberId, packageStatus: status };
+              Meteor.call("purchases.updatePurchases", { payload, recordId });
+            }
+          );
         }
       );
       stripe.balance.retrieve(function(err, balance) {
@@ -116,7 +111,6 @@ Meteor.methods({
         stripe_Response: error,
         status: "Error"
       };
-      console.log("error---->", error);
       Meteor.call("purchases.updatePurchases", { payload, recordId });
       throw new Meteor.Error(
         (error && error.message) || "Something went wrong!!!"
