@@ -591,6 +591,7 @@ class DashBoardView extends React.Component {
               </Button>
             </Grid>
           )}
+          {console.log("schoolMemberListFilters", schoolMemberListFilters)}
           <SchoolMemberListItems
             filters={schoolMemberListFilters}
             handleMemberDetailsToRightPanel={
@@ -697,9 +698,14 @@ class DashBoardView extends React.Component {
                 }
               />
               {memberInfo &&
+<<<<<<< ab445aed64cda830811333bed0fffe195fd72b09
                 Meteor.settings.public.paymentEnabled && (
                   <SubscriptionDetails memberInfo={memberInfo} />
                 )}
+=======
+                schoolAdmin &&
+                slug && <SubscriptionDetails memberInfo={memberInfo} />}
+>>>>>>> packageStatus(memberStatus) correctly added for purchases collections
               {/* <div
                 style={{
                   height: "300px",
@@ -823,7 +829,6 @@ export default createContainer(props => {
       }
     }
   }
-
   return {
     ...props,
     schoolData,

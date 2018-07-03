@@ -489,10 +489,7 @@ export default class SchoolViewBase extends React.Component {
     // Start loading
     const { toastr } = this.props;
     let self = this;
-    console.log(
-      "this.props.schoolData.superAdmin",
-      this.props.schoolData.superAdmin
-    );
+    console.log("this.props in schoolviewbase", this.props);
     Meteor.call(
       "stripe.findAdminStripeAccount",
       this.props.schoolData.superAdmin,

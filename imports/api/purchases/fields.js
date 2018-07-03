@@ -40,7 +40,7 @@ export const PurchasesSchema = new SimpleSchema({
     type: Number,
     optional: true
   },
-  memberStatus: {
+  packageStatus: {
     type: String,
     optional: true
   },
