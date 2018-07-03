@@ -14,15 +14,12 @@ Meteor.methods({
 
     return AllPurchaseData;
   },
-  "purchases.updatePurchases": function(payload, recordId) {
-    console.log("payload and recordid inupdate Purchases ", payload, recordId);
+  "purchases.updatePurchases": function({ payload, recordId }) {
+    // console.log("payload and recordid inupdate Purchases ", payload, recordId);
     Purchases.update(
       { _id: recordId },
       {
-        $set: {
-          stripe_Response: payload.stripe_Response,
-          status: payload.status
-        }
+        $set: payload
       }
     );
   },

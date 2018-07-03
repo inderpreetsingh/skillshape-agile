@@ -39,6 +39,30 @@ export const PurchasesSchema = new SimpleSchema({
   fee: {
     type: Number,
     optional: true
+  },
+  memberStatus: {
+    type: String,
+    optional: true
+  },
+  noOfClasses: {
+    type: String,
+    optional: true
+  },
+  startDate: {
+    type: Date,
+    optional: true
+  },
+  endDate: {
+    type: String,
+    optional: true
+  },
+  memberId: {
+    type: String,
+    optional: true
+  },
+  classId: {
+    type: String,
+    optional: true
   }
 });
 

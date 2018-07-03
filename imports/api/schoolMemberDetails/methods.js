@@ -151,9 +151,11 @@ Meteor.methods({
           },
           { $set: { ...memberData } }
         );
+        console.log("userData._id", userData._id);
+        return userData._id;
       }
     } else {
-      SchoolMemberDetails.insert(memberData);
+      return SchoolMemberDetails.insert(memberData);
     }
   }
 });
