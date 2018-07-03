@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import moment from "moment";
 import styled from "styled-components";
+import isEmpty from 'lodash/isEmpty';
 import { formStyles } from "/imports/util";
 // import { blue500 } from 'material-ui/styles/colors';
 
@@ -107,6 +108,11 @@ const ClassTimesWrapper = styled.div`
   border: 2px solid #ccc;
 `;
 
+const IconsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const scheduleDetails = [
   "Monday",
   "Tuesday",
@@ -141,16 +147,23 @@ const Text = styled.p`
   text-align: ${props => props.center ? 'center' : 'left'};
 `;
 
-const EventWrapper = styled.div`
+const EventHeader = styled.div`
   ${helpers.flexHorizontalSpaceBetween};
+  justify-content: space-around;
   max-width: 400px;
   width: 100%;
+
+  @media screen and (max-width: 400px) {
+    flex-direction: column;
+  }
 `;
 
 const ImageContainer = styled.div`
   width: 100px;
   height: 100px;
   border-radius: 50%;
+  margin-right: ${helpers.rhythmDiv * 2}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
   ${helpers.coverBg};
   background-position: 50% 50%;
   background-image: url('${props => props.src}');
@@ -329,7 +342,7 @@ class ClassDetailModal extends React.Component {
     console.log(classTypeData,eventData,formattedClassTimesDetails,"event ................................. data");
     return (
       <Dialog
-        fullScreen={false}
+        fullScreen={true}
         open={this.props.showModal}
         onClose={() => this.props.closeEventModal(false, null)}
         aria-labelledby="responsive-dialog-title"
@@ -343,7 +356,7 @@ class ClassDetailModal extends React.Component {
           !error && (
             <Grid container style={{ padding: "16px" }}>
               <Grid container classes={{typeItem: classes.gridItem}}>
-                <EventWrapper>
+                <EventHeader>
                   <ImageContainer src={this.getImageSrc(classType, school)}>
                     {/*<div style={{position: "absolute", top: 10, right: 10}}>
   									{
@@ -368,7 +381,7 @@ class ClassDetailModal extends React.Component {
                     <EventName>{eventData.name}</EventName>
                     <ScheduleType>{eventData.scheduleType}</ScheduleType>
                   </Event>
-                </EventWrapper>
+                </EventHeader>
                 <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>
                   <EventDesc>{eventData.desc || ""}</EventDesc>
                 </Grid>
@@ -412,35 +425,38 @@ class ClassDetailModal extends React.Component {
                   {/*<Typography component="p" style={{marginBottom:'20px'}}>
 										{classType && classType.desc}
 									</Typography>*/}
-                <div className={classes.iconWithDetailContainer + ' ' + classes.bottomSpace}>
-                  <div className="circle-icon" className={classes.iconStyle}>
-                    <Icon className="material-icons" color="primary">
-                      account_balance
-                    </Icon>
+                <IconsWrapper>
+                  <div className={classes.iconWithDetailContainer + ' ' + classes.bottomSpace}>
+                    <div className="circle-icon" className={classes.iconStyle}>
+                      <Icon className="material-icons" color="primary">
+                        account_balance
+                      </Icon>
+                    </div>
+                    <div>
+                      <Text>SCHOOL</Text>
+                      <Text>
+                        {school && school.name}
+                      </Text>
+                    </div>
                   </div>
-                  <div>
-                    <Text>SCHOOL</Text>
-                    <Text>
-                      {school && school.name}
-                    </Text>
+
+                  <div className={classes.iconWithDetailContainer}>
+                    <div className="circle-icon" className={classes.iconStyle}>
+                      <Icon className="material-icons" color="primary">
+                        location_on
+                      </Icon>
+                    </div>
+                    <div>
+                      <Text>LOCATION</Text>
+                      <Text>
+                        {location &&
+                          `${location.address}, ${location.city}, ${
+                            location.state
+                          }`}
+                      </Text>
+                    </div>
                   </div>
-                </div>
-                <div className={classes.iconWithDetailContainer}>
-                  <div className="circle-icon" className={classes.iconStyle}>
-                    <Icon className="material-icons" color="primary">
-                      location_on
-                    </Icon>
-                  </div>
-                  <div>
-                    <Text>LOCATION</Text>
-                    <Text>
-                      {location &&
-                        `${location.address}, ${location.city}, ${
-                          location.state
-                        }`}
-                    </Text>
-                  </div>
-                </div>
+                </IconsWrapper>
                 <Grid item xs={12}>
                   {classTypeData &&
                     classTypeData.ageMin && (
@@ -506,7 +522,7 @@ class ClassDetailModal extends React.Component {
                 container
                 style={{ marginTop: "16px" }}
               >
-                <div>
+              {!isEmpty(classTypeData) &&  <div>
                   <Heading marginTop={helpers.rhythmDiv} textTransform="none">This class time is part of</Heading>
                   <ClassTimesBoxes
                     inPopUp={true}
@@ -514,9 +530,9 @@ class ClassDetailModal extends React.Component {
                     classTimesData={[classTypeData]}
                     classInterestData={classInterestData}
                   />
-                </div>
+                </div>}
 
-                <div>
+                {!isEmpty(allFormattedClassTimeDetails) && <div>
                   <Heading marginTop={helpers.rhythmDiv} textTransform="none">More class times for <Capitalize>{classType.name.toLowerCase()}</Capitalize></Heading>
                   <ClassTimesBoxes
                     inPopUp={true}
@@ -524,7 +540,7 @@ class ClassDetailModal extends React.Component {
                     classTimesData={allFormattedClassTimeDetails}
                     classInterestData={classInterestData}
                   />
-                </div>
+                </div>}
               </Grid>
 
               <DialogActions className={classes.dialogAction}>

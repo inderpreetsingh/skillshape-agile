@@ -96,7 +96,7 @@ const Title = styled.span`
 const NonUserDefaultDialogBox = (props) => {
     return (
       <Dialog
-        fullScreen={props.fullScreen}
+        fullScreen={false}
         open={props.open}
         onClose={props.onModalClose}
         onRequestClose={props.onModalClose}
