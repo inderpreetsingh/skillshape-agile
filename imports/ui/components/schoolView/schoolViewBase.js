@@ -489,6 +489,7 @@ export default class SchoolViewBase extends React.Component {
     // Start loading
     const { toastr } = this.props;
     let self = this;
+    console.log("expPeriod", expPeriod, "expDuration", expDuration);
     console.log("this.props in schoolviewbase", this.props);
     Meteor.call(
       "stripe.findAdminStripeAccount",
