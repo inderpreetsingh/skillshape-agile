@@ -61,7 +61,8 @@ export default class Financials extends React.Component {
 
     return (
       <DocumentTitle title="Financials">
-        {this.state.adminPermission || role != -1 ? (
+        {(Meteor.settings.public.paymentEnabled && this.state.adminPermission) ||
+        role != -1 ? (
           <div>
             <ResponsiveTabs
               tabs={["Students", "Payouts", "Transactions", "Settings"]}

@@ -11,6 +11,7 @@ Meteor.methods({
     packageType,
     schoolId
   ) {
+    let recordId;
     try {
       let schoolData = School.findOne({ _id: schoolId });
       let superAdminId = schoolData.superAdmin;
@@ -41,7 +42,7 @@ Meteor.methods({
         status: "In_Progress",
         fee: Math.round(amount * (2.9 / 100) + 30)
       };
-      let recordId = Meteor.call("purchases.addPurchase", payload);
+      recordId = Meteor.call("purchases.addPurchase", payload);
       let charge = await stripe.charges.create(stripe_Request);
 
       payload = {
