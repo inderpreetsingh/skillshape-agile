@@ -17,8 +17,7 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 
 const styles = {
   radioGroupWrapper: {
-    width: '100%',
-    margin: `${helpers.rhythmDiv * 2}px 0`,
+    margin: 0,
     marginTop: helpers.rhythmDiv * 4,
     paddingLeft: helpers.rhythmDiv,
     [`@media screen and (max-width: ${helpers.mobile + 100}px)`] : {
@@ -30,6 +29,10 @@ const styles = {
   },
   radioLabelRoot: {
     marginRight: helpers.rhythmDiv * 3
+  },
+  radioLabelOther: {
+    marginBottom: 0,
+    transform: 'translateY(4px)'
   },
   radioLabelRootZeroMargin: {
     marginRight: 0
@@ -95,6 +98,12 @@ const Form = styled.form`
   }
 `;
 
+const FormGroup = styled.div`
+  display: flex;
+  align-items: center;
+  transform: translateY(-${helpers.rhythmDiv * 2}px)
+`;
+
 const SubmitButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -106,6 +115,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const InputWrapper = styled.div`
+  width: 100%;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
@@ -206,6 +216,7 @@ class ContactUsForm extends Component {
   }
 
   render() {
+    const {classes} = this.props;
     return (
         <FormWrapper>
           {this.state.isLoading && <ContainerLoader />}
@@ -223,30 +234,30 @@ class ContactUsForm extends Component {
                   aria-label="contactRequest"
                   name="contactRequest"
                   value={this.state.radioButtonGroupValue}
-                  className={this.props.classes.radioButtonGroup}
+                  className={classes.radioButtonGroup}
                   onChange={this.handleRadioChange} >
 
-                  <FormControlLabel classes={{root: this.props.classes.radioLabelRoot +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="feature" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Feature request" />
-                  <FormControlLabel classes={{root: this.props.classes.radioLabelRoot +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="somethingBroken" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="Something broken" />
-                  <FormControlLabel classes={{root: this.props.classes.radioLabelRootZeroMargin +' '+ this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="liked" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="I love it!" />
+                  <FormControlLabel classes={{root: classes.radioLabelRoot +' '+ classes.radioLabelMarginBottom, label: classes.radioLabel}} value="feature" control={<Radio classes={{root : classes.radioButton}}/>} label="Feature request" />
+                  <FormControlLabel classes={{root: classes.radioLabelRoot +' '+ classes.radioLabelMarginBottom, label: classes.radioLabel}} value="somethingBroken" control={<Radio classes={{root : classes.radioButton}}/>} label="Something broken" />
+                  <FormControlLabel classes={{root: classes.radioLabelRootZeroMargin +' '+ classes.radioLabelMarginBottom, label: classes.radioLabel}} value="liked" control={<Radio classes={{root : classes.radioButton}}/>} label="I love it!" />
               </RadioGroup>
             </FormControl>
 
-            <FormControl component="fieldset" required classes={{root: this.props.classes.radioGroupWrapper + ' ' + this.props.classes.radioGroupNoMarginTop}}>
-              <RadioGroup
-                  aria-label="contactRequest"
-                  name="contactRequestOther"
-                  value={this.state.radioButtonGroupValue}
-                  className={this.props.classes.radioButtonGroup}
-                  onChange={this.handleRadioChange} >
-                  <FormControlLabel classes={{root: this.props.classes.radioLabelRoot + ' ' + this.props.classes.radioLabelMarginBottom, label: this.props.classes.radioLabel}} value="other" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="other" />
-              </RadioGroup>
-            </FormControl>
+            <FormGroup>
+              <FormControl component="fieldset" required classes={{root: classes.radioGroupWrapper + ' ' + classes.radioGroupNoMarginTop}}>
+                <RadioGroup
+                    aria-label="contactRequest"
+                    name="contactRequestOther"
+                    value={this.state.radioButtonGroupValue}
+                    onChange={this.handleRadioChange} >
+                    <FormControlLabel classes={{root: classes.radioLabelRoot + ' ' +classes.radioLabelOther, label: classes.radioLabel }} value="Other" control={<Radio classes={{root : this.props.classes.radioButton}}/>} label="other" />
+                </RadioGroup>
+              </FormControl>
 
-            <InputWrapper>
-              <IconInput inputId="subject" labelText="What's on your mind" value={this.state.subject} onChange={this.handleInputFieldChange('subject')} />
-            </InputWrapper>
-
+              <InputWrapper>
+                <IconInput inputId="subject" labelText="What's on your mind" value={this.state.subject} onChange={this.handleInputFieldChange('subject')} />
+              </InputWrapper>
+            </FormGroup>
             <InputWrapper>
               <IconInput inputId="message" labelText="Your message goes here" multiline={true} value={this.state.message} onChange={this.handleInputFieldChange('message')} />
             </InputWrapper>
