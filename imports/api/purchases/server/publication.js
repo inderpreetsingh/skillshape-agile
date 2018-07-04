@@ -6,3 +6,6 @@ Meteor.publish("purchases.getAllPurchaseData", function(slug, filters) {
   let cursor = Purchases.find({ schoolId: schoolData._id }, filters);
   return Purchases.publishJoinedCursors(cursor, { reactive: true }, this);
 });
+Meteor.publish("purchases.getPurchasesListByMemberId", function(filter) {
+  return Purchases.find(filter);
+});

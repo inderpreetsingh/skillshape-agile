@@ -21,6 +21,8 @@ Meteor.methods({
     let userId = this.userId;
     let endDate;
     let startDate;
+    let user = Meteor.user();
+    console.log("user", user);
     try {
       let schoolData = School.findOne({ _id: schoolId });
       let superAdminId = schoolData.superAdmin;
@@ -40,12 +42,14 @@ Meteor.methods({
           account: stripeAccountId
         }
       };
+
       startDate = getExpiryDateForPackages(new Date());
-      console.log("startdate---------->", startDate);
       endDate = getExpiryDateForPackages(startDate, expPeriod, expDuration);
-      console.log("enddate---------->", endDate);
       let payload = {
         userId: userId,
+        emailId: user.emails[0].address,
+        userName: user.profile.firstName || user.profile.name,
+        packageName: desc,
         stripe_Request: stripe_Request,
         createdOn: new Date(),
         packageId: packageId,
@@ -67,7 +71,6 @@ Meteor.methods({
       };
       let currentUserRec = Meteor.users.findOne(this.userId);
       Meteor.call("purchases.updatePurchases", { payload, recordId });
-      let x = new Date().getTime();
       let memberData = {
         firstName:
           currentUserRec.profile.name || currentUserRec.profile.firstName,
@@ -81,18 +84,7 @@ Meteor.methods({
         sendMeSkillShapeNotification: true,
         activeUserId: currentUserRec._id,
         createdBy: "",
-        inviteAccepted: false,
-        packageDetails: {
-          [x]: {
-            packageName: desc,
-            createdOn: new Date(),
-            packageType: packageType,
-            packageId: packageId,
-            expDuration: expDuration,
-            expPeriod: expPeriod,
-            noClasses: noClasses
-          }
-        }
+        inviteAccepted: false
       };
       Meteor.call(
         "schoolMemberDetails.addNewMember",
@@ -104,7 +96,6 @@ Meteor.methods({
             userId,
             packageId,
             (error, result) => {
-              console.log("error and result", error, result);
               status = result;
               payload = { memberId: memberId, packageStatus: status };
               Meteor.call("purchases.updatePurchases", { payload, recordId });
@@ -112,9 +103,9 @@ Meteor.methods({
           );
         }
       );
-      stripe.balance.retrieve(function(err, balance) {
-        console.log("------------balace--------------", balance);
-      });
+      // stripe.balance.retrieve(function(err, balance) {
+      //   console.log("------------balace--------------", balance);
+      // });
       return "Payment Successfully Done";
     } catch (error) {
       payload = {

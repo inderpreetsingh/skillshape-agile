@@ -1,7 +1,7 @@
 import React from "react";
 import { dateFriendly } from "/imports/util";
-import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import { createContainer } from "meteor/react-meteor-data";
+import Purchases from "/imports/api/purchases/fields";
 class SubscriptionsDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -21,8 +21,7 @@ class SubscriptionsDetails extends React.Component {
       >
         <div style={{ margin: "10px" }}>Active Subscription</div>
         {memberInfo &&
-          memberInfo.packageDetails &&
-          Object.values(memberInfo.packageDetails).map(value => {
+          memberInfo.map(index => {
             return (
               <center>
                 <div
@@ -38,12 +37,12 @@ class SubscriptionsDetails extends React.Component {
                   }}
                 >
                   <div style={{ margin: "10px" }}>
-                    {value && value.packageName
-                      ? value.packageName
+                    {index && index.packageName
+                      ? index.packageName
                       : "Unavilable"}
                     <br />
-                    {value && value.createdOn
-                      ? dateFriendly(value.createdOn, "MMMM Do YYYY, h:mm:ss a")
+                    {index && index.startDate
+                      ? dateFriendly(index.startDate, "MMMM Do YYYY, h:mm:ss a")
                       : "Unavilable"}
                   </div>
                   {"  "}
@@ -57,22 +56,10 @@ class SubscriptionsDetails extends React.Component {
                       borderRadius: "14px"
                     }}
                   >
-                    {(value &&
-                      value.expDuration &&
-                      "Duration  " + value.expDuration + ",") ||
+                    {(index &&
+                      index.endDate &&
+                      dateFriendly(index.endDate, "MMMM Do YYYY, h:mm:ss a")) ||
                       " "}
-                    {(value &&
-                      value.expPeriod &&
-                      "Period " + value.expPeriod + ",") ||
-                      ""}
-                    {(value &&
-                      value.noClasses &&
-                      "Classes " + value.noClasses) ||
-                      ""}
-                    {!value.expDuration &&
-                      !value.expPeriod &&
-                      !value.noClasses &&
-                      "1 Month"}
                   </div>
                 </div>
               </center>
@@ -82,21 +69,21 @@ class SubscriptionsDetails extends React.Component {
         {/* <PackageDetailsTable>
         {memberInfo &&
           memberInfo.packageDetails &&
-          Object.values(memberInfo.packageDetails).map(value => {
+          Object.values(memberInfo.packageDetails).map(index => {
             return (
               <TableRow>
                 <TableCell style={style.w150}>
                   {}
-                  {value && value.createdOn
+                  {index && index.createdOn
                     ? dateFriendly(
-                        value.createdOn,
+                        index.createdOn,
                         "MMMM Do YYYY, h:mm:ss a"
                       )
                     : "Unavilable"}
                 </TableCell> */}
         {/* <TableCell style={style.w150}>
-                  {value && value.packageName
-                    ? value.packageName
+                  {index && index.packageName
+                    ? index.packageName
                     : "Unavilable"}
                 </TableCell>
               </TableRow>
@@ -115,21 +102,25 @@ class SubscriptionsDetails extends React.Component {
   }
 }
 export default createContainer(props => {
-  const filter = {
-    activeUserId: props.activeUserId
-  };
-  let memberInfo = [];
-  if (props && props.activeUserId) {
-    let subscription = Meteor.subscribe(
-      "schoolMemberDetails.getschoolMemberDetailsByMemberId",
-      filter
-    );
-    memberInfo = SchoolMemberDetails.findOne();
+  let filter;
+  if (props && props.memberId) {
+    filter = {
+      memberId: props.memberId
+    };
   }
-  if (props && props.memberInfo) {
-    memberInfo = props.memberInfo;
+  if (props && props.userId) {
+    filter = {
+      userId: props.userId
+    };
   }
 
+  let memberInfo = [];
+  let subscription = Meteor.subscribe(
+    "purchases.getPurchasesListByMemberId",
+    filter
+  );
+  memberInfo = Purchases.find().fetch();
+  console.log("memberInfo", memberInfo);
   return {
     memberInfo,
     props

@@ -13,7 +13,7 @@ export default class Mysubscriptions extends React.Component {
         {this.props &&
           this.props.currentUser &&
           this.props.currentUser._id && (
-            <SubscriptionDetails activeUserId={this.props.currentUser._id} />
+            <SubscriptionDetails userId={this.props.currentUser._id} />
           )}
       </div>
     );
