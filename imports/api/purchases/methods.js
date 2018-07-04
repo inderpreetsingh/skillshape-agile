@@ -28,7 +28,6 @@ Meteor.methods({
       userId: userId,
       packageId: packageId
     }).fetch();
-    console.log("result of checkExisitingPackagePurchases,.,.,.,.,", result);
     let packageStatus = "active";
     if (result) {
       result.map(current => {

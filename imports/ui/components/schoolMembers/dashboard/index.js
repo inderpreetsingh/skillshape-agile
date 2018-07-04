@@ -426,21 +426,7 @@ class DashBoardView extends React.Component {
     console.log("this.state.purchaseData", this.state.purchaseData);
     this.setState({
       memberInfo: {
-        _id: memberInfo._id,
-        memberId: memberInfo._id,
-        name: memberInfo.firstName,
-        phone: memberInfo.phone,
-        email: memberInfo.email,
-        schoolId: memberInfo.schoolId,
-        adminNotes: memberInfo.adminNotes,
-        classmatesNotes: memberInfo.classmatesNotes,
-        birthYear: memberInfo.birthYear,
-        lastName: memberInfo.lastName,
-        classTypeIds: memberInfo.classTypeIds,
-        firstName: memberInfo.firstName,
-        pic: memberInfo.pic,
-        studentWithoutEmail: memberInfo.studentWithoutEmail,
-        packageDetails: memberInfo.packageDetails
+        memberId: memberInfo._id
       },
       schoolMemberDetailsFilters: { _id: memberId }
     });
@@ -698,14 +684,9 @@ class DashBoardView extends React.Component {
                 }
               />
               {memberInfo &&
-<<<<<<< ab445aed64cda830811333bed0fffe195fd72b09
                 Meteor.settings.public.paymentEnabled && (
                   <SubscriptionDetails memberInfo={memberInfo} />
                 )}
-=======
-                schoolAdmin &&
-                slug && <SubscriptionDetails memberInfo={memberInfo} />}
->>>>>>> packageStatus(memberStatus) correctly added for purchases collections
               {/* <div
                 style={{
                   height: "300px",

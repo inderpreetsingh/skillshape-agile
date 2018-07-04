@@ -6,6 +6,18 @@ export const PurchasesSchema = new SimpleSchema({
     type: String,
     optional: true
   },
+  emailId: {
+    type: String,
+    optional: true
+  },
+  userName: {
+    type: String,
+    optional: true
+  },
+  packageName: {
+    type: String,
+    optional: true
+  },
   stripe_Request: {
     type: Object,
     optional: true,
