@@ -10,11 +10,13 @@
       "Amplitude": { "apiKey": "92093780eecbbd214c300694e1910214" }
     },
     "DevelopmentSiteCaptchKey": "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
-    "stripeClientId": "ca_ChCRiYcffQXD6VnZonJ91zaljBbQRQQL"
+    "stripeClientId": "ca_ChCRiYcffQXD6VnZonJ91zaljBbQRQQL",
+    "paymentEnabled": false
   },
   "stripe": {
     "PRIVATE_KEY": "sk_test_GI9ZJ9DjWz23AoqjlOusnSIO"
   },
+  "paymentEnabled": false,
 
   "AWSAccessKeyId": "AKIAIUDOMFJ4ZGYKIO6Q",
   "AWSSecretAccessKey": "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",

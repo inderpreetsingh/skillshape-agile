@@ -17,6 +17,35 @@ class SchoolSubMenu extends React.Component {
     this.setState({ open: !this.state.open });
   };
 
+  getChildData = school => {
+    let childData = [
+      {
+        name: "Home Page",
+        link: school.link,
+        iconName: "home"
+      },
+      {
+        name: "Edit",
+        link: school.schoolEditLink,
+        iconName: "mode_edit"
+      },
+      {
+        name: "Members",
+        link: `${school.link}/members`,
+        iconName: "people"
+      }
+    ];
+    // stripe enabled then need to show financial tab...
+    if (Meteor.settings.public.paymentEnabled) {
+      childData.push({
+        name: "Financials",
+        link: `${school.link}/financials`,
+        iconName: "attach_money"
+      });
+    }
+    return childData;
+  };
+
   render() {
     const { data, classes } = this.props;
     let childData = null;
@@ -27,6 +56,7 @@ class SchoolSubMenu extends React.Component {
           <div>
             {size(data) < 6 ? (
               data.map((school, index) => {
+                let childData = this.getChildData(school);
                 return (
                   <NestedNavItems
                     key={`${school.name}-${index}`}
@@ -35,28 +65,7 @@ class SchoolSubMenu extends React.Component {
                     nameLimit={22}
                     classes={classes}
                     iconName="school"
-                    childData={[
-                      {
-                        name: "Home Page",
-                        link: school.link,
-                        iconName: "home"
-                      },
-                      {
-                        name: "Edit",
-                        link: school.schoolEditLink,
-                        iconName: "mode_edit"
-                      },
-                      {
-                        name: "Members",
-                        link: `${school.link}/members`,
-                        iconName: "people"
-                      },
-                      {
-                        name: "Financials",
-                        link: `${school.link}/financials`,
-                        iconName: "attach_money"
-                      }
-                    ]}
+                    childData={childData}
                     onClick={this.props.onClick}
                   />
                 );
@@ -81,6 +90,7 @@ class SchoolSubMenu extends React.Component {
                 >
                   <List className={classes.nestedLevel2} disablePadding>
                     {data.map((school, index) => {
+                      let childData = this.getChildData(school);
                       return (
                         <NestedNavItems
                           key={`${school.name}-${index}`}
@@ -89,28 +99,7 @@ class SchoolSubMenu extends React.Component {
                           nameLimit={13}
                           iconName="school"
                           classes={classes}
-                          childData={[
-                            {
-                              name: "Home Page",
-                              link: school.link,
-                              iconName: "home"
-                            },
-                            {
-                              name: "Edit",
-                              link: school.schoolEditLink,
-                              iconName: "mode_edit"
-                            },
-                            {
-                              name: "Members",
-                              link: `${school.link}/members`,
-                              iconName: "people"
-                            },
-                            {
-                              name: "Financials",
-                              link: `${school.link}/financials`,
-                              iconName: "attach_money"
-                            }
-                          ]}
+                          childData={childData}
                           onClick={this.props.onClick}
                         />
                       );

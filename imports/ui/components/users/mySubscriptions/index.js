@@ -12,7 +12,8 @@ export default class Mysubscriptions extends React.Component {
       <div>
         {this.props &&
           this.props.currentUser &&
-          this.props.currentUser._id && (
+          this.props.currentUser._id &&
+          Meteor.settings.public.paymentEnabled && (
             <SubscriptionDetails activeUserId={this.props.currentUser._id} />
           )}
       </div>

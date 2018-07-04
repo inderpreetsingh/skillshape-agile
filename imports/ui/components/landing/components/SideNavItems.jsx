@@ -120,132 +120,137 @@ const LogOutUserSideNav = props => (
   </Fragment>
 );
 
-const LoginUserSideNav = props => (
-  <Fragment>
-    {console.log("this.props in side navitems", props)}
-    <NestedNavItems
-      button
-      name={getUserFullName(props.currentUser)}
-      classes={props.classes}
-      iconName="person"
-      childData={[
-        {
-          name: "My Profile",
-          link: `/profile/${Meteor.userId()}`,
-          iconName: "account_circle"
-        },
-        {
-          name: "My Media",
-          link: `/media/${Meteor.userId()}`,
-          iconName: "collections"
-        },
-        {
-          name: "My Subscriptions",
-          link: `/subsciptions/${Meteor.userId()}`,
-          iconName: "collections"
-        },
-        {
-          name: "Change Password",
-          iconName: "lock_open",
-          onClick: props.showChangePassword
-        }
-      ]}
-      onClick={props.childItemOnClick}
-    />
-    <SideNavItem
-      button
-      menuListItemText={props.classes.menuListItemText}
-      name="My Calendar"
-      iconName="perm_contact_calendar"
-      onClick={() => props.childItemOnClick("/MyCalendar")}
-    />
-    <SideNavItem
-      button
-      menuListItemText={props.classes.menuListItemText}
-      name="My Classmates"
-      iconName="find_in_page"
-      onClick={() => props.childItemOnClick("/classmates")}
-    />
-    {!isEmpty(props.mySchool) && (
-      <SchoolSubMenu
-        data={props.mySchool}
+const LoginUserSideNav = props => {
+  let childData = [
+    {
+      name: "My Profile",
+      link: `/profile/${Meteor.userId()}`,
+      iconName: "account_circle"
+    },
+    {
+      name: "My Media",
+      link: `/media/${Meteor.userId()}`,
+      iconName: "collections"
+    },
+    {
+      name: "Change Password",
+      iconName: "lock_open",
+      onClick: props.showChangePassword
+    }
+  ];
+  if (Meteor.settings.public.paymentEnabled) {
+    childData.push({
+      name: "My Subscriptions",
+      link: `/subsciptions/${Meteor.userId()}`,
+      iconName: "collections"
+    });
+  }
+  return (
+    <Fragment>
+      {console.log("this.props in side navitems", props)}
+      <NestedNavItems
+        button
+        name={getUserFullName(props.currentUser)}
         classes={props.classes}
+        iconName="person"
+        childData={childData}
         onClick={props.childItemOnClick}
-        currentUser={props.currentUser}
       />
-    )}
+      <SideNavItem
+        button
+        menuListItemText={props.classes.menuListItemText}
+        name="My Calendar"
+        iconName="perm_contact_calendar"
+        onClick={() => props.childItemOnClick("/MyCalendar")}
+      />
+      <SideNavItem
+        button
+        menuListItemText={props.classes.menuListItemText}
+        name="My Classmates"
+        iconName="find_in_page"
+        onClick={() => props.childItemOnClick("/classmates")}
+      />
+      {!isEmpty(props.mySchool) && (
+        <SchoolSubMenu
+          data={props.mySchool}
+          classes={props.classes}
+          onClick={props.childItemOnClick}
+          currentUser={props.currentUser}
+        />
+      )}
 
-    <NestedNavItems
-      button
-      name="Classes Attending"
-      classes={props.classes}
-      iconName="account_balance"
-      childData={props.connectedSchool}
-      onClick={props.childItemOnClick}
-    />
-    <SideNavItem
-      button
-      menuListItemText={props.classes.menuListItemText}
-      name="Find a School"
-      iconName="find_in_page"
-      onClick={() => props.childItemOnClick("/") /*browserHistory.push('/')*/}
-    />
-    <SideNavItem
-      button
-      menuListItemText={props.classes.menuListItemText}
-      name="Claim a School"
-      iconName="assignment"
-      onClick={
-        () =>
-          props.childItemOnClick(
-            "/claimSchool"
-          ) /*browserHistory.push('/claimSchool')*/
-      }
-    />
-    <SideNavItem
-      button
-      menuListItemText={props.classes.menuListItemText}
-      name="Send us feedback"
-      iconName="message"
-      onClick={
-        () =>
-          props.childItemOnClick(
-            "/contact-us"
-          ) /*browserHistory.push('/contact-us')*/
-      }
-    />
-    <SideNavItem
-      button
-      menuListItemText={props.classes.menuListItemText}
-      name="Add Schools"
-      iconName="add_box"
-      onClick={
-        () =>
-          props.childItemOnClick(
-            "/claimSchool"
-          ) /*browserHistory.push('/claimSchool')*/
-      }
-    />
-    {checkSuperAdmin(props.currentUser) && (
-      <Fragment>
-        <SideNavItem
-          button
-          menuListItemText={props.classes.menuListItemText}
-          name="Upload Schools"
-          iconName="file_upload"
-          onClick={() => props.childItemOnClick("/SchoolUpload")}
-        />
-        <SideNavItem
-          button
-          menuListItemText={props.classes.menuListItemText}
-          name="Manage Users"
-          iconName="supervisor_account"
-          onClick={() => props.childItemOnClick("/manage-users")}
-        />
-      </Fragment>
-    )}
-  </Fragment>
-);
+      <NestedNavItems
+        button
+        name="Classes Attending"
+        classes={props.classes}
+        iconName="account_balance"
+        childData={props.connectedSchool}
+        onClick={props.childItemOnClick}
+      />
+      <SideNavItem
+        button
+        menuListItemText={props.classes.menuListItemText}
+        name="Find a School"
+        iconName="find_in_page"
+        onClick={() => props.childItemOnClick("/") /*browserHistory.push('/')*/}
+      />
+      <SideNavItem
+        button
+        menuListItemText={props.classes.menuListItemText}
+        name="Claim a School"
+        iconName="assignment"
+        onClick={
+          () =>
+            props.childItemOnClick(
+              "/claimSchool"
+            ) /*browserHistory.push('/claimSchool')*/
+        }
+      />
+      <SideNavItem
+        button
+        menuListItemText={props.classes.menuListItemText}
+        name="Send us feedback"
+        iconName="message"
+        onClick={
+          () =>
+            props.childItemOnClick(
+              "/contact-us"
+            ) /*browserHistory.push('/contact-us')*/
+        }
+      />
+      <SideNavItem
+        button
+        menuListItemText={props.classes.menuListItemText}
+        name="Add Schools"
+        iconName="add_box"
+        onClick={
+          () =>
+            props.childItemOnClick(
+              "/claimSchool"
+            ) /*browserHistory.push('/claimSchool')*/
+        }
+      />
+      {checkSuperAdmin(props.currentUser) && (
+        <Fragment>
+          <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Upload Schools"
+            iconName="file_upload"
+            onClick={() => props.childItemOnClick("/SchoolUpload")}
+          />
+          <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
+            name="Manage Users"
+            iconName="supervisor_account"
+            onClick={() => props.childItemOnClick("/manage-users")}
+          />
+        </Fragment>
+      )}
+    </Fragment>
+  );
+};
 
 class SideNavItems extends React.Component {
   state = {

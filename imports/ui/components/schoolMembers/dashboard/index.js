@@ -696,7 +696,10 @@ class DashBoardView extends React.Component {
                   this.handleMemberDetailsToRightPanel
                 }
               />
-              {memberInfo && <SubscriptionDetails memberInfo={memberInfo} />}
+              {memberInfo &&
+                Meteor.settings.public.paymentEnabled && (
+                  <SubscriptionDetails memberInfo={memberInfo} />
+                )}
               {/* <div
                 style={{
                   height: "300px",
