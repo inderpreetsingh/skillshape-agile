@@ -17,7 +17,7 @@ import Landing from "/imports/ui/components/landing/index.jsx";
 import ClassType from "/imports/ui/components/landing/ClassType.jsx";
 import NoResults from "/imports/ui/components/landing/components/NoResults";
 import ClassTypeView from "/imports/ui/components/classTypeView";
-import SchoolSuggestions from "/imports/ui/components/landing/components/schoolSuggestions/index.jsx";
+import SchoolSuggestionsView from "/imports/ui/components/landing/components/schoolSuggestions/index.jsx";
 import School from "/imports/ui/components/landing/School.jsx";
 import NoPageFound from "/imports/ui/components/landing/components/NoPageFound";
 
@@ -124,8 +124,8 @@ export default (Routes = componentLoader(props => (
       <Route path="/" component={AdminLayout}>
         <Route
           path="/school-suggestions"
-          name="SchoolSuggestions"
-          component={SchoolSuggestions}
+          name="SchoolSuggestionsView"
+          component={SchoolSuggestionsView}
           />
         <Route
           path="/SchoolUpload"
