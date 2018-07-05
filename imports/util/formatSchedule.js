@@ -37,7 +37,7 @@ export const formatClassTimesData = (classTimesData, hidePastDates = true) => {
 
 export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
    const classTimesData = {...data};
-    debugger;
+    // debugger;
     // console.log("formatDataBasedOnScheduleType________", data);
     let classTimes;
     if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
@@ -118,9 +118,8 @@ const filterOutAndAddTotalClassTimes = (classTimes) => {
 
 
 const removePastTimesFromSchedule = (classTimes,scheduleType,scheduleData) => {
-  // console.log(classTimes);
+  console.log(classTimes);
   const currentDate = new Date();
-
   if(scheduleType === 'recurring') {
     // console.log(moment(currentDate),moment(currentDate).isBetween(moment(scheduleData.startDate), moment(scheduleData.endDate)));
     if(moment(currentDate).isBetween(moment(scheduleData.startDate), moment(scheduleData.endDate)) ) {

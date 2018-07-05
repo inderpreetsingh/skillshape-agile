@@ -399,8 +399,17 @@ class ClassDetailModal extends React.Component {
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(eventData,false); // false is for not hiding the past schedule types.
     const classTimesData = ClassTimes.find({classTypeId: eventData.classTypeId});
-    const allFormattedClassTimeDetails = formatClassTimesData(classTimesData,false).filter(classTime => classTime._id != eventData.classTimeId) //false is for not hiding the past schedule types;
+    const allFormattedClassTimeDetails = formatClassTimesData(classTimesData,true).filter(classTime => {
+      debugger;
+        if(classTime._id != eventData.classTimeId
+          && classTime.formattedClassTimesDetails
+          && classTime.formattedClassTimesDetails.totalClassTimes > 0) {
+          return true;
+        }
+        return false;
+    }) // false is for not hiding the past schedule types;
     classTypeData.formattedClassTimesDetails = formattedClassTimesDetails;
+    console.log(allFormattedClassTimeDetails,"l;;;;;;;;;;;;;;;;;;")
     // console.log(classTypeData,eventData,formattedClassTimesDetails,"event ................................. data");
     return (
       <Dialog
