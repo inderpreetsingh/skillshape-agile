@@ -78,6 +78,11 @@ export default (Routes = componentLoader(props => (
         <Route path="/profile/:id" name="MyProfile" component={MyProfile} />
         <Route path="/media/:id" name="MyMedia" component={MyMedia} />
         <Route
+          path="/school-suggestions"
+          name="SchoolSuggestionsView"
+          component={SchoolSuggestionsView}
+          />
+        <Route
           path="/subsciptions/:id"
           name="MySubscriptions"
           component={MySubsciption}
@@ -122,11 +127,6 @@ export default (Routes = componentLoader(props => (
       </Route>
 
       <Route path="/" component={AdminLayout}>
-        <Route
-          path="/school-suggestions"
-          name="SchoolSuggestionsView"
-          component={SchoolSuggestionsView}
-          />
         <Route
           path="/SchoolUpload"
           name="SchoolUpload"
