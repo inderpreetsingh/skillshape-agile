@@ -7,6 +7,18 @@ import School from "/imports/api/school/fields";
 import EmailSignature from "./signature.js";
 import { getUserFullName } from "/imports/util/getUserData";
 
+export const sendNewSchoolSuggestionEmail = function({
+  newSuggestionLink
+}) {
+  Email.send({
+    to: config.skillshapeAdminEmail,
+    from: "Notices@SkillShape.com",
+    subject: "New School Suggestion",
+    html: `Dear admin, <br><br>You have recieved a new school suggestion. In order to view all the suggestions, click the following link.<br><br>
+    ${newSuggestionLink}`
+  })
+}
+
 export const sendPackagePurchaseEmail = function({
   to,
   buyer,

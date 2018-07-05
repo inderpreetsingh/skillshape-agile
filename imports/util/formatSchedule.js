@@ -118,9 +118,8 @@ const filterOutAndAddTotalClassTimes = (classTimes) => {
 
 
 const removePastTimesFromSchedule = (classTimes,scheduleType,scheduleData) => {
-  // console.log(classTimes);
+  console.log(classTimes);
   const currentDate = new Date();
-
   if(scheduleType === 'recurring') {
     // console.log(moment(currentDate),moment(currentDate).isBetween(moment(scheduleData.startDate), moment(scheduleData.endDate)));
     if(moment(currentDate).isBetween(moment(scheduleData.startDate), moment(scheduleData.endDate)) ) {
