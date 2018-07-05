@@ -14,7 +14,6 @@ SyncedCron.add({
       endDate: { $lte: new Date() }
     }).fetch();
     let packageIds = [];
-<<<<<<< HEAD
     activePurchasesData.map(currentPurchase => {
       packageIds.push(currentPurchase._id);
       sendPackageExpiredEmail(
@@ -32,46 +31,12 @@ SyncedCron.add({
         },
         { $set: { packageStatus: "active" } }
       );
-=======
-    let expiredUserDetails = [];
-    activePurchasesData.map(currentPurchase => {
-      packageIds.push(currentPurchase._id);
-      currentPurchase &&
-        currentPurchase.emailId &&
-        expiredUserDetails.push({
-          emailId: currentPurchase.emailId,
-          userName: currentPurchase.userName,
-          packageName: currentPurchase.packageName
-        });
-      let packageId = currentPurchase.packageId;
-      let userId = currentPurchase.userId;
-      let inActivePurchase = Purchases.findOne({
-        packageStatus: "inactive",
-        packageId: currentPurchase.packageId,
-        userId: userId
-      });
-      if (inActivePurchase) {
-        Purchases.update(
-          {
-            packageStatus: "inactive",
-            packageId: currentPurchase.packageId,
-            userId: userId
-          },
-          { $set: { packageStatus: "active" } }
-        );
-      }
->>>>>>> 2a0e99a51cac58511e68bbae5d8c491de4436463
     });
     if (!isEmpty(packageIds)) {
       Purchases.update(
         { _id: { $in: packageIds } },
         { $set: { packageStatus: "expired" } }
       );
-<<<<<<< HEAD
-=======
-      sendPackageExpiredEmail(expiredUserDetails);
-      console.log("Email send to these users", expiredUserDetails);
->>>>>>> 2a0e99a51cac58511e68bbae5d8c491de4436463
     }
   }
 });
