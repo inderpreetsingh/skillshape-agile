@@ -1,4 +1,6 @@
 import config from '/imports/config';
+import SkillCategory from '/imports/api/skillCategory/fields.js';
+import SkillSubject from '/imports/api/skillSubject/fields.js';
 
 const SchoolSuggestion = new Mongo.Collection(config.collections.schoolSuggestion);
 
@@ -55,5 +57,8 @@ export const schoolSuggestionSchema = new SimpleSchema({
 });
 
 SchoolSuggestion.attachSchema(schoolSuggestionSchema);
+
+SchoolSuggestion.join(SkillCategory,'skillCategoryIds','skillCategories',['name']);
+SchoolSuggestion.join(SkillSubject,'skillSubjectIds','skillSubjects',['name']);
 
 export default SchoolSuggestion;
