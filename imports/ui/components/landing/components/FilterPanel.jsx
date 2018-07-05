@@ -138,19 +138,21 @@ class FilterPanel extends Component {
         }
       }
 
-      componentDidMount = () => {
-        window.addEventListener("resize",this.handleChangeInScreenSize);
-      }
-      componentWillUnMount = () => {
-        window.removeEventListener("resize",this.handleChangeInScreenSize);
-      }
 
-      componentWillReceiveProps = (nextProps, nextState) => {
-        // console.log("componentWillReceiveProps",nextProps, nextState)
-        if((this.props.skillTypeText) !== (nextProps.skillTypeText)) {
-            this.setState({skillTypeText:nextProps.skillTypeText});
-        }
+
+    componentWillReceiveProps = (nextProps, nextState) => {
+      // console.log("componentWillReceiveProps",nextProps, nextState)
+      if((this.props.skillTypeText) !== (nextProps.skillTypeText)) {
+          this.setState({skillTypeText:nextProps.skillTypeText});
       }
+    }
+
+    componentDidMount = () => {
+      window.addEventListener("resize",this.handleChangeInScreenSize);
+    }
+    componentWillUnMount = () => {
+      window.removeEventListener("resize",this.handleChangeInScreenSize);
+    }
 
     componentWillMount() {
         const dataSourceCategories = Meteor.call('getAllSkillCategories', (err,result) => {
@@ -250,10 +252,12 @@ class FilterPanel extends Component {
 
     renderFiltersForDialogBox = () => {
       // console.log("------ renderFiltersForDialogBox -----",this.props)
+      const {filtersForSuggestion} = this.props;
       return (
         <Grid container spacing={24}>
             {/* 1rst Row */}
-            <Grid item xs={12} sm={12} md={12}>
+
+            {!filtersForSuggestion && <Grid item xs={12} sm={12} md={12}>
               {/*<div>skill type text filter :</div>*/}
               <MaterialInputWrapper>
                 <IconInput
@@ -262,19 +266,20 @@ class FilterPanel extends Component {
                   onChange={(event) => {this.handleSkillTypeText(event)}}
                />
               </MaterialInputWrapper>
-            </Grid>
+            </Grid>}
+
             <Grid item xs={12} sm={6}>
-            <MaterialInputWrapper>
-                <IconInput
-                    value={get(this.props, "filters.locationName", "")}
-                    onChange={(event)=> this.props.locationInputChanged(event, "filters", null)}
-                    iconName='location_on'
-                    defaultValue={this.props.currentAddress}
-                    googlelocation={true}
-                    labelText="Location"
-                    onLocationChange={(event) => this.props.onLocationChange(event, "filters", null)}
-               />
-            </MaterialInputWrapper>
+              <MaterialInputWrapper>
+                  <IconInput
+                      value={get(this.props, "filters.locationName", "")}
+                      onChange={(event)=> this.props.locationInputChanged(event, "filters", null)}
+                      iconName='location_on'
+                      defaultValue={this.props.currentAddress}
+                      googlelocation={true}
+                      labelText="Location"
+                      onLocationChange={(event) => this.props.onLocationChange(event, "filters", null)}
+                 />
+              </MaterialInputWrapper>
             </Grid>
 
 
@@ -376,7 +381,19 @@ class FilterPanel extends Component {
               />
             </Grid>
 
-            <Grid item item xs={12} sm={6} >
+            {filtersForSuggestion ?
+              <Grid item xs={12} sm={6} >
+               <FilterPanelAction>
+                  <PrimaryButton
+                      fullWidth
+                      label="Give Suggestion"
+                      icon={true}
+                      iconName="sentiment_satisfied"
+                      onClick={this.props.onGiveSuggestion}/>
+                </FilterPanelAction>
+              </Grid>
+              :
+            <Grid item xs={12} sm={6} >
              <FilterPanelAction>
                 <PrimaryButton
                     fullWidth
@@ -385,7 +402,7 @@ class FilterPanel extends Component {
                     iconName="refresh"
                     onClick={() => {this.props.onModalClose();this.props.removeAllFilters();}}/>
               </FilterPanelAction>
-            </Grid>
+            </Grid> }
             <Grid item xs={12} sm={6}>
               <FilterPanelAction>
                 <PrimaryButton
@@ -429,16 +446,21 @@ const CssTransitionGroupWrapperGrid = (props) => (
 FilterPanel.propTypes = {
   handleShowMoreFiltersButtonClick: PropTypes.func,
   filtersInDialogBox: PropTypes.bool,
+  filtersForSuggestion: PropTypes.bool,
   displayChangeViewButton: PropTypes.bool,
+  giveSchoolSuggestion: PropTypes.func,
   fullWidth: PropTypes.bool,
   stickyPosition: PropTypes.bool,
-  mapView: PropTypes.bool
+  mapView: PropTypes.bool,
+  onGiveSuggestion: PropTypes.func
 }
 
 FilterPanel.defaultProps = {
   filtersInDialogBox: false,
+  filtersForSuggestion: false,
   displayChangeViewButton: true,
-  fullWidth: false
+  fullWidth: false,
+  onGiveSuggestion: () => {}
 }
 
 export default FilterPanel;

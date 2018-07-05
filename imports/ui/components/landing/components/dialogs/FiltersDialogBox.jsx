@@ -107,9 +107,12 @@ class FiltersDialogBox extends Component {
         const {
             classes,
             open,
+            title,
             fullScreen,
             onModalClose,
-            filterPanelProps
+            filterPanelProps,
+            filtersForSuggestion,
+            onGiveSuggestion,
         } = this.props;
 
         return(
@@ -124,7 +127,7 @@ class FiltersDialogBox extends Component {
                 <MuiThemeProvider theme={muiTheme}>
                   <DialogTitleContainer>
                     <DialogTitleWrapper>
-                      Filter  Content
+                      {title}
                     </DialogTitleWrapper>
                     <IconButton color="primary" onClick={onModalClose} classes={{root: classes.iconButton}}>
                         <ClearIcon/>
@@ -132,7 +135,12 @@ class FiltersDialogBox extends Component {
                   </DialogTitleContainer>
 
                   <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
-                    <FilterPanel onModalClose={onModalClose}  {...filterPanelProps} filtersInDialogBox/>
+                    <FilterPanel
+                      onModalClose={onModalClose}
+                      {...filterPanelProps}
+                      filtersInDialogBox
+                      onGiveSuggestion={onGiveSuggestion}
+                      filtersForSuggestion={filtersForSuggestion}/>
                   </DialogActions>
 
                 </MuiThemeProvider>
@@ -145,9 +153,16 @@ FiltersDialogBox.propTypes = {
   onModalClose: PropTypes.func,
   classes: PropTypes.object.isRequired,
   filterPanelProps: PropTypes.object,
+  filtersForSuggestion: PropTypes.bool,
+  onGiveSuggestion: PropTypes.func,
   open: PropTypes.bool,
   errorText: PropTypes.string,
   unsetError: PropTypes.func,
+}
+
+FiltersDialogBox.defaultProps = {
+  title: 'Filter Content',
+  onGiveSuggestion: () => {}
 }
 
 export default withMobileDialog()(withStyles(styles)(FiltersDialogBox));

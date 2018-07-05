@@ -93,7 +93,7 @@ const NoResults = (props) => (
     <PrimaryButton
       fullWidth={true}
       onClick={props.schoolSuggestionButtonClick}
-      label="Give Suggestion"
+      label="Suggest School"
       icon
       iconName="sentiment_satisfied"
       noMarginBottom />

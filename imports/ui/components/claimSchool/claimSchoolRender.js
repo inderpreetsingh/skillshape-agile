@@ -11,13 +11,13 @@ import styled from 'styled-components';
 import Button from 'material-ui/Button';
 
 
-
 import ClaimSchoolList  from "./claimSchoolList";
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 
+import toastrModal from '/imports/util';
 
 const Wrapper = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ const FormSubmitButtonWrapper =styled.div`
 const TextWrapper =styled.div`
 `;
 
-export default function () {
+export default function (props) {
    return (
        <DocumentTitle title={this.props.route.name}>
        <div>
@@ -50,6 +50,32 @@ export default function () {
               onClose={() => this.setState({showConfirmationModal: false})}
           />
         }
+        {this.state.schoolSuggestionDialogBox &&
+          <FiltersDialogBox
+              open={this.state.schoolSuggestionDialogBox}
+              title="Give Suggestion"
+              onModalClose={this.handleSchoolSuggestionDialogState(false)}
+              filtersForSuggestion={true}
+              onGiveSuggestion={this.handleGiveSuggestion}
+              filterPanelProps={{
+                ref: "ClaimSchoolFilter",
+                onLocationChange: this.onLocationChange,
+                handleSchoolNameChange: this.handleSchoolNameChange,
+                locationInputChanged: this.locationInputChanged,
+                filters: this.state.filters,
+                tempFilters: this.state.tempFilters,
+                fliterSchoolName: this.fliterSchoolName,
+                filterAge: this.filterAge,
+                filterGender: this.filterGender,
+                skillLevelFilter: this.skillLevelFilter,
+                perClassPriceFilter: this.perClassPriceFilter,
+                pricePerMonthFilter: this.pricePerMonthFilter,
+                collectSelectedSkillCategories: this.collectSelectedSkillCategories,
+                collectSelectedSkillSubject: this.collectSelectedSkillSubject,
+              }}
+          />
+        }
+
         {this.state.filterPanelDialogBox &&
           <FiltersDialogBox
               open={this.state.filterPanelDialogBox}
@@ -73,6 +99,7 @@ export default function () {
               }}
           />
         }
+
         <Sticky activeClassName={"filter-panel-sticked"} innerZ={1} onStateChange={this.handleFixedToggle}>
             {/*<ClaimSchoolFilter
                 stickyPosition={this.state.sticky}
@@ -115,6 +142,7 @@ export default function () {
             removeAllFilters={this.removeAllFilters}
             handleClaimASchool={this.handleClaimASchool}
             onStartNewListingButtonClick={this.showConfirmationModal}
+            handleSchoolSuggestion={this.handleSchoolSuggestionDialogState(true)}
            />
        </div>
        </DocumentTitle>

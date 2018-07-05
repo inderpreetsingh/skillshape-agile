@@ -28,6 +28,7 @@ import "/imports/api/packagesRequest/methods";
 import "/imports/api/classTypeLocationRequest/methods";
 import "/imports/api/stripe/methods";
 import "/imports/api/purchases/methods";
+import "/imports/api/schoolSuggestion/methods";
 // All publication imported over here
 
 import "/imports/api/modules/server/publication";

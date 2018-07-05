@@ -1,8 +1,8 @@
 import React from "react";
 var ReactDOM = require("react-dom");
 import {browserHistory} from 'react-router';
-import Events from '/imports/util/events';
 
+import Events from '/imports/util/events';
 
 export default class ClaimSchoolBase extends React.Component {
     constructor(props) {
@@ -39,11 +39,62 @@ export default class ClaimSchoolBase extends React.Component {
         }
     };
 
+    handleGiveSuggestion = () => {
+      console.log(this.state,"this.state");
+      const { toastr } = this.props;
+      const {experienceLevel,
+        locationName,
+        schoolName,
+        skillCategoryIds,
+        skillSubjectIds,
+        defaultSkillSubject,
+        _classPrice,
+        _monthPrice} = this.state.filters;
+
+        const data = {
+          experienceLevel,
+          locationName,
+          schoolName,
+          skillCategoryIds,
+          skillSubjectIds,
+        }
+
+        if(_monthPrice) {
+          data.monthPrice = {
+            min: _monthPrice[0],
+            max: _monthPrice[1]
+          }
+        }
+
+        if(_classPrice) {
+          data.classPrice = {
+            min: _classPrice[0],
+            max: _classPrice[1]
+          }
+        }
+
+        console.log(data,"data................")
+
+        Meteor.call('schoolSuggestion.addSuggestion',data,(err,res) => {
+          if(err) {
+            toastr.error(err.reason,"Error");
+          }else {
+            toastr.success("Thanks alot for your suggestion","success");
+            this.handleSchoolSuggestionDialogState(false)(); // closing the modal.
+          }
+        });
+    }
 
     handleFiltersDialogBoxState = (state) => {
         this.setState({
             filterPanelDialogBox: state
         })
+    }
+
+    handleSchoolSuggestionDialogState = (state) => () => {
+      this.setState({
+        schoolSuggestionDialogBox: state
+      })
     }
 
     // This is used to handle listing of a new school for a login user.
