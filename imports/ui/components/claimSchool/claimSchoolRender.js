@@ -53,7 +53,7 @@ export default function (props) {
         {this.state.schoolSuggestionDialogBox &&
           <FiltersDialogBox
               open={this.state.schoolSuggestionDialogBox}
-              title="Give Suggestion"
+              title="Suggest School"
               onModalClose={this.handleSchoolSuggestionDialogState(false)}
               filtersForSuggestion={true}
               onGiveSuggestion={this.handleGiveSuggestion}

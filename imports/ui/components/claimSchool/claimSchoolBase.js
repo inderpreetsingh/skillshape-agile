@@ -74,8 +74,9 @@ export default class ClaimSchoolBase extends React.Component {
         }
 
         console.log(data,"data................")
-
+        this.setState({isLoading: true});
         Meteor.call('schoolSuggestion.addSuggestion',data,(err,res) => {
+          this.setState({isLoading: false});
           if(err) {
             toastr.error(err.reason,"Error");
           }else {

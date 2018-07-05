@@ -19,6 +19,8 @@ const Heading = styled.h2`
 
 const Wrapper = styled.div`
   background: white;
+  padding: ${helpers.rhythmDiv * 2}px;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
 class SchoolSuggestionsView extends Component {
