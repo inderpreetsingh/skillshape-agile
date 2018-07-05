@@ -436,17 +436,13 @@ export const sendEmailToSchool = function(
   }
 };
 //Send email to student when their package is expired
-export const sendPackageExpiredEmail = expiredUserDetails => {
-  expiredUserDetails.map(current => {
-    Email.send({
-      to: current.emailId, // Needs to replace this with requester's Email.
-      from: "Notices@SkillShape.com",
-      subject: "Skillshape Package Expired",
-      html: `Hi  ${current.userName}<br/>
-             your ${
-               current.packageName
-             } is expired today.To continue our services you have to buy a new package.<br/>
+export const sendPackageExpiredEmail = (to, userName, packageName) => {
+  Email.send({
+    to: to, // Needs to replace this with requester's Email.
+    from: "Notices@SkillShape.com",
+    subject: "Skillshape Package Expired",
+    html: `Hi  ${userName}<br/>
+             your ${packageName} is expired today.To continue our services you have to buy a new package.<br/>
              Thanks<br/>${EmailSignature}`
-    });
   });
 };

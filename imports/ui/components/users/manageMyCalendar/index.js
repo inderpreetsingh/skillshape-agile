@@ -970,6 +970,7 @@ class ManageMyCalendar extends React.Component {
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               )}
+            {console.log("filter,this.props", filter, this.props)}
             <MyCalender
               manageMyCalendar={
                 this.props.route && this.props.route.name == "MyCalendar"

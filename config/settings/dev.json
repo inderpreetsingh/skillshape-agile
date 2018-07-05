@@ -11,7 +11,7 @@
     },
     "DevelopmentSiteCaptchKey": "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
     "stripeClientId": "ca_ChCRiYcffQXD6VnZonJ91zaljBbQRQQL",
-    "paymentEnabled": false
+    "paymentEnabled": true
   },
   "stripe": {
     "PRIVATE_KEY": "sk_test_GI9ZJ9DjWz23AoqjlOusnSIO"
