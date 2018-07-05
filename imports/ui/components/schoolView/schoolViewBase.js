@@ -496,7 +496,7 @@ export default class SchoolViewBase extends React.Component {
       this.props.schoolData.superAdmin,
       (error, result) => {
         console.log("result and error", error, result);
-        if (result) {
+        if (result && Meteor.settings.public.paymentEnabled) {
           if (monthlyPymtDetails) {
             amount = monthlyPymtDetails[0].cost;
           }
