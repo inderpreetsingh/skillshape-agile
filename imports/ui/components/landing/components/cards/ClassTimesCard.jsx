@@ -35,7 +35,8 @@ const styles = {
     fontWeight: '300',
     width: '100%',
     fontSize: helpers.baseFontSize,
-    fontFamily: helpers.specialFont
+    fontFamily: helpers.specialFont,
+    cursor: 'initial'
   },
   cardItemPopUp: {
     padding: helpers.rhythmDiv * 2,
@@ -58,15 +59,14 @@ const OuterWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 100%;
+  width: 100%;
   height: 100%;
-  // padding: 0 ${helpers.rhythmDiv}px;
-  padding-right: ${helpers.rhythmDiv}px;
   background: transparent;
   position: relative;
 `;
 
 const CardContent = styled.div`
+  width: 100%;
   // padding-right: ${helpers.rhythmDiv}px;
 `;
 
@@ -75,17 +75,19 @@ const Text = styled.p`
   font-weight: 300;
   font-family: ${helpers.specialFont};
   margin: 0;
+  line-height: 1;
 `;
 
 const Description = Text.extend`
   line-height: 1;
-  padding: ${props => props.inPopUp ? helpers.rhythmDiv * 2 : helpers.rhythmDiv}px;
+  padding: ${props => props.inPopUp ? `${helpers.rhythmDiv}px 0 ${helpers.rhythmDiv * 2}px 0`: `${helpers.rhythmDiv}px 0`};
   font-size: ${props => props.inPopUp ? 18 : helpers.baseFontSize}px;
 `;
 
 const Day = Text.extend`
   text-align: center;
   font-weight: 400;
+  font-size: 18px;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
@@ -117,8 +119,10 @@ const ClassTimesCard = (props) =>  {
   const ScheduleDisplay = (props) => <Time> <MyIcon iconName={'access_time'} /> At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins</Time>;
 
   const SchedulePopUp = (props) => {
+    let {day} = props;
+    if(props.scheduleType === 'recurring') day += 's';
     if(props.scheduleType === 'recurring' || props.scheduleType === 'ongoing') {
-      return <DateTime> {props.day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins </DateTime>;
+      return <DateTime> {day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins </DateTime>;
     }else {
       return <DateTime> {props.day.substr(0,3)}, {formatDateNoYear(props.eventDate)} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins </DateTime>
     }

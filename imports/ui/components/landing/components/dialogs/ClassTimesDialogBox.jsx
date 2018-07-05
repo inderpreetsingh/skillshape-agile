@@ -42,7 +42,7 @@ const styles = {
     overflowX: "hidden"
   },
   dialogPaper: {
-    maxWidth: 500,
+    maxWidth: 400,
     background: "white",
     margin: helpers.rhythmDiv,
     overflowY: 'auto'
@@ -51,7 +51,6 @@ const styles = {
     // padding: `0 ${helpers.rhythmDiv * 3}px`,
     // paddingTop: helpers.rhythmDiv * 2
     padding: 0,
-    marginBottom: helpers.rhythmDiv * 2
   },
   dialogContent: {
     overflowX: "hidden",
@@ -110,6 +109,7 @@ const ContentWrapper = styled.div`
 `;
 
 const ContentHeader = styled.div`
+  max-width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 0 ${helpers.rhythmDiv * 2}px;
@@ -125,8 +125,10 @@ const ClassTypeCoverImg = styled.div`
   background-position: center center;
   width: 100px;
   height: 100px;
+  margin-right: ${helpers.rhythmDiv}px;
   border-radius: 50%;
   background-image: url(${props => props.src});
+  flex-shrink: 0;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-bottom: ${helpers.rhythmDiv}px;
@@ -137,6 +139,7 @@ const ClassTimes = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
   padding-right: ${helpers.rhythmDiv * 2}px;
+  flex-shrink: 1;
 `;
 
 const ClassTypeName = styled.h2`
@@ -340,9 +343,10 @@ class ClassTimesDialogBox extends React.Component {
         handleClassTimeRequest
       } = this.props;
     // console.log("ClassTimesDialogBox props--->>", this.props);
-    {
+    {/*
       console.log(this.props.x, this.props.y);
-    }
+    */}
+
     return (
       <Dialog
         open={open}

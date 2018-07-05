@@ -38,6 +38,8 @@ export default class MyCalender extends React.Component {
                   eventData={eventData}
                   showModal={isOpen}
                   closeEventModal={this.handleEventModal}
+									classTimesData={this.props.classTimesData}
+									classInterestData={this.props.classInterestData}
 									onJoinClassButtonClick={this.props.onJoinClassButtonClick}
                   clickedDate={clickedDate}
                   routeName={this.props.route && this.props.route.name}

@@ -23,6 +23,7 @@ import NoPageFound from "/imports/ui/components/landing/components/NoPageFound";
 import ResetPassword from "/imports/ui/components/account/resetPassword";
 import MyProfile from "/imports/ui/components/users/myProfile";
 import MyMedia from "/imports/ui/components/users/myMedia";
+import MySubsciption from "/imports/ui/components/users/mySubscriptions";
 import SchoolView from "/imports/ui/components/schoolView";
 import SchoolMemberView from "/imports/ui/components/schoolMembers";
 import ClaimSchool from "/imports/ui/components/claimSchool";
@@ -39,7 +40,8 @@ import AboutUs from "/imports/ui/pages/aboutUs";
 import ContactUs from "/imports/ui/pages/contactUs";
 import ContactUsPage from "/imports/ui/pages/ContactUsPage";
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
-
+import StripeConnectModal from "./../../ui/modal/stripeConnectModal";
+import Financials from "/imports/ui/components/financials";
 import { componentLoader } from "/imports/util";
 export default (Routes = componentLoader(props => (
   <Router history={browserHistory}>
@@ -61,6 +63,11 @@ export default (Routes = componentLoader(props => (
         name="unsubscribe"
         component={UnsubscribeUser}
       />
+      <Route
+        path="/redirect-to-stripe"
+        name="redirect-to-stripe"
+        component={StripeConnectModal}
+      />
       <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />
 
@@ -69,6 +76,11 @@ export default (Routes = componentLoader(props => (
         <Route path="/Contactus" name="Contactus" component={ContactUs} />
         <Route path="/profile/:id" name="MyProfile" component={MyProfile} />
         <Route path="/media/:id" name="MyMedia" component={MyMedia} />
+        <Route
+          path="/subsciptions/:id"
+          name="MySubscriptions"
+          component={MySubsciption}
+        />
         <Route
           path="/schoolAdmin/:schoolId/edit"
           name="SchoolAdmin-Edit"
@@ -118,6 +130,11 @@ export default (Routes = componentLoader(props => (
           path="/schools/:slug/members"
           name="SchoolMemberView"
           component={SchoolMemberView}
+        />
+        <Route
+          path="/schools/:slug/financials"
+          name="Financials"
+          component={Financials}
         />
         <Route
           path="/classmates"

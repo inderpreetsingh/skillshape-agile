@@ -10,6 +10,7 @@ import Typography from "material-ui/Typography";
 import CardsReveal from "/imports/ui/components/landing/components/cards/CardsReveal.jsx";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+
 import ClassTimesDialogBox from "/imports/ui/components/landing/components/dialogs/ClassTimesDialogBox.jsx";
 import ManageRequestsDialogBox from "/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx";
 
@@ -18,7 +19,7 @@ import ClassTypeCardDescription from "/imports/ui/components/landing/components/
 
 import classTimesData from "/imports/ui/components/landing/constants/classTimesData";
 
-import { toastrModal } from "/imports/util";
+import { toastrModal, formatClassTimesData } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import { cardImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { getUserFullName } from "/imports/util/getUserData";
@@ -159,7 +160,15 @@ class ClassTypeCard extends Component {
       name: name
     };
     const classTimesData = this.getClassTimes(get(this.props, "_id", null));
+    const formattedClassTimesData = formatClassTimesData(classTimesData).filter(data => {
+      if(data)
+        return data.formattedClassTimesDetails.totalClassTimes > 0
+      else
+        return false;
+    });
+    console.log(classTimesData,formattedClassTimesData,"ajsldfalsd");
     const schoolData = this.getSchoolData(schoolId);
+
 
     if (!isEmpty(reviewsStats)) {
       ratings = reviewsStats.ratings;
@@ -172,7 +181,7 @@ class ClassTypeCard extends Component {
           <ClassTimesDialogBox
             classTypeImg={bgImg}
             classInterestData={classInterestData}
-            classTimesData={classTimesData}
+            classTimesData={formattedClassTimesData}
             classTypeName={name}
             open={this.state.dialogOpen}
             onModalClose={this.handleDialogState(false)}
@@ -211,7 +220,7 @@ class ClassTypeCard extends Component {
             descriptionContent={
               <ClassTypeCardDescription
                 schoolData={this.props.schoolData}
-                classTimeCheck={!isEmpty(classTimesData)}
+                classTimeCheck={!isEmpty(formattedClassTimesData)}
                 ratings={ratings}
                 reviews={reviews}
                 description={this.props.desc}

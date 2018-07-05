@@ -6,7 +6,7 @@ import { FormBuilderModal } from "/imports/ui/modal";
 import ResponsiveTabs from "/imports/util/responsiveTabs";
 import Typography from "material-ui/Typography";
 
-import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
+// import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 
 //tab details import over here
 import SchoolDetails from "./schoolDetails";
@@ -33,7 +33,7 @@ export default function(props) {
   } = this.props;
 
   if (isLoading) {
-    return <Preloader />;
+    // return <Preloader />;
   }
 
   if (isUserSubsReady && schoolData) {
@@ -41,7 +41,7 @@ export default function(props) {
     if (this.checkSchoolAccess(currentUser, schoolId)) {
       return (
         <DocumentTitle title={this.props.route.name}>
-          <div style={{ overflow: "hidden" }}>
+          <div id="editRender" style={{ overflow: "hidden" }}>
             <FormBuilderModal
               {...formBuilderModal}
               {...this.props}

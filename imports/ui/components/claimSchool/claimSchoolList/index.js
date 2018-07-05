@@ -20,8 +20,22 @@ const styles = {
 
 class ClaimSchoolList extends React.Component {
 
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      schoolSuggestionDialog: false
+    }
+  }
+
   componentWillUnmount() {
     Session.set("pagesToload",1)
+  }
+
+  handleSchoolSuggestionDialogState = (state) => () => {
+    this.setState({
+      schoolSuggestionDialog: state
+    })
   }
 
   render() {

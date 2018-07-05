@@ -1,29 +1,41 @@
 {
-  "Comment": "Some secrets are of production so need to replace production secrets with development secrets ",
+  "Comment":
+    "Some secrets are of production so need to replace production secrets with development secrets ",
   "public": {
-    "analyticsSettings": {
-      "Google Analytics" : {"trackingId": "UA-115755152-1"},
-      "Amplitude"        : {"apiKey": "92093780eecbbd214c300694e1910214"}
+    "stripe": {
+      "PUBLIC_KEY": "pk_test_keeDSx92i51AJKtdBuzx5H0y"
     },
-    "DevelopmentSiteCaptchKey":"6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+    "analyticsSettings": {
+      "Google Analytics": { "trackingId": "UA-115755152-1" },
+      "Amplitude": { "apiKey": "92093780eecbbd214c300694e1910214" }
+    },
+    "DevelopmentSiteCaptchKey": "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
+    "stripeClientId": "ca_ChCRiYcffQXD6VnZonJ91zaljBbQRQQL",
+    "paymentEnabled": false
   },
+  "stripe": {
+    "PRIVATE_KEY": "sk_test_GI9ZJ9DjWz23AoqjlOusnSIO"
+  },
+  "paymentEnabled": false,
+
   "AWSAccessKeyId": "AKIAIUDOMFJ4ZGYKIO6Q",
   "AWSSecretAccessKey": "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",
   "AWSBucket": "skillshape",
   "AWSRegion": "us-west-1",
-  "SMTPUsername":"notices@trueabundancehealth.com",
-  "SMTPPassword":"w4dcVGuwEdiFwcHsmznGNYbs",
+  "SMTPUsername": "notices@trueabundancehealth.com",
+  "SMTPPassword": "w4dcVGuwEdiFwcHsmznGNYbs",
   "facebook": {
-        "auth": {
-            "appId": "156193171830765",
-            "secret": "5be68ab30fb98cbeac73c2199d61118f"
-        }
-    },
-    "google": {
-        "auth": {
-            "appId": "696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com",
-            "loginStyle": "popup",
-            "secret": "yspUqSye1D0y0IHaDYIl1G4q"
-        }
+    "auth": {
+      "appId": "156193171830765",
+      "secret": "5be68ab30fb98cbeac73c2199d61118f"
     }
+  },
+  "google": {
+    "auth": {
+      "appId":
+        "696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com",
+      "loginStyle": "popup",
+      "secret": "yspUqSye1D0y0IHaDYIl1G4q"
+    }
+  }
 }
