@@ -14,19 +14,6 @@ Meteor.methods({
     noClasses,
     classTypeIds
   ) {
-<<<<<<< HEAD
-    console.log(
-      "stripe.chargecard arugments",
-      stripeToken,
-      amount,
-      desc,
-      packageId,
-      packageType,
-      schoolId,
-      classTypeIds
-    );
-=======
->>>>>>> 2a0e99a51cac58511e68bbae5d8c491de4436463
     let recordId;
     if (packageType == "EP") {
       desc = "Enrollment Fee";
