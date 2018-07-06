@@ -1,38 +1,46 @@
-import React,{Component,Fragment} from 'react';
-import moment from 'moment';
-import styled, {keyframes} from 'styled-components';
-import PropTypes from 'prop-types';
-import { isEmpty, get } from 'lodash';
+import React, { Component, Fragment } from "react";
+import moment from "moment";
+import styled, { keyframes } from "styled-components";
+import PropTypes from "prop-types";
+import { isEmpty, get } from "lodash";
 
-import ClassTimeClockManager from '/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx';
-import ClassTimesCard from '/imports/ui/components/landing/components/cards/ClassTimesCard.jsx';
-import TrendingIcon from '/imports/ui/components/landing/components/icons/Trending.jsx';
+import ClassTimeClockManager from "/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx";
+import ClassTimesCard from "/imports/ui/components/landing/components/cards/ClassTimesCard.jsx";
+import TrendingIcon from "/imports/ui/components/landing/components/icons/Trending.jsx";
 
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
-import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
-import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
+import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
+import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 
 import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 
-import Events from '/imports/util/events';
-import {toastrModal, formatDate, formatTime, formatDataBasedOnScheduleType, getUserFullName} from '/imports/util';
-import { ContainerLoader } from '/imports/ui/loading/container.js';
+import Events from "/imports/util/events";
+import {
+  toastrModal,
+  formatDate,
+  formatTime,
+  formatDataBasedOnScheduleType,
+  getUserFullName
+} from "/imports/util";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
 
-import { DAYS_IN_WEEK, CLASS_TIMES_CARD_WIDTH } from '/imports/ui/components/landing/constants/classTypeConstants.js';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import {
+  DAYS_IN_WEEK,
+  CLASS_TIMES_CARD_WIDTH
+} from "/imports/ui/components/landing/constants/classTypeConstants.js";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const ClassTimeContainer = styled.div`
-  ${helpers.flexHorizontalSpaceBetween}
-  flex-direction: column;
+  ${helpers.flexHorizontalSpaceBetween} flex-direction: column;
   max-width: 100%;
   width: 100%;
-  height: ${props => props.inPopUp ? 'auto' : '420px'};
+  height: ${props => (props.inPopUp ? "auto" : "420px")};
   padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
   z-index: 0;
 
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     bottom: 0;
@@ -48,12 +56,12 @@ const ClassTimeContainer = styled.div`
   }
 
   @media screen and (max-width: ${helpers.mobile + 100}px) {
-    max-width: ${props => props.inPopUp ? '100%' : CLASS_TIMES_CARD_WIDTH}px;
+    max-width: ${props => (props.inPopUp ? "100%" : CLASS_TIMES_CARD_WIDTH)}px;
   }
 `;
 
 const ClassScheduleWrapper = styled.div`
-  ${helpers.flexCenter}
+  ${helpers.flexCenter};
 `;
 
 const ScheduleAndDescriptionWrapper = styled.div`
@@ -82,13 +90,14 @@ const ClassTypeName = styled.h4`
   color: ${helpers.black};
   font-family: ${helpers.specialFont};
   font-weight: 400;
-  font-size: ${props => props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize * 1.25}px;
+  font-size: ${props =>
+    props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize * 1.25}px;
   text-align: center;
   text-transform: capitalize;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const ScheduleType = ClassTypeName.withComponent('p').extend`
+const ScheduleType = ClassTypeName.withComponent("p").extend`
   font-weight: 300;
   font-size: 18px;
   text-transform: capitalize;
@@ -114,7 +123,7 @@ const ButtonWrapper = styled.div`
   justify-content: center;
   margin-bottom: ${helpers.rhythmDiv}px;
   transition: 0.1s ease-in opacity;
-  ${props => props.showCard ? 'opacity: 0' : 'opacity: 1'};
+  ${props => (props.showCard ? "opacity: 0" : "opacity: 1")};
 `;
 
 const TrendingWrapper = styled.div`
@@ -130,206 +139,245 @@ const ClassTimesCardWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  max-height: ${props => props.inPopUp ? 'auto' : '296px'}; // computed height
+  max-height: ${props => (props.inPopUp ? "auto" : "296px")}; // computed height
 `;
-
 
 const Trending = () => {
   return (
     <TrendingWrapper>
       <TrendingIcon />
     </TrendingWrapper>
-  )
-}
+  );
+};
 
 class ClassTime extends Component {
-
   state = {
-    isLoading: false,
+    isLoading: false
     // fullTextState: this.props.fullTextState,
-  }
+  };
 
   handleAddToMyCalendarButtonClick = () => {
     // console.log("this.props.handleAddToMyCalendarButtonClick",this.props);
-    const classTimeData = {...this.props};
+    const classTimeData = { ...this.props };
     this.addToMyCalender(classTimeData);
-  }
+  };
 
-  handleNonUserDialogBoxState = (state) => e => {
+  handleNonUserDialogBoxState = state => e => {
     this.setState({
       nonUserDialogBox: state
-    })
-  }
+    });
+  };
 
   handleRemoveFromCalendarButtonClick = () => {
-
     // this.setState({ addToCalendar: true });
     // console.log("this.props",this.props)
-    const classTimeData = {...this.props};
+    const classTimeData = { ...this.props };
     this.removeFromMyCalender(classTimeData);
-  }
+  };
 
-  removeFromMyCalender = (classTimeRec) => {
-    const {toastr} = this.props;
-    console.log("this.props",this.props,classTimeRec);
-    const result = this.props.classInterestData.filter(data => data.classTimeId  == classTimeRec._id);
-    console.log("result==>",result);
+  removeFromMyCalender = classTimeRec => {
+    const { toastr } = this.props;
+    console.log("this.props", this.props, classTimeRec);
+    const result = this.props.classInterestData.filter(
+      data => data.classTimeId == classTimeRec._id
+    );
+    console.log("result==>", result);
     // check for user login or not
-    const userId = Meteor.userId()
-    if(!isEmpty(userId)) {
-        const doc = {
-            _id: result[0]._id,
-             userId,
-        }
-        this.handleClassInterest({
-            methodName:"classInterest.removeClassInterest",
-            data: {doc}
-        })
-    } else {
-        // toastr.error("Please login !","Error");
-        this.setState({
-          nonUserDialogBox: true
-        });
-    }
-  }
-
-  addToMyCalender = (data) => {
-    // check for user login or not
-    console.log("addToMyCalender",data);
     const userId = Meteor.userId();
-    if(!isEmpty(userId)) {
-        const doc = {
-            classTimeId: data._id,
-            classTypeId: data.classTypeId,
-            schoolId: data.schoolId,
-            userId,
-        }
-        this.handleClassInterest({
-            methodName:"classInterest.addClassInterest",
-            data: {doc}
-        })
+    if (!isEmpty(userId)) {
+      const doc = {
+        _id: result[0]._id,
+        userId
+      };
+      this.handleClassInterest({
+        methodName: "classInterest.removeClassInterest",
+        data: { doc }
+      });
     } else {
-        // alert("Please login !!!!")
-        //Events.trigger("loginAsUser");
-        this.setState({
-          nonUserDialogBox: true
-        });
+      // toastr.error("Please login !","Error");
+      this.setState({
+        nonUserDialogBox: true
+      });
     }
-  }
+  };
 
-  handleClassInterest = ({methodName, data}) => {
-    console.log("handleClassInterest",methodName,data);
-    this.setState({isLoading: true});
+  addToMyCalender = data => {
+    // check for user login or not
+    console.log("addToMyCalender", data);
+    const userId = Meteor.userId();
+    if (!isEmpty(userId)) {
+      const doc = {
+        classTimeId: data._id,
+        classTypeId: data.classTypeId,
+        schoolId: data.schoolId,
+        userId
+      };
+      this.handleClassInterest({
+        methodName: "classInterest.addClassInterest",
+        data: { doc }
+      });
+    } else {
+      // alert("Please login !!!!")
+      //Events.trigger("loginAsUser");
+      this.setState({
+        nonUserDialogBox: true
+      });
+    }
+  };
+
+  handleClassInterest = ({ methodName, data }) => {
+    console.log("handleClassInterest", methodName, data);
+    this.setState({ isLoading: true });
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
     Meteor.call(methodName, data, (err, res) => {
-      const {toastr} = this.props;
-      this.setState({isLoading: false});
-      if(err) {
-        toastr.error(err.message,"Error");
-      }else {
-        if(methodName.indexOf('remove') !== -1)
-          toastr.success(`Hi ${userName}, Class removed successfully from your calendar`,"Success");
+      const { toastr } = this.props;
+      this.setState({ isLoading: false });
+      if (err) {
+        toastr.error(err.message, "Error");
+      } else {
+        if (methodName.indexOf("remove") !== -1)
+          toastr.success(
+            `Hi ${userName}, Class removed successfully from your calendar`,
+            "Success"
+          );
         else
-          toastr.success(`Hi ${userName}, Class added to your calendar`,"Success");
+          toastr.success(
+            `Hi ${userName}, Class added to your calendar`,
+            "Success"
+          );
       }
-    })
-  }
+    });
+  };
 
   getScheduleTypeFormatted = () => {
-      const {startDate, endDate, scheduleType} = this.props;
-      const classScheduleType = scheduleType.toLowerCase();
+    const { startDate, endDate, scheduleType } = this.props;
+    const classScheduleType = scheduleType.toLowerCase();
 
-      if(classScheduleType === 'recurring')
-        return (<ScheduleType>{formatDate(startDate)} - {formatDate(endDate)}</ScheduleType>)
-      else if (classScheduleType === 'onetime') {
-        {/* Adding manual small letters splitted schedule type one time*/}
-        return <ScheduleType>{"one time"}</ScheduleType>
-      }
-      return <ScheduleType>{classScheduleType}</ScheduleType>
-  }
-
-  getWrapperClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar' : 'remove-from-calendar';
-
-  getOuterClockClassName = (addToCalendar) => (addToCalendar) ? 'add-to-calendar-clock' : 'remove-from-calendar-clock';
-
-  getDotColor = (addToCalendar) => (addToCalendar) ? helpers.primaryColor : helpers.cancel;
-
-  getCalenderButton = (addToCalender) => {
-    const iconName = addToCalender ? "add_circle_outline": "delete";
-    // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
-    if(addToCalender || !Meteor.userId()) {
+    if (classScheduleType === "recurring")
       return (
-         <ClassTimeButton
-              icon
-              onClick={this.handleAddToMyCalendarButtonClick}
-              label="Add to my Calender"
-              iconName={iconName}
-          />
-      )
-      } else {
-        return (
-           <ClassTimeButton
-              icon
-              ghost
-              onClick={this.handleRemoveFromCalendarButtonClick}
-              label="Remove from calendar"
-              iconName={iconName}
-          />
-        )
+        <ScheduleType>
+          {formatDate(startDate)} - {formatDate(endDate)}
+        </ScheduleType>
+      );
+    else if (classScheduleType === "onetime") {
+      {
+        /* Adding manual small letters splitted schedule type one time*/
       }
-    return (
-      <div></div>
-    )
-  }
+      return <ScheduleType>{"one time"}</ScheduleType>;
+    }
+    return <ScheduleType>{classScheduleType}</ScheduleType>;
+  };
+
+  getWrapperClassName = addToCalendar =>
+    addToCalendar ? "add-to-calendar" : "remove-from-calendar";
+
+  getOuterClockClassName = addToCalendar =>
+    addToCalendar ? "add-to-calendar-clock" : "remove-from-calendar-clock";
+
+  getDotColor = addToCalendar =>
+    addToCalendar ? helpers.primaryColor : helpers.cancel;
+
+  getCalenderButton = addToCalender => {
+    const iconName = addToCalender ? "add_circle_outline" : "delete";
+    // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
+    if (addToCalender || !Meteor.userId()) {
+      return (
+        <ClassTimeButton
+          icon
+          onClick={this.handleAddToMyCalendarButtonClick}
+          label="Add to my Calender"
+          iconName={iconName}
+        />
+      );
+    } else {
+      return (
+        <ClassTimeButton
+          icon
+          ghost
+          onClick={this.handleRemoveFromCalendarButtonClick}
+          label="Remove from calendar"
+          iconName={iconName}
+        />
+      );
+    }
+    return <div />;
+  };
 
   render() {
     // debugger;
-    const { desc , startDate, endDate, scheduleType, name, inPopUp, formattedClassTimesDetails} = this.props;
+    console.log("this.props of classtime", this.props);
+    const {
+      desc,
+      startDate,
+      endDate,
+      scheduleType,
+      name,
+      inPopUp,
+      formattedClassTimesDetails,
+      classTypeName
+    } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
 
-    console.log(formattedClassTimesDetails,"Formatted Class Times.........");
+    console.log(formattedClassTimesDetails, "Formatted Class Times.........");
     // const showDescription = this.showDescription(formattedClassTimes);
-    const classNameForClock = this.getOuterClockClassName(this.props.addToCalendar);
+    const classNameForClock = this.getOuterClockClassName(
+      this.props.addToCalendar
+    );
     const dotColor = this.getDotColor(this.props.addToCalendar);
-    return (<Fragment> {formattedClassTimesDetails.totalClassTimes > 0 &&
+    return (
       <Fragment>
-      {this.state.isLoading && <ContainerLoader />}
-      {this.state.nonUserDialogBox && <NonUserDefaultDialogBox
-        title={"Sign In"}
-        content={"You need to sign in to add classes"}
-        open={this.state.nonUserDialogBox}
-        onModalClose={this.handleNonUserDialogBoxState(false)}/>}
-      <ClassTimeContainer
-        inPopUp={inPopUp}
-        className={`class-time-bg-transition ${this.getWrapperClassName(this.props.addToCalendar)}`}
-        key={this.props._id} >
-          <ClassTimeContent>
-            {/*Class type name */}
-            <ClassTypeName inPopUp={inPopUp}>{name}</ClassTypeName>
+        {" "}
+        {formattedClassTimesDetails.totalClassTimes > 0 && (
+          <Fragment>
+            {this.state.isLoading && <ContainerLoader />}
+            {this.state.nonUserDialogBox && (
+              <NonUserDefaultDialogBox
+                title={"Sign In"}
+                content={"You need to sign in to add classes"}
+                open={this.state.nonUserDialogBox}
+                onModalClose={this.handleNonUserDialogBoxState(false)}
+              />
+            )}
+            <ClassTimeContainer
+              inPopUp={inPopUp}
+              className={`class-time-bg-transition ${this.getWrapperClassName(
+                this.props.addToCalendar
+              )}`}
+              key={this.props._id}
+            >
+              <ClassTimeContent>
+                {/*Class type name */}
+                <ClassTypeName inPopUp={inPopUp}>{`${
+                  classTypeName.name
+                } : ${name}`}</ClassTypeName>
 
-            {/* Schedule type */}
-            {this.getScheduleTypeFormatted()}
+                {/* Schedule type */}
+                {this.getScheduleTypeFormatted()}
 
-            <ClassTimesCardWrapper inPopUp={inPopUp}>
-              <ClassTimesCard
-                inPopUp={inPopUp}
-                show={true}
-                formattedClassTimes={formattedClassTimesDetails}
-                scheduleType={scheduleType}
-                description={desc}
-               />
-            </ClassTimesCardWrapper>
-          </ClassTimeContent>
+                <ClassTimesCardWrapper inPopUp={inPopUp}>
+                  <ClassTimesCard
+                    inPopUp={inPopUp}
+                    show={true}
+                    formattedClassTimes={formattedClassTimesDetails}
+                    scheduleType={scheduleType}
+                    description={desc}
+                  />
+                </ClassTimesCardWrapper>
+              </ClassTimeContent>
 
-          {/* View All times button */}
-          <ButtonsWrapper>
-            {this.getCalenderButton(this.props.addToCalendar)}
-          </ButtonsWrapper>
+              {/* View All times button */}
+              <ButtonsWrapper>
+                {this.getCalenderButton(this.props.addToCalendar)}
+              </ButtonsWrapper>
 
-          {this.props.isTrending && <Trending />}
-      </ClassTimeContainer> </Fragment>}</Fragment>)
-    }
+              {this.props.isTrending && <Trending />}
+            </ClassTimeContainer>{" "}
+          </Fragment>
+        )}
+      </Fragment>
+    );
+  }
 }
 
 ClassTime.propTypes = {
@@ -343,8 +391,7 @@ ClassTime.propTypes = {
   addToCalendar: PropTypes.bool.isRequired,
   scheduleType: PropTypes.string.isRequired,
   isTrending: PropTypes.bool
-}
-
+};
 
 // export default toastrModal(withShowMoreText(ClassTime, { description: "desc"}));
 export default toastrModal(ClassTime);

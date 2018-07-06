@@ -96,7 +96,6 @@ class FullCalendar extends React.Component {
     // let schoolClassTimesIds = schoolClassTimes.map(data => data._id);
     for (var i = 0; i < classTimesData.length; i++) {
       let classTime = classTimesData[i];
-
       try {
         let sevent = {
           classTimeId: classTime._id,
@@ -130,6 +129,7 @@ class FullCalendar extends React.Component {
         if (classTime.scheduleType === "oneTime" && checkedClassTimes) {
           let scheduleData = [...classTime.scheduleDetails.oneTime];
           sevent.scheduleDetails = classTime.scheduleDetails;
+          console.log("classTime", classTime);
           for (let obj of scheduleData) {
             sevent.start = obj.startDate;
             sevent.roomId = obj.roomId;
@@ -141,7 +141,7 @@ class FullCalendar extends React.Component {
               )
               .format("hh:mm");
             sevent.title =
-              this.props.schoolData.name +
+              classTime.classTypeName.name +
               ":" +
               classTime.name +
               " " +
@@ -182,7 +182,7 @@ class FullCalendar extends React.Component {
                 )
                 .format("hh:mm");
               temp.title =
-                this.props.schoolData.name +
+                classTime.classTypeName.name +
                 ":" +
                 classTime.name +
                 " " +
@@ -274,7 +274,10 @@ export default createContainer(props => {
   }
 
   // console.log("FullCalendar createContainer classTimesData-->>", classTimesData)
-  // console.log("FullCalendar createContainer classInterestData-->>",classInterestData)
+  console.log(
+    "FullCalendar createContainer classInterestData-->>",
+    classInterestData
+  );
   // console.log("FullCalendar createContainer myClassIds-->>",myClassIds)
   // console.log("FullCalendar createContainer classSchedule-->>",classSchedule)
 

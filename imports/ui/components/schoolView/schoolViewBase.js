@@ -77,12 +77,14 @@ export default class SchoolViewBase extends React.Component {
       let normalizedMonthlyPricingData = [];
 
       for (let monthlyPricingObj of monthlyPricingData) {
-        monthlyPricingObj.pymtDetails.forEach(payment => {
-          const myMonthlyPricingObj = Object.assign({}, monthlyPricingObj);
-          myMonthlyPricingObj.pymtDetails = [];
-          myMonthlyPricingObj.pymtDetails.push(payment);
-          normalizedMonthlyPricingData.push(myMonthlyPricingObj);
-        });
+        monthlyPricingObj &&
+          monthlyPricingObj.pymtDetails &&
+          monthlyPricingObj.pymtDetails.forEach(payment => {
+            const myMonthlyPricingObj = Object.assign({}, monthlyPricingObj);
+            myMonthlyPricingObj.pymtDetails = [];
+            myMonthlyPricingObj.pymtDetails.push(payment);
+            normalizedMonthlyPricingData.push(myMonthlyPricingObj);
+          });
       }
 
       return normalizedMonthlyPricingData;
