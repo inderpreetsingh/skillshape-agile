@@ -526,70 +526,80 @@ export default class SchoolViewBase extends React.Component {
             amount = monthlyPymtDetails[0].cost;
           }
           amount = amount * 100;
+
           var handler = StripeCheckout.configure({
             key: Meteor.settings.public.stripe.PUBLIC_KEY,
             image: this.props.schoolData.mainImage,
             locale: "auto",
             token: function(token) {
               toastr.success("Please wait transaction in Progress", "Success");
-              Meteor.call(
-                "stripe.chargeCard",
-                token.id,
-                amount,
-                packageName,
-                packageId,
-                packageType,
-                schoolId,
-                (error, result) => {
-                  console.log("error and result", error, result);
-                  if (result) {
-                    if (result == "Payment Successfully Done") {
-                      console.log(
-                        "self.props.currentUser.profile.name",
-                        self.props
-                      );
-                      let x = new Date().getTime();
-                      let memberData = {
-                        firstName:
-                          self.props.currentUser.profile.name ||
-                          self.props.currentUser.profile.firstName,
-                        lastName:
-                          self.props.currentUser.profile.firstName || "",
-                        email: self.props.currentUser.emails[0].address,
-                        phone: "",
-                        schoolId: self.props.schoolId,
-                        classTypeIds: self.props.classType._id,
-                        birthYear: "",
-                        studentWithoutEmail: false,
-                        sendMeSkillShapeNotification: true,
-                        activeUserId: self.props.currentUser._id,
-                        createdBy: "",
-                        inviteAccepted: false,
-                        packageDetails: {
-                          [x]: {
-                            packageName: packageName,
-                            createdOn: new Date(),
-                            packageType: packageType,
-                            packageId: packageId,
-                            expDuration: expDuration,
-                            expPeriod: expPeriod,
-                            noClasses: noClasses
+              if (packageType == "CP" || packageType == "EP") {
+                Meteor.call(
+                  "stripe.chargeCard",
+                  token.id,
+                  amount,
+                  packageName,
+                  packageId,
+                  packageType,
+                  schoolId,
+                  (error, result) => {
+                    console.log("error and result", error, result);
+                    if (result) {
+                      if (result == "Payment Successfully Done") {
+                        console.log(
+                          "self.props.currentUser.profile.name",
+                          self.props
+                        );
+                        let x = new Date().getTime();
+                        let memberData = {
+                          firstName:
+                            self.props.currentUser.profile.name ||
+                            self.props.currentUser.profile.firstName,
+                          lastName:
+                            self.props.currentUser.profile.firstName || "",
+                          email: self.props.currentUser.emails[0].address,
+                          phone: "",
+                          schoolId: self.props.schoolId,
+                          classTypeIds: self.props.classType._id,
+                          birthYear: "",
+                          studentWithoutEmail: false,
+                          sendMeSkillShapeNotification: true,
+                          activeUserId: self.props.currentUser._id,
+                          createdBy: "",
+                          inviteAccepted: false,
+                          packageDetails: {
+                            [x]: {
+                              packageName: packageName,
+                              createdOn: new Date(),
+                              packageType: packageType,
+                              packageId: packageId,
+                              expDuration: expDuration,
+                              expPeriod: expPeriod,
+                              noClasses: noClasses
+                            }
                           }
-                        }
-                      };
-                      Meteor.call(
-                        "schoolMemberDetails.addNewMember",
-                        memberData
-                      );
-                      toastr.success("Payment Successful", "Success");
+                        };
+                        Meteor.call(
+                          "schoolMemberDetails.addNewMember",
+                          memberData
+                        );
+                        toastr.success("Payment Successful", "Success");
+                      } else {
+                        toastr.success(result.message, "Success");
+                      }
                     } else {
-                      toastr.success(result.message, "Success");
+                      toastr.error(error.message, "Error");
                     }
-                  } else {
-                    toastr.error(error.message, "Error");
                   }
-                }
-              );
+                );
+              } else if (packageType == "MP") {
+                Meteor.call("stripe.handleCustomer", token.id, (err, res) => {
+                  toastr.success(
+                    `customer id ${res} created successfully`,
+                    "Success"
+                  );
+                });
+              }
             }
           });
 

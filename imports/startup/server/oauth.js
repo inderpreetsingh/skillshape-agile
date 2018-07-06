@@ -25,7 +25,10 @@ Meteor.startup(() => {
   );
   // There is no product id in env then grab one and set it in env to use this id for plan
   if (Meteor.settings.productId) {
-    let result = Meteor.call("stripe.createStripeProduct");
+    let result = Meteor.call(
+      "stripe.createStripeProduct",
+      Meteor.settings.productId
+    );
   }
 
   // Start crone job for sending the email.

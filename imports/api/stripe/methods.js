@@ -1,5 +1,6 @@
 import UserStripeData from "./fields";
 import School from "../school/fields";
+//import MonthlyPricing
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
 var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
@@ -18,7 +19,7 @@ Meteor.methods({
       let superAdminId = schoolData.superAdmin;
       let stripeAccountId = UserStripeData.findOne({ userId: superAdminId });
       stripeAccountId = stripeAccountId.stripe_user_id;
-      var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
+
       const token = stripeToken;
       const skillshapeAmount = Math.round(amount * (2.9 / 100) + 40);
       const destinationAmount = Math.round(amount - skillshapeAmount);
@@ -122,52 +123,61 @@ Meteor.methods({
       return false;
     }
   },
-  "stripe.createStripePlan": function({ currencyCode, interval, amount }) {
+  //creating plan for on monthly package creation
+  "stripe.createStripePlan": async function(currencyCode, interval, amount) {
+    console.log("amount is", amount);
     let productId = Meteor.settings.productId;
-    const plan = stripe.plans.create(
-      {
+    try {
+      const plan = await stripe.plans.create({
         product: productId,
         currency: currencyCode, // currency code should be in lower case
         interval: interval,
         amount: amount
-      },
-      function(err, res) {
-        console.log("error22222------------->", err, res);
-        if (err) {
-          throw new Meteor.Error(
-            (err && err.message) || "Something went wrong!!!"
-          );
-        } else {
-        }
-      }
-    );
+      });
+      return plan.id;
+    } catch (error) {
+      throw new Meteor.Error(error);
+    }
   },
   "stripe.createStripeProduct": function(productId) {
     let existingProduct = stripe.products.retrieve(productId, function(
       err,
       product
     ) {
-      console.log("product--------->", product);
       // asynchronously called
-      if (!product && !err) {
+      if (!product && err && err.message.indexOf("No such product") != -1) {
         //Create a service product
-        const product = stripe.products.create(
-          {
-            name: "My SaaS Platform",
-            type: "service",
-            id: productId
-          },
-          function(err, result) {
-            if (result && result.id) {
-              return result.id;
-            } else {
-              throw new Meteor.Error(
-                (err && err.message) || "Something went wrong!!!"
-              );
+        try {
+          const product = stripe.products.create(
+            {
+              name: "Skillshape Monthly Package Product",
+              type: "service",
+              id: productId
+            },
+            function(err, result) {
+              if (result && result.id) {
+                return result.id;
+              } else {
+                throw new Meteor.Error(
+                  (err && err.message) || "Something went wrong!!!"
+                );
+              }
             }
-          }
-        );
+          );
+        } catch (err) {}
       }
     });
+  },
+  "stripe.handleCustomer": async function(token) {
+    let result = await stripe.customers.create({
+      description: "Customer for abigail.white@example.com",
+      source: token // obtained with Stripe.js
+    });
+    const subscription = await stripe.subscriptions.create({
+      customer: result.id,
+      items: [{ plan: "plan_DBCIv225JQv2XV" }]
+    });
+    console.log(subscription);
+    return result.id;
   }
 });
