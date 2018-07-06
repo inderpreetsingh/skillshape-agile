@@ -2,6 +2,7 @@ import UserStripeData from "./fields";
 import School from "../school/fields";
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
+var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
 Meteor.methods({
   "stripe.chargeCard": async function(
     stripeToken,
@@ -120,5 +121,53 @@ Meteor.methods({
     } else {
       return false;
     }
+  },
+  "stripe.createStripePlan": function({ currencyCode, interval, amount }) {
+    let productId = Meteor.settings.productId;
+    const plan = stripe.plans.create(
+      {
+        product: productId,
+        currency: currencyCode, // currency code should be in lower case
+        interval: interval,
+        amount: amount
+      },
+      function(err, res) {
+        console.log("error22222------------->", err, res);
+        if (err) {
+          throw new Meteor.Error(
+            (err && err.message) || "Something went wrong!!!"
+          );
+        } else {
+        }
+      }
+    );
+  },
+  "stripe.createStripeProduct": function(productId) {
+    let existingProduct = stripe.products.retrieve(productId, function(
+      err,
+      product
+    ) {
+      console.log("product--------->", product);
+      // asynchronously called
+      if (!product && !err) {
+        //Create a service product
+        const product = stripe.products.create(
+          {
+            name: "My SaaS Platform",
+            type: "service",
+            id: productId
+          },
+          function(err, result) {
+            if (result && result.id) {
+              return result.id;
+            } else {
+              throw new Meteor.Error(
+                (err && err.message) || "Something went wrong!!!"
+              );
+            }
+          }
+        );
+      }
+    });
   }
 });
