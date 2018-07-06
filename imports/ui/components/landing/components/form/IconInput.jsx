@@ -23,11 +23,19 @@ class IconInput extends React.Component {
     inputFocused : false,
   }
   onFocus = ()=> {
-      this.setState({inputFocused: true})
+      this.setState({inputFocused: true});
   }
   onBlur = ()=> {
       this.setState({inputFocused: false})
   }
+  
+  componentDidUpdate = () => {
+    const {focusOnInput} = this.props;
+    if(focusOnInput) {
+      this.inputRef.focus();
+    }
+  }
+
   render() {
     const props = this.props;
     let inputRef;
@@ -54,7 +62,10 @@ class IconInput extends React.Component {
       {!props.skillShapeInput ? <FormControl error={props.error} fullWidth aria-describedby="error-text">
         <InputLabel htmlFor={props.inputId} classes={{root: props.classes.label}}>{props.labelText}</InputLabel>
         <Input
-          inputRef={(ref)=> inputRef = ref}
+          inputRef={(ref) => {
+            inputRef = ref;
+            this.inputRef = ref;
+          }}
           value={props.value}
           disabled={props.disabled}
           multiline={props.multiline}

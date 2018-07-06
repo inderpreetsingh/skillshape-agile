@@ -166,6 +166,10 @@ const Heading = styled.h2`
   margin-top: ${props => props.marginTop}px;
 `;
 
+const ClassTimeWrapper = styled.div`
+  width: 100%;
+`;
+
 const Text = styled.p`
   margin: 0;
   font-family: ${helpers.specialFont};
@@ -190,10 +194,11 @@ const EventHeader = styled.div`
 const ImageContainer = styled.div`
   width: 100px;
   height: 100px;
+  flex-shrink: 0;
+  ${helpers.coverBg};
   border-radius: 50%;
   margin-right: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv}px;
-  ${helpers.coverBg};
   background-position: 50% 50%;
   background-image: url('${props => props.src}');
 `;
@@ -216,8 +221,6 @@ const Event = styled.div`
   flex-direction: column;
   padding-right: ${helpers.rhythmDiv*2}px;
 `;
-
-const ScheduleType = Text.extend``;
 
 const EventDesc = Text.extend``;
 
@@ -286,6 +289,15 @@ class ClassDetailModal extends React.Component {
   componentDidUpdate = () => {
     const {classType,school} = this.state;
     this.setImageSrc(classType,school);
+  }
+
+  formatScheduleType = (scheduleType) => {
+      const classScheduleType = scheduleType.toLowerCase();
+
+      if(classScheduleType === 'recurring' || classScheduleType === 'ongoing')
+        return (<Text><Capitalize>{classScheduleType}</Capitalize></Text>)
+
+      return <Text>{"One Time"}</Text>
   }
 
   setImageSrc = (classType,school) => {
@@ -400,7 +412,7 @@ class ClassDetailModal extends React.Component {
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(eventData,false); // false is for not hiding the past schedule types.
     const classTimesData = ClassTimes.find({classTypeId: eventData.classTypeId});
     const allFormattedClassTimeDetails = formatClassTimesData(classTimesData,true).filter(classTime => {
-      debugger;
+
         if(classTime._id != eventData.classTimeId
           && classTime.formattedClassTimesDetails
           && classTime.formattedClassTimesDetails.totalClassTimes > 0) {
@@ -459,7 +471,7 @@ class ClassDetailModal extends React.Component {
                   </ImageContainer>}
                   <Event center={classImg !== ''}>
                     <EventName>{eventData.name}</EventName>
-                    <ScheduleType>{eventData.scheduleType}</ScheduleType>
+                    {this.formatScheduleType(eventData.scheduleType)}
                   </Event>
                 </EventHeader>
                 <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>

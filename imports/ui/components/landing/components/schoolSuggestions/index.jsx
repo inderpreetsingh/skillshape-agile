@@ -33,6 +33,17 @@ class SchoolSuggestionsView extends Component {
 
   componentWillMount = () => {
     const { currentUser } = this.props;
+    console.log(currentUser," in the will mount");
+    const accessAllowed = checkMyAccess({user:currentUser});
+    // console.log(accessAllowed,checkMyAccess({user: currentUser}))
+    if(accessAllowed) {
+      this.setState({ accessAllowed: true});
+    }
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const { currentUser } = nextProps;
+    console.log(currentUser," in the recieve props");
     const accessAllowed = checkMyAccess({user:currentUser});
     // console.log(accessAllowed,checkMyAccess({user: currentUser}))
     if(accessAllowed) {
@@ -42,13 +53,13 @@ class SchoolSuggestionsView extends Component {
 
   render() {
     const {accessAllowed} = this.state;
-    const {schoolSuggestions,isLoading} = this.props;
+    const {schoolSuggestions, isLoading} = this.props;
     if(!accessAllowed) {
       return <h2>No Access Allowed</h2>
     }else if(isLoading) {
       return <ContainerLoader />
     }
-
+    debugger;
     return (<Wrapper>
         <Heading>School Suggestions</Heading>
         <SuggestionTable data={schoolSuggestions}/>

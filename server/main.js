@@ -175,6 +175,24 @@ if (Meteor.isServer) {
         return user;
     });
 
+    // var userFeedBack = function(user, email, message, request, subject) {
+    //     var fromEmail = "Notices@SkillShape.com";
+    //     var toEmail = "Notices@SkillShape.com";
+    //     Email.send({
+    //         from: fromEmail,
+    //         to: toEmail,
+    //         replyTo: fromEmail,
+    //         subject: "skillshape feedback",
+    //         text: "Hi ,\nWe have feedback from : " + user + "(" + email + ")" +
+    //             "\nHis feedback request is : " + request + "\n" +
+    //             + (subject ? "\nSubject: "+subject+ "\n\n" : '') +
+    //             "\nMessage : " + message + "\n\n" +
+    //             "Thank you.\n" +
+    //             "The skillshape Team.\n" + Meteor.absoluteUrl() + "\n"
+    //         // + "http://www.graphical.io/assets/img/Graphical-IO.png"
+    //     });
+    // }
+
     var userFeedBack = function(user, email, message, request, subject) {
         var fromEmail = "Notices@SkillShape.com";
         var toEmail = "Notices@SkillShape.com";
@@ -182,13 +200,15 @@ if (Meteor.isServer) {
             from: fromEmail,
             to: toEmail,
             replyTo: fromEmail,
-            subject: "skillshape Feedback",
-            text: "Hi ,\nWe have feedback from : " + user + "(" + email + ")" +
-                "\nHis feedback request is : " + request + "\n" +
-                + (subject ? `\nSubject: ${subject} \n\n` : '') +
-                "\nMessage : " + message + "\n\n" +
-                "Thank you.\n" +
-                "The skillshape Team.\n" + Meteor.absoluteUrl() + "\n"
+            subject: "skillshape feedback",
+            text: `Hi,
+                We have feedback from : ${user} (${email})
+                His feedback request is ${request}
+                ${subject ? `Subject: ${subject}` : ''}
+                Message : ${message}
+                Thank you.
+                The skillshape Team.
+                ${Meteor.absoluteUrl()}`
             // + "http://www.graphical.io/assets/img/Graphical-IO.png"
         });
     }
@@ -230,8 +250,8 @@ if (Meteor.isServer) {
         get_url: function(url) {
             return Meteor.http.get(url, { headers: { "User-Agent": "Meteor/1.0" }, timeout: 25000 });
         },
-        sendfeedbackToAdmin: function(user, email, message, request) {
-            userFeedBack(user, email, message, request)
+        sendfeedbackToAdmin: function(user, email, message, request, subject) {
+            userFeedBack(user, email, message, request, subject)
             return true;
         }
     });

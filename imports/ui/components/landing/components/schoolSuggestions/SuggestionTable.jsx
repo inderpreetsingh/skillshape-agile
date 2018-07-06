@@ -42,7 +42,6 @@ const CustomTableCell = withStyles({
 })(TableCell);
 
 const SuggestionTable = (props) => {
-  debugger;
   return(<Paper className={props.classes.root}>
     <Table className={props.classes.table}>
        <TableHead>
