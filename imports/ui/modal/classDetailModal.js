@@ -166,6 +166,10 @@ const Heading = styled.h2`
   margin-top: ${props => props.marginTop}px;
 `;
 
+const ClassTimeWrapper = styled.div`
+  width: 100%;
+`;
+
 const Text = styled.p`
   margin: 0;
   font-family: ${helpers.specialFont};
@@ -190,10 +194,11 @@ const EventHeader = styled.div`
 const ImageContainer = styled.div`
   width: 100px;
   height: 100px;
+  flex-shrink: 0;
+  ${helpers.coverBg};
   border-radius: 50%;
   margin-right: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv}px;
-  ${helpers.coverBg};
   background-position: 50% 50%;
   background-image: url('${props => props.src}');
 `;
