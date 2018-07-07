@@ -700,7 +700,7 @@ class ClassDetailModal extends React.Component {
 
               <Grid container style={{ marginTop: "16px" }}>
                 {!isEmpty(classTypeData) && (
-                  <div>
+                  <div style={{ backgroundColor: "skyblue" }}>
                     <Heading marginTop={helpers.rhythmDiv} textTransform="none">
                       This {`${classType && classType.name.toLowerCase()}`} :{" "}
                       {eventData.name} is part of
