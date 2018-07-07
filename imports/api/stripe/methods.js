@@ -168,16 +168,41 @@ Meteor.methods({
       }
     });
   },
-  "stripe.handleCustomer": async function(token) {
-    let result = await stripe.customers.create({
-      description: "Customer for abigail.white@example.com",
-      source: token // obtained with Stripe.js
-    });
-    const subscription = await stripe.subscriptions.create({
-      customer: result.id,
-      items: [{ plan: "plan_DBCIv225JQv2XV" }]
-    });
-    console.log(subscription);
-    return result.id;
+  "stripe.handleCustomerAndSubscribe": async function(token, planId) {
+    //customer creation and subscribe if new otherwise straight to subscribe
+    try {
+      console.log("token,planId", token, planId);
+      let userId = this.userId;
+      console.log("userId", userId);
+      let currentUserProfile = Meteor.users.findOne({
+        _id: userId,
+        stripeCusId: { $exists: true }
+      });
+      let stripeCusId;
+      console.log("currentUserProfile", currentUserProfile);
+      if (currentUserProfile) {
+        stripeCusId = currentUserProfile.stripeCusId;
+      } else {
+        let stripeCustomer = await stripe.customers.create({
+          description: Meteor.user().emails[0].address,
+          source: token
+        });
+        stripeCusId = stripeCustomer.id;
+        console.log("stripeCusId in else part", stripeCusId);
+        Meteor.users.update(
+          { _id: userId },
+          { $set: { stripeCusId: stripeCusId } }
+        );
+      }
+      console.log("stripeCusId", stripeCusId);
+      const subscription = await stripe.subscriptions.create({
+        customer: stripeCusId,
+        items: [{ plan: planId }]
+      });
+      console.log(subscription);
+      return stripeCusId;
+    } catch (error) {
+      console.log("error in stripe.handleCustomerAndSubscribe", error);
+    }
   }
 });

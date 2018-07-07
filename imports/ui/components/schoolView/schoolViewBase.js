@@ -507,7 +507,8 @@ export default class SchoolViewBase extends React.Component {
     monthlyPymtDetails,
     expDuration,
     expPeriod,
-    noClasses
+    noClasses,
+    planId
   ) => {
     // Start loading
     const { toastr } = this.props;
@@ -593,12 +594,17 @@ export default class SchoolViewBase extends React.Component {
                   }
                 );
               } else if (packageType == "MP") {
-                Meteor.call("stripe.handleCustomer", token.id, (err, res) => {
-                  toastr.success(
-                    `customer id ${res} created successfully`,
-                    "Success"
-                  );
-                });
+                Meteor.call(
+                  "stripe.handleCustomerAndSubscribe",
+                  token.id,
+                  planId,
+                  (err, res) => {
+                    toastr.success(
+                      `customer id ${res} created successfully`,
+                      "Success"
+                    );
+                  }
+                );
               }
             }
           });
