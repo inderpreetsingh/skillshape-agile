@@ -166,7 +166,7 @@ const Heading = styled.h2`
   margin-top: ${props => props.marginTop}px;
 `;
 
-const ClassTimeWrapper = styled.div`
+const ClassTimeCardsWrapper = styled.div`
   width: 100%;
 `;
 
@@ -625,7 +625,7 @@ class ClassDetailModal extends React.Component {
                 container
                 style={{ marginTop: "16px" }}
               >
-              {!isEmpty(classTypeData) &&  <div>
+              {!isEmpty(classTypeData) &&  <ClassTimeCardsWrapper>
                   <Heading marginTop={helpers.rhythmDiv} textTransform="none">This class time is part of</Heading>
                   <ClassTimesBoxes
                     inPopUp={true}
@@ -633,9 +633,9 @@ class ClassDetailModal extends React.Component {
                     classTimesData={[classTypeData]}
                     classInterestData={classInterestData}
                   />
-                </div>}
+                </ClassTimeCardsWrapper>}
 
-                {!isEmpty(allFormattedClassTimeDetails) && <div>
+                {!isEmpty(allFormattedClassTimeDetails) && <ClassTimeCardsWrapper>
                   <Heading marginTop={helpers.rhythmDiv} textTransform="none">More class times for <Capitalize>{classType.name.toLowerCase()}</Capitalize></Heading>
                   <ClassTimesBoxes
                     inPopUp={true}
@@ -643,7 +643,7 @@ class ClassDetailModal extends React.Component {
                     classTimesData={allFormattedClassTimeDetails}
                     classInterestData={classInterestData}
                   />
-                </div>}
+                </ClassTimeCardsWrapper>}
               </Grid>
 
               <DialogActions className={classes.dialogAction}>
