@@ -604,10 +604,14 @@ export default class SchoolViewBase extends React.Component {
                   packageId,
                   monthlyPymtDetails,
                   (err, res) => {
-                    toastr.success(
-                      `Subscription successfully subscribed`,
-                      "Success"
-                    );
+                    if (res) {
+                      toastr.success(
+                        `Subscription successfully subscribed`,
+                        "Success"
+                      );
+                    } else {
+                      toastr.error("error found ", "error");
+                    }
                   }
                 );
               }
