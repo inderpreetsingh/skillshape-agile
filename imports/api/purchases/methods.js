@@ -16,14 +16,7 @@ Meteor.methods({
     Purchases.update(
       { _id: recordId },
       {
-<<<<<<< HEAD
-        $set: {
-          stripeResponse: payload.stripeResponse,
-          status: payload.status
-        }
-=======
         $set: payload
->>>>>>> stripe-changes
       }
     );
   },

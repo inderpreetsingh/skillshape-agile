@@ -1,13 +1,11 @@
 import UserStripeData from "./fields";
 import School from "../school/fields";
-<<<<<<< HEAD
+
 import ClassSubscription from "../classSubscription/fields";
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
 var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
-=======
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
->>>>>>> stripe-changes
 Meteor.methods({
   "stripe.chargeCard": async function(
     stripeToken,
@@ -53,14 +51,11 @@ Meteor.methods({
       endDate = getExpiryDateForPackages(startDate, expPeriod, expDuration);
       let payload = {
         userId: userId,
-<<<<<<< HEAD
         stripeRequest: stripeRequest,
-=======
         emailId: user.emails[0].address,
         userName: user.profile.firstName || user.profile.name,
         packageName: desc,
-        stripe_Request: stripe_Request,
->>>>>>> stripe-changes
+        stripeRequest: stripeRequest,
         createdOn: new Date(),
         packageId: packageId,
         packageType: packageType,
@@ -239,6 +234,7 @@ Meteor.methods({
     monthlyPymtDetails
   ) {
     //customer creation and subscribe if new otherwise straight to subscribe
+    let startDate, expiryDate, subscriptionRequest, subscriptionDbId, payload;
     try {
       let userId = this.userId;
       let currentUserProfile = Meteor.users.findOne({
@@ -259,12 +255,41 @@ Meteor.methods({
           { $set: { stripeCusId: stripeCusId } }
         );
       }
-      let payload = { userId: userId };
-      const subscription = await stripe.subscriptions.create({
+      startDate = getExpiryDateForPackages(new Date());
+      expiryDate = getExpiryDateForPackages(
+        startDate,
+        "Months",
+        monthlyPymtDetails[0].month
+      );
+      subscriptionRequest = {
         customer: stripeCusId,
         items: [{ plan: planId }]
-      });
+      };
+      payload = {
+        userId: userId,
+        startDate,
+        expiryDate,
+        status: "inProgress",
+        packageId,
+        packageName,
+        schoolId,
+        subscriptionRequest
+      };
+      subscriptionDbId = ClassSubscription.insert(payload);
+      const subscriptionResponse = await stripe.subscriptions.create(
+        subscriptionRequest
+      );
+      payload = {
+        subscriptionId: subscriptionResponse.id,
+        subscriptionResponse,
+        status: "successful"
+      };
+      ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
       return stripeCusId;
-    } catch (error) {}
+    } catch (error) {
+      console.log("error in stripe.handleCustomerAndSubscribe ------>", error);
+      payload = { subscriptionResponse, status: "error" };
+      ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
+    }
   }
 });

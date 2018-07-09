@@ -217,7 +217,7 @@ const Package = props => (
                 props.expDuration,
                 props.expPeriod,
                 props.noClasses,
-                props.pymtDetails[0].planId
+                props.pymtDetails && props.pymtDetails[0].planId
               )
             }
           />
