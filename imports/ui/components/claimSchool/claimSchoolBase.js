@@ -1,10 +1,12 @@
 import React from "react";
 var ReactDOM = require("react-dom");
+import isEmpty from 'lodash/isEmpty';
 import {browserHistory} from 'react-router';
 
 import Events from '/imports/util/events';
 
 export default class ClaimSchoolBase extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -15,6 +17,7 @@ export default class ClaimSchoolBase extends React.Component {
             error: null,
             showConfirmationModal:false
         };
+        this.fieldNames = ['skillSubjectIds','skillCategoryIds','schoolName','locationName','experienceLevel'];
     }
     handleFixedToggle = state => {
         // console.log("handleFixedToggle", defaultPosition);
@@ -38,6 +41,18 @@ export default class ClaimSchoolBase extends React.Component {
             });
         }
     };
+
+    _ifAllFieldsEmpty = (data) => {
+      let allFieldsEmpty = true;
+      for(let i = 0; i < this.fieldNames.length; ++i) {
+        if(!isEmpty(data[this.fieldNames[i]])) {
+          allFieldsEmpty = false;
+          return false;
+        }
+      }
+
+      return allFieldsEmpty;
+    }
 
     handleGiveSuggestion = () => {
       console.log(this.state,"this.state");
@@ -74,16 +89,23 @@ export default class ClaimSchoolBase extends React.Component {
         }
 
         console.log(data,"data................")
-        this.setState({isLoading: true});
-        Meteor.call('schoolSuggestion.addSuggestion',data,(err,res) => {
-          this.setState({isLoading: false});
-          if(err) {
-            toastr.error(err.reason,"Error");
-          }else {
-            toastr.success("Thanks alot for your suggestion","success");
-            this.handleSchoolSuggestionDialogState(false)(); // closing the modal.
-          }
-        });
+        // this.setState({isLoading: true});
+
+        console.log(this._ifAllFieldsEmpty(data));
+        if(this._ifAllFieldsEmpty(data)) {
+          toastr.error(`Please fill one atleast 1 field for suggestion of school`,"Error");
+        }else {
+          Meteor.call('schoolSuggestion.addSuggestion',data,(err,res) => {
+            this.setState({isLoading: false});
+            if(err) {
+              toastr.error(err.reason,"Error");
+            }else {
+              toastr.success("Thanks alot for your suggestion","success");
+              this.handleSchoolSuggestionDialogState(false)(); // closing the modal.
+            }
+          });
+        }
+
     }
 
     handleFiltersDialogBoxState = (state) => {
