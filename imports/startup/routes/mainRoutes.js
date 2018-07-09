@@ -69,6 +69,7 @@ export default (Routes = componentLoader(props => (
         name="redirect-to-stripe"
         component={StripeConnectModal}
       />
+      <Route path="/school-suggestions" name="SchoolSuggestionsView" component={SchoolSuggestionsView} />
       <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />
 
@@ -77,11 +78,6 @@ export default (Routes = componentLoader(props => (
         <Route path="/Contactus" name="Contactus" component={ContactUs} />
         <Route path="/profile/:id" name="MyProfile" component={MyProfile} />
         <Route path="/media/:id" name="MyMedia" component={MyMedia} />
-        <Route
-          path="/school-suggestions"
-          name="SchoolSuggestionsView"
-          component={SchoolSuggestionsView}
-          />
         <Route
           path="/subsciptions/:id"
           name="MySubscriptions"

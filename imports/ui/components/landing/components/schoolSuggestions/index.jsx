@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { createContainer } from 'meteor/react-meteor-data';
 
 import { ContainerLoader } from '/imports/ui/loading/container.js';
+import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
 import SuggestionTable from '/imports/ui/components/landing/components/schoolSuggestions/SuggestionTable.jsx';
 import SchoolSuggestion from '/imports/api/schoolSuggestion/fields.js';
 
@@ -21,13 +22,14 @@ const Wrapper = styled.div`
   background: white;
   padding: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv * 4}px;
+  overflow-x: hidden;
 `;
 
 class SchoolSuggestionsView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accessAllowed: false
+      accessAllowed: true
     }
   }
 
@@ -38,6 +40,8 @@ class SchoolSuggestionsView extends Component {
     // console.log(accessAllowed,checkMyAccess({user: currentUser}))
     if(accessAllowed) {
       this.setState({ accessAllowed: true});
+    }else {
+      this.setState({accessAllowed: false});
     }
   }
 
@@ -48,6 +52,8 @@ class SchoolSuggestionsView extends Component {
     // console.log(accessAllowed,checkMyAccess({user: currentUser}))
     if(accessAllowed) {
       this.setState({ accessAllowed: true});
+    }else {
+      this.setState({accessAllowed: false});
     }
   }
 
@@ -61,6 +67,7 @@ class SchoolSuggestionsView extends Component {
     }
     debugger;
     return (<Wrapper>
+        <BrandBar positionStatic currentUser={this.props.currentUser} />
         <Heading>School Suggestions</Heading>
         <SuggestionTable data={schoolSuggestions}/>
       </Wrapper>)

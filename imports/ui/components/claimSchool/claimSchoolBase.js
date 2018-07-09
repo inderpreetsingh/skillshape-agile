@@ -17,7 +17,7 @@ export default class ClaimSchoolBase extends React.Component {
             error: null,
             showConfirmationModal:false
         };
-        this.fieldNames = ['skillSubjectIds','skillCategoryIds','schoolName','locationName','experienceLevel'];
+        this.fieldNames = ['skillSubjectIds','skillCategoryIds','schoolName','locationName','experienceLevel','gender','age'];
     }
     handleFixedToggle = state => {
         // console.log("handleFixedToggle", defaultPosition);
@@ -63,6 +63,8 @@ export default class ClaimSchoolBase extends React.Component {
         skillCategoryIds,
         skillSubjectIds,
         defaultSkillSubject,
+        gender,
+        age,
         _classPrice,
         _monthPrice} = this.state.filters;
 
@@ -72,6 +74,8 @@ export default class ClaimSchoolBase extends React.Component {
           schoolName,
           skillCategoryIds,
           skillSubjectIds,
+          gender,
+          age
         }
 
         if(_monthPrice) {
@@ -88,13 +92,13 @@ export default class ClaimSchoolBase extends React.Component {
           }
         }
 
-        console.log(data,"data................")
-        // this.setState({isLoading: true});
+        console.log(data,this.state.filters,"data................")
 
         console.log(this._ifAllFieldsEmpty(data));
         if(this._ifAllFieldsEmpty(data)) {
           toastr.error(`Please fill one atleast 1 field for suggestion of school`,"Error");
         }else {
+          this.setState({isLoading: true});
           Meteor.call('schoolSuggestion.addSuggestion',data,(err,res) => {
             this.setState({isLoading: false});
             if(err) {
