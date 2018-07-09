@@ -46,17 +46,17 @@ class Transactions extends React.Component {
                         {"Payout" || "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Response &&
-                        purchase.stripe_Response.amount
+                        {purchase.stripeResponse &&
+                        purchase.stripeResponse.amount
                           ? "$" +
-                            purchase.stripe_Request.destination.amount / 100
+                            purchase.stripeRequest.destination.amount / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Response &&
-                        purchase.stripe_Response.amount
+                        {purchase.stripeResponse &&
+                        purchase.stripeResponse.amount
                           ? "$" +
-                            purchase.stripe_Request.destination.amount / 100
+                            purchase.stripeRequest.destination.amount / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w211}>-----</TableCell>
@@ -75,17 +75,17 @@ class Transactions extends React.Component {
                         {"Charge" || "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Response &&
-                        purchase.stripe_Response.amount
+                        {purchase.stripeResponse &&
+                        purchase.stripeResponse.amount
                           ? "$" +
-                            purchase.stripe_Response.amount / 100 -
+                            purchase.stripeResponse.amount / 100 -
                             purchase.fee / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Response &&
-                        purchase.stripe_Response.amount
-                          ? "$" + purchase.stripe_Response.amount / 100
+                        {purchase.stripeResponse &&
+                        purchase.stripeResponse.amount
+                          ? "$" + purchase.stripeResponse.amount / 100
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w211}>
@@ -94,8 +94,8 @@ class Transactions extends React.Component {
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Response
-                          ? purchase.stripe_Response.description
+                        {purchase.stripeResponse
+                          ? purchase.stripeResponse.description
                           : "Unavailable"}
                       </TableCell>
                       <TableCell style={style.w150}>

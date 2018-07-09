@@ -1,6 +1,6 @@
 import UserStripeData from "./fields";
 import School from "../school/fields";
-//import MonthlyPricing
+import ClassSubscription from "../classSubscription/fields";
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
 var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
@@ -19,11 +19,10 @@ Meteor.methods({
       let superAdminId = schoolData.superAdmin;
       let stripeAccountId = UserStripeData.findOne({ userId: superAdminId });
       stripeAccountId = stripeAccountId.stripe_user_id;
-
       const token = stripeToken;
       const skillshapeAmount = Math.round(amount * (2.9 / 100) + 40);
       const destinationAmount = Math.round(amount - skillshapeAmount);
-      let stripe_Request = {
+      let stripeRequest = {
         amount: amount,
         currency: "usd",
         description: desc,
@@ -36,7 +35,7 @@ Meteor.methods({
       let userId = this.userId;
       let payload = {
         userId: userId,
-        stripe_Request: stripe_Request,
+        stripeRequest: stripeRequest,
         createdOn: new Date(),
         packageId: packageId,
         packageType: packageType,
@@ -45,10 +44,10 @@ Meteor.methods({
         fee: Math.round(amount * (2.9 / 100) + 30)
       };
       recordId = Meteor.call("purchases.addPurchase", payload);
-      let charge = await stripe.charges.create(stripe_Request);
+      let charge = await stripe.charges.create(stripeRequest);
 
       payload = {
-        stripe_Response: charge,
+        stripeResponse: charge,
         status: "Succeeded"
       };
       Meteor.call("purchases.updatePurchases", payload, recordId);
@@ -58,7 +57,7 @@ Meteor.methods({
       return "Payment Successfully Done";
     } catch (error) {
       payload = {
-        stripe_Response: error,
+        stripeResponse: error,
         status: "Error"
       };
       Meteor.call("purchases.updatePurchases", payload, recordId);
@@ -168,18 +167,23 @@ Meteor.methods({
       }
     });
   },
-  "stripe.handleCustomerAndSubscribe": async function(token, planId) {
+  "stripe.handleCustomerAndSubscribe": async function(
+    token,
+    planId,
+    schoolId,
+    packageName,
+    amount,
+    packageId,
+    monthlyPymtDetails
+  ) {
     //customer creation and subscribe if new otherwise straight to subscribe
     try {
-      console.log("token,planId", token, planId);
       let userId = this.userId;
-      console.log("userId", userId);
       let currentUserProfile = Meteor.users.findOne({
         _id: userId,
         stripeCusId: { $exists: true }
       });
       let stripeCusId;
-      console.log("currentUserProfile", currentUserProfile);
       if (currentUserProfile) {
         stripeCusId = currentUserProfile.stripeCusId;
       } else {
@@ -188,21 +192,17 @@ Meteor.methods({
           source: token
         });
         stripeCusId = stripeCustomer.id;
-        console.log("stripeCusId in else part", stripeCusId);
         Meteor.users.update(
           { _id: userId },
           { $set: { stripeCusId: stripeCusId } }
         );
       }
-      console.log("stripeCusId", stripeCusId);
+      let payload = { userId: userId };
       const subscription = await stripe.subscriptions.create({
         customer: stripeCusId,
         items: [{ plan: planId }]
       });
-      console.log(subscription);
       return stripeCusId;
-    } catch (error) {
-      console.log("error in stripe.handleCustomerAndSubscribe", error);
-    }
+    } catch (error) {}
   }
 });

@@ -1,22 +1,32 @@
 import config from "/imports/config";
-const Purchases = new Mongo.Collection(config.collections.purchases);
+const ClassSubscription = new Mongo.Collection(
+  config.collections.classSubscription
+);
 
-export const PurchasesSchema = new SimpleSchema({
+export const ClassSubscriptionSchema = new SimpleSchema({
   userId: {
     type: String,
     optional: true
   },
-  stripeRequest: {
+  subscriptionId: {
+    type: String,
+    optional: true
+  },
+  subscriptionRequest: {
     type: Object,
     optional: true,
     blackbox: true
   },
-  stripeResponse: {
+  subscriptionResponse: {
     type: Object,
     optional: true,
     blackbox: true
   },
-  createdOn: {
+  startDate: {
+    type: Date,
+    optional: true
+  },
+  expiryDate: {
     type: Date,
     optional: true
   },
@@ -24,7 +34,7 @@ export const PurchasesSchema = new SimpleSchema({
     type: String,
     optional: true
   },
-  packageType: {
+  packageName: {
     type: String,
     optional: true
   },
@@ -35,16 +45,8 @@ export const PurchasesSchema = new SimpleSchema({
   status: {
     type: String,
     optional: true
-  },
-  fee: {
-    type: Number,
-    optional: true
   }
 });
 
-Purchases.attachSchema(PurchasesSchema);
-Purchases.join(Meteor.users, "userId", "profile", [
-  "profile.name",
-  "emails.address"
-]);
-export default Purchases;
+ClassSubscription.attachSchema(ClassSubscriptionSchema);
+export default ClassSubscription;

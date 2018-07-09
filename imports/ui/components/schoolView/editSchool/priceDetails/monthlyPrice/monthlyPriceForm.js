@@ -149,9 +149,18 @@ class MonthlyPriceForm extends React.Component {
   handleCheckBox = (key, disableKey, pymtType, event, isInputChecked) => {
     let oldPayment = this.state.pymtType || {};
     oldPayment[pymtType] = isInputChecked;
+    console.log(
+      "key, disableKey, pymtType, event, isInputChecked",
+      key,
+      disableKey,
+      pymtType,
+      event,
+      isInputChecked
+    );
     this.setState({
       [key]: isInputChecked,
-      pymtType: oldPayment
+      pymtType: oldPayment,
+      [disableKey]: false
     });
   };
   handleChange = name => event => {
@@ -250,7 +259,13 @@ class MonthlyPriceForm extends React.Component {
                     </Button>
                     <Button
                       className={classes.button}
-                      onClick={() => this.setState({ tabValue: 1 })}
+                      onClick={() =>
+                        this.setState({
+                          tabValue: 1,
+                          autoWithDraw: false,
+                          payAsYouGo: false
+                        })
+                      }
                       raised
                       color={this.state.tabValue == 1 && "primary"}
                     >

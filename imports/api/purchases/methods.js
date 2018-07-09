@@ -20,7 +20,7 @@ Meteor.methods({
       { _id: recordId },
       {
         $set: {
-          stripe_Response: payload.stripe_Response,
+          stripeResponse: payload.stripeResponse,
           status: payload.status
         }
       }

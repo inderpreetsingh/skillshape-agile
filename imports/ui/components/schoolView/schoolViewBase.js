@@ -598,6 +598,11 @@ export default class SchoolViewBase extends React.Component {
                   "stripe.handleCustomerAndSubscribe",
                   token.id,
                   planId,
+                  schoolId,
+                  packageName,
+                  amount,
+                  packageId,
+                  monthlyPymtDetails,
                   (err, res) => {
                     toastr.success(
                       `customer id ${res} created successfully`,
