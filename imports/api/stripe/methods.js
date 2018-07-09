@@ -1,9 +1,13 @@
 import UserStripeData from "./fields";
 import School from "../school/fields";
+<<<<<<< HEAD
 import ClassSubscription from "../classSubscription/fields";
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
 var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
+=======
+import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
+>>>>>>> stripe-changes
 Meteor.methods({
   "stripe.chargeCard": async function(
     stripeToken,
@@ -11,9 +15,21 @@ Meteor.methods({
     desc,
     packageId,
     packageType,
-    schoolId
+    schoolId,
+    expDuration,
+    expPeriod,
+    noClasses,
+    classTypeIds
   ) {
     let recordId;
+    if (packageType == "EP") {
+      desc = "Enrollment Fee";
+    }
+    let userId = this.userId;
+    let endDate;
+    let startDate;
+    let user = Meteor.user();
+    console.log("user", user);
     try {
       let schoolData = School.findOne({ _id: schoolId });
       let superAdminId = schoolData.superAdmin;
@@ -32,15 +48,28 @@ Meteor.methods({
           account: stripeAccountId
         }
       };
-      let userId = this.userId;
+
+      startDate = getExpiryDateForPackages(new Date());
+      endDate = getExpiryDateForPackages(startDate, expPeriod, expDuration);
       let payload = {
         userId: userId,
+<<<<<<< HEAD
         stripeRequest: stripeRequest,
+=======
+        emailId: user.emails[0].address,
+        userName: user.profile.firstName || user.profile.name,
+        packageName: desc,
+        stripe_Request: stripe_Request,
+>>>>>>> stripe-changes
         createdOn: new Date(),
         packageId: packageId,
         packageType: packageType,
         schoolId: schoolId,
         status: "In_Progress",
+        startDate: startDate,
+        endDate: endDate,
+        noOfClasses: noClasses,
+        classTypeIds: classTypeIds,
         fee: Math.round(amount * (2.9 / 100) + 30)
       };
       recordId = Meteor.call("purchases.addPurchase", payload);
@@ -50,17 +79,50 @@ Meteor.methods({
         stripeResponse: charge,
         status: "Succeeded"
       };
-      Meteor.call("purchases.updatePurchases", payload, recordId);
-      stripe.balance.retrieve(function(err, balance) {
-        console.log("------------balace--------------", balance);
-      });
+      let currentUserRec = Meteor.users.findOne(this.userId);
+      Meteor.call("purchases.updatePurchases", { payload, recordId });
+      let memberData = {
+        firstName:
+          currentUserRec.profile.name || currentUserRec.profile.firstName,
+        lastName: currentUserRec.profile.firstName || "",
+        email: currentUserRec.emails[0].address,
+        phone: "",
+        schoolId: schoolId,
+        classTypeIds: classTypeIds,
+        birthYear: "",
+        studentWithoutEmail: false,
+        sendMeSkillShapeNotification: true,
+        activeUserId: currentUserRec._id,
+        createdBy: "",
+        inviteAccepted: false
+      };
+      Meteor.call(
+        "schoolMemberDetails.addNewMember",
+        memberData,
+        (error, result) => {
+          let memberId = result;
+          Meteor.call(
+            "purchases.checkExisitingPackagePurchases",
+            userId,
+            packageId,
+            (error, result) => {
+              status = result;
+              payload = { memberId: memberId, packageStatus: status };
+              Meteor.call("purchases.updatePurchases", { payload, recordId });
+            }
+          );
+        }
+      );
+      // stripe.balance.retrieve(function(err, balance) {
+      //   console.log("------------balace--------------", balance);
+      // });
       return "Payment Successfully Done";
     } catch (error) {
       payload = {
         stripeResponse: error,
         status: "Error"
       };
-      Meteor.call("purchases.updatePurchases", payload, recordId);
+      Meteor.call("purchases.updatePurchases", { payload, recordId });
       throw new Meteor.Error(
         (error && error.message) || "Something went wrong!!!"
       );

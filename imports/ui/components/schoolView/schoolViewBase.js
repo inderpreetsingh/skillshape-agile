@@ -25,7 +25,6 @@ export default class SchoolViewBase extends React.Component {
       this.setState({ bestPriceDetails: result });
     });
   }
-
   componentDidUpdate() {
     if (
       !_.isEmpty(this.props.schoolLocation) &&
@@ -34,16 +33,10 @@ export default class SchoolViewBase extends React.Component {
       createMarkersOnMap("schoolLocationMap", this.props.schoolLocation);
     }
   }
-
   validateString = value => {
     if (value) return value;
     return "";
   };
-
-  // checkUserAccess = (currentUser,schoolId) => {
-  //   return checkMyAccess({user: currentUser,schoolId});
-  // }
-
   handleGiveReview = () => {
     const { toastr } = this.props;
     if (Meteor.userId()) {
@@ -317,7 +310,6 @@ export default class SchoolViewBase extends React.Component {
       );
     }
   };
-
   getClaimSchoolModalTitle = () => {
     const { claimSchoolModal, claimRequestModal, successModal } = this.state;
     if (claimSchoolModal) {
@@ -328,7 +320,6 @@ export default class SchoolViewBase extends React.Component {
       return "Claim Status";
     }
   };
-
   modalClose = () => {
     this.setState({
       claimRequestModal: false,
@@ -336,7 +327,6 @@ export default class SchoolViewBase extends React.Component {
       successModal: false
     });
   };
-
   modalSubmit = () => {
     const { claimSchoolModal, claimRequestModal, successModal } = this.state;
     const { currentUser, schoolId, schoolData } = this.props;
@@ -370,7 +360,6 @@ export default class SchoolViewBase extends React.Component {
         schoolName: schoolData.name,
         Status: "new"
       };
-
       Meteor.call("addClaimRequest", payload, (error, result) => {
         console.log(e);
         if (error) {
@@ -389,18 +378,15 @@ export default class SchoolViewBase extends React.Component {
       browserHistory.push(`/schoolAdmin/${schoolId}/edit`);
     }
   };
-
   checkOwnerAccess = (currentUser, userId) => {
     if (currentUser) return currentUser._id == userId;
     return false;
   };
-
   checkForJoin = (currentUser, classId) => {
     if (currentUser && currentUser.profile && currentUser.profile.classIds)
       return currentUser.profile.classIds.includes(classId);
     return false;
   };
-
   scrollToTop = ref => {
     const node = ReactDOM.findDOMNode(ref);
     node.scrollIntoView({ behavior: "smooth" });
@@ -414,17 +400,13 @@ export default class SchoolViewBase extends React.Component {
   //         showConfirmationModal: true,
   //     });
   // }
-
   getOurEmail = () => {
     return this.props.schoolData.email;
   };
-
   cancelConfirmationModal = () =>
     this.setState({ showConfirmationModal: false });
-
   handleRequest = (text = "pricing") => {
     const { toastr, schoolData } = this.props;
-
     if (!isEmpty(schoolData)) {
       let emailBody = "";
       let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
@@ -435,14 +417,12 @@ export default class SchoolViewBase extends React.Component {
         text ? text : pricing
       }%3F %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
-
       console.info(mailTo, "my mail To data.............");
       // const mailToNormalized = encodeURI(mailTo);
       // window.location.href = mailToNormalized;
       openMailToInNewTab(mailTo);
     }
   };
-
   handlePricingRequest = () => {
     const { toastr, schoolData } = this.props;
     if (!Meteor.userId()) {
@@ -451,7 +431,6 @@ export default class SchoolViewBase extends React.Component {
       const data = {
         schoolId: schoolData._id
       };
-
       Meteor.call("pricingRequest.addRequest", data, schoolData, (err, res) => {
         this.setState({ isBusy: false }, () => {
           if (err) {
@@ -466,7 +445,6 @@ export default class SchoolViewBase extends React.Component {
       });
     }
   };
-
   // Request Pricing info using this function
   requestPricingInfo = schoolData => {
     this.setState({ showConfirmationModal: false });
@@ -494,7 +472,6 @@ export default class SchoolViewBase extends React.Component {
     //     }
     // });
   };
-
   // This is used to send purchase request email when user wants to purchase a package.
   handlePurcasePackage = (
     typeOfTable,
@@ -513,15 +490,10 @@ export default class SchoolViewBase extends React.Component {
     // Start loading
     const { toastr } = this.props;
     let self = this;
-    console.log(
-      "this.props.schoolData.superAdmin",
-      this.props.schoolData.superAdmin
-    );
     Meteor.call(
       "stripe.findAdminStripeAccount",
       this.props.schoolData.superAdmin,
       (error, result) => {
-        console.log("result and error", error, result);
         if (result && Meteor.settings.public.paymentEnabled) {
           if (monthlyPymtDetails) {
             amount = monthlyPymtDetails[0].cost;
@@ -588,11 +560,8 @@ export default class SchoolViewBase extends React.Component {
                       } else {
                         toastr.success(result.message, "Success");
                       }
-                    } else {
-                      toastr.error(error.message, "Error");
-                    }
-                  }
-                );
+
+            
               } else if (packageType == "MP") {
                 Meteor.call(
                   "stripe.handleCustomerAndSubscribe",

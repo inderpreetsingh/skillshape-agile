@@ -131,7 +131,6 @@ Meteor.methods({
     }
   },
   "schoolMemberDetails.addNewMember": function(memberData) {
-    console.log(memberData, "memberData-=-=-=-=-=-=-=-=-=");
     let userData = SchoolMemberDetails.findOne({
       schoolId: memberData.schoolId,
       activeUserId: memberData.activeUserId
@@ -143,7 +142,6 @@ Meteor.methods({
           ...packageDetails,
           ...memberData.packageDetails
         };
-        console.log("memberData---->", memberData);
         SchoolMemberDetails.update(
           {
             schoolId: memberData.schoolId,
@@ -151,9 +149,10 @@ Meteor.methods({
           },
           { $set: { ...memberData } }
         );
+        return userData._id;
       }
     } else {
-      SchoolMemberDetails.insert(memberData);
+      return SchoolMemberDetails.insert(memberData);
     }
   }
 });

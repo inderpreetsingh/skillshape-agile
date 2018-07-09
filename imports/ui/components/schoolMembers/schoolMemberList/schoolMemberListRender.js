@@ -3,7 +3,6 @@ import Avatar from "material-ui/Avatar";
 import List, { ListItem, ListItemText } from "material-ui/List";
 import Typography from "material-ui/Typography";
 import Grid from "material-ui/Grid";
-
 export default function(props) {
   console.log("mailFolderListItems", this);
   const { src, collectionData } = props;

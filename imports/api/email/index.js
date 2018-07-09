@@ -14,7 +14,7 @@ export const sendPackagePurchaseEmail = function({
   schoolAdminName
 }) {
   Email.send({
-    to: config.skillshapeAdminEmail, // Replace value of `to` with Admin email if Admin exists.
+    to: config.skillshapeAdminEmail,
     from: config.fromEmailForPurchasePackage,
     subject: "Package Purchase Request Recieved",
     html: `Dear ${schoolAdminName},<br/><b>${buyer}</b> has expressed interest in <b>${packageName}</b> class package.
@@ -434,4 +434,15 @@ export const sendEmailToSchool = function(
                    <br/> ${message} <br/>Thanks, <br/>${EmailSignature}`
     });
   }
+};
+//Send email to student when their package is expired
+export const sendPackageExpiredEmail = (to, userName, packageName) => {
+  Email.send({
+    to: to, // Needs to replace this with requester's Email.
+    from: "Notices@SkillShape.com",
+    subject: "Skillshape Package Expired",
+    html: `Hi  ${userName}<br/>
+             your ${packageName} is expired today.To continue our services you have to buy a new package.<br/>
+             Thanks<br/>${EmailSignature}`
+  });
 };
