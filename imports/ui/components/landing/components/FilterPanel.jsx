@@ -1,6 +1,7 @@
 import React ,{Component, Fragment} from 'react';
 import { CSSTransitionGroup } from 'react-transition-group';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
@@ -141,7 +142,7 @@ class FilterPanel extends Component {
 
 
     componentWillReceiveProps = (nextProps, nextState) => {
-      // console.log("componentWillReceiveProps",nextProps, nextState)
+      console.log("componentWillReceiveProps",nextProps, nextState)
       if((this.props.skillTypeText) !== (nextProps.skillTypeText)) {
           this.setState({skillTypeText:nextProps.skillTypeText});
       }
@@ -156,13 +157,15 @@ class FilterPanel extends Component {
 
     componentWillMount() {
         const dataSourceCategories = Meteor.call('getAllSkillCategories', (err,result) => {
-            // console.log(result,'result');
+            console.log(result,'result');
             this.setState({skillCategoryData:result})
         });
     }
 
     componentDidUpdate() {
       this.handleChangeInScreenSize();
+      if (isEmpty(this.state.skillSubjectData) && this.props.filters.skillCategoryIds)
+        this.inputFromUser('');
     }
 
     // This is used to get subjects on the basis of subject category.

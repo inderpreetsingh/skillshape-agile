@@ -62,14 +62,12 @@ class SchoolSuggestionsView extends Component {
     const {schoolSuggestions, isLoading} = this.props;
     if(!accessAllowed) {
       return <h2>No Access Allowed</h2>
-    }else if(isLoading) {
-      return <ContainerLoader />
     }
-    debugger;
+    // debugger;
     return (<Wrapper>
         <BrandBar positionStatic currentUser={this.props.currentUser} />
         <Heading>School Suggestions</Heading>
-        <SuggestionTable data={schoolSuggestions}/>
+        {isLoading ? <ContainerLoader /> : <SuggestionTable data={schoolSuggestions}/>}
       </Wrapper>)
   }
 }
