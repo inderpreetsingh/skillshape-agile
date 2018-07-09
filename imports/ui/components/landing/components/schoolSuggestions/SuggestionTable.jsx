@@ -61,17 +61,17 @@ const SuggestionTable = (props) => {
        <TableBody>
          {props.data.map(n => {
            return (<TableRow key={n._id} className={props.classes.row}>
-               <CustomTableCell><NoWrap>{formatDate(n.createdAt)}</NoWrap></CustomTableCell>
-               <CustomTableCell>{n.schoolName}</CustomTableCell>
-               <CustomTableCell>{n.locationName}</CustomTableCell>
-               <CustomTableCell>{n.skillCategories && n.skillCategories.map(cat => cat.name).join(' , ')}</CustomTableCell>
-               <CustomTableCell>{n.skillSubjects && n.skillSubjects.map(sub => sub.name).join(' , ')}</CustomTableCell>
-               <CustomTableCell>{n.experienceLevel && n.experienceLevel.join(' ,')}</CustomTableCell>
-               <CustomTableCell numeric>{n.monthPrice && n.monthPrice.min} - {n.monthPrice && n.monthPrice.max}</CustomTableCell>
-               <CustomTableCell numeric>{n.classPrice && n.classPrice.min} - {n.classPrice && n.classPrice.max}</CustomTableCell>
-               <CustomTableCell>{n.gender}</CustomTableCell>
-               <CustomTableCell numeric>{n.age}</CustomTableCell>
-             </TableRow>);
+             <CustomTableCell><NoWrap>{formatDate(n.createdAt)}</NoWrap></CustomTableCell>
+             <CustomTableCell>{n.schoolName}</CustomTableCell>
+             <CustomTableCell>{n.locationName}</CustomTableCell>
+             <CustomTableCell>{n.skillCategories && n.skillCategories.map(cat => cat.name).join(' , ')}</CustomTableCell>
+             <CustomTableCell>{n.skillSubjects && n.skillSubjects.map(sub => sub.name).join(' , ')}</CustomTableCell>
+             <CustomTableCell>{n.experienceLevel && n.experienceLevel.join(' ,')}</CustomTableCell>
+             <CustomTableCell numeric>{n.monthPrice && n.monthPrice.min} - {n.monthPrice && n.monthPrice.max}</CustomTableCell>
+             <CustomTableCell numeric>{n.classPrice && n.classPrice.min} - {n.classPrice && n.classPrice.max}</CustomTableCell>
+             <CustomTableCell>{n.gender}</CustomTableCell>
+             <CustomTableCell numeric>{n.age}</CustomTableCell>
+           </TableRow>);
          })}
        </TableBody>
      </Table>

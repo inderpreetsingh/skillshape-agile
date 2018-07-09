@@ -6,7 +6,18 @@ import {
   DefaultRoute,
   IndexRoute
 } from "react-router";
+import styled from 'styled-components';
+
+import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { componentLoader } from "/imports/util";
+
+const PreloaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
 
 class DynamicImport extends React.Component {
   state = {
@@ -20,6 +31,9 @@ class DynamicImport extends React.Component {
     });
   }
   render() {
+    if(!this.state.Component) {
+      return <PreloaderWrapper> <Preloader /> </PreloaderWrapper>
+    }
     return this.props.children(this.state.Component);
   }
 }

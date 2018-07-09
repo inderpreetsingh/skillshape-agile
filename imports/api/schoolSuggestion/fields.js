@@ -18,6 +18,7 @@ const priceSchema = new SimpleSchema({
 export const schoolSuggestionSchema = new SimpleSchema({
   schoolName: {
     type: String,
+    optional: true
   },
   locationName: {
     type: String,

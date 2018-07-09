@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component,Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { browserHistory } from 'react-router';
@@ -18,7 +18,7 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 const styles = {
   radioGroupWrapper: {
     margin: 0,
-    marginTop: helpers.rhythmDiv * 4,
+    marginTop: helpers.rhythmDiv * 3,
     paddingLeft: helpers.rhythmDiv,
     [`@media screen and (max-width: ${helpers.mobile + 100}px)`] : {
       width: 'auto'
@@ -74,12 +74,26 @@ const styles = {
   }
 }
 
-const LabelOrInput = (props) => {
-  if(!props.label)
-    return (<FormLabel for="other" onClick={props.onLabelClick} className={props.classes.formLabel}>{props.inputValue || 'Something else'}</FormLabel>)
-  else
-    return (<IconInput inputId="subject" labelText="" value={props.inputValue} onChange={props.onChange} />)
-}
+const FormElementWrapper = styled.div`
+  width: 100%;
+  display: ${props => props.show ? 'block': 'none'};
+`;
+
+const LabelOrInput = (props) => (<Fragment>
+    <FormElementWrapper show={!props.label}>
+      <FormLabel for="other" onClick={props.onLabelClick} className={props.classes.formLabel}>{props.inputValue || 'Something else'}</FormLabel>
+    </FormElementWrapper>
+    <FormElementWrapper show={props.label}>
+      <IconInput
+        autoFocus={true}
+        onRef={props.onRef}
+        inputId="subject"
+        labelText=""
+        value={props.inputValue}
+        onChange={props.onChange} />
+    </FormElementWrapper>
+  </Fragment>
+)
 
 
 const FormWrapper = styled.div`
@@ -119,6 +133,7 @@ const FormGroup = styled.div`
   align-items: baseline;
   width: calc(100% + 12px);
   transform: translateX(-12px);
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const SubmitButtonWrapper = styled.div`
@@ -137,15 +152,19 @@ const InputWrapper = styled.div`
 `;
 
 class ContactUsForm extends Component {
-  state = {
-    isLoading: false,
-    name: '',
-    email: '',
-    subject: 'Something Else',
-    message: '',
-    radioButtonGroupValue: 'feature',
-    inputsName: ['email','name','subject','message'],
-    readyToSumit: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      name: '',
+      email: '',
+      subject: 'Something Else',
+      message: '',
+      radioButtonGroupValue: 'feature',
+      inputsName: ['email','name','subject','message'],
+      readyToSumit: false,
+    }
+    // console.log(React.createRef(),"--------------");
   }
 
   _validateAllInputs = (data, inputNames) => {
@@ -159,7 +178,14 @@ class ContactUsForm extends Component {
     return true;
   }
 
+  setInputRef = (el) => {
+    console.log(this,el,"setInputRef....");
+    this.otherMessageInput = el;
+  }
+
   handleLabelClick = () => {
+    console.log( this.otherMessageInput, this.otherMessageInput.value, "this other messgae input");
+    this.otherMessageInput.focus();
     this.setState({
       radioButtonGroupValue: "other"
     });
@@ -280,6 +306,7 @@ class ContactUsForm extends Component {
                 className={classes.radioButtonOther}
               />
               <LabelOrInput
+                onRef={this.setInputRef}
                 classes={classes}
                 inputValue={this.state.subject}
                 label={radioButtonGroupValue === 'other'}
