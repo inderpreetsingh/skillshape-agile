@@ -234,7 +234,12 @@ Meteor.methods({
     monthlyPymtDetails
   ) {
     //customer creation and subscribe if new otherwise straight to subscribe
-    let startDate, expiryDate, subscriptionRequest, subscriptionDbId, payload;
+    let startDate,
+      expiryDate,
+      subscriptionRequest,
+      subscriptionDbId,
+      payload,
+      subscriptionResponse;
     try {
       let userId = this.userId;
       let currentUserProfile = Meteor.users.findOne({
@@ -276,7 +281,7 @@ Meteor.methods({
         subscriptionRequest
       };
       subscriptionDbId = ClassSubscription.insert(payload);
-      const subscriptionResponse = await stripe.subscriptions.create(
+      subscriptionResponse = await stripe.subscriptions.create(
         subscriptionRequest
       );
       payload = {
@@ -289,7 +294,14 @@ Meteor.methods({
     } catch (error) {
       console.log("error in stripe.handleCustomerAndSubscribe ------>", error);
       payload = { subscriptionResponse, status: "error" };
-      ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
+      let resultOfErrorUpdate = ClassSubscription.update(
+        { _id: subscriptionDbId },
+        { $set: payload }
+      );
+      console.log("resultOfErrorUpdate", resultOfErrorUpdate);
+      throw new Meteor.error(
+        (error && error.message) || "Something went wrong"
+      );
     }
   }
 });

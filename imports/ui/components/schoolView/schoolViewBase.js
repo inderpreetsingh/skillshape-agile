@@ -610,7 +610,10 @@ export default class SchoolViewBase extends React.Component {
                         "Success"
                       );
                     } else {
-                      toastr.error("error found ", "error");
+                      toastr.error(
+                        (err && err.message) || "something went wrong",
+                        "error"
+                      );
                     }
                   }
                 );
