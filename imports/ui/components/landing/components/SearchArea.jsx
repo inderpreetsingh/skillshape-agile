@@ -109,7 +109,7 @@ const FilterButtonWrapper = GenericButtonWrapper.extend`
   }
 `;
 
-const LocationButtonWrapper = styled.div`
+const SearchIconButtonWrapper = styled.div`
   padding-left: ${helpers.rhythmDiv}px;
 `;
 
@@ -173,7 +173,7 @@ const SearchInputsSection = (props) => (
           value={props.skillTypeText}
         />
       </InputWrapper>
-      <In>in</In>
+      {/* <In>in</In> */}
       <InputWrapper locationInput>
         <MySearchBar
           placeholder="Location"
@@ -190,11 +190,11 @@ const SearchInputsSection = (props) => (
           value={props.currentAddress}
           resetSearch={props.resetSearch}
         />
-        <LocationButtonWrapper>
+        <SearchIconButtonWrapper>
           <IconButton className={props.classes.iconButtonStyle} onClick={props.onSearchIconClick}>
             <Icon>search</Icon>
           </IconButton>
-        </LocationButtonWrapper>
+        </SearchIconButtonWrapper>
 
       </InputWrapper>
    </InputsWrapper>

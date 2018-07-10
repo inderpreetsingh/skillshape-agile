@@ -369,7 +369,7 @@ export default createContainer(props => {
     // console.info("class type data...................................................",classTypeData);
     isLoading = false;
   }
-  // console.log("classInterestData --->>",classInterestData)
+  // console.log("classInterestData --->>",classTypeData,classInterestData)
   return {
     ...props,
     classTypeData,
