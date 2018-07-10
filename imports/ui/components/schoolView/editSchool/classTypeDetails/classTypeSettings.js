@@ -22,7 +22,7 @@ export default classTypeSettings = {
         tableFields: [
             { key: "name", label: "Class Type" },
             { key: "desc", label: "Class Type Description" },
-            { key: "selectedSkillCategory", label: "Skill Category", chipInput: true, childKey:"name"},
+            // { key: "selectedSkillCategory", label: "Skill Category", chipInput: true, childKey:"name"},
             { key: "selectedSkillSubject", label: "Skill Subject", chipInput: true, childKey:"name"},
             { key: "gender", label: "Gender", "labelSm": 4, "lableMd": 3, "valueSm": 4, "valueMd": 2 },
             { key: "ageMin", label: "Age", "labelSm": 4, "lableMd": 1, "valueSm": 4, "valueMd": 2},

@@ -290,5 +290,6 @@ export default _skillCategoryObj = {
         "Keyboard",
         "Piano",
         "Various Instruments"
-    ]
+    ],
+    "Others" : []
 }
