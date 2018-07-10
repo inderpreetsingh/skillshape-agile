@@ -20,6 +20,7 @@ import ClassType from "/imports/ui/components/landing/ClassType.jsx";
 import NoResults from "/imports/ui/components/landing/components/NoResults";
 import ClassTypeView from "/imports/ui/components/classTypeView";
 import School from "/imports/ui/components/landing/School.jsx";
+import SchoolSuggestions from "/imports/ui/components/landing/components/schoolSuggestions/index.jsx";
 import NoPageFound from "/imports/ui/components/landing/components/NoPageFound";
 
 import ResetPassword from "/imports/ui/components/account/resetPassword";
@@ -103,6 +104,7 @@ export default (Routes = componentLoader(props => (
       />
       <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />
+      <Route path="/school-suggestions" name="SchoolSuggetions" component={SchoolSuggestions} />
 
       <Route path="/" component={PublicLayout}>
         <Route path="/Aboutus" name="Aboutus" component={AboutUs} />

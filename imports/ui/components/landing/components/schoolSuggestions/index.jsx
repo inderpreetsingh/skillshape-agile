@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import styled from 'styled-components';
 import { createContainer } from 'meteor/react-meteor-data';
 
@@ -20,9 +20,13 @@ const Heading = styled.h2`
 
 const Wrapper = styled.div`
   background: white;
+
+  overflow-x: hidden;
+`;
+
+const ContentWrapper = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv * 4}px;
-  overflow-x: hidden;
 `;
 
 class SchoolSuggestionsView extends Component {
@@ -33,7 +37,7 @@ class SchoolSuggestionsView extends Component {
     }
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     const { currentUser } = this.props;
     console.log(currentUser," in the will mount");
     const accessAllowed = checkMyAccess({user:currentUser});
@@ -60,14 +64,17 @@ class SchoolSuggestionsView extends Component {
   render() {
     const {accessAllowed} = this.state;
     const {schoolSuggestions, isLoading} = this.props;
-    if(!accessAllowed) {
-      return <h2>No Access Allowed</h2>
-    }
+
     // debugger;
     return (<Wrapper>
         <BrandBar positionStatic currentUser={this.props.currentUser} />
-        <Heading>School Suggestions</Heading>
-        {isLoading ? <ContainerLoader /> : <SuggestionTable data={schoolSuggestions}/>}
+        {!accessAllowed ? <h2>No Access Allowed</h2>
+        :
+        <ContentWrapper>
+          <Heading>School Suggestions</Heading>
+          {isLoading ? <ContainerLoader /> : <SuggestionTable data={schoolSuggestions}/>}
+        </ContentWrapper>
+        }
       </Wrapper>)
   }
 }
