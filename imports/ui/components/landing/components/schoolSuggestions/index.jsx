@@ -1,5 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import styled from 'styled-components';
+import isEmpty from 'lodash/isEmpty';
 import { createContainer } from 'meteor/react-meteor-data';
 
 import { ContainerLoader } from '/imports/ui/loading/container.js';
@@ -20,7 +21,6 @@ const Heading = styled.h2`
 
 const Wrapper = styled.div`
   background: white;
-
   overflow-x: hidden;
 `;
 
@@ -33,39 +33,48 @@ class SchoolSuggestionsView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accessAllowed: true
+      accessAllowed: true,
+      noLoggedIn: false
     }
   }
 
-  componentDidMount = () => {
-    const { currentUser } = this.props;
-    console.log(currentUser," in the will mount");
-    const accessAllowed = checkMyAccess({user:currentUser});
-    // console.log(accessAllowed,checkMyAccess({user: currentUser}))
-    if(accessAllowed) {
-      this.setState({ accessAllowed: true});
+  _setAccessForUser = (currentUser) => {
+    console.log(currentUser,"-------------")
+    debugger;
+    if(!isEmpty(currentUser)) {
+      const accessAllowed = checkMyAccess({user:currentUser});
+      if(accessAllowed) {
+        this.setState({accessAllowed: true, noLoggedIn: false});
+      }else {
+        this.setState({accessAllowed: false,  noLoggedIn: false});
+      }
     }else {
-      this.setState({accessAllowed: false});
+      this.setState({noLoggedIn: true});
     }
+
+  }
+
+  componentWillMount = () => {
+    const currentUser = this.props.currentUser;
+    console.log(currentUser," in the will mount");
+    this._setAccessForUser(currentUser);
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const { currentUser } = nextProps;
+    const currentUser = nextProps.currentUser;
     console.log(currentUser," in the recieve props");
-    const accessAllowed = checkMyAccess({user:currentUser});
-    // console.log(accessAllowed,checkMyAccess({user: currentUser}))
-    if(accessAllowed) {
-      this.setState({ accessAllowed: true});
-    }else {
-      this.setState({accessAllowed: false});
-    }
+    this._setAccessForUser(currentUser);
   }
 
+
   render() {
-    const {accessAllowed} = this.state;
+    const {accessAllowed,noLoggedIn} = this.state;
     const {schoolSuggestions, isLoading} = this.props;
 
-    // debugger;
+    if(noLoggedIn) {
+      return <h1>Not Logged In!</h1>
+    }
+
     return (<Wrapper>
         <BrandBar positionStatic currentUser={this.props.currentUser} />
         {!accessAllowed ? <h2>No Access Allowed</h2>

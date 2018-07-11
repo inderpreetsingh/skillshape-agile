@@ -163,22 +163,60 @@ const ButtonsWrapper = styled.div`
   }
 `;
 
+{/*<InputWrapper>
+  <MySearchBar
+    placeholder="Skill Type"
+    defaultBorderRadius={true}
+    onChange={props.onSkillTypeChange}
+    withIcon={false}
+    rightAlign
+    resetSearch={props.resetSearch}
+    value={props.skillTypeText}
+  />
+</InputWrapper> */}
+
 const SearchInputsSection = (props) => (
   <SearchInputsSectionWrapper>
+  <InputsWrapper>
+    <InputWrapper>
+      <MySearchBar
+        placeholder="Skill Type"
+        defaultBorderRadius={true}
+        onChange={props.onSkillTypeChange}
+        withIcon={false}
+        rightAlign
+        resetSearch={props.resetSearch}
+        value={props.skillTypeText}
+      />
+    </InputWrapper>
+    {/* <In>in</In> */}
+    <InputWrapper locationInput>
+      <MySearchBar
+        placeholder="Location"
+        defaultValue={props.currentAddress}
+        defaultBorderRadius={true}
+        withIcon={false}
+        onSearchIconClick={props.onSearchIconClick}
+        noCloseIcon
+        onChange={(event) => props.locationInputChanged(event, "filters", null)}
+        filters={props.filters}
+        onLocationChange={(event)=> {props.onLocationChange(event, "filters", null)}}
+        currentAddress={props.currentAddress}
+        googlelocation={true}
+        value={props.currentAddress}
+        resetSearch={props.resetSearch}
+      />
+      <SearchIconButtonWrapper>
+        <IconButton className={props.classes.iconButtonStyle} onClick={props.onSearchIconClick}>
+          <Icon>search</Icon>
+        </IconButton>
+      </SearchIconButtonWrapper>
 
-    <InputsWrapper background="white">
-      {/*<InputWrapper>
-        <MySearchBar
-          placeholder="Skill Type"
-          defaultBorderRadius={true}
-          onChange={props.onSkillTypeChange}
-          withIcon={false}
-          rightAlign
-          resetSearch={props.resetSearch}
-          value={props.skillTypeText}
-        />
-      </InputWrapper> */}
+    </InputWrapper>
+ </InputsWrapper>
 
+  {/* UPDATING ...............*/}
+    {/*<InputsWrapper background="white">
       <div className="my-multi-select-filter">
           <MyMultiSelect
               textField={"name"}
@@ -228,7 +266,7 @@ const SearchInputsSection = (props) => (
         <Icon>search</Icon>
         </IconButton>
       </SearchIconButtonWrapper>
-    </InputsWrapper>
+    </InputsWrapper> */}
 
     <ButtonsWrapper>
       <FilterButtonWrapper>

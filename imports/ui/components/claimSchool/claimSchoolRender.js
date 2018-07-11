@@ -51,29 +51,29 @@ export default function (props) {
           />
         }
         {this.state.schoolSuggestionDialogBox &&
-          <FiltersDialogBox
-              open={this.state.schoolSuggestionDialogBox}
-              title="Suggest School"
-              onModalClose={this.handleSchoolSuggestionDialogState(false)}
-              filtersForSuggestion={true}
-              onGiveSuggestion={this.handleGiveSuggestion}
-              filterPanelProps={{
-                ref: "ClaimSchoolFilter",
-                onLocationChange: this.onLocationChange,
-                handleSchoolNameChange: this.handleSchoolNameChange,
-                locationInputChanged: this.locationInputChanged,
-                filters: this.state.filters,
-                tempFilters: this.state.tempFilters,
-                fliterSchoolName: this.fliterSchoolName,
-                filterAge: this.filterAge,
-                filterGender: this.filterGender,
-                skillLevelFilter: this.skillLevelFilter,
-                perClassPriceFilter: this.perClassPriceFilter,
-                pricePerMonthFilter: this.pricePerMonthFilter,
-                collectSelectedSkillCategories: this.collectSelectedSkillCategories,
-                collectSelectedSkillSubject: this.collectSelectedSkillSubject,
-              }}
-          />
+            <FiltersDialogBox
+                open={this.state.schoolSuggestionDialogBox}
+                title="Suggest School"
+                onModalClose={this.handleSchoolSuggestionDialogState(false)}
+                filtersForSuggestion={true}
+                onGiveSuggestion={this.handleGiveSuggestion}
+                filterPanelProps={{
+                  ref: "ClaimSchoolFilter",
+                  onLocationChange: this.onLocationChange,
+                  handleSchoolNameChange: this.handleSchoolNameChange,
+                  locationInputChanged: this.locationInputChanged,
+                  filters: this.state.filters,
+                  tempFilters: this.state.tempFilters,
+                  fliterSchoolName: this.fliterSchoolName,
+                  filterAge: this.filterAge,
+                  filterGender: this.filterGender,
+                  skillLevelFilter: this.skillLevelFilter,
+                  perClassPriceFilter: this.perClassPriceFilter,
+                  pricePerMonthFilter: this.pricePerMonthFilter,
+                  collectSelectedSkillCategories: this.collectSelectedSkillCategories,
+                  collectSelectedSkillSubject: this.collectSelectedSkillSubject,
+                }}
+            />
         }
 
         {this.state.filterPanelDialogBox &&
