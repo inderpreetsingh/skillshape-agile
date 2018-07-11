@@ -80,8 +80,20 @@ class ClassTypeForm extends React.Component {
     return state;
   };
 
-  onSkillSubjectChange = values =>
-    this.setState({ selectedSkillSubject: values });
+  onSkillSubjectChange = values => {
+    values = values.map(ele => {
+      if (ele.skillCategoryId) {
+        return ele;
+      }
+    });
+    values = _.without(values, undefined);
+    if (!_.isEmpty(values)) {
+      this.setState({ selectedSkillSubject: values });
+    }
+    if (values.length == 0) {
+      this.setState({ selectedSkillSubject: [] });
+    }
+  };
 
   onSkillCategoryChange = values => {
     const selectedSkillSubject =
@@ -168,6 +180,7 @@ class ClassTypeForm extends React.Component {
       ageMax: this.ageMax.value && parseInt(this.ageMax.value),
       locationId: this.state.location
     };
+
     console.log(payload,"payload...");
     Meteor.call("getSkillCategoryIdsFromSkillSubjects",{skillSubjectIds: payload.skillSubject},(err,res) => {
       if(res) {

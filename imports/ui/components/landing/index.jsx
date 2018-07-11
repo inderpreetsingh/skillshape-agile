@@ -893,6 +893,8 @@ class Landing extends Component {
                 onFiltersButtonClick={() =>
                   this.handleFiltersDialogBoxState(true)
                 }
+                handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
+
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 onMapViewButtonClick={this.handleToggleMapView}
                 mapView={this.state.mapView}
@@ -902,6 +904,8 @@ class Landing extends Component {
                 filters={this.state.filters}
                 onLocationChange={this.onLocationChange}
                 currentFilterState={this.state.filters}
+                collectSelectedSkillCategories={this.collectSelectedSkillCategories}
+                collectSelectedSkillSubject={this.collectSelectedSkillSubject}
                 onSearchIconClick={() => this.scrollTo()}
               />
             </Cover>
