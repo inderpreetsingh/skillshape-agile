@@ -72,7 +72,8 @@ Meteor.methods({
               packageName: packageName,
               schoolAdminName: schoolAdminName
             });
-            return "School not connected their stripe account yet.Your request has been processed. We will assist you soon!";
+            return `You are currently unable to purchase this package from here. ${schoolData &&
+              schoolData.name} has been notified of your interest in ${packageName} class package.`;
           }
         } else {
           // Return the errors in case something is invalid.
