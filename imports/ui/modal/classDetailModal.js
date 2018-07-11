@@ -797,4 +797,3 @@ class ClassDetailModal extends React.Component {
 }
 
 export default withMobileDialog()(withStyles(styles)(ClassDetailModal));
-  
