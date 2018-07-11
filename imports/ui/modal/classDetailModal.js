@@ -480,9 +480,8 @@ class ClassDetailModal extends React.Component {
                 </DialogTitle>
 
                 <EventHeader>
-                  {classImg && (
-                    <ImageContainer src={classImg}>
-                      {/*<div style={{position: "absolute", top: 10, right: 10}}>
+                  <ImageContainer src={classImg}>
+                    {<div style={{position: "absolute", top: 10, right: 10}}>
   									{
   										eventData.attending && (
   											<Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
@@ -494,27 +493,12 @@ class ClassDetailModal extends React.Component {
   											</Button>
   										)
   									}
-  								</div>*/}
+  								</div>}
 
-                      {/*<img
-                      className={classes.image}
-                      src={this.getImageSrc(classType, school)}
-                    />*/}
-<<<<<<< HEAD
-                  </ImageContainer>}
+                  </ImageContainer>
                   <Event center={classImg !== ''}>
                     <EventName>{eventData.name}</EventName>
                     {this.formatScheduleType(eventData.scheduleType)}
-=======
-                    </ImageContainer>
-                  )}
-                  <Event center={classImg !== ""}>
-                    <EventName>
-                      {`${classType && classType.name.toLowerCase()}`} :{" "}
-                      {eventData.name}
-                    </EventName>
-                    {/* <ScheduleType>{eventData.scheduleType}</ScheduleType> */}
->>>>>>> d1d09fcb3b8e896714f03f8f64b233e54335a49a
                   </Event>
                 </EventHeader>
                 <Grid
@@ -721,34 +705,9 @@ class ClassDetailModal extends React.Component {
                 )}
               </Grid>
 
-<<<<<<< HEAD
-              <Grid
-                container
-                style={{ marginTop: "16px" }}
-              >
-              {!isEmpty(classTypeData) &&  <ClassTimeCardsWrapper>
-                  <Heading marginTop={helpers.rhythmDiv} textTransform="none">This class time is part of</Heading>
-                  <ClassTimesBoxes
-                    inPopUp={true}
-                    withSlider={false}
-                    classTimesData={[classTypeData]}
-                    classInterestData={classInterestData}
-                  />
-                </ClassTimeCardsWrapper>}
-
-                {!isEmpty(allFormattedClassTimeDetails) && <ClassTimeCardsWrapper>
-                  <Heading marginTop={helpers.rhythmDiv} textTransform="none">More class times for <Capitalize>{classType.name.toLowerCase()}</Capitalize></Heading>
-                  <ClassTimesBoxes
-                    inPopUp={true}
-                    withSlider={false}
-                    classTimesData={allFormattedClassTimeDetails}
-                    classInterestData={classInterestData}
-                  />
-                </ClassTimeCardsWrapper>}
-=======
               <Grid container style={{ marginTop: "16px" }}>
                 {!isEmpty(classTypeData) && (
-                  <div style={{ backgroundColor: "skyblue" }}>
+                  <div>
                     <Heading marginTop={helpers.rhythmDiv} textTransform="none">
                       This {`${classType && classType.name.toLowerCase()}`} :{" "}
                       {eventData.name} is part of
@@ -776,7 +735,6 @@ class ClassDetailModal extends React.Component {
                     />
                   </div>
                 )}
->>>>>>> d1d09fcb3b8e896714f03f8f64b233e54335a49a
               </Grid>
 
               <DialogActions className={classes.dialogAction}>
@@ -839,3 +797,4 @@ class ClassDetailModal extends React.Component {
 }
 
 export default withMobileDialog()(withStyles(styles)(ClassDetailModal));
+  
