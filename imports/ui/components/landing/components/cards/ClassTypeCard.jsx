@@ -166,6 +166,7 @@ class ClassTypeCard extends Component {
       else
         return false;
     });
+
     console.log(classTimesData,formattedClassTimesData,"ajsldfalsd");
     const schoolData = this.getSchoolData(schoolId);
 

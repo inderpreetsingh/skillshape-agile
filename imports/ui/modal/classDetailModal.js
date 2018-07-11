@@ -176,6 +176,10 @@ const Heading = styled.h2`
   margin-top: ${props => props.marginTop}px;
 `;
 
+const ClassTimeCardsWrapper = styled.div`
+  width: 100%;
+`;
+
 const Text = styled.p`
   margin: 0;
   font-family: ${helpers.specialFont};
@@ -200,10 +204,11 @@ const EventHeader = styled.div`
 const ImageContainer = styled.div`
   width: 100px;
   height: 100px;
+  flex-shrink: 0;
+  ${helpers.coverBg};
   border-radius: 50%;
   margin-right: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv}px;
-  ${helpers.coverBg};
   background-position: 50% 50%;
   background-image: url('${props => props.src}');
 `;
@@ -225,8 +230,6 @@ const Event = styled.div`
   ${helpers.flexCenter} flex-direction: column;
   padding-right: ${helpers.rhythmDiv * 2}px;
 `;
-
-const ScheduleType = Text.extend``;
 
 const EventDesc = Text.extend``;
 
@@ -297,7 +300,16 @@ class ClassDetailModal extends React.Component {
     this.setImageSrc(classType, school);
   };
 
-  setImageSrc = (classType, school) => {
+  formatScheduleType = (scheduleType) => {
+      const classScheduleType = scheduleType.toLowerCase();
+
+      if(classScheduleType === 'recurring' || classScheduleType === 'ongoing')
+        return (<Text><Capitalize>{classScheduleType}</Capitalize></Text>)
+
+      return <Text>{"One Time"}</Text>
+  }
+
+  setImageSrc = (classType,school) => {
     console.log("getImageSrc classtype school", classType, school);
 
     imageExists((classType && classType.classTypeImg) || "")
@@ -399,32 +411,27 @@ class ClassDetailModal extends React.Component {
       error,
       school,
       classType,
-      classTimes,
       location,
       addToMyCalender,
       classImg
     } = this.state;
-    const {
-      eventData,
-      fullScreen,
-      classes,
-      clickedDate,
-      classInterestData,
-      classTimesData
-    } = this.props;
+    const { eventData, fullScreen, classes, clickedDate, classInterestData} = this.props;
 
-    console.log("eventData____________", classTimesData, eventData);
+    console.log("eventData____________",eventData);
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
-    console.log("first ", classTypeData);
-    const formattedClassTimesDetails = formatDataBasedOnScheduleType(
-      eventData,
-      false
-    ); // false is for not hiding the past schedule types.
-    const allFormattedClassTimeDetails = formatClassTimesData(
-      classTimesData,
-      false
-    ).filter(classTime => classTime._id != eventData.classTimeId); //false is for not hiding the past schedule types;
+    const formattedClassTimesDetails = formatDataBasedOnScheduleType(eventData,false); // false is for not hiding the past schedule types.
+    const classTimesData = ClassTimes.find({classTypeId: eventData.classTypeId});
+    const allFormattedClassTimeDetails = formatClassTimesData(classTimesData,true).filter(classTime => {
+
+        if(classTime._id != eventData.classTimeId
+          && classTime.formattedClassTimesDetails
+          && classTime.formattedClassTimesDetails.totalClassTimes > 0) {
+          return true;
+        }
+        return false;
+    }) // false is for not hiding the past schedule types;
     classTypeData.formattedClassTimesDetails = formattedClassTimesDetails;
+    console.log(allFormattedClassTimeDetails,"l;;;;;;;;;;;;;;;;;;")
     // console.log(classTypeData,eventData,formattedClassTimesDetails,"event ................................. data");
     const scheduleDetails = [
       "Monday",

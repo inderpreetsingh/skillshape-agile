@@ -361,12 +361,15 @@ export default createContainer(props => {
     perak:joins */
   SkillSubject.find().fetch();
 
-  if (subscription.ready() && reviewsSubscription.ready()) {
+  if (
+    (subscription.ready() && reviewsSubscription.ready()) ||
+    ClassType.find().count() > 0
+  ) {
     reviewsData = Reviews.find().fetch();
     // console.info("class type data...................................................",classTypeData);
     isLoading = false;
   }
-  // console.log("classInterestData --->>",classInterestData)
+  // console.log("classInterestData --->>",classTypeData,classInterestData)
   return {
     ...props,
     classTypeData,

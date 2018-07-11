@@ -1,10 +1,12 @@
 import React from "react";
 var ReactDOM = require("react-dom");
+import isEmpty from 'lodash/isEmpty';
 import {browserHistory} from 'react-router';
+
 import Events from '/imports/util/events';
 
-
 export default class ClaimSchoolBase extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -15,6 +17,7 @@ export default class ClaimSchoolBase extends React.Component {
             error: null,
             showConfirmationModal:false
         };
+        this.fieldNames = ['skillSubjectIds','skillCategoryIds','schoolName','locationName','experienceLevel','gender','age'];
     }
     handleFixedToggle = state => {
         // console.log("handleFixedToggle", defaultPosition);
@@ -39,11 +42,86 @@ export default class ClaimSchoolBase extends React.Component {
         }
     };
 
+    _ifAllFieldsEmpty = (data) => {
+      let allFieldsEmpty = true;
+      for(let i = 0; i < this.fieldNames.length; ++i) {
+        if(!isEmpty(data[this.fieldNames[i]])) {
+          allFieldsEmpty = false;
+          return false;
+        }
+      }
+
+      return allFieldsEmpty;
+    }
+
+    handleGiveSuggestion = () => {
+      console.log(this.state,"this.state");
+      const { toastr } = this.props;
+      const {experienceLevel,
+        locationName,
+        schoolName,
+        skillCategoryIds,
+        skillSubjectIds,
+        defaultSkillSubject,
+        gender,
+        age,
+        _classPrice,
+        _monthPrice} = this.state.filters;
+
+        const data = {
+          experienceLevel,
+          locationName,
+          schoolName,
+          skillCategoryIds,
+          skillSubjectIds,
+          gender,
+          age
+        }
+
+        if(_monthPrice) {
+          data.monthPrice = {
+            min: _monthPrice[0],
+            max: _monthPrice[1]
+          }
+        }
+
+        if(_classPrice) {
+          data.classPrice = {
+            min: _classPrice[0],
+            max: _classPrice[1]
+          }
+        }
+
+        console.log(data,this.state.filters,"data................")
+
+        console.log(this._ifAllFieldsEmpty(data));
+        if(this._ifAllFieldsEmpty(data)) {
+          toastr.error(`Please fill one atleast 1 field for suggestion of school`,"Error");
+        }else {
+          this.setState({isLoading: true});
+          Meteor.call('schoolSuggestion.addSuggestion',data,(err,res) => {
+            this.setState({isLoading: false});
+            if(err) {
+              toastr.error(err.reason,"Error");
+            }else {
+              toastr.success("Thanks alot for your suggestion","success");
+              this.handleSchoolSuggestionDialogState(false)(); // closing the modal.
+            }
+          });
+        }
+
+    }
 
     handleFiltersDialogBoxState = (state) => {
         this.setState({
             filterPanelDialogBox: state
         })
+    }
+
+    handleSchoolSuggestionDialogState = (state) => () => {
+      this.setState({
+        schoolSuggestionDialogBox: state
+      })
     }
 
     // This is used to handle listing of a new school for a login user.

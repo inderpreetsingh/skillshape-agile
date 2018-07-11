@@ -641,6 +641,7 @@ class Landing extends Component {
   };
 
   collectSelectedSkillSubject = text => {
+    console.log('skill subject...........',text);
     let oldFilter = { ...this.state.filters };
     oldFilter.skillSubjectIds = text.map(ele => ele._id);
     oldFilter.defaultSkillSubject = text;

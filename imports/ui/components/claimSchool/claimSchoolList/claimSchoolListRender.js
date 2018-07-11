@@ -111,12 +111,12 @@ export default function (props) {
                 {this.state.schoolSuggestionDialog && <SchoolSuggestionDialogBox
                   open={this.state.schoolSuggestionDialog}
                   onModalClose={this.handleSchoolSuggestionDialogState(false)}
-                  /> }
+                  />}
                 <NoneOfMyLisiting {...props} />
                 <NoResults
-                  removeAllFiltersButtonClick={this.props.removeAllFilters}
+                  removeAllFiltersButtonClick={props.removeAllFilters}
                   addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
-                  schoolSuggestionButtonClick={this.handleSchoolSuggestionDialogState(true)}
+                  schoolSuggestionButtonClick={props.handleSchoolSuggestion}
                   showSchoolSuggestion={true}
                 />
               </NoResultContainer>
