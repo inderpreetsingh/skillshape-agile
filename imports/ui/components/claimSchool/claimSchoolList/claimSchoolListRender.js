@@ -108,10 +108,6 @@ export default function (props) {
         return (
             <GridWrapper>
               <NoResultContainer>
-                {this.state.schoolSuggestionDialog && <SchoolSuggestionDialogBox
-                  open={this.state.schoolSuggestionDialog}
-                  onModalClose={this.handleSchoolSuggestionDialogState(false)}
-                  />}
                 <NoneOfMyLisiting {...props} />
                 <NoResults
                   removeAllFiltersButtonClick={props.removeAllFilters}

@@ -145,17 +145,17 @@ class ClassTypeForm extends React.Component {
     // }
     //
     Meteor.call(
-      "getSkillSubjectBySkillCategory",
-      { skillCategoryIds: {}, textSearch: value },
-      (err, res) => {
-        if (res) {
-          console.log(res, "my response..");
-          this.setState({
-            skillSubjectData: res || []
-          });
+        "getSkillSubjectBySkillCategory",
+        { skillCategoryIds: {}, textSearch: value },
+        (err, res) => {
+          if (res) {
+            console.log(res,"my response..");
+            this.setState({
+              skillSubjectData: res || []
+            });
+          }
         }
-      }
-    );
+      );
   };
 
   onSubmit = event => {
@@ -180,31 +180,26 @@ class ClassTypeForm extends React.Component {
       ageMax: this.ageMax.value && parseInt(this.ageMax.value),
       locationId: this.state.location
     };
-    console.log(payload, "payload...");
-    Meteor.call(
-      "getSkillCategoryIdsFromSkillSubjects",
-      { skillSubjectIds: payload.skillSubject },
-      (err, res) => {
-        if (res) {
-          payload.skillCategoryId = res;
-          console.log(payload, "payload..");
-          if (data && data._id) {
-            this.handleSubmit({
-              methodName: "classType.editClassType",
-              doc: payload,
-              doc_id: data._id
-            });
-          } else {
-            this.handleSubmit({
-              methodName: "classType.addClassType",
-              doc: payload
-            });
-          }
+
+    console.log(payload,"payload...");
+    Meteor.call("getSkillCategoryIdsFromSkillSubjects",{skillSubjectIds: payload.skillSubject},(err,res) => {
+      if(res) {
+        payload.skillCategoryId = res;
+        console.log(payload,"payload..")
+        if (data && data._id) {
+          this.handleSubmit({
+            methodName: "classType.editClassType",
+            doc: payload,
+            doc_id: data._id
+          });
         } else {
-          console.warn("ERROR : ", err);
+          this.handleSubmit({ methodName: "classType.addClassType", doc: payload });
         }
+      }else {
+        console.warn("ERROR : ",err);
       }
-    );
+    });
+
   };
 
   handleSubmit = ({ methodName, doc, doc_id }) => {

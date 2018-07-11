@@ -58,9 +58,8 @@ const styles = {
   },
   iconButton: {
     position: 'absolute',
-    top: -20,
-    right: 0,
-    background: 'white',
+    top: -24,
+    right: -8,
     zIndex: 3,
     // boxShadow: helpers.buttonBoxShadow
   }
@@ -75,6 +74,7 @@ const DialogTitleWrapper = styled.div`
 
 const MyScrollToElement = styled.div`
   overflow-y: auto;
+  overflow-x: hidden;
   // padding: ${helpers.rhythmDiv * 2}px 0;
   padding-top: ${helpers.rhythmDiv * 2}px;
   @media screen and (max-width: ${helpers.mobile + 100}px) {

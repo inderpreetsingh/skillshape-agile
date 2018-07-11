@@ -2,13 +2,15 @@ import React, {Component,Fragment} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { browserHistory } from 'react-router';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+
 import Icon from 'material-ui/Icon';
 import {withStyles} from 'material-ui/styles';
-
 import IconButton from 'material-ui/IconButton';
 
+import MyMultiSelect from '/imports/ui/components/landing/components/form/multiSelect/MyMultiSelect.jsx';
 import SearchBarStyled from './SearchBarStyled.jsx';
-
 import IconInput from './form/IconInput.jsx';
 import MySearchBar from './MySearchBar.jsx';
 
@@ -25,7 +27,6 @@ import { grey } from 'material-ui/colors';
 
 import * as helpers from './jss/helpers.js';
 // import IconInput from './form/IconInput.jsx';
-import get from 'lodash/get';
 
 const styles = {
   iconButtonStyle: {
@@ -124,12 +125,16 @@ const SearchInputsSectionWrapper = styled.div`
 
 const InputWrapper = styled.div`
   ${props => props.locationInput ? `${helpers.flexCenter}` : ''}
+  width: 100%;
   height: 48px;
 `;
 
 const InputsWrapper = styled.div`
   ${helpers.flexCenter}
   max-width: 100%;
+  width: 100%;
+  background: ${props => props.background ? props.background : 'transparent'};
+  margin-bottom: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-right: ${helpers.rhythmDiv}px;
@@ -158,47 +163,110 @@ const ButtonsWrapper = styled.div`
   }
 `;
 
+{/*<InputWrapper>
+  <MySearchBar
+    placeholder="Skill Type"
+    defaultBorderRadius={true}
+    onChange={props.onSkillTypeChange}
+    withIcon={false}
+    rightAlign
+    resetSearch={props.resetSearch}
+    value={props.skillTypeText}
+  />
+</InputWrapper> */}
+
 const SearchInputsSection = (props) => (
   <SearchInputsSectionWrapper>
+  <InputsWrapper>
+    <InputWrapper>
+      <MySearchBar
+        placeholder="Skill Type"
+        defaultBorderRadius={true}
+        onChange={props.onSkillTypeChange}
+        withIcon={false}
+        rightAlign
+        resetSearch={props.resetSearch}
+        value={props.skillTypeText}
+      />
+    </InputWrapper>
+    {/* <In>in</In> */}
+    <InputWrapper locationInput>
+      <MySearchBar
+        placeholder="Location"
+        defaultValue={props.currentAddress}
+        defaultBorderRadius={true}
+        withIcon={false}
+        onSearchIconClick={props.onSearchIconClick}
+        noCloseIcon
+        onChange={(event) => props.locationInputChanged(event, "filters", null)}
+        filters={props.filters}
+        onLocationChange={(event)=> {props.onLocationChange(event, "filters", null)}}
+        currentAddress={props.currentAddress}
+        googlelocation={true}
+        value={props.currentAddress}
+        resetSearch={props.resetSearch}
+      />
+      <SearchIconButtonWrapper>
+        <IconButton className={props.classes.iconButtonStyle} onClick={props.onSearchIconClick}>
+          <Icon>search</Icon>
+        </IconButton>
+      </SearchIconButtonWrapper>
+
+    </InputWrapper>
+ </InputsWrapper>
+
+  {/* UPDATING ...............*/}
+    {/*<InputsWrapper background="white">
+      <div className="my-multi-select-filter">
+          <MyMultiSelect
+              textField={"name"}
+              valueField={"_id"}
+              data={props.skillCategoryData}
+              placeholder="Skill category"
+              value={get(props, "filters.defaultSkillCategories", [])}
+              onChange={(event)=> props.collectSelectedSkillCategories(event, "filters", null)}
+              onNoOfFiltersClick={props.handleNoOfFiltersClick}
+          />
+      </div>
+
+      <div className="my-multi-select-filter">
+          <MyMultiSelect
+            data={props.skillSubjectData}
+            defaultValue={get(props, "filters.defaultSkillSubject", [])}
+            placeholder="Type to search skills"
+            textField={"name"}
+            onSearch={props.inputFromUser}
+            onChange ={props.collectSelectedSkillSubject}
+            onNoOfFiltersClick={props.handleNoOfFiltersClick}
+          />
+      </div>
+    </InputsWrapper>
 
     <InputsWrapper>
-      <InputWrapper>
-        <MySearchBar
-          placeholder="Skill Type"
-          defaultBorderRadius={true}
-          onChange={props.onSkillTypeChange}
-          withIcon={false}
-          rightAlign
-          resetSearch={props.resetSearch}
-          value={props.skillTypeText}
-        />
-      </InputWrapper>
-      {/* <In>in</In> */}
       <InputWrapper locationInput>
-        <MySearchBar
-          placeholder="Location"
-          defaultValue={props.currentAddress}
-          defaultBorderRadius={true}
-          withIcon={false}
-          onSearchIconClick={props.onSearchIconClick}
-          noCloseIcon
-          onChange={(event) => props.locationInputChanged(event, "filters", null)}
-          filters={props.filters}
-          onLocationChange={(event)=> {props.onLocationChange(event, "filters", null)}}
-          currentAddress={props.currentAddress}
-          googlelocation={true}
-          value={props.currentAddress}
-          resetSearch={props.resetSearch}
-        />
-        <SearchIconButtonWrapper>
-          <IconButton className={props.classes.iconButtonStyle} onClick={props.onSearchIconClick}>
-            <Icon>search</Icon>
-          </IconButton>
-        </SearchIconButtonWrapper>
-
+          <MySearchBar
+            placeholder="Location"
+            defaultValue={props.currentAddress}
+            defaultBorderRadius={true}
+            withIcon={false}
+            onSearchIconClick={props.onSearchIconClick}
+            noCloseIcon
+            onChange={(event) => props.locationInputChanged(event, "filters", null)}
+            filters={props.filters}
+            onLocationChange={(event)=> {props.onLocationChange(event, "filters", null)}}
+            currentAddress={props.currentAddress}
+            googlelocation={true}
+            value={props.currentAddress}
+            resetSearch={props.resetSearch}
+          />
       </InputWrapper>
-   </InputsWrapper>
 
+      <SearchIconButtonWrapper>
+        <IconButton className={props.classes.iconButtonStyle} onClick={props.onSearchIconClick}>
+        <Icon>search</Icon>
+        </IconButton>
+      </SearchIconButtonWrapper>
+    </InputsWrapper> */}
 
     <ButtonsWrapper>
       <FilterButtonWrapper>
@@ -258,6 +326,30 @@ class SearchArea extends Component {
     skillType: ''
   }
 
+  componentWillMount() {
+      const dataSourceCategories = Meteor.call('getAllSkillCategories', (err,result) => {
+          console.log(result,'result');
+          this.setState({skillCategoryData: result})
+      });
+  }
+
+  componentDidUpdate() {
+     if(isEmpty(this.state.skillSubjectData) && this.props.filters.skillCategoryIds)
+     this.inputFromUser('');
+  }
+
+  // This is used to get subjects on the basis of subject category.
+  inputFromUser = (text) => {
+      // Do db call on the basis of text entered by user
+      let skillCategoryIds = this.props.filters.skillCategoryIds;
+      Meteor.call("getSkillSubjectBySkillCategory",{skillCategoryIds: skillCategoryIds, textSearch: text}, (err,res) => {
+          if(res) {
+              // console.log("result",res)
+              this.setState({skillSubjectData: res || []});
+          }
+      })
+  }
+
   handleLocationInputChange = (event) => {
     let value = '';
     if(event) {
@@ -306,6 +398,11 @@ class SearchArea extends Component {
         {this.props.middleSection ? this.props.middleSection :
           (
             <SearchInputsSection
+              skillCategoryData={this.state.skillCategoryData}
+              skillSubjectData={this.state.skillSubjectData}
+              collectSelectedSkillCategories={this.props.collectSelectedSkillCategories}
+              collectSelectedSkillSubject={this.props.collectSelectedSkillSubject}
+              inputFromUser={this.inputFromUser}
               classes={this.props.classes}
               location={this.state.location}
               skillType={this.state.skillType}

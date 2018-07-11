@@ -12,17 +12,16 @@ const styles = {
     width: '100%',
     padding: helpers.rhythmDiv * 2,
     overflowX: 'auto',
+    fontSize: helpers.baseFontSize
   },
   row: {
-    '&:nth-of-type(odd)': {
+    '&:nth-of-type(2n + 1)': {
       backgroundColor: helpers.panelColor,
     },
   },
 }
 
 const NoWrap = styled.span`
-  display: flex;
-  flex-shrink: 0;
   white-space: nowrap;
 `;
 
@@ -34,12 +33,21 @@ const CustomTableCell = withStyles({
     fontSize: helpers.baseFontSize,
     fontWeight: 600
   },
+  root: {
+    fontSize: helpers.baseFontSize,
+    fontFamily: helpers.specialFont
+  },
   body: {
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
     fontWeight: 400
   },
 })(TableCell);
+
+const Price = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const SuggestionTable = (props) => {
   return(<Paper className={props.classes.root}>
@@ -52,8 +60,18 @@ const SuggestionTable = (props) => {
           <CustomTableCell>Skill Categories</CustomTableCell>
           <CustomTableCell>Skill Subjects</CustomTableCell>
           <CustomTableCell>Experience Level</CustomTableCell>
-          <CustomTableCell>MonthPrice (min - max)</CustomTableCell>
-          <CustomTableCell>ClassPrice (min - max)</CustomTableCell>
+          <CustomTableCell>
+            <Price>
+              <NoWrap> Month Price</NoWrap>
+              <NoWrap>(min - max)</NoWrap>
+            </Price>
+          </CustomTableCell>
+          <CustomTableCell>
+            <Price>
+              <NoWrap>Class Price</NoWrap>
+              <NoWrap>(min - max)</NoWrap>
+            </Price>
+          </CustomTableCell>
           <CustomTableCell>Gender</CustomTableCell>
           <CustomTableCell>Age</CustomTableCell>
          </TableRow>

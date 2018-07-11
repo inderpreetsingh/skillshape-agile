@@ -309,6 +309,15 @@ class ClassDetailModal extends React.Component {
       return <Text>{"One Time"}</Text>
   }
 
+  formatScheduleType = (scheduleType) => {
+      const classScheduleType = scheduleType.toLowerCase();
+
+      if(classScheduleType === 'recurring' || classScheduleType === 'ongoing')
+        return (<Text><Capitalize>{classScheduleType}</Capitalize></Text>)
+
+      return <Text>{"One Time"}</Text>
+  }
+
   setImageSrc = (classType,school) => {
     console.log("getImageSrc classtype school", classType, school);
 
@@ -471,9 +480,8 @@ class ClassDetailModal extends React.Component {
                 </DialogTitle>
 
                 <EventHeader>
-                  {classImg && (
-                    <ImageContainer src={classImg}>
-                      {/*<div style={{position: "absolute", top: 10, right: 10}}>
+                  <ImageContainer src={classImg}>
+                    {<div style={{position: "absolute", top: 10, right: 10}}>
   									{
   										eventData.attending && (
   											<Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
@@ -485,20 +493,12 @@ class ClassDetailModal extends React.Component {
   											</Button>
   										)
   									}
-  								</div>*/}
+  								</div>}
 
-                      {/*<img
-                      className={classes.image}
-                      src={this.getImageSrc(classType, school)}
-                    />*/}
-                    </ImageContainer>
-                  )}
-                  <Event center={classImg !== ""}>
-                    <EventName>
-                      {`${classType && classType.name.toLowerCase()}`} :{" "}
-                      {eventData.name}
-                    </EventName>
-                    {/* <ScheduleType>{eventData.scheduleType}</ScheduleType> */}
+                  </ImageContainer>
+                  <Event center={classImg !== ''}>
+                    <EventName>{eventData.name}</EventName>
+                    {this.formatScheduleType(eventData.scheduleType)}
                   </Event>
                 </EventHeader>
                 <Grid
@@ -707,7 +707,7 @@ class ClassDetailModal extends React.Component {
 
               <Grid container style={{ marginTop: "16px" }}>
                 {!isEmpty(classTypeData) && (
-                  <div style={{ backgroundColor: "skyblue" }}>
+                  <div>
                     <Heading marginTop={helpers.rhythmDiv} textTransform="none">
                       This {`${classType && classType.name.toLowerCase()}`} :{" "}
                       {eventData.name} is part of
