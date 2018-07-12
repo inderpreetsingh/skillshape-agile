@@ -61,6 +61,7 @@ class ClassTimeForm extends React.Component {
       state.locationId = parentData.selectedLocation._id;
     }
     // Default selected tab accoring to data found for `ClassTimes` rec.
+    console.log("data--------->>>>.", data);
     if (!_.isEmpty(data)) {
       if (data.scheduleType === "oneTime") {
         state.tabValue = 0;
@@ -75,6 +76,7 @@ class ClassTimeForm extends React.Component {
       state.endDate = data.endDate;
       state.duration = data.duration;
       state.roomId = data.roomId;
+      console.log("this.state.tabvalue", state.tabValue);
     }
     console.log("Final state -->>", state);
     return state;
@@ -220,8 +222,14 @@ class ClassTimeForm extends React.Component {
                   type="text"
                   fullWidth
                 />
+                {console.log(
+                  "tabValue",
+                  this.state.tabValue,
+                  this.state.tabValue === 0
+                )}
                 <ResponsiveTabs
-                  defaultValue={this.state.tabValue}
+                  defaultValue={0}
+                  tabValue={this.state.tabValue}
                   tabs={["One Time", "Repeating with Start/End", "Ongoing"]}
                   color="primary"
                   onTabChange={this.onTabChange}
