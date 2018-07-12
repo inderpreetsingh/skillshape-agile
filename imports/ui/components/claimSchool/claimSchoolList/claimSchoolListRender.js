@@ -9,6 +9,7 @@ import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import SchoolCard from "/imports/ui/components/landing/components/cards/schoolCard";
 import NoResults from '/imports/ui/components/landing/components/NoResults';
+import FilterPanel from '/imports/ui/components/landing/components/FilterPanel.jsx';
 import SchoolSuggestionDialogBox from "/imports/ui/components/landing/components/dialogs/SchoolSuggestionDialogBox.jsx";
 
 import {getContainerMaxWidth} from '/imports/util/cards.js';
@@ -85,7 +86,11 @@ const GridWrapper = styled.div`
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24}px;
       margin: 0 auto;
     }
+`;
 
+const FormWrapper = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
 export default function (props) {
@@ -109,11 +114,30 @@ export default function (props) {
             <GridWrapper>
               <NoResultContainer>
                 <NoneOfMyLisiting {...props} />
+                <FormWrapper>
+                  <FilterPanel
+                    filtersInDialogBox
+                    filtersForSuggestion
+                    filters={this.state.filters}
+                    tempFilters={this.state.tempFilters}
+                    onLocationChange={this.onLocationChange}
+                    locationInputChanged={this.locationInputChanged}
+                    fliterSchoolName={this.fliterSchoolName}
+                    filterAge={this.filterAge}
+                    filterGender={this.filterGender}
+                    skillLevelFilter={this.skillLevelFilter}
+                    perClassPriceFilter={this.perClassPriceFilter}
+                    pricePerMonthFilter={this.pricePerMonthFilter}
+                    collectSelectedSkillCategories={this.collectSelectedSkillCategories}
+                    collectSelectedSkillSubject={this.collectSelectedSkillSubject}
+                    onGiveSuggestion={this.handleGiveSuggestion}
+                  />
+                </FormWrapper>
                 <NoResults
+                  icon={false}
+                  hideTitle={true}
                   removeAllFiltersButtonClick={props.removeAllFilters}
                   addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
-                  schoolSuggestionButtonClick={props.handleSchoolSuggestion}
-                  showSchoolSuggestion={true}
                 />
               </NoResultContainer>
             </GridWrapper>

@@ -50,32 +50,6 @@ export default function (props) {
               onClose={() => this.setState({showConfirmationModal: false})}
           />
         }
-        {this.state.schoolSuggestionDialogBox &&
-            <FiltersDialogBox
-                open={this.state.schoolSuggestionDialogBox}
-                title="Suggest School"
-                onModalClose={this.handleSchoolSuggestionDialogState(false)}
-                filtersForSuggestion={true}
-                onGiveSuggestion={this.handleGiveSuggestion}
-                filterPanelProps={{
-                  ref: "ClaimSchoolFilter",
-                  onLocationChange: this.onLocationChange,
-                  handleSchoolNameChange: this.handleSchoolNameChange,
-                  locationInputChanged: this.locationInputChanged,
-                  filters: this.state.filters,
-                  tempFilters: this.state.tempFilters,
-                  fliterSchoolName: this.fliterSchoolName,
-                  filterAge: this.filterAge,
-                  filterGender: this.filterGender,
-                  skillLevelFilter: this.skillLevelFilter,
-                  perClassPriceFilter: this.perClassPriceFilter,
-                  pricePerMonthFilter: this.pricePerMonthFilter,
-                  collectSelectedSkillCategories: this.collectSelectedSkillCategories,
-                  collectSelectedSkillSubject: this.collectSelectedSkillSubject,
-                }}
-            />
-        }
-
         {this.state.filterPanelDialogBox &&
           <FiltersDialogBox
               open={this.state.filterPanelDialogBox}
@@ -139,10 +113,10 @@ export default function (props) {
         </Wrapper> */}
          <ClaimSchoolList
             filters={this.state.filters}
+            tempFilters={this.state.tempFilters}
             removeAllFilters={this.removeAllFilters}
             handleClaimASchool={this.handleClaimASchool}
             onStartNewListingButtonClick={this.showConfirmationModal}
-            handleSchoolSuggestion={this.handleSchoolSuggestionDialogState(true)}
            />
        </div>
        </DocumentTitle>

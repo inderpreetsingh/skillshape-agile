@@ -78,11 +78,11 @@ const OrText = styled.p`
 const NoResults = (props) => (
   <DocumentTitle title={get(props, "route.name", "Untitled")}>
   <Wrapper>
-    <IconWrapper>
+    {props.icon && <IconWrapper>
       <Plant />
-    </IconWrapper>
+    </IconWrapper>}
 
-    <Title>Wow! you are the first one here with this idea.</Title>
+    {!props.hideTitle && <Title>Wow! you are the first one here with this idea.</Title>}
 
     <ButtonsWrapper>
       <PrimaryButton fullWidth={true} onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={Duster} noMarginBottom />
@@ -106,11 +106,15 @@ NoResults.propTypes = {
   imgSrc: PropTypes.string,
   removeAllFiltersButtonClick: PropTypes.func,
   addYourSchoolButtonClick: PropTypes.func,
-  schoolSuggestionButtonClick: PropTypes.func
+  schoolSuggestionButtonClick: PropTypes.func,
+  icon: PropTypes.bool,
+  hideTitle: PropTypes.bool
 }
 
 NoResults.defaultProps = {
-  imgSrc: noResultsImgSrc
+  imgSrc: noResultsImgSrc,
+  icon: true,
+  hideTitle: false
 }
 
 export default NoResults;
