@@ -6,8 +6,6 @@ import {
   DefaultRoute,
   IndexRoute
 } from "react-router";
-import { componentLoader } from "/imports/util";
-
 //layout
 import MainLayout from "/imports/ui/layout/mainLayout";
 import AdminLayout from "/imports/ui/layout/adminLayout";
@@ -19,8 +17,8 @@ import Landing from "/imports/ui/components/landing/index.jsx";
 import ClassType from "/imports/ui/components/landing/ClassType.jsx";
 import NoResults from "/imports/ui/components/landing/components/NoResults";
 import ClassTypeView from "/imports/ui/components/classTypeView";
+import SchoolSuggestionsView from "/imports/ui/components/landing/components/schoolSuggestions/index.jsx";
 import School from "/imports/ui/components/landing/School.jsx";
-import SchoolSuggestions from "/imports/ui/components/landing/components/schoolSuggestions/index.jsx";
 import NoPageFound from "/imports/ui/components/landing/components/NoPageFound";
 
 import ResetPassword from "/imports/ui/components/account/resetPassword";
@@ -45,38 +43,7 @@ import ContactUsPage from "/imports/ui/pages/ContactUsPage";
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
 import StripeConnectModal from "./../../ui/modal/stripeConnectModal";
 import Financials from "/imports/ui/components/financials";
-// import { componentLoader } from "/imports/util";
-
-// class DynamicImport extends React.Component {
-//   state = {
-//     Component: null
-//   };
-//   componentDidMount() {
-//     this.props.load().then(Component => {
-//       this.setState(() => ({
-//         Component: Component.default ? Component.default : Component
-//       }));
-//     });
-//   }
-//   render() {
-//     return this.props.children(this.state.Component);
-//   }
-// }
-
-// export default (Routes = componentLoader(props => {
-// if (window.location.href.indexOf("embed") !== -1) {
-//   return (
-//     <DynamicImport load={() => import("./embedRoutes")}>
-//       {Component => (Component === null ? null : <Component {...props} />)}
-//     </DynamicImport>
-//   );
-// } else {
-//   return (
-//     <DynamicImport load={() => import("./mainRoutes")}>
-//       {Component => (Component === null ? null : <Component {...props} />)}
-//     </DynamicImport>
-//   );
-// }
+import { componentLoader } from "/imports/util";
 export default (Routes = componentLoader(props => (
   <Router history={browserHistory}>
     <Route name="SkillShape" path="/" component={MainLayout}>
@@ -102,9 +69,13 @@ export default (Routes = componentLoader(props => (
         name="redirect-to-stripe"
         component={StripeConnectModal}
       />
+      <Route
+        path="/school-suggestions"
+        name="SchoolSuggestionsView"
+        component={SchoolSuggestionsView}
+      />
       <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />
-      <Route path="/school-suggestions" name="SchoolSuggetions" component={SchoolSuggestions} />
 
       <Route path="/" component={PublicLayout}>
         <Route path="/Aboutus" name="Aboutus" component={AboutUs} />
@@ -186,4 +157,3 @@ export default (Routes = componentLoader(props => (
     <Route path="*" name="NoPageFound" component={NoPageFound} />
   </Router>
 )));
-// }));
