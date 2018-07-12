@@ -300,25 +300,33 @@ class ClassDetailModal extends React.Component {
     this.setImageSrc(classType, school);
   };
 
-  formatScheduleType = (scheduleType) => {
-      const classScheduleType = scheduleType.toLowerCase();
+  formatScheduleType = scheduleType => {
+    const classScheduleType = scheduleType.toLowerCase();
 
-      if(classScheduleType === 'recurring' || classScheduleType === 'ongoing')
-        return (<Text><Capitalize>{classScheduleType}</Capitalize></Text>)
+    if (classScheduleType === "recurring" || classScheduleType === "ongoing")
+      return (
+        <Text>
+          <Capitalize>{classScheduleType}</Capitalize>
+        </Text>
+      );
 
-      return <Text>{"One Time"}</Text>
-  }
+    return <Text>{"One Time"}</Text>;
+  };
 
-  formatScheduleType = (scheduleType) => {
-      const classScheduleType = scheduleType.toLowerCase();
+  formatScheduleType = scheduleType => {
+    const classScheduleType = scheduleType.toLowerCase();
 
-      if(classScheduleType === 'recurring' || classScheduleType === 'ongoing')
-        return (<Text><Capitalize>{classScheduleType}</Capitalize></Text>)
+    if (classScheduleType === "recurring" || classScheduleType === "ongoing")
+      return (
+        <Text>
+          <Capitalize>{classScheduleType}</Capitalize>
+        </Text>
+      );
 
-      return <Text>{"One Time"}</Text>
-  }
+    return <Text>{"One Time"}</Text>;
+  };
 
-  setImageSrc = (classType,school) => {
+  setImageSrc = (classType, school) => {
     console.log("getImageSrc classtype school", classType, school);
 
     imageExists((classType && classType.classTypeImg) || "")
@@ -424,23 +432,38 @@ class ClassDetailModal extends React.Component {
       addToMyCalender,
       classImg
     } = this.state;
-    const { eventData, fullScreen, classes, clickedDate, classInterestData} = this.props;
+    const {
+      eventData,
+      fullScreen,
+      classes,
+      clickedDate,
+      classInterestData
+    } = this.props;
 
-    console.log("eventData____________",eventData);
+    console.log("eventData____________", eventData);
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
-    const formattedClassTimesDetails = formatDataBasedOnScheduleType(eventData,false); // false is for not hiding the past schedule types.
-    const classTimesData = ClassTimes.find({classTypeId: eventData.classTypeId});
-    const allFormattedClassTimeDetails = formatClassTimesData(classTimesData,true).filter(classTime => {
-
-        if(classTime._id != eventData.classTimeId
-          && classTime.formattedClassTimesDetails
-          && classTime.formattedClassTimesDetails.totalClassTimes > 0) {
-          return true;
-        }
-        return false;
-    }) // false is for not hiding the past schedule types;
+    const formattedClassTimesDetails = formatDataBasedOnScheduleType(
+      eventData,
+      false
+    ); // false is for not hiding the past schedule types.
+    const classTimesData = ClassTimes.find({
+      classTypeId: eventData.classTypeId
+    });
+    const allFormattedClassTimeDetails = formatClassTimesData(
+      classTimesData,
+      true
+    ).filter(classTime => {
+      if (
+        classTime._id != eventData.classTimeId &&
+        classTime.formattedClassTimesDetails &&
+        classTime.formattedClassTimesDetails.totalClassTimes > 0
+      ) {
+        return true;
+      }
+      return false;
+    }); // false is for not hiding the past schedule types;
     classTypeData.formattedClassTimesDetails = formattedClassTimesDetails;
-    console.log(allFormattedClassTimeDetails,"l;;;;;;;;;;;;;;;;;;")
+    console.log(allFormattedClassTimeDetails, "l;;;;;;;;;;;;;;;;;;");
     // console.log(classTypeData,eventData,formattedClassTimesDetails,"event ................................. data");
     const scheduleDetails = [
       "Monday",
@@ -481,22 +504,28 @@ class ClassDetailModal extends React.Component {
 
                 <EventHeader>
                   <ImageContainer src={classImg}>
-                    {<div style={{position: "absolute", top: 10, right: 10}}>
-  									{
-  										eventData.attending && (
-  											<Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
-  											   <Icon
-  													className="material-icons"
-  												>
-  													delete
-  												</Icon>
-  											</Button>
-  										)
-  									}
-  								</div>}
-
+                    {
+                      <div style={{ position: "absolute", top: 10, right: 10 }}>
+                        {eventData.attending && (
+                          <Button
+                            fab
+                            aria-label="delete"
+                            color="accent"
+                            onClick={event =>
+                              this.removeMyClassInterest(
+                                event,
+                                eventData.classTimeId
+                              )
+                            }
+                            className={classes.button}
+                          >
+                            <Icon className="material-icons">delete</Icon>
+                          </Button>
+                        )}
+                      </div>
+                    }
                   </ImageContainer>
-                  <Event center={classImg !== ''}>
+                  <Event center={classImg !== ""}>
                     <EventName>{eventData.name}</EventName>
                     {this.formatScheduleType(eventData.scheduleType)}
                   </Event>
@@ -709,7 +738,7 @@ class ClassDetailModal extends React.Component {
                 {!isEmpty(classTypeData) && (
                   <div>
                     <Heading marginTop={helpers.rhythmDiv} textTransform="none">
-                      This {`${classType && classType.name.toLowerCase()}`} :{" "}
+                      This {`${classType && classType.name.toLowerCase()}`}:{" "}
                       {eventData.name} is part of
                     </Heading>
                     <ClassTimesBoxes

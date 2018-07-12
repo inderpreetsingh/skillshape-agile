@@ -197,7 +197,6 @@ class ClassTypeList extends Component {
     } else if (isEmpty(classTypeData)) {
       return (
         <NoResultContainer>
-          {console.log(this.props.appliedTopFilter, "appliedTopFilter...")}
           <NoResults
             removeAllFiltersButtonClick={this.props.removeAllFilters}
             addYourSchoolButtonClick={this.handleAddSchool}
@@ -306,7 +305,6 @@ class ClassTypeList extends Component {
 }
 
 export default createContainer(props => {
-  console.log("ClassTypeList createContainer -->>", props);
   let classTypeData = [];
   let reviewsData = [];
   let classTypeIds = [];

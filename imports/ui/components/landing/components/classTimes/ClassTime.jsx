@@ -350,7 +350,7 @@ class ClassTime extends Component {
                 {/*Class type name */}
                 <ClassTypeName inPopUp={inPopUp}>{`${
                   classTypeName.name
-                } : ${name}`}</ClassTypeName>
+                }: ${name}`}</ClassTypeName>
 
                 {/* Schedule type */}
                 {this.getScheduleTypeFormatted()}
