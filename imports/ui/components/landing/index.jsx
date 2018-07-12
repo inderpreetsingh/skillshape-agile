@@ -481,7 +481,8 @@ class Landing extends Component {
           });
           // Toggle map view on click of `Browse classes near by me`
           // if(!args) {
-          this.handleToggleMapView();
+          if(!args.noMapView)
+            this.handleToggleMapView();
           // }
           // toastr.success("Showing classes around you...","Found your location");
           // // Session.set("coords",coords)
@@ -881,6 +882,7 @@ class Landing extends Component {
                 handleNoOfFiltersClick={() =>
                   this.handleFiltersDialogBoxState(true)
                 }
+                locationName={this.state.locationName}
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 onMapViewButtonClick={this.handleToggleMapView}
                 mapView={this.state.mapView}

@@ -33,6 +33,7 @@
 }
 
 .my-multi-select-filter {
+   width: 100%;
   .rw-widget-input, .rw-widget-picker, .rw-widget-container, .rw-multiselect {
     background-color: transparent;
   }
@@ -123,6 +124,7 @@
 }
 
 .my-multi-select-filter-btn {
+  font-family: map-get($fonts, 'common');
   min-width: map-get($sizes,'rhythm-div') * 2px;
   padding: map-get($sizes,'rhythm-div') * 1px;
 }

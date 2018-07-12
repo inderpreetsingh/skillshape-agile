@@ -21,6 +21,7 @@ import SecondaryButton from "./buttons/SecondaryButton";
 
 import Grade from "material-ui-icons/Grade";
 import Location from "material-ui-icons/LocationOn";
+import MyLocation from "material-ui-icons/MyLocation";
 import SearchIcon from "material-ui-icons/Search";
 
 import { grey } from "material-ui/colors";
@@ -111,10 +112,11 @@ const SearchIconButtonWrapper = styled.div`
 `;
 
 const SearchInputsSectionWrapper = styled.div`
-  ${helpers.flexCenter} flex-direction: column;
+  ${helpers.flexCenter}
+  flex-direction: column;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    align-items: flex-start;
+
   }
 `;
 
@@ -126,13 +128,17 @@ const InputWrapper = styled.div`
 const InputsWrapper = styled.div`
   ${helpers.flexCenter} max-width: 100%;
   width: 100%;
+  padding: ${props => props.noPadding ? '0' : helpers.rhythmDiv}px;
   background: ${props => (props.background ? props.background : "transparent")};
   margin-bottom: ${helpers.rhythmDiv}px;
+  border-radius: 4px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    padding-right: ${helpers.rhythmDiv}px;
-    margin: 0 auto;
     max-width: 300px;
+    padding-right: ${helpers.rhythmDiv}px;
+    margin-right: ${helpers.rhythmDiv}px;
+    margin: 0 auto;
+    ${props => props.marginSmallScreen ? `margin-bottom : ${helpers.rhythmDiv}px;` : ''}
   }
 `;
 
@@ -171,7 +177,7 @@ const ButtonsWrapper = styled.div`
 
 const SearchInputsSection = props => (
   <SearchInputsSectionWrapper>
-    <InputsWrapper>
+    {/*<InputsWrapper>
       <InputWrapper>
         <MySearchBar
           placeholder="Skill Type"
@@ -183,7 +189,6 @@ const SearchInputsSection = props => (
           value={props.skillTypeText}
         />
       </InputWrapper>
-      {/* <In>in</In> */}
       <InputWrapper locationInput>
         <MySearchBar
           placeholder="Location"
@@ -211,42 +216,30 @@ const SearchInputsSection = props => (
           </IconButton>
         </SearchIconButtonWrapper>
       </InputWrapper>
-    </InputsWrapper>
+    </InputsWrapper> */}
 
     {/* UPDATING ...............*/}
-    {/*<InputsWrapper background="white">
+    <InputsWrapper background="white" marginSmallScreen>
       <div className="my-multi-select-filter">
           <MyMultiSelect
               textField={"name"}
               valueField={"_id"}
               data={props.skillCategoryData}
-              placeholder="Skill category"
+              placeholder="Choose your skill category"
               value={get(props, "filters.defaultSkillCategories", [])}
               onChange={(event)=> props.collectSelectedSkillCategories(event, "filters", null)}
               onNoOfFiltersClick={props.handleNoOfFiltersClick}
           />
       </div>
-
-      <div className="my-multi-select-filter">
-          <MyMultiSelect
-            data={props.skillSubjectData}
-            defaultValue={get(props, "filters.defaultSkillSubject", [])}
-            placeholder="Type to search skills"
-            textField={"name"}
-            onSearch={props.inputFromUser}
-            onChange ={props.collectSelectedSkillSubject}
-            onNoOfFiltersClick={props.handleNoOfFiltersClick}
-          />
-      </div>
     </InputsWrapper>
 
-    <InputsWrapper>
+    <InputsWrapper noPadding>
       <InputWrapper locationInput>
           <MySearchBar
             placeholder="Location"
             defaultValue={props.currentAddress}
             defaultBorderRadius={true}
-            withIcon={false}
+            searchIcon={<MyLocation style={{ color: grey[500] }} />}
             onSearchIconClick={props.onSearchIconClick}
             noCloseIcon
             onChange={(event) => props.locationInputChanged(event, "filters", null)}
@@ -264,7 +257,7 @@ const SearchInputsSection = props => (
         <Icon>search</Icon>
         </IconButton>
       </SearchIconButtonWrapper>
-    </InputsWrapper> */}
+    </InputsWrapper>
 
     <ButtonsWrapper>
       <FilterButtonWrapper>
@@ -366,29 +359,14 @@ class SearchArea extends Component {
     );
   }
 
-  componentDidUpdate() {
-    if (
-      isEmpty(this.state.skillSubjectData) &&
-      this.props.filters.skillCategoryIds
-    )
-      this.inputFromUser("");
+  componentDidMount() {
+    this.props.getMyCurrentLocation({noMapView: true});
   }
 
-  // This is used to get subjects on the basis of subject category.
-  inputFromUser = text => {
-    // Do db call on the basis of text entered by user
-    let skillCategoryIds = this.props.filters.skillCategoryIds;
-    Meteor.call(
-      "getSkillSubjectBySkillCategory",
-      { skillCategoryIds: skillCategoryIds, textSearch: text },
-      (err, res) => {
-        if (res) {
-          // console.log("result",res)
-          this.setState({ skillSubjectData: res || [] });
-        }
-      }
-    );
-  };
+  componentWillReceiveProps(nextProps) {
+    if(this.props.location != nextProps.locationName)
+      this.setState({ location: nextProps.locationName});
+  }
 
   handleLocationInputChange = event => {
     let value = "";
@@ -449,6 +427,7 @@ class SearchArea extends Component {
               this.props.collectSelectedSkillCategories
             }
             collectSelectedSkillSubject={this.props.collectSelectedSkillSubject}
+            handleNoOfFiltersClick={this.props.handleNoOfFiltersClick}
             inputFromUser={this.inputFromUser}
             classes={this.props.classes}
             location={this.state.location}

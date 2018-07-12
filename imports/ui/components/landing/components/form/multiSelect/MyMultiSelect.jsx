@@ -498,7 +498,7 @@ class Multiselect extends React.Component {
 
     let Component = this.props.tagComponent;
 
-    console.log('messages...',messages);
+    // console.log('messages...',messages);
     return (<MyTagList
          onNoOfFiltersClick={this.props.onNoOfFiltersClick}
          ref='tagList'
