@@ -13,6 +13,7 @@ import FilterPanel from '/imports/ui/components/landing/components/FilterPanel.j
 import SchoolSuggestionDialogBox from "/imports/ui/components/landing/components/dialogs/SchoolSuggestionDialogBox.jsx";
 
 import {getContainerMaxWidth} from '/imports/util/cards.js';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const SPACING = helpers.rhythmDiv * 2;
@@ -112,6 +113,7 @@ export default function (props) {
     if(isEmpty(schools)) {
         return (
             <GridWrapper>
+              {this.state.isLoading && <ContainerLoader />}
               <NoResultContainer>
                 <NoneOfMyLisiting {...props} />
                 <FormWrapper>

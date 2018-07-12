@@ -18,6 +18,7 @@ const Wrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
   max-width: ${helpers.baseFontSize * 30}px;
+  width: 100%;
   margin: ${helpers.rhythmDiv * 4}px auto;
 `;
 

@@ -117,6 +117,13 @@ const FilterBarWrapper = styled.div`
   }
 `;
 
+const GiveSuggestionButton = styled.div`
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  padding: ${helpers.rhythmDiv * 2}px;
+`;
+
 class FilterPanel extends Component {
   state = {
     showMoreFilters: false,
@@ -366,7 +373,11 @@ class FilterPanel extends Component {
             />
           </MaterialInputWrapper>
         </Grid>
-
+        {console.log(get(
+          this.props,
+          "filters.defaultSkillCategories",
+          []
+        ),"................")}
         {/* 2nd Row */}
         <Grid item xs={12} sm={12}>
           <div className="filters-dialog">
@@ -374,7 +385,7 @@ class FilterPanel extends Component {
               textField={"name"}
               valueField={"_id"}
               data={this.state.skillCategoryData}
-              defaultValue={get(
+              value={get(
                 this.props,
                 "filters.defaultSkillCategories",
                 []
@@ -471,17 +482,19 @@ class FilterPanel extends Component {
         </Grid>
 
         {filtersForSuggestion ? (
-          <Grid item xs={12} sm={6}>
-            <FilterPanelAction>
-              <PrimaryButton
-                fullWidth
-                label="Give Suggestion"
-                icon={true}
-                iconName="sentiment_satisfied"
-                onClick={this.props.onGiveSuggestion}
-              />
-            </FilterPanelAction>
-          </Grid>
+          <GiveSuggestionButton>
+            <Grid item xs={12} sm={12}>
+              <FilterPanelAction>
+                <PrimaryButton
+                  fullWidth
+                  label="Give Suggestion"
+                  icon={true}
+                  iconName="sentiment_satisfied"
+                  onClick={this.props.onGiveSuggestion}
+                />
+              </FilterPanelAction>
+            </Grid>
+          </GiveSuggestionButton>
         ) : (
           <Grid item xs={12} sm={6}>
             <FilterPanelAction>
@@ -498,6 +511,8 @@ class FilterPanel extends Component {
             </FilterPanelAction>
           </Grid>
         )}
+
+        {!filtersForSuggestion &&
         <Grid item xs={12} sm={6}>
           <FilterPanelAction>
             <PrimaryButton
@@ -507,7 +522,7 @@ class FilterPanel extends Component {
               onClick={this.props.handleFiltersDialogSaveButtonClick}
             />
           </FilterPanelAction>
-        </Grid>
+        </Grid>}
       </Grid>
     );
   };

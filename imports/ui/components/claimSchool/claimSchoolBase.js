@@ -17,7 +17,6 @@ export default class ClaimSchoolBase extends React.Component {
             error: null,
             showConfirmationModal:false
         };
-        this.fieldNames = ['skillSubjectIds','skillCategoryIds','schoolName','locationName','experienceLevel','gender','age'];
     }
     handleFixedToggle = state => {
         // console.log("handleFixedToggle", defaultPosition);

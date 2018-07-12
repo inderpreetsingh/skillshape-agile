@@ -1,5 +1,7 @@
 import React from "react";
 import {createContainer} from 'meteor/react-meteor-data';
+import isEmpty from 'lodash/isEmpty';
+
 import ClaimSchoolListRender from "./claimSchoolListRender";
 import { Session } from 'meteor/session';
 import {toastrModal, withSubscriptionAndPagination } from '/imports/util';
@@ -27,6 +29,7 @@ class ClaimSchoolList extends React.Component {
       filters: {},
       tempFilters: {}
     }
+    this.fieldNames = ['skillSubjectIds','skillCategoryIds','schoolName','locationName','experienceLevel','gender','age'];
   }
 
   componentWillUnmount() {
@@ -34,6 +37,8 @@ class ClaimSchoolList extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps.filters,this.props.filters,"will receive props..");
+
     this.setState({
       filters: nextProps.filters,
       tempFilters: nextProps.tempFilters
