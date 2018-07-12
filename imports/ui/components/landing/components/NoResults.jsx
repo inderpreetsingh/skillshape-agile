@@ -88,9 +88,12 @@ const NoResults = (props) => (
     <ButtonsWrapper>
       <PrimaryButton fullWidth={true} onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={Duster} noMarginBottom />
       <OrText> or </OrText>
-      <SecondaryButton fullWidth={true} onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom/>
+      {props.showSchoolSuggestion ?
+        <SecondaryButton fullWidth={true} onClick={props.schoolSuggestionButtonClick} label="Give Suggestion" icon iconName="sentiment_satisfied" noMarginBottom />
+        : <SecondaryButton fullWidth={true} onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom/>}
     </ButtonsWrapper>
-    {props.showSchoolSuggestion && <ButtonsWrapper>
+
+    {/* props.showSchoolSuggestion && <ButtonsWrapper>
     <PrimaryButton
       fullWidth={true}
       onClick={props.schoolSuggestionButtonClick}
@@ -98,7 +101,7 @@ const NoResults = (props) => (
       icon
       iconName="sentiment_satisfied"
       noMarginBottom />
-    </ButtonsWrapper>}
+    </ButtonsWrapper>*/}
   </Wrapper>
   </DocumentTitle>
 );
@@ -114,6 +117,7 @@ NoResults.propTypes = {
 
 NoResults.defaultProps = {
   imgSrc: noResultsImgSrc,
+  showSchoolSuggestion: false,
   icon: true,
   hideTitle: false
 }

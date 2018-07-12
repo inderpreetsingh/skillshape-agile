@@ -482,8 +482,7 @@ class FilterPanel extends Component {
         </Grid>
 
         {filtersForSuggestion ? (
-          <GiveSuggestionButton>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={6}>
               <FilterPanelAction>
                 <PrimaryButton
                   fullWidth
@@ -494,7 +493,7 @@ class FilterPanel extends Component {
                 />
               </FilterPanelAction>
             </Grid>
-          </GiveSuggestionButton>
+
         ) : (
           <Grid item xs={12} sm={6}>
             <FilterPanelAction>
@@ -512,7 +511,18 @@ class FilterPanel extends Component {
           </Grid>
         )}
 
-        {!filtersForSuggestion &&
+        {filtersForSuggestion ?
+          <Grid item xs={12} sm={6}>
+            <FilterPanelAction>
+              <PrimaryButton
+                fullWidth
+                label="Go Back"
+                icon={true}
+                onClick={this.props.onGoBackButtonClick}
+              />
+            </FilterPanelAction>
+          </Grid>
+        :
         <Grid item xs={12} sm={6}>
           <FilterPanelAction>
             <PrimaryButton

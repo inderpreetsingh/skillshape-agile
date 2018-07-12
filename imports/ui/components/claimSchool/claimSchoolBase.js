@@ -13,9 +13,10 @@ export default class ClaimSchoolBase extends React.Component {
             filters: {},
             sticky: false,
             filterPanelDialogBox: false,
+            showConfirmationModal: false,
+            suggestionForm: false,
             tempFilters: {},
             error: null,
-            showConfirmationModal:false
         };
     }
     handleFixedToggle = state => {
@@ -40,6 +41,19 @@ export default class ClaimSchoolBase extends React.Component {
             });
         }
     };
+
+    handleSuggestionFormState = (state) => () => {
+      this.setState({
+        suggestionForm: state
+      })
+    }
+
+    handleGoBackButtonClick = () => {
+      this.setState({
+        filters: {},
+        suggestionForm: false
+      })
+    }
 
     handleFiltersDialogBoxState = (state) => {
         this.setState({

@@ -77,21 +77,47 @@ const GridWrapper = styled.div`
 
     @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px) {
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px;
+      ${props => props.suggestionForm ? "max-width: 800px" : ''};
     }
 
     @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px) {
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px;
+      ${props => props.suggestionForm ? "max-width: 800px" : ''};
     }
 
     @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px) {
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24}px;
+      ${props => props.suggestionForm ? "max-width: 800px" : ''};
       margin: 0 auto;
     }
+
 `;
 
 const FormWrapper = styled.div`
   max-width: 800px;
   margin: 0 auto;
+  margin-top: ${helpers.rhythmDiv * 4}px;
+`;
+
+const FormTitle = styled.h2`
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  font-style: italic;
+  text-align: center;
+  line-height: 1;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+const FormTagline = styled.h3`
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 400;
+  text-align: center;
+  line-height: 1;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
 export default function (props) {
@@ -112,11 +138,14 @@ export default function (props) {
 
     if(isEmpty(schools)) {
         return (
-            <GridWrapper>
+            <GridWrapper suggestionForm={this.props.suggestionForm}>
               {this.state.isLoading && <ContainerLoader />}
               <NoResultContainer>
-                <NoneOfMyLisiting {...props} />
-                <FormWrapper>
+                {!this.props.suggestionForm && <NoneOfMyLisiting {...props} />}
+
+                {this.props.suggestionForm && <FormWrapper>
+                  <FormTitle>Give your valuable suggestion</FormTitle>
+                  <FormTagline>Your suggestion will help us know better</FormTagline>
                   <FilterPanel
                     filtersInDialogBox
                     filtersForSuggestion
@@ -133,14 +162,15 @@ export default function (props) {
                     collectSelectedSkillCategories={this.collectSelectedSkillCategories}
                     collectSelectedSkillSubject={this.collectSelectedSkillSubject}
                     onGiveSuggestion={this.handleGiveSuggestion}
+                    onGoBackButtonClick={props.handleGoBackButtonClick}
                   />
-                </FormWrapper>
-                <NoResults
-                  icon={false}
-                  hideTitle={true}
+                </FormWrapper>}
+                {!this.props.suggestionForm && <NoResults
+                  showSchoolSuggestion={true}
                   removeAllFiltersButtonClick={props.removeAllFilters}
+                  schoolSuggestionButtonClick={props.handleSuggestionFormState(true)}
                   addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
-                />
+                />}
               </NoResultContainer>
             </GridWrapper>
         )

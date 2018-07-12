@@ -27,7 +27,8 @@ class ClaimSchoolList extends React.Component {
 
     this.state = {
       filters: {},
-      tempFilters: {}
+      tempFilters: {},
+      suggestionForm: false,
     }
     this.fieldNames = ['skillSubjectIds','skillCategoryIds','schoolName','locationName','experienceLevel','gender','age'];
   }
@@ -109,7 +110,6 @@ class ClaimSchoolList extends React.Component {
             toastr.error(err.reason,"Error");
           }else {
             toastr.success("Thanks alot for your suggestion","success");
-            this.handleSchoolSuggestionDialogState(false)(); // closing the modal.
           }
         });
       }
