@@ -97,6 +97,7 @@ const FormWrapper = styled.div`
   max-width: 800px;
   margin: 0 auto;
   margin-top: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
 const FormTitle = styled.h2`
