@@ -83,19 +83,16 @@ export default createContainer(props => {
 
   let subscription = Meteor.subscribe("classType.getclassType", { schoolId });
 
-  if (subscription.ready()) {
-    classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
-    let classTypeIds = classTypeData && classTypeData.map(data => data._id);
+  // if (subscription.ready()) {
+  classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
+  let classTypeIds = classTypeData && classTypeData.map(data => data._id);
 
-    Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {
-      schoolId,
-      classTypeIds
-    });
-    classTimesData = ClassTimes.find(
-      { schoolId },
-      { sort: { _id: -1 } }
-    ).fetch();
-  }
+  Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {
+    schoolId,
+    classTypeIds
+  });
+  classTimesData = ClassTimes.find({ schoolId }, { sort: { _id: -1 } }).fetch();
+  // }
 
   // console.log("classTimesData -->>",classTimesData)
   /*Find skills to make this container reactive on skill
@@ -103,6 +100,7 @@ export default createContainer(props => {
     perak:joins */
   SkillCategory.find().fetch();
   SkillSubject.find().fetch();
+  console.log("classTypeData", classTypeData);
   /*****************************************************/
 
   return {
