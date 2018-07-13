@@ -39,7 +39,7 @@ const styles = {
 
 const SearchAreaPanel = styled.div`
   padding: ${helpers.rhythmDiv}px;
-  max-width: 430px;
+  max-width: 446px;
   margin: auto;
 
   @media screen and (min-width: 0) and (max-width: ${helpers.mobile}px) {

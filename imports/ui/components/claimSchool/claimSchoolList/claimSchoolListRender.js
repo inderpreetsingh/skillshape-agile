@@ -167,6 +167,7 @@ export default function (props) {
                 </FormWrapper>}
                 {!this.props.suggestionForm && <NoResults
                   showSchoolSuggestion={true}
+                  ghostButtons={true}
                   removeAllFiltersButtonClick={props.removeAllFilters}
                   schoolSuggestionButtonClick={props.handleSuggestionFormState(true)}
                   addYourSchoolButtonClick = {props.onStartNewListingButtonClick}

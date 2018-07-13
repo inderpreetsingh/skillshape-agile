@@ -7,6 +7,7 @@ import Plant from './icons/Plant.jsx';
 import Duster from './icons/Duster.jsx';
 
 //TODO: Automatic imports depending upon variables used - intellij
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import PrimaryButton from './buttons/PrimaryButton.jsx';
 import SecondaryButton from './buttons/SecondaryButton.jsx';
 import Footer from './footer/index.jsx';
@@ -91,23 +92,22 @@ const NoResults = (props) => (
 
     {!props.hideTitle && <Title>Wow! you are the first one here with this idea.</Title>}
 
-    <ButtonsWrapper>
-      <PrimaryButton fullWidth={true} onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={Duster} noMarginBottom />
-      <OrText> or </OrText>
-      {props.showSchoolSuggestion ?
-        <SecondaryButton fullWidth={true} onClick={props.schoolSuggestionButtonClick} label="Give Suggestion" icon iconName="sentiment_satisfied" noMarginBottom />
-        : <SecondaryButton fullWidth={true} onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom/>}
-    </ButtonsWrapper>
-
-    {/* props.showSchoolSuggestion && <ButtonsWrapper>
-    <PrimaryButton
-      fullWidth={true}
-      onClick={props.schoolSuggestionButtonClick}
-      label="Suggest School"
-      icon
-      iconName="sentiment_satisfied"
-      noMarginBottom />
-    </ButtonsWrapper>*/}
+    {!props.ghostButtons
+      ? <ButtonsWrapper>
+          <PrimaryButton fullWidth={true} onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={Duster} noMarginBottom />
+          <OrText> or </OrText>
+          {props.showSchoolSuggestion ?
+            <SecondaryButton fullWidth={true} onClick={props.schoolSuggestionButtonClick} label="Give Suggestion" icon iconName="sentiment_satisfied" noMarginBottom />
+            : <SecondaryButton fullWidth={true} onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom/>}
+        </ButtonsWrapper>
+      :
+      <ButtonsWrapper>
+        <FormGhostButton fullWidth={true} onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={Duster} noMarginBottom />
+        <OrText> or </OrText>
+        {props.showSchoolSuggestion ?
+          <FormGhostButton darkGreyColor fullWidth={true} onClick={props.schoolSuggestionButtonClick} label="Give Suggestion" icon iconName="sentiment_satisfied" noMarginBottom />
+          : <FormGhostButton darkGreyColor fullWidth={true} onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom/>}
+      </ButtonsWrapper>}
   </Wrapper>
   </DocumentTitle>
 );
@@ -118,14 +118,16 @@ NoResults.propTypes = {
   addYourSchoolButtonClick: PropTypes.func,
   schoolSuggestionButtonClick: PropTypes.func,
   icon: PropTypes.bool,
-  hideTitle: PropTypes.bool
+  hideTitle: PropTypes.bool,
+  ghostButtons: PropTypes.bool
 }
 
 NoResults.defaultProps = {
   imgSrc: noResultsImgSrc,
   showSchoolSuggestion: false,
   icon: true,
-  hideTitle: false
+  hideTitle: false,
+  ghostButtons: false,
 }
 
 export default NoResults;

@@ -31,12 +31,12 @@ const styles = {
   noMarginBottom: {
     marginBottom: 0
   },
-  primaryButtonIcon: {
+  icon: {
     display: 'inline-block',
     marginRight: '5px',
     fontSize: 'inherit'
   },
-  primaryButtonCustomIcon: {
+  customIcon: {
     display: 'inline-block',
     fontSize: 'inherit'
   },
@@ -56,9 +56,9 @@ const styles = {
 const getIconForButton = (props) => {
   const CustomIcon = props.customIcon;
   if(CustomIcon && props.icon) {
-    return <CustomIcon className={props.classes.primaryButtonCustomIcon} />
+    return <CustomIcon className={props.classes.customIcon} />
   }else if (props.icon) {
-    return <Icon className={props.classes.primaryButtonIcon}>{props.iconName}</Icon>
+    return <Icon className={props.classes.icon}>{props.iconName}</Icon>
   }
 
   return '';
