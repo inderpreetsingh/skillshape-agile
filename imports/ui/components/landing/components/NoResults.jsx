@@ -57,8 +57,18 @@ const IconWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    width: ${helpers.rhythmDiv * 16}px;
-    height: ${helpers.rhythmDiv * 16}px;
+    margin-bottom: 0;
+    display: none;
+  }
+`;
+
+const IconWrapperSmallScreen = IconWrapper.extend`
+  width: ${helpers.rhythmDiv * 16}px;
+  height: ${helpers.rhythmDiv * 16}px;
+  display: none;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: block;
   }
 `;
 
@@ -89,6 +99,8 @@ const NoResults = (props) => (
     {props.icon && <IconWrapper>
       <Plant />
     </IconWrapper>}
+
+    {props.icon && <IconWrapperSmallScreen> <Plant width={(helpers.rhythmDiv * 16) + 'px'} height={(helpers.rhythmDiv * 16) + 'px'}/> </IconWrapperSmallScreen>}
 
     {!props.hideTitle && <Title>Wow! you are the first one here with this idea.</Title>}
 

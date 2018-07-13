@@ -39,7 +39,7 @@ const styles = {
 
 const SearchAreaPanel = styled.div`
   padding: ${helpers.rhythmDiv}px;
-  max-width: 446px;
+  max-width: 450px; //computed size
   margin: auto;
 
   @media screen and (min-width: 0) and (max-width: ${helpers.mobile}px) {
@@ -70,6 +70,7 @@ const TaglineText = styled.p`
   margin: ${helpers.rhythmDiv}px 0;
 
   @media screen and (max-width: ${helpers.mobile}px) {
+    max-width: 300px;
     padding: 0 ${helpers.rhythmDiv * 2}px;
   }
 `;
@@ -113,10 +114,6 @@ const SearchIconButtonWrapper = styled.div`
 const SearchInputsSectionWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-
-  }
 `;
 
 const InputWrapper = styled.div`
@@ -134,8 +131,6 @@ const InputsWrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     max-width: 300px;
-    padding-right: ${helpers.rhythmDiv}px;
-    margin-right: ${helpers.rhythmDiv}px;
     margin: 0 auto;
   }
 `;
@@ -145,7 +140,7 @@ const SkillInputWrapper = InputsWrapper.extend`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-right: 0;
-    margin-left: -${helpers.rhythmDiv}px;
+    margin-left: 0;
     margin-bottom: ${helpers.rhythmDiv}px;
   }
 `;
@@ -156,7 +151,6 @@ const MapViewButtonWrapper = GenericButtonWrapper.extend`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     margin: 0;
-    margin-top: ${helpers.rhythmDiv}px;
   }
 `;
 
@@ -166,6 +160,7 @@ const ButtonsWrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     flex-direction: column;
+    ${props => props.smallScreenRow ? 'flex-direction: row' : ''};
   }
 `;
 
@@ -266,7 +261,7 @@ const SearchInputsSection = props => (
       </SearchIconButtonWrapper>
     </InputsWrapper>
 
-    <ButtonsWrapper>
+    <ButtonsWrapper smallScreenRow>
       <FilterButtonWrapper>
         <PrimaryButton
           darkGreyColor
