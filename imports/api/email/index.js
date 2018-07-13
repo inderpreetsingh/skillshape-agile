@@ -28,7 +28,7 @@ export const sendPackagePurchaseEmail = function({
 }) {
   console.log("sendpackagepurchaseemail");
   Email.send({
-    to: "yhmed.mco@exiq0air0ndsqbx2.cf", // Replace value of `to` with Admin email if Admin exists.
+    to: config.skillshapeAdminEmail, // Replace value of `to` with Admin email if Admin exists.
     from: config.fromEmailForPurchasePackage,
     subject: "Package Purchase Request Recieved",
     html: `Dear ${schoolAdminName},<br/><b>${buyer}</b> has expressed interest in <b>${packageName}</b> class package.
