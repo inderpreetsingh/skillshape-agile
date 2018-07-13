@@ -6,10 +6,12 @@ import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
 import { browserHistory } from "react-router";
+
 import ip from "ip";
 import Chip from "material-ui/Chip";
 import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
+
 import Cover from "./components/Cover.jsx";
 import BrandBar from "./components/BrandBar.jsx";
 import SearchArea from "./components/SearchArea.jsx";
@@ -177,13 +179,13 @@ const ContactUsWrapper = styled.div`
   bottom: 10%;
   z-index: 1500;
 `;
-const WrapperDiv = styled.div`
+const FilterApplied = styled.div`
   ${helpers.flexCenter} font-weight: 500;
   font-size: ${helpers.baseFontSize}px;
   padding: ${helpers.rhythmDiv}px;
   // border-bottom: solid 1px #dddd;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: 360px) {
     flex-direction: column;
   }
 `;
@@ -193,7 +195,7 @@ const FilterAppliedDivs = styled.div`
   align-items: center;
   margin-right: ${props => props.marginRight}px;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: 360px) {
     width: 100%;
     margin-right: 0;
     margin-bottom: ${helpers.rhythmDiv}px;
@@ -481,7 +483,8 @@ class Landing extends Component {
           });
           // Toggle map view on click of `Browse classes near by me`
           // if(!args) {
-          this.handleToggleMapView();
+          if(!args.noMapView)
+            this.handleToggleMapView();
           // }
           // toastr.success("Showing classes around you...","Found your location");
           // // Session.set("coords",coords)
@@ -726,15 +729,14 @@ class Landing extends Component {
   };
   showText = (text, cb) => {
     return (
-      <WrapperDiv>
+      <FilterApplied>
         {/*<FilterAppliedDivs>
                     Filters in use.
                 </FilterAppliedDivs>*/}
         <FilterAppliedDivs marginRight="16">
           <FormGhostButton
             fullWidth
-            noMarginBottom
-            icon
+            noMar360con
             iconName="close"
             label="Clear All Filters"
             onClick={cb}
@@ -763,15 +765,14 @@ class Landing extends Component {
                        <Icon>tune </Icon>
                     </Button>*/}
         </FilterAppliedDivs>
-      </WrapperDiv>
+      </FilterApplied>
     );
   };
   // Delete `skillTypeText` and `locationText` from filters.
   deleteFilterText = () => {
     this.setState({
       filters: {},
-      tempFilters: {},
-      resetMainSearch: !this.state.resetMainSearch
+      tempFilte360ainSearch: !this.state.resetMainSearch
     });
   };
   // showAppliedLocationFilter = () => {
@@ -881,6 +882,7 @@ class Landing extends Component {
                 handleNoOfFiltersClick={() =>
                   this.handleFiltersDialogBoxState(true)
                 }
+                locationName={this.state.locationName}
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 onMapViewButtonClick={this.handleToggleMapView}
                 mapView={this.state.mapView}

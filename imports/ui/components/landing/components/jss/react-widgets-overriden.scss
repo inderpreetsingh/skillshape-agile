@@ -33,6 +33,7 @@
 }
 
 .my-multi-select-filter {
+   width: 100%;
   .rw-widget-input, .rw-widget-picker, .rw-widget-container, .rw-multiselect {
     background-color: transparent;
   }
@@ -78,7 +79,7 @@
   }
 
   .rw-input-reset {
-    max-width: 60%;
+    max-width: 80%;
   }
 
   .rw-multiselect-tag > * {
@@ -123,6 +124,17 @@
 }
 
 .my-multi-select-filter-btn {
+  font-family: map-get($fonts, 'common');
   min-width: map-get($sizes,'rhythm-div') * 2px;
   padding: map-get($sizes,'rhythm-div') * 1px;
+}
+
+.no-border {
+  .rw-widget-container  {
+    border-width: 0px;
+    &:hover {
+      box-shadow: none;
+      border-width:: 0px;
+    }
+  }
 }

@@ -15,10 +15,6 @@ const isDisabled = (item, list, value) =>
 
 const FilterButtonWrapper = styled.div`
   display: flex;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    min-width: 100px;
-  }
 `;
 
 const FilterButtonTabletView = styled.div`
@@ -31,10 +27,6 @@ const FilterButtonTabletView = styled.div`
 
 const FilterButtonDesktopView = styled.div`
   display: flex;
-
-  @media screen and (max-width: ${helpers.tablet}px) {
-    display: none;
-  }
 `;
 
 class MyTagList extends React.Component {
@@ -89,12 +81,12 @@ class MyTagList extends React.Component {
       </MultiselectTag>
       <FilterButtonWrapper>
 
-        <FilterButtonTabletView>
+        {/*<FilterButtonTabletView>
           <button className="no-shrink primary-button my-multi-select-filter-btn" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters}`}</button>
-        </FilterButtonTabletView>
+        </FilterButtonTabletView> */}
 
         <FilterButtonDesktopView>
-          <button className="no-shrink primary-button" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters} Filters`}</button>
+          <button className="no-shrink primary-button my-multi-select-filter-btn" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters}`}</button>
         </FilterButtonDesktopView>
 
       </FilterButtonWrapper>
