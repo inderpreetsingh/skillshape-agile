@@ -44,7 +44,7 @@ const ButtonsWrapper = styled.div`
   width: 100%;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 
-  @media screen and (max-width: 430px) {
+  @media screen and (max-width: ${helpers.mobile}px) {
     flex-direction: column;
     align-items: center;
     padding: 0 0 0 ${helpers.rhythmDiv}px;

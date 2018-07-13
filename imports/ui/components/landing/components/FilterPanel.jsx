@@ -117,11 +117,15 @@ const FilterBarWrapper = styled.div`
   }
 `;
 
-const GiveSuggestionButton = styled.div`
-  max-width: 480px;
+const SuggestionFormButton = styled.div`
+  max-width: 250px;
   width: 100%;
-  margin: 0 auto;
+  ${props => props.right ? 'margin-right: auto;' : 'margin-left: auto;'};
   padding: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width : 600px) {
+    margin: 0 auto
+  }
 `;
 
 class FilterPanel extends Component {
@@ -483,15 +487,17 @@ class FilterPanel extends Component {
 
         {filtersForSuggestion ? (
           <Grid item xs={12} sm={6}>
-            <FilterPanelAction>
-              <PrimaryButton
-                fullWidth
-                label="Go Back"
-                icon={true}
-                iconName="arrow_back"
-                onClick={this.props.onGoBackButtonClick}
-              />
-            </FilterPanelAction>
+            <SuggestionFormButton>
+              <FilterPanelAction>
+                <PrimaryButton
+                  fullWidth
+                  label="Go Back"
+                  icon={true}
+                  iconName="arrow_back"
+                  onClick={this.props.onGoBackButtonClick}
+                />
+              </FilterPanelAction>
+            </SuggestionFormButton>
           </Grid>
         ) : (
           <Grid item xs={12} sm={6}>
@@ -512,15 +518,17 @@ class FilterPanel extends Component {
 
         {filtersForSuggestion ?
           <Grid item xs={12} sm={6}>
-            <FilterPanelAction>
-              <PrimaryButton
-                fullWidth
-                label="Give Suggestion"
-                icon={true}
-                iconName="sentiment_satisfied"
-                onClick={this.props.onGiveSuggestion}
-              />
-            </FilterPanelAction>
+            <SuggestionFormButton right>
+              <FilterPanelAction>
+                <PrimaryButton
+                  fullWidth
+                  label="Give Suggestion"
+                  icon={true}
+                  iconName="sentiment_satisfied"
+                  onClick={this.props.onGiveSuggestion}
+                />
+              </FilterPanelAction>
+            </SuggestionFormButton>
           </Grid>
         :
         <Grid item xs={12} sm={6}>
