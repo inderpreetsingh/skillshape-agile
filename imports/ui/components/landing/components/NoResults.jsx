@@ -93,6 +93,8 @@ const OrText = styled.p`
   }
 `;
 
+const GreenDuster = () => <Duster color={helpers.primaryColor} />
+
 const NoResults = (props) => (
   <DocumentTitle title={get(props, "route.name", "Untitled")}>
   <Wrapper>
@@ -114,7 +116,7 @@ const NoResults = (props) => (
         </ButtonsWrapper>
       :
       <ButtonsWrapper>
-        <FormGhostButton fullWidth={true} onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={Duster} noMarginBottom />
+        <FormGhostButton fullWidth={true} onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={GreenDuster} noMarginBottom />
         <OrText> or </OrText>
         {props.showSchoolSuggestion ?
           <FormGhostButton darkGreyColor fullWidth={true} onClick={props.schoolSuggestionButtonClick} label="Give Suggestion" icon iconName="sentiment_satisfied" noMarginBottom />

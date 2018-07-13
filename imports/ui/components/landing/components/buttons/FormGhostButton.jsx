@@ -63,7 +63,6 @@ const styles = {
   customIcon: {
     display: 'inline-block',
     fontSize: 'inherit',
-    color: helpers.primaryColor
   },
 };
 
