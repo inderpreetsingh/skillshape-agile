@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   max-width: ${helpers.baseFontSize * 30}px;
   width: 100%;
   margin: ${helpers.rhythmDiv * 4}px auto;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
 const Title = styled.h1`
@@ -53,6 +54,11 @@ const IconWrapper = styled.div`
   width: ${helpers.rhythmDiv * 24}px;
   height: ${helpers.rhythmDiv * 24}px;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    width: ${helpers.rhythmDiv * 16}px;
+    height: ${helpers.rhythmDiv * 16}px;
+  }
 `;
 
 const NoResultsImg = styled.div`

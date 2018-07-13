@@ -15,10 +15,6 @@ const isDisabled = (item, list, value) =>
 
 const FilterButtonWrapper = styled.div`
   display: flex;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    min-width: 100px;
-  }
 `;
 
 const FilterButtonTabletView = styled.div`

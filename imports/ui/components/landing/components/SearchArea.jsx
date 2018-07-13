@@ -38,10 +38,9 @@ const styles = {
 };
 
 const SearchAreaPanel = styled.div`
-  padding: ${helpers.rhythmInc};
+  padding: ${helpers.rhythmDiv}px;
   max-width: 430px;
   margin: auto;
-  text-align: center;
 
   @media screen and (min-width: 0) and (max-width: ${helpers.mobile}px) {
     max-width: 500px;
@@ -138,7 +137,16 @@ const InputsWrapper = styled.div`
     padding-right: ${helpers.rhythmDiv}px;
     margin-right: ${helpers.rhythmDiv}px;
     margin: 0 auto;
-    ${props => props.marginSmallScreen ? `margin-bottom : ${helpers.rhythmDiv}px;` : ''}
+  }
+`;
+
+const SkillInputWrapper = InputsWrapper.extend`
+  height: ${helpers.rhythmDiv * 6}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    margin-right: 0;
+    margin-left: -${helpers.rhythmDiv}px;
+    margin-bottom: ${helpers.rhythmDiv}px;
   }
 `;
 
@@ -195,7 +203,6 @@ const SearchInputsSection = props => (
           defaultValue={props.currentAddress}
           defaultBorderRadius={true}
           withIcon={false}
-          onSearchIconClick={props.onSearchIconClick}
           noCloseIcon
           onChange={event => props.locationInputChanged(event, "filters", null)}
           filters={props.filters}
@@ -219,7 +226,7 @@ const SearchInputsSection = props => (
     </InputsWrapper> */}
 
     {/* UPDATING ...............*/}
-    <InputsWrapper background="white" marginSmallScreen>
+    <SkillInputWrapper background="white" marginSmallScreen>
       <div className="my-multi-select-filter no-border">
           <MyMultiSelect
               textField={"name"}
@@ -231,7 +238,7 @@ const SearchInputsSection = props => (
               onNoOfFiltersClick={props.handleNoOfFiltersClick}
           />
       </div>
-    </InputsWrapper>
+    </SkillInputWrapper>
 
     <InputsWrapper noPadding>
       <InputWrapper locationInput>
