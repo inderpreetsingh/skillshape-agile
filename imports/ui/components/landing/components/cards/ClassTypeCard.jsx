@@ -37,10 +37,9 @@ const CardsRevealWrapper = styled.div`
 `;
 
 const imageExistsConfig = {
-  originalImagePath: 'classTypeImg',
+  originalImagePath: "classTypeImg",
   defaultImage: cardImgSrc
-}
-
+};
 
 class ClassTypeCard extends Component {
   state = {
@@ -52,7 +51,6 @@ class ClassTypeCard extends Component {
   };
   handleDialogState = state => e => {
     e.stopPropagation();
-    console.log("e in handle dialogue type card", e.clientX, e.clientY, state);
     // console.log(e,e.stopPropagation(),"clickced");
     this.setState({
       dialogOpen: state,
@@ -64,7 +62,6 @@ class ClassTypeCard extends Component {
     // this.scrollTo("myScrollToElement");
   };
   scrollTo(name) {
-    console.log("scrollTo");
     scroller.scrollTo(name || "content-container", {
       duration: 800,
       delay: 0,
@@ -160,16 +157,14 @@ class ClassTypeCard extends Component {
       name: name
     };
     const classTimesData = this.getClassTimes(get(this.props, "_id", null));
-    const formattedClassTimesData = formatClassTimesData(classTimesData).filter(data => {
-      if(data)
-        return data.formattedClassTimesDetails.totalClassTimes > 0
-      else
-        return false;
-    });
+    const formattedClassTimesData = formatClassTimesData(classTimesData).filter(
+      data => {
+        if (data) return data.formattedClassTimesDetails.totalClassTimes > 0;
+        else return false;
+      }
+    );
 
-    console.log(classTimesData,formattedClassTimesData,"ajsldfalsd");
     const schoolData = this.getSchoolData(schoolId);
-
 
     if (!isEmpty(reviewsStats)) {
       ratings = reviewsStats.ratings;
@@ -238,4 +233,4 @@ class ClassTypeCard extends Component {
   }
 }
 
-export default toastrModal(withImageExists(ClassTypeCard,imageExistsConfig));
+export default toastrModal(withImageExists(ClassTypeCard, imageExistsConfig));
