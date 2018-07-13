@@ -114,6 +114,11 @@ const SearchIconButtonWrapper = styled.div`
 const SearchInputsSectionWrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
+
+  @media screen and (max-width: 320px) {
+    max-width: 290px; // bit of hacky as skill input is not reducing it's width.
+    margin: 0 auto;  
+  }
 `;
 
 const InputWrapper = styled.div`
@@ -143,6 +148,7 @@ const SkillInputWrapper = InputsWrapper.extend`
     margin-left: 0;
     margin-bottom: ${helpers.rhythmDiv}px;
   }
+
 `;
 
 const MapViewButtonWrapper = GenericButtonWrapper.extend`
