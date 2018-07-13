@@ -142,7 +142,7 @@ class FullCalendar extends React.Component {
               .format("hh:mm");
             sevent.title =
               classTime.classTypeName.name +
-              " : " +
+              ": " +
               classTime.name +
               " " +
               sevent.eventStartTime +
@@ -183,7 +183,7 @@ class FullCalendar extends React.Component {
                 .format("hh:mm");
               temp.title =
                 classTime.classTypeName.name +
-                " : " +
+                ": " +
                 classTime.name +
                 " " +
                 temp.eventStartTime +
