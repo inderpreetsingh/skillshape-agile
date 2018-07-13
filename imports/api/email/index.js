@@ -7,29 +7,32 @@ import School from "/imports/api/school/fields";
 import EmailSignature from "./signature.js";
 import { getUserFullName } from "/imports/util/getUserData";
 
-export const sendNewSchoolSuggestionEmail = function({
-  newSuggestionLink
-}) {
+export const sendNewSchoolSuggestionEmail = function({ newSuggestionLink }) {
   Email.send({
     to: config.skillshapeAdminEmail,
     from: "Notices@SkillShape.com",
     subject: "New School Suggestion",
     html: `Dear admin, <br><br>You have recieved a new school suggestion. In order to view all the suggestions, click the following link.<br><br>
     ${newSuggestionLink}`
-  })
-}
-
+  });
+};
+//1.Button on which admin click.
+//2.It will redirect to the school edit page.
+//3.Need to open the package modal
 export const sendPackagePurchaseEmail = function({
   to,
   buyer,
   packageName,
-  schoolAdminName
+  schoolAdminName,
+  schoolId
 }) {
+  console.log("sendpackagepurchaseemail");
   Email.send({
     to: config.skillshapeAdminEmail, // Replace value of `to` with Admin email if Admin exists.
     from: config.fromEmailForPurchasePackage,
     subject: "Package Purchase Request Recieved",
     html: `Dear ${schoolAdminName},<br/><b>${buyer}</b> has expressed interest in <b>${packageName}</b> class package.
+            <a href=http://localhost:3000/SchoolAdmin/${schoolId}/edit>Click here</a> to go to School page.
             <br/><br/>
             <br/><br/>
             ${EmailSignature}`

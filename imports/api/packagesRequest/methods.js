@@ -11,6 +11,7 @@ Meteor.methods({
     if (!typeOfTable || !tableId || !schoolId) {
       throw new Meteor.Error("Some fields missing!", "Error while purchasing");
     }
+    console.log("packageRequest.addRequest");
     const validationContext = PackageRequestSchema.newContext();
     if (this.userId) {
       let PricingTable = "";
@@ -36,6 +37,7 @@ Meteor.methods({
         packageId: packageData._id
       });
       const schoolData = School.findOne(schoolId);
+      console.log("schoolData", schoolData);
       if (purchaseRequestAlreadyPresent) {
         throw new Meteor.Error(
           `You are currently unable to purchase this package from here. ${schoolData &&
@@ -70,7 +72,8 @@ Meteor.methods({
               to: emailAddress,
               buyer: currentUser.emails[0].address,
               packageName: packageName,
-              schoolAdminName: schoolAdminName
+              schoolAdminName: schoolAdminName,
+              schoolId: schoolId
             });
             return `You are currently unable to purchase this package from here. ${schoolData &&
               schoolData.name} has been notified of your interest in ${packageName} class package.`;
