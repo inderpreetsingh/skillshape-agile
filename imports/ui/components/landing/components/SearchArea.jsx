@@ -220,7 +220,7 @@ const SearchInputsSection = props => (
 
     {/* UPDATING ...............*/}
     <InputsWrapper background="white" marginSmallScreen>
-      <div className="my-multi-select-filter">
+      <div className="my-multi-select-filter no-border">
           <MyMultiSelect
               textField={"name"}
               valueField={"_id"}
