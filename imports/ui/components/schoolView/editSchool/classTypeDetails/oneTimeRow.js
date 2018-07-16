@@ -73,8 +73,10 @@ export class OneTimeRow extends React.Component {
   };
 
   handleSelectInputChange = (index, fieldName, event) => {
-    if (index && fieldName && event) {
+    console.log("index, fieldName, event", index, fieldName, event);
+    if (fieldName && event) {
       const oldRow = [...this.state.row];
+      console.log("parseInt(event.target.value)", parseInt(event.target.value));
       if (fieldName === "duration") {
         oldRow[index][fieldName] = parseInt(event.target.value);
       } else {
@@ -83,6 +85,7 @@ export class OneTimeRow extends React.Component {
 
       this.setState({ row: oldRow });
     }
+    console.log("this.state.row", this.state.row);
   };
 
   getRowData = () => {

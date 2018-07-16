@@ -206,7 +206,7 @@ const ImageContainer = styled.div`
   height: 100px;
   flex-shrink: 0;
   ${helpers.coverBg};
-  border-radius: 50%;
+  border-radius: 0%;
   margin-right: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv}px;
   background-position: 50% 50%;
@@ -566,13 +566,19 @@ class ClassDetailModal extends React.Component {
                         <Italic>Time</Italic>
                       </Text>
                       <Text>
+                        {/* timeUnits are added for mins,hours */}
                         {`${eventData.eventStartTime}`}
-                        {" : "}
+                        {" For "}
+                        {console.log("classTypeData", classTypeData)}
                         {scheduleDetails.map(value => {
                           if (classTypeData.formattedClassTimesDetails[value]) {
-                            return classTypeData.formattedClassTimesDetails[
-                              value
-                            ][0].duration;
+                            return (
+                              classTypeData.formattedClassTimesDetails[value][0]
+                                .duration +
+                              " " +
+                              classTypeData.formattedClassTimesDetails[value][0]
+                                .timeUnits
+                            );
                           }
                         })}
                       </Text>
