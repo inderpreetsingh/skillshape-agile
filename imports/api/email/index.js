@@ -32,7 +32,9 @@ export const sendPackagePurchaseEmail = function({
     from: config.fromEmailForPurchasePackage,
     subject: "Package Purchase Request Recieved",
     html: `Dear ${schoolAdminName},<br/><b>${buyer}</b> has expressed interest in <b>${packageName}</b> class package.
-            <a href=http://localhost:3000/SchoolAdmin/${schoolId}/edit>Click here</a> to go to School page.
+            <a href=${Meteor.absoluteUrl(
+              `SchoolAdmin/${schoolId}/edit`
+            )}>Click here</a> to go to School page.
             <br/><br/>
             <br/><br/>
             ${EmailSignature}`
