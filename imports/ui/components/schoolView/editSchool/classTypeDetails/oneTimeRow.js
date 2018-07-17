@@ -73,14 +73,17 @@ export class OneTimeRow extends React.Component {
   };
 
   handleSelectInputChange = (index, fieldName, event) => {
-    const oldRow = [...this.state.row];
-    if (fieldName === "duration") {
-      oldRow[index][fieldName] = parseInt(event.target.value);
-    } else {
-      oldRow[index][fieldName] = event.target.value;
-    }
+    //index condition in if below is removed
+    if (fieldName && event) {
+      const oldRow = [...this.state.row];
+      if (fieldName === "duration") {
+        oldRow[index][fieldName] = parseInt(event.target.value);
+      } else {
+        oldRow[index][fieldName] = event.target.value;
+      }
 
-    this.setState({ row: oldRow });
+      this.setState({ row: oldRow });
+    }
   };
 
   getRowData = () => {
@@ -204,6 +207,12 @@ export class OneTimeRow extends React.Component {
                     )}
                     fullWidth
                   >
+                    {isEmpty(this.props.roomData) && (
+                      <MenuItem value="" disabled>
+                        Needs class type location
+                      </MenuItem>
+                    )}
+                    {console.log("this.props.roomData", this.props.roomData)}
                     {this.props.roomData &&
                       this.props.roomData.map((data, index) => {
                         return (

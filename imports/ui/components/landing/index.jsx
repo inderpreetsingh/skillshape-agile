@@ -6,8 +6,8 @@ import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
 import { browserHistory } from "react-router";
-import ip from "ip";
 
+import ip from "ip";
 import Chip from "material-ui/Chip";
 import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
@@ -23,18 +23,15 @@ import SwitchIconButton from "./components/buttons/SwitchIconButton.jsx";
 import FloatingChangeViewButton from "./components/buttons/FloatingChangeViewButton.jsx";
 import Footer from "./components/footer/index.jsx";
 import NoResults from "./components/NoResults.jsx";
-
 import PrimaryButton from "./components/buttons/PrimaryButton.jsx";
 import FormGhostButton from "./components/buttons/FormGhostButton.jsx";
 import ContactUsFloatingButton from "./components/buttons/ContactUsFloatingButton.jsx";
 import FiltersDialogBox from "./components/dialogs/FiltersDialogBox.jsx";
-
 import * as helpers from "./components/jss/helpers.js";
 import { cardsData, cardsData1 } from "./constants/cardsData.js";
 import config from "/imports/config";
 import Events from "/imports/util/events";
 import { toastrModal } from "/imports/util";
-
 const MainContentWrapper = styled.div`
   display: flex;
   position: relative;
@@ -182,13 +179,13 @@ const ContactUsWrapper = styled.div`
   bottom: 10%;
   z-index: 1500;
 `;
-const WrapperDiv = styled.div`
+const FilterApplied = styled.div`
   ${helpers.flexCenter} font-weight: 500;
   font-size: ${helpers.baseFontSize}px;
   padding: ${helpers.rhythmDiv}px;
   // border-bottom: solid 1px #dddd;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: 360px) {
     flex-direction: column;
   }
 `;
@@ -198,7 +195,7 @@ const FilterAppliedDivs = styled.div`
   align-items: center;
   margin-right: ${props => props.marginRight}px;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: 360px) {
     width: 100%;
     margin-right: 0;
     margin-bottom: ${helpers.rhythmDiv}px;
@@ -271,8 +268,6 @@ class Landing extends Component {
           this.props.location.query.claimRequest,
           { rejected: true },
           (err, res) => {
-            console.log("errr------------->", err);
-            console.log("res-------------->", res);
             if (err) {
               toastr.error(err.reason || err.message, "Error");
             } else if (res && res.message) {
@@ -488,7 +483,8 @@ class Landing extends Component {
           });
           // Toggle map view on click of `Browse classes near by me`
           // if(!args) {
-          this.handleToggleMapView();
+          if(!args.noMapView)
+            this.handleToggleMapView();
           // }
           // toastr.success("Showing classes around you...","Found your location");
           // // Session.set("coords",coords)
@@ -524,12 +520,6 @@ class Landing extends Component {
   };
 
   handleSkillTypeSearch = (skillTypeText, updateKey1, updateKey2) => {
-    console.log(
-      "handleSkillTypeSearch -->>",
-      skillTypeText,
-      updateKey1,
-      updateKey2
-    );
     this.setState({
       filters: {
         ...this.state.filters,
@@ -641,7 +631,6 @@ class Landing extends Component {
   };
 
   collectSelectedSkillSubject = text => {
-    console.log('skill subject...........',text);
     let oldFilter = { ...this.state.filters };
     oldFilter.skillSubjectIds = text.map(ele => ele._id);
     oldFilter.defaultSkillSubject = text;
@@ -720,7 +709,6 @@ class Landing extends Component {
     const filtersData = this.state.filters;
     for (var prop in filtersData) {
       if (!isEmpty(filtersData[prop])) {
-        console.log("filtersData[prop]===>", filtersData[prop]);
         return this.showText("Clear All Filters", this.deleteFilterText);
       }
     }
@@ -741,15 +729,14 @@ class Landing extends Component {
   };
   showText = (text, cb) => {
     return (
-      <WrapperDiv>
+      <FilterApplied>
         {/*<FilterAppliedDivs>
                     Filters in use.
                 </FilterAppliedDivs>*/}
         <FilterAppliedDivs marginRight="16">
           <FormGhostButton
             fullWidth
-            noMarginBottom
-            icon
+            noMar360con
             iconName="close"
             label="Clear All Filters"
             onClick={cb}
@@ -778,15 +765,14 @@ class Landing extends Component {
                        <Icon>tune </Icon>
                     </Button>*/}
         </FilterAppliedDivs>
-      </WrapperDiv>
+      </FilterApplied>
     );
   };
   // Delete `skillTypeText` and `locationText` from filters.
   deleteFilterText = () => {
     this.setState({
       filters: {},
-      tempFilters: {},
-      resetMainSearch: !this.state.resetMainSearch
+      tempFilte360ainSearch: !this.state.resetMainSearch
     });
   };
   // showAppliedLocationFilter = () => {
@@ -893,6 +879,10 @@ class Landing extends Component {
                 onFiltersButtonClick={() =>
                   this.handleFiltersDialogBoxState(true)
                 }
+                handleNoOfFiltersClick={() =>
+                  this.handleFiltersDialogBoxState(true)
+                }
+                locationName={this.state.locationName}
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 onMapViewButtonClick={this.handleToggleMapView}
                 mapView={this.state.mapView}
@@ -902,6 +892,10 @@ class Landing extends Component {
                 filters={this.state.filters}
                 onLocationChange={this.onLocationChange}
                 currentFilterState={this.state.filters}
+                collectSelectedSkillCategories={
+                  this.collectSelectedSkillCategories
+                }
+                collectSelectedSkillSubject={this.collectSelectedSkillSubject}
                 onSearchIconClick={() => this.scrollTo()}
               />
             </Cover>

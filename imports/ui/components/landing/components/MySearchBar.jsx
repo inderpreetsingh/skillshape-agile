@@ -59,6 +59,7 @@ const iconTransitions = {
 
 const LeftSideInput = styled.div`
   display: ${props => props.inputOnSide === 'left' ? 'block' : 'none'};
+  width: 100%;
 `;
 
 const RightSideInput = styled.div`

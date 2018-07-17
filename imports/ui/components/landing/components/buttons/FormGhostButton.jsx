@@ -54,8 +54,28 @@ const styles = {
       backgroundColor: helpers.darkBgColor,
       color: 'white'
     }
-  }
+  },
+  icon: {
+    display: 'inline-block',
+    marginRight: '5px',
+    fontSize: 'inherit'
+  },
+  customIcon: {
+    display: 'inline-block',
+    fontSize: 'inherit',
+  },
 };
+
+const getIconForButton = (props) => {
+  const CustomIcon = props.customIcon;
+  if(CustomIcon && props.icon) {
+    return <CustomIcon className={props.classes.customIcon} />
+  }else if (props.icon) {
+    return <Icon className={props.classes.icon}>{props.iconName}</Icon>
+  }
+
+  return '';
+}
 
 
 const FormGhostButton = (props) => {
@@ -80,7 +100,7 @@ const FormGhostButton = (props) => {
     <Button classes={{
       root: rootClass,
       }} onClick={props.onClick}>
-        {props.icon && <Icon className={props.classes.buttonIcon}>{props.iconName}</Icon>}
+        {getIconForButton(props)}
 
         {props.label ? props.label : 'Submit'}
     </Button>
@@ -93,7 +113,8 @@ FormGhostButton.propTypes = {
     iconName: PropTypes.string,
     label: PropTypes.string,
     fullWidth: PropTypes.bool,
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    customIcon: PropTypes.element
 }
 
 export default withStyles(styles)(FormGhostButton);

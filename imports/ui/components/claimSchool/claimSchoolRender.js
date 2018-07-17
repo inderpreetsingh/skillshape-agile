@@ -50,32 +50,6 @@ export default function (props) {
               onClose={() => this.setState({showConfirmationModal: false})}
           />
         }
-        {this.state.schoolSuggestionDialogBox &&
-          <FiltersDialogBox
-              open={this.state.schoolSuggestionDialogBox}
-              title="Suggest School"
-              onModalClose={this.handleSchoolSuggestionDialogState(false)}
-              filtersForSuggestion={true}
-              onGiveSuggestion={this.handleGiveSuggestion}
-              filterPanelProps={{
-                ref: "ClaimSchoolFilter",
-                onLocationChange: this.onLocationChange,
-                handleSchoolNameChange: this.handleSchoolNameChange,
-                locationInputChanged: this.locationInputChanged,
-                filters: this.state.filters,
-                tempFilters: this.state.tempFilters,
-                fliterSchoolName: this.fliterSchoolName,
-                filterAge: this.filterAge,
-                filterGender: this.filterGender,
-                skillLevelFilter: this.skillLevelFilter,
-                perClassPriceFilter: this.perClassPriceFilter,
-                pricePerMonthFilter: this.pricePerMonthFilter,
-                collectSelectedSkillCategories: this.collectSelectedSkillCategories,
-                collectSelectedSkillSubject: this.collectSelectedSkillSubject,
-              }}
-          />
-        }
-
         {this.state.filterPanelDialogBox &&
           <FiltersDialogBox
               open={this.state.filterPanelDialogBox}
@@ -100,7 +74,7 @@ export default function (props) {
           />
         }
 
-        <Sticky activeClassName={"filter-panel-sticked"} innerZ={1} onStateChange={this.handleFixedToggle}>
+        {!this.state.suggestionForm && <Sticky activeClassName={"filter-panel-sticked"} innerZ={1} onStateChange={this.handleFixedToggle}>
             {/*<ClaimSchoolFilter
                 stickyPosition={this.state.sticky}
                 ref="ClaimSchoolFilter"
@@ -126,7 +100,7 @@ export default function (props) {
                filters={this.state.filters}
                onLocationChange= {this.onLocationChange}
              />
-        </Sticky>
+        </Sticky>}
         {/*<Wrapper>
           <TextWrapper className={this.props.classes.textStyle}>
               Check to see if any of these are your school.
@@ -138,11 +112,14 @@ export default function (props) {
           </FormSubmitButtonWrapper>
         </Wrapper> */}
          <ClaimSchoolList
+            suggestionForm={this.state.suggestionForm}
             filters={this.state.filters}
+            tempFilters={this.state.tempFilters}
             removeAllFilters={this.removeAllFilters}
             handleClaimASchool={this.handleClaimASchool}
+            handleSuggestionFormState={this.handleSuggestionFormState}
+            handleGoBackButtonClick={this.handleGoBackButtonClick}
             onStartNewListingButtonClick={this.showConfirmationModal}
-            handleSchoolSuggestion={this.handleSchoolSuggestionDialogState(true)}
            />
        </div>
        </DocumentTitle>

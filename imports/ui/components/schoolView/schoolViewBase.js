@@ -77,12 +77,14 @@ export default class SchoolViewBase extends React.Component {
       let normalizedMonthlyPricingData = [];
 
       for (let monthlyPricingObj of monthlyPricingData) {
-        monthlyPricingObj.pymtDetails.forEach(payment => {
-          const myMonthlyPricingObj = Object.assign({}, monthlyPricingObj);
-          myMonthlyPricingObj.pymtDetails = [];
-          myMonthlyPricingObj.pymtDetails.push(payment);
-          normalizedMonthlyPricingData.push(myMonthlyPricingObj);
-        });
+        monthlyPricingObj &&
+          monthlyPricingObj.pymtDetails &&
+          monthlyPricingObj.pymtDetails.forEach(payment => {
+            const myMonthlyPricingObj = Object.assign({}, monthlyPricingObj);
+            myMonthlyPricingObj.pymtDetails = [];
+            myMonthlyPricingObj.pymtDetails.push(payment);
+            normalizedMonthlyPricingData.push(myMonthlyPricingObj);
+          });
       }
 
       return normalizedMonthlyPricingData;
@@ -512,10 +514,7 @@ export default class SchoolViewBase extends React.Component {
     // Start loading
     const { toastr } = this.props;
     let self = this;
-    console.log(
-      "this.props.schoolData.superAdmin",
-      this.props.schoolData.superAdmin
-    );
+    console.log("this.props.schoolData", this.props.schoolData);
     Meteor.call(
       "stripe.findAdminStripeAccount",
       this.props.schoolData.superAdmin,
@@ -619,13 +618,11 @@ export default class SchoolViewBase extends React.Component {
                 // Stop loading
                 self.setState({ isLoading: false });
                 if (err) {
-                  toastr.error(err.reason || err.message, "Error");
+                  console.log("err-------", err);
+                  toastr.error(err.error, "Error");
                 } else {
-                  console.log("result----------------", res);
-                  toastr.success(
-                    "SchoolName is not accepting payments from here at this time, but they have been notified of your interest and will get back to you as soon as they can",
-                    "Success"
-                  );
+                  console.log("res-------", res);
+                  toastr.error(res, "Error");
                 }
               }
             );

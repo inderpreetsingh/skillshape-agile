@@ -1,16 +1,20 @@
 import React, { Fragment } from "react";
 import moment from "moment";
 import styled from "styled-components";
-import isEmpty from 'lodash/isEmpty';
+import isEmpty from "lodash/isEmpty";
 import { formStyles } from "/imports/util";
 // import { blue500 } from 'material-ui/styles/colors';
 
-import Dialog, { DialogActions,DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import Dialog, {
+  DialogActions,
+  DialogTitle,
+  withMobileDialog
+} from "material-ui/Dialog";
 import Card, { CardActions, CardContent, CardMedia } from "material-ui/Card";
 
 import Icon from "material-ui/Icon";
-import IconButton from 'material-ui/IconButton';
-import ClearIcon from 'material-ui-icons/Clear';
+import IconButton from "material-ui/IconButton";
+import ClearIcon from "material-ui-icons/Clear";
 import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
 import Grid from "material-ui/Grid";
@@ -25,14 +29,20 @@ import SLocation from "/imports/api/sLocation/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import {
   flexCenter,
-  rhythmDiv,
+  rhythmDiv
 } from "/imports/ui/components/landing/components/jss/helpers";
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
 
 import "/imports/api/classInterest/methods";
 import "/imports/api/classTimes/methods";
 
-import {checkForAddToCalender ,formatDate, formatTime, formatClassTimesData, formatDataBasedOnScheduleType} from '/imports/util';
+import {
+  checkForAddToCalender,
+  formatDate,
+  formatTime,
+  formatClassTimesData,
+  formatDataBasedOnScheduleType
+} from "/imports/util";
 
 import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes.jsx";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
@@ -40,7 +50,7 @@ import ClassTime from "/imports/ui/components/landing/components/classTimes/Clas
 import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
 
 import Events from "/imports/util/events";
-import {imageExists} from "/imports/util";
+import { imageExists } from "/imports/util";
 import * as settings from "/imports/ui/components/landing/site-settings.js";
 
 const formStyle = formStyles();
@@ -49,25 +59,25 @@ const styles = theme => {
   console.log("theme", theme);
   return {
     dialogPaper: {
-      overflowX: 'hidden',
+      overflowX: "hidden",
       padding: helpers.rhythmDiv * 2,
       maxWidth: 400,
-      maxHeight: '80vh'
+      maxHeight: "80vh"
     },
     dialogTitleRoot: {
-      width: '100%',
-      position: 'absolute',
+      width: "100%",
+      position: "absolute",
       right: helpers.rhythmDiv,
       top: helpers.rhythmDiv,
       padding: 0,
-      marginBottom: 0,
+      marginBottom: 0
     },
     dialogAction: {
-      width: '100%',
+      width: "100%",
       marginTop: helpers.rhythmDiv * 2
     },
     dialogTitle: {
-      position: 'relative'
+      position: "relative"
     },
     gridItem: {
       padding: 0
@@ -79,7 +89,7 @@ const styles = theme => {
       verticalAlign: "middle",
       width: "100%",
       height: "100%",
-      objectFit: 'cover'
+      objectFit: "cover"
     },
     imageContainer: {
       backgroundColor: "#000",
@@ -96,19 +106,18 @@ const styles = theme => {
       marginRight: "5px"
     },
     iconButton: {
-      height: 'auto',
-      width: 'auto'
+      height: "auto",
+      width: "auto"
     },
     iconWithDetailContainer: {
       display: "inline-flex",
-      alignItems: "center",
+      alignItems: "center"
     },
     bottomSpace: {
       marginBottom: helpers.rhythmDiv * 2
     }
   };
 };
-
 
 const ButtonWrapper = styled.div`
   width: 100%;
@@ -159,7 +168,8 @@ const Heading = styled.h2`
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv}px;
   color: ${helpers.primaryColor};
-  text-transform: ${props => props.textTransform ? props.textTransform : 'capitalize'};
+  text-transform: ${props =>
+    props.textTransform ? props.textTransform : "capitalize"};
   text-align: center;
   width: 100%;
   line-height: 1;
@@ -177,7 +187,7 @@ const Text = styled.p`
   font-weight: 400;
   line-height: 1;
   margin-bottom: ${props => props.marginBottom}px;
-  text-align: ${props => props.center ? 'center' : 'left'};
+  text-align: ${props => (props.center ? "center" : "left")};
 `;
 
 const EventHeader = styled.div`
@@ -196,7 +206,7 @@ const ImageContainer = styled.div`
   height: 100px;
   flex-shrink: 0;
   ${helpers.coverBg};
-  border-radius: 50%;
+  border-radius: 0%;
   margin-right: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv}px;
   background-position: 50% 50%;
@@ -217,9 +227,8 @@ const EventName = Heading.extend`
 `;
 
 const Event = styled.div`
-  ${helpers.flexCenter}
-  flex-direction: column;
-  padding-right: ${helpers.rhythmDiv*2}px;
+  ${helpers.flexCenter} flex-direction: column;
+  padding-right: ${helpers.rhythmDiv * 2}px;
 `;
 
 const EventDesc = Text.extend``;
@@ -238,7 +247,7 @@ class ClassDetailModal extends React.Component {
     this.state = {
       isLoading: true,
       error: false,
-      classImg: this.props.classType ? this.props.classType.classTypeImg : ''
+      classImg: this.props.classType ? this.props.classType.classTypeImg : ""
     };
   }
 
@@ -282,35 +291,53 @@ class ClassDetailModal extends React.Component {
   }
 
   componentDidMount = () => {
-    const {classType,school} = this.state;
-    this.setImageSrc(classType,school);
-  }
+    const { classType, school } = this.state;
+    this.setImageSrc(classType, school);
+  };
 
   componentDidUpdate = () => {
-    const {classType,school} = this.state;
-    this.setImageSrc(classType,school);
-  }
+    const { classType, school } = this.state;
+    this.setImageSrc(classType, school);
+  };
 
-  formatScheduleType = (scheduleType) => {
-      const classScheduleType = scheduleType.toLowerCase();
+  formatScheduleType = scheduleType => {
+    const classScheduleType = scheduleType.toLowerCase();
 
-      if(classScheduleType === 'recurring' || classScheduleType === 'ongoing')
-        return (<Text><Capitalize>{classScheduleType}</Capitalize></Text>)
+    if (classScheduleType === "recurring" || classScheduleType === "ongoing")
+      return (
+        <Text>
+          <Capitalize>{classScheduleType}</Capitalize>
+        </Text>
+      );
 
-      return <Text>{"One Time"}</Text>
-  }
+    return <Text>{"One Time"}</Text>;
+  };
 
-  setImageSrc = (classType,school) => {
+  formatScheduleType = scheduleType => {
+    const classScheduleType = scheduleType.toLowerCase();
+
+    if (classScheduleType === "recurring" || classScheduleType === "ongoing")
+      return (
+        <Text>
+          <Capitalize>{classScheduleType}</Capitalize>
+        </Text>
+      );
+
+    return <Text>{"One Time"}</Text>;
+  };
+
+  setImageSrc = (classType, school) => {
     console.log("getImageSrc classtype school", classType, school);
 
-
-    imageExists((classType && classType.classTypeImg) || '').then(res => {
-      if(this.state.classImg !== classType.classTypeImg)
-        this.setState({ classImg: classType.classTypeImg });
-    }).catch(() => {
-      if(this.state.classImg !== settings.classTypeImgSrc)
-        this.setState({ classImg: settings.classTypeImgSrc});
-    })
+    imageExists((classType && classType.classTypeImg) || "")
+      .then(res => {
+        if (this.state.classImg !== classType.classTypeImg)
+          this.setState({ classImg: classType.classTypeImg });
+      })
+      .catch(() => {
+        if (this.state.classImg !== settings.classTypeImgSrc)
+          this.setState({ classImg: settings.classTypeImgSrc });
+      });
 
     // if (classType && classType.classTypeImg) {
     //   return classType.classTypeImg;
@@ -403,26 +430,50 @@ class ClassDetailModal extends React.Component {
       classType,
       location,
       addToMyCalender,
-      classImg,
+      classImg
     } = this.state;
-    const { eventData, fullScreen, classes, clickedDate, classInterestData} = this.props;
+    const {
+      eventData,
+      fullScreen,
+      classes,
+      clickedDate,
+      classInterestData
+    } = this.props;
 
-    console.log("eventData____________",eventData);
+    console.log("eventData____________", eventData);
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
-    const formattedClassTimesDetails = formatDataBasedOnScheduleType(eventData,false); // false is for not hiding the past schedule types.
-    const classTimesData = ClassTimes.find({classTypeId: eventData.classTypeId});
-    const allFormattedClassTimeDetails = formatClassTimesData(classTimesData,true).filter(classTime => {
-
-        if(classTime._id != eventData.classTimeId
-          && classTime.formattedClassTimesDetails
-          && classTime.formattedClassTimesDetails.totalClassTimes > 0) {
-          return true;
-        }
-        return false;
-    }) // false is for not hiding the past schedule types;
+    const formattedClassTimesDetails = formatDataBasedOnScheduleType(
+      eventData,
+      false
+    ); // false is for not hiding the past schedule types.
+    const classTimesData = ClassTimes.find({
+      classTypeId: eventData.classTypeId
+    });
+    const allFormattedClassTimeDetails = formatClassTimesData(
+      classTimesData,
+      true
+    ).filter(classTime => {
+      if (
+        classTime._id != eventData.classTimeId &&
+        classTime.formattedClassTimesDetails &&
+        classTime.formattedClassTimesDetails.totalClassTimes > 0
+      ) {
+        return true;
+      }
+      return false;
+    }); // false is for not hiding the past schedule types;
     classTypeData.formattedClassTimesDetails = formattedClassTimesDetails;
-    console.log(allFormattedClassTimeDetails,"l;;;;;;;;;;;;;;;;;;")
+    console.log(allFormattedClassTimeDetails, "l;;;;;;;;;;;;;;;;;;");
     // console.log(classTypeData,eventData,formattedClassTimesDetails,"event ................................. data");
+    const scheduleDetails = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ];
     return (
       <Dialog
         fullScreen={true}
@@ -438,46 +489,57 @@ class ClassDetailModal extends React.Component {
         {!isLoading &&
           !error && (
             <Grid container style={{ padding: "16px" }}>
-              <Grid container classes={{typeItem: classes.gridItem}}>
-
-                <DialogTitle classes={{root: classes.dialogTitleRoot}}>
+              <Grid container classes={{ typeItem: classes.gridItem }}>
+                <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
                   <DialogTitleWrapper>
-                    <IconButton color="primary" onClick={() => this.props.closeEventModal(false, null)} classes={{root: classes.iconButton}}>
-                      <ClearIcon/>
+                    <IconButton
+                      color="primary"
+                      onClick={() => this.props.closeEventModal(false, null)}
+                      classes={{ root: classes.iconButton }}
+                    >
+                      <ClearIcon />
                     </IconButton>
                   </DialogTitleWrapper>
                 </DialogTitle>
 
                 <EventHeader>
-                  {classImg && <ImageContainer src={classImg}>
-                    {/*<div style={{position: "absolute", top: 10, right: 10}}>
-  									{
-  										eventData.attending && (
-  											<Button fab aria-label="delete" color="accent" onClick={(event) => this.removeMyClassInterest(event, eventData.classTimeId)} className={classes.button}>
-  											   <Icon
-  													className="material-icons"
-  												>
-  													delete
-  												</Icon>
-  											</Button>
-  										)
-  									}
-  								</div>*/}
-
-                    {/*<img
-                      className={classes.image}
-                      src={this.getImageSrc(classType, school)}
-                    />*/}
-                  </ImageContainer>}
-                  <Event center={classImg !== ''}>
+                  <ImageContainer src={classImg}>
+                    {
+                      <div style={{ position: "absolute", top: 10, right: 10 }}>
+                        {eventData.attending && (
+                          <Button
+                            fab
+                            aria-label="delete"
+                            color="accent"
+                            onClick={event =>
+                              this.removeMyClassInterest(
+                                event,
+                                eventData.classTimeId
+                              )
+                            }
+                            className={classes.button}
+                          >
+                            <Icon className="material-icons">delete</Icon>
+                          </Button>
+                        )}
+                      </div>
+                    }
+                  </ImageContainer>
+                  <Event center={classImg !== ""}>
                     <EventName>{eventData.name}</EventName>
                     {this.formatScheduleType(eventData.scheduleType)}
                   </Event>
                 </EventHeader>
-                <Grid item sm={12} md={12} xs={12} classes={{typeItem: classes.gridItem}}>
+                <Grid
+                  item
+                  sm={12}
+                  md={12}
+                  xs={12}
+                  classes={{ typeItem: classes.gridItem }}
+                >
                   <EventDesc>{eventData.desc || ""}</EventDesc>
                 </Grid>
-                <Grid item xs={6} classes={{typeItem: classes.gridItem}}>
+                <Grid item xs={6} classes={{ typeItem: classes.gridItem }}>
                   <div className={classes.iconWithDetailContainer}>
                     <div className="circle-icon" className={classes.iconStyle}>
                       <Icon className="material-icons" color="primary">
@@ -485,7 +547,9 @@ class ClassDetailModal extends React.Component {
                       </Icon>
                     </div>
                     <div>
-                      <Text><Italic>Date</Italic></Text>
+                      <Text>
+                        <Italic>Date</Italic>
+                      </Text>
                       <Text>{clickedDate}</Text>
                     </div>
                   </div>
@@ -498,48 +562,84 @@ class ClassDetailModal extends React.Component {
                       </Icon>
                     </div>
                     <div>
-                      <Text><Italic>Time</Italic></Text>
-                      <Text>{`${
-                        eventData.eventStartTime
-                      }`}</Text>
+                      <Text>
+                        <Italic>Time</Italic>
+                      </Text>
+                      <Text>
+                        {/* timeUnits are added for mins,hours */}
+                        {`${eventData.eventStartTime}`}
+                        {" For "}
+                        {console.log("classTypeData", classTypeData)}
+                        {scheduleDetails.map(value => {
+                          if (classTypeData.formattedClassTimesDetails[value]) {
+                            return (
+                              classTypeData.formattedClassTimesDetails[value][0]
+                                .duration +
+                              " " +
+                              classTypeData.formattedClassTimesDetails[value][0]
+                                .timeUnits
+                            );
+                          }
+                        })}
+                      </Text>
                     </div>
                   </div>
                 </Grid>
               </Grid>
 
-              <Grid
-                container
-                style={{ marginTop: "16px" }}
-              >
-                  {/*<Typography component="p" style={{marginBottom:'20px'}}>
+              <Grid container style={{ marginTop: "16px" }}>
+                {/*<Typography component="p" style={{marginBottom:'20px'}}>
 										{classType && classType.desc}
 									</Typography>*/}
                 <IconsWrapper>
                   <IconsRowWrapper>
-                    <div className={classes.iconWithDetailContainer + ' ' + classes.bottomSpace}>
-                      <div className="circle-icon" className={classes.iconStyle}>
+                    <div
+                      className={
+                        classes.iconWithDetailContainer +
+                        " " +
+                        classes.bottomSpace
+                      }
+                    >
+                      <div
+                        className="circle-icon"
+                        className={classes.iconStyle}
+                      >
                         <Icon className="material-icons" color="primary">
                           account_balance
                         </Icon>
                       </div>
                       <div>
-                        <Text><Italic>School</Italic></Text>
                         <Text>
-                          {school && school.name}
+                          <Italic>School</Italic>
                         </Text>
+                        <Text>{school && school.name}</Text>
                       </div>
                     </div>
 
-                    <div className={classes.iconWithDetailContainer + ' ' + classes.bottomSpace}>
-                      <div className="circle-icon" className={classes.iconStyle}>
+                    <div
+                      className={
+                        classes.iconWithDetailContainer +
+                        " " +
+                        classes.bottomSpace
+                      }
+                    >
+                      {/* <div
+                        className="circle-icon"
+                        className={classes.iconStyle}
+                      >
                         <Icon className="material-icons" color="primary">
                           class
                         </Icon>
-                      </div>
-                      <div>
-                        <Text><Italic>Class Name</Italic></Text>
-                        <Text><Capitalize>{`${classType && classType.name.toLowerCase()}`}</Capitalize></Text>
-                      </div>
+                      </div> */}
+                      {/* <div>
+                        <Text>
+                          <Italic>Class Name</Italic>
+                        </Text>
+                        <Text>
+                          <Capitalize>{`${classType &&
+                            classType.name.toLowerCase()}`}</Capitalize>
+                        </Text>
+                      </div> */}
                     </div>
                   </IconsRowWrapper>
 
@@ -550,7 +650,9 @@ class ClassDetailModal extends React.Component {
                       </Icon>
                     </div>
                     <div>
-                      <Text><Italic>Location</Italic></Text>
+                      <Text>
+                        <Italic>Location</Italic>
+                      </Text>
                       <Text>
                         {location &&
                           `${location.address}, ${location.city}, ${
@@ -560,23 +662,40 @@ class ClassDetailModal extends React.Component {
                     </div>
                   </div>
                 </IconsWrapper>
+                {console.log("classTypeData", classTypeData)}
                 <Grid item xs={12}>
                   {classTypeData &&
-                    classTypeData.ageMin && (
-                      <MetaInfo data={classTypeData.ageMin} title="Age: " />
-                  )}
+                    classTypeData.ageMin &&
+                    classTypeData.ageMax && (
+                      <MetaInfo
+                        data={`  ${classTypeData.ageMin} to ${
+                          classTypeData.ageMax
+                        }`}
+                        title={"Age:" + " "}
+                      />
+                    )}
                   {classTypeData &&
                     classTypeData.gender &&
                     classTypeData.gender !== "All" && (
-                      <MetaInfo data={classTypeData.gender} title="Gender: " />
-                  )}
+                      <MetaInfo
+                        data={classTypeData.gender}
+                        title={"Gender: " + ""}
+                      />
+                    )}
 
                   {classTypeData &&
                   classTypeData.experienceLevel &&
                   classTypeData.experienceLevel == "All" ? (
-                    <MetaInfo data={"All levels are welcomed"} title="Experience: " />
-                  ) :
-                  (<MetaInfo data={classTypeData.experienceLevel} title="Experience: " />)}
+                    <MetaInfo
+                      data={"  All levels are welcome"}
+                      title={"Experience:  " + " "}
+                    />
+                  ) : (
+                    <MetaInfo
+                      data={`  ${classTypeData.experienceLevel}`}
+                      title={"Experience:  " + " "}
+                    />
+                  )}
                 </Grid>
                 {/*<Grid item xs={6}>
 									<div className={classes.iconWithDetailContainer}>
@@ -621,29 +740,36 @@ class ClassDetailModal extends React.Component {
                 )}
               </Grid>
 
-              <Grid
-                container
-                style={{ marginTop: "16px" }}
-              >
-              {!isEmpty(classTypeData) &&  <ClassTimeCardsWrapper>
-                  <Heading marginTop={helpers.rhythmDiv} textTransform="none">This class time is part of</Heading>
-                  <ClassTimesBoxes
-                    inPopUp={true}
-                    withSlider={false}
-                    classTimesData={[classTypeData]}
-                    classInterestData={classInterestData}
-                  />
-                </ClassTimeCardsWrapper>}
+              <Grid container style={{ marginTop: "16px" }}>
+                {!isEmpty(classTypeData) && (
+                  <div>
+                    <Heading marginTop={helpers.rhythmDiv} textTransform="none">
+                      This {`${classType && classType.name.toLowerCase()}`}:{" "}
+                      {eventData.name} is part of
+                    </Heading>
+                    <ClassTimesBoxes
+                      inPopUp={true}
+                      withSlider={false}
+                      classTimesData={[classTypeData]}
+                      classInterestData={classInterestData}
+                    />
+                  </div>
+                )}
 
-                {!isEmpty(allFormattedClassTimeDetails) && <ClassTimeCardsWrapper>
-                  <Heading marginTop={helpers.rhythmDiv} textTransform="none">More class times for <Capitalize>{classType.name.toLowerCase()}</Capitalize></Heading>
-                  <ClassTimesBoxes
-                    inPopUp={true}
-                    withSlider={false}
-                    classTimesData={allFormattedClassTimeDetails}
-                    classInterestData={classInterestData}
-                  />
-                </ClassTimeCardsWrapper>}
+                {!isEmpty(allFormattedClassTimeDetails) && (
+                  <div>
+                    <Heading marginTop={helpers.rhythmDiv} textTransform="none">
+                      More class times for{" "}
+                      <Capitalize>{classType.name.toLowerCase()}</Capitalize>
+                    </Heading>
+                    <ClassTimesBoxes
+                      inPopUp={true}
+                      withSlider={false}
+                      classTimesData={allFormattedClassTimeDetails}
+                      classInterestData={classInterestData}
+                    />
+                  </div>
+                )}
               </Grid>
 
               <DialogActions className={classes.dialogAction}>

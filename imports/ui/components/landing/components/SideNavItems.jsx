@@ -147,7 +147,6 @@ const LoginUserSideNav = props => {
   }
   return (
     <Fragment>
-      {console.log("this.props in side navitems", props)}
       <NestedNavItems
         button
         name={getUserFullName(props.currentUser)}
@@ -312,7 +311,6 @@ class SideNavItems extends React.Component {
         }
         if (result) {
           {
-            console.log("result os getmyscgool", result);
           }
           const mySchool = result.map((school, index) => {
             return {

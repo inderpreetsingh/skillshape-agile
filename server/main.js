@@ -26,12 +26,6 @@ Meteor.startup(() => {
         return Meteor.absoluteUrl('reset-password/' + token);
     };
     // code to run on server at startup
-
-    // Adding the `Others` category here manual.
-    if(!SkillCategory.findOne({name : 'Others'})) {
-      SkillCategory.insert({name: "Others", _mig: 1});
-    }
-
     if (SkillSubject.find({ _mig_: 1 }).count() == 0) {
         console.log("_____SkillSubject dump start___");
         SkillSubject.remove({});
@@ -76,6 +70,10 @@ Meteor.startup(() => {
         }
     }
 
+    // Adding the `Others` category here manual.
+    if(!SkillCategory.findOne({name : 'Others'})) {
+      SkillCategory.insert({name: "Others", _mig: 1});
+    }
 });
 
 if (Meteor.isServer) {
