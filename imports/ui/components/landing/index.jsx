@@ -259,7 +259,6 @@ class Landing extends Component {
     positionCoords.then(function(value) {
       localStorage.setItem("myLocation", JSON.stringify(value));
     });
-    // console.log("this.props.location.query in componentDidMount", this.props.location.query)
     if (this.props.location.query && this.props.location.query.claimRequest) {
       const { toastr } = this.props;
       if (this.props.location.query.schoolRegister) {
@@ -401,7 +400,6 @@ class Landing extends Component {
   };
 
   handleStickyStateChange = status => {
-    // console.log(status, "status..")
     if (status.status === 2) {
       if (!this.state.sticky) {
         this.setState({
@@ -483,8 +481,7 @@ class Landing extends Component {
           });
           // Toggle map view on click of `Browse classes near by me`
           // if(!args) {
-          if(!args.noMapView)
-            this.handleToggleMapView();
+          if (!args.noMapView) this.handleToggleMapView();
           // }
           // toastr.success("Showing classes around you...","Found your location");
           // // Session.set("coords",coords)
@@ -510,7 +507,6 @@ class Landing extends Component {
   };
 
   handleLocationSearch = locationText => {
-    // console.log("handleLocationSearch -->>",locationText)
     this.setState({
       filters: {
         ...this.state.filters,
@@ -777,7 +773,6 @@ class Landing extends Component {
   };
   // showAppliedLocationFilter = () => {
   //     const { locationName } = this.state.filters;
-  //     // console.log("locationName",this.state.filters, defaultLocation)
   //     if (locationName) {
   //         text = `Showing classes near you (${locationName})`;
   //         return this.showText(text, this.clearDefaultLocationFilter);
@@ -830,9 +825,6 @@ class Landing extends Component {
   };
 
   render() {
-    // console.log("Landing state -->>",this.state);
-    // console.log("Landing state -->>", this.state);
-    // console.log("Landing props -->>", this.props);
     return (
       <DocumentTitle title={this.props.route.name}>
         <div>

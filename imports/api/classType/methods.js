@@ -52,7 +52,6 @@ Meteor.methods({
   },
   "classType.addClassType": function({ doc }) {
     const user = Meteor.users.findOne(this.userId);
-    // console.log("classType.addClassType methods called!!!");
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
     ) {
@@ -83,12 +82,10 @@ Meteor.methods({
   },
   "classType.editClassType": function({ doc_id, doc }) {
     const user = Meteor.users.findOne(this.userId);
-    console.log("classType.editClassType methods called!!!", doc_id, doc);
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
     ) {
       let classTypeData = ClassType.findOne({ _id: doc_id });
-      console.log("classTypeData", classTypeData);
       const temp = { ...doc, filters: classTypeData.filters || {} };
 
       if (temp.locationId) {
@@ -106,7 +103,6 @@ Meteor.methods({
       if (!isEmpty(classTimesIds)) {
         updateHookForClassTimes({ classTimesIds, classTypeData, doc });
       }
-      console.log("temp------------>", temp);
       return ClassType.update({ _id: doc_id }, { $set: temp });
     } else {
       throw new Meteor.Error("Permission denied!!");
@@ -114,7 +110,6 @@ Meteor.methods({
   },
   "classType.removeClassType": function({ doc }) {
     const user = Meteor.users.findOne(this.userId);
-    // console.log("classType.removeClassType methods called!!!",doc);
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
     ) {
@@ -172,7 +167,6 @@ Meteor.methods({
         classTypeId,
         userId: this.userId
       });
-      // console.log("classTypeLocationRequest -->>",classTypeLocationRequest)
       // Request Pending
       if (classTypeLocationRequest) {
         throw new Meteor.Error(
@@ -191,7 +185,6 @@ Meteor.methods({
       }
       let schoolData = School.findOne(schoolId);
       let ownerName;
-      // console.log("schoolData==>",schoolData)
       if (schoolData && schoolData.superAdmin) {
         // Get Admin of School As school Owner
         let adminUser = Meteor.users.findOne(schoolData.superAdmin);

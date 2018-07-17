@@ -45,29 +45,28 @@ const styles = {
     maxWidth: 400,
     background: "white",
     margin: helpers.rhythmDiv,
-    overflowY: 'auto'
+    overflowY: "auto"
   },
   dialogTitle: {
     // padding: `0 ${helpers.rhythmDiv * 3}px`,
     // paddingTop: helpers.rhythmDiv * 2
-    padding: 0,
+    padding: 0
   },
   dialogContent: {
     overflowX: "hidden",
-    padding: 0,
+    padding: 0
   },
   iconButton: {
-    position: 'absolute',
+    position: "absolute",
     top: -24,
     right: -8,
-    zIndex: 3,
+    zIndex: 3
     // boxShadow: helpers.buttonBoxShadow
   }
 };
 
 const DialogTitleWrapper = styled.div`
-  ${helpers.flexCenter}
-  width: 100%;
+  ${helpers.flexCenter} width: 100%;
   padding: 0;
   position: relative;
 `;
@@ -115,14 +114,12 @@ const ContentHeader = styled.div`
   padding: 0 ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    ${helpers.flexCenter}
-    flex-direction: column;
+    ${helpers.flexCenter} flex-direction: column;
   }
 `;
 
 const ClassTypeCoverImg = styled.div`
-  ${helpers.coverBg}
-  background-position: center center;
+  ${helpers.coverBg} background-position: center center;
   width: 100px;
   height: 100px;
   margin-right: ${helpers.rhythmDiv}px;
@@ -136,8 +133,7 @@ const ClassTypeCoverImg = styled.div`
 `;
 
 const ClassTimes = styled.div`
-  ${helpers.flexCenter}
-  flex-direction: column;
+  ${helpers.flexCenter} flex-direction: column;
   padding-right: ${helpers.rhythmDiv * 2}px;
   flex-shrink: 1;
 `;
@@ -190,22 +186,18 @@ const RequestsClassTimes = styled.div`
   justify-content: center;
 `;
 
-
 class ClassTimesDialogBox extends React.Component {
   constructor(props) {
     super(props);
     this.scrollTo("myScrollToElement");
   }
   componentDidMount() {
-    console.log("this--------->", this);
     if (this.myDiv) {
       this.myDiv.style.backgroundColor = "red";
     }
     setTimeout(() => {
-      console.log("myScrollToElement", this.myDiv);
       let divElement = $("#myScrollToElement").offset();
       let offset = divElement.top;
-      console.log("offset", offset);
       // send offset of modal to iframe script
       function sendTopOfPopup(e) {
         parent.postMessage(JSON.stringify({ popUpOpened: true, offset }), "*");
@@ -281,9 +273,7 @@ class ClassTimesDialogBox extends React.Component {
   };
 
   handleClassInterest = ({ methodName, data }) => {
-    Meteor.call(methodName, data, (err, res) => {
-      console.log(res, err);
-    });
+    Meteor.call(methodName, data, (err, res) => {});
   };
 
   getSchedules = classesData => {
@@ -332,20 +322,20 @@ class ClassTimesDialogBox extends React.Component {
   render() {
     // const classTimesData = this.normalizeScheduledetails(this.props.classesData);
     const {
-        classInterestData,
-        classTimesData,
-        classes,
-        open,
-        onModalClose,
-        classTypeName,
-        classTypeImg,
-        errorText,
-        handleClassTimeRequest
-      } = this.props;
-    // console.log("ClassTimesDialogBox props--->>", this.props);
-    {/*
-      console.log(this.props.x, this.props.y);
-    */}
+      classInterestData,
+      classTimesData,
+      classes,
+      open,
+      onModalClose,
+      classTypeName,
+      classTypeImg,
+      errorText,
+      handleClassTimeRequest
+    } = this.props;
+    {
+      /*
+    */
+    }
 
     return (
       <Dialog
@@ -358,7 +348,11 @@ class ClassTimesDialogBox extends React.Component {
           <MyScrollToElement id="myScrollToElement" ref={c => (this.myDiv = c)}>
             <DialogTitle classes={{ root: classes.dialogTitle }}>
               <DialogTitleWrapper>
-                <IconButton color="primary" className={classes.iconButton} onClick={onModalClose}>
+                <IconButton
+                  color="primary"
+                  className={classes.iconButton}
+                  onClick={onModalClose}
+                >
                   <ClearIcon />
                 </IconButton>
               </DialogTitleWrapper>
@@ -390,7 +384,9 @@ class ClassTimesDialogBox extends React.Component {
                     <ClassTypeCoverImg src={classTypeImg} />
                     <ClassTimes>
                       <ClassTimesFor>Class Times for</ClassTimesFor>
-                      <ClassTypeName>{classTypeName.toLowerCase()}</ClassTypeName>
+                      <ClassTypeName>
+                        {classTypeName.toLowerCase()}
+                      </ClassTypeName>
                     </ClassTimes>
                   </ContentHeader>
                   <ClassTimesBoxes
@@ -401,9 +397,7 @@ class ClassTimesDialogBox extends React.Component {
                   />
                 </ContentWrapper>
               )}
-              {this.props.errorText && (
-                <ErrorWrapper>{errorText}</ErrorWrapper>
-              )}
+              {this.props.errorText && <ErrorWrapper>{errorText}</ErrorWrapper>}
             </DialogContent>
           </MyScrollToElement>
         </MuiThemeProvider>

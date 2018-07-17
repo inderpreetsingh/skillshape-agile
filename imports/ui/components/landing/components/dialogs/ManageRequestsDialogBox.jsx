@@ -255,11 +255,9 @@ class ManageRequestsDialogBox extends Component {
     setTimeout(() => {
       let divElement = $("#manageDialog").offset();
       let offset = divElement.top;
-      console.log("offset", offset);
       // send offset of modal to iframe script
       function sendTopOfPopup(e) {
         parent.postMessage(JSON.stringify({ popUpOpened: true, offset }), "*");
-        console.log("in managerequest dialog", offset);
       }
       // Call sendTopOfPopup()
       sendTopOfPopup();
@@ -268,7 +266,6 @@ class ManageRequestsDialogBox extends Component {
 
   render() {
     const { props } = this;
-    // console.log(props,"...");
     return (
       <Fragment>
         {this.state.isBusy && <ContainerLoader />}
