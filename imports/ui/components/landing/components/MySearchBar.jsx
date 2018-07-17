@@ -178,8 +178,6 @@ class MySearchBar extends Component {
         // This runs when user changes location.
         autocomplete.addListener("place_changed", () => {
           let place = autocomplete.getPlace();
-          alert(place);
-          console.log("place chnaged", place);
           let coords = [];
           coords[0] = place.geometry["location"].lat();
           coords[1] = place.geometry["location"].lng();
