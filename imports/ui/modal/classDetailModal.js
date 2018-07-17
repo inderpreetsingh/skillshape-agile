@@ -698,7 +698,8 @@ class ClassDetailModal extends React.Component {
 								</Grid>*/}
                 {this.props.routeName !== "EmbedSchoolCalanderView" && (
                   <Grid container style={{ padding: 8 }}>
-                    <Grid item xs={6}>
+                    {/*Removed previous two button and added two new button according to new task*/}
+                    {/* <Grid item xs={6}>
                       <ClassTimeButton
                         fullWidth
                         label="View Class Type"
@@ -718,6 +719,27 @@ class ClassDetailModal extends React.Component {
                         label="View School"
                         onClick={() => this.goToSchoolPage(school)}
                       />
+                    </Grid> */}
+                    <Grid item xs={6}>
+                      <ClassTimeButton
+                        fullWidth
+                        label="Remove from my Calendar"
+                        noMarginBottom
+                        onClick={() =>
+                          this.goToClassTypePage(
+                            classType.name,
+                            eventData.classTypeId
+                          )
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <ClassTimeButton
+                        fullWidth
+                        noMarginBottom
+                        label="Delete This Event"
+                        onClick={() => this.goToSchoolPage(school)}
+                      />
                     </Grid>
                   </Grid>
                 )}
@@ -730,12 +752,14 @@ class ClassDetailModal extends React.Component {
                       This {`${classType && classType.name.toLowerCase()}`}:{" "}
                       {eventData.name} is part of
                     </Heading>
-                    <ClassTimesBoxes
-                      inPopUp={true}
-                      withSlider={false}
-                      classTimesData={[classTypeData]}
-                      classInterestData={classInterestData}
-                    />
+                    <div style={{ backgroundColor: "gray" }}>
+                      <ClassTimesBoxes
+                        inPopUp={true}
+                        withSlider={false}
+                        classTimesData={[classTypeData]}
+                        classInterestData={classInterestData}
+                      />
+                    </div>
                   </div>
                 )}
 
@@ -745,12 +769,14 @@ class ClassDetailModal extends React.Component {
                       More class times for{" "}
                       <Capitalize>{classType.name.toLowerCase()}</Capitalize>
                     </Heading>
-                    <ClassTimesBoxes
-                      inPopUp={true}
-                      withSlider={false}
-                      classTimesData={allFormattedClassTimeDetails}
-                      classInterestData={classInterestData}
-                    />
+                    <div style={{ backgroundColor: "green" }}>
+                      <ClassTimesBoxes
+                        inPopUp={true}
+                        withSlider={false}
+                        classTimesData={allFormattedClassTimeDetails}
+                        classInterestData={classInterestData}
+                      />
+                    </div>
                   </div>
                 )}
               </Grid>
