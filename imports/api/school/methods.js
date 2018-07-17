@@ -16,10 +16,8 @@ import { sendEmailToStudentForClaimAsMember } from "/imports/api/email";
 import { getUserFullName } from "/imports/util/getUserData";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
-// console.log("getUserFullName -->>",getUserFullName)
 Meteor.methods({
   editSchool: function(id, data) {
-    console.log("editSchool >>> ", data, id);
     let schoolData = School.findOne({ _id: id });
     if (schoolData && data.name && schoolData.name !== data.name) {
       ClassType.update(
@@ -122,14 +120,12 @@ Meteor.methods({
   },
   "school.requestPricingInfo": function(schoolData) {
     if (this.userId && schoolData._id) {
-      console.log("classTimesRequest.notifyToSchool -->>", schoolData._id);
       const schoolId = schoolData._id;
       // Check if reuest for this user already exist in DB then just update `notification` and send Email.
       const priceInfoRequest = PriceInfoRequest.findOne({
         schoolId,
         userId: this.userId
       });
-      console.log("priceInfoRequest -->>", priceInfoRequest);
       if (priceInfoRequest) {
         if (priceInfoRequest.notification) {
           throw new Meteor.Error(
@@ -201,8 +197,6 @@ Meteor.methods({
       "profile.schoolId": doc.schoolId
     });
     const currentUserData = Meteor.users.findOne(this.userId);
-    console.log("currentUserData", currentUserData);
-    console.log("doc", doc);
     // Admin needs to login and should not be able to create members with their own email.
     if (!this.userId || !schoolAdminRec) {
       throw new Meteor.Error("You are not allowed to add a new member!!");
@@ -249,12 +243,10 @@ Meteor.methods({
         // Create new member
         let memberId = SchoolMemberDetails.insert(doc);
 
-        // console.log("doc======>", doc)
         let claimingMemberRec = Meteor.users.findOne({ _id: doc.activeUserId });
         let password = newlyCreatedUser ? newlyCreatedUser.password : null;
         let fromEmail = "Notices@SkillShape.com";
 
-        console.log("claimingMemberRec", claimingMemberRec);
         // To: can be from user's email OR from google services
         let toEmail =
           get(claimingMemberRec, "emails[0].address") ||
@@ -294,7 +286,6 @@ Meteor.methods({
   "school.saveAdminNotesToMember": function(doc) {
     // Validations
     // Only school admin can add a new Memeber.
-    console.log("saveAdminNotesToMember", doc);
     doc.updatedBy = this.userId;
     const schoolAdminRec = Meteor.users.findOne({
       "profile.schoolId": doc.schoolId
@@ -382,7 +373,6 @@ Meteor.methods({
     }
   },
   "school.findSuperAdmin": function(userId, slug) {
-    console.log("userId, slug", userId, slug);
     let schoolData = School.findOne({ slug: slug });
     if (schoolData.superAdmin == userId) {
       return true;

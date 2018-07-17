@@ -127,7 +127,6 @@ url_validate = function(url) {
 getLatLong = function(address, callback) {
     // address = address.replace(" ","+")
     var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=AIzaSyBtQoiRR6Ft0wGTajMd8uTZb71h8kwD5Ew"
-    console.log(url);
     let_long = null;
     $.ajax({
         type: "GET",
@@ -135,7 +134,6 @@ getLatLong = function(address, callback) {
         url: url,
         dataType: 'json', //added this so the response is in json
         success: function(data) {
-            console.log(data);
             if (data.results[0] && data.results[0].geometry && data.results[0].geometry.location) {
                 let_long = data.results[0].geometry.location
                 let_long.formatted_address = data.results[0].formatted_address

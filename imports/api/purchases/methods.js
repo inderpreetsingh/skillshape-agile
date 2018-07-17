@@ -5,7 +5,6 @@ Meteor.methods({
     return Purchases.insert(payload);
   },
   "purchases.getAllPurchaseData": function(slug, filters) {
-    console.log("AllPurchaseData", filters);
     let schoolId = School.findOne({ slug: slug });
     let AllPurchaseData = Purchases.find(
       { schoolId: schoolId._id },
@@ -15,7 +14,6 @@ Meteor.methods({
     return AllPurchaseData;
   },
   "purchases.updatePurchases": function(payload, recordId) {
-    console.log("payload and recordid inupdate Purchases ", payload, recordId);
     Purchases.update(
       { _id: recordId },
       {

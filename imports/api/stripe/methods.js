@@ -50,9 +50,7 @@ Meteor.methods({
         status: "Succeeded"
       };
       Meteor.call("purchases.updatePurchases", payload, recordId);
-      stripe.balance.retrieve(function(err, balance) {
-        console.log("------------balace--------------", balance);
-      });
+      stripe.balance.retrieve(function(err, balance) {});
       return "Payment Successfully Done";
     } catch (error) {
       payload = {

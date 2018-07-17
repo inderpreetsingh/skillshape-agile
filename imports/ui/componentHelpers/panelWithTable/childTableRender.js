@@ -33,9 +33,6 @@ export default function(props) {
     schoolId
   } = this.props;
   const FormComponent = childPanelHeader.actions.component;
-  console.log("child Table render this.props -->>", this.props);
-  // console.log("child Table render this.state -->>",this.state)
-  // console.log("child Table render childTableData -->>",childTableData)
   return (
     <div>
       {this.props.childTable.title == "Class Times" ? (
@@ -131,7 +128,6 @@ export default function(props) {
                                   {childTable.actions.edit.title}
                                 </Button>
                               </div>
-                              {console.log("tableData", tableData)}
                               {tableData.scheduleType == "oneTime" &&
                                 tableData.name + ": One Time"}
                               {tableData.scheduleType == "OnGoing" &&
@@ -142,7 +138,6 @@ export default function(props) {
                             <ExpansionPanelDetails style={{ flexWrap: "wrap" }}>
                               {childTable &&
                                 childTable.tableFields.map((field, index) => {
-                                  // console.log("childTable Field Name -->>",field);
                                   return (
                                     <Fragment key={index}>
                                       <Grid
@@ -299,7 +294,6 @@ export default function(props) {
                         >
                           {childTable &&
                             childTable.tableFields.map((field, index) => {
-                              // console.log("childTable Field Name -->>",field);
                               return (
                                 <Fragment key={index}>
                                   <Grid

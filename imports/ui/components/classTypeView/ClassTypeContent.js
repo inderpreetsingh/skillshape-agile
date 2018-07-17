@@ -373,7 +373,6 @@ class ClassTypeContent extends Component {
         //     }
 
         //     Meteor.call("classTimesRequest.notifyToSchool", payload, (err, res) => {
-        //         console.log("err -->>",err)
         //         this.setState({ isBusy: false }, () => {
         //             if(res && res.emailSuccess) {
         //                 // Need to show message to user when email is send successfully.
@@ -427,7 +426,6 @@ class ClassTypeContent extends Component {
     }
 
 	render() {
-		// console.log("ClassTypeContent props --->>",this.props);
 
 		const {
       bgImg,

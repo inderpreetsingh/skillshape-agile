@@ -56,7 +56,6 @@ import * as settings from "/imports/ui/components/landing/site-settings.js";
 const formStyle = formStyles();
 
 const styles = theme => {
-  console.log("theme", theme);
   return {
     dialogPaper: {
       overflowX: "hidden",
@@ -206,7 +205,7 @@ const ImageContainer = styled.div`
   height: 100px;
   flex-shrink: 0;
   ${helpers.coverBg};
-  border-radius: 50%;
+  border-radius: 0%;
   margin-right: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv}px;
   background-position: 50% 50%;
@@ -252,7 +251,6 @@ class ClassDetailModal extends React.Component {
   }
 
   componentWillMount() {
-    // console.log("classTimes.getClassTimes calling start -->>",this.props);
     if (this.props.eventData) {
       const {
         schoolId,
@@ -267,10 +265,7 @@ class ClassDetailModal extends React.Component {
         "classTimes.getClassTimes",
         { schoolId, classTypeId, classTimeId, locationId },
         (error, { school, classTimes, classType, location }) => {
-          // console.log("classTimes.getClassTimes res -->>");
-          // console.log("classTimes.getClassTimes error -->>",error);
           let addToMyCalender = checkForAddToCalender(classTimes);
-          console.log("addToCalender________", addToMyCalender);
           this.setState({
             isLoading: false,
             school,
@@ -327,8 +322,6 @@ class ClassDetailModal extends React.Component {
   };
 
   setImageSrc = (classType, school) => {
-    console.log("getImageSrc classtype school", classType, school);
-
     imageExists((classType && classType.classTypeImg) || "")
       .then(res => {
         if (this.state.classImg !== classType.classTypeImg)
@@ -347,7 +340,6 @@ class ClassDetailModal extends React.Component {
   };
 
   removeMyClassInterest = (event, classTimeId) => {
-    console.log("<<_____removeMyClassInterest-->>>>", classTimeId);
     this.setState({ isLoading: true });
     Meteor.call(
       "classInterest.removeClassInterestByClassTimeId",
@@ -363,7 +355,6 @@ class ClassDetailModal extends React.Component {
   };
 
   handleClassInterest = (event, eventData) => {
-    console.log("eventData====>", eventData);
     if (Meteor.userId()) {
       const doc = {
         classTimeId: eventData.classTimeId,
@@ -374,7 +365,6 @@ class ClassDetailModal extends React.Component {
       // Start Loading
       this.setState({ isLoading: true });
       Meteor.call("classInterest.addClassInterest", { doc }, (err, res) => {
-        console.log(res, err);
         // Stop loading and close modal.
         this.setState({ isLoading: false, error: err });
         this.props.closeEventModal(false, null);
@@ -421,8 +411,6 @@ class ClassDetailModal extends React.Component {
   };
 
   render() {
-    // console.log("ClassDetailModal render props -->>", this.props);
-    // console.log("ClassDetailModal render state -->>", this.state);
     const {
       isLoading,
       error,
@@ -440,7 +428,6 @@ class ClassDetailModal extends React.Component {
       classInterestData
     } = this.props;
 
-    console.log("eventData____________", eventData);
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(
       eventData,
@@ -463,8 +450,6 @@ class ClassDetailModal extends React.Component {
       return false;
     }); // false is for not hiding the past schedule types;
     classTypeData.formattedClassTimesDetails = formattedClassTimesDetails;
-    console.log(allFormattedClassTimeDetails, "l;;;;;;;;;;;;;;;;;;");
-    // console.log(classTypeData,eventData,formattedClassTimesDetails,"event ................................. data");
     const scheduleDetails = [
       "Monday",
       "Tuesday",
@@ -566,13 +551,18 @@ class ClassDetailModal extends React.Component {
                         <Italic>Time</Italic>
                       </Text>
                       <Text>
+                        {/* timeUnits are added for mins,hours */}
                         {`${eventData.eventStartTime}`}
-                        {" : "}
+                        {" For "}
                         {scheduleDetails.map(value => {
                           if (classTypeData.formattedClassTimesDetails[value]) {
-                            return classTypeData.formattedClassTimesDetails[
-                              value
-                            ][0].duration;
+                            return (
+                              classTypeData.formattedClassTimesDetails[value][0]
+                                .duration +
+                              " " +
+                              classTypeData.formattedClassTimesDetails[value][0]
+                                .timeUnits
+                            );
                           }
                         })}
                       </Text>
@@ -656,7 +646,6 @@ class ClassDetailModal extends React.Component {
                     </div>
                   </div>
                 </IconsWrapper>
-                {console.log("classTypeData", classTypeData)}
                 <Grid item xs={12}>
                   {classTypeData &&
                     classTypeData.ageMin &&

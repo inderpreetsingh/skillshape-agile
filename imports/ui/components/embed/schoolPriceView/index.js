@@ -16,6 +16,7 @@ import SignUpDialogBox from "/imports/ui/components/landing/components/dialogs/S
 import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
 import EmailConfirmationDialogBox from "/imports/ui/components/landing/components/dialogs/EmailConfirmationDialogBox";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
+
 class SchoolPriceView extends React.Component {
   constructor(props) {
     super(props);
@@ -55,30 +56,38 @@ class SchoolPriceView extends React.Component {
   }
 
   componentDidUpdate() {
-      // Get height of document
-      function getDocHeight(doc) {
-          doc = doc || document;
-          // from http://stackoverflow.com/questions/1145850/get-height-of-entire-document-with-javascript
-          var body = doc.body,
-              html = doc.documentElement;
-          var height = Math.max(body.scrollHeight, body.offsetHeight,
-              html.clientHeight, html.scrollHeight, html.offsetHeight);
-          return doc.getElementById('UserMainPanel').offsetHeight;
-      }
-      // send docHeight onload
-      function sendDocHeightMsg(e) {
-        setTimeout(()=> {
-          var ht = getDocHeight();
-          parent.postMessage(JSON.stringify({ 'docHeight': ht, 'iframeId' : 'ss-school-price-view'}), '*');
-        }, 3000)
-      }
-      // assign onload handler
-      sendDocHeightMsg();
-      // if (window.addEventListener) {
-      //     window.addEventListener('load', sendDocHeightMsg, false);
-      // } else if (window.attachEvent) { // ie8
-      //     window.attachEvent('onload', sendDocHeightMsg);
-      // }
+    // Get height of document
+    function getDocHeight(doc) {
+      doc = doc || document;
+      // from http://stackoverflow.com/questions/1145850/get-height-of-entire-document-with-javascript
+      var body = doc.body,
+        html = doc.documentElement;
+      var height = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+      );
+      return doc.getElementById("UserMainPanel").offsetHeight;
+    }
+    // send docHeight onload
+    function sendDocHeightMsg(e) {
+      setTimeout(() => {
+        var ht = getDocHeight();
+        parent.postMessage(
+          JSON.stringify({ docHeight: ht, iframeId: "ss-school-price-view" }),
+          "*"
+        );
+      }, 3000);
+    }
+    // assign onload handler
+    sendDocHeightMsg();
+    // if (window.addEventListener) {
+    //     window.addEventListener('load', sendDocHeightMsg, false);
+    // } else if (window.attachEvent) { // ie8
+    //     window.attachEvent('onload', sendDocHeightMsg);
+    // }
   }
 
   handleSignUpDialogBoxState = (state, userType, userEmail, userName) => {
@@ -398,7 +407,9 @@ class SchoolPriceView extends React.Component {
             onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
             reSendEmailVerificationLink={this.reSendEmailVerificationLink}
             fullScreen={false}
-            title={"In order to make a purchase, you must Create an account or log into SkillShape."}
+            title={
+              "In order to make a purchase, you must Create an account or log into SkillShape."
+            }
           />
         )}
         {this.state.signUpDialogBox && (
@@ -437,20 +448,15 @@ class SchoolPriceView extends React.Component {
             onAgreeButtonClick={this.handleServiceAgreementSubmit}
           />
         )}
-        {isEmpty(classPricing) && isEmpty(monthlyPricing) ? (
-          ""
-        ) : (
-          <PackagesList
-            schoolId={schoolId}
-            onAddToCartIconButtonClick={this.handlePurcasePackage}
-            enrollMentPackages
-            enrollMentPackagesData={enrollmentFee}
-            perClassPackagesData={classPricing}
-            monthlyPackagesData={this.normalizeMonthlyPricingData(
-              monthlyPricing
-            )}
-          />
-        )}
+
+        <PackagesList
+          schoolId={schoolId}
+          onAddToCartIconButtonClick={this.handlePurcasePackage}
+          enrollMentPackages
+          enrollMentPackagesData={enrollmentFee}
+          perClassPackagesData={classPricing}
+          monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricing)}
+        />
       </div>
     );
   }

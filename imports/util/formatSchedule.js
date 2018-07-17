@@ -40,49 +40,58 @@ export const formatClassTimesData = (classTimesData, hidePastDates = true) => {
 };
 
 export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
-   const classTimesData = {...data};
-    // debugger;
-    // console.log("formatDataBasedOnScheduleType________", data);
-    let classTimes;
-    if(data && data.scheduleDetails && data.scheduleDetails.oneTime) {
-      classTimes = {};
-      let schoolDetails = data.scheduleDetails.oneTime;
-      let startDate, dayOfTheWeek, day, startTime, formattedTime, timePeriod, currentJsonData;
-      schoolDetails.forEach((item) => {
-        startDate = new Date(item.startDate);
-        dayOfTheWeek = startDate.getDay(); // day of the week (from 0 to 6)
-        if(dayOfTheWeek === 0)
-          dayOfTheWeek = 7;
-        day = DAYS_IN_WEEK[dayOfTheWeek - 1];
-        startTime = new Date(item.startTime); // Get Time from date time
-        formattedTime = formatTime(startTime);
-        timePeriod = _formatAMPM(startTime);
-        currentJsonData = {
-          startTime,
-          time: formattedTime,
-          timePeriod: timePeriod,
-          duration: item.duration,
-          date: `${startDate}`
-        };
-        if(classTimes && classTimes[day]) {
-          let existingTimes = classTimes[day];
-          existingTimes.push(currentJsonData);
-          classTimes[day] = existingTimes;
-        } else {
-          classTimes[day] = [];
-          classTimes[day].push(currentJsonData);
-        }
-        // this.handleSliderState(dayOfTheWeek - 1);
-      })
-    }else {
+  const classTimesData = { ...data };
+  // debugger;
+  let classTimes;
+  if (data && data.scheduleDetails && data.scheduleDetails.oneTime) {
+    classTimes = {};
+    let schoolDetails = data.scheduleDetails.oneTime;
+    let startDate,
+      dayOfTheWeek,
+      day,
+      startTime,
+      formattedTime,
+      timePeriod,
+      currentJsonData,
+      timeUnits;
+    schoolDetails.forEach(item => {
+      startDate = new Date(item.startDate);
+      dayOfTheWeek = startDate.getDay(); // day of the week (from 0 to 6)
+      if (dayOfTheWeek === 0) dayOfTheWeek = 7;
+      day = DAYS_IN_WEEK[dayOfTheWeek - 1];
+      startTime = new Date(item.startTime); // Get Time from date time
+      formattedTime = formatTime(startTime);
+      timePeriod = _formatAMPM(startTime);
+      timeUnits = item.timeUnits;
+      currentJsonData = {
+        startTime,
+        time: formattedTime,
+        timePeriod: timePeriod,
+        duration: item.duration,
+        timeUnits: timeUnits,
+        date: `${startDate}`
+      };
+      if (classTimes && classTimes[day]) {
+        let existingTimes = classTimes[day];
+        existingTimes.push(currentJsonData);
+        classTimes[day] = existingTimes;
+      } else {
+        classTimes[day] = [];
+        classTimes[day].push(currentJsonData);
+      }
+      // this.handleSliderState(dayOfTheWeek - 1);
+    });
+  } else {
+    classTimes = data.scheduleDetails;
+  }
 
-      classTimes = data.scheduleDetails;
-    }
-
-    if(hidePastDates)
-      return removePastTimesFromSchedule(classTimes , data.scheduleType.toLowerCase(), {startDate: data.startDate, endDate: data.endDate});
-    else
-      return addTotalClassTimes(classTimes);
+  if (hidePastDates)
+    return removePastTimesFromSchedule(
+      classTimes,
+      data.scheduleType.toLowerCase(),
+      { startDate: data.startDate, endDate: data.endDate }
+    );
+  else return addTotalClassTimes(classTimes);
 
   if (hidePastDates)
     return removePastTimesFromSchedule(
@@ -96,7 +105,6 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
 const addTotalClassTimes = classTimes => {
   let classTimesCounter = 0;
   Object.keys(classTimes).forEach(day => {
-    // console.log(classTimes[day],classTimes,day,classTimes[day],"----");
     if (typeof classTimes[day] == "object") {
       classTimes[day].filter(classTime => {
         if (!isEmpty(classTime)) {
@@ -126,12 +134,13 @@ const filterOutAndAddTotalClassTimes = classTimes => {
   return addTotalClassTimes(classTimes);
 };
 
-
-const removePastTimesFromSchedule = (classTimes,scheduleType,scheduleData) => {
-  console.log(classTimes);
+const removePastTimesFromSchedule = (
+  classTimes,
+  scheduleType,
+  scheduleData
+) => {
   const currentDate = new Date();
-  if(scheduleType === 'recurring') {
-    // console.log(moment(currentDate),moment(currentDate).isBetween(moment(scheduleData.startDate), moment(scheduleData.endDate)));
+  if (scheduleType === "recurring") {
     if (
       moment(currentDate).isBetween(
         moment(scheduleData.startDate),
@@ -145,7 +154,6 @@ const removePastTimesFromSchedule = (classTimes,scheduleType,scheduleData) => {
     return {};
   } else if (scheduleType === "onetime") {
     return filterOutAndAddTotalClassTimes(classTimes);
-    // console.log('classTimes,,,,,,,,,,,,', classTimes);
   }
 
   return addTotalClassTimes(classTimes);

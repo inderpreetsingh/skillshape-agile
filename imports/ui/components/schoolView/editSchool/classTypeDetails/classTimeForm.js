@@ -284,6 +284,7 @@ class ClassTimeForm extends React.Component {
                       ref="weekDaysRow"
                       data={data && data.scheduleDetails}
                       roomData={this.state.roomData}
+                      saveClassTimes={this.saveClassTimes}
                     />
                   </div>
                 )}
