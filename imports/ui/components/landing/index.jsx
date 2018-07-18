@@ -254,6 +254,22 @@ class Landing extends Component {
 
   componentWillMount() {}
 
+  // This is used to get subjects on the basis of subject category.
+  inputFromUser = text => {
+    // Do db call on the basis of text entered by user
+    let skillCategoryIds = this.state.filters.skillCategoryIds;
+    Meteor.call(
+      "getSkillSubjectBySkillCategory",
+      { skillCategoryIds: skillCategoryIds, textSearch: text },
+      (err, res) => {
+        if (res) {
+          // console.log("result",res)
+          this.setState({ skillSubjectData: res || [] });
+        }
+      }
+    );
+  };
+
   componentDidMount() {
     let positionCoords = this.getUsersCurrentLocation();
     positionCoords.then(function(value) {
@@ -466,7 +482,9 @@ class Landing extends Component {
                 let place = results[0];
                 // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
                 // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
+                console.log(results[0],"location details...")
                 sLocation = results[0].formatted_address;
+                oldFilters["addressComponents"] = JSON.parse(JSON.stringify(results[0].address_components));
                 oldFilters["coords"] = coords;
                 oldFilters["locationName"] = sLocation;
                 oldFilters["applyFilterStatus"] = true;
@@ -538,12 +556,13 @@ class Landing extends Component {
 
   onLocationChange = (location, updateKey1, updateKey2) => {
     let stateObj = {};
-
+    console.log('onLocationChange',location,".....................");
     if (updateKey1) {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
         coords: location.coords,
         locationName: location.fullAddress,
+        addressComponents: '',
         applyFilterStatus: true,
         schoolId: null
       };
@@ -553,7 +572,8 @@ class Landing extends Component {
       stateObj[updateKey2] = {
         ...this.state[updateKey2],
         coords: location.coords,
-        locationName: location.fullAddress
+        locationName: location.fullAddress,
+        addressComponents: ''
       };
     }
 
@@ -566,7 +586,8 @@ class Landing extends Component {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
         coords: null,
-        locationName: event.target.value
+        locationName: event.target.value,
+        addressComponents: ''
       };
     }
 
@@ -574,7 +595,8 @@ class Landing extends Component {
       stateObj[updateKey2] = {
         ...this.state[updateKey2],
         coords: null,
-        locationName: event.target.value
+        locationName: event.target.value,
+        addressComponents: ''
       };
     }
 
@@ -874,13 +896,11 @@ class Landing extends Component {
                 handleNoOfFiltersClick={() =>
                   this.handleFiltersDialogBoxState(true)
                 }
-                locationName={this.state.locationName}
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 onMapViewButtonClick={this.handleToggleMapView}
                 mapView={this.state.mapView}
                 resetSearch={this.state.resetMainSearch}
                 locationInputChanged={this.locationInputChanged}
-                currentAddress={this.state.locationName}
                 filters={this.state.filters}
                 onLocationChange={this.onLocationChange}
                 currentFilterState={this.state.filters}

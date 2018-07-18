@@ -6,6 +6,7 @@ import ClaimSchoolListRender from "./claimSchoolListRender";
 import { Session } from "meteor/session";
 import { toastrModal, withSubscriptionAndPagination } from "/imports/util";
 import { withStyles } from "material-ui/styles";
+import {emailRegex} from '/imports/util';
 
 import School from "/imports/api/school/fields";
 import {
@@ -30,8 +31,8 @@ class ClaimSchoolList extends React.Component {
     this.state = {
       filters: {},
       tempFilters: {},
-      suggestionForm: false
     };
+
     this.fieldNames = [
       "skillSubjectIds",
       "skillCategoryIds",
@@ -81,10 +82,16 @@ class ClaimSchoolList extends React.Component {
       _monthPrice
     } = this.state.filters;
 
+    const {
+      schoolWebsite, schoolEmail
+    } = this.state;
+
     const data = {
       experienceLevel,
       locationName,
       schoolName,
+      schoolEmail,
+      schoolWebsite,
       skillCategoryIds,
       skillSubjectIds,
       gender,
@@ -105,12 +112,20 @@ class ClaimSchoolList extends React.Component {
       };
     }
 
+    console.info('data 0----',data);
+
     if (this._ifAllFieldsEmpty(data)) {
       toastr.error(
         `Please fill one atleast 1 field for suggestion of school`,
         "Error"
       );
-    } else {
+    }else if(!emailRegex.email.test(data.schoolEmail)) {
+      toastr.error(
+        'Please correct the school email format',
+        'Error'
+      )
+    }
+    else {
       this.setState({ isLoading: true });
       Meteor.call("schoolSuggestion.addSuggestion", data, (err, res) => {
         this.setState({ isLoading: false });
@@ -237,6 +252,11 @@ class ClaimSchoolList extends React.Component {
     oldFilter.age = parseInt(event.target.value);
     this.setState({ filters: oldFilter });
   };
+
+  handleSchoolDetails = (name) => event => {
+    const value = event.target.value;
+    this.setState({ [name]: value });
+  }
 
   perClassPriceFilter = text => {
     let oldFilter = { ...this.state.filters };
