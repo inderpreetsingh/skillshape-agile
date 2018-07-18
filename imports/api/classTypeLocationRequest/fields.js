@@ -30,7 +30,7 @@ export const ClassTypeLocationRequestSchema = new SimpleSchema({
     optional: true,
   },
   existingUser: {
-    type: String,
+    type: Boolean,
     optional: true
   },
   notification: {

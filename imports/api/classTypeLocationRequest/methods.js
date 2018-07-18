@@ -33,7 +33,12 @@ Meteor.methods({
     // Verfiying the data send..
     if (isValid) {
       // console.log('adding price request..');
-      const locationRequest = ClassTypeLocationRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
+      let locationRequest;
+      if(!data.classTypeId) {
+        locationRequest = ClassTypeLocationRequest.findOne({email: data.email, schoolId: data.schoolId});
+      }else {
+        locationRequest = ClassTypeLocationRequest.findOne({email: data.email, classTypeId: data.classTypeId, schoolId: data.schoolId});
+      }
 
       if(locationRequest) {
         throw new Meteor.Error('Already requested for Location with this email address');
@@ -67,6 +72,7 @@ Meteor.methods({
            toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
+         toEmail="singhs.ishwer@gmail.com";
          sendRequestReceivedEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink : updateClassLocationLink, memberLink, requestFor});
 
          if(subscriptionRequest === 'save' || this.userId)
