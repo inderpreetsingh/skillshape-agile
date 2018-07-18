@@ -117,7 +117,7 @@ const SearchInputsSectionWrapper = styled.div`
 
   @media screen and (max-width: 320px) {
     max-width: 290px; // bit of hacky as skill input is not reducing it's width.
-    margin: 0 auto;  
+    margin: 0 auto;
   }
 `;
 
@@ -241,11 +241,26 @@ const SearchInputsSection = props => (
       </div>
     </SkillInputWrapper>
 
+    <SkillInputWrapper background="white" marginSmallScreen>
+      <div className="my-multi-select-filter no-border">
+          <MyMultiSelect
+              textField={"name"}
+              valueField={"_id"}
+              data={props.skillSubjectData}
+              placeholder="Choose your skill subject"
+              value={get(props, "filters.defaultSkillSubject", [])}
+              onSearch={this.inputFromUser}
+              onChange={props.collectSelectedSkillSubject}
+              onNoOfFiltersClick={props.handleNoOfFiltersClick}
+          />
+      </div>
+    </SkillInputWrapper>
+
     <InputsWrapper noPadding>
       <InputWrapper locationInput>
           <MySearchBar
             placeholder="Location"
-            defaultValue={props.currentAddress}
+            defaultValue={props.currentDefaultAddress}
             defaultBorderRadius={true}
             searchIcon={<MyLocation style={{ color: grey[500] }} />}
             onSearchIconClick={props.onSearchIconClick}
@@ -358,6 +373,24 @@ class SearchArea extends Component {
     skillType: ""
   };
 
+  _getNormalizedLocation = () => {
+    const { locationName,addressComponents } = this.props.filters;
+    // console.log(addressComponents,"address components...");
+    if(!isEmpty(addressComponents)) {
+      const addressComponentTypes = ['administrative_area_level_1','country'];
+      // While in the filter, we are checking for those address components,
+      // which have administrative_area_level1 and country in there types
+      const normalizedLocation = addressComponents
+      .filter(address => address.types.some(addressComponentType => addressComponentTypes.indexOf(addressComponentType) >= 0))
+      .map(address => address.long_name)
+      .join(", ");
+      
+      return normalizedLocation;
+    }
+
+    return locationName;
+  }
+
   componentWillMount() {
     const dataSourceCategories = Meteor.call(
       "getAllSkillCategories",
@@ -367,13 +400,37 @@ class SearchArea extends Component {
     );
   }
 
+  componentDidUpdate() {
+    if (isEmpty(this.state.skillSubjectData) && this.props.filters.skillCategoryIds)
+      this.inputFromUser("");
+  }
+
+  // This is used to get subjects on the basis of subject category.
+  inputFromUser = text => {
+    // Do db call on the basis of text entered by user
+    let skillCategoryIds = this.props.filters.skillCategoryIds;
+    Meteor.call(
+      "getSkillSubjectBySkillCategory",
+      { skillCategoryIds: skillCategoryIds, textSearch: text },
+      (err, res) => {
+        if (res) {
+          // console.log("result",res)
+          this.setState({ skillSubjectData: res || [] });
+        }
+      }
+    );
+  };
+
   componentDidMount() {
     this.props.getMyCurrentLocation({noMapView: true});
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.location != nextProps.locationName)
-      this.setState({ location: nextProps.locationName});
+    console.log(nextProps,"search area next props....");
+    if(nextProps.locationName && nextProps.addressComponents) {
+      const normalizedLocation = this._removeStreetAddressFromLocation(nextProps.addressComponents);
+      this.setState({ location: normalizedLocation});
+    }
   }
 
   handleLocationInputChange = event => {
@@ -391,20 +448,6 @@ class SearchArea extends Component {
     }
   };
 
-  handleSkillTypeChange = event => {
-    let value = "";
-    if (event) {
-      event.preventDefault();
-      value = event.target.value;
-    }
-    this.setState({
-      skillType: value
-    });
-
-    if (this.props.onSkillTypeChange) {
-      this.props.onSkillTypeChange(value, "filters", null);
-    }
-  };
 
   handleAddSchool = () => {
     if (Meteor.userId()) {
@@ -431,9 +474,7 @@ class SearchArea extends Component {
           <SearchInputsSection
             skillCategoryData={this.state.skillCategoryData}
             skillSubjectData={this.state.skillSubjectData}
-            collectSelectedSkillCategories={
-              this.props.collectSelectedSkillCategories
-            }
+            collectSelectedSkillCategories={this.props.collectSelectedSkillCategories}
             collectSelectedSkillSubject={this.props.collectSelectedSkillSubject}
             handleNoOfFiltersClick={this.props.handleNoOfFiltersClick}
             inputFromUser={this.inputFromUser}
@@ -446,14 +487,10 @@ class SearchArea extends Component {
             onMapViewButtonClick={this.props.onMapViewButtonClick}
             mapView={this.props.mapView}
             locationText={this.props.locationText}
-            skillTypeText={
-              this.props.filters && this.props.filters.skillTypeText
-            }
             resetSearch={this.props.resetSearch}
             locationInputChanged={this.props.locationInputChanged}
             currentAddress={
-              this.props.filters && this.props.filters.locationName
-            }
+  this.props.filters && this._getNormalizedLocation()}
             filters={this.props.filters}
             onLocationChange={this.props.onLocationChange}
             onSearchIconClick={this.props.onSearchIconClick}

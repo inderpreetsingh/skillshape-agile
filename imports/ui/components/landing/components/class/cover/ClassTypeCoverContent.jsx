@@ -272,6 +272,7 @@ class ClassTypeCoverContent extends React.Component {
   // }
 
   getOurEmail = () => {
+    console.log()
     return this.props.schoolDetails.email;
   }
 
