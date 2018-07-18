@@ -8,7 +8,7 @@ import { browserHistory, Link } from 'react-router';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import SchoolCard from "/imports/ui/components/landing/components/cards/schoolCard";
-import NoResults from '/imports/ui/components/landing/components/NoResults';
+import NoResultsFound from '/imports/ui/components/landing/components/helpers/NoResultsFound.jsx';
 import FilterPanel from '/imports/ui/components/landing/components/FilterPanel.jsx';
 import SchoolSuggestionDialogBox from "/imports/ui/components/landing/components/dialogs/SchoolSuggestionDialogBox.jsx";
 
@@ -121,6 +121,11 @@ const FormTagline = styled.h3`
   margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
+const NoResultsFoundContainer = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
 export default function (props) {
     let schools = this.props.collectionData || [];
 
@@ -142,11 +147,17 @@ export default function (props) {
             <GridWrapper suggestionForm={this.props.suggestionForm}>
               {this.state.isLoading && <ContainerLoader />}
               <NoResultContainer>
-                {!this.props.suggestionForm && <NoneOfMyLisiting {...props} />}
+                <NoneOfMyLisiting {...props} />
 
-                {this.props.suggestionForm && <FormWrapper>
-                  <FormTitle>Give your valuable suggestion</FormTitle>
-                  <FormTagline>Your suggestion will help us know better</FormTagline>
+                <NoResultsFoundContainer>
+                  <NoResultsFound
+                    title="No Matching Schools Found."
+                    tagline1="If you know of a school that should be here, please fill in the fields you know."
+                    tagline2="We will look for them and ask them to join."
+                  />
+                </NoResultsFoundContainer>
+
+                <FormWrapper>
                   <FilterPanel
                     filtersInDialogBox
                     filtersForSuggestion
@@ -165,14 +176,8 @@ export default function (props) {
                     onGiveSuggestion={this.handleGiveSuggestion}
                     onGoBackButtonClick={props.handleGoBackButtonClick}
                   />
-                </FormWrapper>}
-                {!this.props.suggestionForm && <NoResults
-                  showSchoolSuggestion={true}
-                  ghostButtons={true}
-                  removeAllFiltersButtonClick={props.removeAllFilters}
-                  schoolSuggestionButtonClick={props.handleSuggestionFormState(true)}
-                  addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
-                />}
+                </FormWrapper>
+
               </NoResultContainer>
             </GridWrapper>
         )

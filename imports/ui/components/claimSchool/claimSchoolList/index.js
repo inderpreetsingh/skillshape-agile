@@ -30,8 +30,8 @@ class ClaimSchoolList extends React.Component {
     this.state = {
       filters: {},
       tempFilters: {},
-      suggestionForm: false
     };
+
     this.fieldNames = [
       "skillSubjectIds",
       "skillCategoryIds",
@@ -237,6 +237,11 @@ class ClaimSchoolList extends React.Component {
     oldFilter.age = parseInt(event.target.value);
     this.setState({ filters: oldFilter });
   };
+
+  getSchoolDetails = (name) => event => {
+    const value = event.target.value;
+    this.setState({ [name]: value });
+  }
 
   perClassPriceFilter = text => {
     let oldFilter = { ...this.state.filters };

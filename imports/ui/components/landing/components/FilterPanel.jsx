@@ -119,13 +119,23 @@ const FilterBarWrapper = styled.div`
 
 const SuggestionFormButton = styled.div`
   max-width: 250px;
-  width: 100%;
   ${props => props.right ? 'margin-right: auto;' : 'margin-left: auto;'};
+  margin: 0 auto;
+  width: 100%;
   padding: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width : 600px) {
-    margin: 0 auto
   }
+`;
+
+const CategoryHeader = styled.h2`
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-weight: 400;
+  font-family: ${helpers.specialFont};
+  text-align: left;
+  margin: 0;
+
+  color: ${helpers.primaryColor};
 `;
 
 class FilterPanel extends Component {
@@ -331,6 +341,7 @@ class FilterPanel extends Component {
     return (
       <Grid container spacing={24}>
         {/* 1rst Row */}
+        {filtersForSuggestion && <Grid item xs={12} sm={12}><CategoryHeader>School Details</CategoryHeader></Grid>}
 
         {!filtersForSuggestion && (
           <Grid item xs={12} sm={12} md={12}>
@@ -377,12 +388,43 @@ class FilterPanel extends Component {
             />
           </MaterialInputWrapper>
         </Grid>
-        {console.log(get(
+
+        {/* console.log(get(
           this.props,
           "filters.defaultSkillCategories",
           []
-        ),"................")}
+        ),"................") */}
+
+        {/* school details */}
+        {filtersForSuggestion && <Fragment>
+          <Grid item xs={12} sm={6}>
+            <MaterialInputWrapper>
+              <IconInput
+                value={this.props.schoolWebsite}
+                iconName="web"
+                onChange={this.props.onSchoolWebsiteChange}
+                labelText="Website"
+              />
+            </MaterialInputWrapper>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <MaterialInputWrapper>
+              <IconInput
+                value={this.props.schoolEmail}
+                iconName="email"
+                onChange={this.props.onSchoolEmailChange}
+                labelText="Email"
+              />
+            </MaterialInputWrapper>
+          </Grid>
+        </Fragment>}
+
         {/* 2nd Row */}
+        {filtersForSuggestion && <Grid item xs={12} sm={12}>
+          <CategoryHeader>Skill Details</CategoryHeader>
+        </Grid>}
+
         <Grid item xs={12} sm={12}>
           <div className="filters-dialog">
             <Multiselect
@@ -428,6 +470,8 @@ class FilterPanel extends Component {
             />
           </div>
         </Grid>
+
+
 
         {/* 3rd Row */}
 
@@ -485,21 +529,7 @@ class FilterPanel extends Component {
           />
         </Grid>
 
-        {filtersForSuggestion ? (
-          <Grid item xs={12} sm={6}>
-            <SuggestionFormButton>
-              <FilterPanelAction>
-                <PrimaryButton
-                  fullWidth
-                  label="Go Back"
-                  icon={true}
-                  iconName="arrow_back"
-                  onClick={this.props.onGoBackButtonClick}
-                />
-              </FilterPanelAction>
-            </SuggestionFormButton>
-          </Grid>
-        ) : (
+        {!filtersForSuggestion &&
           <Grid item xs={12} sm={6}>
             <FilterPanelAction>
               <PrimaryButton
@@ -513,16 +543,15 @@ class FilterPanel extends Component {
                 }}
               />
             </FilterPanelAction>
-          </Grid>
-        )}
+          </Grid>}
 
         {filtersForSuggestion ?
-          <Grid item xs={12} sm={6}>
-            <SuggestionFormButton right>
+          <Grid item xs={12} sm={12}>
+            <SuggestionFormButton>
               <FilterPanelAction>
                 <PrimaryButton
                   fullWidth
-                  label="Give Suggestion"
+                  label="Suggest School"
                   icon={true}
                   iconName="sentiment_satisfied"
                   onClick={this.props.onGiveSuggestion}
