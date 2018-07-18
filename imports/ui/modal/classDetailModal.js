@@ -224,6 +224,9 @@ const EventName = Heading.extend`
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
+const ConfirmationDialog = styled.div`
+  margin: 8px;
+`;
 
 const Event = styled.div`
   ${helpers.flexCenter} flex-direction: column;
@@ -259,7 +262,9 @@ class ClassDetailModal extends React.Component {
         locationId
       } = this.props.eventData;
       this.setState({
-        isLoading: true
+        isLoading: true,
+        removeFromCalendarPopUp: false,
+        permanentlyRemove: false
       });
       Meteor.call(
         "classTimes.getClassTimes",
@@ -409,6 +414,23 @@ class ClassDetailModal extends React.Component {
     browserHistory.push(`/classType/${className}/${classId}`);
     this.props.closeEventModal(false, null);
   };
+  /*
+  1.open dialog box
+  2.Cancel=close
+  3.Ok=functionality
+  */
+  handleRemoveFromMyCalendar = props => {
+    Meteor.call(
+      "classTimes.deleteEventFromMyCalendar",
+      props.eventData.classTimeId,
+      props.clickedDate
+    );
+    this.setState({ removeFromCalendarPopUp: false });
+    this.props.closeEventModal(false, null);
+  };
+  handlePermanentlyRemove = props => {
+    console.log("props in handlepermantelyremove", props);
+  };
 
   render() {
     const {
@@ -459,6 +481,17 @@ class ClassDetailModal extends React.Component {
       "Saturday",
       "Sunday"
     ];
+    let adminAccess;
+    Meteor.call(
+      "school.findSuperAdmin",
+      null,
+      null,
+      this.props.schoolId,
+      (err, res) => {
+        adminAccess = res;
+        console.log("adminAccess", adminAccess);
+      }
+    );
     return (
       <Dialog
         fullScreen={true}
@@ -511,8 +544,12 @@ class ClassDetailModal extends React.Component {
                     }
                   </ImageContainer>
                   <Event center={classImg !== ""}>
-                    <EventName>{eventData.name}</EventName>
-                    {this.formatScheduleType(eventData.scheduleType)}
+                    <EventName>
+                      {`${classType && classType.name.toLowerCase()}: ${
+                        eventData.name
+                      }`}
+                    </EventName>
+                    {/* {this.formatScheduleType(eventData.scheduleType)} */}
                   </Event>
                 </EventHeader>
                 <Grid
@@ -573,8 +610,8 @@ class ClassDetailModal extends React.Component {
 
               <Grid container style={{ marginTop: "16px" }}>
                 {/*<Typography component="p" style={{marginBottom:'20px'}}>
-										{classType && classType.desc}
-									</Typography>*/}
+      							{classType && classType.desc}
+      						</Typography>*/}
                 <IconsWrapper>
                   <IconsRowWrapper>
                     <div
@@ -681,21 +718,21 @@ class ClassDetailModal extends React.Component {
                   )}
                 </Grid>
                 {/*<Grid item xs={6}>
-									<div className={classes.iconWithDetailContainer}>
-										<div className="circle-icon" className={classes.iconStyle}>
-											<Icon
-												className="material-icons"
-												color="primary"
-											>
-												av_timer
-											</Icon>
-										</div>
-										<div>
-											<Typography type="caption" >TIME</Typography>
-											<Typography type="caption" >{`${eventData.eventStartTime} to ${eventData.eventEndTime}`}</Typography>
-										</div>
-									</div>
-								</Grid>*/}
+      						<div className={classes.iconWithDetailContainer}>
+      							<div className="circle-icon" className={classes.iconStyle}>
+      								<Icon
+      									className="material-icons"
+      									color="primary"
+      								>
+      									av_timer
+      								</Icon>
+      							</div>
+      							<div>
+      								<Typography type="caption" >TIME</Typography>
+      								<Typography type="caption" >{`${eventData.eventStartTime} to ${eventData.eventEndTime}`}</Typography>
+      							</div>
+      						</div>
+      					</Grid>*/}
                 {this.props.routeName !== "EmbedSchoolCalanderView" && (
                   <Grid container style={{ padding: 8 }}>
                     {/*Removed previous two button and added two new button according to new task*/}
@@ -725,20 +762,19 @@ class ClassDetailModal extends React.Component {
                         fullWidth
                         label="Remove from my Calendar"
                         noMarginBottom
-                        onClick={() =>
-                          this.goToClassTypePage(
-                            classType.name,
-                            eventData.classTypeId
-                          )
-                        }
+                        onClick={() => {
+                          this.setState({ removeFromCalendarPopUp: true });
+                        }}
                       />
                     </Grid>
                     <Grid item xs={6}>
                       <ClassTimeButton
                         fullWidth
                         noMarginBottom
-                        label="Delete This Event"
-                        onClick={() => this.goToSchoolPage(school)}
+                        label="Permanently Delete "
+                        onClick={() => {
+                          this.setState({ permanentlyRemove: true });
+                        }}
                       />
                     </Grid>
                   </Grid>
@@ -747,12 +783,11 @@ class ClassDetailModal extends React.Component {
 
               <Grid container style={{ marginTop: "16px" }}>
                 {!isEmpty(classTypeData) && (
-                  <div>
+                  <div style={{ backgroundColor: "" }}>
                     <Heading marginTop={helpers.rhythmDiv} textTransform="none">
-                      This {`${classType && classType.name.toLowerCase()}`}:{" "}
-                      {eventData.name} is part of
+                      This class is part of this Series:
                     </Heading>
-                    <div style={{ backgroundColor: "gray" }}>
+                    <div>
                       <ClassTimesBoxes
                         inPopUp={true}
                         withSlider={false}
@@ -764,12 +799,12 @@ class ClassDetailModal extends React.Component {
                 )}
 
                 {!isEmpty(allFormattedClassTimeDetails) && (
-                  <div>
+                  <div style={{ backgroundColor: "aliceblue" }}>
                     <Heading marginTop={helpers.rhythmDiv} textTransform="none">
                       More class times for{" "}
                       <Capitalize>{classType.name.toLowerCase()}</Capitalize>
                     </Heading>
-                    <div style={{ backgroundColor: "green" }}>
+                    <div>
                       <ClassTimesBoxes
                         inPopUp={true}
                         withSlider={false}
@@ -796,45 +831,97 @@ class ClassDetailModal extends React.Component {
 
               )*/}
               {/*<Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
-								Entire Class Dates
-							</Typography>
-							<Grid container>
-								<Grid item xs={6}>
-									<div>
-										<div style={{display: 'inline-flex'}}>
-											<Typography type="caption" >FROM : </Typography>
-											<Typography type="caption" >{ eventData.startDate ? moment(eventData.startDate).format("Do MMM YYYY") : "NA"}</Typography>
-										</div>
-									</div>
-									<div>
-										<div style={{display: 'inline-flex'}}>
-											<Typography type="caption" >TO : </Typography>
-											<Typography type="caption" >{ eventData.endDate ? moment(eventData.endDate).format("Do MMM YYYY") : "NA"}</Typography>
-										</div>
-									</div>
-								</Grid>*/}
+      					Entire Class Dates
+      				</Typography>
+      				<Grid container>
+      					<Grid item xs={6}>
+      						<div>
+      							<div style={{display: 'inline-flex'}}>
+      								<Typography type="caption" >FROM : </Typography>
+      								<Typography type="caption" >{ eventData.startDate ? moment(eventData.startDate).format("Do MMM YYYY") : "NA"}</Typography>
+      							</div>
+      						</div>
+      						<div>
+      							<div style={{display: 'inline-flex'}}>
+      								<Typography type="caption" >TO : </Typography>
+      								<Typography type="caption" >{ eventData.endDate ? moment(eventData.endDate).format("Do MMM YYYY") : "NA"}</Typography>
+      							</div>
+      						</div>
+      					</Grid>*/}
               {/*<Grid item xs={6}>
-									<div className={classes.iconWithDetailContainer}>
-										<div className="circle-icon" className={classes.iconStyle}>
-											<Icon
-												className="material-icons"
-												color="accent"
-											>
-												warning
-											</Icon>
-										</div>
-										<div>
-											<Typography type="caption" >This is a class series with start and end date.</Typography>
-										</div>
-									</div>
-							</Grid>
-								</Grid>*/}
+      						<div className={classes.iconWithDetailContainer}>
+      							<div className="circle-icon" className={classes.iconStyle}>
+      								<Icon
+      									className="material-icons"
+      									color="accent"
+      								>
+      									warning
+      								</Icon>
+      							</div>
+      							<div>
+      								<Typography type="caption" >This is a class series with start and end date.</Typography>
+      							</div>
+      						</div>
+      				</Grid>
+      					</Grid>*/}
 
               {/*<ButtonWrapper>
-						  <PrimaryButton icon iconName="add_circle_outline" label="Join This Class" onClick={this.props.onJoinClassButtonClick}/>
-						</ButtonWrapper>*/}
+      			  <PrimaryButton icon iconName="add_circle_outline" label="Join This Class" onClick={this.props.onJoinClassButtonClick}/>
+      			</ButtonWrapper>*/}
             </Grid>
           )}
+        <Dialog
+          disableBackdropClick
+          disableEscapeKeyDown
+          maxWidth="xs"
+          open={this.state.removeFromCalendarPopUp}
+          aria-labelledby="confirmation-dialog-title"
+        >
+          <DialogTitle id="confirmation-dialog-title">Confirmation</DialogTitle>
+          <ConfirmationDialog>
+            Do You Really want to remove this event from your Calendar.
+          </ConfirmationDialog>
+          <DialogActions>
+            <Button
+              color="primary"
+              onClick={() => this.setState({ removeFromCalendarPopUp: false })}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              onClick={() => this.handleRemoveFromMyCalendar(this.props)}
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          disableBackdropClick
+          disableEscapeKeyDown
+          maxWidth="xs"
+          open={this.state.permanentlyRemove}
+          aria-labelledby="confirmation-dialog-title"
+        >
+          <DialogTitle id="confirmation-dialog-title">Confirmation</DialogTitle>
+          <ConfirmationDialog>
+            Permanently delete this event from the class time.
+          </ConfirmationDialog>
+          <DialogActions>
+            <Button
+              color="primary"
+              onClick={() => this.setState({ permanentlyRemove: false })}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              onClick={() => this.handlePermanentlyRemove(this.props)}
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Dialog>
     );
   }

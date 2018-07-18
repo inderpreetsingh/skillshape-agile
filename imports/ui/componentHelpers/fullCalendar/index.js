@@ -45,7 +45,22 @@ class FullCalendar extends React.Component {
       },
       dayRender: function(date, cell) {},
       eventRender: function(event, element, view) {
-        // console.log("event -->>",event);
+        let renderEvent = true;
+        event.deletedEvents &&
+          event.deletedEvents.map(current => {
+            console.log(
+              "current",
+              current,
+              moment(event.start).format("YYYY-MM-DD")
+            );
+            if (current == moment(event.start).format("YYYY-MM-DD")) {
+              renderEvent = false;
+            }
+          });
+
+        if (!renderEvent) {
+          return false;
+        }
         switch (event.scheduleType) {
           case "oneTime": {
             return true;
@@ -93,11 +108,20 @@ class FullCalendar extends React.Component {
     // Class Time Ids managed by current user
     // console.log("-----------------manageMyCalendarFilter------------------", manageMyCalendarFilter)
     let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
+    console.log("---------manageClassTimeIds------------>", manageClassTimeIds);
+    console.log("---------schoolClassTimeId------------>", schoolClassTimeId);
+    console.log(
+      "---------myClassTimesIds------------>",
+      classTimesData.map(data => data._id)
+    );
     // let schoolClassTimesIds = schoolClassTimes.map(data => data._id);
     for (var i = 0; i < classTimesData.length; i++) {
       let classTime = classTimesData[i];
+      console.log("classTime in bulid calendar", classTime);
       try {
-        let sevent = {
+        let sevent;
+
+        sevent = {
           classTimeId: classTime._id,
           classTypeId: classTime.classTypeId,
           schoolId: classTime.schoolId,
@@ -107,19 +131,23 @@ class FullCalendar extends React.Component {
           name: classTime.name,
           desc: classTime.desc,
           endDate: classTime.endDate,
-          allDay: false // This property affects whether an event's time is shown.
+          allDay: false, // This property affects whether an event's time is shown.
+          deletedEvents: classTime.deletedEvents
         };
         let checkedClassTimes = false;
         // Three type of class times seperated into different colors.
         if (manageClassTimeIds.indexOf(classTime._id) > -1) {
+          console.log("in manage class data");
           sevent.className = "event-rose";
           sevent.attending = true;
           checkedClassTimes = true;
         } else if (myClassTimesIds.indexOf(classTime._id) > -1) {
+          console.log("in myClass class data");
           sevent.className = "event-green";
           sevent.attending = true;
           checkedClassTimes = true;
         } else if (schoolClassTimeId.indexOf(classTime._id) > -1) {
+          console.log("in school class data");
           sevent.className = "event-azure";
           sevent.attending = false;
           checkedClassTimes = true;
@@ -151,6 +179,21 @@ class FullCalendar extends React.Component {
             // sevent.age = classTypeData && classTypeData.ageMin;
             // sevent.gender = classTypeData && classTypeData.gender;
             // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
+            // if (classTime && classTime.deletedEvents) {
+            //   classTime.deletedEvents.map(current => {
+            //     console.log(
+            //       "condition",
+            //       current,
+            //       moment(sevent.start).format("YYYY-MM-DD")
+            //     );
+            //     if (current == moment(sevent.start).format("YYYY-MM-DD")) {
+            //     } else {
+            //       sevents.push(sevent);
+            //       return;
+            //     }
+            //   });
+            // } else {
+            // }
             sevents.push(sevent);
           }
         }
@@ -193,6 +236,22 @@ class FullCalendar extends React.Component {
               // sevent.age = classTypeData && classTypeData.ageMin;
               // sevent.gender = classTypeData && classTypeData.gender;
               // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
+              // if (classTime && classTime.deletedEvents) {
+              //   classTime.deletedEvents.map(current => {
+              //     console.log(
+              //       "condition",
+              //       current,
+              //       moment(temp.start).format("YYYY-MM-DD")
+              //     );
+              //     if (current == moment(temp.start).format("YYYY-MM-DD")) {
+              //     } else {
+              //       sevents.push(temp);
+              //       return;
+              //     }
+              //   });
+              // } else {
+              //   sevents.push(temp);
+              // }
               sevents.push(temp);
             }
           }

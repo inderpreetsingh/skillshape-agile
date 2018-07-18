@@ -97,6 +97,7 @@ class ManageMyCalendar extends React.Component {
       oldFilter.classTimesIdsForCI = this.state.copyFilter.classTimesIdsForCI;
     }
     this.setState({ filter: oldFilter, type });
+    console.log("handleClassOnChange is called");
   };
   componentDidMount() {
     this.intitializeClassTimeFilterForCalander(this.props);
@@ -115,6 +116,7 @@ class ManageMyCalendar extends React.Component {
       schoolClassTypesData,
       classTypeForInterests
     } = props;
+    console.log("intitializeClassTimeFilterForCalander is called");
     if (!_.isEmpty(classTimesData) || !_.isEmpty(classInterestData)) {
       let {
         classTimesIds,
@@ -180,9 +182,18 @@ class ManageMyCalendar extends React.Component {
         classTypeForInterests,
         filter: {
           classTimesIds: _.uniq(classTimesIds),
-          classTimesIdsForCI: _.uniq(classTimesIdsForCI),
-          manageClassTimeIds: _.uniq(manageClassTimeIds),
-          schoolClassTimeId: _.uniq(schoolClassTimeId)
+          classTimesIdsForCI:
+            this.state.type != "school" && this.state.type != "managing"
+              ? _.uniq(classTimesIdsForCI)
+              : [],
+          manageClassTimeIds:
+            this.state.type != "school" && this.state.type != "attending"
+              ? _.uniq(manageClassTimeIds)
+              : [],
+          schoolClassTimeId:
+            this.state.type != "managing" && this.state.type != "attending"
+              ? _.uniq(schoolClassTimeId)
+              : []
         },
         copyFilter: {
           classTimesIds: _.uniq(classTimesIds),
@@ -285,15 +296,7 @@ class ManageMyCalendar extends React.Component {
     event,
     isInputChecked
   ) => {
-    console.log(
-      "handle class type change",
-      parentKey,
-      classTypeId,
-      fieldName,
-      childKey,
-      event,
-      isInputChecked
-    );
+    console.log("handle class type change is called");
     const data = this.state[fieldName];
     let oldFilter = { ...this.state.filter };
     let ids = oldFilter[childKey] || [];
@@ -970,6 +973,7 @@ class ManageMyCalendar extends React.Component {
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               )}
+
             <MyCalender
               manageMyCalendar={
                 this.props.route && this.props.route.name == "MyCalendar"

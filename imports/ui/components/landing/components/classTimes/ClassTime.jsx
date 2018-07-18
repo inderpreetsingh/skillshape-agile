@@ -83,7 +83,7 @@ const ClassTimeContent = styled.div`
   width: 100%;
 `;
 
-const ClassTypeName = styled.h4`
+const ClassTypeName = styled.h5`
   width: 100%;
   margin: 0;
   line-height: 1;
@@ -161,7 +161,9 @@ class ClassTime extends Component {
     const classTimeData = { ...this.props };
     this.addToMyCalender(classTimeData);
   };
-
+  handleClassTimeDescription = () => {
+    alert("functionality of handle class time description");
+  };
   handleNonUserDialogBoxState = state => e => {
     this.setState({
       nonUserDialogBox: state
@@ -264,9 +266,12 @@ class ClassTime extends Component {
       {
         /* Adding manual small letters splitted schedule type one time*/
       }
-      return <ScheduleType>{"one time"}</ScheduleType>;
+      return <ScheduleType>{"This is a one time class time."}</ScheduleType>;
     }
-    return <ScheduleType>{classScheduleType}</ScheduleType>;
+    return (
+      <ScheduleType
+      >{`This is an ${classScheduleType} class time.`}</ScheduleType>
+    );
   };
 
   getWrapperClassName = addToCalendar =>
@@ -283,22 +288,38 @@ class ClassTime extends Component {
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
     if (addToCalender || !Meteor.userId()) {
       return (
-        <ClassTimeButton
-          icon
-          onClick={this.handleAddToMyCalendarButtonClick}
-          label="Add to my Calender"
-          iconName={iconName}
-        />
+        <div style={{ display: "flex" }}>
+          <ClassTimeButton
+            icon
+            onClick={this.handleClassTimeDescription}
+            label="Class Time Description"
+            iconName={iconName}
+          />
+          <ClassTimeButton
+            icon
+            onClick={this.handleAddToMyCalendarButtonClick}
+            label="Add to my Calender"
+            iconName={iconName}
+          />
+        </div>
       );
     } else {
       return (
-        <ClassTimeButton
-          icon
-          ghost
-          onClick={this.handleRemoveFromCalendarButtonClick}
-          label="Remove from calendar"
-          iconName={iconName}
-        />
+        <div style={{ display: "flex" }}>
+          <ClassTimeButton
+            icon
+            onClick={this.handleClassTimeDescription}
+            label="Class Time Description"
+            iconName={iconName}
+          />
+          <ClassTimeButton
+            icon
+            ghost
+            onClick={this.handleRemoveFromCalendarButtonClick}
+            label="Remove from calendar"
+            iconName={iconName}
+          />
+        </div>
       );
     }
     return <div />;
@@ -339,7 +360,7 @@ class ClassTime extends Component {
                 onModalClose={this.handleNonUserDialogBoxState(false)}
               />
             )}
-            <div style={{ backgroundColor: "skyblue" }}>
+            <div>
               <ClassTimeContainer
                 inPopUp={inPopUp}
                 className={`class-time-bg-transition ${this.getWrapperClassName(
@@ -349,13 +370,9 @@ class ClassTime extends Component {
               >
                 <ClassTimeContent>
                   {/*Class type name */}
-                  <ClassTypeName inPopUp={inPopUp}>{`${
-                    classTypeName.name
-                  }: ${name}`}</ClassTypeName>
-
+                  <ClassTypeName inPopUp={inPopUp}>{`${name}`}</ClassTypeName>
                   {/* Schedule type */}
                   {this.getScheduleTypeFormatted()}
-
                   <ClassTimesCardWrapper inPopUp={inPopUp}>
                     <ClassTimesCard
                       inPopUp={inPopUp}
@@ -368,6 +385,7 @@ class ClassTime extends Component {
                 </ClassTimeContent>
 
                 {/* View All times button */}
+                <ButtonsWrapper />
                 <ButtonsWrapper>
                   {this.getCalenderButton(this.props.addToCalendar)}
                 </ButtonsWrapper>
