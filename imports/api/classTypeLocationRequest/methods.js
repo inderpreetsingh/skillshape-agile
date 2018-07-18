@@ -75,8 +75,8 @@ Meteor.methods({
          //2. sending mail to the user.
          if(subscriptionRequest === 'save') {
            const toEmail = data.email;
-           const updateFor = `class type location details of ${classTypeName || schoolData.name}`;
-           const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?classTypeLocationRequest=true&requestId=${locationRequestId}`;
+           const updateFor = `Location details of ${classTypeName || schoolData.name}`;
+           const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?locationRequest=true&requestId=${locationRequestId}`;
            const subject = `Subscription for location request of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
            //console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
