@@ -411,6 +411,7 @@ class FilterPanel extends Component {
           <Grid item xs={12} sm={6}>
             <MaterialInputWrapper>
               <IconInput
+                type="email"
                 value={this.props.schoolEmail}
                 iconName="email"
                 onChange={this.props.onSchoolEmailChange}

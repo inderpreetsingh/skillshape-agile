@@ -164,6 +164,10 @@ export default function (props) {
                     filters={this.state.filters}
                     tempFilters={this.state.tempFilters}
                     onLocationChange={this.onLocationChange}
+                    schoolWebsite={this.state.schoolWebsite}
+                    schoolEmail={this.state.schoolEmail}
+                    onSchoolWebsiteChange={this.handleSchoolDetails('schoolWebsite')}
+                    onSchoolEmailChange={this.handleSchoolDetails('schoolEmail')}
                     locationInputChanged={this.locationInputChanged}
                     fliterSchoolName={this.fliterSchoolName}
                     filterAge={this.filterAge}
