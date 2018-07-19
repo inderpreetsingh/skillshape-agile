@@ -112,6 +112,7 @@ export default function (props) {
           </FormSubmitButtonWrapper>
         </Wrapper> */}
          <ClaimSchoolList
+            removeAllFilters={this.removeAllFilters}
             filters={this.state.filters}
             tempFilters={this.state.tempFilters}
             removeAllFilters={this.removeAllFilters}

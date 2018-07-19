@@ -696,7 +696,8 @@ class Multiselect extends React.Component {
 
   getPlaceholder() {
     let { value, placeholder } = this.props;
-    return (value && value.length ? '' : placeholder) || ''
+    return placeholder;
+    // return (value && value.length ? '' : placeholder) || ''
   }
 }
 

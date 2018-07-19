@@ -129,7 +129,7 @@ const SuggestionFormButton = styled.div`
 `;
 
 const CategoryHeader = styled.h2`
-  font-size: ${helpers.baseFontSize * 2}px;
+  font-size: ${helpers.baseFontSize * 1.5}px;
   font-weight: 400;
   font-family: ${helpers.specialFont};
   text-align: left;
