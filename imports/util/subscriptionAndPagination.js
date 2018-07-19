@@ -42,6 +42,7 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
         pageStart:0,
         loadMore: (pageToLoad)=>{loadMore(pageToLoad)},
         threshold:100,
+        isLoading: !subscription.ready(),
         loader: (<Loading />)
       };
     }, InfiniteScroll);
@@ -69,4 +70,3 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
     }
   };
 }
-

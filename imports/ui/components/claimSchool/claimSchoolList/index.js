@@ -31,6 +31,7 @@ class ClaimSchoolList extends React.Component {
     this.state = {
       filters: {},
       tempFilters: {},
+      listLoaded: false
     };
 
     this.fieldNames = [
@@ -45,6 +46,12 @@ class ClaimSchoolList extends React.Component {
       "age"
     ];
   }
+
+  // componentDidMount() {
+  //   this.setState({
+  //     listLoaded: true
+  //   })
+  // }
 
   componentWillUnmount() {
     Session.set("pagesToload", 1);
