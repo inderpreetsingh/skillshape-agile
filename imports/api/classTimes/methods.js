@@ -81,5 +81,11 @@ Meteor.methods({
     } else {
       throw new Meteor.Error("Permission denied!!");
     }
+  },
+  "classTimes.permanentlyRemove": function(classTimeId, clickedDate) {
+    ClassTimes.update(
+      { _id: classTimeId },
+      { $push: { deletedEvents: clickedDate } }
+    );
   }
 });

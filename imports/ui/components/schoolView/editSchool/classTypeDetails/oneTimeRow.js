@@ -209,7 +209,7 @@ export class OneTimeRow extends React.Component {
                   >
                     {isEmpty(this.props.roomData) && (
                       <MenuItem value="" disabled>
-                        Needs class type location
+                        No location added in Locations.
                       </MenuItem>
                     )}
                     {console.log("this.props.roomData", this.props.roomData)}

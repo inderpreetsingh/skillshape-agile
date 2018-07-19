@@ -372,9 +372,20 @@ Meteor.methods({
       throw new Meteor.Error("Access Denied!!!!");
     }
   },
-  "school.findSuperAdmin": function(userId, slug) {
-    let schoolData = School.findOne({ slug: slug });
-    if (schoolData.superAdmin == userId) {
+  "school.findSuperAdmin": function(userId, slug, SchoolId) {
+    let filter, usersId;
+    if (slug) {
+      filter = { slug: slug };
+    } else {
+      filter = { _id: SchoolId };
+    }
+    if (userId) {
+      usersId = userId;
+    } else {
+      usersId = this.userId;
+    }
+    let schoolData = School.findOne(filter);
+    if (schoolData.superAdmin == usersId) {
       return true;
     } else {
       return false;
