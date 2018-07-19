@@ -37,6 +37,8 @@ class ClaimSchoolList extends React.Component {
       "skillSubjectIds",
       "skillCategoryIds",
       "schoolName",
+      "schoolEmail",
+      "schoolWebsite",
       "locationName",
       "experienceLevel",
       "gender",
@@ -49,6 +51,7 @@ class ClaimSchoolList extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+
     this.setState({
       filters: nextProps.filters,
       tempFilters: nextProps.tempFilters
@@ -112,14 +115,14 @@ class ClaimSchoolList extends React.Component {
       };
     }
 
-    console.info('data 0----',data);
+    // console.info('data 0----',data);
 
     if (this._ifAllFieldsEmpty(data)) {
       toastr.error(
         `Please fill one atleast 1 field for suggestion of school`,
         "Error"
       );
-    }else if(!emailRegex.email.test(data.schoolEmail)) {
+    }else if(data.schoolEmail && !emailRegex.email.test(data.schoolEmail)) {
       toastr.error(
         'Please correct the school email format',
         'Error'
@@ -128,11 +131,12 @@ class ClaimSchoolList extends React.Component {
     else {
       this.setState({ isLoading: true });
       Meteor.call("schoolSuggestion.addSuggestion", data, (err, res) => {
-        this.setState({ isLoading: false });
+        this.setState({ isLoading: false , filters: {}, tempFilters: {}, schoolEmail: "", schoolWebsite: ""});
         if (err) {
           toastr.error(err.reason, "Error");
         } else {
           toastr.success("Thanks alot for your suggestion", "success");
+          this.props.removeAllFilters();
         }
       });
     }
@@ -254,8 +258,7 @@ class ClaimSchoolList extends React.Component {
   };
 
   handleSchoolDetails = (name) => event => {
-    const value = event.target.value;
-    this.setState({ [name]: value });
+    this.setState({ [name]: event.target.value});
   }
 
   perClassPriceFilter = text => {

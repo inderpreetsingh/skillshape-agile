@@ -55,7 +55,7 @@ const SuggestionTable = (props) => {
        <TableHead>
          <TableRow>
           <CustomTableCell>Date Added</CustomTableCell>
-          <CustomTableCell>School Name</CustomTableCell>
+          <CustomTableCell><NoWrap>School Name</NoWrap></CustomTableCell>
           <CustomTableCell><NoWrap>School Website</NoWrap></CustomTableCell>
           <CustomTableCell>School Email</CustomTableCell>
           <CustomTableCell><NoWrap>Location Name</NoWrap></CustomTableCell>

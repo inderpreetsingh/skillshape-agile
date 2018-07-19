@@ -72,7 +72,7 @@ Meteor.methods({
            toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
-         toEmail="singhs.ishwer@gmail.com";
+         //toEmail="singhs.ishwer@gmail.com";
          sendRequestReceivedEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink : updateClassLocationLink, memberLink, requestFor});
 
          if(subscriptionRequest === 'save' || this.userId)
