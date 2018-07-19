@@ -494,7 +494,7 @@ class Landing extends Component {
                 let place = results[0];
                 // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
                 // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
-                console.log(results[0],"location details...")
+                //console.log(results[0],"location details...")
                 sLocation = results[0].formatted_address;
                 oldFilters["coords"] = coords;
                 oldFilters["locationName"] = this._getNormalizedLocation(results[0].address_components);
@@ -567,7 +567,7 @@ class Landing extends Component {
 
   onLocationChange = (location, updateKey1, updateKey2) => {
     let stateObj = {};
-    console.log('onLocationChange',location,".....................");
+    //console.log('onLocationChange',location,".....................");
     if (updateKey1) {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
