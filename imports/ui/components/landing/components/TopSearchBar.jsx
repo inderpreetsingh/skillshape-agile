@@ -1,19 +1,19 @@
-import React, {Fragment} from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
+import React, { Fragment } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import isEmpty from "lodash/isEmpty";
 // import SearchBar from 'material-ui-search-bar';
-import {browserHistory, Link} from 'react-router';
-import MySearchBar from './MySearchBar.jsx';
+import { browserHistory, Link } from "react-router";
+import MySearchBar from "./MySearchBar.jsx";
 
-import Logo from './Logo.jsx';
-import SideNav from './SideNav.jsx';
-import LoginButton from './buttons/LoginButton.jsx';
-import AddSchoolButton from './buttons/AddSchoolButton.jsx';
-import JoinButton from './buttons/JoinButton.jsx';
+import Logo from "./Logo.jsx";
+import SideNav from "./SideNav.jsx";
+import LoginButton from "./buttons/LoginButton.jsx";
+import AddSchoolButton from "./buttons/AddSchoolButton.jsx";
+import JoinButton from "./buttons/JoinButton.jsx";
 
 //TODO: Automatic imports depending upon variables used - intellij
-import * as helpers from './jss/helpers.js';
+import * as helpers from "./jss/helpers.js";
 
 /*Search Bar requires inline styles because of limitations of it using material-ui
 rather than material ui next */
@@ -22,23 +22,24 @@ const MySearchBarWrapper = styled.div`
   height: ${helpers.rhythmDiv * 4}px;
 `;
 
-const MySearchBarStyled = (props) => {
-  // console.log("SearchBarStyled-->>",props)
-  return (<MySearchBarWrapper>
-    <MySearchBar
-      onChange={props.onSearch}
-      onRequestSearch={props.onSearch}
-      noCloseIcon
-      itemScope
-      itemType="http://schema.org/SearchAction"
-      className="is-search-bar"
-      {...props} />
-    </MySearchBarWrapper>)
-}
-
+const MySearchBarStyled = props => {
+  return (
+    <MySearchBarWrapper>
+      <MySearchBar
+        onChange={props.onSearch}
+        onRequestSearch={props.onSearch}
+        noCloseIcon
+        itemScope
+        itemType="http://schema.org/SearchAction"
+        className="is-search-bar"
+        {...props}
+      />
+    </MySearchBarWrapper>
+  );
+};
 
 const NavBarWrapper = styled.div`
-  display : flex;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: ${helpers.rhythmDiv * 2}px;
@@ -47,7 +48,7 @@ const NavBarWrapper = styled.div`
 `;
 
 const ActionArea = styled.div`
-  ${helpers.flexCenter},
+  ${helpers.flexCenter},;
 `;
 
 const ButtonsWrapper = styled.div`
@@ -58,7 +59,7 @@ const ButtonsWrapper = styled.div`
 `;
 
 const LogoSearchSection = styled.div`
-  ${helpers.flexCenter}
+  ${helpers.flexCenter};
 `;
 
 const SideNavWrapper = styled.div`
@@ -66,7 +67,7 @@ const SideNavWrapper = styled.div`
 `;
 
 const NavRightSection = styled.div`
-  ${helpers.flexCenter}
+  ${helpers.flexCenter};
 `;
 
 const LinksWrapper = styled.div`
@@ -84,7 +85,7 @@ const TopBarLink = styled.a`
   font-size: ${helpers.baseFontSize}px;
   color: ${helpers.primaryColor};
   cursor: pointer;
-  transition: color .1s linear;
+  transition: color 0.1s linear;
 
   &:hover {
     color: ${helpers.textColor};
@@ -103,27 +104,34 @@ const MyLink = styled(Link)`
   display: flex;
 `;
 
-const TopSearchBar = (props) => (
-  <NavBarWrapper >
+const TopSearchBar = props => (
+  <NavBarWrapper>
     <LogoSearchSection>
-      {props.logoArea ? props.logoArea :
-      <MyLink to="/">
-      <Logo brandTextShown={false} width={32} height={32} />
-        <BrandText>Skillshape</BrandText>
-      </MyLink>}
+      {props.logoArea ? (
+        props.logoArea
+      ) : (
+        <MyLink to="/">
+          <Logo brandTextShown={false} width={32} height={32} />
+          <BrandText>Skillshape</BrandText>
+        </MyLink>
+      )}
       {/*<MySearchBarStyled {...props.searchBar}/> */}
     </LogoSearchSection>
 
     <NavRightSection>
       <LinksWrapper>
-        {isEmpty(props.currentUser) && <TopBarLink onClick={props.onSkillShapeForSchoolsClick}>SkillShape For Schools</TopBarLink>}
+        {isEmpty(props.currentUser) && (
+          <TopBarLink onClick={props.onSkillShapeForSchoolsClick}>
+            SkillShape For Schools
+          </TopBarLink>
+        )}
         {/*<TopBarLink onClick={props.onSignUpLinkClick}>Sign Up</TopBarLink>
         <TopBarLink onClick={props.onLoginLinkClick}>Log In</TopBarLink>*/}
-        <JoinButton label="Sign Up" {...props}/>
-        <LoginButton icon={false} {...props}/>
+        <JoinButton label="Sign Up" {...props} />
+        <LoginButton icon={false} {...props} />
       </LinksWrapper>
       <SideNavWrapper>
-        <SideNav {...props} smallSize={true}/>
+        <SideNav {...props} smallSize={true} />
       </SideNavWrapper>
     </NavRightSection>
   </NavBarWrapper>
@@ -136,10 +144,11 @@ TopSearchBar.propTypes = {
   onSignUpLinkClick: PropTypes.func,
   onLoginLinkClick: PropTypes.func,
   onSkillShapeForSchoolsClick: PropTypes.func
-}
+};
 
 TopSearchBar.defaultProps = {
-  onSkillShapeForSchoolsClick: () => browserHistory.push('/skillshape-for-school')
-}
+  onSkillShapeForSchoolsClick: () =>
+    browserHistory.push("/skillshape-for-school")
+};
 
 export default TopSearchBar;

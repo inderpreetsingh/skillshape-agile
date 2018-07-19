@@ -1,14 +1,14 @@
-import React, {Component, Fragment} from 'react';
-import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
-import { createContainer } from 'meteor/react-meteor-data';
+import React, { Component, Fragment } from "react";
+import styled from "styled-components";
+import isEmpty from "lodash/isEmpty";
+import { createContainer } from "meteor/react-meteor-data";
 
-import { ContainerLoader } from '/imports/ui/loading/container.js';
-import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
-import SuggestionTable from '/imports/ui/components/landing/components/schoolSuggestions/SuggestionTable.jsx';
-import SchoolSuggestion from '/imports/api/schoolSuggestion/fields.js';
+import { ContainerLoader } from "/imports/ui/loading/container.js";
+import BrandBar from "/imports/ui/components/landing/components/BrandBar.jsx";
+import SuggestionTable from "/imports/ui/components/landing/components/schoolSuggestions/SuggestionTable.jsx";
+import SchoolSuggestion from "/imports/api/schoolSuggestion/fields.js";
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const Heading = styled.h2`
   font-size: ${helpers.baseFontSize * 2}px;
@@ -35,64 +35,68 @@ class SchoolSuggestionsView extends Component {
     this.state = {
       accessAllowed: true,
       noLoggedIn: false
-    }
+    };
   }
 
-  _setAccessForUser = (currentUser) => {
-    console.log(currentUser,"-------------")
+  _setAccessForUser = currentUser => {
     debugger;
-    if(!isEmpty(currentUser)) {
-      const accessAllowed = checkMyAccess({user:currentUser});
-      if(accessAllowed) {
-        this.setState({accessAllowed: true, noLoggedIn: false});
-      }else {
-        this.setState({accessAllowed: false,  noLoggedIn: false});
+    if (!isEmpty(currentUser)) {
+      const accessAllowed = checkMyAccess({ user: currentUser });
+      if (accessAllowed) {
+        this.setState({ accessAllowed: true, noLoggedIn: false });
+      } else {
+        this.setState({ accessAllowed: false, noLoggedIn: false });
       }
-    }else {
-      this.setState({noLoggedIn: true});
+    } else {
+      this.setState({ noLoggedIn: true });
     }
-
-  }
+  };
 
   componentWillMount = () => {
     const currentUser = this.props.currentUser;
-    console.log(currentUser," in the will mount");
     this._setAccessForUser(currentUser);
-  }
+  };
 
-  componentWillReceiveProps = (nextProps) => {
+  componentWillReceiveProps = nextProps => {
     const currentUser = nextProps.currentUser;
-    console.log(currentUser," in the recieve props");
     this._setAccessForUser(currentUser);
-  }
-
+  };
 
   render() {
-    const {accessAllowed,noLoggedIn} = this.state;
-    const {schoolSuggestions, isLoading} = this.props;
+    const { accessAllowed, noLoggedIn } = this.state;
+    const { schoolSuggestions, isLoading } = this.props;
 
-    if(noLoggedIn) {
-      return <h1>Not Logged In!</h1>
+    if (noLoggedIn) {
+      return <h1>Not Logged In!</h1>;
     }
 
-    return (<Wrapper>
+    return (
+      <Wrapper>
         <BrandBar positionStatic currentUser={this.props.currentUser} />
-        {!accessAllowed ? <h2>No Access Allowed</h2>
-        :
-        <ContentWrapper>
-          <Heading>School Suggestions</Heading>
-          {isLoading ? <ContainerLoader /> : <SuggestionTable data={schoolSuggestions}/>}
-        </ContentWrapper>
-        }
-      </Wrapper>)
+        {!accessAllowed ? (
+          <h2>No Access Allowed</h2>
+        ) : (
+          <ContentWrapper>
+            <Heading>School Suggestions</Heading>
+            {isLoading ? (
+              <ContainerLoader />
+            ) : (
+              <SuggestionTable data={schoolSuggestions} />
+            )}
+          </ContentWrapper>
+        )}
+      </Wrapper>
+    );
   }
 }
 
 export default createContainer(props => {
   let schoolSuggestions;
   let isLoading = true;
-  const schoolSuggestionsSubscription = Meteor.subscribe('schoolSuggestion.getAllSuggestions');
-  if(schoolSuggestionsSubscription && schoolSuggestionsSubscription.ready()) {
+  const schoolSuggestionsSubscription = Meteor.subscribe(
+    "schoolSuggestion.getAllSuggestions"
+  );
+  if (schoolSuggestionsSubscription && schoolSuggestionsSubscription.ready()) {
     isLoading = false;
     schoolSuggestions = SchoolSuggestion.find({}).fetch();
   }
@@ -100,5 +104,5 @@ export default createContainer(props => {
     ...props,
     isLoading,
     schoolSuggestions: schoolSuggestions
-  }
-},SchoolSuggestionsView);
+  };
+}, SchoolSuggestionsView);

@@ -56,7 +56,9 @@ const SuggestionTable = (props) => {
          <TableRow>
           <CustomTableCell>Date Added</CustomTableCell>
           <CustomTableCell>School Name</CustomTableCell>
-          <CustomTableCell>Location Name</CustomTableCell>
+          <CustomTableCell><NoWrap>School Website</NoWrap></CustomTableCell>
+          <CustomTableCell>School Email</CustomTableCell>
+          <CustomTableCell><NoWrap>Location Name</NoWrap></CustomTableCell>
           <CustomTableCell>Skill Categories</CustomTableCell>
           <CustomTableCell>Skill Subjects</CustomTableCell>
           <CustomTableCell>Experience Level</CustomTableCell>
@@ -81,6 +83,8 @@ const SuggestionTable = (props) => {
            return (<TableRow key={n._id} className={props.classes.row}>
              <CustomTableCell><NoWrap>{formatDate(n.createdAt)}</NoWrap></CustomTableCell>
              <CustomTableCell>{n.schoolName}</CustomTableCell>
+             <CustomTableCell>{n.schoolWebsite}</CustomTableCell>
+             <CustomTableCell>{n.schoolEmail}</CustomTableCell>
              <CustomTableCell>{n.locationName}</CustomTableCell>
              <CustomTableCell>{n.skillCategories && n.skillCategories.map(cat => cat.name).join(' , ')}</CustomTableCell>
              <CustomTableCell>{n.skillSubjects && n.skillSubjects.map(sub => sub.name).join(' , ')}</CustomTableCell>
