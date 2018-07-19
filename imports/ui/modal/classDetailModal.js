@@ -863,7 +863,7 @@ class ClassDetailModal extends React.Component {
                   <ClassTimeButton
                     fullWidth
                     noMarginBottom
-                    label="View School"
+                    label="Close"
                     onClick={() => {
                       this.props.closeEventModal(false, null);
                     }}
