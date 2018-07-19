@@ -73,7 +73,8 @@ const styles = theme => {
     },
     dialogAction: {
       width: "100%",
-      marginTop: helpers.rhythmDiv * 2
+      marginTop: helpers.rhythmDiv * 2,
+      justifyContent: "space-between"
     },
     dialogTitle: {
       position: "relative"
@@ -469,7 +470,9 @@ class ClassDetailModal extends React.Component {
       clickedDate,
       classInterestData
     } = this.props;
-
+    {
+      console.log("this.props of classdetailsmodal", this.props);
+    }
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(
       eventData,
@@ -618,10 +621,11 @@ class ClassDetailModal extends React.Component {
                   </div>
                 </Grid>
               </Grid>
-              {this.props.routeName !== "EmbedSchoolCalanderView" && (
-                <Grid container style={{ padding: 8 }}>
-                  {/*Removed previous two button and added two new button according to new task*/}
-                  {/* <Grid item xs={6}>
+              <center style={{ width: "100%" }}>
+                {this.props.routeName !== "EmbedSchoolCalanderView" && (
+                  <Grid container style={{ padding: "8px" }}>
+                    {/*Removed previous two button and added two new button according to new task*/}
+                    {/* <Grid item xs={6}>
                       <ClassTimeButton
                         fullWidth
                         label="View Class Type"
@@ -642,31 +646,36 @@ class ClassDetailModal extends React.Component {
                         onClick={() => this.goToSchoolPage(school)}
                       />
                     </Grid> */}
-                  <Grid item xs={6}>
-                    <ClassTimeButton
-                      fullWidth
-                      label="Remove from my Calendar"
-                      noMarginBottom
-                      onClick={() => {
-                        this.setState({ removeFromCalendarPopUp: true });
-                      }}
-                    />
+
+                    {this.props &&
+                      this.props.type == "school" && (
+                        <Grid item xs={6} style={{ margin: "auto" }}>
+                          <ClassTimeButton
+                            fullWidth
+                            label="Remove from my Calendar"
+                            noMarginBottom
+                            onClick={() => {
+                              this.setState({ removeFromCalendarPopUp: true });
+                            }}
+                          />
+                        </Grid>
+                      )}
+
+                    {this.state.adminAccess && (
+                      <Grid item xs={6} style={{ margin: "auto" }}>
+                        <ClassTimeButton
+                          fullWidth
+                          noMarginBottom
+                          label="Permanently Delete "
+                          onClick={() => {
+                            this.setState({ permanentlyRemove: true });
+                          }}
+                        />
+                      </Grid>
+                    )}
                   </Grid>
-                  {console.log("adminaccess", this.state.adminAccess)}
-                  {this.state.adminAccess && (
-                    <Grid item xs={6}>
-                      <ClassTimeButton
-                        fullWidth
-                        noMarginBottom
-                        label="Permanently Delete "
-                        onClick={() => {
-                          this.setState({ permanentlyRemove: true });
-                        }}
-                      />
-                    </Grid>
-                  )}
-                </Grid>
-              )}
+                )}
+              </center>
               <Grid container style={{ marginTop: "16px" }}>
                 {!isEmpty(classTypeData) && (
                   <div style={{ backgroundColor: "" }}>
@@ -838,37 +847,31 @@ class ClassDetailModal extends React.Component {
               </Grid>
 
               <DialogActions className={classes.dialogAction}>
-                <Grid item xs={6}>
-                  <ClassTimeButton
-                    fullWidth
-                    label="View Class Type"
-                    noMarginBottom
-                    onClick={() =>
-                      this.goToClassTypePage(
-                        classType.name,
-                        eventData.classTypeId
-                      )
-                    }
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <ClassTimeButton
-                    fullWidth
-                    noMarginBottom
-                    label="View School"
-                    onClick={() => this.goToSchoolPage(school)}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <ClassTimeButton
-                    fullWidth
-                    noMarginBottom
-                    label="Close"
-                    onClick={() => {
-                      this.props.closeEventModal(false, null);
-                    }}
-                  />
-                </Grid>
+                <ClassTimeButton
+                  fullWidth
+                  label="Class Type"
+                  noMarginBottom
+                  onClick={() =>
+                    this.goToClassTypePage(
+                      classType.name,
+                      eventData.classTypeId
+                    )
+                  }
+                />
+                <ClassTimeButton
+                  fullWidth
+                  noMarginBottom
+                  label="School"
+                  onClick={() => this.goToSchoolPage(school)}
+                />
+                <ClassTimeButton
+                  fullWidth
+                  noMarginBottom
+                  label="Close"
+                  onClick={() => {
+                    this.props.closeEventModal(false, null);
+                  }}
+                />
               </DialogActions>
 
               {/*fullScreen && (
