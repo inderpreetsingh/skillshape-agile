@@ -30,14 +30,14 @@
 
 .filters-dialog, .homepage-filter {
   .rw-multiselect .rw-widget-picker > div {
-    max-width: calc(100% - 16px);
+    max-width: calc(100% - 32px);
     height: 100%;
     display: flex;
     align-items: flex-end;
   }
 
   .rw-multiselect .rw-widget-picker > span {
-    max-width: 16px;
+    max-width: 32px;
     width: 100%;
   }
 }
