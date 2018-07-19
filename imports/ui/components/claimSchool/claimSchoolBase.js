@@ -18,6 +18,13 @@ export default class ClaimSchoolBase extends React.Component {
       error: null
     };
   }
+
+  handleLoading = (state) => {
+      this.setState({
+        isLoading: state
+      })
+  }
+
   handleFixedToggle = state => {
     // const stickyPosition = !defaultPosition;
     // if (this.state.sticky != stickyPosition) {

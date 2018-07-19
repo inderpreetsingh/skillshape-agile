@@ -7,6 +7,7 @@ import { Session } from "meteor/session";
 import { toastrModal, withSubscriptionAndPagination } from "/imports/util";
 import { withStyles } from "material-ui/styles";
 import {emailRegex} from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import School from "/imports/api/school/fields";
 import {
