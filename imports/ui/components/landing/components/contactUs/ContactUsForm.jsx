@@ -60,7 +60,7 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     [`@media screen and (max-width: ${helpers.mobile + 100}px)`]: {
       justifyContent: "flex-start"
     },
@@ -84,6 +84,7 @@ const FormElementWrapper = styled.div`
   display: ${props => (props.show ? "block" : "none")};
 `;
 
+/*
 const LabelOrInput = props => (
   <Fragment>
     <FormElementWrapper show={!props.label}>
@@ -107,7 +108,7 @@ const LabelOrInput = props => (
     </FormElementWrapper>
   </Fragment>
 );
-
+*/
 const FormWrapper = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
   padding-bottom: 0;
@@ -173,7 +174,7 @@ class ContactUsForm extends Component {
       subject: "Something Else",
       message: "",
       radioButtonGroupValue: "feature",
-      inputsName: ["email", "name", "subject", "message"],
+      inputsName: ["email", "name", "message"],
       readyToSumit: false
     };
   }
@@ -348,7 +349,7 @@ class ContactUsForm extends Component {
               <FormControlLabel
                 classes={{
                   root:
-                    classes.radioLabelRootZeroMargin +
+                    classes.radioLabelRoot +
                     " " +
                     classes.radioLabelMarginBottom,
                   label: classes.radioLabel
@@ -357,10 +358,34 @@ class ContactUsForm extends Component {
                 control={<Radio classes={{ root: classes.radioButton }} />}
                 label="I love it!"
               />
+              <FormControlLabel
+                classes={{
+                  root:
+                    classes.radioLabelRoot +
+                    " " +
+                    classes.radioLabelMarginBottom,
+                  label: classes.radioLabel
+                }}
+                value="question"
+                control={<Radio classes={{ root: classes.radioButton }} />}
+                label="Question"
+              />
+              <FormControlLabel
+                classes={{
+                  root:
+                    classes.radioLabelRootZeroMargin +
+                    " " +
+                    classes.radioLabelMarginBottom,
+                  label: classes.radioLabel
+                }}
+                value="SomethingElse"
+                control={<Radio classes={{ root: classes.radioButton }} />}
+                label="Something Else"
+              />
             </RadioGroup>
           </FormControl>
 
-          <FormGroup>
+          {/* <FormGroup>
             <Radio
               checked={radioButtonGroupValue === "other"}
               onChange={this.handleRadioChange}
@@ -376,7 +401,7 @@ class ContactUsForm extends Component {
               onLabelClick={this.handleLabelClick}
               onChange={this.handleInputFieldChange("subject")}
             />
-          </FormGroup>
+          </FormGroup> */}
 
           <InputWrapper>
             <IconInput
