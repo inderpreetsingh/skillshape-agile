@@ -74,7 +74,7 @@ export default function (props) {
           />
         }
 
-        {!this.state.suggestionForm && <Sticky activeClassName={"filter-panel-sticked"} innerZ={1} onStateChange={this.handleFixedToggle}>
+        <Sticky activeClassName={"filter-panel-sticked"} innerZ={1} onStateChange={this.handleFixedToggle}>
             {/*<ClaimSchoolFilter
                 stickyPosition={this.state.sticky}
                 ref="ClaimSchoolFilter"
@@ -100,7 +100,7 @@ export default function (props) {
                filters={this.state.filters}
                onLocationChange= {this.onLocationChange}
              />
-        </Sticky>}
+        </Sticky>
         {/*<Wrapper>
           <TextWrapper className={this.props.classes.textStyle}>
               Check to see if any of these are your school.
@@ -112,7 +112,6 @@ export default function (props) {
           </FormSubmitButtonWrapper>
         </Wrapper> */}
          <ClaimSchoolList
-            suggestionForm={this.state.suggestionForm}
             filters={this.state.filters}
             tempFilters={this.state.tempFilters}
             removeAllFilters={this.removeAllFilters}

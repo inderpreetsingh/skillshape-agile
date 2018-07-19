@@ -20,6 +20,14 @@ export const schoolSuggestionSchema = new SimpleSchema({
     type: String,
     optional: true
   },
+  schoolEmail: {
+    type: String,
+    optional: true
+  },
+  schoolWebsite: {
+    type: String,
+    optional: true
+  },
   locationName: {
     type: String,
     optional: true

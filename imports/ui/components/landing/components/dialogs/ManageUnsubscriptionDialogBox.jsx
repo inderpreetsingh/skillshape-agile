@@ -1,6 +1,8 @@
 import React, {Fragment,Component} from 'react';
 import PropTypes from 'prop-types';
 import {browserHistory} from 'react-router';
+import { MuiThemeProvider} from 'material-ui/styles';
+import {withStyles} from 'material-ui/styles';
 
 
 import { toastrModal } from '/imports/util';
@@ -13,13 +15,9 @@ import ClearIcon from 'material-ui-icons/Clear';
 import TextField from 'material-ui/TextField';
 import styled from 'styled-components';
 
-import IconInput from '../form/IconInput.jsx';
-
-import { MuiThemeProvider} from 'material-ui/styles';
-import {withStyles} from 'material-ui/styles';
-
-import * as helpers from '../jss/helpers.js';
-import muiTheme from '../jss/muitheme.jsx';
+import IconInput from '/imports/ui/components/landing/components/form/IconInput.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
 
 import Dialog , {
   DialogActions,

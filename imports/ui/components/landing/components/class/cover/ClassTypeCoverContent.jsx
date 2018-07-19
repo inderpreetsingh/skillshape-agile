@@ -10,12 +10,12 @@ import Icon from "material-ui/Icon";
 
 import { createMarkersOnMap, toastrModal } from "/imports/util";
 
-import ClassMap from "../../map/ClassMap";
-import ClassTypeDescription from "../ClassTypeDescription.jsx";
-import ClassTypeInfo from "../ClassTypeInfo.jsx";
-import ActionButtons from "../ActionButtons.jsx";
-import BestPrices from "../BestPrices.jsx";
-import ClassTypeLogo from "../ClassTypeLogo.jsx";
+import ClassMap from "/imports/ui/components/landing/components/map/ClassMap";
+import ClassTypeDescription from "/imports/ui/components/landing/components/class/ClassTypeDescription.jsx";
+import ClassTypeInfo from "/imports/ui/components/landing/components/class/ClassTypeInfo.jsx";
+import ActionButtons from "/imports/ui/components/landing/components/class/ActionButtons.jsx";
+import BestPrices from "/imports/ui/components/landing/components/class/BestPrices.jsx";
+import ClassTypeLogo from "/imports/ui/components/landing/components/class/ClassTypeLogo.jsx";
 
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
@@ -23,7 +23,7 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 import ManageRequestsDialogBox from "/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx";
 
-import * as helpers from "../../jss/helpers.js";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import { schoolLogo } from "/imports/ui/components/landing/site-settings.js";
 
@@ -103,10 +103,8 @@ const LogoContainer = styled.div`
 `;
 
 const LocationNotFound = styled.div`
-  display: flex;
-  align-items: center;
-  height: 100%;
-  justify-content: center;
+  min-height: inherit;
+  ${helpers.flexCenter};
 `;
 
 const ClassTypeForegroundImage = styled.div`
@@ -272,10 +270,16 @@ class ClassTypeCoverContent extends React.Component {
   //         this.handleDefaultDialogBox('Login to request location',true);
   //     }
   // }
+
+  getOurEmail = () => {
+    console.log()
+    return this.props.schoolDetails.email;
+  }
+
   handleRequest = text => {
     const { toastr, schoolDetails } = this.props;
 
-    if (!isEmpty(schoolData)) {
+    if (!isEmpty(schoolDetails)) {
       let emailBody = "";
       let url = `${Meteor.absoluteUrl()}schools/${schoolDetails.slug}`;
       let subject = "",
@@ -294,14 +298,21 @@ class ClassTypeCoverContent extends React.Component {
   };
 
   requestClassTypeLocation = () => {
-    const { toastr, classTypeData } = this.props;
+    const { toastr, classTypeData, noClassTypeData, schoolDetails } = this.props;
     if (Meteor.userId()) {
-      const payload = {
-        schoolId: classTypeData.schoolId,
-        classTypeId: classTypeData._id
-      };
+      let payload;
+      if(noClassTypeData) {
+        payload = {
+          schoolId: schoolDetails._id
+        }
+      }else {
+        payload = {
+          schoolId: classTypeData.schoolId,
+          classTypeId: classTypeData._id
+        };
+      }
       this.setState({ isBusy: true });
-      Meteor.call("classTypeLocationRequest.addRequest", data, (err, res) => {
+      Meteor.call("classTypeLocationRequest.addRequest", payload, (err, res) => {
         this.setState({ isBusy: false }, () => {
           if (err) {
             toastr.error(err.reason || err.message, "Error", {}, false);
@@ -363,14 +374,12 @@ class ClassTypeCoverContent extends React.Component {
               <MapContainer>
                 {isEmpty(selectedLocation) ? (
                   <LocationNotFound>
-                    {!props.noClassTypeData && (
                       <PrimaryButton
                         icon
                         onClick={this.requestClassTypeLocation}
                         iconName="add_location"
                         label="Request location"
                       />
-                    )}
                   </LocationNotFound>
                 ) : (
                   <Fragment>

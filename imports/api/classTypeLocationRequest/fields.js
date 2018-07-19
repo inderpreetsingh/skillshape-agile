@@ -8,6 +8,7 @@ const ClassTypeLocationRequest = new Mongo.Collection(config.collections.classTy
  */
 
  // Once it's fully operational we will make some of the optional fields back to false.
+// This Collection will manage both school locations/class type location requests.
 export const ClassTypeLocationRequestSchema = new SimpleSchema({
   name: {
     type: String,
@@ -22,13 +23,14 @@ export const ClassTypeLocationRequestSchema = new SimpleSchema({
   },
   classTypeId: {
     type: String,
+    optional: true
   },
   userId: {
     type: String,
     optional: true,
   },
   existingUser: {
-    type: String,
+    type: Boolean,
     optional: true
   },
   notification: {
