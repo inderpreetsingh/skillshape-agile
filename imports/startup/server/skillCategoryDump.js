@@ -37,6 +37,7 @@ export default (_skillCategoryObj = {
     "Okinawan martial arts",
     "Olympic Wrestling",
     "Other Traditional Martial Art",
+    "Others",
     "Pankration",
     "Sambo",
     "Savate",
@@ -102,6 +103,7 @@ export default (_skillCategoryObj = {
     "Vogue",
     "Waltz",
     "Zumba",
+    "Others",
     "Various Dance Styles"
   ],
   "Art/Design/Craft": [
@@ -128,7 +130,8 @@ export default (_skillCategoryObj = {
     "Fine Arts",
     "Ceramic Arts",
     "Metal Work",
-    "Glass Work"
+    "Glass Work",
+    "Others",
   ],
   "Sport/Exercise": [
     "American Football",
@@ -156,7 +159,8 @@ export default (_skillCategoryObj = {
     "Pilates",
     "Acrobatics",
     "Barre",
-    "Surfing"
+    "Surfing",
+    "Others",
   ],
   Language: [
     "Arabic",
@@ -172,6 +176,7 @@ export default (_skillCategoryObj = {
     "Portuguese",
     "Russian",
     "Spanish",
+    "Others",
     "Various Languages"
   ],
   "Coding and Computers": [
@@ -187,7 +192,8 @@ export default (_skillCategoryObj = {
     "Ruby on Rails",
     "Various Code Languages",
     "Html",
-    "Css"
+    "Css",
+    "Others"
   ],
   "Business/Marketing": [
     "Accounting",
@@ -196,6 +202,7 @@ export default (_skillCategoryObj = {
     "Entrepreneurship",
     "Marketing",
     "Sales",
+    "Others",
     "Software Development",
     "Various Business Skills"
   ],
@@ -208,9 +215,11 @@ export default (_skillCategoryObj = {
     "Christian Meeting",
     "Bible Study",
     "Koran Study",
-    "Sutra Study"
+    "Sutra Study",
+    "Others"
   ],
   "Acting/Comedy": [
+    "Others",
     "Acting Class",
     "Improvisation",
     "Stand-Up Comedy",
@@ -226,19 +235,22 @@ export default (_skillCategoryObj = {
     "Poker",
     "Board Games",
     "Card Games",
-    "Various Games"
+    "Various Games",
+    "Others",
   ],
   Pets: [
     "Dog Walks",
     "Dog Grooming",
     "Dog Meetups",
     "Exotic Pet Meetups",
-    "Dog Training"
+    "Dog Training",
+    "Others"
   ],
   "Parents/Children": [
     "Child Meetup by Age",
     "Parents with Autistic Children",
-    "Parents with Special Needs Children"
+    "Parents with Special Needs Children",
+    "Others"
   ],
   Yoga: [
     "Anusara",
@@ -255,7 +267,8 @@ export default (_skillCategoryObj = {
     "Sivananda",
     "Viniyoga",
     "Vinyasa/Power",
-    "Yin"
+    "Yin",
+    "Others"
   ],
   "Food and Beverage": [
     "Cooking",
@@ -263,7 +276,8 @@ export default (_skillCategoryObj = {
     "Bread Making",
     "Wine Tasting",
     "Beer Making",
-    "Cocktail Mixing"
+    "Cocktail Mixing",
+    "Others"
   ],
   "Life Skills": [
     "Coping",
@@ -273,7 +287,8 @@ export default (_skillCategoryObj = {
     "Conflict Resolution/Meditation",
     "Leadership",
     "Bullying Prevention",
-    "Various Life Skills"
+    "Various Life Skills",
+    "Others"
   ],
   Music: [
     "Percussion",
@@ -291,7 +306,8 @@ export default (_skillCategoryObj = {
     "Guitar",
     "Keyboard",
     "Piano",
-    "Various Instruments"
+    "Various Instruments",
+    "Others",
   ],
   Others: []
 });

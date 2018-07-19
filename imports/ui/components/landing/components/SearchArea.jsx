@@ -249,7 +249,7 @@ const SearchInputsSection = props => (
               data={props.skillSubjectData}
               placeholder="Choose your skill subject"
               value={get(props, "filters.defaultSkillSubject", [])}
-              onSearch={this.inputFromUser}
+              onSearch={props.inputFromUser}
               onChange={props.collectSelectedSkillSubject}
               onNoOfFiltersClick={props.handleNoOfFiltersClick}
           />
@@ -384,7 +384,10 @@ class SearchArea extends Component {
 
   componentDidUpdate(prevProps) {
     console.log(prevProps.filters.skillCategoryIds,this.props.filters.skillCategoryIds)
-    if(prevProps.filters.skillCategoryIds && (prevProps.filters.skillCategoryIds.length !== this.props.filters.skillCategoryIds.length) )
+    const previousSkillCategoryIds = prevProps.filters.skillCategoryIds || [];
+    const currentSkillCategoryIds = this.props.filters.skillCategoryIds || [];
+
+    if(previousSkillCategoryIds.length !== currentSkillCategoryIds.length)
       this.inputFromUser("");
   }
 
