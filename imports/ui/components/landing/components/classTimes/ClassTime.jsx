@@ -3,11 +3,15 @@ import moment from "moment";
 import styled, { keyframes } from "styled-components";
 import PropTypes from "prop-types";
 import { isEmpty, get } from "lodash";
-
+import Button from "material-ui/Button";
 import ClassTimeClockManager from "/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx";
 import ClassTimesCard from "/imports/ui/components/landing/components/cards/ClassTimesCard.jsx";
 import TrendingIcon from "/imports/ui/components/landing/components/icons/Trending.jsx";
-
+import Dialog, {
+  DialogActions,
+  DialogTitle,
+  withMobileDialog
+} from "material-ui/Dialog";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
@@ -82,8 +86,10 @@ const DescriptionWrapper = styled.div`
 const ClassTimeContent = styled.div`
   width: 100%;
 `;
-
-const ClassTypeName = styled.h4`
+const ConfirmationDialog = styled.div`
+  margin: 8px;
+`;
+const ClassTypeName = styled.h5`
   width: 100%;
   margin: 0;
   line-height: 1;
@@ -152,15 +158,19 @@ const Trending = () => {
 
 class ClassTime extends Component {
   state = {
-    isLoading: false
+    isLoading: false,
+    classTimeDescription: false
     // fullTextState: this.props.fullTextState,
   };
 
   handleAddToMyCalendarButtonClick = () => {
+    // console.log("this.props.handleAddToMyCalendarButtonClick",this.props);
     const classTimeData = { ...this.props };
     this.addToMyCalender(classTimeData);
   };
-
+  handleClassTimeDescription = () => {
+    alert("functionality of handle class time description");
+  };
   handleNonUserDialogBoxState = state => e => {
     this.setState({
       nonUserDialogBox: state
@@ -169,15 +179,18 @@ class ClassTime extends Component {
 
   handleRemoveFromCalendarButtonClick = () => {
     // this.setState({ addToCalendar: true });
+    // console.log("this.props",this.props)
     const classTimeData = { ...this.props };
     this.removeFromMyCalender(classTimeData);
   };
 
   removeFromMyCalender = classTimeRec => {
     const { toastr } = this.props;
+    console.log("this.props", this.props, classTimeRec);
     const result = this.props.classInterestData.filter(
       data => data.classTimeId == classTimeRec._id
     );
+    console.log("result==>", result);
     // check for user login or not
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
@@ -199,6 +212,7 @@ class ClassTime extends Component {
 
   addToMyCalender = data => {
     // check for user login or not
+    console.log("addToMyCalender", data);
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
       const doc = {
@@ -221,6 +235,7 @@ class ClassTime extends Component {
   };
 
   handleClassInterest = ({ methodName, data }) => {
+    console.log("handleClassInterest", methodName, data);
     this.setState({ isLoading: true });
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
@@ -258,9 +273,12 @@ class ClassTime extends Component {
       {
         /* Adding manual small letters splitted schedule type one time*/
       }
-      return <ScheduleType>{"one time"}</ScheduleType>;
+      return <ScheduleType>{"This is a one time class time."}</ScheduleType>;
     }
-    return <ScheduleType>{classScheduleType}</ScheduleType>;
+    return (
+      <ScheduleType
+      >{`This is an ${classScheduleType} class time.`}</ScheduleType>
+    );
   };
 
   getWrapperClassName = addToCalendar =>
@@ -277,22 +295,42 @@ class ClassTime extends Component {
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
     if (addToCalender || !Meteor.userId()) {
       return (
-        <ClassTimeButton
-          icon
-          onClick={this.handleAddToMyCalendarButtonClick}
-          label="Add to my Calender"
-          iconName={iconName}
-        />
+        <div style={{ display: "flex" }}>
+          <ClassTimeButton
+            icon
+            onClick={() => {
+              this.setState({ classTimeDescription: true });
+            }}
+            label="Class Time Description"
+            iconName={iconName}
+          />
+          <ClassTimeButton
+            icon
+            onClick={this.handleAddToMyCalendarButtonClick}
+            label="Add to my Calender"
+            iconName={iconName}
+          />
+        </div>
       );
     } else {
       return (
-        <ClassTimeButton
-          icon
-          ghost
-          onClick={this.handleRemoveFromCalendarButtonClick}
-          label="Remove from calendar"
-          iconName={iconName}
-        />
+        <div style={{ display: "flex" }}>
+          <ClassTimeButton
+            icon
+            onClick={() => {
+              this.setState({ classTimeDescription: true });
+            }}
+            label="Class Time Description"
+            iconName={iconName}
+          />
+          <ClassTimeButton
+            icon
+            ghost
+            onClick={this.handleRemoveFromCalendarButtonClick}
+            label="Remove from calendar"
+            iconName={iconName}
+          />
+        </div>
       );
     }
     return <div />;
@@ -300,6 +338,7 @@ class ClassTime extends Component {
 
   render() {
     // debugger;
+    console.log("this.props of classtime", this.props);
     const {
       desc,
       startDate,
@@ -312,7 +351,8 @@ class ClassTime extends Component {
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
 
-    // const showDescription = this.showDescription(formattedClassTimes);
+    console.log(desc, this.props, "Formatted Class Times.........");
+    //const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(
       this.props.addToCalendar
     );
@@ -331,42 +371,65 @@ class ClassTime extends Component {
                 onModalClose={this.handleNonUserDialogBoxState(false)}
               />
             )}
-            <ClassTimeContainer
-              inPopUp={inPopUp}
-              className={`class-time-bg-transition ${this.getWrapperClassName(
-                this.props.addToCalendar
-              )}`}
-              key={this.props._id}
-            >
-              <ClassTimeContent>
-                {/*Class type name */}
-                <ClassTypeName inPopUp={inPopUp}>{`${
-                  classTypeName.name
-                }: ${name}`}</ClassTypeName>
+            <div>
+              <ClassTimeContainer
+                inPopUp={inPopUp}
+                className={`class-time-bg-transition ${this.getWrapperClassName(
+                  this.props.addToCalendar
+                )}`}
+                key={this.props._id}
+              >
+                <ClassTimeContent>
+                  {/*Class type name */}
+                  <ClassTypeName inPopUp={inPopUp}>{`${name}`}</ClassTypeName>
+                  {/* Schedule type */}
+                  {this.getScheduleTypeFormatted()}
+                  <ClassTimesCardWrapper inPopUp={inPopUp}>
+                    <ClassTimesCard
+                      inPopUp={inPopUp}
+                      show={true}
+                      formattedClassTimes={formattedClassTimesDetails}
+                      scheduleType={scheduleType}
+                      description={desc}
+                    />
+                  </ClassTimesCardWrapper>
+                </ClassTimeContent>
 
-                {/* Schedule type */}
-                {this.getScheduleTypeFormatted()}
+                {/* View All times button */}
+                <ButtonsWrapper />
+                <ButtonsWrapper>
+                  {this.getCalenderButton(this.props.addToCalendar)}
+                </ButtonsWrapper>
 
-                <ClassTimesCardWrapper inPopUp={inPopUp}>
-                  <ClassTimesCard
-                    inPopUp={inPopUp}
-                    show={true}
-                    formattedClassTimes={formattedClassTimesDetails}
-                    scheduleType={scheduleType}
-                    description={desc}
-                  />
-                </ClassTimesCardWrapper>
-              </ClassTimeContent>
-
-              {/* View All times button */}
-              <ButtonsWrapper>
-                {this.getCalenderButton(this.props.addToCalendar)}
-              </ButtonsWrapper>
-
-              {this.props.isTrending && <Trending />}
-            </ClassTimeContainer>{" "}
+                {this.props.isTrending && <Trending />}
+              </ClassTimeContainer>{" "}
+            </div>
           </Fragment>
         )}
+        <Dialog
+          disableBackdropClick
+          disableEscapeKeyDown
+          maxWidth="xs"
+          open={this.state.classTimeDescription}
+          aria-labelledby="confirmation-dialog-title"
+        >
+          <DialogTitle id="confirmation-dialog-title">
+            Class Time Description
+          </DialogTitle>
+          <ConfirmationDialog>
+            <center>
+              {desc ? desc : "No Class Time Description is Found"}
+            </center>
+          </ConfirmationDialog>
+          <DialogActions>
+            <Button
+              color="primary"
+              onClick={() => this.setState({ classTimeDescription: false })}
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Fragment>
     );
   }
