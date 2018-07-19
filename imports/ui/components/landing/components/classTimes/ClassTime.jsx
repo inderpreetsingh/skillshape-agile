@@ -297,12 +297,10 @@ class ClassTime extends Component {
       return (
         <div style={{ display: "flex" }}>
           <ClassTimeButton
-            icon
             onClick={() => {
               this.setState({ classTimeDescription: true });
             }}
             label="Class Time Description"
-            iconName={iconName}
           />
           <ClassTimeButton
             icon
@@ -316,12 +314,10 @@ class ClassTime extends Component {
       return (
         <div style={{ display: "flex" }}>
           <ClassTimeButton
-            icon
             onClick={() => {
               this.setState({ classTimeDescription: true });
             }}
             label="Class Time Description"
-            iconName={iconName}
           />
           <ClassTimeButton
             icon
