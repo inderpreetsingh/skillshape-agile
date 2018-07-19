@@ -82,8 +82,7 @@ Meteor.methods({
       throw new Meteor.Error("Permission denied!!");
     }
   },
-  "classTimes.deleteEventFromMyCalendar": function(classTimeId, clickedDate) {
-    console.log("classTimeId, clickedDate", classTimeId, clickedDate);
+  "classTimes.permanentlyRemove": function(classTimeId, clickedDate) {
     ClassTimes.update(
       { _id: classTimeId },
       { $push: { deletedEvents: clickedDate } }

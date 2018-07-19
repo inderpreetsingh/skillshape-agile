@@ -3,11 +3,15 @@ import moment from "moment";
 import styled, { keyframes } from "styled-components";
 import PropTypes from "prop-types";
 import { isEmpty, get } from "lodash";
-
+import Button from "material-ui/Button";
 import ClassTimeClockManager from "/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx";
 import ClassTimesCard from "/imports/ui/components/landing/components/cards/ClassTimesCard.jsx";
 import TrendingIcon from "/imports/ui/components/landing/components/icons/Trending.jsx";
-
+import Dialog, {
+  DialogActions,
+  DialogTitle,
+  withMobileDialog
+} from "material-ui/Dialog";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
@@ -82,7 +86,9 @@ const DescriptionWrapper = styled.div`
 const ClassTimeContent = styled.div`
   width: 100%;
 `;
-
+const ConfirmationDialog = styled.div`
+  margin: 8px;
+`;
 const ClassTypeName = styled.h5`
   width: 100%;
   margin: 0;
@@ -152,7 +158,8 @@ const Trending = () => {
 
 class ClassTime extends Component {
   state = {
-    isLoading: false
+    isLoading: false,
+    classTimeDescription: false
     // fullTextState: this.props.fullTextState,
   };
 
@@ -291,7 +298,9 @@ class ClassTime extends Component {
         <div style={{ display: "flex" }}>
           <ClassTimeButton
             icon
-            onClick={this.handleClassTimeDescription}
+            onClick={() => {
+              this.setState({ classTimeDescription: true });
+            }}
             label="Class Time Description"
             iconName={iconName}
           />
@@ -308,7 +317,9 @@ class ClassTime extends Component {
         <div style={{ display: "flex" }}>
           <ClassTimeButton
             icon
-            onClick={this.handleClassTimeDescription}
+            onClick={() => {
+              this.setState({ classTimeDescription: true });
+            }}
             label="Class Time Description"
             iconName={iconName}
           />
@@ -340,8 +351,8 @@ class ClassTime extends Component {
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
 
-    console.log(formattedClassTimesDetails, "Formatted Class Times.........");
-    // const showDescription = this.showDescription(formattedClassTimes);
+    console.log(desc, this.props, "Formatted Class Times.........");
+    //const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(
       this.props.addToCalendar
     );
@@ -395,6 +406,30 @@ class ClassTime extends Component {
             </div>
           </Fragment>
         )}
+        <Dialog
+          disableBackdropClick
+          disableEscapeKeyDown
+          maxWidth="xs"
+          open={this.state.classTimeDescription}
+          aria-labelledby="confirmation-dialog-title"
+        >
+          <DialogTitle id="confirmation-dialog-title">
+            Class Time Description
+          </DialogTitle>
+          <ConfirmationDialog>
+            <center>
+              {desc ? desc : "No Class Time Description is Found"}
+            </center>
+          </ConfirmationDialog>
+          <DialogActions>
+            <Button
+              color="primary"
+              onClick={() => this.setState({ classTimeDescription: false })}
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Fragment>
     );
   }

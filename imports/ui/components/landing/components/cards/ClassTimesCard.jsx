@@ -1,53 +1,56 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import Icon from 'material-ui/Icon';
-import Button from 'material-ui/Button';
+import { withStyles } from "material-ui/styles";
+import Paper from "material-ui/Paper";
+import Icon from "material-ui/Icon";
+import Button from "material-ui/Button";
 
-import {formatTime, formatAmPm, formatDateNoYear } from '/imports/util';
-import {DAYS_IN_WEEK, CLASS_TIMES_CARD_WIDTH} from '/imports/ui/components/landing/constants/classTypeConstants.js';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { formatTime, formatAmPm, formatDateNoYear } from "/imports/util";
+import {
+  DAYS_IN_WEEK,
+  CLASS_TIMES_CARD_WIDTH
+} from "/imports/ui/components/landing/constants/classTypeConstants.js";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const styles = {
   cardWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    cursor: 'pointer',
-    backgroundColor: 'transparent',
-    overflowX: 'hidden',
-    overflowY: 'auto',
-    height: '100%',
-    boxShadow: 'none',
-    position: 'relative',
-    zIndex: 0,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    cursor: "pointer",
+    backgroundColor: "transparent",
+    overflowX: "hidden",
+    overflowY: "auto",
+    height: "100%",
+    boxShadow: "none",
+    position: "relative",
+    zIndex: 0
   },
   cardWrapperHidden: {
-    overflowY: 'hidden'
+    overflowY: "hidden"
   },
   cardItem: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: `${helpers.rhythmDiv}px`,
     marginBottom: helpers.rhythmDiv,
-    fontWeight: '300',
-    width: '100%',
+    fontWeight: "300",
+    width: "100%",
     fontSize: helpers.baseFontSize,
     fontFamily: helpers.specialFont,
-    cursor: 'initial'
+    cursor: "initial"
   },
   cardItemPopUp: {
     padding: helpers.rhythmDiv * 2,
-    boxShadow: 'none',
+    boxShadow: "none",
     fontSize: 18
   },
   icon: {
     fontSize: helpers.baseFontSize,
-    transform: `translateY(${helpers.rhythmDiv/2}px)`
-  },
-}
+    transform: `translateY(${helpers.rhythmDiv / 2}px)`
+  }
+};
 
 const OuterWrapper = styled.div`
   width: 100%;
@@ -55,7 +58,7 @@ const OuterWrapper = styled.div`
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  padding-top: ${props => props.show ? helpers.rhythmDiv : 0}px;
+  padding-top: ${props => (props.show ? helpers.rhythmDiv : 0)}px;
 `;
 
 const Wrapper = styled.div`
@@ -80,8 +83,11 @@ const Text = styled.p`
 
 const Description = Text.extend`
   line-height: 1;
-  padding: ${props => props.inPopUp ? `${helpers.rhythmDiv}px 0 ${helpers.rhythmDiv * 2}px 0`: `${helpers.rhythmDiv}px 0`};
-  font-size: ${props => props.inPopUp ? 18 : helpers.baseFontSize}px;
+  padding: ${props =>
+    props.inPopUp
+      ? `${helpers.rhythmDiv}px 0 ${helpers.rhythmDiv * 2}px 0`
+      : `${helpers.rhythmDiv}px 0`};
+  font-size: ${props => (props.inPopUp ? 18 : helpers.baseFontSize)}px;
 `;
 
 const Day = Text.extend`
@@ -100,7 +106,7 @@ const Times = styled.ul`
   margin: 0;
 `;
 
-const Time = Text.withComponent('li').extend`
+const Time = Text.withComponent("li").extend`
   list-style: none;
 `;
 
@@ -110,123 +116,169 @@ const Bold = styled.span`
   font-weight: 500;
 `;
 
-const IconWithStyles = (props) => <Icon classes={{root: props.classes.icon}} >{props.iconName}</Icon>
+const IconWithStyles = props => (
+  <Icon classes={{ root: props.classes.icon }}>{props.iconName}</Icon>
+);
 const MyIcon = withStyles(styles)(IconWithStyles);
 
-const ClassTimesCard = (props) =>  {
-  const {classes} = props;
+const ClassTimesCard = props => {
+  const { classes } = props;
 
-  const ScheduleDisplay = (props) => <Time> <MyIcon iconName={'access_time'} /> At <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins</Time>;
+  const ScheduleDisplay = props => (
+    <Time>
+      {" "}
+      <MyIcon iconName={"access_time"} /> At <Bold>{props.time}</Bold> for{" "}
+      <Bold>{props.duration}</Bold> mins
+    </Time>
+  );
 
-  const SchedulePopUp = (props) => {
-    let {day} = props;
-    if(props.scheduleType === 'recurring') day += 's';
-    if(props.scheduleType === 'recurring' || props.scheduleType === 'ongoing') {
-      return <DateTime> {day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins </DateTime>;
-    }else {
-      return <DateTime> {props.day.substr(0,3)}, {formatDateNoYear(props.eventDate)} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins </DateTime>
+  const SchedulePopUp = props => {
+    let { day } = props;
+    if (props.scheduleType === "recurring") day += "s";
+    if (
+      props.scheduleType === "recurring" ||
+      props.scheduleType === "ongoing"
+    ) {
+      return (
+        <DateTime>
+          {" "}
+          {day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold>{" "}
+          mins{" "}
+        </DateTime>
+      );
+    } else {
+      return (
+        <DateTime>
+          {" "}
+          {props.day.substr(0, 3)}, {formatDateNoYear(props.eventDate)} at{" "}
+          <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins{" "}
+        </DateTime>
+      );
     }
-  }
+  };
 
   const formatScheduleDisplay = (data, scheduleType, inPopUp) => {
-    const {eventStartTime, time, timePeriod, duration} = data;
+    const { eventStartTime, time, timePeriod, duration } = data;
 
     let eventTime;
 
-    if(scheduleType === 'recurring' || scheduleType === 'ongoing') {
+    if (scheduleType === "recurring" || scheduleType === "ongoing") {
       eventTime = `${formatTime(eventStartTime)} ${formatAmPm(eventStartTime)}`;
-    }else {
+    } else {
       eventTime = `${time} ${timePeriod}`;
     }
 
-    if(inPopUp) {
-      return <SchedulePopUp
-      time={eventTime}
-      duration={duration}
-      scheduleType={scheduleType}
-      day={data.day}
-      eventDate={data.eventDate}
-      />
+    if (inPopUp) {
+      return (
+        <SchedulePopUp
+          time={eventTime}
+          duration={duration}
+          scheduleType={scheduleType}
+          day={data.day}
+          eventDate={data.eventDate}
+        />
+      );
     }
 
-    return <ScheduleDisplay time={eventTime} duration={duration} />
-  }
+    return <ScheduleDisplay time={eventTime} duration={duration} />;
+  };
 
-  const getScheduleDetailsFromFormattedClassTimes = (formattedClassTimes, scheduleType, inPopUp) => {
+  const getScheduleDetailsFromFormattedClassTimes = (
+    formattedClassTimes,
+    scheduleType,
+    inPopUp
+  ) => {
     const eventScheduleType = scheduleType.toLowerCase();
     let cardItemClass = classes.cardItem;
-    if(inPopUp) cardItemClass = cardItemClass + ' ' + classes.cardItemPopUp;
+    if (inPopUp) cardItemClass = cardItemClass + " " + classes.cardItemPopUp;
 
     return DAYS_IN_WEEK.map(day => {
-      const scheduleData = formattedClassTimes[day]
+      const scheduleData = formattedClassTimes[day];
       const currentDay = day;
 
-      if(scheduleData) {
+      if (scheduleData) {
         const allDatesData = [];
         let eventData;
         scheduleData.forEach((schedule, i) => {
-           const eventStartTime = new Date(schedule.startTime);
-           eventDate = schedule.date;
-           const data = {
-             eventStartTime : eventStartTime,
-             time : schedule.time,
-             timePeriod : schedule.timePeriod,
-             duration : schedule.duration,
-             day: day,
-             eventDate: eventDate
-           }
+          const eventStartTime = new Date(schedule.startTime);
+          eventDate = schedule.date;
+          const data = {
+            eventStartTime: eventStartTime,
+            time: schedule.time,
+            timePeriod: schedule.timePeriod,
+            duration: schedule.duration,
+            day: day,
+            eventDate: eventDate
+          };
           // console.info(eventStartTime,"===========================");
-          allDatesData.push(formatScheduleDisplay(data, eventScheduleType, inPopUp));
+          allDatesData.push(
+            formatScheduleDisplay(data, eventScheduleType, inPopUp)
+          );
         });
 
-        if(eventScheduleType == 'recurring' || eventScheduleType == 'ongoing') {
-          return (<Paper className={cardItemClass}>
-                {!props.inPopUp && <Day>Every {day}</Day>}
-                <Times>{allDatesData}</Times>
-              </Paper>);
-        }else {
-          return (<Paper className={cardItemClass}>
-            {!props.inPopUp && <Day>On {day}, {formatDateNoYear(eventDate)}</Day>}
-            <Times>{allDatesData}</Times>
-          </Paper>);
+        if (
+          eventScheduleType == "recurring" ||
+          eventScheduleType == "ongoing"
+        ) {
+          return (
+            <Paper className={cardItemClass}>
+              {!props.inPopUp && <Day>Every {day}</Day>}
+              <Times>{allDatesData}</Times>
+            </Paper>
+          );
+        } else {
+          return (
+            <Paper className={cardItemClass}>
+              {!props.inPopUp && (
+                <Day>
+                  On {day}, {formatDateNoYear(eventDate)}
+                </Day>
+              )}
+              <Times>{allDatesData}</Times>
+            </Paper>
+          );
         }
       }
-    })
-  }
+    });
+  };
 
-
-  let wrapperClassName = '';
-  if(props.show) {
+  let wrapperClassName = "";
+  if (props.show) {
     wrapperClassName = classes.cardWrapper;
-  }else {
-    wrapperClassName = classes.cardWrapper + ' ' + classes.cardWrapperHidden;
+  } else {
+    wrapperClassName = classes.cardWrapper + " " + classes.cardWrapperHidden;
   }
 
-
-  return (<OuterWrapper show={props.show}>
+  return (
+    <OuterWrapper show={props.show}>
       <Paper className={wrapperClassName} elevation={3}>
         <Wrapper show={props.show}>
           <CardContent>
-            {getScheduleDetailsFromFormattedClassTimes(props.formattedClassTimes, props.scheduleType, props.inPopUp)}
-            {props.description && <Description inPopUp={props.inPopUp}>
+            {getScheduleDetailsFromFormattedClassTimes(
+              props.formattedClassTimes,
+              props.scheduleType,
+              props.inPopUp
+            )}
+            {/* {props.description && <Description inPopUp={props.inPopUp}>
               {props.description}
-            </Description>}
+            </Description>} */}
           </CardContent>
         </Wrapper>
       </Paper>
     </OuterWrapper>
-  )}
+  );
+};
 
-  ClassTimesCard.propTypes = {
-    inPopUp: PropTypes.bool,
-    description: PropTypes.string,
-    scheduleType: PropTypes.string,
-    formattedClassTimes: PropTypes.shape,
-    show: PropTypes.bool
-  }
+ClassTimesCard.propTypes = {
+  inPopUp: PropTypes.bool,
+  description: PropTypes.string,
+  scheduleType: PropTypes.string,
+  formattedClassTimes: PropTypes.shape,
+  show: PropTypes.bool
+};
 
-  ClassTimesCard.defaultProps = {
-    inPopUp: false,
-  }
+ClassTimesCard.defaultProps = {
+  inPopUp: false
+};
 
 export default withStyles(styles)(ClassTimesCard);

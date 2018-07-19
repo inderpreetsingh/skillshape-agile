@@ -1,4 +1,4 @@
-import config from "/imports/config"
+import config from "/imports/config";
 
 const ClassInterest = new Mongo.Collection(config.collections.classInterest);
 /**
@@ -6,23 +6,33 @@ const ClassInterest = new Mongo.Collection(config.collections.classInterest);
  * See: https://github.com/aldeed/meteor-autoform#common-questions
  * See: https://github.com/aldeed/meteor-autoform#affieldinput
  */
-ClassInterest.attachSchema(new SimpleSchema({
+ClassInterest.attachSchema(
+  new SimpleSchema({
     classTimeId: {
-        type: String,
+      type: String
     },
     classTypeId: {
-        type: String,
+      type: String
     },
     schoolId: {
-        type: String,
+      type: String
     },
     userId: {
-        type: String,
+      type: String
     },
     createdAt: {
-        type: Date,
-        optional: true
+      type: Date,
+      optional: true
+    },
+    deletedEvents: {
+      type: Array,
+      optional: true
+    },
+    "deletedEvents.$": {
+      type: String,
+      blackbox: true
     }
-}));
+  })
+);
 
 export default ClassInterest;

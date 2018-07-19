@@ -5,7 +5,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import moment from "moment";
 import ClassType from "/imports/api/classType/fields";
-
+import { uniq } from "lodash";
 class FullCalendar extends React.Component {
   constructor(props) {
     super(props);
@@ -45,14 +45,10 @@ class FullCalendar extends React.Component {
       },
       dayRender: function(date, cell) {},
       eventRender: function(event, element, view) {
+        console.log("event is ", event);
         let renderEvent = true;
         event.deletedEvents &&
           event.deletedEvents.map(current => {
-            console.log(
-              "current",
-              current,
-              moment(event.start).format("YYYY-MM-DD")
-            );
             if (current == moment(event.start).format("YYYY-MM-DD")) {
               renderEvent = false;
             }
@@ -86,7 +82,6 @@ class FullCalendar extends React.Component {
         }
       },
       eventClick: event => {
-        console.log("eventClick -->>", event);
         let clickedDate = moment(event.start).format("YYYY-MM-DD");
         if (event.classTimeId && event.classTypeId) {
           this.props.showEventModal(true, event, clickedDate);
@@ -104,20 +99,32 @@ class FullCalendar extends React.Component {
     } = this.props;
     let { manageMyCalendarFilter } = this.props;
     let sevents = [];
+    console.log(
+      "classinterestdata",
+      classInterestData,
+      "classTimesData",
+      classTimesData
+    );
     let myClassTimesIds = classInterestData.map(data => data.classTimeId);
     // Class Time Ids managed by current user
     // console.log("-----------------manageMyCalendarFilter------------------", manageMyCalendarFilter)
     let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
-    console.log("---------manageClassTimeIds------------>", manageClassTimeIds);
-    console.log("---------schoolClassTimeId------------>", schoolClassTimeId);
-    console.log(
-      "---------myClassTimesIds------------>",
-      classTimesData.map(data => data._id)
-    );
     // let schoolClassTimesIds = schoolClassTimes.map(data => data._id);
+    // merging deletedEvents data from classInterestData to classTimesData for disabling events
+    classInterestData.map(current1 => {
+      classTimesData.map(current2 => {
+        if (current1.classTimeId == current2._id) {
+          current2 && current2.deletedEvents
+            ? (current2.deletedEvents = uniq(
+                current2.deletedEvents.concat(current1.deletedEvents)
+              ))
+            : (current2.deletedEvents = current1.deletedEvents);
+        }
+      });
+    });
     for (var i = 0; i < classTimesData.length; i++) {
       let classTime = classTimesData[i];
-      console.log("classTime in bulid calendar", classTime);
+      //console.log("classTime in bulid calendar", classTime);
       try {
         let sevent;
 
@@ -157,7 +164,6 @@ class FullCalendar extends React.Component {
         if (classTime.scheduleType === "oneTime" && checkedClassTimes) {
           let scheduleData = [...classTime.scheduleDetails.oneTime];
           sevent.scheduleDetails = classTime.scheduleDetails;
-          console.log("classTime", classTime);
           for (let obj of scheduleData) {
             sevent.start = obj.startDate;
             sevent.roomId = obj.roomId;
@@ -257,12 +263,9 @@ class FullCalendar extends React.Component {
           }
         }
         // console.warn("<<< dayData sevents>>>>",sevents);
-      } catch (err) {
-        console.error("Error -->>", err);
-      }
+      } catch (err) {}
     }
 
-    console.warn("Final sevent/s 12-->>", sevents);
     return sevents;
   };
 
@@ -281,7 +284,6 @@ export default createContainer(props => {
     manageMyCalendarFilter
   } = props;
   let view;
-  console.log("props.route", props);
   if (
     (props.route && props.route.name == "SchoolView") ||
     props.route.name == "EmbedSchoolCalanderView"
@@ -333,10 +335,7 @@ export default createContainer(props => {
   }
 
   // console.log("FullCalendar createContainer classTimesData-->>", classTimesData)
-  console.log(
-    "FullCalendar createContainer classInterestData-->>",
-    classInterestData
-  );
+
   // console.log("FullCalendar createContainer myClassIds-->>",myClassIds)
   // console.log("FullCalendar createContainer classSchedule-->>",classSchedule)
 
