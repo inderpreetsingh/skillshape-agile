@@ -13,7 +13,7 @@ const styles = {
   classTimeButton: {
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
-    padding: "6px",
+    padding: "0px",
     backgroundColor: helpers.primaryColor,
     height: "inherit",
     minHeight: "auto",
@@ -25,7 +25,7 @@ const styles = {
   },
   classTimeSecondaryButton: {
     fontSize: helpers.baseFontSize,
-    padding: "6px",
+    padding: "0px",
     height: "inherit",
     minHeight: "auto",
     fontFamily: helpers.specialFont,
@@ -53,12 +53,16 @@ const styles = {
   classTimeButtonLabel: {
     color: helpers.lightTextColor,
     lineHeight: 1,
-    textTransform: "none"
+    textTransform: "none",
+    height: "35px",
+    padding: "15px"
   },
   classTimeSecondaryButtonLabel: {
     color: helpers.textColor,
     lineHeight: 1,
-    textTransform: "none"
+    textTransform: "none",
+    height: "35px",
+    padding: "15px"
   },
   classTimeButtonGhostLabel: {
     color: helpers.cancel,

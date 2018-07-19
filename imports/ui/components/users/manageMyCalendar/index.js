@@ -980,6 +980,7 @@ class ManageMyCalendar extends React.Component {
               }
               manageMyCalendarFilter={filter}
               {...this.props}
+              type={this.state.type}
             />
           </Card>
         </div>
