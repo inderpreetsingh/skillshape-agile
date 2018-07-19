@@ -382,8 +382,9 @@ class SearchArea extends Component {
     );
   }
 
-  componentDidUpdate() {
-    if (isEmpty(this.state.skillSubjectData) && this.props.filters.skillCategoryIds)
+  componentDidUpdate(prevProps) {
+    console.log(prevProps.filters.skillCategoryIds,this.props.filters.skillCategoryIds)
+    if(prevProps.filters.skillCategoryIds && (prevProps.filters.skillCategoryIds.length !== this.props.filters.skillCategoryIds.length) )
       this.inputFromUser("");
   }
 
