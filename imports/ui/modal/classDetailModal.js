@@ -73,7 +73,8 @@ const styles = theme => {
     },
     dialogAction: {
       width: "100%",
-      marginTop: helpers.rhythmDiv * 2
+      marginTop: helpers.rhythmDiv * 2,
+      justifyContent: "space-between"
     },
     dialogTitle: {
       position: "relative"
@@ -642,6 +643,7 @@ class ClassDetailModal extends React.Component {
                         onClick={() => this.goToSchoolPage(school)}
                       />
                     </Grid> */}
+
                   <Grid item xs={6}>
                     <ClassTimeButton
                       fullWidth
@@ -652,7 +654,6 @@ class ClassDetailModal extends React.Component {
                       }}
                     />
                   </Grid>
-                  {console.log("adminaccess", this.state.adminAccess)}
                   {this.state.adminAccess && (
                     <Grid item xs={6}>
                       <ClassTimeButton
@@ -838,37 +839,31 @@ class ClassDetailModal extends React.Component {
               </Grid>
 
               <DialogActions className={classes.dialogAction}>
-                <Grid item xs={6}>
-                  <ClassTimeButton
-                    fullWidth
-                    label="View Class Type"
-                    noMarginBottom
-                    onClick={() =>
-                      this.goToClassTypePage(
-                        classType.name,
-                        eventData.classTypeId
-                      )
-                    }
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <ClassTimeButton
-                    fullWidth
-                    noMarginBottom
-                    label="View School"
-                    onClick={() => this.goToSchoolPage(school)}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <ClassTimeButton
-                    fullWidth
-                    noMarginBottom
-                    label="Close"
-                    onClick={() => {
-                      this.props.closeEventModal(false, null);
-                    }}
-                  />
-                </Grid>
+                <ClassTimeButton
+                  fullWidth
+                  label="Class Type"
+                  noMarginBottom
+                  onClick={() =>
+                    this.goToClassTypePage(
+                      classType.name,
+                      eventData.classTypeId
+                    )
+                  }
+                />
+                <ClassTimeButton
+                  fullWidth
+                  noMarginBottom
+                  label="School"
+                  onClick={() => this.goToSchoolPage(school)}
+                />
+                <ClassTimeButton
+                  fullWidth
+                  noMarginBottom
+                  label="Close"
+                  onClick={() => {
+                    this.props.closeEventModal(false, null);
+                  }}
+                />
               </DialogActions>
 
               {/*fullScreen && (
