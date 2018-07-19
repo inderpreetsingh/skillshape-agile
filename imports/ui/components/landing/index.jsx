@@ -229,6 +229,18 @@ class Landing extends Component {
     this.handleSkillTypeSearch = debounce(this.handleSkillTypeSearch, 1000);
   }
 
+  _getNormalizedLocation = (addressComponents) => {
+      const addressComponentTypes = ['administrative_area_level_1','country'];
+      // While in the filter, we are checking for those address components,
+      // which have administrative_area_level1 and country in there types
+      const normalizedLocation = addressComponents
+      .filter(address => address.types.some(addressComponentType => addressComponentTypes.indexOf(addressComponentType) >= 0))
+      .map(address => address.long_name)
+      .join(", ");
+
+      return normalizedLocation;
+  }
+
   _handleGeoLocationError(err) {
     console.warn(err, "err.message", err.message.indexOf);
     switch (err.code) {
@@ -484,9 +496,8 @@ class Landing extends Component {
                 // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
                 console.log(results[0],"location details...")
                 sLocation = results[0].formatted_address;
-                oldFilters["addressComponents"] = JSON.parse(JSON.stringify(results[0].address_components));
                 oldFilters["coords"] = coords;
-                oldFilters["locationName"] = sLocation;
+                oldFilters["locationName"] = this._getNormalizedLocation(results[0].address_components);
                 oldFilters["applyFilterStatus"] = true;
               }
             }
@@ -562,7 +573,6 @@ class Landing extends Component {
         ...this.state[updateKey1],
         coords: location.coords,
         locationName: location.fullAddress,
-        addressComponents: '',
         applyFilterStatus: true,
         schoolId: null
       };
@@ -573,7 +583,6 @@ class Landing extends Component {
         ...this.state[updateKey2],
         coords: location.coords,
         locationName: location.fullAddress,
-        addressComponents: ''
       };
     }
 
@@ -587,7 +596,6 @@ class Landing extends Component {
         ...this.state[updateKey1],
         coords: null,
         locationName: event.target.value,
-        addressComponents: ''
       };
     }
 
@@ -596,7 +604,6 @@ class Landing extends Component {
         ...this.state[updateKey2],
         coords: null,
         locationName: event.target.value,
-        addressComponents: ''
       };
     }
 
