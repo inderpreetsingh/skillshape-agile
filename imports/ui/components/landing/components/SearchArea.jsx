@@ -249,7 +249,7 @@ const SearchInputsSection = props => (
               data={props.skillSubjectData}
               placeholder="Choose your skill subject"
               value={get(props, "filters.defaultSkillSubject", [])}
-              onSearch={this.inputFromUser}
+              onSearch={props.inputFromUser}
               onChange={props.collectSelectedSkillSubject}
               onNoOfFiltersClick={props.handleNoOfFiltersClick}
           />
@@ -373,24 +373,6 @@ class SearchArea extends Component {
     skillType: ""
   };
 
-  _getNormalizedLocation = () => {
-    const { locationName,addressComponents } = this.props.filters;
-    // console.log(addressComponents,"address components...");
-    if(!isEmpty(addressComponents)) {
-      const addressComponentTypes = ['administrative_area_level_1','country'];
-      // While in the filter, we are checking for those address components,
-      // which have administrative_area_level1 and country in there types
-      const normalizedLocation = addressComponents
-      .filter(address => address.types.some(addressComponentType => addressComponentTypes.indexOf(addressComponentType) >= 0))
-      .map(address => address.long_name)
-      .join(", ");
-      
-      return normalizedLocation;
-    }
-
-    return locationName;
-  }
-
   componentWillMount() {
     const dataSourceCategories = Meteor.call(
       "getAllSkillCategories",
@@ -400,8 +382,12 @@ class SearchArea extends Component {
     );
   }
 
-  componentDidUpdate() {
-    if (isEmpty(this.state.skillSubjectData) && this.props.filters.skillCategoryIds)
+  componentDidUpdate(prevProps) {
+    console.log(prevProps.filters.skillCategoryIds,this.props.filters.skillCategoryIds)
+    const previousSkillCategoryIds = prevProps.filters.skillCategoryIds || [];
+    const currentSkillCategoryIds = this.props.filters.skillCategoryIds || [];
+
+    if(previousSkillCategoryIds.length !== currentSkillCategoryIds.length)
       this.inputFromUser("");
   }
 
@@ -427,9 +413,8 @@ class SearchArea extends Component {
 
   componentWillReceiveProps(nextProps) {
     console.log(nextProps,"search area next props....");
-    if(nextProps.locationName && nextProps.addressComponents) {
-      const normalizedLocation = this._removeStreetAddressFromLocation(nextProps.addressComponents);
-      this.setState({ location: normalizedLocation});
+    if(nextProps.locationName) {
+      this.setState({ location: nextProps.locationName});
     }
   }
 
@@ -479,7 +464,7 @@ class SearchArea extends Component {
             handleNoOfFiltersClick={this.props.handleNoOfFiltersClick}
             inputFromUser={this.inputFromUser}
             classes={this.props.classes}
-            location={this.state.location}
+            location={this.props.location}
             skillType={this.state.skillType}
             onLocationInputChange={this.handleLocationInputChange}
             onSkillTypeChange={this.handleSkillTypeChange}
@@ -489,8 +474,7 @@ class SearchArea extends Component {
             locationText={this.props.locationText}
             resetSearch={this.props.resetSearch}
             locationInputChanged={this.props.locationInputChanged}
-            currentAddress={
-  this.props.filters && this._getNormalizedLocation()}
+            currentAddress={this.props.filters && this.props.filters.locationName}
             filters={this.props.filters}
             onLocationChange={this.props.onLocationChange}
             onSearchIconClick={this.props.onSearchIconClick}

@@ -127,8 +127,8 @@ const NoResultsFoundContainer = styled.div`
 `;
 
 export default function (props) {
-    let schools = this.props.collectionData || [];
-
+    let schools = this.props.collectionData;
+    console.log(this.props.collectionData,schools,"========= schools..","re rending...");
     const NoneOfMyLisiting = (props) => (<Wrapper>
         <TextWrapper>
             Check to see if any of these are your school. The filters can help you search!
@@ -142,12 +142,17 @@ export default function (props) {
         </FormSubmitButtonWrapper>
       </Wrapper>)
 
+    if(this.props.isLoading) {
+      return <div></div>
+    }
+
     if(isEmpty(schools)) {
+        console.log(this.state.filters,"filters in the render......")
         return (
             <GridWrapper suggestionForm={this.props.suggestionForm}>
               {this.state.isLoading && <ContainerLoader />}
               <NoResultContainer>
-                <NoneOfMyLisiting {...props} />
+                <NoneOfMyLisiting {...this.props} />
 
                 <NoResultsFoundContainer>
                   <NoResultsFound
@@ -192,7 +197,7 @@ export default function (props) {
                 <GridWrapper>
                   <NoneOfMyLisiting {...props} />
                   <GridInnerWrapper>
-                    {
+                    {schools &&
                       schools.map((school, index) => {
                           return (
                               <GridItem spacing={SPACING} key={index}>

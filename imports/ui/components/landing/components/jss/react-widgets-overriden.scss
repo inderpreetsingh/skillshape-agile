@@ -16,6 +16,11 @@
   display: block;
 }
 
+
+.rw-list {
+  text-align: left;
+}
+
 .filters-dialog .rw-widget-picker {
   height: auto;
   display: flex;
@@ -25,10 +30,15 @@
 
 .filters-dialog, .homepage-filter {
   .rw-multiselect .rw-widget-picker > div {
-    max-width: 90%;
+    max-width: calc(100% - 32px);
     height: 100%;
     display: flex;
     align-items: flex-end;
+  }
+
+  .rw-multiselect .rw-widget-picker > span {
+    max-width: 32px;
+    width: 100%;
   }
 }
 
@@ -104,7 +114,7 @@
 }
 
 .rw-multiselect .rw-multiselect-taglist {
-  max-width: 80%;
+  max-width: 100%;
   margin-right: map-get($sizes,'rhythm-div') * 1px;
   margin-bottom: map-get($sizes,'rhythm-div') * 1px;
 }
