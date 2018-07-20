@@ -142,16 +142,16 @@ class SkillShapeDefaultDialogBox extends Component {
     }
 
     cloneRecursive = (children) => {
-      return React.children.map(children, element =>
-        const elementProps = {};
-        if (React.isValidElement(child)) {
-            childProps = {someNew: "propToAdd"};
-        }
-        if(element.props.children) {
-          element = this.cloneRecursive(element.props.children)
-        }
-        element.props.onClick
-      )
+      // return React.children.map(children, element =>
+      //   const elementProps = {};
+      //   if (React.isValidElement(child)) {
+      //       childProps = {someNew: "propToAdd"};
+      //   }
+      //   if(element.props.children) {
+      //     element = this.cloneRecursive(element.props.children)
+      //   }
+      //   element.props.onClick
+      // )
 
     }
 
@@ -160,9 +160,6 @@ class SkillShapeDefaultDialogBox extends Component {
       console.log(type,"type in the actions ...")
       if(RenderActions) {
 
-        React.Children.map(RenderActions, element => {
-          console.log(element.props,"element.props...");
-        });
         return React.cloneElement(RenderActions);
       }else {
         if(type == 'inform') {
