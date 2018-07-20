@@ -1,20 +1,16 @@
 import React,{Component} from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import PrimaryButton from '../buttons/PrimaryButton';
+import { MuiThemeProvider} from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
-
-
 import ClearIcon from 'material-ui-icons/Clear';
-import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import styled from 'styled-components';
 
-import { MuiThemeProvider} from 'material-ui/styles';
-import IconInput from '../form/IconInput.jsx';
-import * as helpers from '../jss/helpers.js';
-import muiTheme from '../jss/muitheme.jsx';
+import PrimaryButton from '/imports/ui/compoenents/landing/components/buttons/PrimaryButton';
+import * as helpers from '/imports/ui/compoenents/landing/components/jss/helpers.js';
+import muiTheme from '/imports/ui/compoenents/landing/components/jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
 
 import Dialog , {
@@ -37,10 +33,6 @@ const Title = styled.h2`
   font-family: ${helpers.specialFont};
 `;
 
-const InputWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-`;
-
 const styles = {
     dialogAction: {
         width: '100%'
@@ -49,11 +41,6 @@ const styles = {
 
     }
 }
-
-const ErrorWrapper = styled.span`
-    color: red;
-    float: right;
-`;
 
 const popUpBasicConfig = {
   warning: {
