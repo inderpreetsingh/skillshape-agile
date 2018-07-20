@@ -189,6 +189,7 @@ class CardsList extends Component {
     } = this.props;
     let { reviewsData } = this.props;
     // debugger;
+    console.log("this.props in cardslist", this.props);
     return (
       <CardsListWrapper>
         <CardsListGridWrapper mapView={mapView}>

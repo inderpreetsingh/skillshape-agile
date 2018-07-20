@@ -27,7 +27,7 @@ const styles = {
     fontSize: helpers.baseFontSize,
     padding: "0px",
     height: "inherit",
-    minHeight: "auto",
+    minHeight: "34px",
     fontFamily: helpers.specialFont,
     backgroundColor: helpers.panelColor,
     textTransform: "none",
@@ -41,7 +41,7 @@ const styles = {
     borderColor: helpers.cancel,
     backgroundColor: "transparent",
     transition: "all 0.3s linear",
-    height: "100%",
+    minHeight: "34px",
     lineHeight: 1,
     "&:hover": {
       backgroundColor: helpers.cancel

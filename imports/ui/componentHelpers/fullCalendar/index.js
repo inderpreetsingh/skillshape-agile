@@ -6,6 +6,7 @@ import ClassInterest from "/imports/api/classInterest/fields";
 import moment from "moment";
 import ClassType from "/imports/api/classType/fields";
 import { uniq } from "lodash";
+import fullCalendarRender from "./fullCalendarRender";
 class FullCalendar extends React.Component {
   constructor(props) {
     super(props);
@@ -213,11 +214,13 @@ class FullCalendar extends React.Component {
           let scheduleData = { ...classTime.scheduleDetails };
           sevent.scheduleDetails = classTime.scheduleDetails;
           sevent.endDate = classTime.endDate && moment(classTime.endDate);
+          console.log("scheduleData", scheduleData);
           for (let key in scheduleData) {
             // const dayData = scheduleData[key];
             for (let obj of scheduleData[key]) {
               let temp = { ...sevent };
               temp.dow = [obj.day];
+              console.log("obj in fullCalendarRender", obj);
               // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
               temp.start = moment(obj.startTime).format("hh:mm");
               temp.end = moment(new Date(obj.startTime))
@@ -239,6 +242,9 @@ class FullCalendar extends React.Component {
                 " to " +
                 temp.eventEndTime;
               temp.roomId = obj.roomId;
+              temp.durationAndTimeunits = `${obj.duration} ${
+                obj.timeUnits ? obj.timeUnits : "Minutes"
+              }`;
               // sevent.age = classTypeData && classTypeData.ageMin;
               // sevent.gender = classTypeData && classTypeData.gender;
               // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;

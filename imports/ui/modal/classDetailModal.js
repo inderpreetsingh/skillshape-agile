@@ -230,8 +230,11 @@ const ConfirmationDialog = styled.div`
 `;
 const ClassTypeDescription = styled.div`
   border: 2px solid black;
-  margin: 12px;
   width: 100%;
+  padding: 7px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+  border-radius: 10px;
 `;
 
 const Event = styled.div`
@@ -472,6 +475,7 @@ class ClassDetailModal extends React.Component {
     } = this.props;
     {
       console.log("this.props of classdetailsmodal", this.props);
+      console.log("eventdata ---------------/>>>>>", eventData);
     }
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(
@@ -537,24 +541,9 @@ class ClassDetailModal extends React.Component {
                 <EventHeader>
                   <ImageContainer src={classImg}>
                     {
-                      <div style={{ position: "absolute", top: 10, right: 10 }}>
-                        {eventData.attending && (
-                          <Button
-                            fab
-                            aria-label="delete"
-                            color="accent"
-                            onClick={event =>
-                              this.removeMyClassInterest(
-                                event,
-                                eventData.classTimeId
-                              )
-                            }
-                            className={classes.button}
-                          >
-                            <Icon className="material-icons">delete</Icon>
-                          </Button>
-                        )}
-                      </div>
+                      <div
+                        style={{ position: "absolute", top: 10, right: 10 }}
+                      />
                     }
                   </ImageContainer>
                   <Event center={classImg !== ""}>
@@ -602,10 +591,17 @@ class ClassDetailModal extends React.Component {
                         <Italic>Time</Italic>
                       </Text>
                       <Text>
+                        {console.log(
+                          "scheduleDetails",
+                          classTypeData.formattedClassTimesDetails
+                        )}
                         {/* timeUnits are added for mins,hours */}
                         {`${eventData.eventStartTime}`}
-                        {" For "}
-                        {scheduleDetails.map(value => {
+
+                        {eventData &&
+                          eventData.durationAndTimeunits &&
+                          "For " + eventData.durationAndTimeunits}
+                        {/* {scheduleDetails.map(value => {
                           if (classTypeData.formattedClassTimesDetails[value]) {
                             return (
                               classTypeData.formattedClassTimesDetails[value][0]
@@ -615,7 +611,7 @@ class ClassDetailModal extends React.Component {
                                 .timeUnits
                             );
                           }
-                        })}
+                        })} */}
                       </Text>
                     </div>
                   </div>
@@ -646,9 +642,9 @@ class ClassDetailModal extends React.Component {
                         onClick={() => this.goToSchoolPage(school)}
                       />
                     </Grid> */}
-
+                    {console.log("this.props.type", this.props.type)}
                     {this.props &&
-                      this.props.type == "school" && (
+                      this.props.type == "attending" && (
                         <Grid item xs={6} style={{ margin: "auto" }}>
                           <ClassTimeButton
                             fullWidth
@@ -747,28 +743,30 @@ class ClassDetailModal extends React.Component {
                       </div> */}
                       </div>
                     </IconsRowWrapper>
-
-                    <div className={classes.iconWithDetailContainer}>
-                      <div
-                        className="circle-icon"
-                        className={classes.iconStyle}
-                      >
-                        <Icon className="material-icons" color="primary">
-                          location_on
-                        </Icon>
-                      </div>
-                      <div>
-                        <Text>
-                          <Italic>Location</Italic>
-                        </Text>
-                        <Text>
-                          {location &&
-                            `${location.address}, ${location.city}, ${
-                              location.state
-                            }`}
-                        </Text>
-                      </div>
-                    </div>
+                    {location &&
+                      location.address && (
+                        <div className={classes.iconWithDetailContainer}>
+                          <div
+                            className="circle-icon"
+                            className={classes.iconStyle}
+                          >
+                            <Icon className="material-icons" color="primary">
+                              location_on
+                            </Icon>
+                          </div>
+                          <div>
+                            <Text>
+                              <Italic>Location</Italic>
+                            </Text>
+                            <Text>
+                              {location &&
+                                `${location.address}, ${location.city}, ${
+                                  location.state
+                                }`}
+                            </Text>
+                          </div>
+                        </div>
+                      )}
                   </IconsWrapper>
                   <Grid item xs={12}>
                     {classTypeData &&

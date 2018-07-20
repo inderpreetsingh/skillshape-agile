@@ -251,6 +251,7 @@ class ClassTypeList extends Component {
                     filters={this.props.filters}
                     hideClassTypeOptions={this.props.hideClassTypeOptions}
                     landingPage={this.props.landingPage}
+                    classTypeData={classTypeData}
                   />
 
                   {/*Hack to get rid of this on school type page*/
@@ -272,7 +273,8 @@ class ClassTypeList extends Component {
               this.showClassTypes({
                 classType: this.makeCategorization({
                   classTypeData: classTypeData,
-                  skillCategoryData: skillCategoryData
+                  skillCategoryData: skillCategoryData,
+                  classTypeData: { classTypeData }
                 })
               })
             ) : (
@@ -286,6 +288,7 @@ class ClassTypeList extends Component {
                 classTimesData={classTimesData || []}
                 hideClassTypeOptions={this.props.hideClassTypeOptions}
                 landingPage={this.props.landingPage}
+                classTypeData={classTypeData}
               />
             )}
 

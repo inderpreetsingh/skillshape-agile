@@ -156,6 +156,7 @@ class ClassTypeCard extends Component {
       description: desc,
       name: name
     };
+
     const classTimesData = this.getClassTimes(get(this.props, "_id", null));
     const formattedClassTimesData = formatClassTimesData(classTimesData).filter(
       data => {
@@ -185,6 +186,7 @@ class ClassTypeCard extends Component {
             errorText={this.state.classTimesDialogBoxError}
             x={this.state.x}
             y={this.state.y}
+            {...this.props}
           />
         )}
         {this.state.manageRequestsDialog && (
