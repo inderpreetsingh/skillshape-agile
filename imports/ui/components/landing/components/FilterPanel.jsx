@@ -181,6 +181,8 @@ class FilterPanel extends Component {
     if (this.props.skillTypeText !== nextProps.skillTypeText) {
       this.setState({ skillTypeText: nextProps.skillTypeText });
     }
+    if (isEmpty(this.state.skillSubjectData) && nextProps.filters.skillCategoryIds)
+      this.inputFromUser("");
   };
 
   componentDidMount = () => {
@@ -201,11 +203,7 @@ class FilterPanel extends Component {
 
   componentDidUpdate() {
     this.handleChangeInScreenSize();
-    if (
-      isEmpty(this.state.skillSubjectData) &&
-      this.props.filters.skillCategoryIds
-    )
-      this.inputFromUser("");
+
   }
 
   // This is used to get subjects on the basis of subject category.
