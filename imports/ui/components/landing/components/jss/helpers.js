@@ -46,6 +46,11 @@ export const
     black = '#292828',
     communication = '#448aff',
 
+    /********** SKILLSHAPE POPUP *************/
+    alertColor = "#e84118",
+    warningColor = "#ff9966",
+  
+
     /********** SPECIFIC COLORS **************/
     defaultBoxColor = "#f2f2f2",
     schoolPageColor = '#f2f2f2',

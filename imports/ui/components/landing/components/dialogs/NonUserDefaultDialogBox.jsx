@@ -54,7 +54,8 @@ const styles = theme => {
     iconButton: {
       height: 'auto',
       width: 'auto'
-    }
+    },
+    
   }
 }
 

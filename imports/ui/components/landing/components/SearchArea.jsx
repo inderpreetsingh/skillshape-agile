@@ -382,14 +382,6 @@ class SearchArea extends Component {
     );
   }
 
-  componentDidUpdate(prevProps) {
-    console.log(prevProps.filters.skillCategoryIds,this.props.filters.skillCategoryIds)
-    const previousSkillCategoryIds = prevProps.filters.skillCategoryIds || [];
-    const currentSkillCategoryIds = this.props.filters.skillCategoryIds || [];
-
-    if(previousSkillCategoryIds.length !== currentSkillCategoryIds.length)
-      this.inputFromUser("");
-  }
 
   // This is used to get subjects on the basis of subject category.
   inputFromUser = text => {
@@ -401,7 +393,7 @@ class SearchArea extends Component {
       (err, res) => {
         if (res) {
           // console.log("result",res)
-          this.setState({ skillSubjectData: res || [] });
+            this.setState({ skillSubjectData: res || [] });
         }
       }
     );
@@ -412,10 +404,18 @@ class SearchArea extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const previousSkillCategoryIds = this.props.filters.skillCategoryIds || [];
+    const currentSkillCategoryIds = nextProps.filters.skillCategoryIds || [];
     console.log(nextProps,"search area next props....");
-    if(nextProps.locationName) {
+    if(nextProps) {
       this.setState({ location: nextProps.locationName});
     }
+
+    //console.log(nextProps.fillters.skillCategoryIds,this.props.filters.skillCategoryIds)
+
+    if(previousSkillCategoryIds.length !== currentSkillCategoryIds.length)
+      this.inputFromUser("");
+
   }
 
   handleLocationInputChange = event => {

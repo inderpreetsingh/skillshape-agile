@@ -47,6 +47,7 @@ const styles = {
 const DialogBoxHeaderText = styled.p`
   font-family: ${helpers.commonFont};
   color: ${helpers.textColor};
+  font-weight: 500;
 `;
 
 const ButtonsWrapper = styled.div`
@@ -70,9 +71,10 @@ const TermsOfServiceDialogBox = (props) => (
     itemType="http://schema.org/Service"
   >
   <MuiThemeProvider theme={muiTheme}>
-    <DialogActions classes={{action: props.classes.dialogActionInnerWrapper}}>
-      <DialogBoxHeaderText><strong>Before you can register you must agree to the SkillShape's Terms Of Service.</strong></DialogBoxHeaderText>
-    </DialogActions>
+
+    <DialogBoxHeaderText>
+      Before you can register you must agree to the SkillShape's Terms Of Service
+    </DialogBoxHeaderText>
 
     <DialogActions classes={{root: props.classes.dialogAction}}>
         <PrimaryButton
