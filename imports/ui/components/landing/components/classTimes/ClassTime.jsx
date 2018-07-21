@@ -12,6 +12,7 @@ import Dialog, {
   DialogTitle,
   withMobileDialog
 } from "material-ui/Dialog";
+import { cutString } from "/imports/util";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
@@ -89,6 +90,13 @@ const ClassTimeContent = styled.div`
 const ConfirmationDialog = styled.div`
   margin: 8px;
 `;
+const ClassTimeDescription = styled.div`
+  border: 2px solid black;
+  margin-top: 5px;
+  width: 100%;
+  padding: 7px;
+  border-radius: 10px;
+`;
 const ClassTypeName = styled.h5`
   width: 100%;
   margin: 0;
@@ -158,8 +166,7 @@ const Trending = () => {
 
 class ClassTime extends Component {
   state = {
-    isLoading: false,
-    classTimeDescription: false
+    isLoading: false
     // fullTextState: this.props.fullTextState,
   };
 
@@ -168,9 +175,7 @@ class ClassTime extends Component {
     const classTimeData = { ...this.props };
     this.addToMyCalender(classTimeData);
   };
-  handleClassTimeDescription = () => {
-    alert("functionality of handle class time description");
-  };
+
   handleNonUserDialogBoxState = state => e => {
     this.setState({
       nonUserDialogBox: state
@@ -266,18 +271,42 @@ class ClassTime extends Component {
     if (classScheduleType === "recurring")
       return (
         <ScheduleType>
+          This is a Recurring class time.{<br />}
           {formatDate(startDate)} - {formatDate(endDate)}
+          {<br />}
+          {this.props.desc && (
+            <ClassTimeDescription>
+              {`Class Time Description: ${cutString(this.props.desc, 50)}`}
+            </ClassTimeDescription>
+          )}
         </ScheduleType>
       );
     else if (classScheduleType === "onetime") {
       {
         /* Adding manual small letters splitted schedule type one time*/
       }
-      return <ScheduleType>{"This is a one time class time."}</ScheduleType>;
+      return (
+        <ScheduleType>
+          {"This is a one time class time."}
+          {<br />}
+          {this.props.desc && (
+            <ClassTimeDescription>
+              {`Class Time Description: ${this.props.desc}`}
+            </ClassTimeDescription>
+          )}
+        </ScheduleType>
+      );
     }
     return (
-      <ScheduleType
-      >{`This is an ${classScheduleType} class time.`}</ScheduleType>
+      <ScheduleType>
+        {`This is an ${classScheduleType} class time.`}
+        {<br />}
+        {this.props.desc && (
+          <ClassTimeDescription>
+            {`Class Time Description: ${this.props.desc}`}
+          </ClassTimeDescription>
+        )}
+      </ScheduleType>
     );
   };
 
@@ -297,12 +326,6 @@ class ClassTime extends Component {
       return (
         <div style={{ display: "flex" }}>
           <ClassTimeButton
-            onClick={() => {
-              this.setState({ classTimeDescription: true });
-            }}
-            label="Class Time Description"
-          />
-          <ClassTimeButton
             icon
             onClick={this.handleAddToMyCalendarButtonClick}
             label="Add to my Calender"
@@ -313,12 +336,6 @@ class ClassTime extends Component {
     } else {
       return (
         <div style={{ display: "flex" }}>
-          <ClassTimeButton
-            onClick={() => {
-              this.setState({ classTimeDescription: true });
-            }}
-            label="Class Time Description"
-          />
           <ClassTimeButton
             icon
             ghost
@@ -402,30 +419,6 @@ class ClassTime extends Component {
             </div>
           </Fragment>
         )}
-        <Dialog
-          disableBackdropClick
-          disableEscapeKeyDown
-          maxWidth="xs"
-          open={this.state.classTimeDescription}
-          aria-labelledby="confirmation-dialog-title"
-        >
-          <DialogTitle id="confirmation-dialog-title">
-            Class Time Description
-          </DialogTitle>
-          <ConfirmationDialog>
-            <center>
-              {desc ? desc : "No Class Time Description is Found"}
-            </center>
-          </ConfirmationDialog>
-          <DialogActions>
-            <Button
-              color="primary"
-              onClick={() => this.setState({ classTimeDescription: false })}
-            >
-              Ok
-            </Button>
-          </DialogActions>
-        </Dialog>
       </Fragment>
     );
   }

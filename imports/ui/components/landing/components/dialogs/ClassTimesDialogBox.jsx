@@ -13,13 +13,13 @@ import TextField from "material-ui/TextField";
 import { withStyles } from "material-ui/styles";
 import { MuiThemeProvider } from "material-ui/styles";
 import ClearIcon from "material-ui-icons/Clear";
-
+import Grid from "material-ui/Grid";
 import ClassTimesBar from "/imports/ui/components/landing/components/classTimes/ClassTimesBar";
 import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
-
+import Icon from "material-ui/Icon";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
-
+import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 
@@ -64,13 +64,22 @@ const styles = {
     // boxShadow: helpers.buttonBoxShadow
   }
 };
-
+const ClassTypeDescription = styled.div`
+  border: 2px solid black;
+  width: 100%;
+  padding: 7px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+`;
 const DialogTitleWrapper = styled.div`
   ${helpers.flexCenter} width: 100%;
   padding: 0;
   position: relative;
 `;
-
+const Italic = styled.span`
+  font-style: italic;
+`;
 const MyScrollToElement = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
@@ -169,7 +178,20 @@ const ErrorWrapper = styled.span`
   color: red;
   float: right;
 `;
+const IconsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-left: ${helpers.rhythmDiv}px;
+`;
 
+const IconsRowWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  > div {
+    width: 50%;
+  }
+`;
 const ScheduleType = styled.span`
   display: inline-block;
   padding: ${helpers.rhythmDiv}px;
@@ -185,7 +207,15 @@ const RequestsClassTimes = styled.div`
   display: flex;
   justify-content: center;
 `;
-
+const Text = styled.p`
+  margin: 0;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: ${props => props.marginBottom}px;
+  text-align: ${props => (props.center ? "center" : "left")};
+`;
 class ClassTimesDialogBox extends React.Component {
   constructor(props) {
     super(props);
@@ -330,11 +360,17 @@ class ClassTimesDialogBox extends React.Component {
       classTypeName,
       classTypeImg,
       errorText,
-      handleClassTimeRequest
+      handleClassTimeRequest,
+      experienceLevel,
+      desc,
+      gender,
+      school,
+      location,
+      ageMin,
+      ageMax
     } = this.props;
     {
-      /*
-    */
+      console.log("this.props in the clsstimedialogbox", this.props);
     }
 
     return (
@@ -389,6 +425,96 @@ class ClassTimesDialogBox extends React.Component {
                       </ClassTypeName>
                     </ClassTimes>
                   </ContentHeader>
+                  <Grid container style={{ marginTop: "16px" }}>
+                    <IconsWrapper>
+                      <IconsRowWrapper>
+                        <div
+                          className={
+                            classes.iconWithDetailContainer +
+                            " " +
+                            classes.bottomSpace
+                          }
+                        >
+                          <div
+                            className="circle-icon"
+                            className={classes.iconStyle}
+                          >
+                            <Icon className="material-icons" color="primary">
+                              account_balance
+                            </Icon>
+                          </div>
+                          <div>
+                            <Text>
+                              <Italic>School</Italic>
+                            </Text>
+                            <Text>{school && school.name}</Text>
+                          </div>
+                        </div>
+
+                        <div
+                          className={
+                            classes.iconWithDetailContainer +
+                            " " +
+                            classes.bottomSpace
+                          }
+                        />
+                      </IconsRowWrapper>
+                      {location &&
+                        location.address && (
+                          <div className={classes.iconWithDetailContainer}>
+                            <div
+                              className="circle-icon"
+                              className={classes.iconStyle}
+                            >
+                              <Icon className="material-icons" color="primary">
+                                location_on
+                              </Icon>
+                            </div>
+                            <div>
+                              <Text>
+                                <Italic>Location</Italic>
+                              </Text>
+                              <Text>
+                                {location &&
+                                  `${location.address}, ${location.city}, ${
+                                    location.state
+                                  }`}
+                              </Text>
+                            </div>
+                          </div>
+                        )}
+                    </IconsWrapper>
+                    <Grid item xs={12}>
+                      {ageMin &&
+                        ageMax && (
+                          <MetaInfo
+                            data={`  ${ageMin} to ${ageMax}`}
+                            title={"Age:" + " "}
+                          />
+                        )}
+                      {gender &&
+                        gender !== "All" && (
+                          <MetaInfo data={gender} title={"Gender: " + ""} />
+                        )}
+
+                      {experienceLevel && experienceLevel == "All" ? (
+                        <MetaInfo
+                          data={"  All levels are welcome"}
+                          title={"Experience:  " + " "}
+                        />
+                      ) : (
+                        <MetaInfo
+                          data={`  ${experienceLevel}`}
+                          title={"Experience:  " + " "}
+                        />
+                      )}
+                    </Grid>
+                    {desc && (
+                      <ClassTypeDescription>
+                        {`Class Type Description: ${desc}`}
+                      </ClassTypeDescription>
+                    )}
+                  </Grid>
                   <ClassTimesBoxes
                     inPopUp={true}
                     withSlider={false}
