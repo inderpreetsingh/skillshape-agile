@@ -425,7 +425,10 @@ class ClassTimesDialogBox extends React.Component {
                       </ClassTypeName>
                     </ClassTimes>
                   </ContentHeader>
-                  <Grid container style={{ marginTop: "16px" }}>
+                  <Grid
+                    container
+                    style={{ marginTop: "16px", padding: "22px" }}
+                  >
                     <IconsWrapper>
                       <IconsRowWrapper>
                         <div
