@@ -273,8 +273,7 @@ class ClassTypeList extends Component {
               this.showClassTypes({
                 classType: this.makeCategorization({
                   classTypeData: classTypeData,
-                  skillCategoryData: skillCategoryData,
-                  classTypeData: { classTypeData }
+                  skillCategoryData: skillCategoryData
                 })
               })
             ) : (

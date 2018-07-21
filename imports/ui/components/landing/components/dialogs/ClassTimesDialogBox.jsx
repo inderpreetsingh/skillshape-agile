@@ -207,7 +207,15 @@ const RequestsClassTimes = styled.div`
   display: flex;
   justify-content: center;
 `;
-
+const Text = styled.p`
+  margin: 0;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: ${props => props.marginBottom}px;
+  text-align: ${props => (props.center ? "center" : "left")};
+`;
 class ClassTimesDialogBox extends React.Component {
   constructor(props) {
     super(props);
@@ -219,8 +227,7 @@ class ClassTimesDialogBox extends React.Component {
     }
     setTimeout(() => {
       let divElement = $("#myScrollToElement").offset();
-      console.log("divElement", divElement);
-      let offset = divElement && divElement.top;
+      let offset = divElement.top;
       // send offset of modal to iframe script
       function sendTopOfPopup(e) {
         parent.postMessage(JSON.stringify({ popUpOpened: true, offset }), "*");
