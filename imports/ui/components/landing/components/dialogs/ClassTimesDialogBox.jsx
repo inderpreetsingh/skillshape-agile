@@ -3,8 +3,9 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { isEmpty } from "lodash";
+import { browserHistory, Link } from "react-router";
 import { createContainer } from "meteor/react-meteor-data";
-
+import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import Button from "material-ui/Button";
 import IconButton from "material-ui/IconButton";
 import Chip from "material-ui/Chip";
@@ -22,7 +23,7 @@ import SecondaryButton from "/imports/ui/components/landing/components/buttons/S
 import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
-
+import School from "/imports/api/school/fields";
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -62,6 +63,21 @@ const styles = {
     right: -8,
     zIndex: 3
     // boxShadow: helpers.buttonBoxShadow
+  },
+  iconWithDetailContainer: {
+    display: "inline-flex",
+    alignItems: "center"
+  },
+  bottomSpace: {
+    marginBottom: helpers.rhythmDiv * 2
+  },
+  dataMargin:{
+    marginLeft:'13px'
+  },
+  dialogAction: {
+    width: "100%",
+    justifyContent: "space-between",
+    padding:helpers.rhythmDiv * 2
   }
 };
 const ClassTypeDescription = styled.div`
@@ -132,7 +148,7 @@ const ClassTypeCoverImg = styled.div`
   width: 100px;
   height: 100px;
   margin-right: ${helpers.rhythmDiv}px;
-  border-radius: 50%;
+  border-radius: 0%;
   background-image: url(${props => props.src});
   flex-shrink: 0;
 
@@ -219,6 +235,7 @@ const Text = styled.p`
 class ClassTimesDialogBox extends React.Component {
   constructor(props) {
     super(props);
+   
     this.scrollTo("myScrollToElement");
   }
   componentDidMount() {
@@ -246,7 +263,12 @@ class ClassTimesDialogBox extends React.Component {
       );
     }
   };
-
+  
+  goToClassTypePage = (className, classId) => {
+    browserHistory.push(`/classType/${className}/${classId}`);
+    this.props.onModalClose()
+    
+  };
   scrollTo(name) {
     scroller.scrollTo(name || "content-container", {
       duration: 800,
@@ -254,7 +276,12 @@ class ClassTimesDialogBox extends React.Component {
       smooth: "easeInOutQuart"
     });
   }
-
+  goToSchoolPage = (schoolId) => {
+    let schoolData = School.findOne(schoolId);
+    browserHistory.push(`/schools/${schoolData.slug}`);
+    this.props.onModalClose()
+    
+  };
   getDatesBasedOnScheduleType = data => {
     let startDate = "";
     let endDate = "";
@@ -364,17 +391,19 @@ class ClassTimesDialogBox extends React.Component {
       experienceLevel,
       desc,
       gender,
-      school,
-      location,
+     filters,
       ageMin,
-      ageMax
+      ageMax,
+      _id,
+      schoolId
     } = this.props;
     {
       console.log("this.props in the clsstimedialogbox", this.props);
     }
-
+  
     return (
       <Dialog
+      
         open={open}
         onClose={onModalClose}
         aria-labelledby="modal"
@@ -446,11 +475,8 @@ class ClassTimesDialogBox extends React.Component {
                               account_balance
                             </Icon>
                           </div>
-                          <div>
-                            <Text>
-                              <Italic>School</Italic>
-                            </Text>
-                            <Text>{school && school.name}</Text>
+                          <div className={classes.dataMargin}>
+                            <Text>{filters && filters.schoolName&&filters.schoolName}</Text>
                           </div>
                         </div>
 
@@ -462,8 +488,7 @@ class ClassTimesDialogBox extends React.Component {
                           }
                         />
                       </IconsRowWrapper>
-                      {location &&
-                        location.address && (
+                      {filters && filters.locationTitle && (
                           <div className={classes.iconWithDetailContainer}>
                             <div
                               className="circle-icon"
@@ -473,15 +498,9 @@ class ClassTimesDialogBox extends React.Component {
                                 location_on
                               </Icon>
                             </div>
-                            <div>
+                            <div className={classes.dataMargin}>
                               <Text>
-                                <Italic>Location</Italic>
-                              </Text>
-                              <Text>
-                                {location &&
-                                  `${location.address}, ${location.city}, ${
-                                    location.state
-                                  }`}
+                              {filters && filters.locationTitle&&filters.locationTitle}
                               </Text>
                             </div>
                           </div>
@@ -513,10 +532,13 @@ class ClassTimesDialogBox extends React.Component {
                       )}
                     </Grid>
                     {desc && (
-                      <ClassTypeDescription>
-                        {`Class Type Description: ${desc}`}
-                      </ClassTypeDescription>
-                    )}
+                        <MetaInfo
+                        data={`  ${desc}`}
+                        title={"Description:" }
+                        marginBottom={16}
+                      />
+                      
+                      )}
                   </Grid>
                   <ClassTimesBoxes
                     inPopUp={true}
@@ -528,6 +550,36 @@ class ClassTimesDialogBox extends React.Component {
               )}
               {this.props.errorText && <ErrorWrapper>{errorText}</ErrorWrapper>}
             </DialogContent>
+            <DialogActions className={classes.dialogAction}>
+                <ClassTimeButton
+                  fullWidth
+                  label="Class Type"
+                  noMarginBottom
+                  onClick={(e) =>
+                   { onModalClose(e);
+                    this.goToClassTypePage(
+                      classTypeName,
+                      _id
+                    )
+                    
+                  }
+                  }
+                />
+                <ClassTimeButton
+                  fullWidth
+                  noMarginBottom
+                  label="School"
+                  onClick={(e) => {onModalClose(e);this.goToSchoolPage(schoolId);}
+                  }
+                />
+                <ClassTimeButton
+                  fullWidth
+                  noMarginBottom
+                  label="Close"
+                  onClick={onModalClose}
+                />
+              </DialogActions>
+
           </MyScrollToElement>
         </MuiThemeProvider>
       </Dialog>

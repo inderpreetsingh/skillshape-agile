@@ -14,6 +14,7 @@ const InfoCapsule = styled.div`
   font-size: ${helpers.baseFontSize}px;
   margin-right: ${helpers.rhythmDiv}px;
   margin-top: ${props => props.marginTop || helpers.rhythmDiv * 2}px;
+  margin-bottom: ${props => props.marginBottom || 0 }px;
   min-height: ${helpers.rhythmDiv * 4}px;
   line-height: 1;
 `;
@@ -27,7 +28,7 @@ const CapsuleText = styled.span`
 `;
 
 const MetaInfo = props => (
-  <InfoCapsule>
+  <InfoCapsule {...props}>
     <CapsuleHead>{props.title}</CapsuleHead>
     <CapsuleText style={{ marginLeft: "10px" }}> {props.data}</CapsuleText>
   </InfoCapsule>
