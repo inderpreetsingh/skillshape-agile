@@ -31,7 +31,7 @@ import * as helpers from "./components/jss/helpers.js";
 import { cardsData, cardsData1 } from "./constants/cardsData.js";
 import config from "/imports/config";
 import Events from "/imports/util/events";
-import { toastrModal } from "/imports/util";
+import { withPopUp } from "/imports/util";
 const MainContentWrapper = styled.div`
   display: flex;
   position: relative;
@@ -288,7 +288,7 @@ class Landing extends Component {
       localStorage.setItem("myLocation", JSON.stringify(value));
     });
     if (this.props.location.query && this.props.location.query.claimRequest) {
-      const { toastr } = this.props;
+      const { popUp } = this.props;
       if (this.props.location.query.schoolRegister) {
         Meteor.call(
           "claimSchoolRequest.approveSchoolClaimRequest",
@@ -296,9 +296,9 @@ class Landing extends Component {
           { rejected: true },
           (err, res) => {
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert",{content: err.reason || err.message});
             } else if (res && res.message) {
-              toastr.success(res.message, "Success");
+              popUp.appear("success", {content: res.message});
             } else {
               Events.trigger("registerAsSchool", { userType: "School" });
             }
@@ -310,10 +310,10 @@ class Landing extends Component {
           this.props.location.query.claimRequest,
           (err, res) => {
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert",{content: err.reason || err.message});
             }
             if (res && res.message) {
-              toastr.success(res.message, "Success");
+              popUp.appear("success",{content: res.message});
             }
           }
         );
@@ -342,10 +342,10 @@ class Landing extends Component {
           { keepMeSuperAdmin: true },
           (err, res) => {
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert", {content : err.reason || err.message});
             }
             if (res && res.message) {
-              toastr.success(res.message, "Success");
+              popUp.appear("success",{content: res.message});
             }
           }
         );
@@ -357,10 +357,10 @@ class Landing extends Component {
           { makeRequesterSuperAdmin: true },
           (err, res) => {
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert",{content: err.reason || err.message});
             }
             if (res && res.message) {
-              toastr.success(res.message, "Success");
+              popUp.success("success", {content: res.message});
             }
           }
         );
@@ -372,10 +372,10 @@ class Landing extends Component {
           { removeMeAsAdmin: true },
           (err, res) => {
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert",{content: err.reason || err.message});
             }
             if (res && res.message) {
-              toastr.success(res.message, "Success");
+              popUp.appear("success",{content: res.message});
             }
           }
         );
@@ -394,6 +394,7 @@ class Landing extends Component {
   }
 
   getUsersCurrentLocation = args => {
+    const {popUp} = this.props;
     return new Promise((resolve, reject) => {
       let positionCoords = [];
       if (navigator) {
@@ -418,7 +419,7 @@ class Landing extends Component {
           },
           err => {
             const geolocationError = this._handleGeoLocationError(err);
-            toastr.error(geolocationError, "Error");
+            popUp.appear("alert",{content: geolocationError});
           }
         );
       } else {
@@ -470,7 +471,7 @@ class Landing extends Component {
   }
 
   getMyCurrentLocation = args => {
-    const { toastr } = this.props;
+    const { popUp } = this.props;
     if (navigator) {
       navigator.geolocation.getCurrentPosition(
         position => {
@@ -517,7 +518,7 @@ class Landing extends Component {
         },
         err => {
           const geolocationError = this._handleGeoLocationError(err);
-          toastr.error(geolocationError, "Error");
+          popUp.appear("alert",{content: geolocationError});
         }
       );
     }
@@ -1028,4 +1029,4 @@ class Landing extends Component {
   }
 }
 
-export default toastrModal(Landing);
+export default withPopUp(Landing);

@@ -12,7 +12,7 @@ import {
   FormHelperText
 } from "material-ui/Form";
 
-import { toastrModal } from "/imports/util";
+import { withPopUp } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
@@ -222,7 +222,7 @@ class ContactUsForm extends Component {
   };
 
   handleFormSubmit = e => {
-    const { toastr } = this.props;
+    const { popUp } = this.props;
     e.preventDefault();
 
     let subject = this.state.subject;
@@ -238,13 +238,13 @@ class ContactUsForm extends Component {
     if (this.state.readyToSumit) {
       //..
       if (!email) {
-        toastr.error("Please enter your email.", "Error");
+        popUp.appear("alert",{content: "Please enter your email."});
         return false;
       } else if (!emailReg.test(email)) {
-        toastr.error("Please enter valid email address", "Error");
+        popUp.appear("alert",{content: "Please enter valid email address"});
         return false;
       } else if (!message) {
-        toastr.error("Please enter a message.", "Error");
+        popUp.appear("alert",{content: "Please enter a message."});
         return false;
       } else {
         // Start loading
@@ -260,7 +260,7 @@ class ContactUsForm extends Component {
           (error, result) => {
             if (error) {
             } else {
-              toastr.success("Thanks for providing your feedback", "Success");
+              popUp.appear("success",{content : "Thanks for providing your feedback"});
               if (!this.props.dialogBox) {
                 setTimeout(() => {
                   browserHistory.push(`/`);
@@ -444,4 +444,4 @@ ContactUsForm.propTypes = {
   onRadioButtonChange: PropTypes.func
 };
 
-export default withStyles(styles)(toastrModal(ContactUsForm));
+export default withStyles(styles)(withPopUp(ContactUsForm));

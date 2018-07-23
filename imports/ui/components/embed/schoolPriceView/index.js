@@ -8,7 +8,7 @@ import ClassType from "/imports/api/classType/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
-import { toastrModal, emailRegex } from "/imports/util";
+import { withPopUp, emailRegex } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import Events from "/imports/util/events";
 import LoginDialogBox from "/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx";
@@ -122,7 +122,7 @@ class SchoolPriceView extends React.Component {
   handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
     // Start loading
     console.log(typeOfTable, tableId, schoolId);
-    const { toastr } = this.props;
+    const { popUp } = this.props;
     let self = this;
     if (Meteor.userId()) {
       console.log("Meteor.userId()", Meteor.userId());
@@ -138,11 +138,11 @@ class SchoolPriceView extends React.Component {
           // Stop loading
           self.setState({ isLoading: false });
           if (err) {
-            toastr.error(err.reason || err.message, "Error");
+            popUp.appear('alert',{content: err.reason || err.message});
           } else {
             // Show confirmation to user that purchase request has been created.
             console.log("result----------------", res);
-            toastr.success(res, "Success");
+            popUp.appear("success", {content: res});
           }
         }
       );
@@ -288,13 +288,14 @@ class SchoolPriceView extends React.Component {
 
   reSendEmailVerificationLink = () => {
     this.setState({ loading: true });
+    const {popUp} = this.props;
     Meteor.call(
       "user.sendVerificationEmailLink",
       this.state.email,
       (err, res) => {
         if (err) {
           let errText = err.reason || err.message;
-          toastr.error(errText, "Error");
+          popUp.appear("alert",{content: errText});
         }
         if (res) {
           this.setState(
@@ -303,10 +304,8 @@ class SchoolPriceView extends React.Component {
               loading: false
             },
             () => {
-              this.props.toastr.success(
-                "We send a email verification link, Please check your inbox!!",
-                "success"
-              );
+              popUp.appear("success",
+                {content: "We send a email verification link, Please check your inbox!"});
             }
           );
         }
@@ -342,7 +341,7 @@ class SchoolPriceView extends React.Component {
 
   handleEmailConfirmationSubmit = () => {
     this.setState({ isBusy: true });
-    const { toastr } = this.props;
+    const { popUp } = this.props;
     Meteor.call(
       "user.createUser",
       { ...this.state.userData, signUpType: "skillshape-signup" },
@@ -363,10 +362,7 @@ class SchoolPriceView extends React.Component {
 
         if (res) {
           this.setState(modalObj, () => {
-            toastr.success(
-              "Successfully registered, Please check your email.",
-              "success"
-            );
+            popUp.appear("success",{content: "Successfully registered, Please check your email."});
           });
         }
       }
@@ -485,4 +481,4 @@ export default createContainer(props => {
     enrollmentFee,
     schoolId: schoolId
   };
-}, toastrModal(SchoolPriceView));
+}, withPopUp(SchoolPriceView));
