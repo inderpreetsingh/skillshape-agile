@@ -306,8 +306,8 @@ export default function() {
             schoolLocation={schoolLocation}
             isEdit={false}
             bestPriceDetails={{
-              monthly: !isEmpty(this.state.bestPriceDetails.bestMonthlyPrice) ? floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate) : null,
-              class: !isEmpty(this.state.bestPriceDetails.bestClassPrice) ? floor(this.state.bestPriceDetails.bestClassPrice.avgRate) : null
+              monthly: this.state.bestPriceDetails && !isEmpty(this.state.bestPriceDetails.bestMonthlyPrice) ? floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate) : null,
+              class: this.state.bestPriceDetails && !isEmpty(this.state.bestPriceDetails.bestClassPrice) ? floor(this.state.bestPriceDetails.bestClassPrice.avgRate) : null
             }}
             reviewsStats={{
               noOfRatings: getAverageNoOfRatings(reviewsData),
