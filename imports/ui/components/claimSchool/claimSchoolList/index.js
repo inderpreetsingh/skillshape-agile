@@ -128,7 +128,7 @@ class ClaimSchoolList extends React.Component {
     if (this._ifAllFieldsEmpty(data)) {
       popUp.appear("alert",{title: 'Empty Fields', content: "Please fill one atleast 1 field for suggestion of school"});
     }else if(data.schoolEmail && !emailRegex.email.test(data.schoolEmail)) {
-      popUp.appear("alert",{title: 'Invalid Email',content: 'Please correct the school email format'})
+      popUp.appear("alert",{title: 'Invalid Email',content: 'Please correct the email format'})
     }
     else {
       this.setState({ isLoading: true });

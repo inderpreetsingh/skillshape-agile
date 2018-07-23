@@ -79,10 +79,10 @@ class MySearchBar extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.value !== nextProps.value) {
-      this.setState({ ...this.state, value: nextProps.value, active: false });
+      this.setState((previousState) => ({ ...previousState, value: nextProps.value, active: nextProps.value != '' }));
     }
     if (this.props.resetSearch != nextProps.resetSearch) {
-      this.setState({ value: "", active: false });
+      this.setState((previousState) => ({ value: "", active: false }));
     }
   }
 
@@ -101,7 +101,7 @@ class MySearchBar extends Component {
     // this.setState({value: e.target.value})
     this.setState({
       value: e.target.value,
-      active: e.target.value !== "" ? true : false
+      active: e.target.value != ""
     });
 
     this.props.onChange && this.props.onChange(e);
@@ -109,7 +109,8 @@ class MySearchBar extends Component {
 
   handleCancel = () => {
     this.setState({ active: false, value: "" });
-    this.props.onChange && this.props.onChange("");
+    // this.props.onClose && this.props.onChange("");
+    if(this.props.onCloseIconClick) this.props.onCloseIconClick();
   };
 
   handleKeyPressed = e => {
@@ -191,7 +192,7 @@ class MySearchBar extends Component {
       }, 2000);
     }
 
-    // console.log('clostIconClass',closeIconClass,showIconClass);
+    console.log('clostIconClass',closeIconClass,showIconClass);
     return (
       <Paper className={rootClass}>
         <LeftSideInput inputOnSide={this.props.inputOnSide}>
@@ -223,7 +224,6 @@ class MySearchBar extends Component {
               style={styles.iconTransitions}
               onClick={this.handleCancel}
               className={closeIconClass}
-              onClick={props.onCloseIconClick}
               disabled={disabled}
             >
               {React.cloneElement(closeIcon)}

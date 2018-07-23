@@ -566,6 +566,13 @@ class Landing extends Component {
     });
   };
 
+  resetLocationInput = () => {
+    this.setState({
+      ...this.state,
+      filters: {...this.state.filters, locationName: '', coords: null}
+    })
+  }
+
   onLocationChange = (location, updateKey1, updateKey2) => {
     let stateObj = {};
     //console.log('onLocationChange',location,".....................");
@@ -798,7 +805,8 @@ class Landing extends Component {
   deleteFilterText = () => {
     this.setState({
       filters: {},
-      tempFilte360ainSearch: !this.state.resetMainSearch
+      tempFilters: {},
+      resetMainSearch:!this.state.resetMainSearch
     });
   };
   // showAppliedLocationFilter = () => {
@@ -846,11 +854,12 @@ class Landing extends Component {
     ) {
       return 96; // Size of filter bar + buttons
     } else if (!this.state.mapView && this.checkIfAnyFilterIsApplied()) {
-      return 96;
+      return 96; // if any filter is applied
     } else if (!this.state.mapView && this.state.sticky) {
+      // size without buttons..
       return 72;
     } else {
-      return 0;
+      return 0; // if no filter is applied
     }
   };
 
@@ -907,9 +916,9 @@ class Landing extends Component {
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 onMapViewButtonClick={this.handleToggleMapView}
                 mapView={this.state.mapView}
-                resetSearch={this.state.resetMainSearch}
                 locationInputChanged={this.locationInputChanged}
                 filters={this.state.filters}
+                resetLocationInput={this.resetLocationInput}
                 onLocationChange={this.onLocationChange}
                 currentFilterState={this.state.filters}
                 collectSelectedSkillCategories={
