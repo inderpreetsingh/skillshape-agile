@@ -40,15 +40,19 @@ const Title = styled.h2`
   line-height: 1;
 `;
 
-const Tagline = styled.p`
+const Content = styled.p`
   margin: 0;
-  font-size: ${helpers.baseFontSize}px;
+  font-size: 18px;
   line-height: 1;
   font-family: ${helpers.specialFont};
+  text-align: center;
+
 `;
 
 const ButtonsWrapper = styled.div`
   ${helpers.flexCenter}
+  width: 100%;
+  ${props => props.rightAlign ? 'justify-content: flex-end' : ''};
 `;
 
 
@@ -61,24 +65,24 @@ const popUpBasicConfig = {
   warning: {
     color: helpers.warningColor,
     title: 'Uh Oh!',
-    tagline: 'Something went wrong. Please try again',
+    content: 'Something went wrong. Please try again',
     affimateBtnText: 'Try Again'
   },
   alert: {
     color: helpers.alertColor,
-    title: 'Are you sure?',
-    tagline: 'It can cause serious issues. do you wanna continue ?',
-    affimateBtnText: "Yes"
+    title: 'Error',
+    content: 'It can cause serious issues. do you wanna continue ?',
+    affimateBtnText: "Close"
   },
   inform: {
     color: helpers.black,
     title: 'One more step...',
-    tagline: 'You need to have an account on skillshape, before you can perform this action',
+    content: 'You need to have an account on skillshape, before you can perform this action',
   },
   success: {
     color: helpers.primaryColor,
     title: 'Thank you!!',
-    tagline: 'Your action is successfully completed',
+    content: 'Your action is successfully completed',
     affimateBtnText: 'Okay'
   }
 }
@@ -89,12 +93,14 @@ const styles = {
       width: '100%',
       overflow: 'hidden',
     },
+    dialogActionRoot: {
+      width: '100%',
+      display: 'flex',
+      margin: 0,
+      padding: helpers.rhythmDiv * 2,
+    },
     dialogAction: {
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        margin: 0,
-        padding: helpers.rhythmDiv * 2,
+      width: '100%'
     },
     dialogContent: {
       overflowY: 'visible',
@@ -121,7 +127,7 @@ const styles = {
     }
 }
 
-class SkillShapeDefaultDialogBox extends Component {
+class SkillShapeDialogBox extends Component {
     getDefaultInformButtons = () => {
       return (<ButtonsWrapper>
         <JoinButton label="Sign Up"/>
@@ -130,11 +136,11 @@ class SkillShapeDefaultDialogBox extends Component {
     }
     getDefaultButtons = () => {
       const {RenderActions, type, onAffirmationButtonClick, onModalClose, onCloseButtonClick, classes} = this.props;
-      return (<ButtonsWrapper>
+      return (<ButtonsWrapper rightAlign>
         <ButtonWrapper><Button onClick={onModalClose || onAffirmationButtonClick} className={classes[type]}>
         {popUpBasicConfig[type].affimateBtnText}
         </Button></ButtonWrapper>
-        {(type === 'alert' || type === 'warning') &&
+        {(type === 'warning') &&
           <ButtonWrapper><Button onClick={onModalClose || onCloseButtonClick} color="primary">
             Cancel
           </Button></ButtonWrapper>}
@@ -173,7 +179,7 @@ class SkillShapeDefaultDialogBox extends Component {
     render() {
         const {
           title,
-          tagline,
+          content,
           type,
           classes,
           onModalClose,
@@ -199,10 +205,10 @@ class SkillShapeDefaultDialogBox extends Component {
                     </DialogTitleWrapper>
 
                     <DialogContent classes={{root: classes.dialogContent}}>
-                      <Tagline> {tagline || popUpBasicConfig[type].tagline} </Tagline>
+                      <Content> {content || popUpBasicConfig[type].content} </Content>
                     </DialogContent>
 
-                    <DialogActions classes={{root: classes.dialogAction}}>
+                    <DialogActions classes={{root: classes.dialogActionRoot, action: classes.dialogAction}}>
                       {this.getActionButtons()}
                     </DialogActions>
                 </Dialog>
@@ -211,18 +217,19 @@ class SkillShapeDefaultDialogBox extends Component {
     }
 }
 
-SkillShapeDefaultDialogBox.propTypes = {
+SkillShapeDialogBox.propTypes = {
   onModalClose: PropTypes.func,
   onAffirmationButtonClick: PropTypes.func,
   onCloseButtonClick: PropTypes.func,
   open: PropTypes.bool,
   title: PropTypes.string,
-  tagline: PropTypes.string,
+  content: PropTypes.string,
+  type: PropTypes.string,
   RenderActions: PropTypes.element
 }
 
-SkillShapeDefaultDialogBox.defaultProps = {
+SkillShapeDialogBox.defaultProps = {
   onAffirmationButtonClick: () => {},
 }
 
-export default withStyles(styles)(SkillShapeDefaultDialogBox);
+export default withStyles(styles)(SkillShapeDialogBox);

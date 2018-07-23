@@ -4,7 +4,7 @@ import isEmpty from "lodash/isEmpty";
 
 import ClaimSchoolListRender from "./claimSchoolListRender";
 import { Session } from "meteor/session";
-import { toastrModal, withSubscriptionAndPagination } from "/imports/util";
+import { withPopUp, withSubscriptionAndPagination } from "/imports/util";
 import { withStyles } from "material-ui/styles";
 import {emailRegex} from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
@@ -79,7 +79,7 @@ class ClaimSchoolList extends React.Component {
   };
 
   handleGiveSuggestion = () => {
-    const { toastr } = this.props;
+    const { popUp } = this.props;
     const {
       experienceLevel,
       locationName,
@@ -126,24 +126,18 @@ class ClaimSchoolList extends React.Component {
     // console.info('data 0----',data);
 
     if (this._ifAllFieldsEmpty(data)) {
-      toastr.error(
-        `Please fill one atleast 1 field for suggestion of school`,
-        "Error"
-      );
+      popUp.appear("alert",{title: 'Empty Fields', content: "Please fill one atleast 1 field for suggestion of school"});
     }else if(data.schoolEmail && !emailRegex.email.test(data.schoolEmail)) {
-      toastr.error(
-        'Please correct the school email format',
-        'Error'
-      )
+      popUp.appear("alert",{title: 'Invalid Email',content: 'Please correct the email format'})
     }
     else {
       this.setState({ isLoading: true });
       Meteor.call("schoolSuggestion.addSuggestion", data, (err, res) => {
         this.setState({ isLoading: false , filters: {}, tempFilters: {}, schoolEmail: "", schoolWebsite: ""});
         if (err) {
-          toastr.error(err.reason, "Error");
+          popUp.appear("alert",{content: err.reason});
         } else {
-          toastr.success("Thanks alot for your suggestion", "success");
+          popUp.appear("success",{content: "Thanks alot for your suggestion"});
           this.props.removeAllFilters();
         }
       });
@@ -293,7 +287,7 @@ class ClaimSchoolList extends React.Component {
 }
 
 export default withSubscriptionAndPagination(
-  withStyles(styles)(toastrModal(ClaimSchoolList)),
+  withStyles(styles)(withPopUp(ClaimSchoolList)),
   { collection: School, subscriptionName: "ClaimSchoolFilter", recordLimit: 10 }
 );
 

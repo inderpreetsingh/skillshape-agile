@@ -19,7 +19,7 @@ import ClassTypeCardDescription from "/imports/ui/components/landing/components/
 
 import classTimesData from "/imports/ui/components/landing/constants/classTimesData";
 
-import { toastrModal, formatClassTimesData } from "/imports/util";
+import { withPopUp, formatClassTimesData } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import { cardImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { getUserFullName } from "/imports/util/getUserData";
@@ -85,7 +85,7 @@ class ClassTypeCard extends Component {
   };
 
   handleClassTimesRequest = () => {
-    const { _id, schoolId, toastr } = this.props;
+    const { _id, schoolId, popUp } = this.props;
     if (!Meteor.userId()) {
       const newState = {
         ...this.state,
@@ -102,9 +102,9 @@ class ClassTypeCard extends Component {
       Meteor.call("classTimesRequest.addRequest", data, (err, res) => {
         this.setState({ isBusy: false }, () => {
           if (err) {
-            toastr.error(err.reason || err.message, "Error", {}, false);
+            popUp.appear('error',{content: err.reason || err.message}, false);
           } else {
-            toastr.success("Your request has been processed", "success");
+            popUp.appear('success',{content: "Your request has been processed"});
             this.handleRequest(schoolId);
           }
         });
@@ -235,4 +235,4 @@ class ClassTypeCard extends Component {
   }
 }
 
-export default toastrModal(withImageExists(ClassTypeCard, imageExistsConfig));
+export default withPopUp(withImageExists(ClassTypeCard, imageExistsConfig));

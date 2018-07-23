@@ -14,7 +14,7 @@ import Typography from "material-ui/Typography";
 import Grid from "material-ui/Grid";
 import { Link } from "react-router";
 
-import { cutString, toastrModal, handleOutBoundLink } from "/imports/util";
+import { cutString, withPopUp, handleOutBoundLink } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 import CallUsDialogBox from "/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx";
@@ -223,13 +223,10 @@ class SchoolCard extends Component {
 
   showConfirmationModal = () => {
     const user = Meteor.user();
-    const { toastr } = this.props;
+    const { popUp } = this.props;
     if (!user) {
       // Need to show error in toaster
-      toastr.error(
-        "You must be signed in to claim a school. [Sign In] or [Sign Up]",
-        "Error"
-      );
+      popUp.appear("error" , {content: "You must be signed in to claim a school. [Sign In] or [Sign Up]"});
     } else {
       // Show confirmation Modal before claiming a school.
       this.setState({
@@ -351,4 +348,4 @@ SchoolCard.defaultProps = {
   classTypeImg: cardImgSrc
 };
 
-export default withStyles(styles)(toastrModal(SchoolCard));
+export default withStyles(styles)(withPopUp(SchoolCard));

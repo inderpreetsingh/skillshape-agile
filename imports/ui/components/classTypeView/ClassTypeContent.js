@@ -8,7 +8,7 @@ import {Element, scroller } from 'react-scroll';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
-import { getAverageNoOfRatings , toastrModal } from '/imports/util';
+import { getAverageNoOfRatings , withPopUp } from '/imports/util';
 import withImageExists from '/imports/util/withImageExists.js';
 import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
@@ -239,12 +239,12 @@ class ClassTypeContent extends Component {
     }
 
     handleDialogState = (dialogName,state, event, errorMessage, resMessage) => {
+      const { popUp } = this.props;
       const newState = {...this.state};
       newState[dialogName] = state;
       this.setState(newState);
-      const { toastr } = this.props;
       if(resMessage) {
-        toastr.success(resMessage, "Success");
+        popUp.appear("success",{content: resMessage});
       }
     }
 
@@ -276,7 +276,7 @@ class ClassTypeContent extends Component {
     }
 
     requestPricingInfo = (text) => {
-        const { toastr, classTypeData, schoolData } = this.props;
+        const { popUp, classTypeData, schoolData } = this.props;
         if(!Meteor.userId()) {
           this.handleManageRequestsDialogBox('Pricing',true);
           // this.handleDialogState('manageRequestsDialog',true);
@@ -286,13 +286,15 @@ class ClassTypeContent extends Component {
             schoolId: schoolData._id
           };
 
+          debugger;
           Meteor.call('pricingRequest.addRequest', data, (err,res) => {
             this.setState({isBusy: false} , () => {
               if(err) {
-                toastr.error(err.reason || err.message,"Error", {}, false);
+                //popUp.appear('error',err.reason || err.message,"Error", {}, false);
+                popUp.appear('alert', {content: err.reason || err.message});
               }
               else {
-                toastr.success('Your request has been processed','success');
+                // popUp.appear(,'Your request has been processed','success');
                 this.handleRequest('pricing');
               }
             });
@@ -318,7 +320,7 @@ class ClassTypeContent extends Component {
     }
 
     handleRequest = (text) => {
-      const { toastr, schoolData } = this.props;
+      const { schoolData } = this.props;
 
       if(!isEmpty(schoolData)) {
         let emailBody = "";
@@ -337,7 +339,7 @@ class ClassTypeContent extends Component {
     }
 
     handleClassTimeRequest = () => {
-      const { toastr, classTypeData, schoolData } = this.props;
+      const { popUp, classTypeData, schoolData } = this.props;
       if(!Meteor.userId()) {
         this.handleManageRequestsDialogBox('Schedule Info',true);
 
@@ -351,9 +353,10 @@ class ClassTypeContent extends Component {
         Meteor.call('classTimesRequest.addRequest', data, (err,res) => {
           this.setState({isBusy: false} , () => {
             if(err) {
-              toastr.error(err.reason || err.message,"Error", {}, false);
+              debugger;
+              popUp.appear('alert',{content: err.reason || err.message});
             }else {
-              toastr.success('Your request has been processed','success');
+              popUp.appear('success',{content: 'Your request has been processed'});
               this.handleRequest('Class times');
             }
           });
@@ -396,12 +399,11 @@ class ClassTypeContent extends Component {
 
     handleManageRequestsDialogBox = (title, state) => {
       const newState = {...this.state, manageRequestTitle: title, manageRequestsDialog: state};
-      console.info(newState,"my new State...");
+      // console.info(newState,"my new State...");
       this.setState(newState);
     }
 
     handleGiveReview = () => {
-      const {toastr} = this.props;
       if(Meteor.userId()) {
         this.handleDialogState('giveReviewDialog',true);
       }else {
@@ -458,7 +460,7 @@ class ClassTypeContent extends Component {
     const isReviewsDataEmpty = isEmpty(reviewsData);
     const { manageRequestTitle } = this.state;
     const formattedClassTimesData = formatClassTimesData(classTimesData).filter(data => data.formattedClassTimesDetails.totalClassTimes > 0);
-    
+
     console.info('this.state',this.state);
     if(manageRequestTitle) {
       submitBtnLabel = manageRequestTitle != 'Pricing' ? 'Request class times' : submitBtnLabel;
@@ -614,4 +616,4 @@ class ClassTypeContent extends Component {
 	}
 }
 
-export default toastrModal(withImageExists(ClassTypeContent,imageExistsConfig));
+export default withPopUp(withImageExists(ClassTypeContent,imageExistsConfig));

@@ -1,8 +1,8 @@
 import React,{Fragment} from 'react';
-import SkillShapeDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDefaultDialogBox.jsx';
+import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx';
 
 export function withPopUp(WrappedComponent) {
-  return class PopUpContainer extends React.Component {
+  return class extends React.Component {
     state = {
         open: false,
         applyClose: true
@@ -10,11 +10,11 @@ export function withPopUp(WrappedComponent) {
     onClose = () => {
         this.setState({open: false});
 
-        if(this.props.onToastrClose && this.state.applyClose)
+        if(this.props.onPopUpClose && this.state.applyClose)
           this.props.onPopUpClose();
     }
-    appear = (type, dialogBoxProps, applyClose = true) => {
-      console.log("appear clicked..")
+    appear = (type, dialogBoxProps = {}, applyClose = true) => {
+      // console.log("appear clicked..")
         this.setState({
           open: true,
           type,
@@ -30,7 +30,7 @@ export function withPopUp(WrappedComponent) {
             dialogBoxProps
         } = this.state;
         return  (<Fragment>
-          {open && <SkillShapeDefaultDialogBox
+          {open && <SkillShapeDialogBox
                     open={open}
                     type={type}
                     onModalClose={this.onClose}

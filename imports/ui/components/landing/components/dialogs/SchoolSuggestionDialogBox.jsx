@@ -1,7 +1,6 @@
 import React, {Fragment,Component} from 'react';
 import PropTypes from 'prop-types';
 
-import { toastrModal } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { isEmpty} from 'lodash';
 

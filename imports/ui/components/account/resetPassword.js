@@ -10,7 +10,7 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 import IconInput from '/imports/ui/components/landing/components/form/IconInput.jsx';
 
 import { ContainerLoader } from '/imports/ui/loading/container';
-import { toastrModal } from '/imports/util';
+import { withPopUp } from '/imports/util';
 
 const InputWrapper = styled.div`
     margin-bottom: ${helpers.rhythmDiv * 2}px;
@@ -51,9 +51,9 @@ class ResetPassword extends React.Component {
 
     onSubmit = (event) => {
         event.preventDefault();
+        const { popUp } = this.props;
         const { token } = this.props.routeParams;
         const { password, confirmPassword } = this.state;
-
         if(password && confirmPassword) {
 
             if(password === confirmPassword) {
@@ -64,7 +64,7 @@ class ResetPassword extends React.Component {
                     if (err) {
                         stateObj.errorText = err.reason || err.message
                     } else {
-                        this.props.toastr.success("Your password has been updated!");
+                        popUp.appear("success",{content: "Your password has been updated!"});
                         setTimeout(() => {
                             browserHistory.push('/');
                         },2000)
@@ -125,4 +125,4 @@ class ResetPassword extends React.Component {
 	}
 }
 
-export default withStyles(styles)(toastrModal(ResetPassword));;
+export default withStyles(styles)(withPopUp(ResetPassword));;

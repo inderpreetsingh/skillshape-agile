@@ -14,7 +14,7 @@ import SLocation from "/imports/api/sLocation/fields";
 import School from "/imports/api/school/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import Reviews from "/imports/api/review/fields";
-import { toastrModal } from "/imports/util";
+import { withPopUp } from "/imports/util";
 import config from "/imports/config";
 import ClassTimes from "/imports/api/classTimes/fields";
 
@@ -143,4 +143,4 @@ export default createContainer(props => {
     showLoading,
     classTimesData
   };
-}, withStyles(styles)(toastrModal(SchoolView)));
+}, withStyles(styles)(withPopUp(SchoolView)));

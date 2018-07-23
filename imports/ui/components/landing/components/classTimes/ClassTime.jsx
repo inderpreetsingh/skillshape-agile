@@ -21,7 +21,7 @@ import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/d
 
 import Events from "/imports/util/events";
 import {
-  toastrModal,
+  withPopUp,
   formatDate,
   formatTime,
   formatDataBasedOnScheduleType,
@@ -190,12 +190,12 @@ class ClassTime extends Component {
   };
 
   removeFromMyCalender = classTimeRec => {
-    const { toastr } = this.props;
-    console.log("this.props", this.props, classTimeRec);
+    const { popUp } = this.props;
+    // console.log("this.props", this.props, classTimeRec);
     const result = this.props.classInterestData.filter(
       data => data.classTimeId == classTimeRec._id
     );
-    console.log("result==>", result);
+    // console.log("result==>", result);
     // check for user login or not
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
@@ -208,7 +208,7 @@ class ClassTime extends Component {
         data: { doc }
       });
     } else {
-      // toastr.error("Please login !","Error");
+      // popUp.error("Please login !","Error");
       this.setState({
         nonUserDialogBox: true
       });
@@ -217,7 +217,7 @@ class ClassTime extends Component {
 
   addToMyCalender = data => {
     // check for user login or not
-    console.log("addToMyCalender", data);
+    // console.log("addToMyCalender", data);
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
       const doc = {
@@ -240,26 +240,20 @@ class ClassTime extends Component {
   };
 
   handleClassInterest = ({ methodName, data }) => {
-    console.log("handleClassInterest", methodName, data);
+    // console.log("handleClassInterest", methodName, data);
     this.setState({ isLoading: true });
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
     Meteor.call(methodName, data, (err, res) => {
-      const { toastr } = this.props;
+      const { popUp } = this.props;
       this.setState({ isLoading: false });
       if (err) {
-        toastr.error(err.message, "Error");
+        popUp.appear("error",{content: err.message});
       } else {
         if (methodName.indexOf("remove") !== -1)
-          toastr.success(
-            `Hi ${userName}, Class removed successfully from your calendar`,
-            "Success"
-          );
+          popUp.appear("success",{content: `Hi ${userName}, Class removed successfully from your calendar`});
         else
-          toastr.success(
-            `Hi ${userName}, Class added to your calendar`,
-            "Success"
-          );
+          popUp.appear("success",{content: `Hi ${userName}, Class added to your calendar`});
       }
     });
   };
@@ -424,5 +418,5 @@ ClassTime.propTypes = {
   isTrending: PropTypes.bool
 };
 
-// export default toastrModal(withShowMoreText(ClassTime, { description: "desc"}));
-export default toastrModal(ClassTime);
+// export default withPopUp(withShowMoreText(ClassTime, { description: "desc"}));
+export default withPopUp(ClassTime);
