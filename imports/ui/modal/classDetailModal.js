@@ -73,8 +73,8 @@ const styles = theme => {
     },
     dialogAction: {
       width: "100%",
-      marginTop: helpers.rhythmDiv * 2,
-      justifyContent: "space-between"
+      justifyContent: "space-between",
+      padding:helpers.rhythmDiv * 2
     },
     dialogTitle: {
       position: "relative"
@@ -600,7 +600,7 @@ class ClassDetailModal extends React.Component {
 
                         {eventData &&
                           eventData.durationAndTimeunits &&
-                          "For " + eventData.durationAndTimeunits}
+                          "  For " + eventData.durationAndTimeunits}
                         {/* {scheduleDetails.map(value => {
                           if (classTypeData.formattedClassTimesDetails[value]) {
                             return (
@@ -710,9 +710,7 @@ class ClassDetailModal extends React.Component {
                           </Icon>
                         </div>
                         <div>
-                          <Text>
-                            <Italic>School</Italic>
-                          </Text>
+                          
                           <Text>{school && school.name}</Text>
                         </div>
                       </div>
@@ -755,9 +753,7 @@ class ClassDetailModal extends React.Component {
                             </Icon>
                           </div>
                           <div>
-                            <Text>
-                              <Italic>Location</Italic>
-                            </Text>
+                           
                             <Text>
                               {location &&
                                 `${location.address}, ${location.city}, ${
@@ -801,13 +797,16 @@ class ClassDetailModal extends React.Component {
                         title={"Experience:  " + " "}
                       />
                     )}
+                    {classType &&
+                      classType.desc && (
+                        <MetaInfo
+                        data={`  ${classType.desc}`}
+                        title={"Description:" }
+                        marginBottom={16}
+                      />
+                      
+                      )}
                   </Grid>
-                  {classType &&
-                    classType.desc && (
-                      <ClassTypeDescription>
-                        {`Class Type Description: ${classType.desc}`}
-                      </ClassTypeDescription>
-                    )}
                   {/*<Grid item xs={6}>
       						<div className={classes.iconWithDetailContainer}>
       							<div className="circle-icon" className={classes.iconStyle}>
