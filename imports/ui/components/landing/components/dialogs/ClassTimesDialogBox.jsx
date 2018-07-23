@@ -78,6 +78,12 @@ const styles = {
     width: "100%",
     justifyContent: "space-between",
     padding:helpers.rhythmDiv * 2
+  },
+  about:{
+    width:'100%',
+    fontSize: '21px',
+    padding: '5px',
+    backgroundColor: 'aliceblue'
   }
 };
 const ClassTypeDescription = styled.div`
@@ -454,9 +460,10 @@ class ClassTimesDialogBox extends React.Component {
                       </ClassTypeName>
                     </ClassTimes>
                   </ContentHeader>
+                  <center className={classes.about}> <i>{` About ${classTypeName}`}</i></center>
                   <Grid
                     container
-                    style={{ marginTop: "16px", padding: "22px" }}
+                    style={{ padding: "22px" }}
                   >
                     <IconsWrapper>
                       <IconsRowWrapper>
@@ -553,7 +560,7 @@ class ClassTimesDialogBox extends React.Component {
             <DialogActions className={classes.dialogAction}>
                 <ClassTimeButton
                   fullWidth
-                  label="Class Type"
+                  label="View Class"
                   noMarginBottom
                   onClick={(e) =>
                    { onModalClose(e);
@@ -568,7 +575,7 @@ class ClassTimesDialogBox extends React.Component {
                 <ClassTimeButton
                   fullWidth
                   noMarginBottom
-                  label="School"
+                  label="View School"
                   onClick={(e) => {onModalClose(e);this.goToSchoolPage(schoolId);}
                   }
                 />
