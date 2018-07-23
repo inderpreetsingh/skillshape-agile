@@ -111,10 +111,17 @@ const styles = theme => {
     },
     iconWithDetailContainer: {
       display: "inline-flex",
-      alignItems: "center"
+      alignItems: "center",
+      marginTop:'10px'
     },
     bottomSpace: {
-      marginBottom: helpers.rhythmDiv * 2
+      
+    },
+    about:{
+      width:'100%',
+      fontSize: '21px',
+      padding: '5px',
+      backgroundColor: 'aliceblue'
     }
   };
 };
@@ -241,6 +248,7 @@ const Event = styled.div`
   ${helpers.flexCenter} flex-direction: column;
   padding-right: ${helpers.rhythmDiv * 2}px;
 `;
+
 
 const EventDesc = Text.extend``;
 
@@ -691,7 +699,8 @@ class ClassDetailModal extends React.Component {
                 <Grid container style={{ marginTop: "16px" }}>
                   {/*<Typography component="p" style={{marginBottom:'20px'}}>
       							{classType && classType.desc}
-      						</Typography>*/}
+                  </Typography>*/}
+                <center className={classes.about}> <i>{` About ${classType.name}`}</i></center>
                   <IconsWrapper>
                     <IconsRowWrapper>
                       <div
@@ -846,7 +855,7 @@ class ClassDetailModal extends React.Component {
               <DialogActions className={classes.dialogAction}>
                 <ClassTimeButton
                   fullWidth
-                  label="Class Type"
+                  label="View Class"
                   noMarginBottom
                   onClick={() =>
                     this.goToClassTypePage(
@@ -858,7 +867,7 @@ class ClassDetailModal extends React.Component {
                 <ClassTimeButton
                   fullWidth
                   noMarginBottom
-                  label="School"
+                  label="View School"
                   onClick={() => this.goToSchoolPage(school)}
                 />
                 <ClassTimeButton
