@@ -267,12 +267,6 @@ class ClassTime extends Component {
         <ScheduleType>
           This is a Recurring class time.{<br />}
           {formatDate(startDate)} - {formatDate(endDate)}
-          {<br />}
-          {this.props.desc && (
-            <ClassTimeDescription>
-              {`Class Time Description: ${cutString(this.props.desc, 50)}`}
-            </ClassTimeDescription>
-          )}
         </ScheduleType>
       );
     else if (classScheduleType === "onetime") {
@@ -282,24 +276,12 @@ class ClassTime extends Component {
       return (
         <ScheduleType>
           {"This is a one time class time."}
-          {<br />}
-          {this.props.desc && (
-            <ClassTimeDescription>
-              {`Class Time Description: ${this.props.desc}`}
-            </ClassTimeDescription>
-          )}
         </ScheduleType>
       );
     }
     return (
       <ScheduleType>
         {`This is an ${classScheduleType} class time.`}
-        {<br />}
-        {this.props.desc && (
-          <ClassTimeDescription>
-            {`Class Time Description: ${this.props.desc}`}
-          </ClassTimeDescription>
-        )}
       </ScheduleType>
     );
   };
@@ -391,6 +373,11 @@ class ClassTime extends Component {
                   <ClassTypeName inPopUp={inPopUp}>{`${name}`}</ClassTypeName>
                   {/* Schedule type */}
                   {this.getScheduleTypeFormatted()}
+                  {this.props.desc && (
+                    <ClassTimeDescription>
+                      {`Description: ${cutString(this.props.desc, 70)}`}
+                    </ClassTimeDescription>
+                  )}
                   <ClassTimesCardWrapper inPopUp={inPopUp}>
                     <ClassTimesCard
                       inPopUp={inPopUp}

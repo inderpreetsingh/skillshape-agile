@@ -73,8 +73,8 @@ const styles = theme => {
     },
     dialogAction: {
       width: "100%",
-      marginTop: helpers.rhythmDiv * 2,
-      justifyContent: "space-between"
+      justifyContent: "space-between",
+      padding:helpers.rhythmDiv * 2
     },
     dialogTitle: {
       position: "relative"
@@ -111,10 +111,17 @@ const styles = theme => {
     },
     iconWithDetailContainer: {
       display: "inline-flex",
-      alignItems: "center"
+      alignItems: "center",
+      marginTop:'10px'
     },
     bottomSpace: {
-      marginBottom: helpers.rhythmDiv * 2
+      
+    },
+    about:{
+      width:'100%',
+      fontSize: '21px',
+      padding: '5px',
+      backgroundColor: 'aliceblue'
     }
   };
 };
@@ -241,6 +248,7 @@ const Event = styled.div`
   ${helpers.flexCenter} flex-direction: column;
   padding-right: ${helpers.rhythmDiv * 2}px;
 `;
+
 
 const EventDesc = Text.extend``;
 
@@ -600,7 +608,7 @@ class ClassDetailModal extends React.Component {
 
                         {eventData &&
                           eventData.durationAndTimeunits &&
-                          "For " + eventData.durationAndTimeunits}
+                          "  For " + eventData.durationAndTimeunits}
                         {/* {scheduleDetails.map(value => {
                           if (classTypeData.formattedClassTimesDetails[value]) {
                             return (
@@ -691,7 +699,8 @@ class ClassDetailModal extends React.Component {
                 <Grid container style={{ marginTop: "16px" }}>
                   {/*<Typography component="p" style={{marginBottom:'20px'}}>
       							{classType && classType.desc}
-      						</Typography>*/}
+                  </Typography>*/}
+                <center className={classes.about}> <i>{` About ${classType.name}`}</i></center>
                   <IconsWrapper>
                     <IconsRowWrapper>
                       <div
@@ -710,9 +719,7 @@ class ClassDetailModal extends React.Component {
                           </Icon>
                         </div>
                         <div>
-                          <Text>
-                            <Italic>School</Italic>
-                          </Text>
+                          
                           <Text>{school && school.name}</Text>
                         </div>
                       </div>
@@ -755,9 +762,7 @@ class ClassDetailModal extends React.Component {
                             </Icon>
                           </div>
                           <div>
-                            <Text>
-                              <Italic>Location</Italic>
-                            </Text>
+                           
                             <Text>
                               {location &&
                                 `${location.address}, ${location.city}, ${
@@ -801,13 +806,16 @@ class ClassDetailModal extends React.Component {
                         title={"Experience:  " + " "}
                       />
                     )}
+                    {classType &&
+                      classType.desc && (
+                        <MetaInfo
+                        data={`  ${classType.desc}`}
+                        title={"Description:" }
+                        marginBottom={16}
+                      />
+                      
+                      )}
                   </Grid>
-                  {classType &&
-                    classType.desc && (
-                      <ClassTypeDescription>
-                        {`Class Type Description: ${classType.desc}`}
-                      </ClassTypeDescription>
-                    )}
                   {/*<Grid item xs={6}>
       						<div className={classes.iconWithDetailContainer}>
       							<div className="circle-icon" className={classes.iconStyle}>
@@ -847,7 +855,7 @@ class ClassDetailModal extends React.Component {
               <DialogActions className={classes.dialogAction}>
                 <ClassTimeButton
                   fullWidth
-                  label="Class Type"
+                  label="View Class"
                   noMarginBottom
                   onClick={() =>
                     this.goToClassTypePage(
@@ -859,7 +867,7 @@ class ClassDetailModal extends React.Component {
                 <ClassTimeButton
                   fullWidth
                   noMarginBottom
-                  label="School"
+                  label="View School"
                   onClick={() => this.goToSchoolPage(school)}
                 />
                 <ClassTimeButton
