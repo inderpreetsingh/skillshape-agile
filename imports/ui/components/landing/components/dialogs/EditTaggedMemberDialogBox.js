@@ -12,7 +12,7 @@ import {
   FormHelperText
 } from "material-ui/Form";
 import Multiselect from "react-widgets/lib/Multiselect";
-
+import Checkbox from "material-ui/Checkbox";
 import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
 import { withStyles } from "material-ui/styles";
@@ -96,7 +96,8 @@ class EditTaggedMemberDialogBox extends Component {
         "public"
       ),
       isBusy: true,
-      error: ""
+      error: "",
+      checkedAll:false
     };
   }
 
@@ -163,7 +164,13 @@ class EditTaggedMemberDialogBox extends Component {
   collectSchoolMembers = values => {
     this.setState({ taggedMemberIds: values.map(ele => ele._id) });
   };
+  //1.add all members id into taggedmemberids if checked otherwise empty
+  //2.set checked value into the state 
+  //3.show slected values into the multiselect.
+handleChange=(e)=>{
+  e.target.checked?this.setState({checkedAll:e.target.checked,taggedMemberIds: this.state.schoolMembers.map(ele => ele._id)}):this.setState({checkedAll:e.target.checked,taggedMemberIds: []})
 
+}
   deleteMedia = () => {
     this.setState({ isBusy: true });
     Meteor.call(
@@ -225,11 +232,15 @@ class EditTaggedMemberDialogBox extends Component {
                 />
               </Grid>
               <Grid item md={4} sm={4} xs={4}>
-                <Typography>Members:</Typography>
+                <Typography>Members: <Checkbox
+          checked={this.state.checkedAll}
+          onChange={(e)=>{this.handleChange(e)}}
+          value="checkedAll"
+        /> All</Typography>
               </Grid>
               <Grid item md={8} sm={8} xs={8}>
                 <Multiselect
-                  textField={"firstName"}
+                  textField={'firstName'}
                   valueField={"activeUserId"}
                   data={this.state.schoolMembers}
                   placeholder="School Members"
