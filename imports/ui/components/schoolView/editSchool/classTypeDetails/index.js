@@ -71,6 +71,34 @@ class ClassTypeDetails extends React.Component {
     this.props.moveToNextTab(1);
   };
 
+  _getCategoryName = (categoryId, categoryData) => {
+    let categoryName = "";
+    for (let i = 0; i < categoryData.length; ++i) {
+      if (categoryData[i]._id === categoryId) {
+        return categoryData[i].name;
+      }
+    }
+  };
+
+  modifySelectSubjectsInClassTypeData = () => {
+    const { classTypeData } = this.props;
+    classTypeData.map(obj => {
+      obj.selectedSkillSubject.map(subjectData => {
+        if (subjectData.name == "Others") {
+          const categoryName = this._getCategoryName(
+            subjectData.skillCategoryId,
+            obj.selectedSkillCategory
+          );
+          console.log(categoryName, "category name...........");
+          subjectData.name = `${subjectData.name} -- ${categoryName}`;
+        }
+        return subjectData;
+      });
+      return obj;
+    });
+    return classTypeData;
+  };
+
   render() {
     return ClassTypeDetailsRender.call(this, this.props, this.state);
   }
