@@ -225,7 +225,7 @@ var Popover = (function(_Component) {
       targetEl.style.left = targetPosition.left + "px";
       // targetEl.style.maxHeight = window.innerHeight + "px"; // we can't see the complete list due to the styles here
       targetEl.style.maxHeight = "400px";
-      targetEl.style.overflowY = 'auto';
+      targetEl.style.overflowY = "auto";
     };
 
     _this.handleResize = (0, _lodash2.default)(_this.setPlacement, 100);

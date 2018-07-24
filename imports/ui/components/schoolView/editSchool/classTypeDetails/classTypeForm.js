@@ -45,6 +45,7 @@ class ClassTypeForm extends React.Component {
 
   initializeFields = () => {
     const { data, locationData } = this.props;
+    console.log(data, state, ".... editing data");
     let state = {
       gender: "Any",
       experienceLevel: "All",
@@ -84,7 +85,7 @@ class ClassTypeForm extends React.Component {
       if (err) {
         console.error(err.reason, "---");
       } else {
-        console.info(res, "==== res ====");
+        // console.info(res, "==== res ====");
         this.defaultSubjectList = res;
       }
     });
