@@ -18,7 +18,6 @@ export default function () {
 
 	const { showCreateMediaModal, mediaFormData, filterStatus, limit , isGalleryView} = this.state;
 	const { schoolId, mediaData, classes, fullScreen, schoolView, noMediaFound  } = this.props;
-	console.log("<<<<media details state --->>",this.props);
 	return (
 		<div>
 			{

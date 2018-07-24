@@ -202,7 +202,6 @@ const Package = props => (
               Meteor.settings.public.stripeClientId
             }&scope=read_write`}
           > */}
-          {console.log("package in package", props)}
           <Cart
             onClick={() =>
               props.onAddToCartIconButtonClick(
@@ -238,7 +237,7 @@ Package.propTypes = {
 
 Package.defaultProps = {
   packagePerClass: false,
-  onAddToCartIconButtonClick: () => console.log("cart Icon Clicked")
+  onAddToCartIconButtonClick: () => {}
 };
 
 export default Package;

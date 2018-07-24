@@ -127,16 +127,10 @@ class ImageGalleryView extends React.Component {
     return;
   };
   _onImageClick(event) {
-    console.debug(
-      "clicked on image",
-      event.target,
-      "at index",
-      this.props.images[this._imageGallery.getCurrentIndex()]
-    );
+    
   }
 
   _onImageLoad(event) {
-    console.debug("loaded image", event.target.src);
   }
 
   _onSlide(index) {
@@ -144,20 +138,16 @@ class ImageGalleryView extends React.Component {
     imagesLength = this.props.images.length - 1;
     if (index == imagesLength) {
       this.props.changeLimit();
-      console.debug("slid to index", index);
     }
   }
 
   _onPause(index) {
-    console.debug("paused on index", index);
   }
 
   _onScreenChange(fullScreenElement) {
-    console.debug("isFullScreen?", !!fullScreenElement);
   }
 
   _onPlay(index) {
-    console.debug("playing from index", index);
   }
 
   _handleInputChange(state, event) {

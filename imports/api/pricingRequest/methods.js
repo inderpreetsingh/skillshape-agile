@@ -72,7 +72,6 @@ Meteor.methods({
            toEmail = schoolOwnerData && adminUser.emails[0].address;
          }
 
-        console.log(updatePriceLink, schoolPageLink, currentUserName, classTypeName, ownerName, fromEmail, toEmail, memberLink);
         sendRequestReceivedEmail({toEmail, fromEmail, ownerName, currentUserName,  classTypeName, schoolPageLink, updateLink: updatePriceLink, memberLink, requestFor});
 
          if(subscriptionRequest === 'save' || this.userId)

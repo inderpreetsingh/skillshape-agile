@@ -28,7 +28,6 @@ class ConfirmationModal extends React.Component {
     }
 
 	render() {
-		console.log("ConfirmationModal props-->>",this.props);
 		const {
 			fullScreen,
 			title,

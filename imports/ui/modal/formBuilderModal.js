@@ -24,7 +24,6 @@ export class FormBuilderModal extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("FormBuilderModal componentWillReceiveProps-->>",nextProps);
   }
 
   getFormFields = () => {
@@ -41,8 +40,6 @@ export class FormBuilderModal extends React.Component {
   initializeFormValues = () => {
     let { formFieldsValues } = this.props;
     let formFields = this.getFormFields();
-    // console.log("initializeFormValues formFields-->>", formFields);
-    // console.log("initializeFormValues formFieldsValues-->>", formFieldsValues);
     if(formFields) {
       for(let field of formFields) {
         let value = formFieldsValues && formFieldsValues[field.key]
@@ -209,8 +206,6 @@ export class FormBuilderModal extends React.Component {
         editByFieldValue = formFieldsValues[tableData.actions.edit.editByField];
       }
 
-      console.log("onSubmit payload -->>",payload)
-      // console.log("callApi -->>",callApi, methods[callApi])
       methods[callApi]({formPayload: payload, props: this.props, closeModal: this.hideModal.bind(this), editByFieldValue, parentKeyValue});
 
     }
@@ -221,13 +216,11 @@ export class FormBuilderModal extends React.Component {
     for(let i=0; i < filterArr.length; i++) {
       filters[filterArr[i]] = this.props[filterArr[i]];
     }
-    // console.log("FormBuilderModal getFilters -->>",filters);
     return filters
   }
 
   getInputField = (field) => {
     let { formFieldsValues } = this.props;
-    console.log("getInputField this.props -->>",formFieldsValues);
     switch(field.type) {
 
       case "text":
@@ -321,9 +314,6 @@ export class FormBuilderModal extends React.Component {
   }
 
   render() {
-    console.log("FormBuilderModal render",this.props)
-    // console.log("FormBuilderModal state",this.state)
-    // console.log("FormBuilderModal ref",this.refs)
     let {
       className,
       modalType,

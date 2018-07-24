@@ -38,18 +38,11 @@ class SchoolPriceView extends React.Component {
 
   componentWillMount() {
     Events.on("loginAsUser", "123456", data => {
-      console.log("loginAsUser========>", data);
       this.handleLoginModalState(true, data);
     });
     Events.on("registerAsSchool", "123#567", data => {
       let { userType, userEmail, userName } = data;
-      console.info(userType, userEmail);
-      console.info(
-        "userType, userEmail, userName",
-        userType,
-        userEmail,
-        userName
-      );
+     
       //debugger;
       this.handleSignUpDialogBoxState(true, userType, userEmail, userName);
     });
@@ -105,7 +98,6 @@ class SchoolPriceView extends React.Component {
   };
 
   getClassName = classTypeId => {
-    console.log("SchoolPriceView getClassName classTypeId-->>", classTypeId);
     if (_.isArray(classTypeId)) {
       let str_name = [];
       // let classTypeIds = classTypeId.split(",")
@@ -121,11 +113,9 @@ class SchoolPriceView extends React.Component {
 
   handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
     // Start loading
-    console.log(typeOfTable, tableId, schoolId);
     const { toastr } = this.props;
     let self = this;
     if (Meteor.userId()) {
-      console.log("Meteor.userId()", Meteor.userId());
       this.setState({ isLoading: true });
       Meteor.call(
         "packageRequest.addRequest",
@@ -141,13 +131,11 @@ class SchoolPriceView extends React.Component {
             toastr.error(err.reason || err.message, "Error");
           } else {
             // Show confirmation to user that purchase request has been created.
-            console.log("result----------------", res);
             toastr.success(res, "Success");
           }
         }
       );
     } else {
-      console.log("Meteor.userId()", Meteor.userId());
       // Events.trigger("loginAsUser");
       this.handleLoginModalState(true);
     }
@@ -283,7 +271,6 @@ class SchoolPriceView extends React.Component {
   };
 
   handleSignUpModal = () => {
-    console.log("handleSignUpModal!!!");
   };
 
   reSendEmailVerificationLink = () => {
@@ -347,7 +334,6 @@ class SchoolPriceView extends React.Component {
       "user.createUser",
       { ...this.state.userData, signUpType: "skillshape-signup" },
       (err, res) => {
-        console.log("user.createUser err res -->>", err, res);
         let modalObj = {
           open: false,
           signUpDialogBox: false,
@@ -382,7 +368,6 @@ class SchoolPriceView extends React.Component {
   };
 
   render() {
-    console.log("SchoolPriceView props-->>", this);
     // console.log("ClassPriceTable props-->>",ClassPriceTable);
     // console.log("MonthlyPriceTable props-->>",MonthlyPriceTable);
     const {

@@ -18,7 +18,6 @@ class SchoolMemberView extends Component {
     }
 
     render() {
-        console.log("SchoolMemberView -->>",this.state);
         let { currentUser, isUserSubsReady } = this.props;
         let { slug } = this.props.params;
         let filters = {...this.state.filters};

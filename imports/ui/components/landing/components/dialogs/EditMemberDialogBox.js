@@ -90,7 +90,6 @@ class EditMemberDialogBox extends Component {
           this.props.onModalClose();
         }
         if (err) {
-          console.error("err", err);
           toastr.error(`${err.reason || err.message}`, "Error");
         }
         this.setState({ isLoading: false });

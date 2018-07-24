@@ -37,7 +37,6 @@ class MapView extends SkillClassListBase {
 	}
 
 	getSeletedSchoolData = ({school = {}}) => {
-		console.log("getSeletedSchoolData fn called-->>",school);
 		this.props.setSchoolIdFilter({schoolId: school._id})
 	}
 
@@ -47,7 +46,6 @@ class MapView extends SkillClassListBase {
 }
 
 export default createContainer(props => {
-	console.log("MapView createContainer --->>>",props);
 	const { query } = props.location;
 	let subscription;
 	let sLocation = SLocation.find().fetch()

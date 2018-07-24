@@ -7,10 +7,8 @@ import '/imports/api/sLocation/methods';
 
 export default methods = {
   callMeteorMethod: ({methodName, payload, closeModal}) => {
-    console.log("callMeteorMethod -->>",payload)
     Meteor.call(methodName, payload, (error, result) => {
       if (error) {
-        console.error("error", error);
       }
       if (result) {
         closeModal();
@@ -18,10 +16,8 @@ export default methods = {
     });
   },
   callMeteorUpdateMethod: ({methodName, updateKey, payload, closeModal}) => {
-    console.log("callMeteorUpdateMethod ->",methodName, updateKey, payload);
     Meteor.call(methodName, updateKey, payload, (error, result) => {
       if (error) {
-        console.error("error", error);
       }
       if (result) {
         closeModal()
@@ -29,14 +25,12 @@ export default methods = {
     });
   },
 	addLocation: ({formPayload, props, closeModal}) => {
-    console.log("AddLocation function called")
     const { schoolId } = props;
     let payload = formPayload;
     if(schoolId && payload) {
       payload.createdBy = Meteor.userId();
       payload.schoolId = schoolId;
       let sLocationDetail = payload.address + "," + payload.city + "," + payload.zip + "," + payload.country;
-      console.log("Final payload 1 -->>",payload)
       
       getLatLong(payload, (data) => {
         
@@ -52,7 +46,6 @@ export default methods = {
               payload.geoLat = data.lat
               payload.geoLong = data.lng
               payload.loc = [data.lat, data.lng]
-              console.log("Final payload 2-->>",payload)
               methods.callMeteorMethod({
                 methodName: "location.addLocation", 
                 payload: payload, 
@@ -64,7 +57,6 @@ export default methods = {
           payload.geoLat = data.lat
           payload.geoLong = data.lng
           payload.loc = [data.lat, data.lng]
-          console.log("Final payload 3-->>",payload)
 
           methods.callMeteorMethod({
             methodName: "location.addLocation", 
@@ -89,7 +81,6 @@ export default methods = {
       payload.createdBy = Meteor.userId();
       payload.schoolId = schoolId;
       let sLocationDetail = payload.address + "," + payload.city + "," + payload.zip + "," + payload.country;
-      console.log("editLocation Final payload 1 -->>",payload)
       
       getLatLong(payload, (data) => {
         
@@ -105,7 +96,6 @@ export default methods = {
               payload.geoLat = data.lat
               payload.geoLong = data.lng
               payload.loc = [data.lat, data.lng]
-              console.log("editLocation Final payload 2-->>",payload)
               
               methods.callMeteorUpdateMethod({
                 methodName: "location.editLocation", 
@@ -119,7 +109,6 @@ export default methods = {
             payload.geoLat = data.lat
             payload.geoLong = data.lng
             payload.loc = [data.lat, data.lng]
-            console.log("editLocation Final payload 3-->>",payload)
 
             methods.callMeteorUpdateMethod({
               methodName: "location.editLocation", 
@@ -132,7 +121,6 @@ export default methods = {
     }
   },
   removeLocation: ({formPayload}) => {
-    console.log("removeLocation fn editByFieldValue -->>", formPayload);
     Meteor.call("location.removeLocation", formPayload, (error, result) => {
       if(error) {
         toastr.error("Unable to delete.","Error");
@@ -147,7 +135,6 @@ export default methods = {
       if (result) { 
         closeModal();
       } else if(error) {
-        console.error("Error ->>",error)
       }
     });
   },
@@ -170,7 +157,6 @@ export default methods = {
     });
   },
   addClassType: ({formPayload, props, closeModal}) => {
-    console.log("addClassType method formPayload -->>>",formPayload)
     const { schoolId } = props;
     let payload = formPayload;
     if(schoolId && payload) {
@@ -183,7 +169,6 @@ export default methods = {
         }
         S3.upload({files: { "0": payload.classTypeImg}, path:"class"}, (err, res) => {
           if(err) {
-            console.error("err ",err)
           }
           if(res) {
             payload.classTypeImg = res.secure_url
@@ -197,7 +182,6 @@ export default methods = {
     }
   },
   updateClassType: ({formPayload, props, closeModal, editByFieldValue}) => {
-    console.log("updateClassType -->>",formPayload, editByFieldValue);
     const { schoolId } = props;
     if(formPayload && editByFieldValue && schoolId) {
       formPayload.schoolId = schoolId;
@@ -208,7 +192,6 @@ export default methods = {
         }
         S3.upload({files: { "0": formPayload.classTypeImg}, path:"class"}, (err, res) => {
           if(err) {
-            console.error("err ",err)
           }
           if(res) {
             // this.editUserCall(res)

@@ -40,7 +40,6 @@ class SchoolView extends SchoolViewBase {
 
   handleSeeMore = () => {
     // Attach count with skill cateory name so that see more functionlity can work properly.
-    console.log("handleSeeMore");
     let currentCount = this.state.seeMoreCount;
     this.setState({ seeMoreCount: config.seeMoreCount + currentCount });
   };
@@ -50,10 +49,7 @@ class SchoolView extends SchoolViewBase {
   };
 
   render() {
-    console.log(
-      this.props,
-      "This . route . location name school view render.."
-    );
+    
     // if(this.props.route.name === 'SchoolViewDeveloping') {
     return SchoolViewNewRender.call(this, this.props, this.state);
     // }
@@ -125,11 +121,6 @@ export default createContainer(props => {
     ).fetch();
   }
 
-  console.log("SchoolView classTimesData--->>", classTimesData);
-  // console.log("SchoolView classType--->>", classType)
-  // console.log("SchoolView classPricing--->>", classPricing)
-  // console.log("SchoolView monthlyPricing--->>", monthlyPricing)
-  // console.log("SchoolView schoolLocation--->>", schoolLocation)
   return {
     ...props,
     schoolData,

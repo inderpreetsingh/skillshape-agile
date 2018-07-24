@@ -27,7 +27,6 @@ export default class SkillClassListBase extends React.Component {
           if(item.selectedSkillCategory && item.selectedSkillCategory.name)
             return item.selectedSkillCategory.name;
         });
-       console.log("grouped -->>",grouped)
        return grouped
     }
   }
@@ -70,7 +69,6 @@ export default class SkillClassListBase extends React.Component {
 
   showClassTypes = ({classType}) => {
     if(classType && _.size(classType) > 0) {
-        console.log("showClassTypes classType -->>",classType)
         return Object.keys(classType).map((key, index) => {
             
             return <div className="product-sort">
@@ -78,7 +76,6 @@ export default class SkillClassListBase extends React.Component {
                 {
                     classType[key].map((data, i) => {
                         const { schoolId, locationId } = data;
-                        console.log("showClassTypes data -->>",data)
                         const schoolData = School.findOne({_id: schoolId});
                         const backgroundUrl = this.viewImage({ classType: data, schoolData});
                         const locationData = locationId && this.addressView(locationId)

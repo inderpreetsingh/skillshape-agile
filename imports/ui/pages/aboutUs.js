@@ -67,7 +67,6 @@ class AboutUs extends React.Component{
   submit = (event) => {
       event.preventDefault();
       const { toastr } = this.props;
-      console.log("this", this);
       const name = this.name.value;
       const email = this.email.value;
       const message = this.yourMessage.value;
@@ -85,10 +84,8 @@ class AboutUs extends React.Component{
       } else {
           // Start loading
           this.setState({ isLoading: true });
-          console.log("sendfeedbackToAdmin")
           Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
               if (error) {
-                  console.log("error", error);
               } else {
                   toastr.success("Thanks for providing your feedback", "Success");
                   setTimeout(() => {

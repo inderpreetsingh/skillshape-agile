@@ -22,10 +22,7 @@ class SchoolEditView extends React.Component {
   }
   componentWillMount() {
     // Listen for `?classDetails=true` so that we can click on tab.
-    console.log(
-      "this.props.location.query.type != 'rejec",
-      this.props.location.query.tabValue
-    );
+    
     if (this.props.location.query.tabValue) {
       // We should set state for class details tab so that it opens automatically.
       this.setState({ queryTabValue: this.props.location.query.tabValue });
@@ -62,7 +59,6 @@ class SchoolEditView extends React.Component {
     formFieldsValues,
     parentData
   }) => {
-    console.log("<<<< showEditModal >>>>>", parentData);
     this.setState(
       {
         formBuilderModal: {
@@ -73,7 +69,6 @@ class SchoolEditView extends React.Component {
         }
       },
       () => {
-        console.log("this.formBuilderModal show -->>", this.formBuilderModal);
         this.formBuilderModal.show();
       }
     );

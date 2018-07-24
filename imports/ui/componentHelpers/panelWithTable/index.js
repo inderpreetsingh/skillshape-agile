@@ -87,11 +87,7 @@ class PanelWithTable extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     // Open Class Type Dialog Box, if no class type data is available.
-    console.log(
-      "this.props.showClassTypeModal && nextProps.showClassTypeModal",
-      this.props.showClassTypeModal,
-      nextProps.showClassTypeModal
-    );
+    
     if (this.props.showClassTypeModal && nextProps.showClassTypeModal) {
       this.setState({ showForm: true });
     }

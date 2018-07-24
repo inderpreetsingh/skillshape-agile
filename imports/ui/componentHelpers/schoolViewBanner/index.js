@@ -83,7 +83,7 @@ class SchoolViewBanner extends React.Component {
 		    isEdit
 	  	} = this.props;
 	  	const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
-			console.info('shcooll data',schoolData,"-------");
+			
 		return(<Grid container className={classes.schoolHeaderContainer}>
 	  <Grid item xs={12}  style={{paddingTop: 0}}>
 	  	{this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}

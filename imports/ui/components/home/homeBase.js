@@ -115,8 +115,6 @@ export default class HomeBase extends React.Component {
   }
 
   onSearch = (filterRef) => {
-    console.log("filterReffilterRef -->>",filterRef)
-    console.log("onSearch before fn skillCategoryId",filterRef.refs["skillCategoryId"].getSelectedAutoCompleteValue())
     let oldFilters = {...this.state.filters};
     
     oldFilters.textSearch = filterRef.schoolName.value;
@@ -129,7 +127,6 @@ export default class HomeBase extends React.Component {
     oldFilters.skillCategoryIds = filterRef.skillCategory && [filterRef.skillCategory._id];
     oldFilters.skillSubjectIds = filterRef.skillSubject;
     
-    console.log("onSearch after fn oldFilters",oldFilters)
     this.setState({filters: oldFilters})
   }
 
@@ -144,7 +141,6 @@ export default class HomeBase extends React.Component {
   setSchoolIdFilter = ({schoolId}) => {
     let oldFilters = {...this.state.filters};
     oldFilters.schoolId = schoolId;
-    console.log("setSchoolIdFilter",oldFilters)
     this.setState({filters: oldFilters})
   }
 }

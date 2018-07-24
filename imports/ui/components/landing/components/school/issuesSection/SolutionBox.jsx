@@ -379,7 +379,6 @@ class SolutionBox extends Component {
   };
 
   handleTouchMove = e => {
-    console.info("handle Touch Move", e.touches[0].clientX);
     myPosition.currentX = e.touches[0].clientX;
   };
 
@@ -393,7 +392,6 @@ class SolutionBox extends Component {
   };
 
   handleTouchEnd = e => {
-    console.info("handle touch end");
     if (
       Math.abs(myPosition.currentX - myPosition.initX) > TOUCH_MOVE_THRESHOLD
     ) {

@@ -8,7 +8,6 @@ import ManageUnsubscribeDialogBox from "/imports/ui/components/landing/component
 const redirectUser = () => browserHistory.push('/');
 
 const UnsubscribeUser = (props) => {
-    console.log("props for the unsubscribe dialog box...");
     const {pricingRequest, classTimesRequest, locationRequest, requestId} = queryString.parse(props.location.search);
     const requestFor = (pricingRequest && 'price details') || (classTimesRequest && 'class times') || (locationRequest && 'location');
     return(<div>
