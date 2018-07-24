@@ -16,10 +16,10 @@ import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-pic
 import { TableRow, TableCell } from "material-ui/Table";
 import List from "material-ui/List";
 import Hidden from "material-ui/Hidden";
-import isEmpty from "lodash/isEmpty";
 import find from "lodash/find";
 import Drawer from "material-ui/Drawer";
 import AppBar from "material-ui/AppBar";
+import isEmpty from "lodash/isEmpty";
 import IconButton from "material-ui/IconButton";
 import Toolbar from "material-ui/Toolbar";
 import MenuIcon from "material-ui-icons/Menu";
@@ -41,6 +41,9 @@ import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import SubscriptionDetails from "/imports/ui/componentHelpers/subscriptionDetails";
+import ClassPricing from "/imports/api/classPricing/fields";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 const drawerWidth = 400;
 const style = {
   w211: {
@@ -252,8 +255,46 @@ class DashBoardView extends React.Component {
             data={this.props.classTypeData}
             placeholder="Available Classes"
             onChange={this.collectSelectedClassTypes}
-          />
+            />
         </Grid>
+
+        {/*package details will be show later and the commented code will be used after currency task*/}
+
+
+            {/* {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&& <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+          <Multiselect
+            textField={"name"}
+            valueField={"_id"}
+            data={this.props.enrollmentFee}
+            placeholder="Enrollment Fee"
+            onChange={this.collectSelectedClassTypes}
+          />
+          
+          
+        </Grid>}
+        {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&&  <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+        <Multiselect
+            textField={"packageName"}
+            valueField={"_id"}
+            data={this.props.classPricing}
+            placeholder="Class Packages"
+            onChange={this.collectSelectedClassTypes}
+          />
+          </Grid>}
+        {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&&  <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+           <Multiselect
+            textField={"packageName"}
+            valueField={"_id"}
+            data={this.props.monthlyPricing}
+            placeholder="Monthly Packages"
+            onChange={this.collectSelectedClassTypes}
+          />
+          </Grid>}
+         */}
+       
+         
+          
+           
         <FormControl fullWidth margin="dense">
           <FormControlLabel
             control={
@@ -779,7 +820,8 @@ export default createContainer(props => {
   let classTypeData = [];
   let filters = { ...props.filters, slug };
   let schoolAdmin;
-
+  let schoolId;
+  let classPricing,monthlyPricing,enrollmentFee;
   let subscription = Meteor.subscribe(
     "schoolMemberDetails.getSchoolMemberWithSchool",
     filters
@@ -790,9 +832,30 @@ export default createContainer(props => {
 
     if (slug) {
       schoolData = School.find({ slug: slug }).fetch();
+ 
     } else {
       schoolData = School.find().fetch();
     }
+    //find school id
+    schoolId=schoolData[0]._id;
+    //find all classpricing from subscription for displaying in add new member popup
+    let classPricingSubscription=Meteor.subscribe("classPricing.getClassPricing",{schoolId})
+    if(classPricingSubscription.ready()){
+      classPricing=ClassPricing.find().fetch();
+    }
+
+    //find all enrollmentFee from subscription for displaying in add new member popup
+    let enrollmentFeeSubscription=Meteor.subscribe("enrollmentFee.getEnrollmentFee",{schoolId})
+    if(enrollmentFeeSubscription.ready()){
+      enrollmentFee=EnrollmentFees.find().fetch();
+    }
+    //find all monthlyPricing from subscription for displaying in add new member popup
+    let monthlySubscription=Meteor.subscribe("monthlyPricing.getMonthlyPricing",{schoolId})
+    if(monthlySubscription.ready()){
+      monthlyPricing=MonthlyPricing.find().fetch();
+    }
+
+
     if (!isEmpty(schoolData) && schoolData[0].admins) {
       let currentUser = Meteor.user();
       if (
@@ -810,6 +873,8 @@ export default createContainer(props => {
     classTypeData,
     isLoading,
     slug,
-    schoolAdmin
+    schoolAdmin,
+    classPricing,
+    enrollmentFee,monthlyPricing
   };
 }, withStyles(styles, { withTheme: true })(DashBoardView));
