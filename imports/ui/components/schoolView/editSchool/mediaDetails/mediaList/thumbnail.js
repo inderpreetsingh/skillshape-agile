@@ -17,7 +17,6 @@ export default class Thumbnail extends React.Component {
   }
 
   render() {
-  	console.log("thumbnailData props -->>",this.props);
   	const { thumbnailData } = this.props;
     return (
     	<div className="thumbnail-wrapper col-sm-6" style={{position: 'absolute', margin: -100}}>

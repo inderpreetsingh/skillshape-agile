@@ -30,7 +30,6 @@ export default class AutoComplete extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        // console.log("AutoComplete componentWillReceiveProps-->>",nextProps);
         this.initializeValues(nextProps.suggestions, nextProps.suggestionfield);
         
     }
@@ -40,8 +39,6 @@ export default class AutoComplete extends React.Component {
     }
 
     initializeChildValues = () => {
-        // console.log("AutoComplete initializeChildValues state-->>",this.state);
-        // console.log("AutoComplete initializeChildValues props-->>",this.props);
         const { fieldobj } = this.props;
         const { selectedValue } = this.state;
         if(fieldobj.child && selectedValue) {
@@ -60,7 +57,6 @@ export default class AutoComplete extends React.Component {
     }
 
     onChange = (event, { newValue }) => {
-        // console.log("AutoComplete onChange-->>", newValue)
         const { fieldobj } = this.props;
         if(fieldobj.child) {
             this.refs.autoSelect.getInitialState();
@@ -93,7 +89,6 @@ export default class AutoComplete extends React.Component {
 	}
 
     onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
-        console.log("onSuggestionSelected-->>", suggestion)
         const { fieldobj } = this.props;
         if(fieldobj.child) {
             this.refs.autoSelect.getData({ 
@@ -112,8 +107,6 @@ export default class AutoComplete extends React.Component {
     render() {
     	const { value, suggestions } = this.state;
         const { suggestionfield, fieldobj, data, onChange } = this.props;
-        console.log("AutoComplete render props-->>",this.props);
-        // console.log("AutoComplete render state-->>",this.state);
     
         return ( 
         	<div className={fieldobj.className ? fieldobj.className : viewClass.AutoSuggestClassName}>

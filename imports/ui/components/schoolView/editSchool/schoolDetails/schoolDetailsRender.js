@@ -44,8 +44,6 @@ export default function () {
     currentUser
   } = this.props;
 
-  console.log("SchoolEditDetails render props -->>", this.props)
-  console.log("SchoolEditDetails render state -->>", this.state)
   return  (
     <div>
       <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />

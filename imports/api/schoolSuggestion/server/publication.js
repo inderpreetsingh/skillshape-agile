@@ -1,7 +1,6 @@
 import SchoolSuggestion from "../fields";
 
 Meteor.publish("schoolSuggestion.getAllSuggestions", function() {
-  console.log(this.userId,"this .user Id");
   const userId = this.userId;
   const user = Meteor.users.findOne({_id: userId});
   if(checkMyAccess({user})) {

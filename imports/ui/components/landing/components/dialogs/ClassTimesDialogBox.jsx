@@ -404,7 +404,6 @@ class ClassTimesDialogBox extends React.Component {
       schoolId
     } = this.props;
     {
-      console.log("this.props in the clsstimedialogbox", this.props);
     }
   
     return (

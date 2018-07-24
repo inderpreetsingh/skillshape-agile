@@ -142,7 +142,6 @@ const MainContainer = styled.div`
 `;
 
 const SkillShapeSchool = (props) => {
-	console.log("SkillShapeSchool props -->>",props)
 	return (
 	<DocumentTitle title={props.route.name}>
 		<MainContainer>

@@ -194,7 +194,6 @@ class ClassTypeForm extends React.Component {
             });
           }
         } else {
-          console.warn("ERROR : ", err);
         }
       }
     );
@@ -204,7 +203,6 @@ class ClassTypeForm extends React.Component {
     //this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
       if (error) {
-        console.error("error", error);
       }
       if (result) {
         this.props.onClose(result);

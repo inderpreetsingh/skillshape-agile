@@ -53,7 +53,6 @@ class MyTagList extends React.Component {
 
   handleNoOfFiltersClick = (e) => {
     e.preventDefault();
-    console.log('click..');
     if(this.props.onNoOfFiltersClick)
       this.props.onNoOfFiltersClick();
   }

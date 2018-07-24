@@ -191,11 +191,9 @@ class ClassTime extends Component {
 
   removeFromMyCalender = classTimeRec => {
     const { toastr } = this.props;
-    console.log("this.props", this.props, classTimeRec);
     const result = this.props.classInterestData.filter(
       data => data.classTimeId == classTimeRec._id
     );
-    console.log("result==>", result);
     // check for user login or not
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
@@ -217,7 +215,6 @@ class ClassTime extends Component {
 
   addToMyCalender = data => {
     // check for user login or not
-    console.log("addToMyCalender", data);
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
       const doc = {
@@ -240,7 +237,6 @@ class ClassTime extends Component {
   };
 
   handleClassInterest = ({ methodName, data }) => {
-    console.log("handleClassInterest", methodName, data);
     this.setState({ isLoading: true });
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
@@ -333,7 +329,6 @@ class ClassTime extends Component {
 
   render() {
     // debugger;
-    console.log("this.props of classtime", this.props);
     const {
       desc,
       startDate,
@@ -346,7 +341,6 @@ class ClassTime extends Component {
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
 
-    console.log(desc, this.props, "Formatted Class Times.........");
     //const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(
       this.props.addToCalendar

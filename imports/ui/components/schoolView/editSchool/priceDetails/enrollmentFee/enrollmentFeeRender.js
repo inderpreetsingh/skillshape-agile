@@ -14,7 +14,6 @@ import PanelHeader from '../panelHeader';
 
 export default function () {
 
-	console.log("EnrollmentFee render props -->>",this.props)
 	const { classes, schoolId, enrollmentFeeData } = this.props;
 
 	return (

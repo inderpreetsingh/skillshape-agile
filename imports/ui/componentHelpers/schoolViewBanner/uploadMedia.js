@@ -78,7 +78,7 @@ class UploadMedia extends React.Component {
       // console.log("calling >>>>>>>>>>> editSchool")
   		Meteor.call("editSchool", this.props.schoolId, data, (error, result) => {
             if(error) {
-              console.error("error", error);
+              
             }
             this.setState({isBusy: false})
             this.props.onClose();

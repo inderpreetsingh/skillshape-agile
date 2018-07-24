@@ -5,7 +5,6 @@ import MonthlyPrice from './monthlyPrice';
 import EnrollmentFee from './enrollmentFee';
 
 export default function () {
-	console.log("price details render data -->>>",this.props);
 	let {
 		classPricingData,
 		monthlyPricingData,

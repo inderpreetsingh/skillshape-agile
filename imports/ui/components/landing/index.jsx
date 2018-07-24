@@ -242,7 +242,6 @@ class Landing extends Component {
   }
 
   _handleGeoLocationError(err) {
-    console.warn(err, "err.message", err.message.indexOf);
     switch (err.code) {
       case err.PERMISSION_DENIED:
         if (err.message.indexOf("User denied") == 0) {

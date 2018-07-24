@@ -92,7 +92,6 @@ export class OneTimeRow extends React.Component {
 
   render() {
     const { row } = this.state;
-    console.log("OneTimeRow state -->>", this.state);
     return (
       <div>
         {row.map((data, index) => {
@@ -212,7 +211,6 @@ export class OneTimeRow extends React.Component {
                         No location added in Locations.
                       </MenuItem>
                     )}
-                    {console.log("this.props.roomData", this.props.roomData)}
                     {this.props.roomData &&
                       this.props.roomData.map((data, index) => {
                         return (

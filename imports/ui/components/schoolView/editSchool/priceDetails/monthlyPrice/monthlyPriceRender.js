@@ -14,7 +14,6 @@ import PanelHeader from '../panelHeader';
 
 export default function () {
 
-    console.log("monthlyPricingData props---->",this.props)
 
      const { classes, schoolId, monthlyPricingData } = this.props;
 

@@ -26,7 +26,6 @@ export const sendPackagePurchaseEmail = function({
   schoolAdminName,
   schoolId
 }) {
-  console.log("sendpackagepurchaseemail");
   Email.send({
     to: config.skillshapeAdminEmail, // Replace value of `to` with Admin email if Admin exists.
     from: config.fromEmailForPurchasePackage,

@@ -14,9 +14,7 @@ import PanelHeader from '../panelHeader';
 
 export default function () {
 
-	console.log("classPrice render props -->>",this)
 	const { classes, schoolId, classPricingData } = this.props;
-	console.log("classPrice classes -->>",classes)
 
 	return (
 		<div className="class-price-details">

@@ -47,15 +47,11 @@ class ClassPriceForm extends React.Component {
   }
 
   handleClassTypeInputChange = value => {
-    console.log("ClassPriceForm handleClassTypeInputChange -->>", value);
     Meteor.call(
       "classType.getClassTypeByTextSearch",
       { schoolId: this.props.schoolId, textSearch: value },
       (err, res) => {
-        console.log(
-          "ClassPriceForm classType.getClassTypeByTextSearch res -->>",
-          res
-        );
+        
         this.setState({
           classTypeData: res || []
         });
@@ -64,7 +60,6 @@ class ClassPriceForm extends React.Component {
   };
 
   onClassTypeChange = values => {
-    console.log("ClassPriceForm onClassTypeChange values-->>", values);
     this.setState({ selectedClassType: values });
   };
 
@@ -110,12 +105,8 @@ class ClassPriceForm extends React.Component {
   };
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
-    console.log("handleSubmit methodName-->>", methodName);
-    console.log("handleSubmit doc-->>", doc);
-    console.log("handleSubmit doc_id-->>", doc_id);
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
       if (error) {
-        console.error("error", error);
       }
       if (result) {
         this.props.onClose();

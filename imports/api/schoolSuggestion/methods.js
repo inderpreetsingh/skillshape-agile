@@ -16,7 +16,6 @@ Meteor.methods({
       }
     }else {
       const invalidData = validationContext.invalidKeys()[0];
-      console.log(invalidData,validationContext.invalidKeys);
       throw new Meteor.Error(invalidData.name +' is '+ invalidData.value);
     }
   }

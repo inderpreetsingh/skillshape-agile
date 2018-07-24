@@ -116,8 +116,7 @@ export class WeekDaysRow extends React.Component {
 
   render() {
     const { row } = this.state;
-    console.log("WeekDaysRow state -->>", this.state);
-    console.log("WeekDaysRow props -->>", this.props);
+   
     return (
       <div>
         {row.map((data, index) => {
@@ -249,7 +248,6 @@ export class WeekDaysRow extends React.Component {
                         No location added in Locations.
                       </MenuItem>
                     )}
-                    {console.log("this.props.roomData", this.props.roomData)}
                     {this.props.roomData &&
                       this.props.roomData.map((data, index) => {
                         return (

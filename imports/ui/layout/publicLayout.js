@@ -126,11 +126,7 @@ class PublicLayout extends React.Component {
       className.id = "UserMainPanel";
     }
 
-    console.info(
-      currentUser,
-      isUserSubsReady,
-      "---------- main layout ----------"
-    );
+  
 
     return (
       <MuiThemeProvider theme={muiTheme}>

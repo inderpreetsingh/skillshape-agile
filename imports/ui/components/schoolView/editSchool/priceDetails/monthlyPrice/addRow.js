@@ -31,9 +31,7 @@ export default class AddRow extends React.Component {
 
     onChangeInput = (key, index, event)=> {
     	const oldRow = [...this.state.row];
-    	console.log("onChangeInput -->>", key, index, event.target.value)
     	oldRow[index][key] = parseInt(event.target.value);
-    	console.log("onChangeInput oldRow -->>",oldRow)
     	this.setState({ row: oldRow });
     }
 

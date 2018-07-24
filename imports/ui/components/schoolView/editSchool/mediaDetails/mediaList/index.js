@@ -27,7 +27,6 @@ class MediaList extends React.Component {
   }
 
   render() {
-    console.info('this .props ',this.props,"media list render");
     return MediaListRender.call(this, this.props);
   }
 
@@ -38,7 +37,6 @@ MediaList.defaultProps = {
 }
 
 export default createContainer(props => {
-    console.log("MediaList props -->>",props)
     let { schoolId, limit,schoolData } = props;
     let collectionData = [];
     let mediaSubscription;

@@ -46,7 +46,6 @@ class CreateMedia extends React.Component {
   	}
 
   	handleChange = (file)=>{
-  		console.log("handleChange>>>file>>>>", file)
   		this.setState({fileUploadError: false});
   		this.state.file = file;
   	}
@@ -76,7 +75,6 @@ class CreateMedia extends React.Component {
 		mediaData.schoolId = this.props.schoolId
 
  		// console.log("onSubmit file",this.state.file)
- 		console.log("onSubmit mediaData",this.props)
   		if(mediaFormData) {
   			this.props.onEdit({editKey: mediaFormData._id , data: mediaData, fileData:file});
   		} else {
@@ -89,7 +87,6 @@ class CreateMedia extends React.Component {
 
     render() {
     	let { mediaFormData, formType, fullScreen, showCreateMediaModal, onClose } = this.props;
-    	console.log("createMedia props -->>",this.props)
 	    return (
 	    	<Dialog
 				fullScreen={fullScreen}

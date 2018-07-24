@@ -16,7 +16,6 @@ export class CustomModal extends React.Component{
   }
 
   render() {
-    console.log("CustomModal render",this.props)
     const {
       className,
       title,

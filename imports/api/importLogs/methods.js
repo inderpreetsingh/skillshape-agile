@@ -12,15 +12,12 @@ Meteor.methods({
         this.unblock();
         const user = Meteor.users.findOne(this.userId);
         if (checkMyAccess({ user, viewName: 'csvUpload_Schools' })) {
-            console.log("received file ", fileName);
             const results = Papa.parse(fileData, {
                 header: true
             });
             const csvdata = results.data;
             // csvdata.splice(-1,1)
             const csvLength = csvdata.length;
-            console.log("csvLength>>>> ", csvLength)
-            console.log("csvData>>>> ", JSON.stringify(csvdata, null, 2))
             const csvLogId = ImportLogs.insert({
                 fileName: fileName
             })
@@ -86,27 +83,21 @@ Meteor.methods({
                         }
                         let data = {}
                         try {
-                            console.log("<<< -------- Start for location searching ------->>>>>>>>>>>")
                             let slocation_detail = sLocationDoc.address + "," + sLocationDoc.city + "," + sLocationDoc.state + "," + sLocationDoc.zip;
-                            console.log(slocation_detail)
                             var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + slocation_detail + "&key=AIzaSyB4i-jEGFJrySIptyaTh6Hnz9Wq4q1uoNw ";
-                            console.log(">>>>>url is >>>>> ", url)
                             data = Meteor.http.call("GET", url);
                             data = JSON.parse(data.content);
-                            console.log(">>>>>data is >>>>> ", data)
                             if (data.results[0] && data.results[0].geometry && data.results[0].geometry.location) {
                                 data = data.results[0].geometry.location
                             }
                             if (data.status == 'ZERO_RESULTS') {
                                 data.lat = 0
                                 data.lng = 0
-                                console.log("Location not found");
                             }
                             sLocationDoc.geoLat = data.lat
                             sLocationDoc.geoLong = data.lng
                             sLocationDoc.loc = [data.lat, data.lng]
                         } catch (err) {
-                            console.log("Location not found", err);
                             data.lat = 0
                             data.lng = 0
                             sLocationDoc.geoLat = data.lat
@@ -187,11 +178,9 @@ Meteor.methods({
 
                         classTypeObject.skillCategoryId = skillCategoryIds;
                         classTypeObject.skillSubject = skillSubjectIds;
-                        // console.log("ClassTypeObject Data-->>",classTypeObject);
                         if (classTypeObject.name) {
                             ClassType.update({ schoolId: schoolId, name: csvdata[i].classTypeName, desc: csvdata[i].classTypeDesc }, { $set: classTypeObject }, { upsert: true });
                         }
-                        console.log("--------------- Done with ClassType ----------------------")
                         let classTime = ClassTimes.findOne({ name: csvdata[i].className, schoolId: schoolId });
                         const classTimeObject = {
                             name: csvdata[i].className,
@@ -237,7 +226,6 @@ Meteor.methods({
                         // repeat_details = []
                         // repeat_on_item.map(function(day) {
                         //     repeat_on.push(day);
-                        //     console.log(csvdata[i]);
                         //     start_time = day + 'StartTime';
                         //     end_time = day + 'EndTime';
                         //     location = day + 'LocationTitle';
@@ -291,7 +279,6 @@ Meteor.methods({
                         //     MonthlyPricing.update({ _id: monthlypricing._id }, { $set: obj });
                         // } else {
                         //     if (obj.packageName) {
-                        //         console.log(obj);
                         //         MonthlyPricing.insert(obj);
                         //     }
                         // }
@@ -308,7 +295,6 @@ Meteor.methods({
                         //     ClassPricing.update({ _id: classpricing._id }, { $set: obj });
                         // } else {
                         //     if (obj.packageName) {
-                        //         console.log(obj);
                         //         ClassPricing.insert(obj);
                         //     }
                         // }
@@ -321,12 +307,10 @@ Meteor.methods({
                         } else if (!emailRegex.test(csvdata[i].email)) {
                             csvdata[i]['errorMessage'] = "Invalid email";
                         }
-                        console.log("I CAlled>>????>>>> ", csvdata[i])
                         ImportLogs.update({ _id: csvLogId }, { $inc: { errorRecordCount: 1, totalRecord: 1 }, $push: { 'errorRecord': csvdata[i] } })
                     }
 
                 } catch (err) {
-                    console.log("error is ", err);
                     ImportLogs.update({ _id: csvLogId }, { $inc: { errorRecordCount: 1, totalRecord: 1 }, $push: { 'errorRecord': csvdata[i] } })
                 }
             }
@@ -349,7 +333,6 @@ Meteor.methods({
 })
 
 function CreateNewUser(email, name, firstName, lastName, schoolId) {
-    console.log("CreateNewUser -->>", email, name, firstName, lastName)
     if (typeof email !== "undefined" && emailRegex.test(email)) {
         let _user = Accounts.findUserByEmail(email)
         if (!_user) {

@@ -18,7 +18,6 @@ import EmbedCodes from "./embedCodes";
 import MediaDetails from "./mediaDetails";
 
 export default function(props) {
-  console.log("school edit render props -->>", this.props);
   const { selecetdView, formBuilderModal } = this.state;
 
   let {

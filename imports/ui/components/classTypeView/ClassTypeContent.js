@@ -328,7 +328,6 @@ class ClassTypeContent extends Component {
         emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
         const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
 
-        console.info(mailTo,"my mail To data.............");
         // const mailToNormalized = encodeURI(mailTo);
         // window.location.href = mailToNormalized;
         openMailToInNewTab(mailTo);
@@ -396,7 +395,6 @@ class ClassTypeContent extends Component {
 
     handleManageRequestsDialogBox = (title, state) => {
       const newState = {...this.state, manageRequestTitle: title, manageRequestsDialog: state};
-      console.info(newState,"my new State...");
       this.setState(newState);
     }
 
@@ -459,7 +457,6 @@ class ClassTypeContent extends Component {
     const { manageRequestTitle } = this.state;
     const formattedClassTimesData = formatClassTimesData(classTimesData).filter(data => data.formattedClassTimesDetails.totalClassTimes > 0);
     
-    console.info('this.state',this.state);
     if(manageRequestTitle) {
       submitBtnLabel = manageRequestTitle != 'Pricing' ? 'Request class times' : submitBtnLabel;
       requestFor = manageRequestTitle != 'Pricing' ? 'class times' : requestFor;

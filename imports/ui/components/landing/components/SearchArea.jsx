@@ -383,7 +383,6 @@ class SearchArea extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(prevProps.filters.skillCategoryIds,this.props.filters.skillCategoryIds)
     const previousSkillCategoryIds = prevProps.filters.skillCategoryIds || [];
     const currentSkillCategoryIds = this.props.filters.skillCategoryIds || [];
 
@@ -412,7 +411,6 @@ class SearchArea extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps,"search area next props....");
     if(nextProps.locationName) {
       this.setState({ location: nextProps.locationName});
     }

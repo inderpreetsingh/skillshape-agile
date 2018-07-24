@@ -137,7 +137,6 @@ class EmailMemberDialogBox extends Component {
 
   render() {
     const {props} = this;
-    console.log(props,"...");
     return (
       <Dialog
         fullScreen={props.fullScreen}

@@ -7,7 +7,6 @@ export default class Mysubscriptions extends React.Component {
   }
 
   render() {
-    console.log("memberInfo", this.props);
     return (
       <div>
         {this.props &&

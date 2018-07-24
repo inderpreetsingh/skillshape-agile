@@ -273,7 +273,6 @@ Meteor.publish("school.getClassTypesByCategory", function ({
                     });
                 }
             } catch (err) {
-                console.log("err", err);
             }
         }
     }

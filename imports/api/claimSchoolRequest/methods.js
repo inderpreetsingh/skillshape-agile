@@ -45,7 +45,6 @@ Meteor.methods({
           }
         }
       );
-      console.log("xxxxxxxxxxxxxxx", x);
       doc.status = "approved";
       doc.approvedBy = "superadmin";
       doc.createdAt = new Date();
@@ -104,7 +103,6 @@ Meteor.methods({
         "You need to login as a super admin of this school to approve the request"
       );
     }
-    console.log("1111111111111111");
     let claimRequestRec = ClaimSchoolRequest.findOne(claimRequestId);
 
     /*
@@ -116,17 +114,12 @@ Meteor.methods({
              * approved.
          */
     let schoolData = School.findOne(claimRequestRec.schoolId);
-    console.log(
-      "schoolData.superAdmin !== this.userId",
-      schoolData.superAdmin,
-      this.userId
-    );
+   
     if (schoolData.superAdmin !== this.userId) {
       throw new Meteor.Error(
         "You need to login as a super admin of this school to approve the request"
       );
     } else if (claimRequestRec.status == "approved") {
-      console.log("222222222222222");
       throw new Meteor.Error("This request has already been approved!");
     } else {
       schoolData && delete schoolData._id;

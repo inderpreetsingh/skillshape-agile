@@ -153,7 +153,6 @@ class ManageRequestsDialogBox extends Component {
       } %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${ourEmail}?subject=${subject}&body=${emailBody}`;
 
-      console.info(encodeURI(mailTo), mailTo, "my mail To data.............");
 
       openMailToInNewTab(mailTo);
     }

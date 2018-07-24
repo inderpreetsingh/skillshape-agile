@@ -46,7 +46,6 @@ class FullCalendar extends React.Component {
       },
       dayRender: function(date, cell) {},
       eventRender: function(event, element, view) {
-        console.log("event is ", event);
         let renderEvent = true;
         event.deletedEvents &&
           event.deletedEvents.map(current => {
@@ -100,12 +99,7 @@ class FullCalendar extends React.Component {
     } = this.props;
     let { manageMyCalendarFilter } = this.props;
     let sevents = [];
-    console.log(
-      "classinterestdata",
-      classInterestData,
-      "classTimesData",
-      classTimesData
-    );
+    
     let myClassTimesIds = classInterestData.map(data => data.classTimeId);
     // Class Time Ids managed by current user
     // console.log("-----------------manageMyCalendarFilter------------------", manageMyCalendarFilter)
@@ -145,17 +139,14 @@ class FullCalendar extends React.Component {
         let checkedClassTimes = false;
         // Three type of class times seperated into different colors.
         if (manageClassTimeIds.indexOf(classTime._id) > -1) {
-          console.log("in manage class data");
           sevent.className = "event-rose";
           sevent.attending = true;
           checkedClassTimes = true;
         } else if (myClassTimesIds.indexOf(classTime._id) > -1) {
-          console.log("in myClass class data");
           sevent.className = "event-green";
           sevent.attending = true;
           checkedClassTimes = true;
         } else if (schoolClassTimeId.indexOf(classTime._id) > -1) {
-          console.log("in school class data");
           sevent.className = "event-azure";
           sevent.attending = false;
           checkedClassTimes = true;
@@ -214,13 +205,11 @@ class FullCalendar extends React.Component {
           let scheduleData = { ...classTime.scheduleDetails };
           sevent.scheduleDetails = classTime.scheduleDetails;
           sevent.endDate = classTime.endDate && moment(classTime.endDate);
-          console.log("scheduleData", scheduleData);
           for (let key in scheduleData) {
             // const dayData = scheduleData[key];
             for (let obj of scheduleData[key]) {
               let temp = { ...sevent };
               temp.dow = [obj.day];
-              console.log("obj in fullCalendarRender", obj);
               // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
               temp.start = moment(obj.startTime).format("hh:mm");
               temp.end = moment(new Date(obj.startTime))
