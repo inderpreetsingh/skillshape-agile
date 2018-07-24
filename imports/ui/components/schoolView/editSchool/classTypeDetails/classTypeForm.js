@@ -79,12 +79,24 @@ class ClassTypeForm extends React.Component {
     return state;
   };
 
+  componentDidMount = () => {
+    Meteor.call("getDefaultSubjectsList", (err, res) => {
+      if (err) {
+        console.error(err.reason, "---");
+      } else {
+        console.info(res, "==== res ====");
+        this.defaultSubjectList = res;
+      }
+    });
+  };
+
   onSkillSubjectChange = values => {
     values = values.map(ele => {
-      if (ele.skillCategoryId) {
+      if (ele.skillCategoryId || ele._id) {
         return ele;
       }
     });
+    // debugger;
     values = _.without(values, undefined);
     if (!_.isEmpty(values)) {
       this.setState({ selectedSkillSubject: values });
@@ -143,9 +155,15 @@ class ClassTypeForm extends React.Component {
       "getSkillSubjectBySkillCategory",
       { skillCategoryIds: {}, textSearch: value },
       (err, res) => {
-        if (res) {
+        if (res.length) {
           this.setState({
-            skillSubjectData: res || []
+            skillSubjectData: res,
+            defaultFilterSubjectData: true
+          });
+        } else {
+          this.setState({
+            skillSubjectData: this.defaultSubjectList,
+            defaultFilterSubjectData: true
           });
         }
       }
@@ -281,6 +299,7 @@ class ClassTypeForm extends React.Component {
                   optionValue="_id"
                   optionText="name"
                   input={{
+                    defaultFilter: this.state.defaultFilterSubjectData,
                     value: this.state.selectedSkillSubject,
                     onChange: this.onSkillSubjectChange
                   }}
