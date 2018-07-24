@@ -158,12 +158,12 @@ class ClassTypeForm extends React.Component {
         if (res.length) {
           this.setState({
             skillSubjectData: res,
-            defaultFilterSubjectData: true
+            defaultSubjectData: true
           });
         } else {
           this.setState({
             skillSubjectData: this.defaultSubjectList,
-            defaultFilterSubjectData: true
+            defaultSubjectData: true
           });
         }
       }
@@ -299,7 +299,7 @@ class ClassTypeForm extends React.Component {
                   optionValue="_id"
                   optionText="name"
                   input={{
-                    defaultFilter: this.state.defaultFilterSubjectData,
+                    noFilter: this.state.defaultSubjectData,
                     value: this.state.selectedSkillSubject,
                     onChange: this.onSkillSubjectChange
                   }}

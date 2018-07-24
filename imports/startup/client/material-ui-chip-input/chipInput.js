@@ -483,6 +483,7 @@ class ChipInput extends React.Component {
       onBlur, // eslint-disable-line no-unused-vars
       onChange, // eslint-disable-line no-unused-vars
       onFocus, // eslint-disable-line no-unused-vars
+      noFilter,
       style,
       chipContainerStyle,
       underlineDisabledStyle,
@@ -505,7 +506,7 @@ class ChipInput extends React.Component {
       allowDuplicates, // eslint-disable-line no-unused-vars
       ...other
     } = this.props;
-    console.info("OTher is other", other, this.autoComplete);
+    console.info("OTher is other", other, this.autoComplete, this.props);
     const { prepareStyles } = this.context.muiTheme;
     const styles = getStyles(this.props, this.context, this.state);
     const inputId = id || this.uniqueId;
@@ -584,7 +585,7 @@ class ChipInput extends React.Component {
     const actualFilter = other.openOnFocus
       ? (search, key) => search === "" || filter(search, key)
       : filter;
-    const defaultListFilter = (search, key) => {
+    const defaultFilter = (search, key) => {
       return true;
     };
 
@@ -647,7 +648,7 @@ class ChipInput extends React.Component {
         <AutoComplete
           {...other}
           {...inputProps}
-          filter={defaultListFilter}
+          filter={noFilter ? defaultFilter : actualFilter}
           style={inputStyleMerged}
           dataSource={autoCompleteData}
           dataSourceConfig={dataSourceConfig}
