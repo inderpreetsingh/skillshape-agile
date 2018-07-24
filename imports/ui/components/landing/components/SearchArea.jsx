@@ -442,7 +442,6 @@ class SearchArea extends Component {
 
   render() {
     // console.log("this.props in SearchArea",this.props);
-
     return (
       <SearchAreaPanel
         width={this.props.width}
@@ -472,7 +471,7 @@ class SearchArea extends Component {
             locationText={this.props.locationText}
             resetSearch={this.props.resetSearch}
             locationInputChanged={this.props.locationInputChanged}
-            currentAddress={this.props.filters && this.props.filters.locationName}
+            currentAddress={this.props.filters && this.props.filters.locationName&& this.props.filters.locationName||''}
             filters={this.props.filters}
             onLocationChange={this.props.onLocationChange}
             onSearchIconClick={this.props.onSearchIconClick}
