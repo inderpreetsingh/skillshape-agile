@@ -68,7 +68,14 @@ export default (config = Object.freeze({
   currency: [
     { label: "USD", value: "$" },
     { label: "INR", value: "₹" },
-    { label: "EUR", value: "€" }
+    { label: "EUR", value: "€" },
+    { label: "GBP", value: "£" },
+    { label: "CAD", value: "C$"},
+    { label: "AUD", value: "A$"},
+    { label: "JPY", value: "¥" },
+    { label: "KRW", value: "₩" },
+    { label: "BRL", value: "R$" },
+
   ],
   duration: [
     { label: "Minutes", value: "Minutes" },

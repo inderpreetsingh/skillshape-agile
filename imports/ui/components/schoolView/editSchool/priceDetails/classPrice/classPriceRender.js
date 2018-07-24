@@ -24,7 +24,8 @@ export default function () {
           			data={this.state.formData}
           			open={this.state.showForm}
           			onClose={this.handleFormModal}
-                	classTypeData={this.props.classTypeData}
+					classTypeData={this.props.classTypeData}
+					schoolData={this.props.schoolData}
           		/>
           	}
                <div className={classes.notifyExplanation}>
@@ -47,7 +48,7 @@ export default function () {
                            					</Typography>
                                                   <br></br>
                     						<Typography component="p">
-                    							${classPrice.cost} for {classPrice.noClasses} class
+											{this.props.schoolData&&this.props.schoolData.currency}{classPrice.cost} for {classPrice.noClasses} class
                     						</Typography>
                                                   <br></br>
                     						<Typography component="p">

@@ -34,7 +34,7 @@ export default function(props) {
   if (isLoading) {
     // return <Preloader />;
   }
-
+  
   if (isUserSubsReady && schoolData) {
     // this.checkSchoolAccess(currentUser, schoolId)
     if (this.checkSchoolAccess(currentUser, schoolId)) {
@@ -83,6 +83,7 @@ export default function(props) {
                   moveToNextTab={value => {
                     this.moveToNextTab(value);
                   }}
+                  schoolData={schoolData}
                 />
               )}
               {this.state.tabValue === 2 && (
@@ -94,6 +95,7 @@ export default function(props) {
                   moveToNextTab={value => {
                     this.moveToNextTab(value);
                   }}
+                  schoolData={schoolData}
                 />
               )}
               {this.state.tabValue === 3 && (
@@ -102,6 +104,7 @@ export default function(props) {
                   showFormBuilderModal={this.showFormBuilderModal}
                   moveTab={this.moveTab}
                   classTypeData={this.props.classTypeData}
+                  schoolData={schoolData}
                 />
               )}
               {this.state.tabValue === 4 && (

@@ -32,7 +32,8 @@ class SchoolPriceView extends React.Component {
       password: "",
       loading: false,
       isLoading: false,
-      errorText: null
+      errorText: null,
+      currency:null
     };
   };
 
@@ -46,6 +47,12 @@ class SchoolPriceView extends React.Component {
       //debugger;
       this.handleSignUpDialogBoxState(true, userType, userEmail, userName);
     });
+    let { slug } = this.props.params;
+
+    Meteor.call('school.findSchoolById',slug,(err,res)=>{
+      res&&this.setState({currency:res})
+      console.log('this.state.currency',this.state.currency,slug,this.props)
+    })
   }
 
   componentDidUpdate() {
@@ -368,14 +375,15 @@ class SchoolPriceView extends React.Component {
   };
 
   render() {
-    // console.log("ClassPriceTable props-->>",ClassPriceTable);
-    // console.log("MonthlyPriceTable props-->>",MonthlyPriceTable);
     const {
       classPricing,
       monthlyPricing,
       enrollmentFee,
       schoolId
     } = this.props;
+    const {
+       currency
+  } = this.state;
     return (
       <div className="wrapper">
         {this.state && this.state.isLoading && <ContainerLoader />}
@@ -441,6 +449,7 @@ class SchoolPriceView extends React.Component {
           enrollMentPackagesData={enrollmentFee}
           perClassPackagesData={classPricing}
           monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricing)}
+          currency={currency}
         />
       </div>
     );
@@ -449,12 +458,9 @@ class SchoolPriceView extends React.Component {
 
 export default createContainer(props => {
   const { slug } = props.params;
-
   Meteor.subscribe("UserSchoolbySlug", slug);
-
   const schoolData = School.findOne({ slug: slug });
   const schoolId = schoolData && schoolData._id;
-
   Meteor.subscribe("classPricing.getClassPricing", { schoolId });
   Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId });
   Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId });

@@ -14,7 +14,7 @@ import PanelHeader from '../panelHeader';
 
 export default function () {
 
-	const { classes, schoolId, enrollmentFeeData } = this.props;
+	const { classes, schoolId, enrollmentFeeData,schoolData } = this.props;
 
 	return (
 		<div className="class-price-details">
@@ -24,7 +24,8 @@ export default function () {
           			data={this.state.formData}
           			open={this.state.showForm}
 					onClose={this.handleFormModal}
-					classTypeData={this.props.classTypeData}  
+					classTypeData={this.props.classTypeData}
+					schoolData={schoolData}  
           		/>
           	}
           	<PanelHeader btnText="Add Enrollment Fee" title="Enrollment Fee Cost" caption="Cost of Enrollment" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
@@ -41,7 +42,7 @@ export default function () {
 	             					</Typography>
 	             					<br></br>
 	                                <Typography component="p">
-	                                    <b>Cost:</b> ${enrollmentFee.cost}
+	                                    <b>Cost:</b> {schoolData&&schoolData.currency}{enrollmentFee.cost}
 	                                </Typography>
 	                                <br></br>
 	          						<Typography component="p">

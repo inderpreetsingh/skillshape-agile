@@ -16,14 +16,19 @@ import { toastrModal } from "/imports/util";
 export default class SchoolViewBase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { chargeResult: null };
+    this.state = { chargeResult: null,currency:null,bestPriceDetails:null };
   }
 
   componentWillMount() {
     let { slug } = this.props.params;
     Meteor.call("school.getBestPrice", { slug }, (error, result) => {
       this.setState({ bestPriceDetails: result });
+      
     });
+    
+    Meteor.call('school.findSchoolById',slug,(err,res)=>{
+      res&&this.setState({currency:res})
+    })
   }
 
   componentDidUpdate() {

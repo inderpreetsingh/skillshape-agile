@@ -122,7 +122,7 @@ class ClassPriceForm extends React.Component {
     this.setState({ showConfirmationModal: false });
 
   render() {
-    const { fullScreen, data, classes } = this.props;
+    const { fullScreen, data, classes,schoolData } = this.props;
     const { classTypeData } = this.state;
 
     return (
@@ -245,6 +245,7 @@ class ClassPriceForm extends React.Component {
                 margin="dense"
                 fullWidth
               />
+              {console.log("schoolData",schoolData)}
               <FormControl required={true} fullWidth>
                 <InputLabel htmlFor="amount">Cost</InputLabel>
                 <Input
@@ -254,7 +255,7 @@ class ClassPriceForm extends React.Component {
                   label="Cost"
                   type="number"
                   startAdornment={
-                    <InputAdornment position="start">$</InputAdornment>
+                    <InputAdornment position="start">{schoolData&&schoolData.currency}</InputAdornment>
                   }
                   fullWidth
                 />

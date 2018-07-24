@@ -390,6 +390,16 @@ Meteor.methods({
     } else {
       return false;
     }
+  },
+  "school.findSchoolById":function(slug){
+    let schoolData=School.findOne({slug:slug})
+    let currency;
+    if(schoolData&&schoolData.currency){
+      currency=schoolData.currency
+    }else{
+      currency='$'
+    }
+    return currency;
   }
 });
 

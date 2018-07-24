@@ -46,7 +46,7 @@ export default class AddRow extends React.Component {
     }
 
 	render() {
-        const { classes, tabValue } = this.props;
+        const { classes, tabValue ,schoolData} = this.props;
 		return (
 			<div style={{border: '1px solid black', margin: 2, padding: 5, backgroundColor: 'antiquewhite'}}>
 				{
@@ -74,7 +74,7 @@ export default class AddRow extends React.Component {
 				                        <Input
 				                            defaultValue={data && data.cost}
 				                            onChange={this.onChangeInput.bind(this, "cost", index)}
-				                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+				                            startAdornment={<InputAdornment position="start">{schoolData&&schoolData.currency}</InputAdornment>}
 				                            label="Cost"
 				                            type="number"
 				                            fullWidth

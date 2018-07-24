@@ -31,13 +31,19 @@ class SchoolView extends SchoolViewBase {
       myClassTimes: [],
       manageAll: true,
       attendAll: true,
+      currency:null,
       filter: {
         classTimesIds: [],
         classTimesIdsForCI: []
       }
     };
   }
-
+  componentWillMount() {
+    let { slug } = this.props.params;
+    Meteor.call('school.findSchoolById',slug,(err,res)=>{
+      res&&this.setState({currency:res})
+    })
+  }
   handleSeeMore = () => {
     // Attach count with skill cateory name so that see more functionlity can work properly.
     let currentCount = this.state.seeMoreCount;

@@ -136,7 +136,7 @@ class MonthlyPriceForm extends React.Component {
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
     render() {
-        const { fullScreen, data, classes } = this.props;
+        const { fullScreen, data, classes,schoolData } = this.props;
         const { classTypeData, pymtMethod, pymtDetails } = this.state;
         const tabValue = this.state.tabValue == 0 ? 'Pay Each Month' : 'Pay Up Front';
         return (
@@ -242,7 +242,7 @@ class MonthlyPriceForm extends React.Component {
                                                 </Grid>
                                             )
                                         }
-                                        <AddRow ref="AddRow"  tabValue={tabValue} rowData={(tabValue !== pymtMethod) ? [ { month: null, cost: null} ] :  pymtDetails} classes={classes}/>
+                                        <AddRow ref="AddRow"  tabValue={tabValue} rowData={(tabValue !== pymtMethod) ? [ { month: null, cost: null} ] :  pymtDetails} classes={classes} schoolData={schoolData}/>
                                     </div>
 
                                 </form>
