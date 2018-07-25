@@ -11,12 +11,10 @@ import Input, { InputLabel } from 'material-ui/Input';
 import Select from 'material-ui/Select';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
-
 import { Loading } from '/imports/ui/loading';
 import CreateMedia from '/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia';
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
-
 import MaterialRTE from "/imports/startup/client/material-rte"
 // Need to import this in order to show loading component.
 import { ContainerLoader } from '/imports/ui/loading/container.js';

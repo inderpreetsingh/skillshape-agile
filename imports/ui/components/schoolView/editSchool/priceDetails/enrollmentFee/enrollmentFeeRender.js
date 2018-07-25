@@ -43,7 +43,7 @@ export default function () {
 	             					</Typography>
 	             					<br></br>
 	                                <Typography component="p">
-	                                    <b>Cost:</b> { currency}{enrollmentFee.cost}
+	                                    <b>Cost:</b> { enrollmentFee.currency ? enrollmentFee.currency : currency}{enrollmentFee.cost}
 	                                </Typography>
 	                                <br></br>
 	          						<Typography component="p">
