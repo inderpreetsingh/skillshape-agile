@@ -9,16 +9,17 @@ import { browserHistory } from "react-router";
 
 import { getAverageNoOfRatings } from "/imports/util";
 
-import NoResults from "../NoResults.jsx";
-import ClassMap from "../map/ClassMap.jsx";
-import MapView from "../map/mapView.jsx";
-import CardsList from "../cards/CardsList.jsx";
-import SearchBarStyled from "../SearchBarStyled.jsx";
-import Footer from "../footer/index.jsx";
-import { cardsData, cardsData1 } from "../../constants/cardsData.js";
-import PrimaryButton from "../buttons/PrimaryButton.jsx";
+import NoResults from "/imports/ui/components/landing/components/NoResults.jsx";
+import ClassMap from "/imports/ui/components/landing/components/map/ClassMap.jsx";
+import MapView from "/imports/ui/components/landing/components/map/mapView.jsx";
+import CardsList from "/imports/ui/components/landing/components/cards/CardsList.jsx";
+import SearchBarStyled from "/imports/ui/components/landing/components/SearchBarStyled.jsx";
+import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
-import * as helpers from "../jss/helpers.js";
+import SuggestionForm from "/imports/ui/components/landing/components/schoolSuggestions/SuggestionForm.jsx";
+import { cardsData, cardsData1 } from "../../constants/cardsData.js";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
@@ -188,16 +189,19 @@ class ClassTypeList extends Component {
   };
 
   getNoResultMsg = (isLoading, filters, classTypeData) => {
+    console.log(filters, "updated filters in the class list component...");
     if (isLoading) {
+      console.log("loading........");
       return (
         <PreloaderWrapper>
           <Preloader />
         </PreloaderWrapper>
       );
     } else if (isEmpty(classTypeData)) {
+      console.log("re rending . suggsetion form..");
       return (
         <NoResultContainer>
-          <NoResults
+          {/*<NoResults
             removeAllFiltersButtonClick={this.props.removeAllFilters}
             addYourSchoolButtonClick={this.handleAddSchool}
           />
@@ -205,7 +209,12 @@ class ClassTypeList extends Component {
             {this.props.mapView
               ? "No results in this area. Try a different area?"
               : "Try changing your search"}
-          </RevertSearch>
+          </RevertSearch> */}
+          <SuggestionForm
+            filters={this.props.filters}
+            tempFilters={this.props.tempFilters}
+            removeAllFilters={this.props.removeAllFilters}
+          />
         </NoResultContainer>
       );
     }

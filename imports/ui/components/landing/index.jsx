@@ -229,17 +229,22 @@ class Landing extends Component {
     this.handleSkillTypeSearch = debounce(this.handleSkillTypeSearch, 1000);
   }
 
-  _getNormalizedLocation = (addressComponents) => {
-      const addressComponentTypes = ['administrative_area_level_1','country'];
-      // While in the filter, we are checking for those address components,
-      // which have administrative_area_level1 and country in there types
-      const normalizedLocation = addressComponents
-      .filter(address => address.types.some(addressComponentType => addressComponentTypes.indexOf(addressComponentType) >= 0))
+  _getNormalizedLocation = addressComponents => {
+    const addressComponentTypes = ["administrative_area_level_1", "country"];
+    // While in the filter, we are checking for those address components,
+    // which have administrative_area_level1 and country in there types
+    const normalizedLocation = addressComponents
+      .filter(address =>
+        address.types.some(
+          addressComponentType =>
+            addressComponentTypes.indexOf(addressComponentType) >= 0
+        )
+      )
       .map(address => address.long_name)
       .join(", ");
 
-      return normalizedLocation;
-  }
+    return normalizedLocation;
+  };
 
   _handleGeoLocationError(err) {
     console.warn(err, "err.message", err.message.indexOf);
@@ -296,9 +301,9 @@ class Landing extends Component {
           { rejected: true },
           (err, res) => {
             if (err) {
-              popUp.appear("alert",{content: err.reason || err.message});
+              popUp.appear("alert", { content: err.reason || err.message });
             } else if (res && res.message) {
-              popUp.appear("success", {content: res.message});
+              popUp.appear("success", { content: res.message });
             } else {
               Events.trigger("registerAsSchool", { userType: "School" });
             }
@@ -310,10 +315,10 @@ class Landing extends Component {
           this.props.location.query.claimRequest,
           (err, res) => {
             if (err) {
-              popUp.appear("alert",{content: err.reason || err.message});
+              popUp.appear("alert", { content: err.reason || err.message });
             }
             if (res && res.message) {
-              popUp.appear("success",{content: res.message});
+              popUp.appear("success", { content: res.message });
             }
           }
         );
@@ -342,10 +347,10 @@ class Landing extends Component {
           { keepMeSuperAdmin: true },
           (err, res) => {
             if (err) {
-              popUp.appear("alert", {content : err.reason || err.message});
+              popUp.appear("alert", { content: err.reason || err.message });
             }
             if (res && res.message) {
-              popUp.appear("success",{content: res.message});
+              popUp.appear("success", { content: res.message });
             }
           }
         );
@@ -357,10 +362,10 @@ class Landing extends Component {
           { makeRequesterSuperAdmin: true },
           (err, res) => {
             if (err) {
-              popUp.appear("alert",{content: err.reason || err.message});
+              popUp.appear("alert", { content: err.reason || err.message });
             }
             if (res && res.message) {
-              popUp.success("success", {content: res.message});
+              popUp.success("success", { content: res.message });
             }
           }
         );
@@ -372,10 +377,10 @@ class Landing extends Component {
           { removeMeAsAdmin: true },
           (err, res) => {
             if (err) {
-              popUp.appear("alert",{content: err.reason || err.message});
+              popUp.appear("alert", { content: err.reason || err.message });
             }
             if (res && res.message) {
-              popUp.appear("success",{content: res.message});
+              popUp.appear("success", { content: res.message });
             }
           }
         );
@@ -394,7 +399,7 @@ class Landing extends Component {
   }
 
   getUsersCurrentLocation = args => {
-    const {popUp} = this.props;
+    const { popUp } = this.props;
     return new Promise((resolve, reject) => {
       let positionCoords = [];
       if (navigator) {
@@ -419,7 +424,7 @@ class Landing extends Component {
           },
           err => {
             const geolocationError = this._handleGeoLocationError(err);
-            popUp.appear("alert",{content: geolocationError});
+            popUp.appear("alert", { content: geolocationError });
           }
         );
       } else {
@@ -498,7 +503,9 @@ class Landing extends Component {
                 //console.log(results[0],"location details...")
                 sLocation = results[0].formatted_address;
                 oldFilters["coords"] = coords;
-                oldFilters["locationName"] = this._getNormalizedLocation(results[0].address_components);
+                oldFilters["locationName"] = this._getNormalizedLocation(
+                  results[0].address_components
+                );
                 oldFilters["applyFilterStatus"] = true;
               }
             }
@@ -518,7 +525,7 @@ class Landing extends Component {
         },
         err => {
           const geolocationError = this._handleGeoLocationError(err);
-          popUp.appear("alert",{content: geolocationError});
+          popUp.appear("alert", { content: geolocationError });
         }
       );
     }
@@ -569,9 +576,9 @@ class Landing extends Component {
   resetLocationInput = () => {
     this.setState({
       ...this.state,
-      filters: {...this.state.filters, locationName: '', coords: null}
-    })
-  }
+      filters: { ...this.state.filters, locationName: "", coords: null }
+    });
+  };
 
   onLocationChange = (location, updateKey1, updateKey2) => {
     let stateObj = {};
@@ -590,7 +597,7 @@ class Landing extends Component {
       stateObj[updateKey2] = {
         ...this.state[updateKey2],
         coords: location.coords,
-        locationName: location.fullAddress,
+        locationName: location.fullAddress
       };
     }
 
@@ -603,7 +610,7 @@ class Landing extends Component {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
         coords: null,
-        locationName: event.target.value,
+        locationName: event.target.value
       };
     }
 
@@ -611,7 +618,7 @@ class Landing extends Component {
       stateObj[updateKey2] = {
         ...this.state[updateKey2],
         coords: null,
-        locationName: event.target.value,
+        locationName: event.target.value
       };
     }
 
@@ -701,6 +708,7 @@ class Landing extends Component {
   };
 
   removeAllFilters = () => {
+    debugger;
     this.setState({
       filters: {},
       tempFilters: {}
@@ -806,7 +814,7 @@ class Landing extends Component {
     this.setState({
       filters: {},
       tempFilters: {},
-      resetMainSearch:!this.state.resetMainSearch
+      resetMainSearch: !this.state.resetMainSearch
     });
   };
   // showAppliedLocationFilter = () => {
@@ -959,6 +967,7 @@ class Landing extends Component {
                 defaultLocation={this.state.defaultLocation}
                 mapView={this.state.mapView}
                 filters={this.state.filters}
+                tempFilters={this.state.tempFilters}
                 handleSeeMore={this.handleSeeMore}
                 splitByCategory={true}
                 setSchoolIdFilter={this.setSchoolIdFilter}
