@@ -1,25 +1,25 @@
-import React,{Component,Fragment} from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import React, { Component, Fragment } from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
 
-import { MuiThemeProvider} from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import ClearIcon from 'material-ui-icons/Clear';
-import { withStyles } from 'material-ui/styles';
+import { MuiThemeProvider } from "material-ui/styles";
+import Button from "material-ui/Button";
+import IconButton from "material-ui/IconButton";
+import ClearIcon from "material-ui-icons/Clear";
+import { withStyles } from "material-ui/styles";
 
-import LoginButton from '/imports/ui/components/landing/components/buttons/LoginButton.jsx';
-import JoinButton from '/imports/ui/components/landing/components/buttons/JoinButton.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
-import { ContainerLoader } from '/imports/ui/loading/container';
+import LoginButton from "/imports/ui/components/landing/components/buttons/LoginButton.jsx";
+import JoinButton from "/imports/ui/components/landing/components/buttons/JoinButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
+import { ContainerLoader } from "/imports/ui/loading/container";
 
-import Dialog , {
+import Dialog, {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-} from 'material-ui/Dialog';
+  DialogTitle
+} from "material-ui/Dialog";
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexCenter}
@@ -29,7 +29,6 @@ const DialogTitleWrapper = styled.div`
   position: relative;
   text-align: center;
 `;
-
 
 const Title = styled.h2`
   margin: 0;
@@ -46,72 +45,121 @@ const Content = styled.p`
   line-height: 1;
   font-family: ${helpers.specialFont};
   text-align: center;
-
 `;
 
 const ButtonsWrapper = styled.div`
-  ${helpers.flexCenter}
-  width: 100%;
-  ${props => props.rightAlign ? 'justify-content: flex-end' : ''};
+  ${helpers.flexCenter} width: 100%;
+  ${props => (props.rightAlign ? "justify-content: flex-end" : "")};
 `;
-
 
 const ButtonWrapper = styled.div`
   margin-right: ${helpers.rhythmDiv}px;
-
 `;
 
 const popUpBasicConfig = {
   warning: {
     color: helpers.warningColor,
-    title: 'Uh Oh!',
-    content: 'Something went wrong. Please try again',
-    affimateBtnText: 'Try Again'
+    title: "Uh Oh!",
+    content: "Something went wrong. Please try again",
+    affirmateBtnText: "Try Again"
   },
   alert: {
     color: helpers.alertColor,
-    title: 'Error',
-    content: 'It can cause serious issues. do you wanna continue ?',
-    affimateBtnText: "Close"
+    title: "Error",
+    content: "It can cause serious issues. do you wanna continue ?",
+    affirmateBtnText: "Close"
   },
   inform: {
     color: helpers.black,
-    title: 'One more step...',
-    content: 'You need to have an account on skillshape, before you can perform this action',
+    title: "One more step...",
+    content:
+      "You need to have an account on skillshape, before you can perform this action",
+    affirmateBtnText: "Yes"
   },
   success: {
     color: helpers.primaryColor,
-    title: 'Thank you!!',
-    content: 'Your action is successfully completed',
-    affimateBtnText: 'Okay'
+    title: "Thank you!!",
+    content: "Your action is successfully completed",
+    affirmateBtnText: "Okay"
   }
-}
+};
 
-const styles = {
+const styles = () => {
+  const ghostButtonCommon = {
+    fontFamily: helpers.specialFont,
+    fontSize: helpers.baseFontSize,
+    backgroundColor: "transparent",
+    border: "1px solid",
+    borderColor: helpers.primaryColor,
+    color: helpers.primaryColor,
+    textTransform: "none",
+    "&:hover": {
+      backgroundColor: helpers.primaryColor,
+      color: "white"
+    }
+  };
+
+  const stylesObject = {
     dialogRoot: {
       maxWidth: 450,
-      width: '100%',
-      overflow: 'hidden',
+      width: "100%",
+      overflow: "hidden"
     },
     dialogActionRoot: {
-      width: '100%',
-      display: 'flex',
+      width: "100%",
+      display: "flex",
       margin: 0,
-      padding: helpers.rhythmDiv * 2,
+      padding: helpers.rhythmDiv * 2
     },
     dialogAction: {
-      width: '100%'
+      width: "100%"
     },
     dialogContent: {
-      overflowY: 'visible',
-      padding: `0 ${helpers.rhythmDiv * 2}px`,
+      overflowY: "visible",
+      padding: `0 ${helpers.rhythmDiv * 2}px`
     },
     iconButton: {
-      position: 'absolute',
+      position: "absolute",
       right: 0,
       top: 0,
-      height: 'auto',
-      width: 'auto'
+      height: "auto",
+      width: "auto"
+    },
+    ["ghost.alert"]: {
+      ...ghostButtonCommon,
+      color: popUpBasicConfig.alert.color,
+      borderColor: popUpBasicConfig.alert.color,
+      "&:hover": {
+        backgroundColor: popUpBasicConfig.alert.color,
+        color: "white"
+      }
+    },
+    ["ghost.inform"]: {
+      ...ghostButtonCommon,
+      color: popUpBasicConfig.inform.color,
+      borderColor: popUpBasicConfig.inform.color,
+      "&:hover": {
+        backgroundColor: popUpBasicConfig.inform.color,
+        color: "white"
+      }
+    },
+    ["ghost.warning"]: {
+      ...ghostButtonCommon,
+      color: popUpBasicConfig.warning.color,
+      borderColor: popUpBasicConfig.warning.color,
+      "&:hover": {
+        backgroundColor: popUpBasicConfig.warning.color,
+        color: "white"
+      }
+    },
+    ["ghost.success"]: {
+      ...ghostButtonCommon,
+      color: popUpBasicConfig.success.color,
+      borderColor: popUpBasicConfig.success.color,
+      "&:hover": {
+        backgroundColor: popUpBasicConfig.success.color,
+        color: "white"
+      }
     },
     warning: {
       color: popUpBasicConfig.warning.color
@@ -125,96 +173,166 @@ const styles = {
     success: {
       color: popUpBasicConfig.success.color
     }
-}
+  };
+
+  return stylesObject;
+};
 
 class SkillShapeDialogBox extends Component {
-    getDefaultInformButtons = () => {
-      return (<ButtonsWrapper>
-        <JoinButton label="Sign Up"/>
+  getDefaultInformButtons = () => {
+    return (
+      <ButtonsWrapper>
+        <JoinButton label="Sign Up" />
         <LoginButton icon={true} />
-        </ButtonsWrapper>);
+      </ButtonsWrapper>
+    );
+  };
+  _getAffirmateButtonClasses = () => {
+    const { type, defaultButtons, classes } = this.props;
+    if (type == "alert" && !defaultButtons) {
+      // console.log("alert in get cancel...");
+      return classes["ghost.inform"];
+    } else {
+      return classes[`ghost.${type}`];
     }
-    getDefaultButtons = () => {
-      const {RenderActions, type, onAffirmationButtonClick, onModalClose, onCloseButtonClick, classes} = this.props;
-      return (<ButtonsWrapper rightAlign>
-        <ButtonWrapper><Button onClick={onModalClose || onAffirmationButtonClick} className={classes[type]}>
-        {popUpBasicConfig[type].affimateBtnText}
-        </Button></ButtonWrapper>
-        {(type === 'warning') &&
-          <ButtonWrapper><Button onClick={onModalClose || onCloseButtonClick} color="primary">
-            Cancel
-          </Button></ButtonWrapper>}
-        </ButtonsWrapper>);
+  };
+
+  _getAffirmateButtonText = () => {
+    const { type, defaultButtons, classes } = this.props;
+    return defaultButtons && type === "alert"
+      ? "Yes"
+      : popUpBasicConfig[type].affirmateBtnText;
+  };
+
+  _getCancelButtonClasses = () => {
+    const { type, defaultButtons, classes } = this.props;
+    debugger;
+    if (type == "alert") {
+      // console.log("alert in get cancel...");
+      return classes["ghost.inform"];
+    } else {
+      return classes[`ghost.${type}`];
     }
+  };
 
-    cloneRecursive = (children) => {
-      // return React.children.map(children, element =>
-      //   const elementProps = {};
-      //   if (React.isValidElement(child)) {
-      //       childProps = {someNew: "propToAdd"};
-      //   }
-      //   if(element.props.children) {
-      //     element = this.cloneRecursive(element.props.children)
-      //   }
-      //   element.props.onClick
-      // )
+  getDefaultButtons = defaultButtons => {
+    const {
+      RenderActions,
+      type,
+      onAffirmationButtonClick,
+      onModalClose,
+      onCloseButtonClick,
+      classes
+    } = this.props;
+    return (
+      <ButtonsWrapper rightAlign>
+        <ButtonWrapper>
+          <Button
+            onClick={onAffirmationButtonClick || onModalClose}
+            className={this._getAffirmateButtonClasses()}
+          >
+            {this._getAffirmateButtonText()}
+          </Button>
+        </ButtonWrapper>
+        {(type === "warning" || defaultButtons) && (
+          <ButtonWrapper>
+            <Button
+              onClick={onCloseButtonClick || onModalClose}
+              className={this._getCancelButtonClasses()}
+            >
+              Cancel
+            </Button>
+          </ButtonWrapper>
+        )}
+      </ButtonsWrapper>
+    );
+  };
 
-    }
+  cloneRecursive = children => {
+    // return React.children.map(children, element =>
+    //   const elementProps = {};
+    //   if (React.isValidElement(child)) {
+    //       childProps = {someNew: "propToAdd"};
+    //   }
+    //   if(element.props.children) {
+    //     element = this.cloneRecursive(element.props.children)
+    //   }
+    //   element.props.onClick
+    // )
+  };
 
-    getActionButtons = () => {
-      const {RenderActions, type, onAffirmationButtonClick, onModalClose, onCloseButtonClick} = this.props;
-      console.log(type,"type in the actions ...")
-      if(RenderActions) {
-
-        return React.cloneElement(RenderActions);
-      }else {
-        if(type == 'inform') {
-          return this.getDefaultInformButtons();
-        }else if (type == 'alert' || type == 'success' || type == 'warning') {
-          return this.getDefaultButtons();
-        }
+  getActionButtons = () => {
+    const {
+      type,
+      defaultButtons,
+      RenderActions,
+      onAffirmationButtonClick,
+      onModalClose,
+      onCloseButtonClick
+    } = this.props;
+    // console.log(type,"type in the actions ...")
+    if (RenderActions) {
+      return React.cloneElement(RenderActions);
+    } else {
+      if (defaultButtons) {
+        return this.getDefaultButtons(defaultButtons);
+      } else if (type == "inform") {
+        return this.getDefaultInformButtons();
+      } else if (type == "alert" || type == "success" || type == "warning") {
+        return this.getDefaultButtons();
       }
     }
+  };
 
-    render() {
-        const {
-          title,
-          content,
-          type,
-          classes,
-          onModalClose,
-          onAffirmationButtonClick,
-          open } = this.props;
-        return (
-            <MuiThemeProvider theme={muiTheme}>
-                <Dialog
-                  title="skillshape popup"
-                  open={open}
-                  onClose={onModalClose}
-                  onRequestClose={onModalClose}
-                  aria-labelledby="skillshape-popup"
-                  classes={{paper: classes.dialogRoot}}
-                >
-                    <DialogTitleWrapper color={popUpBasicConfig[type].color}>
-                      <Title color={popUpBasicConfig[type].color}>
-                        {title || popUpBasicConfig[type].title}
-                      </Title>
-                      <IconButton onClick={onModalClose} className={classes.iconButton + ' ' + classes[type]}>
-                        <ClearIcon />
-                      </IconButton>
-                    </DialogTitleWrapper>
+  render() {
+    const {
+      title,
+      content,
+      type,
+      ghostButtons,
+      classes,
+      onModalClose,
+      onAffirmationButtonClick,
+      open
+    } = this.props;
+    return (
+      <MuiThemeProvider theme={muiTheme}>
+        <Dialog
+          title="skillshape popup"
+          open={open}
+          onClose={onModalClose}
+          onRequestClose={onModalClose}
+          aria-labelledby="skillshape-popup"
+          classes={{ paper: classes.dialogRoot }}
+        >
+          <DialogTitleWrapper color={popUpBasicConfig[type].color}>
+            <Title color={popUpBasicConfig[type].color}>
+              {title || popUpBasicConfig[type].title}
+            </Title>
+            <IconButton
+              onClick={onModalClose}
+              className={classes.iconButton + " " + classes[type]}
+            >
+              <ClearIcon />
+            </IconButton>
+          </DialogTitleWrapper>
 
-                    <DialogContent classes={{root: classes.dialogContent}}>
-                      <Content> {content || popUpBasicConfig[type].content} </Content>
-                    </DialogContent>
+          <DialogContent classes={{ root: classes.dialogContent }}>
+            <Content> {content || popUpBasicConfig[type].content} </Content>
+          </DialogContent>
 
-                    <DialogActions classes={{root: classes.dialogActionRoot, action: classes.dialogAction}}>
-                      {this.getActionButtons()}
-                    </DialogActions>
-                </Dialog>
-            </MuiThemeProvider>
-        )
-    }
+          <DialogActions
+            classes={{
+              root: classes.dialogActionRoot,
+              action: classes.dialogAction
+            }}
+          >
+            {this.getActionButtons()}
+          </DialogActions>
+        </Dialog>
+      </MuiThemeProvider>
+    );
+  }
 }
 
 SkillShapeDialogBox.propTypes = {
@@ -225,11 +343,17 @@ SkillShapeDialogBox.propTypes = {
   title: PropTypes.string,
   content: PropTypes.string,
   type: PropTypes.string,
-  RenderActions: PropTypes.element
-}
+  RenderActions: PropTypes.element,
+
+  // default Buttons will make sure, both the Yes/No counter part will appear
+  // without default buttons we only have the buttons in boxes according to the most
+  // used functionality
+  defaultButtons: PropTypes.bool
+};
 
 SkillShapeDialogBox.defaultProps = {
   onAffirmationButtonClick: () => {},
-}
+  defaultButtons: false
+};
 
 export default withStyles(styles)(SkillShapeDialogBox);
