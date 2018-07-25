@@ -15,6 +15,7 @@ import EmbedLayout from "/imports/ui/layout/embedLayout";
 //components
 import Home from "/imports/ui/components/home";
 import Landing from "/imports/ui/components/landing/index.jsx";
+import TestPopUps from '/imports/ui/components/landing/TestPopUps.jsx';
 import ClassType from "/imports/ui/components/landing/ClassType.jsx";
 import NoResults from "/imports/ui/components/landing/components/NoResults";
 import ClassTypeView from "/imports/ui/components/classTypeView";
@@ -60,6 +61,11 @@ export default (Routes = componentLoader(props => (
         name="Skillshape-for-school"
         component={School}
       />
+      <Route
+        path="/popups-dev"
+        name="popups-testing"
+        component={TestPopUps}
+        />
       <Route
         path="/unsubscribe"
         name="unsubscribe"

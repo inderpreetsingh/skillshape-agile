@@ -24,10 +24,11 @@ export { imageExists } from '/imports/util/imageExists';
 export { lightenDarkenColor } from '/imports/util/colors.js';
 export { getContainerMaxWidth } from '/imports/util/cards.js';
 export { handleOutBoundLink } from '/imports/util/handleAnalytics.js';
+export { toastrModal } from "/imports/util/toastrModal.js";
+export { withPopUp } from "/imports/util/withPopUp.js";
 
 export { withStyles } from "./withStyle";
 export { material_ui_next_theme } from "./theme";
-export { toastrModal } from "./toastrModal";
 export { componentLoader } from "./loading";
 export { dateFriendly } from './dateFriendly';
 export { openMailToInNewTab } from './openInNewTabHelpers';

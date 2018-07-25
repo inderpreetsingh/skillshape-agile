@@ -18,7 +18,7 @@ export default function() {
         schoolId={schoolId}
         className="class-type-details"
         settings={classTypeSettings}
-        mainTableData={classTypeData}
+        mainTableData={this.modifySelectSubjectsInClassTypeData()}
         getChildTableData={this.getChildTableData}
         showFormBuilderModal={showFormBuilderModal}
         locationData={locationData}

@@ -45,6 +45,7 @@ class ClassTypeForm extends React.Component {
 
   initializeFields = () => {
     const { data, locationData } = this.props;
+    console.log(data, state, ".... editing data");
     let state = {
       gender: "Any",
       experienceLevel: "All",
@@ -79,12 +80,24 @@ class ClassTypeForm extends React.Component {
     return state;
   };
 
+  componentDidMount = () => {
+    Meteor.call("getDefaultSubjectsList", (err, res) => {
+      if (err) {
+        console.error(err.reason, "---");
+      } else {
+        // console.info(res, "==== res ====");
+        this.defaultSubjectList = res;
+      }
+    });
+  };
+
   onSkillSubjectChange = values => {
     values = values.map(ele => {
-      if (ele.skillCategoryId) {
+      if (ele.skillCategoryId || ele._id) {
         return ele;
       }
     });
+    // debugger;
     values = _.without(values, undefined);
     if (!_.isEmpty(values)) {
       this.setState({ selectedSkillSubject: values });
@@ -143,9 +156,15 @@ class ClassTypeForm extends React.Component {
       "getSkillSubjectBySkillCategory",
       { skillCategoryIds: {}, textSearch: value },
       (err, res) => {
-        if (res) {
+        if (res.length) {
           this.setState({
-            skillSubjectData: res || []
+            skillSubjectData: res,
+            defaultSubjectData: true
+          });
+        } else {
+          this.setState({
+            skillSubjectData: this.defaultSubjectList,
+            defaultSubjectData: true
           });
         }
       }
@@ -279,6 +298,7 @@ class ClassTypeForm extends React.Component {
                   optionValue="_id"
                   optionText="name"
                   input={{
+                    noFilter: this.state.defaultSubjectData,
                     value: this.state.selectedSkillSubject,
                     onChange: this.onSkillSubjectChange
                   }}

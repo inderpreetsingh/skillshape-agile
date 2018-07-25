@@ -17,8 +17,6 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 
-import toastrModal from '/imports/util';
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;

@@ -8,7 +8,7 @@ import { isEmpty } from "lodash";
 import Events from "/imports/util/events";
 import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
-import { toastrModal } from "/imports/util";
+import { withPopUp } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 import PrimaryButton from "../buttons/PrimaryButton";
@@ -161,7 +161,7 @@ class ManageRequestsDialogBox extends Component {
   handleFormSubmit = e => {
     e.preventDefault();
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    const { toastr, requestFor, schoolData, classTypeId } = this.props;
+    const { popUp, requestFor, schoolData, classTypeId } = this.props;
     const subscriptionRequest = this.state.subscriptionRequest;
     const data = {
       name: this.state.name,
@@ -178,13 +178,13 @@ class ManageRequestsDialogBox extends Component {
 
     if (this.state.readyToSubmit) {
       if (!data.email) {
-        toastr.error("Please enter your email.", "Error", {}, false);
+        popUp.appear("alert",{title: 'No Email', content: "Please enter your email."},false);
         return false;
       } else if (!emailReg.test(data.email)) {
-        toastr.error("Please enter valid email address", "Error", {}, false);
+        popUp.appear("alert",{title: 'Invalid Email', content: "Please enter valid email address"},false);
         return false;
       } else if (!data.name) {
-        toastr.error("Please enter a name", "Error", {}, false);
+        popUp.appear("alert",{title: "Error" , content: "Please enter a name"}, false);
         return false;
       } else {
         const userExistsError = "user exists";
@@ -199,7 +199,7 @@ class ManageRequestsDialogBox extends Component {
                 } as registered user. kindly log in your account.`
               });
             } else if (err) {
-              toastr.error(err.reason || err.message, "Error", {}, false);
+              popUp.appear("alert",{title: "Error", content: err.reason || err.message}, false);
             } else if (res) {
               if (subscriptionRequest === "sign-up") {
                 // User wants to join the skillshape now..
@@ -211,7 +211,7 @@ class ManageRequestsDialogBox extends Component {
                 this.handleRequest(text);
                 this.props.onModalClose();
               } else {
-                toastr.success("Your request has been processed", "success");
+                popUp.appear("success",{content: "Your request has been processed"});
                 this.handleRequest(text);
               }
             }
@@ -382,6 +382,6 @@ ManageRequestsDialogBox.defaultProps = {
   submitBtnLabel: "Request pricing"
 };
 
-export default toastrModal(
+export default withPopUp(
   withMobileDialog()(withStyles(styles)(ManageRequestsDialogBox))
 );

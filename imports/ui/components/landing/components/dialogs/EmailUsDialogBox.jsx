@@ -16,7 +16,7 @@ import { withStyles } from "material-ui/styles";
 
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
-import { toastrModal } from "/imports/util";
+import { withPopUp } from "/imports/util";
 
 import Dialog, {
   DialogActions,
@@ -179,7 +179,7 @@ class EmailUsDialogBox extends Component {
 
     const { subject, message } = this.state;
     const name = this.state.name;
-    const { toastr, schoolData } = this.props;
+    const { popUp, schoolData } = this.props;
 
     let yourEmail = "";
     let yourName = "";
@@ -192,7 +192,7 @@ class EmailUsDialogBox extends Component {
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     if (this.state.readyToSumit) {
       if (!emailReg.test(yourEmail) && !Meteor.user()) {
-        toastr.error("Please enter valid email address", "Error");
+        toastr.appear("alert",{content: "Please enter valid email address"});
         return false;
       } else {
         // Start loading
@@ -338,5 +338,5 @@ EmailUsDialogBox.propTypes = {
 };
 
 export default withMobileDialog()(
-  toastrModal(withStyles(styles)(EmailUsDialogBox))
+  withPopUp(withStyles(styles)(EmailUsDialogBox))
 );
