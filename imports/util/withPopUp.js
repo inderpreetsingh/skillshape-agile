@@ -33,6 +33,7 @@ export function withPopUp(WrappedComponent) {
 
     render() {
       const { open, type, dialogBoxProps } = this.state;
+      console.log(this.state, "this.state... withPopUp");
       return (
         <Fragment>
           {open && (

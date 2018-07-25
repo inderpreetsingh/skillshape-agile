@@ -119,12 +119,12 @@ const FilterBarWrapper = styled.div`
 
 const SuggestionFormButton = styled.div`
   max-width: 250px;
-  ${props => props.right ? 'margin-right: auto;' : 'margin-left: auto;'};
+  ${props => (props.right ? "margin-right: auto;" : "margin-left: auto;")};
   margin: 0 auto;
   width: 100%;
   padding: ${helpers.rhythmDiv * 2}px;
 
-  @media screen and (max-width : 600px) {
+  @media screen and (max-width: 600px) {
   }
 `;
 
@@ -181,7 +181,10 @@ class FilterPanel extends Component {
     if (this.props.skillTypeText !== nextProps.skillTypeText) {
       this.setState({ skillTypeText: nextProps.skillTypeText });
     }
-    if (isEmpty(this.state.skillSubjectData) && nextProps.filters.skillCategoryIds)
+    if (
+      isEmpty(this.state.skillSubjectData) &&
+      nextProps.filters.skillCategoryIds
+    )
       this.inputFromUser("");
   };
 
@@ -203,7 +206,6 @@ class FilterPanel extends Component {
 
   componentDidUpdate() {
     this.handleChangeInScreenSize();
-
   }
 
   // This is used to get subjects on the basis of subject category.
@@ -335,11 +337,15 @@ class FilterPanel extends Component {
 
   renderFiltersForDialogBox = () => {
     // console.log("------ renderFiltersForDialogBox -----",this.props)
-    const { filtersForSuggestion } = this.props;
+    const { filtersForSuggestion, errors } = this.props;
     return (
       <Grid container spacing={24}>
         {/* 1rst Row */}
-        {filtersForSuggestion && <Grid item xs={12} sm={12}><CategoryHeader>School Details</CategoryHeader></Grid>}
+        {filtersForSuggestion && (
+          <Grid item xs={12} sm={12}>
+            <CategoryHeader>School Details</CategoryHeader>
+          </Grid>
+        )}
 
         {!filtersForSuggestion && (
           <Grid item xs={12} sm={12} md={12}>
@@ -394,35 +400,44 @@ class FilterPanel extends Component {
         ),"................") */}
 
         {/* school details */}
-        {filtersForSuggestion && <Fragment>
-          <Grid item xs={12} sm={6}>
-            <MaterialInputWrapper>
-              <IconInput
-                value={this.props.schoolWebsite}
-                iconName="web"
-                onChange={this.props.onSchoolWebsiteChange}
-                labelText="Website"
-              />
-            </MaterialInputWrapper>
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <MaterialInputWrapper>
-              <IconInput
-                type="email"
-                value={this.props.schoolEmail}
-                iconName="email"
-                onChange={this.props.onSchoolEmailChange}
-                labelText="Email"
-              />
-            </MaterialInputWrapper>
-          </Grid>
-        </Fragment>}
+        {filtersForSuggestion && (
+          <Fragment>
+            <Grid item xs={12} sm={6}>
+              <MaterialInputWrapper>
+                <IconInput
+                  value={get(this.props, "filters.schoolWebsite", "")}
+                  iconName="web"
+                  onChange={this.props.onSchoolWebsiteChange}
+                  labelText="Website"
+                />
+              </MaterialInputWrapper>
+            </Grid>
+            {console.log(
+              errors.schoolEmail,
+              "errors..........................."
+            )}
+            <Grid item xs={12} sm={6}>
+              <MaterialInputWrapper>
+                <IconInput
+                  type="email"
+                  value={get(this.props, "filters.schoolEmail", "")}
+                  iconName="email"
+                  onChange={this.props.onSchoolEmailChange}
+                  labelText="Email"
+                  error={errors.schoolEmail}
+                  errorText={errors.schoolEmail}
+                />
+              </MaterialInputWrapper>
+            </Grid>
+          </Fragment>
+        )}
 
         {/* 2nd Row */}
-        {filtersForSuggestion && <Grid item xs={12} sm={12}>
-          <CategoryHeader>Skill Details</CategoryHeader>
-        </Grid>}
+        {filtersForSuggestion && (
+          <Grid item xs={12} sm={12}>
+            <CategoryHeader>Skill Details</CategoryHeader>
+          </Grid>
+        )}
 
         <Grid item xs={12} sm={12}>
           <div className="filters-dialog">
@@ -430,11 +445,7 @@ class FilterPanel extends Component {
               textField={"name"}
               valueField={"_id"}
               data={this.state.skillCategoryData}
-              value={get(
-                this.props,
-                "filters.defaultSkillCategories",
-                []
-              )}
+              value={get(this.props, "filters.defaultSkillCategories", [])}
               placeholder="Skill category"
               onChange={event =>
                 this.props.collectSelectedSkillCategories(
@@ -469,8 +480,6 @@ class FilterPanel extends Component {
             />
           </div>
         </Grid>
-
-
 
         {/* 3rd Row */}
 
@@ -528,7 +537,7 @@ class FilterPanel extends Component {
           />
         </Grid>
 
-        {!filtersForSuggestion &&
+        {!filtersForSuggestion && (
           <Grid item xs={12} sm={6}>
             <FilterPanelAction>
               <PrimaryButton
@@ -542,9 +551,10 @@ class FilterPanel extends Component {
                 }}
               />
             </FilterPanelAction>
-          </Grid>}
+          </Grid>
+        )}
 
-        {filtersForSuggestion ?
+        {filtersForSuggestion ? (
           <Grid item xs={12} sm={12}>
             <SuggestionFormButton>
               <FilterPanelAction>
@@ -558,17 +568,18 @@ class FilterPanel extends Component {
               </FilterPanelAction>
             </SuggestionFormButton>
           </Grid>
-        :
-        <Grid item xs={12} sm={6}>
-          <FilterPanelAction>
-            <PrimaryButton
-              fullWidth
-              label="Close"
-              icon={true}
-              onClick={() => this.props.onModalClose()}
-            />
-          </FilterPanelAction>
-        </Grid>}
+        ) : (
+          <Grid item xs={12} sm={6}>
+            <FilterPanelAction>
+              <PrimaryButton
+                fullWidth
+                label="Close"
+                icon={true}
+                onClick={() => this.props.onModalClose()}
+              />
+            </FilterPanelAction>
+          </Grid>
+        )}
       </Grid>
     );
   };

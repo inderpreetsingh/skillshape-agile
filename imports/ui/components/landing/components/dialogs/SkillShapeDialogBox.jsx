@@ -84,44 +84,98 @@ const popUpBasicConfig = {
   }
 };
 
-const styles = {
-  dialogRoot: {
-    maxWidth: 450,
-    width: "100%",
-    overflow: "hidden"
-  },
-  dialogActionRoot: {
-    width: "100%",
-    display: "flex",
-    margin: 0,
-    padding: helpers.rhythmDiv * 2
-  },
-  dialogAction: {
-    width: "100%"
-  },
-  dialogContent: {
-    overflowY: "visible",
-    padding: `0 ${helpers.rhythmDiv * 2}px`
-  },
-  iconButton: {
-    position: "absolute",
-    right: 0,
-    top: 0,
-    height: "auto",
-    width: "auto"
-  },
-  warning: {
-    color: popUpBasicConfig.warning.color
-  },
-  alert: {
-    color: popUpBasicConfig.alert.color
-  },
-  inform: {
-    color: popUpBasicConfig.inform.color
-  },
-  success: {
-    color: popUpBasicConfig.success.color
-  }
+const styles = () => {
+  const ghostButtonCommon = {
+    fontFamily: helpers.specialFont,
+    fontSize: helpers.baseFontSize,
+    backgroundColor: "transparent",
+    border: "1px solid",
+    borderColor: helpers.primaryColor,
+    color: helpers.primaryColor,
+    textTransform: "none",
+    "&:hover": {
+      backgroundColor: helpers.primaryColor,
+      color: "white"
+    }
+  };
+
+  const stylesObject = {
+    dialogRoot: {
+      maxWidth: 450,
+      width: "100%",
+      overflow: "hidden"
+    },
+    dialogActionRoot: {
+      width: "100%",
+      display: "flex",
+      margin: 0,
+      padding: helpers.rhythmDiv * 2
+    },
+    dialogAction: {
+      width: "100%"
+    },
+    dialogContent: {
+      overflowY: "visible",
+      padding: `0 ${helpers.rhythmDiv * 2}px`
+    },
+    iconButton: {
+      position: "absolute",
+      right: 0,
+      top: 0,
+      height: "auto",
+      width: "auto"
+    },
+    ["ghost.alert"]: {
+      ...ghostButtonCommon,
+      color: popUpBasicConfig.alert.color,
+      borderColor: popUpBasicConfig.alert.color,
+      "&:hover": {
+        backgroundColor: popUpBasicConfig.alert.color,
+        color: "white"
+      }
+    },
+    ["ghost.inform"]: {
+      ...ghostButtonCommon,
+      color: popUpBasicConfig.inform.color,
+      borderColor: popUpBasicConfig.inform.color,
+      "&:hover": {
+        backgroundColor: popUpBasicConfig.inform.color,
+        color: "white"
+      }
+    },
+    ["ghost.warning"]: {
+      ...ghostButtonCommon,
+      color: popUpBasicConfig.warning.color,
+      borderColor: popUpBasicConfig.warning.color,
+      "&:hover": {
+        backgroundColor: popUpBasicConfig.warning.color,
+        color: "white"
+      }
+    },
+    ["ghost.success"]: {
+      ...ghostButtonCommon,
+      color: popUpBasicConfig.success.color,
+      borderColor: popUpBasicConfig.success.color,
+      "&:hover": {
+        backgroundColor: popUpBasicConfig.success.color,
+        color: "white"
+      }
+    },
+    warning: {
+      color: popUpBasicConfig.warning.color
+    },
+    alert: {
+      color: popUpBasicConfig.alert.color
+    },
+    inform: {
+      color: popUpBasicConfig.inform.color
+    },
+    success: {
+      color: popUpBasicConfig.success.color
+    }
+  };
+
+  return stylesObject;
 };
 
 class SkillShapeDialogBox extends Component {
@@ -133,6 +187,34 @@ class SkillShapeDialogBox extends Component {
       </ButtonsWrapper>
     );
   };
+  _getAffirmateButtonClasses = () => {
+    const { type, defaultButtons, classes } = this.props;
+    if (type == "alert" && !defaultButtons) {
+      // console.log("alert in get cancel...");
+      return classes["ghost.inform"];
+    } else {
+      return classes[`ghost.${type}`];
+    }
+  };
+
+  _getAffirmateButtonText = () => {
+    const { type, defaultButtons, classes } = this.props;
+    return defaultButtons && type === "alert"
+      ? "Yes"
+      : popUpBasicConfig[type].affirmateBtnText;
+  };
+
+  _getCancelButtonClasses = () => {
+    const { type, defaultButtons, classes } = this.props;
+    debugger;
+    if (type == "alert") {
+      // console.log("alert in get cancel...");
+      return classes["ghost.inform"];
+    } else {
+      return classes[`ghost.${type}`];
+    }
+  };
+
   getDefaultButtons = defaultButtons => {
     const {
       RenderActions,
@@ -147,16 +229,16 @@ class SkillShapeDialogBox extends Component {
         <ButtonWrapper>
           <Button
             onClick={onAffirmationButtonClick || onModalClose}
-            className={classes[type]}
+            className={this._getAffirmateButtonClasses()}
           >
-            {popUpBasicConfig[type].affirmateBtnText}
+            {this._getAffirmateButtonText()}
           </Button>
         </ButtonWrapper>
         {(type === "warning" || defaultButtons) && (
           <ButtonWrapper>
             <Button
               onClick={onCloseButtonClick || onModalClose}
-              color="primary"
+              className={this._getCancelButtonClasses()}
             >
               Cancel
             </Button>
@@ -207,6 +289,7 @@ class SkillShapeDialogBox extends Component {
       title,
       content,
       type,
+      ghostButtons,
       classes,
       onModalClose,
       onAffirmationButtonClick,
@@ -261,6 +344,10 @@ SkillShapeDialogBox.propTypes = {
   content: PropTypes.string,
   type: PropTypes.string,
   RenderActions: PropTypes.element,
+
+  // default Buttons will make sure, both the Yes/No counter part will appear
+  // without default buttons we only have the buttons in boxes according to the most
+  // used functionality
   defaultButtons: PropTypes.bool
 };
 

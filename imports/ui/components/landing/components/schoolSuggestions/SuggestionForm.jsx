@@ -46,7 +46,7 @@ class SuggestionForm extends Component {
     this.state = {
       filters: this.props.filters || {},
       tempFilters: this.props.tempFilters || {},
-      listLoaded: false
+      errors: {}
     };
 
     this.fieldNames = [
@@ -101,11 +101,13 @@ class SuggestionForm extends Component {
       defaultSkillSubject,
       gender,
       age,
+      schoolWebsite,
+      schoolEmail,
       _classPrice,
       _monthPrice
     } = this.state.filters;
 
-    const { schoolWebsite, schoolEmail } = this.state;
+    // const { schoolWebsite, schoolEmail } = this.state;
 
     const data = {
       experienceLevel,
@@ -141,9 +143,11 @@ class SuggestionForm extends Component {
         content: "Please fill one atleast 1 field for suggestion of school"
       });
     } else if (data.schoolEmail && !emailRegex.email.test(data.schoolEmail)) {
-      popUp.appear("alert", {
-        title: "Invalid Email",
-        content: "Please correct the email format"
+      this.setState({
+        ...this.state,
+        errors: {
+          schoolEmail: "email format not valid"
+        }
       });
     } else {
       this.setState({ isLoading: true });
@@ -152,8 +156,7 @@ class SuggestionForm extends Component {
           isLoading: false,
           filters: {},
           tempFilters: {},
-          schoolEmail: "",
-          schoolWebsite: ""
+          errors: {}
         });
         if (err) {
           popUp.appear("alert", { content: err.reason });
@@ -283,7 +286,9 @@ class SuggestionForm extends Component {
   };
 
   handleSchoolDetails = name => event => {
-    this.setState({ [name]: event.target.value });
+    let oldFilter = { ...this.state.filters };
+    oldFilter[name] = event.target.value;
+    this.setState({ filters: oldFilter });
   };
 
   perClassPriceFilter = text => {
@@ -301,7 +306,8 @@ class SuggestionForm extends Component {
   removeAllFilters = () => {
     this.setState({
       filters: {},
-      test: true
+      tempFilters: {},
+      errors: {}
     });
   };
 
@@ -330,9 +336,8 @@ class SuggestionForm extends Component {
               filtersForSuggestion
               filters={this.state.filters}
               tempFilters={this.state.tempFilters}
+              errors={this.state.errors}
               onLocationChange={this.onLocationChange}
-              schoolWebsite={this.state.schoolWebsite}
-              schoolEmail={this.state.schoolEmail}
               onSchoolWebsiteChange={this.handleSchoolDetails("schoolWebsite")}
               onSchoolEmailChange={this.handleSchoolDetails("schoolEmail")}
               locationInputChanged={this.locationInputChanged}
