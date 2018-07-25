@@ -59,7 +59,6 @@ const PreloaderWrapper = styled.div`
 
 const Main = styled.main`
   width: 100%;
-
   @media screen and (max-width: ${helpers.mobile}px) {
     overflow: hidden;
   }
@@ -80,7 +79,6 @@ const MainInner = styled.div`
     props.largePadding ? props.largePadding : helpers.rhythmDiv * 2}px;
   overflow: ${props =>
     props.reviews || props.classTimes ? "hidden" : "initial"};
-
   @media screen and (max-width: ${helpers.mobile}px) {
     padding: ${props =>
       props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
@@ -101,7 +99,6 @@ const ClassWrapper = styled.div`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-
   @media screen and (max-width: ${helpers.mobile + 100}px) {
     padding-bottom: ${props =>
       props.paddingBottom ? props.paddingBottom : 0}px;
@@ -110,11 +107,9 @@ const ClassWrapper = styled.div`
 
 const ClassTimesWrapper = styled.div`
   padding-bottom: ${helpers.rhythmDiv * 4}px;
-
   @media screen and (max-width: ${helpers.mobile + 100}px) {
     padding-bottom: ${props => props.paddingBottom}px;
   }
-
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-bottom: ${helpers.rhythmDiv * 4}px;
   }
@@ -123,7 +118,6 @@ const ClassTimesWrapper = styled.div`
 const ClassTimesInnerWrapper = styled.div`
   padding: 0px;
   overflow: hidden;
-
   @media screen and (max-width: ${helpers.mobile}px) {
     padding: ${props =>
       props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
@@ -141,7 +135,6 @@ const ClassTimesTitle = styled.h2`
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   padding: 0;
-
   @media screen and (max-width: ${helpers.mobile + 100}px) {
     margin-bottom: ${helpers.rhythmDiv * 4}px;
   }
@@ -182,7 +175,6 @@ const ClassContainer = styled.div`
   margin-top: ${props => props.marginTop}px;
   margin-bottom: ${props => props.marginBottom}px;
   padding-bottom: ${props => props.paddingBottom}px;
-
   @media screen and (max-width: ${helpers.mobile}px) {
     ${helpers.flexCenter} flex-direction: column;
     padding-bottom: ${props =>
@@ -259,91 +251,6 @@ class ClassTypeContent extends Component {
         return categoryData[i].name;
       }
     }
-
-    normalizeMonthlyPricingData = (monthlyPricingData) => {
-      if(monthlyPricingData) {
-        let normalizedMonthlyPricingData = [];
-
-        for(let monthlyPricingObj of monthlyPricingData) {
-            monthlyPricingObj.pymtDetails.forEach(payment => {
-              const myMonthlyPricingObj = Object.assign({},monthlyPricingObj);
-              myMonthlyPricingObj.pymtDetails = [];
-              myMonthlyPricingObj.pymtDetails.push(payment);
-              normalizedMonthlyPricingData.push(myMonthlyPricingObj);
-            });
-        }
-
-        return normalizedMonthlyPricingData;
-      }else{
-        return monthlyPricingData;
-      }
-    }
-
-    scrollTo(name) {
-      scroller.scrollTo((name || 'content-container'),{
-        duration: 800,
-        delay: 0,
-        smooth: 'easeInOutQuart'
-      })
-    }
-
-    requestPricingInfo = (text) => {
-        const { toastr, classTypeData, schoolData } = this.props;
-        if(!Meteor.userId()) {
-          this.handleManageRequestsDialogBox('Pricing',true);
-          // this.handleDialogState('manageRequestsDialog',true);
-        }else {
-          const data = {
-            classTypeId: classTypeData._id,
-            schoolId: schoolData._id
-          };
-
-          Meteor.call('pricingRequest.addRequest', data, (err,res) => {
-            this.setState({isBusy: false} , () => {
-              if(err) {
-                toastr.error(err.reason || err.message,"Error", {}, false);
-              }
-              else {
-                toastr.success('Your request has been processed','success');
-                this.handleRequest('pricing');
-              }
-            });
-          });
-
-        }
-        // if(!isEmpty(schoolData)) {
-        //   let emailBody = "";
-        //   let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
-        //   let subject ="", message =  "";
-        //   let currentUserName = getUserFullName(Meteor.user());
-        //   emailBody = `Hi, %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
-        //   const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
-        //
-        //   console.info(mailTo,"my mail To data.............");
-        //   // const mailToNormalized = encodeURI(mailTo);
-        //   // window.location.href = mailToNormalized;
-        //   openMailToInNewTab(mailTo);
-        //
-        // } /*else {
-            // this.handleDefaultDialogBox('Login to make price package requests',true);
-        // }*/
-    }
-
-    handleRequest = (text) => {
-      const { toastr, schoolData } = this.props;
-
-      if(!isEmpty(schoolData)) {
-        let emailBody = "";
-        let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`
-        let subject ="", message =  "";
-        let currentUserName = getUserFullName(Meteor.user());
-        emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
-        const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
-
-        // const mailToNormalized = encodeURI(mailTo);
-        // window.location.href = mailToNormalized;
-        openMailToInNewTab(mailTo);
-
   };
 
   modifySelectSubjectsInClassTypeData = () => {
@@ -391,23 +298,6 @@ class ClassTypeContent extends Component {
     });
   }
 
-    handleManageRequestsDialogBox = (title, state) => {
-      const newState = {...this.state, manageRequestTitle: title, manageRequestsDialog: state};
-      this.setState(newState);
-    }
-
-    handleGiveReview = () => {
-      const {toastr} = this.props;
-      if(Meteor.userId()) {
-        this.handleDialogState('giveReviewDialog',true);
-      }else {
-        this.handleDefaultDialogBox('Login to give review',true);
-      }
-    }
-
-
-    getReviewTitle = (name) => {
-      return `Give review for ${capitalizeString(name)}`;
   requestPricingInfo = text => {
     const { popUp, classTypeData, schoolData } = this.props;
     if (!Meteor.userId()) {
@@ -584,7 +474,8 @@ class ClassTypeContent extends Component {
       enrollmentFeeData,
       mediaData,
       reviewsData,
-      classInterestData
+      classInterestData,
+      currency
     } = this.props;
 
     if (isLoading) {
@@ -798,6 +689,7 @@ class ClassTypeContent extends Component {
                   monthlyPackagesData={this.normalizeMonthlyPricingData(
                     monthlyPricingData
                   )}
+                  currency={currency}
                 />
               )}
             </PackagesWrapper>
