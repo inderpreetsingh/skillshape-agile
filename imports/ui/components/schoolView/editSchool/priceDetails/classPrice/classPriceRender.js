@@ -14,8 +14,7 @@ import PanelHeader from '../panelHeader';
 
 export default function () {
 
-	const { classes, schoolId, classPricingData } = this.props;
-
+	const { classes, schoolId, classPricingData,schoolData,currency } = this.props;
 	return (
 		<div className="class-price-details">
 			{
@@ -25,7 +24,8 @@ export default function () {
           			open={this.state.showForm}
           			onClose={this.handleFormModal}
 					classTypeData={this.props.classTypeData}
-					schoolData={this.props.schoolData}
+					schoolData={schoolData}
+					currency={currency}
           		/>
           	}
                <div className={classes.notifyExplanation}>
@@ -48,7 +48,7 @@ export default function () {
                            					</Typography>
                                                   <br></br>
                     						<Typography component="p">
-											{this.props.schoolData&&this.props.schoolData.currency}{classPrice.cost} for {classPrice.noClasses} class
+											{currency}{classPrice.cost} for {classPrice.noClasses} class
                     						</Typography>
                                                   <br></br>
                     						<Typography component="p">

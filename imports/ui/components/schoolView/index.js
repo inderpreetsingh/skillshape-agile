@@ -39,10 +39,10 @@ class SchoolView extends SchoolViewBase {
     };
   }
   componentWillMount() {
-    let { slug } = this.props.params;
-    Meteor.call('school.findSchoolById',slug,(err,res)=>{
-      res&&this.setState({currency:res})
-    })
+    // let { slug } = this.props.params;
+    // Meteor.call('school.findSchoolById',slug,(err,res)=>{
+    //   res && this.setState({currency:res})
+    // })
   }
   handleSeeMore = () => {
     // Attach count with skill cateory name so that see more functionlity can work properly.
@@ -76,6 +76,7 @@ export default createContainer(props => {
   let subscription;
   let reviewsSubscriptions;
   let classTimesData;
+  let currency;
 
   if (slug) {
     subscription = Meteor.subscribe("UserSchoolbySlug", slug);
@@ -89,6 +90,7 @@ export default createContainer(props => {
     reviewsSubscriptions = Meteor.subscribe("review.getReviews", {
       reviewForId: schoolId
     });
+    currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
   }
 
   const sub1 = reviewsSubscriptions && reviewsSubscriptions.ready();
@@ -138,6 +140,7 @@ export default createContainer(props => {
     classType,
     schoolId,
     showLoading,
-    classTimesData
+    classTimesData,
+    currency
   };
 }, withStyles(styles)(toastrModal(SchoolView)));

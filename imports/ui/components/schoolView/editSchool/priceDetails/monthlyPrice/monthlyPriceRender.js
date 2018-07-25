@@ -15,8 +15,7 @@ import PanelHeader from '../panelHeader';
 export default function () {
 
 
-     const { classes, schoolId, monthlyPricingData,schoolData } = this.props;
-
+     const { classes, schoolId, monthlyPricingData,schoolData ,currency} = this.props;
 	return (
 		<div className="class-price-details">
 			{
@@ -26,7 +25,8 @@ export default function () {
           			open={this.state.showForm}
                     onClose={this.handleFormModal}
                     classTypeData={this.props.classTypeData}
-                    schoolData={schoolData}   
+                    schoolData={schoolData}
+                    currency={currency}   
           		/>
           	}
                <PanelHeader btnText="Add Per Month Package" title="Per Month Packages" caption="Different Payment Packages can cover different payment methods, Class Types, or Durations" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
@@ -84,7 +84,7 @@ export default function () {
                                                        monthPrice.pymtDetails.map((payment) => {
                                                             return <Fragment>
                                                                  <Typography component="p">
-                                                                      {schoolData&&schoolData.currency}{payment.cost} per month for {payment.month} months
+                                                                      {currency && currency}{payment.cost} per month for {payment.month} months
                                                                  </Typography>
                                                                  <br></br>
                                                             </Fragment>

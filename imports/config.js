@@ -65,6 +65,7 @@ export default (config = Object.freeze({
     },
     { label: "Intermediate plus advanced", value: "intermediate plus advanced" }
   ],
+  defaultCurrency:'$',
   currency: [
     { label: "USD", value: "$" },
     { label: "INR", value: "₹" },

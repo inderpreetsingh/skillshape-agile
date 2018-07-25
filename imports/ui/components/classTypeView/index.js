@@ -4,12 +4,11 @@ import { createContainer } from 'meteor/react-meteor-data';
 import get from 'lodash/get';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
 import ContactUsBar from '/imports/ui/components/landing/components/ContactUsBar';
 import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar';
 import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 import ClassTypeContent from './ClassTypeContent';
-
+import config from "/imports/config";
 import Reviews from "/imports/api/review/fields";
 import School from "/imports/api/school/fields";
 import ClassType from "/imports/api/classType/fields";
@@ -56,6 +55,8 @@ export default createContainer(props => {
   let reviewsSubscription;
   let isLoading = true;
   let classInterestData = [];
+  let currency;
+  let schoolData;
 
 	if(classTypeId) {
 		subscription = Meteor.subscribe("classType.getClassTypeWithClassTimes", {classTypeId});
@@ -72,7 +73,8 @@ export default createContainer(props => {
     Meteor.subscribe("enrollmentFee.getClassTypeEnrollMentFree",{classTypeId});
     classInterestData = ClassInterest.find({}).fetch();
     let classTypeData = ClassType.findOne({ _id: classTypeId});
-    let schoolData = School.findOne();
+    schoolData = School.findOne();
+    currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
     let classTimesData = ClassTimes.find({classTypeId:classTypeId}).fetch();
     let classPricingData = ClassPricing.find().fetch();
     let monthlyPricingData = MonthlyPricing.find().fetch();
@@ -95,7 +97,8 @@ export default createContainer(props => {
       monthlyPricingData,
       enrollmentFeeData,
       mediaData,
-      classInterestData
+      classInterestData,
+      currency
   	}
 
 }, ClassTypeView);

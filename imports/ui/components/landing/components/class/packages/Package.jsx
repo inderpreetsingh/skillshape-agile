@@ -137,7 +137,6 @@ function getPaymentType(payment) {
 const Package = props => (
   <OuterWrapper>
     <Wrapper>
-      {console.log('props in package',props)}
       <ClassDetailsSection>
         <Title>{props.packageName || props.name}</Title>
         {props.packageType !== "EP" && (

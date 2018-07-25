@@ -228,13 +228,13 @@ export default function() {
         classes,
         enrollmentFee,
         showLoading,
+        currency
     } = this.props;
 
     const {
         claimSchoolModal,
         claimRequestModal,
-        successModal,
-        currency
+        successModal
     } = this.state;
 
     if(showLoading) {

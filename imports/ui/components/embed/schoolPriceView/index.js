@@ -1,7 +1,7 @@
 import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import { isEmpty, get } from "lodash";
-
+import config from "/imports/config";
 import School from "/imports/api/school/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassType from "/imports/api/classType/fields";
@@ -32,8 +32,7 @@ class SchoolPriceView extends React.Component {
       password: "",
       loading: false,
       isLoading: false,
-      errorText: null,
-      currency:null
+      errorText: null
     };
   };
 
@@ -47,12 +46,12 @@ class SchoolPriceView extends React.Component {
       //debugger;
       this.handleSignUpDialogBoxState(true, userType, userEmail, userName);
     });
-    let { slug } = this.props.params;
+  
+    // let { slug } = this.props.params;
 
-    Meteor.call('school.findSchoolById',slug,(err,res)=>{
-      res&&this.setState({currency:res})
-      console.log('this.state.currency',this.state.currency,slug,this.props)
-    })
+    // Meteor.call('school.findSchoolById',slug,(err,res)=>{
+    //   res&&this.setState({currency:res})
+    // })
   }
 
   componentDidUpdate() {
@@ -379,11 +378,10 @@ class SchoolPriceView extends React.Component {
       classPricing,
       monthlyPricing,
       enrollmentFee,
-      schoolId
+      schoolId,
+      currency
     } = this.props;
-    const {
-       currency
-  } = this.state;
+ 
     return (
       <div className="wrapper">
         {this.state && this.state.isLoading && <ContainerLoader />}
@@ -441,7 +439,6 @@ class SchoolPriceView extends React.Component {
             onAgreeButtonClick={this.handleServiceAgreementSubmit}
           />
         )}
-
         <PackagesList
           schoolId={schoolId}
           onAddToCartIconButtonClick={this.handlePurcasePackage}
@@ -458,9 +455,13 @@ class SchoolPriceView extends React.Component {
 
 export default createContainer(props => {
   const { slug } = props.params;
-  Meteor.subscribe("UserSchoolbySlug", slug);
-  const schoolData = School.findOne({ slug: slug });
-  const schoolId = schoolData && schoolData._id;
+  let schoolData, schoolId, currency;
+  userBySchoolSubscription=Meteor.subscribe("UserSchoolbySlug", slug);
+  if(userBySchoolSubscription.ready()){
+    schoolData = School.findOne({ slug: slug });
+    schoolId = schoolData && schoolData._id;
+    currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
+  }
   Meteor.subscribe("classPricing.getClassPricing", { schoolId });
   Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId });
   Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId });
@@ -474,6 +475,7 @@ export default createContainer(props => {
     classPricing,
     monthlyPricing,
     enrollmentFee,
-    schoolId: schoolId
+    schoolId: schoolId,
+    currency: currency
   };
 }, toastrModal(SchoolPriceView));

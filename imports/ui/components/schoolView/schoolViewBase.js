@@ -26,9 +26,9 @@ export default class SchoolViewBase extends React.Component {
       
     });
     
-    Meteor.call('school.findSchoolById',slug,(err,res)=>{
-      res&&this.setState({currency:res})
-    })
+    // Meteor.call('school.findSchoolById',slug,(err,res)=>{
+    //   res&&this.setState({currency:res})
+    // })
   }
 
   componentDidUpdate() {

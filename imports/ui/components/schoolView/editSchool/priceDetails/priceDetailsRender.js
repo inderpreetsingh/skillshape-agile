@@ -11,7 +11,9 @@ export default function () {
 		enrollmentFeeData,
 		moveTab,
 		schoolId,
-        classTypeData,schoolData
+		classTypeData,
+		schoolData,
+		currency
 	} = this.props
 
 	return (
@@ -22,6 +24,7 @@ export default function () {
 					classPricingData={classPricingData}
 					classTypeData={classTypeData}
 					schoolData={schoolData}
+					currency={currency}
 				/>
 			</div>
 			<div style={{paddingTop: '20px'}}>
@@ -30,6 +33,7 @@ export default function () {
 					monthlyPricingData={monthlyPricingData}
 					classTypeData={classTypeData}
 					schoolData={schoolData}
+					currency={currency}
 					
 				/>
 			</div>
@@ -39,6 +43,7 @@ export default function () {
 					enrollmentFeeData={enrollmentFeeData}
 					classTypeData={classTypeData}
 					schoolData={schoolData}
+					currency={currency}
 					
 					/>
 			</div>

@@ -436,7 +436,8 @@ class ClassTypeContent extends Component {
       enrollmentFeeData,
       mediaData,
       reviewsData,
-      classInterestData
+      classInterestData,
+      currency
 		} = this.props;
 
 		if(isLoading) {
@@ -581,6 +582,7 @@ class ClassTypeContent extends Component {
                               enrollMentPackagesData={enrollmentFeeData}
                               perClassPackagesData={classPricingData}
                               monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricingData)}
+                              currency={currency}
                             />
                         )
                     }
