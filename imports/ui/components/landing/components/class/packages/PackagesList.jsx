@@ -115,6 +115,7 @@ const PackageList = props => (
     fullScreen={props.fullScreen}
     classPackages={props.classPackages}
   >
+ 
     <PackagesWrapper classPackages={props.classPackages}>
       <Title>{props.packageListName}</Title>
       {props.packagesData.map(packageData => (
@@ -123,6 +124,7 @@ const PackageList = props => (
             classPackages={props.classPackages}
             {...packageData}
             {...props.packageProps}
+            currency={props.currency}
           />
         </PackageWrapper>
       ))}
@@ -140,6 +142,7 @@ const EnrollmentPackagesList = props => (
             classPackages={props.classPackages}
             {...packageData}
             {...props.packageProps}
+            currency={props.currency}
           />
         </PackageWrapper>
       ))}
@@ -151,7 +154,8 @@ const PackagesList = props => {
   const classPackagesEmpty = isEmpty(props.perClassPackagesData);
   const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
   const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
-
+  const currency=props.currency;
+  
   return (
     <Fragment>
       {props.enrollMentPackages &&
@@ -165,6 +169,7 @@ const PackagesList = props => {
               }}
               packageListName="Enrollment Packages"
               packagesData={props.enrollMentPackagesData}
+              currency={currency}
             />
           </Wrapper>
         )}
@@ -181,6 +186,7 @@ const PackagesList = props => {
             fullScreen={monthlyPackagesEmpty}
             packageListName="Class Packages"
             packagesData={props.perClassPackagesData}
+            currency={currency}
           />
         )}
 
@@ -194,6 +200,7 @@ const PackagesList = props => {
             packageListName="Monthly Packages"
             fullScreen={classPackagesEmpty}
             packagesData={props.monthlyPackagesData}
+            currency={currency}
           />
         )}
       </Wrapper>
@@ -205,7 +212,8 @@ PackagesList.propTypes = {
   perClassPackagesData: PropTypes.arrayOf(PackageStructure),
   monthlyPackagesData: PropTypes.arrayOf(PackageStructure),
   enrollMentPackages: PropTypes.bool,
-  schoolId: PropTypes.string
+  schoolId: PropTypes.string,
+  
 };
 
 PackagesList.defaultProps = {

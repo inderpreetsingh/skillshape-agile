@@ -428,6 +428,7 @@ class ClassTypeCoverContent extends React.Component {
               props.noClassTypeData &&
               (props.bestPriceDetails.class ||
                 props.bestPriceDetails.monthly) && (
+                  
                 <BestPrices
                   onPricingButtonClick={
                     props.actionButtonProps.onPricingButtonClick

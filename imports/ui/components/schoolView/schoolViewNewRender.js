@@ -215,7 +215,6 @@ const ErrorText = styled.p`
 // `;
 
 export default function() {
-
     const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
     const {
         schoolData,
@@ -229,12 +228,13 @@ export default function() {
         classes,
         enrollmentFee,
         showLoading,
+        currency
     } = this.props;
 
     const {
         claimSchoolModal,
         claimRequestModal,
-        successModal,
+        successModal
     } = this.state;
 
     if(showLoading) {
@@ -296,6 +296,7 @@ export default function() {
             />
           }
           <div>
+            
           <SchoolViewNewBanner
             schoolData={schoolData}
             schoolId={schoolId}
@@ -373,6 +374,7 @@ export default function() {
                     enrollMentPackagesData={enrollmentFee}
                     perClassPackagesData={classPricing}
                     monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricing)}
+                    currency={currency}
                   />
                 }
                 </PackagesWrapper>

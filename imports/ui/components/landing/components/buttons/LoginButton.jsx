@@ -5,7 +5,8 @@ import { browserHistory } from "react-router";
 
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton.jsx";
 import LoginDialogBox from "/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx";
-import { emailRegex, toastrModal } from "/imports/util";
+import { emailRegex } from "/imports/util";
+import {withPopUp} from '/imports/util/withPopUp.js';
 
 class LoginButton extends Component {
   constructor(props) {
@@ -163,13 +164,14 @@ class LoginButton extends Component {
 
   reSendEmailVerificationLink = () => {
     this.setState({ loading: true });
+    const {popUp} = this.props;
     Meteor.call(
       "user.sendVerificationEmailLink",
       this.state.email,
       (err, res) => {
         if (err) {
           let errText = err.reason || err.message;
-          toastr.error(errText, "Error");
+          popUp.appear("error",{content: errText});
         }
         if (res) {
           this.setState(
@@ -178,10 +180,7 @@ class LoginButton extends Component {
               loading: false
             },
             () => {
-              this.props.toastr.success(
-                "We send a email verification link, Please check your inbox!!",
-                "success"
-              );
+              popUp.appear("success", {content: "We send a email verification link, Please check your inbox!!"});
             }
           );
         }
@@ -234,4 +233,4 @@ LoginButton.defaultProps = {
   iconName: "fingerprint"
 };
 
-export default toastrModal(LoginButton);
+export default withPopUp(LoginButton);

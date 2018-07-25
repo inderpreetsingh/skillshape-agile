@@ -373,24 +373,20 @@ Meteor.methods({
     }
   },
   "school.findSuperAdmin": function(userId, slug, SchoolId) {
-    let filter, usersId;
+    let usersId;
+    const filter = {superAdmin : userId || this.userId};
     if (slug) {
-      filter = { slug: slug };
+      filter.slug = slug;
     } else {
-      filter = { _id: SchoolId };
-    }
-    if (userId) {
-      usersId = userId;
-    } else {
-      usersId = this.userId;
+      filter._id = SchoolId;
     }
     let schoolData = School.findOne(filter);
-    if (schoolData.superAdmin == usersId) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+    return !!schoolData;
+  },
+  // "school.findSchoolById": function (slug) {
+  //   const schoolData = School.findOne({ slug: slug });
+  //   return schoolData && schoolData.currency ? schoolData.currency : "$" 
+  // }
 });
 
 /*name, email, userType, sendMeSkillShapeNotification*/

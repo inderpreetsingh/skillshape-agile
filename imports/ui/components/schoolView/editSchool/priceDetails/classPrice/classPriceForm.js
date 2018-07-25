@@ -122,9 +122,9 @@ class ClassPriceForm extends React.Component {
     this.setState({ showConfirmationModal: false });
 
   render() {
-    const { fullScreen, data, classes } = this.props;
+    const { fullScreen, data, classes,schoolData,currency } = this.props;
     const { classTypeData } = this.state;
-
+    
     return (
       <Dialog
         open={this.props.open}
@@ -254,7 +254,7 @@ class ClassPriceForm extends React.Component {
                   label="Cost"
                   type="number"
                   startAdornment={
-                    <InputAdornment position="start">$</InputAdornment>
+                    <InputAdornment position="start">{currency&&currency}</InputAdornment>
                   }
                   fullWidth
                 />

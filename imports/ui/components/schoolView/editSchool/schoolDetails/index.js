@@ -34,7 +34,8 @@ class SchoolDetails extends React.Component {
       backGroundVideoUrl: backGroundVideoUrl || "",
       mainImage: schoolData.mainImage || "",
       isLoading:false, // Loading variable in state.
-      currency: currency || ""
+      currency: currency || "",
+      previousSelectedCurrency: currency || ""
     };
   }
 

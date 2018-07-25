@@ -21,7 +21,6 @@ import MaterialRTE from "/imports/startup/client/material-rte"
 // Need to import this in order to show loading component.
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 export default function () {
-
   let {
     name,
     website,
@@ -41,9 +40,9 @@ export default function () {
     classes,
     route,
     mediaFormData,
-    currentUser
+    currentUser,
+    toastr
   } = this.props;
-
   return  (
     <div>
       <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />
@@ -71,6 +70,7 @@ export default function () {
                               onChange={(event)=> {this.setState({name:event.target.value})}}
                           />
                         </Grid>
+                       
                         <Grid item xs={12}>
                           <TextField
                               required={true}
@@ -146,7 +146,10 @@ export default function () {
                         <Select
                             input={<Input id="currency"/>}
                             value={this.state.currency}
-                            onChange={(event) => this.setState({ currency: event.target.value })}
+                            onChange={(event) => {if(event.target.value!=this.state.previousSelectedCurrency){
+                              toastr.success('You are going to change your Preferred Currency.Please make changes in packages according to your currency. ', "success");
+                            }
+                            this.setState({ currency: event.target.value })}}
                             fullWidth
                         >
                             {

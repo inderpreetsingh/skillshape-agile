@@ -93,8 +93,9 @@ class EnrollmentFeeForm extends React.Component {
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
     render() {
-		const { fullScreen, data, classes } = this.props;
+		const { fullScreen, data, classes ,schoolData,currency} = this.props;
         const { classTypeData } = this.state;
+      
 		return (
 			<Dialog
                 open={this.props.open}
@@ -158,7 +159,7 @@ class EnrollmentFeeForm extends React.Component {
                                     <Input
                                         defaultValue={data && data.cost}
                                         inputRef={(ref)=> this.enrollmentCost = ref}
-                                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                        startAdornment={<InputAdornment position="start">{currency && currency}</InputAdornment>}
                                         label="Cost"
                                         type="number"
                                         fullWidth

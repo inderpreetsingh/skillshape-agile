@@ -17,12 +17,13 @@ import PriceDetails from "./priceDetails";
 import EmbedCodes from "./embedCodes";
 import MediaDetails from "./mediaDetails";
 
-export default function(props) {
+export default function (props) {
   const { selecetdView, formBuilderModal } = this.state;
 
   let {
     schoolId,
     schoolData,
+    currency,
     currentUser,
     isUserSubsReady,
     locationData,
@@ -63,6 +64,7 @@ export default function(props) {
             <div>
               {this.state.tabValue === 0 && (
                 <SchoolDetails
+                  currency={currency}
                   schoolData={schoolData}
                   schoolId={schoolId}
                   moveTab={this.moveTab}
@@ -75,6 +77,7 @@ export default function(props) {
               )}
               {this.state.tabValue === 1 && (
                 <LocationDetails
+                  currency={currency}
                   locationData={locationData}
                   schoolId={schoolId}
                   showFormBuilderModal={this.showFormBuilderModal}
@@ -83,10 +86,12 @@ export default function(props) {
                   moveToNextTab={value => {
                     this.moveToNextTab(value);
                   }}
+                  schoolData={schoolData}
                 />
               )}
               {this.state.tabValue === 2 && (
                 <ClassTypeDetails
+                  currency={currency}
                   locationData={locationData}
                   schoolId={schoolId}
                   showFormBuilderModal={this.showFormBuilderModal}
@@ -94,14 +99,17 @@ export default function(props) {
                   moveToNextTab={value => {
                     this.moveToNextTab(value);
                   }}
+                  schoolData={schoolData}
                 />
               )}
               {this.state.tabValue === 3 && (
                 <PriceDetails
+                  currency={currency}
                   schoolId={schoolId}
                   showFormBuilderModal={this.showFormBuilderModal}
                   moveTab={this.moveTab}
                   classTypeData={this.props.classTypeData}
+                  schoolData={schoolData}
                 />
               )}
               {this.state.tabValue === 4 && (

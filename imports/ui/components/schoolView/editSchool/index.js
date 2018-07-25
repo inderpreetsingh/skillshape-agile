@@ -2,7 +2,7 @@ import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import SchoolEditRender from "./schoolEditRender";
 import { browserHistory } from "react-router";
-
+import config from "/imports/config";
 // import collection definition over here
 // import Modules from "/imports/api/modules/fields";
 import Skills from "/imports/api/skill/fields";
@@ -90,6 +90,7 @@ export default createContainer(props => {
   let locationData;
   let moduleData;
   let isLoading = true;
+  let currency;
 
   if (props.isUserSubsReady) {
     subscription = Meteor.subscribe("UserSchool", schoolId);
@@ -107,6 +108,7 @@ export default createContainer(props => {
   if (subscription && subscription.ready()) {
     isLoading = false;
     schoolData = School.findOne({ _id: schoolId });
+    currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
     locationData = SLocation.find().fetch();
     classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
   }
@@ -118,6 +120,7 @@ export default createContainer(props => {
     locationData,
     moduleData,
     isLoading,
-    classTypeData
+    classTypeData,
+    currency
   };
 }, SchoolEditView);

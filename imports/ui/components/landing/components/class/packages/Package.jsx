@@ -168,7 +168,7 @@ const Package = props => (
           <Fragment>
             {props.classPackages ? (
               <PriceSection>
-                <Price>{props.cost && `${props.cost}$`}</Price>
+                <Price>{props.cost && `${props.cost}${props.currency}`}</Price>
                 <NoOfClasses>
                   {props.noClasses && `for ${props.noClasses} classes`}
                 </NoOfClasses>
@@ -178,7 +178,7 @@ const Package = props => (
               props.pymtDetails.map((payment, index) => {
                 return (
                   <PriceSection key={`${payment.cost}-${index}`}>
-                    <Price>{payment.cost && `${payment.cost}$`}</Price>
+                    <Price>{payment.cost && `${payment.cost}${props.currency}`}</Price>
                     <NoOfClasses>
                       {payment.month && `per month for ${payment.month} months`}
                     </NoOfClasses>
@@ -191,8 +191,8 @@ const Package = props => (
           <PriceSection>
             {" "}
             {/* used for enrollment packages */}
-            <Price>{props.cost && `${props.cost}$`}</Price>
-            <NoOfClasses>${props.cost && "For Enrollment"}</NoOfClasses>
+            <Price>{props.cost && `${props.cost}${props.currency}`}</Price>
+            <NoOfClasses>{props.cost && "For Enrollment"}</NoOfClasses>
           </PriceSection>
         )}
 

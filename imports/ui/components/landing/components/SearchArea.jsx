@@ -259,18 +259,19 @@ const SearchInputsSection = props => (
     <InputsWrapper noPadding>
       <InputWrapper locationInput>
           <MySearchBar
+            withIcon
             placeholder="Location"
             defaultValue={props.currentDefaultAddress}
             defaultBorderRadius={true}
             searchIcon={<MyLocation style={{ color: grey[500] }} />}
             onSearchIconClick={props.onSearchIconClick}
-            noCloseIcon
             onChange={(event) => props.locationInputChanged(event, "filters", null)}
             filters={props.filters}
             onLocationChange={(event)=> {props.onLocationChange(event, "filters", null)}}
             currentAddress={props.currentAddress}
             googlelocation={true}
             value={props.currentAddress}
+            onCloseIconClick={props.resetSearch}
             resetSearch={props.resetSearch}
           />
       </InputWrapper>
@@ -400,7 +401,7 @@ class SearchArea extends Component {
       (err, res) => {
         if (res) {
           // console.log("result",res)
-          this.setState({ skillSubjectData: res || [] });
+            this.setState({ skillSubjectData: res || [] });
         }
       }
     );
@@ -411,26 +412,42 @@ class SearchArea extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.locationName) {
-      this.setState({ location: nextProps.locationName});
-    }
+    const previousSkillCategoryIds = this.props.filters.skillCategoryIds || [];
+    const currentSkillCategoryIds = nextProps.filters.skillCategoryIds || [];
+    // console.log(nextProps,"search area next props....");
+    // if(nextProps) {
+    //   this.setState({ location: nextProps.locationName});
+    // }
+    //
+    // //console.log(nextProps.fillters.skillCategoryIds,this.props.filters.skillCategoryIds)
+
+    if(previousSkillCategoryIds.length !== currentSkillCategoryIds.length)
+      this.inputFromUser("");
+
   }
 
   handleLocationInputChange = event => {
-    let value = "";
-    if (event) {
-      event.preventDefault();
-      value = event.target.value;
-    }
-    this.setState({
-      location: value
-    });
+    // let value = "";
+    // if (event) {
+    //   event.preventDefault();
+    //   value = event.target.value;
+    // }
+    // this.setState({
+    //   location: value
+    // });
 
     if (this.props.onLocationInputChange) {
       this.props.onLocationInputChange(value);
     }
   };
 
+  //
+  // resetSearch = () => {
+  //   debugger;
+  //   if(this.props.resetLocationInput) {
+  //     this.props.e('');
+  //   }
+  // }
 
   handleAddSchool = () => {
     if (Meteor.userId()) {
@@ -469,9 +486,9 @@ class SearchArea extends Component {
             onMapViewButtonClick={this.props.onMapViewButtonClick}
             mapView={this.props.mapView}
             locationText={this.props.locationText}
-            resetSearch={this.props.resetSearch}
+            resetSearch={this.props.resetLocationInput}
             locationInputChanged={this.props.locationInputChanged}
-            currentAddress={this.props.filters && this.props.filters.locationName&& this.props.filters.locationName||''}
+            currentAddress={this.props.filters.locationName || ''}
             filters={this.props.filters}
             onLocationChange={this.props.onLocationChange}
             onSearchIconClick={this.props.onSearchIconClick}
