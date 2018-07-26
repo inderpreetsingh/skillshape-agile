@@ -85,20 +85,6 @@ const popUpBasicConfig = {
 };
 
 const styles = () => {
-  const ghostButtonCommon = {
-    fontFamily: helpers.specialFont,
-    fontSize: helpers.baseFontSize,
-    backgroundColor: "transparent",
-    border: "1px solid",
-    borderColor: helpers.primaryColor,
-    color: helpers.primaryColor,
-    textTransform: "none",
-    "&:hover": {
-      backgroundColor: helpers.primaryColor,
-      color: "white"
-    }
-  };
-
   const stylesObject = {
     dialogRoot: {
       maxWidth: 450,
@@ -125,8 +111,20 @@ const styles = () => {
       height: "auto",
       width: "auto"
     },
+    ghostCommon: {
+      fontFamily: helpers.specialFont,
+      fontSize: helpers.baseFontSize,
+      backgroundColor: "transparent",
+      border: "1px solid",
+      borderColor: helpers.primaryColor,
+      color: helpers.primaryColor,
+      textTransform: "none",
+      "&:hover": {
+        backgroundColor: helpers.primaryColor,
+        color: "white"
+      }
+    },
     ["ghost.alert"]: {
-      ...ghostButtonCommon,
       color: popUpBasicConfig.alert.color,
       borderColor: popUpBasicConfig.alert.color,
       "&:hover": {
@@ -135,7 +133,6 @@ const styles = () => {
       }
     },
     ["ghost.inform"]: {
-      ...ghostButtonCommon,
       color: popUpBasicConfig.inform.color,
       borderColor: popUpBasicConfig.inform.color,
       "&:hover": {
@@ -144,7 +141,6 @@ const styles = () => {
       }
     },
     ["ghost.warning"]: {
-      ...ghostButtonCommon,
       color: popUpBasicConfig.warning.color,
       borderColor: popUpBasicConfig.warning.color,
       "&:hover": {
@@ -153,7 +149,6 @@ const styles = () => {
       }
     },
     ["ghost.success"]: {
-      ...ghostButtonCommon,
       color: popUpBasicConfig.success.color,
       borderColor: popUpBasicConfig.success.color,
       "&:hover": {
@@ -187,13 +182,14 @@ class SkillShapeDialogBox extends Component {
       </ButtonsWrapper>
     );
   };
+
   _getAffirmateButtonClasses = () => {
     const { type, defaultButtons, classes } = this.props;
     if (type == "alert" && !defaultButtons) {
       // console.log("alert in get cancel...");
-      return classes["ghost.inform"];
+      return classes["ghostCommon"] + " " + classes["ghost.inform"];
     } else {
-      return classes[`ghost.${type}`];
+      return classes["ghostCommon"] + " " + classes[`ghost.${type}`];
     }
   };
 
@@ -206,12 +202,12 @@ class SkillShapeDialogBox extends Component {
 
   _getCancelButtonClasses = () => {
     const { type, defaultButtons, classes } = this.props;
-    debugger;
+    // debugger;
     if (type == "alert") {
       // console.log("alert in get cancel...");
-      return classes["ghost.inform"];
+      return classes["ghostCommon"] + " " + classes["ghost.inform"];
     } else {
-      return classes[`ghost.${type}`];
+      return classes["ghostCommon"] + " " + classes[`ghost.${type}`];
     }
   };
 

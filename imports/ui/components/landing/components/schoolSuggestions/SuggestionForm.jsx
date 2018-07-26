@@ -145,6 +145,7 @@ class SuggestionForm extends Component {
     } else if (data.schoolEmail && !emailRegex.email.test(data.schoolEmail)) {
       this.setState({
         ...this.state,
+        filters: { ...this.state.filters },
         errors: {
           schoolEmail: "email format not valid"
         }
@@ -162,7 +163,7 @@ class SuggestionForm extends Component {
           popUp.appear("alert", { content: err.reason });
         } else {
           popUp.appear("success", {
-            content: "Thanks alot for your suggestion",
+            content: "Thank you for your suggestion, we will try our best to get this school.",
             onAffirmationButtonClick: this.props.removeAllFilters
           });
         }
