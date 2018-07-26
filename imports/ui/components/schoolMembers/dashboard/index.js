@@ -16,10 +16,10 @@ import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-pic
 import { TableRow, TableCell } from "material-ui/Table";
 import List from "material-ui/List";
 import Hidden from "material-ui/Hidden";
-import isEmpty from "lodash/isEmpty";
 import find from "lodash/find";
 import Drawer from "material-ui/Drawer";
 import AppBar from "material-ui/AppBar";
+import isEmpty from "lodash/isEmpty";
 import IconButton from "material-ui/IconButton";
 import Toolbar from "material-ui/Toolbar";
 import MenuIcon from "material-ui-icons/Menu";
@@ -41,6 +41,9 @@ import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import SubscriptionDetails from "/imports/ui/componentHelpers/subscriptionDetails";
+import ClassPricing from "/imports/api/classPricing/fields";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 const drawerWidth = 400;
 const style = {
   w211: {
@@ -252,8 +255,46 @@ class DashBoardView extends React.Component {
             data={this.props.classTypeData}
             placeholder="Available Classes"
             onChange={this.collectSelectedClassTypes}
-          />
+            />
         </Grid>
+
+        {/*package details will be show later and the commented code will be used after currency task*/}
+
+
+            {/* {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&& <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+          <Multiselect
+            textField={"name"}
+            valueField={"_id"}
+            data={this.props.enrollmentFee}
+            placeholder="Enrollment Fee"
+            onChange={this.collectSelectedClassTypes}
+          />
+          
+          
+        </Grid>}
+        {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&&  <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+        <Multiselect
+            textField={"packageName"}
+            valueField={"_id"}
+            data={this.props.classPricing}
+            placeholder="Class Packages"
+            onChange={this.collectSelectedClassTypes}
+          />
+          </Grid>}
+        {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&&  <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+           <Multiselect
+            textField={"packageName"}
+            valueField={"_id"}
+            data={this.props.monthlyPricing}
+            placeholder="Monthly Packages"
+            onChange={this.collectSelectedClassTypes}
+          />
+          </Grid>}
+         */}
+       
+         
+          
+           
         <FormControl fullWidth margin="dense">
           <FormControlLabel
             control={
@@ -328,7 +369,6 @@ class DashBoardView extends React.Component {
   };
 
   addNewMember = event => {
-    console.log("Add addNewMember", this);
     event.preventDefault();
     const { schoolData } = this.props;
     // Check for existing user only if users has entered their email.
@@ -340,8 +380,7 @@ class DashBoardView extends React.Component {
         "user.checkForRegisteredUser",
         { email: this.email.value },
         (err, res) => {
-          console.log("err...", err);
-          console.log("res....", res);
+         
           let state = {};
           if (res) {
             // Open Modal
@@ -387,17 +426,13 @@ class DashBoardView extends React.Component {
   };
 
   handleChangeDate = (fieldName, date) => {
-    console.log("handleChangeDate -->>", fieldName, date);
     this.setState({ [fieldName]: new Date(date) });
   };
 
   handlePhoneChange = event => {
     const inputPhoneNumber = event.target.value;
     let phoneRegex = /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g;
-    console.log(
-      "inputPhoneNumber.match(phoneRegex)",
-      inputPhoneNumber.match(phoneRegex)
-    );
+  
     let showErrorMessage;
     if (inputPhoneNumber.match(phoneRegex) || inputPhoneNumber == "") {
       showErrorMessage = false;
@@ -410,7 +445,6 @@ class DashBoardView extends React.Component {
   };
 
   collectSelectedClassTypes = data => {
-    console.log("collectSelectedClassTypes", data);
     let classTypeIds = data.map(item => {
       return item._id;
     });
@@ -418,12 +452,9 @@ class DashBoardView extends React.Component {
   };
 
   handleMemberDetailsToRightPanel = memberId => {
-    console.log("handleMemberDetailsToRightPanel===>", memberId);
     let memberInfo = SchoolMemberDetails.findOne(memberId);
     // memberInfo = this.state.memberInfo
-    console.log("memberInfo before===>", memberInfo);
 
-    console.log("this.state.purchaseData", this.state.purchaseData);
     this.setState({
       memberInfo: {
         _id: memberInfo._id,
@@ -444,23 +475,19 @@ class DashBoardView extends React.Component {
       },
       schoolMemberDetailsFilters: { _id: memberId }
     });
-    console.log("memberInfo after===>", this);
   };
   // This is used to save admin notes in `Members` information.
   saveAdminNotesInMembers = event => {
-    console.log("saveAdminNotesInMembers", event.target.value);
     let memberInfo = this.state.memberInfo;
     memberInfo.adminNotes = event.target.value;
     memberInfo.schoolId = this.props.schoolData && this.props.schoolData._id;
     Meteor.call("school.saveAdminNotesToMember", memberInfo, (err, res) => {
       if (res) {
-        console.log("Upadted School Notes", res);
       }
     });
   };
 
   handleInput = event => {
-    console.log("oldMemberInfo", event.target.value);
     // this.setState({adminNotes:event.target.value});
     let oldMemberInfo = { ...this.state.memberInfo };
     oldMemberInfo.adminNotes = event.target.value;
@@ -468,13 +495,10 @@ class DashBoardView extends React.Component {
   };
 
   handleTaggingMembers = () => {
-    console.log("handleTaggingMembers");
   };
 
   renderSchoolMedia = (schoolData, memberInfo, slug) => {
-    console.log("renderSchoolMedia -->>", schoolData, memberInfo);
     const school = find(schoolData, { _id: memberInfo.schoolId });
-    console.log("renderSchoolMedia school-->>", school);
     if (isEmpty(school)) {
       return;
     } else {
@@ -494,7 +518,6 @@ class DashBoardView extends React.Component {
   };
 
   handleMemberNameChange = event => {
-    console.log("handleMemberNameChange -->", event.target.value);
     this.setState({
       filters: {
         ...this.state.filters,
@@ -524,8 +547,7 @@ class DashBoardView extends React.Component {
   };
   // Return Dash view from here
   render() {
-    console.log("DashBoardView props -->>", this.props);
-    console.log("DashBoardView state -->>", this.state);
+
     const {
       classes,
       theme,
@@ -682,7 +704,6 @@ class DashBoardView extends React.Component {
           className={classes.rightPanel}
           style={{ height: "100vh", overflow: "auto", overflowX: "hidden" }}
         >
-          {console.log("memberInfo", memberInfo)}
           {!isEmpty(memberInfo) && (
             <Fragment>
               <SchoolMemberInfo
@@ -799,7 +820,8 @@ export default createContainer(props => {
   let classTypeData = [];
   let filters = { ...props.filters, slug };
   let schoolAdmin;
-
+  let schoolId;
+  let classPricing,monthlyPricing,enrollmentFee;
   let subscription = Meteor.subscribe(
     "schoolMemberDetails.getSchoolMemberWithSchool",
     filters
@@ -810,9 +832,30 @@ export default createContainer(props => {
 
     if (slug) {
       schoolData = School.find({ slug: slug }).fetch();
+ 
     } else {
       schoolData = School.find().fetch();
     }
+    //find school id
+    schoolId=schoolData[0]._id;
+    //find all classpricing from subscription for displaying in add new member popup
+    let classPricingSubscription=Meteor.subscribe("classPricing.getClassPricing",{schoolId})
+    if(classPricingSubscription.ready()){
+      classPricing=ClassPricing.find().fetch();
+    }
+
+    //find all enrollmentFee from subscription for displaying in add new member popup
+    let enrollmentFeeSubscription=Meteor.subscribe("enrollmentFee.getEnrollmentFee",{schoolId})
+    if(enrollmentFeeSubscription.ready()){
+      enrollmentFee=EnrollmentFees.find().fetch();
+    }
+    //find all monthlyPricing from subscription for displaying in add new member popup
+    let monthlySubscription=Meteor.subscribe("monthlyPricing.getMonthlyPricing",{schoolId})
+    if(monthlySubscription.ready()){
+      monthlyPricing=MonthlyPricing.find().fetch();
+    }
+
+
     if (!isEmpty(schoolData) && schoolData[0].admins) {
       let currentUser = Meteor.user();
       if (
@@ -830,6 +873,8 @@ export default createContainer(props => {
     classTypeData,
     isLoading,
     slug,
-    schoolAdmin
+    schoolAdmin,
+    classPricing,
+    enrollmentFee,monthlyPricing
   };
 }, withStyles(styles, { withTheme: true })(DashBoardView));

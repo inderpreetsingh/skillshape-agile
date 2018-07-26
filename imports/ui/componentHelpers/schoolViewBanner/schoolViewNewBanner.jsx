@@ -86,7 +86,6 @@ class SchoolViewBanner extends React.Component {
 	}
 
 	handleEmailUs = () => {
-		console.log('handle email us clicked..')
 		this.handleDialogState('emailUsDialog',true);
 	}
 

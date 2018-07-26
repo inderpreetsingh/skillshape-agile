@@ -272,7 +272,6 @@ class ClassTypeCoverContent extends React.Component {
   // }
 
   getOurEmail = () => {
-    console.log()
     return this.props.schoolDetails.email;
   }
 
@@ -290,7 +289,6 @@ class ClassTypeCoverContent extends React.Component {
       }%3F %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
 
-      console.info(mailTo, "my mail To data.............");
       // const mailToNormalized = encodeURI(mailTo);
       // window.location.href = mailToNormalized;
       openMailToInNewTab(mailTo);
@@ -329,7 +327,6 @@ class ClassTypeCoverContent extends React.Component {
 
   render() {
     const props = this.props;
-    console.info("this . props ...............", this.props, "...........");
     const classTypeName = props.noClassTypeData ? "" : props.classTypeData.name;
     const selectedLocation = props.noClassTypeData
       ? props.schoolLocation
@@ -431,6 +428,7 @@ class ClassTypeCoverContent extends React.Component {
               props.noClassTypeData &&
               (props.bestPriceDetails.class ||
                 props.bestPriceDetails.monthly) && (
+                  
                 <BestPrices
                   onPricingButtonClick={
                     props.actionButtonProps.onPricingButtonClick

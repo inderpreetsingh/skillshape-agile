@@ -17,7 +17,6 @@ class ClassTypeDetails extends React.Component {
   }
 
   getChildTableData(parentData) {
-    console.log("getChildTableData -->>", parentData._id);
     return ClassTimes.find({ classTypeId: parentData._id }).fetch();
   }
 
@@ -26,7 +25,6 @@ class ClassTypeDetails extends React.Component {
   };
 
   handleImageSave = (schoolId, classTypeId) => {
-    console.log("<<<< handleImageSave called-->>", this.state);
     const { file } = this.state;
     let doc = {
       schoolId: schoolId
@@ -36,7 +34,6 @@ class ClassTypeDetails extends React.Component {
         { files: { "0": file.fileData }, path: "schools" },
         (err, res) => {
           if (err) {
-            console.error("err ", err);
           }
           if (res) {
             doc.classTypeImg = res.secure_url;
@@ -56,7 +53,6 @@ class ClassTypeDetails extends React.Component {
   editClassType = ({ doc, doc_id }) => {
     Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
       if (error) {
-        console.error("error", error);
       }
       if (result) {
       }
@@ -122,13 +118,11 @@ export default createContainer(props => {
   classTimesData = ClassTimes.find({ schoolId }, { sort: { _id: -1 } }).fetch();
   // }
 
-  // console.log("classTimesData -->>",classTimesData)
   /*Find skills to make this container reactive on skill
     other wise skills are joined with collections using package
     perak:joins */
   SkillCategory.find().fetch();
   SkillSubject.find().fetch();
-  console.log("classTypeData", classTypeData);
   /*****************************************************/
 
   return {

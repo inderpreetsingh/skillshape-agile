@@ -95,7 +95,6 @@ class MyProfile extends React.Component {
   };
 
   onLocationChange = location => {
-    console.log("location==>", location);
     this.setState({
       loc: location.coords,
       address: location.fullAddress
@@ -137,7 +136,6 @@ class MyProfile extends React.Component {
           { files: { "0": file.fileData }, path: "profile" },
           (err, res) => {
             if (err) {
-              console.error("err ", err);
               this.setState({
                 isBusy: false,
                 errorText: err.reason || err.message
@@ -163,8 +161,6 @@ class MyProfile extends React.Component {
 
   editUserCall = userData => {
     const { currentUser, toastr } = this.props;
-    // console.log("editUserCall -->>",this.state.dob)
-    console.log("currentuser in profile index", currentUser);
     Meteor.call(
       "user.editUser",
       { doc: userData, docId: currentUser._id },

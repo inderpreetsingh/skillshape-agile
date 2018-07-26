@@ -25,7 +25,6 @@ import '/imports/api/sLocation/methods';
 const formId = "LocationForm";
 
 const styles = theme => {
-    console.log("theme -->>",theme)
     return {
         button: {
           margin: 5,
@@ -67,8 +66,6 @@ class MonthlyPriceForm extends React.Component {
         event.preventDefault();
         const { selectedClassType, pymtType, tabValue } = this.state;
         const { data, schoolId, toastr, classTypeData } = this.props;
-        // console.log("pymtType -->>",pymtType)
-        // console.log("tabValue -->>",tabValue)
         let allClassTypeIds = classTypeData.map((item) => {return item._id});
         const payload = {
             schoolId: schoolId,
@@ -102,12 +99,8 @@ class MonthlyPriceForm extends React.Component {
     }
 
     handleSubmit = ({methodName, doc, doc_id})=> {
-        console.log("handleSubmit methodName-->>",methodName)
-        console.log("handleSubmit doc-->>",doc)
-        console.log("handleSubmit doc_id-->>",doc_id)
         Meteor.call(methodName, { doc, doc_id }, (error, result) => {
             if (error) {
-              console.error("error", error);
             }
             if (result) {
                 this.props.onClose()
@@ -118,7 +111,6 @@ class MonthlyPriceForm extends React.Component {
 
     handleClassTypeInputChange = (value) => {
         Meteor.call("classType.getClassTypeByTextSearch",{schoolId:this.props.schoolId, textSearch: value}, (err,res) => {
-            console.log("classType.getClassTypeByTextSearch res -->>",res)
             this.setState({
                 classTypeData: res || [],
             })
@@ -144,9 +136,7 @@ class MonthlyPriceForm extends React.Component {
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
     render() {
-        console.log("MonthlyPriceForm render props -->>>",this.props);
-        console.log("MonthlyPriceForm render state -->>>",this.state);
-        const { fullScreen, data, classes } = this.props;
+        const { fullScreen, data, classes,schoolData ,currency} = this.props;
         const { classTypeData, pymtMethod, pymtDetails } = this.state;
         const tabValue = this.state.tabValue == 0 ? 'Pay Each Month' : 'Pay Up Front';
         return (
@@ -252,7 +242,7 @@ class MonthlyPriceForm extends React.Component {
                                                 </Grid>
                                             )
                                         }
-                                        <AddRow ref="AddRow"  tabValue={tabValue} rowData={(tabValue !== pymtMethod) ? [ { month: null, cost: null} ] :  pymtDetails} classes={classes}/>
+                                        <AddRow ref="AddRow"  tabValue={tabValue} rowData={(tabValue !== pymtMethod) ? [ { month: null, cost: null,currency:currency} ] :  pymtDetails} classes={classes} currency={currency}/>
                                     </div>
 
                                 </form>

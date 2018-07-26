@@ -10,6 +10,7 @@ import Select from "material-ui/Select";
 import Input, { InputLabel, InputAdornment } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import config from '/imports/config';
 import Dialog, {
   DialogTitle,
   DialogContent,
@@ -42,20 +43,17 @@ class ClassPriceForm extends React.Component {
       selectedClassType: get(this.props, "data.selectedClassType", null),
       expPeriod: get(this.props, "data.expPeriod", ""),
       includeAllClassTypes: get(this.props, "data.includeAllClassTypes", ""),
-      noExpiration: get(this.props, "data.noExpiration", "")
+      noExpiration: get(this.props, "data.noExpiration", ""),
+      currency: get(this.props, "data.currency", this.props.currency)
     };
   }
 
   handleClassTypeInputChange = value => {
-    console.log("ClassPriceForm handleClassTypeInputChange -->>", value);
     Meteor.call(
       "classType.getClassTypeByTextSearch",
       { schoolId: this.props.schoolId, textSearch: value },
       (err, res) => {
-        console.log(
-          "ClassPriceForm classType.getClassTypeByTextSearch res -->>",
-          res
-        );
+        
         this.setState({
           classTypeData: res || []
         });
@@ -64,7 +62,6 @@ class ClassPriceForm extends React.Component {
   };
 
   onClassTypeChange = values => {
-    console.log("ClassPriceForm onClassTypeChange values-->>", values);
     this.setState({ selectedClassType: values });
   };
 
@@ -92,7 +89,8 @@ class ClassPriceForm extends React.Component {
       noClasses: this.noClasses.value && parseInt(this.noClasses.value),
       cost: this.classPriceCost.value && parseInt(this.classPriceCost.value),
       noExpiration: this.state.noExpiration,
-      includeAllClassTypes: this.state.includeAllClassTypes
+      includeAllClassTypes: this.state.includeAllClassTypes,
+      currency:this.state.currency
     };
     this.setState({ isBusy: true });
     if (data && data._id) {
@@ -110,12 +108,8 @@ class ClassPriceForm extends React.Component {
   };
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
-    console.log("handleSubmit methodName-->>", methodName);
-    console.log("handleSubmit doc-->>", doc);
-    console.log("handleSubmit doc_id-->>", doc_id);
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
       if (error) {
-        console.error("error", error);
       }
       if (result) {
         this.props.onClose();
@@ -131,9 +125,9 @@ class ClassPriceForm extends React.Component {
     this.setState({ showConfirmationModal: false });
 
   render() {
-    const { fullScreen, data, classes } = this.props;
+    const { fullScreen, data, classes,schoolData,currency } = this.props;
     const { classTypeData } = this.state;
-
+    
     return (
       <Dialog
         open={this.props.open}
@@ -254,6 +248,17 @@ class ClassPriceForm extends React.Component {
                 margin="dense"
                 fullWidth
               />
+              {/* 1.Currency selection will align with the cost field.(Done)
+                  2.School Default currency will be selected as default. (Done)
+                  or in case of edit package already selected currency will be become default currency.(Done)
+                  3.New field currency need to be created  in the classPricing collection. (Done)
+                  4.User selected currency name and symbol store in the state.(Done)
+                  5.On Save store in the collection.(Done)
+              */}
+              
+                    
+                 
+                
               <FormControl required={true} fullWidth>
                 <InputLabel htmlFor="amount">Cost</InputLabel>
                 <Input
@@ -263,7 +268,22 @@ class ClassPriceForm extends React.Component {
                   label="Cost"
                   type="number"
                   startAdornment={
-                    <InputAdornment position="start">$</InputAdornment>
+                    <Select
+                      required={true}
+                      input={<Input id="currency" />}
+                      value={this.state.currency}
+                      onChange={event =>
+                        this.setState({ currency: event.target.value })
+                      }
+                    >
+                     {config.currency.map((data, index)=> {
+                                    return <MenuItem
+                                      key={data.label}
+                                      value={data.value}>
+                                      {data.value}
+                                    </MenuItem>
+                                })} 
+                    </Select>
                   }
                   fullWidth
                 />

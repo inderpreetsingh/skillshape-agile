@@ -108,19 +108,18 @@ if (Meteor.isServer) {
       user.term_cond_accepted = options.term_cond_accepted;
     }
 
-    if (user.services) {
-      var service = _.keys(user.services)[0];
-      if (service == "facebook") {
-        let email = user.services[service].email;
-        user.profile = user.profile || {};
-        user.profile.firstName = user.services.facebook.first_name;
-        user.profile.lastName = user.services.facebook.last_name;
-        user.name = `${user.profile.firstName} ${user.profile.lastName}`;
-        user.emails = [{ address: email, verified: true }];
-        console.log("onCreateUser facebook 2...", user);
-        let existingUser = Meteor.users.findOne({ "emails.address": email });
-        console.log("onCreateUser  facebook1..", existingUser);
-        if (!existingUser) return user;
+        if (user.services) {
+            var service = _.keys(user.services)[0];
+            if (service == 'facebook') {
+                let email = user.services[service].email;
+                user.profile = user.profile || {}
+                user.profile.firstName = user.services.facebook.first_name;
+                user.profile.lastName = user.services.facebook.last_name;
+                user.name = `${user.profile.firstName} ${user.profile.lastName}`;
+                user.emails = [{address: email, verified: true}]
+                let existingUser = Meteor.users.findOne({'emails.address': email});
+                if (!existingUser)
+                    return user;
 
         // precaution, these will exist from accounts-password if used
         if (!existingUser.services)
@@ -128,30 +127,27 @@ if (Meteor.isServer) {
         if (!existingUser.services.resume)
           existingUser.services.resume = { loginTokens: [] };
 
-        // copy across new service info
-        existingUser.services[service] = user.services[service];
-        /*if(user.services.resume && user.services.resume.loginTokens) {
-                    console.log("Token",user.services.resume.loginTokens)
+                // copy across new service info
+                existingUser.services[service] = user.services[service];
+                /*if(user.services.resume && user.services.resume.loginTokens) {
                     existingUser.services.resume.loginTokens.push(
                         user.services.resume.loginTokens[0]
                     );
                 }*/
-        console.log("Existing facebook user", existingUser);
-        // even worse hackery
-        Meteor.users.remove({ _id: existingUser._id }); // remove existing record
-        return existingUser;
-      } else if (service == "google") {
-        let email = user.services[service].email;
-        user.profile = user.profile || {};
-        user.profile.firstName = user.services.google.given_name;
-        user.profile.lastName = user.services.google.family_name;
-        user.profile.name = user.services.google.name;
-        user.emails = [{ address: email, verified: true }];
+                // even worse hackery
+                Meteor.users.remove({_id: existingUser._id}); // remove existing record
+                return existingUser;
+            } else if(service == 'google') {
+                let email = user.services[service].email;
+                user.profile = user.profile || {}
+                user.profile.firstName = user.services.google.given_name;
+                user.profile.lastName = user.services.google.family_name;
+                user.profile.name = user.services.google.name;
+                user.emails = [{address: email, verified: true}];
 
-        console.log("onCreateUser google 2...", user);
-        let existingUser = Meteor.users.findOne({ "emails.address": email });
-        console.log("onCreateUser  google 1..", existingUser);
-        if (!existingUser) return user;
+                let existingUser = Meteor.users.findOne({'emails.address': email});
+                if (!existingUser)
+                    return user;
 
         // precaution, these will exist from accounts-password if used
         if (!existingUser.services)
@@ -159,15 +155,13 @@ if (Meteor.isServer) {
         if (!existingUser.services.resume)
           existingUser.services.resume = { loginTokens: [] };
 
-        // copy across new service info
-        existingUser.services[service] = user.services[service];
-        /*if(user.services.resume && user.services.resume.loginTokens) {
-                    console.log("Token",user.services.resume.loginTokens)
+                // copy across new service info
+                existingUser.services[service] = user.services[service];
+                /*if(user.services.resume && user.services.resume.loginTokens) {
                     existingUser.services.resume.loginTokens.push(
                         user.services.resume.loginTokens[0]
                     );
                 }*/
-        console.log("Existing google user", existingUser);
         // even worse hackery
         Meteor.users.remove({ _id: existingUser._id }); // remove existing record
         return existingUser;

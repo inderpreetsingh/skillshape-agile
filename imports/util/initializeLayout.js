@@ -234,7 +234,6 @@ let md = {
            if(!mobile_menu_initialized){
 
                $navbar = $('nav').find('.navbar-collapse').first().clone(true);
-              //  console.log($navbar);
                nav_content = '';
                mobile_menu_content = '';
 
@@ -417,7 +416,6 @@ let md = {
 
              });
          }
-         console.log("initBootstrapNavbarMenu");
          // join_school_events();
      }, 800),
 

@@ -5,7 +5,6 @@ import Typography from "material-ui/Typography";
 import Grid from "material-ui/Grid";
 
 export default function(props) {
-  console.log("mailFolderListItems", this);
   const { src, collectionData } = props;
   const membersByName = _.groupBy(collectionData && collectionData, function(
     item

@@ -47,14 +47,12 @@ class UploadAvatar extends React.Component {
     }
 
     handleChange = (file)=>{
-        console.log("handleChange>>>file>>>>", file)
         this.setState({fileUploadError: false});
         this.state.file = file;
     }
 
     onSubmit = (event) => {
         event.preventDefault();
-        console.log("this.props.memberInfo", this);
         let file = this.state.file;
         if (!this.state.file) {
             this.setState({ fileUploadError: true })
@@ -66,37 +64,30 @@ class UploadAvatar extends React.Component {
         if (file && file.fileData && !file.isUrl) {
             S3.upload({ files: { "0": file.fileData }, path: "memberAvatar" }, (err, res) => {
                 if (err) {
-                    console.error("err ", err)
                     this.setState({ isBusy: false, errorText: err.reason || err.message })
                 }
                 if (res) {
                     memberData["pic"] = res.secure_url
-                    console.log("else part11111111111")
                     this.editUserCall(memberData);
 
                 }
             });
         } else if (file && file.isUrl) {
             memberData["pic"] = file.file;
-            console.log("else part2222222222222")
             this.editUserCall(memberData);
         } else {
-            console.log("else part33333333")
             this.editUserCall(memberData);
         }
     }
     editUserCall = (memberData) => {
-        console.log("memberData==>", memberData);
         let payload = {};
         payload.pic = memberData.pic;
         Meteor.call(
             "schoolMemberDetails.editSchoolMemberDetails", { doc_id: memberData._id, doc: payload },
             (err, res) => {
                 if (res) {
-                    console.log("Upadted School Image", res);
                 }
                 if (err) {
-                    console.error("err", err);
                 }
                 // Stop loading and close modal.
                 this.setState({ isLoading: false });
@@ -107,7 +98,6 @@ class UploadAvatar extends React.Component {
 
     render() {
         let { mediaFormData, formType, fullScreen, showUploadAvatarModal, onClose } = this.props;
-        console.log("createMedia props -->>",this.props);
         return (
             <Dialog
                 fullScreen={fullScreen}

@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default function() {
-  console.log("product props -->>",this.props);
   const {
     className,
     school,

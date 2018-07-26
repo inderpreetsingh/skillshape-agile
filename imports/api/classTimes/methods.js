@@ -22,7 +22,6 @@ Meteor.methods({
   },
   "classTimes.addClassTimes": function({ doc }) {
     const user = Meteor.users.findOne(this.userId);
-    console.log("classTimes.addClassTimes methods called!!!", doc);
     if (
       checkMyAccess({
         user,

@@ -48,7 +48,6 @@ class ClassTimeForm extends React.Component {
 
   initializeFields = () => {
     const { data, locationData, parentData } = this.props;
-    console.log("initializeFields data -->>", this.props);
     let state = {
       roomData: [],
       roomId: "",
@@ -61,7 +60,6 @@ class ClassTimeForm extends React.Component {
       state.locationId = parentData.selectedLocation._id;
     }
     // Default selected tab accoring to data found for `ClassTimes` rec.
-    console.log("data--------->>>>.", data);
     if (!_.isEmpty(data)) {
       if (data.scheduleType === "oneTime") {
         state.tabValue = 0;
@@ -76,30 +74,21 @@ class ClassTimeForm extends React.Component {
       state.endDate = data.endDate;
       state.duration = data.duration;
       state.roomId = data.roomId;
-      console.log("this.state.tabvalue", state.tabValue);
     }
-    console.log("Final state -->>", state);
     return state;
   };
 
   onTabChange = tabValue => {
-    console.log("onTabChange state -->>", tabValue);
     this.setState({ tabValue });
   };
 
   handleChangeDate = (fieldName, date) => {
-    console.log("handleChangeDate -->>", fieldName, date);
     this.setState({ [fieldName]: new Date(date) });
   };
 
   saveClassTimes = (nextTab, addSeperateTimeJson, event) => {
     event.preventDefault();
-    console.log(
-      "nextTab, addSeperateTimeJson, event",
-      nextTab,
-      addSeperateTimeJson,
-      event
-    );
+    
     const { schoolId, data, parentKey, parentData, toastr } = this.props;
     const { tabValue, locationId } = this.state;
 
@@ -127,7 +116,6 @@ class ClassTimeForm extends React.Component {
       payload.startDate = new Date();
       payload.scheduleDetails = this.refs.weekDaysRow.getRowData();
     }
-    console.log("ClassTimes submit -->>", payload);
 
     if (data && data._id) {
       this.onSubmit({
@@ -170,7 +158,6 @@ class ClassTimeForm extends React.Component {
   render() {
     const { fullScreen, data, classes, locationData } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
-    console.log("ClassTimeForm state -->>", this.state);
     return (
       <div>
         <Dialog
@@ -222,11 +209,7 @@ class ClassTimeForm extends React.Component {
                   type="text"
                   fullWidth
                 />
-                {console.log(
-                  "tabValue",
-                  this.state.tabValue,
-                  this.state.tabValue === 0
-                )}
+               
                 <ResponsiveTabs
                   defaultValue={0}
                   tabValue={this.state.tabValue}

@@ -67,7 +67,6 @@ class AddSchoolMember extends React.Component {
     }
     // Return Dash view from here
     render() {
-      console.log("renderStudentModal===>",this.props)
         const { renderStudentModal } = this.props;
         return (
           <form id="addUser" onSubmit={this.props.addNewMember}>

@@ -30,7 +30,6 @@ import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/s
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
 export default function() {
-    console.log("SchoolView render-->>",this.props)
 
     const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
     const {
@@ -68,7 +67,6 @@ export default function() {
         const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
         let isPublish = this.getPublishStatus(schoolData.isPublish)
 
-        console.info('---------- is publish...',this.props);
 
         return (
             <DocumentTitle title={this.props.route.name}>
@@ -700,10 +698,8 @@ export default function() {
                           <div className="col-sm-12">
                           {
                             classType.map((classTypeData, index)=> {
-                              console.log("classTypeData -->>",classTypeData)
                               const skillClass = SkillClass.find({classTypeId: classTypeData._id}).fetch();
                               return skillClass.map((skillClassData, index) => {
-                                console.log("skillClassData -->>",skillClassData)
                                 const imgUrl = this.getClassImageUrl(skillClassData.classTypeId, skillClassData.classImagePath);
                                 return (<div className="col-md-4 npdagin npding">
                                     <div className="card card-profile">

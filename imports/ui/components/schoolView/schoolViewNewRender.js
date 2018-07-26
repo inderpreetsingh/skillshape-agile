@@ -215,8 +215,6 @@ const ErrorText = styled.p`
 // `;
 
 export default function() {
-    console.log("SchoolView render-->>",this.props)
-
     const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
     const {
         schoolData,
@@ -230,12 +228,13 @@ export default function() {
         classes,
         enrollmentFee,
         showLoading,
+        currency
     } = this.props;
 
     const {
         claimSchoolModal,
         claimRequestModal,
-        successModal,
+        successModal
     } = this.state;
 
     if(showLoading) {
@@ -254,7 +253,6 @@ export default function() {
         const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
         let isPublish = this.getPublishStatus(schoolData.isPublish)
 
-        console.info('---------- is publish...',this.props);
 
         return (
             <DocumentTitle title={this.props.routeParams.slug}>
@@ -298,6 +296,7 @@ export default function() {
             />
           }
           <div>
+            
           <SchoolViewNewBanner
             schoolData={schoolData}
             schoolId={schoolId}
@@ -375,6 +374,7 @@ export default function() {
                     enrollMentPackagesData={enrollmentFee}
                     perClassPackagesData={classPricing}
                     monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricing)}
+                    currency={currency}
                   />
                 }
                 </PackagesWrapper>
@@ -674,10 +674,8 @@ export default function() {
                           <div className="col-sm-12">
                           {
                             classType.map((classTypeData, index)=> {
-                              console.log("classTypeData -->>",classTypeData)
                               const skillClass = SkillClass.find({classTypeId: classTypeData._id}).fetch();
                               return skillClass.map((skillClassData, index) => {
-                                console.log("skillClassData -->>",skillClassData)
                                 const imgUrl = this.getClassImageUrl(skillClassData.classTypeId, skillClassData.classImagePath);
                                 return (<div className="col-md-4 npdagin npding">
                                     <div className="card card-profile">

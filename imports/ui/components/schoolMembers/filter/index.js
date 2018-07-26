@@ -52,8 +52,7 @@ export default class SchoolMemberFilter extends Component {
 
   	render() {
     	const { stickyPosition } = this.props;
-    	console.log("SchoolMemberFilter props -->>",this.props);
-    	console.log("SchoolMemberFilter state -->>",this.state);
+    	
 
   		return (
 		    <MuiThemeProvider theme={muiTheme}>
