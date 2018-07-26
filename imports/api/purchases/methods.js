@@ -2,6 +2,7 @@ import Purchases from "./fields";
 import School from "../school/fields";
 Meteor.methods({
   "purchases.addPurchase": function(payload) {
+    console.log('payload',payload)
     return Purchases.insert(payload);
   },
   "purchases.getAllPurchaseData": function(slug, filters) {
@@ -12,7 +13,7 @@ Meteor.methods({
     ).fetch();
     return AllPurchaseData;
   },
-  "purchases.updatePurchases": function(payload, recordId) {
+  "purchases.updatePurchases": function({payload, recordId}) {
     Purchases.update(
       { _id: recordId },
       {

@@ -17,7 +17,8 @@ Meteor.methods({
     expDuration,
     expPeriod,
     noClasses,
-    classTypeIds
+    classTypeIds,
+    currency
   ) {
     let recordId;
     if (packageType == "EP") {
@@ -27,7 +28,6 @@ Meteor.methods({
     let endDate;
     let startDate;
     let user = Meteor.user();
-    console.log("user", user);
     try {
       let schoolData = School.findOne({ _id: schoolId });
       let superAdminId = schoolData.superAdmin;
@@ -38,7 +38,7 @@ Meteor.methods({
       const destinationAmount = Math.round(amount - skillshapeAmount);
       let stripeRequest = {
         amount: amount,
-        currency: "usd",
+        currency: expDuration,
         description: desc,
         source: token,
         destination: {
@@ -109,7 +109,6 @@ Meteor.methods({
         }
       );
       // stripe.balance.retrieve(function(err, balance) {
-      //   console.log("------------balace--------------", balance);
       // });
       return "Payment Successfully Done";
     } catch (error) {
@@ -181,7 +180,6 @@ Meteor.methods({
   },
   //creating plan for on monthly package creation
   "stripe.createStripePlan": async function(currencyCode, interval, amount) {
-    console.log("amount is", amount);
     let productId = Meteor.settings.productId;
     try {
       const plan = await stripe.plans.create({
@@ -292,13 +290,11 @@ Meteor.methods({
       ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
       return stripeCusId;
     } catch (error) {
-      console.log("error in stripe.handleCustomerAndSubscribe ------>", error);
       payload = { subscriptionResponse, status: "error" };
       let resultOfErrorUpdate = ClassSubscription.update(
         { _id: subscriptionDbId },
         { $set: payload }
       );
-      console.log("resultOfErrorUpdate", resultOfErrorUpdate);
       throw new Meteor.error(
         (error && error.message) || "Something went wrong"
       );

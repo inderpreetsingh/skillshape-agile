@@ -45,7 +45,6 @@ class ClassTypeForm extends React.Component {
 
   initializeFields = () => {
     const { data, locationData } = this.props;
-    console.log(data, state, ".... editing data");
     let state = {
       gender: "Any",
       experienceLevel: "All",

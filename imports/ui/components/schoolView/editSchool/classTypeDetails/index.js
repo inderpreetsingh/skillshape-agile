@@ -85,7 +85,6 @@ class ClassTypeDetails extends React.Component {
             subjectData.skillCategoryId,
             obj.selectedSkillCategory
           );
-          console.log(categoryName, "category name...........");
           subjectData.name = `${subjectData.name} -- ${categoryName}`;
         }
         return subjectData;

@@ -119,7 +119,6 @@ export default createContainer(props => {
     filter
   );
   memberInfo = Purchases.find().fetch();
-  console.log("memberInfo", memberInfo);
   return {
     memberInfo,
     props

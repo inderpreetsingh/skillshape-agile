@@ -20,11 +20,6 @@ function updateHookForClassType({ classTypeId, doc }) {
 
 Meteor.methods({
   "monthlyPricing.addMonthlyPricing": function({ doc }) {
-    console.log(
-      "doc in monthlyPricing.addMonthlyPricing",
-      doc,
-      doc && doc.pymType && doc.pymtType.autoWithDraw
-    );
     try {
     } catch (error) {}
     const user = Meteor.users.findOne(this.userId);
@@ -42,7 +37,6 @@ Meteor.methods({
         (doc.pymtType.autoWithDraw == true && !doc.pymtType.payAsYouGo)
       ) {
         doc.pymtDetails.map((elem, index) => {
-          console.log("this is index ", index);
           try {
             let result = Meteor.call(
               "stripe.createStripePlan",
@@ -51,15 +45,12 @@ Meteor.methods({
               elem.cost
             );
             return (doc.pymtDetails[index].planId = result);
-            console.log("doc.pymtDetails", doc.pymtDetails);
           } catch (error) {
-            console.log("error in monthlyPricing.addMonthlyPricing", error);
             throw new Meteor.Error("Something went wrong!");
           }
         });
       }
 
-      console.log("doc------------->", doc);
       MonthlyPricing.insert(doc);
       return true;
     } else {
@@ -68,11 +59,6 @@ Meteor.methods({
   },
   "monthlyPricing.editMonthlyPricing": function({ doc_id, doc }) {
     const user = Meteor.users.findOne(this.userId);
-    console.log(
-      "MonthlyPricing.editMonthlyPricing methods called!!!",
-      doc_id,
-      doc
-    );
     if (
       checkMyAccess({
         user,
@@ -92,7 +78,6 @@ Meteor.methods({
         (doc.pymtType.autoWithDraw == true && !doc.pymtType.payAsYouGo)
       ) {
         doc.pymtDetails.map((elem, index) => {
-          console.log("this is index ", index);
 
           try {
             let result = Meteor.call(
@@ -102,7 +87,6 @@ Meteor.methods({
               elem.cost
             );
             return (doc.pymtDetails[index].planId = result);
-            console.log("doc.pymtDetails", doc.pymtDetails);
           } catch (error) {
             throw new Meteor.Error("Something went wrong!");
           }

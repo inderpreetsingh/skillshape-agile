@@ -50,7 +50,7 @@ export default class SchoolViewBase extends React.Component {
   // }
 
   handleGiveReview = () => {
-    const { toastr } = this.props;
+    //const { toastr } = this.props;
     if (Meteor.userId()) {
       this.handleDialogState("giveReviewDialog", true);
     } else {
@@ -507,10 +507,16 @@ export default class SchoolViewBase extends React.Component {
     expDuration,
     expPeriod,
     noClasses,
-    planId
+    planId,
+    currency
   ) => {
     // Start loading
-    const { toastr } = this.props;
+    config.currency.map((data,index)=>{
+      if(data.value==currency)
+       currency = data.label;
+    })
+    console.log('currency',currency)
+    const { popUp } = this.props;
     let self = this;
     Meteor.call(
       "stripe.findAdminStripeAccount",
@@ -521,13 +527,14 @@ export default class SchoolViewBase extends React.Component {
             amount = monthlyPymtDetails[0].cost;
           }
           amount = amount * 100;
-
           var handler = StripeCheckout.configure({
             key: Meteor.settings.public.stripe.PUBLIC_KEY,
             image: this.props.schoolData.mainImage,
+            currency: currency,
             locale: "auto",
             token: function(token) {
-              toastr.success("Please wait transaction in Progress", "Success");
+              popUp.appear("warning", {title: "Wait", content: "Please wait transaction in Progress"});
+              //toastr.success("Please wait transaction in Progress", "Success");
               if (packageType == "CP" || packageType == "EP") {
                 Meteor.call(
                   "stripe.chargeCard",
@@ -537,6 +544,7 @@ export default class SchoolViewBase extends React.Component {
                   packageId,
                   packageType,
                   schoolId,
+                  currency,
                   (error, result) => {
                     if (result) {
                       if (result == "Payment Successfully Done") {
@@ -573,12 +581,18 @@ export default class SchoolViewBase extends React.Component {
                           "schoolMemberDetails.addNewMember",
                           memberData
                         );
-                        toastr.success("Payment Successful", "Success");
+              popUp.appear("warning", {title: "Success", content: "Payment Successful"});
+                        
+                       // toastr.success("Payment Successful", "Success");
                       } else {
-                        toastr.success(result.message, "Success");
+              popUp.appear("warning", {title: "Success", content: result.message});
+                        
+                       // toastr.success(result.message, "Success");
                       }
                     } else {
-                      toastr.error(error.message, "Error");
+              popUp.appear("warning", {title: "Error", content: error.message,});
+                      
+                    //  toastr.error(error.message, "Error");
                     }
                   }
                 );
@@ -592,17 +606,22 @@ export default class SchoolViewBase extends React.Component {
                   amount,
                   packageId,
                   monthlyPymtDetails,
+                  currency,
                   (err, res) => {
                     if (res) {
-                      toastr.success(
-                        `Subscription successfully subscribed`,
-                        "Success"
-                      );
+              popUp.appear("warning", {title: "Success", content: `Subscription successfully subscribed`});
+                      
+                      // toastr.success(
+                      //   `Subscription successfully subscribed`,
+                      //   "Success"
+                      // );
                     } else {
-                      toastr.error(
-                        (err && err.message) || "something went wrong",
-                        "error"
-                      );
+              popUp.appear("warning", {title: "Error", content: (err && err.message) || "something went wrong"});
+                      
+                      // toastr.error(
+                      //   (err && err.message) || "something went wrong",
+                      //   "error"
+                      // );
                     }
                   }
                 );
@@ -636,9 +655,13 @@ export default class SchoolViewBase extends React.Component {
                 // Stop loading
                 self.setState({ isLoading: false });
                 if (err) {
-                  toastr.error(err.error, "Error");
+              popUp.appear("warning", {title: "Error", content: err.error});
+                  
+                 // toastr.error(err.error, "Error");
                 } else {
-                  toastr.error(res, "Error");
+              popUp.appear("warning", {title: "Error", content: res});
+                  
+                  //toastr.error(res, "Error");
                 }
               }
             );
