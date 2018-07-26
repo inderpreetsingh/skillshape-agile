@@ -43,6 +43,9 @@ ClassPricing.attachSchema(new SimpleSchema({
 	includeAllClassTypes: {
 		type: Boolean,
 		optional: true
+	},
+	currency:{
+		type: String
 	}
 }));
 

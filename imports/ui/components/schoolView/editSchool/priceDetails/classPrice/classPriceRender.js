@@ -48,7 +48,7 @@ export default function () {
                            					</Typography>
                                                   <br></br>
                     						<Typography component="p">
-											{currency}{classPrice.cost} for {classPrice.noClasses} class
+											{classPrice.currency?classPrice.currency:currency}{classPrice.cost} for {classPrice.noClasses} class
                     						</Typography>
                                                   <br></br>
                     						<Typography component="p">

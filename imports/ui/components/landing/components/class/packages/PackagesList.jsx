@@ -124,7 +124,7 @@ const PackageList = props => (
             classPackages={props.classPackages}
             {...packageData}
             {...props.packageProps}
-            currency={props.currency}
+            schoolCurrency={props.schoolCurrency}
           />
         </PackageWrapper>
       ))}
@@ -142,7 +142,7 @@ const EnrollmentPackagesList = props => (
             classPackages={props.classPackages}
             {...packageData}
             {...props.packageProps}
-            currency={props.currency}
+            schoolCurrency={props.schoolCurrency}
           />
         </PackageWrapper>
       ))}
@@ -154,7 +154,7 @@ const PackagesList = props => {
   const classPackagesEmpty = isEmpty(props.perClassPackagesData);
   const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
   const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
-  const currency=props.currency;
+  const schoolCurrency=props.currency;
   
   return (
     <Fragment>
@@ -169,7 +169,7 @@ const PackagesList = props => {
               }}
               packageListName="Enrollment Packages"
               packagesData={props.enrollMentPackagesData}
-              currency={currency}
+              schoolCurrency={schoolCurrency}
             />
           </Wrapper>
         )}
@@ -186,7 +186,7 @@ const PackagesList = props => {
             fullScreen={monthlyPackagesEmpty}
             packageListName="Class Packages"
             packagesData={props.perClassPackagesData}
-            currency={currency}
+            schoolCurrency={schoolCurrency}
           />
         )}
 
@@ -200,7 +200,7 @@ const PackagesList = props => {
             packageListName="Monthly Packages"
             fullScreen={classPackagesEmpty}
             packagesData={props.monthlyPackagesData}
-            currency={currency}
+            schoolCurrency={schoolCurrency}
           />
         )}
       </Wrapper>
