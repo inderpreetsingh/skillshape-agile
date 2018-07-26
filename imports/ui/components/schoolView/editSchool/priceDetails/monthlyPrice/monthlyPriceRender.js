@@ -84,7 +84,7 @@ export default function () {
                                                        monthPrice.pymtDetails.map((payment) => {
                                                             return <Fragment>
                                                                  <Typography component="p">
-                                                                      {currency && currency}{payment.cost} per month for {payment.month} months
+                                                                { payment.currency ? payment.currency : currency}{payment.cost} per month for {payment.month} months
                                                                  </Typography>
                                                                  <br></br>
                                                             </Fragment>

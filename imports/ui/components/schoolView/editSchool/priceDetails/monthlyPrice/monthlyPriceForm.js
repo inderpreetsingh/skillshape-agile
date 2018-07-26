@@ -242,7 +242,7 @@ class MonthlyPriceForm extends React.Component {
                                                 </Grid>
                                             )
                                         }
-                                        <AddRow ref="AddRow"  tabValue={tabValue} rowData={(tabValue !== pymtMethod) ? [ { month: null, cost: null} ] :  pymtDetails} classes={classes} currency={currency}/>
+                                        <AddRow ref="AddRow"  tabValue={tabValue} rowData={(tabValue !== pymtMethod) ? [ { month: null, cost: null,currency:currency} ] :  pymtDetails} classes={classes} currency={currency}/>
                                     </div>
 
                                 </form>
