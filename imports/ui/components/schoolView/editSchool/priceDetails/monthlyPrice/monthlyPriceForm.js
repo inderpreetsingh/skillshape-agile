@@ -21,7 +21,6 @@ import Radio, { RadioGroup } from 'material-ui/Radio';
 import AddRow from './addRow';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import '/imports/api/sLocation/methods';
-
 const formId = "LocationForm";
 
 const styles = theme => {
@@ -66,36 +65,53 @@ class MonthlyPriceForm extends React.Component {
         event.preventDefault();
         const { selectedClassType, pymtType, tabValue } = this.state;
         const { data, schoolId, toastr, classTypeData } = this.props;
+        let rowsUniqueness=true;
         let allClassTypeIds = classTypeData.map((item) => {return item._id});
-        const payload = {
-            schoolId: schoolId,
-            packageName: this.packageName.value,
-            classTypeId: this.state.includeAllClassTypes ? allClassTypeIds : selectedClassType && selectedClassType.map(data => data._id),
-            pymtMethod: "Pay Up Front",
-            pymtDetails: this.refs.AddRow.getRowData(),
-            includeAllClassTypes: this.state.includeAllClassTypes
-        }
-        if(tabValue === 0) {
-            // No option is selected for making payment then need to show this `Please select any payment type`.
-            if(pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo) {
-                toastr.error("Please select any payment type.","Error");
-                return
+        this.refs.AddRow.getRowData().map((value1,index1)=>{
+            this.refs.AddRow.getRowData().map((value2,index2)=>{
+                if(value1.month == value2.month && value1.currency == value2.currency && index1 !=index2)
+                {   
+                    rowsUniqueness=false;
+                }
+            })
+        })
+        if(rowsUniqueness)
+        {
+            const payload = {
+                schoolId: schoolId,
+                packageName: this.packageName.value,
+                classTypeId: this.state.includeAllClassTypes ? allClassTypeIds : selectedClassType && selectedClassType.map(data => data._id),
+                pymtMethod: "Pay Up Front",
+                pymtDetails: this.refs.AddRow.getRowData(),
+                includeAllClassTypes: this.state.includeAllClassTypes
             }
-            if(pymtType && pymtType.payUpFront) {
-                delete pymtType.payUpFront;
+            if(tabValue === 0) {
+                // No option is selected for making payment then need to show this `Please select any payment type`.
+                if(pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo) {
+                    toastr.error("Please select any payment type.","Error");
+                    return
+                }
+                if(pymtType && pymtType.payUpFront) {
+                    delete pymtType.payUpFront;
+                }
+                payload.pymtType = pymtType;
+                payload.pymtMethod = "Pay Each Month";
+            } else {
+                payload.pymtType ={payUpFront:true};
             }
-            payload.pymtType = pymtType;
-            payload.pymtMethod = "Pay Each Month";
-        } else {
-            payload.pymtType ={payUpFront:true};
+            this.setState({isBusy: true});
+    
+            if(data && data._id) {
+                this.handleSubmit({ methodName: "monthlyPricing.editMonthlyPricing", doc: payload, doc_id: data._id})
+            } else {
+                this.handleSubmit({ methodName: "monthlyPricing.addMonthlyPricing", doc: payload })
+            }
         }
-        this.setState({isBusy: true});
-
-        if(data && data._id) {
-            this.handleSubmit({ methodName: "monthlyPricing.editMonthlyPricing", doc: payload, doc_id: data._id})
-        } else {
-            this.handleSubmit({ methodName: "monthlyPricing.addMonthlyPricing", doc: payload })
+        else
+        {
+            toastr.error("Month and currency must be unique","Error");
         }
+       
     }
 
     handleSubmit = ({methodName, doc, doc_id})=> {

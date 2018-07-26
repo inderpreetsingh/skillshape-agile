@@ -1,29 +1,44 @@
 import UserStripeData from "./fields";
 import School from "../school/fields";
-
+import EnrollmentFees from "../enrollmentFee/fields";
 import ClassSubscription from "../classSubscription/fields";
+import ClassPricing from "../classPricing/fields";
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
+// :":":":":":":"" classtypeids removed 
 var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 Meteor.methods({
-  "stripe.chargeCard": async function(
+  "stripe.chargeCard": async function (
     stripeToken,
-    amount,
     desc,
     packageId,
     packageType,
     schoolId,
     expDuration,
     expPeriod,
-    noClasses,
-    classTypeIds,
-    currency
+    noClasses
   ) {
-    let recordId;
+    let recordId, amount, currency;
+    //Get amount and currency from database using package ids
     if (packageType == "EP") {
-      desc = "Enrollment Fee";
+      let enrollmentData = EnrollmentFees.findOne({ _id: packageId });
+      currency = enrollmentData.currency;
+      amount = enrollmentData.cost;
     }
+    else {
+      let classData = ClassPricing.findOne({ _id: packageId })
+      currency = classData.currency;
+      amount = classData.cost;
+      console.log("amount and currency",amount,currency,classData,packageId)
+    }
+    //Get currency name and correct amount using multipleFactor from config
+    config.currency.map((data, index) => {
+      if (data.value == currency) {
+        currency = data.label;
+        amount = amount * data.multiplyFactor;
+      }
+    })
     let userId = this.userId;
     let endDate;
     let startDate;
@@ -38,7 +53,7 @@ Meteor.methods({
       const destinationAmount = Math.round(amount - skillshapeAmount);
       let stripeRequest = {
         amount: amount,
-        currency: expDuration,
+        currency: currency,
         description: desc,
         source: token,
         destination: {
@@ -64,7 +79,6 @@ Meteor.methods({
         startDate: startDate,
         endDate: endDate,
         noOfClasses: noClasses,
-        classTypeIds: classTypeIds,
         fee: Math.round(amount * (2.9 / 100) + 30)
       };
       recordId = Meteor.call("purchases.addPurchase", payload);
@@ -83,7 +97,6 @@ Meteor.methods({
         email: currentUserRec.emails[0].address,
         phone: "",
         schoolId: schoolId,
-        classTypeIds: classTypeIds,
         birthYear: "",
         studentWithoutEmail: false,
         sendMeSkillShapeNotification: true,
@@ -122,12 +135,12 @@ Meteor.methods({
       );
     }
   },
-  "stripe.getStripeToken": function(code) {
+  "stripe.getStripeToken": function (code) {
     try {
       let result = Meteor.http.call(
         "POST",
         `https://connect.stripe.com/oauth/token?client_secret=${
-          Meteor.settings.stripe.PRIVATE_KEY
+        Meteor.settings.stripe.PRIVATE_KEY
         }&code=${code}&grant_type=authorization_code`
       );
 
@@ -150,19 +163,19 @@ Meteor.methods({
       throw new Meteor.Error(
         error.response.statusCode,
         error.response &&
-          error.response.data &&
-          error.response.data.error_description
+        error.response.data &&
+        error.response.data.error_description
       );
     }
   },
-  "stripe.addStripeJsonForUser": function(data) {
+  "stripe.addStripeJsonForUser": function (data) {
     let customer_id = UserStripeData.insert(data);
     Meteor.users.update(
       { _id: this.userId },
       { $set: { "profile.stripeStatus": true } }
     );
   },
-  "stripe.disconnectStripeUser": function() {
+  "stripe.disconnectStripeUser": function () {
     Meteor.users.update(
       { _id: this.userId },
       { $set: { "profile.stripeStatus": false } }
@@ -170,7 +183,7 @@ Meteor.methods({
     UserStripeData.remove({ userId: this.userId });
     return "Successfully Disconnected";
   },
-  "stripe.findAdminStripeAccount": function(superAdminId) {
+  "stripe.findAdminStripeAccount": function (superAdminId) {
     let result = UserStripeData.findOne({ userId: superAdminId });
     if (result) {
       return true;
@@ -179,7 +192,7 @@ Meteor.methods({
     }
   },
   //creating plan for on monthly package creation
-  "stripe.createStripePlan": async function(currencyCode, interval, amount) {
+  "stripe.createStripePlan": async function (currencyCode, interval, amount) {
     let productId = Meteor.settings.productId;
     try {
       const plan = await stripe.plans.create({
@@ -193,8 +206,8 @@ Meteor.methods({
       throw new Meteor.Error(error);
     }
   },
-  "stripe.createStripeProduct": function(productId) {
-    let existingProduct = stripe.products.retrieve(productId, function(
+  "stripe.createStripeProduct": function (productId) {
+    let existingProduct = stripe.products.retrieve(productId, function (
       err,
       product
     ) {
@@ -208,7 +221,7 @@ Meteor.methods({
               type: "service",
               id: productId
             },
-            function(err, result) {
+            function (err, result) {
               if (result && result.id) {
                 return result.id;
               } else {
@@ -218,11 +231,11 @@ Meteor.methods({
               }
             }
           );
-        } catch (err) {}
+        } catch (err) { }
       }
     });
   },
-  "stripe.handleCustomerAndSubscribe": async function(
+  "stripe.handleCustomerAndSubscribe": async function (
     token,
     planId,
     schoolId,

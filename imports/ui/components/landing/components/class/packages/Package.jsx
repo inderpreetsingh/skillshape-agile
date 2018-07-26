@@ -162,7 +162,6 @@ const Package = props => (
           Covers: {getCovers(props.selectedClassType)}
         </ClassDetailsText>
       </ClassDetailsSection>
-
       <RightSection>
         {props.packageType !== "EP" ? (
           <Fragment>
@@ -202,6 +201,7 @@ const Package = props => (
               Meteor.settings.public.stripeClientId
             }&scope=read_write`}
           > */}
+         
           <Cart
             onClick={() =>
               props.onAddToCartIconButtonClick(
@@ -209,15 +209,13 @@ const Package = props => (
                 props._id,
                 props.schoolId,
                 props.packageName,
-                props.cost,
-                props._id,
-                props.packageType,
+                props.cost ? props.cost : props.pymtDetails[0].cost,
                 props.pymtDetails,
                 props.expDuration,
                 props.expPeriod,
                 props.noClasses,
                 props.pymtDetails && props.pymtDetails[0].planId,
-                props.currency ? props.currency : props.schoolCurrency
+                props.currency ? props.currency : props.pymtDetails ? props.pymtDetails[0].currency : props.schoolCurrency
               )
             }
           />
