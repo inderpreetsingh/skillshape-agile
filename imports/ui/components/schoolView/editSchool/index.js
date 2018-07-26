@@ -2,7 +2,7 @@ import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import SchoolEditRender from "./schoolEditRender";
 import { browserHistory } from "react-router";
-
+import config from "/imports/config";
 // import collection definition over here
 // import Modules from "/imports/api/modules/fields";
 import Skills from "/imports/api/skill/fields";
@@ -22,10 +22,7 @@ class SchoolEditView extends React.Component {
   }
   componentWillMount() {
     // Listen for `?classDetails=true` so that we can click on tab.
-    console.log(
-      "this.props.location.query.type != 'rejec",
-      this.props.location.query.tabValue
-    );
+    
     if (this.props.location.query.tabValue) {
       // We should set state for class details tab so that it opens automatically.
       this.setState({ queryTabValue: this.props.location.query.tabValue });
@@ -62,7 +59,6 @@ class SchoolEditView extends React.Component {
     formFieldsValues,
     parentData
   }) => {
-    console.log("<<<< showEditModal >>>>>", parentData);
     this.setState(
       {
         formBuilderModal: {
@@ -73,7 +69,6 @@ class SchoolEditView extends React.Component {
         }
       },
       () => {
-        console.log("this.formBuilderModal show -->>", this.formBuilderModal);
         this.formBuilderModal.show();
       }
     );
@@ -95,6 +90,7 @@ export default createContainer(props => {
   let locationData;
   let moduleData;
   let isLoading = true;
+  let currency;
 
   if (props.isUserSubsReady) {
     subscription = Meteor.subscribe("UserSchool", schoolId);
@@ -112,6 +108,7 @@ export default createContainer(props => {
   if (subscription && subscription.ready()) {
     isLoading = false;
     schoolData = School.findOne({ _id: schoolId });
+    currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
     locationData = SLocation.find().fetch();
     classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
   }
@@ -123,6 +120,7 @@ export default createContainer(props => {
     locationData,
     moduleData,
     isLoading,
-    classTypeData
+    classTypeData,
+    currency
   };
 }, SchoolEditView);

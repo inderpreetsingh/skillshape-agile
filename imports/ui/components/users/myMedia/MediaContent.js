@@ -19,7 +19,6 @@ class MediaContent extends React.Component {
     render() {
     	// const { isLoading, schoolList, myMemberIds } = this.state;
     	const { currentUser, schoolData, myMemberIds, isLoading } = this.props;
-    	console.log("MediaContent props -->>",this.props);
     	return (
     		<div>
     			{isLoading && <Preloader/>}
@@ -52,7 +51,6 @@ class MediaContent extends React.Component {
 }
 
 export default createContainer(props => {
-    // console.log("MediaContent props -->>",props)
     let { currentUser } = props;
     let email = get(currentUser, "emails[0].address");
     let isLoading = true;

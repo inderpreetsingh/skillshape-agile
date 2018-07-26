@@ -10,7 +10,7 @@ import Radio, { RadioGroup } from 'material-ui/Radio';
 import Button from 'material-ui/Button';
 import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'material-ui/Form';
 
-import { toastrModal } from '/imports/util';
+import { withPopUp } from '/imports/util/withPopUp';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 const styles = theme => ({
@@ -66,30 +66,28 @@ class ContactUs extends React.Component {
 
   submit = (event) => {
       event.preventDefault();
-      const { toastr } = this.props;
-      console.log("this", this);
+      const { popUp } = this.props;
       const name = this.name.value;
       const email = this.email.value;
       const message = this.yourMessage.value;
       const selectedOption = this.state.optionsRadios;
       const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
       if (!email) {
-          toastr.error('Please enter your email.', 'Error');
+          popUp.appear("alert",{content: 'Please enter your email.'});
           return false;
       } else if (!emailReg.test(email)) {
-          toastr.error("Please enter valid email address", "Error");
+          popUp.appear("alert",{content: "Please enter valid email address"});
           return false;
       } else if (!message) {
-          toastr.error("Please enter a message.", "Error");
+          popUp.appear("alert",{content: "Please enter a message."});
           return false;
       } else {
           // Start loading
           this.setState({ isLoading: true });
           Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
               if (error) {
-                  console.log("error", error);
               } else {
-                  toastr.success("Thanks for providing your feedback", "Success");
+                  popUp.appear("success",{content: "Thanks for providing your feedback"});
                   setTimeout(() => {
                       browserHistory.push(`/`);
                   }, 200);
@@ -101,7 +99,6 @@ class ContactUs extends React.Component {
 
     render() {
         const { classes } = this.props;
-        console.log("Props====>",this.props);
         return(
             <DocumentTitle title={this.props.route.name}>
             <Grid container style={{paddingLeft: 8}}>
@@ -207,4 +204,4 @@ class ContactUs extends React.Component {
     }
 }
 
-export default withStyles(styles)(toastrModal(ContactUs));
+export default withStyles(styles)(withPopUp(ContactUs));

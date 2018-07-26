@@ -6,8 +6,8 @@ import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
 import { browserHistory } from "react-router";
-import ip from "ip";
 
+import ip from "ip";
 import Chip from "material-ui/Chip";
 import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
@@ -23,18 +23,15 @@ import SwitchIconButton from "./components/buttons/SwitchIconButton.jsx";
 import FloatingChangeViewButton from "./components/buttons/FloatingChangeViewButton.jsx";
 import Footer from "./components/footer/index.jsx";
 import NoResults from "./components/NoResults.jsx";
-
 import PrimaryButton from "./components/buttons/PrimaryButton.jsx";
 import FormGhostButton from "./components/buttons/FormGhostButton.jsx";
 import ContactUsFloatingButton from "./components/buttons/ContactUsFloatingButton.jsx";
 import FiltersDialogBox from "./components/dialogs/FiltersDialogBox.jsx";
-
 import * as helpers from "./components/jss/helpers.js";
 import { cardsData, cardsData1 } from "./constants/cardsData.js";
 import config from "/imports/config";
 import Events from "/imports/util/events";
-import { toastrModal } from "/imports/util";
-
+import { withPopUp } from "/imports/util";
 const MainContentWrapper = styled.div`
   display: flex;
   position: relative;
@@ -182,13 +179,13 @@ const ContactUsWrapper = styled.div`
   bottom: 10%;
   z-index: 1500;
 `;
-const WrapperDiv = styled.div`
+const FilterApplied = styled.div`
   ${helpers.flexCenter} font-weight: 500;
   font-size: ${helpers.baseFontSize}px;
   padding: ${helpers.rhythmDiv}px;
   // border-bottom: solid 1px #dddd;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: 360px) {
     flex-direction: column;
   }
 `;
@@ -198,7 +195,7 @@ const FilterAppliedDivs = styled.div`
   align-items: center;
   margin-right: ${props => props.marginRight}px;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: 360px) {
     width: 100%;
     margin-right: 0;
     margin-bottom: ${helpers.rhythmDiv}px;
@@ -232,8 +229,19 @@ class Landing extends Component {
     this.handleSkillTypeSearch = debounce(this.handleSkillTypeSearch, 1000);
   }
 
+  _getNormalizedLocation = (addressComponents) => {
+      const addressComponentTypes = ['administrative_area_level_1','country'];
+      // While in the filter, we are checking for those address components,
+      // which have administrative_area_level1 and country in there types
+      const normalizedLocation = addressComponents
+      .filter(address => address.types.some(addressComponentType => addressComponentTypes.indexOf(addressComponentType) >= 0))
+      .map(address => address.long_name)
+      .join(", ");
+
+      return normalizedLocation;
+  }
+
   _handleGeoLocationError(err) {
-    console.warn(err, "err.message", err.message.indexOf);
     switch (err.code) {
       case err.PERMISSION_DENIED:
         if (err.message.indexOf("User denied") == 0) {
@@ -257,26 +265,39 @@ class Landing extends Component {
 
   componentWillMount() {}
 
+  // This is used to get subjects on the basis of subject category.
+  inputFromUser = text => {
+    // Do db call on the basis of text entered by user
+    let skillCategoryIds = this.state.filters.skillCategoryIds;
+    Meteor.call(
+      "getSkillSubjectBySkillCategory",
+      { skillCategoryIds: skillCategoryIds, textSearch: text },
+      (err, res) => {
+        if (res) {
+          // console.log("result",res)
+          this.setState({ skillSubjectData: res || [] });
+        }
+      }
+    );
+  };
+
   componentDidMount() {
     let positionCoords = this.getUsersCurrentLocation();
     positionCoords.then(function(value) {
       localStorage.setItem("myLocation", JSON.stringify(value));
     });
-    // console.log("this.props.location.query in componentDidMount", this.props.location.query)
     if (this.props.location.query && this.props.location.query.claimRequest) {
-      const { toastr } = this.props;
+      const { popUp } = this.props;
       if (this.props.location.query.schoolRegister) {
         Meteor.call(
           "claimSchoolRequest.approveSchoolClaimRequest",
           this.props.location.query.claimRequest,
           { rejected: true },
           (err, res) => {
-            console.log("errr------------->", err);
-            console.log("res-------------->", res);
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert",{content: err.reason || err.message});
             } else if (res && res.message) {
-              toastr.success(res.message, "Success");
+              popUp.appear("success", {content: res.message});
             } else {
               Events.trigger("registerAsSchool", { userType: "School" });
             }
@@ -288,10 +309,10 @@ class Landing extends Component {
           this.props.location.query.claimRequest,
           (err, res) => {
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert",{content: err.reason || err.message});
             }
             if (res && res.message) {
-              toastr.success(res.message, "Success");
+              popUp.appear("success",{content: res.message});
             }
           }
         );
@@ -320,10 +341,10 @@ class Landing extends Component {
           { keepMeSuperAdmin: true },
           (err, res) => {
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert", {content : err.reason || err.message});
             }
             if (res && res.message) {
-              toastr.success(res.message, "Success");
+              popUp.appear("success",{content: res.message});
             }
           }
         );
@@ -335,10 +356,10 @@ class Landing extends Component {
           { makeRequesterSuperAdmin: true },
           (err, res) => {
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert",{content: err.reason || err.message});
             }
             if (res && res.message) {
-              toastr.success(res.message, "Success");
+              popUp.success("success", {content: res.message});
             }
           }
         );
@@ -350,10 +371,10 @@ class Landing extends Component {
           { removeMeAsAdmin: true },
           (err, res) => {
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert",{content: err.reason || err.message});
             }
             if (res && res.message) {
-              toastr.success(res.message, "Success");
+              popUp.appear("success",{content: res.message});
             }
           }
         );
@@ -372,6 +393,7 @@ class Landing extends Component {
   }
 
   getUsersCurrentLocation = args => {
+    const {popUp} = this.props;
     return new Promise((resolve, reject) => {
       let positionCoords = [];
       if (navigator) {
@@ -396,7 +418,7 @@ class Landing extends Component {
           },
           err => {
             const geolocationError = this._handleGeoLocationError(err);
-            toastr.error(geolocationError, "Error");
+            popUp.appear("alert",{content: geolocationError});
           }
         );
       } else {
@@ -406,7 +428,6 @@ class Landing extends Component {
   };
 
   handleStickyStateChange = status => {
-    // console.log(status, "status..")
     if (status.status === 2) {
       if (!this.state.sticky) {
         this.setState({
@@ -449,7 +470,7 @@ class Landing extends Component {
   }
 
   getMyCurrentLocation = args => {
-    const { toastr } = this.props;
+    const { popUp } = this.props;
     if (navigator) {
       navigator.geolocation.getCurrentPosition(
         position => {
@@ -473,9 +494,10 @@ class Landing extends Component {
                 let place = results[0];
                 // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
                 // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
+                //console.log(results[0],"location details...")
                 sLocation = results[0].formatted_address;
                 oldFilters["coords"] = coords;
-                oldFilters["locationName"] = sLocation;
+                oldFilters["locationName"] = this._getNormalizedLocation(results[0].address_components);
                 oldFilters["applyFilterStatus"] = true;
               }
             }
@@ -488,14 +510,14 @@ class Landing extends Component {
           });
           // Toggle map view on click of `Browse classes near by me`
           // if(!args) {
-          this.handleToggleMapView();
+          if (!args.noMapView) this.handleToggleMapView();
           // }
           // toastr.success("Showing classes around you...","Found your location");
           // // Session.set("coords",coords)
         },
         err => {
           const geolocationError = this._handleGeoLocationError(err);
-          toastr.error(geolocationError, "Error");
+          popUp.appear("alert",{content: geolocationError});
         }
       );
     }
@@ -514,7 +536,6 @@ class Landing extends Component {
   };
 
   handleLocationSearch = locationText => {
-    // console.log("handleLocationSearch -->>",locationText)
     this.setState({
       filters: {
         ...this.state.filters,
@@ -524,12 +545,6 @@ class Landing extends Component {
   };
 
   handleSkillTypeSearch = (skillTypeText, updateKey1, updateKey2) => {
-    console.log(
-      "handleSkillTypeSearch -->>",
-      skillTypeText,
-      updateKey1,
-      updateKey2
-    );
     this.setState({
       filters: {
         ...this.state.filters,
@@ -550,9 +565,16 @@ class Landing extends Component {
     });
   };
 
+  resetLocationInput = () => {
+    this.setState({
+      ...this.state,
+      filters: {...this.state.filters, locationName: '', coords: null}
+    })
+  }
+
   onLocationChange = (location, updateKey1, updateKey2) => {
     let stateObj = {};
-
+    //console.log('onLocationChange',location,".....................");
     if (updateKey1) {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
@@ -567,7 +589,7 @@ class Landing extends Component {
       stateObj[updateKey2] = {
         ...this.state[updateKey2],
         coords: location.coords,
-        locationName: location.fullAddress
+        locationName: location.fullAddress,
       };
     }
 
@@ -580,7 +602,7 @@ class Landing extends Component {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
         coords: null,
-        locationName: event.target.value
+        locationName: event.target.value,
       };
     }
 
@@ -588,7 +610,7 @@ class Landing extends Component {
       stateObj[updateKey2] = {
         ...this.state[updateKey2],
         coords: null,
-        locationName: event.target.value
+        locationName: event.target.value,
       };
     }
 
@@ -719,7 +741,6 @@ class Landing extends Component {
     const filtersData = this.state.filters;
     for (var prop in filtersData) {
       if (!isEmpty(filtersData[prop])) {
-        console.log("filtersData[prop]===>", filtersData[prop]);
         return this.showText("Clear All Filters", this.deleteFilterText);
       }
     }
@@ -740,15 +761,14 @@ class Landing extends Component {
   };
   showText = (text, cb) => {
     return (
-      <WrapperDiv>
+      <FilterApplied>
         {/*<FilterAppliedDivs>
                     Filters in use.
                 </FilterAppliedDivs>*/}
         <FilterAppliedDivs marginRight="16">
           <FormGhostButton
             fullWidth
-            noMarginBottom
-            icon
+            noMar360con
             iconName="close"
             label="Clear All Filters"
             onClick={cb}
@@ -777,7 +797,7 @@ class Landing extends Component {
                        <Icon>tune </Icon>
                     </Button>*/}
         </FilterAppliedDivs>
-      </WrapperDiv>
+      </FilterApplied>
     );
   };
   // Delete `skillTypeText` and `locationText` from filters.
@@ -785,12 +805,11 @@ class Landing extends Component {
     this.setState({
       filters: {},
       tempFilters: {},
-      resetMainSearch: !this.state.resetMainSearch
+      resetMainSearch:!this.state.resetMainSearch
     });
   };
   // showAppliedLocationFilter = () => {
   //     const { locationName } = this.state.filters;
-  //     // console.log("locationName",this.state.filters, defaultLocation)
   //     if (locationName) {
   //         text = `Showing classes near you (${locationName})`;
   //         return this.showText(text, this.clearDefaultLocationFilter);
@@ -834,18 +853,16 @@ class Landing extends Component {
     ) {
       return 96; // Size of filter bar + buttons
     } else if (!this.state.mapView && this.checkIfAnyFilterIsApplied()) {
-      return 96;
+      return 96; // if any filter is applied
     } else if (!this.state.mapView && this.state.sticky) {
+      // size without buttons..
       return 72;
     } else {
-      return 0;
+      return 0; // if no filter is applied
     }
   };
 
   render() {
-    // console.log("Landing state -->>",this.state);
-    // console.log("Landing state -->>", this.state);
-    // console.log("Landing props -->>", this.props);
     return (
       <DocumentTitle title={this.props.route.name}>
         <div>
@@ -892,15 +909,21 @@ class Landing extends Component {
                 onFiltersButtonClick={() =>
                   this.handleFiltersDialogBoxState(true)
                 }
+                handleNoOfFiltersClick={() =>
+                  this.handleFiltersDialogBoxState(true)
+                }
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 onMapViewButtonClick={this.handleToggleMapView}
                 mapView={this.state.mapView}
-                resetSearch={this.state.resetMainSearch}
                 locationInputChanged={this.locationInputChanged}
-                currentAddress={this.state.locationName}
                 filters={this.state.filters}
+                resetLocationInput={this.resetLocationInput}
                 onLocationChange={this.onLocationChange}
                 currentFilterState={this.state.filters}
+                collectSelectedSkillCategories={
+                  this.collectSelectedSkillCategories
+                }
+                collectSelectedSkillSubject={this.collectSelectedSkillSubject}
                 onSearchIconClick={() => this.scrollTo()}
               />
             </Cover>
@@ -1014,4 +1037,4 @@ class Landing extends Component {
   }
 }
 
-export default toastrModal(Landing);
+export default withPopUp(Landing);

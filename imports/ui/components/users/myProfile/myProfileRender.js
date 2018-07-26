@@ -40,8 +40,6 @@ const ErrorWrapper = styled.span`
 `;
 
 export default function() {
-  console.log("My Profile Props -->>>", this.props);
-  console.log("My Profile State -->>>", this.state);
   let { currentUser, classes, isUserSubsReady } = this.props;
   let {
     firstName,

@@ -29,7 +29,6 @@ class Payouts extends React.Component {
   render() {
     const { purchaseData } = this.props;
     const { pageCount } = this.props;
-    console.log("this.props.filters", this.props.filters);
     return (
       <div>
         <center>

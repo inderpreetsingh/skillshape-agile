@@ -498,7 +498,7 @@ class Multiselect extends React.Component {
 
     let Component = this.props.tagComponent;
 
-    console.log('messages...',messages);
+    // console.log('messages...',messages);
     return (<MyTagList
          onNoOfFiltersClick={this.props.onNoOfFiltersClick}
          ref='tagList'
@@ -696,7 +696,8 @@ class Multiselect extends React.Component {
 
   getPlaceholder() {
     let { value, placeholder } = this.props;
-    return (value && value.length ? '' : placeholder) || ''
+    return placeholder;
+    // return (value && value.length ? '' : placeholder) || ''
   }
 }
 

@@ -180,9 +180,18 @@ class ManageMyCalendar extends React.Component {
         classTypeForInterests,
         filter: {
           classTimesIds: _.uniq(classTimesIds),
-          classTimesIdsForCI: _.uniq(classTimesIdsForCI),
-          manageClassTimeIds: _.uniq(manageClassTimeIds),
-          schoolClassTimeId: _.uniq(schoolClassTimeId)
+          classTimesIdsForCI:
+            this.state.type != "school" && this.state.type != "managing"
+              ? _.uniq(classTimesIdsForCI)
+              : [],
+          manageClassTimeIds:
+            this.state.type != "school" && this.state.type != "attending"
+              ? _.uniq(manageClassTimeIds)
+              : [],
+          schoolClassTimeId:
+            this.state.type != "managing" && this.state.type != "attending"
+              ? _.uniq(schoolClassTimeId)
+              : []
         },
         copyFilter: {
           classTimesIds: _.uniq(classTimesIds),
@@ -201,14 +210,7 @@ class ManageMyCalendar extends React.Component {
     event,
     isInputChecked
   ) => {
-    console.log(
-      parentKey,
-      fieldName,
-      childKey,
-      classTimeId,
-      event,
-      isInputChecked
-    );
+    
     const data = this.state[fieldName];
     let oldFilter = { ...this.state.filter };
     let ids = oldFilter[childKey] || [];
@@ -285,19 +287,9 @@ class ManageMyCalendar extends React.Component {
     event,
     isInputChecked
   ) => {
-    console.log(
-      "handle class type change",
-      parentKey,
-      classTypeId,
-      fieldName,
-      childKey,
-      event,
-      isInputChecked
-    );
     const data = this.state[fieldName];
     let oldFilter = { ...this.state.filter };
     let ids = oldFilter[childKey] || [];
-    console.log("ids------------>", ids);
     const { classTypeForInterests } = { ...this.state };
     const { managedClassTypes } = { ...this.state };
     const { managedClassTimes } = { ...this.state };
@@ -307,11 +299,7 @@ class ManageMyCalendar extends React.Component {
     let classTimesIds = [...oldFilter.classTimesIds];
     let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
     let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
-    console.log(
-      "classTypeForInterests in handle change",
-      classTypeForInterests
-    );
-    console.log("data-------------", data);
+   
     for (let i = 0; i < data.length; i++) {
       if (data[i].classTypeId === classTypeId) {
         data[i].isCheck = isInputChecked;
@@ -392,7 +380,6 @@ class ManageMyCalendar extends React.Component {
             // Toggle class type for interests.
             for (let j = 0; j < schoolClassTypes.length; j++) {
               if (schoolClassTypes[j]._id == classTypeId) {
-                console.log("inside if ---->", schoolClassTypes[j]._id);
                 schoolClassTypes[j].isCheck = isInputChecked;
               }
               if (data[i].classTypeId == classTypeId) {
@@ -408,10 +395,7 @@ class ManageMyCalendar extends React.Component {
         }
       }
     }
-    console.log(
-      "classTypeForInterests after in handle change",
-      classTypeForInterests
-    );
+    
     this.setState({
       filter: oldFilter,
       classTypeForInterests,
@@ -430,13 +414,7 @@ class ManageMyCalendar extends React.Component {
     event,
     isInputChecked
   ) => {
-    console.log(
-      "handleChangeAllClassTime -->>",
-      parentKey,
-      fieldName,
-      childKey,
-      isInputChecked
-    );
+    
     // get class interests:
     // loop over class interests.
     // get classTypeId from class interest.
@@ -451,14 +429,11 @@ class ManageMyCalendar extends React.Component {
     let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
     let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
 
-    console.log("classTypeData", classTypeData);
-    console.log("classTimeData", classTimeData);
     for (let i = 0; i < classTypeData.length; i++) {
       for (let j = 0; j < classTimeData.length; j++) {
         classTimeData[j].classTypeId = isInputChecked;
         if (isInputChecked) {
           if (parentKey == "attendingPanel") {
-            console.log("in if condition");
             classTimeIds.push(classTimeData[j]._id);
             oldFilter.classTimesIds = classTimeIds;
           }
@@ -538,8 +513,6 @@ class ManageMyCalendar extends React.Component {
   };
 
   render() {
-    console.log("ManageMyCalendar props--->>", this.props);
-    console.log("ManageMyCalendar state--->>", this.state);
     // const { schoolClassTimes } = this.props;
     const { classes, classInterestData } = this.props;
     const {
@@ -970,13 +943,13 @@ class ManageMyCalendar extends React.Component {
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               )}
-            {console.log("filter,this.props", filter, this.props)}
             <MyCalender
               manageMyCalendar={
                 this.props.route && this.props.route.name == "MyCalendar"
               }
               manageMyCalendarFilter={filter}
               {...this.props}
+              type={this.state.type}
             />
           </Card>
         </div>
@@ -988,7 +961,6 @@ class ManageMyCalendar extends React.Component {
 export default createContainer(props => {
   const classTimesData = ClassTimes.find({}).fetch();
   let classTypeIds = classTimesData.map(item => item.classTypeId);
-  console.log("container props", props);
   Meteor.subscribe("classTime.getclassType", {
     classTypeIds
   });
@@ -1011,11 +983,9 @@ export default createContainer(props => {
   let schoolClassTimes = [];
   let schoolClassTypesData = [];
   let schoolId = props.schoolId || (props.schoolData && props.schoolData._id);
-  console.log("schoolId-------------------->", schoolId);
   if (schoolId) {
     schoolClassTimes = ClassTimes.find({ schoolId: schoolId }).fetch();
     schoolClassTypesData = ClassType.find({ schoolId: schoolId }).fetch();
-    console.log("inside check-----------------", schoolClassTimes);
   }
   const classInterestData = ClassInterest.find({}).fetch();
   let classInterestClassIds = classInterestData.map(item => {

@@ -11,13 +11,11 @@ import styled from 'styled-components';
 import Button from 'material-ui/Button';
 
 
-
 import ClaimSchoolList  from "./claimSchoolList";
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
-
 
 const Wrapper = styled.div`
   display: flex;
@@ -33,7 +31,7 @@ const FormSubmitButtonWrapper =styled.div`
 const TextWrapper =styled.div`
 `;
 
-export default function () {
+export default function (props) {
    return (
        <DocumentTitle title={this.props.route.name}>
        <div>
@@ -73,6 +71,7 @@ export default function () {
               }}
           />
         }
+
         <Sticky activeClassName={"filter-panel-sticked"} innerZ={1} onStateChange={this.handleFixedToggle}>
             {/*<ClaimSchoolFilter
                 stickyPosition={this.state.sticky}
@@ -111,9 +110,13 @@ export default function () {
           </FormSubmitButtonWrapper>
         </Wrapper> */}
          <ClaimSchoolList
+            removeAllFilters={this.removeAllFilters}
             filters={this.state.filters}
+            tempFilters={this.state.tempFilters}
             removeAllFilters={this.removeAllFilters}
             handleClaimASchool={this.handleClaimASchool}
+            handleSuggestionFormState={this.handleSuggestionFormState}
+            handleGoBackButtonClick={this.handleGoBackButtonClick}
             onStartNewListingButtonClick={this.showConfirmationModal}
            />
        </div>

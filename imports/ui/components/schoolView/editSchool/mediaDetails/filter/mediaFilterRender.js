@@ -46,7 +46,6 @@ const FilterButtonArea = styled.div`
 
 export default function(){
 	const { stickyPosition, classes } = this.props;
-	console.log("Media filer props -->>",this.props.filters);
 	return (
   		<FilterPanelContainer stickyPosition={stickyPosition}>
     		<FilterPanelContent stickyPosition={stickyPosition}>

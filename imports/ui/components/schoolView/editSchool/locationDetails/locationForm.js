@@ -49,19 +49,16 @@ class LocationForm extends React.Component {
         const sLocationDetail = payload.address + "," + payload.city + "," + payload.zip + "," + payload.country;
 
         getLatLong(sLocationDetail, (data) => {
-        	console.log("getLatLong result -->>",data);
 	        if(data) {
 	            payload.geoLat = data.lat
 	            payload.geoLong = data.lng
 	            payload.loc = [data.lat, data.lng]
-	          	console.log("Final payload 3-->>",payload)
 	          	this.handleSubmit(payload);
 	        } else {
 	            const getLatLongPayload = payload.city + "," + payload.zip + "," + payload.country
 	            getLatLong(getLatLongPayload, (data) => {
 
 		            if (data == null) {
-		              console.error("Please enter valid address details");
 		              return false;
 		            } else {
 		                payload.geoLat = data.lat
@@ -75,7 +72,6 @@ class LocationForm extends React.Component {
 	}
 
 	handleSubmit = (payload, deleteObj)=> {
-		console.log("addLocation payload -->>",payload)
 		const { data } = this.props;
 		let methodName;
 		let docObj = {};
@@ -94,7 +90,6 @@ class LocationForm extends React.Component {
 		this.props.enableParentPanelToDefaultOpen();
 		Meteor.call(methodName, docObj, (error, result) => {
 	      if (error) {
-	        console.error("error", error);
 	      }
 	      if (result) {
 	        this.props.onClose(result)
@@ -130,8 +125,6 @@ class LocationForm extends React.Component {
 	}
 
 	render() {
-		// console.log("AddLocation render props -->>>",this.props);
-		// console.log("AddLocation render state -->>>",this.state);
 		const { fullScreen, data } = this.props;
 		return (
 			<div>

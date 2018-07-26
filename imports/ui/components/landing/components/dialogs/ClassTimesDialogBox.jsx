@@ -3,8 +3,9 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { isEmpty } from "lodash";
+import { browserHistory, Link } from "react-router";
 import { createContainer } from "meteor/react-meteor-data";
-
+import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import Button from "material-ui/Button";
 import IconButton from "material-ui/IconButton";
 import Chip from "material-ui/Chip";
@@ -13,16 +14,16 @@ import TextField from "material-ui/TextField";
 import { withStyles } from "material-ui/styles";
 import { MuiThemeProvider } from "material-ui/styles";
 import ClearIcon from "material-ui-icons/Clear";
-
+import Grid from "material-ui/Grid";
 import ClassTimesBar from "/imports/ui/components/landing/components/classTimes/ClassTimesBar";
 import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
-
+import Icon from "material-ui/Icon";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
-
+import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
-
+import School from "/imports/api/school/fields";
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -45,36 +46,65 @@ const styles = {
     maxWidth: 400,
     background: "white",
     margin: helpers.rhythmDiv,
-    overflowY: 'auto'
+    overflowY: "auto"
   },
   dialogTitle: {
     // padding: `0 ${helpers.rhythmDiv * 3}px`,
     // paddingTop: helpers.rhythmDiv * 2
-    padding: 0,
+    padding: 0
   },
   dialogContent: {
     overflowX: "hidden",
-    padding: 0,
+    padding: 0
   },
   iconButton: {
-    position: 'absolute',
-    top: -20,
-    right: 0,
-    background: 'white',
-    zIndex: 3,
+    position: "absolute",
+    top: -24,
+    right: -8,
+    zIndex: 3
     // boxShadow: helpers.buttonBoxShadow
+  },
+  iconWithDetailContainer: {
+    display: "inline-flex",
+    alignItems: "center"
+  },
+  bottomSpace: {
+    marginBottom: helpers.rhythmDiv * 2
+  },
+  dataMargin:{
+    marginLeft:'13px'
+  },
+  dialogAction: {
+    width: "100%",
+    justifyContent: "space-between",
+    padding:helpers.rhythmDiv * 2
+  },
+  about:{
+    width:'100%',
+    fontSize: '21px',
+    padding: '5px',
+    backgroundColor: 'aliceblue'
   }
 };
-
-const DialogTitleWrapper = styled.div`
-  ${helpers.flexCenter}
+const ClassTypeDescription = styled.div`
+  border: 2px solid black;
   width: 100%;
+  padding: 7px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+`;
+const DialogTitleWrapper = styled.div`
+  ${helpers.flexCenter} width: 100%;
   padding: 0;
   position: relative;
 `;
-
+const Italic = styled.span`
+  font-style: italic;
+`;
 const MyScrollToElement = styled.div`
   overflow-y: auto;
+  overflow-x: hidden;
   // padding: ${helpers.rhythmDiv * 2}px 0;
   padding-top: ${helpers.rhythmDiv * 2}px;
   @media screen and (max-width: ${helpers.mobile + 100}px) {
@@ -115,18 +145,16 @@ const ContentHeader = styled.div`
   padding: 0 ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    ${helpers.flexCenter}
-    flex-direction: column;
+    ${helpers.flexCenter} flex-direction: column;
   }
 `;
 
 const ClassTypeCoverImg = styled.div`
-  ${helpers.coverBg}
-  background-position: center center;
+  ${helpers.coverBg} background-position: center center;
   width: 100px;
   height: 100px;
   margin-right: ${helpers.rhythmDiv}px;
-  border-radius: 50%;
+  border-radius: 0%;
   background-image: url(${props => props.src});
   flex-shrink: 0;
 
@@ -136,8 +164,7 @@ const ClassTypeCoverImg = styled.div`
 `;
 
 const ClassTimes = styled.div`
-  ${helpers.flexCenter}
-  flex-direction: column;
+  ${helpers.flexCenter} flex-direction: column;
   padding-right: ${helpers.rhythmDiv * 2}px;
   flex-shrink: 1;
 `;
@@ -173,7 +200,20 @@ const ErrorWrapper = styled.span`
   color: red;
   float: right;
 `;
+const IconsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-left: ${helpers.rhythmDiv}px;
+`;
 
+const IconsRowWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  > div {
+    width: 50%;
+  }
+`;
 const ScheduleType = styled.span`
   display: inline-block;
   padding: ${helpers.rhythmDiv}px;
@@ -189,23 +229,28 @@ const RequestsClassTimes = styled.div`
   display: flex;
   justify-content: center;
 `;
-
-
+const Text = styled.p`
+  margin: 0;
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: ${props => props.marginBottom}px;
+  text-align: ${props => (props.center ? "center" : "left")};
+`;
 class ClassTimesDialogBox extends React.Component {
   constructor(props) {
     super(props);
+   
     this.scrollTo("myScrollToElement");
   }
   componentDidMount() {
-    console.log("this--------->", this);
     if (this.myDiv) {
       this.myDiv.style.backgroundColor = "red";
     }
     setTimeout(() => {
-      console.log("myScrollToElement", this.myDiv);
       let divElement = $("#myScrollToElement").offset();
       let offset = divElement.top;
-      console.log("offset", offset);
       // send offset of modal to iframe script
       function sendTopOfPopup(e) {
         parent.postMessage(JSON.stringify({ popUpOpened: true, offset }), "*");
@@ -224,7 +269,12 @@ class ClassTimesDialogBox extends React.Component {
       );
     }
   };
-
+  
+  goToClassTypePage = (className, classId) => {
+    browserHistory.push(`/classType/${className}/${classId}`);
+    this.props.onModalClose()
+    
+  };
   scrollTo(name) {
     scroller.scrollTo(name || "content-container", {
       duration: 800,
@@ -232,7 +282,12 @@ class ClassTimesDialogBox extends React.Component {
       smooth: "easeInOutQuart"
     });
   }
-
+  goToSchoolPage = (schoolId) => {
+    let schoolData = School.findOne(schoolId);
+    browserHistory.push(`/schools/${schoolData.slug}`);
+    this.props.onModalClose()
+    
+  };
   getDatesBasedOnScheduleType = data => {
     let startDate = "";
     let endDate = "";
@@ -281,9 +336,7 @@ class ClassTimesDialogBox extends React.Component {
   };
 
   handleClassInterest = ({ methodName, data }) => {
-    Meteor.call(methodName, data, (err, res) => {
-      console.log(res, err);
-    });
+    Meteor.call(methodName, data, (err, res) => {});
   };
 
   getSchedules = classesData => {
@@ -332,23 +385,30 @@ class ClassTimesDialogBox extends React.Component {
   render() {
     // const classTimesData = this.normalizeScheduledetails(this.props.classesData);
     const {
-        classInterestData,
-        classTimesData,
-        classes,
-        open,
-        onModalClose,
-        classTypeName,
-        classTypeImg,
-        errorText,
-        handleClassTimeRequest
-      } = this.props;
-    // console.log("ClassTimesDialogBox props--->>", this.props);
-    {/*
-      console.log(this.props.x, this.props.y);
-    */}
-
+      classInterestData,
+      classTimesData,
+      classes,
+      open,
+      onModalClose,
+      classTypeName,
+      classTypeImg,
+      errorText,
+      handleClassTimeRequest,
+      experienceLevel,
+      desc,
+      gender,
+     filters,
+      ageMin,
+      ageMax,
+      _id,
+      schoolId
+    } = this.props;
+    {
+    }
+  
     return (
       <Dialog
+      
         open={open}
         onClose={onModalClose}
         aria-labelledby="modal"
@@ -358,7 +418,11 @@ class ClassTimesDialogBox extends React.Component {
           <MyScrollToElement id="myScrollToElement" ref={c => (this.myDiv = c)}>
             <DialogTitle classes={{ root: classes.dialogTitle }}>
               <DialogTitleWrapper>
-                <IconButton color="primary" className={classes.iconButton} onClick={onModalClose}>
+                <IconButton
+                  color="primary"
+                  className={classes.iconButton}
+                  onClick={onModalClose}
+                >
                   <ClearIcon />
                 </IconButton>
               </DialogTitleWrapper>
@@ -390,9 +454,98 @@ class ClassTimesDialogBox extends React.Component {
                     <ClassTypeCoverImg src={classTypeImg} />
                     <ClassTimes>
                       <ClassTimesFor>Class Times for</ClassTimesFor>
-                      <ClassTypeName>{classTypeName.toLowerCase()}</ClassTypeName>
+                      <ClassTypeName>
+                        {classTypeName.toLowerCase()}
+                      </ClassTypeName>
                     </ClassTimes>
                   </ContentHeader>
+                  <center className={classes.about}> <i>{` About ${classTypeName}`}</i></center>
+                  <Grid
+                    container
+                    style={{ padding: "22px" }}
+                  >
+                    <IconsWrapper>
+                      <IconsRowWrapper>
+                        <div
+                          className={
+                            classes.iconWithDetailContainer +
+                            " " +
+                            classes.bottomSpace
+                          }
+                        >
+                          <div
+                            className="circle-icon"
+                            className={classes.iconStyle}
+                          >
+                            <Icon className="material-icons" color="primary">
+                              account_balance
+                            </Icon>
+                          </div>
+                          <div className={classes.dataMargin}>
+                            <Text>{filters && filters.schoolName&&filters.schoolName}</Text>
+                          </div>
+                        </div>
+
+                        <div
+                          className={
+                            classes.iconWithDetailContainer +
+                            " " +
+                            classes.bottomSpace
+                          }
+                        />
+                      </IconsRowWrapper>
+                      {filters && filters.locationTitle && (
+                          <div className={classes.iconWithDetailContainer}>
+                            <div
+                              className="circle-icon"
+                              className={classes.iconStyle}
+                            >
+                              <Icon className="material-icons" color="primary">
+                                location_on
+                              </Icon>
+                            </div>
+                            <div className={classes.dataMargin}>
+                              <Text>
+                              {filters && filters.locationTitle&&filters.locationTitle}
+                              </Text>
+                            </div>
+                          </div>
+                        )}
+                    </IconsWrapper>
+                    <Grid item xs={12}>
+                      {ageMin &&
+                        ageMax && (
+                          <MetaInfo
+                            data={`  ${ageMin} to ${ageMax}`}
+                            title={"Age:" + " "}
+                          />
+                        )}
+                      {gender &&
+                        gender !== "All" && (
+                          <MetaInfo data={gender} title={"Gender: " + ""} />
+                        )}
+
+                      {experienceLevel && experienceLevel == "All" ? (
+                        <MetaInfo
+                          data={"  All levels are welcome"}
+                          title={"Experience:  " + " "}
+                        />
+                      ) : (
+                        <MetaInfo
+                          data={`  ${experienceLevel}`}
+                          title={"Experience:  " + " "}
+                        />
+                      )}
+                    </Grid>
+                    {desc && (
+                        <MetaInfo
+                        data={`  ${desc}`}
+                        title={"Description:" }
+                        marginBottom={16}
+                      />
+                      
+                      )}
+                  </Grid>
                   <ClassTimesBoxes
                     inPopUp={true}
                     withSlider={false}
@@ -401,10 +554,38 @@ class ClassTimesDialogBox extends React.Component {
                   />
                 </ContentWrapper>
               )}
-              {this.props.errorText && (
-                <ErrorWrapper>{errorText}</ErrorWrapper>
-              )}
+              {this.props.errorText && <ErrorWrapper>{errorText}</ErrorWrapper>}
             </DialogContent>
+            <DialogActions className={classes.dialogAction}>
+                <ClassTimeButton
+                  fullWidth
+                  label="View Class"
+                  noMarginBottom
+                  onClick={(e) =>
+                   { onModalClose(e);
+                    this.goToClassTypePage(
+                      classTypeName,
+                      _id
+                    )
+                    
+                  }
+                  }
+                />
+                <ClassTimeButton
+                  fullWidth
+                  noMarginBottom
+                  label="View School"
+                  onClick={(e) => {onModalClose(e);this.goToSchoolPage(schoolId);}
+                  }
+                />
+                <ClassTimeButton
+                  fullWidth
+                  noMarginBottom
+                  label="Close"
+                  onClick={onModalClose}
+                />
+              </DialogActions>
+
           </MyScrollToElement>
         </MuiThemeProvider>
       </Dialog>

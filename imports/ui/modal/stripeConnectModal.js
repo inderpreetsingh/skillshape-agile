@@ -37,7 +37,6 @@ import { toastrModal } from "/imports/util";
 const formStyle = formStyles();
 
 const styles = theme => {
-  console.log("theme", theme);
   return {
     dialogPaper: {
       overflowX: "hidden",
@@ -98,7 +97,6 @@ class StripeConnectModal extends React.Component {
     };
   }
   componentDidMount() {
-    console.log("in stripe connect modal this.props", this.props);
     if (this.props.location.query && this.props.location.query.code) {
       const { toastr } = this.props;
       let ROOT_URL = Meteor.absoluteUrl();
@@ -106,7 +104,6 @@ class StripeConnectModal extends React.Component {
         "stripe.getStripeToken",
         this.props.location.query.code,
         (error, result) => {
-          console.log("-------------------", error, result);
           if (result) {
             toastr.success(result, "Success");
           } else {

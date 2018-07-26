@@ -65,7 +65,7 @@ const CardsContainer = styled.div`
 const NoResultContainer = styled.div`
   text-align: center;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   ${helpers.flexCenter} flex-direction: column;
 `;
 
@@ -197,7 +197,6 @@ class ClassTypeList extends Component {
     } else if (isEmpty(classTypeData)) {
       return (
         <NoResultContainer>
-          {console.log(this.props.appliedTopFilter, "appliedTopFilter...")}
           <NoResults
             removeAllFiltersButtonClick={this.props.removeAllFilters}
             addYourSchoolButtonClick={this.handleAddSchool}
@@ -252,6 +251,7 @@ class ClassTypeList extends Component {
                     filters={this.props.filters}
                     hideClassTypeOptions={this.props.hideClassTypeOptions}
                     landingPage={this.props.landingPage}
+                    classTypeData={classTypeData}
                   />
 
                   {/*Hack to get rid of this on school type page*/
@@ -287,6 +287,7 @@ class ClassTypeList extends Component {
                 classTimesData={classTimesData || []}
                 hideClassTypeOptions={this.props.hideClassTypeOptions}
                 landingPage={this.props.landingPage}
+                classTypeData={classTypeData}
               />
             )}
 
@@ -306,7 +307,6 @@ class ClassTypeList extends Component {
 }
 
 export default createContainer(props => {
-  console.log("ClassTypeList createContainer -->>", props);
   let classTypeData = [];
   let reviewsData = [];
   let classTypeIds = [];
@@ -361,12 +361,15 @@ export default createContainer(props => {
     perak:joins */
   SkillSubject.find().fetch();
 
-  if (subscription.ready() && reviewsSubscription.ready()) {
+  if (
+    (subscription.ready() && reviewsSubscription.ready()) ||
+    ClassType.find().count() > 0
+  ) {
     reviewsData = Reviews.find().fetch();
     // console.info("class type data...................................................",classTypeData);
     isLoading = false;
   }
-  // console.log("classInterestData --->>",classInterestData)
+  // console.log("classInterestData --->>",classTypeData,classInterestData)
   return {
     ...props,
     classTypeData,

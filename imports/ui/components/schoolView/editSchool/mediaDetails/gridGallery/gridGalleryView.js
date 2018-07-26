@@ -48,7 +48,6 @@ class ImageGridGallery extends React.Component {
             obj.thumbnailWidth = 240;
             obj.thumbnailHeight = 320;
         }
-        console.log("",img.height)
         return {   ...obj,src: media.sourcePath,
             thumbnail:media.sourcePath,
             media: media,
@@ -57,7 +56,6 @@ class ImageGridGallery extends React.Component {
             scaletwidth:100
         }
     })
-    console.log("images", images);
     return  (
         <div>
             {

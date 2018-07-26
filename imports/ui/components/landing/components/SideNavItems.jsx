@@ -147,7 +147,6 @@ const LoginUserSideNav = props => {
   }
   return (
     <Fragment>
-      {console.log("this.props in side navitems", props)}
       <NestedNavItems
         button
         name={getUserFullName(props.currentUser)}
@@ -235,6 +234,13 @@ const LoginUserSideNav = props => {
           <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
+            name="User Suggestions"
+            iconName="notification_important"
+            onClick={() => props.childItemOnClick("/school-suggestions")}
+          />
+          <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
             name="Upload Schools"
             iconName="file_upload"
             onClick={() => props.childItemOnClick("/SchoolUpload")}
@@ -305,7 +311,6 @@ class SideNavItems extends React.Component {
         }
         if (result) {
           {
-            console.log("result os getmyscgool", result);
           }
           const mySchool = result.map((school, index) => {
             return {

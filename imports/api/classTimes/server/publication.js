@@ -89,7 +89,6 @@ Meteor.publish("classTimes.getclassTimesForCalendar", function({
       condition["$or"].push({ schoolId: { $in: schoolIds } });
     }
     // console.log("schoolIds====>",schoolIds)
-    console.log("condition", JSON.stringify(condition));
     let classTimeCursor = ClassTimes.find(condition);
     // let classTypeData = ClassType.find({schoolId: { $in: schoolIds }})
     // console.log("view", view);

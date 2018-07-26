@@ -1,34 +1,32 @@
-import React ,{Fragment} from 'react';
-import isEmpty from 'lodash/isEmpty';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import Package from './Package';
+import React, { Fragment } from "react";
+import isEmpty from "lodash/isEmpty";
+import styled from "styled-components";
+import PropTypes from "prop-types";
+import Package from "./Package";
 
-import PackageStructure from '../../../constants/structure/package.js';
+import PackageStructure from "../../../constants/structure/package.js";
 
-import * as helpers from '../../jss/helpers.js';
+import * as helpers from "../../jss/helpers.js";
 
 const Wrapper = styled.div`
   width: 100%;
-  ${helpers.flexCenter}
-  align-items: stretch;
+  ${helpers.flexCenter} align-items: stretch;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    ${helpers.flexDirectionColumn}
+    ${helpers.flexDirectionColumn};
   }
 `;
 
 const PackagesListWrapper = styled.section`
-  ${helpers.flexDirectionColumn}
-  width: 50%;
+  ${helpers.flexDirectionColumn} width: 50%;
   position: relative;
   z-index: 1;
-  align-items: ${props => props.classPackages ? 'flex-end' : 'flex-start'};
+  align-items: ${props => (props.classPackages ? "flex-end" : "flex-start")};
   padding: ${helpers.rhythmDiv * 4}px 0;
   ${props => props.fullScreen && `width: 100%; align-items: center`};
 
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     bottom: 0;
@@ -36,8 +34,9 @@ const PackagesListWrapper = styled.section`
     right: 0;
     width: 100%;
     z-index: 0;
-    background-color: ${props => props.classPackages ? helpers.primaryColor : helpers.panelColor};
-    opacity: ${props => props.classPackages ? 0.1 : 1};
+    background-color: ${props =>
+      props.classPackages ? helpers.primaryColor : helpers.panelColor};
+    opacity: ${props => (props.classPackages ? 0.1 : 1)};
   }
 
   @media screen and (max-width: ${helpers.tablet}px) {
@@ -56,7 +55,6 @@ const EnrollMentListWrapper = PackagesListWrapper.extend`
   }
 `;
 
-
 const PackageWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   width: 100%;
@@ -67,7 +65,7 @@ const PackagesWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: ${props => props.classPackages ? 'flex-end' : 'flex-start'};
+  align-items: ${props => (props.classPackages ? "flex-end" : "flex-start")};
   padding: 0 ${helpers.rhythmDiv * 2}px;
   position: relative;
   z-index: 1;
@@ -85,7 +83,6 @@ const PackagesWrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
   }
-
 `;
 
 const Title = styled.h1`
@@ -113,85 +110,114 @@ const FallBackMsg = styled.h3`
   width: 100%;
 `;
 
-const PackageList = (props) => (
-  <PackagesListWrapper fullScreen={props.fullScreen} classPackages={props.classPackages}>
+const PackageList = props => (
+  <PackagesListWrapper
+    fullScreen={props.fullScreen}
+    classPackages={props.classPackages}
+  >
+ 
     <PackagesWrapper classPackages={props.classPackages}>
       <Title>{props.packageListName}</Title>
-      {console.log(props,"packages list....")}
       {props.packagesData.map(packageData => (
         <PackageWrapper key={packageData._id}>
-          <Package classPackages={props.classPackages} {...packageData} {...props.packageProps} />
-        </PackageWrapper>))}
+          <Package
+            classPackages={props.classPackages}
+            {...packageData}
+            {...props.packageProps}
+            schoolCurrency={props.schoolCurrency}
+          />
+        </PackageWrapper>
+      ))}
     </PackagesWrapper>
   </PackagesListWrapper>
 );
 
-const EnrollmentPackagesList = (props) => (
+const EnrollmentPackagesList = props => (
   <EnrollMentListWrapper>
     <PackagesWrapper>
-    <Title>{props.packageListName}</Title>
-    {props.packagesData.map(packageData => (
+      <Title>{props.packageListName}</Title>
+      {props.packagesData.map(packageData => (
         <PackageWrapper key={packageData._id}>
-          <Package classPackages={props.classPackages} {...packageData} {...props.packageProps} />
+          <Package
+            classPackages={props.classPackages}
+            {...packageData}
+            {...props.packageProps}
+            schoolCurrency={props.schoolCurrency}
+          />
         </PackageWrapper>
       ))}
     </PackagesWrapper>
   </EnrollMentListWrapper>
-)
+);
 
-const PackagesList = (props) => {
+const PackagesList = props => {
   const classPackagesEmpty = isEmpty(props.perClassPackagesData);
   const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
   const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
-
+  const schoolCurrency=props.currency;
+  
   return (
     <Fragment>
-      {props.enrollMentPackages && !enrollMentPackagesEmpty && <Wrapper>
-      <EnrollmentPackagesList
-        packageProps={{
-          packageType: "EP",
-          onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-          schoolId: props.schoolId
-        }}
-        packageListName='Enrollment Packages'
-        packagesData={props.enrollMentPackagesData} />
-      </Wrapper>}
+      {props.enrollMentPackages &&
+        !enrollMentPackagesEmpty && (
+          <Wrapper>
+            <EnrollmentPackagesList
+              packageProps={{
+                packageType: "EP",
+                onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+                schoolId: props.schoolId
+              }}
+              packageListName="Enrollment Packages"
+              packagesData={props.enrollMentPackagesData}
+              schoolCurrency={schoolCurrency}
+            />
+          </Wrapper>
+        )}
       <Wrapper>
-        {!classPackagesEmpty && <PackageList
-          packageProps={{
-            packageType: "CP",
-            onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-            schoolId: props.schoolId,
-          }}
-          onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
-          classPackages
-          fullScreen={monthlyPackagesEmpty}
-          packageListName='Class Packages'
-          packagesData={props.perClassPackagesData} />}
+        {!classPackagesEmpty && (
+          <PackageList
+            packageProps={{
+              packageType: "CP",
+              onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+              schoolId: props.schoolId
+            }}
+            onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
+            classPackages
+            fullScreen={monthlyPackagesEmpty}
+            packageListName="Class Packages"
+            packagesData={props.perClassPackagesData}
+            schoolCurrency={schoolCurrency}
+          />
+        )}
 
-        {!monthlyPackagesEmpty && <PackageList
-          packageProps={{
-            packageType: "MP",
-            onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-            schoolId: props.schoolId
-          }}
-          packageListName='Monthly Packages'
-          fullScreen={classPackagesEmpty}
-          packagesData={props.monthlyPackagesData} />}
+        {!monthlyPackagesEmpty && (
+          <PackageList
+            packageProps={{
+              packageType: "MP",
+              onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+              schoolId: props.schoolId
+            }}
+            packageListName="Monthly Packages"
+            fullScreen={classPackagesEmpty}
+            packagesData={props.monthlyPackagesData}
+            schoolCurrency={schoolCurrency}
+          />
+        )}
       </Wrapper>
     </Fragment>
-  )
-}
+  );
+};
 
 PackagesList.propTypes = {
   perClassPackagesData: PropTypes.arrayOf(PackageStructure),
   monthlyPackagesData: PropTypes.arrayOf(PackageStructure),
   enrollMentPackages: PropTypes.bool,
   schoolId: PropTypes.string,
-}
+  
+};
 
 PackagesList.defaultProps = {
-  enrollMentPackages: false,
-}
+  enrollMentPackages: false
+};
 
 export default PackagesList;

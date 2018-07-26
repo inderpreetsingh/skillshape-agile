@@ -35,15 +35,12 @@ export default class Financials extends React.Component {
     this.setState({ tabValue });
   };
   componentWillMount() {
-    console.log("in financial", this.props.currentUser);
-
     Meteor.call(
       "school.findSuperAdmin",
       this.props.currentUser._id,
       this.props.routeParams.slug,
       (error, result) => {
         this.setState({ adminPermission: result });
-        console.log("result----------------", result);
       }
     );
 
@@ -57,11 +54,11 @@ export default class Financials extends React.Component {
   render() {
     let { currentUser } = this.props;
     const role = currentUser && _.indexOf(currentUser.roles, "Superadmin");
-    console.log("this.props-------------->.", this.props);
 
     return (
       <DocumentTitle title="Financials">
-        {(Meteor.settings.public.paymentEnabled && this.state.adminPermission) ||
+        {(Meteor.settings.public.paymentEnabled &&
+          this.state.adminPermission) ||
         role != -1 ? (
           <div>
             <ResponsiveTabs

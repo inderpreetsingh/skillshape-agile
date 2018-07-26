@@ -19,7 +19,7 @@ import ClassTypeCardDescription from "/imports/ui/components/landing/components/
 
 import classTimesData from "/imports/ui/components/landing/constants/classTimesData";
 
-import { toastrModal, formatClassTimesData } from "/imports/util";
+import { withPopUp, formatClassTimesData } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import { cardImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { getUserFullName } from "/imports/util/getUserData";
@@ -37,10 +37,9 @@ const CardsRevealWrapper = styled.div`
 `;
 
 const imageExistsConfig = {
-  originalImagePath: 'classTypeImg',
+  originalImagePath: "classTypeImg",
   defaultImage: cardImgSrc
-}
-
+};
 
 class ClassTypeCard extends Component {
   state = {
@@ -52,7 +51,6 @@ class ClassTypeCard extends Component {
   };
   handleDialogState = state => e => {
     e.stopPropagation();
-    console.log("e in handle dialogue type card", e.clientX, e.clientY, state);
     // console.log(e,e.stopPropagation(),"clickced");
     this.setState({
       dialogOpen: state,
@@ -64,7 +62,6 @@ class ClassTypeCard extends Component {
     // this.scrollTo("myScrollToElement");
   };
   scrollTo(name) {
-    console.log("scrollTo");
     scroller.scrollTo(name || "content-container", {
       duration: 800,
       delay: 0,
@@ -88,7 +85,7 @@ class ClassTypeCard extends Component {
   };
 
   handleClassTimesRequest = () => {
-    const { _id, schoolId, toastr } = this.props;
+    const { _id, schoolId, popUp } = this.props;
     if (!Meteor.userId()) {
       const newState = {
         ...this.state,
@@ -105,9 +102,9 @@ class ClassTypeCard extends Component {
       Meteor.call("classTimesRequest.addRequest", data, (err, res) => {
         this.setState({ isBusy: false }, () => {
           if (err) {
-            toastr.error(err.reason || err.message, "Error", {}, false);
+            popUp.appear('error',{content: err.reason || err.message}, false);
           } else {
-            toastr.success("Your request has been processed", "success");
+            popUp.appear('success',{content: "Your request has been processed"});
             this.handleRequest(schoolId);
           }
         });
@@ -159,16 +156,16 @@ class ClassTypeCard extends Component {
       description: desc,
       name: name
     };
-    const classTimesData = this.getClassTimes(get(this.props, "_id", null));
-    const formattedClassTimesData = formatClassTimesData(classTimesData).filter(data => {
-      if(data)
-        return data.formattedClassTimesDetails.totalClassTimes > 0
-      else
-        return false;
-    });
-    console.log(classTimesData,formattedClassTimesData,"ajsldfalsd");
-    const schoolData = this.getSchoolData(schoolId);
 
+    const classTimesData = this.getClassTimes(get(this.props, "_id", null));
+    const formattedClassTimesData = formatClassTimesData(classTimesData).filter(
+      data => {
+        if (data) return data.formattedClassTimesDetails.totalClassTimes > 0;
+        else return false;
+      }
+    );
+
+    const schoolData = this.getSchoolData(schoolId);
 
     if (!isEmpty(reviewsStats)) {
       ratings = reviewsStats.ratings;
@@ -189,6 +186,7 @@ class ClassTypeCard extends Component {
             errorText={this.state.classTimesDialogBoxError}
             x={this.state.x}
             y={this.state.y}
+            {...this.props}
           />
         )}
         {this.state.manageRequestsDialog && (
@@ -237,4 +235,4 @@ class ClassTypeCard extends Component {
   }
 }
 
-export default toastrModal(withImageExists(ClassTypeCard,imageExistsConfig));
+export default withPopUp(withImageExists(ClassTypeCard, imageExistsConfig));

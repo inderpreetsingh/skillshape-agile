@@ -12,7 +12,7 @@ Meteor.methods({
     ).fetch();
     return AllPurchaseData;
   },
-  "purchases.updatePurchases": function({ payload, recordId }) {
+  "purchases.updatePurchases": function(payload, recordId) {
     Purchases.update(
       { _id: recordId },
       {

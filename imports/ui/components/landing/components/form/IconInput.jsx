@@ -15,6 +15,9 @@ const InputIcon = (props) => (<Icon color="disabled">{props.iconName}</Icon>);
 const styles = {
   label : {
     color: helpers.defaultInputColor
+  },
+  root: {
+    fontWeight: 500
   }
 }
 
@@ -23,14 +26,18 @@ class IconInput extends React.Component {
     inputFocused : false,
   }
   onFocus = ()=> {
-      this.setState({inputFocused: true})
+      this.setState({inputFocused: true});
   }
   onBlur = ()=> {
       this.setState({inputFocused: false})
   }
+
   render() {
-    const props = this.props;
     let inputRef;
+    const props = this.props;
+    const { classes } = props;
+    const setInputRef = (ref) => inputRef = ref;
+
     if(props.googlelocation) {
       setTimeout(()=> {
         let options ={strictBounds:true}
@@ -48,13 +55,14 @@ class IconInput extends React.Component {
       },2000)
     }
 
-
+    // console.log(props.onRef,"this is icon input...");
     return (
       <Fragment>
       {!props.skillShapeInput ? <FormControl error={props.error} fullWidth aria-describedby="error-text">
         <InputLabel htmlFor={props.inputId} classes={{root: props.classes.label}}>{props.labelText}</InputLabel>
         <Input
-          inputRef={(ref)=> inputRef = ref}
+          inputRef={props.onRef || setInputRef}
+          autoFocus={props.autoFocus}
           value={props.value}
           disabled={props.disabled}
           multiline={props.multiline}
@@ -65,10 +73,13 @@ class IconInput extends React.Component {
           onChange={props.onChange}
           endAdornment={<InputAdornment position="end"><InputIcon iconName={props.iconName}/></InputAdornment>}
           inputProps={{
+            inputRef: props.onRef || setInputRef,
             min: props.min,
             max: props.max
           }}
-          style={{fontWeight:600}}
+          classes={{
+            root: classes.root
+          }}
         />
         {
           props.error && <FormHelperText id="error-text">{props.errorText}</FormHelperText>
@@ -78,7 +89,7 @@ class IconInput extends React.Component {
             <div tabindex="0"  className="rw-widget-input rw-widget-picker rw-widget-container">
               <div style={{display: 'inline-flex', alignItems: 'center', paddingRight: 10}}>
                 <input
-                  ref={(ref)=> inputRef = ref}
+                  ref={props.onRef || setInputRef}
                   value={props.value}
                   disabled={props.disabled}
                   multiline={props.multiline}
@@ -88,7 +99,7 @@ class IconInput extends React.Component {
                   id={props.inputId}
                   onChange={props.onChange}
                   placeholder={props.placeholder}
-                  className="rw-input-reset"
+                  className={"rw-input-reset" +' '+ classes.root}
                   style={{width: "100%"}}
                   onFocus={this.onFocus}
                   onBlur={this.onBlur}
@@ -133,6 +144,6 @@ IconInput.defaultProps = {
   disabled: false,
   multiline: false,
   value: "",
-  rows: 6
+  rows: 6,
 }
 export default withStyles(styles)(IconInput);

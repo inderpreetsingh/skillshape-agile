@@ -26,15 +26,11 @@ class Students extends React.Component {
     };
   }
   componentWillMount() {
-    console.log("this.props in payout", this.props);
-
     // Meteor.call("purchases.getAllPurchaseData", this.props.params.slug, (err, res) => {
-    //   console.log("------------->AllPurchaseData<---------", res);
     //   this.setState({ PurchaseData: res });
     // });
   }
   handlePageClick = ({ skip }) => {
-    console.log("skip -->>", skip);
     this.setState({ isBusy: true });
     this.getUsers({ limit: this.state.perPage, skip: skip });
   };
@@ -42,7 +38,6 @@ class Students extends React.Component {
   render() {
     const { purchaseData } = this.props;
     const { pageCount } = this.props;
-    console.log("PurchaseData in students--->", this.props);
     return (
       <div>
         <center>
@@ -100,7 +95,6 @@ class Students extends React.Component {
   }
 }
 export default createContainer(props => {
-  console.log("payout props----->", props);
   let purchaseSubscription = Meteor.subscribe(
     "purchases.getAllPurchaseData",
     props.params.slug,
@@ -109,7 +103,6 @@ export default createContainer(props => {
   // let purchaseData = [];
   // if (purchaseSubscription.ready()) {
   let purchaseData = Purchases.find().fetch();
-  console.log("in createcontainer", purchaseData);
   // }
 
   return {

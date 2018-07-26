@@ -1,43 +1,43 @@
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import { CSSTransitionGroup } from 'react-transition-group';
-import styled from 'styled-components';
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
+import { CSSTransitionGroup } from "react-transition-group";
+import styled from "styled-components";
 
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import Icon from 'material-ui/Icon';
-import IconButton from 'material-ui/IconButton';
-import Clear from 'material-ui-icons/Clear';
-import MoreVert from 'material-ui-icons/MoreVert';
-import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid'
-import { Link } from 'react-router';
+import { withStyles } from "material-ui/styles";
+import Paper from "material-ui/Paper";
+import Icon from "material-ui/Icon";
+import IconButton from "material-ui/IconButton";
+import Clear from "material-ui-icons/Clear";
+import MoreVert from "material-ui-icons/MoreVert";
+import Typography from "material-ui/Typography";
+import Grid from "material-ui/Grid";
+import { Link } from "react-router";
 
-import { cutString, toastrModal, handleOutBoundLink } from '/imports/util';
-import { ContainerLoader } from '/imports/ui/loading/container.js';
+import { cutString, withPopUp, handleOutBoundLink } from "/imports/util";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
 
-import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
-import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
-import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import CallUsDialogBox from "/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx";
+import EmailUsDialogBox from "/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
-import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
+import { cardImgSrc } from "/imports/ui/components/landing/site-settings.js";
 
 const styles = {
   cardWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'relative',
-    cursor: 'pointer',
+    display: "flex",
+    flexDirection: "column",
+    position: "relative",
+    cursor: "pointer",
     minHeight: 450
   },
-  cardIcon : {
-    cursor: 'pointer'
+  cardIcon: {
+    cursor: "pointer"
   },
   marginAuto: {
-    margin:'auto'
+    margin: "auto"
   },
   actionButton: {
     fontSize: helpers.baseFontSize * 2,
@@ -46,8 +46,8 @@ const styles = {
     width: helpers.rhythmDiv * 4,
     color: helpers.darkBgColor,
     marginBottom: helpers.rhythmDiv,
-    transition: '0.1s color linear',
-    '&:hover' : {
+    transition: "0.1s color linear",
+    "&:hover": {
       color: helpers.primaryColor
     }
   },
@@ -55,9 +55,9 @@ const styles = {
     fontSize: helpers.baseFontSize * 2,
     height: helpers.rhythmDiv * 4,
     width: helpers.rhythmDiv * 4,
-    fontWeight: 100,
+    fontWeight: 100
   }
-}
+};
 
 const MyLink = styled(Link)`
   width: 100%;
@@ -90,10 +90,7 @@ const CardImage = styled.img`
   object-fit: cover;
 `;
 
-
-const CardContent = styled.div`
-
-`;
+const CardContent = styled.div``;
 
 const CardContentHeader = styled.div`
   display: flex;
@@ -101,7 +98,6 @@ const CardContentHeader = styled.div`
   flex-direction: column;
   flex-shrink: 0;
 `;
-
 
 const CardContentTitle = styled.h2`
   font-size: ${helpers.baseFontSize * 1.5}px;
@@ -113,18 +109,16 @@ const CardContentTitle = styled.h2`
   line-height: 1;
   padding: ${helpers.rhythmDiv * 2}px;
 
-  @media screen and (max-width : ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
   }
 
-  @media screen and (max-width : ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     font-size: ${helpers.baseFontSize * 1.2}px;
   }
 `;
 
-const CardContentBody = styled.div`
-`;
-
+const CardContentBody = styled.div``;
 
 const CardDescriptionWrapper = styled.div`
   display: flex;
@@ -154,8 +148,7 @@ const CardDescriptionActionArea = styled.div`
 `;
 
 const ActionButtonsWrapper = styled.div`
-  ${helpers.flexCenter}
-  justify-content: space-evenly;
+  ${helpers.flexCenter} justify-content: space-evenly;
   background: ${helpers.panelColor};
   padding: ${helpers.rhythmDiv * 2}px;
   color: ${helpers.darkBgColor};
@@ -163,8 +156,7 @@ const ActionButtonsWrapper = styled.div`
 `;
 
 const ActionBtnWrapper = styled.div`
-  ${helpers.flexCenter}
-  flex-direction: column;
+  ${helpers.flexCenter} flex-direction: column;
 `;
 
 const ActionBtnText = styled.p`
@@ -174,7 +166,7 @@ const ActionBtnText = styled.p`
   margin: 0;
 `;
 
-const MyAnchor = ActionBtnText.withComponent('a').extend`
+const MyAnchor = ActionBtnText.withComponent("a").extend`
   color: ${helpers.darkBgColor};
 
   &:visited , &:active {
@@ -182,96 +174,118 @@ const MyAnchor = ActionBtnText.withComponent('a').extend`
   }
 `;
 
-const ActionButton = (props) => (<ActionBtnWrapper onClick={props.onClick}>
+const ActionButton = props => (
+  <ActionBtnWrapper onClick={props.onClick}>
     <IconButton className={props.classes.actionButton}>
       <Icon className={props.classes.actionButtonIcon}>{props.iconName}</Icon>
     </IconButton>
-    <ActionBtnText>
-      {props.text}
-    </ActionBtnText>
+    <ActionBtnText>{props.text}</ActionBtnText>
   </ActionBtnWrapper>
-)
+);
 
 class SchoolCard extends Component {
   state = {
-    imageContainerHeight: '250px',
+    imageContainerHeight: "250px",
     revealCard: false,
-    isLoading: false,
+    isLoading: false
   };
 
   componentDidCatch(error, info) {
     // Display fallback UI
     // You can also log the error to an error reporting service
-    console.info("The error is this...",error, info);
+    // console.info("The error is this...", error, info);
   }
 
   getContactNumbers = () => {
-    return this.props.schoolCardData.phone && this.props.schoolCardData.phone.split(/[\|\,\\]/);
-  }
+    return (
+      this.props.schoolCardData.phone &&
+      this.props.schoolCardData.phone.split(/[\|\,\\]/)
+    );
+  };
 
   getOurEmail = () => {
     return this.props.schoolCardData.email;
-  }
+  };
 
   handleEmailUsButtonClick = () => {
-    this.handleDialogState('emailUsDialog',true);
-  }
+    this.handleDialogState("emailUsDialog", true);
+  };
 
   handleCallUsButtonClick = () => {
-    this.handleDialogState('callUsDialog',true);
-  }
+    this.handleDialogState("callUsDialog", true);
+  };
 
-  handleDialogState = (dialogName,state) => {
-    const newState = {...this.state};
+  handleDialogState = (dialogName, state) => {
+    const newState = { ...this.state };
     newState[dialogName] = state;
     this.setState(newState);
-  }
+  };
 
-  showConfirmationModal =() => {
-    console.log("claimASchool called",Meteor.user(),this);
+  showConfirmationModal = () => {
     const user = Meteor.user();
-    const { toastr} = this.props;
-    if(!user) {
+    const { popUp } = this.props;
+    if (!user) {
       // Need to show error in toaster
-      toastr.error('You must be signed in to claim a school. [Sign In] or [Sign Up]', 'Error');
+      popUp.appear("error" , {content: "You must be signed in to claim a school. [Sign In] or [Sign Up]"});
     } else {
-        // Show confirmation Modal before claiming a school.
+      // Show confirmation Modal before claiming a school.
       this.setState({
-          showConfirmationModal: true,
+        showConfirmationModal: true
       });
     }
-  }
+  };
 
-  cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
+  cancelConfirmationModal = () =>
+    this.setState({ showConfirmationModal: false });
 
   render() {
-    console.log("this.props checkUserAccess",this.props)
-    const {
-        classes,
-        schoolCardData,
-        toastr
-      } = this.props;
-    //console.log(ShowDetails,"adsljfj")
+    const { classes, schoolCardData, toastr } = this.props;
     const name = schoolCardData.name.toLowerCase();
     const ourEmail = this.getOurEmail();
     return (
-      <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
+      <Paper
+        className={classes.cardWrapper}
+        itemScope
+        itemType="http://schema.org/Service"
+      >
         {this.state.isLoading && <ContainerLoader />}
-        {this.state.showConfirmationModal && <ConfirmationModal
-              open={this.state.showConfirmationModal}
-              submitBtnLabel="Yes"
-              cancelBtnLabel="Cancel"
-              message="Do you really want to claim this school ?"
-              onSubmit={()=>{this.props.handleClaimASchool(schoolCardData, this)}}
-              onClose={this.cancelConfirmationModal}
-              toastr = {toastr}
-              schoolCardData= {schoolCardData}
-          />}
-        {this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)} /> }
-        {this.state.emailUsDialog && <EmailUsDialogBox schoolData={schoolCardData} ourEmail={ourEmail} open={this.state.emailUsDialog} onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
+        {this.state.showConfirmationModal && (
+          <ConfirmationModal
+            open={this.state.showConfirmationModal}
+            submitBtnLabel="Yes"
+            cancelBtnLabel="Cancel"
+            message="Do you really want to claim this school ?"
+            onSubmit={() => {
+              this.props.handleClaimASchool(schoolCardData, this);
+            }}
+            onClose={this.cancelConfirmationModal}
+            toastr={toastr}
+            schoolCardData={schoolCardData}
+          />
+        )}
+        {this.state.callUsDialog && (
+          <CallUsDialogBox
+            contactNumbers={this.getContactNumbers()}
+            open={this.state.callUsDialog}
+            onModalClose={() => this.handleDialogState("callUsDialog", false)}
+          />
+        )}
+        {this.state.emailUsDialog && (
+          <EmailUsDialogBox
+            schoolData={schoolCardData}
+            ourEmail={ourEmail}
+            open={this.state.emailUsDialog}
+            onModalClose={() => this.handleDialogState("emailUsDialog", false)}
+          />
+        )}
         <div>
           <CardImageContentWrapper>
-            <MyLink to={`/schools/${schoolCardData.slug}`} target="_blank"> <CardImageWrapper bgImage={schoolCardData.mainImage || cardImgSrc}  /> </MyLink>
+            <MyLink to={`/schools/${schoolCardData.slug}`} target="_blank">
+              {" "}
+              <CardImageWrapper
+                bgImage={schoolCardData.mainImage || cardImgSrc}
+              />{" "}
+            </MyLink>
 
             <CardContentHeader>
               <CardContentTitle itemProp="name">{name}</CardContentTitle>
@@ -283,18 +297,20 @@ class SchoolCard extends Component {
                     text="Call us"
                     onClick={this.handleCallUsButtonClick}
                   />
-                  {ourEmail && <ActionButton
-                    classes={classes}
-                    iconName="mail_outline"
-                    text="Email us"
-                    onClick={this.handleEmailUsButtonClick}
-                  />}
-                  <MyAnchor href={schoolCardData.website} target='_blank'>
+                  {ourEmail && (
                     <ActionButton
-                    classes={classes}
-                    iconName="present_to_all"
-                    text="Website"
-                    onClick={handleOutBoundLink}
+                      classes={classes}
+                      iconName="mail_outline"
+                      text="Email us"
+                      onClick={this.handleEmailUsButtonClick}
+                    />
+                  )}
+                  <MyAnchor href={schoolCardData.website} target="_blank">
+                    <ActionButton
+                      classes={classes}
+                      iconName="present_to_all"
+                      text="Website"
+                      onClick={handleOutBoundLink}
                     />
                   </MyAnchor>
                   {/*
@@ -303,15 +319,18 @@ class SchoolCard extends Component {
                 </ActionButtonsWrapper>
               </CardContentBody>
             </CardContentHeader>
-
           </CardImageContentWrapper>
           <CardContent>
             <Grid container>
-                <Grid item xs={6} sm={6} className={classes.marginAuto}>
-                  {
-                    <PrimaryButton fullWidth label="Claim" onClick={this.showConfirmationModal}/>
-                  }
-                </Grid>
+              <Grid item xs={6} sm={6} className={classes.marginAuto}>
+                {
+                  <PrimaryButton
+                    fullWidth
+                    label="Claim"
+                    onClick={this.showConfirmationModal}
+                  />
+                }
+              </Grid>
             </Grid>
           </CardContent>
         </div>
@@ -321,12 +340,12 @@ class SchoolCard extends Component {
 }
 
 SchoolCard.propTypes = {
-    schoolCardData: PropTypes.object.isRequired,
-    height: PropTypes.number,
-}
+  schoolCardData: PropTypes.object.isRequired,
+  height: PropTypes.number
+};
 
 SchoolCard.defaultProps = {
-   classTypeImg: cardImgSrc,
-}
+  classTypeImg: cardImgSrc
+};
 
-export default withStyles(styles)(toastrModal(SchoolCard));
+export default withStyles(styles)(withPopUp(SchoolCard));

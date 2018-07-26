@@ -67,24 +67,16 @@ class RoomForm extends React.Component {
   };
 
   handleSubmit = ({ methodName, data, locationId, nextTab }) => {
-    console.log(
-      "handleSubmit methodName-->>",
-      methodName,
-      data,
-      locationId,
-      nextTab
-    );
+   
 
     Meteor.call(methodName, { locationId, data }, (error, result) => {
       let stateObj = { isBusy: false };
       if (error) {
-        console.error("error", error);
         stateObj.error = error.reason || error.message;
       }
       if (result) {
         this.props.onClose();
         if (nextTab) {
-          console.log("next tab------------>>>>>>");
           this.props.moveToNextTab();
         }
       }
@@ -94,8 +86,6 @@ class RoomForm extends React.Component {
   };
 
   render() {
-    console.log("RoomForm render props -->>>", this.props);
-    console.log("RoomForm render state -->>>", this.state);
     const { fullScreen, data } = this.props;
     return (
       <div>

@@ -5,7 +5,8 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import moment from "moment";
 import ClassType from "/imports/api/classType/fields";
-
+import { uniq } from "lodash";
+import fullCalendarRender from "./fullCalendarRender";
 class FullCalendar extends React.Component {
   constructor(props) {
     super(props);
@@ -45,7 +46,17 @@ class FullCalendar extends React.Component {
       },
       dayRender: function(date, cell) {},
       eventRender: function(event, element, view) {
-        // console.log("event -->>",event);
+        let renderEvent = true;
+        event.deletedEvents &&
+          event.deletedEvents.map(current => {
+            if (current == moment(event.start).format("YYYY-MM-DD")) {
+              renderEvent = false;
+            }
+          });
+
+        if (!renderEvent) {
+          return false;
+        }
         switch (event.scheduleType) {
           case "oneTime": {
             return true;
@@ -71,7 +82,6 @@ class FullCalendar extends React.Component {
         }
       },
       eventClick: event => {
-        console.log("eventClick -->>", event);
         let clickedDate = moment(event.start).format("YYYY-MM-DD");
         if (event.classTimeId && event.classTypeId) {
           this.props.showEventModal(true, event, clickedDate);
@@ -89,15 +99,31 @@ class FullCalendar extends React.Component {
     } = this.props;
     let { manageMyCalendarFilter } = this.props;
     let sevents = [];
+    
     let myClassTimesIds = classInterestData.map(data => data.classTimeId);
     // Class Time Ids managed by current user
     // console.log("-----------------manageMyCalendarFilter------------------", manageMyCalendarFilter)
     let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
     // let schoolClassTimesIds = schoolClassTimes.map(data => data._id);
+    // merging deletedEvents data from classInterestData to classTimesData for disabling events
+    classInterestData.map(current1 => {
+      classTimesData.map(current2 => {
+        if (current1.classTimeId == current2._id) {
+          current2 && current2.deletedEvents
+            ? (current2.deletedEvents = uniq(
+                current2.deletedEvents.concat(current1.deletedEvents)
+              ))
+            : (current2.deletedEvents = current1.deletedEvents);
+        }
+      });
+    });
     for (var i = 0; i < classTimesData.length; i++) {
       let classTime = classTimesData[i];
+      //console.log("classTime in bulid calendar", classTime);
       try {
-        let sevent = {
+        let sevent;
+
+        sevent = {
           classTimeId: classTime._id,
           classTypeId: classTime.classTypeId,
           schoolId: classTime.schoolId,
@@ -107,7 +133,8 @@ class FullCalendar extends React.Component {
           name: classTime.name,
           desc: classTime.desc,
           endDate: classTime.endDate,
-          allDay: false // This property affects whether an event's time is shown.
+          allDay: false, // This property affects whether an event's time is shown.
+          deletedEvents: classTime.deletedEvents
         };
         let checkedClassTimes = false;
         // Three type of class times seperated into different colors.
@@ -140,8 +167,8 @@ class FullCalendar extends React.Component {
               )
               .format("hh:mm");
             sevent.title =
-              this.props.schoolData.name +
-              ":" +
+              classTime.classTypeName.name +
+              ": " +
               classTime.name +
               " " +
               sevent.eventStartTime +
@@ -150,6 +177,21 @@ class FullCalendar extends React.Component {
             // sevent.age = classTypeData && classTypeData.ageMin;
             // sevent.gender = classTypeData && classTypeData.gender;
             // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
+            // if (classTime && classTime.deletedEvents) {
+            //   classTime.deletedEvents.map(current => {
+            //     console.log(
+            //       "condition",
+            //       current,
+            //       moment(sevent.start).format("YYYY-MM-DD")
+            //     );
+            //     if (current == moment(sevent.start).format("YYYY-MM-DD")) {
+            //     } else {
+            //       sevents.push(sevent);
+            //       return;
+            //     }
+            //   });
+            // } else {
+            // }
             sevents.push(sevent);
           }
         }
@@ -181,28 +223,44 @@ class FullCalendar extends React.Component {
                 )
                 .format("hh:mm");
               temp.title =
-                this.props.schoolData.name +
-                ":" +
+                classTime.classTypeName.name +
+                ": " +
                 classTime.name +
                 " " +
                 temp.eventStartTime +
                 " to " +
                 temp.eventEndTime;
               temp.roomId = obj.roomId;
+              temp.durationAndTimeunits = `${obj.duration} ${
+                obj.timeUnits ? obj.timeUnits : "Minutes"
+              }`;
               // sevent.age = classTypeData && classTypeData.ageMin;
               // sevent.gender = classTypeData && classTypeData.gender;
               // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
+              // if (classTime && classTime.deletedEvents) {
+              //   classTime.deletedEvents.map(current => {
+              //     console.log(
+              //       "condition",
+              //       current,
+              //       moment(temp.start).format("YYYY-MM-DD")
+              //     );
+              //     if (current == moment(temp.start).format("YYYY-MM-DD")) {
+              //     } else {
+              //       sevents.push(temp);
+              //       return;
+              //     }
+              //   });
+              // } else {
+              //   sevents.push(temp);
+              // }
               sevents.push(temp);
             }
           }
         }
         // console.warn("<<< dayData sevents>>>>",sevents);
-      } catch (err) {
-        console.error("Error -->>", err);
-      }
+      } catch (err) {}
     }
 
-    console.warn("Final sevent/s 12-->>", sevents);
     return sevents;
   };
 
@@ -221,7 +279,6 @@ export default createContainer(props => {
     manageMyCalendarFilter
   } = props;
   let view;
-  console.log("props.route", props);
   if (
     (props.route && props.route.name == "SchoolView") ||
     props.route.name == "EmbedSchoolCalanderView"
@@ -273,7 +330,7 @@ export default createContainer(props => {
   }
 
   // console.log("FullCalendar createContainer classTimesData-->>", classTimesData)
-  // console.log("FullCalendar createContainer classInterestData-->>",classInterestData)
+
   // console.log("FullCalendar createContainer myClassIds-->>",myClassIds)
   // console.log("FullCalendar createContainer classSchedule-->>",classSchedule)
 

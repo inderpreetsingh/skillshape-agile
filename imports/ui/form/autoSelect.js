@@ -37,10 +37,8 @@ export default class AutoSelect extends React.Component {
     getData = (data) => {
     	const { fieldobj } = this.props;
     	Meteor.call(fieldobj.method, data, (err,res) => {
-    	    // console.log("AutoSelect res -->>",res);
 	    	let value = []
 	    	if(this.defaultData) {
-	    		console.log("AutoSelect initializeValues-->>",this.defaultData);
 	    		value = this.defaultData.toString();
 	    	}
     	    this.setState({
@@ -52,11 +50,9 @@ export default class AutoSelect extends React.Component {
 
     handleChange = (selectedOption) => {
 	    this.setState({ selectedOption });
-	    console.log(`Selected: ${selectedOption.label}`);
 	}
 
 	handleSelectChange = (value) => {
-		console.log(`handleSelectChange:-`,value);
 		this.setState({ value 
 		},() => {
             if(this.props.onChange) {

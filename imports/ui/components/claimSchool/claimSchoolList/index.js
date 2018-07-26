@@ -1,50 +1,295 @@
 import React from "react";
-import {createContainer} from 'meteor/react-meteor-data';
+import { createContainer } from "meteor/react-meteor-data";
+import isEmpty from "lodash/isEmpty";
+
 import ClaimSchoolListRender from "./claimSchoolListRender";
-import { Session } from 'meteor/session';
-import { withSubscriptionAndPagination } from '/imports/util';
-import { withStyles } from 'material-ui/styles';
+import { Session } from "meteor/session";
+import { withPopUp, withSubscriptionAndPagination } from "/imports/util";
+import { withStyles } from "material-ui/styles";
+import {emailRegex} from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import School from "/imports/api/school/fields";
-import {danger,rhythmDiv} from '/imports/ui/components/landing/components/jss/helpers.js';
+import {
+  danger,
+  rhythmDiv
+} from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const styles = {
   buttonStyles: {
     fontWeight: 600,
     borderRadius: 10,
     backgroundColor: danger,
-    color: 'white',
+    color: "white",
     marginRight: rhythmDiv * 2
   }
-}
+};
 
 class ClaimSchoolList extends React.Component {
-
   constructor(props) {
     super(props);
-    
+
     this.state = {
-      schoolSuggestionDialog: false
-    }
+      filters: {},
+      tempFilters: {},
+      listLoaded: false
+    };
+
+    this.fieldNames = [
+      "skillSubjectIds",
+      "skillCategoryIds",
+      "schoolName",
+      "schoolEmail",
+      "schoolWebsite",
+      "locationName",
+      "experienceLevel",
+      "gender",
+      "age"
+    ];
   }
+
+  // componentDidMount() {
+  //   this.setState({
+  //     listLoaded: true
+  //   })
+  // }
 
   componentWillUnmount() {
-    Session.set("pagesToload",1)
+    Session.set("pagesToload", 1);
   }
 
-  handleSchoolSuggestionDialogState = (state) => () => {
+  componentWillReceiveProps(nextProps) {
+
     this.setState({
-      schoolSuggestionDialog: state
-    })
+      filters: nextProps.filters,
+      tempFilters: nextProps.tempFilters
+    });
   }
+
+  _ifAllFieldsEmpty = data => {
+    let allFieldsEmpty = true;
+    for (let i = 0; i < this.fieldNames.length; ++i) {
+      if (!isEmpty(data[this.fieldNames[i]])) {
+        allFieldsEmpty = false;
+        return false;
+      }
+    }
+
+    return allFieldsEmpty;
+  };
+
+  handleGiveSuggestion = () => {
+    const { popUp } = this.props;
+    const {
+      experienceLevel,
+      locationName,
+      schoolName,
+      skillCategoryIds,
+      skillSubjectIds,
+      defaultSkillSubject,
+      gender,
+      age,
+      _classPrice,
+      _monthPrice
+    } = this.state.filters;
+
+    const {
+      schoolWebsite, schoolEmail
+    } = this.state;
+
+    const data = {
+      experienceLevel,
+      locationName,
+      schoolName,
+      schoolEmail,
+      schoolWebsite,
+      skillCategoryIds,
+      skillSubjectIds,
+      gender,
+      age
+    };
+
+    if (_monthPrice) {
+      data.monthPrice = {
+        min: _monthPrice[0],
+        max: _monthPrice[1]
+      };
+    }
+
+    if (_classPrice) {
+      data.classPrice = {
+        min: _classPrice[0],
+        max: _classPrice[1]
+      };
+    }
+
+    // console.info('data 0----',data);
+
+    if (this._ifAllFieldsEmpty(data)) {
+      popUp.appear("alert",{title: 'Empty Fields', content: "Please fill one atleast 1 field for suggestion of school"});
+    }else if(data.schoolEmail && !emailRegex.email.test(data.schoolEmail)) {
+      popUp.appear("alert",{title: 'Invalid Email',content: 'Please correct the email format'})
+    }
+    else {
+      this.setState({ isLoading: true });
+      Meteor.call("schoolSuggestion.addSuggestion", data, (err, res) => {
+        this.setState({ isLoading: false , filters: {}, tempFilters: {}, schoolEmail: "", schoolWebsite: ""});
+        if (err) {
+          popUp.appear("alert",{content: err.reason});
+        } else {
+          popUp.appear("success",{content: "Thanks alot for your suggestion"});
+          this.props.removeAllFilters();
+        }
+      });
+    }
+  };
+
+  onLocationChange = (location, updateKey1, updateKey2) => {
+    let stateObj = {};
+
+    if (updateKey1) {
+      stateObj[updateKey1] = {
+        ...this.state[updateKey1],
+        coords: location.coords,
+        locationName: location.fullAddress
+      };
+    }
+
+    if (updateKey2) {
+      stateObj[updateKey2] = {
+        ...this.state[updateKey2],
+        coords: location.coords,
+        locationName: location.fullAddress
+      };
+    }
+
+    this.setState(stateObj);
+  };
+
+  /*When user empties the location filter then need to update state
+  so that no data is available on the basis of location filter*/
+  locationInputChanged = (event, updateKey1, updateKey2) => {
+    let stateObj = {};
+
+    if (updateKey1) {
+      stateObj[updateKey1] = {
+        ...this.state[updateKey1],
+        coords: null,
+        locationName: event.target.value
+      };
+    }
+
+    if (updateKey2) {
+      stateObj[updateKey2] = {
+        ...this.state[updateKey2],
+        coords: null,
+        locationName: event.target.value
+      };
+    }
+
+    this.setState(stateObj);
+  };
+
+  // Filter that works when user starts typing school name on /claimSchool page
+  fliterSchoolName = (event, updateKey1, updateKey2) => {
+    let stateObj = {};
+
+    if (updateKey1) {
+      stateObj[updateKey1] = {
+        ...this.state[updateKey1],
+        schoolName: event.target.value
+      };
+    }
+
+    if (updateKey2) {
+      stateObj[updateKey2] = {
+        ...this.state[updateKey2],
+        schoolName: event.target.value
+      };
+    }
+
+    this.setState(stateObj);
+  };
+
+  // This is used to collect selected skill categories.
+  collectSelectedSkillCategories = (text, updateKey1, updateKey2) => {
+    let stateObj = {};
+
+    if (updateKey1) {
+      stateObj[updateKey1] = {
+        ...this.state[updateKey1],
+        skillCategoryIds: text.map(ele => ele._id),
+        defaultSkillCategories: text
+      };
+    }
+
+    if (updateKey2) {
+      stateObj[updateKey2] = {
+        ...this.state[updateKey2],
+        skillCategoryIds: text.map(ele => ele._id),
+        defaultSkillCategories: text
+      };
+    }
+
+    this.setState(stateObj);
+  };
+
+  collectSelectedSkillSubject = text => {
+    let oldFilter = { ...this.state.filters };
+    oldFilter.skillSubjectIds = text.map(ele => ele._id);
+    oldFilter.defaultSkillSubject = text;
+    this.setState({ filters: oldFilter });
+  };
+
+  skillLevelFilter = text => {
+    let oldFilter = { ...this.state.filters };
+    oldFilter.experienceLevel = text;
+    this.setState({ filters: oldFilter });
+  };
+
+  filterGender = event => {
+    let oldFilter = { ...this.state.filters };
+    oldFilter.gender = event.target.value;
+    this.setState({ filters: oldFilter });
+  };
+
+  filterAge = event => {
+    let oldFilter = { ...this.state.filters };
+    oldFilter.age = parseInt(event.target.value);
+    this.setState({ filters: oldFilter });
+  };
+
+  handleSchoolDetails = (name) => event => {
+    this.setState({ [name]: event.target.value});
+  }
+
+  perClassPriceFilter = text => {
+    let oldFilter = { ...this.state.filters };
+    oldFilter._classPrice = text;
+    this.setState({ filters: oldFilter });
+  };
+
+  pricePerMonthFilter = text => {
+    let oldFilter = { ...this.state.filters };
+    oldFilter._monthPrice = text;
+    this.setState({ filters: oldFilter });
+  };
+
+  removeAllFilters = () => {
+    this.setState({
+      filters: {}
+    });
+  };
 
   render() {
-    return ClaimSchoolListRender.call(this, this.props, this.state)
+    return ClaimSchoolListRender.call(this, this.props, this.state);
   }
 }
 
-export default withSubscriptionAndPagination(withStyles(styles)(ClaimSchoolList), {collection: School, subscriptionName: "ClaimSchoolFilter", recordLimit: 10});
-
+export default withSubscriptionAndPagination(
+  withStyles(styles)(withPopUp(ClaimSchoolList)),
+  { collection: School, subscriptionName: "ClaimSchoolFilter", recordLimit: 10 }
+);
 
 // export default createContainer(props => {
 //   let pagesToload = Session.get("pagesToload") || 1;

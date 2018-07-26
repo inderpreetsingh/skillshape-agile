@@ -11,8 +11,8 @@ const config = {
   desktop: 4,
   tablet: 2,
   mobile: 1,
-  autoplay: true,
-  arrows: false
+  autoplay: false,
+  arrows: true
 }
 
 const breakPoints = {

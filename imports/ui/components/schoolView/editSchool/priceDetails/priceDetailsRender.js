@@ -5,14 +5,15 @@ import MonthlyPrice from './monthlyPrice';
 import EnrollmentFee from './enrollmentFee';
 
 export default function () {
-	console.log("price details render data -->>>",this.props);
 	let {
 		classPricingData,
 		monthlyPricingData,
 		enrollmentFeeData,
 		moveTab,
 		schoolId,
-        classTypeData
+		classTypeData,
+		schoolData,
+		currency
 	} = this.props
 
 	return (
@@ -21,7 +22,9 @@ export default function () {
 				<ClassPrice
 					schoolId={schoolId}
 					classPricingData={classPricingData}
-                    classTypeData={classTypeData}
+					classTypeData={classTypeData}
+					schoolData={schoolData}
+					currency={currency}
 				/>
 			</div>
 			<div style={{paddingTop: '20px'}}>
@@ -29,6 +32,9 @@ export default function () {
 					schoolId={schoolId}
 					monthlyPricingData={monthlyPricingData}
 					classTypeData={classTypeData}
+					schoolData={schoolData}
+					currency={currency}
+					
 				/>
 			</div>
 			<div style={{paddingTop: '20px'}}>
@@ -36,7 +42,10 @@ export default function () {
 					schoolId={schoolId}
 					enrollmentFeeData={enrollmentFeeData}
 					classTypeData={classTypeData}
-				/>
+					schoolData={schoolData}
+					currency={currency}
+					
+					/>
 			</div>
 			{/*<div className="wizard-footer col-md-12">
         <div className="pull-right">

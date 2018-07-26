@@ -8,10 +8,12 @@ import { browserHistory, Link } from 'react-router';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import SchoolCard from "/imports/ui/components/landing/components/cards/schoolCard";
-import NoResults from '/imports/ui/components/landing/components/NoResults';
+import NoResultsFound from '/imports/ui/components/landing/components/helpers/NoResultsFound.jsx';
+import FilterPanel from '/imports/ui/components/landing/components/FilterPanel.jsx';
 import SchoolSuggestionDialogBox from "/imports/ui/components/landing/components/dialogs/SchoolSuggestionDialogBox.jsx";
 
 import {getContainerMaxWidth} from '/imports/util/cards.js';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const SPACING = helpers.rhythmDiv * 2;
@@ -75,22 +77,57 @@ const GridWrapper = styled.div`
 
     @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px) {
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px;
+      ${props => props.suggestionForm ? "max-width: 800px" : ''};
     }
 
     @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px) {
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px;
+      ${props => props.suggestionForm ? "max-width: 800px" : ''};
     }
 
     @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px) {
       max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24}px;
+      ${props => props.suggestionForm ? "max-width: 800px" : ''};
       margin: 0 auto;
     }
 
 `;
 
-export default function (props) {
-    let schools = this.props.collectionData || [];
+const FormWrapper = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+`;
 
+const FormTitle = styled.h2`
+  font-size: ${helpers.baseFontSize * 2}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  font-style: italic;
+  text-align: center;
+  line-height: 1;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+const FormTagline = styled.h3`
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+  font-weight: 400;
+  text-align: center;
+  line-height: 1;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+`;
+
+const NoResultsFoundContainer = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
+export default function (props) {
+    let schools = this.props.collectionData;
     const NoneOfMyLisiting = (props) => (<Wrapper>
         <TextWrapper>
             Check to see if any of these are your school. The filters can help you search!
@@ -104,21 +141,50 @@ export default function (props) {
         </FormSubmitButtonWrapper>
       </Wrapper>)
 
+    if(this.props.isLoading) {
+      return <div></div>
+    }
+
     if(isEmpty(schools)) {
         return (
-            <GridWrapper>
+            <GridWrapper suggestionForm={this.props.suggestionForm}>
+              {this.state.isLoading && <ContainerLoader />}
               <NoResultContainer>
-                {this.state.schoolSuggestionDialog && <SchoolSuggestionDialogBox
-                  open={this.state.schoolSuggestionDialog}
-                  onModalClose={this.handleSchoolSuggestionDialogState(false)}
-                  /> }
-                <NoneOfMyLisiting {...props} />
-                <NoResults
-                  removeAllFiltersButtonClick={this.props.removeAllFilters}
-                  addYourSchoolButtonClick = {props.onStartNewListingButtonClick}
-                  schoolSuggestionButtonClick={this.handleSchoolSuggestionDialogState(true)}
-                  showSchoolSuggestion={true}
-                />
+                <NoneOfMyLisiting {...this.props} />
+
+                <NoResultsFoundContainer>
+                  <NoResultsFound
+                    title="No Matching Schools Found."
+                    tagline1="If you know of a school that should be here, please fill in the fields you know."
+                    tagline2="We will look for them and ask them to join."
+                  />
+                </NoResultsFoundContainer>
+
+                <FormWrapper>
+                  <FilterPanel
+                    filtersInDialogBox
+                    filtersForSuggestion
+                    filters={this.state.filters}
+                    tempFilters={this.state.tempFilters}
+                    onLocationChange={this.onLocationChange}
+                    schoolWebsite={this.state.schoolWebsite}
+                    schoolEmail={this.state.schoolEmail}
+                    onSchoolWebsiteChange={this.handleSchoolDetails('schoolWebsite')}
+                    onSchoolEmailChange={this.handleSchoolDetails('schoolEmail')}
+                    locationInputChanged={this.locationInputChanged}
+                    fliterSchoolName={this.fliterSchoolName}
+                    filterAge={this.filterAge}
+                    filterGender={this.filterGender}
+                    skillLevelFilter={this.skillLevelFilter}
+                    perClassPriceFilter={this.perClassPriceFilter}
+                    pricePerMonthFilter={this.pricePerMonthFilter}
+                    collectSelectedSkillCategories={this.collectSelectedSkillCategories}
+                    collectSelectedSkillSubject={this.collectSelectedSkillSubject}
+                    onGiveSuggestion={this.handleGiveSuggestion}
+                    onGoBackButtonClick={props.handleGoBackButtonClick}
+                  />
+                </FormWrapper>
+
               </NoResultContainer>
             </GridWrapper>
         )
@@ -129,7 +195,7 @@ export default function (props) {
                 <GridWrapper>
                   <NoneOfMyLisiting {...props} />
                   <GridInnerWrapper>
-                    {
+                    {schools &&
                       schools.map((school, index) => {
                           return (
                               <GridItem spacing={SPACING} key={index}>

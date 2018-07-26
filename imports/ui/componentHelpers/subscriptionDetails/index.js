@@ -10,7 +10,6 @@ class SubscriptionsDetails extends React.Component {
 
   render() {
     const { memberInfo } = this.props;
-    console.log("memberinfo=====>>>>>>>>", memberInfo);
     return (
       <div
         style={{

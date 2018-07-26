@@ -1,20 +1,19 @@
-import React, {Fragment,Component} from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import Events from '/imports/util/events';
+import React, { Fragment, Component } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import Events from "/imports/util/events";
 
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 
-import SchoolSolutionCard from '/imports/ui/components/landing/components/cards/SchoolSolutionCard.jsx';
-import SchoolSolutionSlider from '/imports/ui/components/landing/components/school/issuesSection/SchoolCardsSlider.jsx';
+import SchoolSolutionCard from "/imports/ui/components/landing/components/cards/SchoolSolutionCard.jsx";
+import SchoolSolutionSlider from "/imports/ui/components/landing/components/school/issuesSection/SchoolCardsSlider.jsx";
 
-import ContactUsDialogBox from '/imports/ui/components/landing/components/dialogs/ContactUsDialogBox.jsx';
+import ContactUsDialogBox from "/imports/ui/components/landing/components/dialogs/ContactUsDialogBox.jsx";
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const BoxWrapper = styled.div`
-  ${helpers.flexCenter}
-  flex-direction: column;
+  ${helpers.flexCenter} flex-direction: column;
   flex-grow: 1;
   justify-content: space-evenly;
   max-width: ${helpers.schoolPageContainer + 200}px;
@@ -52,7 +51,7 @@ const TitleArea = styled.div`
   margin-top: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    ${helpers.flexCenter}
+    ${helpers.flexCenter};
   }
 `;
 const SolutionNumber = styled.p`
@@ -110,8 +109,7 @@ const Description = styled.p`
 `;
 
 SchoolSolutionCardsWrapper = styled.div`
-  ${helpers.flexCenter}
-  width: 100%;
+  ${helpers.flexCenter} width: 100%;
   justify-content: flex-start;
 `;
 
@@ -128,7 +126,6 @@ SchoolSolutionCardsOuterWrapper = styled.div`
     display: none;
   }
 `;
-
 
 SchoolSolutionSliderWrapper = styled.div`
   display: none;
@@ -198,9 +195,9 @@ const SolutionInnerContent = styled.div`
 
 const SolutionContent = styled.div`
   position: absolute;
-  transition: .2s opacity ease-in-out;
-  opacity: ${props => props.showContent ? 1 : 0};
-  z-index: ${props => props.showContent ? 1 : 0};
+  transition: 0.2s opacity ease-in-out;
+  opacity: ${props => (props.showContent ? 1 : 0)};
+  z-index: ${props => (props.showContent ? 1 : 0)};
 `;
 
 const SolutionContentArea = styled.div`
@@ -213,9 +210,7 @@ const SolutionWrapper = styled.div`
   min-height: 150px;
 `;
 
-const Solution = styled.div`
-
-`;
+const Solution = styled.div``;
 
 const Problem = styled.div`
   display: flex;
@@ -233,7 +228,6 @@ const MyProblemWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
 
 // const ProblemNumber = styled.p`
 //   margin: 0;
@@ -269,8 +263,8 @@ const Arrows = styled.div`
   font-family: ${helpers.specialFont};
   font-weight: 300;
   color: ${helpers.primaryColor};
-  transition: .1s linear opacity;
-  opacity: ${props => props.showArrows ? 1 : 0};
+  transition: 0.1s linear opacity;
+  opacity: ${props => (props.showArrows ? 1 : 0)};
   ${helpers.flexCenter};
   align-items: flex-start;
 `;
@@ -292,8 +286,8 @@ const Arrow = styled.button`
   font-weight: 300;
   color: ${helpers.primaryColor};
   padding: 0 ${helpers.rhythmDiv}px;
-  transition: .1s linear opacity;
-  opacity: ${props => props.show ? 1 : 0};
+  transition: 0.1s linear opacity;
+  opacity: ${props => (props.show ? 1 : 0)};
 `;
 
 const LeftArrow = Arrow.extend``;
@@ -308,129 +302,132 @@ const MySwipe = styled.div`
 `;
 
 let myPosition = {
-  initX : 0,
-  initY : 0,
+  initX: 0,
+  initY: 0,
   currentX: 0,
-  currentY: 0,
-}
+  currentY: 0
+};
 
 const TOUCH_MOVE_THRESHOLD = 40;
 
 class SolutionBox extends Component {
-
   state = {
     currentSolution: 0,
     showArrows: false,
-    showCards: true,
-  }
+    showCards: true
+  };
 
-  handleDialogBoxState = (dialogBoxName,state) => {
+  handleDialogBoxState = (dialogBoxName, state) => {
     this.setState({
-      [dialogBoxName] : state
-    })
-  }
+      [dialogBoxName]: state
+    });
+  };
 
   handleSignUpButtonClick = () => {
-    Events.trigger("registerAsSchool",{userType : 'School'});
-  }
+    Events.trigger("registerAsSchool", { userType: "School" });
+  };
 
-  _getNextSolution = (direction) => {
+  _getNextSolution = direction => {
     let nextSolution = this.state.currentSolution;
 
-    if(direction === 'left') {
-      if(nextSolution === 0) {
+    if (direction === "left") {
+      if (nextSolution === 0) {
         nextSolution = TOTAL_NUMBER_OF_SOLUTIONS;
-      }else {
+      } else {
         nextSolution = --nextSolution;
       }
-    }else {
-      nextSolution = (++nextSolution) % (TOTAL_NUMBER_OF_SOLUTIONS + 1);
+    } else {
+      nextSolution = ++nextSolution % (TOTAL_NUMBER_OF_SOLUTIONS + 1);
     }
 
     return nextSolution;
-  }
+  };
 
-  _moveToSolution = (direction) => {
+  _moveToSolution = direction => {
     // get next solution with given direction.
     const nextSolution = this._getNextSolution(direction);
 
     //debugger;
     this.handleSolutionChange(nextSolution);
-  }
+  };
 
-  handleArrowClick = (arrow) => {
+  handleArrowClick = arrow => {
     this._moveToSolution(arrow);
-  }
+  };
 
-  handleSolutionChange = (currentSolution) => {
-    this.setState({currentSolution});
-  }
+  handleSolutionChange = currentSolution => {
+    this.setState({ currentSolution });
+  };
 
   handleScreenResize = () => {
-    if(window.innerWidth <= helpers.tablet) {
-      // console.log(window.innerWidth,"------");
-      if(this.state.showCards)
-        this.setState({showCards: false});
-    }else {
-      if(!this.state.showCards)
-        this.setState({showCards: true});
+    if (window.innerWidth <= helpers.tablet) {
+      if (this.state.showCards) this.setState({ showCards: false });
+    } else {
+      if (!this.state.showCards) this.setState({ showCards: true });
     }
-  }
+  };
 
-  handleMouseEvent = (state) => {
+  handleMouseEvent = state => {
     this.setState({
       showArrows: state
     });
-  }
+  };
 
-  handleTouchStart = (e) => {
-    console.log('handleTouchStart',e.touches[0].clientX);
+  handleTouchStart = e => {
     this.touchStarted = true;
     myPosition.initX = e.touches[0].clientX;
-  }
+  };
 
-  handleTouchMove = (e) => {
-    console.info('handle Touch Move',e.touches[0].clientX);
+  handleTouchMove = e => {
     myPosition.currentX = e.touches[0].clientX;
-  }
+  };
 
   _resetTouchEventData = () => {
     this.touchStarted = this.touchMoved = false;
     myPosition.initX = myPosition.initY = myPosition.currentX = myPosition.currentY = 0;
-  }
+  };
 
-  handleTouchCancel = (e) => {
+  handleTouchCancel = e => {
     this._resetTouchEventData();
-  }
+  };
 
-  handleTouchEnd = (e) => {
-    console.info('handle touch end');
-    if(Math.abs(myPosition.currentX - myPosition.initX) > TOUCH_MOVE_THRESHOLD) {
-      if(myPosition.initX < myPosition.currentX) {
-        this._moveToSolution('right');
-      }else {
-        this._moveToSolution('left');
+  handleTouchEnd = e => {
+    if (
+      Math.abs(myPosition.currentX - myPosition.initX) > TOUCH_MOVE_THRESHOLD
+    ) {
+      if (myPosition.initX < myPosition.currentX) {
+        this._moveToSolution("right");
+      } else {
+        this._moveToSolution("left");
       }
     }
     this._resetTouchEventData();
-  }
+  };
 
   componentWillMount = () => {
-    window.addEventListener('resize',this.handleScreenResize);
-  }
+    window.addEventListener("resize", this.handleScreenResize);
+  };
 
   componentDidMount = () => {
     this.handleScreenResize();
-  }
+  };
 
   componentWillUnMount = () => {
-    window.removeEventListener('resize',this.handleScreenResize);
-  }
+    window.removeEventListener("resize", this.handleScreenResize);
+  };
 
   render() {
-    const {props} = this;
-    return(<BoxWrapper firstBox={props.firstBox}>
-        {this.state.contactDialog && <ContactUsDialogBox open={this.state.contactDialog} onModalClose={() => this.handleDialogBoxState('contactDialog',false)}/>}
+    const { props } = this;
+    return (
+      <BoxWrapper firstBox={props.firstBox}>
+        {this.state.contactDialog && (
+          <ContactUsDialogBox
+            open={this.state.contactDialog}
+            onModalClose={() =>
+              this.handleDialogBoxState("contactDialog", false)
+            }
+          />
+        )}
         <Problem>
           <MyProblemWrapper>
             {/*<ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber> */}
@@ -440,33 +437,45 @@ class SolutionBox extends Component {
 
         <BoxInnerWrapper>
           <SchoolSolutionCardsOuterWrapper>
-            {this.state.showCards && <SchoolSolutionCardsWrapper>
-              {props.cardsData && props.cardsData.map((card,i) => {
-                  if(i == 0 || i == 1) {
-                    return (<SchoolSolutionCard
-                      key={i}
-                      {...card}
-                      active={i === this.state.currentSolution}
-                      noMarginBotton={i === 2 || i === 3}
-                      onCardClick={() => this.handleSolutionChange(i)}
-                      cardBgColor={props.cardBgColor}/>)
-                  }
-              })}
-              </SchoolSolutionCardsWrapper>}
-            {this.state.showCards && <SchoolSolutionCardsWrapper>
-                {props.cardsData && props.cardsData.map((card,i) => {
-                    if(i == 2 || i == 3) {
-                      return (<SchoolSolutionCard
-                        key={i}
-                        {...card}
-                        active={i === this.state.currentSolution}
-                        noMarginBotton={i === 2 || i === 3}
-                        onCardClick={() => this.handleSolutionChange(i)}
-                        cardBgColor={props.cardBgColor}/>)
+            {this.state.showCards && (
+              <SchoolSolutionCardsWrapper>
+                {props.cardsData &&
+                  props.cardsData.map((card, i) => {
+                    if (i == 0 || i == 1) {
+                      return (
+                        <SchoolSolutionCard
+                          key={i}
+                          {...card}
+                          active={i === this.state.currentSolution}
+                          noMarginBotton={i === 2 || i === 3}
+                          onCardClick={() => this.handleSolutionChange(i)}
+                          cardBgColor={props.cardBgColor}
+                        />
+                      );
                     }
-                })}
-              </SchoolSolutionCardsWrapper>}
-            </SchoolSolutionCardsOuterWrapper>
+                  })}
+              </SchoolSolutionCardsWrapper>
+            )}
+            {this.state.showCards && (
+              <SchoolSolutionCardsWrapper>
+                {props.cardsData &&
+                  props.cardsData.map((card, i) => {
+                    if (i == 2 || i == 3) {
+                      return (
+                        <SchoolSolutionCard
+                          key={i}
+                          {...card}
+                          active={i === this.state.currentSolution}
+                          noMarginBotton={i === 2 || i === 3}
+                          onCardClick={() => this.handleSolutionChange(i)}
+                          cardBgColor={props.cardBgColor}
+                        />
+                      );
+                    }
+                  })}
+              </SchoolSolutionCardsWrapper>
+            )}
+          </SchoolSolutionCardsOuterWrapper>
 
           {/*this.state.showCards && <SchoolSolutionSliderWrapper>
             <SchoolSolutionSlider
@@ -483,40 +492,72 @@ class SolutionBox extends Component {
           >
             <SolutionContentWrapper
               onMouseOver={() => this.handleMouseEvent(true)}
-              onMouseOut={() => this.handleMouseEvent(false)}>
-              {props.cardsData && props.cardsData.map((card,i) => {
-                return(<SolutionContent key={i} showContent={this.state.currentSolution === i}>
-                  <SolutionInnerContent>
-                    <Arrow show={this.state.showArrows || !this.state.showCards} onClick={() => this.handleArrowClick('left')}> {'<'} </Arrow>
+              onMouseOut={() => this.handleMouseEvent(false)}
+            >
+              {props.cardsData &&
+                props.cardsData.map((card, i) => {
+                  return (
+                    <SolutionContent
+                      key={i}
+                      showContent={this.state.currentSolution === i}
+                    >
+                      <SolutionInnerContent>
+                        <Arrow
+                          show={this.state.showArrows || !this.state.showCards}
+                          onClick={() => this.handleArrowClick("left")}
+                        >
+                          {" "}
+                          {"<"}{" "}
+                        </Arrow>
 
-                    <SolutionContentArea>
-                      <Title firstBox={props.firstBox}> {card.title} </Title>
-                      <Tagline>
-                        {card.tagline}
-                      </Tagline>
+                        <SolutionContentArea>
+                          <Title firstBox={props.firstBox}>
+                            {" "}
+                            {card.title}{" "}
+                          </Title>
+                          <Tagline>{card.tagline}</Tagline>
 
-                      <Description>
-                        {card.content}
-                      </Description>
+                          <Description>{card.content}</Description>
 
-                      <ActionArea>
-                        <ButtonWrapper marginRight={helpers.rhythmDiv * 2}>
-                          <PrimaryButton noMarginBottom onClick={() => this.handleDialogBoxState('contactDialog',true)} label="Any doubts?" />
-                        </ButtonWrapper>
-                        <ButtonWrapper>
-                          <PrimaryButton noMarginBottom onClick={this.handleSignUpButtonClick} label="Sign up"/>
-                        </ButtonWrapper>
-                      </ActionArea>
-                    </SolutionContentArea>
+                          <ActionArea>
+                            <ButtonWrapper marginRight={helpers.rhythmDiv * 2}>
+                              <PrimaryButton
+                                noMarginBottom
+                                onClick={() =>
+                                  this.handleDialogBoxState(
+                                    "contactDialog",
+                                    true
+                                  )
+                                }
+                                label="Any doubts?"
+                              />
+                            </ButtonWrapper>
+                            <ButtonWrapper>
+                              <PrimaryButton
+                                noMarginBottom
+                                onClick={this.handleSignUpButtonClick}
+                                label="Sign up"
+                              />
+                            </ButtonWrapper>
+                          </ActionArea>
+                        </SolutionContentArea>
 
-                    <Arrow show={this.state.showArrows || !this.state.showCards} onClick={() => this.handleArrowClick('right')}> {'>'} </Arrow>
-                  </SolutionInnerContent>
-                </SolutionContent>)
-              })}
+                        <Arrow
+                          show={this.state.showArrows || !this.state.showCards}
+                          onClick={() => this.handleArrowClick("right")}
+                        >
+                          {" "}
+                          {">"}{" "}
+                        </Arrow>
+                      </SolutionInnerContent>
+                    </SolutionContent>
+                  );
+                })}
             </SolutionContentWrapper>
           </MySwipe>
         </BoxInnerWrapper>
-      </BoxWrapper>);
+      </BoxWrapper>
+    );
   }
 }
 
@@ -524,6 +565,6 @@ SolutionBox.propTypes = {
   content: PropTypes.string,
   active: PropTypes.bool,
   onActionButtonClick: PropTypes.func
-}
+};
 
 export default SolutionBox;

@@ -22,15 +22,9 @@ Meteor.methods({
         PricingTable = EnrollmentFees;
       }
       let packageData = PricingTable.findOne(tableId);
-      console.log("packageData-----------------", packageData);
       const packageName =
         typeOfTable == "EP" ? packageData.name : packageData.packageName;
-      console.log(
-        "typeOfTable, tableId, schoolId",
-        typeOfTable,
-        tableId,
-        schoolId
-      );
+     
       const purchaseRequestAlreadyPresent = PackageRequest.findOne({
         userId: this.userId,
         packageId: packageData._id
@@ -70,14 +64,15 @@ Meteor.methods({
               to: emailAddress,
               buyer: currentUser.emails[0].address,
               packageName: packageName,
-              schoolAdminName: schoolAdminName
+              schoolAdminName: schoolAdminName,
+              schoolId: schoolId
             });
-            return "School not connected their stripe account yet.Your request has been processed. We will assist you soon!";
+            return `You are currently unable to purchase this package from here. ${schoolData &&
+              schoolData.name} has been notified of your interest in ${packageName} class package.`;
           }
         } else {
           // Return the errors in case something is invalid.
           const invalidData = validationContext.invalidKeys()[0];
-          console.log("validation errors...", validationContext.invalidKeys());
           throw new Meteor.Error(invalidData.name + " is " + invalidData.value);
         }
       }

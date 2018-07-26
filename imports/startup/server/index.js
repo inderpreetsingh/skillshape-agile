@@ -29,7 +29,7 @@ import "/imports/api/classTypeLocationRequest/methods";
 import "/imports/api/stripe/methods";
 import "/imports/api/stripe/webhook";
 import "/imports/api/purchases/methods";
-import "/imports/api/classSubscription/methods";
+import "/imports/api/schoolSuggestion/methods";
 // All publication imported over here
 
 import "/imports/api/modules/server/publication";
@@ -53,3 +53,4 @@ import "/imports/api/claimSchoolRequest/cronjob";
 import "/imports/api/purchases/cronJobForPackageStatus";
 import "/imports/api/stripe/server/publication";
 import "/imports/api/purchases/server/publication";
+import "/imports/api/schoolSuggestion/server/publication";

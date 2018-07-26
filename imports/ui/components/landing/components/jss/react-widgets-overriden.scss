@@ -16,6 +16,11 @@
   display: block;
 }
 
+
+.rw-list {
+  text-align: left;
+}
+
 .filters-dialog .rw-widget-picker {
   height: auto;
   display: flex;
@@ -25,14 +30,20 @@
 
 .filters-dialog, .homepage-filter {
   .rw-multiselect .rw-widget-picker > div {
-    max-width: 90%;
+    max-width: calc(100% - 32px);
     height: 100%;
     display: flex;
     align-items: flex-end;
   }
+
+  .rw-multiselect .rw-widget-picker > span {
+    max-width: 32px;
+    width: 100%;
+  }
 }
 
 .my-multi-select-filter {
+   width: 100%;
   .rw-widget-input, .rw-widget-picker, .rw-widget-container, .rw-multiselect {
     background-color: transparent;
   }
@@ -78,7 +89,7 @@
   }
 
   .rw-input-reset {
-    max-width: 60%;
+    max-width: 80%;
   }
 
   .rw-multiselect-tag > * {
@@ -103,7 +114,7 @@
 }
 
 .rw-multiselect .rw-multiselect-taglist {
-  max-width: 80%;
+  max-width: 100%;
   margin-right: map-get($sizes,'rhythm-div') * 1px;
   margin-bottom: map-get($sizes,'rhythm-div') * 1px;
 }
@@ -123,6 +134,17 @@
 }
 
 .my-multi-select-filter-btn {
+  font-family: map-get($fonts, 'common');
   min-width: map-get($sizes,'rhythm-div') * 2px;
   padding: map-get($sizes,'rhythm-div') * 1px;
+}
+
+.no-border {
+  .rw-widget-container  {
+    border-width: 0px;
+    &:hover {
+      box-shadow: none;
+      border-width:: 0px;
+    }
+  }
 }

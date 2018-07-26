@@ -17,7 +17,6 @@ class ClassTypeDetails extends React.Component {
   }
 
   getChildTableData(parentData) {
-    console.log("getChildTableData -->>", parentData._id);
     return ClassTimes.find({ classTypeId: parentData._id }).fetch();
   }
 
@@ -26,7 +25,6 @@ class ClassTypeDetails extends React.Component {
   };
 
   handleImageSave = (schoolId, classTypeId) => {
-    console.log("<<<< handleImageSave called-->>", this.state);
     const { file } = this.state;
     let doc = {
       schoolId: schoolId
@@ -36,7 +34,6 @@ class ClassTypeDetails extends React.Component {
         { files: { "0": file.fileData }, path: "schools" },
         (err, res) => {
           if (err) {
-            console.error("err ", err);
           }
           if (res) {
             doc.classTypeImg = res.secure_url;
@@ -56,7 +53,6 @@ class ClassTypeDetails extends React.Component {
   editClassType = ({ doc, doc_id }) => {
     Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
       if (error) {
-        console.error("error", error);
       }
       if (result) {
       }
@@ -71,6 +67,34 @@ class ClassTypeDetails extends React.Component {
     this.props.moveToNextTab(1);
   };
 
+  _getCategoryName = (categoryId, categoryData) => {
+    let categoryName = "";
+    for (let i = 0; i < categoryData.length; ++i) {
+      if (categoryData[i]._id === categoryId) {
+        return categoryData[i].name;
+      }
+    }
+  };
+
+  modifySelectSubjectsInClassTypeData = () => {
+    const { classTypeData } = this.props;
+    classTypeData.map(obj => {
+      obj.selectedSkillSubject.map(subjectData => {
+        if (subjectData.name == "Others") {
+          const categoryName = this._getCategoryName(
+            subjectData.skillCategoryId,
+            obj.selectedSkillCategory
+          );
+          console.log(categoryName, "category name...........");
+          subjectData.name = `${subjectData.name} -- ${categoryName}`;
+        }
+        return subjectData;
+      });
+      return obj;
+    });
+    return classTypeData;
+  };
+
   render() {
     return ClassTypeDetailsRender.call(this, this.props, this.state);
   }
@@ -83,21 +107,17 @@ export default createContainer(props => {
 
   let subscription = Meteor.subscribe("classType.getclassType", { schoolId });
 
-  if (subscription.ready()) {
-    classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
-    let classTypeIds = classTypeData && classTypeData.map(data => data._id);
+  // if (subscription.ready()) {
+  classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
+  let classTypeIds = classTypeData && classTypeData.map(data => data._id);
 
-    Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {
-      schoolId,
-      classTypeIds
-    });
-    classTimesData = ClassTimes.find(
-      { schoolId },
-      { sort: { _id: -1 } }
-    ).fetch();
-  }
+  Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {
+    schoolId,
+    classTypeIds
+  });
+  classTimesData = ClassTimes.find({ schoolId }, { sort: { _id: -1 } }).fetch();
+  // }
 
-  // console.log("classTimesData -->>",classTimesData)
   /*Find skills to make this container reactive on skill
     other wise skills are joined with collections using package
     perak:joins */

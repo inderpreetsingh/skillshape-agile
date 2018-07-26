@@ -45,7 +45,7 @@ class ClassTypeForm extends React.Component {
 
   initializeFields = () => {
     const { data, locationData } = this.props;
-    console.log("initializeFields data -->>", data);
+    console.log(data, state, ".... editing data");
     let state = {
       gender: "Any",
       experienceLevel: "All",
@@ -80,8 +80,32 @@ class ClassTypeForm extends React.Component {
     return state;
   };
 
-  onSkillSubjectChange = values =>
-    this.setState({ selectedSkillSubject: values });
+  componentDidMount = () => {
+    Meteor.call("getDefaultSubjectsList", (err, res) => {
+      if (err) {
+        console.error(err.reason, "---");
+      } else {
+        // console.info(res, "==== res ====");
+        this.defaultSubjectList = res;
+      }
+    });
+  };
+
+  onSkillSubjectChange = values => {
+    values = values.map(ele => {
+      if (ele.skillCategoryId || ele._id) {
+        return ele;
+      }
+    });
+    // debugger;
+    values = _.without(values, undefined);
+    if (!_.isEmpty(values)) {
+      this.setState({ selectedSkillSubject: values });
+    }
+    if (values.length == 0) {
+      this.setState({ selectedSkillSubject: [] });
+    }
+  };
 
   onSkillCategoryChange = values => {
     const selectedSkillSubject =
@@ -89,7 +113,6 @@ class ClassTypeForm extends React.Component {
       this.state.selectedSkillSubject.filter(data => {
         return findIndex(values, { _id: data.skillCategoryId }) > -1;
       });
-    console.log("selectedSkillSubject -->>", selectedSkillSubject);
     this.setState({ selectedSkillCategory: values, selectedSkillSubject });
   };
 
@@ -100,9 +123,7 @@ class ClassTypeForm extends React.Component {
     this.setState({ [fieldName]: value });
 
   handleSkillCategoryInputChange = value => {
-    console.log("handleSkillCategoryInputChange -->>", value);
     Meteor.call("getSkillCategory", { textSearch: value }, (err, res) => {
-      console.log("getSkillCategory res -->>", res);
       if (res) {
         this.setState({
           skillCategoryData: res || []
@@ -112,40 +133,55 @@ class ClassTypeForm extends React.Component {
   };
 
   handleSkillSubjectInputChange = value => {
-    console.log("handleSkillSubjectInputChange -->>", value);
-    if (!_.isEmpty(this.state.selectedSkillCategory)) {
-      let skillCategoryIds = this.state.selectedSkillCategory.map(
-        data => data._id
-      );
-      Meteor.call(
-        "getSkillSubjectBySkillCategory",
-        { skillCategoryIds: skillCategoryIds, textSearch: value },
-        (err, res) => {
-          if (res) {
-            this.setState({
-              skillSubjectData: res || []
-            });
-          }
+    // if (!_.isEmpty(this.state.selectedSkillCategory)) {
+    //   let skillCategoryIds = this.state.selectedSkillCategory.map(
+    //     data => data._id
+    //   );
+    //   Meteor.call(
+    //     "getSkillSubjectBySkillCategory",
+    //     { skillCategoryIds: skillCategoryIds, textSearch: value },
+    //     (err, res) => {
+    //       if (res) {
+    //         this.setState({
+    //           skillSubjectData: res || []
+    //         });
+    //       }
+    //     }
+    //   );
+    // } else {
+    //   // toastr.error("Please select skill category first", "Error");
+    // }
+    //
+    Meteor.call(
+      "getSkillSubjectBySkillCategory",
+      { skillCategoryIds: {}, textSearch: value },
+      (err, res) => {
+        if (res.length) {
+          this.setState({
+            skillSubjectData: res,
+            defaultSubjectData: true
+          });
+        } else {
+          this.setState({
+            skillSubjectData: this.defaultSubjectList,
+            defaultSubjectData: true
+          });
         }
-      );
-    } else {
-      toastr.error("Please select skill category first", "Error");
-    }
+      }
+    );
   };
 
   onSubmit = event => {
-    console.log("--------------------- ClassType from submit----------------");
     event.preventDefault();
-    console.log("onSubmit state -->>", this.state);
     const { schoolId, data } = this.props;
 
     const payload = {
       schoolId: schoolId,
       name: this.classTypeName.value,
       desc: this.desc.value,
-      skillCategoryId:
-        this.state.selectedSkillCategory &&
-        this.state.selectedSkillCategory.map(data => data._id),
+      // skillCategoryId:
+      //   this.state.selectedSkillCategory &&
+      //   this.state.selectedSkillCategory.map(data => data._id),
       skillSubject:
         this.state.selectedSkillSubject &&
         this.state.selectedSkillSubject.map(data => data._id),
@@ -155,26 +191,37 @@ class ClassTypeForm extends React.Component {
       ageMax: this.ageMax.value && parseInt(this.ageMax.value),
       locationId: this.state.location
     };
-
-    if (data && data._id) {
-      this.handleSubmit({
-        methodName: "classType.editClassType",
-        doc: payload,
-        doc_id: data._id
-      });
-    } else {
-      this.handleSubmit({ methodName: "classType.addClassType", doc: payload });
+    if (!payload.skillSubject) {
+      payload.skillSubject = [];
     }
+    Meteor.call(
+      "getSkillCategoryIdsFromSkillSubjects",
+      { skillSubjectIds: payload.skillSubject },
+      (err, res) => {
+        if (res) {
+          payload.skillCategoryId = res;
+          if (data && data._id) {
+            this.handleSubmit({
+              methodName: "classType.editClassType",
+              doc: payload,
+              doc_id: data._id
+            });
+          } else {
+            this.handleSubmit({
+              methodName: "classType.addClassType",
+              doc: payload
+            });
+          }
+        } else {
+        }
+      }
+    );
   };
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
-    console.log("handleSubmit methodName-->>", methodName);
-    console.log("handleSubmit doc-->>", doc);
-    console.log("handleSubmit doc_id-->>", doc_id);
     //this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
       if (error) {
-        console.error("error", error);
       }
       if (result) {
         this.props.onClose(result);
@@ -186,7 +233,6 @@ class ClassTypeForm extends React.Component {
   render() {
     const { fullScreen, data, classes, locationData } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
-    // console.log("ClassTypeForm state -->>",this.state);
     return (
       <div>
         <Dialog
@@ -234,7 +280,7 @@ class ClassTypeForm extends React.Component {
                   type="text"
                   fullWidth
                 />
-                <SelectArrayInput
+                {/*<SelectArrayInput
                   floatingLabelText="Skill Category"
                   optionValue="_id"
                   optionText="name"
@@ -246,12 +292,13 @@ class ClassTypeForm extends React.Component {
                   setFilter={this.handleSkillCategoryInputChange}
                   dataSourceConfig={{ text: "name", value: "_id" }}
                   choices={skillCategoryData}
-                />
+                /> */}
                 <SelectArrayInput
                   floatingLabelText="Skill Subject"
                   optionValue="_id"
                   optionText="name"
                   input={{
+                    noFilter: this.state.defaultSubjectData,
                     value: this.state.selectedSkillSubject,
                     onChange: this.onSkillSubjectChange
                   }}
@@ -351,6 +398,11 @@ class ClassTypeForm extends React.Component {
                         }
                         fullWidth
                       >
+                        {_.isEmpty(locationData) && (
+                          <MenuItem value="" disabled>
+                            No location added in Locations.
+                          </MenuItem>
+                        )}
                         {locationData.map((data, index) => {
                           return (
                             <MenuItem key={index} value={data._id}>{`${

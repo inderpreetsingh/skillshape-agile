@@ -14,7 +14,7 @@ import SLocation from "/imports/api/sLocation/fields";
 import School from "/imports/api/school/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import Reviews from "/imports/api/review/fields";
-import { toastrModal } from "/imports/util";
+import { withPopUp } from "/imports/util";
 import config from "/imports/config";
 import ClassTimes from "/imports/api/classTimes/fields";
 
@@ -31,16 +31,21 @@ class SchoolView extends SchoolViewBase {
       myClassTimes: [],
       manageAll: true,
       attendAll: true,
+      currency:null,
       filter: {
         classTimesIds: [],
         classTimesIdsForCI: []
       }
     };
   }
-
+  componentWillMount() {
+    // let { slug } = this.props.params;
+    // Meteor.call('school.findSchoolById',slug,(err,res)=>{
+    //   res && this.setState({currency:res})
+    // })
+  }
   handleSeeMore = () => {
     // Attach count with skill cateory name so that see more functionlity can work properly.
-    console.log("handleSeeMore");
     let currentCount = this.state.seeMoreCount;
     this.setState({ seeMoreCount: config.seeMoreCount + currentCount });
   };
@@ -50,10 +55,7 @@ class SchoolView extends SchoolViewBase {
   };
 
   render() {
-    console.log(
-      this.props,
-      "This . route . location name school view render.."
-    );
+    
     // if(this.props.route.name === 'SchoolViewDeveloping') {
     return SchoolViewNewRender.call(this, this.props, this.state);
     // }
@@ -74,6 +76,7 @@ export default createContainer(props => {
   let subscription;
   let reviewsSubscriptions;
   let classTimesData;
+  let currency;
 
   if (slug) {
     subscription = Meteor.subscribe("UserSchoolbySlug", slug);
@@ -87,6 +90,7 @@ export default createContainer(props => {
     reviewsSubscriptions = Meteor.subscribe("review.getReviews", {
       reviewForId: schoolId
     });
+    currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
   }
 
   const sub1 = reviewsSubscriptions && reviewsSubscriptions.ready();
@@ -125,11 +129,6 @@ export default createContainer(props => {
     ).fetch();
   }
 
-  console.log("SchoolView classTimesData--->>", classTimesData);
-  // console.log("SchoolView classType--->>", classType)
-  // console.log("SchoolView classPricing--->>", classPricing)
-  // console.log("SchoolView monthlyPricing--->>", monthlyPricing)
-  // console.log("SchoolView schoolLocation--->>", schoolLocation)
   return {
     ...props,
     schoolData,
@@ -141,6 +140,7 @@ export default createContainer(props => {
     classType,
     schoolId,
     showLoading,
-    classTimesData
+    classTimesData,
+    currency
   };
-}, withStyles(styles)(toastrModal(SchoolView)));
+}, withStyles(styles)(withPopUp(SchoolView)));

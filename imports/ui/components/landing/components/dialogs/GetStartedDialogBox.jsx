@@ -1,35 +1,35 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import Recaptcha from 'react-recaptcha';
-import styled from 'styled-components';
-import Input, { InputLabel } from 'material-ui/Input';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Recaptcha from "react-recaptcha";
+import styled from "styled-components";
+import Input, { InputLabel } from "material-ui/Input";
 
-import IconButton from 'material-ui/IconButton';
-import ClearIcon from 'material-ui-icons/Clear';
-import Typography from 'material-ui/Typography';
-import {withStyles} from 'material-ui/styles';
-import { MuiThemeProvider} from 'material-ui/styles';
+import IconButton from "material-ui/IconButton";
+import ClearIcon from "material-ui-icons/Clear";
+import Typography from "material-ui/Typography";
+import { withStyles } from "material-ui/styles";
+import { MuiThemeProvider } from "material-ui/styles";
 
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
+import PrimaryButton from "../buttons/PrimaryButton.jsx";
 
-import * as helpers from '../jss/helpers.js';
-import muiTheme from '../jss/muitheme.jsx';
+import * as helpers from "../jss/helpers.js";
+import muiTheme from "../jss/muitheme.jsx";
 
-import Dialog , {
+import Dialog, {
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  withMobileDialog,
-} from 'material-ui/Dialog';
+  withMobileDialog
+} from "material-ui/Dialog";
 
 import {
   FormLabel,
   FormControl,
   FormGroup,
   FormControlLabel,
-  FormHelperText,
-} from 'material-ui/Form';
+  FormHelperText
+} from "material-ui/Form";
 
 const styles = {
   dialogPaper: {
@@ -37,26 +37,26 @@ const styles = {
     paddingBottom: `${helpers.rhythmDiv}px`
   },
   dialogTitleRoot: {
-    display: 'flex',
+    display: "flex",
     fontFamily: `${helpers.specialFont}`
   },
-  dialogContent :  {
-    display: 'flex',
+  dialogContent: {
+    display: "flex",
     padding: helpers.rhythmDiv * 2,
     paddingTop: 0
   },
   dialogAction: {
-    width: '100%',
+    width: "100%",
     margin: 0
   },
   iconButton: {
-    height: 'auto',
-    width: 'auto'
+    height: "auto",
+    width: "auto"
   },
   formControlRoot: {
     marginBottom: `${helpers.rhythmDiv * 2}px`
   }
-}
+};
 
 const DialogBoxHeaderText = styled.p`
   font-family: ${helpers.commonFont};
@@ -103,86 +103,81 @@ const MyForm = styled.form`
 `;
 
 class SchoolGetStartedDialogBox extends Component {
-    state = {
-      email: ''
+  state = {
+    email: ""
+  };
+
+  handleLetsJoinButtonClick = () => {
+    if (this.props.onLetsJoinButtonClick) {
+      this.props.onLetsJoinButtonClick();
     }
+  };
 
-    handleLetsJoinButtonClick = () => {
+  handleInputChange = e => {
+    this.setState({
+      email: e.target.value
+    });
+  };
 
-      if(this.props.onLetsJoinButtonClick) {
-        this.props.onLetsJoinButtonClick();
-      }
-    }
+  render() {
+    const { classes, open, fullScreen, onModalClose } = this.props;
 
-    handleInputChange = (e) => {
-      this.setState({
-        email: e.target.value
-      });
-    }
-
-    render() {
-        console.log("SchoolGetStartedDialogBox props--->>",this.props);
-        const {
-            classes,
-            open,
-            fullScreen,
-            onModalClose,
-        } = this.props;
-
-        return(
-            <Dialog
-              open={open}
-              onClose={onModalClose}
-              onRequestClose={onModalClose}
-              aria-labelledby="school-getstarted-dialog-box"
-              classes={{paper: classes.dialogPaper}}
+    return (
+      <Dialog
+        open={open}
+        onClose={onModalClose}
+        onRequestClose={onModalClose}
+        aria-labelledby="school-getstarted-dialog-box"
+        classes={{ paper: classes.dialogPaper }}
+      >
+        <MuiThemeProvider theme={muiTheme}>
+          <DialogTitleContainer>
+            <DialogTitleWrapper>Get Started</DialogTitleWrapper>
+            <IconButton
+              color="primary"
+              onClick={onModalClose}
+              classes={{ root: classes.iconButton }}
             >
-                <MuiThemeProvider theme={muiTheme}>
-                  <DialogTitleContainer>
-                    <DialogTitleWrapper>
-                      Get Started
-                    </DialogTitleWrapper>
-                    <IconButton color="primary" onClick={onModalClose} classes={{root: classes.iconButton}}>
-                        <ClearIcon/>
-                    </IconButton >
-                  </DialogTitleContainer>
+              <ClearIcon />
+            </IconButton>
+          </DialogTitleContainer>
 
-                  <DialogContent classes={{root : classes.dialogContent}}>
-                      <MyForm>
-                          <FormControl fullWidth >
-                            <InputLabel htmlFor="email">Email Id</InputLabel>
-                            <Input
-                              autoFocus
-                              id="email"
-                              type="email"
-                              value={this.state.email}
-                              onChange={this.handleInputChange}
-                              fullWidth
-                             />
+          <DialogContent classes={{ root: classes.dialogContent }}>
+            <MyForm>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="email">Email Id</InputLabel>
+                <Input
+                  autoFocus
+                  id="email"
+                  type="email"
+                  value={this.state.email}
+                  onChange={this.handleInputChange}
+                  fullWidth
+                />
+              </FormControl>
 
-                          </FormControl>
-
-                          <ButtonWrapper>
-                              <PrimaryButton
-                                  type="submit"
-                                  label="Lets join"
-                                  onClick={this.handleLetsJoinButtonClick}
-                                  noMarginBottom
-                              />
-                          </ButtonWrapper>
-                      </MyForm>
-                  </DialogContent>
-
-                </MuiThemeProvider>
-            </Dialog>
-        )
-    }
+              <ButtonWrapper>
+                <PrimaryButton
+                  type="submit"
+                  label="Lets join"
+                  onClick={this.handleLetsJoinButtonClick}
+                  noMarginBottom
+                />
+              </ButtonWrapper>
+            </MyForm>
+          </DialogContent>
+        </MuiThemeProvider>
+      </Dialog>
+    );
+  }
 }
 
 SchoolGetStartedDialogBox.propTypes = {
   onModalClose: PropTypes.func,
   classes: PropTypes.object.isRequired,
-  open: PropTypes.bool,
-}
+  open: PropTypes.bool
+};
 
-export default withMobileDialog()(withStyles(styles)(SchoolGetStartedDialogBox));
+export default withMobileDialog()(
+  withStyles(styles)(SchoolGetStartedDialogBox)
+);

@@ -34,7 +34,8 @@ class SchoolDetails extends React.Component {
       backGroundVideoUrl: backGroundVideoUrl || "",
       mainImage: schoolData.mainImage || "",
       isLoading:false, // Loading variable in state.
-      currency: currency || ""
+      currency: currency || "",
+      previousSelectedCurrency: currency || ""
     };
   }
 
@@ -48,7 +49,6 @@ class SchoolDetails extends React.Component {
     if(imageFile) {
       S3.upload({ files: { "0": imageFile}, path: "schools"}, (err, res) => {
         if(err) {
-          console.error("err ",err)
         }
         if(res) {
           this.editSchoolCall(res)
@@ -60,7 +60,6 @@ class SchoolDetails extends React.Component {
   }
 
   editSchoolCall = (nextTab, event) => {
-    console.log("nextTab, event=============>",nextTab, event,this);
     // Start loading on when user press button to update school details.
     this.setState({isLoading: true});
     const { schoolId,toastr } = this.props;

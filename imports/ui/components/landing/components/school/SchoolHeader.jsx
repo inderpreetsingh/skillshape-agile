@@ -1,46 +1,45 @@
-import React,{Component} from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import Events from '/imports/util/events';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import Events from "/imports/util/events";
 
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import {withStyles} from 'material-ui/styles';
-import TextField from 'material-ui/TextField';
+import PrimaryButton from "../buttons/PrimaryButton.jsx";
+import { withStyles } from "material-ui/styles";
+import TextField from "material-ui/TextField";
 
-import * as helpers from '../jss/helpers.js';
-import { schoolDoorImgSrc } from '../../site-settings.js';
+import * as helpers from "../jss/helpers.js";
+import { schoolDoorImgSrc } from "../../site-settings.js";
 
 const styles = {
-    root: {
-      ['@media screen and (max-width : '+helpers.tablet+'px)']: {
-        boxShadow: helpers.inputBoxShadow
-      },
-      ['@media screen and (max-width : '+helpers.mobile+'px)']: {
-        width: '100%'
-      }
+  root: {
+    ["@media screen and (max-width : " + helpers.tablet + "px)"]: {
+      boxShadow: helpers.inputBoxShadow
     },
-    formControl: {
-      width: 250,
-      height: helpers.rhythmDiv * 6,
-      ['@media screen and (max-width : '+helpers.mobile+'px)']: {
-        width: '100%'
-      }
-    },
-    userEmailInput : {
-        padding: `0 ${helpers.rhythmDiv}px`,
-        background: helpers.lightTextColor,
-        fontFamily: helpers.specialFont,
-        fontStyle: 'italic',
-        borderRadius: 3,
-        height: '100%'
-    },
-    userEmailInputInkBar: {
-        '&:after': {
-            backgroundColor: helpers.darkBgColor
-        }
+    ["@media screen and (max-width : " + helpers.mobile + "px)"]: {
+      width: "100%"
     }
-}
-
+  },
+  formControl: {
+    width: 250,
+    height: helpers.rhythmDiv * 6,
+    ["@media screen and (max-width : " + helpers.mobile + "px)"]: {
+      width: "100%"
+    }
+  },
+  userEmailInput: {
+    padding: `0 ${helpers.rhythmDiv}px`,
+    background: helpers.lightTextColor,
+    fontFamily: helpers.specialFont,
+    fontStyle: "italic",
+    borderRadius: 3,
+    height: "100%"
+  },
+  userEmailInputInkBar: {
+    "&:after": {
+      backgroundColor: helpers.darkBgColor
+    }
+  }
+};
 
 const OuterWrapper = styled.div`
   background-color: ${helpers.schoolPageColor};
@@ -54,7 +53,9 @@ const OuterWrapper = styled.div`
   //   position: absolute;
   //   width: 100%;
   //   background-color: inherit;
-  //   border-bottom: ${helpers.rhythmDiv * 8}px solid ${helpers.schoolPageColor};
+  //   border-bottom: ${helpers.rhythmDiv * 8}px solid ${
+  helpers.schoolPageColor
+};
   //   border-radius: 100%;
   //   bottom: -${helpers.rhythmDiv * 8}px;
   //   z-index: -1;
@@ -98,7 +99,7 @@ const HeaderOverlay = styled.div`
   background-color: ${helpers.overlayColor};
   z-index: -1;
 
-  @media screen and ( max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     display: block;
   }
 `;
@@ -134,13 +135,11 @@ const Content = styled.p`
 `;
 
 const HeaderContentWrapper = styled.div`
-  ${helpers.flexCenter}
-  justify-content: flex-start;
+  ${helpers.flexCenter} justify-content: flex-start;
   height: 100%;
   position: relative;
   z-index: 0;
 `;
-
 
 const InputWrapper = styled.div`
   display: flex;
@@ -172,83 +171,87 @@ const ButtonSmallWrapper = styled.div`
 `;
 
 class SchoolHeader extends Component {
-
   state = {
-    userEmail: ''
-  }
+    userEmail: ""
+  };
 
-  handleInputChange = (e) => {
-    console.info('e.target.value',e.target.value);
-    this.setState({ userEmail: e.target.value});
-  }
+  handleInputChange = e => {
+    this.setState({ userEmail: e.target.value });
+  };
 
   handleSignUpButtonClick = () => {
-    console.log('signup buton click..',this.state.myEmail);
-    Events.trigger("registerAsSchool",{userType : 'School', userEmail: this.state.userEmail});
-  }
+    Events.trigger("registerAsSchool", {
+      userType: "School",
+      userEmail: this.state.userEmail
+    });
+  };
 
   render() {
-      const {props} = this;
-      return(<OuterWrapper>
-          <Wrapper bgSrc={props.schoolHeaderImgSrc}>
-            <HeaderContentWrapper>
-              <HeaderContent>
-                <Title>{props.title}</Title>
-                <Content>{props.content}</Content>
-                <InputWrapper>
-                  <TextField
-                    id="user-email"
-                    placeholder="Enter Your Email Id"
-                    type="email"
-                    color={helpers.lightTextColor}
-                    className={props.classes.root}
-                    onChange={this.handleInputChange}
-                    InputProps={{
-                      disableUnderline: true,
-                      classes: {
-                          root: props.classes.formControl,
-                          input: props.classes.userEmailInput,
-                          inkbar: props.classes.userEmailInputInkBar
-                      }
-                    }}
-                    />
-                    <ButtonWrapper>
-                      <PrimaryButton
-                        label="Sign Up"
-                        increaseHeight
-                        noMarginBottom
-                        onClick={this.handleSignUpButtonClick} />
-                    </ButtonWrapper>
-                    <ButtonSmallWrapper>
-                      <PrimaryButton
-                        label="Sign Up"
-                        increaseHeight
-                        noMarginBottom
-                        boxShadow
-                        onClick={this.handleSignUpButtonClick} />
-                    </ButtonSmallWrapper>
-                  </InputWrapper>
-              </HeaderContent>
+    const { props } = this;
+    return (
+      <OuterWrapper>
+        <Wrapper bgSrc={props.schoolHeaderImgSrc}>
+          <HeaderContentWrapper>
+            <HeaderContent>
+              <Title>{props.title}</Title>
+              <Content>{props.content}</Content>
+              <InputWrapper>
+                <TextField
+                  id="user-email"
+                  placeholder="Enter Your Email Id"
+                  type="email"
+                  color={helpers.lightTextColor}
+                  className={props.classes.root}
+                  onChange={this.handleInputChange}
+                  InputProps={{
+                    disableUnderline: true,
+                    classes: {
+                      root: props.classes.formControl,
+                      input: props.classes.userEmailInput,
+                      inkbar: props.classes.userEmailInputInkBar
+                    }
+                  }}
+                />
+                <ButtonWrapper>
+                  <PrimaryButton
+                    label="Sign Up"
+                    increaseHeight
+                    noMarginBottom
+                    onClick={this.handleSignUpButtonClick}
+                  />
+                </ButtonWrapper>
+                <ButtonSmallWrapper>
+                  <PrimaryButton
+                    label="Sign Up"
+                    increaseHeight
+                    noMarginBottom
+                    boxShadow
+                    onClick={this.handleSignUpButtonClick}
+                  />
+                </ButtonSmallWrapper>
+              </InputWrapper>
+            </HeaderContent>
 
-              <HeaderOverlay>
-                {/* This div adds an overlay over the background in smaller sizes */}
-              </HeaderOverlay>
-            </HeaderContentWrapper>
-          </Wrapper>
-        </OuterWrapper>)
-    }
+            <HeaderOverlay>
+              {/* This div adds an overlay over the background in smaller sizes */}
+            </HeaderOverlay>
+          </HeaderContentWrapper>
+        </Wrapper>
+      </OuterWrapper>
+    );
+  }
 }
 
 SchoolHeader.propTypes = {
   title: PropTypes.string,
   content: PropTypes.string,
-  schoolHeaderImgSrc: PropTypes.string,
-}
+  schoolHeaderImgSrc: PropTypes.string
+};
 
 SchoolHeader.defaultProps = {
-  title: 'This is your school',
-  content: 'Amazing things happen when people enter these doors',
+  title: "This is your school",
+  content: "Amazing things happen when people enter these doors",
   schoolHeaderImgSrc: schoolDoorImgSrc
-}
+};
 
 export default withStyles(styles)(SchoolHeader);

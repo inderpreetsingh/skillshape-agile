@@ -45,14 +45,14 @@ const SliderLeftArrow = Arrow.extend`
   left: 0px;
 
   @media screen and (max-width: ${helpers.mobile - 100}px) {
-    left: -8px;
+    left: -25px;
   }
 `;
 
 const SliderRightArrow = Arrow.extend`
   right: 0px;
   @media screen and (max-width: ${helpers.mobile - 100}px) {
-    right: -8px;
+    right: -25px;
   }
 `;
 
@@ -64,8 +64,6 @@ const defaultPaging = (i) => <button>{i + 1}</button>
 
 const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) => {
   // debugger;
-  console.log(sliderBreakPoints,"slider breakPoints");
-  console.log(sliderConfig,props,"slider config");
   const breakPoints = {
     mobile: (sliderBreakPoints && sliderBreakPoints.mobile) || helpers.mobile,
     tablet: (sliderBreakPoints && sliderBreakPoints.tablet) || helpers.tablet
@@ -96,7 +94,6 @@ const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) 
         sliderProps.onBeforeSlideChange(next);
     },
     afterChange: (index) => {
-      // console.log(index);
       const {sliderProps} = props;
       if(sliderProps && sliderProps.onAfterSlideChange)
         sliderProps.onAfterSlideChange(index);
@@ -105,7 +102,6 @@ const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) 
     responsive: [{ breakpoint: breakPoints.mobile, settings: { slidesToShow: sliderConfig.mobile } }, { breakpoint: breakPoints.tablet, settings: { slidesToShow: sliderConfig.tablet }}]
   };
 
-  // console.log('Props...',props,WrappedComponent);
   const { componentProps } = props;
   return (
     <Container>

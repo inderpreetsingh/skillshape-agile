@@ -154,7 +154,6 @@ class SchoolMemberInfo extends Component {
   };
 
   saveMyNotesInMembers = event => {
-    console.log("saveMyNotesInMembers memberInfo -->>", memberInfo);
     const { memberInfo, view } = this.props;
     let payload = {};
 
@@ -167,16 +166,13 @@ class SchoolMemberInfo extends Component {
         }
       };
     }
-    console.log("Final payload -->>", payload);
     Meteor.call(
       "schoolMemberDetails.editSchoolMemberDetails",
       { doc_id: memberInfo._id, doc: payload },
       (err, res) => {
         if (res) {
-          console.log("Upadted School Notes", res);
         }
         if (err) {
-          console.error("err", err);
         }
       }
     );
@@ -184,7 +180,6 @@ class SchoolMemberInfo extends Component {
 
   // Handle call button for member's view.
   handleCall = memberInfo => {
-    console.log("memberInfo=>", memberInfo);
     // Detect mobile and dial number on phone else show popup that shows phone information.
     let md = new MobileDetect(window.navigator.userAgent);
     if (md.mobile()) {
@@ -220,8 +215,7 @@ class SchoolMemberInfo extends Component {
 
   render() {
     const { memberInfo, view, classes } = this.props;
-    console.log("SchoolMemberInfo state -->>", this.state);
-    console.log("SchoolMemberInfo props -->>", this.props);
+    
     const {
       showUploadAvatarModal,
       mediaFormData,
