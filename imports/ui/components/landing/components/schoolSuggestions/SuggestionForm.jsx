@@ -163,7 +163,8 @@ class SuggestionForm extends Component {
           popUp.appear("alert", { content: err.reason });
         } else {
           popUp.appear("success", {
-            content: "Thank you for your suggestion, we will try our best to get this school.",
+            content:
+              "Thank you for your suggestion, we will try our best to get this school.",
             onAffirmationButtonClick: this.props.removeAllFilters
           });
         }
