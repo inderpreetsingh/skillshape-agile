@@ -87,7 +87,7 @@ class MonthlyPriceForm extends React.Component {
             }
             if(tabValue === 0) {
                 // No option is selected for making payment then need to show this `Please select any payment type`.
-                if(pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo) {
+                if(pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo || !pymtType) {
                     toastr.error("Please select any payment type.","Error");
                     return
                 }

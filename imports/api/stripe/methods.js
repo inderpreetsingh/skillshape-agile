@@ -30,7 +30,6 @@ Meteor.methods({
       let classData = ClassPricing.findOne({ _id: packageId })
       currency = classData.currency;
       amount = classData.cost;
-      console.log("amount and currency",amount,currency,classData,packageId)
     }
     //Get currency name and correct amount using multipleFactor from config
     config.currency.map((data, index) => {
@@ -240,7 +239,6 @@ Meteor.methods({
     planId,
     schoolId,
     packageName,
-    amount,
     packageId,
     monthlyPymtDetails
   ) {
@@ -250,14 +248,14 @@ Meteor.methods({
       subscriptionRequest,
       subscriptionDbId,
       payload,
-      subscriptionResponse;
+      subscriptionResponse,
+      stripeCusId;
     try {
       let userId = this.userId;
       let currentUserProfile = Meteor.users.findOne({
         _id: userId,
         stripeCusId: { $exists: true }
       });
-      let stripeCusId;
       if (currentUserProfile) {
         stripeCusId = currentUserProfile.stripeCusId;
       } else {
@@ -301,14 +299,14 @@ Meteor.methods({
         status: "successful"
       };
       ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
-      return stripeCusId;
+      return true;
     } catch (error) {
       payload = { subscriptionResponse, status: "error" };
       let resultOfErrorUpdate = ClassSubscription.update(
         { _id: subscriptionDbId },
         { $set: payload }
       );
-      throw new Meteor.error(
+      throw new Meteor.Error(
         (error && error.message) || "Something went wrong"
       );
     }

@@ -601,10 +601,8 @@ export default class SchoolViewBase extends React.Component {
                   planId,
                   schoolId,
                   packageName,
-                  amount,
                   packageId,
                   monthlyPymtDetails,
-                  currency,
                   (err, res) => {
                     if (res) {
                       popUp.appear("warning", { title: "Success", content: `Subscription successfully subscribed` });

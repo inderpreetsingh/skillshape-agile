@@ -20,8 +20,7 @@ function updateHookForClassType({ classTypeId, doc }) {
 
 Meteor.methods({
   "monthlyPricing.addMonthlyPricing": function({ doc }) {
-    try {
-    } catch (error) {}
+    let amount,currency;
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({
@@ -37,12 +36,18 @@ Meteor.methods({
         (doc.pymtType.autoWithDraw == true && !doc.pymtType.payAsYouGo)
       ) {
         doc.pymtDetails.map((elem, index) => {
-          try {
+                  try {
+            config.currency.map((data, index) => {
+              if (data.value == elem.currency) {
+                currency = data.label;
+                amount = elem.cost * data.multiplyFactor;
+              }
+            })
             let result = Meteor.call(
               "stripe.createStripePlan",
-              "usd",
+              currency,
               "month",
-              elem.cost
+              amount
             );
             return (doc.pymtDetails[index].planId = result);
           } catch (error) {
@@ -58,6 +63,7 @@ Meteor.methods({
     }
   },
   "monthlyPricing.editMonthlyPricing": function({ doc_id, doc }) {
+    let amount,currency;
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({
@@ -80,11 +86,17 @@ Meteor.methods({
         doc.pymtDetails.map((elem, index) => {
 
           try {
+            config.currency.map((data, index) => {
+              if (data.value == elem.currency) {
+                currency = data.label;
+                amount = elem.cost * data.multiplyFactor;
+              }
+            })
             let result = Meteor.call(
               "stripe.createStripePlan",
-              "usd",
+              currency,
               "month",
-              elem.cost
+              amount
             );
             return (doc.pymtDetails[index].planId = result);
           } catch (error) {
