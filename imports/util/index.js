@@ -16,7 +16,6 @@ export { cutString } from '/imports/util/cutString';
 export { formatTime, formatAmPm, formatDate, formatDateNoYear, formatDataBasedOnScheduleType, formatClassTimesData} from '/imports/util/formatSchedule.js';
 export { getAverageNoOfRatings } from '/imports/util/averageRatings';
 export { capitalizeString, addDelimiter } from '/imports/util/stringOperations';
-export { withSubscriptionAndPagination } from '/imports/util/subscriptionAndPagination';
 export { formStyles } from '/imports/util/formStyle';
 export { createTable } from '/imports/util/createTable';
 export { downloadingFunction } from '/imports/util/csvFileDownload';
@@ -26,6 +25,8 @@ export { getContainerMaxWidth } from '/imports/util/cards.js';
 export { handleOutBoundLink } from '/imports/util/handleAnalytics.js';
 export { toastrModal } from "/imports/util/toastrModal.js";
 export { withPopUp } from "/imports/util/withPopUp.js";
+export { default as withMovingMarker } from "/imports/util/withMovingMarker.js";
+export { withSubscriptionAndPagination } from '/imports/util/subscriptionAndPagination';
 
 export { withStyles } from "./withStyle";
 export { material_ui_next_theme } from "./theme";

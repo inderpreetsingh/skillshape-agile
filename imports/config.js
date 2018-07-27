@@ -15,6 +15,10 @@ export default (config = Object.freeze({
     white: "#ffffff"
   },
   defaultLocation: [52.3702157, 4.8951],
+  defaultLocationObject: {
+    lat: 52.3702157,
+    lng: 4.8951
+  },
   // All collections needs to put here.
   collections: {
     modules: "Modules",
