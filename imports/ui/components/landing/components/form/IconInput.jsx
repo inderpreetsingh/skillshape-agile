@@ -10,6 +10,7 @@ import TextField from 'material-ui/TextField';
 import * as helpers from '../jss/helpers.js';
 import { findDOMNode } from 'react-dom'
 
+let inputRef;
 const InputIcon = (props) => (<Icon color="disabled">{props.iconName}</Icon>);
 
 const styles = {
@@ -33,19 +34,18 @@ class IconInput extends React.Component {
   }
 
   render() {
-    let inputRef;
     const props = this.props;
     const { classes } = props;
     const setInputRef = (ref) => inputRef = ref;
 
-    if(props.googlelocation) {
+    if(props.googlelocation  && !this.autocomplete) {
       setTimeout(()=> {
         let options ={strictBounds:true}
         // Google's API
-        let autocomplete = new google.maps.places.Autocomplete(inputRef,options);
+         this.autocomplete = new google.maps.places.Autocomplete(inputRef,options);
         // This runs when user changes location.
-        autocomplete.addListener('place_changed', () => {
-          let place = autocomplete.getPlace();
+        this.autocomplete.addListener('place_changed', () => {
+          let place = this.autocomplete.getPlace();
           // console.log("place -->>",place)
           let coords = [];
           coords[0] = place.geometry['location'].lat();
@@ -128,11 +128,11 @@ IconInput.propTypes = {
   placeHolder: PropTypes.string,
   labelText: PropTypes.string,
   onChange: PropTypes.func,
-  googlelocation: PropTypes.boolean,
+  googlelocation: PropTypes.bool,
   error: PropTypes.boolean,
   errorText: PropTypes.string,
-  disabled: PropTypes.boolean,
-  multiline: PropTypes.boolean,
+  disabled: PropTypes.bool,
+  multiline: PropTypes.bool,
   classes: PropTypes.object,
   min: PropTypes.number,
   max: PropTypes.number,

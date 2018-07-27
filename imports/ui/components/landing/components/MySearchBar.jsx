@@ -13,6 +13,7 @@ import { grey } from "material-ui/colors";
 
 import * as helpers from "./jss/helpers.js";
 
+let inputRef;
 const styles = {
   root: {
     height: "100%",
@@ -59,12 +60,12 @@ const iconTransitions = {
 };
 
 const LeftSideInput = styled.div`
-  display: ${props => (props.inputOnSide === "left" ? "block" : "none")};
-  width: 100%;
+display: ${props => (props.inputOnSide === "left" ? "block" : "none")};
+width: 100%;
 `;
 
 const RightSideInput = styled.div`
-  display: ${props => (props.inputOnSide === "right" ? "block" : "none")};
+display: ${props => (props.inputOnSide === "right" ? "block" : "none")};
 `;
 
 class MySearchBar extends Component {
@@ -135,15 +136,13 @@ class MySearchBar extends Component {
   render() {
     const { value } = this.state;
     let self = this;
-    // console.log('value in MySearchBar===>',value);
-    // console.log('state in MySearchBar===>',this.state);
-    // console.log('props in MySearchBar===>',this.props);
     const {
       closeIcon,
       disabled,
       onRequestSearch, // eslint-disable-line
       searchIcon,
       classes,
+      onSearchIconClick,
       ...inputProps
     } = this.props;
 
@@ -167,18 +166,17 @@ class MySearchBar extends Component {
     }
 
     const props = this.props;
-    let inputRef;
-    if (props.googlelocation) {
+    if (props.googlelocation && !this.autocomplete) {
       setTimeout(() => {
         let options = { strictBounds: true };
         // Google's API
-        let autocomplete = new google.maps.places.Autocomplete(
+        this.autocomplete = new google.maps.places.Autocomplete(
           inputRef,
           options
         );
         // This runs when user changes location.
-        autocomplete.addListener("place_changed", () => {
-          let place = autocomplete.getPlace();
+        this.autocomplete.addListener("place_changed", () => {
+          let place = this.autocomplete.getPlace();
           let coords = [];
           coords[0] = place.geometry["location"].lat();
           coords[1] = place.geometry["location"].lng();
@@ -192,7 +190,6 @@ class MySearchBar extends Component {
       }, 2000);
     }
 
-    console.log('clostIconClass',closeIconClass,showIconClass);
     return (
       <Paper className={rootClass}>
         <LeftSideInput inputOnSide={this.props.inputOnSide}>
@@ -216,7 +213,7 @@ class MySearchBar extends Component {
               style={styles.iconTransitions}
               className={showIconClass}
               disabled={disabled}
-              onClick={props.onSearchIconClick}
+              onClick={onSearchIconClick}
             >
               {React.cloneElement(searchIcon)}
             </IconButton>

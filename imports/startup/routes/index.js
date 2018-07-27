@@ -12,10 +12,11 @@ import MainLayout from "/imports/ui/layout/mainLayout";
 import AdminLayout from "/imports/ui/layout/adminLayout";
 import PublicLayout from "/imports/ui/layout/publicLayout";
 import EmbedLayout from "/imports/ui/layout/embedLayout";
-
+import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 //components
 import Home from "/imports/ui/components/home";
 import Landing from "/imports/ui/components/landing/index.jsx";
+
 
 class DynamicImport extends React.Component {
   state = {
@@ -134,6 +135,7 @@ const InitialRoutes = componentLoader(props => (
           }}
         />
       </Route>
+      <Route path="*" name="Please Wait" component={Preloader} />
     </Route>
   </Router>
 ));

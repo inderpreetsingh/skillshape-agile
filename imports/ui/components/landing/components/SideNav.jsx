@@ -165,7 +165,7 @@ class SideNav extends Component {
         });
     }
     render() {
-        const { currentUser } = this.props;
+        const { currentUser, classes, ...otherProps } = this.props;
         // console.log("SideNav state -->>>",this.state);
         return (
             <Fragment>
@@ -216,7 +216,9 @@ class SideNav extends Component {
                     handleDrawer={() => this.handleDrawerState(false)}
                     handleSignUpDialogBox={this.handleSignUpDialogBoxState}
                     showChangePassword={() => this.handleChangePasswordDialogBoxState(true)}
-                    {...this.props}
+                    currentUser={currentUser}
+                    {...otherProps}
+                    
                     />
             </Fragment>
         )
