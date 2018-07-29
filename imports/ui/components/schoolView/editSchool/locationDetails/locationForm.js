@@ -24,9 +24,26 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 
 const formId = "LocationForm";
 
+const MyForm = styled.div`
+  max-width: 50%;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    max-width: 100%;
+    width: 100%;
+  }
+`;
+
+const Title = styled.div`
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize * 1.5}px;
+  line-height: 1;
+  font-weight: 500;
+`;
+
 const Tagline = styled.div`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
+  font-weight: 400;
   line-height: 1;
 `;
 
@@ -36,8 +53,19 @@ const styles = theme => {
       margin: 5,
       width: 150
     },
+    dialogRootPaper: {
+      maxWidth: 700,
+      width: "100%",
+    },
     dialogContent: {
-      display: "flex"
+      display: "flex",
+      [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+        flexDirection: "column"
+      }
+    },
+    dialogActions: {
+      padding: `${helpers.rhythmDiv}px`,
+      paddingTop: 0
     }
   };
 };
@@ -162,6 +190,9 @@ class LocationForm extends React.Component {
   };
 
   handleBlur = event => {
+    if (!event.target.value) {
+      return false;
+    }
     this.onSubmit(event, true);
   };
   handleAddressChange = name => event => {
@@ -192,7 +223,6 @@ class LocationForm extends React.Component {
       zip: this.zipCode.value,
       country: this.country.value
     };
-    this.setState({ isBusy: true });
     const sLocationDetail =
       payload.address +
       "," +
@@ -201,7 +231,12 @@ class LocationForm extends React.Component {
       payload.zip +
       "," +
       payload.country;
+    debugger;
+    if (!sLocationDetail) {
+      return false;
+    }
 
+    this.setState({ isBusy: true });
     getLatLong(sLocationDetail, data => {
       if (data) {
         payload.geoLat = data.lat;
@@ -328,13 +363,17 @@ class LocationForm extends React.Component {
           open={this.props.open}
           onClose={this.props.onClose}
           aria-labelledby="form-dialog-title"
-          fullScreen={fullScreen}
+          fullScreen={false}
+          classes={{ paper: classes.dialogRootPaper }}
         >
-          <DialogTitle id="form-dialog-title">Add Location</DialogTitle>
-          <Tagline>
-            You can drag the marker to point your location on the map, or just
-            type the details in the form.
-          </Tagline>
+          <DialogTitle id="form-dialog-title">
+            <Title>Add Location</Title>
+            <Tagline>
+              You can drag the marker to point your location on the map, or just
+              type the details in the form.
+            </Tagline>
+          </DialogTitle>
+
           {this.state.isBusy && <ContainerLoader />}
           {this.state.showConfirmationModal && (
             <ConfirmationModal
@@ -349,14 +388,16 @@ class LocationForm extends React.Component {
           {this.state.error ? (
             <div style={{ color: "red" }}>{this.state.error}</div>
           ) : (
-            <DialogContent>
+            <DialogContent classes={{ root: classes.dialogContent }}>
               <SchoolLocationMap
                 locationData={this.state.myLocation}
-                myCurrentPosition={JSON.parse(localStorage.getItem('myLocation'))}
+                myCurrentPosition={JSON.parse(
+                  localStorage.getItem("myLocation")
+                )}
                 onDragEnd={this.getAddressFromLocation}
               />
 
-              <form id={formId} onSubmit={this.onSubmit}>
+              <MyForm id={formId} onSubmit={this.onSubmit}>
                 <TextField
                   required={true}
                   defaultValue={data && data.title}
@@ -420,10 +461,10 @@ class LocationForm extends React.Component {
                   onBlur={this.handleBlur}
                   fullWidth
                 />
-              </form>
+              </MyForm>
             </DialogContent>
           )}
-          <DialogActions>
+          <DialogActions classes={{ root: classes.dialogActions }}>
             {data && (
               <Button
                 onClick={() => this.setState({ showConfirmationModal: true })}

@@ -13,6 +13,8 @@ import {
 import config from "/imports/util";
 import { withMovingMarker } from "/imports/util";
 
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+
 const mapOptions = {
   zoom: 8,
   scrollwheel: true,
@@ -23,6 +25,14 @@ const mapOptions = {
 
 const MapContainer = styled.div`
   max-height: 400px;
+  width: 100%;
+  margin-right: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    margin-right: 0;
+    height: 300px;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+  }
 `;
 
 const SchoolLocationMap = withMovingMarker(
@@ -58,10 +68,11 @@ SchoolLocationMap.defaultProps = {
   isMarkerShown: true,
   dragMarker: true,
   myLocation: config.defaultLocation,
-  googleMapURL:
-    "https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAUzsZloT4lEquePIL_uReXGwMYGqyL0NE&libraries=places",
+  googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&key=${
+    config.MAP_KEY
+  }&libraries=places`,
   loadingElement: <div style={{ height: `100%` }} />,
-  containerElement: <div style={{ height: `400px` }} />,
+  containerElement: <MapContainer />,
   mapElement: <div style={{ height: `100%` }} />
 };
 

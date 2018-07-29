@@ -20,11 +20,11 @@ export default (withMovingMarker = WrappedComponent => {
       return {
         lat:
           locationData.lat ||
-          (myCurrentPosition[0]) ||
+          myCurrentPosition[0] ||
           config.defaultLocationObject.lat,
         lng:
           locationData.lng ||
-          (myCurrentPosition[1]) ||
+          myCurrentPosition[1] ||
           config.defaultLocationObject.lng
       };
     };
