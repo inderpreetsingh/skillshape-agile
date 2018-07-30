@@ -256,6 +256,7 @@ Meteor.methods({
         _id: userId,
         stripeCusId: { $exists: true }
       });
+      //find stripeCusId from users or create a new one and store in the users collection
       if (currentUserProfile) {
         stripeCusId = currentUserProfile.stripeCusId;
       } else {
@@ -289,15 +290,18 @@ Meteor.methods({
         schoolId,
         subscriptionRequest
       };
+      // insert subscription  progress in classSubscription
       subscriptionDbId = ClassSubscription.insert(payload);
       subscriptionResponse = await stripe.subscriptions.create(
         subscriptionRequest
       );
+      // get subscription id
       payload = {
         subscriptionId: subscriptionResponse.id,
         subscriptionResponse,
         status: "successful"
       };
+      // update subscription id in collection
       ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
       return true;
     } catch (error) {
