@@ -4,6 +4,13 @@ import List, { ListItem, ListItemText } from "material-ui/List";
 import Typography from "material-ui/Typography";
 import Grid from "material-ui/Grid";
 
+{
+  /*
+1.Set profile pic for student.
+2.Find letter in code.
+3.Change letter with the pic.
+*/
+}
 export default function(props) {
   const { src, collectionData } = props;
   const membersByName = _.groupBy(collectionData && collectionData, function(
@@ -40,6 +47,8 @@ export default function(props) {
                         </ListItem>,
                         membersByName[key] &&
                           membersByName[key].map(data => {
+                            const avtar = data && data.profile && data.profile.profile && data.profile.profile.pic
+                            
                             return (
                               <ListItem
                                 key={data._id}
@@ -51,8 +60,8 @@ export default function(props) {
                                   )
                                 }
                               >
-                                <Avatar alt="Remy Sharp" src={src ? src : ""}>
-                                  {key}
+                                <Avatar alt="Remy Sharp" src={ avtar}>
+                                   { !avtar && key } 
                                 </Avatar>
                                 <ListItemText primary={data.firstName} />
                               </ListItem>
