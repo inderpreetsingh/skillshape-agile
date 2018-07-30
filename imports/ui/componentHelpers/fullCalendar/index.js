@@ -14,10 +14,10 @@ class FullCalendar extends React.Component {
       header: {
         left: "prev,next today",
         center: "title",
-        right: "basicWeek,listWeek"
+        right: "week,listWeek"
         // right: "month,agendaWeek,agendaDay,listWeek"
       },
-      defaultView:$(window).width() < 765 ? 'listWeek' : 'basicWeek',
+      defaultView:$(window).width() < 765 ? 'listWeek' : 'week',
       views:{
         week:{
               type:'basic',
@@ -41,7 +41,7 @@ class FullCalendar extends React.Component {
         }
         else
         {
-          $('#fullcalendar-container').fullCalendar('changeView', 'basicWeek');
+          $('#fullcalendar-container').fullCalendar('changeView', 'week');
           
         } 
       },
