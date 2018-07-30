@@ -7,7 +7,6 @@ import moment from "moment";
 import ClassType from "/imports/api/classType/fields";
 import { uniq } from "lodash";
 import fullCalendarRender from "./fullCalendarRender";
-
 class FullCalendar extends React.Component {
   constructor(props) {
     super(props);
@@ -15,10 +14,10 @@ class FullCalendar extends React.Component {
       header: {
         left: "prev,next today",
         center: "title",
-        right: "month,listWeek"
+        right: "basicWeek,listWeek"
         // right: "month,agendaWeek,agendaDay,listWeek"
       },
-      defaultView:'week',
+      defaultView:$(window).width() < 765 ? 'listWeek' : 'basicWeek',
       views:{
         week:{
               type:'basic',
@@ -35,7 +34,18 @@ class FullCalendar extends React.Component {
       selectHelper: true,
       navLinks: false, // can click day/week names to navigate views
       editable: false,
-      eventLimit: true, // allow "more" link when too many events
+      eventLimit: false,
+      windowResize: (view)=> {
+        if($(window).width() < 765) {
+          $('#fullcalendar-container').fullCalendar('changeView', 'listWeek');
+        }
+        else
+        {
+          $('#fullcalendar-container').fullCalendar('changeView', 'basicWeek');
+          
+        } 
+      },
+       // allow "more" link when too many events
       /*eventSources :[sevents],*/
       eventSources: (start, end, timezone, callback) => {
         let startDate = new Date(start);

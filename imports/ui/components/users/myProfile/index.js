@@ -171,7 +171,7 @@ class MyProfile extends React.Component {
           toastr.error(state.errorText, "Error");
         }
         if (result) {
-          toastr.success("Successfully edit your profile.", "Success");
+          toastr.success("You have successfully edited your profile!", "Success");
         }
         this.setState(state);
       }
