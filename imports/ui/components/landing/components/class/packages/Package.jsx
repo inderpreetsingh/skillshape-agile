@@ -16,13 +16,14 @@ const Wrapper = styled.div`
 `;
 
 const OuterWrapper = styled.div`
-  background-color: ${props => (props.forIframes ? "transparent" : "white")};
   ${props => (props.forIframes ? `box-shadow: ${helpers.inputBoxShadow}` : "")};
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
   padding-right: ${helpers.rhythmDiv * 2}px;
   border-radius: ${helpers.rhythmDiv * 6}px;
   width: 100%;
   color: ${helpers.textColor};
+  z-index: 1;
+  position: relative;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     border-radius: ${helpers.rhythmDiv}px;
@@ -30,6 +31,19 @@ const OuterWrapper = styled.div`
     max-width: 320px;
     width: 100%;
     margin: 0 auto;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: ${props => (props.forIframes ? props.bgColor : "white")};
+    opacity: ${props => (props.forIframes ? 0.1 : 1)};
+    border-radius: ${helpers.rhythmDiv * 6}px;
   }
 `;
 
@@ -41,7 +55,7 @@ const Title = styled.h2`
   text-transform: uppercase;
   margin: 0;
   color: rgba(0, 0, 0, 1);
-  line-height: 1;
+  line-height: 1.2;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     text-align: center;
@@ -134,7 +148,7 @@ function getPaymentType(payment) {
 }
 
 const Package = props => (
-  <OuterWrapper forIframes={props.forIframes}>
+  <OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
     <Wrapper>
       <ClassDetailsSection>
         <Title>{props.packageName || props.name}</Title>
@@ -248,13 +262,11 @@ Package.propTypes = {
   price: PropTypes.string,
   noOfClasses: PropTypes.number,
   classesCovered: PropTypes.string,
-  onAddToCartIconButtonClick: PropTypes.func,
-  forIframes: PropTypes.bool
+  onAddToCartIconButtonClick: PropTypes.func
 };
 
 Package.defaultProps = {
   packagePerClass: false,
-  forIframes: false,
   onAddToCartIconButtonClick: () => {}
 };
 

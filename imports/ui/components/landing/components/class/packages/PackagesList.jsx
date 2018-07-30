@@ -36,6 +36,7 @@ const PackagesListWrapper = styled.section`
     z-index: 0;
     background-color: ${props =>
       props.classPackages ? helpers.primaryColor : helpers.panelColor};
+    ${props => (props.forIframes ? "background-color: transparent" : "")};
     opacity: ${props => (props.classPackages ? 0.1 : 1)};
   }
 
@@ -51,6 +52,7 @@ const EnrollMentListWrapper = PackagesListWrapper.extend`
 
   &:after {
     background-color: #dddd;
+    ${props => (props.forIframes ? "background-color: transparent" : "")};
     opacity: 1;
   }
 `;
@@ -112,6 +114,7 @@ const FallBackMsg = styled.h3`
 
 const PackageList = props => (
   <PackagesListWrapper
+    forIframes={props.forIframes}
     fullScreen={props.fullScreen}
     classPackages={props.classPackages}
   >
@@ -132,7 +135,7 @@ const PackageList = props => (
 );
 
 const EnrollmentPackagesList = props => (
-  <EnrollMentListWrapper>
+  <EnrollMentListWrapper forIframes={props.forIframes}>
     <PackagesWrapper>
       <Title>{props.packageListName}</Title>
       {props.packagesData.map(packageData => (
@@ -163,6 +166,7 @@ const PackagesList = props => {
             <EnrollmentPackagesList
               forIframes={props.forIframes}
               packageProps={{
+                bgColor: "#dddd",
                 forIframes: props.forIframes,
                 packageType: "EP",
                 onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
@@ -179,6 +183,7 @@ const PackagesList = props => {
           <PackageList
             forIframes={props.forIframes}
             packageProps={{
+              bgColor: helpers.primaryColor,
               forIframes: props.forIframes,
               packageType: "CP",
               onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
@@ -197,6 +202,7 @@ const PackagesList = props => {
           <PackageList
             forIframes={props.forIframes}
             packageProps={{
+              bgColor: helpers.primaryColor,
               forIframes: props.forIframes,
               packageType: "MP",
               onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
@@ -217,11 +223,13 @@ PackagesList.propTypes = {
   perClassPackagesData: PropTypes.arrayOf(PackageStructure),
   monthlyPackagesData: PropTypes.arrayOf(PackageStructure),
   enrollMentPackages: PropTypes.bool,
+  forIframes: PropTypes.bool,
   schoolId: PropTypes.string
 };
 
 PackagesList.defaultProps = {
-  enrollMentPackages: false
+  enrollMentPackages: false,
+  forIframes: false
 };
 
 export default PackagesList;
