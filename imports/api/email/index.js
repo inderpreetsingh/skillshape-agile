@@ -335,6 +335,7 @@ export const sendEmailToStudentForPriceInfoUpdate = function(
     });
   }
 };
+// Click <b>${newlyCreatedUser ? "Claim your account" : "To accept the invitation"}</b> to accept the invitation :<br/>
 
 export const sendEmailToStudentForClaimAsMember = function(
   currentUserData,
@@ -344,7 +345,8 @@ export const sendEmailToStudentForClaimAsMember = function(
   fromEmail,
   toEmail,
   ROOT_URL,
-  rejectionUrl
+  rejectionUrl,
+  newlyCreatedUser
 ) {
   if (Meteor.isServer) {
     const adminName = getUserFullName(currentUserData);
@@ -353,21 +355,25 @@ export const sendEmailToStudentForClaimAsMember = function(
       to: toEmail,
       from: fromEmail,
       subject: "School member invitation received",
-      html: `Hi ${userName},<br/>
-            ${adminName} from ${
-        schoolData.name
-      }  has invited you to claim your account on SkillShape.com
+      html: `
+        Hi ${userName},<br/>
+        ${adminName} from ${schoolData.name}  has invited you to claim your account on <a href="https://www.skillshape.com/">skillshape.com</a>.
+            <br/>
             <div>
-               Click <b>Claim your account</b> to accept the invitation :<br/>
-               <a href=${ROOT_URL} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Claim your account</a><br/>
-               ${
-                 rejectionUrl
-                   ? `If this is a mistake, click here to reject the invitation :<a href=${rejectionUrl} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Reject the invitation</a><br/>`
+              <center><a href=${ROOT_URL} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">
+                ${newlyCreatedUser ? "Click here to claim and accept the invitation" : "Click here to join "+ schoolData.name}
+              </a></center>
+              <br/>
+               ${ rejectionUrl
+                   ? `<center> 
+                        <a href=${rejectionUrl} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">
+                          If this is a mistake, click here to reject the invitation
+                        </a>
+                      </center><br/>`
                    : ""
                }
             </div>
-            ${
-              passwd
+            ${ passwd
                 ? `Your temporary password is  : ${passwd} You will be asked to make your own when you click the link above.`
                 : ""
             }
