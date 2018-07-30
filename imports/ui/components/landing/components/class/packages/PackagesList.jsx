@@ -115,15 +115,14 @@ const PackageList = props => (
     fullScreen={props.fullScreen}
     classPackages={props.classPackages}
   >
- 
     <PackagesWrapper classPackages={props.classPackages}>
       <Title>{props.packageListName}</Title>
       {props.packagesData.map(packageData => (
         <PackageWrapper key={packageData._id}>
           <Package
-            classPackages={props.classPackages}
             {...packageData}
             {...props.packageProps}
+            classPackages={props.classPackages}
             schoolCurrency={props.schoolCurrency}
           />
         </PackageWrapper>
@@ -139,9 +138,9 @@ const EnrollmentPackagesList = props => (
       {props.packagesData.map(packageData => (
         <PackageWrapper key={packageData._id}>
           <Package
-            classPackages={props.classPackages}
             {...packageData}
             {...props.packageProps}
+            classPackages={props.classPackages}
             schoolCurrency={props.schoolCurrency}
           />
         </PackageWrapper>
@@ -154,15 +153,17 @@ const PackagesList = props => {
   const classPackagesEmpty = isEmpty(props.perClassPackagesData);
   const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
   const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
-  const schoolCurrency=props.currency;
-  
+  const schoolCurrency = props.currency;
+
   return (
     <Fragment>
       {props.enrollMentPackages &&
         !enrollMentPackagesEmpty && (
           <Wrapper>
             <EnrollmentPackagesList
+              forIframes={props.forIframes}
               packageProps={{
+                forIframes: props.forIframes,
                 packageType: "EP",
                 onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
                 schoolId: props.schoolId
@@ -176,7 +177,9 @@ const PackagesList = props => {
       <Wrapper>
         {!classPackagesEmpty && (
           <PackageList
+            forIframes={props.forIframes}
             packageProps={{
+              forIframes: props.forIframes,
               packageType: "CP",
               onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
               schoolId: props.schoolId
@@ -192,7 +195,9 @@ const PackagesList = props => {
 
         {!monthlyPackagesEmpty && (
           <PackageList
+            forIframes={props.forIframes}
             packageProps={{
+              forIframes: props.forIframes,
               packageType: "MP",
               onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
               schoolId: props.schoolId
@@ -212,8 +217,7 @@ PackagesList.propTypes = {
   perClassPackagesData: PropTypes.arrayOf(PackageStructure),
   monthlyPackagesData: PropTypes.arrayOf(PackageStructure),
   enrollMentPackages: PropTypes.bool,
-  schoolId: PropTypes.string,
-  
+  schoolId: PropTypes.string
 };
 
 PackagesList.defaultProps = {

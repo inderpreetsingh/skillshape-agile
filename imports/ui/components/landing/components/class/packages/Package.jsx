@@ -2,12 +2,12 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
-import Cart from "../../icons/Cart.jsx";
 
-import PrimaryButton from "../../buttons/PrimaryButton";
+import Cart from "/imports/ui/components/landing/components/icons/Cart.jsx";
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 
 //TODO: Automatic imports depending upon variables used - intellij
-import * as helpers from "../../jss/helpers.js";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const Wrapper = styled.div`
   ${helpers.flexCenter} justify-content: space-between;
@@ -18,7 +18,8 @@ const Wrapper = styled.div`
 `;
 
 const OuterWrapper = styled.div`
-  background-color: white;
+  background-color: ${props => (props.forIframes ? "transparent" : "white")};
+  ${props => props.forIframes ? `box-shadow: ${helpers.inputBoxShadow}` : ''};
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
   padding-right: ${helpers.rhythmDiv * 2}px;
   border-radius: ${helpers.rhythmDiv * 6}px;
@@ -135,7 +136,7 @@ function getPaymentType(payment) {
 }
 
 const Package = props => (
-  <OuterWrapper>
+  <OuterWrapper forIframes={props.forIframes}>
     <Wrapper>
       <ClassDetailsSection>
         <Title>{props.packageName || props.name}</Title>
@@ -168,7 +169,12 @@ const Package = props => (
           <Fragment>
             {props.classPackages ? (
               <PriceSection>
-                <Price>{props.cost && `${props.cost}${props.currency ? props.currency : props.schoolCurrency}`}</Price>
+                <Price>
+                  {props.cost &&
+                    `${props.cost}${
+                      props.currency ? props.currency : props.schoolCurrency
+                    }`}
+                </Price>
                 <NoOfClasses>
                   {props.noClasses && `for ${props.noClasses} classes`}
                 </NoOfClasses>
@@ -178,7 +184,14 @@ const Package = props => (
               props.pymtDetails.map((payment, index) => {
                 return (
                   <PriceSection key={`${payment.cost}-${index}`}>
-                    <Price>{payment.cost && `${payment.cost}${payment.currency ? payment.currency : props.schoolCurrency}`}</Price>
+                    <Price>
+                      {payment.cost &&
+                        `${payment.cost}${
+                          payment.currency
+                            ? payment.currency
+                            : props.schoolCurrency
+                        }`}
+                    </Price>
                     <NoOfClasses>
                       {payment.month && `per month for ${payment.month} months`}
                     </NoOfClasses>
@@ -191,7 +204,12 @@ const Package = props => (
           <PriceSection>
             {" "}
             {/* used for enrollment packages */}
-            <Price>{props.cost && `${props.cost}${ props.currency ? props.currency : props.schoolCurrency}`}</Price>
+            <Price>
+              {props.cost &&
+                `${props.cost}${
+                  props.currency ? props.currency : props.schoolCurrency
+                }`}
+            </Price>
             <NoOfClasses>{props.cost && "For Enrollment"}</NoOfClasses>
           </PriceSection>
         )}
@@ -232,11 +250,13 @@ Package.propTypes = {
   price: PropTypes.string,
   noOfClasses: PropTypes.number,
   classesCovered: PropTypes.string,
-  onAddToCartIconButtonClick: PropTypes.func
+  onAddToCartIconButtonClick: PropTypes.func,
+  forIframes: PropTypes.bool
 };
 
 Package.defaultProps = {
   packagePerClass: false,
+  forIframes: false,
   onAddToCartIconButtonClick: () => {}
 };
 

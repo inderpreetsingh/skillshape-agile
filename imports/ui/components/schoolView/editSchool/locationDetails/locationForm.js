@@ -55,7 +55,7 @@ const styles = theme => {
     },
     dialogRootPaper: {
       maxWidth: 700,
-      width: "100%",
+      width: "100%"
     },
     dialogContent: {
       display: "flex",
@@ -75,21 +75,21 @@ class LocationForm extends React.Component {
     super(props);
     this.state = {
       isBusy: false,
-      myLocation: this.initalizeMyLocation(),
-      completeAddress: this.initializeCompleteAddress()
+      myLocation: this._getMyLocation(),
+      completeAddress: this._getMyCompleteAddress()
     };
   }
 
-  initalizeMyLocation = () => {
-    const data = this.props.data || { loc: ["", ""] };
+  _getMyLocation = (nextProps = {}) => {
+    const data = nextProps.data || this.props.data || { loc: ["", ""] };
     return {
       lat: data.loc[0],
       lng: data.loc[1]
     };
   };
 
-  initializeCompleteAddress = () => {
-    const data = this.props.data || {};
+  _getMyCompleteAddress = (nextProps = {}) => {
+    const data = nextProps.data || this.props.data || {};
     return {
       street: data.address || "",
       city: data.city || "",
@@ -111,6 +111,50 @@ class LocationForm extends React.Component {
       }
     }
     return "";
+  };
+
+  componentDidMount = () => {
+    const myLocation = this._getMyLocation();
+
+    if (!myLocation.lat || !myLocation.lng) {
+      const defaultLocation = this.getMyDefaultLocation();
+      this.getAddressFromLocation({
+        lat: defaultLocation[0],
+        lng: defaultLocation[1]
+      });
+    }
+  };
+
+  componentWillReceiveProps = nextProps => {
+    this.setState(previousState => {
+      return {
+        ...previousState,
+        myLocation: this._getMyLocation(nextProps),
+        completeAddress: this._getMyCompleteAddress(nextProps)
+      };
+    });
+
+    // // if this.props.data was not present
+    // // or in case it is present, we should check and see , whether the location
+    // // data actually changed or not
+    // // also nextProps should have some data on it.
+    // debugger;
+    // if (
+    //   !this.props.data ||
+    //   (this.props.data &&
+    //     (this.props.data.loc[0] !== nextProps.data.loc[0] ||
+    //       this.props.data.loc[1] !== nextProps.data.lng[1])) ||
+    //   (nextProps.data && (nextProps.data.loc[0] || nextProps.data.loc[1]))
+    // ) {
+    //   this.getAddressFromLocation({
+    //     lat: nextProps.data.loc[0],
+    //     lng: nextProps.data.loc[1]
+    //   });
+    // }
+  };
+
+  getMyDefaultLocation = () => {
+    return JSON.parse(localStorage.getItem("myLocation"));
   };
 
   getAddressFromLocation = ({ lat, lng }) => {
@@ -193,7 +237,7 @@ class LocationForm extends React.Component {
     if (!event.target.value) {
       return false;
     }
-    this.onSubmit(event, true);
+    this.onSubmit(event, false);
   };
   handleAddressChange = name => event => {
     // event.preventDefault();
@@ -210,7 +254,7 @@ class LocationForm extends React.Component {
     });
   };
 
-  onSubmit = (event, noSubmit) => {
+  onSubmit = (event, submit = true) => {
     event.preventDefault();
     // debugger;
     const payload = {
@@ -243,27 +287,25 @@ class LocationForm extends React.Component {
         payload.geoLong = data.lng;
         payload.loc = [data.lat, data.lng];
 
-        if (noSubmit) {
-          this.setState(state => {
-            return {
-              ...state,
-              isBusy: false,
-              completeAddress: {
-                street: payload.address,
-                zip: payload.zip,
-                country: payload.country,
-                city: payload.city,
-                state: payload.state
-              },
-              myLocation: {
-                lat: payload.geoLat,
-                lng: payload.geoLong
-              }
-            };
-          });
-        } else {
-          this.handleSubmit(payload);
-        }
+        this.setState(state => {
+          return {
+            ...state,
+            isBusy: false,
+            completeAddress: {
+              street: payload.address,
+              zip: payload.zip,
+              country: payload.country,
+              city: payload.city,
+              state: payload.state
+            },
+            myLocation: {
+              lat: payload.geoLat,
+              lng: payload.geoLong
+            }
+          };
+        });
+
+        if (submit) this.handleSubmit(payload);
       } else {
         const getLatLongPayload =
           payload.city + "," + payload.zip + "," + payload.country;
@@ -274,27 +316,25 @@ class LocationForm extends React.Component {
             payload.geoLat = data.lat;
             payload.geoLong = data.lng;
             payload.loc = [data.lat, data.lng];
-            if (noSubmit) {
-              this.setState(state => {
-                return {
-                  ...state,
-                  isBusy: false,
-                  completeAddress: {
-                    street: payload.address,
-                    zip: payload.zip,
-                    country: payload.country,
-                    city: payload.city,
-                    state: payload.state
-                  },
-                  myLocation: {
-                    lat: payload.geoLat,
-                    lng: payload.geoLong
-                  }
-                };
-              });
-            } else {
-              this.handleSubmit(payload);
-            }
+            this.setState(state => {
+              return {
+                ...state,
+                isBusy: false,
+                completeAddress: {
+                  street: payload.address,
+                  zip: payload.zip,
+                  country: payload.country,
+                  city: payload.city,
+                  state: payload.state
+                },
+                myLocation: {
+                  lat: payload.geoLat,
+                  lng: payload.geoLong
+                }
+              };
+            });
+
+            if (submit) this.handleSubmit(payload);
           }
         });
       }
@@ -391,9 +431,7 @@ class LocationForm extends React.Component {
             <DialogContent classes={{ root: classes.dialogContent }}>
               <SchoolLocationMap
                 locationData={this.state.myLocation}
-                myCurrentPosition={JSON.parse(
-                  localStorage.getItem("myLocation")
-                )}
+                myCurrentPosition={this.getMyDefaultLocation()}
                 onDragEnd={this.getAddressFromLocation}
               />
 
@@ -476,7 +514,12 @@ class LocationForm extends React.Component {
             <Button onClick={() => this.props.onClose()} color="primary">
               Cancel
             </Button>
-            <Button type="submit" form={formId} color="primary">
+            <Button
+              type="submit"
+              form={formId}
+              color="primary"
+              onClick={this.onSubmit}
+            >
               {data ? "Save" : "Submit"}
             </Button>
           </DialogActions>
