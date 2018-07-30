@@ -5,8 +5,6 @@ import isEmpty from "lodash/isEmpty";
 
 import Cart from "/imports/ui/components/landing/components/icons/Cart.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
-
-//TODO: Automatic imports depending upon variables used - intellij
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const Wrapper = styled.div`
@@ -19,7 +17,7 @@ const Wrapper = styled.div`
 
 const OuterWrapper = styled.div`
   background-color: ${props => (props.forIframes ? "transparent" : "white")};
-  ${props => props.forIframes ? `box-shadow: ${helpers.inputBoxShadow}` : ''};
+  ${props => (props.forIframes ? `box-shadow: ${helpers.inputBoxShadow}` : "")};
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
   padding-right: ${helpers.rhythmDiv * 2}px;
   border-radius: ${helpers.rhythmDiv * 6}px;
