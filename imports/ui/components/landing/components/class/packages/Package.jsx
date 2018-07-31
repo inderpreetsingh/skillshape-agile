@@ -174,6 +174,9 @@ const Package = props => (
         <ClassDetailsText>
           Covers: {getCovers(props.selectedClassType)}
         </ClassDetailsText>
+         <ClassDetailsText>
+          Maxmium Classes: {props && props.noClasses ? props.noClasses + ' days' : 'Unlimited days'}
+        </ClassDetailsText>
       </ClassDetailsSection>
 
       <RightSection>
