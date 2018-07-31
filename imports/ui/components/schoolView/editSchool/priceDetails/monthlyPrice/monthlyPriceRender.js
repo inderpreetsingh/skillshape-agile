@@ -16,12 +16,13 @@ export default function () {
 
 
      const { classes, schoolId, monthlyPricingData,schoolData ,currency} = this.props;
+     const data = this.state.formData;
 	return (
 		<div className="class-price-details">
 			{
           		this.state.showForm && <MonthlyPriceForm
           			schoolId={schoolId}
-          			data={this.state.formData}
+          			data={data}
           			open={this.state.showForm}
                     onClose={this.handleFormModal}
                     classTypeData={this.props.classTypeData}
@@ -76,6 +77,12 @@ export default function () {
                     								monthPrice.selectedClassType.map((classType) => {
                     									return <span>{classType.name} </span>
                     								})
+                    							}
+                    						</Typography>
+                                                  <br></br>
+                                                  <Typography component="p">
+                    							<b>Maxmium classes:</b> {
+                    								monthPrice && monthPrice.noClasses ? monthPrice.noClasses +' Days' : 'Unlimited Days'
                     							}
                     						</Typography>
                                                   <br></br>

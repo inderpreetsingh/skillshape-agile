@@ -73,7 +73,7 @@ export function reCenterMap(map, center) {
 export function initializeSchoolEditLocationMap(location) {
     const mapId = location && `goolge-map-${location._id}`;
     if (location && document.getElementById(mapId)) {
-        document.getElementById(mapId).innerHTML = ""
+        document.getElementById(mapId).innerHTML = "";
         let geolocate;
         let map = new google.maps.Map(document.getElementById(mapId), mapOptions);
 
