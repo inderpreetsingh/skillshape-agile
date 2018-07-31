@@ -1,31 +1,91 @@
+import ClassSubscription from "../classSubscription/fields";
+import Purchases from "./fields";
 var bodyParser = require("body-parser");
 Picker.middleware(bodyParser.json());
 Picker.middleware(bodyParser.urlencoded({ extended: false }));
-var dataFile = function(params, request, response, next) {
-  console.log(" ============================================================", request.body);
-  // var request = request.body;
-  // console.log("request type", request.type);
-  // switch (request.type) {
-  //   case "customer.subscription.updated":
-  //     stripeUpdateSubscription(request.data.object);
-  //     break;
-  //   case "invoice.payment_succeeded":
-  //     stripeCreateInvoice(request.data.object);
-  //     break;
-  // }
-  // this.response.statusCode = 200;
-  // this.response.end("");
+var dataFile = function (params, request, response, next) {
+  let type = request.body.type;
+  console.log("type",type)
+  try{
 
-  /*
-  1.invoice.payment_succeeded
-  2.invoice.created
-  3.customer.subscription.created
-  4.customer.updated
-  5.invoice.created
-  6.invoice.upcoming
-  
-  
-  
-  */
+    switch (type) {
+      case "invoice.payment_succeeded":
+      // updating classSubscription collection
+        console.log("in case 1")
+        let subscriptionId = request.body.data.object.subscription;
+        let subscriptionResponse = request.body;
+        let classSubscriptionData= ClassSubscription.find({subscriptionId:subscriptionId}).fetch();
+        console.log('classSubscriptionData',classSubscriptionData)
+        let monthCounter= classSubscriptionData.monthCounter;
+        let payload = {
+                      subscriptionResponse,
+                      monthCounter: monthCounter,
+                      status: "successful"
+                     };
+        ClassSubscription.update({ subscriptionId }, { $set: payload });
+        // updating purchases collections
+       let result= Purchases.findOne({subscriptionId});
+       console.log()
+       if(result){
+       console.log('in if ')
+         
+        payload={ 
+                endDate: classSubscriptionData.endDate,
+                packageStatus: 'active'
+        }
+      }
+      else{
+       console.log('in else',classSubscriptionData)
+        
+        payload={ 
+          userId: classSubscriptionData[0].userId,
+          packageId: classSubscriptionData[0].packageId,
+          subscriptionId: subscriptionId,
+          packageName: classSubscriptionData[0].packageName,
+          schoolId: classSubscriptionData[0].schoolId,
+          startDate: classSubscriptionData[0].startDate,
+          endDate: classSubscriptionData[0].endDate,
+          packageStatus: 'active'
+        }
+      }
+      console.log('before update',payload)
+      let result1 = Purchases.insert(payload)
+      console.log("result1",result1)  
+      console.log('after update')
+      
+      break;
+    }
+  }
+  catch(error){
+    console.log('---error----',error)
+  }
 };
 Picker.route("/stripe-webhooks", dataFile);
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+1.invoice.payment_succeeded
+2.invoice.created
+3.customer.subscription.created
+4.customer.updated
+5.invoice.created
+6.invoice.upcoming
+
+------------------- For invoice.payment_succeeded-------------
+1.Find subscription id in the response.(Done)
+2.update the classSubscription based on  subscription id.
+3.Add/Update the purchases collection after getting details 
+to be inserted in the purchases from class subscription collection.
+4.Increment the counter if updating or set 1 if new record in purchases.
+5.Add monthly starting/expiry date in purchases.
+*/

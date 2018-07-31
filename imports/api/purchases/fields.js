@@ -75,6 +75,10 @@ export const PurchasesSchema = new SimpleSchema({
   classId: {
     type: String,
     optional: true
+  },
+  subscriptionId: {
+    type: String,
+    optional: true
   }
 });
 

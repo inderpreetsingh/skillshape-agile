@@ -215,7 +215,8 @@ const Package = props => (
                 props.expPeriod,
                 props.noClasses,
                 props.pymtDetails && props.pymtDetails[0].planId,
-                props.currency ? props.currency : props.pymtDetails ? props.pymtDetails[0].currency : props.schoolCurrency
+                props.currency ? props.currency : props.pymtDetails ? props.pymtDetails[0].currency : props.schoolCurrency,
+                props.pymtType 
               )
             }
           />

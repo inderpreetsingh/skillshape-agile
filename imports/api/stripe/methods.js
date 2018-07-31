@@ -271,7 +271,7 @@ Meteor.methods({
         );
       }
       startDate = getExpiryDateForPackages(new Date());
-      expiryDate = getExpiryDateForPackages(
+      endDate = getExpiryDateForPackages(
         startDate,
         "Months",
         monthlyPymtDetails[0].month
@@ -283,29 +283,29 @@ Meteor.methods({
       payload = {
         userId: userId,
         startDate,
-        expiryDate,
+        endDate,
         status: "inProgress",
         packageId,
         packageName,
         schoolId,
-        subscriptionRequest
+        subscriptionRequest,
+        monthCounter:0
       };
       // insert subscription  progress in classSubscription
       subscriptionDbId = ClassSubscription.insert(payload);
-      subscriptionResponse = await stripe.subscriptions.create(
-        subscriptionRequest
-      );
+      subscriptionResponse = await stripe.subscriptions.create(subscriptionRequest);
       // get subscription id
+
       payload = {
         subscriptionId: subscriptionResponse.id,
-        subscriptionResponse,
-        status: "successful"
       };
-      // update subscription id in collection
-      ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
+      // add subscription id in collection
+       ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
+
       return true;
     } catch (error) {
-      payload = { subscriptionResponse, status: "error" };
+      console.log('error in stripe.handleCustomerAndSubscribe',error)
+      payload = { status: "error" };
       let resultOfErrorUpdate = ClassSubscription.update(
         { _id: subscriptionDbId },
         { $set: payload }

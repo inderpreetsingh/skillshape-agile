@@ -26,7 +26,7 @@ export const ClassSubscriptionSchema = new SimpleSchema({
     type: Date,
     optional: true
   },
-  expiryDate: {
+  endDate: {
     type: Date,
     optional: true
   },
@@ -44,6 +44,10 @@ export const ClassSubscriptionSchema = new SimpleSchema({
   },
   status: {
     type: String,
+    optional: true
+  },
+  monthCounter:{
+    type: Number,
     optional: true
   }
 });

@@ -30,6 +30,7 @@ import "/imports/api/stripe/methods";
 import "/imports/api/stripe/webhook";
 import "/imports/api/purchases/methods";
 import "/imports/api/schoolSuggestion/methods";
+import '/imports/api/classSubscription/methods';
 // All publication imported over here
 
 import "/imports/api/modules/server/publication";

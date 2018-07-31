@@ -506,7 +506,8 @@ export default class SchoolViewBase extends React.Component {
     expPeriod,
     noClasses,
     planId,
-    currency
+    currency,
+    pymtType
   ) => {
     // Start loading
     packageName ? packageName : packageName = 'Enrollment Fee Package'
@@ -516,7 +517,6 @@ export default class SchoolViewBase extends React.Component {
         amount = amount * data.multiplyFactor;
       }
     })
-
     const { popUp } = this.props;
     let self = this;
     Meteor.call(
@@ -594,7 +594,7 @@ export default class SchoolViewBase extends React.Component {
                     }
                   }
                 );
-              } else if (packageType == "MP") {
+              } else if (packageType == "MP" && pymtType && pymtType.autoWithDraw) {
                 Meteor.call(
                   "stripe.handleCustomerAndSubscribe",
                   token.id,
