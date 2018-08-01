@@ -68,7 +68,11 @@ export default (locationSettings = {
           { key: "country", label: "Country", type: "text", required: true }
         ]
       },
-      delete: "removeLocation"
+      delete: "removeLocation",
+      del: {
+        title: "Delete Location",
+        onSubmit: "location.removeLocation"
+      }
     }
   },
   childPanelHeader: {
@@ -109,7 +113,11 @@ export default (locationSettings = {
           { key: "capicity", label: "Capacity", type: "text", required: false }
         ]
       },
-      delete: "removeRoom"
+      delete: "removeRoom",
+      del: {
+        onSubmit: "location.roomRemove",
+        title: "Delete Room"
+      }
     }
   }
 });

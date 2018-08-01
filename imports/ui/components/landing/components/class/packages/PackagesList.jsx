@@ -77,35 +77,15 @@ const PackagesWrapper = styled.div`
     padding: ${helpers.rhythmDiv}px;
     align-items: center;
   }
-
-  @media screen and (max-width: ${helpers.tablet}px) {
-    // max-width: 500px;
-    // width: 100%;
-  }
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-  }
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   font-family: ${helpers.specialFont};
   font-weight: 300;
   text-align: center;
   font-style: italic;
   line-height: 1;
   font-size: ${helpers.baseFontSize * 1.5}px;
-  margin: 0;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
-  color: ${helpers.textColor};
-  width: 100%;
-`;
-
-const FallBackMsg = styled.h3`
-  font-family: ${helpers.specialFont};
-  text-align: center;
-  font-style: italic;
-  line-height: 1;
-  font-size: ${helpers.baseFontSize}px;
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 4}px;
   color: ${helpers.textColor};

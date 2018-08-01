@@ -4,7 +4,7 @@ import filter from "lodash/filter";
 import PropTypes from "prop-types";
 import PanelWithTableRender from "./panelWithTableRender";
 import { withStyles } from "material-ui/styles";
-import { toastrModal } from "/imports/util";
+import { withPopUp } from "/imports/util";
 
 const styles = theme => {
   // console.log("theme", theme);
@@ -73,6 +73,7 @@ class PanelWithTable extends React.Component {
       value: "",
       showForm: this.props.showLocationDialog,
       showEditForm: false,
+      deleteConfirmationModal: false,
       currentTableData: null,
       methodName: "",
       isBusy: false,
@@ -87,7 +88,7 @@ class PanelWithTable extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     // Open Class Type Dialog Box, if no class type data is available.
-    
+
     if (this.props.showClassTypeModal && nextProps.showClassTypeModal) {
       this.setState({ showForm: true });
     }
@@ -161,14 +162,14 @@ class PanelWithTable extends React.Component {
         },
         (err, res) => {
           // console.log("classType.notifyToStudentForClassTimes",error, result)
-          const { toastr } = this.props;
+          const { popUp } = this.props;
           this.setState({ showConfirmationModal: false, isBusy: false }, () => {
             if (res && res.message) {
               // Need to show message to user when email is send successfully.
-              toastr.success(res.message, "Success");
+              popUp.appear("success", { content: res.message });
             }
             if (err) {
-              toastr.error(err.reason || err.message, "Error");
+              popUp.appear("alert", { content: err.reason || err.message });
             }
           });
         }
@@ -187,6 +188,44 @@ class PanelWithTable extends React.Component {
 
   cancelConfirmationModal = () =>
     this.setState({ showConfirmationModal: false });
+
+  handleDeleteData = () => {
+    const { popUp } = this.props;
+    const { formData } = this.state;
+    const delAction = this.props.settings.mainTable.actions.del;
+    const methodToCall = delAction.onSubmit;
+    // const docObj = formData;
+    // console.log(formData, methodToCall, docObj, "===================");
+
+    // NOTE: we are only covering case for location.removeLocation
+    // need to somehow cover it for other panel methods as well.
+    Meteor.call(methodToCall, { doc: formData }, (err, res) => {
+      this.closeDeleteConfirmationModal();
+      if (err) {
+        popUp.appear("alert", { content: err.reason || err.message });
+      } else {
+        popUp.appear("success", { title: "success", content: res.message });
+      }
+    });
+  };
+
+  showDeleteConfirmationModal = () => {
+    this.setState(state => {
+      return {
+        ...state,
+        deleteConfirmationModal: true
+      };
+    });
+  };
+
+  closeDeleteConfirmationModal = () => {
+    this.setState(state => {
+      return {
+        ...state,
+        deleteConfirmationModal: false
+      };
+    });
+  };
 
   getExpansionPanelTitle = (data, keys) => {
     if (isArray(keys)) {
@@ -211,4 +250,4 @@ PanelWithTable.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(toastrModal(PanelWithTable));
+export default withStyles(styles)(withPopUp(PanelWithTable));
