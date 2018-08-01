@@ -194,13 +194,17 @@ class PanelWithTable extends React.Component {
     const { formData } = this.state;
     const delAction = this.props.settings.mainTable.actions.del;
     const methodToCall = delAction.onSubmit;
-    const docObj = formData[delAction.deleteByField] || formData;
+    // const docObj = formData;
     // console.log(formData, methodToCall, docObj, "===================");
-    Meteor.call(methodToCall, docObj, (err, res) => {
+
+    // NOTE: we are only covering case for location.removeLocation
+    // need to somehow cover it for other panel methods as well.
+    Meteor.call(methodToCall, { doc: formData }, (err, res) => {
+      this.closeDeleteConfirmationModal();
       if (err) {
         popUp.appear("alert", { content: err.reason || err.message });
       } else {
-        popUp.appear("success", { content: res.message });
+        popUp.appear("success", { title: "success", content: res.message });
       }
     });
   };

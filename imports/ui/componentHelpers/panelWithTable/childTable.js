@@ -4,6 +4,8 @@ import { get } from "lodash";
 import Grid from "material-ui/Grid";
 import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
+
+import { withPopUp } from "/imports/util";
 import ChildTableRender from "./childTableRender";
 
 const styles = theme => {
@@ -138,9 +140,24 @@ class ChildTable extends React.Component {
 
   handleDeleteData = () => {
     const { formData } = this.state;
-    const { parentKey, childTable } = this.props;
-    console.log(formData, parentKey, childTable, "==============");
-    // Meteor;
+    const { parentKey, childTable, popUp } = this.props;
+    const methodToCall = childTable.actions.del.onSubmit;
+
+    // console.log(formData, parentKey, childTable, "==============");
+    // NOTE: we are only covering case for location.roomRemove
+    // need to somehow cover it for other panel methods as well.
+    Meteor.call(
+      methodToCall,
+      { locationId: parentKey, data: formData },
+      (err, res) => {
+        this.closeDeleteConfirmationModal();
+        if (err) {
+          popUp.appear("alert", { content: err.reason || err.message });
+        } else {
+          popUp.appear("success", { title: "success", content: res.message });
+        }
+      }
+    );
   };
 
   handleAddClassTime = event => {
@@ -247,4 +264,4 @@ ChildTable.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ChildTable);
+export default withStyles(styles)(withPopUp(ChildTable));

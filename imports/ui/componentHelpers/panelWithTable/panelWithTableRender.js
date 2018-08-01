@@ -42,16 +42,24 @@ import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import {
   rhythmDiv,
-  mobile
+  mobile,
+  tablet
 } from "/imports/ui/components/landing/components/jss/helpers.js";
 
-const ButtonsWrappers = styled.div`
+const ButtonsWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+
+  @media screen and (max-width: ${tablet - 100}px) {
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
 
 const ButtonWrapper = styled.div`
-  margin-right: ${rhythmDiv}px;
+  margin-top: ${rhythmDiv * 2}px;
+  margin-right: ${rhythmDiv * 2}px;
+  // ${props => (props.left ? `margin-right: ${rhythmDiv * 2}px;` : "")};
 `;
 
 export default function() {
@@ -335,9 +343,8 @@ export default function() {
                             )}
                         </Grid>
                         <ButtonsWrapper>
-                          <ButtonWrapper>
+                          <ButtonWrapper left>
                             <Button
-                              style={{ margin: 15 }}
                               onClick={() =>
                                 this.setState({
                                   showForm: true,
@@ -353,24 +360,25 @@ export default function() {
                             </Button>
                           </ButtonWrapper>
                           {settings.mainTable.actions.del && (
-                            <Button
-                              style={{ margin: 15 }}
-                              onClick={() => {
-                                this.setState(state => {
-                                  return {
-                                    ...state,
-                                    formData: tableData
-                                  };
-                                });
-                                this.showDeleteConfirmationModal();
-                              }}
-                              color="accent"
-                              raised
-                              dense
-                            >
-                              <Delete style={{ marginRight: 2 }} />
-                              {settings.mainTable.actions.del.title}
-                            </Button>
+                            <ButtonWrapper right>
+                              <Button
+                                onClick={() => {
+                                  this.setState(state => {
+                                    return {
+                                      ...state,
+                                      formData: tableData
+                                    };
+                                  });
+                                  this.showDeleteConfirmationModal();
+                                }}
+                                color="accent"
+                                raised
+                                dense
+                              >
+                                <Delete style={{ marginRight: 2 }} />
+                                {settings.mainTable.actions.del.title}
+                              </Button>
+                            </ButtonWrapper>
                           )}
                         </ButtonsWrapper>
                       </div>

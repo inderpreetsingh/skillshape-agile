@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import styled from "styled-components";
 import moment from "moment";
 import Button from "material-ui/Button";
 import Dialog, {
@@ -29,13 +30,19 @@ import {
   mobile
 } from "/imports/ui/components/landing/components/jss/helpers.js";
 
-const ButtonsWrappers = styled.div`
+const ButtonsWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+
+  @media screen and (max-width: 400px) {
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
 
 const ButtonWrapper = styled.div`
-  margin-right: ${rhythmDiv}px;
+  margin-top: ${rhythmDiv * 2}px;
+  margin-right: ${rhythmDiv * 2}px;
 `;
 
 export default function(props) {
@@ -444,23 +451,26 @@ export default function(props) {
                               {childTable.actions.edit.title}
                             </Button>
                           </ButtonWrapper>
-                          <Button
-                            onClick={() => {
-                              this.setState(state => {
-                                return {
-                                  ...state,
-                                  formData: tableData
-                                };
-                              });
-                              this.showDeleteConfirmationModal();
-                            }}
-                            color="accent"
-                            raised
-                            dense
-                          >
-                            <Delete style={{ marginRight: 2 }} />
-                            {childTable.actions.del.title}
-                          </Button>
+
+                          <ButtonWrapper>
+                            <Button
+                              onClick={() => {
+                                this.setState(state => {
+                                  return {
+                                    ...state,
+                                    formData: tableData
+                                  };
+                                });
+                                this.showDeleteConfirmationModal();
+                              }}
+                              color="accent"
+                              raised
+                              dense
+                            >
+                              <Delete style={{ marginRight: 2 }} />
+                              {childTable.actions.del.title}
+                            </Button>
+                          </ButtonWrapper>
                         </ButtonsWrapper>
                       </div>
                     </div>

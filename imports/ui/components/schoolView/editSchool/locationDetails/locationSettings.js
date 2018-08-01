@@ -115,7 +115,7 @@ export default (locationSettings = {
       },
       delete: "removeRoom",
       del: {
-        onSubmit: "location.removeRoom",
+        onSubmit: "location.roomRemove",
         title: "Delete Room"
       }
     }
