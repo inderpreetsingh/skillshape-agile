@@ -125,14 +125,36 @@ class LocationForm extends React.Component {
     }
   };
 
+  _compareCompleteAddress = (address1, address2) => {
+    const propertiesToCompare = ["street", "zip", "city", "state", "country"];
+    for (let i = 0; i < propertiesToCompare.length; ++i) {
+      const currentProperty = propertiesToCompare[i];
+      if (address1[currentProperty] !== address2[currentProperty]) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   componentWillReceiveProps = nextProps => {
-    this.setState(previousState => {
-      return {
-        ...previousState,
-        myLocation: this._getMyLocation(nextProps),
-        completeAddress: this._getMyCompleteAddress(nextProps)
-      };
-    });
+    const currentMyLocation = this._getMyLocation();
+    const newMyLocation = this._getMyLocation(nextProps);
+    const currentCompleteAddress = this._getMyCompleteAddress();
+    const newCompleteAddress = this._getMyCompleteAddress(nextProps);
+
+    if (
+      currentMyLocation.lat !== newMyLocation.lng ||
+      currentMyLocation.lng !== newMyLocation.lng ||
+      this._compareCompleteAddress(currentCompleteAddress, newCompleteAddress)
+    ) {
+      this.setState(previousState => {
+        return {
+          ...previousState,
+          myLocation: newMyLocation,
+          completeAddress: newCompleteAddress
+        };
+      });
+    }
 
     // // if this.props.data was not present
     // // or in case it is present, we should check and see , whether the location

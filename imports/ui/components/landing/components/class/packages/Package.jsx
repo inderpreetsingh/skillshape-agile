@@ -47,7 +47,7 @@ const OuterWrapper = styled.div`
   }
 `;
 
-const Title = styled.h2`
+const Title = styled.h3`
   font-size: 12px;
   font-family: ${helpers.commonFont};
   letter-spacing: 2px;
