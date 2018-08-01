@@ -28,7 +28,7 @@ class FullCalendar extends React.Component {
       firstDay: moment().day(),
       //columnFormat: 'ddd - D',
      // contentHeight: 'auto',
-     // height: 650, // Sets the height of the entire calendar, including header and footer.
+      height: 'auto', // Sets the height of the entire calendar, including header and footer.
       defaultDate: new Date(),
       selectable: true,
       selectHelper: true,
