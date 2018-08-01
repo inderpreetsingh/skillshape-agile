@@ -194,10 +194,20 @@ class SkillShapeDialogBox extends Component {
   };
 
   _getAffirmateButtonText = () => {
-    const { type, defaultButtons, classes } = this.props;
+    const { type, defaultButtons, classes, affirmateBtnText } = this.props;
+    if (affirmateBtnText) {
+      return affirmateBtnText;
+    }
+
     return defaultButtons && type === "alert"
       ? "Yes"
       : popUpBasicConfig[type].affirmateBtnText;
+  };
+
+  _getCancelButtonText = () => {
+    const { cancelBtnText } = this.props;
+    if (cancelBtnText) return cancelBtnText;
+    return "Cancel";
   };
 
   _getCancelButtonClasses = () => {
@@ -215,6 +225,7 @@ class SkillShapeDialogBox extends Component {
     const {
       RenderActions,
       type,
+
       onAffirmationButtonClick,
       onModalClose,
       onCloseButtonClick,
@@ -236,7 +247,7 @@ class SkillShapeDialogBox extends Component {
               onClick={onCloseButtonClick || onModalClose}
               className={this._getCancelButtonClasses()}
             >
-              Cancel
+              {this._getCancelButtonText()}
             </Button>
           </ButtonWrapper>
         )}
@@ -340,6 +351,8 @@ SkillShapeDialogBox.propTypes = {
   content: PropTypes.string,
   type: PropTypes.string,
   RenderActions: PropTypes.element,
+  affirmateBtnText: PropTypes.string,
+  cancelBtnText: PropTypes.string,
 
   // default Buttons will make sure, both the Yes/No counter part will appear
   // without default buttons we only have the buttons in boxes according to the most

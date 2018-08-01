@@ -22,6 +22,22 @@ import ExpansionPanel, {
 } from "material-ui/ExpansionPanel";
 import Divider from "material-ui/Divider";
 
+import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
+
+import {
+  rhythmDiv,
+  mobile
+} from "/imports/ui/components/landing/components/jss/helpers.js";
+
+const ButtonsWrappers = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const ButtonWrapper = styled.div`
+  margin-right: ${rhythmDiv}px;
+`;
+
 export default function(props) {
   const {
     classes,
@@ -242,6 +258,20 @@ export default function(props) {
               moveToNextTab={this.props.moveToNextTab}
             />
           )}
+          {this.state.deleteConfirmationModal && (
+            <SkillShapeDialogBox
+              open={this.state.deleteConfirmationModal}
+              type="alert"
+              defaultButtons
+              title="Are you sure?"
+              content="This will permanently delete your data. Are you sure?"
+              cancelBtnText="Cancel"
+              onAffirmationButtonClick={this.handleDeleteData}
+              onModalClose={this.closeDeleteConfirmationModal}
+              onCloseButtonClick={this.closeDeleteConfirmationModal}
+            />
+          )}
+
           <ExpansionPanel expanded={true}>
             <ExpansionPanelSummary className={classes.classtimeHeader}>
               <Grid container>
@@ -362,7 +392,7 @@ export default function(props) {
                               );
                             })}
                         </Grid>
-                        <div style={{ float: "right", margin: 10 }}>
+                        {/*<div style={{ float: "right", margin: 10 }}>
                           <Button
                             onClick={() =>
                               this.setState({
@@ -377,7 +407,61 @@ export default function(props) {
                             <Edit style={{ marginRight: 2 }} />
                             {childTable.actions.edit.title}
                           </Button>
-                        </div>
+
+                          <Button
+                            onClick={() => {
+                              this.setState(state => {
+                                return {
+                                  ...state,
+                                  formData: tableData
+                                };
+                              });
+                              this.showDeleteConfirmationModal();
+                            }}
+                            color="accent"
+                            raised
+                            dense
+                          >
+                            <Delete style={{ marginRight: 2 }} />
+                            {childTable.actions.del.title}
+                          </Button>
+                        </div> */}
+
+                        <ButtonsWrapper>
+                          <ButtonWrapper>
+                            <Button
+                              onClick={() =>
+                                this.setState({
+                                  showForm: true,
+                                  formData: tableData
+                                })
+                              }
+                              color="accent"
+                              raised
+                              dense
+                            >
+                              <Edit style={{ marginRight: 2 }} />
+                              {childTable.actions.edit.title}
+                            </Button>
+                          </ButtonWrapper>
+                          <Button
+                            onClick={() => {
+                              this.setState(state => {
+                                return {
+                                  ...state,
+                                  formData: tableData
+                                };
+                              });
+                              this.showDeleteConfirmationModal();
+                            }}
+                            color="accent"
+                            raised
+                            dense
+                          >
+                            <Delete style={{ marginRight: 2 }} />
+                            {childTable.actions.del.title}
+                          </Button>
+                        </ButtonsWrapper>
                       </div>
                     </div>
                   </ExpansionPanelDetails>

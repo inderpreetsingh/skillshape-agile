@@ -297,7 +297,7 @@ class LocationForm extends React.Component {
       payload.zip +
       "," +
       payload.country;
-    debugger;
+    // debugger;
     if (!sLocationDetail) {
       return false;
     }

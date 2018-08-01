@@ -118,6 +118,31 @@ class ChildTable extends React.Component {
     });
   };
 
+  showDeleteConfirmationModal = () => {
+    this.setState(state => {
+      return {
+        ...state,
+        deleteConfirmationModal: true
+      };
+    });
+  };
+
+  closeDeleteConfirmationModal = () => {
+    this.setState(state => {
+      return {
+        ...state,
+        deleteConfirmationModal: false
+      };
+    });
+  };
+
+  handleDeleteData = () => {
+    const { formData } = this.state;
+    const { parentKey, childTable } = this.props;
+    console.log(formData, parentKey, childTable, "==============");
+    // Meteor;
+  };
+
   handleAddClassTime = event => {
     event.preventDefault();
     event.stopPropagation();
