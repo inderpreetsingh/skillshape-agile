@@ -10,7 +10,6 @@ import TextField from 'material-ui/TextField';
 import * as helpers from '../jss/helpers.js';
 import { findDOMNode } from 'react-dom'
 
-let inputRef;
 const InputIcon = (props) => (<Icon color="disabled">{props.iconName}</Icon>);
 
 const styles = {
@@ -27,25 +26,26 @@ class IconInput extends React.Component {
     inputFocused : false,
   }
   onFocus = ()=> {
-      this.setState({inputFocused: true});
+    this.setState({inputFocused: true});
   }
   onBlur = ()=> {
-      this.setState({inputFocused: false})
+    this.setState({inputFocused: false})
   }
-
+  
   render() {
+    let inputRef;
     const props = this.props;
     const { classes } = props;
     const setInputRef = (ref) => inputRef = ref;
 
-    if(props.googlelocation  && !this.autocomplete) {
+    if(props.googlelocation  ) {
       setTimeout(()=> {
         let options ={strictBounds:true}
         // Google's API
-         this.autocomplete = new google.maps.places.Autocomplete(inputRef,options);
+         autocomplete = new google.maps.places.Autocomplete(inputRef,options);
         // This runs when user changes location.
-        this.autocomplete.addListener('place_changed', () => {
-          let place = this.autocomplete.getPlace();
+        autocomplete.addListener('place_changed', () => {
+          let place = autocomplete.getPlace();
           // console.log("place -->>",place)
           let coords = [];
           coords[0] = place.geometry['location'].lat();

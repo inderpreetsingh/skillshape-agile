@@ -234,7 +234,7 @@ export class WeekDaysRow extends React.Component {
                 <FormControl fullWidth margin="dense">
                   <InputLabel htmlFor="roomId">Room</InputLabel>
                   <Select
-                    value={data ? data.roomId : ""}
+                    value={data && data.roomId ? data.roomId : !isEmpty(this.props.roomData) && this.props.roomData[0].id}
                     input={<Input id="roomId" />}
                     onChange={this.handleSelectInputChange.bind(
                       this,

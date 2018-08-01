@@ -95,12 +95,7 @@ const GridWrapper = styled.div`
 
 export default function(props) {
   let schools = this.props.collectionData;
-  console.log(
-    this.props.collectionData,
-    schools,
-    "========= schools..",
-    "re rending..."
-  );
+  
   const NoneOfMyLisiting = props => (
     <Wrapper>
       <TextWrapper>

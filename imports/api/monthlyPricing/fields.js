@@ -41,6 +41,10 @@ MonthlyPricing.attachSchema(new SimpleSchema({
     noClasses:{
         type: Number,
         optional:true
+    },
+    duPeriod:{
+        type: String,
+        optional:true 
     }
 }));
 

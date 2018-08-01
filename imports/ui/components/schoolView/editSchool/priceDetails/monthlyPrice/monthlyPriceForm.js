@@ -22,13 +22,14 @@ import AddRow from "./addRow";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import "/imports/api/sLocation/methods";
 import { Card } from "material-ui";
-
-// 1.maxmium classes field in the collection monthyPricing.
-// 2.input field for entering the maxmium classes.
-// 3.saveing in the collection.
-// 4.on edit reteriving the value.
-// 5.show maxmium no of classes in the monthly pricing Card.
-// 6. displaying the maxmium no of classes in the package listing also.
+import Input, { InputLabel} from "material-ui/Input";
+// 1.perTime field in the collection monthyPricing.(Done)
+// 2.dropDown for selecting the perTime classes.(Done)
+// 3.saving in the collection.(Done)
+// 4.on edit retrieving the value.(Done)
+// 5.show perTime no of classes in the monthly pricing Card.
+// 6. displaying the perTime no of classes in the package listing also.
+// 7.maxmium classes only in monthly package.
 const formId = "LocationForm";
 const styles = theme => {
   return {
@@ -62,7 +63,8 @@ class MonthlyPriceForm extends React.Component {
         { month: null, cost: null }
       ]),
       pymtMethod: pymtMethod,
-      includeAllClassTypes: get(this.props, "data.includeAllClassTypes", "")
+      includeAllClassTypes: get(this.props, "data.includeAllClassTypes", ""),
+      duPeriod: get(this.props, "data.duPeriod", "")
     };
     if (pymtMethod && pymtMethod === "Pay Up Front") state.tabValue = 1;
     return state;
@@ -84,7 +86,9 @@ class MonthlyPriceForm extends React.Component {
       pymtMethod: "Pay Up Front",
       pymtDetails: this.refs.AddRow.getRowData(),
       includeAllClassTypes: this.state.includeAllClassTypes,
-      noClasses:this.noClasses.value
+      noClasses:this.noClasses.value,
+      duPeriod: this.state.duPeriod
+
     };
     if (tabValue === 0) {
       // No option is selected for making payment then need to show this `Please select any payment type`.
@@ -228,14 +232,36 @@ class MonthlyPriceForm extends React.Component {
                     label="Include all classes"
                   />
                 </FormControl>
+                <div style={{display: 'flex', alignItems: 'flex-end'}}>
                 <TextField
                   defaultValue={data && data.noClasses}
                   margin="dense"
                   inputRef={ref => (this.noClasses = ref)}
-                  label="Maxmium classes"
+                  label="Maximum classes"
                   type="number"
                   fullWidth
                 />
+   
+                
+                  <FormControl fullWidth margin="dense">
+                    <InputLabel htmlFor="duration-period">
+                      Duration Period
+                    </InputLabel>
+                    <Select
+                      required={true}
+                      input={<Input id="duration-period" />}
+                      value={this.state && this.state.duPeriod ? this.state.duPeriod : 'day'}
+                      onChange={event =>
+                        this.setState({ duPeriod: event.target.value })
+                      }
+                      fullWidth
+                    >
+                      <MenuItem value={"day"}>Day</MenuItem>
+                      <MenuItem value={"month"}>Month</MenuItem>
+                      <MenuItem value={"year"}>Year</MenuItem>
+                    </Select>
+                  </FormControl>
+               </div>
                 <div className="responsive-tab">
                   <div
                     style={{

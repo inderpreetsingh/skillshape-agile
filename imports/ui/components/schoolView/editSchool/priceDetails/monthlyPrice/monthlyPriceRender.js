@@ -8,7 +8,7 @@ import Add from 'material-ui-icons/Add';
 import Edit from 'material-ui-icons/Edit';
 import Button from 'material-ui/Button';
 import Delete from 'material-ui-icons/Delete';
-
+import { maximumClasses } from '/imports/util';
 import MonthlyPriceForm from './monthlyPriceForm';
 import PanelHeader from '../panelHeader';
 
@@ -81,9 +81,9 @@ export default function () {
                     						</Typography>
                                                   <br></br>
                                                   <Typography component="p">
-                    							<b>Maxmium classes:</b> {
-                    								monthPrice && monthPrice.noClasses ? monthPrice.noClasses +' Days' : 'Unlimited Days'
-                    							}
+                                                <b>Maximum classes:</b> 
+                                               
+                                                {maximumClasses(monthPrice)}
                     						</Typography>
                                                   <br></br>
                                                   {
