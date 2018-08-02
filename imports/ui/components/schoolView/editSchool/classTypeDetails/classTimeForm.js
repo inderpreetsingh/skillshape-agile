@@ -52,7 +52,8 @@ class ClassTimeForm extends React.Component {
       roomData: [],
       roomId: "",
       startDate: new Date(),
-      endDate: new Date()
+      endDate: new Date(),
+      tabValue: 2
     };
 
     if (!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {
@@ -211,9 +212,9 @@ class ClassTimeForm extends React.Component {
                 />
                
                 <ResponsiveTabs
-                  defaultValue={0}
+                  defaultValue={1}
                   tabValue={this.state.tabValue}
-                  tabs={["Single", "Series", "Ongoing"]}
+                  tabs={["Single/Set", "Series", "Ongoing"]}
                   color="primary"
                   onTabChange={this.onTabChange}
                 />
