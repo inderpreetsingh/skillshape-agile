@@ -274,7 +274,8 @@ Meteor.methods({
           fromEmail,
           toEmail,
           ROOT_URL,
-          rejectionUrl
+          rejectionUrl,
+          newlyCreatedUser
         );
         return { addedNewMember: true };
       } else {

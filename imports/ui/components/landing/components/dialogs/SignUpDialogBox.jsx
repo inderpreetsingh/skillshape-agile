@@ -303,7 +303,7 @@ class SignUpDialogBox extends Component {
             <DialogContent className={classes.dialogContent}>
               <InputWrapper>
                 <IconInput
-                  labelText="Name *"
+                  labelText="Your Name *"
                   iconName="person"
                   value={name}
                   onChange={this.handleTextChange.bind(this, "name")}

@@ -45,7 +45,6 @@ class ClassTypeForm extends React.Component {
 
   initializeFields = () => {
     const { data, locationData } = this.props;
-    console.log(data, state, ".... editing data");
     let state = {
       gender: "Any",
       experienceLevel: "All",
@@ -229,7 +228,11 @@ class ClassTypeForm extends React.Component {
       this.setState({ isBusy: false, error });
     });
   };
-
+  //Set default location id if nothing selected 
+  setDefaultLocation=(defaultLocId)=>{
+    this.setState({location:defaultLocId})
+    return defaultLocId;
+  }
   render() {
     const { fullScreen, data, classes, locationData } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
@@ -392,7 +395,7 @@ class ClassTypeForm extends React.Component {
                       <Select
                         required={true}
                         input={<Input id="location" />}
-                        value={this.state.location}
+                        value={this.state.location ? this.state.location : !_.isEmpty(locationData) && this.setDefaultLocation(locationData[0]._id) }
                         onChange={event =>
                           this.setState({ location: event.target.value })
                         }

@@ -193,12 +193,15 @@ export class OneTimeRow extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
+                        {
+                          
+                        }              
               <Grid item sm={6} xs={12}>
                 <FormControl fullWidth margin="dense">
                   <InputLabel htmlFor="roomId">Room</InputLabel>
                   <Select
                     input={<Input id="roomId" />}
-                    value={data ? data.roomId : ""}
+                    value={data && data.roomId ? data.roomId : !isEmpty(this.props.roomData) && this.props.roomData[0].id}
                     onChange={this.handleSelectInputChange.bind(
                       this,
                       index,

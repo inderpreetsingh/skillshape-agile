@@ -542,10 +542,10 @@ class Multiselect extends React.Component {
     let readOnly = this.props.readOnly === true
 
     let messages = this.messages;
-
+    let {onNoOfFiltersClick, ...otherProps} = elementProps; 
     return (
       <Widget
-        {...elementProps}
+        {...otherProps}
         open={open}
         dropUp={dropUp}
         focused={focused}

@@ -213,7 +213,7 @@ class ClassTimeForm extends React.Component {
                 <ResponsiveTabs
                   defaultValue={0}
                   tabValue={this.state.tabValue}
-                  tabs={["One Time", "Repeating with Start/End", "Ongoing"]}
+                  tabs={["Single", "Series", "Ongoing"]}
                   color="primary"
                   onTabChange={this.onTabChange}
                 />

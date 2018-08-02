@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
-
+import { maximumClasses } from '/imports/util';
 import Cart from "/imports/ui/components/landing/components/icons/Cart.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
@@ -150,6 +150,7 @@ function getPaymentType(payment) {
 const Package = props => (
   <OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
     <Wrapper>
+     
       <ClassDetailsSection>
         <Title>{props.packageName || props.name}</Title>
         {props.packageType !== "EP" && (
@@ -174,6 +175,11 @@ const Package = props => (
         <ClassDetailsText>
           Covers: {getCovers(props.selectedClassType)}
         </ClassDetailsText>
+        {props.packageType == 'MP'&&  <ClassDetailsText>
+          Maximum Classes: {maximumClasses(props)}
+        </ClassDetailsText>
+      }
+        
       </ClassDetailsSection>
 
       <RightSection>

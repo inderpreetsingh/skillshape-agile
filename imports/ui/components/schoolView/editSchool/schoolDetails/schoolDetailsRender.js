@@ -60,7 +60,7 @@ export default function () {
                       <Grid item xs={12}>
                         <TextField
                               required={true}
-                              defaultValue={schoolData && schoolData.name}
+                              defaultValue={schoolData && schoolData.name == 'my-school' ? ' ': schoolData.name}
                               inputRef={(ref)=> this.name = ref}
                               label="School Name"
                               type="text"
@@ -72,7 +72,7 @@ export default function () {
                         <Grid item xs={12}>
                           <TextField
                               required={true}
-                              defaultValue={schoolData && schoolData.website}
+                              defaultValue={schoolData && schoolData.website ? schoolData.website : 'https://www.'}
                               inputRef={(ref)=> this.website = ref}
                               label="Website"
                               type="text"
