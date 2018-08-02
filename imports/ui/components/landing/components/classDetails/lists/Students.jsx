@@ -4,14 +4,14 @@ import styled from "styled-components";
 
 import EntityList from "./presentational/EntityList.jsx";
 
-class Teachers extends Component {
+class Students extends Component {
   render() {
-    return <EntityList entityType="teachers" />;
+    return <EntityList entityType="students" />;
   }
 }
 
-Teachers.propTypes = {
+Students.propTypes = {
   data: PropTypes.object
 };
 
-export default Teachers;
+export default Students;

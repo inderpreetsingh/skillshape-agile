@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
@@ -6,10 +6,12 @@ import {
   Text,
   SubHeading
 } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-import * as helpers from "/imports/ui/components/landing/components/jss/";
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const Wrapper = styled.div`
   background: ${helpers.panelColor};
+  width: 100%;
 `;
 
 const ProfilePic = styled.div`
@@ -38,6 +40,15 @@ const StudentNotesContent = styled.textArea`
 
 const Status = styled.div``;
 
+const ExpiresOn = Text.extend`
+  font-style: italic;
+  font-weight: 300;
+`;
+
+const Date = Text.extend`
+  color: ${helpers.alertColor};
+`;
+
 const Entity = props => (
   <Wrapper>
     <div>
@@ -53,6 +64,25 @@ const Entity = props => (
           {props.studentNotes || "Notes about student here"}
         </StudentNotesContent>
       </StudentNotes>
+    )}
+    {type === "student" && (
+      <Status>
+        <PrimaryButton label="Checked In" icon iconName="arrow_drop_down" />
+        {props.paymentInfo === "expired" ? (
+          <Fragment>
+            <Text>{"Payment Expired"}</Text>
+            <PrimaryButton
+              label="Accept Payment"
+              onClick={props.onAcceptPayment}
+            />
+          </Fragment>
+        ) : (
+          <Fragment>
+            <ExpiresOn>{props.paymentData.paymentType} expires on</ExpiresOn>
+            <Date>{props.paymentData.expiryDate}</Date>
+          </Fragment>
+        )}
+      </Status>
     )}
   </Wrapper>
 );

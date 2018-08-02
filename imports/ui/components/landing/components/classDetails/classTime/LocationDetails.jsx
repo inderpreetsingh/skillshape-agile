@@ -24,9 +24,10 @@ const Right = styled.div`
   width: 100%;
 `;
 
-const Time = (Address = Date = Text.extend`
+/* prettier-ignore */
+const Time = Address = Date = Text.extend`
   font-style: italic;
-`);
+`;
 
 const LocationDetails = props => {
   return (
