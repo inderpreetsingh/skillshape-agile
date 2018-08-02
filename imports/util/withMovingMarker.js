@@ -11,6 +11,7 @@ export default (withMovingMarker = WrappedComponent => {
 
       this.state = {
         draggable: true, // By default map is draggable
+        markerDraggable: this.props.markerDraggable,
         myLocation: this._initializeLocation()
       };
     }
@@ -71,7 +72,7 @@ export default (withMovingMarker = WrappedComponent => {
           myLocation={this.state.myLocation}
           movingMarker={
             <Marker
-              draggable={true}
+              draggable={this.state.markerDraggable}
               position={this.state.myLocation}
               onDragStart={this.dragStart}
               onDragEnd={this.dragEnd}
