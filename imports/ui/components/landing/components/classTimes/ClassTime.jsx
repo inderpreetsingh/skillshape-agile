@@ -265,13 +265,13 @@ class ClassTime extends Component {
   }
 
   getScheduleTypeFormatted = () => {
-    const { startDate, endDate, scheduleType } = this.props;
+    const { startDate, endDate, scheduleType,addToCalendar } = this.props;
     const classScheduleType = scheduleType.toLowerCase();
 
     if (classScheduleType === "recurring")
       return (
         <ScheduleType>
-          This is a Series class time.{<br />}
+         {addToCalendar=='closed' ? 'This is a Closed Series.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series.': "This is a Series class time."} {<br />}
           {formatDate(startDate)} - {formatDate(endDate)}
         </ScheduleType>
       );

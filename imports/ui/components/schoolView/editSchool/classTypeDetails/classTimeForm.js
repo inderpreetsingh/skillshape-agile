@@ -64,7 +64,8 @@ class ClassTimeForm extends React.Component {
       startDate: new Date(),
       endDate: new Date(),
       tabValue: 2,
-      closed:false
+      closed:false,
+      noOfRow: 0
     };
 
     if (!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {
@@ -94,14 +95,15 @@ class ClassTimeForm extends React.Component {
   onTabChange = tabValue => {
     this.setState({ tabValue });
   };
-
+  handleNoOfRow=(data)=>{
+    this.setState({noOfRow:this.state.noOfRow + data});
+  }
   handleChangeDate = (fieldName, date) => {
     this.setState({ [fieldName]: new Date(date) });
   };
-
+  
   saveClassTimes = (nextTab, addSeperateTimeJson, event) => {
     event.preventDefault();
-    
     const { schoolId, data, parentKey, parentData, toastr } = this.props;
     const { tabValue, locationId } = this.state;
 
@@ -120,6 +122,9 @@ class ClassTimeForm extends React.Component {
     if (tabValue === 0) {
       payload.scheduleType = "oneTime";
       payload.scheduleDetails = { oneTime: this.refs.oneTimeRow.getRowData() };
+      if(this.state.noOfRow < 2){
+        payload.closed=false
+      }
     } else if (tabValue === 1) {
       payload.scheduleType = "recurring";
       payload.startDate = this.state.startDate;
@@ -137,14 +142,14 @@ class ClassTimeForm extends React.Component {
         doc: payload,
         doc_id: data._id,
         nextTab: nextTab,
-        value: addSeperateTimeJson
+        value: addSeperateTimeJson 
       });
     } else {
       this.onSubmit({
         methodName: "classTimes.addClassTimes",
         doc: payload,
         nextTab: nextTab,
-        value: addSeperateTimeJson
+        value: addSeperateTimeJson 
       });
     }
   };
@@ -152,13 +157,14 @@ class ClassTimeForm extends React.Component {
   onSubmit = ({ methodName, doc, doc_id, nextTab, value }) => {
     this.setState({ isBusy: true });
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
+     
       if (error) {
       }
       if (result) {
         if (value.addSeperateTime == false) {
-          this.props.onClose();
+         this.props.onClose();
         } else if (value.addSeperateTime == true) {
-          this.props.onClose(value.addSeperateTime);
+          this.props.onClose( value.addSeperateTime );
         } else {
           this.props.onClose();
           this.props.moveToNextTab();
@@ -170,7 +176,7 @@ class ClassTimeForm extends React.Component {
   //onsubmit1 for the handling again opening new classtime form
   closedCheckbox = () => {
     return <Fragment> 
-                {this.state.tabValue ==1 && <FormControl fullWidth margin="dense">
+                {(this.state.tabValue ==1 || this.state.tabValue==0 && this.state.noOfRow >= 2 ) && <FormControl fullWidth margin="dense">
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -181,7 +187,9 @@ class ClassTimeForm extends React.Component {
                         value="closed"
                       />
                     }
-                    label="Do you want to close registration for the series once the first class has started."
+                    label="Do you want to close registration for this series once the first class has started?
+                     This will make it a Closed Series. Students who join the class will be enrolled in the 
+                     entire series."
                   />
                 </FormControl>}
     </Fragment>
@@ -259,6 +267,7 @@ class ClassTimeForm extends React.Component {
                       }
                       roomData={this.state.roomData}
                       saveClassTimes={this.saveClassTimes}
+                      handleNoOfRow={this.handleNoOfRow}
                     />
                   </div>
                 )}

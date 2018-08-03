@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-
+import { isEmpty } from "lodash";
 import { withStyles } from "material-ui/styles";
 import Paper from "material-ui/Paper";
 import Icon from "material-ui/Icon";
@@ -196,7 +196,7 @@ const ClassTimesCard = props => {
       const scheduleData = formattedClassTimes[day];
       const currentDay = day;
 
-      if (scheduleData) {
+      if (!isEmpty(scheduleData)) {
         const allDatesData = [];
         let eventData;
         scheduleData.forEach((schedule, i) => {
