@@ -82,6 +82,10 @@ ClassTimes.attachSchema(
     "deletedEvents.$": {
       type: String,
       blackbox: true
+    },
+    closed:{
+      type: Boolean,
+      optional: true
     }
   })
 );

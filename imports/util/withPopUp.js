@@ -27,8 +27,9 @@ export function withPopUp(WrappedComponent) {
       if (this.state.applyClose) {
         this.onClose();
       }
-
-      this.state.dialogBoxProps.onAffirmationButtonClick();
+      if(this.state.dialogBoxProps.onAffirmationButtonClick){
+        this.state.dialogBoxProps.onAffirmationButtonClick();
+      }
     };
 
     render() {

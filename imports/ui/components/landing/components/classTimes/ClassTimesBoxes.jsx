@@ -29,27 +29,29 @@ class ClassTimesBoxes extends Component {
 
   _checkForAddToCalender = (data) => {
     const userId = Meteor.userId();
-    if(isEmpty(data) || isEmpty(userId)) {
-        return true;
-    } else {
+    if (!isEmpty(data)  && data.closed &&  data.startDate < new Date() ){
+      return 'closed';
+    }
+    
+    else if(isEmpty(data) || isEmpty(userId)) {
+      return true;
+  }  
+    else {
         return isEmpty(ClassInterest.find({classTimeId: data._id}).fetch());
     }
   }
 
   render() {
-    // console.log("props in ClassTimesBoxes",this.props)
     const { classTimesData,
             classInterestData,
             inPopUp,
             withSlider
           } = this.props;
-    // console.log("ClassTimesBoxes props-->>",this.props, slider);
 
     const modifiedClassTimesData = classTimesData.map(data => {
       data.addToCalendar = this._checkForAddToCalender(data);
       return data;
     });
-    // console.log('modifiedClassTimesData',modifiedClassTimesData);
     return (<Fragment>
         {withSlider && <SliderWrapper>
           <ClassTimesSlider

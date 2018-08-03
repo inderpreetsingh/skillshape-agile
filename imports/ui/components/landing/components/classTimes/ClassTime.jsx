@@ -171,7 +171,6 @@ class ClassTime extends Component {
   };
 
   handleAddToMyCalendarButtonClick = () => {
-    // console.log("this.props.handleAddToMyCalendarButtonClick",this.props);
     const classTimeData = { ...this.props };
     this.addToMyCalender(classTimeData);
   };
@@ -184,18 +183,15 @@ class ClassTime extends Component {
 
   handleRemoveFromCalendarButtonClick = () => {
     // this.setState({ addToCalendar: true });
-    // console.log("this.props",this.props)
     const classTimeData = { ...this.props };
     this.removeFromMyCalender(classTimeData);
   };
 
   removeFromMyCalender = classTimeRec => {
     const { popUp } = this.props;
-    // console.log("this.props", this.props, classTimeRec);
     const result = this.props.classInterestData.filter(
       data => data.classTimeId == classTimeRec._id
     );
-    // console.log("result==>", result);
     // check for user login or not
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
@@ -255,6 +251,18 @@ class ClassTime extends Component {
       }
     });
   };
+  handleClassClosed=()=>{
+    const currentUser = Meteor.user();
+    const userName = getUserFullName(currentUser);
+    const { popUp } = this.props;
+    let emailId;
+    this.props && this.props.schoolId && Meteor.call('school.getMySchool',(err,res)=>{
+      if(res){
+        emailId= res && res[0].email;
+        popUp.appear("success",{content: `Hi ${userName}, This class is closed to registration. ${emailId && emailId && `contact the administrator at ${emailId} for more details.`} `});
+      } 
+    })
+  }
 
   getScheduleTypeFormatted = () => {
     const { startDate, endDate, scheduleType } = this.props;
@@ -263,7 +271,7 @@ class ClassTime extends Component {
     if (classScheduleType === "recurring")
       return (
         <ScheduleType>
-          This is a Recurring class time.{<br />}
+          This is a Series class time.{<br />}
           {formatDate(startDate)} - {formatDate(endDate)}
         </ScheduleType>
       );
@@ -273,7 +281,7 @@ class ClassTime extends Component {
       }
       return (
         <ScheduleType>
-          {"This is a one time class time."}
+          {"This is a Single/Set class time."}
         </ScheduleType>
       );
     }
@@ -296,6 +304,19 @@ class ClassTime extends Component {
   getCalenderButton = addToCalender => {
     const iconName = addToCalender ? "add_circle_outline" : "delete";
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
+    if(addToCalender=='closed'){
+      
+      return (
+        <div style={{ display: "flex" }}>
+          <ClassTimeButton
+            icon
+            onClick={this.handleClassClosed}
+            label="Class Closed"
+            iconName={iconName}
+          />
+        </div>
+      );
+    }
     if (addToCalender || !Meteor.userId()) {
       return (
         <div style={{ display: "flex" }}>

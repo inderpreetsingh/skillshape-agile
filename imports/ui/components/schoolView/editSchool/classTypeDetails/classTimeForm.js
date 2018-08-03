@@ -6,6 +6,8 @@ import config from "/imports/config";
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
 import Select from "material-ui/Select";
+import Checkbox from "material-ui/Checkbox";
+import { FormControl, FormControlLabel } from "material-ui/Form";
 import Grid from "material-ui/Grid";
 import Dialog, {
   DialogTitle,
@@ -19,12 +21,20 @@ import ResponsiveTabs from "/imports/util/responsiveTabs";
 import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
 // import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
 import { WeekDaysRow } from "./weekDaysRow";
-import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
 import { OneTimeRow } from "./oneTimeRow";
 import "/imports/api/sLocation/methods";
 import { toastrModal } from "/imports/util";
+/*
+1.closed field in the collection.(Done)
+2.Default value of closed checkbox.(Done)
+3.Only shown in case of series.(Done)
+4.storing in the state and then in collection.(Done)
+5.Retrieving the default value.(Done)
+6.Join class button will be set to closed class if class started.
+7.Popup with some text.
 
+*/
 const formId = "classTimeForm";
 
 const styles = theme => {
@@ -53,7 +63,8 @@ class ClassTimeForm extends React.Component {
       roomId: "",
       startDate: new Date(),
       endDate: new Date(),
-      tabValue: 2
+      tabValue: 2,
+      closed:false
     };
 
     if (!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {
@@ -75,6 +86,7 @@ class ClassTimeForm extends React.Component {
       state.endDate = data.endDate;
       state.duration = data.duration;
       state.roomId = data.roomId;
+      state.closed=data.closed
     }
     return state;
   };
@@ -98,7 +110,8 @@ class ClassTimeForm extends React.Component {
       classTypeId: parentKey,
       name: this.classTimeName.value,
       desc: this.desc.value,
-      locationId: locationId
+      locationId: locationId,
+      closed: this.state.closed
     };
     if (!this.classTimeName.value) {
       toastr.error("Please enter Class Time name.", "Error");
@@ -155,7 +168,24 @@ class ClassTimeForm extends React.Component {
     });
   };
   //onsubmit1 for the handling again opening new classtime form
-
+  closedCheckbox = () => {
+    return <Fragment> 
+                {this.state.tabValue ==1 && <FormControl fullWidth margin="dense">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.closed}
+                        onChange={()=>{
+                          this.setState({closed:!this.state.closed})
+                        }}
+                        value="closed"
+                      />
+                    }
+                    label="Do you want to close registration for the series once the first class has started."
+                  />
+                </FormControl>}
+    </Fragment>
+  }
   render() {
     const { fullScreen, data, classes, locationData } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
@@ -210,14 +240,14 @@ class ClassTimeForm extends React.Component {
                   type="text"
                   fullWidth
                 />
-               
                 <ResponsiveTabs
                   defaultValue={1}
                   tabValue={this.state.tabValue}
                   tabs={["Single/Set", "Series", "Ongoing"]}
                   color="primary"
                   onTabChange={this.onTabChange}
-                />
+                  />
+                  {this.closedCheckbox()}
                 {this.state.tabValue === 0 && (
                   <div style={{ border: "3px solid blue", padding: 10 }}>
                     <OneTimeRow

@@ -93,13 +93,13 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
     );
   else return addTotalClassTimes(classTimes);
 
-  if (hidePastDates)
-    return removePastTimesFromSchedule(
-      classTimes,
-      data.scheduleType.toLowerCase(),
-      { startDate: data.startDate, endDate: data.endDate }
-    );
-  else return addTotalClassTimes(classTimes);
+  // if (hidePastDates)
+  //   return removePastTimesFromSchedule(
+  //     classTimes,
+  //     data.scheduleType.toLowerCase(),
+  //     { startDate: data.startDate, endDate: data.endDate }
+  //   );
+  // else return addTotalClassTimes(classTimes);
 };
 
 const addTotalClassTimes = classTimes => {
@@ -141,15 +141,16 @@ const removePastTimesFromSchedule = (
 ) => {
   const currentDate = new Date();
   if (scheduleType === "recurring") {
-    if (
-      moment(currentDate).isBetween(
-        moment(scheduleData.startDate),
-        moment(scheduleData.endDate)
-      )
-    ) {
+    //logic is not fullProof in case of past times and future times
+    // if (
+    //   moment(currentDate).isBetween(
+    //     moment(scheduleData.startDate),
+    //     moment(scheduleData.endDate)
+    //   )
+    // ) {
       // now we need don't need to check anything
       return addTotalClassTimes(classTimes);
-    }
+    // }
 
     return {};
   } else if (scheduleType === "onetime") {
