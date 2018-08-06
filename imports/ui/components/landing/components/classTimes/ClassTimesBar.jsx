@@ -135,21 +135,7 @@ const ClassTimesBar = props => {
             />
           </GridItem>)
         }
-        else{
-          return  (<ClassContainer>
-            <Typography caption="p">
-             {classTimeObj.name} is ended recently.It will be updated soon.
-            </Typography >
-            </ClassContainer>)
-        }
-      }
-      else{
-       return  (<ClassContainer>
-         <Typography caption="p">
-          {classTimeObj.name} is ended recently.It will be updated soon.
-         </Typography >
-         </ClassContainer>)
-               
+        
       }
     })
   

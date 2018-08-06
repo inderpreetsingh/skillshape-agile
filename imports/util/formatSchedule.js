@@ -140,25 +140,31 @@ const removePastTimesFromSchedule = (
   scheduleData
 ) => {
   const currentDate = new Date();
-  if (scheduleType === "recurring") {
-    //logic is not fullProof in case of past times and future times
-    // if (
-    //   moment(currentDate).isBetween(
-    //     moment(scheduleData.startDate),
-    //     moment(scheduleData.endDate)
-    //   )
-    // ) {
-      // now we need don't need to check anything
-      return addTotalClassTimes(classTimes);
-    // }
-
+  console.log('',classTimes,scheduleType)
+  if (scheduleType === "recurring" || scheduleType === 'ongoing') {
+   
+     if(scheduleData.endDate > new Date()) 
+     {
+       return addTotalClassTimes(classTimes);
+     }
     return {};
   } else if (scheduleType === "onetime") {
+    let allPastDate=true;
+    DAYS_IN_WEEK.map(day => {
+      const scheduleData = classTimes[day];
+      if (!isEmpty(scheduleData)) {
+        scheduleData.forEach((schedule, i) => {
+         if(schedule.startTime > new Date()){
+            allPastDate=false;
+         } 
+        })
+      }
+    } ) 
+    if(!allPastDate){
     return addTotalClassTimes(classTimes);
-    //return filterOutAndAddTotalClassTimes(classTimes);
+    }
+    else return {};
   }
-
-  return addTotalClassTimes(classTimes);
 };
 
 export const _formatAMPM = startTime => {
