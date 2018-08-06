@@ -271,7 +271,10 @@ export default function(props) {
               type="alert"
               defaultButtons
               title="Are you sure?"
-              content={childTable.actions.del.dialogBoxContent}
+              content={
+                childTable.actions.del.dialogBoxContent ||
+                "This will delete your data, are you sure?"
+              }
               cancelBtnText="Cancel"
               onAffirmationButtonClick={this.handleDeleteData}
               onModalClose={this.closeDeleteConfirmationModal}

@@ -113,7 +113,10 @@ export default function() {
           type="alert"
           defaultButtons
           title="Are you sure?"
-          content={settings.mainPanelHeader.actions.del.dialogBoxContent}
+          content={
+            settings.mainTable.actions.del.dialogBoxContent ||
+            "This will delete your data, are you sure?"
+          }
           cancelBtnText="Cancel"
           onAffirmationButtonClick={this.handleDeleteData}
           onModalClose={this.closeDeleteConfirmationModal}
