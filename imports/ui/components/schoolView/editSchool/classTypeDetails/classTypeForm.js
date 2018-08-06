@@ -20,7 +20,7 @@ import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import "/imports/api/sLocation/methods";
 import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
-
+import PackageAttachment from '/imports/ui/components/landing/components/dialogs/PackageAttachement.jsx'
 const formId = "classTypeForm";
 
 const styles = theme => {
@@ -54,7 +54,9 @@ class ClassTypeForm extends React.Component {
       skillCategoryId: null,
       selectedSkillSubject: null,
       selectedLocation: null,
-      searchSkillCategoryText: ""
+      searchSkillCategoryText: "",
+      PackageAttachment:false,
+      PackageOpen:true
     };
     if (data && _.size(data) > 0) {
       if (
@@ -219,11 +221,12 @@ class ClassTypeForm extends React.Component {
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
     //this.props.enableParentPanelToDefaultOpen();
+    this.setState({PackageAttachment:true,PackageOpen:true})
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
       if (error) {
       }
       if (result) {
-        this.props.onClose(result);
+       // this.props.onClose(result);
       }
       this.setState({ isBusy: false, error });
     });
@@ -437,6 +440,8 @@ class ClassTypeForm extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+        {console.log('this.state.PackageAttachment ',this.state.PackageAttachment )}
+       {this.state.PackageAttachment && <PackageAttachment open={this.state.PackageOpen} onClose={()=>{this.setState({PackageOpen:false})}}/>} 
       </div>
     );
   }

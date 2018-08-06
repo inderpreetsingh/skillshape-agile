@@ -262,7 +262,6 @@ class ClassTypeContent extends Component {
           subjectData.skillCategoryId,
           classTypeData.selectedSkillCategory
         );
-        console.log(categoryName, "category name...........");
         subjectData.name = `${subjectData.name} -- ${categoryName}`;
       }
       return subjectData;

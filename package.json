@@ -5,8 +5,7 @@
     "start": "meteor run"
   },
   "dependencies": {
-    "@babel/runtime": "7.0.0-beta.56",
-    "babel-runtime": "6.26.0",
+    "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
     "datatables.net": "^1.10.16",
     "date-fns": "^1.29.0",

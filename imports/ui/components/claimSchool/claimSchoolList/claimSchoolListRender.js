@@ -119,7 +119,6 @@ export default function(props) {
   }
 
   if (isEmpty(schools)) {
-    console.log(this.state.filters, "filters in the render......");
     return (
       <GridWrapper suggestionForm={this.props.suggestionForm}>
         {this.state.isLoading && <ContainerLoader />}

@@ -3,7 +3,6 @@ import config from "/imports/config";
 
 import { Marker } from "react-google-maps";
 
-console.log(config, "default location");
 export default (withMovingMarker = WrappedComponent => {
   return class extends Component {
     constructor(props) {
@@ -44,7 +43,6 @@ export default (withMovingMarker = WrappedComponent => {
     };
 
     dragEnd = e => {
-      console.log(this.props.onDragEnd, "..........");
       this.setState({
         ...this.state,
         myLocation: {
@@ -64,7 +62,6 @@ export default (withMovingMarker = WrappedComponent => {
     };
 
     render() {
-      // console.log(this.state,this.props,"=========== withMoving Marker.js")
       return (
         <WrappedComponent
           {...this.props}

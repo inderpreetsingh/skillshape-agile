@@ -140,7 +140,6 @@ const removePastTimesFromSchedule = (
   scheduleData
 ) => {
   const currentDate = new Date();
-  console.log('',classTimes,scheduleType)
   if (scheduleType === "recurring" || scheduleType === 'ongoing') {
    
      if(scheduleData.endDate > new Date()) 
