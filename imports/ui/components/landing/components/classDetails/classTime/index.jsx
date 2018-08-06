@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 
-import ActionButtons from "./ActionButtons";
-import Description from "./Description";
-import LocationDetails from "./LocationDetails";
-import NameBar from "./NameBar";
+import ActionButtons from "./presentational/ActionButtons";
+import Description from "./presentational/Description";
+import LocationDetails from "./presentational/LocationDetails";
+import NameBar from "./presentational/NameBar";
 
 class ClassTime extends Component {
   render() {
