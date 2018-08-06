@@ -271,7 +271,7 @@ export default function(props) {
               type="alert"
               defaultButtons
               title="Are you sure?"
-              content="This will permanently delete your data. Are you sure?"
+              content={childTable.actions.del.dialogBoxContent}
               cancelBtnText="Cancel"
               onAffirmationButtonClick={this.handleDeleteData}
               onModalClose={this.closeDeleteConfirmationModal}

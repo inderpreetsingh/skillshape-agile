@@ -47,6 +47,10 @@ const Tagline = styled.div`
   line-height: 1;
 `;
 
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
 const styles = theme => {
   return {
     button: {
@@ -65,7 +69,11 @@ const styles = theme => {
     },
     dialogActions: {
       padding: `${helpers.rhythmDiv}px`,
-      paddingTop: 0
+      paddingTop: 0,
+      [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+        flexWrap: "wrap",
+        justifyContent: "flex-start"
+      }
     }
   };
 };
@@ -532,23 +540,29 @@ class LocationForm extends React.Component {
           )}
           <DialogActions classes={{ root: classes.dialogActions }}>
             {data && (
-              <FormGhostButton
-                alertColor
-                onClick={() => this.setState({ showConfirmationModal: true })}
-                label="Delete"
-              />
+              <ButtonWrapper>
+                <FormGhostButton
+                  alertColor
+                  onClick={() => this.setState({ showConfirmationModal: true })}
+                  label="Delete"
+                />
+              </ButtonWrapper>
             )}
-            <FormGhostButton
-              darkGreyColor
-              onClick={() => this.props.onClose()}
-              label="Cancel"
-            />
-            <FormGhostButton
-              type="submit"
-              form={formId}
-              onClick={this.onSubmit}
-              label={data ? "Save" : "Submit"}
-            />
+            <ButtonWrapper>
+              <FormGhostButton
+                darkGreyColor
+                onClick={() => this.props.onClose()}
+                label="Cancel"
+              />
+            </ButtonWrapper>
+            <ButtonWrapper>
+              <FormGhostButton
+                type="submit"
+                form={formId}
+                onClick={this.onSubmit}
+                label={data ? "Save" : "Submit"}
+              />
+            </ButtonWrapper>
           </DialogActions>
         </Dialog>
       </div>
