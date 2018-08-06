@@ -437,23 +437,6 @@ export default function(props) {
                         <ButtonsWrapper>
                           <ButtonWrapper>
                             <Button
-                              onClick={() =>
-                                this.setState({
-                                  showForm: true,
-                                  formData: tableData
-                                })
-                              }
-                              color="accent"
-                              raised
-                              dense
-                            >
-                              <Edit style={{ marginRight: 2 }} />
-                              {childTable.actions.edit.title}
-                            </Button>
-                          </ButtonWrapper>
-
-                          <ButtonWrapper>
-                            <Button
                               onClick={() => {
                                 this.setState(state => {
                                   return {
@@ -469,6 +452,23 @@ export default function(props) {
                             >
                               <Delete style={{ marginRight: 2 }} />
                               {childTable.actions.del.title}
+                            </Button>
+                          </ButtonWrapper>
+
+                          <ButtonWrapper>
+                            <Button
+                              onClick={() =>
+                                this.setState({
+                                  showForm: true,
+                                  formData: tableData
+                                })
+                              }
+                              color="accent"
+                              raised
+                              dense
+                            >
+                              <Edit style={{ marginRight: 2 }} />
+                              {childTable.actions.edit.title}
                             </Button>
                           </ButtonWrapper>
                         </ButtonsWrapper>

@@ -453,6 +453,7 @@ class LocationForm extends React.Component {
             <DialogContent classes={{ root: classes.dialogContent }}>
               <SchoolLocationMap
                 locationData={this.state.myLocation}
+                markerDraggable={true}
                 myCurrentPosition={this.getMyDefaultLocation()}
                 onDragEnd={this.getAddressFromLocation}
               />

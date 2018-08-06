@@ -2,13 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import { compose, withProps } from "recompose";
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker
-} from "react-google-maps";
+import { withProps } from "recompose";
+import { withScriptjs, withGoogleMap, GoogleMap } from "react-google-maps";
 
 import config from "/imports/util";
 import { withMovingMarker } from "/imports/util";
@@ -46,9 +41,8 @@ const SchoolLocationMap = withMovingMarker(
         defaultZoom={mapOptions.zoom}
         defaultCenter={props.myLocation}
         center={props.myLocation}
-        {...props}
       >
-        {props.isMarkerShown && React.cloneElement(props.movingMarker)}
+        {props.isMarkerShown && React.cloneElement(props.renderMarker)}
       </GoogleMap>
     );
   })

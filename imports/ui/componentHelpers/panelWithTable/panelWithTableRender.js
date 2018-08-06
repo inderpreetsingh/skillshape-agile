@@ -343,24 +343,8 @@ export default function() {
                             )}
                         </Grid>
                         <ButtonsWrapper>
-                          <ButtonWrapper left>
-                            <Button
-                              onClick={() =>
-                                this.setState({
-                                  showForm: true,
-                                  formData: tableData
-                                })
-                              }
-                              color="accent"
-                              raised
-                              dense
-                            >
-                              <Edit style={{ marginRight: 2 }} />
-                              {settings.mainTable.actions.edit.title}
-                            </Button>
-                          </ButtonWrapper>
                           {settings.mainTable.actions.del && (
-                            <ButtonWrapper right>
+                            <ButtonWrapper left>
                               <Button
                                 onClick={() => {
                                   this.setState(state => {
@@ -380,6 +364,22 @@ export default function() {
                               </Button>
                             </ButtonWrapper>
                           )}
+                          <ButtonWrapper right>
+                            <Button
+                              onClick={() =>
+                                this.setState({
+                                  showForm: true,
+                                  formData: tableData
+                                })
+                              }
+                              color="accent"
+                              raised
+                              dense
+                            >
+                              <Edit style={{ marginRight: 2 }} />
+                              {settings.mainTable.actions.edit.title}
+                            </Button>
+                          </ButtonWrapper>
                         </ButtonsWrapper>
                       </div>
                     </Grid>
