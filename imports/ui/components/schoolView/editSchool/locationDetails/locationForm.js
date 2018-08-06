@@ -13,11 +13,11 @@ import Dialog, {
   withMobileDialog
 } from "material-ui/Dialog";
 
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import { ContainerLoader } from "/imports/ui/loading/container";
-
-import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
 
 import "/imports/api/sLocation/methods";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
@@ -438,13 +438,18 @@ class LocationForm extends React.Component {
 
           {this.state.isBusy && <ContainerLoader />}
           {this.state.showConfirmationModal && (
-            <ConfirmationModal
+            <SkillShapeDialogBox
+              defaultButtons
+              type="alert"
               open={this.state.showConfirmationModal}
-              submitBtnLabel="Yes, Delete"
-              cancelBtnLabel="Cancel"
-              message="You will delete this location, Are you sure?"
-              onSubmit={() => this.handleSubmit(data, true)}
-              onClose={() => this.setState({ showConfirmationModal: false })}
+              affirmateBtnText="Yes, Delete"
+              cancelBtnText="Cancel"
+              title="Are you sure ?"
+              content="You will delete this location permanently, so you want to delete it?"
+              onAffirmationButtonClick={() => this.handleSubmit(data, true)}
+              onModalClose={() =>
+                this.setState({ showConfirmationModal: false })
+              }
             />
           )}
           {this.state.error ? (
@@ -527,24 +532,23 @@ class LocationForm extends React.Component {
           )}
           <DialogActions classes={{ root: classes.dialogActions }}>
             {data && (
-              <Button
+              <FormGhostButton
+                alertColor
                 onClick={() => this.setState({ showConfirmationModal: true })}
-                color="accent"
-              >
-                Delete
-              </Button>
+                label="Delete"
+              />
             )}
-            <Button onClick={() => this.props.onClose()} color="primary">
-              Cancel
-            </Button>
-            <Button
+            <FormGhostButton
+              darkGreyColor
+              onClick={() => this.props.onClose()}
+              label="Cancel"
+            />
+            <FormGhostButton
               type="submit"
               form={formId}
-              color="primary"
               onClick={this.onSubmit}
-            >
-              {data ? "Save" : "Submit"}
-            </Button>
+              label={data ? "Save" : "Submit"}
+            />
           </DialogActions>
         </Dialog>
       </div>

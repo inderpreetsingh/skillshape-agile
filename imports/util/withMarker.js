@@ -4,8 +4,8 @@ import config from "/imports/config";
 
 import { Marker } from "react-google-maps";
 
-console.log(config, "default location");
-export default (withMovingMarker = WrappedComponent => {
+// NOTE: By default the marker is draggable in this withMarker HOC.
+export default (withMarker = WrappedComponent => {
   return class MarkerHOC extends Component {
     static defaultProps = {
       markerDraggable: true
