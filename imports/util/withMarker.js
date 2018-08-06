@@ -15,7 +15,6 @@ export default (withMarker = WrappedComponent => {
       super(props);
 
       this.state = {
-        draggable: true, // By default map is draggable
         myLocation: this._initializeLocation()
       };
     }

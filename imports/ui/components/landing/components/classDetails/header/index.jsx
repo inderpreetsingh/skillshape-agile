@@ -1,25 +1,34 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import Header from "/imports/ui/components/landing/components/classDetails/header/Header.jsx";
+import Header from "./presentational/Header.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { coverSrc } from "/imports/ui/components/landing/site-settings.js";
 
 class HeaderContainer extends Component {
   handlePurchaseButtonClick = () => {};
   render() {
-    return Header.call(this);
+    const { classTypeCoverSrc, schoolCoverSrc } = this.props;
+
+    return (
+      <Header
+        profileCoverSrc={classTypeCoverSrc}
+        schoolCoverSrc={schoolCoverSrc}
+        onPurchaseButtonClick={this.handlePurchaseButtonClick}
+      />
+    );
   }
 }
 
 HeaderContainer.propTypes = {
-  coverSrc: PropTypes.string,
-  profileSrc: PropTypes.string
+  classTypeCoverSrc: PropTypes.string,
+  schoolCoverSrc: PropTypes.string
 };
 
 HeaderContainer.defaultProps = {
-  coverSrc: coverSrc
+  classTypeCoverSrc: coverSrc,
+  schoolCoverSrc: coverSrc
 };
 
 export default HeaderContainer;

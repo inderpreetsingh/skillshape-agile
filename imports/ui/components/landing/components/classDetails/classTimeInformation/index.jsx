@@ -5,7 +5,7 @@ import Description from "./presentational/Description";
 import LocationDetails from "./presentational/LocationDetails";
 import NameBar from "./presentational/NameBar";
 
-class ClassTime extends Component {
+class ClassTimeInformation extends Component {
   render() {
     const { classTimeData, classTypeName, schoolName } = this.props;
 
@@ -29,4 +29,8 @@ class ClassTime extends Component {
   }
 }
 
-export default ClassTime;
+ClassTimeInformation.defaultProps = {
+  classTimeData
+}
+
+export default ClassTimeInformation;

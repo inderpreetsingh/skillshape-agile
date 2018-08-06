@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 `;
 
 const ProfilePic = styled.div`
-  background-image: url(${props.src});
+  background-image: url(${props => props.src});
   height: ${helpers.rhythmDiv * 8}px;
   width: ${helpers.rhythmDiv * 6}px;
   padding: ${helpers.rhythmDiv * 2}px;
@@ -30,7 +30,7 @@ const StudentNotes = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
 `;
 
-const StudentNotesContent = styled.textArea`
+const StudentNotesContent = styled.textarea`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
   font-style: italic;

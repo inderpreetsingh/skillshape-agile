@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 import ClearIcon from "material-ui-icons/Clear";
-
 import { withStyles } from "material-ui/styles";
+
+import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
@@ -23,14 +25,6 @@ const Wrapper = styled.div`
 const TextWrapper = styled.div`
   /* prettier-ignore */
   ${helpers.flexHorizontalSpaceBetween}
-`;
-
-const Text = style.p`
-  margin: 0;
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize}px;
-  color: white;
-  line-height: 1;
 `;
 
 const Notification = props => (

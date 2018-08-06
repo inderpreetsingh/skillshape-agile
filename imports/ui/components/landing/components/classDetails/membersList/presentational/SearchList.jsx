@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-import { withStyles } from "material-ui/withStyles";
+import { withStyles } from "material-ui/styles";
 import Icon from "material-ui/Icon";
 import TextField from "material-ui/TextField";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const Wrapper = styled.div`
   display: flex;
@@ -11,7 +12,7 @@ const Wrapper = styled.div`
 
 const styles = {
   icon: {
-    color: helpers.rhythmDiv,
+    color: helpers.black,
     fontSize: helpers.baseFontSize * 1.5
   }
 };
