@@ -16,7 +16,6 @@ import { cutString } from "/imports/util";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
-
 import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 
 import Events from "/imports/util/events";
@@ -281,7 +280,7 @@ class ClassTime extends Component {
       }
       return (
         <ScheduleType>
-          {"This is a Single/Set class time."}
+         {addToCalendar=='closed' ? 'This is a Closed Single/set.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series.': "This is a Single/Set class time."} {<br />}
         </ScheduleType>
       );
     }
@@ -301,9 +300,10 @@ class ClassTime extends Component {
   getDotColor = addToCalendar =>
     addToCalendar ? helpers.primaryColor : helpers.cancel;
 
-  getCalenderButton = addToCalender => {
+  getCalenderButton = (addToCalender,formattedClassTimesDetails) => {
     const iconName = addToCalender ? "add_circle_outline" : "delete";
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
+   
     if(addToCalender=='closed'){
       
       return (

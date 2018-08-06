@@ -195,7 +195,6 @@ const ClassTimesCard = props => {
     return DAYS_IN_WEEK.map(day => {
       const scheduleData = formattedClassTimes[day];
       const currentDay = day;
-
       if (!isEmpty(scheduleData)) {
         const allDatesData = [];
         let eventData;

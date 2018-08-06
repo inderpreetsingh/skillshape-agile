@@ -154,7 +154,8 @@ const removePastTimesFromSchedule = (
 
     return {};
   } else if (scheduleType === "onetime") {
-    return filterOutAndAddTotalClassTimes(classTimes);
+    return addTotalClassTimes(classTimes);
+    //return filterOutAndAddTotalClassTimes(classTimes);
   }
 
   return addTotalClassTimes(classTimes);
@@ -176,3 +177,4 @@ export const _formatAMPM = startTime => {
 //   }
 //   return false;
 // }
+// function to check if the classs time end date ended
