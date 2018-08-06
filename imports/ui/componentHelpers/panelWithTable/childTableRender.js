@@ -271,7 +271,10 @@ export default function(props) {
               type="alert"
               defaultButtons
               title="Are you sure?"
-              content="This will permanently delete your data. Are you sure?"
+              content={
+                childTable.actions.del.dialogBoxContent ||
+                "This will delete your data, are you sure?"
+              }
               cancelBtnText="Cancel"
               onAffirmationButtonClick={this.handleDeleteData}
               onModalClose={this.closeDeleteConfirmationModal}
@@ -437,23 +440,6 @@ export default function(props) {
                         <ButtonsWrapper>
                           <ButtonWrapper>
                             <Button
-                              onClick={() =>
-                                this.setState({
-                                  showForm: true,
-                                  formData: tableData
-                                })
-                              }
-                              color="accent"
-                              raised
-                              dense
-                            >
-                              <Edit style={{ marginRight: 2 }} />
-                              {childTable.actions.edit.title}
-                            </Button>
-                          </ButtonWrapper>
-
-                          <ButtonWrapper>
-                            <Button
                               onClick={() => {
                                 this.setState(state => {
                                   return {
@@ -469,6 +455,23 @@ export default function(props) {
                             >
                               <Delete style={{ marginRight: 2 }} />
                               {childTable.actions.del.title}
+                            </Button>
+                          </ButtonWrapper>
+
+                          <ButtonWrapper>
+                            <Button
+                              onClick={() =>
+                                this.setState({
+                                  showForm: true,
+                                  formData: tableData
+                                })
+                              }
+                              color="accent"
+                              raised
+                              dense
+                            >
+                              <Edit style={{ marginRight: 2 }} />
+                              {childTable.actions.edit.title}
                             </Button>
                           </ButtonWrapper>
                         </ButtonsWrapper>

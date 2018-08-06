@@ -71,6 +71,7 @@ export default (locationSettings = {
       delete: "removeLocation",
       del: {
         title: "Delete Location",
+        dialogBoxContent: "This will delete the location, are you sure?",
         onSubmit: "location.removeLocation"
       }
     }
@@ -116,6 +117,7 @@ export default (locationSettings = {
       delete: "removeRoom",
       del: {
         onSubmit: "location.roomRemove",
+        dialogBoxContent: "This will delete the room, are you sure ?",
         title: "Delete Room"
       }
     }

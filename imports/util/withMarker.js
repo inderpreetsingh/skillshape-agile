@@ -1,11 +1,16 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import config from "/imports/config";
 
 import { Marker } from "react-google-maps";
 
-console.log(config, "default location");
-export default (withMovingMarker = WrappedComponent => {
-  return class extends Component {
+// NOTE: By default the marker is draggable in this withMarker HOC.
+export default (withMarker = WrappedComponent => {
+  return class MarkerHOC extends Component {
+    static defaultProps = {
+      markerDraggable: true
+    };
+
     constructor(props) {
       super(props);
 
@@ -44,7 +49,11 @@ export default (withMovingMarker = WrappedComponent => {
     };
 
     dragEnd = e => {
-      console.log(this.props.onDragEnd, "..........");
+      // console.log(this.props.onDragEnd, "..........");
+      debugger;
+      console.group("mar dragger");
+      console.log(e);
+      console.groupEnd();
       this.setState({
         ...this.state,
         myLocation: {
@@ -53,12 +62,15 @@ export default (withMovingMarker = WrappedComponent => {
         }
       });
 
-      // debugger;
       this.props.onDragEnd &&
         this.props.onDragEnd({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     };
 
-    dragStart = e => {
+    dragStart = (e, ar) => {
+      debugger;
+      console.group("mar dragger");
+      console.log(e, ar);
+      console.groupEnd();
       this.props.onDragStart &&
         this.props.onDragStart({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     };
@@ -69,9 +81,9 @@ export default (withMovingMarker = WrappedComponent => {
         <WrappedComponent
           {...this.props}
           myLocation={this.state.myLocation}
-          movingMarker={
+          renderMarker={
             <Marker
-              draggable={true}
+              draggable={this.props.markerDraggable}
               position={this.state.myLocation}
               onDragStart={this.dragStart}
               onDragEnd={this.dragEnd}
