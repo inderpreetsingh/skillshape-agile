@@ -8,7 +8,7 @@ import Add from 'material-ui-icons/Add';
 import Edit from 'material-ui-icons/Edit';
 import Button from 'material-ui/Button';
 import Delete from 'material-ui-icons/Delete';
-
+import { maximumClasses } from '/imports/util';
 import MonthlyPriceForm from './monthlyPriceForm';
 import PanelHeader from '../panelHeader';
 
@@ -16,12 +16,13 @@ export default function () {
 
 
      const { classes, schoolId, monthlyPricingData,schoolData ,currency} = this.props;
+     const data = this.state.formData;
 	return (
 		<div className="class-price-details">
 			{
           		this.state.showForm && <MonthlyPriceForm
           			schoolId={schoolId}
-          			data={this.state.formData}
+          			data={data}
           			open={this.state.showForm}
                     onClose={this.handleFormModal}
                     classTypeData={this.props.classTypeData}
@@ -77,6 +78,12 @@ export default function () {
                     									return <span>{classType.name} </span>
                     								})
                     							}
+                    						</Typography>
+                                                  <br></br>
+                                                  <Typography component="p">
+                                                <b>Maximum classes:</b> 
+                                               
+                                                {maximumClasses(monthPrice)}
                     						</Typography>
                                                   <br></br>
                                                   {

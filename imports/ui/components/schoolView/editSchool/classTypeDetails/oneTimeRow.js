@@ -109,7 +109,7 @@ export class OneTimeRow extends React.Component {
               <Grid item sm={6} xs={12}>
                 <MaterialDatePicker
                   required={true}
-                  hintText={"Start Date"}
+                  hintText={"Date"}
                   floatingLabelText={"Date *"}
                   value={data ? data.startDate : ""}
                   onChange={this.handleChangeDate.bind(
@@ -193,12 +193,15 @@ export class OneTimeRow extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
+                        {
+                          
+                        }              
               <Grid item sm={6} xs={12}>
                 <FormControl fullWidth margin="dense">
                   <InputLabel htmlFor="roomId">Room</InputLabel>
                   <Select
                     input={<Input id="roomId" />}
-                    value={data ? data.roomId : ""}
+                    value={data && data.roomId ? data.roomId : !isEmpty(this.props.roomData) && this.props.roomData[0].id}
                     onChange={this.handleSelectInputChange.bind(
                       this,
                       index,
@@ -236,7 +239,7 @@ export class OneTimeRow extends React.Component {
         })}
         <div>
           <div>
-            <div
+            {/* <div
               style={{
                 display: "flex",
                 justifyContent: "space-between"
@@ -258,18 +261,18 @@ export class OneTimeRow extends React.Component {
                 Use this if there is a different repeating type or students can
                 come to any class time available.
               </Typography>
-            </div>
+            </div> */}
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-between"
+                justifyContent: "center"
               }}
             >
               <Button onClick={this.addNewRow} raised color="secondary">
                 Add Linked Class Time
               </Button>
 
-              <Button
+              {/* <Button
                 onClick={this.props.saveClassTimes.bind(this, event, {
                   addSeperateTime: true
                 })}
@@ -277,7 +280,7 @@ export class OneTimeRow extends React.Component {
                 color="secondary"
               >
                 Add Separate Class Time
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

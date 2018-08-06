@@ -269,7 +269,7 @@ const SearchInputsSection = props => (
             filters={props.filters}
             onLocationChange={(event)=> {props.onLocationChange(event, "filters", null)}}
             currentAddress={props.currentAddress}
-            googlelocation={true}
+            googlelocation={'true'}
             value={props.currentAddress}
             onCloseIconClick={props.resetSearch}
             resetSearch={props.resetSearch}
