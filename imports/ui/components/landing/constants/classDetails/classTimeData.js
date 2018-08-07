@@ -1,4 +1,5 @@
 import uuidv4 from "uuid/v4";
+import moment from "moment";
 
 export const classTimeData = {
   id: uuidv4(),
@@ -7,9 +8,9 @@ export const classTimeData = {
   schoolName: "my school name",
   description:
     "This class time is done under mr sudhir, who is taking this class at a particular time for over 4 years as of now",
-  startDate: new Date(),
+  startDate: new Date("2018-03-18"),
   time: "11:40",
-  timeperiod: "pm",
+  timePeriod: "pm",
   address: "Appollo Bandar, Colaba, Mumbai, 400001",
   locationData: {
     lat: -34,

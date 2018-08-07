@@ -6,7 +6,7 @@ import ClassTimeInformation from "./classTimeInformation/index.jsx";
 import MembersList from "./membersList/index.jsx";
 
 const Wrapper = styled.div`
-  overflow-x: hidden;
+  overflow: hidden;
 `;
 
 const ClassDetails = props => (

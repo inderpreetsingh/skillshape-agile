@@ -21,7 +21,8 @@ class ClassTimeInformation extends Component {
         <Description description={classTimeData.description} />
         <LocationDetails
           time={classTimeData.time}
-          date={classTimeData.date}
+          timePeriod={classTimeData.timePeriod}
+          startDate={classTimeData.startDate}
           address={classTimeData.address}
           locationData={classTimeData.locationData}
         />

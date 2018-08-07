@@ -13,7 +13,8 @@ const styles = {
     position: "absolute",
     right: 0,
     top: 0,
-    color: "white"
+    color: "white",
+    cursor: "pointer"
   }
 };
 
@@ -22,7 +23,7 @@ const Wrapper = styled.div`
   width: 100%;
   background: ${props => props.bgColor};
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 4}px;
-  transition: 0.5s ease-in-out transform;
+  transition: 0.25s ease-in transform;
   transform-origin: center top;
   ${props => (!props.show ? `transform: scaleY(0)` : "")};
 `;

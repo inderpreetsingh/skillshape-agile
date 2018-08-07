@@ -5,16 +5,28 @@ import styled from "styled-components";
 import { Link } from "react-router";
 
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import {
+  rhythmDiv,
+  mobile
+} from "/imports/ui/components/landing/components/jss/helpers.js";
 
 // console.log(Meteor, Meteor.absoluteUrl);
 //const APP_URL = Meteor.absoluteUrl();
 
 const Wrapper = styled.div`
-  padding: ${helpers.rhythmDiv * 2}px;
+  padding: ${rhythmDiv * 2}px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
+
+  @media screen and (max-width: ${mobile}px) {
+    justify-content: flex-start;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
 `;
 
 const ActionButtons = props => (
@@ -23,20 +35,27 @@ const ActionButtons = props => (
       to={`${Meteor.absoluteUrl()}/classType/my_class/${props.classTypeId}`}
       target="_blank"
     >
-      <PrimaryButton label="Visit ClassType" />
+      <ButtonWrapper>
+        <PrimaryButton label="Visit ClassType" />
+      </ButtonWrapper>
     </Link>
     <Link
       to={`${Meteor.absoluteUrl()}/schools/${props.schoolName}`}
       target="_blank"
     >
-      <PrimaryButton label="Visit School" />
+      <ButtonWrapper>
+        <PrimaryButton label="Visit School" />
+      </ButtonWrapper>
     </Link>
-    <PrimaryButton
-      label="Schedule"
-      icon
-      iconName="schedule"
-      onClick={props.onScheduleButtonClick}
-    />
+
+    <ButtonWrapper>
+      <PrimaryButton
+        label="Schedule"
+        icon
+        iconName="schedule"
+        onClick={props.onScheduleButtonClick}
+      />
+    </ButtonWrapper>
   </Wrapper>
 );
 
