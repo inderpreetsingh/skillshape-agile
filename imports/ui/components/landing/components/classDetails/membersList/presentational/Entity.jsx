@@ -11,7 +11,15 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 
 const Wrapper = styled.div`
   background: ${helpers.panelColor};
+  display: flex;
   width: 100%;
+`;
+
+const ProfileBasic = styled.div`
+  ${helpers.flexCenter};
+  flex-direction: column;
+  padding: ${helpers.rhythmDiv * 2}px;
+  padding-top: 0;
 `;
 
 const ProfilePic = styled.div`
@@ -20,10 +28,12 @@ const ProfilePic = styled.div`
   width: ${helpers.rhythmDiv * 6}px;
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const EntityDetails = styled.div`
   ${helpers.flexHorizontalSpaceBetween};
+  flex-direction: column;
 `;
 
 const StudentNotes = styled.div`
@@ -51,21 +61,21 @@ const Date = Text.extend`
 
 const Entity = props => (
   <Wrapper>
-    <div>
-      <ProfilePic src={props.imageSrc} />
+    <ProfileBasic>
+      <ProfilePic src={props.profileSrc} />
       <EntityDetails>
         <SubHeading>{props.name}</SubHeading>
-        {type !== "student" && <Text>{props.type}</Text>}
+        {props.type !== "student" && <Text>{props.type}</Text>}
       </EntityDetails>
-    </div>
-    {type === "student" && (
+    </ProfileBasic>
+    {props.type === "student" && (
       <StudentNotes>
         <StudentNotesContent>
           {props.studentNotes || "Notes about student here"}
         </StudentNotesContent>
       </StudentNotes>
     )}
-    {type === "student" && (
+    {props.type === "student" && (
       <Status>
         <PrimaryButton label="Checked In" icon iconName="arrow_drop_down" />
         {props.paymentInfo === "expired" ? (

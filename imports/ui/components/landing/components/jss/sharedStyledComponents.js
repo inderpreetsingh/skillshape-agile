@@ -31,7 +31,7 @@ export const SubHeading = GenericText.withComponent("h3").extend`
   color: ${props => props.color || helpers.black};
 `;
 
-export const Capitialize = styled.span`
+export const Capitalize = styled.span`
   text-transform: capitalize;
 `;
 

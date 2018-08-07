@@ -7,7 +7,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import {
   Text,
   Heading,
-  Capitialize
+  Capitalize
 } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 
 const Wrapper = styled.div`
@@ -28,9 +28,9 @@ const NameBar = props => {
     <Wrapper>
       <Left>
         <Heading>
-          <Capitialize>
+          <Capitalize>
             {props.classTimeName} : {props.classTypeName}
-          </Capitialize>
+          </Capitalize>
         </Heading>
         {props.schoolName && (
           <Heading color={helpers.textColor}>{props.schoolName}</Heading>

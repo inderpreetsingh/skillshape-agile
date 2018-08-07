@@ -6,13 +6,13 @@ export const membersList = [
   {
     id: uuidv4(),
     name: "Mr. Panda",
-    type: "Instructor",
+    type: "instructor",
     profileSrc: sampleInstructor
   },
   {
     id: uuidv4(),
     name: "Mr. Mantis",
-    type: "Assistant",
+    type: "assistant",
     profileSrc: sampleInstructor
   },
   {
@@ -22,7 +22,9 @@ export const membersList = [
     profileSrc: sampleStudent,
     studentNotes:
       "Ben is a really good student who knows how to use his tools appropriately",
-    paymentInfo: "expired"
+    paymentData: {
+      paymentInfo: "expired"
+    }
   },
   {
     id: uuidv4(),
@@ -31,6 +33,8 @@ export const membersList = [
     profileSrc: sampleStudent,
     studentNotes:
       "Alexa is a really good student who knows how to use his tools appropriately",
-    paymentInfo: "expired"
+    paymentData: {
+      paymentInfo: "expired"
+    }
   }
 ];

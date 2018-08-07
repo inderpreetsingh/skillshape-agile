@@ -8,6 +8,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 
 const Wrapper = styled.div`
   display: flex;
+  margin-left: ${helpers.rhythmDiv}px;
 `;
 
 const styles = {
