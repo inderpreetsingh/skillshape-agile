@@ -1,41 +1,69 @@
 import React from "react";
 import styled from "styled-components";
+
+import { withImageExists } from "/imports/util";
+import { schoolDetailsImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
-import { rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+
+const imageExistsConfigSchoolSrc = {
+  originalImagePath: "schoolCoverSrc",
+  defaultImage: schoolDetailsImgSrc
+};
+
+const imageExistsConfigClassSrc = {
+  originalImagePath: "classTypeCoverSrc",
+  defaultImage: schoolDetailsImgSrc
+};
+
 const Wrapper = styled.header`
   background-image: url('${props => props.url}');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  max-height: 400px;
+  height: 400px;
   position: relative;
 `;
 
-const Notifcation = styled.div`
+const NotificationWrapper = styled.div`
   position: absolute;
   top: 0;
+  width: 100%;
 `;
 
-const ProfilePic = styled.div`
+const ClassTypeProfile = styled.div`
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 150px;
+  height: 150px;
   position: absolute;
-  bottom: ${rhythmDiv * 2}px;
-  left: ${rhythmDiv * 2}px;
+  bottom: ${helpers.rhythmDiv * 2}px;
+  left: ${helpers.rhythmDiv * 2}px;
   background-image: url('${props => props.url}');
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
 `;
 
+// const ProfilePicDefaultImage = (props) =>
+const ClassTypeProfileWithDefaultImage = withImageExists(props => {
+  const { bgImg, classTypeCoverSrc } = props;
+  return <ClassTypeProfile url={bgImg || classTypeCoverSrc} />;
+}, imageExistsConfigClassSrc);
+
 const Header = props => (
-  <Wrapper url={props.schoolCoverSrc}>
-    <NotifcationWrapper>
-      <Notifcation onPurchaseButtonClick={props.onPurchaseButtonClick} />
-    </NotifcationWrapper>
-    <ProfilePic url={props.profileCoverSrc} />
+  <Wrapper url={props.bgImg || props.schoolCoverSrc}>
+    <NotificationWrapper>
+      <Notification
+        notificationContent="You do not have any packages that will cover this class."
+        bgColor={helpers.danger}
+        buttonLabel="Purchase Classes"
+        onButtonClick={props.onPurchaseButtonClick}
+      />
+    </NotificationWrapper>
+    <ClassTypeProfileWithDefaultImage
+      classTypeCoverSrc={props.classTypeCoverSrc}
+    />
   </Wrapper>
 );
 
-export default Header;
+export default withImageExists(Header, imageExistsConfigSchoolSrc);

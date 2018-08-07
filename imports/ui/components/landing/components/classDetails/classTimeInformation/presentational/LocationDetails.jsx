@@ -52,10 +52,7 @@ const LocationDetails = props => {
         </Address>
       </Left>
       <Right>
-        <SchoolLocationMap
-          markerDraggable={false}
-          myLocation={props.locationData}
-        />
+        <SchoolLocationMap markerDraggable={false} />
       </Right>
     </Wrapper>
   );

@@ -35,6 +35,7 @@ export { getContainerMaxWidth } from "/imports/util/cards.js";
 export { handleOutBoundLink } from "/imports/util/handleAnalytics.js";
 export { toastrModal } from "/imports/util/toastrModal.js";
 export { withPopUp } from "/imports/util/withPopUp.js";
+export { default as withImageExists } from "/imports/util/withImageExists";
 export { default as withMarker } from "/imports/util/withMarker.js";
 export {
   withSubscriptionAndPagination

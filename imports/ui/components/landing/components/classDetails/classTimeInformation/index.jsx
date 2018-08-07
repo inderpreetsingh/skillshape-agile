@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-
+import PropTypes from "prop-types";
 import ActionButtons from "./presentational/ActionButtons";
 import Description from "./presentational/Description";
 import LocationDetails from "./presentational/LocationDetails";
 import NameBar from "./presentational/NameBar";
+
+import { classTimeData } from "/imports/ui/components/landing/constants/classDetails/classTimeData";
 
 class ClassTimeInformation extends Component {
   render() {
@@ -30,7 +32,11 @@ class ClassTimeInformation extends Component {
 }
 
 ClassTimeInformation.defaultProps = {
-  classTimeData
-}
+  classTimeData: classTimeData
+};
+
+ClassTimeInformation.propTypes = {
+  classTimeData: PropTypes.object
+};
 
 export default ClassTimeInformation;

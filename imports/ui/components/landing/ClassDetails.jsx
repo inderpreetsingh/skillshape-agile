@@ -8,7 +8,16 @@ class ClassDetailsContainer extends Component {
   }
 
   render() {
-    return ClassDetails.call(this);
+    return (
+      <ClassDetails
+        headerProps={{
+          classTypeCoverSrc: "",
+          schoolCoverSrc: ""
+        }}
+        classTimeInformationProps={{}}
+        membersListProps={{}}
+      />
+    );
   }
 }
 

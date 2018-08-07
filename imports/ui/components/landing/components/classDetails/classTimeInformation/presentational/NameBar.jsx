@@ -6,7 +6,8 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import {
   Text,
-  Heading
+  Heading,
+  Capitialize
 } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 
 const Wrapper = styled.div`
@@ -27,7 +28,10 @@ const NameBar = props => {
     <Wrapper>
       <Left>
         <Heading>
-          {props.classTimeName} : {props.classTypeName}
+          {props.classTimeName}
+          {props.classTypeName && (
+            <Capitialize> : {props.classTypeName}</Capitialize>
+          )}
         </Heading>
         <Heading color={helpers.lightTextColor}>{props.schoolName}</Heading>
       </Left>

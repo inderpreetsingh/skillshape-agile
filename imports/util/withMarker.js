@@ -23,27 +23,31 @@ export default (withMarker = WrappedComponent => {
       const { locationData, myCurrentPosition } = nextProps || this.props;
       return {
         lat:
-          locationData.lat ||
-          myCurrentPosition[0] ||
+          (locationData && locationData.lat) ||
+          (myCurrentPosition && myCurrentPosition[0]) ||
           config.defaultLocationObject.lat,
         lng:
-          locationData.lng ||
-          myCurrentPosition[1] ||
+          (locationData && locationData.lng) ||
+          (myCurrentPosition && myCurrentPosition[1]) ||
           config.defaultLocationObject.lng
       };
     };
 
     componentWillReceiveProps = nextProps => {
-      if (
-        this.props.locationData.lat !== nextProps.locationData.lat ||
-        this.props.locationData.lng !== nextProps.locationData.lng
-      ) {
-        this.setState(state => {
-          return {
-            ...state,
-            myLocation: this._initializeLocation(nextProps)
-          };
-        });
+      if (this.props.locationData || nextProps.locationData) {
+        if (
+          (this.props.locationData && this.props.locationData.lat) !==
+            nextProps.locationData.lat ||
+          (this.props.locationData && this.props.locationData.lng) !==
+            nextProps.locationData.lng
+        ) {
+          this.setState(state => {
+            return {
+              ...state,
+              myLocation: this._initializeLocation(nextProps)
+            };
+          });
+        }
       }
     };
 
