@@ -237,7 +237,7 @@ class ClassTypeForm extends React.Component {
     return defaultLocId;
   }
   render() {
-    const { fullScreen, data, classes, locationData } = this.props;
+    const { fullScreen, data, classes, locationData ,schoolId } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
     return (
       <div>
@@ -440,8 +440,11 @@ class ClassTypeForm extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-        {console.log('this.state.PackageAttachment ',this.state.PackageAttachment )}
-       {this.state.PackageAttachment && <PackageAttachment open={this.state.PackageOpen} onClose={()=>{this.setState({PackageOpen:false})}}/>} 
+       {this.state.PackageAttachment && <PackageAttachment 
+       open={this.state.PackageOpen} 
+       onClose={()=>{this.setState({PackageOpen:false})}} 
+       schoolId={schoolId}
+       />} 
       </div>
     );
   }

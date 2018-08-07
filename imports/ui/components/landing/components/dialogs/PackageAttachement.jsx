@@ -48,9 +48,11 @@ const ErrorWrapper = styled.span`
 class PackageAttachment extends React.Component {
     constructor(props){
         super(props);
-       this.state={PackageListingAttachment:false}
+       this.state={PackageListingAttachment:false,pacLisAttOpen:true}
     }
     render() {
+    const { schoolId } = this.props;
+
         return (
             <MuiThemeProvider theme={muiTheme}>
                 <Dialog
@@ -78,14 +80,14 @@ class PackageAttachment extends React.Component {
                             fullWidth
                             label="Create New Package For this Package"
                             noMarginBottom
-                            onClick={(e) => {this.setState({PackageListingAttachment:true}) }
+                            onClick={() => { }
                             }
                         />
                         <ClassTimeButton
                             fullWidth
                             noMarginBottom
                             label="Linked Existing Packages"
-                            onClick={(e) => { }
+                            onClick={(e) => {this.setState({PackageListingAttachment:true})}
                             }
                         />
                         <ClassTimeButton
@@ -97,7 +99,11 @@ class PackageAttachment extends React.Component {
                     </DialogActions>
 
                 </Dialog>
-                {this.state.PackageListingAttachment && <PackageListingAttachment/>}
+                {this.state.PackageListingAttachment && <PackageListingAttachment 
+                open={this.state.pacLisAttOpen} 
+                onClose={()=>{this.setState({PackageListingAttachment:false})}}
+                schoolId={schoolId}
+                />}
             </MuiThemeProvider>
         )
     }
