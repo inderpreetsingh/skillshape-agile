@@ -1,5 +1,5 @@
 import uuidv4 from "uuid/v4";
-const sampleStudent = "/images/school/boy.svg";
+const sampleStudent = "/images/class-details/benjamin.png";
 const sampleInstructor = "/images/classtype/default-reviewer.png";
 
 export const membersList = [
@@ -28,11 +28,11 @@ export const membersList = [
   },
   {
     id: uuidv4(),
-    name: "Alexa",
+    name: "Alex",
     type: "student",
     profileSrc: sampleStudent,
     studentNotes:
-      "Alexa is a really good student who knows how to use his tools appropriately",
+      "Alex is a really good student who knows how to use his tools appropriately",
     paymentData: {
       paymentInfo: "expired"
     }

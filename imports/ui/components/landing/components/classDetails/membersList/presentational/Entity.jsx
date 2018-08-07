@@ -13,6 +13,8 @@ const Wrapper = styled.div`
   background: ${helpers.panelColor};
   display: flex;
   width: 100%;
+
+  @media screen and (max-width: ${helpers.mobile}px)
 `;
 
 const ProfileBasic = styled.div`
@@ -24,6 +26,9 @@ const ProfileBasic = styled.div`
 
 const ProfilePic = styled.div`
   background-image: url(${props => props.src});
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: cover;
   height: ${helpers.rhythmDiv * 8}px;
   width: ${helpers.rhythmDiv * 6}px;
   padding: ${helpers.rhythmDiv * 2}px;
@@ -32,7 +37,7 @@ const ProfilePic = styled.div`
 `;
 
 const EntityDetails = styled.div`
-  ${helpers.flexHorizontalSpaceBetween};
+  display: flex;
   flex-direction: column;
 `;
 
@@ -48,7 +53,9 @@ const StudentNotesContent = styled.textarea`
   border-radius: 5px;
 `;
 
-const Status = styled.div``;
+const Status = styled.div`
+  padding: ${helpers.rhythmDiv * 2}px;
+`;
 
 const ExpiresOn = Text.extend`
   font-style: italic;

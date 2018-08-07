@@ -26,7 +26,7 @@ export const SlantedHeading = Heading.extend`
 `;
 
 export const SubHeading = GenericText.withComponent("h3").extend`
-  font-weight: 400;
+  font-weight: 500;
   font-size: ${props => props.fontSize || helpers.baseFontSize * 1.25}px;
   color: ${props => props.color || helpers.black};
 `;

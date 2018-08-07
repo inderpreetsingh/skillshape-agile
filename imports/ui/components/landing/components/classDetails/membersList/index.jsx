@@ -17,9 +17,9 @@ class MembersList extends Component {
       if (typeof entityType == "string") return member.type == entityType;
       else return entityType.indexOf(member.type) !== -1;
     });
-    console.group("entities");
-    console.info(entities);
-    console.groupEnd();
+    // console.group("entities");
+    // console.info(entities);
+    // console.groupEnd();
     return entities;
   };
 
@@ -30,8 +30,8 @@ class MembersList extends Component {
         <EntityList
           data={
             this.getParticularEntityFromMembersList([
-              "teacher",
-              "instructor"
+              "instructor",
+              "assistant"
             ]) || instructorsList
           }
           entityType={"teachers"}
