@@ -15,15 +15,15 @@ class ClassTimeInformation extends Component {
       <div>
         <NameBar
           classTimeName={classTimeData.name}
-          classTypeName={classTypeName}
-          schoolName={schoolName}
+          classTypeName={classTimeData.classTypeName || classTypeName}
+          schoolName={classTimeData.schoolName || schoolName}
         />
         <Description description={classTimeData.description} />
         <LocationDetails
           time={classTimeData.time}
           date={classTimeData.date}
           address={classTimeData.address}
-          locationData={classTimeData.loc}
+          locationData={classTimeData.locationData}
         />
         <ActionButtons onScheduleButtonClick={() => {}} />
       </div>

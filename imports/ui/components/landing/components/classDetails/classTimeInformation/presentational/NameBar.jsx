@@ -28,12 +28,13 @@ const NameBar = props => {
     <Wrapper>
       <Left>
         <Heading>
-          {props.classTimeName}
-          {props.classTypeName && (
-            <Capitialize> : {props.classTypeName}</Capitialize>
-          )}
+          <Capitialize>
+            {props.classTimeName} : {props.classTypeName}
+          </Capitialize>
         </Heading>
-        <Heading color={helpers.lightTextColor}>{props.schoolName}</Heading>
+        {props.schoolName && (
+          <Heading color={helpers.textColor}>{props.schoolName}</Heading>
+        )}
       </Left>
       <Right>
         <PrimaryButton label="join class" />

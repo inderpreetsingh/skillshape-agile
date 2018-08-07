@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ClassDetails from "/imports/ui/components/landing/components/classDetails/index.jsx";
 // import PurchaseClassesDialogBox from '/imports/ui/components/landing/components/dialogs/'
+import { classTimeData } from "/imports/ui/components/landing/constants/classDetails/";
 
 class ClassDetailsContainer extends Component {
   constructor(props) {
@@ -14,8 +15,7 @@ class ClassDetailsContainer extends Component {
           classTypeCoverSrc: "",
           schoolCoverSrc: ""
         }}
-        classTimeInformationProps={{}}
-        membersListProps={{}}
+        classTimeInformationProps={{ ...classTimeData }}
       />
     );
   }

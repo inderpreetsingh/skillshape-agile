@@ -51,6 +51,13 @@ const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
+const MapContainer = styled.div`
+  max-height: 400px;
+  @media screen and (max-width: ${helpers.mobile}px) {
+    height: 300px;
+  }
+`;
+
 const styles = theme => {
   return {
     button: {
@@ -464,12 +471,14 @@ class LocationForm extends React.Component {
             <div style={{ color: "red" }}>{this.state.error}</div>
           ) : (
             <DialogContent classes={{ root: classes.dialogContent }}>
-              <SchoolLocationMap
-                locationData={this.state.myLocation}
-                markerDraggable={true}
-                myCurrentPosition={this.getMyDefaultLocation()}
-                onDragEnd={this.getAddressFromLocation}
-              />
+              <MapContainer>
+                <SchoolLocationMap
+                  locationData={this.state.myLocation}
+                  markerDraggable={true}
+                  myCurrentPosition={this.getMyDefaultLocation()}
+                  onDragEnd={this.getAddressFromLocation}
+                />
+              </MapContainer>
 
               <MyForm id={formId} onSubmit={this.onSubmit}>
                 <TextField

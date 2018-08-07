@@ -4,20 +4,23 @@ import Icon from "material-ui/Icon";
 
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
-import { rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
+import {
+  rhythmDiv,
+  baseFontSize
+} from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const Wrapper = styled.div`
-  max-height: 300px;
+  height: 300px;
   width: 100vw;
   display: flex;
+  padding: 0 ${rhythmDiv * 2}px;
 `;
 
 const Left = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: space-between;
+  justify-content: space-evenly;
   padding: ${rhythmDiv * 2}px;
-  text-align: center;
   max-width: 50%;
   width: 100%;
 `;
@@ -32,6 +35,8 @@ const Right = styled.div`
 const Time = Address = Date = Text.extend`
   display: flex;
   font-style: italic;
+  font-weight: 400;
+  font-size: ${baseFontSize * 1.5}px;
 `;
 
 const LocationDetails = props => {
@@ -40,11 +45,11 @@ const LocationDetails = props => {
       <Left>
         <Date>
           <Icon>calendar_today</Icon>
-          {props.date}
+          {props.startDate}
         </Date>
         <Time>
           <Icon>timer</Icon>
-          {props.time}-
+          {props.time} {props.timePeriod}
         </Time>
         <Address>
           <Icon>my_location</Icon>
@@ -52,12 +57,17 @@ const LocationDetails = props => {
         </Address>
       </Left>
       <Right>
-        <SchoolLocationMap markerDraggable={false} />
+        <SchoolLocationMap locationData={locationData} markerDraggable={false} />
       </Right>
     </Wrapper>
   );
 };
 
-LocationDetails.propTypes = {};
+LocationDetails.propTypes = {
+  startDate: PropTypes.string,
+  time: PropTypes.string,
+  timePeriod: PropTypes.string,
+  address: PropTypes.string
+};
 
 export default LocationDetails;

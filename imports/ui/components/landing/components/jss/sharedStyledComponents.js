@@ -4,6 +4,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 export const GenericText = styled.p`
   font-family: ${helpers.specialFont}px;
   line-height: 1;
+  margin: 0;
 `;
 
 export const Text = GenericText.extend`
@@ -31,7 +32,7 @@ export const SubHeading = GenericText.withComponent("h3").extend`
 `;
 
 export const Capitialize = styled.span`
-  text-transform: Capitialize;
+  text-transform: capitalize;
 `;
 
 export const Bold = styled.span`

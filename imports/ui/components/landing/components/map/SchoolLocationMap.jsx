@@ -19,13 +19,14 @@ const mapOptions = {
 };
 
 const MapContainer = styled.div`
-  max-height: 400px;
+  height: 100%;
   width: 100%;
   margin-right: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-right: 0;
-    height: 300px;
+    min-height: 300px;
+    height: 100%;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
   }
 `;
@@ -50,7 +51,6 @@ const SchoolLocationMap = withMarker(
 
 SchoolLocationMap.propTypes = {
   isMarkerShown: PropTypes.bool,
-  dragMarker: PropTypes.bool,
   myLocation: PropTypes.object,
   googleMapURL: PropTypes.string,
   containerElement: PropTypes.element,
@@ -60,7 +60,6 @@ SchoolLocationMap.propTypes = {
 
 SchoolLocationMap.defaultProps = {
   isMarkerShown: true,
-  dragMarker: true,
   myLocation: config.defaultLocation,
   googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&key=${
     config.MAP_KEY

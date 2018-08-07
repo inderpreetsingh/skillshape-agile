@@ -13,7 +13,7 @@ const ClassDetails = props => (
   <Wrapper>
     <Header {...props.headerProps} />
     <ClassTimeInformation {...props.ClassTimeInformation} />
-    <MembersList {...props.membersList} />
+    <MembersList />
   </Wrapper>
 );
 
