@@ -7,6 +7,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import {
   Text,
   Heading,
+  SubHeading,
   Capitalize
 } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 
@@ -21,19 +22,23 @@ const Left = styled.div`
   flex-direction: column;
 `;
 
-const Right = styled.div``;
+const Right = styled.div`
+  flex-shrink: 0;
+`;
 
 const NameBar = props => {
   return (
     <Wrapper>
       <Left>
-        <Heading>
+        <Heading weight={400}>
           <Capitalize>
             {props.classTimeName} : {props.classTypeName}
           </Capitalize>
         </Heading>
         {props.schoolName && (
-          <Heading color={helpers.textColor}>{props.schoolName}</Heading>
+          <SubHeading color={helpers.secondaryTextColor}>
+            <Capitalize>{props.schoolName}</Capitalize>
+          </SubHeading>
         )}
       </Left>
       <Right>

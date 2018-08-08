@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import styled from "styled-components";
 
 import { withImageExists } from "/imports/util";
@@ -21,20 +21,14 @@ const Wrapper = styled.header`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  height: 400px;
+  height: 300px;
   position: relative;
-`;
-
-const NotificationWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  width: 100%;
 `;
 
 const ClassTypeProfile = styled.div`
   border-radius: 50%;
-  width: 150px;
-  height: 150px;
+  width: 175px;
+  height: 175px;
   position: absolute;
   bottom: ${helpers.rhythmDiv * 2}px;
   left: ${helpers.rhythmDiv * 2}px;
@@ -51,19 +45,21 @@ const ClassTypeProfileWithDefaultImage = withImageExists(props => {
 }, imageExistsConfigClassSrc);
 
 const Header = props => (
-  <Wrapper url={props.bgImg || props.schoolCoverSrc}>
-    <NotificationWrapper>
+  <Fragment>
+    {props.noPurchasedClasses && (
       <Notification
         notificationContent="You do not have any packages that will cover this class."
         bgColor={helpers.danger}
         buttonLabel="Purchase Classes"
         onButtonClick={props.onPurchaseButtonClick}
       />
-    </NotificationWrapper>
-    <ClassTypeProfileWithDefaultImage
-      classTypeCoverSrc={props.classTypeCoverSrc}
-    />
-  </Wrapper>
+    )}
+    <Wrapper url={props.bgImg || props.schoolCoverSrc}>
+      <ClassTypeProfileWithDefaultImage
+        classTypeCoverSrc={props.classTypeCoverSrc}
+      />
+    </Wrapper>
+  </Fragment>
 );
 
 export default withImageExists(Header, imageExistsConfigSchoolSrc);

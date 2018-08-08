@@ -23,6 +23,7 @@ export const /*******FONTS*********/
   textColor = colors.grey[800],
   headingColor = colors.grey[900],
   lightTextColor = colors.grey[50], //for dark backgrounds
+  secondaryTextColor = colors.grey[400],
   ignoreMeText = "rgb(154,154,154)",
   defaultInputColor = "#A9A9A9",
   focalColor = colors.red[700],

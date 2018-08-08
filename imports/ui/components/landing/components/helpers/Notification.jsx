@@ -11,10 +11,12 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 const styles = {
   icon: {
     position: "absolute",
-    right: 0,
+    right: helpers.rhythmDiv,
     top: 0,
     color: "white",
-    cursor: "pointer"
+    cursor: "pointer",
+    height: helpers.baseFontSize,
+    width: helpers.baseFontSize
   }
 };
 
@@ -23,14 +25,17 @@ const Wrapper = styled.div`
   width: 100%;
   background: ${props => props.bgColor};
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 4}px;
-  transition: 0.25s ease-in transform;
-  transform-origin: center top;
-  ${props => (!props.show ? `transform: scaleY(0)` : "")};
+  transition: 0.25s ease-in max-height, 0.25s linear opacity,
+    0.05s linear padding 0.1s;
+  opacity: 1;
+  max-height: 160px;
+  ${props => (!props.show ? `max-height: 0; opacity: 0; padding: 0` : "")};
 `;
 
 const NotificationInnerWrapper = styled.div`
   /* prettier-ignore */
   ${helpers.flexHorizontalSpaceBetween}
+
   @media screen and (max-width: ${helpers.mobile}px) {
     justify-content: flex-start;
     flex-direction: column;
@@ -39,15 +44,18 @@ const NotificationInnerWrapper = styled.div`
 
 const NotificationContent = Text.extend`
   font-size: ${helpers.baseFontSize * 1.5}px;
+  margin-right: ${helpers.rhythmDiv}px;
   color: white;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    font-size: ${helpers.baseFontSize}px;
+    margin-right: 0;
+    font-size: ${helpers.baseFontSize * 1.25}px;
   }
 `;
 const ButtonWrapper = styled.div`
   display: flex;
   background-color: white;
+  flex-shrink: 0;
 `;
 
 class Notification extends Component {

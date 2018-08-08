@@ -20,6 +20,7 @@ class HeaderContainer extends Component {
 
     return (
       <Header
+        noPurchasedClasses={true}
         classTypeCoverSrc={classTypeCoverSrc}
         schoolCoverSrc={schoolCoverSrc}
         onPurchaseButtonClick={this.handlePurchaseButtonClick}

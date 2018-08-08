@@ -9,6 +9,7 @@ import { Text } from "/imports/ui/components/landing/components/jss/sharedStyled
 import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
 import {
   rhythmDiv,
+  tablet,
   mobile,
   baseFontSize
 } from "/imports/ui/components/landing/components/jss/helpers.js";
@@ -25,9 +26,13 @@ const Wrapper = styled.div`
   display: flex;
   padding: 0 ${rhythmDiv * 2}px;
 
+  @media screen and (max-width: ${tablet}px) {
+    height: 200px;
+  }
+
   @media screen and (max-width: ${mobile}px) {
     flex-direction: column;
-    min-height: 300px;
+    min-height: 200px;
     height: auto;
   }
 `;
@@ -63,7 +68,7 @@ const Time = Address = MyDate = Text.extend`
   display: flex;
   font-style: italic;
   font-weight: 400;
-  font-size: ${baseFontSize * 1.5}px;
+  font-size: ${baseFontSize * 1.25}px;
 `;
 
 const LocationDetails = props => {

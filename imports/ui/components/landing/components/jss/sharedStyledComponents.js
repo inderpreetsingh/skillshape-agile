@@ -15,9 +15,13 @@ export const Text = GenericText.extend`
 `;
 
 export const Heading = GenericText.withComponent("h2").extend`
-  font-weight: 500;
+  font-weight: ${props => props.weight || 500};
   font-size: ${props => props.fontSize || helpers.baseFontSize * 2}px;
   color: ${props => props.color || helpers.black};
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    font-size: ${helpers.baseFontSize * 1.5}px;
+  }
 `;
 
 export const SlantedHeading = Heading.extend`
@@ -26,9 +30,13 @@ export const SlantedHeading = Heading.extend`
 `;
 
 export const SubHeading = GenericText.withComponent("h3").extend`
-  font-weight: 500;
-  font-size: ${props => props.fontSize || helpers.baseFontSize * 1.25}px;
+  font-weight: ${props => props.weight || 500};
+  font-size: ${props => props.fontSize || helpers.baseFontSize * 1.5}px;
   color: ${props => props.color || helpers.black};
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    font-size: ${helpers.baseFontSize * 1.25}px;
+  }
 `;
 
 export const Capitalize = styled.span`
