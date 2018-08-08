@@ -4,20 +4,33 @@ import styled from "styled-components";
 import { withStyles } from "material-ui/styles";
 import Icon from "material-ui/Icon";
 import TextField from "material-ui/TextField";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import {
+  mobile,
+  black,
+  baseFontSize,
+  rhythmDiv
+} from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const Wrapper = styled.div`
   display: flex;
-  margin-left: ${helpers.rhythmDiv}px;
+  margin-left: ${rhythmDiv}px;
+
+  @media screen and (max-width: ${mobile}px) {
+    margin-left: 0;
+    margin-bottom: ${rhythmDiv * 2}px;
+  }
 `;
 
 const styles = {
   icon: {
-    color: helpers.black,
-    fontSize: helpers.baseFontSize * 1.5
+    color: black,
+    fontSize: baseFontSize * 1.5
   },
   inputRoot: {
-    height: 18
+    height: 18,
+    fontSize: baseFontSize,
+    fontStyle: "normal",
+    fontWeight: 400
   }
 };
 

@@ -3,7 +3,11 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import {
+  flexHorizontalSpaceBetween,
+  rhythmDiv,
+  secondaryTextColor
+} from "/imports/ui/components/landing/components/jss/helpers.js";
 import {
   Text,
   Heading,
@@ -13,8 +17,8 @@ import {
 
 const Wrapper = styled.div`
   /* prettier-ignore */
-  ${helpers.flexHorizontalSpaceBetween}
-  padding: ${helpers.rhythmDiv * 2}px;
+  ${flexHorizontalSpaceBetween}
+  padding: ${rhythmDiv * 2}px;
 `;
 
 const Left = styled.div`
@@ -36,13 +40,16 @@ const NameBar = props => {
           </Capitalize>
         </Heading>
         {props.schoolName && (
-          <SubHeading color={helpers.secondaryTextColor}>
+          <SubHeading color={secondaryTextColor}>
             <Capitalize>{props.schoolName}</Capitalize>
           </SubHeading>
         )}
       </Left>
       <Right>
-        <PrimaryButton label="join class" />
+        <PrimaryButton
+          label="Join class"
+          onClick={props.onJoinClassButtonClick}
+        />
       </Right>
     </Wrapper>
   );

@@ -14,8 +14,6 @@ const Wrapper = styled.div`
   display: flex;
   width: 100%;
 
-  @media screen and (max-width: ${helpers.mobile}px);
-
   ${props =>
     props.type === "default"
       ? `width: 160px;
@@ -40,7 +38,7 @@ const ProfilePic = styled.div`
   background-image: url(${props => props.src});
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: cover;
+  background-size: contain;
   width: 100%;
   min-height: 64px;
   display: flex;

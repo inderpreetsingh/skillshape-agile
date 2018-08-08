@@ -39,9 +39,6 @@ const Wrapper = styled.div`
 `;
 
 const Left = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
   padding: ${rhythmDiv * 2}px;
   max-width: 50%;
   width: 100%;
@@ -49,6 +46,25 @@ const Left = styled.div`
     max-width: 100%;
     padding: 0;
     margin-bottom: ${rhythmDiv}px;
+  }
+`;
+
+const LeftInnerWrapper = styled.div`
+  max-width: 400px;
+  height: 100%;
+  flex-grow: 1;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+
+  @media screen and (max-width: ${mobile}px) {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  @media screen and (max-width: ${tablet}px) {
+    max-width: 250px;
   }
 `;
 
@@ -80,18 +96,20 @@ const LocationDetails = props => {
   return (
     <Wrapper>
       <Left>
-        <MyDate>
-          <Icon classes={{ root: props.classes.icon }}>calendar_today</Icon>
-          {formatDate(props.startDate)}
-        </MyDate>
-        <Time>
-          <Icon classes={{ root: props.classes.icon }}>timer</Icon>
-          {props.time} {props.timePeriod}
-        </Time>
-        <Address>
-          <Icon classes={{ root: props.classes.icon }}>my_location</Icon>
-          {props.address}
-        </Address>
+        <LeftInnerWrapper>
+          <MyDate>
+            <Icon classes={{ root: props.classes.icon }}>calendar_today</Icon>
+            {formatDate(props.startDate)}
+          </MyDate>
+          <Time>
+            <Icon classes={{ root: props.classes.icon }}>timer</Icon>
+            {props.time} {props.timePeriod}
+          </Time>
+          <Address>
+            <Icon classes={{ root: props.classes.icon }}>my_location</Icon>
+            {props.address}
+          </Address>
+        </LeftInnerWrapper>
       </Left>
       <Right>
         <SchoolLocationMap

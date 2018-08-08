@@ -37,7 +37,7 @@ const ActionButtons = props => (
       target="_blank"
     >
       <ButtonWrapper>
-        <PrimaryButton label="Visit ClassType" />
+        <PrimaryButton icon iconName="class" label="Visit ClassType" />
       </ButtonWrapper>
     </Link>
     <Link
@@ -45,7 +45,7 @@ const ActionButtons = props => (
       target="_blank"
     >
       <ButtonWrapper>
-        <PrimaryButton label="Visit School" />
+        <PrimaryButton icon iconName="school" label="Visit School" />
       </ButtonWrapper>
     </Link>
 

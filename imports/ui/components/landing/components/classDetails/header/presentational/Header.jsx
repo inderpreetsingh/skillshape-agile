@@ -4,7 +4,10 @@ import styled from "styled-components";
 import { withImageExists } from "/imports/util";
 import { schoolDetailsImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import {
+  rhythmDiv,
+  danger
+} from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const imageExistsConfigSchoolSrc = {
   originalImagePath: "schoolCoverSrc",
@@ -30,8 +33,8 @@ const ClassTypeProfile = styled.div`
   width: 175px;
   height: 175px;
   position: absolute;
-  bottom: ${helpers.rhythmDiv * 2}px;
-  left: ${helpers.rhythmDiv * 2}px;
+  bottom: ${rhythmDiv * 2}px;
+  left: ${rhythmDiv * 2}px;
   background-image: url('${props => props.url}');
   background-size: cover;
   background-position: 50% 50%;
@@ -49,7 +52,7 @@ const Header = props => (
     {props.noPurchasedClasses && (
       <Notification
         notificationContent="You do not have any packages that will cover this class."
-        bgColor={helpers.danger}
+        bgColor={danger}
         buttonLabel="Purchase Classes"
         onButtonClick={props.onPurchaseButtonClick}
       />

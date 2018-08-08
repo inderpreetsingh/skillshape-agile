@@ -1,30 +1,48 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import Header from "./presentational/Header.jsx";
-import { withImageExists } from "/imports/util";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import SelectPackagesDialogBox from "/imports/ui/components/landing/components/dialogs/SelectPackagesDialogBox.jsx";
+// import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { coverSrc } from "/imports/ui/components/landing/site-settings.js";
 
-const configObject = {
-  originalImagePath: "classTypeCoverSrc"
-};
-
 class HeaderContainer extends Component {
-  handlePurchaseButtonClick = () => {
-    console.log("this purchase button clicked");
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selectPackagesDialogBoxState: false
+    };
+  }
+
+  handleDialogBoxState = dialogState => () => {
+    this.setState(state => {
+      return {
+        ...state,
+        selectPackagesDialogBoxState: dialogState
+      };
+    });
   };
+
   render() {
     const { classTypeCoverSrc, schoolCoverSrc } = this.props;
 
     return (
-      <Header
-        noPurchasedClasses={true}
-        classTypeCoverSrc={classTypeCoverSrc}
-        schoolCoverSrc={schoolCoverSrc}
-        onPurchaseButtonClick={this.handlePurchaseButtonClick}
-      />
+      <Fragment>
+        {this.state.selectPackagesDialogBoxState && (
+          <SelectPackagesDialogBox
+            open={this.state.selectPackagesDialogBoxState}
+            onModalClose={this.handleDialogBoxState(false)}
+          />
+        )}
+        <Header
+          noPurchasedClasses={true}
+          classTypeCoverSrc={classTypeCoverSrc}
+          schoolCoverSrc={schoolCoverSrc}
+          onPurchaseButtonClick={this.handleDialogBoxState(true)}
+        />
+      </Fragment>
     );
   }
 }
