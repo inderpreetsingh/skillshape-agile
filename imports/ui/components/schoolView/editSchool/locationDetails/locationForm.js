@@ -53,7 +53,14 @@ const ButtonWrapper = styled.div`
 
 const MapContainer = styled.div`
   max-height: 400px;
+  max-width: 50%;
+  width: 100%;
+  margin-right: ${helpers.rhythmDiv * 2}px;
+
   @media screen and (max-width: ${helpers.mobile}px) {
+    margin-right: 0;
+    max-width: 100%;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
     height: 300px;
   }
 `;
