@@ -11,6 +11,16 @@ class MembersList extends Component {
     studentsFilterWith: ""
   };
 
+  handleSearchChange = type => e => {
+    const value = e.target.value;
+    this.setState(state => {
+      return {
+        ...state,
+        [type]: value
+      };
+    });
+  };
+
   getParticularEntityFromMembersList = entityType => {
     const { membersList } = this.props;
     const entities = membersList.filter(member => {
@@ -28,6 +38,8 @@ class MembersList extends Component {
     return (
       <Fragment>
         <EntityList
+          searchedValue={this.state.teachersFilterWith}
+          onSearchChange={this.handleSearchChange("teachersFilterWith")}
           data={
             this.getParticularEntityFromMembersList([
               "instructor",
@@ -38,6 +50,8 @@ class MembersList extends Component {
           searchedValue={this.state.teachersFilterWith}
         />
         <EntityList
+          searchedValue={this.state.studentsFilterWith}
+          onSearchChange={this.handleSearchChange("studentsFilterWith")}
           data={
             this.getParticularEntityFromMembersList("student") || studentsList
           }

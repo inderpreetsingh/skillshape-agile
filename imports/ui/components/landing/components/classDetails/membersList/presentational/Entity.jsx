@@ -14,14 +14,26 @@ const Wrapper = styled.div`
   display: flex;
   width: 100%;
 
-  @media screen and (max-width: ${helpers.mobile}px)
+  @media screen and (max-width: ${helpers.mobile}px);
+
+  ${props =>
+    props.type === "default"
+      ? `width: 160px;
+      height: 180px;`
+      : ""};
 `;
 
-const ProfileBasic = styled.div`
+const Profile = styled.div`
   ${helpers.flexCenter};
   flex-direction: column;
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;
+  width: 140px;
+
+  ${props =>
+    props.type === "default"
+      ? `width: 100%; flex-grow: 1; flex-shrink: 0; padding-bottom: 0`
+      : ""};
 `;
 
 const ProfilePic = styled.div`
@@ -29,8 +41,11 @@ const ProfilePic = styled.div`
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-size: cover;
-  height: ${helpers.rhythmDiv * 8}px;
-  width: ${helpers.rhythmDiv * 6}px;
+  width: 100%;
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
@@ -39,10 +54,13 @@ const ProfilePic = styled.div`
 const EntityDetails = styled.div`
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 `;
 
 const StudentNotes = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
+  display: flex;
+  min-width: 0;
 `;
 
 const StudentNotesContent = styled.textarea`
@@ -55,6 +73,7 @@ const StudentNotesContent = styled.textarea`
 
 const Status = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
+  min-width: 0;
 `;
 
 const ExpiresOn = Text.extend`
@@ -66,43 +85,60 @@ const Date = Text.extend`
   color: ${helpers.alertColor};
 `;
 
-const Entity = props => (
-  <Wrapper>
-    <ProfileBasic>
-      <ProfilePic src={props.profileSrc} />
-      <EntityDetails>
-        <SubHeading>{props.name}</SubHeading>
-        {props.type !== "student" && <Text>{props.type}</Text>}
-      </EntityDetails>
-    </ProfileBasic>
-    {props.type === "student" && (
-      <StudentNotes>
-        <StudentNotesContent>
-          {props.studentNotes || "Notes about student here"}
-        </StudentNotesContent>
-      </StudentNotes>
-    )}
-    {props.type === "student" && (
-      <Status>
-        <PrimaryButton label="Checked In" icon iconName="arrow_drop_down" />
-        {props.paymentInfo === "expired" ? (
-          <Fragment>
-            <Text>{"Payment Expired"}</Text>
-            <PrimaryButton
-              label="Accept Payment"
-              onClick={props.onAcceptPayment}
-            />
-          </Fragment>
-        ) : (
-          <Fragment>
-            <ExpiresOn>{props.paymentData.paymentType} expires on</ExpiresOn>
-            <Date>{props.paymentData.expiryDate}</Date>
-          </Fragment>
-        )}
-      </Status>
-    )}
-  </Wrapper>
-);
+const Entity = props => {
+  if (props.type === "student" && props.viewType === "instructorsView") {
+    return (
+      <Wrapper>
+        <Profile>
+          <ProfilePic src={props.profileSrc} />
+          <EntityDetails>
+            <SubHeading>{props.name}</SubHeading>
+            {props.type !== "student" && <Text>{props.type}</Text>}
+          </EntityDetails>
+        </Profile>
+
+        <StudentNotes>
+          <StudentNotesContent>
+            {props.studentNotes || "Notes about student here"}
+          </StudentNotesContent>
+        </StudentNotes>
+
+        <Status>
+          <PrimaryButton label="Checked In" icon iconName="arrow_drop_down" />
+          {props.paymentInfo === "expired" ? (
+            <Fragment>
+              <Text>{"Payment Expired"}</Text>
+              <PrimaryButton
+                label="Accept Payment"
+                onClick={props.onAcceptPayment}
+              />
+            </Fragment>
+          ) : (
+            <Fragment>
+              <ExpiresOn>{props.paymentData.paymentType} expires on</ExpiresOn>
+              <Date>{props.paymentData.expiryDate}</Date>
+            </Fragment>
+          )}
+        </Status>
+      </Wrapper>
+    );
+  }
+
+  // This is the basic card returned for students in case the view
+  // is not instructorsView && for teachers in both the cases.
+
+  return (
+    <Wrapper type="default">
+      <Profile type="default">
+        <ProfilePic src={props.profileSrc} />
+        <EntityDetails>
+          <SubHeading>{props.name}</SubHeading>
+          {props.type !== "student" && <Text>{props.type}</Text>}
+        </EntityDetails>
+      </Profile>
+    </Wrapper>
+  );
+};
 
 Entity.propTypes = {
   expanded: PropTypes.bool,

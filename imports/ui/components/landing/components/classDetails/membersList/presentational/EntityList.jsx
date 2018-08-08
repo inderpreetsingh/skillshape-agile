@@ -5,13 +5,17 @@ import {
   SlantedHeading,
   Capitalize
 } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-import { rhythmDiv, mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+import {
+  rhythmDiv,
+  mobile
+} from "/imports/ui/components/landing/components/jss/helpers.js";
 
 import SearchList from "./SearchList.jsx";
 import Entity from "./Entity.jsx";
 
 const Wrapper = styled.div`
   padding: 0 ${rhythmDiv * 2}px;
+  margin-bottom: ${rhythmDiv * 4}px;
 `;
 const Entities = styled.div`
   display: flex;
@@ -22,7 +26,7 @@ const Entities = styled.div`
   }
 `;
 const EntityWrapper = styled.div`
-  padding: ${rhythmDiv * 2}px;
+  padding: ${rhythmDiv}px;
 `;
 
 const ListHeading = SlantedHeading.extend`
@@ -35,13 +39,16 @@ const EntityList = props => (
     <ListHeading>
       <Capitalize>{props.entityType}&nbsp;</Capitalize>
       in class
-      <SearchList searchedValue={props.searchedValue} />
+      <SearchList
+        onChange={props.onSearchChange}
+        searchedValue={props.searchedValue}
+      />
     </ListHeading>
     <Entities>
       {props.data &&
         props.data.map(obj => (
           <EntityWrapper type={obj.type}>
-            <Entity type={obj.type} {...obj} />
+            <Entity viewType="studentsView" type={obj.type} {...obj} />
           </EntityWrapper>
         ))}
     </Entities>

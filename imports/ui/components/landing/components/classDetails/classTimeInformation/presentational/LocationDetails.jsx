@@ -25,6 +25,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   padding: 0 ${rhythmDiv * 2}px;
+  margin-bottom: ${rhythmDiv * 4}px;
 
   @media screen and (max-width: ${tablet}px) {
     height: 200px;

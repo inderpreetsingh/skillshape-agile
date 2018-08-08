@@ -8,8 +8,8 @@ import {
 } from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const Wrapper = styled.div`
-  padding: ${rhythmDiv * 2}px;
-  padding-top: 0;
+  padding: 0 ${rhythmDiv * 2}px;
+  margin-bottom: ${rhythmDiv * 4}px;
 `;
 
 const Content = Text.extend`

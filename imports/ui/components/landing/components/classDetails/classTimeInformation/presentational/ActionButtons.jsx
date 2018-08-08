@@ -14,11 +14,12 @@ import {
 //const APP_URL = Meteor.absoluteUrl();
 
 const Wrapper = styled.div`
-  padding: ${rhythmDiv * 2}px;
+  padding: 0 ${rhythmDiv * 2}px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
+  margin-bottom: ${rhythmDiv * 4}px;
 
   @media screen and (max-width: ${mobile}px) {
     justify-content: flex-start;

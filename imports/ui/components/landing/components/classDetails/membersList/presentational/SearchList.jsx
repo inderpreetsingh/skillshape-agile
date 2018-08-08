@@ -15,12 +15,19 @@ const styles = {
   icon: {
     color: helpers.black,
     fontSize: helpers.baseFontSize * 1.5
+  },
+  inputRoot: {
+    height: 18
   }
 };
 
 const SearchList = props => (
   <Wrapper>
-    <TextField value={props.searchedValue} onChange={props.onChange} />
+    <TextField
+      value={props.searchedValue}
+      InputProps={{ classes: { input: props.classes.inputRoot } }}
+      onChange={props.onChange}
+    />
     <Icon className={props.classes.icon}>{"search"}</Icon>
   </Wrapper>
 );
