@@ -75,11 +75,9 @@ Meteor.methods({
     classTimeId,
     clickedDate
   ) {
-    console.log("classTimeId,clickedDate", classTimeId, clickedDate);
     let result = ClassInterest.update(
       { classTimeId: classTimeId, userId: this.userId },
       { $push: { deletedEvents: clickedDate } }
     );
-    console.log("result", result);
   }
 });

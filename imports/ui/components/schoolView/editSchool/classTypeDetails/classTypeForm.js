@@ -20,7 +20,6 @@ import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import "/imports/api/sLocation/methods";
 import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
-
 const formId = "classTypeForm";
 
 const styles = theme => {
@@ -45,7 +44,6 @@ class ClassTypeForm extends React.Component {
 
   initializeFields = () => {
     const { data, locationData } = this.props;
-    console.log(data, state, ".... editing data");
     let state = {
       gender: "Any",
       experienceLevel: "All",
@@ -55,7 +53,8 @@ class ClassTypeForm extends React.Component {
       skillCategoryId: null,
       selectedSkillSubject: null,
       selectedLocation: null,
-      searchSkillCategoryText: ""
+      searchSkillCategoryText: "",
+      
     };
     if (data && _.size(data) > 0) {
       if (
@@ -213,7 +212,6 @@ class ClassTypeForm extends React.Component {
             });
           }
         } else {
-          console.warn("ERROR : ", err);
         }
       }
     );
@@ -223,7 +221,6 @@ class ClassTypeForm extends React.Component {
     //this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
       if (error) {
-        console.error("error", error);
       }
       if (result) {
         this.props.onClose(result);
@@ -231,9 +228,13 @@ class ClassTypeForm extends React.Component {
       this.setState({ isBusy: false, error });
     });
   };
-
+  //Set default location id if nothing selected 
+  setDefaultLocation=(defaultLocId)=>{
+    this.setState({location:defaultLocId})
+    return defaultLocId;
+  }
   render() {
-    const { fullScreen, data, classes, locationData } = this.props;
+    const { fullScreen, data, classes, locationData  } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
     return (
       <div>
@@ -394,7 +395,7 @@ class ClassTypeForm extends React.Component {
                       <Select
                         required={true}
                         input={<Input id="location" />}
-                        value={this.state.location}
+                        value={this.state.location ? this.state.location : !_.isEmpty(locationData) && this.setDefaultLocation(locationData[0]._id) }
                         onChange={event =>
                           this.setState({ location: event.target.value })
                         }
@@ -436,6 +437,7 @@ class ClassTypeForm extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+       
       </div>
     );
   }

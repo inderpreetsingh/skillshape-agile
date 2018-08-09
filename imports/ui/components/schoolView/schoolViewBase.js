@@ -12,18 +12,23 @@ import { Loading } from "/imports/ui/loading";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import { isEmpty } from "lodash";
 import { getUserFullName } from "/imports/util/getUserData";
-import { toastrModal } from "/imports/util";
+
 export default class SchoolViewBase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { chargeResult: null };
+    this.state = { chargeResult: null,currency:null,bestPriceDetails:null };
   }
 
   componentWillMount() {
     let { slug } = this.props.params;
     Meteor.call("school.getBestPrice", { slug }, (error, result) => {
       this.setState({ bestPriceDetails: result });
+      
     });
+    
+    // Meteor.call('school.findSchoolById',slug,(err,res)=>{
+    //   res&&this.setState({currency:res})
+    // })
   }
 
   componentDidUpdate() {
@@ -72,26 +77,7 @@ export default class SchoolViewBase extends React.Component {
     this.setState(newState);
   };
 
-  normalizeMonthlyPricingData = monthlyPricingData => {
-    if (monthlyPricingData) {
-      let normalizedMonthlyPricingData = [];
-
-      for (let monthlyPricingObj of monthlyPricingData) {
-        monthlyPricingObj &&
-          monthlyPricingObj.pymtDetails &&
-          monthlyPricingObj.pymtDetails.forEach(payment => {
-            const myMonthlyPricingObj = Object.assign({}, monthlyPricingObj);
-            myMonthlyPricingObj.pymtDetails = [];
-            myMonthlyPricingObj.pymtDetails.push(payment);
-            normalizedMonthlyPricingData.push(myMonthlyPricingObj);
-          });
-      }
-
-      return normalizedMonthlyPricingData;
-    } else {
-      return monthlyPricingData;
-    }
-  };
+  
 
   claimASchool = (currentUser, schoolData) => {
     if (currentUser) {
@@ -221,7 +207,6 @@ export default class SchoolViewBase extends React.Component {
   };
 
   getClassName = classTypeId => {
-    console.log("getClassName classTypeId-->>", classTypeId);
     if (_.isArray(classTypeId)) {
       let str_name = [];
       // let classTypeIds = classTypeId.split(",")
@@ -350,10 +335,8 @@ export default class SchoolViewBase extends React.Component {
         schoolId,
         (error, result) => {
           if (error) {
-            console.error("error", error);
           }
           if (result) {
-            // console.log("result", result);
             this.setState({ successModal: true, claimSchoolModal: false });
           }
         }
@@ -374,12 +357,9 @@ export default class SchoolViewBase extends React.Component {
       };
 
       Meteor.call("addClaimRequest", payload, (error, result) => {
-        console.log(e);
         if (error) {
-          console.error("error", error);
         }
         if (result) {
-          console.log("result", result);
           toastr.success(
             "You have requested to manage a school that has already been claimed. We will investigate this double claim and inform you as soon as a decision has been made. If you are found to be the rightful manager of the listing, you will be able to edit the school listing.",
             "Success"
@@ -410,7 +390,6 @@ export default class SchoolViewBase extends React.Component {
   // ADDING A NEW FLOW FOR REQUEST PRICING
   // // This function is used to Open pricing info request Modal
   // handlePricingInfoRequestModal = () => {
-  //   console.log("handlePricingInfoRequestModal")
   //     // Set state for opening Price info Request Modal.
   //     this.setState({
   //         showConfirmationModal: true,
@@ -438,7 +417,6 @@ export default class SchoolViewBase extends React.Component {
       }%3F %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
 
-      console.info(mailTo, "my mail To data.............");
       // const mailToNormalized = encodeURI(mailTo);
       // window.location.href = mailToNormalized;
       openMailToInNewTab(mailTo);
@@ -514,12 +492,10 @@ export default class SchoolViewBase extends React.Component {
     // Start loading
     const { toastr } = this.props;
     let self = this;
-    console.log("this.props.schoolData", this.props.schoolData);
     Meteor.call(
       "stripe.findAdminStripeAccount",
       this.props.schoolData.superAdmin,
       (error, result) => {
-        console.log("result and error", error, result);
         if (result && Meteor.settings.public.paymentEnabled) {
           if (monthlyPymtDetails) {
             amount = monthlyPymtDetails[0].cost;
@@ -540,13 +516,9 @@ export default class SchoolViewBase extends React.Component {
                 packageType,
                 schoolId,
                 (error, result) => {
-                  console.log("error and result", error, result);
                   if (result) {
                     if (result == "Payment Successfully Done") {
-                      console.log(
-                        "self.props.currentUser.profile.name",
-                        self.props
-                      );
+                      
                       let x = new Date().getTime();
                       let memberData = {
                         firstName:
@@ -618,10 +590,8 @@ export default class SchoolViewBase extends React.Component {
                 // Stop loading
                 self.setState({ isLoading: false });
                 if (err) {
-                  console.log("err-------", err);
                   toastr.error(err.error, "Error");
                 } else {
-                  console.log("res-------", res);
                   toastr.error(res, "Error");
                 }
               }
@@ -634,7 +604,6 @@ export default class SchoolViewBase extends React.Component {
     );
 
     // Meteor.setTimeout(() => {
-    //   console.log("called the method handle purchase package",typeOfTable, tableId, schoolId);
     //   self.setState({
     //     isLoading: false
     //   })

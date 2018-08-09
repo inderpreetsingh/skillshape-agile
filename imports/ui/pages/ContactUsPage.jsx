@@ -166,7 +166,6 @@ class ContactUs extends Component {
 
   render() {
     // console.info('--------------------------------------------------------',this.state, "------ contact us page");
-    console.info('--- contact us page props --->',this.props, this.state);
     return(<DocumentTitle title={this.props.route.name} >
       <Wrapper>
 

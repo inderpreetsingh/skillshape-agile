@@ -86,7 +86,6 @@ class ClassTimeClockManager extends Component {
 
   handleDayClick = (clockIndex,dayIndex) => (e) => {
     e.preventDefault();
-    console.log('clicked',clockIndex,dayIndex,"=============");
 
     this.handleSliderState(clockIndex,dayIndex);
   }

@@ -40,13 +40,12 @@ class EnrollmentFeeForm extends React.Component {
             pymtType: get(this.props, 'data.pymtType', ''),
             selectedClassType: get(this.props, 'data.selectedClassType', null),
             includeAllClassTypes:get(this.props, 'data.includeAllClassTypes', ""),
+            currency: get(this.props, "data.currency", this.props.currency)
         }
     }
 
     handleClassTypeInputChange = (value) => {
-        console.log("ClassPriceForm handleClassTypeInputChange -->>",value)
         Meteor.call("classType.getClassTypeByTextSearch",{schoolId:this.props.schoolId, textSearch: value}, (err,res) => {
-            console.log("ClassPriceForm classType.getClassTypeByTextSearch res -->>",res)
             this.setState({
                 classTypeData: res || [],
             })
@@ -54,7 +53,6 @@ class EnrollmentFeeForm extends React.Component {
     }
 
     onClassTypeChange = (values)=> {
-        console.log("ClassPriceForm onClassTypeChange values-->>",values)
         this.setState({selectedClassType: values})
     }
 
@@ -68,7 +66,8 @@ class EnrollmentFeeForm extends React.Component {
             name: this.enrollmentName.value,
             classTypeId: this.state.includeAllClassTypes ? allClassTypeIds : selectedClassType && selectedClassType.map(data => data._id),
             cost: this.enrollmentCost.value && parseInt(this.enrollmentCost.value),
-            includeAllClassTypes: this.state.includeAllClassTypes
+            includeAllClassTypes: this.state.includeAllClassTypes,
+            currency:this.state.currency
         }
         this.setState({isBusy: true});
         if(data && data._id) {
@@ -79,12 +78,8 @@ class EnrollmentFeeForm extends React.Component {
     }
 
     handleSubmit = ({methodName, doc, doc_id})=> {
-        console.log("handleSubmit methodName-->>",methodName)
-        console.log("handleSubmit doc-->>",doc)
-        console.log("handleSubmit doc_id-->>",doc_id)
         Meteor.call(methodName, { doc, doc_id }, (error, result) => {
             if (error) {
-              console.error("error", error);
             }
             if (result) {
                 this.props.onClose()
@@ -100,10 +95,9 @@ class EnrollmentFeeForm extends React.Component {
     cancelConfirmationModal = ()=> this.setState({showConfirmationModal: false})
 
     render() {
-		const { fullScreen, data, classes } = this.props;
+		const { fullScreen, data, classes ,schoolData,currency} = this.props;
         const { classTypeData } = this.state;
-        console.log("enrollmentFee form state -->>",this.state);
-        console.log("enrollmentFee form props -->>",this.props);
+      
 		return (
 			<Dialog
                 open={this.props.open}
@@ -158,6 +152,13 @@ class EnrollmentFeeForm extends React.Component {
 										label="Include all classes"
 									/>
 								</FormControl>
+                                {/* 1.Currency selection will align with the cost field.(Done)
+                                    2.School Default currency will be selected as default. (Done)
+                                    or in case of edit package already selected currency will be become default currency.(Done)
+                                    3.New field currency need to be created  in the classPricing collection. (Done)
+                                    4.User selected currency name and symbol store in the state.(Done)
+                                    5.On Save store in the collection.(Done)
+                                */}
                                 <FormControl
                                     margin="dense"
                                     required={true}
@@ -167,7 +168,22 @@ class EnrollmentFeeForm extends React.Component {
                                     <Input
                                         defaultValue={data && data.cost}
                                         inputRef={(ref)=> this.enrollmentCost = ref}
-                                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                        startAdornment={<Select
+                                            required={true}
+                                            input={<Input id="currency" />}
+                                            value={this.state.currency}
+                                            onChange={event =>
+                                              this.setState({ currency: event.target.value })
+                                            }
+                                          >
+                                           {config.currency.map((data, index)=> {
+                                                          return <MenuItem
+                                                            key={data.label}
+                                                            value={data.value}>
+                                                            {data.value}
+                                                          </MenuItem>
+                                                      })} 
+                                          </Select>}
                                         label="Cost"
                                         type="number"
                                         fullWidth

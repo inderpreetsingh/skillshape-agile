@@ -5,6 +5,5 @@ export const handleOutBoundLink = () => {
   ReactGA.outboundLink({
     label: 'clicked external link'
   },function(){
-    console.log('outbound link click.');
   });
 }

@@ -11,7 +11,6 @@ Meteor.methods({
     if (!typeOfTable || !tableId || !schoolId) {
       throw new Meteor.Error("Some fields missing!", "Error while purchasing");
     }
-    console.log("packageRequest.addRequest");
     const validationContext = PackageRequestSchema.newContext();
     if (this.userId) {
       let PricingTable = "";
@@ -23,21 +22,14 @@ Meteor.methods({
         PricingTable = EnrollmentFees;
       }
       let packageData = PricingTable.findOne(tableId);
-      console.log("packageData-----------------", packageData);
       const packageName =
         typeOfTable == "EP" ? packageData.name : packageData.packageName;
-      console.log(
-        "typeOfTable, tableId, schoolId",
-        typeOfTable,
-        tableId,
-        schoolId
-      );
+     
       const purchaseRequestAlreadyPresent = PackageRequest.findOne({
         userId: this.userId,
         packageId: packageData._id
       });
       const schoolData = School.findOne(schoolId);
-      console.log("schoolData", schoolData);
       if (purchaseRequestAlreadyPresent) {
         throw new Meteor.Error(
           `You are currently unable to purchase this package from here. ${schoolData &&
@@ -81,7 +73,6 @@ Meteor.methods({
         } else {
           // Return the errors in case something is invalid.
           const invalidData = validationContext.invalidKeys()[0];
-          console.log("validation errors...", validationContext.invalidKeys());
           throw new Meteor.Error(invalidData.name + " is " + invalidData.value);
         }
       }

@@ -1,9 +1,16 @@
-@mixin get-color($color, $textColor: 'light-text', $hover-color: 'dark', $ripple-color: 'dark', $amount: 3) {
+// This mixin is specific to the skillshape buttons
+@mixin get-color(
+  $color,
+  $textColor: "light-text",
+  $hover-color: "dark",
+  $ripple-color: "dark",
+  $amount: 3
+) {
   $bg-color: map-get($colors, $color);
   background-color: $bg-color;
   color: map-get($colors, $textColor);
   &:hover {
-    @if $hover-color == 'dark' {
+    @if $hover-color == "dark" {
       background-color: darken($bg-color, $amount * 1%);
     } @else {
       background-color: lighten($bg-color, $amount * 1%);
@@ -11,10 +18,10 @@
   }
 
   &::after {
-    @if $ripple-color == 'dark' {
-      background-color: rgba(map-get($colors, 'my-black') , 0.5);
-    }@else {
-      background-color: rgba(#f5f5f5 , 0.5);
+    @if $ripple-color == "dark" {
+      background-color: rgba(map-get($colors, "my-black"), 0.5);
+    } @else {
+      background-color: rgba(#f5f5f5, 0.5);
     }
   }
 }

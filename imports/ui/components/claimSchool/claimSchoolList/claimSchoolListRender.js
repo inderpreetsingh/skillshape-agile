@@ -95,12 +95,7 @@ const GridWrapper = styled.div`
 
 export default function(props) {
   let schools = this.props.collectionData;
-  console.log(
-    this.props.collectionData,
-    schools,
-    "========= schools..",
-    "re rending..."
-  );
+  
   const NoneOfMyLisiting = props => (
     <Wrapper>
       <TextWrapper>
@@ -124,7 +119,6 @@ export default function(props) {
   }
 
   if (isEmpty(schools)) {
-    console.log(this.state.filters, "filters in the render......");
     return (
       <GridWrapper suggestionForm={this.props.suggestionForm}>
         {this.state.isLoading && <ContainerLoader />}

@@ -59,7 +59,6 @@ const PreloaderWrapper = styled.div`
 
 const Main = styled.main`
   width: 100%;
-
   @media screen and (max-width: ${helpers.mobile}px) {
     overflow: hidden;
   }
@@ -80,7 +79,6 @@ const MainInner = styled.div`
     props.largePadding ? props.largePadding : helpers.rhythmDiv * 2}px;
   overflow: ${props =>
     props.reviews || props.classTimes ? "hidden" : "initial"};
-
   @media screen and (max-width: ${helpers.mobile}px) {
     padding: ${props =>
       props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
@@ -101,7 +99,6 @@ const ClassWrapper = styled.div`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-
   @media screen and (max-width: ${helpers.mobile + 100}px) {
     padding-bottom: ${props =>
       props.paddingBottom ? props.paddingBottom : 0}px;
@@ -110,11 +107,9 @@ const ClassWrapper = styled.div`
 
 const ClassTimesWrapper = styled.div`
   padding-bottom: ${helpers.rhythmDiv * 4}px;
-
   @media screen and (max-width: ${helpers.mobile + 100}px) {
     padding-bottom: ${props => props.paddingBottom}px;
   }
-
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-bottom: ${helpers.rhythmDiv * 4}px;
   }
@@ -123,7 +118,6 @@ const ClassTimesWrapper = styled.div`
 const ClassTimesInnerWrapper = styled.div`
   padding: 0px;
   overflow: hidden;
-
   @media screen and (max-width: ${helpers.mobile}px) {
     padding: ${props =>
       props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
@@ -141,7 +135,6 @@ const ClassTimesTitle = styled.h2`
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   padding: 0;
-
   @media screen and (max-width: ${helpers.mobile + 100}px) {
     margin-bottom: ${helpers.rhythmDiv * 4}px;
   }
@@ -175,14 +168,13 @@ const CalendarWrapper = styled.div`
 const ClassContainer = styled.div`
   width: 90%;
   padding: 0 ${helpers.rhythmDiv}px;
-  margin: 0px auto;
+  margin: 3px auto;
   border-radius: ${helpers.rhythmDiv}px;
   background: #ffffff;
   text-align: center;
   margin-top: ${props => props.marginTop}px;
   margin-bottom: ${props => props.marginBottom}px;
   padding-bottom: ${props => props.paddingBottom}px;
-
   @media screen and (max-width: ${helpers.mobile}px) {
     ${helpers.flexCenter} flex-direction: column;
     padding-bottom: ${props =>
@@ -270,7 +262,6 @@ class ClassTypeContent extends Component {
           subjectData.skillCategoryId,
           classTypeData.selectedSkillCategory
         );
-        console.log(categoryName, "category name...........");
         subjectData.name = `${subjectData.name} -- ${categoryName}`;
       }
       return subjectData;
@@ -482,7 +473,8 @@ class ClassTypeContent extends Component {
       enrollmentFeeData,
       mediaData,
       reviewsData,
-      classInterestData
+      classInterestData,
+      currency
     } = this.props;
 
     if (isLoading) {
@@ -696,6 +688,7 @@ class ClassTypeContent extends Component {
                   monthlyPackagesData={this.normalizeMonthlyPricingData(
                     monthlyPricingData
                   )}
+                  currency={currency}
                 />
               )}
             </PackagesWrapper>

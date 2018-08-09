@@ -67,7 +67,6 @@ class ContactUs extends React.Component {
   submit = (event) => {
       event.preventDefault();
       const { popUp } = this.props;
-      console.log("this", this);
       const name = this.name.value;
       const email = this.email.value;
       const message = this.yourMessage.value;
@@ -87,7 +86,6 @@ class ContactUs extends React.Component {
           this.setState({ isLoading: true });
           Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
               if (error) {
-                  console.log("error", error);
               } else {
                   popUp.appear("success",{content: "Thanks for providing your feedback"});
                   setTimeout(() => {
@@ -101,7 +99,6 @@ class ContactUs extends React.Component {
 
     render() {
         const { classes } = this.props;
-        console.log("Props====>",this.props);
         return(
             <DocumentTitle title={this.props.route.name}>
             <Grid container style={{paddingLeft: 8}}>
@@ -190,11 +187,11 @@ class ContactUs extends React.Component {
                                 <div className={classes.imageContainer}>
                                     <img src="/images/new-logo.png" className="" alt="logo" width="48" style={{width: 'auto', height: '250px'}} />
                                     <div  className="sl-bar">
-                                        <a href="#" className={[`${classes.socialIcon} fa fa-facebook social_icon`]}></a>
-                                        <a href="#" className={[`${classes.socialIcon} fa fa-twitter social_icon`]}></a>
-                                        <a href="#" className={[`${classes.socialIcon} fa fa-google-plus social_icon`]}></a>
-                                        <a href="#" className={[`${classes.socialIcon} fa fa-dribbble social_icon`]}></a>
-                                        <a href="#" className={[`${classes.socialIcon} fa fa-instagram social_icon`]}></a>
+                                        <a href="https://business.facebook.com/SkillShapeLearning" className={[`${classes.socialIcon} fa fa-facebook social_icon`]}></a>
+                                        <a href="https://twitter.com/skillshape" className={[`${classes.socialIcon} fa fa-twitter social_icon`]}></a>
+                                        <a href="https://plus.google.com/117321700113912820761" className={[`${classes.socialIcon} fa fa-google-plus social_icon`]}></a>
+                                        {/* <a href="#" className={[`${classes.socialIcon} fa fa-dribbble social_icon`]}></a> */}
+                                        <a href="https://www.instagram.com/skillshape/" className={[`${classes.socialIcon} fa fa-instagram social_icon`]}></a>
                                     </div>
                                 </div>
                             </Grid>

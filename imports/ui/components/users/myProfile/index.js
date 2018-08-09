@@ -60,9 +60,10 @@ class MyProfile extends React.Component {
   }
 
   initialzeUserProfileForm = currentUser => {
+    console.log("currentUser",currentUser)
     if (currentUser) {
       this.setState({
-        firstName: currentUser.profile.firstName || "",
+        firstName: currentUser.profile.firstName || currentUser.profile.name || "",
         lastName: currentUser.profile.lastName || "",
         gender: currentUser.profile.gender || "",
         dob: currentUser.profile.dob || null,
@@ -95,7 +96,6 @@ class MyProfile extends React.Component {
   };
 
   onLocationChange = location => {
-    console.log("location==>", location);
     this.setState({
       loc: location.coords,
       address: location.fullAddress
@@ -137,7 +137,6 @@ class MyProfile extends React.Component {
           { files: { "0": file.fileData }, path: "profile" },
           (err, res) => {
             if (err) {
-              console.error("err ", err);
               this.setState({
                 isBusy: false,
                 errorText: err.reason || err.message
@@ -163,8 +162,6 @@ class MyProfile extends React.Component {
 
   editUserCall = userData => {
     const { currentUser, toastr } = this.props;
-    // console.log("editUserCall -->>",this.state.dob)
-    console.log("currentuser in profile index", currentUser);
     Meteor.call(
       "user.editUser",
       { doc: userData, docId: currentUser._id },
@@ -175,7 +172,7 @@ class MyProfile extends React.Component {
           toastr.error(state.errorText, "Error");
         }
         if (result) {
-          toastr.success("Successfully edit your profile.", "Success");
+          toastr.success("You have successfully edited your profile!", "Success");
         }
         this.setState(state);
       }

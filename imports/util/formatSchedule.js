@@ -93,13 +93,13 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
     );
   else return addTotalClassTimes(classTimes);
 
-  if (hidePastDates)
-    return removePastTimesFromSchedule(
-      classTimes,
-      data.scheduleType.toLowerCase(),
-      { startDate: data.startDate, endDate: data.endDate }
-    );
-  else return addTotalClassTimes(classTimes);
+  // if (hidePastDates)
+  //   return removePastTimesFromSchedule(
+  //     classTimes,
+  //     data.scheduleType.toLowerCase(),
+  //     { startDate: data.startDate, endDate: data.endDate }
+  //   );
+  // else return addTotalClassTimes(classTimes);
 };
 
 const addTotalClassTimes = classTimes => {
@@ -140,22 +140,31 @@ const removePastTimesFromSchedule = (
   scheduleData
 ) => {
   const currentDate = new Date();
-  if (scheduleType === "recurring") {
-    if (
-      moment(currentDate).isBetween(
-        moment(scheduleData.startDate),
-        moment(scheduleData.endDate)
-      )
-    ) {
-      // now we need don't need to check anything
-      return addTotalClassTimes(classTimes);
-    }
-
+  if (scheduleType === "recurring" ) {
+   
+     if(scheduleData.endDate > new Date()) 
+     {
+       return addTotalClassTimes(classTimes);
+     }
+     
     return {};
   } else if (scheduleType === "onetime") {
-    return filterOutAndAddTotalClassTimes(classTimes);
+    let allPastDate=true;
+    DAYS_IN_WEEK.map(day => {
+      const scheduleData = classTimes[day];
+      if (!isEmpty(scheduleData)) {
+        scheduleData.forEach((schedule, i) => {
+         if(schedule.startTime > new Date()){
+            allPastDate=false;
+         } 
+        })
+      }
+    } ) 
+    if(!allPastDate){
+    return addTotalClassTimes(classTimes);
+    }
+    else return {};
   }
-
   return addTotalClassTimes(classTimes);
 };
 
@@ -175,3 +184,4 @@ export const _formatAMPM = startTime => {
 //   }
 //   return false;
 // }
+// function to check if the classs time end date ended

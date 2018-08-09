@@ -6,6 +6,8 @@ import config from "/imports/config";
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
 import Select from "material-ui/Select";
+import Checkbox from "material-ui/Checkbox";
+import { FormControl, FormControlLabel } from "material-ui/Form";
 import Grid from "material-ui/Grid";
 import Dialog, {
   DialogTitle,
@@ -19,12 +21,21 @@ import ResponsiveTabs from "/imports/util/responsiveTabs";
 import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
 // import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
 import { WeekDaysRow } from "./weekDaysRow";
-import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
 import { OneTimeRow } from "./oneTimeRow";
 import "/imports/api/sLocation/methods";
+import PackageAttachment from '/imports/ui/components/landing/components/dialogs/PackageAttachement.jsx'
 import { toastrModal } from "/imports/util";
+/*
+1.closed field in the collection.(Done)
+2.Default value of closed checkbox.(Done)
+3.Only shown in case of series.(Done)
+4.storing in the state and then in collection.(Done)
+5.Retrieving the default value.(Done)
+6.Join class button will be set to closed class if class started.
+7.Popup with some text.
 
+*/
 const formId = "classTimeForm";
 
 const styles = theme => {
@@ -48,12 +59,16 @@ class ClassTimeForm extends React.Component {
 
   initializeFields = () => {
     const { data, locationData, parentData } = this.props;
-    console.log("initializeFields data -->>", this.props);
     let state = {
       roomData: [],
       roomId: "",
       startDate: new Date(),
-      endDate: new Date()
+      endDate: new Date(),
+      tabValue: 2,
+      closed:false,
+      noOfRow: 0,
+      PackageAttachment:false,
+      PackageOpen:true
     };
 
     if (!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {
@@ -61,7 +76,6 @@ class ClassTimeForm extends React.Component {
       state.locationId = parentData.selectedLocation._id;
     }
     // Default selected tab accoring to data found for `ClassTimes` rec.
-    console.log("data--------->>>>.", data);
     if (!_.isEmpty(data)) {
       if (data.scheduleType === "oneTime") {
         state.tabValue = 0;
@@ -76,30 +90,23 @@ class ClassTimeForm extends React.Component {
       state.endDate = data.endDate;
       state.duration = data.duration;
       state.roomId = data.roomId;
-      console.log("this.state.tabvalue", state.tabValue);
+      state.closed=data.closed
     }
-    console.log("Final state -->>", state);
     return state;
   };
 
   onTabChange = tabValue => {
-    console.log("onTabChange state -->>", tabValue);
     this.setState({ tabValue });
   };
-
+  handleNoOfRow=(data)=>{
+    this.setState({noOfRow:this.state.noOfRow + data});
+  }
   handleChangeDate = (fieldName, date) => {
-    console.log("handleChangeDate -->>", fieldName, date);
     this.setState({ [fieldName]: new Date(date) });
   };
-
+  
   saveClassTimes = (nextTab, addSeperateTimeJson, event) => {
     event.preventDefault();
-    console.log(
-      "nextTab, addSeperateTimeJson, event",
-      nextTab,
-      addSeperateTimeJson,
-      event
-    );
     const { schoolId, data, parentKey, parentData, toastr } = this.props;
     const { tabValue, locationId } = this.state;
 
@@ -108,7 +115,8 @@ class ClassTimeForm extends React.Component {
       classTypeId: parentKey,
       name: this.classTimeName.value,
       desc: this.desc.value,
-      locationId: locationId
+      locationId: locationId,
+      closed: this.state.closed
     };
     if (!this.classTimeName.value) {
       toastr.error("Please enter Class Time name.", "Error");
@@ -117,6 +125,9 @@ class ClassTimeForm extends React.Component {
     if (tabValue === 0) {
       payload.scheduleType = "oneTime";
       payload.scheduleDetails = { oneTime: this.refs.oneTimeRow.getRowData() };
+      if(this.state.noOfRow < 2){
+        payload.closed=false
+      }
     } else if (tabValue === 1) {
       payload.scheduleType = "recurring";
       payload.startDate = this.state.startDate;
@@ -127,7 +138,6 @@ class ClassTimeForm extends React.Component {
       payload.startDate = new Date();
       payload.scheduleDetails = this.refs.weekDaysRow.getRowData();
     }
-    console.log("ClassTimes submit -->>", payload);
 
     if (data && data._id) {
       this.onSubmit({
@@ -135,30 +145,38 @@ class ClassTimeForm extends React.Component {
         doc: payload,
         doc_id: data._id,
         nextTab: nextTab,
-        value: addSeperateTimeJson
+        value: addSeperateTimeJson 
       });
     } else {
       this.onSubmit({
         methodName: "classTimes.addClassTimes",
         doc: payload,
         nextTab: nextTab,
-        value: addSeperateTimeJson
+        value: addSeperateTimeJson 
       });
     }
   };
 
-  onSubmit = ({ methodName, doc, doc_id, nextTab, value }) => {
+  onSubmit = ({ methodName, doc, doc_id, value }) => {
+    
     this.setState({ isBusy: true });
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
+      
       if (error) {
       }
       if (result) {
         if (value.addSeperateTime == false) {
-          this.props.onClose();
+          this.setState({PackageAttachment:true,PackageOpen:true,classTimeFormOnClose:this.props.onClose,value:value.addSeperateTime})
+
+        // this.props.onClose();
         } else if (value.addSeperateTime == true) {
-          this.props.onClose(value.addSeperateTime);
-        } else {
-          this.props.onClose();
+          this.setState({PackageAttachment:true,PackageOpen:true,classTimeFormOnClose:this.props.onClose,value:value.addSeperateTime})
+         //this.props.onClose( value.addSeperateTime );
+        } 
+       else if (value == "delete") {
+        this.props.onClose();
+      }else {
+         this.props.onClose();
           this.props.moveToNextTab();
         }
       }
@@ -166,11 +184,29 @@ class ClassTimeForm extends React.Component {
     });
   };
   //onsubmit1 for the handling again opening new classtime form
-
+  closedCheckbox = () => {
+    return <Fragment> 
+                {(this.state.tabValue ==1 || this.state.tabValue==0 && this.state.noOfRow >= 2 ) && <FormControl fullWidth margin="dense">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.closed}
+                        onChange={()=>{
+                          this.setState({closed:!this.state.closed})
+                        }}
+                        value="closed"
+                      />
+                    }
+                    label="Do you want to close registration for this series once the first class has started?
+                     This will make it a Closed Series. Students who join the class will be enrolled in the 
+                     entire series."
+                  />
+                </FormControl>}
+    </Fragment>
+  }
   render() {
-    const { fullScreen, data, classes, locationData } = this.props;
+    const { fullScreen, data, classes, locationData,schoolId,parentKey } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
-    console.log("ClassTimeForm state -->>", this.state);
     return (
       <div>
         <Dialog
@@ -189,7 +225,9 @@ class ClassTimeForm extends React.Component {
               onSubmit={() =>
                 this.onSubmit({
                   methodName: "classTimes.removeClassTimes",
-                  doc: data
+                  doc:data,
+                  doc_id:data,
+                  value:"delete"
                 })
               }
               onClose={() => this.setState({ showConfirmationModal: false })}
@@ -222,18 +260,14 @@ class ClassTimeForm extends React.Component {
                   type="text"
                   fullWidth
                 />
-                {console.log(
-                  "tabValue",
-                  this.state.tabValue,
-                  this.state.tabValue === 0
-                )}
                 <ResponsiveTabs
-                  defaultValue={0}
+                  defaultValue={1}
                   tabValue={this.state.tabValue}
-                  tabs={["One Time", "Repeating with Start/End", "Ongoing"]}
+                  tabs={["Single/Set", "Series", "Ongoing"]}
                   color="primary"
                   onTabChange={this.onTabChange}
-                />
+                  />
+                  {this.closedCheckbox()}
                 {this.state.tabValue === 0 && (
                   <div style={{ border: "3px solid blue", padding: 10 }}>
                     <OneTimeRow
@@ -245,6 +279,7 @@ class ClassTimeForm extends React.Component {
                       }
                       roomData={this.state.roomData}
                       saveClassTimes={this.saveClassTimes}
+                      handleNoOfRow={this.handleNoOfRow}
                     />
                   </div>
                 )}
@@ -325,6 +360,20 @@ class ClassTimeForm extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+        {this.state.PackageAttachment && <PackageAttachment 
+       open={this.state.PackageOpen} 
+       onClose={()=>{this.setState({PackageOpen:false})}} 
+       schoolId={schoolId}
+       classTypeId={parentKey}
+       classTimeFormOnClose={()=>{
+         if(this.state.value){
+          this.state.classTimeFormOnClose(true)
+         }
+         else{
+          this.state.classTimeFormOnClose()
+         }
+        }}
+       />} 
       </div>
     );
   }

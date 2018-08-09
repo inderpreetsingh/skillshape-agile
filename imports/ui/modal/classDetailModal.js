@@ -277,7 +277,6 @@ class ClassDetailModal extends React.Component {
       null,
       this.props.eventData.schoolId,
       (err, res) => {
-        console.log("----------res----------->", res);
         this.setState({ adminAccess: res });
       }
     );
@@ -380,7 +379,6 @@ class ClassDetailModal extends React.Component {
         this.setState({ isLoading: false, error });
         this.props.closeEventModal(false, null);
         if (error) {
-          console.error("Error :-", error);
         }
       }
     );
@@ -482,8 +480,6 @@ class ClassDetailModal extends React.Component {
       classInterestData
     } = this.props;
     {
-      console.log("this.props of classdetailsmodal", this.props);
-      console.log("eventdata ---------------/>>>>>", eventData);
     }
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(
@@ -506,7 +502,6 @@ class ClassDetailModal extends React.Component {
       }
       return false;
     }); // false is for not hiding the past schedule types;
-    console.log("classtype in classdetail modal", classType);
     classTypeData.formattedClassTimesDetails = formattedClassTimesDetails;
     const scheduleDetails = [
       "Monday",
@@ -599,10 +594,7 @@ class ClassDetailModal extends React.Component {
                         <Italic>Time</Italic>
                       </Text>
                       <Text>
-                        {console.log(
-                          "scheduleDetails",
-                          classTypeData.formattedClassTimesDetails
-                        )}
+                       
                         {/* timeUnits are added for mins,hours */}
                         {`${eventData.eventStartTime}`}
 
@@ -650,7 +642,6 @@ class ClassDetailModal extends React.Component {
                         onClick={() => this.goToSchoolPage(school)}
                       />
                     </Grid> */}
-                    {console.log("this.props.type", this.props.type)}
                     {this.props &&
                       this.props.type == "attending" && (
                         <Grid item xs={6} style={{ margin: "auto" }}>

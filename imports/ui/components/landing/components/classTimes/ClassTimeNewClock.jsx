@@ -307,12 +307,7 @@ class ClassTimeNewClock extends Component {
   handleClockClick = currentClockIndex => {
     const { updateClockAndDayIndex } = this.props;
     const dayIndex = this._getDayIndexFromCurrentClockIndex(currentClockIndex);
-    console.info(
-      "updateing ......... currentClockIndex , dayIdex",
-      currentClockIndex,
-      dayIndex,
-      "updateing ......... currentClockIndex , dayIdex"
-    );
+   
     updateClockAndDayIndex(currentClockIndex, dayIndex);
   };
 
@@ -529,7 +524,6 @@ class ClassTimeNewClock extends Component {
       formattedClassTimes
     } = this.props;
     const type = totalClocks > 1 ? "multiple" : "single";
-    console.info(type, totalClocks, "type .............");
     const schduleTypeLowerCase = scheduleType.toLowerCase();
 
     return (

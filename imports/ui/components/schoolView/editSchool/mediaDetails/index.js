@@ -18,9 +18,7 @@ class MediaDetails extends React.Component {
         }
     }
     handleFixedToggle = status => {
-      // console.log("handleFixedToggle", defaultPosition);
       // const stickyPosition = !defaultPosition;
-      // console.log(this.state.sticky, defaultPosition);
       // if (this.state.sticky != stickyPosition) {
       //   this.setState({
       //     sticky: stickyPosition
@@ -56,14 +54,11 @@ class MediaDetails extends React.Component {
     }
 
     onAddMedia = ({data, fileData, isUrl}) => {
-      console.log("data====>",data)
-      // console.log("onAddMedia data -->>",data, fileData);
       if(isUrl){
           this.meteorCall({type:"add", data})
       } else {
         S3.upload({files: { "0": fileData}, path:"schools"}, (err, res) => {
             if(err) {
-              console.error("err ",err);
             }
             if(res) {
               data.sourcePath = res.secure_url;
@@ -74,7 +69,6 @@ class MediaDetails extends React.Component {
     }
 
     onEditMedia = ({editKey, data, fileData}) => {
-        // console.log("onEditMedia data -->>",data, fileData);
         if(data.type === "url") {
             this.meteorCall({type:"edit", data, editKey})
         } else {
@@ -83,7 +77,6 @@ class MediaDetails extends React.Component {
 
                 S3.upload({files: { "0": fileData}, path:"schools"}, (err, res) => {
                     if(err) {
-                      console.error("err ",err);
                     }
                     if(res) {
                       data.sourcePath = res.secure_url;
@@ -103,7 +96,6 @@ class MediaDetails extends React.Component {
 
             Meteor.call("media.addMedia", data, (error, result) => {
                 if(error) {
-                  console.error("error", error);
                 }
                 this.closeMediaUpload();
             });
@@ -111,7 +103,6 @@ class MediaDetails extends React.Component {
 
             Meteor.call("media.editMedia", editKey, data, (error, result) => {
                 if(error) {
-                  console.error("error", error);
                 }
                 this.closeMediaUpload();
             });
@@ -122,10 +113,8 @@ class MediaDetails extends React.Component {
 
       Meteor.call("media.removeMedia", data, (error, result) => {
         if(error) {
-          console.error("Error -->>",error)
         }
         if(result) {
-          console.log("Success!!!!")
         }
       })
 

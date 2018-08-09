@@ -31,7 +31,7 @@ Meteor.methods({
         );
       }
     } else {
-      throw new Meteor.Error("Access Denied due to invalid informations!!");
+      throw new Meteor.Error("You already have a session with another user please logout to accept invitation.");
     }
   },
   "schoolMemberDetails.getAllSchoolMembers": function({ schoolId }) {
@@ -121,7 +121,7 @@ Meteor.methods({
         });
       }
     } else {
-      throw new Meteor.Error("Access Denied due to invalid informations!!");
+      throw new Meteor.Error("You already have a session with another user please logout to reject invitation.");
     }
   },
   "schoolMemberDetails.addNewMember": function(memberData) {

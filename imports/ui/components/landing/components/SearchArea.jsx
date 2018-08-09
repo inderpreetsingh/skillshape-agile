@@ -269,7 +269,7 @@ const SearchInputsSection = props => (
             filters={props.filters}
             onLocationChange={(event)=> {props.onLocationChange(event, "filters", null)}}
             currentAddress={props.currentAddress}
-            googlelocation={true}
+            googlelocation={'true'}
             value={props.currentAddress}
             onCloseIconClick={props.resetSearch}
             resetSearch={props.resetSearch}
@@ -383,6 +383,13 @@ class SearchArea extends Component {
     );
   }
 
+  componentDidUpdate(prevProps) {
+    const previousSkillCategoryIds = prevProps.filters.skillCategoryIds || [];
+    const currentSkillCategoryIds = this.props.filters.skillCategoryIds || [];
+
+    if(previousSkillCategoryIds.length !== currentSkillCategoryIds.length)
+      this.inputFromUser("");
+  }
 
   // This is used to get subjects on the basis of subject category.
   inputFromUser = text => {
@@ -452,7 +459,6 @@ class SearchArea extends Component {
 
   render() {
     // console.log("this.props in SearchArea",this.props);
-
     return (
       <SearchAreaPanel
         width={this.props.width}

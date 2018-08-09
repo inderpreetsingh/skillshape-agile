@@ -25,7 +25,6 @@ class SchoolCalenderView extends React.Component {
       function sendDocHeightMsg(e) {
         setTimeout(()=> {
           var ht = getDocHeight();
-          console.log("parent", parent);
           parent.postMessage(JSON.stringify({ 'docHeight': ht, 'iframeId' : 'ss-school-calender-view'}), '*');
         }, 3000)
       }

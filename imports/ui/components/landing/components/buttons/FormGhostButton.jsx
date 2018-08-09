@@ -1,12 +1,12 @@
-import React  from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import React from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
 
-import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Icon from 'material-ui/Icon';
+import { withStyles } from "material-ui/styles";
+import Button from "material-ui/Button";
+import Icon from "material-ui/Icon";
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 /* Because we are extending a material ui button, it us jss instead of styled Components */
 const styles = {
@@ -18,103 +18,122 @@ const styles = {
     borderColor: helpers.primaryColor,
     color: helpers.primaryColor,
     textTransform: "none",
-    '&:hover': {
+    "&:hover": {
       backgroundColor: helpers.primaryColor,
-      color: 'white'
+      color: "white"
     }
   },
   fullWidth: {
-    width: '100%'
+    width: "100%"
   },
   buttonIcon: {
-    display: 'inline-block',
-    marginRight: '5px',
+    display: "inline-block",
+    marginRight: "5px",
     fontSize: helpers.baseFontSize
+  },
+  redColor: {
+    color: helpers.alertColor,
+    borderColor: helpers.alertColor,
+    "&:hover": {
+      backgroundColor: helpers.alertColor,
+      color: "white"
+    }
   },
   blackColor: {
     color: helpers.black,
     borderColor: helpers.black,
-    '&:hover': {
+    "&:hover": {
       backgroundColor: helpers.black,
-      color: 'white'
+      color: "white"
     }
   },
   greyColor: {
     color: helpers.cancel,
     borderColor: helpers.cancel,
-    '&:hover': {
+    "&:hover": {
       backgroundColor: helpers.cancel,
-      color: 'white'
+      color: "white"
     }
   },
   darkGreyColor: {
     color: helpers.darkBgColor,
     borderColor: helpers.darkBgColor,
-    '&:hover': {
+    "&:hover": {
       backgroundColor: helpers.darkBgColor,
-      color: 'white'
+      color: "white"
     }
   },
   icon: {
-    display: 'inline-block',
-    marginRight: '5px',
-    fontSize: 'inherit'
+    display: "inline-block",
+    marginRight: "5px",
+    fontSize: "inherit"
   },
   customIcon: {
-    display: 'inline-block',
-    fontSize: 'inherit',
-  },
+    display: "inline-block",
+    fontSize: "inherit"
+  }
 };
 
-const getIconForButton = (props) => {
+const getIconForButton = props => {
   const CustomIcon = props.customIcon;
-  if(CustomIcon && props.icon) {
-    return <CustomIcon className={props.classes.customIcon} />
-  }else if (props.icon) {
-    return <Icon className={props.classes.icon}>{props.iconName}</Icon>
+  if (CustomIcon && props.icon) {
+    return <CustomIcon className={props.classes.customIcon} />;
+  } else if (props.icon) {
+    return <Icon className={props.classes.icon}>{props.iconName}</Icon>;
   }
 
-  return '';
-}
+  return "";
+};
 
-
-const FormGhostButton = (props) => {
+const FormGhostButton = props => {
   let rootClass = ``;
-  if(props.fullWidth) {
+  if (props.fullWidth) {
     rootClass = `${props.classes.formGhostButton} ${props.classes.fullWidth}`;
-  }else{
+  } else {
     rootClass = props.classes.formGhostButton;
   }
-
-  if(props.blackColor) {
-    rootClass = rootClass + ' ' + props.classes.blackColor;
+  // debugger;
+  /* prettier-ignore */
+  if (props.blackColor || (props.color == "black")) {
+    rootClass = rootClass + " " + props.classes.blackColor;
+  } else if (props.greyColor || (props.color == "grey")) {
+    rootClass = rootClass + " " + props.classes.greyColor;
+  } else if (props.darkGreyColor || (props.color == "dark-grey")) {
+    rootClass = rootClass + " " + props.classes.darkGreyColor;
+  } else if (props.alertColor || (props.color == "alert")) {
+    rootClass = rootClass + " " + props.classes.redColor;
   }
-  else if(props.greyColor) {
-    rootClass = rootClass + ' ' + props.classes.greyColor;
-  }
-  else if(props.darkGreyColor) {
-    rootClass = rootClass + ' ' + props.classes.darkGreyColor;
-  }
-
+  console.log(rootClass, "lll...");
   return (
-    <Button classes={{
-      root: rootClass,
-      }} onClick={props.onClick}>
-        {getIconForButton(props)}
+    <Button
+      type={props.type}
+      classes={{
+        root: rootClass
+      }}
+      onClick={props.onClick}
+      form={props.form}
+    >
+      {getIconForButton(props)}
 
-        {props.label ? props.label : 'Submit'}
+      {props.label ? props.label : "Submit"}
     </Button>
-  )
-}
+  );
+};
 
 FormGhostButton.propTypes = {
-    onClick: PropTypes.func,
-    icon: PropTypes.bool,
-    iconName: PropTypes.string,
-    label: PropTypes.string,
-    fullWidth: PropTypes.bool,
-    classes: PropTypes.object.isRequired,
-    customIcon: PropTypes.element
-}
+  type: PropTypes.string,
+  onClick: PropTypes.func,
+  icon: PropTypes.bool,
+  iconName: PropTypes.string,
+  label: PropTypes.string,
+  fullWidth: PropTypes.bool,
+  color: PropTypes.string,
+  classes: PropTypes.object.isRequired,
+  customIcon: PropTypes.element
+};
+
+FormGhostButton.defaultProps = {
+  type: "button"
+};
 
 export default withStyles(styles)(FormGhostButton);

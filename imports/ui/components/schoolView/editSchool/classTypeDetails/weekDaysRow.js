@@ -116,8 +116,7 @@ export class WeekDaysRow extends React.Component {
 
   render() {
     const { row } = this.state;
-    console.log("WeekDaysRow state -->>", this.state);
-    console.log("WeekDaysRow props -->>", this.props);
+   
     return (
       <div>
         {row.map((data, index) => {
@@ -235,7 +234,7 @@ export class WeekDaysRow extends React.Component {
                 <FormControl fullWidth margin="dense">
                   <InputLabel htmlFor="roomId">Room</InputLabel>
                   <Select
-                    value={data ? data.roomId : ""}
+                    value={data && data.roomId ? data.roomId : !isEmpty(this.props.roomData) && this.props.roomData[0].id}
                     input={<Input id="roomId" />}
                     onChange={this.handleSelectInputChange.bind(
                       this,
@@ -249,7 +248,6 @@ export class WeekDaysRow extends React.Component {
                         No location added in Locations.
                       </MenuItem>
                     )}
-                    {console.log("this.props.roomData", this.props.roomData)}
                     {this.props.roomData &&
                       this.props.roomData.map((data, index) => {
                         return (
@@ -291,7 +289,7 @@ export class WeekDaysRow extends React.Component {
         </div> */}
         <div>
           <div>
-            <div
+            {/* <div
               style={{
                 display: "flex",
                 justifyContent: "space-between"
@@ -313,18 +311,18 @@ export class WeekDaysRow extends React.Component {
                 Use this if there is a different repeating type or students can
                 come to any class time available.
               </Typography>
-            </div>
+            </div> */}
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-between"
+                justifyContent: "center"
               }}
             >
               <Button onClick={this.addNewRow} raised color="secondary">
                 Add Linked Class Time
               </Button>
 
-              <Button
+              {/* <Button
                 onClick={this.props.saveClassTimes.bind(this, event, {
                   addSeperateTime: true
                 })}
@@ -332,7 +330,7 @@ export class WeekDaysRow extends React.Component {
                 color="secondary"
               >
                 Add Separate Class Time
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

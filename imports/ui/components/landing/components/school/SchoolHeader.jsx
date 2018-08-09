@@ -176,7 +176,6 @@ class SchoolHeader extends Component {
   };
 
   handleInputChange = e => {
-    console.info("e.target.value", e.target.value);
     this.setState({ userEmail: e.target.value });
   };
 

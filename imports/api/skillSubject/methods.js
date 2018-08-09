@@ -31,7 +31,7 @@ Meteor.methods({
     skillCategoryIds,
     textSearch,
     defaultList = false,
-    limit = 10
+    limit = 0
   }) {
     let filter = {},
       list;

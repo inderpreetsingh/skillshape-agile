@@ -11,17 +11,14 @@ import Input, { InputLabel } from 'material-ui/Input';
 import Select from 'material-ui/Select';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
-
 import { Loading } from '/imports/ui/loading';
 import CreateMedia from '/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia';
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
-
 import MaterialRTE from "/imports/startup/client/material-rte"
 // Need to import this in order to show loading component.
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 export default function () {
-
   let {
     name,
     website,
@@ -41,11 +38,9 @@ export default function () {
     classes,
     route,
     mediaFormData,
-    currentUser
+    currentUser,
+    toastr
   } = this.props;
-
-  console.log("SchoolEditDetails render props -->>", this.props)
-  console.log("SchoolEditDetails render state -->>", this.state)
   return  (
     <div>
       <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />
@@ -65,7 +60,7 @@ export default function () {
                       <Grid item xs={12}>
                         <TextField
                               required={true}
-                              defaultValue={schoolData && schoolData.name}
+                              defaultValue={schoolData && schoolData.name == 'my-school' ? ' ': schoolData.name}
                               inputRef={(ref)=> this.name = ref}
                               label="School Name"
                               type="text"
@@ -73,10 +68,11 @@ export default function () {
                               onChange={(event)=> {this.setState({name:event.target.value})}}
                           />
                         </Grid>
+                       
                         <Grid item xs={12}>
                           <TextField
                               required={true}
-                              defaultValue={schoolData && schoolData.website}
+                              defaultValue={schoolData && schoolData.website ? schoolData.website : 'https://www.'}
                               inputRef={(ref)=> this.website = ref}
                               label="Website"
                               type="text"
@@ -148,7 +144,10 @@ export default function () {
                         <Select
                             input={<Input id="currency"/>}
                             value={this.state.currency}
-                            onChange={(event) => this.setState({ currency: event.target.value })}
+                            onChange={(event) => {if(event.target.value!=this.state.previousSelectedCurrency){
+                              toastr.success('You are going to change your Preferred Currency.Please make changes in packages according to your currency. ', "success");
+                            }
+                            this.setState({ currency: event.target.value })}}
                             fullWidth
                         >
                             {

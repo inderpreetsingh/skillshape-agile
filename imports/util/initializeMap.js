@@ -26,7 +26,6 @@ const mapOptions = {
 
 function infoSchool({school, classTypes}) {
     if(school) {
-        // console.log("<< --infoSchool -->>")
         let backgroundUrl = school.mainImage || "images/SkillShape-Whitesmoke.png";
         const schoolName = school ? cutString(school.name, 30) : "";
         Events.trigger("getSeletedSchoolData",{school});
@@ -37,7 +36,6 @@ function infoSchool({school, classTypes}) {
 }
 
 export function createMarkersOnMap(mapId, locationData) {
-    // console.log("document.getElementById(mapId)",document.getElementById(mapId))
     if(document.getElementById(mapId)) {
         let map = new google.maps.Map(document.getElementById(mapId), {zoom: 5});
         let i = 0;
@@ -68,7 +66,6 @@ export function createMarkersOnMap(mapId, locationData) {
 }
 
 export function reCenterMap(map, center) {
-    // console.log("reCenterMap center -->>",center)
     map && map.panTo(new google.maps.LatLng(center[0], center[1]));
     return map;
 }
@@ -76,7 +73,7 @@ export function reCenterMap(map, center) {
 export function initializeSchoolEditLocationMap(location) {
     const mapId = location && `goolge-map-${location._id}`;
     if (location && document.getElementById(mapId)) {
-        document.getElementById(mapId).innerHTML = ""
+        document.getElementById(mapId).innerHTML = "";
         let geolocate;
         let map = new google.maps.Map(document.getElementById(mapId), mapOptions);
 
@@ -91,7 +88,6 @@ export function initializeSchoolEditLocationMap(location) {
 }
 
 export function initializeMap(center) {
-    console.log("center--------->",center);
     if (document.getElementById('google-map')) {
         import('/imports/ui/components/landing/components/jss/infoBox').then(InfoBox => {
             InfoBoxInstance = InfoBox.InfoBox;
@@ -125,7 +121,6 @@ export function initializeMap(center) {
         // if (!!navigator.geolocation) {
         //     navigator.geolocation.getCurrentPosition(function(position) {
         //         geolocate = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        //         console.log("geolocate", geolocate);
         //         map.setCenter(geolocate);
         //     });
         // } else {
@@ -140,7 +135,6 @@ export function initializeMap(center) {
         });
         let countDebounce = 0;
         google.maps.event.addListener(map, "idle", function() {
-            // console.log("this", this)
             _.debounce(()=> {
                 bounds = map.getBounds();
                 NEPoint = [bounds.getNorthEast().lat(),bounds.getNorthEast().lng()];
@@ -167,7 +161,6 @@ export function setMarkersOnMap(map, SLocation) {
         let oldMarkersLocationsIdObj = mc.getMarkers() || [];
         locations = [];
         if(mc && googleMarkers.length > 0) {
-            // console.log("Old googleMarkers --->>",googleMarkers)
             // mc.clearMarkers(googleMarkers);
             googleMarkers = [];
         }
@@ -220,7 +213,6 @@ export function setMarkersOnMap(map, SLocation) {
 function getSchoolViewOnMap(classTypes,backgroundUrl,schoolName) {
     let className = "";
     classTypes.forEach(data => {
-        // console.log('data is as',data);
         className +=  `<div class="info-box-classtype-name"><a href="">${data.name}</a></div>`
     })
     return (

@@ -30,7 +30,6 @@ class SideNav extends Component {
     componentWillMount() {
         Events.on("registerAsSchool", "123#567",(data) => {
           let {userType, userEmail, userName} = data;
-          console.info(userType,userEmail);
           //debugger;
           this.handleSignUpDialogBoxState(true, userType, userEmail, userName);
         })
@@ -166,7 +165,7 @@ class SideNav extends Component {
         });
     }
     render() {
-        const { currentUser } = this.props;
+        const { currentUser, classes, ...otherProps } = this.props;
         // console.log("SideNav state -->>>",this.state);
         return (
             <Fragment>
@@ -217,7 +216,9 @@ class SideNav extends Component {
                     handleDrawer={() => this.handleDrawerState(false)}
                     handleSignUpDialogBox={this.handleSignUpDialogBoxState}
                     showChangePassword={() => this.handleChangePasswordDialogBoxState(true)}
-                    {...this.props}
+                    currentUser={currentUser}
+                    {...otherProps}
+                    
                     />
             </Fragment>
         )

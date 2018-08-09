@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { withStyles } from "material-ui/styles";
 import Button from "material-ui/Button";
@@ -11,6 +12,13 @@ import Dialog, {
   withMobileDialog
 } from "material-ui/Dialog";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import {
+  mobile,
+  rhythmDiv
+} from "/imports/ui/components/landing/components/jss/helpers.js";
+
 import "/imports/api/sLocation/methods";
 import { toastrModal } from "/imports/util";
 
@@ -21,9 +29,19 @@ const styles = theme => {
     button: {
       margin: 5,
       width: 150
+    },
+    dialogActionsRoot: {
+      [`@media screen and (max-width: ${mobile}px)`]: {
+        flexWrap: "wrap",
+        justifyContent: "flex-start"
+      }
     }
   };
 };
+
+const ButtonWrapper = styled.div`
+  margin-bottom: ${rhythmDiv}px;
+`;
 
 class RoomForm extends React.Component {
   constructor(props) {
@@ -67,24 +85,14 @@ class RoomForm extends React.Component {
   };
 
   handleSubmit = ({ methodName, data, locationId, nextTab }) => {
-    console.log(
-      "handleSubmit methodName-->>",
-      methodName,
-      data,
-      locationId,
-      nextTab
-    );
-
     Meteor.call(methodName, { locationId, data }, (error, result) => {
       let stateObj = { isBusy: false };
       if (error) {
-        console.error("error", error);
         stateObj.error = error.reason || error.message;
       }
       if (result) {
         this.props.onClose();
         if (nextTab) {
-          console.log("next tab------------>>>>>>");
           this.props.moveToNextTab();
         }
       }
@@ -94,9 +102,7 @@ class RoomForm extends React.Component {
   };
 
   render() {
-    console.log("RoomForm render props -->>>", this.props);
-    console.log("RoomForm render state -->>>", this.state);
-    const { fullScreen, data } = this.props;
+    const { fullScreen, data, classes } = this.props;
     return (
       <div>
         <Dialog
@@ -108,19 +114,24 @@ class RoomForm extends React.Component {
           <DialogTitle id="form-dialog-title" />
           {this.state.isBusy && <ContainerLoader />}
           {this.state.showConfirmationModal && (
-            <ConfirmationModal
+            <SkillShapeDialogBox
+              type="alert"
+              defaultButtons
               open={this.state.showConfirmationModal}
-              submitBtnLabel="Yes, Delete"
-              cancelBtnLabel="Cancel"
-              message="You will delete this room, Are you sure?"
-              onSubmit={() =>
+              affirmateBtnText="Yes, Delete"
+              cancelBtnText="Cancel"
+              title="Are you sure?"
+              content="You will delete this room, so want to delete it?"
+              onAffirmationButtonClick={() =>
                 this.handleSubmit({
                   methodName: "location.roomRemove",
                   data: data,
                   locationId: this.props.parentKey
                 })
               }
-              onClose={() => this.setState({ showConfirmationModal: false })}
+              onModalClose={() =>
+                this.setState({ showConfirmationModal: false })
+              }
             />
           )}
           {this.state.error ? (
@@ -153,34 +164,39 @@ class RoomForm extends React.Component {
               </form>
             </DialogContent>
           )}
-          <DialogActions>
+          <DialogActions classes={{ root: classes.dialogActionsRoot }}>
             {data && (
-              <Button
-                onClick={() => this.setState({ showConfirmationModal: true })}
-                color="accent"
-              >
-                Delete
-              </Button>
+              <ButtonWrapper>
+                <FormGhostButton
+                  color="alert"
+                  onClick={() => this.setState({ showConfirmationModal: true })}
+                  label="Delete"
+                />
+              </ButtonWrapper>
             )}
-            <Button onClick={() => this.props.onClose()} color="primary">
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              form={formId}
-              color="primary"
-              onClick={this.saveRoomFormData.bind(this, null)}
-            >
-              {data ? "Save" : "Submit"}
-            </Button>
-            <Button
-              type="button"
-              form={formId}
-              color="primary"
-              onClick={this.saveRoomFormData.bind(this, "nextTab")}
-            >
-              Save and Add Classes
-            </Button>
+            <ButtonWrapper>
+              <FormGhostButton
+                color="dark-grey"
+                onClick={() => this.props.onClose()}
+                label="Cancel"
+              />
+            </ButtonWrapper>
+            <ButtonWrapper>
+              <FormGhostButton
+                type="button"
+                form={formId}
+                onClick={this.saveRoomFormData.bind(this, null)}
+                label={data ? "Save" : "Submit"}
+              />
+            </ButtonWrapper>
+            <ButtonWrapper>
+              <FormGhostButton
+                type="button"
+                form={formId}
+                onClick={this.saveRoomFormData.bind(this, "nextTab")}
+                label="Save and Add Classes"
+              />
+            </ButtonWrapper>
           </DialogActions>
         </Dialog>
       </div>

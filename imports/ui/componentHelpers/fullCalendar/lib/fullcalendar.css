@@ -1287,4 +1287,11 @@ be a descendant of the grid when it is being dragged.
 .card-calendar .fc .fc-row:last-child td {
   border-bottom: 0; }
 .card-calendar .fc .fc-body .fc-widget-content {
-  border-bottom: 0; }
+  border-bottom: 0; 
+}
+@media only screen and (max-width: 600px) {
+    .card-calendar .fc .fc-body .fc-widget-content {
+      min-height: 300px;
+      border-bottom: 0;
+    }
+ }

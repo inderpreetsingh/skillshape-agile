@@ -71,14 +71,12 @@ class MyMedia extends React.Component {
     }
 
     handleMediaSettingChange = (event, type) => {
-    	console.log("handleMediaSettingChange -->>",event.target.value, type)
     	this.setState({mediaDefaultValue: type})
     }
 
     submitMediaDetails = (event)=> {
     	event.preventDefault();
     	const { currentUser, toastr } = this.props;
-    	console.log("submitMediaDetails state -->>",this.state);
     	if(currentUser) {
 
     		if(this.state.mediaDefaultValue) {
@@ -105,8 +103,6 @@ class MyMedia extends React.Component {
     }
 
   	render() {
-	  	console.log("MyMedia props --->>", this.props);
-	  	console.log("MyMedia state --->>", this.state);
 	  	let { currentUser, classes, isUserSubsReady } = this.props;
 
 	  	if(!isUserSubsReady)

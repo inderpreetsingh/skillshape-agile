@@ -9,8 +9,6 @@ import MediaList from '/imports/ui/components/schoolView/editSchool/mediaDetails
 
 export default function() {
     const { showCreateMediaModal, mediaFormData, filterStatus, limit, memberInfo } = this.state;
-    console.log("SchoolMemberMedia props -->>",this.props);
-    console.log("SchoolMemberMedia state -->>",this.state);
     const { mediaListfilters, showUploadImageBtn } = this.props;
 
     return (

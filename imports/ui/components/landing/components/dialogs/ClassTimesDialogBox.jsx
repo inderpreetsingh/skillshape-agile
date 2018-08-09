@@ -115,7 +115,7 @@ const MyScrollToElement = styled.div`
 const ClassContainer = styled.div`
   width: 90%;
   padding: ${helpers.rhythmDiv}px;
-  margin: 0 auto;
+  margin: 3px auto;
   border-radius: ${helpers.rhythmDiv}px;
   background: #ffffff;
 `;
@@ -404,7 +404,6 @@ class ClassTimesDialogBox extends React.Component {
       schoolId
     } = this.props;
     {
-      console.log("this.props in the clsstimedialogbox", this.props);
     }
   
     return (

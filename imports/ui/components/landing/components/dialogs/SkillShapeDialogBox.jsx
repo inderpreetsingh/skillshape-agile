@@ -85,20 +85,6 @@ const popUpBasicConfig = {
 };
 
 const styles = () => {
-  const ghostButtonCommon = {
-    fontFamily: helpers.specialFont,
-    fontSize: helpers.baseFontSize,
-    backgroundColor: "transparent",
-    border: "1px solid",
-    borderColor: helpers.primaryColor,
-    color: helpers.primaryColor,
-    textTransform: "none",
-    "&:hover": {
-      backgroundColor: helpers.primaryColor,
-      color: "white"
-    }
-  };
-
   const stylesObject = {
     dialogRoot: {
       maxWidth: 450,
@@ -125,8 +111,20 @@ const styles = () => {
       height: "auto",
       width: "auto"
     },
+    ghostCommon: {
+      fontFamily: helpers.specialFont,
+      fontSize: helpers.baseFontSize,
+      backgroundColor: "transparent",
+      border: "1px solid",
+      borderColor: helpers.primaryColor,
+      color: helpers.primaryColor,
+      textTransform: "none",
+      "&:hover": {
+        backgroundColor: helpers.primaryColor,
+        color: "white"
+      }
+    },
     ["ghost.alert"]: {
-      ...ghostButtonCommon,
       color: popUpBasicConfig.alert.color,
       borderColor: popUpBasicConfig.alert.color,
       "&:hover": {
@@ -135,7 +133,6 @@ const styles = () => {
       }
     },
     ["ghost.inform"]: {
-      ...ghostButtonCommon,
       color: popUpBasicConfig.inform.color,
       borderColor: popUpBasicConfig.inform.color,
       "&:hover": {
@@ -144,7 +141,6 @@ const styles = () => {
       }
     },
     ["ghost.warning"]: {
-      ...ghostButtonCommon,
       color: popUpBasicConfig.warning.color,
       borderColor: popUpBasicConfig.warning.color,
       "&:hover": {
@@ -153,7 +149,6 @@ const styles = () => {
       }
     },
     ["ghost.success"]: {
-      ...ghostButtonCommon,
       color: popUpBasicConfig.success.color,
       borderColor: popUpBasicConfig.success.color,
       "&:hover": {
@@ -187,31 +182,42 @@ class SkillShapeDialogBox extends Component {
       </ButtonsWrapper>
     );
   };
+
   _getAffirmateButtonClasses = () => {
     const { type, defaultButtons, classes } = this.props;
     if (type == "alert" && !defaultButtons) {
       // console.log("alert in get cancel...");
-      return classes["ghost.inform"];
+      return classes["ghostCommon"] + " " + classes["ghost.inform"];
     } else {
-      return classes[`ghost.${type}`];
+      return classes["ghostCommon"] + " " + classes[`ghost.${type}`];
     }
   };
 
   _getAffirmateButtonText = () => {
-    const { type, defaultButtons, classes } = this.props;
+    const { type, defaultButtons, classes, affirmateBtnText } = this.props;
+    if (affirmateBtnText) {
+      return affirmateBtnText;
+    }
+
     return defaultButtons && type === "alert"
       ? "Yes"
       : popUpBasicConfig[type].affirmateBtnText;
   };
 
+  _getCancelButtonText = () => {
+    const { cancelBtnText } = this.props;
+    if (cancelBtnText) return cancelBtnText;
+    return "Cancel";
+  };
+
   _getCancelButtonClasses = () => {
     const { type, defaultButtons, classes } = this.props;
-    debugger;
+    // debugger;
     if (type == "alert") {
       // console.log("alert in get cancel...");
-      return classes["ghost.inform"];
+      return classes["ghostCommon"] + " " + classes["ghost.inform"];
     } else {
-      return classes[`ghost.${type}`];
+      return classes["ghostCommon"] + " " + classes[`ghost.${type}`];
     }
   };
 
@@ -219,6 +225,7 @@ class SkillShapeDialogBox extends Component {
     const {
       RenderActions,
       type,
+
       onAffirmationButtonClick,
       onModalClose,
       onCloseButtonClick,
@@ -240,7 +247,7 @@ class SkillShapeDialogBox extends Component {
               onClick={onCloseButtonClick || onModalClose}
               className={this._getCancelButtonClasses()}
             >
-              Cancel
+              {this._getCancelButtonText()}
             </Button>
           </ButtonWrapper>
         )}
@@ -344,6 +351,8 @@ SkillShapeDialogBox.propTypes = {
   content: PropTypes.string,
   type: PropTypes.string,
   RenderActions: PropTypes.element,
+  affirmateBtnText: PropTypes.string,
+  cancelBtnText: PropTypes.string,
 
   // default Buttons will make sure, both the Yes/No counter part will appear
   // without default buttons we only have the buttons in boxes according to the most

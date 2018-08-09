@@ -72,7 +72,6 @@ class UsersList extends React.Component {
 	}
 
 	handlePageClick = ({skip}) => {
-	    console.log("skip -->>",skip)
 		this.setState({isBusy: true})
 		this.getUsers({ limit: this.state.perPage, skip:skip })
   	}

@@ -12,10 +12,7 @@ import ImageGalleryView from "/imports/ui/componentHelpers/imageGalleryView";
 export default function() {
 
 	const { collectionData, noMediaFound, showEditButton, onDelete, openEditMediaForm, memberExists, memberInfo } = this.props;
-	console.log("media list render props -->>",this.props);
-	console.log("media list render state -->>",this.state);
 	const { isHovering, thumbnailData, imgIndex } = this.state;
-	console.info('no Media found',noMediaFound);
 
 	return (
 		<div style={{textAlign:'center'}}>

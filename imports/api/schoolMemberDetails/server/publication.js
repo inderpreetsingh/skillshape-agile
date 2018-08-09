@@ -92,11 +92,12 @@ Meteor.publish("MembersBySchool", function({
     }
     // console.log("SchoolMemberDetails called",classfilter);
     // console.log("MembersRec",SchoolMemberDetails.find(classfilter,{ limit: limit ? limit : 4 },{sort: {firstName: 1}}).fetch());
-    return SchoolMemberDetails.find(
+    let cursor = SchoolMemberDetails.find(
       classfilter,
       { limit: limit ? limit : 4 },
       { sort: { firstName: 1 } }
     );
+    return SchoolMemberDetails.publishJoinedCursors(cursor, { reactive: true }, this);
   } else {
     throw new Meteor.Error("Access Denied!!!");
   }

@@ -102,7 +102,6 @@ const getIconForButton = (props) => {
 }
 
 const getColor = (props,rootClass) => {
-  console.log('props.classes',props);
   if (props.action) return rootClass + ' ' + props.classes.action;
   else if (props.information) return rootClass + ' ' + props.classes.information;
   else if (props.danger) return rootClass + ' ' + props.classes.danger;

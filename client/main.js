@@ -36,7 +36,7 @@ class App extends Component {
     );
   }
 }
-
-Meteor.startup(() => {
-  render(<App />, document.getElementById("app"));
-});
+render(<App />, document.getElementById("app"));
+// Meteor.startup(() => {
+ 
+// });

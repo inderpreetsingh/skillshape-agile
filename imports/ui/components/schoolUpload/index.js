@@ -21,7 +21,6 @@ class schoolUploadView extends React.Component {
 
     fileSelected = (e)=>{
         var files = this.fileInputRef.files[0];
-        console.log("e.target.value>>??>>>>> ",files)
         let fileUploadName =  files.name || null;
         this.setState({fileUploadName})
     }
@@ -33,7 +32,7 @@ class schoolUploadView extends React.Component {
         reader.onload = function(fileLoadEvent) {
             Meteor.call('project_upload', files[0].name, reader.result,function(error, result){
                 if(error){
-                    console.log("errrr in file parseing >>>> ", error)
+                    
                     toastr.error("Please try again. some error in provided data","Error");
                 } else {
                     toastr.success("All School data uploaded successfully","Success");
@@ -67,7 +66,6 @@ class schoolUploadView extends React.Component {
     render() {
         const { currentUser, isUserSubsReady } = this.props;
 
-        console.log("School Upload props -->>",this.props);
 
         if(!isUserSubsReady)
         return <Preloader/>

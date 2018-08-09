@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import get from "lodash/get";
 import styled from "styled-components";
 import Grid from "material-ui/Grid";
+import isEmpty from "lodash/isEmpty";
 import Input, { InputLabel, InputAdornment } from "material-ui/Input";
 import Radio, { RadioGroup } from "material-ui/Radio";
 import {
@@ -12,7 +13,7 @@ import {
   FormHelperText
 } from "material-ui/Form";
 import Multiselect from "react-widgets/lib/Multiselect";
-
+import Checkbox from "material-ui/Checkbox";
 import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
 import { withStyles } from "material-ui/styles";
@@ -81,7 +82,9 @@ const ErrorWrapper = styled.span`
   color: red;
   margin: 15px;
 `;
-
+const ConfirmationDialog = styled.div`
+  margin: 8px;
+`;
 class EditTaggedMemberDialogBox extends Component {
   constructor(props) {
     super(props);
@@ -96,7 +99,11 @@ class EditTaggedMemberDialogBox extends Component {
         "public"
       ),
       isBusy: true,
-      error: ""
+      error: "",
+      noMember:false,
+      checkedAll:false,
+      taggedMemberData:this.props&&this.props.currentMediaData.taggedMemberData?this.props.currentMediaData.taggedMemberData:[]
+     
     };
   }
 
@@ -130,40 +137,51 @@ class EditTaggedMemberDialogBox extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    const mediaId = get(this.props, "currentMediaData._id");
-    const payload = {
-      name: this.state.mediaTitle,
-      desc: this.state.mediaNotes,
-      taggedMemberIds: this.state.taggedMemberIds,
-      users_permission: {
-        [Meteor.userId()]: { accessType: this.state.mediaDefaultValue }
-      }
-    };
-
-    if (mediaId) {
-      this.setState({ isBusy: true });
-      Meteor.call("media.editMedia", mediaId, payload, (err, res) => {
-        let state = { isBusy: false };
-
-        if (err) {
-          state.error = err.reason || err.message;
+    if(!isEmpty(this.state.taggedMemberIds))
+    {
+      const mediaId = get(this.props, "currentMediaData._id");
+      const payload = {
+        name: this.state.mediaTitle,
+        desc: this.state.mediaNotes,
+        taggedMemberIds: this.state.taggedMemberIds,
+        users_permission: {
+          [Meteor.userId()]: { accessType: this.state.mediaDefaultValue }
         }
-
-        this.setState(state, () => {
-          if (res) {
-            this.props.onModalClose();
+      };
+  
+      if (mediaId) {
+        this.setState({ isBusy: true });
+        Meteor.call("media.editMedia", mediaId, payload, (err, res) => {
+          let state = { isBusy: false };
+  
+          if (err) {
+            state.error = err.reason || err.message;
           }
+  
+          this.setState(state, () => {
+            if (res) {
+              this.props.onModalClose();
+            }
+          });
         });
-      });
-    } else {
-      this.setState({ error: "Access Denied!!!" });
+      } else {
+        this.setState({ error: "Access Denied!!!" });
+      }
+    }else{
+      this.setState({noMember:true})
     }
+   
   };
 
   collectSchoolMembers = values => {
     this.setState({ taggedMemberIds: values.map(ele => ele._id) });
   };
-
+  //1.add all members id into taggedmemberids if checked otherwise empty
+  //2.set checked value into the state 
+  //3.show slected values into the multiselect.
+handleChange=(e)=>{
+  e.target.checked?this.setState({checkedAll:e.target.checked,taggedMemberIds: this.state.schoolMembers.map(ele => ele._id)}):this.setState({checkedAll:e.target.checked,taggedMemberIds: [],taggedMemberData:[]})
+}
   deleteMedia = () => {
     this.setState({ isBusy: true });
     Meteor.call(
@@ -197,7 +215,6 @@ class EditTaggedMemberDialogBox extends Component {
     } = this.props;
 
     const { mediaDefaultValue, isBusy, error } = this.state;
-
     // This is used to save Tagged media details
     return (
       <Dialog
@@ -225,21 +242,32 @@ class EditTaggedMemberDialogBox extends Component {
                 />
               </Grid>
               <Grid item md={4} sm={4} xs={4}>
-                <Typography>Members:</Typography>
+                <Typography>Members: </Typography>
               </Grid>
               <Grid item md={8} sm={8} xs={8}>
-                <Multiselect
-                  textField={"firstName"}
+              <FormControl fullWidth margin="dense">
+                <FormControlLabel
+                  control={
+                  <Checkbox
+                  checked={this.state.checkedAll}
+                  onChange={(e)=>{this.handleChange(e)}}
+                  value="checkedAll"
+              />
+                  }
+                  label="Select All Members"
+                />
+              </FormControl>
+
+             
+              {!this.state.checkedAll &&  <Multiselect
+                  textField={'firstName'}
                   valueField={"activeUserId"}
                   data={this.state.schoolMembers}
                   placeholder="School Members"
-                  defaultValue={get(
-                    this.props,
-                    "currentMediaData.taggedMemberData",
-                    []
-                  )}
+                  defaultValue={this.state.taggedMemberData}
                   onChange={this.collectSchoolMembers}
-                />
+                /> }
+               
               </Grid>
               <Grid item md={4} sm={4} xs={4}>
                 <Typography>Permissions:</Typography>
@@ -309,6 +337,27 @@ class EditTaggedMemberDialogBox extends Component {
             </Grid>
           </form>
         </MuiThemeProvider>
+        <Dialog
+          disableBackdropClick
+          disableEscapeKeyDown
+          maxWidth="xs"
+          open={this.state.noMember}
+          aria-labelledby="confirmation-dialog-title"
+        >
+          <DialogTitle id="confirmation-dialog-title">Confirmation</DialogTitle>
+          <ConfirmationDialog>
+            Please Select at least one member.
+          </ConfirmationDialog>
+          <DialogActions>
+          
+            <Button
+              color="primary"
+              onClick={() => this.setState({noMember:false})}
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Dialog>
     );
   }

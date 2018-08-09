@@ -14,21 +14,42 @@ class FullCalendar extends React.Component {
       header: {
         left: "prev,next today",
         center: "title",
-        right: "month,agendaWeek,agendaDay,listWeek"
+        right: "month,week,listWeek"
+        // right: "month,agendaWeek,agendaDay,listWeek"
       },
-      height: 1200, // Sets the height of the entire calendar, including header and footer.
+      defaultView:$(window).width() < 765 ? 'listWeek' : 'week',
+      views:{
+        week:{
+              type:'basic',
+              duration:{ weeks : 2}
+        }
+      },
+      //theme:false,
+      firstDay: moment().day(),
+      //columnFormat: 'ddd - D',
+     // contentHeight: 'auto',
+      height: 'auto', // Sets the height of the entire calendar, including header and footer.
       defaultDate: new Date(),
       selectable: true,
       selectHelper: true,
       navLinks: false, // can click day/week names to navigate views
       editable: false,
-      eventLimit: true, // allow "more" link when too many events
+      eventLimit: false,
+      windowResize: (view)=> {
+        if($(window).width() < 765) {
+          $('#fullcalendar-container').fullCalendar('changeView', 'listWeek');
+        }
+        else
+        {
+          $('#fullcalendar-container').fullCalendar('changeView', 'week');
+          
+        } 
+      },
+       // allow "more" link when too many events
       /*eventSources :[sevents],*/
       eventSources: (start, end, timezone, callback) => {
         let startDate = new Date(start);
         let endDate = new Date(end);
-        // console.log("eventSources old startDate-->>",this.props.startDate)
-        // console.log("eventSources new startDate-->>",startDate)
         if (!this.props.startDate && startDate) {
           this.props.setDate(startDate, endDate);
         }
@@ -37,16 +58,13 @@ class FullCalendar extends React.Component {
           startDate &&
           this.props.startDate.valueOf() !== startDate.valueOf()
         ) {
-          // console.log("eventSources startDate changed-->>")
           this.props.setDate(startDate, endDate);
         }
         let sevents = this.buildCalander() || [];
-        // console.log("sevents -->>",sevents);
         callback(sevents);
       },
       dayRender: function(date, cell) {},
       eventRender: function(event, element, view) {
-        console.log("event is ", event);
         let renderEvent = true;
         event.deletedEvents &&
           event.deletedEvents.map(current => {
@@ -60,7 +78,7 @@ class FullCalendar extends React.Component {
         }
         switch (event.scheduleType) {
           case "oneTime": {
-            return true;
+            return  renderEventBox(event);
           }
           case "recurring": {
             if (
@@ -69,7 +87,7 @@ class FullCalendar extends React.Component {
               moment(event.start).format("YYYY-MM-DD") <=
                 moment(event.endDate).format("YYYY-MM-DD")
             )
-              return true;
+              return  renderEventBox(event);
             return false;
           }
           case "OnGoing": {
@@ -77,7 +95,7 @@ class FullCalendar extends React.Component {
               moment(event.start).format("YYYY-MM-DD") >=
               moment(event.startDate).format("YYYY-MM-DD")
             )
-              return true;
+              return renderEventBox(event);
             return false;
           }
         }
@@ -100,15 +118,9 @@ class FullCalendar extends React.Component {
     } = this.props;
     let { manageMyCalendarFilter } = this.props;
     let sevents = [];
-    console.log(
-      "classinterestdata",
-      classInterestData,
-      "classTimesData",
-      classTimesData
-    );
+    
     let myClassTimesIds = classInterestData.map(data => data.classTimeId);
     // Class Time Ids managed by current user
-    // console.log("-----------------manageMyCalendarFilter------------------", manageMyCalendarFilter)
     let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
     // let schoolClassTimesIds = schoolClassTimes.map(data => data._id);
     // merging deletedEvents data from classInterestData to classTimesData for disabling events
@@ -125,7 +137,6 @@ class FullCalendar extends React.Component {
     });
     for (var i = 0; i < classTimesData.length; i++) {
       let classTime = classTimesData[i];
-      //console.log("classTime in bulid calendar", classTime);
       try {
         let sevent;
 
@@ -145,23 +156,19 @@ class FullCalendar extends React.Component {
         let checkedClassTimes = false;
         // Three type of class times seperated into different colors.
         if (manageClassTimeIds.indexOf(classTime._id) > -1) {
-          console.log("in manage class data");
           sevent.className = "event-rose";
           sevent.attending = true;
           checkedClassTimes = true;
         } else if (myClassTimesIds.indexOf(classTime._id) > -1) {
-          console.log("in myClass class data");
           sevent.className = "event-green";
           sevent.attending = true;
           checkedClassTimes = true;
         } else if (schoolClassTimeId.indexOf(classTime._id) > -1) {
-          console.log("in school class data");
           sevent.className = "event-azure";
           sevent.attending = false;
           checkedClassTimes = true;
         }
         // let classTypeData = ClassType.findOne({ _id: classTime.classTypeId});
-        // console.log("classTypeData===>",classTypeData)
         if (classTime.scheduleType === "oneTime" && checkedClassTimes) {
           let scheduleData = [...classTime.scheduleDetails.oneTime];
           sevent.scheduleDetails = classTime.scheduleDetails;
@@ -178,17 +185,20 @@ class FullCalendar extends React.Component {
             sevent.title =
               classTime.classTypeName.name +
               ": " +
-              classTime.name +
-              " " +
-              sevent.eventStartTime +
-              " to " +
-              sevent.eventEndTime;
+              classTime.name ;
+              sevent.durationAndTimeunits = `${obj.duration} ${
+                obj.timeUnits ? obj.timeUnits : "Minutes"
+              }`;
+              // +
+              // " " +
+              // sevent.eventStartTime +
+              // " to " +
+              // sevent.eventEndTime;
             // sevent.age = classTypeData && classTypeData.ageMin;
             // sevent.gender = classTypeData && classTypeData.gender;
             // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
             // if (classTime && classTime.deletedEvents) {
             //   classTime.deletedEvents.map(current => {
-            //     console.log(
             //       "condition",
             //       current,
             //       moment(sevent.start).format("YYYY-MM-DD")
@@ -214,13 +224,11 @@ class FullCalendar extends React.Component {
           let scheduleData = { ...classTime.scheduleDetails };
           sevent.scheduleDetails = classTime.scheduleDetails;
           sevent.endDate = classTime.endDate && moment(classTime.endDate);
-          console.log("scheduleData", scheduleData);
           for (let key in scheduleData) {
             // const dayData = scheduleData[key];
             for (let obj of scheduleData[key]) {
               let temp = { ...sevent };
               temp.dow = [obj.day];
-              console.log("obj in fullCalendarRender", obj);
               // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
               temp.start = moment(obj.startTime).format("hh:mm");
               temp.end = moment(new Date(obj.startTime))
@@ -236,11 +244,12 @@ class FullCalendar extends React.Component {
               temp.title =
                 classTime.classTypeName.name +
                 ": " +
-                classTime.name +
-                " " +
-                temp.eventStartTime +
-                " to " +
-                temp.eventEndTime;
+                classTime.name 
+                // +
+                // " " +
+                // temp.eventStartTime +
+                // " to " +
+                // temp.eventEndTime;
               temp.roomId = obj.roomId;
               temp.durationAndTimeunits = `${obj.duration} ${
                 obj.timeUnits ? obj.timeUnits : "Minutes"
@@ -250,7 +259,6 @@ class FullCalendar extends React.Component {
               // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
               // if (classTime && classTime.deletedEvents) {
               //   classTime.deletedEvents.map(current => {
-              //     console.log(
               //       "condition",
               //       current,
               //       moment(temp.start).format("YYYY-MM-DD")
@@ -335,15 +343,11 @@ export default createContainer(props => {
         };
       }
     }
-    // console.log("classInterestFilter -->>",classInterestFilter)
     classTimesData = ClassTimes.find(classTimesFilter).fetch();
     classInterestData = ClassInterest.find(classInterestFilter).fetch();
   }
 
-  // console.log("FullCalendar createContainer classTimesData-->>", classTimesData)
 
-  // console.log("FullCalendar createContainer myClassIds-->>",myClassIds)
-  // console.log("FullCalendar createContainer classSchedule-->>",classSchedule)
 
   return {
     ...props,
@@ -351,3 +355,36 @@ export default createContainer(props => {
     classInterestData
   };
 }, FullCalendar);
+
+
+const renderEventBox = (event) => {
+  return $(`<div class="fc-day-grid-event fc-h-event fc-event fc-start fc-end" style="
+              position: relative;
+              background: #f5f5f5;
+              border-radius:  5px;
+              font-family: &quot;Lato&quot;, &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;
+              font-weight: 400;
+              line-height: 1.5;
+              color: #0a0a0a;
+              -webkit-font-smoothing: antialiased;
+              margin:  5px;
+            ">
+            <div>
+              <strong class="primary label hour fc-event ${event.className && event.className[0]}" style="box-shadow: none;display:  block;border-radius:  5px 5px 0 0;color: #fff;text-align: left;padding: 5px;"> ${moment(event.start).format("hh:mm a")} </strong>
+            </div>
+            <div class="padded" style="
+              padding: 5px;
+              text-align:  left;
+            ">
+                <div class="past_class" style="
+                  color:  #8a8a8a;
+                  font-weight: 700;
+                  font-size:  15px;
+                ">
+                  <small>${event.title}</small></br>
+                  <small style="color: blueviolet;font-size: 12px;font-weight: normal">
+                  ${event.durationAndTimeunits && event.durationAndTimeunits}</small>
+                </div>
+              </div>
+            </div>`);
+}
