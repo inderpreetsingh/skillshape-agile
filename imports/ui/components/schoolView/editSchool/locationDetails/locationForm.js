@@ -125,7 +125,7 @@ class LocationForm extends React.Component {
     componentYouLookingFor,
     addressComponents
   ) => {
-    console.info(addressComponents, "addrss components..");
+   
     for (let i = 0; i < addressComponents.length; ++i) {
       const currentAddComponent = addressComponents[i];
       if (currentAddComponent.types.indexOf(componentYouLookingFor) !== -1) {
@@ -222,7 +222,6 @@ class LocationForm extends React.Component {
             let place = results[0];
             // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
             // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
-            console.log(results[0], "location details...");
             const addressComponents = results[0].address_components;
             const currentPosAddress = {
               zip: this._getComponentFromCompleteAddress(
@@ -259,7 +258,6 @@ class LocationForm extends React.Component {
             };
 
             this.setState(state => {
-              console.log("setting state, address...");
               return {
                 ...state,
                 completeAddress: currentPosAddress,
@@ -269,7 +267,6 @@ class LocationForm extends React.Component {
                 }
               };
             });
-            console.log(currentPosAddress, "----------- current Pos Address");
             // const sLocation = results[0].formatted_address;
           }
         }
@@ -287,7 +284,6 @@ class LocationForm extends React.Component {
     // event.preventDefault();
     const value = event.target.value;
     this.setState(state => {
-      //console.log(event, event.target, "event.target");
       return {
         ...state,
         completeAddress: {

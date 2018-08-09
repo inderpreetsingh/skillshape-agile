@@ -27,13 +27,14 @@ export function withPopUp(WrappedComponent) {
       if (this.state.applyClose) {
         this.onClose();
       }
-
-      this.state.dialogBoxProps.onAffirmationButtonClick();
+      if(this.state.dialogBoxProps.onAffirmationButtonClick){
+        this.state.dialogBoxProps.onAffirmationButtonClick();
+      }
     };
 
     render() {
       const { open, type, dialogBoxProps } = this.state;
-      console.log(this.state, "this.state... withPopUp");
+     // console.log(this.state, "this.state... withPopUp");
       return (
         <Fragment>
           {open && (

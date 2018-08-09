@@ -11,7 +11,6 @@ export default class MapComponent extends React.Component {
   }
 
   render() {
-    console.log("MapComponent props -->>", this.props);
     const { mapData } = this.props;
     return (
       <div
