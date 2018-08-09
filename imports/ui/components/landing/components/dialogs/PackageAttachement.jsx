@@ -46,12 +46,12 @@ const ErrorWrapper = styled.span`
 `;
 
 class PackageAttachment extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-       this.state={PackageListingAttachment:false,pacLisAttOpen:true}
+        this.state = { PackageListingAttachment: false, pacLisAttOpen: true }
     }
     render() {
-    const { schoolId,classTypeId} = this.props;
+        const { schoolId, classTypeId } = this.props;
 
         return (
             <MuiThemeProvider theme={muiTheme}>
@@ -66,8 +66,8 @@ class PackageAttachment extends React.Component {
                     <DialogTitle>
                         <DialogTitleWrapper>
                             Select Package
-    
-                            <IconButton color="primary" onClick={()=>{this.props.onClose()}}>
+
+                            <IconButton color="primary" onClick={() => { this.props.onClose() }}>
                                 <ClearIcon />
                             </IconButton >
                         </DialogTitleWrapper>
@@ -87,23 +87,24 @@ class PackageAttachment extends React.Component {
                             fullWidth
                             noMarginBottom
                             label="Linked Existing Packages"
-                            onClick={(e) => {this.setState({PackageListingAttachment:true})}
+                            onClick={(e) => { this.setState({ PackageListingAttachment: true }) }
                             }
                         />
                         <ClassTimeButton
                             fullWidth
                             noMarginBottom
                             label="No thanks"
-                            onClick={() => {this.props.onClose() }}
+                            onClick={() => { this.props.classTimeFormOnClose() }}
                         />
                     </DialogActions>
 
                 </Dialog>
-                {this.state.PackageListingAttachment && <PackageListingAttachment 
-                open={this.state.pacLisAttOpen} 
-                onClose={()=>{this.setState({PackageListingAttachment:false})}}
-                schoolId={schoolId}
-                classTypeId={classTypeId}
+                {this.state.PackageListingAttachment && <PackageListingAttachment
+                    open={this.state.pacLisAttOpen}
+                    onClose={() => { this.setState({ PackageListingAttachment: false }) }}
+                    schoolId={schoolId}
+                    classTypeId={classTypeId}
+                    classTimeFormOnClose={() => { this.props.classTimeFormOnClose() }}
                 />}
             </MuiThemeProvider>
         )

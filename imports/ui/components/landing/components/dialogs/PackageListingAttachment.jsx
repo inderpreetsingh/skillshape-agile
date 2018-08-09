@@ -68,7 +68,7 @@ const OuterWrapper = styled.div`
     border-radius: ${helpers.rhythmDiv * 6}px;
   }
 `;
-const MonthlyPackageBackground= styled.div`
+const MonthlyPackageBackground = styled.div`
 background-color: #f5f5f5;
 `;
 const Title = styled.h3`
@@ -85,7 +85,18 @@ const Title = styled.h3`
     text-align: center;
   }
 `;
-
+const TitleForPackageType = styled.h2`
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  text-align: center;
+  font-style: italic;
+  line-height: 1;
+  font-size: ${helpers.baseFontSize * 1.5}px;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  color: ${helpers.textColor};
+  width: 100%;
+`;
 const Body = styled.section`
   padding: ${helpers.rhythmDiv}px;
 `;
@@ -251,6 +262,7 @@ class PackageListingAttachment extends React.Component {
     Meteor.call("monthlyPricing.addClasstypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
       if (res) {
         this.setState({ isBusy: false })
+        this.props.classTimeFormOnClose()
       }
     })
   }
@@ -356,7 +368,7 @@ class PackageListingAttachment extends React.Component {
                 <NoOfClasses>{props.cost && "For Enrollment"}</NoOfClasses>
               </PriceSection>
             )}
-          <FormControl  margin="dense">
+          <FormControl margin="dense">
             <FormControlLabel
               control={
                 <Checkbox
@@ -400,19 +412,20 @@ class PackageListingAttachment extends React.Component {
           </DialogTitle>
           <DialogContent>
             <MonthlyPackageBackground>
-            {!isEmpty(monthlyPackageData) && monthlyPackageData.map((current, index) => {
-              current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
+              <TitleForPackageType>Monthly Packages</TitleForPackageType>
+              {!isEmpty(monthlyPackageData) && monthlyPackageData.map((current, index) => {
+                current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
                 return this.Package(current, index)
-            })}
+              })}
             </MonthlyPackageBackground>
           </DialogContent>
           <DialogActions classes={{ action: this.props.classes.dialogAction }}>
-              <CenterConnect>
-            <ClassTimeButton
-              noMarginBottom
-              label="Connect"
-              onClick={() => { this.onConnect() }}
-            />
+            <CenterConnect>
+              <ClassTimeButton
+                noMarginBottom
+                label="Connect"
+                onClick={() => { this.onConnect() }}
+              />
             </CenterConnect>
           </DialogActions>
 

@@ -94,7 +94,20 @@ const ClassTimesBar = props => {
   };
   checkPastEndDate=(classTimesData)=>{
     return classTimesData.map(classTimeObj => {
-      if(classTimeObj.endDate > new Date() )
+      if(classTimeObj.scheduleType=='OnGoing'){
+        return (
+          <GridItem key={classTimeObj._id} spacing={32} inPopUp={inPopUp}>
+           
+            <ClassTime
+              {...classTimeObj}
+              inPopUp={inPopUp}
+              classTimeData={classTimeObj}
+              classInterestData={classInterestData}
+            />
+          </GridItem>
+        );
+      }
+      else if(classTimeObj.endDate > new Date() )
       {
         return (
           <GridItem key={classTimeObj._id} spacing={32} inPopUp={inPopUp}>
