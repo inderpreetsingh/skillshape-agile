@@ -140,12 +140,13 @@ const removePastTimesFromSchedule = (
   scheduleData
 ) => {
   const currentDate = new Date();
-  if (scheduleType === "recurring" || scheduleType === 'ongoing') {
+  if (scheduleType === "recurring" ) {
    
      if(scheduleData.endDate > new Date()) 
      {
        return addTotalClassTimes(classTimes);
      }
+     
     return {};
   } else if (scheduleType === "onetime") {
     let allPastDate=true;
@@ -164,6 +165,7 @@ const removePastTimesFromSchedule = (
     }
     else return {};
   }
+  return addTotalClassTimes(classTimes);
 };
 
 export const _formatAMPM = startTime => {

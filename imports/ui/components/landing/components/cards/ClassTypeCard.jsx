@@ -51,7 +51,6 @@ class ClassTypeCard extends Component {
   };
   handleDialogState = state => e => {
     e.stopPropagation();
-    // console.log(e,e.stopPropagation(),"clickced");
     this.setState({
       dialogOpen: state,
       classTimesDialogBoxError: null,
@@ -158,7 +157,6 @@ class ClassTypeCard extends Component {
     };
 
     const classTimesData = this.getClassTimes(get(this.props, "_id", null));
-    console.log('===classTimesData====',classTimesData)
     const formattedClassTimesData = formatClassTimesData(classTimesData).filter(
       data => {
         if (data) return data.formattedClassTimesDetails.totalClassTimes > 0;

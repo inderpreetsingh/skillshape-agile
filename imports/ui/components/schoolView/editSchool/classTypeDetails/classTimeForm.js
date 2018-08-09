@@ -157,21 +157,26 @@ class ClassTimeForm extends React.Component {
     }
   };
 
-  onSubmit = ({ methodName, doc, doc_id, nextTab, value }) => {
-    this.setState({PackageAttachment:true,PackageOpen:true})
-
+  onSubmit = ({ methodName, doc, doc_id, value }) => {
+    
     this.setState({ isBusy: true });
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
-     
+      
       if (error) {
       }
       if (result) {
         if (value.addSeperateTime == false) {
-         //this.props.onClose();
+          this.setState({PackageAttachment:true,PackageOpen:true,classTimeFormOnClose:this.props.onClose,value:value.addSeperateTime})
+
+        // this.props.onClose();
         } else if (value.addSeperateTime == true) {
-        //  this.props.onClose( value.addSeperateTime );
-        } else {
-         // this.props.onClose();
+          this.setState({PackageAttachment:true,PackageOpen:true,classTimeFormOnClose:this.props.onClose,value:value.addSeperateTime})
+         //this.props.onClose( value.addSeperateTime );
+        } 
+       else if (value == "delete") {
+        this.props.onClose();
+      }else {
+         this.props.onClose();
           this.props.moveToNextTab();
         }
       }
@@ -220,7 +225,9 @@ class ClassTimeForm extends React.Component {
               onSubmit={() =>
                 this.onSubmit({
                   methodName: "classTimes.removeClassTimes",
-                  doc: data
+                  doc:data,
+                  doc_id:data,
+                  value:"delete"
                 })
               }
               onClose={() => this.setState({ showConfirmationModal: false })}
@@ -358,6 +365,14 @@ class ClassTimeForm extends React.Component {
        onClose={()=>{this.setState({PackageOpen:false})}} 
        schoolId={schoolId}
        classTypeId={parentKey}
+       classTimeFormOnClose={()=>{
+         if(this.state.value){
+          this.state.classTimeFormOnClose(true)
+         }
+         else{
+          this.state.classTimeFormOnClose()
+         }
+        }}
        />} 
       </div>
     );

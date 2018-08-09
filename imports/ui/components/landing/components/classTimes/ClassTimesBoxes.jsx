@@ -69,7 +69,6 @@ class ClassTimesBoxes extends Component {
       data.addToCalendar = this._checkForAddToCalender(data);
       return data;
     });
-    console.log('classTimesData,classInterestData',classTimesData,classInterestData)
     return (<Fragment>
         {withSlider && <SliderWrapper>
           <ClassTimesSlider
