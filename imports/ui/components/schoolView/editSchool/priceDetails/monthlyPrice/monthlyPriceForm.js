@@ -90,6 +90,9 @@ class MonthlyPriceForm extends React.Component {
       duPeriod: this.state.duPeriod
 
     };
+    if(payload.classTypeId==null){
+      payload.classTypeId=[];
+    }
     if (tabValue === 0) {
       // No option is selected for making payment then need to show this `Please select any payment type`.
       if (pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo || pymtType==null || pymtType && pymtType.autoWithDraw && pymtType.payAsYouGo) {

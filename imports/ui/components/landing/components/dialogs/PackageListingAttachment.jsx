@@ -6,6 +6,8 @@ import PrimaryButton from '../buttons/PrimaryButton';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import MonthlyPricing from "/imports/api/monthlyPricing/fields.js";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import ClassPricing from "/imports/api/classPricing/fields";
 import School from '/imports/api/school/fields.js'
 import ClearIcon from 'material-ui-icons/Clear';
 import Typography from 'material-ui/Typography';
@@ -29,6 +31,7 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import { maximumClasses } from '/imports/util';
+import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 const Wrapper = styled.div`
   ${helpers.flexCenter} justify-content: space-between;
 
@@ -71,6 +74,12 @@ const OuterWrapper = styled.div`
 const MonthlyPackageBackground = styled.div`
 background-color: #f5f5f5;
 `;
+const ClassPackageBackground = styled.div`
+background-color: #ebf7ee;
+`;
+const EnrollmentPackageBackground = styled.div`
+background-color: #e1e1e1;
+`;
 const Title = styled.h3`
   font-size: 12px;
   font-family: ${helpers.commonFont};
@@ -93,7 +102,7 @@ const TitleForPackageType = styled.h2`
   line-height: 1;
   font-size: ${helpers.baseFontSize * 1.5}px;
   margin: 0;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: 5px;
   color: ${helpers.textColor};
   width: 100%;
 `;
@@ -187,8 +196,8 @@ class PackageListingAttachment extends React.Component {
   }
   initializeFields = () => {
     let state = {
-      packageSelect: {},
-      isBusy: this.props.isBusy
+      packageSelect: {MP:{},EP:{},CP:{}},
+      showConfirmationModal:false
     }
     return { ...state }
   }
@@ -244,41 +253,82 @@ class PackageListingAttachment extends React.Component {
   }
   onConnect = () => {
     //get selectedPackages in object form
-    let finalSelectedPackages = [], finalDiselectedPackages = [];
+    let selectedMonthlyPackages = [], 
+    unSelectedMonthlyPackages = [],
+    selectedEnrollementPackages = [], 
+    unSelectedEnrollmentPackages = [],
+    selectedClassPackages = [], 
+    unSelectedClassPackages = [];
     let packageSelect = this.state.packageSelect;
     let classTypeId = this.props.classTypeId;
     Object.keys(packageSelect).length ? Object.keys(packageSelect).forEach(function (key, id) {
-      if (packageSelect[key]) {
+      if(key=='MP'){
 
-        finalSelectedPackages.push(key);
+        Object.keys(packageSelect[key]).length ? Object.keys(packageSelect[key]).forEach(function (key1, id) {
+          if (packageSelect[key][key1]) {
+            selectedMonthlyPackages.push(key1);
+          }
+          else {
+            unSelectedMonthlyPackages.push(key1)
+          }
+        }) : "";
       }
-      else {
-        finalDiselectedPackages.push(key)
+      else if(key=='EP'){
+        Object.keys(packageSelect[key]).length ? Object.keys(packageSelect[key]).forEach(function (key1, id) {
+          if (packageSelect[key][key1]) {
+            selectedEnrollementPackages.push(key1);
+          }
+          else {
+            unSelectedEnrollmentPackages.push(key1)
+          }
+        }) : "";
+       
+      }
+      else{
+        Object.keys(packageSelect[key]).length ? Object.keys(packageSelect[key]).forEach(function (key1, id) {
+          if (packageSelect[key][key1]) {
+            selectedClassPackages.push(key1);
+          }
+          else {
+            unSelectedClassPackages.push(key1)
+          }
+        }) : ""; 
       }
     }) : "";
-    let selectedIds = uniq(finalSelectedPackages);
-    let diselectedIds = uniq(finalDiselectedPackages);
-    this.setState({ isBusy: true })
-    Meteor.call("monthlyPricing.addClasstypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
+    let selectedIds = uniq(selectedMonthlyPackages);
+    let diselectedIds = uniq(unSelectedMonthlyPackages);
+    Meteor.call("monthlyPricing.handleClassTypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
       if (res) {
-        this.setState({ isBusy: false })
-        this.props.classTimeFormOnClose()
       }
     })
+    selectedIds = uniq(selectedEnrollementPackages);
+    diselectedIds = uniq(unSelectedEnrollmentPackages);
+    Meteor.call("enrollmentFee.handleClassTypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
+      if (res) {
+      }
+    })
+    selectedIds = uniq(selectedClassPackages);
+    diselectedIds = uniq(unSelectedClassPackages);
+    Meteor.call("classPricing.handleClassTypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
+      if (res) {
+        this.props.classTimeFormOnClose();
+      }
+    })
+
   }
-  checkboxChecker = (value, props, index) => {
+  checkboxChecker = (value, props) => {
     if (value == undefined) {
       if (props.classTypeId.includes(this.props.classTypeId)) {
         let packageSelect = this.state.packageSelect;
-        packageSelect[props._id] = true;
+        packageSelect[`${props.packageType}`][`${props._id}`] = true;
         this.setState({ packageSelect })
-        return true
+        return true;
       }
       else {
         let packageSelect = this.state.packageSelect;
-        packageSelect[props._id] = false;
+        packageSelect[`${props.packageType}`][`${props._id}`] = false;
         this.setState({ packageSelect })
-        return false
+        return false;
 
       }
     }
@@ -369,13 +419,15 @@ class PackageListingAttachment extends React.Component {
               </PriceSection>
             )}
           <FormControl margin="dense">
+          
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={this.checkboxChecker(this.state.packageSelect[props._id], props, index)}
+                  checked={this.checkboxChecker(this.state.packageSelect[`${props.packageType}`][`${props._id}`], props)}
                   onChange={() => {
                     let packageSelect = this.state.packageSelect;
-                    packageSelect[props._id] = !this.state.packageSelect[props._id];
+                    packageSelect[`${props.packageType}`][`${props._id}`] = !this.state.packageSelect[`${props.packageType}`][props._id];
+                    // packageSelect[props._id] = !this.state.packageSelect[props._id];
                     this.setState({ packageSelect })
                   }}
                   value="closed"
@@ -390,10 +442,24 @@ class PackageListingAttachment extends React.Component {
   );
 
   render() {
-    let { monthlyPackageData, schoolData } = this.props;
+    let { monthlyPackageData, schoolData ,enrollmentFee,perClass} = this.props;
     monthlyPackageData = normalizeMonthlyPricingData(monthlyPackageData);
     return (
       <MuiThemeProvider theme={muiTheme}>
+       {this.state.showConfirmationModal && (
+          <SkillShapeDialogBox
+            open={this.state.showConfirmationModal}
+            defaultButtons
+            onModalClose={() => this.setState({ showConfirmationModal: false })}
+            type="inform"
+            title="Save"
+            content="This will save class time and the package details.Are you sure!"
+            onAffirmationButtonClick={this.onConnect}
+            onCloseButtonClick={() =>
+              this.setState({ showConfirmationModal: false })
+            }
+          />
+        )}
         <Dialog
           title="Package Listing"
           open={this.props.open}
@@ -415,16 +481,34 @@ class PackageListingAttachment extends React.Component {
               <TitleForPackageType>Monthly Packages</TitleForPackageType>
               {!isEmpty(monthlyPackageData) && monthlyPackageData.map((current, index) => {
                 current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
+                current.packageType='MP';
                 return this.Package(current, index)
               })}
             </MonthlyPackageBackground>
+            <EnrollmentPackageBackground>
+              <TitleForPackageType>Enrollment Packages</TitleForPackageType>
+              {!isEmpty(enrollmentFee) && enrollmentFee.map((current, index) => {
+                current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
+                current.packageType = 'EP';
+                return this.Package(current, index)
+              })}
+            </EnrollmentPackageBackground>
+            <ClassPackageBackground>
+              <TitleForPackageType>Class Packages</TitleForPackageType>
+              {!isEmpty(perClass) && perClass.map((current, index) => {
+                current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
+                current.packageType = 'CP';
+                current.classPackages = true;
+                return this.Package(current, index)
+              })}
+            </ClassPackageBackground>
           </DialogContent>
           <DialogActions classes={{ action: this.props.classes.dialogAction }}>
             <CenterConnect>
               <ClassTimeButton
                 noMarginBottom
                 label="Connect"
-                onClick={() => { this.onConnect() }}
+                onClick={() => { this.setState({showConfirmationModal:true}) }}
               />
             </CenterConnect>
           </DialogActions>
@@ -437,21 +521,30 @@ class PackageListingAttachment extends React.Component {
 
 export default createContainer(props => {
   const { schoolId } = props;
-  let monthlyPackageData = [], monthlySubscription, schoolDataSubscription, schoolData, isBusy = true;
+  let monthlyPackageData = [], monthlySubscription, schoolDataSubscription, schoolData, isBusy = true,
+  enrollmentFee=[],enrollmentSubscription,classPricingSubscription,perClass=[];
   monthlySubscription = Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId });
   schoolDataSubscription = Meteor.subscribe("school.getSchoolBySchoolId", schoolId)
-  if (schoolDataSubscription && schoolDataSubscription.ready()) {
-    schoolData = School.findOne()
+  enrollmentSubscription = Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId });
+  classPricingSubscription = Meteor.subscribe("classPricing.getClassPricing", { schoolId });
 
-  }
-  if (monthlySubscription && monthlySubscription.ready()) {
+  if (schoolDataSubscription && schoolDataSubscription.ready()) 
+    schoolData = School.findOne();
+  
+  if (monthlySubscription && monthlySubscription.ready()) 
     monthlyPackageData = MonthlyPricing.find().fetch();
-    isBusy = false;
-  }
+
+  if(enrollmentSubscription && enrollmentSubscription.ready())
+  enrollmentFee = EnrollmentFees.find({ schoolId }).fetch();
+
+  if(classPricingSubscription && classPricingSubscription.ready())
+  perClass = ClassPricing.find({ schoolId}).fetch();
+
   return {
     ...props,
     schoolData,
     monthlyPackageData,
-    isBusy
+    enrollmentFee,
+    perClass
   };
 }, withStyles(styles)(PackageListingAttachment));

@@ -1,4 +1,5 @@
 import EnrollmentFees from "./fields";
+import isEmpty from "lodash/isEmpty";
 
 Meteor.methods({
     "enrollmentFee.addEnrollmentFee": function({doc}) {
@@ -28,6 +29,21 @@ Meteor.methods({
             return EnrollmentFees.remove({ _id: doc._id });
         } else {
             throw new Meteor.Error("Permission denied!!");
+        }
+    },
+    'enrollmentFee.handleClassTypes':function({ classTypeId, selectedIds, diselectedIds }){
+            EnrollmentFees.update({classTypeId:null},{$set:{classTypeId:[]}})        
+        try {
+            if (!isEmpty(diselectedIds)) {
+                let result = EnrollmentFees.update({ _id: { $in: diselectedIds } }, { $pop: { classTypeId } }, { multi: true })
+            }
+            if (!isEmpty(selectedIds)) {
+                let result = EnrollmentFees.update({ _id: { $in: selectedIds } }, { $push: { classTypeId } }, { multi: true })
+
+            }
+            return true;
+        }
+        catch (error) {
         }
     }
 });

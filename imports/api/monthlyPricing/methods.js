@@ -51,7 +51,8 @@ Meteor.methods({
             throw new Meteor.Error("Permission denied!!");
         }
     },
-    "monthlyPricing.addClasstypes": function ({ classTypeId, selectedIds, diselectedIds }) {
+    "monthlyPricing.handleClassTypes": function ({ classTypeId, selectedIds, diselectedIds }) {
+        MonthlyPricing.update({classTypeId:null},{$set:{classTypeId:[]}})        
         try {
             if (!isEmpty(diselectedIds)) {
                 let result = MonthlyPricing.update({ _id: { $in: diselectedIds } }, { $pop: { classTypeId } }, { multi: true })

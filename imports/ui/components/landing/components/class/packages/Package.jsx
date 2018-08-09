@@ -150,7 +150,6 @@ function getPaymentType(payment) {
 const Package = props => (
   <OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
     <Wrapper>
-     
       <ClassDetailsSection>
         <Title>{props.packageName || props.name}</Title>
         {props.packageType !== "EP" && (
