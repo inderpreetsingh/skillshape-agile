@@ -24,6 +24,7 @@ import { WeekDaysRow } from "./weekDaysRow";
 import { MenuItem } from "material-ui/Menu";
 import { OneTimeRow } from "./oneTimeRow";
 import "/imports/api/sLocation/methods";
+import PackageAttachment from '/imports/ui/components/landing/components/dialogs/PackageAttachement.jsx'
 import { toastrModal } from "/imports/util";
 /*
 1.closed field in the collection.(Done)
@@ -65,7 +66,9 @@ class ClassTimeForm extends React.Component {
       endDate: new Date(),
       tabValue: 2,
       closed:false,
-      noOfRow: 0
+      noOfRow: 0,
+      PackageAttachment:false,
+      PackageOpen:true
     };
 
     if (!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {
@@ -155,6 +158,8 @@ class ClassTimeForm extends React.Component {
   };
 
   onSubmit = ({ methodName, doc, doc_id, nextTab, value }) => {
+    this.setState({PackageAttachment:true,PackageOpen:true})
+
     this.setState({ isBusy: true });
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
      
@@ -162,11 +167,11 @@ class ClassTimeForm extends React.Component {
       }
       if (result) {
         if (value.addSeperateTime == false) {
-         this.props.onClose();
+         //this.props.onClose();
         } else if (value.addSeperateTime == true) {
-          this.props.onClose( value.addSeperateTime );
+        //  this.props.onClose( value.addSeperateTime );
         } else {
-          this.props.onClose();
+         // this.props.onClose();
           this.props.moveToNextTab();
         }
       }
@@ -195,7 +200,7 @@ class ClassTimeForm extends React.Component {
     </Fragment>
   }
   render() {
-    const { fullScreen, data, classes, locationData } = this.props;
+    const { fullScreen, data, classes, locationData,schoolId,parentKey } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
     return (
       <div>
@@ -348,6 +353,12 @@ class ClassTimeForm extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+        {this.state.PackageAttachment && <PackageAttachment 
+       open={this.state.PackageOpen} 
+       onClose={()=>{this.setState({PackageOpen:false})}} 
+       schoolId={schoolId}
+       classTypeId={parentKey}
+       />} 
       </div>
     );
   }

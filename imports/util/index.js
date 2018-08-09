@@ -35,3 +35,4 @@ export { dateFriendly } from './dateFriendly';
 export { openMailToInNewTab } from './openInNewTabHelpers';
 export { goToSchoolPage, goToClassTypePage, checkForAddToCalender } from './handleRedirect.js';
 export {maximumClasses} from './maximumClasses.js'
+export {normalizeMonthlyPricingData} from './packageFormat.js'

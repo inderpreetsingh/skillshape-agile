@@ -51,7 +51,7 @@ class PackageAttachment extends React.Component {
        this.state={PackageListingAttachment:false,pacLisAttOpen:true}
     }
     render() {
-    const { schoolId } = this.props;
+    const { schoolId,classTypeId} = this.props;
 
         return (
             <MuiThemeProvider theme={muiTheme}>
@@ -78,7 +78,7 @@ class PackageAttachment extends React.Component {
                     <DialogActions classes={{ action: this.props.classes.dialogAction }}>
                         <ClassTimeButton
                             fullWidth
-                            label="Create New Package For this Package"
+                            label="Create New Package"
                             noMarginBottom
                             onClick={() => { }
                             }
@@ -103,6 +103,7 @@ class PackageAttachment extends React.Component {
                 open={this.state.pacLisAttOpen} 
                 onClose={()=>{this.setState({PackageListingAttachment:false})}}
                 schoolId={schoolId}
+                classTypeId={classTypeId}
                 />}
             </MuiThemeProvider>
         )
