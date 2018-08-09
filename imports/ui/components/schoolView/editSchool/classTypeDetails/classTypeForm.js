@@ -20,7 +20,6 @@ import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import "/imports/api/sLocation/methods";
 import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
-
 const formId = "classTypeForm";
 
 const styles = theme => {
@@ -54,7 +53,8 @@ class ClassTypeForm extends React.Component {
       skillCategoryId: null,
       selectedSkillSubject: null,
       selectedLocation: null,
-      searchSkillCategoryText: ""
+      searchSkillCategoryText: "",
+      
     };
     if (data && _.size(data) > 0) {
       if (
@@ -234,7 +234,7 @@ class ClassTypeForm extends React.Component {
     return defaultLocId;
   }
   render() {
-    const { fullScreen, data, classes, locationData } = this.props;
+    const { fullScreen, data, classes, locationData  } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
     return (
       <div>
@@ -437,6 +437,7 @@ class ClassTypeForm extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+       
       </div>
     );
   }

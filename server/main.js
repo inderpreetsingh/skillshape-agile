@@ -27,7 +27,6 @@ Meteor.startup(() => {
   };
   // code to run on server at startup
   if (SkillSubject.find({ _mig_: 1 }).count() == 0) {
-    console.log("_____SkillSubject dump start___");
     SkillSubject.remove({});
     SkillCategory.remove({});
 
@@ -44,7 +43,6 @@ Meteor.startup(() => {
   } else {
     for (var key in _skillCategoryObj) {
       const skillCategoryData = SkillCategory.findOne({ name: key, _mig_: 1 });
-      // console.log("skillCategoryData 1--->>",key, skillCategoryData)
       if (isEmpty(skillCategoryData)) {
         let objId = SkillCategory.insert({ name: key, _mig_: 1 });
         _skillCategoryObj[key].forEach(f => {
@@ -57,7 +55,6 @@ Meteor.startup(() => {
       } else {
         _skillCategoryObj[key].forEach(f => {
           const skillSubjectData = SkillSubject.findOne({ name: f, _mig_: 1 });
-          // console.log("skillSubjectData 2--->>",f,skillSubjectData)
           if (isEmpty(skillSubjectData)) {
             SkillSubject.insert({
               name: f,
@@ -98,8 +95,6 @@ if (Meteor.isServer) {
     region: Meteor.settings.AWSRegion
   };
   Accounts.onCreateUser(function(options, user) {
-    // console.log("onCreateUser options -->>",options)
-    // console.log("onCreateUser user -->>",user)
     if (options.sign_up_service) {
       user.sign_up_service = options.sign_up_service;
     }
@@ -171,7 +166,6 @@ if (Meteor.isServer) {
     // if (options.profile == null || options.profile == undefined) {
     //     user.profile = { "role": "Admin", "access_key": Math.random().toString(36).slice(2) }
     //     // Roles.addUsersToRoles(user._id,'admin')
-    //     // console.log(Roles.userIsInRole(Meteor.userId(),'admin'));
     // } else {
     // }
     // user.profile = _.extend(user.profile, { "user_type": "C" });

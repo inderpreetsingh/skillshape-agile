@@ -24,6 +24,7 @@ export class OneTimeRow extends React.Component {
     const { data, locationData, parentData } = this.props;
 
     if (isEmpty(data)) {
+
       state = {
         row: [
           {
@@ -35,8 +36,13 @@ export class OneTimeRow extends React.Component {
           }
         ]
       };
+      this.props.handleNoOfRow(1);
     } else {
       state = { row: [...data] };
+
+     
+      this.props.handleNoOfRow(data.length);
+      
     }
     return state;
   };
@@ -50,12 +56,14 @@ export class OneTimeRow extends React.Component {
       roomId: ""
     });
     this.setState({ row: oldRow });
+    this.props.handleNoOfRow(1);
   };
 
   removeRow = (index, event) => {
     const oldRow = [...this.state.row];
     oldRow.splice(index, 1);
     this.setState({ row: oldRow });
+    this.props.handleNoOfRow(-1);
   };
 
   handleChangeDate = (index, fieldName, date) => {
@@ -89,9 +97,10 @@ export class OneTimeRow extends React.Component {
   getRowData = () => {
     return this.state.row;
   };
-
+  
   render() {
     const { row } = this.state;
+    
     return (
       <div>
         {row.map((data, index) => {

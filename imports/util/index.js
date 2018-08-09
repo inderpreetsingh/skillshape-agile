@@ -43,11 +43,8 @@ export {
 export { withStyles } from "./withStyle";
 export { material_ui_next_theme } from "./theme";
 export { componentLoader } from "./loading";
-export { dateFriendly } from "./dateFriendly";
-export { openMailToInNewTab } from "./openInNewTabHelpers";
-export {
-  goToSchoolPage,
-  goToClassTypePage,
-  checkForAddToCalender
-} from "./handleRedirect.js";
-export { maximumClasses } from "./maximumClasses.js";
+export { dateFriendly } from './dateFriendly';
+export { openMailToInNewTab } from './openInNewTabHelpers';
+export { goToSchoolPage, goToClassTypePage, checkForAddToCalender } from './handleRedirect.js';
+export {maximumClasses} from './maximumClasses.js'
+export {normalizeMonthlyPricingData} from './packageFormat.js'

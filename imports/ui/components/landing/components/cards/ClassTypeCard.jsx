@@ -158,6 +158,7 @@ class ClassTypeCard extends Component {
     };
 
     const classTimesData = this.getClassTimes(get(this.props, "_id", null));
+    console.log('===classTimesData====',classTimesData)
     const formattedClassTimesData = formatClassTimesData(classTimesData).filter(
       data => {
         if (data) return data.formattedClassTimesDetails.totalClassTimes > 0;

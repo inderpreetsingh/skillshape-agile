@@ -156,7 +156,6 @@ class ClassTypeList extends Component {
   };
 
   showClassTypes = ({ classType }) => {
-    // console.log("showClassTypes classType -->>>",classType, this.props)
     if (!isEmpty(classType)) {
       return Object.keys(classType).map((key, index) => {
         let title = key;
@@ -189,16 +188,13 @@ class ClassTypeList extends Component {
   };
 
   getNoResultMsg = (isLoading, filters, classTypeData) => {
-    console.log(filters, "updated filters in the class list component...");
     if (isLoading) {
-      console.log("loading........");
       return (
         <PreloaderWrapper>
           <Preloader />
         </PreloaderWrapper>
       );
     } else if (isEmpty(classTypeData)) {
-      console.log("re rending . suggsetion form..");
       return (
         <NoResultContainer>
           {/*<NoResults
@@ -232,7 +228,6 @@ class ClassTypeList extends Component {
       isLoading,
       classTimesData
     } = this.props;
-    // console.log("ClassTypeList props -->>",this);
     return (
       <MainContentWrapper>
         {mapView ? (
@@ -378,7 +373,6 @@ export default createContainer(props => {
     // console.info("class type data...................................................",classTypeData);
     isLoading = false;
   }
-  // console.log("classInterestData --->>",classTypeData,classInterestData)
   return {
     ...props,
     classTypeData,
