@@ -85,5 +85,20 @@ Meteor.methods({
         } else {
             throw new Meteor.Error("Permission denied!!");
         }
+    },
+    'classPricing.handleClassTypes':function({ classTypeId, selectedIds, diselectedIds }){
+        ClassPricing.update({classTypeId:null},{$set:{classTypeId:[]}})        
+    try {
+        if (!isEmpty(diselectedIds)) {
+            let result = ClassPricing.update({ _id: { $in: diselectedIds } }, { $pop: { classTypeId } }, { multi: true })
+        }
+        if (!isEmpty(selectedIds)) {
+            let result = ClassPricing.update({ _id: { $in: selectedIds } }, { $push: { classTypeId } }, { multi: true })
+
+        }
+        return true;
     }
+    catch (error) {
+    }
+}
 });

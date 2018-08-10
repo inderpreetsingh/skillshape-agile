@@ -349,7 +349,7 @@ class ClassTimeForm extends React.Component {
             >
               {data ? "Save" : "Submit"}
             </Button>
-            <Button
+            {/* <Button
               type="button"
               form={formId}
               name="save-and-go-to-pricing"
@@ -357,7 +357,7 @@ class ClassTimeForm extends React.Component {
               onClick={this.saveClassTimes.bind(this, "nextTab", event)}
             >
               Save and Add Pricing
-            </Button>
+            </Button> */}
           </DialogActions>
         </Dialog>
         {this.state.PackageAttachment && <PackageAttachment 
