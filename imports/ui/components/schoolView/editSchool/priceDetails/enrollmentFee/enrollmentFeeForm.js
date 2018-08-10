@@ -69,6 +69,9 @@ class EnrollmentFeeForm extends React.Component {
             includeAllClassTypes: this.state.includeAllClassTypes,
             currency:this.state.currency
         }
+        if(payload.classTypeId==null){
+            payload.classTypeId=[];
+          }
         this.setState({isBusy: true});
         if(data && data._id) {
             this.handleSubmit({ methodName: "enrollmentFee.editEnrollmentFee", doc: payload, doc_id: data._id})
