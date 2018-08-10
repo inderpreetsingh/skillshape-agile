@@ -4,8 +4,10 @@ import styled from "styled-components";
 
 import {
   Text,
-  SubHeading
+  SubHeading,
+  Capitalize
 } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+import MemberExpanded from "./MemberExpanded.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
@@ -26,7 +28,6 @@ const Profile = styled.div`
   flex-direction: column;
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;
-  width: 140px;
 
   ${props =>
     props.type === "default"
@@ -39,17 +40,15 @@ const ProfilePic = styled.div`
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-size: contain;
-  width: 100%;
-  min-height: 64px;
+  width: 100px;
+  height: 100px;
   display: flex;
-  flex-direction: column;
-  flex-grow: 1;
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
-const EntityDetails = styled.div`
+const Details = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -74,7 +73,9 @@ const Status = styled.div`
   min-width: 0;
 `;
 
-const ExpiresOn = Text.extend`
+/* prettier-ignore */
+
+const ExpiresOn = Designation = Text.extend`
   font-style: italic;
   font-weight: 300;
 `;
@@ -83,43 +84,9 @@ const Date = Text.extend`
   color: ${helpers.alertColor};
 `;
 
-const Entity = props => {
+const Member = props => {
   if (props.type === "student" && props.viewType === "instructorsView") {
-    return (
-      <Wrapper>
-        <Profile>
-          <ProfilePic src={props.profileSrc} />
-          <EntityDetails>
-            <SubHeading>{props.name}</SubHeading>
-            {props.type !== "student" && <Text>{props.type}</Text>}
-          </EntityDetails>
-        </Profile>
-
-        <StudentNotes>
-          <StudentNotesContent>
-            {props.studentNotes || "Notes about student here"}
-          </StudentNotesContent>
-        </StudentNotes>
-
-        <Status>
-          <PrimaryButton label="Checked In" icon iconName="arrow_drop_down" />
-          {props.paymentInfo === "expired" ? (
-            <Fragment>
-              <Text>{"Payment Expired"}</Text>
-              <PrimaryButton
-                label="Accept Payment"
-                onClick={props.onAcceptPayment}
-              />
-            </Fragment>
-          ) : (
-            <Fragment>
-              <ExpiresOn>{props.paymentData.paymentType} expires on</ExpiresOn>
-              <Date>{props.paymentData.expiryDate}</Date>
-            </Fragment>
-          )}
-        </Status>
-      </Wrapper>
-    );
+    return <MemberExpanded {...props} />;
   }
 
   // This is the basic card returned for students in case the view
@@ -129,19 +96,19 @@ const Entity = props => {
     <Wrapper type="default">
       <Profile type="default">
         <ProfilePic src={props.profileSrc} />
-        <EntityDetails>
+        <Details>
           <SubHeading>{props.name}</SubHeading>
           {props.type !== "student" && <Text>{props.type}</Text>}
-        </EntityDetails>
+        </Details>
       </Profile>
     </Wrapper>
   );
 };
 
-Entity.propTypes = {
+Member.propTypes = {
   expanded: PropTypes.bool,
   showMoreOptions: PropTypes.bool,
   type: PropTypes.string //type can be student, teacher
 };
 
-export default Entity;
+export default Member;

@@ -2,10 +2,10 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import EntityList from "./presentational/EntityList.jsx";
+import MembersList from "./presentational/MembersList.jsx";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 
-class MembersList extends Component {
+class MembersListContainer extends Component {
   state = {
     teachersFilterWith: "",
     studentsFilterWith: ""
@@ -37,7 +37,8 @@ class MembersList extends Component {
     const { studentsList, instructorsList } = this.props;
     return (
       <Fragment>
-        <EntityList
+        <MembersList
+          viewType="instructorsView"
           searchedValue={this.state.teachersFilterWith}
           onSearchChange={this.handleSearchChange("teachersFilterWith")}
           data={
@@ -49,7 +50,8 @@ class MembersList extends Component {
           entityType={"teachers"}
           searchedValue={this.state.teachersFilterWith}
         />
-        <EntityList
+        <MembersList
+          viewType={"instructorsView"}
           searchedValue={this.state.studentsFilterWith}
           onSearchChange={this.handleSearchChange("studentsFilterWith")}
           data={
@@ -63,13 +65,13 @@ class MembersList extends Component {
   }
 }
 
-MembersList.propTypes = {
+MembersListContainer.propTypes = {
   data: PropTypes.object,
   membersList: PropTypes.array
 };
 
-MembersList.defaultProps = {
+MembersListContainer.defaultProps = {
   membersList: membersList
 };
 
-export default MembersList;
+export default MembersListContainer;

@@ -13,17 +13,19 @@ import {
 // console.log(Meteor, Meteor.absoluteUrl);
 //const APP_URL = Meteor.absoluteUrl();
 
+const OuterWrapper = styled.div`
+  text-align: center;
+`;
+
 const Wrapper = styled.div`
   padding: 0 ${rhythmDiv * 2}px;
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
-  margin-bottom: ${rhythmDiv * 4}px;
-
-  @media screen and (max-width: ${mobile}px) {
-    justify-content: flex-start;
-  }
+  margin-bottom: ${rhythmDiv * 3}px;
+  max-width: 500px;
+  width: 100%;
 `;
 
 const ButtonWrapper = styled.div`
@@ -31,33 +33,40 @@ const ButtonWrapper = styled.div`
 `;
 
 const ActionButtons = props => (
-  <Wrapper>
-    <Link
-      to={`${Meteor.absoluteUrl()}/classType/my_class/${props.classTypeId}`}
-      target="_blank"
-    >
-      <ButtonWrapper>
-        <PrimaryButton icon iconName="class" label="Visit ClassType" />
-      </ButtonWrapper>
-    </Link>
-    <Link
-      to={`${Meteor.absoluteUrl()}/schools/${props.schoolName}`}
-      target="_blank"
-    >
-      <ButtonWrapper>
-        <PrimaryButton icon iconName="school" label="Visit School" />
-      </ButtonWrapper>
-    </Link>
+  <OuterWrapper>
+    <Wrapper>
+      <Link
+        to={`${Meteor.absoluteUrl()}/classType/my_class/${props.classTypeId}`}
+        target="_blank"
+      >
+        <ButtonWrapper>
+          <PrimaryButton icon iconName="class" label="Visit ClassType" />
+        </ButtonWrapper>
+      </Link>
+      <Link
+        to={`${Meteor.absoluteUrl()}/schools/${props.schoolName}`}
+        target="_blank"
+      >
+        <ButtonWrapper>
+          <PrimaryButton
+            noMarginRight
+            icon
+            iconName="school"
+            label="Visit School"
+          />
+        </ButtonWrapper>
+      </Link>
 
-    <ButtonWrapper>
-      <PrimaryButton
-        label="Schedule"
-        icon
-        iconName="schedule"
-        onClick={props.onScheduleButtonClick}
-      />
-    </ButtonWrapper>
-  </Wrapper>
+      {/*<ButtonWrapper>
+        <PrimaryButton
+          label="Schedule"
+          icon
+          iconName="schedule"
+          onClick={props.onScheduleButtonClick}
+        />
+      </ButtonWrapper> */}
+    </Wrapper>
+  </OuterWrapper>
 );
 
 ActionButtons.propTypes = {

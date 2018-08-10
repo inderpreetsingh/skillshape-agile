@@ -13,11 +13,11 @@ import {
 
 const Wrapper = styled.div`
   display: flex;
-  margin-left: ${rhythmDiv}px;
+  margin-left: 0px;
+  margin-bottom: ${rhythmDiv * 2}px;
 
-  @media screen and (max-width: ${mobile}px) {
-    margin-left: 0;
-    margin-bottom: ${rhythmDiv * 2}px;
+  @media screen and (min-width: ${mobile - 50}px) {
+    margin-left: ${rhythmDiv * 2}px;
   }
 `;
 

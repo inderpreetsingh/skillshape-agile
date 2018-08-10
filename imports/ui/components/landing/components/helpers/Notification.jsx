@@ -30,16 +30,21 @@ const Wrapper = styled.div`
   opacity: 1;
   max-height: 160px;
   ${props => (!props.show ? `max-height: 0; opacity: 0; padding: 0` : "")};
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    // padding: ${helpers.rhythmDiv * 2}px;
+
+  }
 `;
 
 const NotificationInnerWrapper = styled.div`
   /* prettier-ignore */
   ${helpers.flexHorizontalSpaceBetween}
 
-  @media screen and (max-width: ${helpers.mobile}px) {
-    justify-content: flex-start;
-    flex-direction: column;
-  }
+  // @media screen and (max-width: ${helpers.mobile}px) {
+  //   justify-content: flex-start;
+  //   flex-direction: column;
+  // }
 `;
 
 const NotificationContent = Text.extend`
@@ -48,13 +53,11 @@ const NotificationContent = Text.extend`
   color: white;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    margin-right: 0;
-    font-size: ${helpers.baseFontSize * 1.25}px;
+    font-size: 18px;
   }
 `;
 const ButtonWrapper = styled.div`
   display: flex;
-  background-color: white;
   flex-shrink: 0;
 `;
 
@@ -89,7 +92,7 @@ class Notification extends Component {
           {actionButton || (
             <ButtonWrapper>
               <FormGhostButton
-                alertColor
+                whiteColor
                 label={buttonLabel}
                 onClick={onButtonClick}
               />

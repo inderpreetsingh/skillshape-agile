@@ -24,14 +24,14 @@ const Wrapper = styled.header`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  height: 300px;
+  height: 160px;
   position: relative;
 `;
 
 const ClassTypeProfile = styled.div`
   border-radius: 50%;
-  width: 175px;
-  height: 175px;
+  width: 100px;
+  height: 100px;
   position: absolute;
   bottom: ${rhythmDiv * 2}px;
   left: ${rhythmDiv * 2}px;

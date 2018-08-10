@@ -24,7 +24,8 @@ export const membersList = [
       "Ben is a really good student who knows how to use his tools appropriately",
     paymentData: {
       paymentInfo: "expired"
-    }
+    },
+    status: "checked in"
   },
   {
     id: uuidv4(),
@@ -35,6 +36,7 @@ export const membersList = [
       "Alex is a really good student who knows how to use his tools appropriately",
     paymentData: {
       paymentInfo: "expired"
-    }
+    },
+    status: "checked in"
   }
 ];

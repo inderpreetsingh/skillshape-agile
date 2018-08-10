@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 const Content = Text.extend`
   font-style: italic;
   font-weight: 300;
-  font-size: ${baseFontSize * 1.25}px;
+  font-size: 18px;
 `;
 
 const Description = props => (

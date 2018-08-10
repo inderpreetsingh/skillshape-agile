@@ -31,6 +31,14 @@ const styles = {
     marginRight: "5px",
     fontSize: helpers.baseFontSize
   },
+  whiteColor: {
+    color: "white",
+    borderColor: "white",
+    "&:hover": {
+      backgroundColor: "white",
+      color: "black"
+    }
+  },
   redColor: {
     color: helpers.alertColor,
     borderColor: helpers.alertColor,
@@ -102,8 +110,11 @@ const FormGhostButton = props => {
     rootClass = rootClass + " " + props.classes.darkGreyColor;
   } else if (props.alertColor || (props.color == "alert")) {
     rootClass = rootClass + " " + props.classes.redColor;
+  }else if(props.whiteColor || (props.color == 'white')) {
+    rootClass = rootClass + " " + props.classes.whiteColor;
   }
-  console.log(rootClass, "lll...");
+
+  // console.log(rootClass, "lll...");
   return (
     <Button
       type={props.type}

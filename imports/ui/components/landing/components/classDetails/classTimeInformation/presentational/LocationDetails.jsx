@@ -16,67 +16,75 @@ import {
 
 const styles = {
   icon: {
-    marginRight: rhythmDiv
+    marginRight: rhythmDiv,
+    fontSize: 18,
+    width: 18,
+    height: 18
   }
 };
 
 const Wrapper = styled.div`
-  height: 300px;
   width: 100%;
   display: flex;
+  flex-direction: column;
   padding: 0 ${rhythmDiv * 2}px;
   margin-bottom: ${rhythmDiv * 4}px;
+  min-height: 200px;
+  height: auto;
 
-  @media screen and (max-width: ${tablet}px) {
+  @media screen and (min-width: ${mobile}px) {
+    flex-direction: row;
+  }
+
+  @media screen and (min-width: ${mobile}px) and (max-width: ${tablet}px) {
     height: 200px;
   }
 
-  @media screen and (max-width: ${mobile}px) {
-    flex-direction: column;
-    min-height: 200px;
-    height: auto;
+  @media screen and (min-width: ${tablet}px) {
+    height: 300px;
   }
 `;
 
 const Left = styled.div`
-  padding: ${rhythmDiv * 2}px;
-  max-width: 50%;
-  width: 100%;
-  @media screen and (max-width: ${mobile}px) {
-    max-width: 100%;
-    padding: 0;
-    margin-bottom: ${rhythmDiv}px;
+  max-width: 100%;
+  padding: 0;
+  margin-bottom: ${rhythmDiv}px;
+
+  @media screen and (min-width: ${mobile}px) {
+    padding: ${rhythmDiv * 2}px;
+    max-width: 50%;
+    width: 100%;
   }
 `;
 
 const LeftInnerWrapper = styled.div`
-  max-width: 400px;
   height: 100%;
   flex-grow: 1;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  max-width: 100%;
+  margin: 0;
 
-  @media screen and (max-width: ${mobile}px) {
-    max-width: 100%;
-    margin: 0;
+  @media screen and (min-width: ${mobile}px and max-width: ${tablet}px) {
+    max-width: 250px;
   }
 
-  @media screen and (max-width: ${tablet}px) {
-    max-width: 250px;
+  @media screen and (min-width: ${tablet}px) {
+      max-width: 400px;
+      margin: 0 auto;
   }
 `;
 
 const Right = styled.div`
-  height: 100%;
-  max-width: 50%;
-  width: 100%;
+  max-width: 100%;
+  height: 300px;
+  margin-bottom: ${rhythmDiv}px;
 
-  @media screen and (max-width: ${mobile}px) {
-    max-width: 100%;
-    height: 300px;
-    margin-bottom: ${rhythmDiv}px;
+  @media screen and (min-width: ${mobile}px) {
+    height: 100%;
+    max-width: 50%;
+    width: 100%;
   }
 `;
 
@@ -85,7 +93,7 @@ const Time = Address = MyDate = Text.extend`
   display: flex;
   font-style: italic;
   font-weight: 400;
-  font-size: ${baseFontSize * 1.25}px;
+  font-size: 18px;
 `;
 
 const LocationDetails = props => {
