@@ -17,6 +17,7 @@ import muiTheme from '../jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import PackageListingAttachment from './PackageListingAttachment';
+import PackageAddNew from './PackageAddNew';
 import Dialog, {
     DialogActions,
     DialogContent,
@@ -48,10 +49,10 @@ const ErrorWrapper = styled.span`
 class PackageAttachment extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { PackageListingAttachment: false, pacLisAttOpen: true }
+        this.state = { PackageListingAttachment: false, pacLisAttOpen: true,PackageAddNew:false }
     }
     render() {
-        const { schoolId, classTypeId } = this.props;
+        const { schoolId, classTypeId,classTypeName ,parentData} = this.props;
 
         return (
             <MuiThemeProvider theme={muiTheme}>
@@ -80,7 +81,7 @@ class PackageAttachment extends React.Component {
                             fullWidth
                             label="Create New Package"
                             noMarginBottom
-                            onClick={() => { }
+                            onClick={() => {this.setState({PackageAddNew:true}) }
                             }
                         />
                         <ClassTimeButton
@@ -105,6 +106,15 @@ class PackageAttachment extends React.Component {
                     schoolId={schoolId}
                     classTypeId={classTypeId}
                     classTimeFormOnClose={() => { this.props.classTimeFormOnClose() }}
+                />}
+                {this.state.PackageAddNew && <PackageAddNew
+                    open={this.state.PackageAddNew}
+                    onClose={() => { this.setState({ PackageAddNew: false }) }}
+                    schoolId={schoolId}
+                    classTypeId={classTypeId}
+                    classTimeFormOnClose={() => { this.props.classTimeFormOnClose() }}
+                    classTypeName={classTypeName}
+                    parentData={parentData}
                 />}
             </MuiThemeProvider>
         )

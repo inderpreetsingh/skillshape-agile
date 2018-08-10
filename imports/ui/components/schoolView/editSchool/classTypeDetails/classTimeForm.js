@@ -205,7 +205,7 @@ class ClassTimeForm extends React.Component {
     </Fragment>
   }
   render() {
-    const { fullScreen, data, classes, locationData,schoolId,parentKey } = this.props;
+    const { fullScreen, data, classes, locationData,schoolId,parentKey,parentData } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
     return (
       <div>
@@ -365,6 +365,8 @@ class ClassTimeForm extends React.Component {
        onClose={()=>{this.setState({PackageOpen:false})}} 
        schoolId={schoolId}
        classTypeId={parentKey}
+       classTypeName={data.classTypeName}
+       parentData={parentData}
        classTimeFormOnClose={()=>{
          if(this.state.value){
           this.state.classTimeFormOnClose(true)

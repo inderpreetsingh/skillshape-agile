@@ -198,7 +198,7 @@ class EnrollmentFeeForm extends React.Component {
                 }
                 <DialogActions>
                     {
-                        data && (
+                        data && !data.from && (
                             <Button onClick={() => this.setState({showConfirmationModal: true})} color="accent">
                                 Delete
                             </Button>

@@ -295,7 +295,7 @@ class ClassPriceForm extends React.Component {
           </DialogContent>
         )}
         <DialogActions>
-          {data && (
+          {data && !data.from && (
             <Button
               onClick={() => this.setState({ showConfirmationModal: true })}
               color="accent"
