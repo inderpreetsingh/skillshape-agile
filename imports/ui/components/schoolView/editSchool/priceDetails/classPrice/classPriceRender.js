@@ -8,9 +8,9 @@ import Add from 'material-ui-icons/Add';
 import Edit from 'material-ui-icons/Edit';
 import Button from 'material-ui/Button';
 import Delete from 'material-ui-icons/Delete';
-
 import ClassPriceForm from './classPriceForm';
 import PanelHeader from '../panelHeader';
+import PackageList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 
 export default function () {
 
@@ -36,7 +36,7 @@ export default function () {
                </div>
                <PanelHeader btnText="Add Per Class Package" title="Per Class Packages" caption="Different Payment Packages can cover different payment methods, Class Types, or Durations" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
-               <Grid container className={classes.paddingLeft}>
+               {/* <Grid container className={classes.paddingLeft}>
                	{
                		classPricingData && classPricingData.map((classPrice, index)=> {
                			return (
@@ -74,7 +74,12 @@ export default function () {
                			)
                		})
                	}
-               </Grid>
+			   </Grid> */}
+			   <PackageList 
+			   perClassPackagesData={classPricingData}
+			   currency={currency}
+			   onSchoolEdit={true}
+			   />
 		</div>
 	)
 }

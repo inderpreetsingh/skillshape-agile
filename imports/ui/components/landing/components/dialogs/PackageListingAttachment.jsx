@@ -311,9 +311,9 @@ class PackageListingAttachment extends React.Component {
     diselectedIds = uniq(unSelectedClassPackages);
     Meteor.call("classPricing.handleClassTypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
       if (res) {
-        this.props.classTimeFormOnClose();
       }
     })
+    this.props.classTimeFormOnClose();
 
   }
   checkboxChecker = (value, props) => {

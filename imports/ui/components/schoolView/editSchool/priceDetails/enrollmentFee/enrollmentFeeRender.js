@@ -8,6 +8,7 @@ import Add from 'material-ui-icons/Add';
 import Edit from 'material-ui-icons/Edit';
 import Button from 'material-ui/Button';
 import Delete from 'material-ui-icons/Delete';
+import PackageList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 
 import EnrollmentFeeForm from './enrollmentFeeForm';
 import PanelHeader from '../panelHeader';
@@ -31,7 +32,7 @@ export default function () {
           	}
           	<PanelHeader btnText="Add Enrollment Fee" title="Enrollment Fee Cost" caption="Cost of Enrollment" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
-          	<Grid container className={classes.enrollmentFeeContainer}>
+          	 {/* <Grid container className={classes.enrollmentFeeContainer}>
 	          	{
 	          		enrollmentFeeData && enrollmentFeeData.map((enrollmentFee, index)=> {
 	          			return (
@@ -65,7 +66,13 @@ export default function () {
 	          			)
 	          		})
 	          	}
-          	</Grid>
+			  </Grid>  */}
+			  <PackageList 
+			   enrollMentPackagesData={enrollmentFeeData}
+			   enrollMentPackages={true}
+			   currency={currency}
+			   onSchoolEdit={true}
+			   />
 		</div>
 	)
 }

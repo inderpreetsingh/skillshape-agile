@@ -151,6 +151,7 @@ const Package = props => (
   <OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
     <Wrapper>
       <ClassDetailsSection>
+     
         <Title>{props.packageName || props.name}</Title>
         {props.packageType !== "EP" && (
           <Fragment>
@@ -230,8 +231,7 @@ const Package = props => (
             <NoOfClasses>{props.cost && "For Enrollment"}</NoOfClasses>
           </PriceSection>
         )}
-
-        <AddToCartSection>
+        {props.onSchoolEdit ? '':  <AddToCartSection>
           {/* <a
             href={`https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${
               Meteor.settings.public.stripeClientId
@@ -255,7 +255,8 @@ const Package = props => (
             }
           />
           {/* </a> */}
-        </AddToCartSection>
+        </AddToCartSection>}
+      
       </RightSection>
     </Wrapper>
   </OuterWrapper>

@@ -117,6 +117,7 @@ const PackageList = props => (
 const EnrollmentPackagesList = props => (
   <EnrollMentListWrapper forIframes={props.forIframes}>
     <PackagesWrapper>
+
       <Title>{props.packageListName}</Title>
       {props.packagesData.map(packageData => (
         <PackageWrapper key={packageData._id}>
@@ -125,6 +126,7 @@ const EnrollmentPackagesList = props => (
             {...props.packageProps}
             classPackages={props.classPackages}
             schoolCurrency={props.schoolCurrency}
+            onSchoolEdit={props.onSchoolEdit}
           />
         </PackageWrapper>
       ))}
@@ -137,7 +139,6 @@ const PackagesList = props => {
   const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
   const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
   const schoolCurrency = props.currency;
-
   return (
     <Fragment>
       {props.enrollMentPackages &&
@@ -155,6 +156,7 @@ const PackagesList = props => {
               packageListName="Enrollment Packages"
               packagesData={props.enrollMentPackagesData}
               schoolCurrency={schoolCurrency}
+              onSchoolEdit={props.onSchoolEdit}
             />
           </Wrapper>
         )}

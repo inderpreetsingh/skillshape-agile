@@ -11,7 +11,8 @@ import Delete from 'material-ui-icons/Delete';
 import { maximumClasses } from '/imports/util';
 import MonthlyPriceForm from './monthlyPriceForm';
 import PanelHeader from '../panelHeader';
-
+import PackageList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
+import { normalizeMonthlyPricingData } from "/imports/util";
 export default function () {
 
 
@@ -32,7 +33,7 @@ export default function () {
           	}
                <PanelHeader btnText="Add Per Month Package" title="Per Month Packages" caption="Different Payment Packages can cover different payment methods, Class Types, or Durations" icon="assignment" onAddButtonClicked={()=> {this.setState({showForm: true, formData: null})}} />
 
-               <Grid container className={classes.monthlyPriceContainer}>
+               {/* <Grid container className={classes.monthlyPriceContainer}>
                	{
                		monthlyPricingData && monthlyPricingData.map((monthPrice, index)=> {
                               let paymentType = '';
@@ -61,16 +62,7 @@ export default function () {
                                                       <b>Payment Type:</b> {paymentType}
                                                   </Typography>
                                                   <br></br>
-                                                  {
-                                                       /*monthPrice.pymtType && (
-                                                            <Fragment>
-                                                                 <Typography component="p">
-                                                                     <b>Payment Type:</b> {monthPrice.pymtType}
-                                                                 </Typography>
-                                                                 <br></br>
-                                                            </Fragment>
-                                                       )*/
-                                                  }
+                                                
                     						<Typography component="p">
                     							<b>Class Types Covered:</b> {
                     								_.isEmpty(monthPrice.selectedClassType) ? "None" :
@@ -108,7 +100,12 @@ export default function () {
                			)
                		})
                	}
-               </Grid>
+               </Grid> */}
+               <PackageList 
+			   monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricingData)}
+               currency={currency}
+               onSchoolEdit={true}
+			   /> 
 		</div>
 	)
 }
