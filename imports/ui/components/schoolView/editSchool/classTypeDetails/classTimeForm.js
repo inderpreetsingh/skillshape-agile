@@ -207,6 +207,7 @@ class ClassTimeForm extends React.Component {
   render() {
     const { fullScreen, data, classes, locationData,schoolId,parentKey,parentData } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
+    console.log('this.props in ctf',this.props)
     return (
       <div>
         <Dialog
@@ -365,7 +366,7 @@ class ClassTimeForm extends React.Component {
        onClose={()=>{this.setState({PackageOpen:false})}} 
        schoolId={schoolId}
        classTypeId={parentKey}
-       classTypeName={data.classTypeName}
+       classTypeName={data && data.classTypeName?data.classTypeName :[]}
        parentData={parentData}
        classTimeFormOnClose={()=>{
          if(this.state.value){
