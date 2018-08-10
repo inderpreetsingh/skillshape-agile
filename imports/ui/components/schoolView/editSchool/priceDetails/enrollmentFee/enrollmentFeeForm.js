@@ -42,6 +42,7 @@ class EnrollmentFeeForm extends React.Component {
             includeAllClassTypes:get(this.props, 'data.includeAllClassTypes', ""),
             currency: get(this.props, "data.currency", this.props.currency)
         }
+        console.log('classTypeName in the packageaddnew',this.props)
     }
 
     handleClassTypeInputChange = (value) => {

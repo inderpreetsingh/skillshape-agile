@@ -143,6 +143,7 @@ export default createContainer(props => {
         currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
    
     }
+    console.log('classTypeName in the packageaddnew',classTypeName)
     data.selectedClassType=[classTypeName];
     data.from='classTime'
     classTypeData=[parentData]

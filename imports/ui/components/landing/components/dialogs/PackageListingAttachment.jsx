@@ -252,6 +252,7 @@ class PackageListingAttachment extends React.Component {
     return str.toLowerCase();
   }
   onConnect = () => {
+    try{
     //get selectedPackages in object form
     let selectedMonthlyPackages = [], 
     unSelectedMonthlyPackages = [],
@@ -295,25 +296,39 @@ class PackageListingAttachment extends React.Component {
         }) : ""; 
       }
     }) : "";
-    let selectedIds = uniq(selectedMonthlyPackages);
-    let diselectedIds = uniq(unSelectedMonthlyPackages);
-    Meteor.call("monthlyPricing.handleClassTypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
-      if (res) {
-      }
-    })
-    selectedIds = uniq(selectedEnrollementPackages);
-    diselectedIds = uniq(unSelectedEnrollmentPackages);
-    Meteor.call("enrollmentFee.handleClassTypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
-      if (res) {
-      }
-    })
-    selectedIds = uniq(selectedClassPackages);
-    diselectedIds = uniq(unSelectedClassPackages);
-    Meteor.call("classPricing.handleClassTypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
-      if (res) {
-        this.props.classTimeFormOnClose();
-      }
-    })
+    
+      let selectedIds = uniq(selectedMonthlyPackages);
+      let diselectedIds = uniq(unSelectedMonthlyPackages);
+      Meteor.call("monthlyPricing.handleClassTypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
+        if (res) {
+        }
+        else{
+          console.log('err in monthlyPricing.handleClassTypes',err);
+        }
+      })
+      selectedIds = uniq(selectedEnrollementPackages);
+      diselectedIds = uniq(unSelectedEnrollmentPackages);
+      Meteor.call("enrollmentFee.handleClassTypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
+        if (res) {
+        }
+        else{
+          console.log('enrollmentFee.handleClassTypes',err);
+        }
+      })
+      selectedIds = uniq(selectedClassPackages);
+      diselectedIds = uniq(unSelectedClassPackages);
+      Meteor.call("classPricing.handleClassTypes", { classTypeId, selectedIds, diselectedIds }, (err, res) => {
+        if (res) {
+          this.props.classTimeFormOnClose();
+        }
+        else{
+          console.log('classPricing.handleClassTypes',err);
+        }
+      })
+    }
+  catch(error){
+      console.log('error in pla',error)
+  }
 
   }
   checkboxChecker = (value, props) => {

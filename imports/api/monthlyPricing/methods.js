@@ -64,6 +64,7 @@ Meteor.methods({
             return true;
         }
         catch (error) {
+            throw new Meteor.Error(error);
         }
     }
 });
