@@ -118,7 +118,7 @@ const PaymentDetails = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   margin-right: ${helpers.rhythmDiv * 2}px;
 
-  @media screen and (min-width: ${mobile - 100}px) {
+  @media screen and (min-width: ${helpers.mobile - 100}px) {
     margin-right: 0;
   }
 `;
