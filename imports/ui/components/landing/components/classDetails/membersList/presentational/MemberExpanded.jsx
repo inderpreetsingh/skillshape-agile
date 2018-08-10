@@ -13,9 +13,13 @@ const styles = {
   iconButton: {
     color: "white",
     cursor: "pointer",
+    width: 8,
     height: 24,
-    width: 24,
     fontSize: helpers.baseFontSize
+  },
+  icon: {
+    height: 24,
+    width: 24
   }
 };
 
@@ -25,7 +29,7 @@ const Wrapper = styled.div`
   background: ${helpers.panelColor};
   padding: ${helpers.rhythmDiv * 2}px;
 
-  @media screen and (min-width: ${helpers.mobile - 100}px) {
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
     justify-content: space-between;
   }
 `;
@@ -33,10 +37,10 @@ const Wrapper = styled.div`
 const InnerWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 400px;
+  max-width: 450px;
   width: 100%;
 
-  @media screen and (min-width: ${helpers.mobile - 100}px) {
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
     max-width: 300px;
     margin-right: ${helpers.rhythmDiv * 4}px;
   }
@@ -59,7 +63,7 @@ const StudentNotesContent = styled.textarea`
 const ShowOnSmallScreen = styled.div`
   display: block;
 
-  @media screen and (min-width: ${helpers.mobile - 100}px) {
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
     display: none;
   }
 `;
@@ -67,7 +71,7 @@ const ShowOnSmallScreen = styled.div`
 const HideOnSmall = styled.div`
   display: none;
 
-  @media screen and (min-width: ${helpers.mobile - 100}px) {
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
     display: flex;
     flex-shrink: 0;
   }
@@ -102,12 +106,13 @@ const PaymentAndStatusDetails = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  margin-bottom: ${helpers.rhythmDiv}px;
 
-  @media screen and (min-width: ${helpers.mobile - 100}px) {
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
     flex-direction: column;
     flex-wrap: none;
     justify-content: space-between;
-    // align-items: space-between;
+    margin-bottom: 0;
   }
 `;
 
@@ -118,7 +123,7 @@ const PaymentDetails = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   margin-right: ${helpers.rhythmDiv * 2}px;
 
-  @media screen and (min-width: ${helpers.mobile - 100}px) {
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
     margin-right: 0;
   }
 `;
@@ -136,8 +141,14 @@ const ButtonWrapper = styled.div`
 `;
 
 const PaymentExpires = Text.extend`
+  font-weight: 300;
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const ExpiryDate = Text.extend`
+  font-weight: 300;
+  color: ${helpers.alertColor};
   font-style: italic;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const getStatusColor = status => {
@@ -152,12 +163,19 @@ const MemberExpanded = props => {
           <MemberDetailsInner>
             <MemberPic url={props.profileSrc} />
             <MemberStatus>
-              <Text color="white">{props.name}</Text>
+              <Text color="white" fontSize="18">
+                {props.name}
+              </Text>
               <Text color={getStatusColor(props.status)}>{props.status}</Text>
             </MemberStatus>
           </MemberDetailsInner>
 
-          <IconButton className={props.classes.iconButton}>
+          <IconButton
+            classes={{
+              root: props.classes.iconButton,
+              icon: props.classes.icon
+            }}
+          >
             <MoreVert />
           </IconButton>
         </MemberDetails>
@@ -167,14 +185,16 @@ const MemberExpanded = props => {
             {props.paymentData.paymentInfo === "expired" ? (
               <PaymentDetails>
                 <Text color={helpers.alertColor}>Payment Expired</Text>
-                <button className="black-button full-width">
+                <button className="danger-button full-width">
                   Accept Payment
                 </button>
               </PaymentDetails>
             ) : (
               <PaymentDetails>
                 <PaymentExpires>Payment Expires on</PaymentExpires>
-                <ExpiryDate>{formatDate(props.expiryDate)}</ExpiryDate>
+                <ExpiryDate>
+                  {formatDate(props.paymentData.expiryDate)}
+                </ExpiryDate>
               </PaymentDetails>
             )}
             <StatusDetails>

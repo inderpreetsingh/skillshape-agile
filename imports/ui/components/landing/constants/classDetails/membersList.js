@@ -35,7 +35,8 @@ export const membersList = [
     studentNotes:
       "Alex is a really good student who knows how to use his tools appropriately",
     paymentData: {
-      paymentInfo: "expired"
+      paymentInfo: "on-going",
+      expiryDate: new Date("2018-10-22")
     },
     status: "checked in"
   }

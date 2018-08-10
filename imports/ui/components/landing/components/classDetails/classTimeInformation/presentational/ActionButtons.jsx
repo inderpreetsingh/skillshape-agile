@@ -14,18 +14,21 @@ import {
 //const APP_URL = Meteor.absoluteUrl();
 
 const OuterWrapper = styled.div`
-  text-align: center;
+  width: 100%;
+  display: flex;
 `;
 
 const Wrapper = styled.div`
   padding: 0 ${rhythmDiv * 2}px;
   display: inline-flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-items: center;
-  margin-bottom: ${rhythmDiv * 3}px;
-  max-width: 500px;
-  width: 100%;
+  align-items: flex-start;
+  margin: 0 auto ${rhythmDiv * 3}px; auto;
+
+  @media screen and (min-width: ${mobile - 100}px) {
+    width: 100%;
+    justify-content: space-evenly;
+  }
 `;
 
 const ButtonWrapper = styled.div`
