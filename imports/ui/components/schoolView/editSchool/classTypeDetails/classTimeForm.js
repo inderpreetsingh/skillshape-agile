@@ -376,6 +376,7 @@ class ClassTimeForm extends React.Component {
           this.state.classTimeFormOnClose()
          }
         }}
+        closed={this.state.closed}
        />} 
       </div>
     );

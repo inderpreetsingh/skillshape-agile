@@ -33,7 +33,6 @@ export class WeekDaysRow extends React.Component {
       row: []
     };
     if (!_.isEmpty(data)) {
-      // console.log("WeekDaysRow initializeFields -->>",data);
       for (let key in data) {
         for (let obj of data[key]) {
           state.row.push({
@@ -57,7 +56,6 @@ export class WeekDaysRow extends React.Component {
         timeUnits: "Minutes"
       });
     }
-    // console.log("WeekDaysRow initializeFields -->>",state)
     return state;
   };
 
@@ -137,9 +135,10 @@ export class WeekDaysRow extends React.Component {
                   <InputLabel htmlFor="weekDay" shrink={true}>
                     WeekDay
                   </InputLabel>
+                  
                   <Select
                     input={<Input id="weekDay" />}
-                    value={data ? data.key : ""}
+                    value={data && data.key!='' ? data.key : scheduleDetails[0]}
                     onChange={this.handleSelectInputChange.bind(
                       this,
                       index,

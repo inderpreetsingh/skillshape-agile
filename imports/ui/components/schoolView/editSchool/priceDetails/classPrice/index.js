@@ -75,9 +75,12 @@ class ClassPrice extends Component {
         this.state = {
             open: false,
             showForm: false,
+            formData:null
         }
     }
-
+    setFormData=(formData)=>{
+        this.setState({formData:formData})
+    }
     handleFormModal = ()=> this.setState({showForm: false, formData: null});
 
     // Update Class time from prices page.
@@ -87,6 +90,12 @@ class ClassPrice extends Component {
         Meteor.call('classPricing.notifyStudentForPricingUpdate',{schoolId}, (err, res)=> {
             if(res && res.emailSent) {
                 toastr.success('Your Email regarding pricing info update has been sent successfully', 'success');
+            }
+            else if(res && !res.emailSent){
+                toastr.success('No Student joined your school classes yet.', 'success');
+
+            }
+            else{
             }
         });
     }
