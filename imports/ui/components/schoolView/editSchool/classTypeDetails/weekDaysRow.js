@@ -192,11 +192,8 @@ export class WeekDaysRow extends React.Component {
                       type="number"
                       fullWidth
                       required={
-                        data && data.key ? true : false
+                        data && data.key && data.key!='' ? true : false
                       } /*Made it mandatory if week day selected*/
-                      disabled={
-                        data && data.key ? false : true
-                      } /*Made it disabled if weekday is not selected*/
                     />
                   </Grid>
                   <Grid sm={6}>
