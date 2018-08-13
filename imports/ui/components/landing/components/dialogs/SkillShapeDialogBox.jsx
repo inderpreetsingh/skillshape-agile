@@ -186,7 +186,6 @@ class SkillShapeDialogBox extends Component {
   _getAffirmateButtonClasses = () => {
     const { type, defaultButtons, classes } = this.props;
     if (type == "alert" && !defaultButtons) {
-      // console.log("alert in get cancel...");
       return classes["ghostCommon"] + " " + classes["ghost.inform"];
     } else {
       return classes["ghostCommon"] + " " + classes[`ghost.${type}`];
@@ -214,7 +213,6 @@ class SkillShapeDialogBox extends Component {
     const { type, defaultButtons, classes } = this.props;
     // debugger;
     if (type == "alert") {
-      // console.log("alert in get cancel...");
       return classes["ghostCommon"] + " " + classes["ghost.inform"];
     } else {
       return classes["ghostCommon"] + " " + classes[`ghost.${type}`];
@@ -229,7 +227,8 @@ class SkillShapeDialogBox extends Component {
       onAffirmationButtonClick,
       onModalClose,
       onCloseButtonClick,
-      classes
+      classes,
+      fromPackageListing
     } = this.props;
     return (
       <ButtonsWrapper rightAlign>
@@ -237,6 +236,7 @@ class SkillShapeDialogBox extends Component {
           <Button
             onClick={onAffirmationButtonClick || onModalClose}
             className={this._getAffirmateButtonClasses()}
+            style={{backgroundColor:`${fromPackageListing && 'rgb(76, 175, 80)'}`}}
           >
             {this._getAffirmateButtonText()}
           </Button>
@@ -246,6 +246,7 @@ class SkillShapeDialogBox extends Component {
             <Button
               onClick={onCloseButtonClick || onModalClose}
               className={this._getCancelButtonClasses()}
+              style={{backgroundColor:`${fromPackageListing && 'yellow'}`}}
             >
               {this._getCancelButtonText()}
             </Button>
@@ -277,7 +278,6 @@ class SkillShapeDialogBox extends Component {
       onModalClose,
       onCloseButtonClick
     } = this.props;
-    // console.log(type,"type in the actions ...")
     if (RenderActions) {
       return React.cloneElement(RenderActions);
     } else {

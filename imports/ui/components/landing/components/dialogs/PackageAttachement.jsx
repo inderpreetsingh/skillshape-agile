@@ -52,7 +52,7 @@ class PackageAttachment extends React.Component {
         this.state = { PackageListingAttachment: false, pacLisAttOpen: true,PackageAddNew:false }
     }
     render() {
-        const { schoolId, classTypeId,classTypeName ,parentData} = this.props;
+        const { schoolId, classTypeId,classTypeName ,parentData,closed} = this.props;
 
         return (
             <MuiThemeProvider theme={muiTheme}>
@@ -73,8 +73,11 @@ class PackageAttachment extends React.Component {
                             </IconButton >
                         </DialogTitleWrapper>
                     </DialogTitle>
-                    <DialogContent>
-                        You have created a Closed Series.Often, their is an enrollment fee for a closed series.
+                    <DialogContent style={{fontSize: '18px'}}>
+                        {closed ? 'You have created a Closed Series/Set. Often, their is an enrollment fee for a closed series.'
+                        : 'Would you like to connect class package to this class type.'    
+                        }
+                        
                         </DialogContent>
                     <DialogActions classes={{ action: this.props.classes.dialogAction }}>
                         <ClassTimeButton
@@ -88,14 +91,15 @@ class PackageAttachment extends React.Component {
                             fullWidth
                             noMarginBottom
                             label="Linked Existing Packages"
-                            onClick={(e) => { this.setState({ PackageListingAttachment: true }) }
-                            }
+                            onClick={(e) => { this.setState({ PackageListingAttachment: true }) }}
+                            bgColor={'rgb(38, 123, 195)'}
                         />
                         <ClassTimeButton
                             fullWidth
                             noMarginBottom
                             label="No thanks"
                             onClick={() => { this.props.classTimeFormOnClose() }}
+                            bgColor={'rgb(186, 195, 38)'}
                         />
                     </DialogActions>
 

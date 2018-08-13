@@ -458,6 +458,7 @@ class PackageListingAttachment extends React.Component {
             onCloseButtonClick={() =>
               this.setState({ showConfirmationModal: false })
             }
+            fromPackageListing={true}
           />
         )}
         <Dialog

@@ -156,7 +156,7 @@ class MonthlyPriceForm extends React.Component {
     this.setState({
       [key]: isInputChecked,
       pymtType: oldPayment,
-      
+      [disableKey]: !isInputChecked
     });
   };
   handleChange = name => event => {

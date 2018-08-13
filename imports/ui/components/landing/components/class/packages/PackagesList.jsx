@@ -49,7 +49,7 @@ const PackagesListWrapper = styled.section`
 const EnrollMentListWrapper = PackagesListWrapper.extend`
   width: 100%;
   align-items: center;
-
+  ${props => (props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;')}
   &:after {
     background-color: #dddd;
     ${props => (props.forIframes ? "background-color: transparent" : "")};
@@ -59,11 +59,12 @@ const EnrollMentListWrapper = PackagesListWrapper.extend`
 
 const PackageWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
-  width: 100%;
+  min-width: 500px;
+  max-width: 500px;
 `;
 
 const PackagesWrapper = styled.div`
-  max-width: 550px;
+  max-width: 500px
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -71,11 +72,13 @@ const PackagesWrapper = styled.div`
   padding: 0 ${helpers.rhythmDiv * 2}px;
   position: relative;
   z-index: 1;
+  ${props => (props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;')}
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
-    max-width: 550px;
+  max-width: 500px
     padding: ${helpers.rhythmDiv}px;
-    align-items: center;
+    align-items: space-around;
+    
   }
 `;
 
@@ -98,7 +101,7 @@ const PackageList = props => (
     fullScreen={props.fullScreen}
     classPackages={props.classPackages}
   >
-    <PackagesWrapper classPackages={props.classPackages}>
+    <PackagesWrapper classPackages={props.classPackages} onPriceEdit={props.onPriceEdit}>
       <Title>{props.packageListName}</Title>
       {props.packagesData.map(packageData => (
         <PackageWrapper key={packageData._id}>
@@ -107,6 +110,9 @@ const PackageList = props => (
             {...props.packageProps}
             classPackages={props.classPackages}
             schoolCurrency={props.schoolCurrency}
+            onSchoolEdit={props.onSchoolEdit}
+            onEditClick={()=>{props.onEditClick()}}
+            setFormData={()=>{props.setFormData(packageData)}}
           />
         </PackageWrapper>
       ))}
@@ -116,7 +122,7 @@ const PackageList = props => (
 
 const EnrollmentPackagesList = props => (
   <EnrollMentListWrapper forIframes={props.forIframes}>
-    <PackagesWrapper>
+    <PackagesWrapper onPriceEdit={props.onPriceEdit}>
 
       <Title>{props.packageListName}</Title>
       {props.packagesData.map(packageData => (
@@ -127,6 +133,9 @@ const EnrollmentPackagesList = props => (
             classPackages={props.classPackages}
             schoolCurrency={props.schoolCurrency}
             onSchoolEdit={props.onSchoolEdit}
+            onEditClick={()=>{props.onEditClick()}}
+            setFormData={()=>{props.setFormData(packageData)}}
+
           />
         </PackageWrapper>
       ))}
@@ -157,6 +166,9 @@ const PackagesList = props => {
               packagesData={props.enrollMentPackagesData}
               schoolCurrency={schoolCurrency}
               onSchoolEdit={props.onSchoolEdit}
+              onEditClick={()=>{props.onEditClick()}}
+              setFormData={(packageData)=>{props.setFormData(packageData)}}
+              onPriceEdit={props.onPriceEdit}
             />
           </Wrapper>
         )}
@@ -177,6 +189,10 @@ const PackagesList = props => {
             packageListName="Class Packages"
             packagesData={props.perClassPackagesData}
             schoolCurrency={schoolCurrency}
+            onSchoolEdit={props.onSchoolEdit}
+            onEditClick={()=>{props.onEditClick()}}
+            setFormData={(packageData)=>{props.setFormData(packageData)}}
+            onPriceEdit={props.onPriceEdit}
           />
         )}
 
@@ -194,6 +210,10 @@ const PackagesList = props => {
             fullScreen={classPackagesEmpty}
             packagesData={props.monthlyPackagesData}
             schoolCurrency={schoolCurrency}
+            onSchoolEdit={props.onSchoolEdit}
+            onEditClick={()=>{props.onEditClick()}}
+            setFormData={(packageData)=>{props.setFormData(packageData)}}
+            onPriceEdit={props.onPriceEdit}
           />
         )}
       </Wrapper>
