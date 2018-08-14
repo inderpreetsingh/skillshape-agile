@@ -64,9 +64,12 @@ class MonthlyPrice extends Component {
         this.state = {
             open: false,
             showForm: false,
+            formData:null
         }
     }
-
+    setFormData=(formData)=>{
+        this.setState({formData:formData})
+    }
     handleFormModal = ()=> this.setState({showForm: false, formData: null})
 
     render() {

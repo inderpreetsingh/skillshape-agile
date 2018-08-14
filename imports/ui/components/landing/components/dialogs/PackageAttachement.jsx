@@ -17,6 +17,7 @@ import muiTheme from '../jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import PackageListingAttachment from './PackageListingAttachment';
+import PackageAddNew from './PackageAddNew';
 import Dialog, {
     DialogActions,
     DialogContent,
@@ -48,10 +49,10 @@ const ErrorWrapper = styled.span`
 class PackageAttachment extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { PackageListingAttachment: false, pacLisAttOpen: true }
+        this.state = { PackageListingAttachment: false, pacLisAttOpen: true,PackageAddNew:false }
     }
     render() {
-        const { schoolId, classTypeId } = this.props;
+        const { schoolId, classTypeId,classTypeName ,parentData,closed} = this.props;
 
         return (
             <MuiThemeProvider theme={muiTheme}>
@@ -72,29 +73,33 @@ class PackageAttachment extends React.Component {
                             </IconButton >
                         </DialogTitleWrapper>
                     </DialogTitle>
-                    <DialogContent>
-                        You have created a Closed Series.Often, their is an enrollment fee for a closed series.
+                    <DialogContent style={{fontSize: '18px'}}>
+                        {closed ? 'You have created a Closed Series/Set. Often, their is an enrollment fee for a closed series.'
+                        : 'Would you like to connect class package to this class type.'    
+                        }
+                        
                         </DialogContent>
                     <DialogActions classes={{ action: this.props.classes.dialogAction }}>
                         <ClassTimeButton
                             fullWidth
                             label="Create New Package"
                             noMarginBottom
-                            onClick={() => { }
+                            onClick={() => {this.setState({PackageAddNew:true}) }
                             }
                         />
                         <ClassTimeButton
                             fullWidth
                             noMarginBottom
                             label="Linked Existing Packages"
-                            onClick={(e) => { this.setState({ PackageListingAttachment: true }) }
-                            }
+                            onClick={(e) => { this.setState({ PackageListingAttachment: true }) }}
+                            bgColor={'rgb(38, 123, 195)'}
                         />
                         <ClassTimeButton
                             fullWidth
                             noMarginBottom
                             label="No thanks"
                             onClick={() => { this.props.classTimeFormOnClose() }}
+                            bgColor={'rgb(186, 195, 38)'}
                         />
                     </DialogActions>
 
@@ -105,6 +110,15 @@ class PackageAttachment extends React.Component {
                     schoolId={schoolId}
                     classTypeId={classTypeId}
                     classTimeFormOnClose={() => { this.props.classTimeFormOnClose() }}
+                />}
+                {this.state.PackageAddNew && <PackageAddNew
+                    open={this.state.PackageAddNew}
+                    onClose={() => { this.setState({ PackageAddNew: false }) }}
+                    schoolId={schoolId}
+                    classTypeId={classTypeId}
+                    classTimeFormOnClose={() => { this.props.classTimeFormOnClose() }}
+                    classTypeName={classTypeName}
+                    parentData={parentData}
                 />}
             </MuiThemeProvider>
         )

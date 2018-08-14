@@ -156,7 +156,7 @@ class MonthlyPriceForm extends React.Component {
     this.setState({
       [key]: isInputChecked,
       pymtType: oldPayment,
-      
+      [disableKey]: !isInputChecked
     });
   };
   handleChange = name => event => {
@@ -358,7 +358,7 @@ class MonthlyPriceForm extends React.Component {
             </DialogContent>
           )}
           <DialogActions>
-            {data && (
+            {data && !data.from && (
               <Button
                 onClick={() => this.setState({ showConfirmationModal: true })}
                 color="accent"
