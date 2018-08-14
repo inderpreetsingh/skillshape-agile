@@ -12,7 +12,12 @@ import { MenuItem } from "material-ui/Menu";
 import Typography from "material-ui/Typography";
 import config from "/imports/config";
 import { DialogActions } from "material-ui/Dialog";
-
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 export class OneTimeRow extends React.Component {
   constructor(props) {
     super(props);
@@ -40,9 +45,9 @@ export class OneTimeRow extends React.Component {
     } else {
       state = { row: [...data] };
 
-     
+
       this.props.handleNoOfRow(data.length);
-      
+
     }
     return state;
   };
@@ -97,10 +102,10 @@ export class OneTimeRow extends React.Component {
   getRowData = () => {
     return this.state.row;
   };
-  
+
   render() {
     const { row } = this.state;
-    
+
     return (
       <div>
         {row.map((data, index) => {
@@ -155,7 +160,7 @@ export class OneTimeRow extends React.Component {
                   <Grid sm={6}>
                     <TextField
                       required={true}
-                      defaultValue={data && data.duration != ""? data.duration : 60}
+                      defaultValue={data && data.duration != "" ? data.duration : 60}
                       margin="dense"
                       label="Duration"
                       type="number"
@@ -201,9 +206,9 @@ export class OneTimeRow extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-                        {
-                          
-                        }              
+              {
+
+              }
               <Grid item sm={6} xs={12}>
                 <FormControl fullWidth margin="dense">
                   <InputLabel htmlFor="roomId">Room</InputLabel>
@@ -234,13 +239,25 @@ export class OneTimeRow extends React.Component {
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Button
+                {/* <Button
                   onClick={this.removeRow.bind(this, index)}
                   raised
                   color="accent"
+                  style={{
+                    backgroundColor: 'red',
+                    color: "black",
+                    fontWeight: 600
+                  }}
                 >
                   Delete
-                </Button>
+                </Button> */}
+                 <ButtonWrapper>
+            <FormGhostButton
+              alertColor
+              onClick={this.removeRow.bind(this, index)}
+              label="Delete"
+            />
+          </ButtonWrapper>
               </Grid>
             </Grid>
           );
@@ -276,10 +293,22 @@ export class OneTimeRow extends React.Component {
                 justifyContent: "center"
               }}
             >
-              <Button onClick={this.addNewRow} raised color="secondary">
+              {/* <Button onClick={this.addNewRow} raised color="secondary"
+                style={{
+                  backgroundColor: 'mediumseagreen',
+                  color: "black",
+                  fontWeight: 600
+                }}
+              >
                 Add Linked Class Time
-              </Button>
-
+              </Button> */}
+              <ButtonWrapper>
+                  <FormGhostButton
+                    darkGreyColor
+                    onClick={this.addNewRow}
+                    label="Add Linked Class Time"
+                  />
+                </ButtonWrapper>
               {/* <Button
                 onClick={this.props.saveClassTimes.bind(this, event, {
                   addSeperateTime: true

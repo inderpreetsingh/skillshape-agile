@@ -74,7 +74,22 @@ const styles = theme => {
         flexWrap: "wrap",
         justifyContent: "flex-start"
       }
-    }
+    },
+    delete: {
+      backgroundColor:'red',
+      color: "black",
+      fontWeight: 600
+     },
+     cancel: {
+       backgroundColor:'yellow',
+       color: "black",
+       fontWeight: 600
+      },
+      save: {
+       backgroundColor:'green',
+       color: "black",
+       fontWeight: 600
+      }
   };
 };
 
@@ -541,6 +556,7 @@ class LocationForm extends React.Component {
                   alertColor
                   onClick={() => this.setState({ showConfirmationModal: true })}
                   label="Delete"
+                  className={classes.delete}
                 />
               </ButtonWrapper>
             )}
@@ -549,6 +565,7 @@ class LocationForm extends React.Component {
                 darkGreyColor
                 onClick={() => this.props.onClose()}
                 label="Cancel"
+                className={classes.cancel}
               />
             </ButtonWrapper>
             <ButtonWrapper>
@@ -557,6 +574,7 @@ class LocationForm extends React.Component {
                 form={formId}
                 onClick={this.onSubmit}
                 label={data ? "Save" : "Submit"}
+                className={classes.save}
               />
             </ButtonWrapper>
           </DialogActions>
