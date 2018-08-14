@@ -26,6 +26,31 @@ import { OneTimeRow } from "./oneTimeRow";
 import "/imports/api/sLocation/methods";
 import PackageAttachment from '/imports/ui/components/landing/components/dialogs/PackageAttachement.jsx'
 import { toastrModal } from "/imports/util";
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+const styles = theme => {
+  return {
+    delete: {
+     backgroundColor:'red',
+     color: "black",
+     fontWeight: 600
+    },
+    cancel: {
+      backgroundColor:'yellow',
+      color: "black",
+      fontWeight: 600
+     },
+     save: {
+      backgroundColor:'green',
+      color: "black",
+      fontWeight: 600
+     }
+  };
+};
 /*
 1.closed field in the collection.(Done)
 2.Default value of closed checkbox.(Done)
@@ -37,20 +62,6 @@ import { toastrModal } from "/imports/util";
 
 */
 const formId = "classTimeForm";
-
-const styles = theme => {
-  return {
-    button: {
-      margin: 5,
-      width: 150
-    },
-    classtypeInputContainer: {
-      alignItems: "center",
-      textAlign: "left"
-    }
-  };
-};
-
 class ClassTimeForm extends React.Component {
   constructor(props) {
     super(props);
@@ -205,8 +216,9 @@ class ClassTimeForm extends React.Component {
     </Fragment>
   }
   render() {
-    const { fullScreen, data, classes, locationData,schoolId,parentKey } = this.props;
+    const { fullScreen, data, classes, locationData,schoolId,parentKey,parentData} = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
+    console.log('this.props in ctf',this.props)
     return (
       <div>
         <Dialog
@@ -328,27 +340,57 @@ class ClassTimeForm extends React.Component {
           )}
           <DialogActions>
             {data && (
-              <Button
-                onClick={() => this.setState({ showConfirmationModal: true })}
-                color="accent"
-              >
-                Delete
-              </Button>
-            )}
-            <Button onClick={() => this.props.onClose()} color="primary">
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              form={formId}
-              name="save-class-times"
-              color="primary"
-              onClick={this.saveClassTimes.bind(this, event, {
-                addSeperateTime: false
-              })}
-            >
-              {data ? "Save" : "Submit"}
-            </Button>
+            //   <Button
+            //     onClick={() => this.setState({ showConfirmationModal: true })}
+            //     color="accent"
+            //     className={classes.delete}
+            //   >
+            //     Delete
+            //   </Button>
+            // )}
+            // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
+            //   Cancel
+            // </Button>
+            // <Button
+            //   type="button"
+            //   form={formId}
+            //   name="save-class-times"
+            //   color="primary"
+            //   className={classes.save}
+            //   onClick={this.saveClassTimes.bind(this, event, {
+            //     addSeperateTime: false
+            //   })}
+            // >
+            //   {data ? "Save" : "Submit"}
+            // </Button>
+            <ButtonWrapper>
+            <FormGhostButton
+              alertColor
+              onClick={() => this.setState({ showConfirmationModal: true })}
+              label="Delete"
+              className={classes.delete}
+            />
+          </ButtonWrapper>
+        )}
+        <ButtonWrapper>
+          <FormGhostButton
+            darkGreyColor
+            onClick={() => this.props.onClose()}
+            label="Cancel"
+            className={classes.cancel}
+          />
+        </ButtonWrapper>
+        <ButtonWrapper>
+          <FormGhostButton
+            type="submit"
+            form={formId}
+            onClick={this.saveClassTimes.bind(this, event, {
+                  addSeperateTime: false
+                })}
+            label={data ? "Save" : "Submit"}
+            className={classes.save}
+          />
+        </ButtonWrapper>
             {/* <Button
               type="button"
               form={formId}
@@ -365,6 +407,8 @@ class ClassTimeForm extends React.Component {
        onClose={()=>{this.setState({PackageOpen:false})}} 
        schoolId={schoolId}
        classTypeId={parentKey}
+       classTypeName={data && data.classTypeName?data.classTypeName :{name:parentData.name,_id:parentData._id}}
+       parentData={parentData}
        classTimeFormOnClose={()=>{
          if(this.state.value){
           this.state.classTimeFormOnClose(true)
@@ -373,6 +417,7 @@ class ClassTimeForm extends React.Component {
           this.state.classTimeFormOnClose()
          }
         }}
+        closed={this.state.closed}
        />} 
       </div>
     );
