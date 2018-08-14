@@ -47,3 +47,7 @@ export const Capitalize = styled.span`
 export const Bold = styled.span`
   font-weight: 500;
 `;
+
+export const Italic = styled.span`
+  font-style: italic;
+`;

@@ -6,10 +6,13 @@ import MembersList from "./presentational/MembersList.jsx";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 
 class MembersListContainer extends Component {
-  state = {
-    teachersFilterWith: "",
-    studentsFilterWith: ""
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      teachersFilterWith: "",
+      studentsFilterWith: ""
+    };
+  }
 
   handleSearchChange = type => e => {
     const value = e.target.value;

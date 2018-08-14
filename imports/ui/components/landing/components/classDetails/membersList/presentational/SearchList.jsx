@@ -27,7 +27,7 @@ const styles = {
     fontSize: baseFontSize * 1.5
   },
   inputRoot: {
-    height: 18,
+    height: 19,
     fontSize: baseFontSize,
     fontStyle: "normal",
     fontWeight: 400

@@ -5,6 +5,8 @@ import IconButton from "material-ui/IconButton";
 import MoreVert from "material-ui-icons/MoreVert";
 import Icon from "material-ui/Icon";
 
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import SkillShapeButton from "/imports/ui/components/landing/components/buttons/SkillShapeButton.jsx";
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { formatDate } from "/imports/util/formatSchedule";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
@@ -155,6 +157,39 @@ const getStatusColor = status => {
   return status == "checked in" ? helpers.caution : helpers.primaryColor;
 };
 
+const PaymentAndStatus = props => (
+  <PaymentAndStatusDetails>
+    {props.paymentData.paymentInfo === "expired" ? (
+      <PaymentDetails>
+        <Text color={helpers.alertColor}>Payment Expired</Text>
+        <SkillShapeButton
+          noMarginBottom
+          danger
+          fullWidth
+          label="Accept Payment"
+        />
+      </PaymentDetails>
+    ) : (
+      <PaymentDetails>
+        <PaymentExpires>Payment Expires on</PaymentExpires>
+        <ExpiryDate>{formatDate(props.paymentData.expiryDate)}</ExpiryDate>
+      </PaymentDetails>
+    )}
+    <StatusOptions {...props} />
+  </PaymentAndStatusDetails>
+);
+
+const StatusOptions = props => (
+  <StatusDetails>
+    <ButtonWrapper>
+      <PrimaryButton noMarginBottom fullWidth label="Check in" />
+    </ButtonWrapper>
+    <ButtonWrapper>
+      <SkillShapeButton noMarginBottom caution fullWidth label="Sign out" />
+    </ButtonWrapper>
+  </StatusDetails>
+);
+
 const MemberExpanded = props => {
   return (
     <Wrapper>
@@ -181,31 +216,7 @@ const MemberExpanded = props => {
         </MemberDetails>
 
         <ShowOnSmallScreen>
-          <PaymentAndStatusDetails>
-            {props.paymentData.paymentInfo === "expired" ? (
-              <PaymentDetails>
-                <Text color={helpers.alertColor}>Payment Expired</Text>
-                <button className="danger-button full-width">
-                  Accept Payment
-                </button>
-              </PaymentDetails>
-            ) : (
-              <PaymentDetails>
-                <PaymentExpires>Payment Expires on</PaymentExpires>
-                <ExpiryDate>
-                  {formatDate(props.paymentData.expiryDate)}
-                </ExpiryDate>
-              </PaymentDetails>
-            )}
-            <StatusDetails>
-              <ButtonWrapper>
-                <button className="primary-button full-width">Check in</button>
-              </ButtonWrapper>
-              <ButtonWrapper>
-                <button className="caution-button full-width">Sign out</button>
-              </ButtonWrapper>
-            </StatusDetails>
-          </PaymentAndStatusDetails>
+          <PaymentAndStatus {...props} />
         </ShowOnSmallScreen>
 
         <StudentNotes>
@@ -214,31 +225,7 @@ const MemberExpanded = props => {
       </InnerWrapper>
 
       <HideOnSmall>
-        <PaymentAndStatusDetails>
-          {props.paymentData.paymentInfo === "expired" ? (
-            <PaymentDetails>
-              <Text color={helpers.alertColor}>Payment Expired</Text>
-              <ButtonWrapper>
-                <button className="black-button">Accept Payment</button>
-              </ButtonWrapper>
-            </PaymentDetails>
-          ) : (
-            <PaymentDetails>
-              <PaymentExpires>Payment Expires on</PaymentExpires>
-              <ExpiryDate>
-                {formatDate(props.paymentData.expiryDate)}
-              </ExpiryDate>
-            </PaymentDetails>
-          )}
-          <StatusDetails>
-            <ButtonWrapper>
-              <button className="primary-button full-width">Check in</button>
-            </ButtonWrapper>
-            <ButtonWrapper>
-              <button className="caution-button full-width">Sign out</button>
-            </ButtonWrapper>
-          </StatusDetails>
-        </PaymentAndStatusDetails>
+        <PaymentAndStatus {...props} />
       </HideOnSmall>
     </Wrapper>
   );
