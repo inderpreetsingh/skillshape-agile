@@ -1,5 +1,6 @@
 import Purchases from "./fields";
 import School from "../school/fields";
+import isEmpty from "lodash/isEmpty";
 Meteor.methods({
   "purchases.addPurchase": function(payload) {
     console.log('payload',payload)
@@ -40,5 +41,15 @@ Meteor.methods({
     } else {
       return packageStatus;
     }
+  },
+  "purchases.isAlreadyPurchased": function({userId, planId}) {
+    let result = Purchases.find({userId,planId,packageStatus:'active'}).fetch();
+    console.log('result in isap',result)
+    if(!isEmpty(result)){
+      return true;
+    }
+    else
+    return false;
   }
+   
 });

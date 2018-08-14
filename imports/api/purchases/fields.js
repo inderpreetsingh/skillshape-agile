@@ -18,6 +18,10 @@ export const PurchasesSchema = new SimpleSchema({
     type: String,
     optional: true
   },
+  planId: {
+    type: String,
+    optional: true
+  },
   stripeRequest: {
     type: Object,
     optional: true,

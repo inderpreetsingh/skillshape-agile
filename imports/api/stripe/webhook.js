@@ -1,5 +1,5 @@
 import ClassSubscription from "../classSubscription/fields";
-import Purchases from "./fields";
+import Purchases from '/imports/api/purchases/fields';
 var bodyParser = require("body-parser");
 Picker.middleware(bodyParser.json());
 Picker.middleware(bodyParser.urlencoded({ extended: false }));
@@ -25,7 +25,7 @@ var dataFile = function (params, request, response, next) {
         ClassSubscription.update({ subscriptionId }, { $set: payload });
         // updating purchases collections
        let result= Purchases.findOne({subscriptionId});
-       console.log()
+       console.log('result of purchases  find by sub id',result)
        if(result){
        console.log('in if ')
          
@@ -33,6 +33,7 @@ var dataFile = function (params, request, response, next) {
                 endDate: classSubscriptionData.endDate,
                 packageStatus: 'active'
         }
+        
       }
       else{
        console.log('in else',classSubscriptionData)
@@ -45,13 +46,11 @@ var dataFile = function (params, request, response, next) {
           schoolId: classSubscriptionData[0].schoolId,
           startDate: classSubscriptionData[0].startDate,
           endDate: classSubscriptionData[0].endDate,
+          planId: classSubscriptionData[0].subscriptionRequest.items[0].plan,
           packageStatus: 'active'
         }
+        Purchases.insert(payload)
       }
-      console.log('before update',payload)
-      let result1 = Purchases.insert(payload)
-      console.log("result1",result1)  
-      console.log('after update')
       
       break;
     }
