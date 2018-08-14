@@ -155,9 +155,9 @@ export class OneTimeRow extends React.Component {
                   <Grid sm={6}>
                     <TextField
                       required={true}
-                      defaultValue={data ? data.duration : ""}
+                      defaultValue={data && data.duration != ""? data.duration : 60}
                       margin="dense"
-                      label="Length"
+                      label="Duration"
                       type="number"
                       onChange={this.handleSelectInputChange.bind(
                         this,
@@ -165,7 +165,6 @@ export class OneTimeRow extends React.Component {
                         "duration"
                       )}
                       fullWidth
-                      defaultValue={data && data.duration}
                     />
                   </Grid>
                   <Grid sm={6}>

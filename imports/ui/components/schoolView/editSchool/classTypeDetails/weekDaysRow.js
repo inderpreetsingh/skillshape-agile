@@ -181,7 +181,7 @@ export class WeekDaysRow extends React.Component {
                 >
                   <Grid item sm={6}>
                     <TextField
-                      defaultValue={data && data.duration}
+                      defaultValue={data && data.duration || 60}
                       margin="dense"
                       onChange={this.handleSelectInputChange.bind(
                         this,
