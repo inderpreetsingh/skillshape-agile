@@ -15,7 +15,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 const calculateElapsedTime = startTime => {
   // startTime is expected to be a date Obj with proper Time information stored in it
   if (startTime) {
-    const startTimeMoment = moment(new Date());
+    const startTimeMoment = moment(new Date("2020-09-11"));
     const currentTimeMoment = moment(new Date());
     return startTimeMoment.diff(currentTimeMoment, "minutes");
   }
@@ -32,8 +32,8 @@ const ActivitiesWrapper = styled.div`
   height: ${props => props.length}px;
 
   @media screen and (min-width: ${helpers.tablet}px) {
-    width: 100vw;
-    height: 320px;
+    width: calc(100vw - 48px);
+    height: 300px;
     display: flex;
   }
 `;

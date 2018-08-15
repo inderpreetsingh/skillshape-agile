@@ -70,6 +70,12 @@ const ActivityName = Text.extend`
   min-width: 100px;
   white-space: no-wrap;
   font-style: italic;
+
+  @media screen and (min-width: ${helpers.tablet}px) {
+    min-width: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
 `;
 
 const ActivityType = ActivityName.extend`

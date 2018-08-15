@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
 import IconButton from "material-ui/IconButton";
 import Menu, { MenuItem } from "material-ui/Menu";
@@ -10,7 +11,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 const styles = {
   iconButton: {
     cursor: "pointer",
-    width: 24,
+    width: 8,
     height: 24,
     fontSize: helpers.baseFontSize
   },
@@ -24,56 +25,71 @@ class DropDownMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      menu: false,
-      selectedOptionValue: ""
+      anchorEl: null
     };
   }
 
-  handleMenuState = state => {
-    this.setState(prevState => {
-      return {
-        ...prevState,
-        menu: state
-      };
+  handleClick = e => {
+    this.setState({
+      anchorEl: e.currentTarget
     });
   };
 
-  handleMenuItemClick = name => {
-    console.log(name);
+  handleClose = () => {
+    this.setState({
+      anchorEl: null
+    });
+  };
+
+  handleMenuItemClick = option => () => {
+    console.log(option);
+    this.setState({
+      anchorEl: null
+    });
+
+    this.props.onMenuItemClick && this.props.onMenuItemClick(option);
   };
 
   render() {
-    const { menu } = this.state;
+    const { menu, anchorEl } = this.state;
     const {
       options,
       selectedOptionValue,
       onMenuButtonClick,
+      menuButton,
       menuOptions,
       classes
     } = this.props;
     return (
       <div>
-        <IconButton
-          aria-owns={menu ? "my-menu" : null}
-          aria-label="More"
-          aria-haspopup="true"
-          onClick={this.handleClick}
-          classes={{
-            root: classes.iconButton,
-            icon: classes.icon
-          }}
-        >
-          <MoreVertIcon onClick={onMenuButtonClick} />
-        </IconButton>
+        {(menuButton && React.clone(menuButton)) || (
+          <IconButton
+            aria-owns={anchorEl ? "my-menu" : null}
+            aria-label="More"
+            aria-haspopup="true"
+            onClick={this.handleClick}
+            classes={{
+              root: classes.iconButton,
+              icon: classes.icon
+            }}
+          >
+            <MoreVertIcon />
+          </IconButton>
+        )}
 
-        <Menu id="my-menu" open={menu} onClose={this.hanlde}>
+        <Menu
+          id="my-menu"
+          open={Boolean(anchorEl)}
+          anchorEl={anchorEl}
+          onClose={this.handleClose}
+        >
           {menuOptions.map(option => (
             <MenuItem
-              key={option}
+              key={option.value}
               selected={option.value === selectedOptionValue}
-              onClick={this.handleMenuItemClick}
+              onClick={this.handleMenuItemClick(option)}
             >
-              {option.displayValue}
+              {option.name}
             </MenuItem>
           ))}
         </Menu>
@@ -81,5 +97,13 @@ class DropDownMenu extends Component {
     );
   }
 }
+
+DropDownMenu.propTypes = {
+  menuButton: PropTypes.element,
+  menuOptions: PropTypes.arrayOf({
+    name: PropTypes.string,
+    value: PropTypes.string
+  })
+};
 
 export default withStyles(styles)(DropDownMenu);

@@ -36,8 +36,8 @@ const menuOptions = [
     value: "evalute"
   },
   {
-    name: "View Student",
-    value: "view_student"
+    name: "Remove Teacher",
+    value: "remove_teacher"
   }
 ];
 
@@ -61,7 +61,7 @@ const Profile = styled.div`
 
   ${props =>
     props.type === "default"
-      ? `width: 100%; flex-grow: 1; flex-shrink: 0; padding-bottom: 0`
+      ? `width: 100%; flex-grow: 1; flex-shrink: 0;`
       : ""};
 `;
 
@@ -81,13 +81,13 @@ const ProfilePic = styled.div`
 const DetailsWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween};
   align-items: flex-start;
+  flex-shrink: 0;
 `;
 
 const Details = styled.div`
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
-  margin-right: ${helpers.rhythmDiv * 2}px;
+  margin-right: ${helpers.rhythmDiv}px;
 `;
 
 const StudentNotes = styled.div`
@@ -129,8 +129,9 @@ const Member = props => {
   // is not instructorsView && for teachers in both the cases.
 
   const onMenuItemClick = value => {
-    if (value === "view_student") {
-      props.history.push("/view-students");
+    console.log(value, "---", props.history);
+    if (value === "remove_teacher") {
+      props.history.push("/remove_teacher");
     } else {
       props.history.push("/some-random-link");
     }
@@ -143,7 +144,11 @@ const Member = props => {
         <DetailsWrapper>
           <Details>
             <SubHeading>{props.name}</SubHeading>
-            {props.type !== "student" && <Text>{props.type}</Text>}
+            {props.type !== "student" && (
+              <Text>
+                <Capitalize>{props.type}</Capitalize>
+              </Text>
+            )}
           </Details>
           {props.viewType === "instructorsView" && (
             <DropDownMenu menuOptions={menuOptions} />
