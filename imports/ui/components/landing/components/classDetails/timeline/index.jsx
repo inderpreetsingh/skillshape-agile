@@ -15,7 +15,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 const calculateElapsedTime = startTime => {
   // startTime is expected to be a date Obj with proper Time information stored in it
   if (startTime) {
-    const startTimeMoment = moment(new Date("2020-09-11"));
+    const startTimeMoment = moment(new Date());
     const currentTimeMoment = moment(new Date());
     return startTimeMoment.diff(currentTimeMoment, "minutes");
   }
