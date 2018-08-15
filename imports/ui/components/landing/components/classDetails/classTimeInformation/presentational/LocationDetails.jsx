@@ -32,11 +32,11 @@ const Wrapper = styled.div`
   min-height: 200px;
   height: auto;
 
-  @media screen and (min-width: ${mobile}px) {
+  @media screen and (min-width: ${mobile + 1}px) {
     flex-direction: row;
   }
 
-  @media screen and (min-width: ${mobile}px) and (max-width: ${tablet}px) {
+  @media screen and (min-width: ${mobile + 1}px) and (max-width: ${tablet}px) {
     height: 200px;
   }
 
@@ -50,7 +50,7 @@ const Left = styled.div`
   padding: 0;
   margin-bottom: ${rhythmDiv}px;
 
-  @media screen and (min-width: ${mobile}px) {
+  @media screen and (min-width: ${mobile + 1}px) {
     padding: ${rhythmDiv * 2}px;
     max-width: 50%;
     width: 100%;
@@ -78,13 +78,13 @@ const LeftInnerWrapper = styled.div`
 
 const Right = styled.div`
   max-width: 100%;
+  width: 100%;
   height: 300px;
   margin-bottom: ${rhythmDiv}px;
 
-  @media screen and (min-width: ${mobile}px) {
+  @media screen and (min-width: ${mobile + 1}px) {
     height: 100%;
     max-width: 50%;
-    width: 100%;
   }
 `;
 

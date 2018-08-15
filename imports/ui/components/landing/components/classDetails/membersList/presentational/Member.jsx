@@ -2,31 +2,44 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { withStyles } from "material-ui/styles";
-import MoreVert from "material-ui-icons/MoreVert";
-import IconButton from "material-ui/IconButton";
+import { withRouter } from "react-router";
+import MemberExpanded from "./MemberExpanded.jsx";
 
 import {
   Text,
   SubHeading,
   Capitalize
 } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-import MemberExpanded from "./MemberExpanded.jsx";
+
+import DropDownMenu from "/imports/ui/components/landing/components/form/DropDownMenu.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
-const styles = {
-  iconButton: {
-    color: helpers.black,
-    cursor: "pointer",
-    width: 8,
-    height: 24,
-    fontSize: helpers.baseFontSize
+// const styles = {
+//   iconButton: {
+//     color: helpers.black,
+//     cursor: "pointer",
+//     width: 8,
+//     height: 24,
+//     fontSize: helpers.baseFontSize
+//   },
+//   icon: {
+//     height: 24,
+//     width: 24
+//   }
+// };
+//
+const menuOptions = [
+  {
+    name: "Evaluate",
+    value: "evalute"
   },
-  icon: {
-    height: 24,
-    width: 24
+  {
+    name: "View Student",
+    value: "view_student"
   }
-};
+];
 
 const Wrapper = styled.div`
   background: ${helpers.panelColor};
@@ -115,6 +128,14 @@ const Member = props => {
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.
 
+  const onMenuItemClick = value => {
+    if (value === "view_student") {
+      props.history.push("/view-students");
+    } else {
+      props.history.push("/some-random-link");
+    }
+  };
+
   return (
     <Wrapper type="default">
       <Profile type="default">
@@ -125,14 +146,7 @@ const Member = props => {
             {props.type !== "student" && <Text>{props.type}</Text>}
           </Details>
           {props.viewType === "instructorsView" && (
-            <IconButton
-              classes={{
-                root: props.classes.iconButton,
-                icon: props.classes.icon
-              }}
-            >
-              <MoreVert />
-            </IconButton>
+            <DropDownMenu menuOptions={menuOptions} />
           )}
         </DetailsWrapper>
       </Profile>
@@ -146,4 +160,4 @@ Member.propTypes = {
   type: PropTypes.string //type can be student, teacher
 };
 
-export default withStyles(styles)(Member);
+export default withRouter(Member);

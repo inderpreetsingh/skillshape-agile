@@ -28,6 +28,16 @@ const Wrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
+const ActivitiesWrapper = styled.div`
+  height: ${props => props.length}px;
+
+  @media screen and (min-width: ${helpers.tablet}px) {
+    width: 100vw;
+    height: 320px;
+    display: flex;
+  }
+`;
+
 const Title = styled.div`
   /* prettier-ignore */
   ${helpers.flexHorizontalSpaceBetween}
@@ -89,9 +99,9 @@ class TimeLineContainer extends PureComponent {
     this.timeLineCounter = Meteor.setInterval(() => {
       const elapsedTime = (this.state.elapsedTime || eventElapsedTime) + 1;
       const eventCompleted = elapsedTime > totalEventTime ? true : false;
-      console.group("set interval , not running");
-      console.log("elapsedTime, eventCompleted, ", elapsedTime, eventCompleted);
-      console.groupEnd();
+      // console.group("set interval , not running");
+      // console.log("elapsedTime, eventCompleted, ", elapsedTime, eventCompleted);
+      // console.groupEnd();
       this.setState(state => {
         return {
           ...state,
@@ -140,8 +150,10 @@ class TimeLineContainer extends PureComponent {
         elapsedTime = 0;
       }
 
-      const currentActivityNodeLength = currentActivityTimeElapsed * 10;
-      const totalActivityLength = moduleData.time * 10;
+      // Getting the sizes in percent;
+      const totalActivityLength = (moduleData.time / totalEventTime) * 100;
+      const currentActivityNodeLength =
+        (currentActivityTimeElapsed / moduleData.time) * 100;
       const even = index % 2 == 0;
 
       return (
@@ -170,7 +182,9 @@ class TimeLineContainer extends PureComponent {
             <TotalTimeInMins>{totalEventTime} mins</TotalTimeInMins>
           </TotalTime>
         </Title>
-        {this.getClassModulesActivites()}
+        <ActivitiesWrapper length={totalEventTime * 10}>
+          {this.getClassModulesActivites()}
+        </ActivitiesWrapper>
       </Wrapper>
     );
   }
