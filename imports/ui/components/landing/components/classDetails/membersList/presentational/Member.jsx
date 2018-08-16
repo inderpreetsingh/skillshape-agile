@@ -16,20 +16,6 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
-// const styles = {
-//   iconButton: {
-//     color: helpers.black,
-//     cursor: "pointer",
-//     width: 8,
-//     height: 24,
-//     fontSize: helpers.baseFontSize
-//   },
-//   icon: {
-//     height: 24,
-//     width: 24
-//   }
-// };
-//
 const menuOptions = [
   {
     name: "Evaluate",
@@ -81,6 +67,7 @@ const ProfilePic = styled.div`
 const DetailsWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween};
   align-items: flex-start;
+  width: 100%;
   flex-shrink: 0;
 `;
 
@@ -143,7 +130,7 @@ const Member = props => {
         <ProfilePic src={props.profileSrc} />
         <DetailsWrapper>
           <Details>
-            <SubHeading>{props.name}</SubHeading>
+            <SubHeading fontSize="20">{props.name}</SubHeading>
             {props.type !== "student" && (
               <Text>
                 <Capitalize>{props.type}</Capitalize>

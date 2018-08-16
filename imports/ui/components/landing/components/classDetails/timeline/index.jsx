@@ -161,7 +161,7 @@ class TimeLineContainer extends PureComponent {
           {...moduleData}
           key={index}
           color={even ? helpers.primaryColor : helpers.information}
-          leftSide={even}
+          evenPosition={even}
           timeElapsedLength={currentActivityNodeLength}
           totalTimeLength={totalActivityLength}
         />

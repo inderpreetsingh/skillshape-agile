@@ -51,6 +51,8 @@ class DropDownMenu extends Component {
   };
 
   render() {
+    let rootClass,
+      iconClass = "";
     const { menu, anchorEl } = this.state;
     const {
       options,
@@ -58,8 +60,15 @@ class DropDownMenu extends Component {
       onMenuButtonClick,
       menuButton,
       menuOptions,
+      menuIconClass,
+      menuButtonClass,
       classes
     } = this.props;
+    rootClass = classes.iconButton;
+    iconClass = classes.icon;
+
+    if (menuButtonClass) rootClass = rootClass + " " + menuButtonClass;
+    if (menuIconClass) iconClass = iconClass + " " + menuIconClass;
     return (
       <div>
         {(menuButton && React.clone(menuButton)) || (
@@ -69,8 +78,8 @@ class DropDownMenu extends Component {
             aria-haspopup="true"
             onClick={this.handleClick}
             classes={{
-              root: classes.iconButton,
-              icon: classes.icon
+              root: rootClass,
+              icon: iconClass
             }}
           >
             <MoreVertIcon />

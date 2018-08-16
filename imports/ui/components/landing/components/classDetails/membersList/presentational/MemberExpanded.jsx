@@ -1,29 +1,30 @@
 import React from "react";
 import styled from "styled-components";
 import { withStyles } from "material-ui/styles";
-import IconButton from "material-ui/IconButton";
-import MoreVert from "material-ui-icons/MoreVert";
-import Icon from "material-ui/Icon";
 
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import SkillShapeButton from "/imports/ui/components/landing/components/buttons/SkillShapeButton.jsx";
+import DropDownMenu from "/imports/ui/components/landing/components/form/DropDownMenu.jsx";
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { formatDate } from "/imports/util/formatSchedule";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const styles = {
   iconButton: {
-    color: "white",
-    cursor: "pointer",
-    width: 8,
-    height: 24,
-    fontSize: helpers.baseFontSize
-  },
-  icon: {
-    height: 24,
-    width: 24
+    color: "white"
   }
 };
+
+const menuOptions = [
+  {
+    name: "Evaluate",
+    value: "evalute"
+  },
+  {
+    name: "View Student",
+    value: "view_student"
+  }
+];
 
 const Wrapper = styled.div`
   display: flex;
@@ -153,8 +154,31 @@ const ExpiryDate = Text.extend`
   font-style: italic;
 `;
 
+const onMenuItemClick = value => {
+  console.log(value, "---", props.history);
+  if (value === "remove_teacher") {
+    props.history.push("/remove_teacher");
+  } else {
+    props.history.push("/some-random-link");
+  }
+};
+
 const getStatusColor = status => {
-  return status == "checked in" ? helpers.caution : helpers.primaryColor;
+  if (status.checkedIn) {
+    return helpers.primaryColor;
+  }
+
+  return helpers.caution;
+};
+
+const getStatusInfo = status => {
+  if (status.checkedIn) {
+    return "Checked In";
+  } else if (!status.checkedIn && status.signedIn) {
+    return "Signed In";
+  }
+
+  return "Signed Out";
 };
 
 const PaymentAndStatus = props => (
@@ -182,10 +206,19 @@ const PaymentAndStatus = props => (
 const StatusOptions = props => (
   <StatusDetails>
     <ButtonWrapper>
-      <PrimaryButton noMarginBottom fullWidth label="Check in" />
+      <PrimaryButton
+        noMarginBottom
+        fullWidth
+        label={props.status.checkedIn ? "Check in" : "Check out"}
+      />
     </ButtonWrapper>
     <ButtonWrapper>
-      <SkillShapeButton noMarginBottom caution fullWidth label="Sign out" />
+      <SkillShapeButton
+        noMarginBottom
+        caution
+        fullWidth
+        label={props.status.signedIn ? "Sign out" : "Sign in"}
+      />
     </ButtonWrapper>
   </StatusDetails>
 );
@@ -201,18 +234,17 @@ const MemberExpanded = props => {
               <Text color="white" fontSize="18">
                 {props.name}
               </Text>
-              <Text color={getStatusColor(props.status)}>{props.status}</Text>
+              <Text color={getStatusColor(props.status)}>
+                {getStatusInfo(props.status)}
+              </Text>
             </MemberStatus>
           </MemberDetailsInner>
 
-          <IconButton
-            classes={{
-              root: props.classes.iconButton,
-              icon: props.classes.icon
-            }}
-          >
-            <MoreVert />
-          </IconButton>
+          <DropDownMenu
+            onMenuItemClick={onMenuItemClick}
+            menuButtonClass={props.classes.iconButton}
+            menuOptions={menuOptions}
+          />
         </MemberDetails>
 
         <ShowOnSmallScreen>

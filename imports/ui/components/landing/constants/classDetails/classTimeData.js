@@ -9,7 +9,7 @@ export const classTimeData = {
     "This class time is done under mr sudhir, who is taking this class at a particular time for over 4 years as of now",
   startDate: new Date("2018-08-13"),
   startTime: new Date("2018-08-13 23:45:00"),
-  totalEventTime: 60,
+  totalEventTime: 70,
   time: "11:40",
   timePeriod: "pm",
   address: "Appollo Bandar, Colaba, Mumbai, 400001",

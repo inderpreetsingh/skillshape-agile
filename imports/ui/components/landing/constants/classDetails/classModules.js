@@ -32,5 +32,10 @@ export const classModulesData = [
   {
     name: "Meditation",
     time: 10
+  },
+  {
+    name: "Technique",
+    time: 10,
+    type: "Escape the guard"
   }
 ];

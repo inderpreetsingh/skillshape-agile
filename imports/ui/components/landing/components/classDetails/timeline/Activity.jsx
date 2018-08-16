@@ -23,9 +23,9 @@ const InnerWrapper = styled.div`
   height: 100%;
 
   @media screen and (min-width: ${helpers.tablet}px) {
-    height: ${props => (props.leftSide ? "50%" : "calc(50% - 5px)")};
+    height: ${props => (props.evenPosition ? "50%" : "calc(50% - 5px)")};
     ${props =>
-      props.leftSide
+      props.evenPosition
         ? "flex-direction: column-reverse;"
         : "flex-direction: column; transform: translateY(100%);"} width: 100%;
     justify-content: flex-start;
@@ -42,17 +42,18 @@ const NodeDetails = styled.div`
   ${props => (props.show ? "opacity: 1" : "opacity: 0")};
   ${props => {
     if (props.show) {
-      return props.leftSide ? `left: 50%` : `right: 50%`;
+      return props.evenPosition ? `left: 50%` : `right: 50%`;
     }
 
-    return props.leftSide ? "left: 500px;" : "right: 500px";
+    return props.evenPosition ? "left: 500px;" : "right: 500px";
   }};
 
   @media screen and (min-width: ${helpers.tablet}px) {
     position: static;
     flex-direction: column;
     align-items: center;
-    justify-content: ${props => (props.leftSide ? "flex-end" : "flex-start")};
+    justify-content: ${props =>
+      props.evenPosition ? "flex-end" : "flex-start"};
     width: 100%;
   }
 `;
@@ -61,20 +62,23 @@ const ActivityDetails = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  align-items: ${props => (props.evenPosition ? "flex-start" : "flex-end")};
   padding: 0 ${helpers.rhythmDiv}px;
+
+  @media screen and (min-width: ${helpers.tablet}px) {
+    align-items: center;
+  }
 `;
 
 const ActivityName = Text.extend`
   font-weight: 400;
   font-size: 18px;
-  min-width: 100px;
-  white-space: no-wrap;
   font-style: italic;
+  text-transform: capitalize;
 
   @media screen and (min-width: ${helpers.tablet}px) {
-    min-width: auto;
-    flex-shrink: 0;
-    white-space: nowrap;
+    text-align: center;
+    width: fit-content;
   }
 `;
 
@@ -111,7 +115,7 @@ const TimeLineNodeWrapper = styled.div`
 
   @media screen and (min-width: ${helpers.tablet}px) {
     width: 100%;
-    // height: ${props => (props.leftSide ? "6px" : "5px")};
+    // height: ${props => (props.evenPosition ? "6px" : "5px")};
     height: 5px;
     flex-shrink: 0;
   }
@@ -143,23 +147,23 @@ class Activity extends PureComponent {
     const { props } = this;
     return (
       <Wrapper length={props.totalTimeLength}>
-        <InnerWrapper leftSide={props.leftSide}>
-          <TimeLineNodeWrapper leftSide={props.leftSide}>
+        <InnerWrapper evenPosition={props.evenPosition}>
+          <TimeLineNodeWrapper evenPosition={props.evenPosition}>
             <TimeLineNode
               color={props.color}
               length={props.timeElapsedLength}
             />
           </TimeLineNodeWrapper>
           <NodeDetails
-            leftSide={props.leftSide}
+            evenPosition={props.evenPosition}
             show={props.timeElapsedLength > 0}
           >
             <Attacher
-              show={props.leftSide}
+              show={props.evenPosition}
               color={props.timeElapsedLength ? props.color : helpers.black}
             />
 
-            <ActivityDetails>
+            <ActivityDetails evenPosition={props.evenPosition}>
               <Time
                 color={props.timeElapsedLength ? props.color : helpers.black}
               >
@@ -170,7 +174,7 @@ class Activity extends PureComponent {
             </ActivityDetails>
 
             <Attacher
-              show={!props.leftSide}
+              show={!props.evenPosition}
               color={props.timeElapsedLength ? props.color : helpers.black}
             />
           </NodeDetails>

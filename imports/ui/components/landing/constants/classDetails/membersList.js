@@ -25,7 +25,10 @@ export const membersList = [
     paymentData: {
       paymentInfo: "expired"
     },
-    status: "checked in"
+    status: {
+      signedIn: true,
+      checkedIn: true
+    }
   },
   {
     id: uuidv4(),
@@ -38,6 +41,9 @@ export const membersList = [
       paymentInfo: "on-going",
       expiryDate: new Date("2018-10-22")
     },
-    status: "checked in"
+    status: {
+      signedIn: true,
+      checkedIn: false
+    }
   }
 ];
