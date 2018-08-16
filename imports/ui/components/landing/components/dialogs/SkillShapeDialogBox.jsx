@@ -235,7 +235,11 @@ class SkillShapeDialogBox extends Component {
         <ButtonWrapper>
           <Button
             onClick={onAffirmationButtonClick || onModalClose}
-            className={fromPackageListing ? classes["ghostCommon"] + " " + classes[`ghost.success`] :this._getAffirmateButtonClasses()}
+            className={
+              fromPackageListing
+                ? classes["ghostCommon"] + " " + classes[`ghost.success`]
+                : this._getAffirmateButtonClasses()
+            }
           >
             {this._getAffirmateButtonText()}
           </Button>
@@ -303,7 +307,6 @@ class SkillShapeDialogBox extends Component {
     return (
       <MuiThemeProvider theme={muiTheme}>
         <Dialog
-          title="skillshape popup"
           open={open}
           onClose={onModalClose}
           onRequestClose={onModalClose}
