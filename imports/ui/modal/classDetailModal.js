@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import moment from "moment";
-import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
 import { formStyles } from "/imports/util";
 // import { blue500 } from 'material-ui/styles/colors';
@@ -17,7 +16,6 @@ import IconButton from "material-ui/IconButton";
 import ClearIcon from "material-ui-icons/Clear";
 import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
-import Grid from "material-ui/Grid";
 import { withStyles } from "material-ui/styles";
 
 import { ContainerLoader } from "/imports/ui/loading/container";
@@ -31,7 +29,6 @@ import {
   flexCenter,
   rhythmDiv
 } from "/imports/ui/components/landing/components/jss/helpers";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
 
 import "/imports/api/classInterest/methods";
 import "/imports/api/classTimes/methods";
@@ -52,7 +49,13 @@ import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo
 import Events from "/imports/util/events";
 import { imageExists } from "/imports/util";
 import * as settings from "/imports/ui/components/landing/site-settings.js";
-
+import Grid from 'material-ui/Grid';
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 const formStyle = formStyles();
 
 const styles = theme => {
@@ -74,7 +77,6 @@ const styles = theme => {
     dialogAction: {
       width: "100%",
       justifyContent: "space-between",
-      padding:helpers.rhythmDiv * 2
     },
     dialogTitle: {
       position: "relative"
@@ -112,13 +114,13 @@ const styles = theme => {
     iconWithDetailContainer: {
       display: "inline-flex",
       alignItems: "center",
-      marginTop:'10px'
+      marginTop: '10px'
     },
     bottomSpace: {
-      
+
     },
-    about:{
-      width:'100%',
+    about: {
+      width: '100%',
       fontSize: '21px',
       padding: '5px',
       backgroundColor: 'aliceblue'
@@ -126,11 +128,11 @@ const styles = theme => {
   };
 };
 
-const ButtonWrapper = styled.div`
-  width: 100%;
-  ${flexCenter}
-  padding: ${rhythmDiv}px 0px;
-`;
+// const ButtonWrapper = styled.div`
+//   width: 100%;
+//   ${flexCenter}
+//   padding: ${rhythmDiv}px 0px;
+// `;
 const InnerWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -553,7 +555,7 @@ class ClassDetailModal extends React.Component {
                     <EventName>
                       {`${classType && classType.name.toLowerCase()}: ${
                         eventData.name
-                      }`}
+                        }`}
                     </EventName>
                     {/* {this.formatScheduleType(eventData.scheduleType)} */}
                   </Event>
@@ -594,7 +596,7 @@ class ClassDetailModal extends React.Component {
                         <Italic>Time</Italic>
                       </Text>
                       <Text>
-                       
+
                         {/* timeUnits are added for mins,hours */}
                         {`${eventData.eventStartTime}`}
 
@@ -673,7 +675,7 @@ class ClassDetailModal extends React.Component {
               </center>
               <Grid container style={{ marginTop: "16px" }}>
                 {!isEmpty(classTypeData) && (
-                  <div style={{ backgroundColor: "" }}>
+                  <div style={{ backgroundColor: "", width: '100%' }}>
                     <Heading marginTop={helpers.rhythmDiv} textTransform="none">
                       This class is part of this Series:
                     </Heading>
@@ -683,6 +685,7 @@ class ClassDetailModal extends React.Component {
                         withSlider={false}
                         classTimesData={[classTypeData]}
                         classInterestData={classInterestData}
+
                       />
                     </div>
                   </div>
@@ -691,7 +694,7 @@ class ClassDetailModal extends React.Component {
                   {/*<Typography component="p" style={{marginBottom:'20px'}}>
       							{classType && classType.desc}
                   </Typography>*/}
-                <center className={classes.about}> <i>{` About ${classType.name}`}</i></center>
+                  <center className={classes.about}> <i>{` About ${classType.name}`}</i></center>
                   <IconsWrapper>
                     <IconsRowWrapper>
                       <div
@@ -710,7 +713,7 @@ class ClassDetailModal extends React.Component {
                           </Icon>
                         </div>
                         <div>
-                          
+
                           <Text>{school && school.name}</Text>
                         </div>
                       </div>
@@ -753,11 +756,11 @@ class ClassDetailModal extends React.Component {
                             </Icon>
                           </div>
                           <div>
-                           
+
                             <Text>
                               {location &&
                                 `${location.address}, ${location.city}, ${
-                                  location.state
+                                location.state
                                 }`}
                             </Text>
                           </div>
@@ -771,7 +774,7 @@ class ClassDetailModal extends React.Component {
                         <MetaInfo
                           data={`  ${classTypeData.ageMin} to ${
                             classTypeData.ageMax
-                          }`}
+                            }`}
                           title={"Age:" + " "}
                         />
                       )}
@@ -785,26 +788,26 @@ class ClassDetailModal extends React.Component {
                       )}
 
                     {classTypeData &&
-                    classTypeData.experienceLevel &&
-                    classTypeData.experienceLevel == "All" ? (
-                      <MetaInfo
-                        data={"  All levels are welcome"}
-                        title={"Experience:  " + " "}
-                      />
-                    ) : (
-                      <MetaInfo
-                        data={`  ${classTypeData.experienceLevel}`}
-                        title={"Experience:  " + " "}
-                      />
-                    )}
+                      classTypeData.experienceLevel &&
+                      classTypeData.experienceLevel == "All" ? (
+                        <MetaInfo
+                          data={"  All levels are welcome"}
+                          title={"Experience:  " + " "}
+                        />
+                      ) : (
+                        <MetaInfo
+                          data={`  ${classTypeData.experienceLevel}`}
+                          title={"Experience:  " + " "}
+                        />
+                      )}
                     {classType &&
                       classType.desc && (
                         <MetaInfo
-                        data={`  ${classType.desc}`}
-                        title={"Description:" }
-                        marginBottom={16}
-                      />
-                      
+                          data={`  ${classType.desc}`}
+                          title={"Description:"}
+                          marginBottom={16}
+                        />
+
                       )}
                   </Grid>
                   {/*<Grid item xs={6}>
@@ -826,7 +829,7 @@ class ClassDetailModal extends React.Component {
                 </Grid>
 
                 {!isEmpty(allFormattedClassTimeDetails) && (
-                  <div style={{ backgroundColor: "aliceblue" }}>
+                  <div style={{ backgroundColor: "aliceblue", width: '100%' }}>
                     <Heading marginTop={helpers.rhythmDiv} textTransform="none">
                       More class times for{" "}
                       <Capitalize>{classType.name.toLowerCase()}</Capitalize>
@@ -837,6 +840,7 @@ class ClassDetailModal extends React.Component {
                         withSlider={false}
                         classTimesData={allFormattedClassTimeDetails}
                         classInterestData={classInterestData}
+
                       />
                     </div>
                   </div>
@@ -844,7 +848,7 @@ class ClassDetailModal extends React.Component {
               </Grid>
 
               <DialogActions className={classes.dialogAction}>
-                <ClassTimeButton
+                {/* <ClassTimeButton
                   fullWidth
                   label="View Class"
                   noMarginBottom
@@ -868,7 +872,35 @@ class ClassDetailModal extends React.Component {
                   onClick={() => {
                     this.props.closeEventModal(false, null);
                   }}
-                />
+                /> */}
+                <Grid style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <ButtonWrapper>
+                    <FormGhostButton
+                      label="View Class"
+                      onClick={() =>
+                        this.goToClassTypePage(
+                          classType.name,
+                          eventData.classTypeId
+                        )
+                      }
+                    />
+                  </ButtonWrapper>
+                  <ButtonWrapper>
+                    <FormGhostButton
+                      label="View School"
+                      onClick={() => this.goToSchoolPage(school)}
+                    />
+                  </ButtonWrapper>
+                  <ButtonWrapper>
+                    <FormGhostButton
+                      darkGreyColor
+                      label="Close"
+                      onClick={() => {
+                        this.props.closeEventModal(false, null);
+                      }}
+                    />
+                  </ButtonWrapper>
+                </Grid>
               </DialogActions>
 
               {/*fullScreen && (
@@ -926,18 +958,27 @@ class ClassDetailModal extends React.Component {
             Do You Really want to remove this event from your Calendar.
           </ConfirmationDialog>
           <DialogActions>
-            <Button
+            {/* <Button
               color="primary"
               onClick={() => this.setState({ removeFromCalendarPopUp: false })}
             >
               Cancel
-            </Button>
-            <Button
+            </Button> */}
+            <FormGhostButton
+              darkGreyColor
+              label="Cancel"
+              onClick={() => this.setState({ removeFromCalendarPopUp: false })}
+            />
+            {/* <Button
               color="primary"
               onClick={() => this.handleRemoveFromMyCalendar(this.props)}
             >
               Ok
-            </Button>
+            </Button> */}
+            <FormGhostButton
+              label="Ok"
+              onClick={() => this.handleRemoveFromMyCalendar(this.props)}
+            />
           </DialogActions>
         </Dialog>
         <Dialog
@@ -952,18 +993,26 @@ class ClassDetailModal extends React.Component {
             Permanently delete this event from the class time.
           </ConfirmationDialog>
           <DialogActions>
-            <Button
+            {/* <Button
               color="primary"
               onClick={() => this.setState({ permanentlyRemove: false })}
             >
               Cancel
-            </Button>
-            <Button
+            </Button> */}
+            <FormGhostButton
+              label=" Cancel"
+              onClick={() => this.setState({ permanentlyRemove: false })}
+            />
+            {/* <Button
               color="primary"
               onClick={() => this.handlePermanentlyRemove(this.props)}
             >
               Ok
-            </Button>
+            </Button> */}
+            <FormGhostButton
+              label="Ok"
+              onClick={() => this.handlePermanentlyRemove(this.props)}
+            />
           </DialogActions>
         </Dialog>
       </Dialog>

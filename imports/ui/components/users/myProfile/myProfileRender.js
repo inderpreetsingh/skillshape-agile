@@ -25,7 +25,7 @@ import { validateImage } from "/imports/util";
 import { Loading } from "/imports/ui/loading";
 import config from "/imports/config";
 import { ContainerLoader } from "/imports/ui/loading/container";
-
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import MediaUpload from "/imports/ui/componentHelpers/mediaUpload";
 import IconInput from "/imports/ui/components/landing/components/form/IconInput";
 
@@ -262,9 +262,13 @@ export default function() {
                         />
 
                         <SaveBtnWrapper>
-                          <Button type="submit" color="accent" raised dense>
+                          {/* <Button type="submit" color="accent" raised dense>
                             Save
-                          </Button>
+                          </Button> */}
+                          <FormGhostButton
+                          type="submit"
+                          label='Save'
+                          />
                         </SaveBtnWrapper>
                         {this.state.errorText && (
                           <ErrorWrapper>{this.state.errorText}</ErrorWrapper>
