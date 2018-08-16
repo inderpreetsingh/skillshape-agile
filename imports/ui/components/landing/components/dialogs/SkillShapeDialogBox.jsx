@@ -235,8 +235,7 @@ class SkillShapeDialogBox extends Component {
         <ButtonWrapper>
           <Button
             onClick={onAffirmationButtonClick || onModalClose}
-            className={this._getAffirmateButtonClasses()}
-            style={{backgroundColor:`${fromPackageListing && 'rgb(76, 175, 80)'}`}}
+            className={fromPackageListing ? classes["ghostCommon"] + " " + classes[`ghost.success`] :this._getAffirmateButtonClasses()}
           >
             {this._getAffirmateButtonText()}
           </Button>
@@ -246,7 +245,6 @@ class SkillShapeDialogBox extends Component {
             <Button
               onClick={onCloseButtonClick || onModalClose}
               className={this._getCancelButtonClasses()}
-              style={{backgroundColor:`${fromPackageListing && 'yellow'}`}}
             >
               {this._getCancelButtonText()}
             </Button>

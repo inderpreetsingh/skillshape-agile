@@ -11,6 +11,7 @@ import Typography from "material-ui/Typography";
 import Checkbox from "material-ui/Checkbox";
 import { withStyles } from "material-ui/styles";
 import { MuiThemeProvider } from "material-ui/styles";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
@@ -221,24 +222,36 @@ class TaggedMemberDialogBox extends Component {
                 xs={12}
                 style={{ display: "flex", justifyContent: "space-between" }}
               >
-                <Button style={{ backgroundColor: "#ffd740" }}>
+                {/* <Button style={{ backgroundColor: "#ffd740" }}>
                   Report as inappropriate
-                </Button>
+                </Button> */}
+                <FormGhostButton
+                  darkGreyColor
+                  label='Report as inappropriate'
+                />
                 {this.state.error && (
                   <ErrorWrapper>{this.state.error}</ErrorWrapper>
                 )}
                 {Meteor.userId() == currentMediaData.createdBy ? (
-                  <Button
-                    style={{ backgroundColor: "#4caf50" }}
+                  // <Button
+                  //   style={{ backgroundColor: "#4caf50" }}
+                  //   onClick={this.props.openEditTaggedModal}
+                  // >
+                  //   Edit
+                  // </Button>
+                  <FormGhostButton
+                    label='Edit'
                     onClick={this.props.openEditTaggedModal}
-                  >
-                    Edit
-                  </Button>
+                  />
                 ) : (
-                  <Button type="submit" style={{ backgroundColor: "#ffd740" }}>
-                    Save
-                  </Button>
-                )}
+                    // <Button type="submit" style={{ backgroundColor: "#ffd740" }}>
+                    //   Save
+                    // </Button>
+                    <FormGhostButton
+                      type='submit'
+                      label='Save'
+                    />
+                  )}
               </Grid>
             </Grid>
           </form>

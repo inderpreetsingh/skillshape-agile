@@ -12,7 +12,7 @@ import red from "material-ui/colors/red";
 import ShareIcon from "material-ui-icons/Share";
 import ExpandMoreIcon from "material-ui-icons/ExpandMore";
 import MoreVertIcon from "material-ui-icons/MoreVert";
-
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import Typography from "material-ui/Typography";
 import Paper from "material-ui/Paper";
 import Grid from "material-ui/Grid";
@@ -177,6 +177,7 @@ export default function() {
             >
               {settings.mainPanelHeader.actions.buttonTitle}
             </Button>
+          
           </Grid>
         </Grid>
       </Paper>

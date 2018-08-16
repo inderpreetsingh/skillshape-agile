@@ -8,10 +8,8 @@ import ClearIcon from 'material-ui-icons/Clear';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import { MuiThemeProvider } from 'material-ui/styles';
-import styled from 'styled-components';
 import IconInput from '../form/IconInput.jsx';
 import School from '/imports/api/school/fields.js'
-import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
@@ -24,6 +22,13 @@ import Dialog, {
 import EnrollmentFeeForm from '/imports/ui/components/schoolView/editSchool/priceDetails/enrollmentFee/enrollmentFeeForm'
 import ClassPackageForm from '/imports/ui/components/schoolView/editSchool/priceDetails/classPrice/classPriceForm'
 import MonthlyPackageForm from '/imports/ui/components/schoolView/editSchool/priceDetails/monthlyPrice/monthlyPriceForm.js'
+import Grid from 'material-ui/Grid';
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   width: 100%;
@@ -78,7 +83,7 @@ class PackageAddNew extends React.Component {
                          the package that you want to add to this class time.
                         </DialogContent>
                     <DialogActions classes={{ action: this.props.classes.dialogAction }}>
-                        <ClassTimeButton
+                        {/* <ClassTimeButton
                             fullWidth
                             label="Enrollment Package"
                             noMarginBottom
@@ -98,7 +103,27 @@ class PackageAddNew extends React.Component {
                             noMarginBottom
                             label="Monthly Package"
                             onClick={() => { this.setState({monthlyPackageForm:true})  }}
-                        />
+                        /> */}
+                          <Grid style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <ButtonWrapper>
+                            <FormGhostButton
+                                onClick={() => { this.setState({enrollmentFeeForm:true})}}
+                                label="Enrollment Package"
+                            />
+                        </ButtonWrapper>
+                        <ButtonWrapper>
+                            <FormGhostButton
+                                onClick={() => { this.setState({classPackageForm:true}) }}
+                                label="Class Package"
+                            />
+                        </ButtonWrapper>
+                        <ButtonWrapper>
+                            <FormGhostButton
+                                onClick={() => { this.setState({monthlyPackageForm:true})  }}
+                                label="Monthly Package"
+                            />
+                        </ButtonWrapper>
+                        </Grid>
                     </DialogActions>
 
                 </Dialog>

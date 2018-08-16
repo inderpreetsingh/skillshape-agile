@@ -12,11 +12,9 @@ import School from '/imports/api/school/fields.js'
 import ClearIcon from 'material-ui-icons/Clear';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import styled from 'styled-components';
 import { createContainer } from "meteor/react-meteor-data";
 import { MuiThemeProvider } from 'material-ui/styles';
 import IconInput from '../form/IconInput.jsx';
-import * as helpers from '../jss/helpers.js';
 import { normalizeMonthlyPricingData } from "/imports/util";
 import muiTheme from '../jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
@@ -32,6 +30,13 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import { maximumClasses } from '/imports/util';
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
+import Grid from 'material-ui/Grid';
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 const Wrapper = styled.div`
   ${helpers.flexCenter} justify-content: space-between;
 
@@ -48,8 +53,8 @@ const OuterWrapper = styled.div`
   color: ${helpers.textColor};
   z-index: 1;
   position: relative;
-  margin: 5px 0px 13px 0px;
-
+  margin-bottom: 16px;
+  background-color:'#e1e1e1';
   @media screen and (max-width: ${helpers.mobile}px) {
     border-radius: ${helpers.rhythmDiv}px;
 
@@ -70,15 +75,6 @@ const OuterWrapper = styled.div`
     opacity: ${props => (props.forIframes ? 0.1 : 1)};
     border-radius: ${helpers.rhythmDiv * 6}px;
   }
-`;
-const MonthlyPackageBackground = styled.div`
-background-color: #f5f5f5;
-`;
-const ClassPackageBackground = styled.div`
-background-color: #ebf7ee;
-`;
-const EnrollmentPackageBackground = styled.div`
-background-color: #e1e1e1;
 `;
 const Title = styled.h3`
   font-size: 12px;
@@ -109,7 +105,6 @@ const TitleForPackageType = styled.h2`
 const Body = styled.section`
   padding: ${helpers.rhythmDiv}px;
 `;
-
 const ClassDetailsSection = styled.div`
   ${helpers.flexDirectionColumn} max-width: 65%;
   padding-right: ${helpers.rhythmDiv}px;
@@ -160,6 +155,7 @@ const NoOfClasses = styled.p`
 const CenterConnect = styled.div`
 display: flex;
 justify-content: space-around;
+margin-top:'5px';
 `;
 const AddToCartSection = styled.div`
   margin-left: ${helpers.rhythmDiv * 2}px;
@@ -174,11 +170,14 @@ const DialogTitleWrapper = styled.div`
   width: 100%;
 `;
 
+const DialogActionWrapper= styled.div`
+background-color:'#e1e1e1';
+`;
 
 const SinglePackage = styled.div`
 border: 2px solid black;
 border-radius: 10px;
-margin-bottom: 5px;
+margin-bottom: 10px;
 padding: 5px;
 `;
 
@@ -485,7 +484,8 @@ class PackageListingAttachment extends React.Component {
           aria-labelledby="Package Listing"
         >
           {this.props.isLoading && <ContainerLoader />}
-          <DialogTitle>
+          <DialogTitle style={{backgroundColor:'#e1e1e1'}}>
+           
             <DialogTitleWrapper>
               Connect To Packages
            <IconButton color="primary" onClick={() => { this.props.onClose() }}>
@@ -493,24 +493,20 @@ class PackageListingAttachment extends React.Component {
               </IconButton >
             </DialogTitleWrapper>
           </DialogTitle>
-          <DialogContent>
-            <MonthlyPackageBackground>
+          
+          <DialogContent style={{backgroundColor:'#e1e1e1'}} >
               <TitleForPackageType>Monthly Packages</TitleForPackageType>
               {!isEmpty(monthlyPackageData) && monthlyPackageData.map((current, index) => {
                 current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
                 current.packageType = 'MP';
                 return this.Package(current, index)
               })}
-            </MonthlyPackageBackground>
-            <EnrollmentPackageBackground>
               <TitleForPackageType>Enrollment Packages</TitleForPackageType>
               {!isEmpty(enrollmentFee) && enrollmentFee.map((current, index) => {
                 current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
                 current.packageType = 'EP';
                 return this.Package(current, index)
               })}
-            </EnrollmentPackageBackground>
-            <ClassPackageBackground>
               <TitleForPackageType>Class Packages</TitleForPackageType>
               {!isEmpty(perClass) && perClass.map((current, index) => {
                 current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
@@ -518,18 +514,26 @@ class PackageListingAttachment extends React.Component {
                 current.classPackages = true;
                 return this.Package(current, index)
               })}
-            </ClassPackageBackground>
+            
           </DialogContent>
-          <DialogActions classes={{ action: this.props.classes.dialogAction }}>
+          <DialogActions classes={{ action: this.props.classes.dialogAction }} style={{backgroundColor:'#e1e1e1',margin:'0px 0px'}}>
             <CenterConnect>
-              <ClassTimeButton
+              {/* <ClassTimeButton
                 noMarginBottom
                 label="Connect"
                 onClick={() => { this.setState({ showConfirmationModal: true }) }}
-              />
+              /> */}
+              <Grid style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <ButtonWrapper>
+                  <FormGhostButton
+                    onClick={() => { this.setState({ showConfirmationModal: true }) }}
+                    label="Connect"
+                  />
+                </ButtonWrapper>
+
+              </Grid>
             </CenterConnect>
           </DialogActions>
-
         </Dialog>
       </MuiThemeProvider>
     )

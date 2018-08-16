@@ -16,15 +16,19 @@ const styles = {
     marginTop: '10px',
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
+    backgroundColor: "transparent",
     fontWeight: 400,
     minWidth:"0px",
-    backgroundColor:helpers.primaryColor,
+    border: "1px solid",
+    borderColor: helpers.primaryColor,
+    
+    textTransform: "none",
     '&:hover': {
       backgroundColor: helpers.primaryColor,
     },
   },
   primaryButtonLabel: {
-    color: helpers.lightTextColor,
+    color: 'black',
     textTransform: 'none',
   },
   fullWidth: {

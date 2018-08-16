@@ -18,6 +18,8 @@ const styles = {
     borderColor: helpers.primaryColor,
     color: helpers.primaryColor,
     textTransform: "none",
+    whiteSpace: 'nowrap',
+    marginRight:'10px',
     "&:hover": {
       backgroundColor: helpers.primaryColor,
       color: "white"
