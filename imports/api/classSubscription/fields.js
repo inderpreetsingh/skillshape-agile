@@ -46,9 +46,18 @@ export const ClassSubscriptionSchema = new SimpleSchema({
     type: String,
     optional: true
   },
+  emailId: {
+    type: String,
+    optional: true
+  },
   monthCounter:{
     type: Number,
     optional: true
+  },
+  subscriptionCancelResponse:{
+    type: Object,
+    optional: true,
+    blackbox: true
   }
 });
 

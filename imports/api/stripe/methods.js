@@ -256,12 +256,14 @@ Meteor.methods({
         _id: userId,
         stripeCusId: { $exists: true }
       });
+      console.log("currentUserProfile",currentUserProfile)
+      let emailId=currentUserProfile.emails.address;
       //find stripeCusId from users or create a new one and store in the users collection
       if (currentUserProfile) {
         stripeCusId = currentUserProfile.stripeCusId;
       } else {
         let stripeCustomer = await stripe.customers.create({
-          description: Meteor.user().emails[0].address,
+          description: emailId,
           source: token
         });
         stripeCusId = stripeCustomer.id;
@@ -289,7 +291,7 @@ Meteor.methods({
         packageName,
         schoolId,
         subscriptionRequest,
-        monthCounter:0
+        emailId
       };
       // insert subscription  progress in classSubscription
       subscriptionDbId = ClassSubscription.insert(payload);

@@ -533,7 +533,7 @@ export default class SchoolViewBase extends React.Component {
             currency: currency,
             locale: "auto",
             token: function (token) {
-              popUp.appear("warning", { title: "Wait", content: "Please wait transaction in Progress" });
+              popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress" });
               //toastr.success("Please wait transaction in Progress", "Success");
               if (packageType == "CP" || packageType == "EP") {
                 Meteor.call(
@@ -608,7 +608,7 @@ export default class SchoolViewBase extends React.Component {
                   monthlyPymtDetails,
                   (err, res) => {
                     if (res) {
-                      popUp.appear("warning", { title: "Success", content: `Subscription successfully subscribed` });
+                      popUp.appear("success", { title: "Success", content: `Subscription successfully subscribed` });
 
                       // toastr.success(
                       //   `Subscription successfully subscribed`,

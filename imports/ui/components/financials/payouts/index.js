@@ -42,10 +42,10 @@ class Payouts extends React.Component {
                 return (
                   <TableRow key={purchase._id} selectable={false}>
                     <TableCell style={style.w150}>
-                      {"$" + purchase.stripeRequest.destination.amount / 100}
+                      {"$" + purchase && purchase.stripeRequest && purchase.stripeRequest.destination.amount / 100}
                     </TableCell>
                     <TableCell style={style.w211}>
-                      {purchase.stripeRequest.destination.account}
+                      {purchase && purchase.stripeRequest && purchase.stripeRequest.destination.account}
                     </TableCell>
                     <TableCell style={style.w150}>
                       {dateFriendly(

@@ -45,10 +45,6 @@ export { material_ui_next_theme } from "./theme";
 export { componentLoader } from "./loading";
 export { dateFriendly } from './dateFriendly';
 export { openMailToInNewTab } from './openInNewTabHelpers';
-<<<<<<< HEAD
-export { goToSchoolPage, goToClassTypePage, checkForAddToCalender } from './handleRedirect.js';
-=======
 export { goToSchoolPage, goToClassTypePage, checkForAddToCalender } from './handleRedirect.js';
 export {maximumClasses} from './maximumClasses.js'
 export {normalizeMonthlyPricingData} from './packageFormat.js'
->>>>>>> a1a316c7f784a448d18238b464c45b88d2061df5

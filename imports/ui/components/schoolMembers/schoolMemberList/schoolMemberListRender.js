@@ -3,8 +3,6 @@ import Avatar from "material-ui/Avatar";
 import List, { ListItem, ListItemText } from "material-ui/List";
 import Typography from "material-ui/Typography";
 import Grid from "material-ui/Grid";
-<<<<<<< HEAD
-=======
 
 {
   /*
@@ -13,7 +11,6 @@ import Grid from "material-ui/Grid";
 3.Change letter with the pic.
 */
 }
->>>>>>> a1a316c7f784a448d18238b464c45b88d2061df5
 export default function(props) {
   const { src, collectionData } = props;
   const membersByName = _.groupBy(collectionData && collectionData, function(

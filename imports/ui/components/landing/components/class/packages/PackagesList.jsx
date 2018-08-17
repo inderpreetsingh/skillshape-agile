@@ -147,11 +147,7 @@ const PackagesList = props => {
   const classPackagesEmpty = isEmpty(props.perClassPackagesData);
   const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
   const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
-<<<<<<< HEAD
   const schoolCurrency=props.currency;
-=======
-  const schoolCurrency = props.currency;
->>>>>>> a1a316c7f784a448d18238b464c45b88d2061df5
   return (
     <Fragment>
       {props.enrollMentPackages &&

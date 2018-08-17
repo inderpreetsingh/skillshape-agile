@@ -230,16 +230,6 @@ const Package = props => (
             <NoOfClasses>{props.cost && "For Enrollment"}</NoOfClasses>
           </PriceSection>
         )}
-<<<<<<< HEAD
-
-        <AddToCartSection>
-          {/* <a
-            href={`https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${
-              Meteor.settings.public.stripeClientId
-            }&scope=read_write`}
-          > */}
-         
-=======
         {props.onSchoolEdit ? 
           <EditButton 
           label={'Edit'}
@@ -249,7 +239,6 @@ const Package = props => (
           }}
           />
           :  <AddToCartSection>
->>>>>>> a1a316c7f784a448d18238b464c45b88d2061df5
           <Cart
             onClick={() =>
               props.onAddToCartIconButtonClick(

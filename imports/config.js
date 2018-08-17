@@ -72,7 +72,6 @@ export default (config = Object.freeze({
   ],
   defaultCurrency: "$",
   currency: [
-<<<<<<< HEAD
     { label: "USD", value: "$" ,multiplyFactor: 100},
     { label: "INR", value: "₹" ,multiplyFactor: 100},
     { label: "EUR", value: "€" ,multiplyFactor: 100},
@@ -83,17 +82,6 @@ export default (config = Object.freeze({
     { label: "KRW", value: "₩" ,multiplyFactor: 100},
     { label: "BRL", value: "R$" ,multiplyFactor: 100},
 
-=======
-    { label: "USD", value: "$" },
-    { label: "INR", value: "₹" },
-    { label: "EUR", value: "€" },
-    { label: "GBP", value: "£" },
-    { label: "CAD", value: "C$" },
-    { label: "AUD", value: "A$" },
-    { label: "JPY", value: "¥" },
-    { label: "KRW", value: "₩" },
-    { label: "BRL", value: "R$" }
->>>>>>> a1a316c7f784a448d18238b464c45b88d2061df5
   ],
   duration: [
     { label: "Minutes", value: "Minutes" },
