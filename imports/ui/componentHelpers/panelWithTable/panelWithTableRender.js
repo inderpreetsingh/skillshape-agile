@@ -62,7 +62,7 @@ const ButtonWrapper = styled.div`
   // ${props => (props.left ? `margin-right: ${rhythmDiv * 2}px;` : "")};
 `;
 
-export default function() {
+export default function () {
   const {
     classes,
     className,
@@ -177,7 +177,7 @@ export default function() {
             >
               {settings.mainPanelHeader.actions.buttonTitle}
             </Button>
-          
+
           </Grid>
         </Grid>
       </Paper>
@@ -264,13 +264,13 @@ export default function() {
                       item
                       md={
                         settings.mainPanelHeader.showImageUpload ||
-                        settings.mainPanelHeader.showAddressOnMap
+                          settings.mainPanelHeader.showAddressOnMap
                           ? 8
                           : 12
                       }
                       sm={
                         settings.mainPanelHeader.showImageUpload ||
-                        settings.mainPanelHeader.showAddressOnMap
+                          settings.mainPanelHeader.showAddressOnMap
                           ? 6
                           : 12
                       }
@@ -332,13 +332,13 @@ export default function() {
                                               )}
                                           </div>
                                         ) : (
-                                          <span>
-                                            {this.displayFieldValue(
-                                              field,
-                                              tableData
-                                            )}
-                                          </span>
-                                        )}
+                                            <span>
+                                              {this.displayFieldValue(
+                                                field,
+                                                tableData
+                                              )}
+                                            </span>
+                                          )}
                                       </div>
                                     </Grid>
                                   </Fragment>
@@ -349,7 +349,7 @@ export default function() {
                         <ButtonsWrapper>
                           {settings.mainTable.actions.del && (
                             <ButtonWrapper left>
-                              <Button
+                              {/* <Button
                                 onClick={() => {
                                   this.setState(state => {
                                     return {
@@ -365,11 +365,25 @@ export default function() {
                               >
                                 <Delete style={{ marginRight: 2 }} />
                                 {settings.mainTable.actions.del.title}
-                              </Button>
+                              </Button> */}
+                              <FormGhostButton
+                                alertColor
+                                onClick={() => {
+                                  this.setState(state => {
+                                    return {
+                                      ...state,
+                                      formData: tableData
+                                    };
+                                  });
+                                  this.showDeleteConfirmationModal();
+                                }}
+                                label={settings.mainTable.actions.del.title}
+
+                              />
                             </ButtonWrapper>
                           )}
                           <ButtonWrapper right>
-                            <Button
+                            {/* <Button
                               onClick={() =>
                                 this.setState({
                                   showForm: true,
@@ -382,7 +396,17 @@ export default function() {
                             >
                               <Edit style={{ marginRight: 2 }} />
                               {settings.mainTable.actions.edit.title}
-                            </Button>
+                            </Button> */}
+                            <FormGhostButton
+                              onClick={() =>
+                                this.setState({
+                                  showForm: true,
+                                  formData: tableData
+                                })
+                              }
+                              label={settings.mainTable.actions.edit.title}
+
+                            />
                           </ButtonWrapper>
                         </ButtonsWrapper>
                       </div>
@@ -419,7 +443,7 @@ export default function() {
                           showVideoOption={false}
                         />
 
-                        <Button
+                        {/* <Button
                           onClick={() =>
                             this.props.handleImageSave(
                               tableData.schoolId,
@@ -432,38 +456,50 @@ export default function() {
                           raised
                         >
                           Save
-                        </Button>
+                        </Button> */}
+                        <div style={{marginLeft:'28%'}}>
+                        <FormGhostButton
+                          onClick={() =>
+                            this.props.handleImageSave(
+                              tableData.schoolId,
+                              tableData._id
+                            )
+                          }
+                          label="Save"
+                          
+                        />
+                        </div>
                       </Grid>
                     )}
                     {(settings.childTable ||
                       this.state.MainTableHandleSubmit) && (
-                      <Grid
-                        className={classes.classtypeInputContainer}
-                        item
-                        md={8}
-                        sm={12}
-                        xs={12}
-                      >
-                        <ChildTable
-                          schoolId={schoolId}
-                          childPanelHeader={settings.childPanelHeader}
-                          childTable={settings.childTable}
-                          childTableData={childTableData}
-                          parentKey={tableData._id}
-                          showClassTimeFormModal={
-                            this.state.showClassTimeFormModal &&
-                            this.state.showClassTimeFormModal[tableData._id]
-                          }
-                          parentData={tableData}
-                          updateParentProps={this.updateParentProps}
-                          handleMainTableState={this.handleMainTableState}
-                          MainTableHandleSubmit={
-                            this.state.MainTableHandleSubmit
-                          }
-                          moveToNextTab={this.props.moveToNextTab}
-                        />
-                      </Grid>
-                    )}
+                        <Grid
+                          className={classes.classtypeInputContainer}
+                          item
+                          md={8}
+                          sm={12}
+                          xs={12}
+                        >
+                          <ChildTable
+                            schoolId={schoolId}
+                            childPanelHeader={settings.childPanelHeader}
+                            childTable={settings.childTable}
+                            childTableData={childTableData}
+                            parentKey={tableData._id}
+                            showClassTimeFormModal={
+                              this.state.showClassTimeFormModal &&
+                              this.state.showClassTimeFormModal[tableData._id]
+                            }
+                            parentData={tableData}
+                            updateParentProps={this.updateParentProps}
+                            handleMainTableState={this.handleMainTableState}
+                            MainTableHandleSubmit={
+                              this.state.MainTableHandleSubmit
+                            }
+                            moveToNextTab={this.props.moveToNextTab}
+                          />
+                        </Grid>
+                      )}
                   </Grid>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
