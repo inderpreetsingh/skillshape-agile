@@ -22,7 +22,7 @@ import ExpansionPanel, {
   ExpansionPanelActions
 } from "material-ui/ExpansionPanel";
 import Divider from "material-ui/Divider";
-
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 
 import {
@@ -45,7 +45,7 @@ const ButtonWrapper = styled.div`
   margin-right: ${rhythmDiv * 2}px;
 `;
 
-export default function(props) {
+export default function (props) {
   const {
     classes,
     childPanelHeader,
@@ -64,24 +64,24 @@ export default function(props) {
             (this.props &&
               this.props.MainTableHandleSubmit &&
               this.props.MainTableHandleSubmit[
-                this.props && this.props.parentKey
+              this.props && this.props.parentKey
               ])) && (
-            <FormComponent
-              schoolId={schoolId}
-              parentKey={parentKey}
-              parentData={parentData}
-              data={this.state.formData}
-              open={
-                this.state.showForm ||
-                (this.props.MainTableHandleSubmit &&
-                  this.props.MainTableHandleSubmit[
+              <FormComponent
+                schoolId={schoolId}
+                parentKey={parentKey}
+                parentData={parentData}
+                data={this.state.formData}
+                open={
+                  this.state.showForm ||
+                  (this.props.MainTableHandleSubmit &&
+                    this.props.MainTableHandleSubmit[
                     this.props && this.props.parentKey
-                  ])
-              }
-              onClose={this.handleFormModal}
-              moveToNextTab={this.props.moveToNextTab}
-            />
-          )}
+                    ])
+                }
+                onClose={this.handleFormModal}
+                moveToNextTab={this.props.moveToNextTab}
+              />
+            )}
 
           <ExpansionPanel expanded={true}>
             <ExpansionPanelSummary className={classes.classtimeHeader}>
@@ -113,6 +113,7 @@ export default function(props) {
                   >
                     {childPanelHeader.actions.buttonTitle}
                   </Button>
+
                 </Grid>
               </Grid>
             </ExpansionPanelSummary>
@@ -136,7 +137,7 @@ export default function(props) {
                               expandIcon={<ExpandMoreIcon />}
                             >
                               <div style={{ float: "right" }}>
-                                <Button
+                                {/* <Button
                                   onClick={() =>
                                     this.setState({
                                       showForm: true,
@@ -149,7 +150,18 @@ export default function(props) {
                                 >
                                   <Edit style={{ marginRight: 2 }} />
                                   {childTable.actions.edit.title}
-                                </Button>
+                                </Button> */}
+                                <FormGhostButton
+
+                                  onClick={() =>
+                                    this.setState({
+                                      showForm: true,
+                                      formData: tableData
+                                    })
+                                  }
+                                  label={childTable.actions.edit.title}
+
+                                />
                               </div>
                               {tableData.scheduleType == "oneTime" &&
                                 tableData.name + ": Single/Set"}
@@ -217,16 +229,16 @@ export default function(props) {
                                             }
                                           )
                                         ) : (
-                                          <div
-                                            style={{
-                                              minHeight: 31,
-                                              marginTop: 5
-                                            }}
-                                            className={classes.inputDisableBox}
-                                          >
-                                            <span>{tableData[field.key]}</span>
-                                          </div>
-                                        )}
+                                            <div
+                                              style={{
+                                                minHeight: 31,
+                                                marginTop: 5
+                                              }}
+                                              className={classes.inputDisableBox}
+                                            >
+                                              <span>{tableData[field.key]}</span>
+                                            </div>
+                                          )}
                                       </Grid>
                                     </Fragment>
                                   );
@@ -242,167 +254,167 @@ export default function(props) {
           </ExpansionPanel>
         </div>
       ) : (
-        <div className="panel-child-table">
-          {(this.state.showForm ||
-            (this.props &&
-              this.props.MainTableHandleSubmit &&
-              this.props.MainTableHandleSubmit[
+          <div className="panel-child-table">
+            {(this.state.showForm ||
+              (this.props &&
+                this.props.MainTableHandleSubmit &&
+                this.props.MainTableHandleSubmit[
                 this.props && this.props.parentKey
-              ])) && (
-            <FormComponent
-              schoolId={schoolId}
-              parentKey={parentKey}
-              parentData={parentData}
-              data={this.state.formData}
-              open={
-                this.state.showForm ||
-                (this.props.MainTableHandleSubmit &&
-                  this.props.MainTableHandleSubmit[
-                    this.props && this.props.parentKey
-                  ])
-              }
-              onClose={this.handleFormModal}
-              moveToNextTab={this.props.moveToNextTab}
-            />
-          )}
-          {this.state.deleteConfirmationModal && (
-            <SkillShapeDialogBox
-              open={this.state.deleteConfirmationModal}
-              type="alert"
-              defaultButtons
-              title="Are you sure?"
-              content={
-                childTable.actions.del.dialogBoxContent ||
-                "This will delete your data, are you sure?"
-              }
-              cancelBtnText="Cancel"
-              onAffirmationButtonClick={this.handleDeleteData}
-              onModalClose={this.closeDeleteConfirmationModal}
-              onCloseButtonClick={this.closeDeleteConfirmationModal}
-            />
-          )}
+                ])) && (
+                <FormComponent
+                  schoolId={schoolId}
+                  parentKey={parentKey}
+                  parentData={parentData}
+                  data={this.state.formData}
+                  open={
+                    this.state.showForm ||
+                    (this.props.MainTableHandleSubmit &&
+                      this.props.MainTableHandleSubmit[
+                      this.props && this.props.parentKey
+                      ])
+                  }
+                  onClose={this.handleFormModal}
+                  moveToNextTab={this.props.moveToNextTab}
+                />
+              )}
+            {this.state.deleteConfirmationModal && (
+              <SkillShapeDialogBox
+                open={this.state.deleteConfirmationModal}
+                type="alert"
+                defaultButtons
+                title="Are you sure?"
+                content={
+                  childTable.actions.del.dialogBoxContent ||
+                  "This will delete your data, are you sure?"
+                }
+                cancelBtnText="Cancel"
+                onAffirmationButtonClick={this.handleDeleteData}
+                onModalClose={this.closeDeleteConfirmationModal}
+                onCloseButtonClick={this.closeDeleteConfirmationModal}
+              />
+            )}
 
-          <ExpansionPanel expanded={true}>
-            <ExpansionPanelSummary className={classes.classtimeHeader}>
-              <Grid container>
-                <Grid
-                  item
-                  lg={9}
-                  sm={9}
-                  xs={12}
-                  style={{
-                    color: "#fff",
-                    display: "inline-flex",
-                    alignItems: "center"
-                  }}
-                >
-                  <span>
-                    <Icon className="material-icons" style={{ marginRight: 5 }}>
-                      {childPanelHeader.leftIcon}
-                    </Icon>
-                  </span>
-                  <span>{childPanelHeader.notes}</span>
-                </Grid>
-                <Grid item lg={1} sm={3} xs={12}>
-                  <Button
-                    className={classes.headerBtn}
-                    onClick={() =>
-                      this.setState({ showForm: true, formData: null })
-                    }
-                  >
-                    {childPanelHeader.actions.buttonTitle}
-                  </Button>
-                </Grid>
-              </Grid>
-            </ExpansionPanelSummary>
-            {_.isArray(childTableData) &&
-              childTableData.map((tableData, index) => {
-                return (
-                  <ExpansionPanelDetails
-                    key={index}
-                    className={classes.details}
+            <ExpansionPanel expanded={true}>
+              <ExpansionPanelSummary className={classes.classtimeHeader}>
+                <Grid container>
+                  <Grid
+                    item
+                    lg={9}
+                    sm={9}
+                    xs={12}
                     style={{
-                      boxShadow: "0px 0px 0px 3px #bdbdbd",
-                      border: "0px solid #bdbdbd"
+                      color: "#fff",
+                      display: "inline-flex",
+                      alignItems: "center"
                     }}
                   >
-                    <div className={classes.classtimeFormOuter}>
-                      <div className={classes.classtypeForm}>
-                        <Grid
-                          container
-                          className={classes.classtypeInputContainer}
-                        >
-                          {childTable &&
-                            childTable.tableFields.map((field, index) => {
-                              return (
-                                <Fragment key={index}>
-                                  <Grid
-                                    item
-                                    xs={12}
-                                    sm={field.labelSm ? field.labelSm : 3}
-                                    md={field.lableMd ? field.lableMd : 3}
-                                  >
-                                    <div> {field.label} </div>
-                                  </Grid>
-                                  <Grid
-                                    item
-                                    xs={12}
-                                    sm={field.valueSm ? field.valueSm : 9}
-                                    md={field.valueMd ? field.valueMd : 9}
-                                  >
-                                    {field.nestedObjectOfArray ? (
-                                      tableData[field.key] &&
-                                      Object.keys(tableData[field.key]).map(
-                                        (itemkey, index) => {
-                                          const itemData =
-                                            tableData[field.key][itemkey];
-                                          let fields = [
-                                            {
-                                              label: "Start Time",
-                                              key: "startTime"
-                                            },
-                                            {
-                                              label: "Duration",
-                                              key: "duration"
-                                            },
-                                            { label: "Room", key: "roomId" }
-                                          ];
-                                          if (itemkey === "oneTime") {
-                                            fields.unshift({
-                                              label: "Date",
-                                              key: "startDate"
-                                            });
-                                          } else {
-                                            fields.unshift({
-                                              label: "Day",
-                                              value: itemkey
-                                            });
+                    <span>
+                      <Icon className="material-icons" style={{ marginRight: 5 }}>
+                        {childPanelHeader.leftIcon}
+                      </Icon>
+                    </span>
+                    <span>{childPanelHeader.notes}</span>
+                  </Grid>
+                  <Grid item lg={1} sm={3} xs={12}>
+                    <Button
+                      className={classes.headerBtn}
+                      onClick={() =>
+                        this.setState({ showForm: true, formData: null })
+                      }
+                    >
+                      {childPanelHeader.actions.buttonTitle}
+                    </Button>
+                  </Grid>
+                </Grid>
+              </ExpansionPanelSummary>
+              {_.isArray(childTableData) &&
+                childTableData.map((tableData, index) => {
+                  return (
+                    <ExpansionPanelDetails
+                      key={index}
+                      className={classes.details}
+                      style={{
+                        boxShadow: "0px 0px 0px 3px #bdbdbd",
+                        border: "0px solid #bdbdbd"
+                      }}
+                    >
+                      <div className={classes.classtimeFormOuter}>
+                        <div className={classes.classtypeForm}>
+                          <Grid
+                            container
+                            className={classes.classtypeInputContainer}
+                          >
+                            {childTable &&
+                              childTable.tableFields.map((field, index) => {
+                                return (
+                                  <Fragment key={index}>
+                                    <Grid
+                                      item
+                                      xs={12}
+                                      sm={field.labelSm ? field.labelSm : 3}
+                                      md={field.lableMd ? field.lableMd : 3}
+                                    >
+                                      <div> {field.label} </div>
+                                    </Grid>
+                                    <Grid
+                                      item
+                                      xs={12}
+                                      sm={field.valueSm ? field.valueSm : 9}
+                                      md={field.valueMd ? field.valueMd : 9}
+                                    >
+                                      {field.nestedObjectOfArray ? (
+                                        tableData[field.key] &&
+                                        Object.keys(tableData[field.key]).map(
+                                          (itemkey, index) => {
+                                            const itemData =
+                                              tableData[field.key][itemkey];
+                                            let fields = [
+                                              {
+                                                label: "Start Time",
+                                                key: "startTime"
+                                              },
+                                              {
+                                                label: "Duration",
+                                                key: "duration"
+                                              },
+                                              { label: "Room", key: "roomId" }
+                                            ];
+                                            if (itemkey === "oneTime") {
+                                              fields.unshift({
+                                                label: "Date",
+                                                key: "startDate"
+                                              });
+                                            } else {
+                                              fields.unshift({
+                                                label: "Day",
+                                                value: itemkey
+                                              });
+                                            }
+                                            return this.renderScheduleTypeData(
+                                              classes,
+                                              parentData,
+                                              itemData,
+                                              fields
+                                            );
                                           }
-                                          return this.renderScheduleTypeData(
-                                            classes,
-                                            parentData,
-                                            itemData,
-                                            fields
-                                          );
-                                        }
-                                      )
-                                    ) : (
-                                      <div
-                                        style={{
-                                          minHeight: 31,
-                                          marginTop: 5
-                                        }}
-                                        className={classes.inputDisableBox}
-                                      >
-                                        <span>{tableData[field.key]}</span>
-                                      </div>
-                                    )}
-                                  </Grid>
-                                </Fragment>
-                              );
-                            })}
-                        </Grid>
-                        {/*<div style={{ float: "right", margin: 10 }}>
+                                        )
+                                      ) : (
+                                          <div
+                                            style={{
+                                              minHeight: 31,
+                                              marginTop: 5
+                                            }}
+                                            className={classes.inputDisableBox}
+                                          >
+                                            <span>{tableData[field.key]}</span>
+                                          </div>
+                                        )}
+                                    </Grid>
+                                  </Fragment>
+                                );
+                              })}
+                          </Grid>
+                          {/*<div style={{ float: "right", margin: 10 }}>
                           <Button
                             onClick={() =>
                               this.setState({
@@ -437,9 +449,9 @@ export default function(props) {
                           </Button>
                         </div> */}
 
-                        <ButtonsWrapper>
-                          <ButtonWrapper>
-                            <Button
+                          <ButtonsWrapper>
+                            <ButtonWrapper>
+                              {/* <Button
                               onClick={() => {
                                 this.setState(state => {
                                   return {
@@ -455,34 +467,58 @@ export default function(props) {
                             >
                               <Delete style={{ marginRight: 2 }} />
                               {childTable.actions.del.title}
-                            </Button>
-                          </ButtonWrapper>
+                            </Button> */}
+                              <FormGhostButton
+                                alertColor
+                                onClick={() => {
+                                  this.setState(state => {
+                                    return {
+                                      ...state,
+                                      formData: tableData
+                                    };
+                                  });
+                                  this.showDeleteConfirmationModal();
+                                }}
+                                label={childTable.actions.del.title}
 
-                          <ButtonWrapper>
-                            <Button
-                              onClick={() =>
-                                this.setState({
-                                  showForm: true,
-                                  formData: tableData
-                                })
-                              }
-                              color="accent"
-                              raised
-                              dense
-                            >
-                              <Edit style={{ marginRight: 2 }} />
-                              {childTable.actions.edit.title}
-                            </Button>
-                          </ButtonWrapper>
-                        </ButtonsWrapper>
+                              />
+                            </ButtonWrapper>
+
+                            <ButtonWrapper>
+                              {/* <Button
+                                onClick={() =>
+                                  this.setState({
+                                    showForm: true,
+                                    formData: tableData
+                                  })
+                                }
+                                color="accent"
+                                raised
+                                dense
+                              >
+                                <Edit style={{ marginRight: 2 }} />
+                                {childTable.actions.edit.title}
+                              </Button> */}
+                              <FormGhostButton
+                                onClick={() =>
+                                  this.setState({
+                                    showForm: true,
+                                    formData: tableData
+                                  })
+                                }
+                                label={childTable.actions.edit.title}
+
+                              />
+                            </ButtonWrapper>
+                          </ButtonsWrapper>
+                        </div>
                       </div>
-                    </div>
-                  </ExpansionPanelDetails>
-                );
-              })}
-          </ExpansionPanel>
-        </div>
-      )}
+                    </ExpansionPanelDetails>
+                  );
+                })}
+            </ExpansionPanel>
+          </div>
+        )}
     </div>
   );
 }
