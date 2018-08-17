@@ -18,6 +18,7 @@ import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
 import { withStyles } from "material-ui/styles";
 import { MuiThemeProvider } from "material-ui/styles";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
@@ -318,7 +319,7 @@ handleChange=(e)=>{
                 style={{ display: "flex", justifyContent: "flex-end" }}
               >
                 {error && <ErrorWrapper>{error}</ErrorWrapper>}
-                <Button
+                {/* <Button
                   style={{ color: helpers.danger }}
                   onClick={this.deleteMedia}
                 >
@@ -332,7 +333,21 @@ handleChange=(e)=>{
                 </Button>
                 <Button type="submit" style={{ color: helpers.action }}>
                   Save
-                </Button>
+                </Button> */}
+                <FormGhostButton
+                color='alert'
+                onClick={this.deleteMedia}
+                label='Delete this image'
+                />
+                <FormGhostButton
+                greyColor
+                onClick={onModalClose}
+                label='Cancel'
+                />
+                <FormGhostButton
+                type='submit'
+                label=' Save'
+                />
               </Grid>
             </Grid>
           </form>

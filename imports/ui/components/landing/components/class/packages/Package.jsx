@@ -6,7 +6,7 @@ import { maximumClasses } from '/imports/util';
 import Cart from "/imports/ui/components/landing/components/icons/Cart.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
+import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx'
 const Wrapper = styled.div`
   ${helpers.flexCenter} justify-content: space-between;
 
@@ -150,8 +150,8 @@ function getPaymentType(payment) {
 const Package = props => (
   <OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
     <Wrapper>
-     
       <ClassDetailsSection>
+     
         <Title>{props.packageName || props.name}</Title>
         {props.packageType !== "EP" && (
           <Fragment>
@@ -231,13 +231,15 @@ const Package = props => (
             <NoOfClasses>{props.cost && "For Enrollment"}</NoOfClasses>
           </PriceSection>
         )}
-
-        <AddToCartSection>
-          {/* <a
-            href={`https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${
-              Meteor.settings.public.stripeClientId
-            }&scope=read_write`}
-          > */}
+        {props.onSchoolEdit ? 
+          <EditButton 
+          label={'Edit'}
+          onClick={()=>{
+            props.setFormData()
+            props.onEditClick()
+          }}
+          />
+          :  <AddToCartSection>
           <Cart
             onClick={() =>
               props.onAddToCartIconButtonClick(
@@ -256,7 +258,8 @@ const Package = props => (
             }
           />
           {/* </a> */}
-        </AddToCartSection>
+        </AddToCartSection>}
+      
       </RightSection>
     </Wrapper>
   </OuterWrapper>

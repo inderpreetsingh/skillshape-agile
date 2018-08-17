@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { isEmpty } from "lodash";
@@ -14,14 +13,12 @@ import TextField from "material-ui/TextField";
 import { withStyles } from "material-ui/styles";
 import { MuiThemeProvider } from "material-ui/styles";
 import ClearIcon from "material-ui-icons/Clear";
-import Grid from "material-ui/Grid";
 import ClassTimesBar from "/imports/ui/components/landing/components/classTimes/ClassTimesBar";
 import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
 import Icon from "material-ui/Icon";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
 import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import School from "/imports/api/school/fields";
 import Dialog, {
@@ -36,7 +33,13 @@ import ClassInterest from "/imports/api/classInterest/fields";
 import Events from "/imports/util/events";
 import { Element } from "react-scroll";
 import { scroller } from "react-scroll";
-
+import Grid from "material-ui/Grid";
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 const styles = {
   dialog: {
     padding: `${helpers.rhythmDiv}px`,
@@ -71,19 +74,19 @@ const styles = {
   bottomSpace: {
     marginBottom: helpers.rhythmDiv * 2
   },
-  dataMargin:{
-    marginLeft:'13px'
+  dataMargin: {
+    marginLeft: "13px"
   },
   dialogAction: {
     width: "100%",
     justifyContent: "space-between",
-    padding:helpers.rhythmDiv * 2
+    padding: helpers.rhythmDiv * 2
   },
-  about:{
-    width:'100%',
-    fontSize: '21px',
-    padding: '5px',
-    backgroundColor: 'aliceblue'
+  about: {
+    width: "100%",
+    fontSize: "21px",
+    padding: "5px",
+    backgroundColor: "aliceblue"
   }
 };
 const ClassTypeDescription = styled.div`
@@ -241,7 +244,7 @@ const Text = styled.p`
 class ClassTimesDialogBox extends React.Component {
   constructor(props) {
     super(props);
-   
+
     this.scrollTo("myScrollToElement");
   }
   componentDidMount() {
@@ -269,11 +272,10 @@ class ClassTimesDialogBox extends React.Component {
       );
     }
   };
-  
+
   goToClassTypePage = (className, classId) => {
     browserHistory.push(`/classType/${className}/${classId}`);
-    this.props.onModalClose()
-    
+    this.props.onModalClose();
   };
   scrollTo(name) {
     scroller.scrollTo(name || "content-container", {
@@ -282,11 +284,10 @@ class ClassTimesDialogBox extends React.Component {
       smooth: "easeInOutQuart"
     });
   }
-  goToSchoolPage = (schoolId) => {
+  goToSchoolPage = schoolId => {
     let schoolData = School.findOne(schoolId);
     browserHistory.push(`/schools/${schoolData.slug}`);
-    this.props.onModalClose()
-    
+    this.props.onModalClose();
   };
   getDatesBasedOnScheduleType = data => {
     let startDate = "";
@@ -336,7 +337,7 @@ class ClassTimesDialogBox extends React.Component {
   };
 
   handleClassInterest = ({ methodName, data }) => {
-    Meteor.call(methodName, data, (err, res) => {});
+    Meteor.call(methodName, data, (err, res) => { });
   };
 
   getSchedules = classesData => {
@@ -397,7 +398,7 @@ class ClassTimesDialogBox extends React.Component {
       experienceLevel,
       desc,
       gender,
-     filters,
+      filters,
       ageMin,
       ageMax,
       _id,
@@ -405,10 +406,9 @@ class ClassTimesDialogBox extends React.Component {
     } = this.props;
     {
     }
-  
+
     return (
       <Dialog
-      
         open={open}
         onClose={onModalClose}
         aria-labelledby="modal"
@@ -440,7 +440,13 @@ class ClassTimesDialogBox extends React.Component {
                   <br />
 
                   <RequestsClassTimes>
-                    <PrimaryButton
+                    {/* <PrimaryButton
+                      icon
+                      onClick={handleClassTimeRequest}
+                      iconName="perm_contact_calendar"
+                      label="Request class times"
+                    /> */}
+                    <FormGhostButton
                       icon
                       onClick={handleClassTimeRequest}
                       iconName="perm_contact_calendar"
@@ -449,115 +455,121 @@ class ClassTimesDialogBox extends React.Component {
                   </RequestsClassTimes>
                 </ClassContainer>
               ) : (
-                <ContentWrapper>
-                  <ContentHeader>
-                    <ClassTypeCoverImg src={classTypeImg} />
-                    <ClassTimes>
-                      <ClassTimesFor>Class Times for</ClassTimesFor>
-                      <ClassTypeName>
-                        {classTypeName.toLowerCase()}
-                      </ClassTypeName>
-                    </ClassTimes>
-                  </ContentHeader>
-                  <center className={classes.about}> <i>{` About ${classTypeName}`}</i></center>
-                  <Grid
-                    container
-                    style={{ padding: "22px" }}
-                  >
-                    <IconsWrapper>
-                      <IconsRowWrapper>
-                        <div
-                          className={
-                            classes.iconWithDetailContainer +
-                            " " +
-                            classes.bottomSpace
-                          }
-                        >
+                  <ContentWrapper>
+                    <ContentHeader>
+                      <ClassTypeCoverImg src={classTypeImg} />
+                      <ClassTimes>
+                        <ClassTimesFor>Class Times for</ClassTimesFor>
+                        <ClassTypeName>
+                          {classTypeName.toLowerCase()}
+                        </ClassTypeName>
+                      </ClassTimes>
+                    </ContentHeader>
+                    <center className={classes.about}>
+                      {" "}
+                      <i>{` About ${classTypeName}`}</i>
+                    </center>
+                    <Grid container style={{ padding: "22px" }}>
+                      <IconsWrapper>
+                        <IconsRowWrapper>
                           <div
-                            className="circle-icon"
-                            className={classes.iconStyle}
+                            className={
+                              classes.iconWithDetailContainer +
+                              " " +
+                              classes.bottomSpace
+                            }
                           >
-                            <Icon className="material-icons" color="primary">
-                              account_balance
-                            </Icon>
-                          </div>
-                          <div className={classes.dataMargin}>
-                            <Text>{filters && filters.schoolName&&filters.schoolName}</Text>
-                          </div>
-                        </div>
-
-                        <div
-                          className={
-                            classes.iconWithDetailContainer +
-                            " " +
-                            classes.bottomSpace
-                          }
-                        />
-                      </IconsRowWrapper>
-                      {filters && filters.locationTitle && (
-                          <div className={classes.iconWithDetailContainer}>
                             <div
                               className="circle-icon"
                               className={classes.iconStyle}
                             >
                               <Icon className="material-icons" color="primary">
-                                location_on
-                              </Icon>
+                                account_balance
+                            </Icon>
                             </div>
                             <div className={classes.dataMargin}>
                               <Text>
-                              {filters && filters.locationTitle&&filters.locationTitle}
+                                {filters &&
+                                  filters.schoolName &&
+                                  filters.schoolName}
                               </Text>
                             </div>
                           </div>
-                        )}
-                    </IconsWrapper>
-                    <Grid item xs={12}>
-                      {ageMin &&
-                        ageMax && (
-                          <MetaInfo
-                            data={`  ${ageMin} to ${ageMax}`}
-                            title={"Age:" + " "}
-                          />
-                        )}
-                      {gender &&
-                        gender !== "All" && (
-                          <MetaInfo data={gender} title={"Gender: " + ""} />
-                        )}
 
-                      {experienceLevel && experienceLevel == "All" ? (
+                          <div
+                            className={
+                              classes.iconWithDetailContainer +
+                              " " +
+                              classes.bottomSpace
+                            }
+                          />
+                        </IconsRowWrapper>
+                        {filters &&
+                          filters.locationTitle && (
+                            <div className={classes.iconWithDetailContainer}>
+                              <div
+                                className="circle-icon"
+                                className={classes.iconStyle}
+                              >
+                                <Icon className="material-icons" color="primary">
+                                  location_on
+                              </Icon>
+                              </div>
+                              <div className={classes.dataMargin}>
+                                <Text>
+                                  {filters &&
+                                    filters.locationTitle &&
+                                    filters.locationTitle}
+                                </Text>
+                              </div>
+                            </div>
+                          )}
+                      </IconsWrapper>
+                      <Grid item xs={12}>
+                        {ageMin &&
+                          ageMax && (
+                            <MetaInfo
+                              data={`  ${ageMin} to ${ageMax}`}
+                              title={"Age:" + " "}
+                            />
+                          )}
+                        {gender &&
+                          gender !== "All" && (
+                            <MetaInfo data={gender} title={"Gender: " + ""} />
+                          )}
+
+                        {experienceLevel && experienceLevel == "All" ? (
+                          <MetaInfo
+                            data={"  All levels are welcome"}
+                            title={"Experience:  " + " "}
+                          />
+                        ) : (
+                            <MetaInfo
+                              data={`  ${experienceLevel}`}
+                              title={"Experience:  " + " "}
+                            />
+                          )}
+                      </Grid>
+                      {desc && (
                         <MetaInfo
-                          data={"  All levels are welcome"}
-                          title={"Experience:  " + " "}
-                        />
-                      ) : (
-                        <MetaInfo
-                          data={`  ${experienceLevel}`}
-                          title={"Experience:  " + " "}
+                          data={`  ${desc}`}
+                          title={"Description:"}
+                          marginBottom={16}
                         />
                       )}
                     </Grid>
-                    {desc && (
-                        <MetaInfo
-                        data={`  ${desc}`}
-                        title={"Description:" }
-                        marginBottom={16}
-                      />
-                      
-                      )}
-                  </Grid>
-                  <ClassTimesBoxes
-                    inPopUp={true}
-                    withSlider={false}
-                    classTimesData={classTimesData}
-                    classInterestData={classInterestData}
-                  />
-                </ContentWrapper>
-              )}
+                    <ClassTimesBoxes
+                      inPopUp={true}
+                      withSlider={false}
+                      classTimesData={classTimesData}
+                      classInterestData={classInterestData}
+                    />
+                  </ContentWrapper>
+                )}
               {this.props.errorText && <ErrorWrapper>{errorText}</ErrorWrapper>}
             </DialogContent>
             <DialogActions className={classes.dialogAction}>
-                <ClassTimeButton
+              {/* <ClassTimeButton
                   fullWidth
                   label="View Class"
                   noMarginBottom
@@ -583,9 +595,35 @@ class ClassTimesDialogBox extends React.Component {
                   noMarginBottom
                   label="Close"
                   onClick={onModalClose}
-                />
-              </DialogActions>
-
+                /> */}
+              <Grid style={{ display: "flex", justifyContent: "flex-end" }}>
+                <ButtonWrapper>
+                  <FormGhostButton
+                    onClick={e => {
+                      onModalClose(e);
+                      this.goToClassTypePage(classTypeName, _id);
+                    }}
+                    label="View Class"
+                  />
+                </ButtonWrapper>
+                <ButtonWrapper>
+                  <FormGhostButton
+                    onClick={e => {
+                      onModalClose(e);
+                      this.goToSchoolPage(schoolId);
+                    }}
+                    label="View School"
+                  />
+                </ButtonWrapper>
+                <ButtonWrapper>
+                  <FormGhostButton
+                    darkGreyColor
+                    label="Close"
+                    onClick={onModalClose}
+                  />
+                </ButtonWrapper>
+              </Grid>
+            </DialogActions>
           </MyScrollToElement>
         </MuiThemeProvider>
       </Dialog>

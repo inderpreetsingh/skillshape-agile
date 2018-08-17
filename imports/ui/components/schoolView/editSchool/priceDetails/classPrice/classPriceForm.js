@@ -22,15 +22,35 @@ import { FormControl, FormControlLabel } from "material-ui/Form";
 import Icon from "material-ui/Icon";
 import "/imports/api/classPricing/methods";
 import Checkbox from "material-ui/Checkbox";
-
 const formId = "ClassPriceForm";
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 const styles = theme => {
   return {
     button: {
       margin: 5,
       width: 150
-    }
+    },
+    delete: {
+      backgroundColor:'red',
+      color: "black",
+      fontWeight: 600
+     },
+     cancel: {
+       backgroundColor:'yellow',
+       color: "black",
+       fontWeight: 600
+      },
+      save: {
+       backgroundColor:'green',
+       color: "black",
+       fontWeight: 600
+      }
   };
 };
 
@@ -92,6 +112,9 @@ class ClassPriceForm extends React.Component {
       includeAllClassTypes: this.state.includeAllClassTypes,
       currency:this.state.currency
     };
+    if(payload.classTypeId==null){
+      payload.classTypeId=[];
+    }
     this.setState({ isBusy: true });
     if (data && data._id) {
       this.handleSubmit({
@@ -292,20 +315,47 @@ class ClassPriceForm extends React.Component {
           </DialogContent>
         )}
         <DialogActions>
-          {data && (
-            <Button
-              onClick={() => this.setState({ showConfirmationModal: true })}
-              color="accent"
-            >
-              Delete
-            </Button>
-          )}
-          <Button onClick={() => this.props.onClose()} color="primary">
-            Cancel
-          </Button>
-          <Button type="submit" form={formId} color="primary">
-            {data ? "Save" : "Submit"}
-          </Button>
+          {data && !data.from && (
+          //   <Button
+          //     onClick={() => this.setState({ showConfirmationModal: true })}
+          //     color="accent"
+          //     className={classes.delete}
+          //   >
+          //     Delete
+          //   </Button>
+          // )}
+          // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
+          //   Cancel
+          // </Button>
+          // <Button type="submit" form={formId} color="primary" className={classes.save}>
+          //   {data ? "Save" : "Submit"}
+          // </Button>
+          <ButtonWrapper>
+          <FormGhostButton
+            alertColor
+            onClick={() => this.setState({ showConfirmationModal: true })}
+            label="Delete"
+            className={classes.delete}
+          />
+        </ButtonWrapper>
+      )}
+      <ButtonWrapper>
+        <FormGhostButton
+          darkGreyColor
+          onClick={() => this.props.onClose()}
+          label="Cancel"
+          className={classes.cancel}
+        />
+      </ButtonWrapper>
+      <ButtonWrapper>
+        <FormGhostButton
+          type="submit"
+          form={formId}
+          onClick={this.onSubmit}
+          label={data ? "Save" : "Submit"}
+          className={classes.save}
+        />
+      </ButtonWrapper>
         </DialogActions>
       </Dialog>
     );

@@ -186,7 +186,6 @@ class SkillShapeDialogBox extends Component {
   _getAffirmateButtonClasses = () => {
     const { type, defaultButtons, classes } = this.props;
     if (type == "alert" && !defaultButtons) {
-      // console.log("alert in get cancel...");
       return classes["ghostCommon"] + " " + classes["ghost.inform"];
     } else {
       return classes["ghostCommon"] + " " + classes[`ghost.${type}`];
@@ -214,7 +213,6 @@ class SkillShapeDialogBox extends Component {
     const { type, defaultButtons, classes } = this.props;
     // debugger;
     if (type == "alert") {
-      // console.log("alert in get cancel...");
       return classes["ghostCommon"] + " " + classes["ghost.inform"];
     } else {
       return classes["ghostCommon"] + " " + classes[`ghost.${type}`];
@@ -229,14 +227,15 @@ class SkillShapeDialogBox extends Component {
       onAffirmationButtonClick,
       onModalClose,
       onCloseButtonClick,
-      classes
+      classes,
+      fromPackageListing
     } = this.props;
     return (
       <ButtonsWrapper rightAlign>
         <ButtonWrapper>
           <Button
             onClick={onAffirmationButtonClick || onModalClose}
-            className={this._getAffirmateButtonClasses()}
+            className={fromPackageListing ? classes["ghostCommon"] + " " + classes[`ghost.success`] :this._getAffirmateButtonClasses()}
           >
             {this._getAffirmateButtonText()}
           </Button>
@@ -277,7 +276,6 @@ class SkillShapeDialogBox extends Component {
       onModalClose,
       onCloseButtonClick
     } = this.props;
-    // console.log(type,"type in the actions ...")
     if (RenderActions) {
       return React.cloneElement(RenderActions);
     } else {

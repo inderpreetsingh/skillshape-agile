@@ -23,6 +23,13 @@ import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import "/imports/api/sLocation/methods";
 import { Card } from "material-ui";
 import Input, { InputLabel} from "material-ui/Input";
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 // 1.perTime field in the collection monthyPricing.(Done)
 // 2.dropDown for selecting the perTime classes.(Done)
 // 3.saving in the collection.(Done)
@@ -39,7 +46,22 @@ const styles = theme => {
     },
     checked: {
       color: theme.palette.grey[300]
-    }
+    },
+    delete: {
+      backgroundColor:'red',
+      color: "black",
+      fontWeight: 600
+     },
+     cancel: {
+       backgroundColor:'yellow',
+       color: "black",
+       fontWeight: 600
+      },
+      save: {
+       backgroundColor:'green',
+       color: "black",
+       fontWeight: 600
+      }
   };
 };
 
@@ -90,6 +112,9 @@ class MonthlyPriceForm extends React.Component {
       duPeriod: this.state.duPeriod
 
     };
+    if(payload.classTypeId==null){
+      payload.classTypeId=[];
+    }
     if (tabValue === 0) {
       // No option is selected for making payment then need to show this `Please select any payment type`.
       if (pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo || pymtType==null || pymtType && pymtType.autoWithDraw && pymtType.payAsYouGo) {
@@ -153,7 +178,7 @@ class MonthlyPriceForm extends React.Component {
     this.setState({
       [key]: isInputChecked,
       pymtType: oldPayment,
-      
+      [disableKey]: !isInputChecked
     });
   };
   handleChange = name => event => {
@@ -355,20 +380,47 @@ class MonthlyPriceForm extends React.Component {
             </DialogContent>
           )}
           <DialogActions>
-            {data && (
-              <Button
-                onClick={() => this.setState({ showConfirmationModal: true })}
-                color="accent"
-              >
-                Delete
-              </Button>
-            )}
-            <Button onClick={() => this.props.onClose()} color="primary">
-              Cancel
-            </Button>
-            <Button type="submit" form={formId} color="primary">
-              {data ? "Save" : "Submit"}
-            </Button>
+            {data && !data.from && (
+            //   <Button
+            //     onClick={() => this.setState({ showConfirmationModal: true })}
+            //     color="accent"
+            //     className={classes.delete}
+            //   >
+            //     Delete
+            //   </Button>
+            // )}
+            // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
+            //   Cancel
+            // </Button>
+            // <Button type="submit" form={formId} color="primary" className={classes.save}>
+            //   {data ? "Save" : "Submit"}
+            // </Button>
+            <ButtonWrapper>
+            <FormGhostButton
+              alertColor
+              onClick={() => this.setState({ showConfirmationModal: true })}
+              label="Delete"
+              className={classes.delete}
+            />
+          </ButtonWrapper>
+        )}
+        <ButtonWrapper>
+          <FormGhostButton
+            darkGreyColor
+            onClick={() => this.props.onClose()}
+            label="Cancel"
+            className={classes.cancel}
+          />
+        </ButtonWrapper>
+        <ButtonWrapper>
+          <FormGhostButton
+            type="submit"
+            form={formId}
+            onClick={this.onSubmit}
+            label={data ? "Save" : "Submit"}
+            className={classes.save}
+          />
+        </ButtonWrapper>
           </DialogActions>
         </Dialog>
       </div>

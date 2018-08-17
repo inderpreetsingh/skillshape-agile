@@ -10,7 +10,12 @@ import { MenuItem } from "material-ui/Menu";
 import Typography from "material-ui/Typography";
 import config from "/imports/config";
 import isEmpty from "lodash/isEmpty";
-
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 const scheduleDetails = [
   "Monday",
   "Tuesday",
@@ -20,7 +25,6 @@ const scheduleDetails = [
   "Saturday",
   "Sunday"
 ];
-
 export class WeekDaysRow extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +37,6 @@ export class WeekDaysRow extends React.Component {
       row: []
     };
     if (!_.isEmpty(data)) {
-      // console.log("WeekDaysRow initializeFields -->>",data);
       for (let key in data) {
         for (let obj of data[key]) {
           state.row.push({
@@ -57,7 +60,6 @@ export class WeekDaysRow extends React.Component {
         timeUnits: "Minutes"
       });
     }
-    // console.log("WeekDaysRow initializeFields -->>",state)
     return state;
   };
 
@@ -108,7 +110,7 @@ export class WeekDaysRow extends React.Component {
     let rowData = this.state.row.filter(data => {
       return data.key;
     });
-    const grouped = _.groupBy(rowData, function(item) {
+    const grouped = _.groupBy(rowData, function (item) {
       return item.key;
     });
     return grouped;
@@ -116,7 +118,7 @@ export class WeekDaysRow extends React.Component {
 
   render() {
     const { row } = this.state;
-   
+
     return (
       <div>
         {row.map((data, index) => {
@@ -137,9 +139,10 @@ export class WeekDaysRow extends React.Component {
                   <InputLabel htmlFor="weekDay" shrink={true}>
                     WeekDay
                   </InputLabel>
+
                   <Select
                     input={<Input id="weekDay" />}
-                    value={data ? data.key : ""}
+                    value={data && data.key != '' ? data.key : scheduleDetails[0]}
                     onChange={this.handleSelectInputChange.bind(
                       this,
                       index,
@@ -182,7 +185,7 @@ export class WeekDaysRow extends React.Component {
                 >
                   <Grid item sm={6}>
                     <TextField
-                      defaultValue={data && data.duration}
+                      defaultValue={data && data.duration || 60}
                       margin="dense"
                       onChange={this.handleSelectInputChange.bind(
                         this,
@@ -193,11 +196,8 @@ export class WeekDaysRow extends React.Component {
                       type="number"
                       fullWidth
                       required={
-                        data && data.key ? true : false
+                        data && data.key && data.key != '' ? true : false
                       } /*Made it mandatory if week day selected*/
-                      disabled={
-                        data && data.key ? false : true
-                      } /*Made it disabled if weekday is not selected*/
                     />
                   </Grid>
                   <Grid sm={6}>
@@ -260,13 +260,25 @@ export class WeekDaysRow extends React.Component {
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Button
+                {/* <Button
                   onClick={this.removeRow.bind(this, index)}
                   raised
                   color="accent"
+                  style={{
+                    backgroundColor: 'red',
+                    color: "black",
+                    fontWeight: 600
+                  }}
                 >
                   Delete
-                </Button>
+                </Button> */}
+                <ButtonWrapper>
+                  <FormGhostButton
+                    alertColor
+                    onClick={this.removeRow.bind(this, index)}
+                    label="Delete"
+                  />
+                </ButtonWrapper>
               </Grid>
             </Grid>
           );
@@ -317,10 +329,24 @@ export class WeekDaysRow extends React.Component {
                 display: "flex",
                 justifyContent: "center"
               }}
+
             >
-              <Button onClick={this.addNewRow} raised color="secondary">
+              {/* <Button onClick={this.addNewRow} raised color="secondary"
+                style={{
+                  backgroundColor: 'mediumseagreen',
+                  color: "black",
+                  fontWeight: 600
+                }}
+              >
                 Add Linked Class Time
-              </Button>
+              </Button> */}
+              <ButtonWrapper>
+                  <FormGhostButton
+                    darkGreyColor
+                    onClick={this.addNewRow}
+                    label="Add Linked Class Time"
+                  />
+                </ButtonWrapper>
 
               {/* <Button
                 onClick={this.props.saveClassTimes.bind(this, event, {
