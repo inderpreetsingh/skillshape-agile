@@ -13,7 +13,7 @@ const Logo = styled.div`
   bottom: ${props => (props.bottom ? props.bottom : 0)}px;
   margin-right: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
-  background-size: ${helpers.rhythmDiv * 18}px ${helpers.rhythmDiv * 18}px;
+  background-size: ${helpers.rhythmDiv * 16}px ${helpers.rhythmDiv * 16}px;
   background-color: white;
   background-position: center center;
   background-repeat: no-repeat;

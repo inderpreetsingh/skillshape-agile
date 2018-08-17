@@ -580,8 +580,8 @@ class FilterPanel extends Component {
                 icon={true}
                 iconName="refresh"
                 onClick={() => {
-                  this.props.onModalClose();
                   this.props.removeAllFilters();
+                  this.props.onModalClose();
                 }}
               />
             </FilterPanelAction>
@@ -610,10 +610,7 @@ class FilterPanel extends Component {
                   <PrimaryButton
                     fullWidth
                     label="Search Again"
-                    onClick={() => {
-                      this.props.onModalClose();
-                      this.props.removeAllFilters();
-                    }}
+                    onClick={this.props.removeAllFilters}
                   />
                 </FilterPanelAction>
               </SuggestionFormButton>
