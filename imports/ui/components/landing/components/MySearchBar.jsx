@@ -29,7 +29,7 @@ const styles = {
     height: 32,
     width: 32,
     transition:
-      "transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)"
+    "transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)"
   },
   defaultBorderRadius: {
     borderRadius: 2
@@ -46,7 +46,7 @@ const styles = {
   },
   iconTransitions: {
     transition:
-      "transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)"
+    "transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)"
   },
   rightAlign: {
     textAlign: "right"
@@ -55,16 +55,16 @@ const styles = {
 
 const iconTransitions = {
   transition:
-    "transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)"
+  "transform 200ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 200ms cubic-bezier(0.4, 0.0, 0.2, 1)"
 };
 
 const LeftSideInput = styled.div`
-  display: ${props => (props.inputOnSide === "left" ? "block" : "none")};
-  width: 100%;
+display: ${props => (props.inputOnSide === "left" ? "block" : "none")};
+width: 100%;
 `;
 
 const RightSideInput = styled.div`
-  display: ${props => (props.inputOnSide === "right" ? "block" : "none")};
+display: ${props => (props.inputOnSide === "right" ? "block" : "none")};
 `;
 
 class MySearchBar extends Component {
@@ -76,7 +76,7 @@ class MySearchBar extends Component {
       active: false
     };
   }
-
+  
   componentWillReceiveProps(nextProps) {
     if (this.props.value !== nextProps.value) {
       this.setState((previousState) => ({ ...previousState, value: nextProps.value, active: nextProps.value != '' }));
@@ -85,47 +85,47 @@ class MySearchBar extends Component {
       this.setState((previousState) => ({ value: "", active: false }));
     }
   }
-
+  
   handleFocus = () => {
     this.setState({ focus: true });
   };
-
+  
   handleBlur = () => {
     this.setState({ focus: false });
     if (this.state.value.trim().length === 0) {
       this.setState({ value: "" });
     }
   };
-
+  
   handleInput = e => {
     // this.setState({value: e.target.value})
     this.setState({
       value: e.target.value,
       active: e.target.value != ""
     });
-
+    
     this.props.onChange && this.props.onChange(e);
   };
-
+  
   handleCancel = () => {
     this.setState({ active: false, value: "" });
     // this.props.onClose && this.props.onChange("");
     if(this.props.onCloseIconClick) this.props.onCloseIconClick();
   };
-
+  
   handleKeyPressed = e => {
     if (e.charCode === 13 || e.key === "Enter") {
       this.props.onRequestSearch(this.state.value);
     }
   };
-
+  
   _getCloseIconClassName = (active, classes) => {
     if (this.props.noCloseIcon) {
       return classes.hide;
     }
     return active ? classes.show : classes.hide;
   };
-
+  
   _getShowIconClassName = (active, classes) => {
     if (this.props.noCloseIcon) {
       return classes.show;
@@ -135,50 +135,48 @@ class MySearchBar extends Component {
   render() {
     const { value } = this.state;
     let self = this;
-    // console.log('value in MySearchBar===>',value);
-    // console.log('state in MySearchBar===>',this.state);
-    // console.log('props in MySearchBar===>',this.props);
     const {
       closeIcon,
       disabled,
       onRequestSearch, // eslint-disable-line
       searchIcon,
       classes,
+      onSearchIconClick,
       ...inputProps
     } = this.props;
-
+    
     let closeIconClass =
-      classes.iconButtonRoot +
-      " " +
-      this._getCloseIconClassName(this.state.active, classes);
+    classes.iconButtonRoot +
+    " " +
+    this._getCloseIconClassName(this.state.active, classes);
     let showIconClass =
-      classes.iconButtonRoot +
-      " " +
-      this._getShowIconClassName(this.state.active, classes);
+    classes.iconButtonRoot +
+    " " +
+    this._getShowIconClassName(this.state.active, classes);
     let rootClass = `${classes.root} `;
     let inputClass = ``;
-
+    
     if (this.props.defaultBorderRadius) {
       rootClass += `${classes.defaultBorderRadius}`;
     }
-
+    
     if (this.props.rightAlign) {
       inputClass = `${classes.rightAlign}`;
     }
-
-    const props = this.props;
+    
     let inputRef;
+    const props = this.props;
     if (props.googlelocation) {
       setTimeout(() => {
         let options = { strictBounds: true };
         // Google's API
-        let autocomplete = new google.maps.places.Autocomplete(
+        autocomplete = new google.maps.places.Autocomplete(
           inputRef,
           options
         );
         // This runs when user changes location.
         autocomplete.addListener("place_changed", () => {
-          let place = autocomplete.getPlace();
+          let place = this.autocomplete.getPlace();
           let coords = [];
           coords[0] = place.geometry["location"].lat();
           coords[1] = place.geometry["location"].lng();
@@ -192,7 +190,6 @@ class MySearchBar extends Component {
       }, 2000);
     }
 
-    console.log('clostIconClass',closeIconClass,showIconClass);
     return (
       <Paper className={rootClass}>
         <LeftSideInput inputOnSide={this.props.inputOnSide}>
@@ -216,7 +213,7 @@ class MySearchBar extends Component {
               style={styles.iconTransitions}
               className={showIconClass}
               disabled={disabled}
-              onClick={props.onSearchIconClick}
+              onClick={onSearchIconClick}
             >
               {React.cloneElement(searchIcon)}
             </IconButton>

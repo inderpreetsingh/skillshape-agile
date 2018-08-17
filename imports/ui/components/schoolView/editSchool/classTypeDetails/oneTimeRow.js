@@ -12,7 +12,12 @@ import { MenuItem } from "material-ui/Menu";
 import Typography from "material-ui/Typography";
 import config from "/imports/config";
 import { DialogActions } from "material-ui/Dialog";
-
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 export class OneTimeRow extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +29,7 @@ export class OneTimeRow extends React.Component {
     const { data, locationData, parentData } = this.props;
 
     if (isEmpty(data)) {
+
       state = {
         row: [
           {
@@ -35,8 +41,13 @@ export class OneTimeRow extends React.Component {
           }
         ]
       };
+      this.props.handleNoOfRow(1);
     } else {
       state = { row: [...data] };
+
+
+      this.props.handleNoOfRow(data.length);
+
     }
     return state;
   };
@@ -50,12 +61,14 @@ export class OneTimeRow extends React.Component {
       roomId: ""
     });
     this.setState({ row: oldRow });
+    this.props.handleNoOfRow(1);
   };
 
   removeRow = (index, event) => {
     const oldRow = [...this.state.row];
     oldRow.splice(index, 1);
     this.setState({ row: oldRow });
+    this.props.handleNoOfRow(-1);
   };
 
   handleChangeDate = (index, fieldName, date) => {
@@ -92,6 +105,7 @@ export class OneTimeRow extends React.Component {
 
   render() {
     const { row } = this.state;
+
     return (
       <div>
         {row.map((data, index) => {
@@ -109,7 +123,7 @@ export class OneTimeRow extends React.Component {
               <Grid item sm={6} xs={12}>
                 <MaterialDatePicker
                   required={true}
-                  hintText={"Start Date"}
+                  hintText={"Date"}
                   floatingLabelText={"Date *"}
                   value={data ? data.startDate : ""}
                   onChange={this.handleChangeDate.bind(
@@ -146,9 +160,9 @@ export class OneTimeRow extends React.Component {
                   <Grid sm={6}>
                     <TextField
                       required={true}
-                      defaultValue={data ? data.duration : ""}
+                      defaultValue={data && data.duration != "" ? data.duration : 60}
                       margin="dense"
-                      label="Length"
+                      label="Duration"
                       type="number"
                       onChange={this.handleSelectInputChange.bind(
                         this,
@@ -156,7 +170,6 @@ export class OneTimeRow extends React.Component {
                         "duration"
                       )}
                       fullWidth
-                      defaultValue={data && data.duration}
                     />
                   </Grid>
                   <Grid sm={6}>
@@ -193,12 +206,15 @@ export class OneTimeRow extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
+              {
+
+              }
               <Grid item sm={6} xs={12}>
                 <FormControl fullWidth margin="dense">
                   <InputLabel htmlFor="roomId">Room</InputLabel>
                   <Select
                     input={<Input id="roomId" />}
-                    value={data ? data.roomId : ""}
+                    value={data && data.roomId ? data.roomId : !isEmpty(this.props.roomData) && this.props.roomData[0].id}
                     onChange={this.handleSelectInputChange.bind(
                       this,
                       index,
@@ -223,20 +239,32 @@ export class OneTimeRow extends React.Component {
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Button
+                {/* <Button
                   onClick={this.removeRow.bind(this, index)}
                   raised
                   color="accent"
+                  style={{
+                    backgroundColor: 'red',
+                    color: "black",
+                    fontWeight: 600
+                  }}
                 >
                   Delete
-                </Button>
+                </Button> */}
+                 <ButtonWrapper>
+            <FormGhostButton
+              alertColor
+              onClick={this.removeRow.bind(this, index)}
+              label="Delete"
+            />
+          </ButtonWrapper>
               </Grid>
             </Grid>
           );
         })}
         <div>
           <div>
-            <div
+            {/* <div
               style={{
                 display: "flex",
                 justifyContent: "space-between"
@@ -258,18 +286,30 @@ export class OneTimeRow extends React.Component {
                 Use this if there is a different repeating type or students can
                 come to any class time available.
               </Typography>
-            </div>
+            </div> */}
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-between"
+                justifyContent: "center"
               }}
             >
-              <Button onClick={this.addNewRow} raised color="secondary">
+              {/* <Button onClick={this.addNewRow} raised color="secondary"
+                style={{
+                  backgroundColor: 'mediumseagreen',
+                  color: "black",
+                  fontWeight: 600
+                }}
+              >
                 Add Linked Class Time
-              </Button>
-
-              <Button
+              </Button> */}
+              <ButtonWrapper>
+                  <FormGhostButton
+                    darkGreyColor
+                    onClick={this.addNewRow}
+                    label="Add Linked Class Time"
+                  />
+                </ButtonWrapper>
+              {/* <Button
                 onClick={this.props.saveClassTimes.bind(this, event, {
                   addSeperateTime: true
                 })}
@@ -277,7 +317,7 @@ export class OneTimeRow extends React.Component {
                 color="secondary"
               >
                 Add Separate Class Time
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

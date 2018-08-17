@@ -99,7 +99,6 @@ SchoolMemberDetails.attachSchema(
     }
   })
 );
-
 Meteor.startup(function() {
   // FTS on the basis of first name last name and class types.
   if (Meteor.isServer) {
@@ -110,4 +109,5 @@ Meteor.startup(function() {
     });
   }
 });
+SchoolMemberDetails.join(Meteor.users, "activeUserId", "profile", ["profile"]);
 export default SchoolMemberDetails;

@@ -54,8 +54,11 @@ Meteor.methods({
     }
     return School.find({ _id: { $in: schoolList } }).fetch();
   },
-  "school.getMySchool": function() {
-    if (this.userId) {
+  "school.getMySchool": function(schoolId) {
+    if(schoolId){
+        return School.findOne({_id:schoolId})
+    }
+    else if (this.userId) {
       return School.find({ admins: { $in: [this.userId] } }).fetch();
     }
   },
@@ -274,7 +277,8 @@ Meteor.methods({
           fromEmail,
           toEmail,
           ROOT_URL,
-          rejectionUrl
+          rejectionUrl,
+          newlyCreatedUser
         );
         return { addedNewMember: true };
       } else {

@@ -24,7 +24,7 @@ class FullCalendar extends React.Component {
       return Object.assign({}, defaultOptions, calendarOptions);
     };
 
-    this.calendar = $(this.refs['fullcalendar-container']);
+    this.calendar = $('#fullcalendar-container');
 
     const calendarOptions = this.extendCalendarOptions(options);
 
@@ -44,13 +44,13 @@ class FullCalendar extends React.Component {
     });
 
     this.calendar.fullCalendar('refetchEvents');
-    this.calendar.fullCalendar('changeView', newOptions.defaultView);
+    //this.calendar.fullCalendar('changeView', newOptions.defaultView);
     // this.calendar.fullCalendar('gotoDate', newOptions.defaultDate);
   }
 
   render() {
     return (
-      <div ref="fullcalendar-container"></div>
+      <div id="fullcalendar-container"></div>
     );
   }
 }

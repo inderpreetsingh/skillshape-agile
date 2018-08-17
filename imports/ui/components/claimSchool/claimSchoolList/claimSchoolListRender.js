@@ -1,20 +1,20 @@
 import React from "react";
-import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
-import {cutString} from '/imports/util';
-import { InfiniteScroll } from '/imports/util';
-import { browserHistory, Link } from 'react-router';
+import styled from "styled-components";
+import isEmpty from "lodash/isEmpty";
+import { cutString } from "/imports/util";
+import { InfiniteScroll } from "/imports/util";
+import { browserHistory, Link } from "react-router";
 
-import Grid from 'material-ui/Grid';
-import Button from 'material-ui/Button';
+import Grid from "material-ui/Grid";
+import Button from "material-ui/Button";
 import SchoolCard from "/imports/ui/components/landing/components/cards/schoolCard";
-import NoResultsFound from '/imports/ui/components/landing/components/helpers/NoResultsFound.jsx';
-import FilterPanel from '/imports/ui/components/landing/components/FilterPanel.jsx';
-import SchoolSuggestionDialogBox from "/imports/ui/components/landing/components/dialogs/SchoolSuggestionDialogBox.jsx";
+import NoResults from "/imports/ui/components/landing/components/NoResults.jsx";
+import NoResultsFound from "/imports/ui/components/landing/components/helpers/NoResultsFound.jsx";
+import FilterPanel from "/imports/ui/components/landing/components/FilterPanel.jsx";
 
-import {getContainerMaxWidth} from '/imports/util/cards.js';
-import { ContainerLoader } from '/imports/ui/loading/container.js';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { getContainerMaxWidth } from "/imports/util/cards.js";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const SPACING = helpers.rhythmDiv * 2;
 const CARD_WIDTH = 300;
@@ -38,21 +38,19 @@ const Wrapper = styled.div`
   }
 `;
 
-const FormSubmitButtonWrapper =styled.div`
+const FormSubmitButtonWrapper = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
 `;
 
-const TextWrapper =styled.div`
+const TextWrapper = styled.div`
   font-size: ${helpers.baseFontSize * 1.25}px;
   text-align: left;
   max-width: 900px;
   margin-left: ${helpers.rhythmDiv * 2}px;
 `;
 
-
 const GridInnerWrapper = styled.div`
-  ${helpers.flexCenter}
-  justify-content: flex-start;
+  ${helpers.flexCenter} justify-content: flex-start;
   flex-wrap: wrap;
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -62,151 +60,99 @@ const GridInnerWrapper = styled.div`
 
 const GridItem = styled.div`
   width: ${CARD_WIDTH}px;
-  margin: ${props => props.spacing/2 || '16'}px;
+  margin: ${props => props.spacing / 2 || "16"}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     max-width: ${CARD_WIDTH}px;
-    margin: ${props => props.spacing/2 || '16'}px 0;
+    margin: ${props => props.spacing / 2 || "16"}px 0;
   }
 `;
 
 const GridWrapper = styled.div`
-    padding: ${SPACING/2}px;
+  padding: ${SPACING / 2}px;
+  margin: 0 auto;
+  max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 4) + 24}px;
+
+  @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 4) +
+      24}px) {
+    max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 3) + 24}px;
+    ${props => (props.suggestionForm ? "max-width: 800px" : "")};
+  }
+
+  @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 3) +
+      24}px) {
+    max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 2) + 24}px;
+    ${props => (props.suggestionForm ? "max-width: 800px" : "")};
+  }
+
+  @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 2) +
+      24}px) {
+    max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 1) + 24}px;
+    ${props => (props.suggestionForm ? "max-width: 800px" : "")};
     margin: 0 auto;
-    max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px;
-
-    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,4) + 24}px) {
-      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px;
-      ${props => props.suggestionForm ? "max-width: 800px" : ''};
-    }
-
-    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,3) + 24}px) {
-      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px;
-      ${props => props.suggestionForm ? "max-width: 800px" : ''};
-    }
-
-    @media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,2) + 24}px) {
-      max-width: ${getContainerMaxWidth(CARD_WIDTH,SPACING,1) + 24}px;
-      ${props => props.suggestionForm ? "max-width: 800px" : ''};
-      margin: 0 auto;
-    }
-
+  }
 `;
 
-const FormWrapper = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  margin-top: ${helpers.rhythmDiv * 4}px;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
-`;
+export default function(props) {
+  let schools = this.props.collectionData;
+  
+  const NoneOfMyLisiting = props => (
+    <Wrapper>
+      <TextWrapper>
+        Check to see if any of these are your school. The filters can help you
+        search! If you find your school, press the <b>claim</b> button. If you
+        do not find it, click the button to the right to open a new listing!
+      </TextWrapper>
+      <FormSubmitButtonWrapper>
+        <Button
+          className={props.classes.buttonStyles}
+          onClick={props.onStartNewListingButtonClick}
+        >
+          None of these are my school. <br />Start a new Listing!
+        </Button>
+      </FormSubmitButtonWrapper>
+    </Wrapper>
+  );
 
-const FormTitle = styled.h2`
-  font-size: ${helpers.baseFontSize * 2}px;
-  font-family: ${helpers.specialFont};
-  font-weight: 300;
-  font-style: italic;
-  text-align: center;
-  line-height: 1;
-  margin: 0;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-`;
+  if (this.props.isLoading) {
+    return <div />;
+  }
 
-const FormTagline = styled.h3`
-  font-size: ${helpers.baseFontSize}px;
-  font-family: ${helpers.specialFont};
-  font-weight: 400;
-  text-align: center;
-  line-height: 1;
-  margin: 0;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
-`;
+  if (isEmpty(schools)) {
+    return (
+      <GridWrapper suggestionForm={this.props.suggestionForm}>
+        {this.state.isLoading && <ContainerLoader />}
+        <NoResultContainer>
+          <NoneOfMyLisiting {...this.props} />
 
-const NoResultsFoundContainer = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
-`;
-
-export default function (props) {
-    let schools = this.props.collectionData;
-    const NoneOfMyLisiting = (props) => (<Wrapper>
-        <TextWrapper>
-            Check to see if any of these are your school. The filters can help you search!
-            If you find your school, press the <b>claim</b> button.
-            If you do not find it, click the button to the right to open a new listing!
-        </TextWrapper>
-        <FormSubmitButtonWrapper>
-          <Button className={props.classes.buttonStyles} onClick={props.onStartNewListingButtonClick}>
-            None of these are my school. <br/>Start a new Listing!
-          </Button>
-        </FormSubmitButtonWrapper>
-      </Wrapper>)
-
-    if(this.props.isLoading) {
-      return <div></div>
-    }
-
-    if(isEmpty(schools)) {
-        return (
-            <GridWrapper suggestionForm={this.props.suggestionForm}>
-              {this.state.isLoading && <ContainerLoader />}
-              <NoResultContainer>
-                <NoneOfMyLisiting {...this.props} />
-
-                <NoResultsFoundContainer>
-                  <NoResultsFound
-                    title="No Matching Schools Found."
-                    tagline1="If you know of a school that should be here, please fill in the fields you know."
-                    tagline2="We will look for them and ask them to join."
-                  />
-                </NoResultsFoundContainer>
-
-                <FormWrapper>
-                  <FilterPanel
-                    filtersInDialogBox
-                    filtersForSuggestion
-                    filters={this.state.filters}
-                    tempFilters={this.state.tempFilters}
-                    onLocationChange={this.onLocationChange}
-                    schoolWebsite={this.state.schoolWebsite}
-                    schoolEmail={this.state.schoolEmail}
-                    onSchoolWebsiteChange={this.handleSchoolDetails('schoolWebsite')}
-                    onSchoolEmailChange={this.handleSchoolDetails('schoolEmail')}
-                    locationInputChanged={this.locationInputChanged}
-                    fliterSchoolName={this.fliterSchoolName}
-                    filterAge={this.filterAge}
-                    filterGender={this.filterGender}
-                    skillLevelFilter={this.skillLevelFilter}
-                    perClassPriceFilter={this.perClassPriceFilter}
-                    pricePerMonthFilter={this.pricePerMonthFilter}
-                    collectSelectedSkillCategories={this.collectSelectedSkillCategories}
-                    collectSelectedSkillSubject={this.collectSelectedSkillSubject}
-                    onGiveSuggestion={this.handleGiveSuggestion}
-                    onGoBackButtonClick={props.handleGoBackButtonClick}
-                  />
-                </FormWrapper>
-
-              </NoResultContainer>
-            </GridWrapper>
-        )
-    } else {
-        return (
-            <div>
-
-                <GridWrapper>
-                  <NoneOfMyLisiting {...props} />
-                  <GridInnerWrapper>
-                    {schools &&
-                      schools.map((school, index) => {
-                          return (
-                              <GridItem spacing={SPACING} key={index}>
-                                  <SchoolCard schoolCardData={school} handleClaimASchool={this.props.handleClaimASchool}/>
-                              </GridItem>
-                          )
-                      })
-                    }
-                    </GridInnerWrapper>
-                </GridWrapper>
-            </div>
-        )
-    }
+          <NoResults
+            ghostButtons={true}
+            removeAllFiltersButtonClick={props.removeAllFilters}
+            addYourSchoolButtonClick={props.onStartNewListingButtonClick}
+          />
+        </NoResultContainer>
+      </GridWrapper>
+    );
+  } else {
+    return (
+      <div>
+        <GridWrapper>
+          <NoneOfMyLisiting {...props} />
+          <GridInnerWrapper>
+            {schools &&
+              schools.map((school, index) => {
+                return (
+                  <GridItem spacing={SPACING} key={index}>
+                    <SchoolCard
+                      schoolCardData={school}
+                      handleClaimASchool={this.props.handleClaimASchool}
+                    />
+                  </GridItem>
+                );
+              })}
+          </GridInnerWrapper>
+        </GridWrapper>
+      </div>
+    );
+  }
 }

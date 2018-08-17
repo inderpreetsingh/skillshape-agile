@@ -15,6 +15,10 @@ export default (config = Object.freeze({
     white: "#ffffff"
   },
   defaultLocation: [52.3702157, 4.8951],
+  defaultLocationObject: {
+    lat: 52.3702157,
+    lng: 4.8951
+  },
   // All collections needs to put here.
   collections: {
     modules: "Modules",
@@ -66,8 +70,9 @@ export default (config = Object.freeze({
     },
     { label: "Intermediate plus advanced", value: "intermediate plus advanced" }
   ],
-  defaultCurrency:'$',
+  defaultCurrency: "$",
   currency: [
+<<<<<<< HEAD
     { label: "USD", value: "$" ,multiplyFactor: 100},
     { label: "INR", value: "₹" ,multiplyFactor: 100},
     { label: "EUR", value: "€" ,multiplyFactor: 100},
@@ -78,6 +83,17 @@ export default (config = Object.freeze({
     { label: "KRW", value: "₩" ,multiplyFactor: 100},
     { label: "BRL", value: "R$" ,multiplyFactor: 100},
 
+=======
+    { label: "USD", value: "$" },
+    { label: "INR", value: "₹" },
+    { label: "EUR", value: "€" },
+    { label: "GBP", value: "£" },
+    { label: "CAD", value: "C$" },
+    { label: "AUD", value: "A$" },
+    { label: "JPY", value: "¥" },
+    { label: "KRW", value: "₩" },
+    { label: "BRL", value: "R$" }
+>>>>>>> a1a316c7f784a448d18238b464c45b88d2061df5
   ],
   duration: [
     { label: "Minutes", value: "Minutes" },
@@ -90,6 +106,8 @@ export default (config = Object.freeze({
     process.env.NODE_ENV == "development"
       ? "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
       : "6LeRJE8UAAAAAEtZBraHTNfUe3VD8k5QgJ0oM1J3", // production key
+
+  MAP_KEY: "AIzaSyAUzsZloT4lEquePIL_uReXGwMYGqyL0NE",
   // Need to show these default classes to `Users` if no class type data found for User's current location.
   defaultClassType: [
     { skillType: "Judo", location: "Toyko" },

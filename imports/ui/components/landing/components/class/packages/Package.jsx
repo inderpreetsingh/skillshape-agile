@@ -2,13 +2,11 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
-import Cart from "../../icons/Cart.jsx";
-
-import PrimaryButton from "../../buttons/PrimaryButton";
-
-//TODO: Automatic imports depending upon variables used - intellij
-import * as helpers from "../../jss/helpers.js";
-
+import { maximumClasses } from '/imports/util';
+import Cart from "/imports/ui/components/landing/components/icons/Cart.jsx";
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx'
 const Wrapper = styled.div`
   ${helpers.flexCenter} justify-content: space-between;
 
@@ -18,12 +16,14 @@ const Wrapper = styled.div`
 `;
 
 const OuterWrapper = styled.div`
-  background-color: white;
+  ${props => (props.forIframes ? `box-shadow: ${helpers.inputBoxShadow}` : "")};
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
   padding-right: ${helpers.rhythmDiv * 2}px;
   border-radius: ${helpers.rhythmDiv * 6}px;
   width: 100%;
   color: ${helpers.textColor};
+  z-index: 1;
+  position: relative;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     border-radius: ${helpers.rhythmDiv}px;
@@ -32,9 +32,22 @@ const OuterWrapper = styled.div`
     width: 100%;
     margin: 0 auto;
   }
+
+  &:after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: ${props => (props.forIframes ? props.bgColor : "white")};
+    opacity: ${props => (props.forIframes ? 0.1 : 1)};
+    border-radius: ${helpers.rhythmDiv * 6}px;
+  }
 `;
 
-const Title = styled.h2`
+const Title = styled.h3`
   font-size: 12px;
   font-family: ${helpers.commonFont};
   letter-spacing: 2px;
@@ -42,7 +55,7 @@ const Title = styled.h2`
   text-transform: uppercase;
   margin: 0;
   color: rgba(0, 0, 0, 1);
-  line-height: 1;
+  line-height: 1.2;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     text-align: center;
@@ -135,9 +148,10 @@ function getPaymentType(payment) {
 }
 
 const Package = props => (
-  <OuterWrapper>
+  <OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
     <Wrapper>
       <ClassDetailsSection>
+     
         <Title>{props.packageName || props.name}</Title>
         {props.packageType !== "EP" && (
           <Fragment>
@@ -161,13 +175,23 @@ const Package = props => (
         <ClassDetailsText>
           Covers: {getCovers(props.selectedClassType)}
         </ClassDetailsText>
+        {props.packageType == 'MP'&&  <ClassDetailsText>
+          Maximum Classes: {maximumClasses(props)}
+        </ClassDetailsText>
+      }
+        
       </ClassDetailsSection>
       <RightSection>
         {props.packageType !== "EP" ? (
           <Fragment>
             {props.classPackages ? (
               <PriceSection>
-                <Price>{props.cost && `${props.cost}${props.currency ? props.currency : props.schoolCurrency}`}</Price>
+                <Price>
+                  {props.cost &&
+                    `${props.cost}${
+                      props.currency ? props.currency : props.schoolCurrency
+                    }`}
+                </Price>
                 <NoOfClasses>
                   {props.noClasses && `for ${props.noClasses} classes`}
                 </NoOfClasses>
@@ -177,7 +201,14 @@ const Package = props => (
               props.pymtDetails.map((payment, index) => {
                 return (
                   <PriceSection key={`${payment.cost}-${index}`}>
-                    <Price>{payment.cost && `${payment.cost}${payment.currency ? payment.currency : props.schoolCurrency}`}</Price>
+                    <Price>
+                      {payment.cost &&
+                        `${payment.cost}${
+                          payment.currency
+                            ? payment.currency
+                            : props.schoolCurrency
+                        }`}
+                    </Price>
                     <NoOfClasses>
                       {payment.month && `per month for ${payment.month} months`}
                     </NoOfClasses>
@@ -190,10 +221,16 @@ const Package = props => (
           <PriceSection>
             {" "}
             {/* used for enrollment packages */}
-            <Price>{props.cost && `${props.cost}${ props.currency ? props.currency : props.schoolCurrency}`}</Price>
+            <Price>
+              {props.cost &&
+                `${props.cost}${
+                  props.currency ? props.currency : props.schoolCurrency
+                }`}
+            </Price>
             <NoOfClasses>{props.cost && "For Enrollment"}</NoOfClasses>
           </PriceSection>
         )}
+<<<<<<< HEAD
 
         <AddToCartSection>
           {/* <a
@@ -202,6 +239,17 @@ const Package = props => (
             }&scope=read_write`}
           > */}
          
+=======
+        {props.onSchoolEdit ? 
+          <EditButton 
+          label={'Edit'}
+          onClick={()=>{
+            props.setFormData()
+            props.onEditClick()
+          }}
+          />
+          :  <AddToCartSection>
+>>>>>>> a1a316c7f784a448d18238b464c45b88d2061df5
           <Cart
             onClick={() =>
               props.onAddToCartIconButtonClick(
@@ -221,7 +269,8 @@ const Package = props => (
             }
           />
           {/* </a> */}
-        </AddToCartSection>
+        </AddToCartSection>}
+      
       </RightSection>
     </Wrapper>
   </OuterWrapper>

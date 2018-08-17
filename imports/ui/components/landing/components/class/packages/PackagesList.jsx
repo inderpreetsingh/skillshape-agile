@@ -36,6 +36,7 @@ const PackagesListWrapper = styled.section`
     z-index: 0;
     background-color: ${props =>
       props.classPackages ? helpers.primaryColor : helpers.panelColor};
+    ${props => (props.forIframes ? "background-color: transparent" : "")};
     opacity: ${props => (props.classPackages ? 0.1 : 1)};
   }
 
@@ -48,20 +49,22 @@ const PackagesListWrapper = styled.section`
 const EnrollMentListWrapper = PackagesListWrapper.extend`
   width: 100%;
   align-items: center;
-
+  ${props => (props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;')}
   &:after {
     background-color: #dddd;
+    ${props => (props.forIframes ? "background-color: transparent" : "")};
     opacity: 1;
   }
 `;
 
 const PackageWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
-  width: 100%;
+  min-width: 500px;
+  max-width: 500px;
 `;
 
 const PackagesWrapper = styled.div`
-  max-width: 550px;
+  max-width: 500px
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -69,23 +72,17 @@ const PackagesWrapper = styled.div`
   padding: 0 ${helpers.rhythmDiv * 2}px;
   position: relative;
   z-index: 1;
+  ${props => (props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;')}
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
-    max-width: 550px;
+  max-width: 500px
     padding: ${helpers.rhythmDiv}px;
-    align-items: center;
-  }
-
-  @media screen and (max-width: ${helpers.tablet}px) {
-    // max-width: 500px;
-    // width: 100%;
-  }
-
-  @media screen and (max-width: ${helpers.mobile}px) {
+    align-items: space-around;
+    
   }
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   font-family: ${helpers.specialFont};
   font-weight: 300;
   text-align: center;
@@ -98,33 +95,24 @@ const Title = styled.h1`
   width: 100%;
 `;
 
-const FallBackMsg = styled.h3`
-  font-family: ${helpers.specialFont};
-  text-align: center;
-  font-style: italic;
-  line-height: 1;
-  font-size: ${helpers.baseFontSize}px;
-  margin: 0;
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
-  color: ${helpers.textColor};
-  width: 100%;
-`;
-
 const PackageList = props => (
   <PackagesListWrapper
+    forIframes={props.forIframes}
     fullScreen={props.fullScreen}
     classPackages={props.classPackages}
   >
- 
-    <PackagesWrapper classPackages={props.classPackages}>
+    <PackagesWrapper classPackages={props.classPackages} onPriceEdit={props.onPriceEdit}>
       <Title>{props.packageListName}</Title>
       {props.packagesData.map(packageData => (
         <PackageWrapper key={packageData._id}>
           <Package
-            classPackages={props.classPackages}
             {...packageData}
             {...props.packageProps}
+            classPackages={props.classPackages}
             schoolCurrency={props.schoolCurrency}
+            onSchoolEdit={props.onSchoolEdit}
+            onEditClick={()=>{props.onEditClick()}}
+            setFormData={()=>{props.setFormData(packageData)}}
           />
         </PackageWrapper>
       ))}
@@ -133,16 +121,21 @@ const PackageList = props => (
 );
 
 const EnrollmentPackagesList = props => (
-  <EnrollMentListWrapper>
-    <PackagesWrapper>
+  <EnrollMentListWrapper forIframes={props.forIframes}>
+    <PackagesWrapper onPriceEdit={props.onPriceEdit}>
+
       <Title>{props.packageListName}</Title>
       {props.packagesData.map(packageData => (
         <PackageWrapper key={packageData._id}>
           <Package
-            classPackages={props.classPackages}
             {...packageData}
             {...props.packageProps}
+            classPackages={props.classPackages}
             schoolCurrency={props.schoolCurrency}
+            onSchoolEdit={props.onSchoolEdit}
+            onEditClick={()=>{props.onEditClick()}}
+            setFormData={()=>{props.setFormData(packageData)}}
+
           />
         </PackageWrapper>
       ))}
@@ -154,14 +147,21 @@ const PackagesList = props => {
   const classPackagesEmpty = isEmpty(props.perClassPackagesData);
   const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
   const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
+<<<<<<< HEAD
   const schoolCurrency=props.currency;
+=======
+  const schoolCurrency = props.currency;
+>>>>>>> a1a316c7f784a448d18238b464c45b88d2061df5
   return (
     <Fragment>
       {props.enrollMentPackages &&
         !enrollMentPackagesEmpty && (
           <Wrapper>
             <EnrollmentPackagesList
+              forIframes={props.forIframes}
               packageProps={{
+                bgColor: "#dddd",
+                forIframes: props.forIframes,
                 packageType: "EP",
                 onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
                 schoolId: props.schoolId
@@ -169,13 +169,20 @@ const PackagesList = props => {
               packageListName="Enrollment Packages"
               packagesData={props.enrollMentPackagesData}
               schoolCurrency={schoolCurrency}
+              onSchoolEdit={props.onSchoolEdit}
+              onEditClick={()=>{props.onEditClick()}}
+              setFormData={(packageData)=>{props.setFormData(packageData)}}
+              onPriceEdit={props.onPriceEdit}
             />
           </Wrapper>
         )}
       <Wrapper>
         {!classPackagesEmpty && (
           <PackageList
+            forIframes={props.forIframes}
             packageProps={{
+              bgColor: helpers.primaryColor,
+              forIframes: props.forIframes,
               packageType: "CP",
               onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
               schoolId: props.schoolId
@@ -186,12 +193,19 @@ const PackagesList = props => {
             packageListName="Class Packages"
             packagesData={props.perClassPackagesData}
             schoolCurrency={schoolCurrency}
+            onSchoolEdit={props.onSchoolEdit}
+            onEditClick={()=>{props.onEditClick()}}
+            setFormData={(packageData)=>{props.setFormData(packageData)}}
+            onPriceEdit={props.onPriceEdit}
           />
         )}
 
         {!monthlyPackagesEmpty && (
           <PackageList
+            forIframes={props.forIframes}
             packageProps={{
+              bgColor: helpers.primaryColor,
+              forIframes: props.forIframes,
               packageType: "MP",
               onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
               schoolId: props.schoolId
@@ -200,6 +214,10 @@ const PackagesList = props => {
             fullScreen={classPackagesEmpty}
             packagesData={props.monthlyPackagesData}
             schoolCurrency={schoolCurrency}
+            onSchoolEdit={props.onSchoolEdit}
+            onEditClick={()=>{props.onEditClick()}}
+            setFormData={(packageData)=>{props.setFormData(packageData)}}
+            onPriceEdit={props.onPriceEdit}
           />
         )}
       </Wrapper>
@@ -211,12 +229,13 @@ PackagesList.propTypes = {
   perClassPackagesData: PropTypes.arrayOf(PackageStructure),
   monthlyPackagesData: PropTypes.arrayOf(PackageStructure),
   enrollMentPackages: PropTypes.bool,
-  schoolId: PropTypes.string,
-  
+  forIframes: PropTypes.bool,
+  schoolId: PropTypes.string
 };
 
 PackagesList.defaultProps = {
-  enrollMentPackages: false
+  enrollMentPackages: false,
+  forIframes: false
 };
 
 export default PackagesList;

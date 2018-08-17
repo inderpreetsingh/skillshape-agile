@@ -20,7 +20,8 @@ const styles = theme => ({
   wrapper: {
     minHeight: "100vh",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    overflow:'hidden'
   },
   content: {
     backgroundColor: theme.palette.background.default

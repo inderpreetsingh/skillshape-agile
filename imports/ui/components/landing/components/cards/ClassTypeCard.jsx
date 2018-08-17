@@ -51,7 +51,6 @@ class ClassTypeCard extends Component {
   };
   handleDialogState = state => e => {
     e.stopPropagation();
-    // console.log(e,e.stopPropagation(),"clickced");
     this.setState({
       dialogOpen: state,
       classTimesDialogBoxError: null,

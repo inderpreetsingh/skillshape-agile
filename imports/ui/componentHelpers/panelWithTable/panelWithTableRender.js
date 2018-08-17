@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import styled from "styled-components";
 import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
 import methods from "/imports/ui/modal/formBuilderMethods";
 import ChildTable from "./childTable";
@@ -11,7 +12,7 @@ import red from "material-ui/colors/red";
 import ShareIcon from "material-ui-icons/Share";
 import ExpandMoreIcon from "material-ui-icons/ExpandMore";
 import MoreVertIcon from "material-ui-icons/MoreVert";
-
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import Typography from "material-ui/Typography";
 import Paper from "material-ui/Paper";
 import Grid from "material-ui/Grid";
@@ -36,8 +37,30 @@ import Dialog, {
 import MapComponent from "./mapComponent";
 import MediaUpload from "/imports/ui/componentHelpers/mediaUpload";
 import Card, { CardActions, CardContent } from "material-ui/Card";
+import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
+import {
+  rhythmDiv,
+  mobile,
+  tablet
+} from "/imports/ui/components/landing/components/jss/helpers.js";
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+
+  @media screen and (max-width: ${tablet - 100}px) {
+    flex-direction: column;
+    justify-content: center;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  margin-top: ${rhythmDiv * 2}px;
+  margin-right: ${rhythmDiv * 2}px;
+  // ${props => (props.left ? `margin-right: ${rhythmDiv * 2}px;` : "")};
+`;
 
 export default function() {
   const {
@@ -50,13 +73,14 @@ export default function() {
   } = this.props;
   const FormComponent = settings.mainPanelHeader.actions.component;
   // const EditForm = settings.mainTable.actions.edit.component;
+
   // console.log("Panel with table props -->>",this.state);
   const { currentTableData } = this.state;
   // console.log("Panel with table -->>",this);
   return (
     <div className={`${className} panel-table`}>
       {this.state.isBusy && <ContainerLoader />}
-      {this.state.showConfirmationModal && (
+      {/*this.state.showConfirmationModal && (
         <ConfirmationModal
           open={this.state.showConfirmationModal}
           submitBtnLabel="Yes"
@@ -66,6 +90,37 @@ export default function() {
             this.handleExpansionPanelRightBtn(currentTableData);
           }}
           onClose={this.cancelConfirmationModal}
+        />
+      )*/}
+      {this.state.showConfirmationModal && (
+        <SkillShapeDialogBox
+          open={this.state.showConfirmationModal}
+          type="alert"
+          defaultButtons
+          title="Are you sure?"
+          content="This will email all attending and interested students of the time change. Are you sure?"
+          cancelBtnText="Cancel"
+          onAffirmationButtonClick={() => {
+            this.handleExpansionPanelRightBtn(currentTableData);
+          }}
+          onModalClose={this.cancelConfirmationModal}
+          onCloseButtonClick={this.cancelConfirmationModal}
+        />
+      )}
+      {this.state.deleteConfirmationModal && (
+        <SkillShapeDialogBox
+          open={this.state.deleteConfirmationModal}
+          type="alert"
+          defaultButtons
+          title="Are you sure?"
+          content={
+            settings.mainTable.actions.del.dialogBoxContent ||
+            "This will delete your data, are you sure?"
+          }
+          cancelBtnText="Cancel"
+          onAffirmationButtonClick={this.handleDeleteData}
+          onModalClose={this.closeDeleteConfirmationModal}
+          onCloseButtonClick={this.closeDeleteConfirmationModal}
         />
       )}
       {this.state.showForm && (
@@ -122,6 +177,7 @@ export default function() {
             >
               {settings.mainPanelHeader.actions.buttonTitle}
             </Button>
+          
           </Grid>
         </Grid>
       </Paper>
@@ -290,28 +346,45 @@ export default function() {
                               }
                             )}
                         </Grid>
-                        <Grid
-                          item
-                          xs={12}
-                          sm={12}
-                          style={{ textAlign: "right" }}
-                        >
-                          <Button
-                            style={{ margin: 15 }}
-                            onClick={() =>
-                              this.setState({
-                                showForm: true,
-                                formData: tableData
-                              })
-                            }
-                            color="accent"
-                            raised
-                            dense
-                          >
-                            <Edit style={{ marginRight: 2 }} />
-                            {settings.mainTable.actions.edit.title}
-                          </Button>
-                        </Grid>
+                        <ButtonsWrapper>
+                          {settings.mainTable.actions.del && (
+                            <ButtonWrapper left>
+                              <Button
+                                onClick={() => {
+                                  this.setState(state => {
+                                    return {
+                                      ...state,
+                                      formData: tableData
+                                    };
+                                  });
+                                  this.showDeleteConfirmationModal();
+                                }}
+                                color="accent"
+                                raised
+                                dense
+                              >
+                                <Delete style={{ marginRight: 2 }} />
+                                {settings.mainTable.actions.del.title}
+                              </Button>
+                            </ButtonWrapper>
+                          )}
+                          <ButtonWrapper right>
+                            <Button
+                              onClick={() =>
+                                this.setState({
+                                  showForm: true,
+                                  formData: tableData
+                                })
+                              }
+                              color="accent"
+                              raised
+                              dense
+                            >
+                              <Edit style={{ marginRight: 2 }} />
+                              {settings.mainTable.actions.edit.title}
+                            </Button>
+                          </ButtonWrapper>
+                        </ButtonsWrapper>
                       </div>
                     </Grid>
                     {settings.mainPanelHeader.showAddressOnMap && (

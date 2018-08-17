@@ -20,9 +20,14 @@ import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import "/imports/api/sLocation/methods";
 import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
-
 const formId = "classTypeForm";
+import styled from "styled-components";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 const styles = theme => {
   return {
     button: {
@@ -32,7 +37,22 @@ const styles = theme => {
     classtypeInputContainer: {
       alignItems: "center",
       textAlign: "left"
-    }
+    },
+    delete: {
+      backgroundColor:'red',
+      color: "black",
+      fontWeight: 600
+     },
+     cancel: {
+       backgroundColor:'yellow',
+       color: "black",
+       fontWeight: 600
+      },
+      save: {
+       backgroundColor:'green',
+       color: "black",
+       fontWeight: 600
+      }
   };
 };
 
@@ -54,7 +74,8 @@ class ClassTypeForm extends React.Component {
       skillCategoryId: null,
       selectedSkillSubject: null,
       selectedLocation: null,
-      searchSkillCategoryText: ""
+      searchSkillCategoryText: "",
+      
     };
     if (data && _.size(data) > 0) {
       if (
@@ -228,9 +249,13 @@ class ClassTypeForm extends React.Component {
       this.setState({ isBusy: false, error });
     });
   };
-
+  //Set default location id if nothing selected 
+  setDefaultLocation=(defaultLocId)=>{
+    this.setState({location:defaultLocId})
+    return defaultLocId;
+  }
   render() {
-    const { fullScreen, data, classes, locationData } = this.props;
+    const { fullScreen, data, classes, locationData  } = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
     return (
       <div>
@@ -391,7 +416,7 @@ class ClassTypeForm extends React.Component {
                       <Select
                         required={true}
                         input={<Input id="location" />}
-                        value={this.state.location}
+                        value={this.state.location ? this.state.location : !_.isEmpty(locationData) && this.setDefaultLocation(locationData[0]._id) }
                         onChange={event =>
                           this.setState({ location: event.target.value })
                         }
@@ -418,21 +443,49 @@ class ClassTypeForm extends React.Component {
           )}
           <DialogActions>
             {data && (
-              <Button
-                onClick={() => this.setState({ showConfirmationModal: true })}
-                color="accent"
-              >
-                Delete
-              </Button>
-            )}
-            <Button onClick={() => this.props.onClose()} color="primary">
-              Cancel
-            </Button>
-            <Button type="submit" form={formId} color="primary">
-              {data ? "Save" : "Submit"}
-            </Button>
+            //   <Button
+            //     onClick={() => this.setState({ showConfirmationModal: true })}
+            //     color="accent"
+            //     className={classes.delete}
+            //   >
+            //     Delete
+            //   </Button>
+            // )}
+            // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
+            //   Cancel
+            // </Button>
+            // <Button type="submit" form={formId} color="primary" className={classes.save}>
+            //   {data ? "Save" : "Submit"}
+            // </Button>
+            <ButtonWrapper>
+            <FormGhostButton
+              alertColor
+              onClick={() => this.setState({ showConfirmationModal: true })}
+              label="Delete"
+              className={classes.delete}
+            />
+          </ButtonWrapper>
+        )}
+        <ButtonWrapper>
+          <FormGhostButton
+            darkGreyColor
+            onClick={() => this.props.onClose()}
+            label="Cancel"
+            className={classes.cancel}
+          />
+        </ButtonWrapper>
+        <ButtonWrapper>
+          <FormGhostButton
+            type="submit"
+            form={formId}
+            onClick={this.onSubmit}
+            label={data ? "Save" : "Submit"}
+            className={classes.save}
+          />
+        </ButtonWrapper>
           </DialogActions>
         </Dialog>
+       
       </div>
     );
   }

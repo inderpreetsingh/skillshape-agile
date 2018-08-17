@@ -171,6 +171,7 @@ const ClassTimeButton = props => {
         disabled={props.disabled}
         itemScope
         itemType={props.itemType}
+        
       >
         {getIconForButton(props)}
 
@@ -188,6 +189,7 @@ const ClassTimeButton = props => {
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
+      style={{backgroundColor:`${props.bgColor&& props.bgColor}`}}
     >
       {getIconForButton(props)}
 

@@ -26,23 +26,23 @@ class IconInput extends React.Component {
     inputFocused : false,
   }
   onFocus = ()=> {
-      this.setState({inputFocused: true});
+    this.setState({inputFocused: true});
   }
   onBlur = ()=> {
-      this.setState({inputFocused: false})
+    this.setState({inputFocused: false})
   }
-
+  
   render() {
     let inputRef;
     const props = this.props;
     const { classes } = props;
     const setInputRef = (ref) => inputRef = ref;
 
-    if(props.googlelocation) {
+    if(props.googlelocation  ) {
       setTimeout(()=> {
         let options ={strictBounds:true}
         // Google's API
-        let autocomplete = new google.maps.places.Autocomplete(inputRef,options);
+         autocomplete = new google.maps.places.Autocomplete(inputRef,options);
         // This runs when user changes location.
         autocomplete.addListener('place_changed', () => {
           let place = autocomplete.getPlace();
@@ -128,11 +128,11 @@ IconInput.propTypes = {
   placeHolder: PropTypes.string,
   labelText: PropTypes.string,
   onChange: PropTypes.func,
-  googlelocation: PropTypes.boolean,
+  googlelocation: PropTypes.bool,
   error: PropTypes.boolean,
   errorText: PropTypes.string,
-  disabled: PropTypes.boolean,
-  multiline: PropTypes.boolean,
+  disabled: PropTypes.bool,
+  multiline: PropTypes.bool,
   classes: PropTypes.object,
   min: PropTypes.number,
   max: PropTypes.number,

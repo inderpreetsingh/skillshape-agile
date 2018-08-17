@@ -824,7 +824,7 @@ export default createContainer(props => {
       schoolData = School.find().fetch();
     }
     //find school id
-    schoolId=schoolData[0]._id;
+    schoolId=!isEmpty(schoolData) && schoolData[0]._id;
     //find all classpricing from subscription for displaying in add new member popup
     let classPricingSubscription=Meteor.subscribe("classPricing.getClassPricing",{schoolId})
     if(classPricingSubscription.ready()){

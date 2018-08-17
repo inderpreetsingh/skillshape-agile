@@ -45,7 +45,7 @@ import ClassTimeButton from '/imports/ui/components/landing/components/buttons/C
 
 import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
-
+import { normalizeMonthlyPricingData } from "/imports/util";
 import { schoolDetailsImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
@@ -373,7 +373,7 @@ export default function() {
                     enrollMentPackages
                     enrollMentPackagesData={enrollmentFee}
                     perClassPackagesData={classPricing}
-                    monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricing)}
+                    monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricing)}
                     currency={currency}
                   />
                 }

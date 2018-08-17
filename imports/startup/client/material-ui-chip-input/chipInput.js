@@ -506,7 +506,6 @@ class ChipInput extends React.Component {
       allowDuplicates, // eslint-disable-line no-unused-vars
       ...other
     } = this.props;
-    console.info("OTher is other", other, this.autoComplete, this.props);
     const { prepareStyles } = this.context.muiTheme;
     const styles = getStyles(this.props, this.context, this.state);
     const inputId = id || this.uniqueId;

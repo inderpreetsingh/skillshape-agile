@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { SocialIcon } from 'react-social-icons';
 
-import { FooterSectionHeader, FooterText, SocialIconLink } from './FooterHelpers';
+import { FooterSectionHeader, FooterText } from './FooterHelpers';
 
 import * as helpers from '../jss/helpers.js';
 
@@ -28,26 +28,18 @@ const ConnectWithUs = () => (
            <span itemProp="description">Connect with Us</span>
         </FooterSectionHeader>
         <SocialIconsWrapper >
-            <SocialIconLink itemProp="url" to="https://www.facebook.com">
-                <div className="social-container">
-                    <SocialIcon network="facebook" style={socialIconStyles} color={helpers.lightTextColor}/>
-                </div>
-            </SocialIconLink>
-            <SocialIconLink itemProp="url" to="https://plus.google.com">
-                <div className="social-container">
-                    <SocialIcon network="google" style={socialIconStyles} color={helpers.lightTextColor}/>
-                </div>
-            </SocialIconLink>
-            <SocialIconLink itemProp="url" to="https://www.twitter.com">
-                <div className="social-container">
-                    <SocialIcon network="twitter" style={socialIconStyles} color={helpers.lightTextColor}/>
-                </div>
-            </SocialIconLink>
-            <SocialIconLink itemProp="url" to="https://www.instagram.com">
-                <div className="social-container">
-                    <SocialIcon network="instagram" style={socialIconStyles} color={helpers.lightTextColor}/>
-                </div>
-            </SocialIconLink>
+            <div className="social-container">
+                <SocialIcon url="https://business.facebook.com/SkillShapeLearning" network="facebook" style={socialIconStyles} color={helpers.lightTextColor}/>
+            </div>
+            <div className="social-container">
+                <SocialIcon url="https://plus.google.com/117321700113912820761" network="google" style={socialIconStyles} color={helpers.lightTextColor}/>
+            </div>
+            <div className="social-container">
+                <SocialIcon url="https://twitter.com/skillshape" network="twitter" style={socialIconStyles} color={helpers.lightTextColor}/>
+            </div>
+            <div className="social-container">
+                <SocialIcon url="https://www.instagram.com/skillshape/" network="instagram" style={socialIconStyles} color={helpers.lightTextColor}/>
+            </div>
         </SocialIconsWrapper>
     </ConnectWithUsWrapper>
 );

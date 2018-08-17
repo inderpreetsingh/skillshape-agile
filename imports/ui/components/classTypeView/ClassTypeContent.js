@@ -168,7 +168,7 @@ const CalendarWrapper = styled.div`
 const ClassContainer = styled.div`
   width: 90%;
   padding: 0 ${helpers.rhythmDiv}px;
-  margin: 0px auto;
+  margin: 3px auto;
   border-radius: ${helpers.rhythmDiv}px;
   background: #ffffff;
   text-align: center;
