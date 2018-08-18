@@ -132,7 +132,6 @@ class MonthlyPriceForm extends React.Component {
       }
       
     this.setState({ isBusy: true });
-    console.log("payload",payload)
     if (data && data._id) {
       this.handleSubmit({
         methodName: "monthlyPricing.editMonthlyPricing",
@@ -175,12 +174,17 @@ class MonthlyPriceForm extends React.Component {
   };
 
   handleCheckBox = (key, disableKey, pymtType, event, isInputChecked) => {
+    
     let oldPayment = this.state.pymtType || {};
     oldPayment[pymtType] = isInputChecked;
+    oldPayment[disableKey] = !isInputChecked;
     this.setState({
       [key]: isInputChecked,
       pymtType: oldPayment,
+      [disableKey]:!isInputChecked
     });
+    console.log("pymtType",this.state.pymtType)
+   
   };
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
