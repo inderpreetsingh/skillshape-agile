@@ -180,6 +180,7 @@ class MonthlyPriceForm extends React.Component {
       if (error) {
       }
       if (result) {
+        console.log(result);
         this.props.onClose();
       }
       this.setState({ isBusy: false, error });
