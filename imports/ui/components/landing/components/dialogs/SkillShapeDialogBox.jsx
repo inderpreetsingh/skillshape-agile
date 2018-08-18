@@ -232,15 +232,7 @@ class SkillShapeDialogBox extends Component {
     } = this.props;
     return (
       <ButtonsWrapper rightAlign>
-        <ButtonWrapper>
-          <Button
-            onClick={onAffirmationButtonClick || onModalClose}
-            className={fromPackageListing ? classes["ghostCommon"] + " " + classes[`ghost.success`] :this._getAffirmateButtonClasses()}
-          >
-            {this._getAffirmateButtonText()}
-          </Button>
-        </ButtonWrapper>
-        {(type === "warning" || defaultButtons) && (
+       {(type === "warning" || defaultButtons) && (
           <ButtonWrapper>
             <Button
               onClick={onCloseButtonClick || onModalClose}
@@ -250,6 +242,15 @@ class SkillShapeDialogBox extends Component {
             </Button>
           </ButtonWrapper>
         )}
+        <ButtonWrapper>
+          <Button
+            onClick={onAffirmationButtonClick || onModalClose}
+            className={fromPackageListing ? classes["ghostCommon"] + " " + classes[`ghost.success`] :this._getAffirmateButtonClasses()}
+          >
+            {this._getAffirmateButtonText()}
+          </Button>
+        </ButtonWrapper>
+       
       </ButtonsWrapper>
     );
   };

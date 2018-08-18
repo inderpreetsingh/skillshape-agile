@@ -347,7 +347,7 @@ class MonthlyPriceForm extends React.Component {
                   style={{
                     border: "1px solid blue",
                     padding: 10,
-                    backgroundColor: "#C5D9A1"
+                    backgroundColor: "dimgrey"
                   }}
                 >
                   {this.state.tabValue === 0 && (
@@ -447,7 +447,7 @@ class MonthlyPriceForm extends React.Component {
             type="submit"
             form={formId}
             onClick={this.onSubmit}
-            label={data ? "Save" : "Submit"}
+            label={"Save"}
             className={classes.save}
           />
         </ButtonWrapper>
