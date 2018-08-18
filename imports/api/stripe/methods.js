@@ -3,6 +3,7 @@ import School from "../school/fields";
 import EnrollmentFees from "../enrollmentFee/fields";
 import ClassSubscription from "../classSubscription/fields";
 import ClassPricing from "../classPricing/fields";
+import { check } from 'meteor/check';
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
 // :":":":":":":"" classtypeids removed 
@@ -19,6 +20,11 @@ Meteor.methods({
     expPeriod,
     noClasses
   ) {
+    check(stripeToken,String);
+    check(desc,String);
+    check(packageId,String);
+    check(packageType,String);
+    check(schoolId,String);
     let recordId, amount, currency;
     //Get amount and currency from database using package ids
     if (packageType == "EP") {
@@ -135,6 +141,7 @@ Meteor.methods({
     }
   },
   "stripe.getStripeToken": function (code) {
+    check(code,String);
     try {
       let result = Meteor.http.call(
         "POST",
@@ -168,6 +175,7 @@ Meteor.methods({
     }
   },
   "stripe.addStripeJsonForUser": function (data) {
+    check(data,Object);
     let customer_id = UserStripeData.insert(data);
     Meteor.users.update(
       { _id: this.userId },
@@ -183,6 +191,7 @@ Meteor.methods({
     return "Successfully Disconnected";
   },
   "stripe.findAdminStripeAccount": function (superAdminId) {
+    check(superAdminId,String);
     let result = UserStripeData.findOne({ userId: superAdminId });
     if (result) {
       return true;
@@ -192,6 +201,9 @@ Meteor.methods({
   },
   //creating plan for on monthly package creation
   "stripe.createStripePlan": async function (currencyCode, interval, amount) {
+    check(currencyCode,String);
+    check(interval,String);
+    check(amount,String);
     let productId = Meteor.settings.productId;
     try {
       const plan = await stripe.plans.create({
@@ -206,6 +218,7 @@ Meteor.methods({
     }
   },
   "stripe.createStripeProduct": function (productId) {
+    check(productId,String);
     let existingProduct = stripe.products.retrieve(productId, function (
       err,
       product
@@ -242,6 +255,12 @@ Meteor.methods({
     packageId,
     monthlyPymtDetails
   ) {
+    check(token,String);
+    check(planId,String);
+    check(schoolId,String);
+    check(packageName,String);
+    check(packageId,String);
+    check(monthlyPymtDetails,[Object]);
     //customer creation and subscribe if new otherwise straight to subscribe
     let startDate,
       expiryDate,
@@ -256,8 +275,7 @@ Meteor.methods({
         _id: userId,
         stripeCusId: { $exists: true }
       });
-      console.log("currentUserProfile",currentUserProfile)
-      let emailId=currentUserProfile.emails.address;
+      let emailId=Meteor.user().emails.address;
       //find stripeCusId from users or create a new one and store in the users collection
       if (currentUserProfile) {
         stripeCusId = currentUserProfile.stripeCusId;

@@ -8,11 +8,15 @@ import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import Media from "/imports/api/media/fields.js"
 import config from "/imports/config";
 import { size, uniq, isEmpty, isArray } from 'lodash';
+import { check } from 'meteor/check';
+
 // import { checkSuperAdmin } from '/imports/util';
 // import { buildAggregator } from 'meteor/lamoglia:publish-aggregation';
 // import ClientReports from '/imports/startup/client';
 
 Meteor.publish("UserSchool", function (schoolId) {
+    check(schoolId,String);
+
     const schoolCursor = School.find({ _id: schoolId })
     const schoolData = schoolCursor.fetch();
 
@@ -29,6 +33,8 @@ Meteor.publish("UserSchool", function (schoolId) {
 });
 
 Meteor.publish("UserSchoolbySlug", function (slug) {
+    check(slug,String);
+
     const schoolCursor = School.find({ slug: slug })
     const schoolData = schoolCursor.fetch();
     if (!isEmpty(schoolData)) {
@@ -50,6 +56,7 @@ Meteor.publish("UserSchoolbySlug", function (slug) {
 });
 
 Meteor.publish("classTypeBySchool", function ({ schoolId, limit }) {
+
     return [
         ClassType.find({ schoolId: schoolId })
     ];
@@ -470,6 +477,8 @@ Meteor.publish("school.getClassTypesByCategory", function ({
 
 });
 Meteor.publish('school.getSchoolBySchoolId',function(schoolId){
+    check(schoolId,String);
+
    let  result= School.find({_id:schoolId});
    return result;
 
@@ -628,6 +637,8 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
 
 // This publication is used to get media uploaded by admin of a School OR member's media
 Meteor.publish("school.getSchoolWithConnectedTagedMedia", function ({ email }) {
+    check(email,String);
+
     if (email && this.userId) {
         let schoolIds = [];
         let schoolCursor;

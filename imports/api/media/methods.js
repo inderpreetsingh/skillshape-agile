@@ -1,8 +1,11 @@
 import Media from "./fields";
 import get from 'lodash/get';
+import { check } from 'meteor/check';
 
 Meteor.methods({
    "media.addMedia": function(doc) {
+    check(doc, Object);
+
         const user = Meteor.users.findOne(this.userId);
         // console.log("media.addMedia methods called!!!");
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "media_CUD" })) {
@@ -22,6 +25,8 @@ Meteor.methods({
         }
     },
     "media.editMedia": function(doc_id, doc) {
+        check(doc, Object);
+        check(doc_id, String);
         // console.log("media.editMedia methods called!!!",doc_id, doc);
         let payload = {...doc, accessType: 'public'};
         const mediaData = Media.findOne({ _id: doc_id });
@@ -60,6 +65,7 @@ Meteor.methods({
         // }
     },
     "media.removeMedia": function(doc) {
+        check(doc, Object);
         const user = Meteor.users.findOne(this.userId);
         // console.log("media.removeModule methods called!!!",doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "media_CUD" })) {

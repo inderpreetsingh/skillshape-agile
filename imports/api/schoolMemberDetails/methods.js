@@ -3,6 +3,7 @@ import isArray from "lodash/isArray";
 import get from "lodash/get";
 import { sendEmailToStudentForClaimAsMember } from "/imports/api/email";
 import School from "/imports/api/school/fields.js";
+import { check } from 'meteor/check';
 
 Meteor.methods({
   "schoolMemberDetails.acceptInvitation": function({
@@ -10,6 +11,9 @@ Meteor.methods({
     schoolId,
     acceptInvite
   }) {
+    check(memberId,String);
+    check(schoolId,String);
+
     let schoolMemberDetailsData = SchoolMemberDetails.findOne({
       _id: memberId,
       schoolId: schoolId
@@ -35,6 +39,8 @@ Meteor.methods({
     }
   },
   "schoolMemberDetails.getAllSchoolMembers": function({ schoolId }) {
+    check(schoolId,String);
+
     if (schoolId) {
       return SchoolMemberDetails.find({ schoolId }).fetch();
     } else {
@@ -42,6 +48,9 @@ Meteor.methods({
     }
   },
   "schoolMemberDetails.editSchoolMemberDetails": function({ doc_id, doc }) {
+    check(doc,Object);
+    check(doc_id,String);
+
     const user = Meteor.users.findOne(this.userId);
     const memberData = SchoolMemberDetails.findOne({ _id: doc_id });
     // We are editing a school member without email here so need to check if entered email already exist OR not.
@@ -104,6 +113,9 @@ Meteor.methods({
     return SchoolMemberDetails.update({ _id: doc_id }, { $set: doc });
   },
   "schoolMemberDetails.rejectInvitation": function({ memberId, schoolId }) {
+    check(memberId,String);
+    check(schoolId,String);
+    
     let schoolMemberDetailsData = SchoolMemberDetails.findOne({
       _id: memberId,
       schoolId: schoolId
@@ -125,6 +137,8 @@ Meteor.methods({
     }
   },
   "schoolMemberDetails.addNewMember": function(memberData) {
+    check(memberData,Object);
+    
     let userData = SchoolMemberDetails.findOne({
       schoolId: memberData.schoolId,
       activeUserId: memberData.activeUserId

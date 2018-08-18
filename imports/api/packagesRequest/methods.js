@@ -5,9 +5,14 @@ import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "/imports/api/school/fields";
 import { getUserFullName } from "/imports/util/getUserData";
+import { check } from 'meteor/check';
 
 Meteor.methods({
   "packageRequest.addRequest": function({ typeOfTable, tableId, schoolId }) {
+    check(typeOfTable, String);
+    check(tableId, String);
+    check(schoolId, String);
+
     if (!typeOfTable || !tableId || !schoolId) {
       throw new Meteor.Error("Some fields missing!", "Error while purchasing");
     }

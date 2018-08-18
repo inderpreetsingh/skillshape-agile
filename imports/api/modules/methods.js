@@ -1,7 +1,10 @@
 import Modules from "./fields";
+import { check } from 'meteor/check';
 
 Meteor.methods({
     "module.addModule": function(doc) {
+        check(doc, Object);
+
         const user = Meteor.users.findOne(this.userId);
         // console.log("module.addModule methods called!!!");
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "modules_CUD" })) {
@@ -13,6 +16,8 @@ Meteor.methods({
         }
     },
     "module.removeModule": function(doc) {
+        check(doc, Object);
+
         const user = Meteor.users.findOne(this.userId);
         // console.log("module.removeModule methods called!!!",doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "modules_CUD" })) {
@@ -22,6 +27,8 @@ Meteor.methods({
         }
     },
     "module.editModule": function(doc_id, doc) {
+        check(doc, Object);
+        check(doc_id, String);
         const user = Meteor.users.findOne(this.userId);
         // console.log("module.editModule methods called!!!",doc_id, doc);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "modules_CUD" })) {

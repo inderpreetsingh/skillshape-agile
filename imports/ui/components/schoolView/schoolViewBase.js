@@ -518,8 +518,6 @@ export default class SchoolViewBase extends React.Component {
     const { popUp } = this.props;
     let self = this;
     let userId = this.props.currentUser._id;
-
-
     this.isAlreadyPurchased(userId, planId);
     Meteor.call(
       "stripe.findAdminStripeAccount",
@@ -535,6 +533,8 @@ export default class SchoolViewBase extends React.Component {
             token: function (token) {
               popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress" });
               //toastr.success("Please wait transaction in Progress", "Success");
+              
+              console.log("packageType ", packageType);
               if (packageType == "CP" || packageType == "EP") {
                 Meteor.call(
                   "stripe.chargeCard",

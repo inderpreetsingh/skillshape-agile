@@ -1,4 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
+import { check } from 'meteor/check';
 
 import ClassType from "../fields";
 import ClassTimes from "/imports/api/classTimes/fields";
@@ -8,6 +9,7 @@ import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import Media from "/imports/api/media/fields";
 
 Meteor.publish("classType.getclassType", function({ schoolId }) {
+    check(schoolId,String);
 
     // console.log("classType.getclassType pub -->>",schoolId)
     let cursor = ClassType.find({schoolId});
@@ -19,6 +21,7 @@ Meteor.publish("classType.getclassType", function({ schoolId }) {
 });
 
 Meteor.publish("classType.getClassTypeWithClassTimes", function({ classTypeId }) {
+    check(classTypeId,String);
 
     let cursor = ClassType.find({_id: classTypeId});
     let classTypeData = cursor.fetch();

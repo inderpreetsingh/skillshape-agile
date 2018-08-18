@@ -4,8 +4,9 @@ import isArray from "lodash/isArray";
 import SchoolMemberDetails from "../fields";
 import School from "/imports/api/school/fields.js";
 import ClassType from "/imports/api/classType/fields.js";
+import { check } from 'meteor/check';
 
-Meteor.publish("schoolMemberDetails.getSchoolMemberWithSchool", function({
+Meteor.publish("schoolMemberDetails.getSchoolMemberWithSchool", function ({
   slug,
   classTypeIds,
   memberName
@@ -48,7 +49,7 @@ Meteor.publish("schoolMemberDetails.getSchoolMemberWithSchool", function({
 });
 
 // Categorise students on the basis of their first Name
-Meteor.publish("MembersBySchool", function({
+Meteor.publish("MembersBySchool", function ({
   schoolId,
   memberName,
   classTypeIds,
@@ -56,7 +57,6 @@ Meteor.publish("MembersBySchool", function({
   activeUserId
 }) {
   // console.log(schoolId, memberName, classTypeIds, limit)
-
   if (this.userId) {
     const classfilter = {
       activeUserId: { $ne: this.userId }
@@ -102,8 +102,10 @@ Meteor.publish("MembersBySchool", function({
     throw new Meteor.Error("Access Denied!!!");
   }
 });
-Meteor.publish("schoolMemberDetails.getschoolMemberDetailsByMemberId", function(
+Meteor.publish("schoolMemberDetails.getschoolMemberDetailsByMemberId", function (
   filter
 ) {
+  check(filter, Object);
+
   return SchoolMemberDetails.find(filter);
 });

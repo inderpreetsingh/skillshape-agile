@@ -3,9 +3,10 @@ import { sendClaimASchoolEmail } from "/imports/api/email";
 import { sendConfirmationEmail } from "/imports/api/email";
 import School from "/imports/api/school/fields";
 import { getUserFullName } from "/imports/util/getUserData";
-
+import { check } from 'meteor/check';
 Meteor.methods({
   "claimSchoolRequest.createClaimSchoolRequest": function(doc) {
+    check(doc,Object);
     let currentUser = Meteor.users.findOne(doc.userId);
     let schoolData = School.findOne(doc.schoolId);
     // Check for PENDING OR REJECTED claim requests of current users if any and let them know the status of their request.
@@ -98,6 +99,7 @@ Meteor.methods({
     claimRequestId,
     status
   ) {
+    check(claimRequestId,String);
     if (!this.userId) {
       throw new Meteor.Error(
         "You need to login as a super admin of this school to approve the request"

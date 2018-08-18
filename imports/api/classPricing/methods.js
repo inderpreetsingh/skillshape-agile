@@ -1,4 +1,5 @@
 import isEmpty from "lodash/isEmpty";
+import { check } from 'meteor/check';
 
 import ClassPricing from "./fields";
 import ClassType from "/imports/api/classType/fields";
@@ -11,6 +12,8 @@ import { sendEmailToStudentForPriceInfoUpdate } from "/imports/api/email";
 
 Meteor.methods({
     "classPricing.addClassPricing": function({doc}) {
+    check(doc,Object);
+
         const user = Meteor.users.findOne(this.userId);
 
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {
@@ -27,6 +30,9 @@ Meteor.methods({
         }
     },
     "classPricing.editclassPricing": function({doc_id, doc}) {
+    check(doc,Object);
+    check(doc_id,String);
+    
         const user = Meteor.users.findOne(this.userId);
 
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {
@@ -52,6 +58,8 @@ Meteor.methods({
         }
     },
     "classPricing.removeClassPricing": function({doc}) {
+    check(doc,Object);
+
         const user = Meteor.users.findOne(this.userId);
 
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {
@@ -66,7 +74,8 @@ Meteor.methods({
         }
     },
     "classPricing.notifyStudentForPricingUpdate": function({schoolId}) {
-       
+    check(schoolId,String);
+
             if(this.userId) {
                 const PricingRequestData = PricingRequest.find({schoolId,notification: true}).fetch();
                 if(!isEmpty(PricingRequestData)) {
@@ -89,30 +98,21 @@ Meteor.methods({
         
     },
     'classPricing.handleClassTypes':function({ classTypeId, selectedIds, diselectedIds }){
-        console.log('classTypeId, selectedIds, diselectedIds',classTypeId, selectedIds, diselectedIds)
-        console.log("step 1");
+    check(classTypeId,String);
+    check(selectedIds,[String]);
+    check(diselectedIds,[String]);
         ClassPricing.update({classTypeId:null},{$set:{classTypeId:[]}}) 
-        console.log("step 2");       
     try {
-        console.log("step 3");
         if (!isEmpty(diselectedIds)) {
-            console.log("step 4");
-            let result = ClassPricing.update({ _id: { $in: diselectedIds } }, { $pop: { classTypeId } }, { multi: true })
-            console.log("step 5");
+            let result = ClassPricing.update({ _id: { $in: diselectedIds } }, { $pull: { classTypeId } }, { multi: true })
         }
         if (!isEmpty(selectedIds)) {
-            console.log("step 6");
             let result = ClassPricing.update({ _id: { $in: selectedIds } }, { $push: { classTypeId } }, { multi: true })
-            console.log("step 7");
         }
-        console.log("step 8");
         return true;
-        console.log("step 9");
     }
     catch (error) {
-        console.log("step 10");
         throw new Meteor.Error(error);
-        console.log("step 11");
     }
 }
 });

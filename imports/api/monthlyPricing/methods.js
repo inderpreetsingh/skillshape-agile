@@ -1,6 +1,7 @@
 import MonthlyPricing from "./fields";
 import ClassType from "/imports/api/classType/fields";
 import isEmpty from "lodash/isEmpty";
+import { check } from 'meteor/check';
 
 function updateHookForClassType({ classTypeId, doc }) {
   if (classTypeId && _.isArray(classTypeId)) {
@@ -20,8 +21,10 @@ function updateHookForClassType({ classTypeId, doc }) {
 }
 
 Meteor.methods({
-  "monthlyPricing.addMonthlyPricing": function({ doc }) {
-    let amount,currency;
+  "monthlyPricing.addMonthlyPricing": function ({ doc }) {
+    check(doc, Object);
+
+    let amount, currency;
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({
@@ -37,7 +40,7 @@ Meteor.methods({
         (doc.pymtType.autoWithDraw == true && !doc.pymtType.payAsYouGo)
       ) {
         doc.pymtDetails.map((elem, index) => {
-                  try {
+          try {
             config.currency.map((data, index) => {
               if (data.value == elem.currency) {
                 currency = data.label;
@@ -63,8 +66,10 @@ Meteor.methods({
       throw new Meteor.Error("Permission denied!!");
     }
   },
-  "monthlyPricing.editMonthlyPricing": function({ doc_id, doc }) {
-    let amount,currency;
+  "monthlyPricing.editMonthlyPricing": function ({ doc_id, doc }) {
+    check(doc, Object);
+    check(doc_id, String);
+    let amount, currency;
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({
@@ -112,7 +117,9 @@ Meteor.methods({
       throw new Meteor.Error("Permission denied!!");
     }
   },
-  "monthlyPricing.removeMonthlyPricing": function({ doc }) {
+  "monthlyPricing.removeMonthlyPricing": function ({ doc }) {
+    check(doc, Object);
+
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({
@@ -131,31 +138,22 @@ Meteor.methods({
     }
   },
   "monthlyPricing.handleClassTypes": function ({ classTypeId, selectedIds, diselectedIds }) {
-      console.log('classTypeId, selectedIds, diselectedIds',classTypeId, selectedIds, diselectedIds)
-      console.log("step 1");
-      MonthlyPricing.update({classTypeId:null},{$set:{classTypeId:[]}})        
-      console.log("step 2");       
-      try {
-          console.log("step 3");
-          if (!isEmpty(diselectedIds)) {
-              console.log("step 4");
-              let result = MonthlyPricing.update({ _id: { $in: diselectedIds } }, { $pop: { classTypeId } }, { multi: true })
-              console.log("step 5");
-          }
-          if (!isEmpty(selectedIds)) {
-              console.log("step 6");
-              let result = MonthlyPricing.update({ _id: { $in: selectedIds } }, { $push: { classTypeId } }, { multi: true })
-              console.log("step 7");
-          }
-          console.log("step 8");
-          return true;
-          console.log("step 9");
+    check(classTypeId, String);
+    check(selectedIds, [String]);
+    check(diselectedIds, [String]);
+    MonthlyPricing.update({ classTypeId: null }, { $set: { classTypeId: [] } })
+    try {
+      if (!isEmpty(diselectedIds)) {
+        let result = MonthlyPricing.update({ _id: { $in: diselectedIds } }, { $pull: { classTypeId } }, { multi: true })
       }
-      catch (error) {
-          console.log("step 10");
-          throw new Meteor.Error(error);
-          console.log("step 11");
+      if (!isEmpty(selectedIds)) {
+        let result = MonthlyPricing.update({ _id: { $in: selectedIds } }, { $push: { classTypeId } }, { multi: true })
       }
+      return true;
+    }
+    catch (error) {
+      throw new Meteor.Error(error);
+    }
   }
 });
 

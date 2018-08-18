@@ -7,7 +7,7 @@ SyncedCron.add({
   name: "cronJobForPackageStatus",
   schedule: function (parser) {
     // parser is a later.parse object
-    return parser.text("every 1 minutes");
+    return parser.text("every 24 hours");
   },
   job: function () {
     try {

@@ -3,7 +3,7 @@ import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import School from "/imports/api/school/fields";
-
+import { check } from 'meteor/check';
 Meteor.methods({
   "classTimes.getClassTimes": function({
     schoolId,
@@ -11,6 +11,8 @@ Meteor.methods({
     classTimeId,
     locationId
   }) {
+    
+
     // console.log("classTimes.getClassTimes -->>",schoolId, classTypeId, classTimeId)
     // console.log("SchoolSchool -->>",School.find({ _id: schoolId}))
     return {
@@ -21,6 +23,8 @@ Meteor.methods({
     };
   },
   "classTimes.addClassTimes": function({ doc }) {
+    check(doc,Object);
+
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({
@@ -50,6 +54,8 @@ Meteor.methods({
     }
   },
   "classTimes.editClassTimes": function({ doc_id, doc }) {
+    check(doc,Object);
+    check(doc_id,String);
     const user = Meteor.users.findOne(this.userId);
     // console.log("classTimes.editClassTimes methods called!!!",doc_id, doc);
     if (
@@ -66,6 +72,7 @@ Meteor.methods({
     }
   },
   "classTimes.removeClassTimes": function({ doc }) {
+    check(doc,Object);
     const user = Meteor.users.findOne(this.userId);
     // console.log("classTimes.removeClassTimes methods called!!!",doc);
     if (
@@ -82,6 +89,7 @@ Meteor.methods({
     }
   },
   "classTimes.permanentlyRemove": function(classTimeId, clickedDate) {
+    check(classTimeId,String);
     ClassTimes.update(
       { _id: classTimeId },
       { $push: { deletedEvents: clickedDate } }
