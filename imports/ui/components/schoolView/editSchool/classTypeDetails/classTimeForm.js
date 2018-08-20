@@ -108,6 +108,10 @@ class ClassTimeForm extends React.Component {
 
   onTabChange = tabValue => {
     this.setState({ tabValue });
+    const { data} = this.props;
+    if(tabValue == 0 && this.state.noOfRow!=0){
+    this.setState({noOfRow:0});
+    }
   };
   handleNoOfRow=(data)=>{
     this.setState({noOfRow:this.state.noOfRow + data});
@@ -218,7 +222,6 @@ class ClassTimeForm extends React.Component {
   render() {
     const { fullScreen, data, classes, locationData,schoolId,parentKey,parentData} = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
-    console.log('this.props in ctf',this.props)
     return (
       <div>
         <Dialog
