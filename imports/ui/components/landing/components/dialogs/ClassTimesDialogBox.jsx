@@ -31,11 +31,13 @@ import Dialog, {
 
 import ClassInterest from "/imports/api/classInterest/fields";
 import Events from "/imports/util/events";
+import withImageExists from "/imports/util/withImageExists";
 import { Element } from "react-scroll";
 import { scroller } from "react-scroll";
 import Grid from "material-ui/Grid";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -242,6 +244,16 @@ const Text = styled.p`
   margin-bottom: ${props => props.marginBottom}px;
   text-align: ${props => (props.center ? "center" : "left")};
 `;
+const classTypeImgConfig = {
+  defaultImage: classTypeImgSrc,
+  originalImagePath: 'classTypeImg'
+};
+
+const ClassTypeCoverWithDefaultImg = withImageExists(
+  props => <ClassTypeCoverImg src={props.bgImg} />,
+  classTypeImgConfig
+);
+
 class ClassTimesDialogBox extends React.Component {
   constructor(props) {
     super(props);
@@ -459,7 +471,8 @@ class ClassTimesDialogBox extends React.Component {
               ) : (
                 <ContentWrapper>
                   <ContentHeader>
-                    <ClassTypeCoverImg src={classTypeImg} />
+                    {/*<ClassTypeCoverImg src={classTypeImg} /> */}
+                    <ClassTypeCoverWithDefaultImg classTypeImg={classTypeImg} />
                     <ClassTimes>
                       <ClassTimesFor>Class Times for</ClassTimesFor>
                       <ClassTypeName>
