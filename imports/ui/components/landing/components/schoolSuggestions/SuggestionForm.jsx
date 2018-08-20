@@ -315,7 +315,7 @@ class SuggestionForm extends Component {
         errors: {}
       };
     });
-    this.props.removeAllFilters(true);
+    this.props.removeAllFilters();
   };
 
   render() {
