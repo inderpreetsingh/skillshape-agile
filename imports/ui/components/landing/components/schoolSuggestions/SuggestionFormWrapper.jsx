@@ -42,9 +42,15 @@ class SuggestionFormWrapper extends Component {
     return true;
   }
   render() {
-    const { filters, tempFilters, removeAllFilters } = this.props;
+    const {
+      filters,
+      tempFilters,
+      onSearchAgainButtonClick,
+      removeAllFilters
+    } = this.props;
     return (
       <SuggestionForm
+        onSearchAgainButtonClick={onSearchAgainButtonClick}
         filters={filters}
         tempFilters={tempFilters}
         removeAllFilters={removeAllFilters}

@@ -207,6 +207,7 @@ class ClassTypeList extends Component {
               : "Try changing your search"}
           </RevertSearch> */}
           <SuggestionFormWrapper
+            onSearchAgainButtonClick={this.props.onSearchAgainButtonClick}
             filters={this.props.filters}
             tempFilters={this.props.tempFilters}
             removeAllFilters={this.props.removeAllFilters}
@@ -323,7 +324,7 @@ export default createContainer(props => {
   let isLoading = true;
   let subscription, reviewsSubscription;
   let filters = props.filters ? props.filters : {};
-  debugger;
+  // debugger;
   if (props.mapView) {
     const query = props.location && props.location.query;
     if (query && query.NEPoint && query.SWPoint) {
