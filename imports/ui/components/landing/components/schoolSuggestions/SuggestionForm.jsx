@@ -308,14 +308,18 @@ class SuggestionForm extends Component {
   };
 
   removeAllFilters = () => {
-    this.setState(() => {
-      return {
-        filters: {},
-        tempFilters: {},
-        errors: {}
-      };
-    });
-    this.props.removeAllFilters(true);
+    // this.setState(() => {
+    //   return {
+    //     filters: {},
+    //     tempFilters: {},
+    //     errors: {}
+    //   };
+    // });
+
+    const filters = JSON.parse(JSON.stringify(this.state.filters));
+    delete filters.schoolWebsite;
+    delete filters.schoolEmail;
+    this.props.onSearchAgainButtonClick(filters);
   };
 
   render() {

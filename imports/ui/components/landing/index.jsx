@@ -275,6 +275,16 @@ class Landing extends Component {
     }
   }
 
+  setFilters = filters => {
+    console.info(filters, "------");
+    this.setState(state => {
+      return {
+        ...state,
+        filters
+      };
+    });
+  };
+
   componentWillMount() {}
 
   // This is used to get subjects on the basis of subject category.
@@ -985,6 +995,7 @@ class Landing extends Component {
                   this.checkIfAnyFilterIsApplied() &&
                   this.showAppliedTopFilter()
                 }
+                onSearchAgainButtonClick={this.setFilters}
                 removeAllFilters={this.removeAllFilters}
                 {...this.props}
               />
