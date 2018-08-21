@@ -21,7 +21,7 @@ const styles = {
     minWidth:"0px",
     border: "1px solid",
     borderColor: helpers.primaryColor,
-    
+    borderRadius: "41px",
     textTransform: "none",
     '&:hover': {
       backgroundColor: helpers.primaryColor,

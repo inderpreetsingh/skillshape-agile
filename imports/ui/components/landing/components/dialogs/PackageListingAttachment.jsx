@@ -468,7 +468,7 @@ class PackageListingAttachment extends React.Component {
             onModalClose={() => this.setState({ showConfirmationModal: false })}
             type="inform"
             title="Save"
-            content="This will save class time and the package details.Are you sure!"
+            content="This will save Class Time and Package details. Are you sure ?"
             onAffirmationButtonClick={this.onConnect}
             onCloseButtonClick={() =>
               this.setState({ showConfirmationModal: false })

@@ -18,8 +18,8 @@ const styles = {
     borderColor: helpers.primaryColor,
     color: helpers.primaryColor,
     textTransform: "none",
-    whiteSpace: 'nowrap',
-    marginRight:'10px',
+    whiteSpace: "nowrap",
+    marginRight: "10px",
     "&:hover": {
       backgroundColor: helpers.primaryColor,
       color: "white"
@@ -115,8 +115,6 @@ const FormGhostButton = props => {
   }else if(props.whiteColor || (props.color == 'white')) {
     rootClass = rootClass + " " + props.classes.whiteColor;
   }
-
-  // console.log(rootClass, "lll...");
   return (
     <Button
       type={props.type}

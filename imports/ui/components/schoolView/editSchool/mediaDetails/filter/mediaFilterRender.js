@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import Grid from 'material-ui/Grid';
 import Multiselect from 'react-widgets/lib/Multiselect'
 import Hidden from 'material-ui/Hidden';
-import { MuiThemeProvider} from 'material-ui/styles';
+import { MuiThemeProvider } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
 import TextField from 'material-ui/TextField';
 import { FormControl } from 'material-ui/Form';
-
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import muiTheme from '/imports/ui/components/landing/components/jss/muitheme';
@@ -34,7 +34,7 @@ const FilterPanelInnerContent = styled.div`
 `;
 
 const FilterPanelAction = styled.div`
-    padding:${helpers.rhythmDiv*2}px 0px;
+    padding:${helpers.rhythmDiv * 2}px 0px;
 `;
 
 const FilterButtonArea = styled.div`
@@ -44,61 +44,71 @@ const FilterButtonArea = styled.div`
     margin-top:-24px;
 `;
 
-export default function(){
-	const { stickyPosition, classes } = this.props;
-	return (
-  		<FilterPanelContainer stickyPosition={stickyPosition}>
-    		<FilterPanelContent stickyPosition={stickyPosition}>
-     			<form noValidate autoComplete="off">
-		            <Grid container>
-		                <Grid item xs={12} sm={3}>
-		                    <FormControl fullWidth margin='dense'>
+export default function () {
+    const { stickyPosition, classes } = this.props;
+    return (
+        <FilterPanelContainer stickyPosition={stickyPosition}>
+            <FilterPanelContent stickyPosition={stickyPosition}>
+                <form noValidate autoComplete="off">
+                    <Grid container>
+                        <Grid item xs={12} sm={3}>
+                            <FormControl fullWidth margin='dense'>
                                 <TextField
-                                  id="mediaName"
-                                  label="Media Name"
-                                  value={this.state.mediaName}
-                                  onChange={(e) => this.setState({mediaName: e.target.value})}
-                                  margin="normal"
+                                    id="mediaName"
+                                    label="Media Name"
+                                    value={this.state.mediaName}
+                                    onChange={(e) => this.setState({ mediaName: e.target.value })}
+                                    margin="normal"
                                 />
                             </FormControl>
-		                </Grid>
-		                <Grid item xs={12} sm={3}>
-		                    <FormControl fullWidth margin='dense'>
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <FormControl fullWidth margin='dense'>
                                 <MaterialDatePicker
                                     required={false}
                                     hintText={"From"}
                                     emptyLabel="Select a Date"
                                     value={this.state.startDate}
-                                    onChange={(date)=> this.setState({startDate: date.toISOString()})}
+                                    onChange={(date) => this.setState({ startDate: date.toISOString() })}
                                     fullWidth={true}
                                 />
                             </FormControl>
-		                </Grid>
-		                <Grid item xs={12} sm = {3}>
-		                    <FormControl fullWidth margin='dense'>
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <FormControl fullWidth margin='dense'>
                                 <MaterialDatePicker
                                     required={false}
                                     hintText={"To"}
                                     emptyLabel="Select a Date"
                                     value={this.state.endDate}
-                                    onChange={(date)=> this.setState({endDate: date.toISOString()})}
+                                    onChange={(date) => this.setState({ endDate: date.toISOString() })}
                                     fullWidth={true}
                                 />
                             </FormControl>
-		                </Grid>
-                        <Grid item xs={12} sm = {1}>
-                            <Button className={classes.searchBtn} onClick={() => this.props.onSearch({...this.state})}>
+                        </Grid>
+                        <Grid item xs={12} sm={1}>
+                            {/* <Button className={classes.searchBtn} onClick={() => this.props.onSearch({...this.state})}>
                                 Search
-                            </Button>
+                            </Button> */}
+                            <FormGhostButton
+                                onClick={() => this.props.onSearch({ ...this.state })}
+                                label="Search"
+                            />
                         </Grid>
-                        <Grid item xs={12} sm = {1}>
-                            <Button className={classes.resetBtn} onClick={this.resetFilter}>
+                        <Grid item xs={12} sm={1}>
+                            {/* <Button className={classes.resetBtn} onClick={this.resetFilter}>
                                 Reset
-                            </Button>
+                            </Button> */}
+
+                            <FormGhostButton
+                                darkGreyColor
+                                onClick={this.resetFilter}
+                                label="Reset"
+                            />
                         </Grid>
-		            </Grid>
-      			</form>
-    		</FilterPanelContent>
-  		</FilterPanelContainer>
-	)
+                    </Grid>
+                </form>
+            </FilterPanelContent>
+        </FilterPanelContainer>
+    )
 }

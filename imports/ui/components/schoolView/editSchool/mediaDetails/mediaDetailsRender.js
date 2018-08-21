@@ -5,7 +5,7 @@ import Button from 'material-ui/Button';
 import FileUpload from 'material-ui-icons/FileUpload';
 import Switch from 'material-ui/Switch';
 import { FormControlLabel, FormGroup } from 'material-ui/Form';
-
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import MediaFilter from './filter';
 import MediaList from './mediaList';
@@ -16,19 +16,19 @@ import Sticky from 'react-stickynode';
 
 export default function () {
 
-	const { showCreateMediaModal, mediaFormData, filterStatus, limit , isGalleryView} = this.state;
-	const { schoolId, mediaData, classes, fullScreen, schoolView, noMediaFound  } = this.props;
+	const { showCreateMediaModal, mediaFormData, filterStatus, limit, isGalleryView } = this.state;
+	const { schoolId, mediaData, classes, fullScreen, schoolView, noMediaFound } = this.props;
 	return (
 		<div>
 			{
 				this.state.loading && <ContainerLoader />
 			}
-			 {
-			 	!schoolView && (
-			 		<Fragment>
-					 	<CreateMedia
-						 	showCreateMediaModal={showCreateMediaModal}
-						 	onClose = {this.closeMediaUpload}
+			{
+				!schoolView && (
+					<Fragment>
+						<CreateMedia
+							showCreateMediaModal={showCreateMediaModal}
+							onClose={this.closeMediaUpload}
 							formType={showCreateMediaModal}
 							schoolId={schoolId}
 							ref="createMedia"
@@ -36,7 +36,7 @@ export default function () {
 							onEdit={this.onEditMedia}
 							mediaFormData={mediaFormData}
 							filterStatus={filterStatus}
-							showLoading = {this.showLoading}
+							showLoading={this.showLoading}
 						/>
 						<Sticky activeClassName={"filter-panel-sticked"} onStateChange={this.handleFixedToggle}>
 							<MediaFilter
@@ -48,8 +48,8 @@ export default function () {
 								{...this.props}
 							/>
 						</Sticky>
-			 		</Fragment>
-			 	)
+					</Fragment>
+				)
 			}
 			<Grid container>
 				<Grid item xs={12}>
@@ -57,52 +57,56 @@ export default function () {
 						<Grid container>
 							<Grid item xs={6}>
 								<FormGroup>
-							        <FormControlLabel
-							          style={{paddingLeft:13}}
-							          control={
-							            <Switch
-								          checked={isGalleryView}
-								          onChange={!isGalleryView ? ()=> this.setState({isGalleryView:true}): ()=> this.setState({isGalleryView:false})}
-								          aria-label="galleryViewTrue"
-								        />
-							          }
-							          label={isGalleryView ? "Switch to Gallery view": "Switch to Carousel view"}
-							        />
-							    </FormGroup>
+									<FormControlLabel
+										style={{ paddingLeft: 13 }}
+										control={
+											<Switch
+												checked={isGalleryView}
+												onChange={!isGalleryView ? () => this.setState({ isGalleryView: true }) : () => this.setState({ isGalleryView: false })}
+												aria-label="galleryViewTrue"
+											/>
+										}
+										label={isGalleryView ? "Switch to Gallery view" : "Switch to Carousel view"}
+									/>
+								</FormGroup>
 							</Grid>
 							<Grid item xs={6}>
-								<div style={{textAlign:"right",padding: 8}}>
-									<Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
+								<div style={{ textAlign: "right", padding: 8 }}>
+									{/* <Button raised color="accent" onClick={()=> this.setState({showCreateMediaModal:true, mediaFormData: null, filterStatus: false})}>
 							          	Upload Media <FileUpload />
-							        </Button>
-						        </div>
-				        	</Grid>
-				        	<Grid item xs={12}>
-				        		{/*By default we need to show gallery view*/}
-				        		{!isGalleryView ? <ImageGridGallery
-				        			filters={this.state.filters}
-				        			onDelete={this.onDeleteMedia}
-									openEditMediaForm={this.openEditMediaForm}
-
-				        			/> : <MediaList
-						        	changeLimit = {this.changeLimit}
-						        	limit= {limit || 0}
-									schoolId={schoolId}
+							        </Button> */}
+									<FormGhostButton
+										onClick={() => this.setState({ showCreateMediaModal: true, mediaFormData: null, filterStatus: false })}
+										label="Upload Media"
+									/>
+								</div>
+							</Grid>
+							<Grid item xs={12}>
+								{/*By default we need to show gallery view*/}
+								{!isGalleryView ? <ImageGridGallery
+									filters={this.state.filters}
 									onDelete={this.onDeleteMedia}
 									openEditMediaForm={this.openEditMediaForm}
-									showEditButton={true}
-									{...this.state}
-								/>}
-				        	</Grid>
-				        </Grid>
+
+								/> : <MediaList
+										changeLimit={this.changeLimit}
+										limit={limit || 0}
+										schoolId={schoolId}
+										onDelete={this.onDeleteMedia}
+										openEditMediaForm={this.openEditMediaForm}
+										showEditButton={true}
+										{...this.state}
+									/>}
+							</Grid>
+						</Grid>
 					</Card>}
 					{schoolView &&
 						<Grid container>
 
-				        	<Grid item xs={12}>
-						        <MediaList
-						        	changeLimit = {this.changeLimit}
-						        	limit= {limit || 0}
+							<Grid item xs={12}>
+								<MediaList
+									changeLimit={this.changeLimit}
+									limit={limit || 0}
 									schoolId={schoolId}
 									onDelete={this.onDeleteMedia}
 									openEditMediaForm={this.openEditMediaForm}
@@ -110,8 +114,8 @@ export default function () {
 									noMediaFound={noMediaFound}
 									{...this.state}
 								/>
-				        	</Grid>
-				        </Grid>
+							</Grid>
+						</Grid>
 					}
 				</Grid>
 			</Grid>

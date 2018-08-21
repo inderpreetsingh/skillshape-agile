@@ -79,8 +79,8 @@ class MonthlyPriceForm extends React.Component {
       pymtType: pymtType,
       selectedClassType: get(this.props, "data.selectedClassType", null),
       tabValue: 0,
-      autoWithDraw: pymtType && pymtType["autoWithDraw"],
-      payAsYouGo: pymtType && pymtType["payAsYouGo"],
+      autoWithDraw: pymtType && pymtType["autoWithDraw"] ,
+      payAsYouGo: pymtType && pymtType["payAsYouGo"] ,
       pymtDetails: get(this.props, "data.pymtDetails", [
         { month: null, cost: null }
       ]),
@@ -88,6 +88,7 @@ class MonthlyPriceForm extends React.Component {
       includeAllClassTypes: get(this.props, "data.includeAllClassTypes", ""),
       duPeriod: get(this.props, "data.duPeriod", "")
     };
+    
     if (pymtMethod && pymtMethod === "Pay Up Front") state.tabValue = 1;
     return state;
   };
@@ -117,10 +118,6 @@ class MonthlyPriceForm extends React.Component {
     }
     if (tabValue === 0) {
       // No option is selected for making payment then need to show this `Please select any payment type`.
-      if (pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo || pymtType==null || pymtType && pymtType.autoWithDraw && pymtType.payAsYouGo) {
-        toastr.error("Please select one payment type.", "Error");
-        return;
-      }
       if (pymtType && pymtType.payUpFront) {
         delete pymtType.payUpFront;
       }
@@ -129,8 +126,12 @@ class MonthlyPriceForm extends React.Component {
     } else {
       payload.pymtType = { payUpFront: true };
     }
+      if ( payload.pymtType==null || !payload.pymtType.autoWithDraw && !payload.pymtType.payAsYouGo) {
+        toastr.error("Please select one payment type.", "Error");
+        return;
+      }
+      
     this.setState({ isBusy: true });
-
     if (data && data._id) {
       this.handleSubmit({
         methodName: "monthlyPricing.editMonthlyPricing",
@@ -173,13 +174,17 @@ class MonthlyPriceForm extends React.Component {
   };
 
   handleCheckBox = (key, disableKey, pymtType, event, isInputChecked) => {
+    
     let oldPayment = this.state.pymtType || {};
     oldPayment[pymtType] = isInputChecked;
+    oldPayment[disableKey] = !isInputChecked;
     this.setState({
       [key]: isInputChecked,
       pymtType: oldPayment,
-      [disableKey]: !isInputChecked
+      [disableKey]:!isInputChecked
     });
+    console.log("pymtType",this.state.pymtType)
+   
   };
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
@@ -317,7 +322,7 @@ class MonthlyPriceForm extends React.Component {
                   style={{
                     border: "1px solid blue",
                     padding: 10,
-                    backgroundColor: "#C5D9A1"
+                    backgroundColor: "dimgrey"
                   }}
                 >
                   {this.state.tabValue === 0 && (
@@ -417,7 +422,7 @@ class MonthlyPriceForm extends React.Component {
             type="submit"
             form={formId}
             onClick={this.onSubmit}
-            label={data ? "Save" : "Submit"}
+            label={"Save"}
             className={classes.save}
           />
         </ButtonWrapper>

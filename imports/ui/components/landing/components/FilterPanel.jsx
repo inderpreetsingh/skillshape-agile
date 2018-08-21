@@ -119,12 +119,13 @@ const FilterBarWrapper = styled.div`
 
 const SuggestionFormButton = styled.div`
   max-width: 250px;
+  // margin: 0 auto;
   ${props => (props.right ? "margin-right: auto;" : "margin-left: auto;")};
-  margin: 0 auto;
   width: 100%;
-  padding: ${helpers.rhythmDiv * 2}px;
+  // padding: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: 600px) {
+    margin: 0 auto;
   }
 `;
 
@@ -347,9 +348,7 @@ class FilterPanel extends Component {
           </Grid>
         )}
 
-        {!filtersForSuggestion && (
-          <Grid item xs={12} sm={12} md={12}>
-            {/*<div>skill type text filter :</div>*/}
+        {/* <Grid item xs={12} sm={12} md={12}>
             <MaterialInputWrapper>
               <IconInput
                 labelText="Skill type text filter"
@@ -359,39 +358,74 @@ class FilterPanel extends Component {
                 }}
               />
             </MaterialInputWrapper>
-          </Grid>
+          </Grid> */}
+
+        {filtersForSuggestion ? (
+          <Fragment>
+            <Grid item xs={12} sm={6}>
+              <MaterialInputWrapper>
+                <IconInput
+                  value={get(this.props, "filters.schoolName", "")}
+                  iconName="school"
+                  onChange={event =>
+                    this.props.fliterSchoolName(event, "filters", null)
+                  }
+                  labelText="School Name"
+                />
+              </MaterialInputWrapper>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <MaterialInputWrapper>
+                <IconInput
+                  value={get(this.props, "filters.locationName", "")}
+                  onChange={event =>
+                    this.props.locationInputChanged(event, "filters", null)
+                  }
+                  iconName="location_on"
+                  defaultValue={this.props.currentAddress}
+                  googlelocation={true}
+                  labelText="Location"
+                  onLocationChange={event =>
+                    this.props.onLocationChange(event, "filters", null)
+                  }
+                />
+              </MaterialInputWrapper>
+            </Grid>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Grid item xs={12} sm={12}>
+              <MaterialInputWrapper>
+                <IconInput
+                  value={get(this.props, "filters.schoolName", "")}
+                  iconName="school"
+                  onChange={event =>
+                    this.props.fliterSchoolName(event, "filters", null)
+                  }
+                  labelText="School Name"
+                />
+              </MaterialInputWrapper>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <MaterialInputWrapper>
+                <IconInput
+                  value={get(this.props, "filters.locationName", "")}
+                  onChange={event =>
+                    this.props.locationInputChanged(event, "filters", null)
+                  }
+                  iconName="location_on"
+                  defaultValue={this.props.currentAddress}
+                  googlelocation={true}
+                  labelText="Location"
+                  onLocationChange={event =>
+                    this.props.onLocationChange(event, "filters", null)
+                  }
+                />
+              </MaterialInputWrapper>
+            </Grid>
+          </Fragment>
         )}
-
-        <Grid item xs={12} sm={6}>
-          <MaterialInputWrapper>
-            <IconInput
-              value={get(this.props, "filters.locationName", "")}
-              onChange={event =>
-                this.props.locationInputChanged(event, "filters", null)
-              }
-              iconName="location_on"
-              defaultValue={this.props.currentAddress}
-              googlelocation={true}
-              labelText="Location"
-              onLocationChange={event =>
-                this.props.onLocationChange(event, "filters", null)
-              }
-            />
-          </MaterialInputWrapper>
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <MaterialInputWrapper>
-            <IconInput
-              value={get(this.props, "filters.schoolName", "")}
-              iconName="school"
-              onChange={event =>
-                this.props.fliterSchoolName(event, "filters", null)
-              }
-              labelText="School Name"
-            />
-          </MaterialInputWrapper>
-        </Grid>
 
         {/* console.log(get(
           this.props,
@@ -546,8 +580,8 @@ class FilterPanel extends Component {
                 icon={true}
                 iconName="refresh"
                 onClick={() => {
-                  this.props.onModalClose();
                   this.props.removeAllFilters();
+                  this.props.onModalClose();
                 }}
               />
             </FilterPanelAction>
@@ -555,19 +589,33 @@ class FilterPanel extends Component {
         )}
 
         {filtersForSuggestion ? (
-          <Grid item xs={12} sm={12}>
-            <SuggestionFormButton>
-              <FilterPanelAction>
-                <PrimaryButton
-                  fullWidth
-                  label="Suggest School"
-                  icon={true}
-                  iconName="sentiment_satisfied"
-                  onClick={this.props.onGiveSuggestion}
-                />
-              </FilterPanelAction>
-            </SuggestionFormButton>
-          </Grid>
+          <Fragment>
+            <Grid item xs={12} sm={6}>
+              <SuggestionFormButton>
+                <FilterPanelAction>
+                  <PrimaryButton
+                    fullWidth
+                    label="Suggest School"
+                    icon={true}
+                    iconName="sentiment_satisfied"
+                    onClick={this.props.onGiveSuggestion}
+                  />
+                </FilterPanelAction>
+              </SuggestionFormButton>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <SuggestionFormButton right>
+                <FilterPanelAction>
+                  <PrimaryButton
+                    fullWidth
+                    label="Search Again"
+                    onClick={this.props.removeAllFilters}
+                  />
+                </FilterPanelAction>
+              </SuggestionFormButton>
+            </Grid>
+          </Fragment>
         ) : (
           <Grid item xs={12} sm={6}>
             <FilterPanelAction>

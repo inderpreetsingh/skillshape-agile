@@ -101,9 +101,15 @@ class ClassTypeCard extends Component {
       Meteor.call("classTimesRequest.addRequest", data, (err, res) => {
         this.setState({ isBusy: false }, () => {
           if (err) {
-            popUp.appear('error',{content: err.reason || err.message}, false);
+            popUp.appear(
+              "error",
+              { content: err.reason || err.message },
+              false
+            );
           } else {
-            popUp.appear('success',{content: "Your request has been processed"});
+            popUp.appear("success", {
+              content: "Your request has been processed"
+            });
             this.handleRequest(schoolId);
           }
         });
@@ -143,6 +149,7 @@ class ClassTypeCard extends Component {
       name,
       reviewsStats,
       classInterestData,
+      hideClassTypeOptions,
       bgImg
     } = this.props;
     const cardRevealData = {
@@ -182,6 +189,7 @@ class ClassTypeCard extends Component {
             open={this.state.dialogOpen}
             onModalClose={this.handleDialogState(false)}
             handleClassTimeRequest={this.handleClassTimesRequest}
+            hideClassTypeOptions={hideClassTypeOptions}
             errorText={this.state.classTimesDialogBoxError}
             x={this.state.x}
             y={this.state.y}

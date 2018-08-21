@@ -254,7 +254,7 @@ class EnrollmentFeeForm extends React.Component {
                     type="submit"
                     form={formId}
                     onClick={this.onSubmit}
-                    label={data ? "Save" : "Submit"}
+                    label={"Save"}
                     className={classes.save}
                   />
                 </ButtonWrapper>
