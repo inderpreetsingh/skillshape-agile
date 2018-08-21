@@ -39,5 +39,7 @@
       "loginStyle": "popup",
       "secret": "yspUqSye1D0y0IHaDYIl1G4q"
     }
-  }
+  },
+  "platform": "local"
+
 }

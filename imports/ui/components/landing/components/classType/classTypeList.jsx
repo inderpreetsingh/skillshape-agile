@@ -323,7 +323,6 @@ export default createContainer(props => {
   let isLoading = true;
   let subscription, reviewsSubscription;
   let filters = props.filters ? props.filters : {};
-  debugger;
   if (props.mapView) {
     const query = props.location && props.location.query;
     if (query && query.NEPoint && query.SWPoint) {
