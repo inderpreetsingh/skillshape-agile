@@ -1,7 +1,8 @@
 import Purchases from "./fields";
 import isEmpty from "lodash/isEmpty";
 import ClassSubscription from '/imports/api/classSubscription/fields';
-import { sendPackageExpiredEmail } from "/imports/api/email";
+import School from '/imports/api/school/fields';
+import { sendPackageExpiredEmail ,sendPackageExpiredEmailToSchool} from "/imports/api/email";
 var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
 SyncedCron.add({
   name: "cronJobForPackageStatus",
@@ -11,6 +12,7 @@ SyncedCron.add({
   },
   job: function () {
     try {
+      let schoolName, schoolEmail,schoolId,schoolData, userName, userEmail, packageName;
       let activePurchasesData = Purchases.find({
         packageStatus: "active",
         endDate: { $lte: new Date() }
@@ -22,13 +24,25 @@ SyncedCron.add({
       let packageIds = [];
       activePurchasesData.map(currentPurchase => {
         packageIds.push(currentPurchase._id);
-        if (currentPurchase.emailId && currentPurchase.userName && currentPurchase.packageName) {
+        userEmail = currentPurchase.emailId;
+        userName = currentPurchase.userName;
+        packageName = currentPurchase.packageName;
+        schoolId = currentPurchase.schoolId;
+        schoolData = School.findOne({_id:schoolId});
+        schoolEmail = schoolData.email;
+        schoolName = schoolData.name;
+        if (userEmail && userName && packageName) {
           sendPackageExpiredEmail(
-            currentPurchase.emailId,
-            currentPurchase.userName,
-            currentPurchase.packageName
+            userEmail,
+            userName,
+            packageName
           );
         }
+        if (schoolName && schoolEmail&& userName&& userEmail&& packageName) {
+          sendPackageExpiredEmailToSchool(
+              schoolName, schoolEmail, userName, userEmail, packageName
+            );
+          }
         let packageId = currentPurchase.packageId;
         let userId = currentPurchase.userId;
         Purchases.update(
@@ -58,7 +72,7 @@ SyncedCron.add({
               // asynchronously called
               console.log(err, confirmation);
               if (confirmation) {
-                ClassSubscription.update({ subscriptionId }, { $set:{status: 'expired',subscriptionCancelResponse : confirmation} });
+                ClassSubscription.update({ subscriptionId }, { $set: { status: 'expired', subscriptionCancelResponse: confirmation } });
               }
             })
           );

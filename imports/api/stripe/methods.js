@@ -4,6 +4,7 @@ import EnrollmentFees from "../enrollmentFee/fields";
 import ClassSubscription from "../classSubscription/fields";
 import ClassPricing from "../classPricing/fields";
 import { check } from 'meteor/check';
+import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} from '/imports/api/email/index';
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
 // :":":":":":":"" classtypeids removed 
@@ -20,17 +21,20 @@ Meteor.methods({
     expPeriod,
     noClasses
   ) {
+    try {
     check(stripeToken,String);
     check(desc,String);
     check(packageId,String);
     check(packageType,String);
     check(schoolId,String);
-    let recordId, amount, currency;
+    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail;
+    packageName=desc;
     //Get amount and currency from database using package ids
     if (packageType == "EP") {
       let enrollmentData = EnrollmentFees.findOne({ _id: packageId });
       currency = enrollmentData.currency;
       amount = enrollmentData.cost;
+     
     }
     else {
       let classData = ClassPricing.findOne({ _id: packageId })
@@ -48,8 +52,10 @@ Meteor.methods({
     let endDate;
     let startDate;
     let user = Meteor.user();
-    try {
+    
       let schoolData = School.findOne({ _id: schoolId });
+      schoolEmail = schoolData.email;
+      schoolName = schoolData.name;
       let superAdminId = schoolData.superAdmin;
       let stripeAccountId = UserStripeData.findOne({ userId: superAdminId });
       stripeAccountId = stripeAccountId.stripe_user_id;
@@ -95,6 +101,8 @@ Meteor.methods({
       };
       let currentUserRec = Meteor.users.findOne(this.userId);
       Meteor.call("purchases.updatePurchases", { payload, recordId });
+      userName=currentUserRec.profile.name || currentUserRec.profile.firstName;
+      userEmail=currentUserRec.emails[0].address;
       let memberData = {
         firstName:
           currentUserRec.profile.name || currentUserRec.profile.firstName,
@@ -128,6 +136,9 @@ Meteor.methods({
       );
       // stripe.balance.retrieve(function(err, balance) {
       // });
+      
+      sendPackagePurchasedEmailToStudent(userName, userEmail, packageName);
+      sendPackagePurchasedEmailToSchool(schoolName, schoolEmail, userName, userEmail, packageName)
       return "Payment Successfully Done";
     } catch (error) {
       payload = {
@@ -201,11 +212,8 @@ Meteor.methods({
   },
   //creating plan for on monthly package creation
   "stripe.createStripePlan": async function (currencyCode, interval, amount) {
-    check(currencyCode,String);
-    check(interval,String);
-    check(amount,String);
-    let productId = Meteor.settings.productId;
     try {
+    let productId = Meteor.settings.productId;
       const plan = await stripe.plans.create({
         product: productId,
         currency: currencyCode, // currency code should be in lower case
@@ -214,10 +222,12 @@ Meteor.methods({
       });
       return plan.id;
     } catch (error) {
+      console.log("error in createstripeplan",error);
       throw new Meteor.Error(error);
     }
   },
   "stripe.createStripeProduct": function (productId) {
+    try {
     check(productId,String);
     let existingProduct = stripe.products.retrieve(productId, function (
       err,
@@ -226,7 +236,6 @@ Meteor.methods({
       // asynchronously called
       if (!product && err && err.message.indexOf("No such product") != -1) {
         //Create a service product
-        try {
           const product = stripe.products.create(
             {
               name: "Skillshape Monthly Package Product",
@@ -238,14 +247,19 @@ Meteor.methods({
                 return result.id;
               } else {
                 throw new Meteor.Error(
+                  console.log("err in the product create",err)
                   (err && err.message) || "Something went wrong!!!"
                 );
               }
             }
           );
-        } catch (err) { }
-      }
+        }
+      
     });
+    console.log('finshied succefully')
+  } catch (err) { 
+    console.log('Error found in stripe.createStripeProduct',err)
+  }
   },
   "stripe.handleCustomerAndSubscribe": async function (
     token,
@@ -254,8 +268,8 @@ Meteor.methods({
     packageName,
     packageId,
     monthlyPymtDetails
+ 
   ) {
-    check(token,String);
     check(planId,String);
     check(schoolId,String);
     check(packageName,String);
@@ -271,31 +285,29 @@ Meteor.methods({
       stripeCusId;
     try {
       let userId = this.userId;
-      let currentUserProfile = Meteor.users.findOne({
-        _id: userId,
-        stripeCusId: { $exists: true }
-      });
-      let emailId=Meteor.user().emails.address;
-      //find stripeCusId from users or create a new one and store in the users collection
-      if (currentUserProfile) {
-        stripeCusId = currentUserProfile.stripeCusId;
-      } else {
-        let stripeCustomer = await stripe.customers.create({
-          description: emailId,
-          source: token
+      let emailId=Meteor.user().emails[0].address;
+      if(token){
+        let currentUserProfile = Meteor.users.findOne({
+          _id: userId,
+          stripeCusId: { $exists: true }
         });
-        stripeCusId = stripeCustomer.id;
-        Meteor.users.update(
-          { _id: userId },
-          { $set: { stripeCusId: stripeCusId } }
-        );
+        //find stripeCusId from users or create a new one and store in the users collection
+        if (currentUserProfile) {
+          stripeCusId = currentUserProfile.stripeCusId;
+        } else {
+          let stripeCustomer = await stripe.customers.create({
+            description: emailId,
+            source: token
+          });
+          stripeCusId = stripeCustomer.id;
+          Meteor.users.update(
+            { _id: userId },
+            { $set: { stripeCusId: stripeCusId } }
+          );
+        }
       }
       startDate = getExpiryDateForPackages(new Date());
-      endDate = getExpiryDateForPackages(
-        startDate,
-        "Months",
-        monthlyPymtDetails[0].month
-      );
+      endDate = getExpiryDateForPackages(startDate,"Months",monthlyPymtDetails[0].month);
       subscriptionRequest = {
         customer: stripeCusId,
         items: [{ plan: planId }]
@@ -309,20 +321,21 @@ Meteor.methods({
         packageName,
         schoolId,
         subscriptionRequest,
-        emailId
+        emailId,
+        planId
       };
       // insert subscription  progress in classSubscription
       subscriptionDbId = ClassSubscription.insert(payload);
-      subscriptionResponse = await stripe.subscriptions.create(subscriptionRequest);
-      // get subscription id
-
-      payload = {
-        subscriptionId: subscriptionResponse.id,
-      };
-      // add subscription id in collection
-       ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
-
-      return true;
+      if(token){
+        subscriptionResponse = await stripe.subscriptions.create(subscriptionRequest);
+        // get subscription id
+        payload = {
+          subscriptionId: subscriptionResponse.id,
+        };
+        // add subscription id in collection
+         ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
+        }
+        return true;
     } catch (error) {
       console.log('error in stripe.handleCustomerAndSubscribe',error)
       payload = { status: "error" };

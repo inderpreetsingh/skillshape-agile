@@ -85,7 +85,6 @@ export const sendClaimASchoolEmail = function(
 ) {
   if (Meteor.isServer) {
     const schoolOwnerName = getUserFullName(schoolAdminRec);
-    // console.log("To====>",To)
     if (!To) {
       To = config.skillshapeAdminEmail;
     }
@@ -321,10 +320,11 @@ export const sendEmailToStudentForPriceInfoUpdate = function(
   userData,
   schoolData
 ) {
+  
   if (Meteor.isServer) {
     const userName = getUserFullName(userData);
     Email.send({
-      to: "sam@skillshape.com", // Needs to replace this with requester's Email.
+      to: userData.emails[0].address || "sam@skillshape.com", // Needs to replace this with requester's Email.
       from: "Notices@SkillShape.com",
       subject: "School has updated pricing info",
       html: `Hi ${userName}, \n${
@@ -444,7 +444,7 @@ export const sendEmailToSchool = function(
 ) {
   if (Meteor.isServer) {
     Email.send({
-      to: "sam@skillshape.com", // Needs to replace this with requester's Email.
+      to: schoolData.email || "sam@skillshape.com", // Needs to replace this with requester's Email.
       from: "Notices@SkillShape.com",
       subject: subject,
       html: `Hi, ${contactName}<br/>
@@ -466,5 +466,43 @@ export const sendPackageExpiredEmail = (to, userName, packageName) => {
     html: `Hi  ${userName}<br/>
              your ${packageName} is expired today.To continue our services you have to buy a new package.<br/>
              Thanks<br/>${EmailSignature}`
+  });
+};
+//Send email to school when their student package is expired.
+export const sendPackageExpiredEmailToSchool = (schoolName, schoolEmail, userName, userEmail, packageName) => {
+  Email.send({
+    to: schoolEmail, // Needs to replace this with requester's Email.
+    from: "Notices@SkillShape.com",
+    subject: "Student Package Expired",
+    html: `Hi  ${schoolName}<br/>
+             your student name ${userName} and email Id ${userEmail} 's package name ${packageName} is expired today.
+             Thanks<br/>${EmailSignature}`
+  });
+};
+// send email notification to school when student successfully purchased a package.
+export const sendPackagePurchasedEmailToStudent = ( userName, userEmail, packageName) => {
+ console.log("sendPackagePurchasedEmailToStudent ");
+  
+  Email.send({
+    to: userEmail, // Needs to replace this with requester's Email.
+    from: "Notices@SkillShape.com",
+    subject: "Package Purchased successfully",
+    html: `Hi  ${userName}<br/>
+             You have successfully purchased package name ${packageName}.Thank you for using skillshape.com .<br/>
+             We hope you will come again soon.
+             Thank you for using skillshape.com <br/>${EmailSignature}`
+  });
+};
+
+// send email notification to student when student successfully purchased a package.
+export const sendPackagePurchasedEmailToSchool = (schoolName, schoolEmail, userName, userEmail, packageName) => {
+ console.log("sendPackagePurchasedEmailToSchool ");
+  Email.send({
+    to: schoolEmail, // Needs to replace this with requester's Email.
+    from: "Notices@SkillShape.com",
+    subject: "New Package Purchased by Student",
+    html: `Hi  ${schoolName}<br/>
+             Your student name ${userName} and email Id ${userEmail} 's package name ${packageName} is purchased successfully.
+             Thank you for using skillshape.com <br/>${EmailSignature}`
   });
 };

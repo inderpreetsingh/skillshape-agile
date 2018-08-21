@@ -144,46 +144,18 @@ class MonthlyPriceForm extends React.Component {
         {
             toastr.error("Month and currency must be unique","Error");
         }
-        if (tabValue === 0) {
-          // No option is selected for making payment then need to show this `Please select any payment type`.
-          if (pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo || pymtType==null || pymtType && pymtType.autoWithDraw && pymtType.payAsYouGo) {
-            toastr.error("Please select one payment type.", "Error");
-            return;
-          }
-          if (pymtType && pymtType.payUpFront) {
-            delete pymtType.payUpFront;
-          }
-          payload.pymtType = pymtType;
-          payload.pymtMethod = "Pay Each Month";
-        } else {
-          payload.pymtType = { payUpFront: true };
-        }
-        this.setState({ isBusy: true });
-    
-        if (data && data._id) {
-          this.handleSubmit({
-            methodName: "monthlyPricing.editMonthlyPricing",
-            doc: payload,
-            doc_id: data._id
-          });
-        } else {
-          this.handleSubmit({
-            methodName: "monthlyPricing.addMonthlyPricing",
-            doc: payload
-          });
-        }    
     }
    
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
-      if (error) {
-      }
+     
       if (result) {
         console.log(result);
         this.props.onClose();
+      }else{
+        this.setState({ isBusy: false, error });
       }
-      this.setState({ isBusy: false, error });
     });
   };
 

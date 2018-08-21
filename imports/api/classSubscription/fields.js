@@ -58,6 +58,10 @@ export const ClassSubscriptionSchema = new SimpleSchema({
     type: Object,
     optional: true,
     blackbox: true
+  },
+  planId:{
+    type: String,
+    optional: true
   }
 });
 

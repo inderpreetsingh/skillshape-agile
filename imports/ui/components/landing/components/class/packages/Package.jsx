@@ -245,7 +245,7 @@ const Package = props => (
                 props.packageType,
                 props._id,
                 props.schoolId,
-                props.packageName,
+                props.packageName || props.name,
                 props.cost ? props.cost : props.pymtDetails[0].cost,
                 props.pymtDetails,
                 props.expDuration,

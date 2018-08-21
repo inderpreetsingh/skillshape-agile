@@ -24,7 +24,6 @@ Meteor.methods({
   "monthlyPricing.addMonthlyPricing": function ({ doc }) {
     check(doc, Object);
     try{
-
       let amount, currency;
       const user = Meteor.users.findOne(this.userId);
       if (
@@ -38,10 +37,9 @@ Meteor.methods({
         if (
           doc &&
           doc.pymtType &&
-          (doc.pymtType.autoWithDraw == true && !doc.pymtType.payAsYouGo)
+          (doc.pymtType.autoWithDraw || doc.pymtType.payAsYouGo || doc.pymtType.payUpFront)
         ) {
           doc.pymtDetails.map((elem, index) => {
-            
               config.currency.map((data, index) => {
                 if (data.value == elem.currency) {
                   currency = data.label;
@@ -57,8 +55,8 @@ Meteor.methods({
               return (doc.pymtDetails[index].planId = result);
             
           });
-        }
   
+        }
         MonthlyPricing.insert(doc);
         return true;
       } else {
@@ -72,7 +70,6 @@ Meteor.methods({
     try {
     check(doc, Object);
     check(doc_id, String);
-    console.log('1')
     let amount, currency;
     const user = Meteor.users.findOne(this.userId);
     if (
@@ -82,12 +79,10 @@ Meteor.methods({
         viewName: "monthlyPricing_CUD"
       })
     ) {
-    console.log('2')
 
       let monthlyPriceData = MonthlyPricing.findOne({ _id: doc_id });
       let diff = _.difference(monthlyPriceData.classTypeId, doc.classTypeId);
       if (diff && diff.length > 0) {
-    console.log('3')
 
         updateHookForClassType({ classTypeId: diff, doc: null });
       }
@@ -95,16 +90,14 @@ Meteor.methods({
       if (
         doc &&
         doc.pymtType &&
-        (doc.pymtType.autoWithDraw == true && !doc.pymtType.payAsYouGo)
+        (doc.pymtType.autoWithDraw || doc.pymtType.payAsYouGo || doc.pymtType.payUpFront)
       ) {
-    console.log('4')
-
         doc.pymtDetails.map((elem, index) => {
-          console.log('5')
+
             config.currency.map((data, index) => {
-          console.log('6')
 
               if (data.value == elem.currency) {
+
                 currency = data.label;
                 amount = elem.cost * data.multiplyFactor;
               }
@@ -115,10 +108,12 @@ Meteor.methods({
               "month",
               amount
             );
-            return (doc.pymtDetails[index].planId = result);
+
+            doc.pymtDetails[index].planId = result
         });
       }
       MonthlyPricing.update({ _id: doc_id }, { $set: doc });
+
       return true;
     } else {
       throw new Meteor.Error("Permission denied!!");

@@ -12,13 +12,20 @@ import { Loading } from "/imports/ui/loading";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import { isEmpty } from "lodash";
 import { getUserFullName } from "/imports/util/getUserData";
-
+import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 export default class SchoolViewBase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { chargeResult: null, currency: null, bestPriceDetails: null,isAlreadyPurchased:false };
+    this.state = this.initializeFields();
   }
-
+  initializeFields = () => {
+    let state = {
+      chargeResult: null, currency: null,
+      bestPriceDetails: null, isAlreadyPurchased: false,
+      goForward: true, showConfirmationModal: true, open: true, addRequest: false
+    }
+    return state;
+  }
   componentWillMount() {
     let { slug } = this.props.params;
     Meteor.call("school.getBestPrice", { slug }, (error, result) => {
@@ -77,7 +84,7 @@ export default class SchoolViewBase extends React.Component {
     this.setState(newState);
   };
 
-  
+
 
   claimASchool = (currentUser, schoolData) => {
     if (currentUser) {
@@ -477,20 +484,42 @@ export default class SchoolViewBase extends React.Component {
   //This function is used to find out if a user is already purchased an package or not
   isAlreadyPurchased = async (userId, planId) => {
     if (userId && planId) {
-     await Meteor.call('purchases.isAlreadyPurchased', {userId, planId}, (err, res) => {
-        console.log("res,err",res,err);
+      await Meteor.call('purchases.isAlreadyPurchased', { userId, planId }, (err, res) => {
+        console.log("res,err", res, err);
         if (res) {
           const { popUp } = this.props;
           popUp.appear("success", { title: "Already Purchased", content: "You have already purchased this package." });
-          this.setState({isAlreadyPurchased:true});
+          this.setState({ isAlreadyPurchased: true, addRequest: false });
         }
-        else{
-          this.setState({isAlreadyPurchased:false});
+        else {
+          this.setState({ isAlreadyPurchased: false });
         }
-        
+
+
       })
     }
 
+  }
+  //check payment type and take action then
+  checkPymtType = async (pymtType, userId, planId) => {
+    console.log("pymtType", pymtType)
+    if (pymtType && pymtType.payAsYouGo == true || pymtType.payUpFront) {
+      this.setState({ goForward: false, addRequest: false });
+      await Meteor.call('classSubscription.isAlreadyMarked', { userId, planId }, (err, res) => {
+        console.log("errrrrrrr,res", err, res);
+        if (res) {
+          const { popUp } = this.props;
+          popUp.appear("success", { title: "Already Marked", content: "You are already marked for this package." });
+          this.setState({ isAlreadyPurchased: true, addRequest: false,goForward:false });
+        }
+        else{
+          this.setState({ isAlreadyPurchased: false, addRequest: false ,goForward:true});
+        }
+      })
+    }
+    else {
+      this.setState({ goForward: true, addRequest: false, isAlreadyPurchased: false });
+    }
   }
   // This is used to send purchase request email when user wants to purchase a package.
   handlePurcasePackage = (
@@ -508,8 +537,7 @@ export default class SchoolViewBase extends React.Component {
     pymtType
   ) => {
     // Start loading
-    packageName ? packageName : packageName = 'Enrollment Fee Package'
-     config.currency.map((data, index) => {
+    config.currency.map((data, index) => {
       if (data.value == currency) {
         currency = data.label;
         amount = amount * data.multiplyFactor;
@@ -518,12 +546,15 @@ export default class SchoolViewBase extends React.Component {
     const { popUp } = this.props;
     let self = this;
     let userId = this.props.currentUser._id;
+    //check is package is already purchased
     this.isAlreadyPurchased(userId, planId);
+    // check payment type  and take required action
+    this.checkPymtType(pymtType, userId, planId);
     Meteor.call(
       "stripe.findAdminStripeAccount",
       this.props.schoolData.superAdmin,
       (error, result) => {
-        if (result && Meteor.settings.public.paymentEnabled && !this.state.isAlreadyPurchased) {
+        if (result && Meteor.settings.public.paymentEnabled && !this.state.isAlreadyPurchased && this.state.goForward) {
 
           let handler = StripeCheckout.configure({
             key: Meteor.settings.public.stripe.PUBLIC_KEY,
@@ -533,8 +564,6 @@ export default class SchoolViewBase extends React.Component {
             token: function (token) {
               popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress" });
               //toastr.success("Please wait transaction in Progress", "Success");
-              
-              console.log("packageType ", packageType);
               if (packageType == "CP" || packageType == "EP") {
                 Meteor.call(
                   "stripe.chargeCard",
@@ -629,21 +658,60 @@ export default class SchoolViewBase extends React.Component {
           });
 
           // Open Checkout with further options:
-         
-            handler.open({
-              name: this.props.schoolData.name,
-              description: packageName,
-              zipCode: true,
-              amount: amount
-            });
-         
-         
+
+          handler.open({
+            name: this.props.schoolData.name,
+            description: packageName,
+            zipCode: true,
+            amount: amount
+          });
+
+
 
           // Close Checkout on page navigation:
           window.addEventListener("popstate", function () {
             handler.close();
           });
-        } else {
+        }
+        else if (!this.state.goForward && !this.state.isAlreadyPurchased) {
+          const { popUp } = this.props;
+          popUp.appear("inform", {
+            title: "Pay As You GO Package", content: "This is a Pay As You Go package.We will mark you. You have to pay your fees at School.",
+            defaultButtons: true,
+            onAffirmationButtonClick: () => {
+              Meteor.call(
+                "stripe.handleCustomerAndSubscribe",
+                null,
+                planId,
+                schoolId,
+                packageName,
+                packageId,
+                monthlyPymtDetails,
+                (err, res) => {
+                  console.log(err, res);
+                  if (res) {
+                    popUp.appear("success", { title: "Success", content: `We have mark you as interested student.` });
+
+                    // toastr.success(
+                    //   `Subscription successfully subscribed`,
+                    //   "Success"
+                    // );
+                  } else {
+                    popUp.appear("warning", { title: "Error", content: (err && err.message) || "something went wrong" });
+
+                    // toastr.error(
+                    //   (err && err.message) || "something went wrong",
+                    //   "error"
+                    // );
+                  }
+                }
+              );
+            }
+          });
+          this.setState({ goForward: true, isAlreadyPurchased: false });
+
+        }
+        else if (this.state.addRequest) {
           if (Meteor.userId()) {
             this.setState({ isLoading: true });
             Meteor.call(
@@ -656,11 +724,11 @@ export default class SchoolViewBase extends React.Component {
               (err, res) => {
                 // Stop loading
                 self.setState({ isLoading: false });
-                if (err && !isAlreadyPurchased) {
+                if (err) {
                   popUp.appear("success", { title: "Message", content: err.error });
 
                   // toastr.error(err.error, "Error");
-                } else if(res && !isAlreadyPurchased ){
+                } else if (res) {
                   popUp.appear("success", { title: "Message", content: res });
 
                   //toastr.error(res, "Error");
@@ -673,7 +741,7 @@ export default class SchoolViewBase extends React.Component {
         }
       }
     );
-
+    this.initializeFields();
     // Meteor.setTimeout(() => {
     //   self.setState({
     //     isLoading: false
