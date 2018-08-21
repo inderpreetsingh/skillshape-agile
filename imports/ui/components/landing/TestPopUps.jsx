@@ -39,10 +39,11 @@ class TestPopUps extends Component {
 
   handleSuccessButtonClick = () => {
     const { popUp } = this.props;
+    //debugger;
     popUp.appear(
       "success",
       {
-        onAffirmationButtonClick: this.handleSuccessButtonClick
+        onAffirmationButtonClick: () => console.log("success click")
       },
       true
     );
@@ -53,8 +54,22 @@ class TestPopUps extends Component {
     popUp.appear("inform", {
       RenderActions: (
         <ButtonsWrapper>
-          <Button onClick={this.handleSuccessButtonClick} applyClose>
+          <Button
+            onClick={() =>
+              this.setState({
+                showButton: true
+              })
+            }
+            applyClose
+          >
             Custom Render Action
+          </Button>
+
+          <Button onClick={() => alert("will close it")} applyClose>
+            Will close
+          </Button>
+          <Button onClick={() => alert("me here won't close the original")}>
+            Won't Close
           </Button>
         </ButtonsWrapper>
       )
@@ -77,6 +92,7 @@ class TestPopUps extends Component {
   render() {
     return (
       <div>
+        {this.state.showButton && <Button>YOU APPLIED CLOSE</Button>}
         {this.state.standAloneDialogBox && (
           <SkillShapeDialogBox
             open={this.state.standAloneDialogBox}

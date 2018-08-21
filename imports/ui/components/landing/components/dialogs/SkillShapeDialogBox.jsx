@@ -261,24 +261,19 @@ class SkillShapeDialogBox extends Component {
   applyCloseToRenderActions = elements => {
     const { onModalClose } = this.props;
 
-    const newOnClickHandler = props => e => {
-      props.onClick && props.onClick();
+    const createNewOnClickHandler = oldClickHandler => e => {
       onModalClose();
+      oldClickHandler && oldClickHandler();
     };
 
     return React.Children.map(elements, child => {
-      console.log(React.isValidElement(child), " ====== ");
       if (!React.isValidElement(child)) return child;
 
-      debugger;
-      console.log("child ---", child);
       const childProps = { ...child.props };
-      console.log(childProps, " ====== before");
       if (React.isValidElement(child) && childProps.applyClose) {
-        childProps.onClick = newOnClickHandler(childProps);
+        const newOnClickHandler = createNewOnClickHandler(childProps.onClick);
+        childProps.onClick = newOnClickHandler;
       }
-
-      console.log(childProps, " ====== after");
 
       if (childProps.children) {
         childProps.children = this.applyCloseToRenderActions(
