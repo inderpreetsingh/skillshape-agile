@@ -232,7 +232,7 @@ class SkillShapeDialogBox extends Component {
     } = this.props;
     return (
       <ButtonsWrapper rightAlign>
-       {(type === "warning" || defaultButtons) && (
+        {(type === "warning" || defaultButtons) && (
           <ButtonWrapper>
             <Button
               onClick={onCloseButtonClick || onModalClose}
@@ -245,27 +245,50 @@ class SkillShapeDialogBox extends Component {
         <ButtonWrapper>
           <Button
             onClick={onAffirmationButtonClick || onModalClose}
-            className={fromPackageListing ? classes["ghostCommon"] + " " + classes[`ghost.success`] :this._getAffirmateButtonClasses()}
+            className={
+              fromPackageListing
+                ? classes["ghostCommon"] + " " + classes[`ghost.success`]
+                : this._getAffirmateButtonClasses()
+            }
           >
             {this._getAffirmateButtonText()}
           </Button>
         </ButtonWrapper>
-       
       </ButtonsWrapper>
     );
   };
 
-  cloneRecursive = children => {
-    // return React.children.map(children, element =>
-    //   const elementProps = {};
-    //   if (React.isValidElement(child)) {
-    //       childProps = {someNew: "propToAdd"};
-    //   }
-    //   if(element.props.children) {
-    //     element = this.cloneRecursive(element.props.children)
-    //   }
-    //   element.props.onClick
-    // )
+  applyCloseToRenderActions = elements => {
+    const { onModalClose } = this.props;
+
+    const newOnClickHandler = props => e => {
+      props.onClick && props.onClick();
+      onModalClose();
+    };
+
+    return React.Children.map(elements, child => {
+      console.log(React.isValidElement(child), " ====== ");
+      if (!React.isValidElement(child)) return child;
+
+      debugger;
+      console.log("child ---", child);
+      const childProps = { ...child.props };
+      console.log(childProps, " ====== before");
+      if (React.isValidElement(child) && childProps.applyClose) {
+        childProps.onClick = newOnClickHandler(childProps);
+      }
+
+      console.log(childProps, " ====== after");
+
+      if (childProps.children) {
+        childProps.children = this.applyCloseToRenderActions(
+          childProps.children
+        );
+      }
+
+      return React.cloneElement(child, childProps);
+      // element.props.onClick;
+    });
   };
 
   getActionButtons = () => {
@@ -278,7 +301,7 @@ class SkillShapeDialogBox extends Component {
       onCloseButtonClick
     } = this.props;
     if (RenderActions) {
-      return React.cloneElement(RenderActions);
+      return this.applyCloseToRenderActions(RenderActions);
     } else {
       if (defaultButtons) {
         return this.getDefaultButtons(defaultButtons);

@@ -53,7 +53,7 @@ class TestPopUps extends Component {
     popUp.appear("inform", {
       RenderActions: (
         <ButtonsWrapper>
-          <Button onClick={this.handleSuccessButtonClick}>
+          <Button onClick={this.handleSuccessButtonClick} applyClose>
             Custom Render Action
           </Button>
         </ButtonsWrapper>

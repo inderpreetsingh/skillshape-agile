@@ -246,7 +246,7 @@ const Text = styled.p`
 `;
 const classTypeImgConfig = {
   defaultImage: classTypeImgSrc,
-  originalImagePath: 'classTypeImg'
+  originalImagePath: "classTypeImg"
 };
 
 const ClassTypeCoverWithDefaultImg = withImageExists(
