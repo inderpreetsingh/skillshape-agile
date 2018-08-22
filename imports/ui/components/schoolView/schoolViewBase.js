@@ -520,9 +520,9 @@ export default class SchoolViewBase extends React.Component {
     });
   }
   //This function is used to find out if a user is already purchased an package or not
-  isAlreadyPurchased = async (userId, planId, packageId, packageType, pymtType) => {
+  isAlreadyPurchased =  (userId, planId, packageId, packageType, pymtType) => {
     if (userId && planId || packageId) {
-      await Meteor.call('purchases.isAlreadyPurchased', { userId, planId, packageId, packageType, pymtType }, (err, res) => {
+       Meteor.call('purchases.isAlreadyPurchased', { userId, planId, packageId, packageType, pymtType }, (err, res) => {
         if (res) {
           const { popUp } = this.props;
           popUp.appear("success", { title: "Already Purchased", content: "You have already purchased this package." });
@@ -538,9 +538,9 @@ export default class SchoolViewBase extends React.Component {
 
   }
   //check payment type and take action then
-  checkPymtType = async (pymtType, userId, planId) => {
+  checkPymtType =  (pymtType, userId, planId) => {
     if (pymtType && pymtType.payAsYouGo || pymtType.payUpFront) {
-      await Meteor.call('classSubscription.isAlreadyMarked', { userId, planId }, (err, res) => {
+       Meteor.call('classSubscription.isAlreadyMarked', { userId, planId }, (err, res) => {
         if (res) {
           const { popUp } = this.props;
           popUp.appear("success", { title: "Already Marked", content: "You are already marked for this package." });
