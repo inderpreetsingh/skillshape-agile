@@ -52,10 +52,10 @@ Meteor.methods({
       return packageStatus;
     }
   },
-  "purchases.isAlreadyPurchased": function({userId, planId,packageId,packageType}) {
+  "purchases.isAlreadyPurchased": function({userId, planId,packageId,packageType,pymtType}) {
     check(userId,String);
     let result;
-    if(packageType == 'MP'){
+    if(packageType == 'MP' && !pymtType.payUpFront ){
       result = Purchases.find({userId,planId,packageStatus:'active'}).fetch();
     }
     else{

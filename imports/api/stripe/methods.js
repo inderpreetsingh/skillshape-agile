@@ -3,6 +3,7 @@ import School from "../school/fields";
 import EnrollmentFees from "../enrollmentFee/fields";
 import ClassSubscription from "../classSubscription/fields";
 import ClassPricing from "../classPricing/fields";
+import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 import { check } from 'meteor/check';
 import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} from '/imports/api/email/index';
 //chargeCard for  creating charge and purchasing package
@@ -10,17 +11,7 @@ import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} fr
 // :":":":":":":"" classtypeids removed 
 var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
-Meteor.methods({
-  "stripe.chargeCard": async function (
-    stripeToken,
-    desc,
-    packageId,
-    packageType,
-    schoolId,
-    expDuration,
-    expPeriod,
-    noClasses
-  ) {
+Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packageId, packageType, schoolId, expDuration, expPeriod, noClasses ,planId) {
     try {
     check(stripeToken,String);
     check(desc,String);
@@ -36,10 +27,19 @@ Meteor.methods({
       amount = enrollmentData.cost;
      
     }
-    else {
+    else if(packageType == 'CP'){
       let classData = ClassPricing.findOne({ _id: packageId })
       currency = classData.currency;
       amount = classData.cost;
+    }
+    else {
+      let MonthlyData = MonthlyPricing.findOne({'pymtDetails.planId':planId})
+      MonthlyData.pymtDetails.map((current,index)=>{
+        if(current.planId == planId){
+          amount = current.cost * current.month;
+          currency = current.currency;
+        }
+      })
     }
     //Get currency name and correct amount using multipleFactor from config
     config.currency.map((data, index) => {
@@ -52,7 +52,6 @@ Meteor.methods({
     let endDate;
     let startDate;
     let user = Meteor.user();
-    
       let schoolData = School.findOne({ _id: schoolId });
       schoolEmail = schoolData.email;
       schoolName = schoolData.name;
@@ -222,7 +221,6 @@ Meteor.methods({
       });
       return plan.id;
     } catch (error) {
-      console.log("error in createstripeplan",error);
       throw new Meteor.Error(error);
     }
   },
@@ -247,7 +245,6 @@ Meteor.methods({
                 return result.id;
               } else {
                 throw new Meteor.Error(
-                  console.log("err in the product create",err)
                   (err && err.message) || "Something went wrong!!!"
                 );
               }
@@ -256,9 +253,7 @@ Meteor.methods({
         }
       
     });
-    console.log('finshied succefully')
   } catch (err) { 
-    console.log('Error found in stripe.createStripeProduct',err)
   }
   },
   "stripe.handleCustomerAndSubscribe": async function (
@@ -337,7 +332,6 @@ Meteor.methods({
         }
         return true;
     } catch (error) {
-      console.log('error in stripe.handleCustomerAndSubscribe',error)
       payload = { status: "error" };
       let resultOfErrorUpdate = ClassSubscription.update(
         { _id: subscriptionDbId },
