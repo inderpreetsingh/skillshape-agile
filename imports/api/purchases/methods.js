@@ -56,7 +56,7 @@ Meteor.methods({
     check(userId,String);
     let result;
     if(packageType == 'MP' && !pymtType.payUpFront ){
-      result = Purchases.find({userId,planId,packageStatus:'active'}).fetch();
+      result =  Purchases.find({userId,planId,packageStatus:'active'}).fetch();
     }
     else{
       result = Purchases.find({userId,packageId,packageStatus:'active'}).fetch();

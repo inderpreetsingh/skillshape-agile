@@ -7,14 +7,13 @@ export function withPopUp(WrappedComponent) {
       open: false,
       applyClose: true
     };
-    onClose = () => {
+    handleClose = () => {
       this.setState({ open: false });
 
       if (this.props.onPopUpClose && this.state.applyClose)
         this.props.onPopUpClose();
     };
     appear = (type, dialogBoxProps = {}, applyClose = true) => {
-      // console.log("appear clicked..")
       this.setState({
         open: true,
         type,
@@ -23,11 +22,11 @@ export function withPopUp(WrappedComponent) {
       });
     };
 
-    onAffirmationButtonClick = () => {
+    handleAffirmationButtonClick = () => {
       if (this.state.applyClose) {
-        this.onClose();
+        this.handleClose();
       }
-      if(this.state.dialogBoxProps.onAffirmationButtonClick){
+      if (this.state.dialogBoxProps.onAffirmationButtonClick) {
         this.state.dialogBoxProps.onAffirmationButtonClick();
         
       }
@@ -35,17 +34,16 @@ export function withPopUp(WrappedComponent) {
 
     render() {
       const { open, type, dialogBoxProps } = this.state;
-     // console.log(this.state, "this.state... withPopUp");
       return (
         <Fragment>
           {open && (
             <SkillShapeDialogBox
               open={open}
               type={type}
-              onModalClose={this.onClose}
-              onCloseButtonClick={this.onClose}
-              onAffirmationButtonClick={this.onAffirmationButtonClick}
               {...dialogBoxProps}
+              onModalClose={this.handleClose}
+              onCloseButtonClick={this.handleClose}
+              onAffirmationButtonClick={this.handleAffirmationButtonClick}
             />
           )}
           <WrappedComponent {...this.props} popUp={{ appear: this.appear }} />

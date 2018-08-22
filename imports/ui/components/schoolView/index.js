@@ -21,8 +21,14 @@ import ClassTimes from "/imports/api/classTimes/fields";
 class SchoolView extends SchoolViewBase {
   constructor(props) {
     super(props);
-    this.state = {
-      isPublish: true,
+    this.state = this.initializeFields();
+  }
+  initializeFields = () => {
+    let state = {
+      chargeResult: null, currency: null,
+      bestPriceDetails: null, isAlreadyPurchased: false,
+       open: true, addRequest: false,
+      payAsYouGo:false,payUpFront:false, isPublish: true,
       bestPriceDetails: null,
       isLoading: false,
       seeMoreCount: 4,
@@ -36,7 +42,8 @@ class SchoolView extends SchoolViewBase {
         classTimesIds: [],
         classTimesIdsForCI: []
       }
-    };
+    }
+    return state;
   }
   componentWillMount() {
     // let { slug } = this.props.params;

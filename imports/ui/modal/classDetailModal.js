@@ -49,7 +49,7 @@ import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo
 import Events from "/imports/util/events";
 import { imageExists } from "/imports/util";
 import * as settings from "/imports/ui/components/landing/site-settings.js";
-import Grid from 'material-ui/Grid';
+import Grid from "material-ui/Grid";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
@@ -76,7 +76,7 @@ const styles = theme => {
     },
     dialogAction: {
       width: "100%",
-      justifyContent: "space-between",
+      justifyContent: "space-between"
     },
     dialogTitle: {
       position: "relative"
@@ -86,6 +86,10 @@ const styles = theme => {
     },
     gridContainer: {
       padding: helpers.rhythmDiv
+    },
+    aboutClassGridContainer: {
+      marginTop: helpers.rhythmDiv * 2,
+      padding: `0 ${helpers.rhythmDiv * 3}px`
     },
     image: {
       verticalAlign: "middle",
@@ -114,16 +118,14 @@ const styles = theme => {
     iconWithDetailContainer: {
       display: "inline-flex",
       alignItems: "center",
-      marginTop: '10px'
+      marginTop: "10px"
     },
-    bottomSpace: {
-
-    },
+    bottomSpace: {},
     about: {
-      width: '100%',
-      fontSize: '21px',
-      padding: '5px',
-      backgroundColor: 'aliceblue'
+      width: "100%",
+      fontSize: "21px",
+      padding: "5px",
+      backgroundColor: "aliceblue"
     }
   };
 };
@@ -250,7 +252,6 @@ const Event = styled.div`
   ${helpers.flexCenter} flex-direction: column;
   padding-right: ${helpers.rhythmDiv * 2}px;
 `;
-
 
 const EventDesc = Text.extend``;
 
@@ -555,7 +556,7 @@ class ClassDetailModal extends React.Component {
                     <EventName>
                       {`${classType && classType.name.toLowerCase()}: ${
                         eventData.name
-                        }`}
+                      }`}
                     </EventName>
                     {/* {this.formatScheduleType(eventData.scheduleType)} */}
                   </Event>
@@ -596,7 +597,6 @@ class ClassDetailModal extends React.Component {
                         <Italic>Time</Italic>
                       </Text>
                       <Text>
-
                         {/* timeUnits are added for mins,hours */}
                         {`${eventData.eventStartTime}`}
 
@@ -675,7 +675,7 @@ class ClassDetailModal extends React.Component {
               </center>
               <Grid container style={{ marginTop: "16px" }}>
                 {!isEmpty(classTypeData) && (
-                  <div style={{ backgroundColor: "", width: '100%' }}>
+                  <div style={{ backgroundColor: "", width: "100%" }}>
                     <Heading marginTop={helpers.rhythmDiv} textTransform="none">
                       This class is part of this Series:
                     </Heading>
@@ -685,16 +685,18 @@ class ClassDetailModal extends React.Component {
                         withSlider={false}
                         classTimesData={[classTypeData]}
                         classInterestData={classInterestData}
-
                       />
                     </div>
                   </div>
                 )}
-                <Grid container style={{ marginTop: "16px" }}>
+                <Grid container className={classes.aboutClassGridContainer}>
                   {/*<Typography component="p" style={{marginBottom:'20px'}}>
       							{classType && classType.desc}
                   </Typography>*/}
-                  <center className={classes.about}> <i>{` About ${classType.name}`}</i></center>
+                  <center className={classes.about}>
+                    {" "}
+                    <i>{` About ${classType.name}`}</i>
+                  </center>
                   <IconsWrapper>
                     <IconsRowWrapper>
                       <div
@@ -713,7 +715,6 @@ class ClassDetailModal extends React.Component {
                           </Icon>
                         </div>
                         <div>
-
                           <Text>{school && school.name}</Text>
                         </div>
                       </div>
@@ -756,11 +757,10 @@ class ClassDetailModal extends React.Component {
                             </Icon>
                           </div>
                           <div>
-
                             <Text>
                               {location &&
                                 `${location.address}, ${location.city}, ${
-                                location.state
+                                  location.state
                                 }`}
                             </Text>
                           </div>
@@ -774,7 +774,7 @@ class ClassDetailModal extends React.Component {
                         <MetaInfo
                           data={`  ${classTypeData.ageMin} to ${
                             classTypeData.ageMax
-                            }`}
+                          }`}
                           title={"Age:" + " "}
                         />
                       )}
@@ -788,18 +788,18 @@ class ClassDetailModal extends React.Component {
                       )}
 
                     {classTypeData &&
-                      classTypeData.experienceLevel &&
-                      classTypeData.experienceLevel == "All" ? (
-                        <MetaInfo
-                          data={"  All levels are welcome"}
-                          title={"Experience:  " + " "}
-                        />
-                      ) : (
-                        <MetaInfo
-                          data={`  ${classTypeData.experienceLevel}`}
-                          title={"Experience:  " + " "}
-                        />
-                      )}
+                    classTypeData.experienceLevel &&
+                    classTypeData.experienceLevel == "All" ? (
+                      <MetaInfo
+                        data={"  All levels are welcome"}
+                        title={"Experience:  " + " "}
+                      />
+                    ) : (
+                      <MetaInfo
+                        data={`  ${classTypeData.experienceLevel}`}
+                        title={"Experience:  " + " "}
+                      />
+                    )}
                     {classType &&
                       classType.desc && (
                         <MetaInfo
@@ -807,7 +807,6 @@ class ClassDetailModal extends React.Component {
                           title={"Description:"}
                           marginBottom={16}
                         />
-
                       )}
                   </Grid>
                   {/*<Grid item xs={6}>
@@ -829,7 +828,7 @@ class ClassDetailModal extends React.Component {
                 </Grid>
 
                 {!isEmpty(allFormattedClassTimeDetails) && (
-                  <div style={{ backgroundColor: "aliceblue", width: '100%' }}>
+                  <div style={{ backgroundColor: "aliceblue", width: "100%" }}>
                     <Heading marginTop={helpers.rhythmDiv} textTransform="none">
                       More class times for{" "}
                       <Capitalize>{classType.name.toLowerCase()}</Capitalize>
@@ -840,7 +839,6 @@ class ClassDetailModal extends React.Component {
                         withSlider={false}
                         classTimesData={allFormattedClassTimeDetails}
                         classInterestData={classInterestData}
-
                       />
                     </div>
                   </div>
@@ -873,7 +871,7 @@ class ClassDetailModal extends React.Component {
                     this.props.closeEventModal(false, null);
                   }}
                 /> */}
-                <Grid style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Grid style={{ display: "flex", justifyContent: "flex-end" }}>
                   <ButtonWrapper>
                     <FormGhostButton
                       label="View Class"
