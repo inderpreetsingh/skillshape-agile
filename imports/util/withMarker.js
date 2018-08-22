@@ -57,10 +57,7 @@ export default (withMovingMarker = WrappedComponent => {
     };
 
     dragStart = (e, ar) => {
-      debugger;
-      console.group("mar dragger");
-      console.log(e, ar);
-      console.groupEnd();
+      //debugger;
       this.props.onDragStart &&
         this.props.onDragStart({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     };

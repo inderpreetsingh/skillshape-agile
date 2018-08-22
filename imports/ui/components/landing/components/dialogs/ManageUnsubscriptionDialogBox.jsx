@@ -150,7 +150,7 @@ class ManageUnsubscriptionDialogBox extends Component {
   componentDidMount = () => {
     const { toastr, requestId } = this.props;
     const methodNameToCall = this._getCompleteMethodName('getRequestData');
-    debugger;
+   // debugger;
     Meteor.call(methodNameToCall,requestId,(err,res) => {
       if(err) {
         toastr.error("There was no data found with this request id, you have already unsubscribed.","Error");

@@ -374,7 +374,7 @@ class ClassTypeContent extends Component {
       Meteor.call("classTimesRequest.addRequest", data, (err, res) => {
         this.setState({ isBusy: false }, () => {
           if (err) {
-            debugger;
+            //debugger;
             popUp.appear("alert", { content: err.reason || err.message });
           } else {
             popUp.appear("success", {

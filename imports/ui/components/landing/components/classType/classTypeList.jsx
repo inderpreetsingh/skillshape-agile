@@ -207,6 +207,7 @@ class ClassTypeList extends Component {
               : "Try changing your search"}
           </RevertSearch> */}
           <SuggestionFormWrapper
+            onSearchAgainButtonClick={this.props.onSearchAgainButtonClick}
             filters={this.props.filters}
             tempFilters={this.props.tempFilters}
             removeAllFilters={this.props.removeAllFilters}
