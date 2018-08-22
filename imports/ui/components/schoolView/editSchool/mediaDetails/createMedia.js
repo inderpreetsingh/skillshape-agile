@@ -145,6 +145,7 @@ class CreateMedia extends React.Component {
 						/>
 						<FormGhostButton
 							type='submit'
+							form={formId}
 							label="Save"
 						/>
 					</div>

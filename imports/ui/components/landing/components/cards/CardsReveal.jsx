@@ -209,6 +209,7 @@ class CardsReveal extends Component {
   state = {
     maxCharsLimit: 18,
     revealCard: false,
+    bgImg:this.props.bgImg
   };
 
   revealCardContent = (e) => {
@@ -218,7 +219,15 @@ class CardsReveal extends Component {
   hideCardContent = (e) => {
     this.setState({ revealCard: false });
   }
-
+  componentWillMount (){
+    const {bgImg,schoolId}= this.props;
+    Meteor.call('school.getMySchool',schoolId,true,(err,res)=>{
+      if(res && res.mainImage && bgImg == '/images/classtype/classtype-cover.jpg'){
+        this.setState({bgImg:res.mainImage})
+      }
+      
+    })
+  }
 
   render() {
     const { name, classTypeImg, descriptionContent, body, classes, bgImg } = this.props;
@@ -228,7 +237,7 @@ class CardsReveal extends Component {
         <div onClick={this.revealCardContent}>
           <CardImageTitleWrapper>
 
-            <CardImageWrapper bgImage={bgImg}></CardImageWrapper>
+            <CardImageWrapper bgImage={this.state.bgImg}></CardImageWrapper>
 
             <CardContentHeader>
               <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>

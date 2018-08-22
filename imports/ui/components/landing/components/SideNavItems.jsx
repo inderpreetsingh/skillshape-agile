@@ -305,7 +305,7 @@ class SideNavItems extends React.Component {
 
   loadMySchool = () => {
     if (Meteor.userId()) {
-      Meteor.call("school.getMySchool", (error, result) => {
+      Meteor.call("school.getMySchool",null,false, (error, result) => {
         if (error) {
           // console.log("error", error);
         }
