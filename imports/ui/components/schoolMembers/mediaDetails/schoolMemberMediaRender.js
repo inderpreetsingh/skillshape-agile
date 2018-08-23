@@ -49,11 +49,11 @@ export default function() {
                 </Grid>
                 <Grid item xs={12}>
                     <MediaList
-                        changeLimit = {() => alert('changeLimit')}
+                        changeLimit = {() => {}}
                         limit= {limit || 0}
                         schoolId={this.props.schoolData._id}
-                        onDelete={() => alert('changeLimit')}
-                        openEditMediaForm={() => alert('changeLimit')}
+                        onDelete={() => {}}
+                        openEditMediaForm={() => {}}
                         showEditButton={false}
                         filters={mediaListfilters}
                         memberExists={true}
