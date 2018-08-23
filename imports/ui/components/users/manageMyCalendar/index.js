@@ -515,7 +515,7 @@ class ManageMyCalendar extends React.Component {
     value = value.filter(function(element) {
       return element !== undefined;
     });
-    return value[0] + ":" + Time;
+    return value[0] + ": " + Time;
   };
 
   render() {

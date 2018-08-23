@@ -8,7 +8,7 @@ import Card from 'material-ui/Card';
 import MediaList from '/imports/ui/components/schoolView/editSchool/mediaDetails/mediaList';
 
 export default function() {
-    const { showCreateMediaModal, mediaFormData, filterStatus, limit, memberInfo } = this.state;
+    const { showCreateMediaModal, mediaFormData, filterStatus, limit, memberInfo,_id,openEditTaggedModal} = this.state;
     const { mediaListfilters, showUploadImageBtn } = this.props;
 
     return (
@@ -32,6 +32,9 @@ export default function() {
                         showLoading = {this.showLoading}
                         tagMember={true}
                         taggedMemberInfo={memberInfo}
+                        _id={_id}
+                        openEditTaggedModal={openEditTaggedModal}
+                        closeEditTaggedModal={this.closeEditTaggedModal}
                     />
                 )
             }
@@ -46,11 +49,11 @@ export default function() {
                 </Grid>
                 <Grid item xs={12}>
                     <MediaList
-                        changeLimit = {() => alert('changeLimit')}
+                        changeLimit = {() => {}}
                         limit= {limit || 0}
                         schoolId={this.props.schoolData._id}
-                        onDelete={() => alert('changeLimit')}
-                        openEditMediaForm={() => alert('changeLimit')}
+                        onDelete={() => {}}
+                        openEditMediaForm={() => {}}
                         showEditButton={false}
                         filters={mediaListfilters}
                         memberExists={true}
