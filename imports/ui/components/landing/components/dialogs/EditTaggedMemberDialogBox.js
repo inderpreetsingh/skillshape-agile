@@ -130,6 +130,8 @@ class EditTaggedMemberDialogBox extends Component {
         }
       );
     }
+    this.setState({ isBusy: false });
+
   }
 
   handleMediaSettingChange = (event, type) => {

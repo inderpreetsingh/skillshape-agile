@@ -14,7 +14,7 @@ class MediaDetails extends React.Component {
           limit: 10,
           filters: {
             schoolId: this.props.schoolId
-          }
+          },openEditTaggedModal:false
         }
     }
     handleFixedToggle = status => {
@@ -95,16 +95,23 @@ class MediaDetails extends React.Component {
         if(type === "add") {
 
             Meteor.call("media.addMedia", data, (error, result) => {
-                if(error) {
+                
+               if(result){
+                 this.setState({openEditTaggedModal:true,_id:result});
+                // this.closeMediaUpload();
                 }
-                this.closeMediaUpload();
             });
         } else if(type === "edit") {
 
             Meteor.call("media.editMedia", editKey, data, (error, result) => {
-                if(error) {
-                }
-                this.closeMediaUpload();
+                
+              if(result){
+                this.setState({openEditTaggedModal:true,_id:result});
+               // this.closeMediaUpload();
+
+              }
+           
+
             });
         }
     }
@@ -135,6 +142,9 @@ class MediaDetails extends React.Component {
             schoolId: this.props.schoolId
         },
       });
+    }
+    closeEditTaggedModal = () =>{
+      this.setState({openEditTaggedModal:false})
     }
 
     render() {
