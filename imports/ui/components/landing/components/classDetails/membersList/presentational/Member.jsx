@@ -65,7 +65,10 @@ const ProfilePic = styled.div`
 `;
 
 const DetailsWrapper = styled.div`
-  ${helpers.flexHorizontalSpaceBetween};
+  ${props =>
+    props.type === "student"
+      ? helpers.flexCenter
+      : helpers.flexHorizontalSpaceBetween};
   align-items: flex-start;
   width: 100%;
   flex-shrink: 0;
@@ -128,7 +131,7 @@ const Member = props => {
     <Wrapper type="default">
       <Profile type="default">
         <ProfilePic src={props.profileSrc} />
-        <DetailsWrapper>
+        <DetailsWrapper type={props.type}>
           <Details>
             <SubHeading fontSize="20">{props.name}</SubHeading>
             {props.type !== "student" && (

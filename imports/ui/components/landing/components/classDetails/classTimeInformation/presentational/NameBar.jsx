@@ -4,10 +4,12 @@ import styled from "styled-components";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 
 import {
-  flexHorizontalSpaceBetween,
+  tablet,
   rhythmDiv,
-  secondaryTextColor
+  secondaryTextColor,
+  flexHorizontalSpaceBetween
 } from "/imports/ui/components/landing/components/jss/helpers.js";
+
 import {
   Text,
   Heading,
@@ -30,15 +32,21 @@ const Right = styled.div`
   flex-shrink: 0;
 `;
 
+const ClassTimeName = Heading.extend`
+  font-weight: 400;
+  text-transform: capitalize;
+  @media screen and (min-width: ${tablet}px) {
+    margin-right: ${rhythmDiv}px;
+  }
+`;
+
 const NameBar = props => {
   return (
     <Wrapper>
       <Left>
-        <Heading weight={400}>
-          <Capitalize>
-            {props.classTimeName} : {props.classTypeName}
-          </Capitalize>
-        </Heading>
+        <ClassTimeName>
+          {props.classTimeName} : {props.classTypeName}
+        </ClassTimeName>
         {props.schoolName && (
           <SubHeading color={secondaryTextColor}>
             <Capitalize>{props.schoolName}</Capitalize>

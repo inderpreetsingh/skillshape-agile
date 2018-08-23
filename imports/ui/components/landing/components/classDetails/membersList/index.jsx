@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
+import { withRouter } from "react-router";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 
 import MembersList from "./presentational/MembersList.jsx";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
@@ -37,11 +37,16 @@ class MembersListContainer extends Component {
   };
 
   render() {
-    const { studentsList, instructorsList } = this.props;
+    const { studentsList, instructorsList, location } = this.props;
+    console.log(location, "From inside membersList");
+    const currentView =
+      location.pathname === "/classdetails-student"
+        ? "studentsView"
+        : "instructorsView";
     return (
       <Fragment>
         <MembersList
-          viewType="instructorsView"
+          viewType={currentView}
           searchedValue={this.state.teachersFilterWith}
           onSearchChange={this.handleSearchChange("teachersFilterWith")}
           data={
@@ -54,7 +59,7 @@ class MembersListContainer extends Component {
           searchedValue={this.state.teachersFilterWith}
         />
         <MembersList
-          viewType={"instructorsView"}
+          viewType={currentView}
           searchedValue={this.state.studentsFilterWith}
           onSearchChange={this.handleSearchChange("studentsFilterWith")}
           data={
@@ -77,4 +82,4 @@ MembersListContainer.defaultProps = {
   membersList: membersList
 };
 
-export default MembersListContainer;
+export default withRouter(MembersListContainer);

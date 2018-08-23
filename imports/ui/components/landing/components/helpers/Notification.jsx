@@ -33,22 +33,21 @@ const Wrapper = styled.div`
 
   @media screen and (max-width: ${helpers.mobile}px) {
     // padding: ${helpers.rhythmDiv * 2}px;
-
   }
 `;
 
 const NotificationInnerWrapper = styled.div`
   /* prettier-ignore */
-  ${helpers.flexHorizontalSpaceBetween}
+  ${helpers.flexCenter}
 
-  // @media screen and (max-width: ${helpers.mobile}px) {
-  //   justify-content: flex-start;
-  //   flex-direction: column;
-  // }
+  @media screen and (max-width: ${helpers.tablet}px) {
+    /* prettier-ignore */
+    ${helpers.flexHorizontalSpaceBetween}
+  }
 `;
 
 const NotificationContent = Text.extend`
-  font-size: ${helpers.baseFontSize * 1.5}px;
+  font-size: ${helpers.baseFontSize * 1.25}px;
   margin-right: ${helpers.rhythmDiv}px;
   color: white;
 

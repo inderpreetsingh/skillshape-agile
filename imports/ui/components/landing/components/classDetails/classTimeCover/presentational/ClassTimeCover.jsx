@@ -3,8 +3,11 @@ import styled from "styled-components";
 
 import { withImageExists } from "/imports/util";
 import { schoolDetailsImgSrc } from "/imports/ui/components/landing/site-settings.js";
+
+import ActionButtons from "/imports/ui/components/landing/components/classDetails/classTimeInformation/presentational/ActionButtons";
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 import {
+  tablet,
   rhythmDiv,
   danger
 } from "/imports/ui/components/landing/components/jss/helpers.js";
@@ -19,13 +22,20 @@ const imageExistsConfigClassSrc = {
   defaultImage: schoolDetailsImgSrc
 };
 
-const Wrapper = styled.header`
+const Wrapper = styled.div`
   background-image: url('${props => props.url}');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  width: 100%;
   height: 160px;
   position: relative;
+
+  @media screen and (min-width: ${tablet}px) {
+    flex: 1;
+    height: auto;
+    margin-bottom: ${rhythmDiv * 4}px;
+  }
 `;
 
 const ClassTypeProfile = styled.div`
@@ -41,28 +51,25 @@ const ClassTypeProfile = styled.div`
   background-repeat: no-repeat;
 `;
 
-// const ProfilePicDefaultImage = (props) =>
 const ClassTypeProfileWithDefaultImage = withImageExists(props => {
   const { bgImg, classTypeCoverSrc } = props;
   return <ClassTypeProfile url={bgImg || classTypeCoverSrc} />;
 }, imageExistsConfigClassSrc);
 
-const Header = props => (
-  <Fragment>
-    {props.noPurchasedClasses && (
-      <Notification
-        notificationContent="You do not have any packages that will cover this class."
-        bgColor={danger}
-        buttonLabel="Purchase Classes"
-        onButtonClick={props.onPurchaseButtonClick}
-      />
-    )}
-    <Wrapper url={props.bgImg || props.schoolCoverSrc}>
-      <ClassTypeProfileWithDefaultImage
-        classTypeCoverSrc={props.classTypeCoverSrc}
-      />
-    </Wrapper>
-  </Fragment>
+const ShowOnLargeScreen = styled.div`
+  display: none;
+  @media screen and (min-width: ${tablet});
+`;
+
+const ClassTimeCover = props => (
+  <Wrapper url={props.bgImg || props.schoolCoverSrc}>
+    <ClassTypeProfileWithDefaultImage
+      classTypeCoverSrc={props.classTypeCoverSrc}
+    />
+    <ShowOnLargeScreen>
+      <ActionButtons />
+    </ShowOnLargeScreen>
+  </Wrapper>
 );
 
-export default withImageExists(Header, imageExistsConfigSchoolSrc);
+export default withImageExists(ClassTimeCover, imageExistsConfigSchoolSrc);

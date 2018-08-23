@@ -1,18 +1,35 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
+import styled from "styled-components";
 import PropTypes from "prop-types";
+
 import ActionButtons from "./presentational/ActionButtons";
 import Description from "./presentational/Description";
 import LocationDetails from "./presentational/LocationDetails";
 import NameBar from "./presentational/NameBar";
 
+import {
+  tablet,
+  rhythmDiv
+} from "/imports/ui/components/landing/components/jss/helpers.js";
 import { classTimeData } from "/imports/ui/components/landing/constants/classDetails/classTimeData";
+
+const Wrapper = styled.div`
+  flex: 1;
+  margin-right: ${rhythmDiv * 2}px;
+`;
+
+const HideOnLargeScreen = styled.div`
+  @media screen and (min-width: ${tablet}px) {
+    display: none;
+  }
+`;
 
 class ClassTimeInformation extends Component {
   render() {
     const { classTimeData, classTypeName, schoolName } = this.props;
 
     return (
-      <div>
+      <Wrapper>
         <NameBar
           classTimeName={classTimeData.name}
           classTypeName={classTimeData.classTypeName || classTypeName}
@@ -26,8 +43,10 @@ class ClassTimeInformation extends Component {
           address={classTimeData.address}
           locationData={classTimeData.locationData}
         />
-        <ActionButtons onScheduleButtonClick={() => {}} />
-      </div>
+        <HideOnLargeScreen>
+          <ActionButtons />
+        </HideOnLargeScreen>
+      </Wrapper>
     );
   }
 }

@@ -11,6 +11,7 @@ import {
 } from "/imports/ui/components/landing/components/jss/helpers.js";
 
 import SearchList from "./SearchList.jsx";
+import MemberExpanded from "./MemberExpanded.jsx";
 import Member from "./Member.jsx";
 
 const Wrapper = styled.div`
@@ -54,32 +55,34 @@ const Title = SlantedHeading.extend`
   }
 `;
 
-const MembersList = props => (
-  <Wrapper>
-    <ListHeading>
-      <Title>
-        <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
-      </Title>
-      <SearchList
-        onChange={props.onSearchChange}
-        searchedValue={props.searchedValue}
-      />
-    </ListHeading>
-    <MembersGrid entityType={props.entityType}>
-      {props.data &&
-        props.data.map(obj => (
-          <MemberWrapper
-            expanded={
-              props.viewType === "instructorsView" &&
-              props.entityType === "students"
-            }
-            type={obj.type}
-          >
-            <Member viewType="instructorsView" {...obj} />
-          </MemberWrapper>
-        ))}
-    </MembersGrid>
-  </Wrapper>
-);
+const MembersList = props => {
+  const expanded =
+    props.viewType === "instructorsView" && props.entityType === "students";
+  return (
+    <Wrapper>
+      <ListHeading>
+        <Title>
+          <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
+        </Title>
+        <SearchList
+          onChange={props.onSearchChange}
+          searchedValue={props.searchedValue}
+        />
+      </ListHeading>
+      <MembersGrid entityType={props.entityType}>
+        {props.data &&
+          props.data.map(obj => (
+            <MemberWrapper expanded={expanded} type={obj.type}>
+              {expanded ? (
+                <MemberExpanded viewType={props.viewType} {...obj} />
+              ) : (
+                <Member viewType={props.viewType} {...obj} />
+              )}
+            </MemberWrapper>
+          ))}
+      </MembersGrid>
+    </Wrapper>
+  );
+};
 
 export default MembersList;

@@ -64,8 +64,13 @@ export default (Routes = componentLoader(props => (
       />
       <Route path="/popups-dev" name="popups-testing" component={TestPopUps} />
       <Route
-        path="/classdetails-dev"
-        name="classdetails-development"
+        path="/classdetails-student"
+        name="classdetails-student-development"
+        component={ClassDetails}
+      />
+      <Route
+        path="/classdetails-instructor"
+        name="classdetails-instructor-development"
         component={ClassDetails}
       />
       <Route

@@ -32,7 +32,7 @@ const ActivitiesWrapper = styled.div`
   height: ${props => props.length}px;
 
   @media screen and (min-width: ${helpers.tablet}px) {
-    width: calc(100vw - 48px);
+    width: calc(100% - 16px);
     height: 300px;
     display: flex;
   }

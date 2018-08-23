@@ -36,12 +36,8 @@ const Wrapper = styled.div`
     flex-direction: row;
   }
 
-  @media screen and (min-width: ${mobile + 1}px) and (max-width: ${tablet}px) {
+  @media screen and (min-width: ${mobile + 1}px) {
     height: 200px;
-  }
-
-  @media screen and (min-width: ${tablet}px) {
-    height: 300px;
   }
 `;
 
@@ -72,6 +68,7 @@ const LeftInnerWrapper = styled.div`
 
   @media screen and (min-width: ${tablet}px) {
       max-width: 400px;
+      justify-content: space-between;
       margin: 0 auto;
   }
 `;

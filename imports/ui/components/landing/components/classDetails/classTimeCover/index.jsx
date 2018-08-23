@@ -2,12 +2,12 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import Header from "./presentational/Header.jsx";
+import ClassTimeCover from "./presentational/ClassTimeCover.jsx";
 import SelectPackagesDialogBox from "/imports/ui/components/landing/components/dialogs/SelectPackagesDialogBox.jsx";
 // import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { coverSrc } from "/imports/ui/components/landing/site-settings.js";
 
-class HeaderContainer extends Component {
+class ClassTimeCoverContainer extends Component {
   constructor(props) {
     super(props);
 
@@ -36,8 +36,7 @@ class HeaderContainer extends Component {
             onModalClose={this.handleDialogBoxState(false)}
           />
         )}
-        <Header
-          noPurchasedClasses={true}
+        <ClassTimeCover
           classTypeCoverSrc={classTypeCoverSrc}
           schoolCoverSrc={schoolCoverSrc}
           onPurchaseButtonClick={this.handleDialogBoxState(true)}
@@ -47,14 +46,14 @@ class HeaderContainer extends Component {
   }
 }
 
-HeaderContainer.propTypes = {
+ClassTimeCoverContainer.propTypes = {
   classTypeCoverSrc: PropTypes.string,
   schoolCoverSrc: PropTypes.string
 };
 
-HeaderContainer.defaultProps = {
+ClassTimeCoverContainer.defaultProps = {
   classTypeCoverSrc: coverSrc,
   schoolCoverSrc: coverSrc
 };
 
-export default HeaderContainer;
+export default ClassTimeCoverContainer;
