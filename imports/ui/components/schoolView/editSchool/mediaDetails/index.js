@@ -93,21 +93,17 @@ class MediaDetails extends React.Component {
 
     meteorCall = ({type, data, editKey}) => {
         if(type === "add") {
-
             Meteor.call("media.addMedia", data, (error, result) => {
-                
                if(result){
                  this.setState({openEditTaggedModal:true,_id:result});
-                // this.closeMediaUpload();
+                 this.closeMediaUpload();
                 }
             });
         } else if(type === "edit") {
-
             Meteor.call("media.editMedia", editKey, data, (error, result) => {
-                
               if(result){
                 this.setState({openEditTaggedModal:true,_id:result});
-               // this.closeMediaUpload();
+               this.closeMediaUpload();
 
               }
            

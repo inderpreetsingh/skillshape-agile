@@ -10,14 +10,19 @@ import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
+import Multiselect from "react-widgets/lib/Multiselect";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { withStyles, imageRegex } from "/imports/util";
 import '/imports/api/media/methods';
 import MediaUpload from '/imports/ui/componentHelpers/mediaUpload';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import Checkbox from "material-ui/Checkbox";
+import Select from "react-select";
 import EditTaggedMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditTaggedMemberDialogBox.js";
 const formId = "create-media";
+
 
 class CreateMedia extends React.Component {
 
@@ -25,11 +30,44 @@ class CreateMedia extends React.Component {
 		super(props);
 		this.state = {
 			isBusy: false,
-			currentMediaData: null
+			currentMediaData: null,
+			checkedAll: false,
+			selectedOption: [],
 		}
 	}
 	componentWillReceiveProps() {
 		this.setState({ fileUploadError: false });
+	}
+	componentWillMount() {
+		try {
+
+			let schoolId = this.props.schoolId;
+			if (schoolId) {
+				this.setState({ isBusy: true });
+				Meteor.call(
+					"schoolMemberDetails.getAllSchoolMembers",
+					{ schoolId },
+					(err, res) => {
+						let state = { isBusy: false };
+						state.schoolMembers = [];
+						if (err) {
+							state.error = err.reason || err.message;
+						}
+						if (!_.isEmpty(res)) {
+							res.map((current, index) => {
+								state.schoolMembers.push({ value: current._id, label: `${current && current.firstName ? current.firstName : ""} ${current && current.lastName ? current.lastName : ""}` })
+							})
+						}
+
+						this.setState(state);
+					}
+				);
+			}
+			this.setState({ isBusy: false });
+		} catch (error) {
+
+		}
+
 	}
 	getFileType = (file, mediaFormData) => {
 		if (file) {
@@ -54,7 +92,7 @@ class CreateMedia extends React.Component {
 	onSubmit = (event) => {
 		event.preventDefault()
 		let file;
-		const mediaData = {};
+		let mediaData = {};
 		const { mediaFormData, formType } = this.props;
 		if (!this.state.file) {
 			this.setState({ fileUploadError: true })
@@ -74,30 +112,46 @@ class CreateMedia extends React.Component {
 		mediaData.name = this.mediaName.value
 		mediaData.desc = this.mediaNotes.value
 		mediaData.schoolId = this.props.schoolId
+		mediaData.taggedMemberIds = [];
+		this.state.selectedOption.map((current, index) => {
+			mediaData.taggedMemberIds.push(current.value);
+		})
 
 		if (mediaFormData) {
 			this.props.onEdit({ editKey: mediaFormData._id, data: mediaData, fileData: file });
 		} else {
 			if (this.props.tagMember) {
-				mediaData.taggedMemberIds = [this.props.taggedMemberInfo._id];
+				mediaData.taggedMemberIds.push(this.props.taggedMemberInfo._id);
+				mediaData.taggedMemberIds = (_.uniq(mediaData.taggedMemberIds));
 			}
 			this.props.onAdd({ data: mediaData, fileData: file, isUrl: this.state.file.isUrl });
 		}
-		if(this.props.from == 'editSection'){
-			this.setState({isBusy:false});
-			this.props.onClose();
-		}
-		this.setState({currentMediaData:mediaData});
-		
-	}
 
-	render() {
-		let { mediaFormData, formType, fullScreen, showCreateMediaModal, onClose,taggedMemberInfo ,openEditTaggedModal,_id,closeEditTaggedModal} = this.props;
-		let {currentMediaData} =this.state;
-		
-		if(openEditTaggedModal){
-			currentMediaData._id = _id;
+		this.setState({ isBusy: false })
+		this.props.onClose();
+
+	}
+	collectSchoolMembers = values => {
+		this.setState({ taggedMemberIds: values.map(ele => ele._id) });
+	};
+	handleSelectAll = (e) => {
+		e.target.checked ? this.setState({ checkedAll: e.target.checked, selectedOption: this.state.schoolMembers }) : this.setState({ checkedAll: e.target.checked, selectedOption: [] })
+	}
+	handleChangeForTagging = (selectedOption) => {
+		this.setState(state => {
+			return {
+				selectedOption: selectedOption
+			};
+		});
+		if (_.isEmpty(selectedOption)) {
+			this.setState({ checkedAll: false })
 		}
+	}
+	
+	render() {
+		let { mediaFormData, formType, fullScreen, showCreateMediaModal, onClose, taggedMemberInfo, openEditTaggedModal, _id, closeEditTaggedModal } = this.props;
+		const { selectedOption, schoolMembers } = this.state;
+		
 		return (
 			<Dialog
 				fullScreen={fullScreen}
@@ -105,20 +159,11 @@ class CreateMedia extends React.Component {
 				onClose={onClose}
 				aria-labelledby="responsive-dialog-title"
 			>
-				<DialogContent>
-				{
-				this.state.isBusy && <ContainerLoader />
-			}
-					{openEditTaggedModal && (
-						<EditTaggedMemberDialogBox
-							open={openEditTaggedModal}
-							onModalClose={()=>{this.props.closeEditTaggedModal();
-								onClose()}}
-							openEditTaggedModal={this.openEditTaggedModal}
-							currentMediaData={currentMediaData}
-							memberInfo={taggedMemberInfo}
-						/>
-					)}
+				<DialogContent >
+					{
+						this.state.isBusy && <ContainerLoader />
+					}
+
 					<form id={formId} onSubmit={this.onSubmit}>
 						<Grid container >
 							<Grid item xs={12} sm={6}>
@@ -142,6 +187,35 @@ class CreateMedia extends React.Component {
 									rows={2}
 									fullWidth
 								/>
+								<div style={{display:'flex'}}>
+								<Grid item md={4} sm={4} xs={4} style={{marginTop:'22px'}}>
+									<Typography >Members: </Typography>
+								</Grid>
+								<Grid item md={8} sm={8} xs={8} >
+									<FormControl fullWidth margin="dense">
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={this.state.checkedAll}
+													onChange={(e) => { this.handleSelectAll(e) }}
+													value="checkedAll"
+												/>
+											}
+											label="Select All Members"
+											style={{width:'100%'}}
+										/>
+									</FormControl>
+									
+								</Grid>
+								</div>
+								<Select
+										name="filters"
+										placeholder="School Members"
+										value={selectedOption}
+										options={schoolMembers}
+										onChange={this.handleChangeForTagging}
+										multi
+									/>
 							</Grid>
 							<Grid item xs={12} sm={6}>
 								<MediaUpload fullScreen={fullScreen} width={275} onChange={this.handleChange} data={mediaFormData && { file: mediaFormData.sourcePath, isUrl: true }} showVideoOption={false} />
