@@ -39,7 +39,7 @@ class SchoolSuggestionsView extends Component {
   }
 
   _setAccessForUser = currentUser => {
-    debugger;
+    // debugger;
     if (!isEmpty(currentUser)) {
       const accessAllowed = checkMyAccess({ user: currentUser });
       if (accessAllowed) {

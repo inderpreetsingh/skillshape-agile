@@ -7,9 +7,12 @@ import ClassTimeInformation from "./classTimeInformation/index.jsx";
 import MembersList from "./membersList/index.jsx";
 import TimeLine from "./timeline/index.jsx";
 
+import BrandBar from "/imports/ui/components/landing/components/BrandBar.jsx";
+import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar';
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 
 import {
+  panelColor,
   tablet,
   danger,
   maxContainerWidth
@@ -41,6 +44,7 @@ const ClassDetails = props => (
         onButtonClick={props.onPurchaseButtonClick}
       />
     )}
+    <TopSearchBar />
     <InnerWrapper>
       <Header>
         <ClassTimeCover {...props.headerProps} />
