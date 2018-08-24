@@ -157,7 +157,7 @@ class TaggedMemberDialogBox extends Component {
                       return result;
                     }
                     
-                  })}
+                  })}.
                 <Typography />
               </Grid>
               <Grid item md={4} sm={4} xs={4}>
