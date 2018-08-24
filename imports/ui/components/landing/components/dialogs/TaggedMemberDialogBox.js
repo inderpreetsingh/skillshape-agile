@@ -118,7 +118,7 @@ class TaggedMemberDialogBox extends Component {
       currentMediaData,
       schoolData
     } = this.props;
-
+    let first=true;
     return (
       <Dialog
         fullScreen={fullScreen}
@@ -142,14 +142,21 @@ class TaggedMemberDialogBox extends Component {
                 <Typography>Members:</Typography>
               </Grid>
               <Grid item md={8} sm={8} xs={8}>
+              
                 {!isEmpty(currentMediaData.taggedMemberData) &&
                   currentMediaData.taggedMemberData.map(userData => {
+                    console.log("first",first);
                     if (userData.firstName && userData.lastName) {
-                      return `${userData.firstName} ${userData &&
+                       let result=`${first ?'':', '}${userData.firstName} ${userData &&
                         userData.lastName}`;
+                        first = false;
+                        return result;
                     } else {
-                      return `${userData.firstName}`;
+                      let result=`${first ? '': ', '}${userData.firstName}`;
+                      first = false;
+                      return result;
                     }
+                    
                   })}
                 <Typography />
               </Grid>
