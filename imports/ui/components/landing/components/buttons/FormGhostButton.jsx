@@ -105,7 +105,6 @@ const FormGhostButton = props => {
   } else if (props.alertColor || (props.color == "alert")) {
     rootClass = rootClass + " " + props.classes.redColor;
   }
-  console.log(rootClass, "lll...");
   return (
     <Button
       type={props.type}

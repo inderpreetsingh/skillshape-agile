@@ -17,9 +17,9 @@ import SearchBarStyled from "/imports/ui/components/landing/components/SearchBar
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
-import SuggestionForm from "/imports/ui/components/landing/components/schoolSuggestions/SuggestionForm.jsx";
-import { cardsData, cardsData1 } from "../../constants/cardsData.js";
+import SuggestionFormWrapper from "/imports/ui/components/landing/components/schoolSuggestions/SuggestionFormWrapper.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { cardsData, cardsData1 } from "../../constants/cardsData.js";
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
@@ -206,7 +206,8 @@ class ClassTypeList extends Component {
               ? "No results in this area. Try a different area?"
               : "Try changing your search"}
           </RevertSearch> */}
-          <SuggestionForm
+          <SuggestionFormWrapper
+            onSearchAgainButtonClick={this.props.onSearchAgainButtonClick}
             filters={this.props.filters}
             tempFilters={this.props.tempFilters}
             removeAllFilters={this.props.removeAllFilters}
@@ -217,6 +218,7 @@ class ClassTypeList extends Component {
   };
 
   render() {
+    // debugger;
     const {
       mapView,
       classTypeData,
@@ -322,7 +324,7 @@ export default createContainer(props => {
   let isLoading = true;
   let subscription, reviewsSubscription;
   let filters = props.filters ? props.filters : {};
-
+  // debugger;
   if (props.mapView) {
     const query = props.location && props.location.query;
     if (query && query.NEPoint && query.SWPoint) {

@@ -255,7 +255,7 @@ class ClassTime extends Component {
     const userName = getUserFullName(currentUser);
     const { popUp } = this.props;
     let emailId;
-    this.props && this.props.schoolId && Meteor.call('school.getMySchool', (err, res) => {
+    this.props && this.props.schoolId && Meteor.call('school.getMySchool',null,false, (err, res) => {
       if (res) {
         emailId = res && res[0].email;
         popUp.appear("success", { content: `Hi ${userName}, This class is closed to registration. ${emailId && emailId && `contact the administrator at ${emailId} for more details.`} ` });

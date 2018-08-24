@@ -279,7 +279,7 @@ class ImageGalleryView extends React.Component {
             open={this.state.showListOfMembers}
             onModalClose={() => this.setState({ showListOfMembers: false })}
             currentMediaData={
-              this.props.images[this._imageGallery.getCurrentIndex()]["media"]
+             this.props.images? this.props.images[this._imageGallery.getCurrentIndex()]["media"] :''
             }
             openEditTaggedModal={this.openEditTaggedModal}
             schoolData={this.state.schoolData}
@@ -292,7 +292,7 @@ class ImageGalleryView extends React.Component {
             onModalClose={() => this.setState({ openEditTaggedModal: false })}
             openEditTaggedModal={this.openEditTaggedModal}
             currentMediaData={
-              this.props.images[this._imageGallery.getCurrentIndex()]["media"]
+              this.props.images? this.props.images[this._imageGallery.getCurrentIndex()]["media"] :''
             }
             memberInfo={this.props.memberInfo}
           />

@@ -206,6 +206,13 @@ const FilterAppliedDivs = styled.div`
   }
 `;
 
+// This is just an empty div introduced just in order to push
+// down the list based on certain condition
+const ClassTypeCardsPush = styled.div`
+  width: 100%;
+  height: ${props => props.height}px;
+`;
+
 const ClassTypeOuterWrapper = styled.div`
   padding-top: ${props => props.padding}px;
 `;
@@ -267,6 +274,16 @@ class Landing extends Component {
         break;
     }
   }
+
+  setFilters = filters => {
+    console.info(filters, "------");
+    this.setState(state => {
+      return {
+        ...state,
+        filters
+      };
+    });
+  };
 
   componentWillMount() {}
 
@@ -706,12 +723,14 @@ class Landing extends Component {
     this.setState({ filters: oldFilter });
   };
 
-  removeAllFilters = () => {
-    debugger;
-    this.setState({
+  removeAllFilters = (displayInitialPosition = false) => {
+    this.setState(() => ({
       filters: {},
       tempFilters: {}
-    });
+    }));
+    if (displayInitialPosition) {
+      this.getMyCurrentLocation();
+    }
   };
 
   handleMemberInvitedDialogBoxState = state => {
@@ -956,10 +975,12 @@ class Landing extends Component {
             className="element homepage-content"
           >
             {/* Applied Filters */}
-            <ClassTypeOuterWrapper padding={this.getOuterWrapperPadding()}>
+            <ClassTypeCardsPush height={this.getOuterWrapperPadding()} />
+            <ClassTypeOuterWrapper padding="0">
               {!this.state.mapView &&
                 this.checkIfAnyFilterIsApplied() &&
                 this.showAppliedTopFilter()}
+              {console.log("re rendering .... classtype list...")}
               <ClassTypeList
                 landingPage={true}
                 getMyCurrentLocation={this.getMyCurrentLocation}
@@ -974,6 +995,7 @@ class Landing extends Component {
                   this.checkIfAnyFilterIsApplied() &&
                   this.showAppliedTopFilter()
                 }
+                onSearchAgainButtonClick={this.setFilters}
                 removeAllFilters={this.removeAllFilters}
                 {...this.props}
               />
@@ -1024,22 +1046,6 @@ class Landing extends Component {
               />
             </FloatingMapButtonWrapper>
           )}
-
-          {/*
-                <SwitchViewWrapper mapView={this.state.mapView}>
-                  {this.state.mapView ?
-                  (<FloatingChangeViewButton
-                      cardsView={true}
-                      onListButtonClick={this.handleToggleMapView} />)
-                    :
-                  (<FloatingChangeViewButton
-                    cardsView={true}
-                    label="MAP"
-                    iconName="map"
-                    onListButtonClick={this.handleToggleMapView} />)
-                  }
-                </SwitchViewWrapper>
-                */}
         </div>
       </DocumentTitle>
     );

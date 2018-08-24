@@ -15,8 +15,8 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 import { withStyles, imageRegex } from "/imports/util";
 import '/imports/api/media/methods';
 import MediaUpload from '/imports/ui/componentHelpers/mediaUpload';
-
-
+import { ContainerLoader } from '/imports/ui/loading/container.js';
+import EditTaggedMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditTaggedMemberDialogBox.js";
 const formId = "create-media";
 
 class CreateMedia extends React.Component {
@@ -25,6 +25,7 @@ class CreateMedia extends React.Component {
 		super(props);
 		this.state = {
 			isBusy: false,
+			currentMediaData: null
 		}
 	}
 	componentWillReceiveProps() {
@@ -74,7 +75,6 @@ class CreateMedia extends React.Component {
 		mediaData.desc = this.mediaNotes.value
 		mediaData.schoolId = this.props.schoolId
 
-		// console.log("onSubmit file",this.state.file)
 		if (mediaFormData) {
 			this.props.onEdit({ editKey: mediaFormData._id, data: mediaData, fileData: file });
 		} else {
@@ -83,10 +83,21 @@ class CreateMedia extends React.Component {
 			}
 			this.props.onAdd({ data: mediaData, fileData: file, isUrl: this.state.file.isUrl });
 		}
+		if(this.props.from == 'editSection'){
+			this.setState({isBusy:false});
+			this.props.onClose();
+		}
+		this.setState({currentMediaData:mediaData});
+		
 	}
 
 	render() {
-		let { mediaFormData, formType, fullScreen, showCreateMediaModal, onClose } = this.props;
+		let { mediaFormData, formType, fullScreen, showCreateMediaModal, onClose,taggedMemberInfo ,openEditTaggedModal,_id,closeEditTaggedModal} = this.props;
+		let {currentMediaData} =this.state;
+		
+		if(openEditTaggedModal){
+			currentMediaData._id = _id;
+		}
 		return (
 			<Dialog
 				fullScreen={fullScreen}
@@ -95,6 +106,19 @@ class CreateMedia extends React.Component {
 				aria-labelledby="responsive-dialog-title"
 			>
 				<DialogContent>
+				{
+				this.state.isBusy && <ContainerLoader />
+			}
+					{openEditTaggedModal && (
+						<EditTaggedMemberDialogBox
+							open={openEditTaggedModal}
+							onModalClose={()=>{this.props.closeEditTaggedModal();
+								onClose()}}
+							openEditTaggedModal={this.openEditTaggedModal}
+							currentMediaData={currentMediaData}
+							memberInfo={taggedMemberInfo}
+						/>
+					)}
 					<form id={formId} onSubmit={this.onSubmit}>
 						<Grid container >
 							<Grid item xs={12} sm={6}>
@@ -145,6 +169,7 @@ class CreateMedia extends React.Component {
 						/>
 						<FormGhostButton
 							type='submit'
+							form={formId}
 							label="Save"
 						/>
 					</div>

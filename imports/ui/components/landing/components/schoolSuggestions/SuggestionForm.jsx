@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Component, Fragment } from "react";
 import isEmpty from "lodash/isEmpty";
 import styled from "styled-components";
 
@@ -67,7 +67,9 @@ class SuggestionForm extends Component {
   // }
 
   componentDidMount() {
+    // console.group("suggestion form");
     // console.log("Component is re mounted");
+    // console.groupEnd();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -306,20 +308,28 @@ class SuggestionForm extends Component {
   };
 
   removeAllFilters = () => {
-    this.setState({
-      filters: {},
-      tempFilters: {},
-      errors: {}
-    });
+    // this.setState(() => {
+    //   return {
+    //     filters: {},
+    //     tempFilters: {},
+    //     errors: {}
+    //   };
+    // });
+
+    const filters = JSON.parse(JSON.stringify(this.state.filters));
+    delete filters.schoolWebsite;
+    delete filters.schoolEmail;
+    this.props.onSearchAgainButtonClick(filters);
   };
 
   render() {
-    console.log(
-      "this.state.filters",
-      this.state.filters,
-      this.props.filters,
-      "suggestion form rendering..."
-    );
+    // console.log(
+    //   "this.state.filters",
+    //   this.state.filters,
+    //   this.props.filters,
+    //   "suggestion form rendering..."
+    // );
+    // const { removeAllFilters } = this.props;
     return (
       <Fragment>
         {this.state.isLoading && <ContainerLoader />}
@@ -353,6 +363,7 @@ class SuggestionForm extends Component {
                 this.collectSelectedSkillCategories
               }
               collectSelectedSkillSubject={this.collectSelectedSkillSubject}
+              removeAllFilters={this.removeAllFilters}
               onGiveSuggestion={this.handleGiveSuggestion}
             />
           </FormWrapper>
