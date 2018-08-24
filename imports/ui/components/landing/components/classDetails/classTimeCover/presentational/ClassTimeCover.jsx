@@ -56,9 +56,16 @@ const ClassTypeProfileWithDefaultImage = withImageExists(props => {
   return <ClassTypeProfile url={bgImg || classTypeCoverSrc} />;
 }, imageExistsConfigClassSrc);
 
-const ShowOnLargeScreen = styled.div`
+const ButtonsWrapper = styled.div`
   display: none;
-  @media screen and (min-width: ${tablet});
+  @media screen and (min-width: ${tablet}px) {
+    display: flex;
+    width: calc(100% - 160px); // subtracting the space for profile.
+    margin-left: auto;
+    height: 100%;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
 `;
 
 const ClassTimeCover = props => (
@@ -66,9 +73,9 @@ const ClassTimeCover = props => (
     <ClassTypeProfileWithDefaultImage
       classTypeCoverSrc={props.classTypeCoverSrc}
     />
-    <ShowOnLargeScreen>
+    <ButtonsWrapper>
       <ActionButtons />
-    </ShowOnLargeScreen>
+    </ButtonsWrapper>
   </Wrapper>
 );
 

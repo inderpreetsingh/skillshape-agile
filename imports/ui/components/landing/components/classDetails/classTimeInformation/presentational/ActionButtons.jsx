@@ -7,7 +7,8 @@ import { Link } from "react-router";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import {
   rhythmDiv,
-  mobile
+  mobile,
+  tablet
 } from "/imports/ui/components/landing/components/jss/helpers.js";
 
 // console.log(Meteor, Meteor.absoluteUrl);
@@ -29,10 +30,22 @@ const Wrapper = styled.div`
     width: 100%;
     justify-content: space-evenly;
   }
+
+  @media screen and (min-width: ${tablet}px) {
+    justify-content: flex-end;
+  }
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
+
+  @media screen and (min-width: ${tablet}px) {
+    ${props => props.marginRight && `margin-right: ${rhythmDiv}px;`};
+  }
+
+  @media screen and (min-width: 300px) and (max-width: 400px) {
+    margin-right: ${rhythmDiv}px;
+  }
 `;
 
 const ActionButtons = props => (
@@ -42,15 +55,20 @@ const ActionButtons = props => (
         to={`${Meteor.absoluteUrl()}/classType/my_class/${props.classTypeId}`}
         target="_blank"
       >
-        <ButtonWrapper>
-          <PrimaryButton icon iconName="class" label="Visit ClassType" />
+        <ButtonWrapper marginRight>
+          <PrimaryButton
+            noMarginRight
+            icon
+            iconName="class"
+            label="Visit ClassType"
+          />
         </ButtonWrapper>
       </Link>
       <Link
         to={`${Meteor.absoluteUrl()}/schools/${props.schoolName}`}
         target="_blank"
       >
-        <ButtonWrapper>
+        <ButtonWrapper marginRight>
           <PrimaryButton
             noMarginRight
             icon
