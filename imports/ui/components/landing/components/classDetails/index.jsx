@@ -1,14 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { withRouter } from "react-router";
 
 import ClassTimeCover from "./classTimeCover/index.jsx";
 import ClassTimeInformation from "./classTimeInformation/index.jsx";
 import MembersList from "./membersList/index.jsx";
 import TimeLine from "./timeline/index.jsx";
 
-import BrandBar from "/imports/ui/components/landing/components/BrandBar.jsx";
-import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar';
+import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 
 import {
@@ -34,28 +34,36 @@ const Header = styled.header`
   }
 `;
 
-const ClassDetails = props => (
-  <Wrapper>
-    {props.noPurchasedClasses && (
-      <Notification
-        notificationContent="You do not have any packages that will cover this class."
-        bgColor={danger}
-        buttonLabel="Purchase Classes"
-        onButtonClick={props.onPurchaseButtonClick}
-      />
-    )}
-    <TopSearchBar />
-    <InnerWrapper>
-      <Header>
-        <ClassTimeCover {...props.headerProps} />
-        <ClassTimeInformation {...props.ClassTimeInformation} />
-      </Header>
-      <TimeLine {...props.timeLineProps} />
-      <MembersList />
-    </InnerWrapper>
-  </Wrapper>
-);
+const ClassDetails = props => {
+  const { location } = props;
 
+  const currentView =
+    location.pathname === "/classdetails-student"
+      ? "studentsView"
+      : "instructorsView";
+  return (
+    <Wrapper>
+      {props.noPurchasedClasses &&
+        currentView === "studentsView" && (
+          <Notification
+            notificationContent="You do not have any packages that will cover this class."
+            bgColor={danger}
+            buttonLabel="Purchase Classes"
+            onButtonClick={props.onPurchaseButtonClick}
+          />
+        )}
+      <TopSearchBar />
+      <InnerWrapper>
+        <Header>
+          <ClassTimeCover {...props.headerProps} />
+          <ClassTimeInformation {...props.ClassTimeInformation} />
+        </Header>
+        <TimeLine {...props.timeLineProps} />
+        <MembersList currentView={currentView} />
+      </InnerWrapper>
+    </Wrapper>
+  );
+};
 ClassDetails.propTypes = {
   noPurchasedClasses: PropTypes.bool
 };
@@ -64,4 +72,4 @@ ClassDetails.defaultProps = {
   noPurchasedClasses: true
 };
 
-export default ClassDetails;
+export default withRouter(ClassDetails);

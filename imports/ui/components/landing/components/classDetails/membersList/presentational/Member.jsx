@@ -106,10 +106,6 @@ const ExpiresOn = Designation = Text.extend`
   font-weight: 300;
 `;
 
-const Date = Text.extend`
-  color: ${helpers.alertColor};
-`;
-
 const Member = props => {
   if (props.type === "student" && props.viewType === "instructorsView") {
     return <MemberExpanded {...props} />;

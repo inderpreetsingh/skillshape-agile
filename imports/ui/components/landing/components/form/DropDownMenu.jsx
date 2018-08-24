@@ -88,6 +88,7 @@ class DropDownMenu extends Component {
 
         <Menu
           id="my-menu"
+          disableAutoFocusItem
           open={Boolean(anchorEl)}
           anchorEl={anchorEl}
           onClose={this.handleClose}
@@ -95,7 +96,6 @@ class DropDownMenu extends Component {
           {menuOptions.map(option => (
             <MenuItem
               key={option.value}
-              selected={option.value === selectedOptionValue}
               onClick={this.handleMenuItemClick(option)}
             >
               {option.name}

@@ -12,7 +12,7 @@ export const classModulesData = [
   },
   {
     name: "Parker Sequences",
-    time: 5,
+    time: 15,
     type: "Conditioning drills"
   },
   {
@@ -22,20 +22,11 @@ export const classModulesData = [
   },
   {
     name: "Technique",
-    time: 5,
+    time: 15,
     type: "Escape the guard"
-  },
-  {
-    name: "Warm Up",
-    time: 10
   },
   {
     name: "Meditation",
     time: 10
-  },
-  {
-    name: "Technique",
-    time: 10,
-    type: "Escape the guard"
   }
 ];

@@ -12,7 +12,7 @@ const styles = {
   icon: {
     position: "absolute",
     right: helpers.rhythmDiv,
-    top: 0,
+    top: helpers.rhythmDiv,
     color: "white",
     cursor: "pointer",
     height: helpers.baseFontSize,

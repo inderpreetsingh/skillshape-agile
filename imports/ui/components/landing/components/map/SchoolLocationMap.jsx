@@ -18,6 +18,15 @@ const mapOptions = {
   //center: config.defaultLocationObject
 };
 
+const MapElement = styled.div`
+  height: 100%;
+  border-radius: 5px;
+`;
+
+const LoadingElement = styled.div`
+  height: 100%;
+`;
+
 const MapContainer = styled.div`
   height: 100%;
   width: 100%;
@@ -31,9 +40,9 @@ const MapContainer = styled.div`
 const SchoolLocationMap = withMarker(
   withGoogleMap(props => {
     // const MovingMarker = props.movingMarker;
-    console.group("Google Map");
-    console.log("Google map rendering", props.myLocation);
-    console.groupEnd();
+    // console.group("Google Map");
+    // console.log("Google map rendering", props.myLocation);
+    // console.groupEnd();
     return (
       <GoogleMap
         defaultZoom={mapOptions.zoom}
@@ -61,9 +70,9 @@ SchoolLocationMap.defaultProps = {
   googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&key=${
     config.MAP_KEY
   }&libraries=places`,
-  loadingElement: <div style={{ height: `100%` }} />,
+  loadingElement: <LoadingElement />,
   containerElement: <MapContainer />,
-  mapElement: <div style={{ height: `100%` }} />
+  mapElement: <div style={{ height: "100%", borderRadius: "5px" }} />
 };
 
 export default SchoolLocationMap;

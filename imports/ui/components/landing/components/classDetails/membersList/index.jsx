@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 
 import MembersList from "./presentational/MembersList.jsx";
@@ -37,12 +36,12 @@ class MembersListContainer extends Component {
   };
 
   render() {
-    const { studentsList, instructorsList, location } = this.props;
-    console.log(location, "From inside membersList");
-    const currentView =
-      location.pathname === "/classdetails-student"
-        ? "studentsView"
-        : "instructorsView";
+    const { studentsList, instructorsList, currentView } = this.props;
+    console.log(currentView, "From inside membersList");
+    // const currentView =
+    //   location.pathname === "/classdetails-student"
+    //     ? "studentsView"
+    //     : "instructorsView";
     return (
       <Fragment>
         <MembersList
@@ -82,4 +81,4 @@ MembersListContainer.defaultProps = {
   membersList: membersList
 };
 
-export default withRouter(MembersListContainer);
+export default MembersListContainer;

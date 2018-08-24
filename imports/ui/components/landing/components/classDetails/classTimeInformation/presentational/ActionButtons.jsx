@@ -52,32 +52,36 @@ const ButtonWrapper = styled.div`
 const ActionButtons = props => (
   <OuterWrapper>
     <Wrapper>
-      <Link
-        to={`${Meteor.absoluteUrl()}/classType/my_class/${props.classTypeId}`}
+      <ButtonWrapper marginRight>
+        <PrimaryButton
+          noMarginRight
+          icon
+          iconName="class"
+          label="Visit ClassType"
+        />
+      </ButtonWrapper>
+      <ButtonWrapper marginRight>
+        <PrimaryButton
+          noMarginRight
+          icon
+          iconName="school"
+          label="Visit School"
+        />
+      </ButtonWrapper>
+      {/*<Link
+        to={
+          "#" ||
+          `/classType/my_class/${props.classTypeId}`
+        }
         target="_blank"
       >
-        <ButtonWrapper marginRight>
-          <PrimaryButton
-            noMarginRight
-            icon
-            iconName="class"
-            label="Visit ClassType"
-          />
-        </ButtonWrapper>
       </Link>
       <Link
-        to={`${Meteor.absoluteUrl()}/schools/${props.schoolName}`}
+        to={"#" || `/schools/${props.schoolName}`}
         target="_blank"
       >
-        <ButtonWrapper marginRight>
-          <PrimaryButton
-            noMarginRight
-            icon
-            iconName="school"
-            label="Visit School"
-          />
-        </ButtonWrapper>
-      </Link>
+
+      </Link> */}
 
       {/*<ButtonWrapper>
         <PrimaryButton

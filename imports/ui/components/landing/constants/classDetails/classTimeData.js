@@ -14,7 +14,7 @@ export const classTimeData = {
   timePeriod: "pm",
   address: "Appollo Bandar, Colaba, Mumbai, 400001",
   locationData: {
-    lat: -34,
-    lng: 89.234
+    lat: 18.92493,
+    lng: 72.83008
   }
 };

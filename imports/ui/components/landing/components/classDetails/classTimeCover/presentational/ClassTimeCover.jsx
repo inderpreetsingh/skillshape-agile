@@ -35,6 +35,7 @@ const Wrapper = styled.div`
     flex: 1;
     height: auto;
     margin-bottom: ${rhythmDiv * 4}px;
+    border-radius: 5px;
   }
 `;
 
