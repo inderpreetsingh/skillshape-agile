@@ -49,12 +49,11 @@ class CreateMedia extends React.Component {
 					{ schoolId },
 					(err, res) => {
 						let state = { isBusy: false };
-						state.schoolMembers = []
+						state.schoolMembers = [];
 						if (err) {
 							state.error = err.reason || err.message;
 						}
 						if (!_.isEmpty(res)) {
-							//state.schoolMembers = res || [];
 							res.map((current, index) => {
 								state.schoolMembers.push({ value: current._id, label: `${current && current.firstName ? current.firstName : ""} ${current && current.lastName ? current.lastName : ""}` })
 							})
@@ -144,9 +143,9 @@ class CreateMedia extends React.Component {
 				selectedOption: selectedOption
 			};
 		});
-						if(_.isEmpty(selectedOption)){
-							this.setState({checkedAll:false})
-						}
+		if (_.isEmpty(selectedOption)) {
+			this.setState({ checkedAll: false })
+		}
 	}
 	
 	render() {
