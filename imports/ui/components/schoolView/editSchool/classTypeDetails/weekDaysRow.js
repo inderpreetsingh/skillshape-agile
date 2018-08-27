@@ -95,9 +95,9 @@ export class WeekDaysRow extends React.Component {
       let indexOfDay = scheduleDetails.indexOf(event.target.value);
       oldRow[index].day = 1 + scheduleDetails.indexOf(event.target.value);
       // Set Time according to week day selected.
-      let ret = new Date();
-      ret.setDate(ret.getDate() + ((indexOfDay - ret.getDay()) % 7) + 1);
-      oldRow[index]["startTime"] = ret;
+      // let ret = new Date();
+      // ret.setDate(ret.getDate() + ((indexOfDay - ret.getDay()) % 7) + 1);
+      // oldRow[index]["startTime"] = ret;
     }
 
     if (fieldName === "duration") {
@@ -198,6 +198,7 @@ export class WeekDaysRow extends React.Component {
                       required={
                         data && data.key && data.key != '' ? true : false
                       } /*Made it mandatory if week day selected*/
+                      inputProps={{ min: "0"}}
                     />
                   </Grid>
                   <Grid sm={6}>

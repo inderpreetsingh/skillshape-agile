@@ -170,6 +170,7 @@ export class OneTimeRow extends React.Component {
                         "duration"
                       )}
                       fullWidth
+                      inputProps={{ min: "0"}}
                     />
                   </Grid>
                   <Grid sm={6}>

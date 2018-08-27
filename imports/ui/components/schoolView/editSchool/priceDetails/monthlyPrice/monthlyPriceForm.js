@@ -268,6 +268,7 @@ class MonthlyPriceForm extends React.Component {
                   label="Maximum classes"
                   type="number"
                   fullWidth
+                  inputProps={{ min: "0"}}
                 />
    
                 

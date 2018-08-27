@@ -398,7 +398,7 @@ class LocationForm extends React.Component {
       methodName = "location.addLocation";
       docObj.doc = payload;
     }
-    this.props.enableParentPanelToDefaultOpen();
+    this.props && this.props.enableParentPanelToDefaultOpen && this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, docObj, (error, result) => {
       if (error) {
       }
