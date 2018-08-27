@@ -15,7 +15,7 @@ import EmbedLayout from "/imports/ui/layout/embedLayout";
 //components
 import Home from "/imports/ui/components/home";
 import Landing from "/imports/ui/components/landing/index.jsx";
-import TestPopUps from '/imports/ui/components/landing/TestPopUps.jsx';
+import TestPopUps from "/imports/ui/components/landing/TestPopUps.jsx";
 import ClassType from "/imports/ui/components/landing/ClassType.jsx";
 import NoResults from "/imports/ui/components/landing/components/NoResults";
 import ClassTypeView from "/imports/ui/components/classTypeView";
@@ -37,6 +37,7 @@ import SchoolUpload from "/imports/ui/components/schoolUpload";
 import VerifyEmail from "/imports/ui/components/account/verifyEmail";
 import SkillShapeSchool from "/imports/ui/components/skillshape-school";
 import ManageUsers from "/imports/ui/components/manage-users";
+import ClassDetails from "/imports/ui/components/landing/ClassDetails.jsx";
 
 //pages
 import AboutUs from "/imports/ui/pages/aboutUs";
@@ -61,11 +62,17 @@ export default (Routes = componentLoader(props => (
         name="Skillshape-for-school"
         component={School}
       />
+      <Route path="/popups-dev" name="popups-testing" component={TestPopUps} />
       <Route
-        path="/popups-dev"
-        name="popups-testing"
-        component={TestPopUps}
-        />
+        path="/classdetails-student"
+        name="classdetails-student-development"
+        component={ClassDetails}
+      />
+      <Route
+        path="/classdetails-instructor"
+        name="classdetails-instructor-development"
+        component={ClassDetails}
+      />
       <Route
         path="/unsubscribe"
         name="unsubscribe"

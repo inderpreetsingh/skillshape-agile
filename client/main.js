@@ -5,7 +5,6 @@
 // Run this when the meteor app is started
 //import '../imports/startup/client';
 import React, { Component } from "react";
-//import { Meteor } from 'meteor/meteor';
 import { render } from "react-dom";
 import ReactGA from "react-ga";
 
@@ -20,6 +19,10 @@ muiTheme.overrides = pickerStyles;
 import Routes from "../imports/startup/routes";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   componentWillMount = () => {
     ReactGA.initialize("UA-115928788-1", {
       debug: true
@@ -36,7 +39,5 @@ class App extends Component {
     );
   }
 }
+
 render(<App />, document.getElementById("app"));
-// Meteor.startup(() => {
- 
-// });

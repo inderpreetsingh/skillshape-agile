@@ -322,7 +322,6 @@ class SkillShapeDialogBox extends Component {
     return (
       <MuiThemeProvider theme={muiTheme}>
         <Dialog
-          title="skillshape popup"
           open={open}
           onClose={onModalClose}
           onRequestClose={onModalClose}

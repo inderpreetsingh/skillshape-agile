@@ -5,12 +5,7 @@ import { browserHistory } from "react-router";
 
 import { withStyles } from "material-ui/styles";
 import Radio, { RadioGroup } from "material-ui/Radio";
-import {
-  FormLabel,
-  FormControl,
-  FormControlLabel,
-  FormHelperText
-} from "material-ui/Form";
+import { FormLabel, FormControl, FormControlLabel } from "material-ui/Form";
 
 import { withPopUp } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
@@ -238,13 +233,13 @@ class ContactUsForm extends Component {
     if (this.state.readyToSumit) {
       //..
       if (!email) {
-        popUp.appear("alert",{content: "Please enter your email."});
+        popUp.appear("alert", { content: "Please enter your email." });
         return false;
       } else if (!emailReg.test(email)) {
-        popUp.appear("alert",{content: "Please enter valid email address"});
+        popUp.appear("alert", { content: "Please enter valid email address" });
         return false;
       } else if (!message) {
-        popUp.appear("alert",{content: "Please enter a message."});
+        popUp.appear("alert", { content: "Please enter a message." });
         return false;
       } else {
         // Start loading
@@ -260,7 +255,9 @@ class ContactUsForm extends Component {
           (error, result) => {
             if (error) {
             } else {
-              popUp.appear("success",{content : "Thanks for providing your feedback"});
+              popUp.appear("success", {
+                content: "Thanks for providing your feedback"
+              });
               if (!this.props.dialogBox) {
                 setTimeout(() => {
                   browserHistory.push(`/`);

@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import ClassDetails from "/imports/ui/components/landing/components/classDetails/index.jsx";
-import PurchaseClassesDialogBox from '/imports/ui/components/landing/components/dialogs/'
+// import PurchaseClassesDialogBox from '/imports/ui/components/landing/components/dialogs/'
+import {
+  classTimeData,
+  classModulesData
+} from "/imports/ui/components/landing/constants/classDetails/";
 
 class ClassDetailsContainer extends Component {
   constructor(props) {
@@ -8,7 +12,20 @@ class ClassDetailsContainer extends Component {
   }
 
   render() {
-    return ClassDetails.call(this);
+    return (
+      <ClassDetails
+        headerProps={{
+          classTypeCoverSrc: "",
+          schoolCoverSrc: ""
+        }}
+        timeLineProps={{
+          startTime: classTimeData.startTime,
+          totalEventTime: classTimeData.totalEventTime,
+          classModulesData: classModulesData
+        }}
+        classTimeInformationProps={{ ...classTimeData }}
+      />
+    );
   }
 }
 
