@@ -21,6 +21,7 @@ import { ContainerLoader } from '/imports/ui/loading/container.js';
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import ReactPhoneInput from 'react-phone-input-2';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -85,13 +86,7 @@ export default function () {
                     fullWidth
                     onChange={(event) => { this.setState({ website: event.target.value }) }}
                   />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
+                   <TextField
                 required={true}
                 defaultValue={schoolData && schoolData.email}
                 inputRef={(ref) => this.email = ref}
@@ -100,9 +95,23 @@ export default function () {
                 fullWidth
                 onChange={(event) => { this.setState({ email: event.target.value }) }}
               />
+              <ReactPhoneInput
+                required={true}
+                defaultCountry={'us'}
+                value={phone}
+                onChange={phone => this.setState({ phone })}
+                inputStyle={{width:'100%'}}
+                placeHolder={'Phone Number'}
+                containerStyle={{marginTop:'10px'}}
+              />
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField
+             
+            </Grid>
+            {/* <Grid item xs={12} sm={4}> */}
+              {/* <TextField
                 required={true}
                 defaultValue={schoolData && schoolData.phone && parseInt((schoolData.phone).replace(/[^0-9]/g, ''), 10)}
                 inputRef={(ref) => this.phone = ref}
@@ -110,8 +119,9 @@ export default function () {
                 type="number"
                 fullWidth
                 onChange={(event) => { this.setState({ phone: parseInt(event.target.value) }) }}
-              />
-            </Grid>
+              /> */}
+              
+            {/* </Grid> */}
           </Grid>
           <Grid container style={{ display: 'flex', alignItems: 'baseline' }}>
             <Grid item xs={12} sm={4}>
@@ -210,7 +220,7 @@ export default function () {
                   </Button> */}
             <ButtonWrapper>
               <FormGhostButton
-                onClick={this.editSchoolCall}
+                onClick={this.editSchoolCall.bind(this,null)}
                 label="Save"
               />
             </ButtonWrapper>
