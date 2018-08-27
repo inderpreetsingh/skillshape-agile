@@ -25,7 +25,7 @@ export class OneTimeRow extends React.Component {
 
   initializeFields = () => {
     let state;
-    const { data, locationData, parentData,roomData } = this.props;
+    const { data, locationData, parentData } = this.props;
     if (_.isEmpty(data)) {
 
       state = {
@@ -34,7 +34,7 @@ export class OneTimeRow extends React.Component {
             startDate: new Date(),
             startTime: new Date(),
             duration: "",
-            roomId:  !_.isEmpty(roomData) ? roomData[0].id : '',
+            roomId:  !_.isEmpty(locationData.rooms) ? locationData.rooms[0]._id : '',
             timeUnits: "Minutes",
             locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
           }
@@ -43,11 +43,9 @@ export class OneTimeRow extends React.Component {
       this.props.handleNoOfRow(1);
     } else {
       state = { row: [...data] };
-
-
       this.props.handleNoOfRow(data.length);
-
     }
+    state.roomData = [];
     return state;
   };
 
@@ -107,9 +105,21 @@ export class OneTimeRow extends React.Component {
   getRowData = () => {
     return this.state.row;
   };
-
+  handleRoomData = (locationId,roomId,index)=> {
+    const {  locationData } = this.props;
+    let old = this.state.roomData;
+    locationData.map((data,index1)=>{
+      if (data._id == locationId){
+        roomData = {rooms:data && data.rooms ? data.rooms : []};
+        roomData.selectedRoom = roomId ? roomId : !_.isEmpty(roomData.rooms) ? roomData.rooms[0]._id : '';
+        old[index] = roomData;
+      }
+    })
+    this.setState({roomData:old});
+    debugger;
+  }
   render() {
-    const { row } = this.state;
+    const { row,roomData } = this.state;
     const {locationData} = this.props;
     return (
       <div>
@@ -241,12 +251,14 @@ export class OneTimeRow extends React.Component {
                       </Select>
                     </FormControl>
                   </Grid>
+                  {this.handleRoomData(data.locationId,data.roomId,index)}
+                
               <Grid item sm={6} xs={12}>
                 <FormControl fullWidth margin="dense">
                   <InputLabel htmlFor="roomId">Room</InputLabel>
                   <Select
                     input={<Input id="roomId" />}
-                    value={data.roomId}
+                    value={roomData[index].selectedRoom}
                     onChange={this.handleSelectInputChange.bind(
                       this,
                       index,
@@ -254,13 +266,13 @@ export class OneTimeRow extends React.Component {
                     )}
                     fullWidth
                   >
-                    {_.isEmpty(this.props.roomData) && (
+                    {_.isEmpty(roomData[index].rooms) && (
                       <MenuItem value="" disabled>
                         No location added in Locations.
                       </MenuItem>
                     )}
-                    {this.props.roomData &&
-                      this.props.roomData.map((data, index) => {
+                    {roomData[index].rooms &&
+                      roomData[index].rooms.map((data, index) => {
                         return (
                           <MenuItem key={index} value={data.id}>
                             {data.name}
