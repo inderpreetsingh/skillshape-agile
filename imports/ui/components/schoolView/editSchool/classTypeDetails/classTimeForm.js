@@ -1,3 +1,10 @@
+/* 
+1.ADD LOCATION Field in the class time form.
+2.Get list of location for location fiedls.
+3.Show list of rooms according to the selected location in the lfield.
+4.Change in the database of class time.
+5. Related changes in the class time popup in the calendar.
+*/
 import React, { Fragment } from "react";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { withStyles } from "material-ui/styles";
@@ -79,12 +86,11 @@ class ClassTimeForm extends React.Component {
       closed:false,
       noOfRow: 0,
       PackageAttachment:false,
-      PackageOpen:true
+      PackageOpen:true,
     };
 
     if (!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {
       state.roomData = parentData.selectedLocation.rooms;
-      state.locationId = parentData.selectedLocation._id;
     }
     // Default selected tab accoring to data found for `ClassTimes` rec.
     if (!_.isEmpty(data)) {
@@ -101,7 +107,9 @@ class ClassTimeForm extends React.Component {
       state.endDate = data.endDate;
       state.duration = data.duration;
       state.roomId = data.roomId;
-      state.closed=data.closed
+      state.closed=data.closed;
+      
+
     }
     return state;
   };
@@ -119,6 +127,7 @@ class ClassTimeForm extends React.Component {
   handleChangeDate = (fieldName, date) => {
     this.setState({ [fieldName]: new Date(date) });
   };
+  
   
   saveClassTimes = (nextTab, addSeperateTimeJson, event) => {
     event.preventDefault();
@@ -220,7 +229,7 @@ class ClassTimeForm extends React.Component {
     </Fragment>
   }
   render() {
-    const { fullScreen, data, classes, locationData,schoolId,parentKey,parentData} = this.props;
+    const { fullScreen, data, classes,schoolId,parentKey,parentData,locationData} = this.props;
     const { skillCategoryData, skillSubjectData } = this.state;
     return (
       <div>
@@ -275,6 +284,7 @@ class ClassTimeForm extends React.Component {
                   type="text"
                   fullWidth
                 />
+                
                 <ResponsiveTabs
                   defaultValue={1}
                   tabValue={this.state.tabValue}
@@ -295,6 +305,7 @@ class ClassTimeForm extends React.Component {
                       roomData={this.state.roomData}
                       saveClassTimes={this.saveClassTimes}
                       handleNoOfRow={this.handleNoOfRow}
+                      locationData={locationData}
                     />
                   </div>
                 )}
@@ -335,6 +346,7 @@ class ClassTimeForm extends React.Component {
                       data={data && data.scheduleDetails}
                       roomData={this.state.roomData}
                       saveClassTimes={this.saveClassTimes}
+                      locationData={locationData}
                     />
                   </div>
                 )}
