@@ -213,7 +213,7 @@ export default function() {
                         /> */}
                           <ReactPhoneInput 
                           defaultCountry={'us'} 
-                          value={phone}
+                          value={phone.toString()}
                           onChange={phone => this.setState({ phone })}
                           inputStyle={{width:'100%'}}
                           placeHolder={'Phone Number'}

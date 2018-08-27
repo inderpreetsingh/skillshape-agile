@@ -80,6 +80,7 @@ export default function (props) {
                 }
                 onClose={this.handleFormModal}
                 moveToNextTab={this.props.moveToNextTab}
+                locationData={this.props.locationData}
               />
             )}
 

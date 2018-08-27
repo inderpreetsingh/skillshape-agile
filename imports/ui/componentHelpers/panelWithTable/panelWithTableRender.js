@@ -497,6 +497,7 @@ export default function () {
                               this.state.MainTableHandleSubmit
                             }
                             moveToNextTab={this.props.moveToNextTab}
+                            locationData={this.props.locationData}
                           />
                         </Grid>
                       )}

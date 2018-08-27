@@ -160,6 +160,7 @@ class RoomForm extends React.Component {
                   label="Capicity"
                   type="number"
                   fullWidth
+                  inputProps={{ min: "0"}}
                 />
               </form>
             </DialogContent>

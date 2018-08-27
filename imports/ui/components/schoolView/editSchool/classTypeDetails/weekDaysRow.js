@@ -9,7 +9,6 @@ import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
 import Typography from "material-ui/Typography";
 import config from "/imports/config";
-import isEmpty from "lodash/isEmpty";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
@@ -32,7 +31,7 @@ export class WeekDaysRow extends React.Component {
   }
 
   initializeFields = () => {
-    const { data, locationData, parentData } = this.props;
+    const { data, locationData, parentData ,roomData} = this.props;
     const state = {
       row: []
     };
@@ -45,7 +44,8 @@ export class WeekDaysRow extends React.Component {
             duration: obj.duration,
             day: obj.day,
             roomId: obj.roomId,
-            timeUnits: (obj && obj.timeUnits) || "Minutes"
+            timeUnits: (obj && obj.timeUnits) || "Minutes",
+            locationId: obj.locationId
           });
         }
       }
@@ -56,8 +56,9 @@ export class WeekDaysRow extends React.Component {
         startTime: new Date(),
         duration: "",
         day: null,
-        roomId: "",
-        timeUnits: "Minutes"
+        roomId:  !_.isEmpty(roomData) ? roomData[0].id : '',
+        timeUnits: "Minutes",
+        locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
       });
     }
     return state;
@@ -70,17 +71,19 @@ export class WeekDaysRow extends React.Component {
   };
 
   addNewRow = () => {
+    const {  locationData,roomData} = this.props;
     const oldRow = [...this.state.row];
     oldRow.push({
       key: null,
       startTime: new Date(),
       duration: "",
       day: null,
-      roomId: null
+      roomId:  !_.isEmpty(roomData) ? roomData[0].id : '',
+      locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
     });
     this.setState({ row: oldRow });
   };
-
+  //Set default location id if nothing selected 
   removeRow = (index, event) => {
     const oldRow = [...this.state.row];
     oldRow.splice(index, 1);
@@ -95,9 +98,9 @@ export class WeekDaysRow extends React.Component {
       let indexOfDay = scheduleDetails.indexOf(event.target.value);
       oldRow[index].day = 1 + scheduleDetails.indexOf(event.target.value);
       // Set Time according to week day selected.
-      let ret = new Date();
-      ret.setDate(ret.getDate() + ((indexOfDay - ret.getDay()) % 7) + 1);
-      oldRow[index]["startTime"] = ret;
+      // let ret = new Date();
+      // ret.setDate(ret.getDate() + ((indexOfDay - ret.getDay()) % 7) + 1);
+      // oldRow[index]["startTime"] = ret;
     }
 
     if (fieldName === "duration") {
@@ -118,7 +121,7 @@ export class WeekDaysRow extends React.Component {
 
   render() {
     const { row } = this.state;
-
+    const {locationData} = this.props;
     return (
       <div>
         {row.map((data, index) => {
@@ -198,6 +201,7 @@ export class WeekDaysRow extends React.Component {
                       required={
                         data && data.key && data.key != '' ? true : false
                       } /*Made it mandatory if week day selected*/
+                      inputProps={{ min: "0"}}
                     />
                   </Grid>
                   <Grid sm={6}>
@@ -230,11 +234,40 @@ export class WeekDaysRow extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel htmlFor="location">Location</InputLabel>
+                  <Select
+                    required={true}
+                    input={<Input id="location" />}
+                    value={data.locationId}
+                    onChange={this.handleSelectInputChange.bind(
+                      this,
+                      index,
+                      "locationId"
+                    )}
+                    fullWidth
+                  >
+                    {_.isEmpty(locationData) && (
+                      <MenuItem value="" disabled>
+                        No location added in Locations.
+                          </MenuItem>
+                    )}
+                    {locationData.map((data, index) => {
+                      return (
+                        <MenuItem key={index} value={data._id}>{`${
+                          data.address
+                          }, ${data.city}, ${data.country}`}</MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid item sm={6} xs={12}>
                 <FormControl fullWidth margin="dense">
                   <InputLabel htmlFor="roomId">Room</InputLabel>
                   <Select
-                    value={data && data.roomId ? data.roomId : !isEmpty(this.props.roomData) && this.props.roomData[0].id}
+                    value={data.roomId}
                     input={<Input id="roomId" />}
                     onChange={this.handleSelectInputChange.bind(
                       this,
@@ -243,7 +276,7 @@ export class WeekDaysRow extends React.Component {
                     )}
                     fullWidth
                   >
-                    {isEmpty(this.props.roomData) && (
+                    {_.isEmpty(this.props.roomData) && (
                       <MenuItem value="" disabled>
                         No location added in Locations.
                       </MenuItem>

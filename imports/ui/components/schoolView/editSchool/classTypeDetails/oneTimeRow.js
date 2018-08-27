@@ -1,6 +1,5 @@
 import React from "react";
 import Grid from "material-ui/Grid";
-import isEmpty from "lodash/isEmpty";
 import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
 import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import Select from "material-ui/Select";
@@ -26,9 +25,8 @@ export class OneTimeRow extends React.Component {
 
   initializeFields = () => {
     let state;
-    const { data, locationData, parentData } = this.props;
-
-    if (isEmpty(data)) {
+    const { data, locationData, parentData,roomData } = this.props;
+    if (_.isEmpty(data)) {
 
       state = {
         row: [
@@ -36,8 +34,9 @@ export class OneTimeRow extends React.Component {
             startDate: new Date(),
             startTime: new Date(),
             duration: "",
-            roomId: "",
-            timeUnits: "Minutes"
+            roomId:  !_.isEmpty(roomData) ? roomData[0].id : '',
+            timeUnits: "Minutes",
+            locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
           }
         ]
       };
@@ -53,12 +52,14 @@ export class OneTimeRow extends React.Component {
   };
 
   addNewRow = () => {
+    const {locationData,data,roomData} = this.props;
     const oldRow = [...this.state.row];
     oldRow.push({
       startDate: new Date(),
       startTime: new Date(),
       duration: "",
-      roomId: ""
+      roomId:  !_.isEmpty(roomData) ? roomData[0].id : '',
+      locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
     });
     this.setState({ row: oldRow });
     this.props.handleNoOfRow(1);
@@ -84,7 +85,11 @@ export class OneTimeRow extends React.Component {
     oldRow[index][fieldName] = new Date(date);
     this.setState({ row: oldRow });
   };
-
+  //Set default location id if nothing selected 
+  setDefaultLocation=(defaultLocId)=>{
+    this.setState({locationId:defaultLocId})
+    return defaultLocId;
+  }
   handleSelectInputChange = (index, fieldName, event) => {
     //index condition in if below is removed
     if (fieldName && event) {
@@ -105,7 +110,7 @@ export class OneTimeRow extends React.Component {
 
   render() {
     const { row } = this.state;
-
+    const {locationData} = this.props;
     return (
       <div>
         {row.map((data, index) => {
@@ -170,6 +175,7 @@ export class OneTimeRow extends React.Component {
                         "duration"
                       )}
                       fullWidth
+                      inputProps={{ min: "0"}}
                     />
                   </Grid>
                   <Grid sm={6}>
@@ -206,15 +212,41 @@ export class OneTimeRow extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              {
-
-              }
+              <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth margin="dense">
+                      <InputLabel htmlFor="location">Location</InputLabel>
+                      <Select
+                        required={true}
+                        input={<Input id="location" />}
+                        value={data.locationId}
+                        onChange={this.handleSelectInputChange.bind(
+                          this,
+                          index,
+                          "locationId"
+                        )}
+                        fullWidth
+                      >
+                        {_.isEmpty(locationData) && (
+                          <MenuItem value="" disabled>
+                            No location added in Locations.
+                          </MenuItem>
+                        )}
+                        {locationData.map((data, index) => {
+                          return (
+                            <MenuItem key={index} value={data._id}>{`${
+                              data.address
+                            }, ${data.city}, ${data.country}`}</MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  </Grid>
               <Grid item sm={6} xs={12}>
                 <FormControl fullWidth margin="dense">
                   <InputLabel htmlFor="roomId">Room</InputLabel>
                   <Select
                     input={<Input id="roomId" />}
-                    value={data && data.roomId ? data.roomId : !isEmpty(this.props.roomData) && this.props.roomData[0].id}
+                    value={data.roomId}
                     onChange={this.handleSelectInputChange.bind(
                       this,
                       index,
@@ -222,7 +254,7 @@ export class OneTimeRow extends React.Component {
                     )}
                     fullWidth
                   >
-                    {isEmpty(this.props.roomData) && (
+                    {_.isEmpty(this.props.roomData) && (
                       <MenuItem value="" disabled>
                         No location added in Locations.
                       </MenuItem>

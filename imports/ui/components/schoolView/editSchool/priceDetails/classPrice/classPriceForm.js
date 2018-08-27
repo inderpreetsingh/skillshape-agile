@@ -225,6 +225,7 @@ class ClassPriceForm extends React.Component {
                     type="number"
                     label="Expiration Duration"
                     fullWidth
+                    inputProps={{ min: "0"}}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -270,6 +271,7 @@ class ClassPriceForm extends React.Component {
                 type="number"
                 margin="dense"
                 fullWidth
+                inputProps={{ min: "0"}}
               />
               {/* 1.Currency selection will align with the cost field.(Done)
                   2.School Default currency will be selected as default. (Done)
@@ -309,6 +311,7 @@ class ClassPriceForm extends React.Component {
                     </Select>
                   }
                   fullWidth
+                  inputProps={{ min: "0"}}
                 />
               </FormControl>
             </form>

@@ -212,6 +212,7 @@ class EnrollmentFeeForm extends React.Component {
                                         label="Cost"
                                         type="number"
                                         fullWidth
+                                        inputProps={{ min: "0"}}
                                     />
                                 </FormControl>
                             </form>

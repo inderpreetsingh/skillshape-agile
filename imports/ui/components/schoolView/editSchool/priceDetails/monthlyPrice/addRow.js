@@ -65,6 +65,7 @@ export default class AddRow extends React.Component {
 										label="Months"
 										type="number"
 										fullWidth
+										inputProps={{ min: "0"}}
 									/>
 								</Grid>
 								{/* 1.Currency selection will align with the cost field.(Done)
@@ -108,6 +109,7 @@ export default class AddRow extends React.Component {
 											label="Cost"
 											type="number"
 											fullWidth
+											inputProps={{ min: "0"}}
 										/>
 									</FormControl>
 								</Grid>
