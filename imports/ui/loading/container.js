@@ -1,31 +1,26 @@
-"use strict"
+"use strict";
 
 import React from "react";
-import { CircularProgress } from 'material-ui/Progress';
-import './container.css';
+import { CircularProgress } from "material-ui/Progress";
+import "./container.css";
 
 const style = {
-  display: 'block',
-  position: 'relative',
-}
+  display: "block",
+  position: "relative"
+};
 
-const className = "preload-container"
+const className = "preload-container";
 
 export class ContainerLoader extends React.Component {
-
-  render () {
-
+  render() {
     const viewClass = this.props.className
       ? `${className} ${this.props.className}`
-      : className
+      : className;
 
     return (
-        <div className={viewClass}>
-            <CircularProgress 
-                color="primary"
-                thickness={5} 
-            />
-        </div>
-    )
+      <div className={viewClass}>
+        <CircularProgress color="primary" thickness={5} />
+      </div>
+    );
   }
 }

@@ -1,19 +1,21 @@
 import React from "react";
 import { isEmpty, get } from "lodash";
 import { createContainer } from "meteor/react-meteor-data";
-import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-import BrandBar from "/imports/ui/components/landing/components/BrandBar.jsx";
+import { Route, Redirect } from "react-router-dom";
+import { browserHistory } from "react-router";
 import ContactUsFloatingButton from "/imports/ui/components/landing/components/buttons/ContactUsFloatingButton.jsx";
-
-import { toastrModal } from "/imports/util";
+import FirstTimeVisitDialogBox from "/imports/ui/components/landing/components/dialogs/FirstTimeVisitDialogBox.jsx";
 import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
+import { toastrModal, withPopUp } from "/imports/util";
 import config from "/imports/config";
 
 class MainLayout extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      memberInvitation: true
+      memberInvitation: true,
+      userRoleValue: localStorage.getItem("userRoleValue")
     };
   }
 
@@ -53,7 +55,7 @@ class MainLayout extends React.Component {
   }
 
   acceptMemberInvitation = invitationObj => {
-    const { toastr } = this.props;
+    const { popUp } = this.props;
     // console.log("Landing acceptMemberInvitation")
     Meteor.call(
       "schoolMemberDetails.acceptInvitation",
@@ -63,16 +65,18 @@ class MainLayout extends React.Component {
         if (err) {
           let errorText = err.error || err.reason || err.message;
           this.setState({ memberInvitation: false }, () => {
-            toastr.error(errorText, "Error");
+            popUp.appear("alert", {
+              title: "Member Invititation Failed!",
+              content: errorText
+            });
           });
         }
 
         if (res) {
           this.setState({ memberInvitation: false }, () => {
-            toastr.success(
-              "You successfully accepted the invitation.",
-              "success"
-            );
+            popUp.appear("success", {
+              content: "You successfully accepted the invitation."
+            });
           });
         }
       }
@@ -81,7 +85,7 @@ class MainLayout extends React.Component {
 
   rejectMemberInvitation = invitationObj => {
     // console.log("Reject invitation");
-    const { toastr } = this.props;
+    const { popUp } = this.props;
     Meteor.call(
       "schoolMemberDetails.rejectInvitation",
       invitationObj,
@@ -90,16 +94,18 @@ class MainLayout extends React.Component {
         if (err) {
           let errorText = err.error || err.reason || err.message;
           this.setState({ memberInvitation: false }, () => {
-            toastr.error(errorText, "Error");
+            popUp.appear("error", {
+              title: "Invitation Rejection Failed!",
+              content: errorText
+            });
           });
         }
 
         if (res) {
           this.setState({ memberInvitation: false }, () => {
-            toastr.success(
-              "You have successfully rejected school invite.",
-              "success"
-            );
+            popUp.appear("success", {
+              content: "You have successfully rejected school invite."
+            });
           });
         }
       }
@@ -115,14 +121,25 @@ class MainLayout extends React.Component {
 
   showTermsOfServiceDialogBox = () => {};
 
+  componentDidMount = () => {
+    const { userRoleValue } = this.state;
+    if (userRoleValue === "student") {
+      return browserHistory.push("/");
+    } else if (userRoleValue === "school") {
+      return browserHistory.push("/claimSchool");
+    }
+  };
+
   render() {
     const { currentUser, isUserSubsReady, classes } = this.props;
+    const { userRoleValue } = this.state;
     return (
       <div>
         {React.cloneElement(this.props.children, {
           currentUser: currentUser,
           isUserSubsReady: isUserSubsReady
         })}
+        {!userRoleValue && <FirstTimeVisitDialogBox />}
         {isUserSubsReady &&
           currentUser &&
           !currentUser.term_cond_accepted && (
@@ -149,4 +166,4 @@ export default createContainer(props => {
   let userSubs = Meteor.subscribe("myInfo");
   let isUserSubsReady = userSubs.ready();
   return { ...props, currentUser, isUserSubsReady };
-}, toastrModal(MainLayout));
+}, withPopUp(MainLayout));
