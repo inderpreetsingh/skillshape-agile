@@ -21,6 +21,7 @@ const Wrapper = styled.div`
   /* prettier-ignore */
   ${flexHorizontalSpaceBetween}
   padding: ${rhythmDiv * 2}px;
+  padding-bottom: ${rhythmDiv}px;
 `;
 
 const Left = styled.div`

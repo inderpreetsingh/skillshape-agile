@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { Link } from "react-router";
 
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
+
 import {
   rhythmDiv,
   mobile,
@@ -24,7 +26,7 @@ const Wrapper = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  margin: 0 auto ${rhythmDiv * 3}px; auto;
+  margin: 0 auto ${rhythmDiv * 4}px; auto;
 
   @media screen and (min-width: ${mobile - 100}px) {
     width: 100%;
@@ -41,32 +43,23 @@ const ButtonWrapper = styled.div`
   display: flex;
 
   @media screen and (min-width: ${tablet}px) {
-    ${props => props.marginRight && `margin-right: ${rhythmDiv}px;`};
+    ${props => props.marginBottom && `margin-bottom: ${rhythmDiv}px;`};
   }
 
   @media screen and (min-width: 300px) and (max-width: 400px) {
     margin-right: ${rhythmDiv}px;
+    ${props => props.marginBottom && `margin-bottom: ${rhythmDiv}px;`};
   }
 `;
 
 const ActionButtons = props => (
   <OuterWrapper>
     <Wrapper>
-      <ButtonWrapper marginRight>
-        <PrimaryButton
-          noMarginRight
-          icon
-          iconName="class"
-          label="Visit ClassType"
-        />
+      <ButtonWrapper marginBottom>
+        <ClassTimeButton icon iconName="class" label="Visit Classtype" />
       </ButtonWrapper>
-      <ButtonWrapper marginRight>
-        <PrimaryButton
-          noMarginRight
-          icon
-          iconName="school"
-          label="Visit School"
-        />
+      <ButtonWrapper>
+        <ClassTimeButton icon iconName="school" label="Visit School" />
       </ButtonWrapper>
       {/*<Link
         to={

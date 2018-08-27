@@ -34,6 +34,7 @@ const Wrapper = styled.div`
   @media screen and (max-width: ${helpers.mobile}px) {
     // padding: ${helpers.rhythmDiv * 2}px;
   }
+
 `;
 
 const NotificationInnerWrapper = styled.div`
@@ -43,6 +44,10 @@ const NotificationInnerWrapper = styled.div`
   @media screen and (max-width: ${helpers.tablet}px) {
     /* prettier-ignore */
     ${helpers.flexHorizontalSpaceBetween}
+  }
+
+  @media screen and (max-width: ${helpers.mobile - 100}px) {
+    flex-direction: column;
   }
 `;
 

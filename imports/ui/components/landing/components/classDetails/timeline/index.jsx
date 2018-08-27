@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, Fragment } from "react";
 import { Meteor } from "meteor/meteor";
 import styled from "styled-components";
 import Activity from "./Activity.jsx";
@@ -22,13 +22,16 @@ const calculateElapsedTime = startTime => {
 
   return -1;
 };
-
 const Wrapper = styled.div`
-  padding: 0 ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
+const OuterActivitesWrapper = styled.div`
+  background: ${helpers.panelColor};
+`;
+
 const ActivitiesWrapper = styled.div`
+  padding: 0 ${helpers.rhythmDiv * 2}px;
   height: ${props => props.length}px;
 
   @media screen and (min-width: ${helpers.tablet}px) {
@@ -41,6 +44,7 @@ const ActivitiesWrapper = styled.div`
 const Title = styled.div`
   /* prettier-ignore */
   ${helpers.flexHorizontalSpaceBetween}
+  padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
 const TotalTime = styled.div``;
@@ -57,51 +61,28 @@ const TotalTimeInMins = TotalTimeText.extend`
   font-weight: 600;
 `;
 
+// elapsedTime is -1 in case the class (event) hasn't started and is +ve
+// depending upon how much time we are ahead of the class.
 class TimeLineContainer extends PureComponent {
   constructor(props) {
     super(props);
-    // const memoizeCalculateElapsedTime = memoizeOne(this._calculateElapsedTime);
+    const { startTime, totalEventTime } = this.props;
+    const elapsedTime = calculateElapsedTime(startTime);
 
     this.state = {
-      startTime: this.props.startTime,
-      totalEventTime: this.props.totalEventTime || -1,
-      elapsedTime: -1,
-      eventCompleted: false
+      elapsedTime: elapsedTime,
+      eventCompleted: elapsedTime > totalEventTime ? true : false
     };
   }
-
-  static getDerivedStateFromProps = (nextProps, prevState) => {
-    const { totalEventTime, startTime } = nextProps;
-    console.group("getDerivedStateFromProps");
-    console.log(nextProps, prevState);
-    console.groupEnd();
-    if (
-      startTime !== prevState.startTime ||
-      totalEventTime !== prevState.totalEventTime
-    ) {
-      const elapsedTime = calculateElapsedTime(startTime);
-      return {
-        startTime: startTime,
-        elapsedTime: elapsedTime,
-        eventCompleted: elapsedTime > totalEventTime ? true : false
-      };
-    }
-    return null;
-  };
-
-  componentDidMount = () => {
-    this._startTimeLineCounter();
-  };
 
   _startTimeLineCounter = () => {
     const { startTime, totalEventTime } = this.props;
     const eventElapsedTime = calculateElapsedTime(startTime);
+
     this.timeLineCounter = Meteor.setInterval(() => {
       const elapsedTime = (this.state.elapsedTime || eventElapsedTime) + 1;
       const eventCompleted = elapsedTime > totalEventTime ? true : false;
-      // console.group("set interval , not running");
-      // console.log("elapsedTime, eventCompleted, ", elapsedTime, eventCompleted);
-      // console.groupEnd();
+
       this.setState(state => {
         return {
           ...state,
@@ -112,8 +93,12 @@ class TimeLineContainer extends PureComponent {
     }, 1000);
   };
 
-  componentDidUpdate = (prevProps, prevState) => {
-    if (!this.timeLineCounter && !this.state.eventCompleted) {
+  componentDidMount = () => {
+    if (this.props.startTime) this._startTimeLineCounter();
+  };
+
+  componentDidUpdate = () => {
+    if (!this.timeLineCounter && this.props.startTime) {
       this._startTimeLineCounter();
     } else if (this.timeLineCounter && this.state.eventCompleted) {
       Meteor.clearInterval(this.timeLineCounter);
@@ -130,9 +115,6 @@ class TimeLineContainer extends PureComponent {
 
     return classModulesData.map((moduleData, index) => {
       let currentActivityTimeElapsed = 0;
-      console.group("total time elapsed");
-      console.log(elapsedTime, currentActivityTimeElapsed, moduleData.time);
-      console.groupEnd();
       if (elapsedTime >= totalEventTime) {
         currentActivityTimeElapsed = moduleData.time;
         // elapsedTime = moduleData.time;
@@ -182,9 +164,11 @@ class TimeLineContainer extends PureComponent {
             <TotalTimeInMins>{totalEventTime} mins</TotalTimeInMins>
           </TotalTime>
         </Title>
-        <ActivitiesWrapper length={totalEventTime * 10}>
-          {this.getClassModulesActivites()}
-        </ActivitiesWrapper>
+        <OuterActivitesWrapper>
+          <ActivitiesWrapper length={totalEventTime * 10}>
+            {this.getClassModulesActivites()}
+          </ActivitiesWrapper>
+        </OuterActivitesWrapper>
       </Wrapper>
     );
   }

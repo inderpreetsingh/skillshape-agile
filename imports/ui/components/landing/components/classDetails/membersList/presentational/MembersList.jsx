@@ -16,7 +16,7 @@ import Member from "./Member.jsx";
 
 const Wrapper = styled.div`
   padding: 0 ${rhythmDiv * 2}px;
-  margin-bottom: ${rhythmDiv * 4}px;
+  margin-bottom: ${rhythmDiv * 3}px;
 `;
 
 const ListHeading = styled.div`

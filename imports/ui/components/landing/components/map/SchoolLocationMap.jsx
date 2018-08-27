@@ -45,6 +45,7 @@ const SchoolLocationMap = withMarker(
     // console.groupEnd();
     return (
       <GoogleMap
+        defaultOptions={{ ...props.defaultOptions }}
         defaultZoom={mapOptions.zoom}
         defaultCenter={props.myLocation}
         center={props.myLocation}
@@ -58,6 +59,7 @@ const SchoolLocationMap = withMarker(
 SchoolLocationMap.propTypes = {
   isMarkerShown: PropTypes.bool,
   myLocation: PropTypes.object,
+  defaultOptions: PropTypes.object,
   googleMapURL: PropTypes.string,
   containerElement: PropTypes.element,
   mapElement: PropTypes.element,
@@ -70,6 +72,9 @@ SchoolLocationMap.defaultProps = {
   googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&key=${
     config.MAP_KEY
   }&libraries=places`,
+  defaultOptions: {
+    mapTypeControl: false
+  },
   loadingElement: <LoadingElement />,
   containerElement: <MapContainer />,
   mapElement: <div style={{ height: "100%", borderRadius: "5px" }} />

@@ -77,7 +77,7 @@ const Right = styled.div`
   max-width: 100%;
   width: 100%;
   height: 300px;
-  margin-bottom: ${rhythmDiv}px;
+  // margin-bottom: ${rhythmDiv}px;
 
   @media screen and (min-width: ${mobile + 1}px) {
     height: 100%;

@@ -2,9 +2,13 @@ import React, { Fragment } from "react";
 import styled from "styled-components";
 
 import { withImageExists } from "/imports/util";
-import { schoolDetailsImgSrc } from "/imports/ui/components/landing/site-settings.js";
+import {
+  schoolDetailsImgSrc,
+  coverSrc
+} from "/imports/ui/components/landing/site-settings.js";
 
-import ActionButtons from "/imports/ui/components/landing/components/classDetails/classTimeInformation/presentational/ActionButtons";
+import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
+
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 import {
   tablet,
@@ -14,7 +18,7 @@ import {
 
 const imageExistsConfigSchoolSrc = {
   originalImagePath: "schoolCoverSrc",
-  defaultImage: schoolDetailsImgSrc
+  defaultImage: coverSrc
 };
 
 const imageExistsConfigClassSrc = {

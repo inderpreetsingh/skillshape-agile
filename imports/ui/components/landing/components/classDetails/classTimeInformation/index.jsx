@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-import ActionButtons from "./presentational/ActionButtons";
+import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
 import Description from "./presentational/Description";
 import LocationDetails from "./presentational/LocationDetails";
 import NameBar from "./presentational/NameBar";
