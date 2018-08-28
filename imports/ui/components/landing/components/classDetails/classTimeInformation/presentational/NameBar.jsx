@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+// import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 
 import {
   tablet,
@@ -55,7 +56,7 @@ const NameBar = props => {
         )}
       </Left>
       <Right>
-        <PrimaryButton
+        <ClassTimeButton
           label="Join class"
           onClick={props.onJoinClassButtonClick}
         />
