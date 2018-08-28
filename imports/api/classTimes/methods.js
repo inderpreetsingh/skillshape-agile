@@ -11,8 +11,6 @@ Meteor.methods({
     classTimeId,
     locationId
   }) {
-    // console.log("classTimes.getClassTimes -->>",schoolId, classTypeId, classTimeId)
-    // console.log("SchoolSchool -->>",School.find({ _id: schoolId}))
     return {
       school: School.findOne({ _id: schoolId }),
       classTimes: ClassTimes.findOne({ _id: classTimeId }),
@@ -51,7 +49,6 @@ Meteor.methods({
   },
   "classTimes.editClassTimes": function({ doc_id, doc }) {
     const user = Meteor.users.findOne(this.userId);
-    // console.log("classTimes.editClassTimes methods called!!!",doc_id, doc);
     if (
       checkMyAccess({
         user,
@@ -59,7 +56,6 @@ Meteor.methods({
         viewName: "ClassTimes_CUD"
       })
     ) {
-      // console.log(doc);
       return ClassTimes.update({ _id: doc_id }, { $set: doc });
     } else {
       throw new Meteor.Error("Permission denied!!");
@@ -67,7 +63,6 @@ Meteor.methods({
   },
   "classTimes.removeClassTimes": function({ doc }) {
     const user = Meteor.users.findOne(this.userId);
-    // console.log("classTimes.removeClassTimes methods called!!!",doc);
     if (
       checkMyAccess({
         user,

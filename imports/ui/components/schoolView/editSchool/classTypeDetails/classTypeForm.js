@@ -105,7 +105,7 @@ class ClassTypeForm extends React.Component {
   componentDidMount = () => {
     Meteor.call("getDefaultSubjectsList", (err, res) => {
       if (err) {
-        console.error(err.reason, "---");
+        
       } else {
         // console.info(res, "==== res ====");
         this.defaultSubjectList = res;
@@ -419,7 +419,7 @@ class ClassTypeForm extends React.Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  {/* <Grid item xs={12} sm={6}>
                     <FormControl fullWidth margin="dense">
                       <InputLabel htmlFor="location">Location</InputLabel>
                       <Select
@@ -445,7 +445,7 @@ class ClassTypeForm extends React.Component {
                         })}
                       </Select>
                     </FormControl>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </form>
             </DialogContent>
