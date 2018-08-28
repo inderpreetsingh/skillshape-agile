@@ -80,6 +80,11 @@ const MembersList = props => {
               )}
             </MemberWrapper>
           ))}
+        {entityType === "instructors" && (
+          <MemberWrapper>
+            <Member viewType={props.viewType} addInstructor />
+          </MemberWrapper>
+        )}
       </MembersGrid>
     </Wrapper>
   );
