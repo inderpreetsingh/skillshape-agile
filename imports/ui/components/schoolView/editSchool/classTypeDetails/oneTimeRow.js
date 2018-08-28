@@ -45,10 +45,19 @@ export class OneTimeRow extends React.Component {
       state = { row: [...data] };
       this.props.handleNoOfRow(data.length);
     }
-    state.roomData = [];
+    state.row.map((data, index)=>{
+      const oldRow = [...state.row];
+      locationData.map((data1,index1)=>{
+       if (data1._id == data.locationId){
+         oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
+         oldRow[index]['roomId'] = data.roomId ? data.roomId : !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
+       }
+     })
+     state.row=oldRow;
+      })
     return state;
   };
-
+ 
   addNewRow = () => {
     const {locationData,data,roomData} = this.props;
     const oldRow = [...this.state.row];
@@ -56,8 +65,9 @@ export class OneTimeRow extends React.Component {
       startDate: new Date(),
       startTime: new Date(),
       duration: "",
-      roomId:  !_.isEmpty(roomData) ? roomData[0].id : '',
-      locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
+      roomId:  oldRow[oldRow.length-1]['roomId'] ? oldRow[oldRow.length-1]['roomId'] : '',
+      locationId: oldRow[oldRow.length-1]['locationId'] ? oldRow[oldRow.length-1]['locationId'] : '',
+      roomData: oldRow[oldRow.length-1]['roomData'] ? oldRow[oldRow.length-1]['roomData'] :[]
     });
     this.setState({ row: oldRow });
     this.props.handleNoOfRow(1);
@@ -90,6 +100,8 @@ export class OneTimeRow extends React.Component {
   }
   handleSelectInputChange = (index, fieldName, event) => {
     //index condition in if below is removed
+    const { locationData } = this.props;
+
     if (fieldName && event) {
       const oldRow = [...this.state.row];
       if (fieldName === "duration") {
@@ -97,7 +109,14 @@ export class OneTimeRow extends React.Component {
       } else {
         oldRow[index][fieldName] = event.target.value;
       }
-
+      oldRow.map((data2, index2)=>{
+        locationData.map((data1,index1)=>{
+         if (data1._id == data2.locationId){
+           oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
+           oldRow[index]['roomId'] =  !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
+         }
+       })
+        })
       this.setState({ row: oldRow });
     }
   };
@@ -106,21 +125,13 @@ export class OneTimeRow extends React.Component {
     return this.state.row;
   };
   handleRoomData = (locationId,roomId,index)=> {
-    const {  locationData } = this.props;
-    let old = this.state.roomData;
-    locationData.map((data,index1)=>{
-      if (data._id == locationId){
-        roomData = {rooms:data && data.rooms ? data.rooms : []};
-        roomData.selectedRoom = roomId ? roomId : !_.isEmpty(roomData.rooms) ? roomData.rooms[0]._id : '';
-        old[index] = roomData;
-      }
-    })
-    this.setState({roomData:old});
-    debugger;
+  
+  this.setState({row:oldRow});
   }
   render() {
-    const { row,roomData } = this.state;
+    const { row } = this.state;
     const {locationData} = this.props;
+    
     return (
       <div>
         {row.map((data, index) => {
@@ -251,14 +262,13 @@ export class OneTimeRow extends React.Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  {this.handleRoomData(data.locationId,data.roomId,index)}
-                
+            
               <Grid item sm={6} xs={12}>
                 <FormControl fullWidth margin="dense">
                   <InputLabel htmlFor="roomId">Room</InputLabel>
                   <Select
                     input={<Input id="roomId" />}
-                    value={roomData[index].selectedRoom}
+                    value={data.roomId}
                     onChange={this.handleSelectInputChange.bind(
                       this,
                       index,
@@ -266,13 +276,13 @@ export class OneTimeRow extends React.Component {
                     )}
                     fullWidth
                   >
-                    {_.isEmpty(roomData[index].rooms) && (
+                    {_.isEmpty(data.roomData) && (
                       <MenuItem value="" disabled>
                         No location added in Locations.
                       </MenuItem>
                     )}
-                    {roomData[index].rooms &&
-                      roomData[index].rooms.map((data, index) => {
+                    {data.roomData&&
+                      data.roomData.map((data, index) => {
                         return (
                           <MenuItem key={index} value={data.id}>
                             {data.name}
