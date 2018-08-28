@@ -48,7 +48,7 @@ export class OneTimeRow extends React.Component {
     state.row.map((data, index)=>{
       const oldRow = [...state.row];
       locationData.map((data1,index1)=>{
-       if (data1._id == data.locationId){
+       if (data1._id == data.locationId && !oldRow[index]['roomData'] && !oldRow[index]['roomId'] ){
          oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
          oldRow[index]['roomId'] = data.roomId ? data.roomId : !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
        }
@@ -109,23 +109,23 @@ export class OneTimeRow extends React.Component {
       } else {
         oldRow[index][fieldName] = event.target.value;
       }
-      oldRow.map((data2, index2)=>{
-        locationData.map((data1,index1)=>{
-         if (data1._id == data2.locationId){
-           oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
-           oldRow[index]['roomId'] =  !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
-         }
-       })
-        })
+      if(fieldName == 'locationId' || fieldName == 'roomId'){
+        oldRow.map((data2, index2)=>{
+          locationData.map((data1,index1)=>{
+           if (data1._id == data2.locationId){
+             oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
+             oldRow[index]['roomId'] =  !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
+           }
+         })
+          })
+      }
       this.setState({ row: oldRow });
     }
   };
-
   getRowData = () => {
     return this.state.row;
   };
   handleRoomData = (locationId,roomId,index)=> {
-  
   this.setState({row:oldRow});
   }
   render() {

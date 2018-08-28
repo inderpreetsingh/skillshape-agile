@@ -53,10 +53,10 @@ export class WeekDaysRow extends React.Component {
     } else {
       // Initial state if we are adding time instead of editing class time
       state.row.push({
-        key: "",
+        key: "Monday",
         startTime: new Date(),
         duration: "",
-        day: null,
+        day: 0,
         roomId:  !_.isEmpty(locationData.rooms) ? locationData.rooms[0]._id : '',
         timeUnits: "Minutes",
         locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
@@ -66,9 +66,11 @@ export class WeekDaysRow extends React.Component {
       const oldRow = [...state.row];
       locationData.map((data1,index1)=>{
        if (data1._id == data.locationId){
-         oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
-         oldRow[index]['roomId'] = data.roomId ? data.roomId : !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
-       }
+         if(!oldRow[index]['roomData'] && !oldRow[index]['roomId'] ){
+           oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
+           oldRow[index]['roomId'] = data.roomId ? data.roomId : !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
+         }
+        }
      })
      state.row=oldRow;
       })
@@ -85,10 +87,10 @@ export class WeekDaysRow extends React.Component {
     const {  locationData,roomData} = this.props;
     const oldRow = [...this.state.row];
     oldRow.push({
-      key: null,
+      key: "Monday",
       startTime: new Date(),
       duration: "",
-      day: null,
+      day: 0,
       roomId:  oldRow[oldRow.length-1]['roomId'] ? oldRow[oldRow.length-1]['roomId'] : '',
       locationId: oldRow[oldRow.length-1]['locationId'] ? oldRow[oldRow.length-1]['locationId'] : '',
       roomData: oldRow[oldRow.length-1]['roomData'] ? oldRow[oldRow.length-1]['roomData'] :[]
@@ -119,6 +121,7 @@ export class WeekDaysRow extends React.Component {
     if (fieldName === "duration") {
       oldRow[index][fieldName] = parseInt(event.target.value);
     }
+    if(fieldName == 'locationId' || fieldName == 'roomId'){
     oldRow.map((data2, index2)=>{
       locationData.map((data1,index1)=>{
        if (data1._id == data2.locationId){
@@ -126,7 +129,7 @@ export class WeekDaysRow extends React.Component {
          oldRow[index]['roomId'] =  !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
        }
      })
-      })
+      })}
     this.setState({ row: oldRow });
   };
 

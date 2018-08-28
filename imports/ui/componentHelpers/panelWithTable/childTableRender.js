@@ -53,7 +53,8 @@ export default function (props) {
     childTableData,
     parentKey,
     parentData,
-    schoolId
+    schoolId,
+    locationData
   } = this.props;
   const FormComponent = childPanelHeader.actions.component;
   return (
@@ -80,7 +81,7 @@ export default function (props) {
                 }
                 onClose={this.handleFormModal}
                 moveToNextTab={this.props.moveToNextTab}
-                locationData={this.props.locationData}
+                locationData={locationData}
               />
             )}
 
@@ -208,7 +209,10 @@ export default function (props) {
                                                   label: "Duration",
                                                   key: "duration"
                                                 },
-                                                { label: "Room", key: "roomId" }
+                                                { label: "Room", key: "roomId" },
+                                                {
+                                                  label: 'Location', Key: 'locationId'
+                                                }
                                               ];
                                               if (itemkey === "oneTime") {
                                                 fields.unshift({
@@ -225,7 +229,8 @@ export default function (props) {
                                                 classes,
                                                 parentData,
                                                 itemData,
-                                                fields
+                                                fields,
+                                                locationData
                                               );
                                             }
                                           )

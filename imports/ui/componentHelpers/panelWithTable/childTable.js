@@ -9,7 +9,6 @@ import { withPopUp } from "/imports/util";
 import ChildTableRender from "./childTableRender";
 
 const styles = theme => {
-  // console.log("theme", theme);
   return {
     input: {
       display: "none"
@@ -143,7 +142,6 @@ class ChildTable extends React.Component {
     const { parentKey, childTable, popUp } = this.props;
     const methodToCall = childTable.actions.del.onSubmit;
 
-    // console.log(formData, parentKey, childTable, "==============");
     // NOTE: we are only covering case for location.roomRemove
     // need to somehow cover it for other panel methods as well.
     Meteor.call(
@@ -169,18 +167,27 @@ class ChildTable extends React.Component {
   };
 
   getRoomName = (roomId, data) => {
-    const roomData = get(data, "selectedLocation.rooms", null);
-    if (roomData) {
-      for (let obj of roomData) {
-        if (obj.id === roomId) {
-          return obj.name;
+    let roomName = 'Not Selected';
+    data.map((current,index)=>{
+      current.rooms.map((current1,index1)=>{
+        if(current1.id == roomId){
+          roomName = current1.name;
         }
-      }
-    }
-    return;
+      })
+    })
+    
+    return  roomName;
   };
-
-  renderScheduleTypeData = (classes, parentData, itemData, field) => {
+  getLocationName = (locationId,data) => {
+    let locationName = 'No Location Selected';
+    data.map((current,index)=>{
+      if(current._id == locationId){
+        locationName = `${current.address && current.address} ${current.state && current.state} ${current.country && current.country}`;
+      }
+    })
+    return locationName;
+  }
+  renderScheduleTypeData = (classes, parentData, itemData, field,locationData) => {
     if (_.isArray(itemData)) {
       return itemData.map((x, index) => {
         return (
@@ -244,8 +251,24 @@ class ChildTable extends React.Component {
                 >
                   <span>
                     {x[field[3]["key"]] &&
-                      this.getRoomName(x[field[3]["key"]], parentData)}
+                      this.getRoomName(x[field[3]["key"]], locationData)}
                   </span>
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={3} md={2}>
+                <div>{field[4].label}</div>
+              </Grid>
+              <Grid item xs={12} sm={9} md={4}>
+                <div
+                  style={{
+                    minHeight: 31,
+                    marginTop: 5
+                  }}
+                  className={classes.inputDisableBox}
+                >
+                  <span>{x.locationId &&
+                this.getLocationName(x.locationId,locationData)
+                }</span>
                 </div>
               </Grid>
             </Grid>

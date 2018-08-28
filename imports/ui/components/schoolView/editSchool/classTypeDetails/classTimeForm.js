@@ -162,7 +162,6 @@ class ClassTimeForm extends React.Component {
       payload.startDate = new Date();
       payload.scheduleDetails = this.refs.weekDaysRow.getRowData();
     }
-
     if (data && data._id) {
       this.onSubmit({
         methodName: "classTimes.editClassTimes",
@@ -284,34 +283,7 @@ class ClassTimeForm extends React.Component {
                   type="text"
                   fullWidth
                 />
-                
-                <ResponsiveTabs
-                  defaultValue={1}
-                  tabValue={this.state.tabValue}
-                  tabs={["Single/Set", "Series", "Ongoing"]}
-                  color="primary"
-                  onTabChange={this.onTabChange}
-                  />
-                  {this.closedCheckbox()}
-                {this.state.tabValue === 0 && (
-                  <div style={{ border: "3px solid blue", padding: 10 }}>
-                    <OneTimeRow
-                      ref="oneTimeRow"
-                      data={
-                        data &&
-                        data.scheduleDetails &&
-                        data.scheduleDetails.oneTime
-                      }
-                      roomData={this.state.roomData}
-                      saveClassTimes={this.saveClassTimes}
-                      handleNoOfRow={this.handleNoOfRow}
-                      locationData={locationData}
-                    />
-                  </div>
-                )}
-                {(this.state.tabValue === 1 || this.state.tabValue === 2) && (
-                  <div style={{ border: "3px solid blue", padding: 10 }}>
-                    {this.state.tabValue === 1 && (
+                   {this.state.tabValue === 1 && (
                       <Grid container>
                         <Grid item sm={6} xs={12}>
                           <MaterialDatePicker
@@ -341,7 +313,33 @@ class ClassTimeForm extends React.Component {
                         </Grid>
                       </Grid>
                     )}
-                    <WeekDaysRow
+                <ResponsiveTabs
+                  defaultValue={1}
+                  tabValue={this.state.tabValue}
+                  tabs={["Single/Set", "Series", "Ongoing"]}
+                  color="primary"
+                  onTabChange={this.onTabChange}
+                  />
+                  {this.closedCheckbox()}
+                {this.state.tabValue === 0 && (
+                  <div style={{ border: "3px solid blue", padding: 10 }}>
+                    <OneTimeRow
+                      ref="oneTimeRow"
+                      data={
+                        data &&
+                        data.scheduleDetails &&
+                        data.scheduleDetails.oneTime
+                      }
+                      roomData={this.state.roomData}
+                      saveClassTimes={this.saveClassTimes}
+                      handleNoOfRow={this.handleNoOfRow}
+                      locationData={locationData}
+                    />
+                  </div>
+                )}
+                {(this.state.tabValue === 1 || this.state.tabValue === 2) && (
+                  <div style={{ border: "3px solid blue", padding: 10 }}>
+                 <WeekDaysRow
                       ref="weekDaysRow"
                       data={data && data.scheduleDetails}
                       roomData={this.state.roomData}
