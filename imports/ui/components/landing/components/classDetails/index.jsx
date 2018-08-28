@@ -8,6 +8,7 @@ import ClassTimeInformation from "./classTimeInformation/index.jsx";
 import MembersList from "./membersList/index.jsx";
 import TimeLine from "./timeline/index.jsx";
 
+import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 
@@ -27,7 +28,7 @@ const InnerWrapper = styled.div`
   margin: 0 auto;
 `;
 
-const Header = styled.header`
+const ClassTimeWrapper = styled.div`
   @media screen and (min-width: ${tablet}px) {
     display: flex;
     flex-direction: row-reverse;
@@ -54,13 +55,14 @@ const ClassDetails = props => {
         )}
       <TopSearchBar />
       <InnerWrapper>
-        <Header>
+        <ClassTimeWrapper>
           <ClassTimeCover {...props.headerProps} />
           <ClassTimeInformation {...props.ClassTimeInformation} />
-        </Header>
+        </ClassTimeWrapper>
         <TimeLine {...props.timeLineProps} />
         <MembersList currentView={currentView} />
       </InnerWrapper>
+      <Footer />
     </Wrapper>
   );
 };

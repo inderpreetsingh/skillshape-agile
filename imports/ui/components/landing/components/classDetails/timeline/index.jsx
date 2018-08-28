@@ -45,9 +45,14 @@ const Title = styled.div`
   /* prettier-ignore */
   ${helpers.flexHorizontalSpaceBetween}
   padding: 0 ${helpers.rhythmDiv * 2}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const TotalTime = styled.div``;
+const TotalTime = styled.div`
+  @media screen and (min-width: ${helpers.tablet}px) {
+    ${helpers.flexCenter};
+  }
+`;
 
 const TotalTimeText = Text.extend`
   font-size: ${helpers.baseFontSize * 1.25}px;
@@ -55,13 +60,17 @@ const TotalTimeText = Text.extend`
   @media screen and (min-width: ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize * 1.5}px;
   }
+
+  @media screen and (min-width: ${helpers.tablet}px) {
+    margin-right: ${helpers.rhythmDiv}px;
+  }
 `;
 
 const TotalTimeInMins = TotalTimeText.extend`
   font-weight: 600;
 `;
 
-// elapsedTime is -1 in case the class (event) hasn't started and is +ve
+// elapsedTime is -ve in case the class (event) hasn't started and is +ve
 // depending upon how much time we are ahead of the class.
 class TimeLineContainer extends PureComponent {
   constructor(props) {
@@ -160,7 +169,7 @@ class TimeLineContainer extends PureComponent {
             <Italic>Class Modules</Italic>
           </Heading>
           <TotalTime>
-            <TotalTimeText>Total Time</TotalTimeText>
+            <TotalTimeText>Total Time:</TotalTimeText>
             <TotalTimeInMins>{totalEventTime} mins</TotalTimeInMins>
           </TotalTime>
         </Title>
