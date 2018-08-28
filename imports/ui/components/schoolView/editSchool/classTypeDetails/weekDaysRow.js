@@ -45,7 +45,8 @@ export class WeekDaysRow extends React.Component {
             day: obj.day,
             roomId: obj.roomId,
             timeUnits: (obj && obj.timeUnits) || "Minutes",
-            locationId: obj.locationId
+            locationId: obj.locationId || '',
+            roomData: obj.roomData || ''
           });
         }
       }
@@ -56,11 +57,21 @@ export class WeekDaysRow extends React.Component {
         startTime: new Date(),
         duration: "",
         day: null,
-        roomId:  !_.isEmpty(roomData) ? roomData[0].id : '',
+        roomId:  !_.isEmpty(locationData.rooms) ? locationData.rooms[0]._id : '',
         timeUnits: "Minutes",
         locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
       });
     }
+    state.row.map((data, index)=>{
+      const oldRow = [...state.row];
+      locationData.map((data1,index1)=>{
+       if (data1._id == data.locationId){
+         oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
+         oldRow[index]['roomId'] = data.roomId ? data.roomId : !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
+       }
+     })
+     state.row=oldRow;
+      })
     return state;
   };
 
@@ -78,8 +89,9 @@ export class WeekDaysRow extends React.Component {
       startTime: new Date(),
       duration: "",
       day: null,
-      roomId:  !_.isEmpty(roomData) ? roomData[0].id : '',
-      locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
+      roomId:  oldRow[oldRow.length-1]['roomId'] ? oldRow[oldRow.length-1]['roomId'] : '',
+      locationId: oldRow[oldRow.length-1]['locationId'] ? oldRow[oldRow.length-1]['locationId'] : '',
+      roomData: oldRow[oldRow.length-1]['roomData'] ? oldRow[oldRow.length-1]['roomData'] :[]
     });
     this.setState({ row: oldRow });
   };
@@ -92,6 +104,7 @@ export class WeekDaysRow extends React.Component {
 
   handleSelectInputChange = (index, fieldName, event) => {
     const oldRow = [...this.state.row];
+    const { locationData } = this.props;
     oldRow[index][fieldName] = event.target.value;
 
     if (fieldName === "key") {
@@ -106,6 +119,14 @@ export class WeekDaysRow extends React.Component {
     if (fieldName === "duration") {
       oldRow[index][fieldName] = parseInt(event.target.value);
     }
+    oldRow.map((data2, index2)=>{
+      locationData.map((data1,index1)=>{
+       if (data1._id == data2.locationId){
+         oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
+         oldRow[index]['roomId'] =  !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
+       }
+     })
+      })
     this.setState({ row: oldRow });
   };
 
@@ -276,13 +297,13 @@ export class WeekDaysRow extends React.Component {
                     )}
                     fullWidth
                   >
-                    {_.isEmpty(this.props.roomData) && (
+                    {_.isEmpty(data.roomData) && (
                       <MenuItem value="" disabled>
                         No location added in Locations.
                       </MenuItem>
                     )}
-                    {this.props.roomData &&
-                      this.props.roomData.map((data, index) => {
+                    {data.roomData &&
+                      data.roomData.map((data, index) => {
                         return (
                           <MenuItem key={index} value={data.id}>
                             {data.name}
