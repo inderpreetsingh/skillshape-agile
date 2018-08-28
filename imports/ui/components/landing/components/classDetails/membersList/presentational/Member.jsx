@@ -111,18 +111,18 @@ const onMenuItemClick = value => {
 };
 
 const Member = props => {
-  if (props.type === "student" && props.viewType === "instructorsView") {
-    return <MemberExpanded {...props} />;
-  }
-
-  // This is the basic card returned for students in case the view
-  // is not instructorsView && for teachers in both the cases.
-
   const profileSrc = props.addInstructor
     ? addInstructorImgSrc
     : props.profileSrc;
 
   const name = props.addInstructor ? "Add Instuctor" : props.name;
+
+  // This is the basic card returned for students in case the view
+  // is not instructorsView && for teachers in both the cases.
+
+  if (props.type === "student" && props.viewType === "instructorsView") {
+    return <MemberExpanded {...props} />;
+  }
 
   return (
     <Wrapper>
@@ -130,7 +130,7 @@ const Member = props => {
         <ProfilePic
           addInstructor={props.addInstructor}
           src={profileSrc}
-          onClick={props.onIconClick}
+          onClick={props.onAddIconClick}
         />
         <DetailsWrapper type={props.type}>
           <Details>

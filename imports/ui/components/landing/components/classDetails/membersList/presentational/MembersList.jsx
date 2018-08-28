@@ -84,7 +84,11 @@ const MembersList = props => {
         {props.entityType === "teachers" &&
           props.viewType === "instructorsView" && (
             <MemberWrapper expanded={expanded} type={"instructor"}>
-              <Member addInstructor type="instructor" />
+              <Member
+                addInstructor
+                onAddIconClick={props.onAddIconClick}
+                type="instructor"
+              />
             </MemberWrapper>
           )}
       </MembersGrid>
