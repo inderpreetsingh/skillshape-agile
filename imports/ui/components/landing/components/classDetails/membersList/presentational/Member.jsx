@@ -72,7 +72,6 @@ const DetailsWrapper = styled.div`
 const Details = styled.div`
   display: flex;
   flex-direction: column;
-  margin-right: ${helpers.rhythmDiv}px;
 `;
 
 const StudentNotes = styled.div`
@@ -116,7 +115,6 @@ const Member = props => {
     : props.profileSrc;
 
   const name = props.addInstructor ? "Add Instuctor" : props.name;
-
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.
 

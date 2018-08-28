@@ -11,11 +11,12 @@ class MembersListContainer extends Component {
     this.state = {
       teachersFilterWith: "",
       studentsFilterWith: "",
-      addInstructorDialogBox: false
+      addInstructorDialogBoxState: false
     };
   }
 
   handleAddInstructorDialogBoxState = dialogBoxState => () => {
+    console.info("clicked...");
     this.setState(state => {
       return {
         ...state,
@@ -48,7 +49,7 @@ class MembersListContainer extends Component {
 
   render() {
     const { studentsList, instructorsList, currentView } = this.props;
-    const { addInstructorDialogBox } = this.state;
+    const { addInstructorDialogBoxState } = this.state;
     // console.log(currentView, "From inside membersList");
     // const currentView =
     //   location.pathname === "/classdetails-student"
@@ -56,9 +57,9 @@ class MembersListContainer extends Component {
     //     : "instructorsView";
     return (
       <Fragment>
-        {addInstructorDialogBox && (
+        {addInstructorDialogBoxState && (
           <AddInstructorDialogBox
-            open={addInstructorDialogBox}
+            open={addInstructorDialogBoxState}
             onModalClose={this.handleAddInstructorDialogBoxState(false)}
           />
         )}
@@ -74,6 +75,7 @@ class MembersListContainer extends Component {
           }
           entityType={"teachers"}
           searchedValue={this.state.teachersFilterWith}
+          onAddIconClick={this.handleAddInstructorDialogBoxState(true)}
         />
         <MembersList
           viewType={currentView}
@@ -84,7 +86,6 @@ class MembersListContainer extends Component {
           }
           entityType={"students"}
           searchedValue={this.state.studentsFilterWith}
-          onAddIconClick={this.handleAddInstructorDialogBoxState(true)}
         />
       </Fragment>
     );

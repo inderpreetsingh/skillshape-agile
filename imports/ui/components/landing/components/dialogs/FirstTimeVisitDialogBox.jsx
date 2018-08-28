@@ -158,7 +158,7 @@ class FirstTimeVisitDialogBox extends Component {
     // }
   };
 
-  handleStudentButtonClick = () => {
+  handleIamStudentClick = () => {
     localStorage.setItem("userRoleValue", "student");
     this._closeModal();
     setTimeout(() => {
@@ -166,7 +166,7 @@ class FirstTimeVisitDialogBox extends Component {
     }, 100);
   };
 
-  handleSchoolButtonClick = () => {
+  handleIamSchoolClick = () => {
     localStorage.setItem("userRoleValue", "school");
     this._closeModal();
     setTimeout(() => {
@@ -210,13 +210,13 @@ class FirstTimeVisitDialogBox extends Component {
           <DialogActions classes={{ root: props.classes.dialogActionsRoot }}>
             <CardsWrapper>
               <OptionCard
-                onClick={this.handleStudentButtonClick}
+                onClick={this.handleIamStudentClick}
                 message="I am here to learn"
                 icon={<Student />}
               />
 
               <OptionCard
-                onClick={this.handleSchoolButtonClick}
+                onClick={this.handleIamSchoolClick}
                 message="I am here to teach"
                 icon={<School />}
               />
