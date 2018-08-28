@@ -80,6 +80,7 @@ class ClassTimeForm extends React.Component {
     let state = {
       roomData: [],
       roomId: "",
+      locationId: '',
       startDate: new Date(),
       endDate: new Date(),
       tabValue: 2,
@@ -88,6 +89,8 @@ class ClassTimeForm extends React.Component {
       PackageAttachment:false,
       PackageOpen:true,
     };
+    
+      
 
     if (!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {
       state.roomData = parentData.selectedLocation.rooms;
@@ -106,11 +109,28 @@ class ClassTimeForm extends React.Component {
       state.startTime = data.startTime;
       state.endDate = data.endDate;
       state.duration = data.duration;
-      state.roomId = data.roomId;
+      state.roomId = data.roomId ;
+      state.locationId = data.locationId ;
       state.closed=data.closed;
-      
-
     }
+    if(!_.locationData){
+      if(!state.roomId){
+        state.locationId = locationData[0]._id;
+        state.roomData = locationData[0].rooms|| [];
+        state.roomId = locationData[0].rooms[0].id || '';
+      }
+      else {
+        locationData.map((location)=>{
+          location.rooms.map((room)=>{
+            if(room.id == state.roomId){
+              state.roomData = !_.isEmpty(location.rooms) ? location.rooms :[];
+              return;
+            }
+          })
+        })
+      }
+    }
+    
     return state;
   };
 
@@ -128,7 +148,23 @@ class ClassTimeForm extends React.Component {
     this.setState({ [fieldName]: new Date(date) });
   };
   
-  
+  handleLocAndRoom = (key,event)=>{
+  if(key == 'roomId'){
+    this.setState({roomId:event.target.value});
+  }else{
+    const {locationData} = this.props;
+    locationData.map((location)=>{
+      location.rooms.map((room)=>{
+        if(location._id == event.target.value){
+          this.setState({roomData:!_.isEmpty(location.rooms) ? location.rooms :[],
+                         roomId: location && location.rooms && location.rooms[0].id || '',
+                         locationId: location._id
+          });
+        }
+      })
+    })
+  }
+  }
   saveClassTimes = (nextTab, addSeperateTimeJson, event) => {
     event.preventDefault();
     const { schoolId, data, parentKey, parentData, toastr } = this.props;
@@ -140,7 +176,9 @@ class ClassTimeForm extends React.Component {
       name: this.classTimeName.value,
       desc: this.desc.value,
       locationId: locationId,
-      closed: this.state.closed
+      closed: this.state.closed,
+      locationId: this.state.locationId,
+      roomId: this.state.roomId
     };
     if (!this.classTimeName.value) {
       toastr.error("Please enter Class Time name.", "Error");
@@ -229,7 +267,9 @@ class ClassTimeForm extends React.Component {
   }
   render() {
     const { fullScreen, data, classes,schoolId,parentKey,parentData,locationData} = this.props;
-    const { skillCategoryData, skillSubjectData } = this.state;
+    const { roomId,locationId,roomData } = this.state;
+
+    let styleForBox =this.state.tabValue ==1 || this.state.tabValue==0 && this.state.noOfRow >= 2 ?{border: '2px solid',padding: '7px',marginBottom: "2px",backgroundColor:"lightgray"} : {} ;
     return (
       <div>
         <Dialog
@@ -261,33 +301,91 @@ class ClassTimeForm extends React.Component {
           ) : (
             <DialogContent>
               <DialogContentText>
-                This name helps differentiate different class times in the same
-                class type. Good examples include "Wednesday Night Swim" or
-                "Weekend Open Training."
+                  This name helps differentiate different class times in the same
+                  class type. Good examples include "Wednesday Night Swim" or
+                  "Weekend Open Training."
               </DialogContentText>
-              <form id={formId}>
-                <TextField
-                  required={true}
-                  defaultValue={data && data.name}
-                  margin="dense"
-                  inputRef={ref => (this.classTimeName = ref)}
-                  label="Class Time Name"
-                  type="text"
-                  fullWidth
-                />
-                <TextField
-                  defaultValue={data && data.desc}
-                  margin="dense"
-                  inputRef={ref => (this.desc = ref)}
-                  label="Brief Description"
-                  type="text"
-                  fullWidth
-                />
-                   {this.state.tabValue === 1 && (
-                      <Grid container>
-                        <Grid item sm={6} xs={12}>
-                          <MaterialDatePicker
-                            required={true}
+                <form id={formId}>
+                  <TextField
+                    required={true}
+                    defaultValue={data && data.name}
+                    margin="dense"
+                    inputRef={ref => (this.classTimeName = ref)}
+                    label="Class Time Name"
+                    type="text"
+                    fullWidth
+                  />
+                  <TextField
+                    defaultValue={data && data.desc}
+                    margin="dense"
+                    inputRef={ref => (this.desc = ref)}
+                    label="Brief Description"
+                    type="text"
+                    fullWidth
+                  />
+                    <FormControl fullWidth margin="dense">
+                      <InputLabel htmlFor="location">Location</InputLabel>
+                      <Select
+                        required={true}
+                        input={<Input id="location" />}
+                        value={locationId}
+                        onChange={this.handleLocAndRoom.bind(this,'locationId')}
+                        fullWidth
+                      >
+                        {_.isEmpty(locationData) && (
+                          <MenuItem value="" disabled>
+                            No location added in Locations.
+                          </MenuItem>
+                        )}
+                        {locationData.map((data, index) => {
+                          return (
+                            <MenuItem key={index} value={data._id}>{`${
+                              data.address
+                              }, ${data.city}, ${data.country}`}</MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth margin="dense">
+                      <InputLabel htmlFor="roomId">Room</InputLabel>
+                      <Select
+                        input={<Input id="roomId" />}
+                        value={roomId}
+                        onChange={this.handleLocAndRoom.bind(this,'roomId')}
+                        fullWidth
+                      >
+                        {_.isEmpty(roomData) && (
+                          <MenuItem value="" disabled>
+                            No location added in Locations.
+                      </MenuItem>
+                        )}
+                        {roomData &&
+                          roomData.map((data, index) => {
+                            return (
+                              <MenuItem key={index} value={data.id}>
+                                {data.name}
+                              </MenuItem>
+                            );
+                          })}
+                      </Select>
+                    </FormControl>
+                 
+                <ResponsiveTabs
+                  defaultValue={1}
+                  tabValue={this.state.tabValue}
+                  tabs={["Single/Set", "Series", "Ongoing"]}
+                  color="primary"
+                  onTabChange={this.onTabChange}
+                  />
+                  
+                  <div style={styleForBox}>
+                    {this.closedCheckbox()}
+                  {this.state.tabValue == 1 && (
+                    <Grid container>
+                      <Grid item sm={6} xs={12}>
+                        <MaterialDatePicker
+                          required={true}
                             label={"Start Date"}
                             floatingLabelText={"Start Date *"}
                             value={this.state.startDate}
@@ -313,14 +411,8 @@ class ClassTimeForm extends React.Component {
                         </Grid>
                       </Grid>
                     )}
-                <ResponsiveTabs
-                  defaultValue={1}
-                  tabValue={this.state.tabValue}
-                  tabs={["Single/Set", "Series", "Ongoing"]}
-                  color="primary"
-                  onTabChange={this.onTabChange}
-                  />
-                  {this.closedCheckbox()}
+                  </div>
+                  
                 {this.state.tabValue === 0 && (
                   <div style={{ border: "3px solid blue", padding: 10 }}>
                     <OneTimeRow

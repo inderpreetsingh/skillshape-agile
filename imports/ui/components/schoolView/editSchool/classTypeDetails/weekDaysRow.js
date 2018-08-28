@@ -43,10 +43,7 @@ export class WeekDaysRow extends React.Component {
             startTime: obj.startTime,
             duration: obj.duration,
             day: obj.day,
-            roomId: obj.roomId,
             timeUnits: (obj && obj.timeUnits) || "Minutes",
-            locationId: obj.locationId || '',
-            roomData: obj.roomData || ''
           });
         }
       }
@@ -62,18 +59,6 @@ export class WeekDaysRow extends React.Component {
         locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
       });
     }
-    state.row.map((data, index)=>{
-      const oldRow = [...state.row];
-      locationData.map((data1,index1)=>{
-       if (data1._id == data.locationId){
-         if(!oldRow[index]['roomData'] && !oldRow[index]['roomId'] ){
-           oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
-           oldRow[index]['roomId'] = data.roomId ? data.roomId : !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
-         }
-        }
-     })
-     state.row=oldRow;
-      })
     return state;
   };
 
@@ -91,9 +76,6 @@ export class WeekDaysRow extends React.Component {
       startTime: new Date(),
       duration: "",
       day: 0,
-      roomId:  oldRow[oldRow.length-1]['roomId'] ? oldRow[oldRow.length-1]['roomId'] : '',
-      locationId: oldRow[oldRow.length-1]['locationId'] ? oldRow[oldRow.length-1]['locationId'] : '',
-      roomData: oldRow[oldRow.length-1]['roomData'] ? oldRow[oldRow.length-1]['roomData'] :[]
     });
     this.setState({ row: oldRow });
   };
@@ -112,24 +94,12 @@ export class WeekDaysRow extends React.Component {
     if (fieldName === "key") {
       let indexOfDay = scheduleDetails.indexOf(event.target.value);
       oldRow[index].day = 1 + scheduleDetails.indexOf(event.target.value);
-      // Set Time according to week day selected.
-      // let ret = new Date();
-      // ret.setDate(ret.getDate() + ((indexOfDay - ret.getDay()) % 7) + 1);
-      // oldRow[index]["startTime"] = ret;
     }
 
     if (fieldName === "duration") {
       oldRow[index][fieldName] = parseInt(event.target.value);
     }
-    if(fieldName == 'locationId' || fieldName == 'roomId'){
-    oldRow.map((data2, index2)=>{
-      locationData.map((data1,index1)=>{
-       if (data1._id == data2.locationId){
-         oldRow[index]['roomData'] =  data1 && data1.rooms ? data1.rooms : [];
-         oldRow[index]['roomId'] =  !_.isEmpty(oldRow[index]['roomData']) ? oldRow[index]['roomData'][0].id : '';
-       }
-     })
-      })}
+    
     this.setState({ row: oldRow });
   };
 
@@ -145,7 +115,6 @@ export class WeekDaysRow extends React.Component {
 
   render() {
     const { row } = this.state;
-    const {locationData} = this.props;
     return (
       <div>
         {row.map((data, index) => {
@@ -258,77 +227,10 @@ export class WeekDaysRow extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel htmlFor="location">Location</InputLabel>
-                  <Select
-                    required={true}
-                    input={<Input id="location" />}
-                    value={data.locationId}
-                    onChange={this.handleSelectInputChange.bind(
-                      this,
-                      index,
-                      "locationId"
-                    )}
-                    fullWidth
-                  >
-                    {_.isEmpty(locationData) && (
-                      <MenuItem value="" disabled>
-                        No location added in Locations.
-                          </MenuItem>
-                    )}
-                    {locationData.map((data, index) => {
-                      return (
-                        <MenuItem key={index} value={data._id}>{`${
-                          data.address
-                          }, ${data.city}, ${data.country}`}</MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel htmlFor="roomId">Room</InputLabel>
-                  <Select
-                    value={data.roomId}
-                    input={<Input id="roomId" />}
-                    onChange={this.handleSelectInputChange.bind(
-                      this,
-                      index,
-                      "roomId"
-                    )}
-                    fullWidth
-                  >
-                    {_.isEmpty(data.roomData) && (
-                      <MenuItem value="" disabled>
-                        No location added in Locations.
-                      </MenuItem>
-                    )}
-                    {data.roomData &&
-                      data.roomData.map((data, index) => {
-                        return (
-                          <MenuItem key={index} value={data.id}>
-                            {data.name}
-                          </MenuItem>
-                        );
-                      })}
-                  </Select>
-                </FormControl>
-              </Grid>
+              
+              
               <Grid item xs={12} sm={4}>
-                {/* <Button
-                  onClick={this.removeRow.bind(this, index)}
-                  raised
-                  color="accent"
-                  style={{
-                    backgroundColor: 'red',
-                    color: "black",
-                    fontWeight: 600
-                  }}
-                >
-                  Delete
-                </Button> */}
+               
                 <ButtonWrapper>
                   <FormGhostButton
                     alertColor
@@ -340,47 +242,10 @@ export class WeekDaysRow extends React.Component {
             </Grid>
           );
         })}
-        {/* <div>
-          <Typography type="caption">
-            Unless attendance to more than one class is required, a separate
-            Class Times should be created for each class. If it is required that
-            students come to more than one class, add the additional class time
-            here.
-          </Typography>
-          <Button
-            onClick={this.addNewRow}
-            style={{ width: 162 }}
-            raised
-            color="secondary"
-          >
-            Add Another Time
-          </Button>
-        </div> */}
+        
         <div>
           <div>
-            {/* <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between"
-              }}
-            >
-              <Typography
-                type="caption"
-                style={{ maxWidth: "188px", padding: "8px" }}
-              >
-                Use this if there is another class with the same repeating
-                pattern and students are expected to attend all class times in
-                this group.
-              </Typography>
-
-              <Typography
-                type="caption"
-                style={{ maxWidth: "188px", padding: "8px" }}
-              >
-                Use this if there is a different repeating type or students can
-                come to any class time available.
-              </Typography>
-            </div> */}
+         
             <div
               style={{
                 display: "flex",
@@ -388,15 +253,7 @@ export class WeekDaysRow extends React.Component {
               }}
 
             >
-              {/* <Button onClick={this.addNewRow} raised color="secondary"
-                style={{
-                  backgroundColor: 'mediumseagreen',
-                  color: "black",
-                  fontWeight: 600
-                }}
-              >
-                Add Linked Class Time
-              </Button> */}
+              
               <ButtonWrapper>
                   <FormGhostButton
                     darkGreyColor
@@ -405,15 +262,7 @@ export class WeekDaysRow extends React.Component {
                   />
                 </ButtonWrapper>
 
-              {/* <Button
-                onClick={this.props.saveClassTimes.bind(this, event, {
-                  addSeperateTime: true
-                })}
-                raised
-                color="secondary"
-              >
-                Add Separate Class Time
-              </Button> */}
+              
             </div>
           </div>
         </div>
