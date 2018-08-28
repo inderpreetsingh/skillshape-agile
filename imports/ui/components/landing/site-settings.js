@@ -7,6 +7,7 @@ export const logoSrc = "/images/landing/logo.png",
   schoolLogo = "/images/new-logo.png",
   reviewerImgSrc = "/images/classtype/default-reviewer.png",
   schoolDoorImgSrc = "/images/school/door.svg",
+  addInstructorImgSrc = "/images/class-details/round-add-button.svg",
   brandText = "SkillShape",
   brandTagline = "your path revealed",
   siteAddress = "700 N. Valley St. Anaheim Ca 92801 USA";

@@ -80,6 +80,13 @@ const MembersList = props => {
               )}
             </MemberWrapper>
           ))}
+        {/* Adding add instructors box*/}
+        {props.entityType === "teachers" &&
+          props.viewType === "instructorsView" && (
+            <MemberWrapper expanded={expanded} type={"instructor"}>
+              <Member addInstructor type="instructor" />
+            </MemberWrapper>
+          )}
       </MembersGrid>
     </Wrapper>
   );

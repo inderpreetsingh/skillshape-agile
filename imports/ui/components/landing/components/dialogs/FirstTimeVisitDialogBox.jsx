@@ -5,7 +5,7 @@ import styled from "styled-components";
 import IconButton from "material-ui/IconButton";
 import ClearIcon from "material-ui-icons/Clear";
 import { withStyles } from "material-ui/styles";
-import { withPopUp } from "/imports/util";
+// import { withPopUp } from "/imports/util";
 
 import { MuiThemeProvider } from "material-ui/styles";
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
@@ -145,16 +145,17 @@ class FirstTimeVisitDialogBox extends Component {
   };
 
   handleModalClose = () => {
-    const { popUp } = this.props;
-    if (!localStorage.getItem("userRoleValue")) {
-      console.log("not item in the user Role Value");
-      popUp.appear("alert", {
-        title: "Need Input",
-        content: "kindly give us your feedback, for future preferences"
-      });
-    } else {
-      this._closeModal();
-    }
+    this._closeModal();
+    // const { popUp } = this.props;
+    // if (!localStorage.getItem("userRoleValue")) {
+    //   console.log("not item in the user Role Value");
+    //   popUp.appear("alert", {
+    //     title: "Need Input",
+    //     content: "kindly give us your feedback, for future preferences"
+    //   });
+    // } else {
+    //   this._closeModal();
+    // }
   };
 
   handleStudentButtonClick = () => {
@@ -200,20 +201,23 @@ class FirstTimeVisitDialogBox extends Component {
           </DialogTitle>
 
           <DialogContent classes={{ root: props.classes.dialogContent }}>
-            <Text>You need to select any one of the option from below</Text>
+            <Text>
+              You need to select any one option from below, will allow to serve
+              you in a better way.
+            </Text>
           </DialogContent>
 
           <DialogActions classes={{ root: props.classes.dialogActionsRoot }}>
             <CardsWrapper>
               <OptionCard
                 onClick={this.handleStudentButtonClick}
-                message={"I am here to learn"}
+                message="I am here to learn"
                 icon={<Student />}
               />
 
               <OptionCard
                 onClick={this.handleSchoolButtonClick}
-                message={"I am here to teach"}
+                message="I am here to teach"
                 icon={<School />}
               />
             </CardsWrapper>
@@ -224,4 +228,4 @@ class FirstTimeVisitDialogBox extends Component {
   }
 }
 
-export default withStyles(styles)(withPopUp(FirstTimeVisitDialogBox));
+export default withStyles(styles)(FirstTimeVisitDialogBox);

@@ -1,4 +1,5 @@
 import React from "react";
+import { Meteor } from "meteor/meteor";
 import { isEmpty, get } from "lodash";
 import { createContainer } from "meteor/react-meteor-data";
 import { Route, Redirect } from "react-router-dom";
@@ -14,8 +15,7 @@ class MainLayout extends React.Component {
     super(props);
 
     this.state = {
-      memberInvitation: true,
-      userRoleValue: localStorage.getItem("userRoleValue")
+      memberInvitation: true
     };
   }
 
@@ -122,17 +122,20 @@ class MainLayout extends React.Component {
   showTermsOfServiceDialogBox = () => {};
 
   componentDidMount = () => {
-    const { userRoleValue } = this.state;
-    if (userRoleValue === "student") {
-      return browserHistory.push("/");
-    } else if (userRoleValue === "school") {
-      return browserHistory.push("/claimSchool");
+    const userRoleValue = localStorage.getItem("userRoleValue");
+    // NOTE: while development it causes redirects, which is sometimes not desirable.
+    if (Meteor.isProduction) {
+      if (userRoleValue === "student") {
+        return browserHistory.push("/");
+      } else if (userRoleValue === "school") {
+        return browserHistory.push("/claimSchool");
+      }
     }
   };
 
   render() {
     const { currentUser, isUserSubsReady, classes } = this.props;
-    const { userRoleValue } = this.state;
+    const userRoleValue = localStorage.getItem("userRoleValue") || "";
     return (
       <div>
         {React.cloneElement(this.props.children, {
