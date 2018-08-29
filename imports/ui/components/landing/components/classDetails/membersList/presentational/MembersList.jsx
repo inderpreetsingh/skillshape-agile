@@ -30,7 +30,7 @@ const ListHeading = styled.div`
 const MembersGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  ${props => (props.entityType === "students" ? `flex-direction: column` : "")};
+  ${props => props.expanded && `flex-direction: column`};
 
   @media screen and (min-width: ${mobile - 50}px) {
     flex-direction: row;
@@ -69,7 +69,7 @@ const MembersList = props => {
           searchedValue={props.searchedValue}
         />
       </ListHeading>
-      <MembersGrid entityType={props.entityType}>
+      <MembersGrid expanded={expanded}>
         {props.data &&
           props.data.map(obj => (
             <MemberWrapper expanded={expanded} type={obj.type}>

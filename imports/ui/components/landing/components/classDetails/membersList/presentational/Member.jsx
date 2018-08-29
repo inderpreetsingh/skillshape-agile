@@ -36,7 +36,8 @@ const Wrapper = styled.div`
 `;
 
 const Profile = styled.div`
-  ${helpers.flexCenter};
+  display: flex;
+  align-items: center;
   flex-direction: column;
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;

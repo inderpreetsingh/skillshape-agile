@@ -46,6 +46,7 @@ const ClassDetails = props => {
       : "instructorsView";
   return (
     <Wrapper>
+      <TopSearchBar />
       {props.noPurchasedClasses &&
         currentView === "studentsView" && (
           <Notification
@@ -55,7 +56,6 @@ const ClassDetails = props => {
             onButtonClick={props.onPurchaseButtonClick}
           />
         )}
-      <TopSearchBar />
       <InnerWrapper>
         <ClassTimeWrapper>
           <ClassTimeCover {...props.headerProps} />
