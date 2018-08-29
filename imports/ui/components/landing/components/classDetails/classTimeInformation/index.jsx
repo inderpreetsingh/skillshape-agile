@@ -14,10 +14,10 @@ import {
 import { classTimeData } from "/imports/ui/components/landing/constants/classDetails/classTimeData";
 
 const Wrapper = styled.div`
+  padding: 0;
   @media screen and (min-width: ${tablet}px) {
     flex: 1;
     margin-right: ${rhythmDiv * 2}px;
-    padding: ${rhythmDiv * 2}px 0 0 ${rhythmDiv * 2}px;
   }
 `;
 

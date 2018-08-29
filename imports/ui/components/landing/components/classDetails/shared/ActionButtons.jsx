@@ -26,7 +26,7 @@ const Wrapper = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  margin: 0 auto ${rhythmDiv * 4}px; auto;
+  margin: 0 auto ${rhythmDiv * 8}px; auto;
 
   @media screen and (min-width: ${mobile - 100}px) {
     width: 100%;

@@ -13,6 +13,7 @@ import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 
 import {
+  rhythmDiv,
   panelColor,
   tablet,
   danger,
@@ -32,6 +33,7 @@ const ClassTimeWrapper = styled.div`
   @media screen and (min-width: ${tablet}px) {
     display: flex;
     flex-direction: row-reverse;
+    margin-bottom: ${rhythmDiv * 4}px;
   }
 `;
 

@@ -23,7 +23,7 @@ const calculateElapsedTime = startTime => {
   return -1;
 };
 const Wrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  margin-bottom: ${helpers.rhythmDiv * 8}px;
 `;
 
 const OuterActivitesWrapper = styled.div`

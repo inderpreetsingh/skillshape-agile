@@ -23,6 +23,10 @@ const Wrapper = styled.div`
   ${flexHorizontalSpaceBetween}
   padding: ${rhythmDiv * 2}px;
   padding-bottom: ${rhythmDiv}px;
+
+  @media screen and (min-width: ${tablet}px) {
+    padding: 0 ${rhythmDiv * 2}px ${rhythmDiv}px ${rhythmDiv * 2}px;
+  }
 `;
 
 const Left = styled.div`
