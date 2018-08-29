@@ -103,6 +103,7 @@ export default function () {
                 inputStyle={{width:'100%'}}
                 placeHolder={'Phone Number'}
                 containerStyle={{marginTop:'10px'}}
+                disableAreaCodes={true}
               />
                 </Grid>
               </Grid>
