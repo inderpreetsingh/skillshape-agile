@@ -61,6 +61,8 @@ const NameBar = props => {
       </Left>
       <Right>
         <ClassTimeButton
+          icon
+          iconName="add_circle_outline"
           label="Join class"
           onClick={props.onJoinClassButtonClick}
         />

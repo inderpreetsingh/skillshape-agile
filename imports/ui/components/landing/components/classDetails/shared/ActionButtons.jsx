@@ -56,10 +56,10 @@ const ActionButtons = props => (
   <OuterWrapper>
     <Wrapper>
       <ButtonWrapper marginBottom>
-        <ClassTimeButton icon iconName="class" label="Visit Classtype" />
+        <ClassTimeButton label="Visit Classtype" />
       </ButtonWrapper>
       <ButtonWrapper>
-        <ClassTimeButton icon iconName="school" label="Visit School" />
+        <ClassTimeButton label="Visit School" />
       </ButtonWrapper>
       {/*<Link
         to={
