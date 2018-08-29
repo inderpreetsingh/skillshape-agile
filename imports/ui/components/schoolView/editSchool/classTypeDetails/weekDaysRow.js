@@ -2,9 +2,9 @@ import React from "react";
 import Grid from "material-ui/Grid";
 import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import Select from "material-ui/Select";
+import MultiSelect from "react-select";
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
-import Button from "material-ui/Button";
 import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
 import Typography from "material-ui/Typography";
@@ -15,15 +15,6 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
-const scheduleDetails = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday"
-];
 export class WeekDaysRow extends React.Component {
   constructor(props) {
     super(props);
@@ -31,15 +22,24 @@ export class WeekDaysRow extends React.Component {
   }
 
   initializeFields = () => {
-    const { data, locationData, parentData ,roomData} = this.props;
+    const { data, locationData} = this.props;
     const state = {
-      row: []
+      row: [],
+      Weekdays:[
+        {value:0,label:"Monday"},
+        {value:1,label:"Tuesday"},
+        {value:2,label:"Wednesday"},
+        {value:3,label:"Thursday"},
+        {value:4,label:"Friday"},
+        {value:5,label:"Saturday"},
+        {value:6,label:"Sunday"}
+      ]
     };
     if (!_.isEmpty(data)) {
       for (let key in data) {
         for (let obj of data[key]) {
           state.row.push({
-            key: key,
+            key: obj.key,
             startTime: obj.startTime,
             duration: obj.duration,
             day: obj.day,
@@ -50,7 +50,7 @@ export class WeekDaysRow extends React.Component {
     } else {
       // Initial state if we are adding time instead of editing class time
       state.row.push({
-        key: "Monday",
+        key: [],
         startTime: new Date(),
         duration: "",
         day: 0,
@@ -72,7 +72,7 @@ export class WeekDaysRow extends React.Component {
     const {  locationData,roomData} = this.props;
     const oldRow = [...this.state.row];
     oldRow.push({
-      key: "Monday",
+      key: [],
       startTime: new Date(),
       duration: "",
       day: 0,
@@ -112,9 +112,13 @@ export class WeekDaysRow extends React.Component {
     });
     return grouped;
   };
-
+  handleWeekDay = (key,index)=> {
+    let oldRow= this.state.row;
+    oldRow[index][`key`]=key;
+    this.setState({row:oldRow});
+  }
   render() {
-    const { row } = this.state;
+    const { row ,Weekdays} = this.state;
     return (
       <div>
         {row.map((data, index) => {
@@ -136,7 +140,7 @@ export class WeekDaysRow extends React.Component {
                     WeekDay
                   </InputLabel>
 
-                  <Select
+                  {/* <Select
                     input={<Input id="weekDay" />}
                     value={data && data.key != '' ? data.key : scheduleDetails[0]}
                     onChange={this.handleSelectInputChange.bind(
@@ -153,7 +157,16 @@ export class WeekDaysRow extends React.Component {
                         </MenuItem>
                       );
                     })}
-                  </Select>
+                  </Select> */}
+                  <MultiSelect
+                    name="filters"
+                    placeholder="Weekdays"
+                    value={data.key}
+                    options={Weekdays}
+                    onChange={(e)=>{this.handleWeekDay(e,index)}}
+                    multi
+                    style = {{backgroundColor:'antiquewhite'}}
+                  />
                 </FormControl>
               </Grid>
               <Grid item sm={6} xs={12}>
@@ -261,8 +274,7 @@ export class WeekDaysRow extends React.Component {
                     label="Add Linked Class Time"
                   />
                 </ButtonWrapper>
-
-              
+                              
             </div>
           </div>
         </div>
