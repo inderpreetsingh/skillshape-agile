@@ -99,6 +99,7 @@ const CardsWrapper = styled.div`
 const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 250px;
   height: 200px;
   cursor: pointer;
@@ -107,8 +108,8 @@ const CardWrapper = styled.div`
 `;
 
 const IconWrapper = styled.div`
-  width: 100%;
-  height: 160px;
+  width: 80%;
+  height: 120px;
 `;
 
 const CardFooter = styled.div`
@@ -122,7 +123,7 @@ const OptionCard = props => (
   <CardWrapper onClick={props.onClick}>
     <IconWrapper>{React.cloneElement(props.icon)}</IconWrapper>
     <CardFooter>
-      <Text>{props.message}</Text>
+      <Text fontSize={18}>{props.message}</Text>
     </CardFooter>
   </CardWrapper>
 );
@@ -158,7 +159,8 @@ class FirstTimeVisitDialogBox extends Component {
   };
 
   handleStudentButtonClick = () => {
-    localStorage.setItem("userRoleValue", "student");
+    localStorage.setItem('visitorRedirected', false);
+    localStorage.setItem("visitorType", "student");
     this._closeModal();
     setTimeout(() => {
       this._redirectTo("/");
@@ -166,7 +168,8 @@ class FirstTimeVisitDialogBox extends Component {
   };
 
   handleSchoolButtonClick = () => {
-    localStorage.setItem("userRoleValue", "school");
+    localStorage.setItem('visitorRedirected', false);
+    localStorage.setItem("visitorType", "school");
     this._closeModal();
     setTimeout(() => {
       this._redirectTo("/claimSchool");

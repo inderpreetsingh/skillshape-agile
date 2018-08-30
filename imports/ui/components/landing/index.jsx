@@ -5,7 +5,8 @@ import { createContainer } from "meteor/react-meteor-data";
 import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
-import { browserHistory } from "react-router";
+import { browserHistory, withRouter, BrowserRouter } from "react-router";
+import { Redirect } from 'react-router-dom';
 
 import ip from "ip";
 import Chip from "material-ui/Chip";
@@ -224,7 +225,6 @@ class Landing extends Component {
       mapView: false,
       sticky: false,
       filterPanelDialogBox: false,
-      cardsDataList: [cardsData, cardsData1],
       filters: {
         coords: null,
         skillCategoryClassLimit: {},
@@ -275,33 +275,25 @@ class Landing extends Component {
     }
   }
 
-  setFilters = filters => {
-    console.info(filters, "------");
-    this.setState(state => {
-      return {
-        ...state,
-        filters
-      };
-    });
-  };
-
-  componentWillMount() {}
-
-  // This is used to get subjects on the basis of subject category.
-  inputFromUser = text => {
-    // Do db call on the basis of text entered by user
-    let skillCategoryIds = this.state.filters.skillCategoryIds;
-    Meteor.call(
-      "getSkillSubjectBySkillCategory",
-      { skillCategoryIds: skillCategoryIds, textSearch: text },
-      (err, res) => {
-        if (res) {
-          // console.log("result",res)
-          this.setState({ skillSubjectData: res || [] });
-        }
+  _redirectBasedOnVisitorType = () => {
+    const {location,history} = this.props;
+    const visitorType = localStorage.getItem('visitorType');
+    const visitorRedirected = JSON.parse(localStorage.getItem('visitorRedirected'));
+    // console.log(localStorage.getItem('visitorRedirected'), visitorType)
+    debugger;
+    if(!visitorRedirected) {
+      if (visitorType === "school") {
+        localStorage.setItem("visitorRedirected",true);
+        return browserHistory.push('/claimSchool');
+      }else if(visitorType === 'student'){
+        localStorage.setItem('visitorRedirected',true);
       }
-    );
-  };
+    }
+  }
+
+  componentWillMount() {
+    // this._redirectBasedOnVisitorType();
+  }
 
   componentDidMount() {
     let positionCoords = this.getUsersCurrentLocation();
@@ -413,6 +405,33 @@ class Landing extends Component {
     // Have to manually set it , otherwise it resets automatically in mapView.
     document.title = "Skillshape";
   }
+
+  // This is used to get subjects on the basis of subject category.
+  inputFromUser = text => {
+    // Do db call on the basis of text entered by user
+    let skillCategoryIds = this.state.filters.skillCategoryIds;
+    Meteor.call(
+      "getSkillSubjectBySkillCategory",
+      { skillCategoryIds: skillCategoryIds, textSearch: text },
+      (err, res) => {
+        if (res) {
+          // console.log("result",res)
+          this.setState({ skillSubjectData: res || [] });
+        }
+      }
+    );
+  };
+
+  setFilters = filters => {
+    console.info(filters, "------");
+    this.setState(state => {
+      return {
+        ...state,
+        filters
+      };
+    });
+  };
+
 
   getUsersCurrentLocation = args => {
     const { popUp } = this.props;
@@ -893,6 +912,7 @@ class Landing extends Component {
     return (
       <DocumentTitle title={this.props.route.name}>
         <div>
+          {this._redirectBasedOnVisitorType()}
           <FiltersDialogBox
             open={this.state.filterPanelDialogBox}
             onModalClose={() => this.handleFiltersDialogBoxState(false)}
@@ -1052,4 +1072,4 @@ class Landing extends Component {
   }
 }
 
-export default withPopUp(Landing);
+export default withRouter(withPopUp(Landing));

@@ -446,10 +446,6 @@ class FilterPanel extends Component {
                 />
               </MaterialInputWrapper>
             </Grid>
-            {console.log(
-              errors.schoolEmail,
-              "errors..........................."
-            )}
             <Grid item xs={12} sm={6}>
               <MaterialInputWrapper>
                 <IconInput
