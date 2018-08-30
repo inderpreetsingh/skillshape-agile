@@ -103,7 +103,7 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
 };
 
 const addTotalClassTimes = classTimes => {
-  // let classTimesCounter = 0;
+  let classTimesCounter = classTimes.length;
   // Object.keys(classTimes).forEach(day => {
   //   if (typeof classTimes[day] == "object") {
   //     classTimes[day].filter(classTime => {
@@ -113,7 +113,7 @@ const addTotalClassTimes = classTimes => {
   //     });
   //   }
   // });
-  // classTimes.totalClassTimes = classTimesCounter;
+  classTimes.totalClassTimes = classTimesCounter;
 
   return classTimes;
 };

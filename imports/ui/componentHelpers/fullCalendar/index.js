@@ -170,9 +170,9 @@ class FullCalendar extends React.Component {
         }
         // let classTypeData = ClassType.findOne({ _id: classTime.classTypeId});
         if (classTime.scheduleType === "oneTime" && checkedClassTimes) {
-          let scheduleData = [...classTime.scheduleDetails.oneTime];
+          let scheduleData = classTime.scheduleDetails;
           sevent.scheduleDetails = classTime.scheduleDetails;
-          for (let obj of scheduleData) {
+          scheduleData.map((obj,index)=>{
             sevent.start = obj.startDate;
             sevent.roomId = obj.roomId;
             sevent.eventStartTime = moment(obj.startTime).format("hh:mm");
@@ -211,8 +211,9 @@ class FullCalendar extends React.Component {
             //   });
             // } else {
             // }
+            
             sevents.push(sevent);
-          }
+          })
         }
 
         if (
@@ -221,28 +222,27 @@ class FullCalendar extends React.Component {
           (classTime.scheduleType === "recurring" ||
             classTime.scheduleType === "OnGoing")
         ) {
-          let scheduleData = { ...classTime.scheduleDetails };
+          let scheduleData = classTime.scheduleDetails;
           sevent.scheduleDetails = classTime.scheduleDetails;
           sevent.endDate = classTime.endDate && moment(classTime.endDate);
-          for (let key in scheduleData) {
-            // const dayData = scheduleData[key];
-            for (let obj of scheduleData[key]) {
-              let temp = { ...sevent };
-              temp.dow = [obj.day];
-              // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
-              temp.start = moment(obj.startTime).format("hh:mm");
-              temp.end = moment(new Date(obj.startTime))
+              scheduleData.map((obj,index)=>{
+
+                let temp = { ...sevent };
+                temp.dow = [obj.day];
+                // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
+                temp.start = moment(obj.startTime).format("hh:mm");
+                temp.end = moment(new Date(obj.startTime))
                 .add(obj.duration, "minutes")
                 .format("hh:mm");
-              temp.eventStartTime = moment(obj.startTime).format("hh:mm");
+                temp.eventStartTime = moment(obj.startTime).format("hh:mm");
               temp.eventEndTime = moment(new Date(obj.startTime))
-                .add(
+              .add(
                   obj.duration,
                   (obj.timeUnits && obj.timeUnits.toLowerCase()) || "minutes"
                 )
                 .format("hh:mm");
               temp.title =
-                classTime.classTypeName.name +
+              classTime.classTypeName.name +
                 ": " +
                 classTime.name 
                 // +
@@ -250,31 +250,32 @@ class FullCalendar extends React.Component {
                 // temp.eventStartTime +
                 // " to " +
                 // temp.eventEndTime;
-              temp.roomId = obj.roomId;
-              temp.durationAndTimeunits = `${obj.duration} ${
-                obj.timeUnits ? obj.timeUnits : "Minutes"
+                temp.roomId = obj.roomId;
+                temp.durationAndTimeunits = `${obj.duration} ${
+                  obj.timeUnits ? obj.timeUnits : "Minutes"
               }`;
               // sevent.age = classTypeData && classTypeData.ageMin;
               // sevent.gender = classTypeData && classTypeData.gender;
               // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
               // if (classTime && classTime.deletedEvents) {
-              //   classTime.deletedEvents.map(current => {
-              //       "condition",
-              //       current,
-              //       moment(temp.start).format("YYYY-MM-DD")
-              //     );
-              //     if (current == moment(temp.start).format("YYYY-MM-DD")) {
-              //     } else {
-              //       sevents.push(temp);
-              //       return;
-              //     }
-              //   });
-              // } else {
-              //   sevents.push(temp);
-              // }
-              sevents.push(temp);
-            }
-          }
+                //   classTime.deletedEvents.map(current => {
+                  //       "condition",
+                  //       current,
+                  //       moment(temp.start).format("YYYY-MM-DD")
+                  //     );
+                  //     if (current == moment(temp.start).format("YYYY-MM-DD")) {
+                    //     } else {
+                      //       sevents.push(temp);
+                      //       return;
+                      //     }
+                      //   });
+                      // } else {
+                        //   sevents.push(temp);
+                        // }
+                        
+                        sevents.push(temp);
+                        
+                      })
         }
         // console.warn("<<< dayData sevents>>>>",sevents);
       } catch (err) {}
