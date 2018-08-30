@@ -279,8 +279,6 @@ class Landing extends Component {
     const {location,history} = this.props;
     const visitorType = localStorage.getItem('visitorType');
     const visitorRedirected = JSON.parse(localStorage.getItem('visitorRedirected'));
-    // console.log(localStorage.getItem('visitorRedirected'), visitorType)
-    debugger;
     if(!visitorRedirected) {
       if (visitorType === "school") {
         localStorage.setItem("visitorRedirected",true);
@@ -291,9 +289,6 @@ class Landing extends Component {
     }
   }
 
-  componentWillMount() {
-    // this._redirectBasedOnVisitorType();
-  }
 
   componentDidMount() {
     let positionCoords = this.getUsersCurrentLocation();

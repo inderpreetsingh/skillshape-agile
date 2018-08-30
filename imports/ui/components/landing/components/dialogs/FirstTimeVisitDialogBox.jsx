@@ -94,17 +94,32 @@ const Title = styled.span`
 const CardsWrapper = styled.div`
   width: 100%;
   ${helpers.flexHorizontalSpaceBetween};
+
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
 
 const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 250px;
+  max-width: 250px;
+  width: 100%;
   height: 200px;
   cursor: pointer;
   box-shadow: ${helpers.heavyBoxShadow};
   margin-right: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
+    margin-right: 0;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+
+    :first-of-type {
+      margin-top: ${helpers.rhythmDiv}px;
+    }
+  }
 `;
 
 const IconWrapper = styled.div`
