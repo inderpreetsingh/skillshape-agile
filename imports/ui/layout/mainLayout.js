@@ -123,11 +123,11 @@ class MainLayout extends React.Component {
 
   componentDidMount = () => {
     const { userRoleValue } = this.state;
-    if (userRoleValue === "student") {
-      return browserHistory.push("/");
-    } else if (userRoleValue === "school") {
-      return browserHistory.push("/claimSchool");
-    }
+    // if (userRoleValue === "student") {
+    //   return browserHistory.push("/");
+    // } else if (userRoleValue === "school") {
+    //   return browserHistory.push("/claimSchool");
+    // }
   };
 
   render() {
@@ -139,7 +139,7 @@ class MainLayout extends React.Component {
           currentUser: currentUser,
           isUserSubsReady: isUserSubsReady
         })}
-        {!userRoleValue && <FirstTimeVisitDialogBox />}
+        {/* {!userRoleValue && <FirstTimeVisitDialogBox />} */}
         {isUserSubsReady &&
           currentUser &&
           !currentUser.term_cond_accepted && (

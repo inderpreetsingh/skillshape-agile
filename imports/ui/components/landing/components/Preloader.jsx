@@ -29,7 +29,7 @@ const PreloaderIcon = styled.div`
   background-position: 50% 50%;
   background-size: cover;
   background-image: url('${logoSrc}');
-  animation: ${PreloaderAnim} 2s infinite;
+  animation: ${PreloaderAnim} 0.5s infinite;
 `;
 
 const Preloader = () => (
