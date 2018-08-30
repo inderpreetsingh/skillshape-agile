@@ -15,7 +15,6 @@ class MainLayout extends React.Component {
 
     this.state = {
       memberInvitation: true,
-      userRoleValue: localStorage.getItem("userRoleValue")
     };
   }
 
@@ -53,6 +52,8 @@ class MainLayout extends React.Component {
       });
     }
   }
+
+
 
   acceptMemberInvitation = invitationObj => {
     const { popUp } = this.props;
@@ -119,27 +120,19 @@ class MainLayout extends React.Component {
     });
   };
 
-  showTermsOfServiceDialogBox = () => {};
 
-  componentDidMount = () => {
-    const { userRoleValue } = this.state;
-    // if (userRoleValue === "student") {
-    //   return browserHistory.push("/");
-    // } else if (userRoleValue === "school") {
-    //   return browserHistory.push("/claimSchool");
-    // }
-  };
+  showTermsOfServiceDialogBox = () => {};
 
   render() {
     const { currentUser, isUserSubsReady, classes } = this.props;
-    const { userRoleValue } = this.state;
+    const visitorTypeValue = localStorage.getItem('visitorType');
     return (
       <div>
         {React.cloneElement(this.props.children, {
           currentUser: currentUser,
           isUserSubsReady: isUserSubsReady
         })}
-        {/* {!userRoleValue && <FirstTimeVisitDialogBox />} */}
+        {!visitorTypeValue && <FirstTimeVisitDialogBox />}
         {isUserSubsReady &&
           currentUser &&
           !currentUser.term_cond_accepted && (
