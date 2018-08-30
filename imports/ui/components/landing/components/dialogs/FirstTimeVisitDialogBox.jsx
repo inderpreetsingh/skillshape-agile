@@ -94,21 +94,37 @@ const Title = styled.span`
 const CardsWrapper = styled.div`
   width: 100%;
   ${helpers.flexHorizontalSpaceBetween};
+
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
 
 const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 250px;
+  align-items: center;
+  max-width: 250px;
+  width: 100%;
   height: 200px;
   cursor: pointer;
   box-shadow: ${helpers.heavyBoxShadow};
   margin-right: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
+    margin-right: 0;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+
+    :first-of-type {
+      margin-top: ${helpers.rhythmDiv}px;
+    }
+  }
 `;
 
 const IconWrapper = styled.div`
-  width: 100%;
-  height: 160px;
+  width: 80%;
+  height: 120px;
 `;
 
 const CardFooter = styled.div`
@@ -122,7 +138,7 @@ const OptionCard = props => (
   <CardWrapper onClick={props.onClick}>
     <IconWrapper>{React.cloneElement(props.icon)}</IconWrapper>
     <CardFooter>
-      <Text>{props.message}</Text>
+      <Text fontSize={18}>{props.message}</Text>
     </CardFooter>
   </CardWrapper>
 );
@@ -158,16 +174,18 @@ class FirstTimeVisitDialogBox extends Component {
     // }
   };
 
-  handleIamStudentClick = () => {
-    localStorage.setItem("userRoleValue", "student");
+  handleStudentButtonClick = () => {
+    localStorage.setItem('visitorRedirected', false);
+    localStorage.setItem("visitorType", "student");
     this._closeModal();
     setTimeout(() => {
       this._redirectTo("/");
     }, 100);
   };
 
-  handleIamSchoolClick = () => {
-    localStorage.setItem("userRoleValue", "school");
+  handleSchoolButtonClick = () => {
+    localStorage.setItem('visitorRedirected', false);
+    localStorage.setItem("visitorType", "school");
     this._closeModal();
     setTimeout(() => {
       this._redirectTo("/claimSchool");

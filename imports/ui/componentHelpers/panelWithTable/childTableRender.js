@@ -173,6 +173,7 @@ export default function (props) {
                                 tableData.name + ": Series"}
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails style={{ flexWrap: "wrap" }}>
+                            
                               {childTable &&
                                 childTable.tableFields.map((field, index) => {
                                   return (
@@ -228,7 +229,7 @@ export default function (props) {
                                               return this.renderScheduleTypeData(
                                                 classes,
                                                 parentData,
-                                                itemData,
+                                                tableData,
                                                 fields,
                                                 locationData
                                               );

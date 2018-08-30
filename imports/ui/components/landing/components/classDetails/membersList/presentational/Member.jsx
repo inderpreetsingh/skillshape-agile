@@ -143,6 +143,7 @@ const Member = props => {
           </Details>
           {props.viewType === "instructorsView" &&
             !props.addInstructor && <DropDownMenu menuOptions={menuOptions} />}
+          
         </DetailsWrapper>
       </Profile>
     </Wrapper>

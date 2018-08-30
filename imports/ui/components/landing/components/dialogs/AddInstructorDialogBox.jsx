@@ -88,6 +88,7 @@ class AddInstructorDialogBox extends Component {
           <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
             <DialogTitleWrapper>
               <Title>Add instructor</Title>
+
               <IconButton
                 color="primary"
                 onClick={props.onModalClose}
@@ -97,8 +98,25 @@ class AddInstructorDialogBox extends Component {
               </IconButton>
             </DialogTitleWrapper>
           </DialogTitle>
+          <DialogContent classes={{ root: props.classes.dialogContent }}>
+            <Text>Add the instructor to your </Text>
+          </DialogContent>
 
-          <DialogContent classes={{ root: props.classes.dialogContent }} />
+          <DialogActions classes={{ root: props.classes.dialogActionsRoot }}>
+            <CardsWrapper>
+              <OptionCard
+                onClick={this.handleStudentButtonClick}
+                message={"I am here to learn"}
+                icon={<Student />}
+              />
+
+              <OptionCard
+                onClick={this.handleSchoolButtonClick}
+                message={"I am here to teach"}
+                icon={<School />}
+              />
+            </CardsWrapper>
+          </DialogActions>
         </MuiThemeProvider>
       </Dialog>
     );

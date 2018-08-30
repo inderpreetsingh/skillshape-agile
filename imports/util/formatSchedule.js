@@ -103,17 +103,17 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
 };
 
 const addTotalClassTimes = classTimes => {
-  let classTimesCounter = 0;
-  Object.keys(classTimes).forEach(day => {
-    if (typeof classTimes[day] == "object") {
-      classTimes[day].filter(classTime => {
-        if (!isEmpty(classTime)) {
-          ++classTimesCounter;
-        }
-      });
-    }
-  });
-  classTimes.totalClassTimes = classTimesCounter;
+  // let classTimesCounter = 0;
+  // Object.keys(classTimes).forEach(day => {
+  //   if (typeof classTimes[day] == "object") {
+  //     classTimes[day].filter(classTime => {
+  //       if (!isEmpty(classTime)) {
+  //         ++classTimesCounter;
+  //       }
+  //     });
+  //   }
+  // });
+  // classTimes.totalClassTimes = classTimesCounter;
 
   return classTimes;
 };

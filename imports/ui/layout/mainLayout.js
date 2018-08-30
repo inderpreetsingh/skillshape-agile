@@ -54,6 +54,8 @@ class MainLayout extends React.Component {
     }
   }
 
+
+
   acceptMemberInvitation = invitationObj => {
     const { popUp } = this.props;
     // console.log("Landing acceptMemberInvitation")
@@ -119,30 +121,19 @@ class MainLayout extends React.Component {
     });
   };
 
-  showTermsOfServiceDialogBox = () => {};
 
-  componentDidMount = () => {
-    const userRoleValue = localStorage.getItem("userRoleValue");
-    // NOTE: while development it causes redirects, which is sometimes not desirable.
-    if (Meteor.isProduction) {
-      if (userRoleValue === "student") {
-        return browserHistory.push("/");
-      } else if (userRoleValue === "school") {
-        return browserHistory.push("/claimSchool");
-      }
-    }
-  };
+  showTermsOfServiceDialogBox = () => {};
 
   render() {
     const { currentUser, isUserSubsReady, classes } = this.props;
-    const userRoleValue = localStorage.getItem("userRoleValue") || "";
+    const visitorTypeValue = localStorage.getItem('visitorType');
     return (
       <div>
         {React.cloneElement(this.props.children, {
           currentUser: currentUser,
           isUserSubsReady: isUserSubsReady
         })}
-        {!userRoleValue && <FirstTimeVisitDialogBox />}
+        {!visitorTypeValue && <FirstTimeVisitDialogBox />}
         {isUserSubsReady &&
           currentUser &&
           !currentUser.term_cond_accepted && (
