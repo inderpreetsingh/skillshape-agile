@@ -36,6 +36,7 @@ const Wrapper = styled.div`
   @media screen and (min-width: ${tablet}px) {
     justify-content: flex-end;
     padding: 0 ${rhythmDiv}px;
+    margin-bottom: ${rhythmDiv * 2}px;
   }
 `;
 
