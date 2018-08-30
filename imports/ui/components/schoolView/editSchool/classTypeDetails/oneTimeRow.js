@@ -33,7 +33,7 @@ export class OneTimeRow extends React.Component {
           {
             startDate: new Date(),
             startTime: new Date(),
-            duration: "",
+            duration: 60,
             timeUnits: "Minutes",
           }
         ]
@@ -52,7 +52,7 @@ export class OneTimeRow extends React.Component {
     oldRow.push({
       startDate: new Date(),
       startTime: new Date(),
-      duration: "",
+      duration: 60,
     });
     this.setState({ row: oldRow });
     this.props.handleNoOfRow(1);
@@ -98,6 +98,7 @@ export class OneTimeRow extends React.Component {
     }
   };
   getRowData = () => {
+    console.log("this.state.row ", this.state.row);
     return this.state.row;
   };
   handleRoomData = (locationId,roomId,index)=> {

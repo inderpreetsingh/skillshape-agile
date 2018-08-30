@@ -186,7 +186,7 @@ class ClassTimeForm extends React.Component {
     }
     if (tabValue === 0) {
       payload.scheduleType = "oneTime";
-      payload.scheduleDetails = { oneTime: this.refs.oneTimeRow.getRowData() };
+      payload.scheduleDetails =this.refs.oneTimeRow.getRowData();
       if(this.state.noOfRow < 2){
         payload.closed=false
       }

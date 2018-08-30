@@ -187,7 +187,9 @@ class ChildTable extends React.Component {
     })
     return locationName;
   }
-  renderScheduleTypeData = (classes, parentData, itemData, field,locationData) => {
+  renderScheduleTypeData = (classes, parentData, tableData, field,locationData) => {
+    itemData = tableData.scheduleDetails;
+    let first=true;
     if (_.isArray(itemData)) {
       return itemData.map((x, index) => {
         return (
@@ -203,10 +205,14 @@ class ChildTable extends React.Component {
               <Grid item xs={12} sm={9} md={4}>
                 <div className={classes.inputDisableBox}>
                   <span>
-                    {field[0].value
-                      ? field[0].value
-                      : x[field[0]["key"]] &&
-                        moment(new Date(x[field[0]["key"]])).format("L")}
+                
+                    {x && x.key  ? x.key.map((current)=>{
+                      if(current.label){
+                        let result = `${first ?'':', '}${current.label}`
+                        first = false;
+                        return result;
+                      }
+                    }) : x && x.startDate && moment(x.startDate).format('dddd') }
                   </span>
                 </div>
               </Grid>
@@ -250,8 +256,8 @@ class ChildTable extends React.Component {
                   className={classes.inputDisableBox}
                 >
                   <span>
-                    {x[field[3]["key"]] &&
-                      this.getRoomName(x[field[3]["key"]], locationData)}
+                    {tableData.roomId &&
+                      this.getRoomName(tableData.roomId, locationData)}
                   </span>
                 </div>
               </Grid>
@@ -266,8 +272,8 @@ class ChildTable extends React.Component {
                   }}
                   className={classes.inputDisableBox}
                 >
-                  <span>{x.locationId &&
-                this.getLocationName(x.locationId,locationData)
+                  <span>{tableData.locationId &&
+                this.getLocationName(tableData.locationId,locationData)
                 }</span>
                 </div>
               </Grid>

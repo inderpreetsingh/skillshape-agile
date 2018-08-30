@@ -51,7 +51,7 @@ ClassTimes.attachSchema(
       optional: true
     },
     scheduleDetails: {
-      type: Object,
+      type: [Object],
       optional: true,
       blackbox: true
     },

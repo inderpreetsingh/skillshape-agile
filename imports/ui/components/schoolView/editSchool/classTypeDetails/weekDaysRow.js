@@ -36,27 +36,34 @@ export class WeekDaysRow extends React.Component {
       ]
     };
     if (!_.isEmpty(data)) {
-      for (let key in data) {
-        for (let obj of data[key]) {
-          state.row.push({
-            key: obj.key,
-            startTime: obj.startTime,
-            duration: obj.duration,
-            day: obj.day,
-            timeUnits: (obj && obj.timeUnits) || "Minutes",
-          });
-        }
-      }
+      data.map((obj,index)=>{
+        state.row.push({
+          key: obj.key,
+          startTime: obj.startTime,
+          duration: obj.duration,
+          day: obj.day || 0,
+          timeUnits: (obj && obj.timeUnits) || "Minutes",
+        })
+      })
+      // for (let key in data) {
+      //   for (let obj of data[key]) {
+      //     state.row.push({
+      //       key: obj.key,
+      //       startTime: obj.startTime,
+      //       duration: obj.duration,
+      //       day: obj.day,
+      //       timeUnits: (obj && obj.timeUnits) || "Minutes",
+      //     });
+      //   }
+      // }
     } else {
       // Initial state if we are adding time instead of editing class time
       state.row.push({
         key: [],
         startTime: new Date(),
-        duration: "",
+        duration: 60,
         day: 0,
-        roomId:  !_.isEmpty(locationData.rooms) ? locationData.rooms[0]._id : '',
         timeUnits: "Minutes",
-        locationId: !_.isEmpty(locationData) ? locationData[0]._id : ''
       });
     }
     return state;
@@ -74,7 +81,7 @@ export class WeekDaysRow extends React.Component {
     oldRow.push({
       key: [],
       startTime: new Date(),
-      duration: "",
+      duration: 60,
       day: 0,
     });
     this.setState({ row: oldRow });
@@ -104,13 +111,15 @@ export class WeekDaysRow extends React.Component {
   };
 
   getRowData = () => {
-    let rowData = this.state.row.filter(data => {
-      return data.key;
-    });
-    const grouped = _.groupBy(rowData, function (item) {
-      return item.key;
-    });
-    return grouped;
+    // let rowData = this.state.row.filter(data => {
+    //   return data.key;
+    // });
+    // const grouped = _.groupBy(rowData, function (item) {
+    //   return item.key;
+    // });
+    // return grouped;
+    console.log("this.state.row ", this.state.row);
+    return this.state.row;
   };
   handleWeekDay = (key,index)=> {
     let oldRow= this.state.row;
