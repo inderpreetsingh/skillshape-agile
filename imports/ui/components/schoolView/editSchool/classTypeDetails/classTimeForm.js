@@ -36,6 +36,8 @@ import { toastrModal } from "/imports/util";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import LocationForm from '/imports/ui/components/schoolView/editSchool/locationDetails/locationForm';
+import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetails/roomForm";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -88,6 +90,9 @@ class ClassTimeForm extends React.Component {
       noOfRow: 0,
       PackageAttachment:false,
       PackageOpen:true,
+      showLocationForm:false,
+      showRoomForm:false,
+      locId:''
     };
     
       
@@ -121,12 +126,12 @@ class ClassTimeForm extends React.Component {
       }
       else {
         locationData.map((location)=>{
-          location.rooms.map((room)=>{
+          location && location.rooms ? location.rooms.map((room)=>{
             if(room.id == state.roomId){
               state.roomData = !_.isEmpty(location.rooms) ? location.rooms :[];
               return;
             }
-          })
+          }):state.roomData = [];
         })
       }
     }
@@ -154,14 +159,14 @@ class ClassTimeForm extends React.Component {
   }else{
     const {locationData} = this.props;
     locationData.map((location)=>{
-      location.rooms.map((room)=>{
+      !_.isEmpty(location.rooms)? location.rooms.map((room)=>{
         if(location._id == event.target.value){
           this.setState({roomData:!_.isEmpty(location.rooms) ? location.rooms :[],
                          roomId: location && location.rooms && location.rooms[0].id || '',
                          locationId: location._id
           });
         }
-      })
+      }) : this.setState({roomId:''})
     })
   }
   }
@@ -296,6 +301,20 @@ class ClassTimeForm extends React.Component {
               onClose={() => this.setState({ showConfirmationModal: false })}
             />
           )}
+           {this.state.showLocationForm && <LocationForm
+          open={true}
+          schoolId = {schoolId}
+          onClose = {(result)=>{
+             if(result)this.setState({showLocationForm:false,showRoomForm:true,locId:result})}}
+          />}
+         {this.state.showRoomForm && this.state.locId &&
+         <RoomForm
+         parentKey={this.state.locId}
+         open={this.state.showRoomForm}
+         onClose={()=>{this.setState({showRoomForm:false})}}
+         from={'classTime'}
+         />}  
+
           {this.state.error ? (
             <div style={{ color: "red" }}>{this.state.error}</div>
           ) : (
@@ -482,6 +501,13 @@ class ClassTimeForm extends React.Component {
             darkGreyColor
             onClick={() => this.props.onClose()}
             label="Cancel"
+            className={classes.cancel}
+          />
+        </ButtonWrapper>
+        <ButtonWrapper>
+          <FormGhostButton
+            onClick={()=>{this.setState({showLocationForm:true})}}
+            label="Add New Location"
             className={classes.cancel}
           />
         </ButtonWrapper>

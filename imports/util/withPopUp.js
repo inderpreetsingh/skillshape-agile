@@ -14,7 +14,6 @@ export function withPopUp(WrappedComponent) {
         this.props.onPopUpClose();
     };
     appear = (type, dialogBoxProps = {}, applyClose = true) => {
-      console.log("appear clicked..", type, applyClose, dialogBoxProps);
       this.setState({
         open: true,
         type,
@@ -24,7 +23,7 @@ export function withPopUp(WrappedComponent) {
     };
 
     handleAffirmationButtonClick = () => {
-      debugger;
+      
       if (this.state.applyClose) {
         this.handleClose();
       }
@@ -35,7 +34,6 @@ export function withPopUp(WrappedComponent) {
 
     render() {
       const { open, type, dialogBoxProps } = this.state;
-      // console.log(this.state, "this.state... withPopUp");
       return (
         <Fragment>
           {open && (

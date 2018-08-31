@@ -169,7 +169,7 @@ class ChildTable extends React.Component {
   getRoomName = (roomId, data) => {
     let roomName = 'Not Selected';
     data.map((current,index)=>{
-      current.rooms.map((current1,index1)=>{
+     current.rooms && current && current.rooms.map((current1,index1)=>{
         if(current1.id == roomId){
           roomName = current1.name;
         }

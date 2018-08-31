@@ -419,7 +419,6 @@ class LocationForm extends React.Component {
       if (result) {
         this.props.onClose(result);
       }
-
       this.setState({ isBusy: false, error });
     });
   };

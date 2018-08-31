@@ -25,7 +25,6 @@ import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { isThisSecond } from "date-fns";
-import LocationForm from '/imports/ui/components/schoolView/editSchool/locationDetails/locationForm';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -76,7 +75,6 @@ class ClassTypeForm extends React.Component {
       selectedSkillSubject: null,
       selectedLocation: null,
       searchSkillCategoryText: "",
-      showLocationForm:false
       
     };
     if (data && _.size(data) > 0) {
@@ -109,6 +107,7 @@ class ClassTypeForm extends React.Component {
       } else {
         // console.info(res, "==== res ====");
         this.defaultSubjectList = res;
+        this.setState({skillSubjectData:this.defaultSubjectList})
       }
     });
   };
@@ -144,15 +143,15 @@ class ClassTypeForm extends React.Component {
   handleSelectChange = (fieldName, event, index, value) =>
     this.setState({ [fieldName]: value });
 
-  handleSkillCategoryInputChange = value => {
-    Meteor.call("getSkillCategory", { textSearch: value }, (err, res) => {
-      if (res) {
-        this.setState({
-          skillCategoryData: res || []
-        });
-      }
-    });
-  };
+  // handleSkillCategoryInputChange = value => {
+  //   Meteor.call("getSkillCategory", { textSearch: value }, (err, res) => {
+  //     if (res) {
+  //       this.setState({
+  //         skillCategoryData: res || []
+  //       });
+  //     }
+  //   });
+  // };
 
   handleSkillSubjectInputChange = value => {
     // if (!_.isEmpty(this.state.selectedSkillCategory)) {
@@ -284,11 +283,7 @@ class ClassTypeForm extends React.Component {
               onClose={() => this.setState({ showConfirmationModal: false })}
             />
           )}
-          {this.state.showLocationForm && <LocationForm
-          open={true}
-          schoolId = {this.props.schoolId}
-          onClose = {()=>{this.setState({showLocationForm:false})}}
-          />}
+         
           {this.state.error ? (
             <div style={{ color: "red" }}>{this.state.error}</div>
           ) : (
@@ -483,13 +478,7 @@ class ClassTypeForm extends React.Component {
             className={classes.cancel}
           />
         </ButtonWrapper>
-        <ButtonWrapper>
-          <FormGhostButton
-            onClick={()=>{this.setState({showLocationForm:true})}}
-            label="Add New Location"
-            className={classes.cancel}
-          />
-        </ButtonWrapper>
+        
         <ButtonWrapper>
           <FormGhostButton
             type="submit"
