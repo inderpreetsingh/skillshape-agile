@@ -561,7 +561,10 @@ class Landing extends Component {
         },
         err => {
           const geolocationError = this._handleGeoLocationError(err);
-          popUp.appear("alert", { content: geolocationError });
+          popUp.appear("alert", { content: geolocationError }, true, {
+            autoClose: true,
+            autoTimeout: 4000
+          });
         }
       );
     }
