@@ -28,27 +28,24 @@ const styles = theme => {
     dialogTitleRoot: {
       padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv *
         3}px 0 ${helpers.rhythmDiv * 3}px`,
-      marginBottom: `${helpers.rhythmDiv * 2}px`,
-      "@media screen and (max-width : 500px)": {
-        padding: `0 ${helpers.rhythmDiv * 3}px`
-      }
+      marginBottom: `${helpers.rhythmDiv * 2}px`
     },
     dialogContent: {
       padding: `0 ${helpers.rhythmDiv * 3}px`,
-      paddingBottom: helpers.rhythmDiv * 2,
-      flexGrow: 0,
-      display: "flex",
-      justifyContent: "center",
-      "@media screen and (max-width : 500px)": {
-        // minHeight: "150px"
-      }
+      paddingBottom: helpers.rhythmDiv,
+      display: "block",
+      overflowY: "visible"
     },
     dialogActionsRoot: {
       padding: `0 ${helpers.rhythmDiv}px`,
-      paddingBottom: helpers.rhythmDiv * 2,
+      paddingBottom: helpers.rhythmDiv * 3,
       display: "flex",
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "center",
+      margin: 0,
+      [`@media screen and (max-width: ${helpers.mobile + 100}px)`]: {
+        paddingBottom: helpers.rhythmDiv
+      }
     },
     dialogActions: {
       width: "100%",
@@ -112,6 +109,10 @@ const CardWrapper = styled.div`
   box-shadow: ${helpers.heavyBoxShadow};
   margin-right: ${helpers.rhythmDiv * 2}px;
 
+  :last-of-type {
+    margin-right: 0;
+  }
+
   @media screen and (max-width: ${helpers.mobile + 100}px) {
     margin-right: 0;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
@@ -133,12 +134,22 @@ const CardFooter = styled.div`
   flex-grow: 1;
   font-family: ${helpers.specialFont};
 `;
+const CardBody = styled.div`
+  padding-top: ${helpers.rhythmDiv}px;
+`;
+
+const CardContent = Text.extend`
+  font-size: 18px;
+  margin-bottom: 0;
+`;
 
 const OptionCard = props => (
   <CardWrapper onClick={props.onClick}>
-    <IconWrapper>{React.cloneElement(props.icon)}</IconWrapper>
+    <CardBody>
+      <IconWrapper>{React.cloneElement(props.icon)}</IconWrapper>
+    </CardBody>
     <CardFooter>
-      <Text fontSize={18}>{props.message}</Text>
+      <CardContent>{props.message}</CardContent>
     </CardFooter>
   </CardWrapper>
 );
@@ -174,8 +185,8 @@ class FirstTimeVisitDialogBox extends Component {
     // }
   };
 
-  handleStudentButtonClick = () => {
-    localStorage.setItem('visitorRedirected', false);
+  handleIamStudentClick = () => {
+    localStorage.setItem("visitorRedirected", false);
     localStorage.setItem("visitorType", "student");
     this._closeModal();
     setTimeout(() => {
@@ -183,8 +194,8 @@ class FirstTimeVisitDialogBox extends Component {
     }, 100);
   };
 
-  handleSchoolButtonClick = () => {
-    localStorage.setItem('visitorRedirected', false);
+  handleIamSchoolClick = () => {
+    localStorage.setItem("visitorRedirected", false);
     localStorage.setItem("visitorType", "school");
     this._closeModal();
     setTimeout(() => {

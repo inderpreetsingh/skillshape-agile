@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
 import { browserHistory, withRouter, BrowserRouter } from "react-router";
-import { Redirect } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 
 import ip from "ip";
 import Chip from "material-ui/Chip";
@@ -276,19 +276,26 @@ class Landing extends Component {
   }
 
   _redirectBasedOnVisitorType = () => {
-    const {location,history} = this.props;
-    const visitorType = localStorage.getItem('visitorType');
-    const visitorRedirected = JSON.parse(localStorage.getItem('visitorRedirected'));
-    if(!visitorRedirected) {
+    const {
+      location,
+      history,
+      match,
+      previousLocationPathName,
+      currentLocationPathName
+    } = this.props;
+    const visitorType = localStorage.getItem("visitorType");
+    const visitorRedirected = JSON.parse(
+      localStorage.getItem("visitorRedirected")
+    );
+    if (!visitorRedirected && previousLocationPathName === "/") {
       if (visitorType === "school") {
-        localStorage.setItem("visitorRedirected",true);
-        return browserHistory.push('/claimSchool');
-      }else if(visitorType === 'student'){
-        localStorage.setItem('visitorRedirected',true);
+        localStorage.setItem("visitorRedirected", true);
+        return browserHistory.push("/claimSchool");
+      } else if (visitorType === "student") {
+        localStorage.setItem("visitorRedirected", true);
       }
     }
-  }
-
+  };
 
   componentDidMount() {
     let positionCoords = this.getUsersCurrentLocation();
@@ -426,7 +433,6 @@ class Landing extends Component {
       };
     });
   };
-
 
   getUsersCurrentLocation = args => {
     const { popUp } = this.props;

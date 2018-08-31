@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { Meteor } from "meteor/meteor";
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 
 export function withPopUp(WrappedComponent) {
@@ -13,17 +14,30 @@ export function withPopUp(WrappedComponent) {
       if (this.props.onPopUpClose && this.state.applyClose)
         this.props.onPopUpClose();
     };
-    appear = (type, dialogBoxProps = {}, applyClose = true) => {
+    appear = (
+      type,
+      dialogBoxProps = {},
+      applyClose = true,
+      autoClose: false,
+      autoTimeout: 2000
+    ) => {
       this.setState({
         open: true,
         type,
         applyClose,
         dialogBoxProps
       });
+
+      if (autoClose) {
+        this._startTimer(autoTimeout);
+      }
+    };
+
+    _startTimer = autoTimeout => {
+      Meteor.setTimeout(handleClose, autoTimeout);
     };
 
     handleAffirmationButtonClick = () => {
-      
       if (this.state.applyClose) {
         this.handleClose();
       }
