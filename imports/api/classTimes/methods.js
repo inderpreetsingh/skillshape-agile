@@ -42,23 +42,37 @@ Meteor.methods({
       if (classTypeData && classTypeData.experienceLevel) {
         doc.experienceLevel = classTypeData.experienceLevel;
       }
-      return ClassTimes.insert(doc);
+
+      let _id = ClassTimes.insert(doc);
+      if( doc && doc.classTypeId  && doc.locationId){
+        Meteor.call('classType.addLocationFilter',doc.classTypeId,doc.locationId,_id,"newTime")
+      }
+      return _id;
     } else {
       throw new Meteor.Error("Permission denied!!");
     }
   },
   "classTimes.editClassTimes": function({ doc_id, doc }) {
-    const user = Meteor.users.findOne(this.userId);
-    if (
-      checkMyAccess({
-        user,
-        schoolId: doc.schoolId,
-        viewName: "ClassTimes_CUD"
-      })
-    ) {
-      return ClassTimes.update({ _id: doc_id }, { $set: doc });
-    } else {
-      throw new Meteor.Error("Permission denied!!");
+    try{
+
+      console.log("doc  ", doc );
+      const user = Meteor.users.findOne(this.userId);
+      if (
+        checkMyAccess({
+          user,
+          schoolId: doc.schoolId,
+          viewName: "ClassTimes_CUD"
+        })
+      ) {
+        if(  doc && doc.classTypeId  && doc.locationId){
+          Meteor.call('classType.addLocationFilter',doc.classTypeId,doc.locationId,doc_id,"editTime")
+        }
+        return ClassTimes.update({ _id: doc_id }, { $set: doc });
+      } else {
+        throw new Meteor.Error("Permission denied!!");
+      }
+    }catch(error){
+      console.log("error in classTimes.editClassTimes", error);
     }
   },
   "classTimes.removeClassTimes": function({ doc }) {
@@ -71,6 +85,7 @@ Meteor.methods({
       })
     ) {
       ClassInterest.remove({ classTimeId: doc._id });
+      Meteor.call('classType.addLocationFilter',doc.classTypeId,doc.locationId,doc._id,"deleteTime")
       return ClassTimes.remove({ _id: doc._id });
     } else {
       throw new Meteor.Error("Permission denied!!");

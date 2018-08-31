@@ -109,17 +109,17 @@ class ClassTimeForm extends React.Component {
       } else if (data.scheduleType === "OnGoing") {
         state.tabValue = 2;
       }
-
+      
       state.startDate = data.startDate;
       state.startTime = data.startTime;
       state.endDate = data.endDate;
       state.duration = data.duration;
-      state.roomId = data.roomId ;
-      state.locationId = data.locationId ;
+      state.roomId = data.roomId || '';
+      state.locationId = data.locationId || '';
       state.closed=data.closed;
     }
     if(!_.locationData){
-      if(!state.roomId){
+      if(!state.locationId && !state.roomId){
         state.locationId = locationData[0]._id;
         state.roomData = locationData[0].rooms|| [];
         state.roomId = locationData[0].rooms[0].id || '';
@@ -157,16 +157,16 @@ class ClassTimeForm extends React.Component {
   if(key == 'roomId'){
     this.setState({roomId:event.target.value});
   }else{
+    this.setState({locationId:event.target.value})
     const {locationData} = this.props;
     locationData.map((location)=>{
       !_.isEmpty(location.rooms)? location.rooms.map((room)=>{
         if(location._id == event.target.value){
           this.setState({roomData:!_.isEmpty(location.rooms) ? location.rooms :[],
-                         roomId: location && location.rooms && location.rooms[0].id || '',
-                         locationId: location._id
+                         roomId: location && location.rooms && location.rooms[0].id || ''
           });
         }
-      }) : this.setState({roomId:''})
+      }) : this.setState({roomId:'',roomData: []})
     })
   }
   }

@@ -85,16 +85,40 @@ ClassType.attachSchema(
       blackbox: true
     },
     "filters.location": {
-      type: [Number], // [<longitude>, <latitude>]
-      index: "2d", // create the geospatial index
+      type: Array, 
       optional: true,
-      decimal: true
     },
-    "filters.schoolName": {
+    "filters.location.$": {
+      type: Object, 
+      optional: true,
+    },
+    "filters.location.$.loc": {
+      type: Object,
+      optional: true,
+      index: "2dsphere",
+    },
+    "filters.location.$.loc.type": {
       type: String,
       optional: true
     },
-    "filters.locationTitle": {
+    "filters.location.$.loc.coordinates": {
+      type: [Number],
+      optional: true,
+      decimal:true
+    },
+    "filters.location.$.loc.title": {
+      type: String,
+      optional: true
+    },
+    "filters.location.$.loc.locationId": {
+      type: String,
+      optional: true
+    },
+    "filters.location.$.loc.classTimeId": {
+      type: String,
+      optional: true
+    },
+    "filters.schoolName": {
       type: String,
       optional: true
     },
@@ -130,6 +154,18 @@ Meteor.startup(function() {
       "filters.locationTitle": "text",
       "filters.schoolName": "text"
     });
+
+
+    const raw = ClassType.rawCollection();
+    const indexes = Meteor.wrapAsync(raw.indexes, raw)();
+
+    const found = _.find(indexes, index => {
+           return index.key["filters.location"] == "2d";
+    });
+    console.log("found   ", found);
+    if(found) {
+      ClassType._dropIndex({"filters.location": "2d"});
+    }
   }
 });
 

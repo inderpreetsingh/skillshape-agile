@@ -1,5 +1,6 @@
 import SLocation from "./fields";
 import ClassType from "/imports/api/classType/fields";
+import ClassTime from "/imports/api/classTimes/fields";
 
 Meteor.methods({
   "location.getLocationBySchoolId": function({ schoolId }) {
@@ -10,7 +11,7 @@ Meteor.methods({
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })
     ) {
-      // doc.remoteIP = this.connection.clientAddress;
+      
       doc.createdAt = new Date();
       return SLocation.insert(doc);
     } else {
@@ -22,17 +23,18 @@ Meteor.methods({
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })
     ) {
-      ClassType.update(
-        { locationId: doc_id },
-        {
-          $set: {
-            "filters.location": doc.loc,
-            "filters.locationTitle": `${doc.state}, ${doc.city}, ${doc.country}`
-          }
-        },
-        { multi: true }
-      );
-
+      let ClassTypeData = ClassType.find().fetch();
+      ClassTypeData.map((currentClassType)=>{
+        currentClassType.filters && currentClassType.filters['location'] &&
+         currentClassType.filters['location'].map((currentLocation,index)=>{
+         if(currentLocation && currentLocation['loc'] && currentLocation['loc']["locationId"] &&
+         currentLocation['loc']["locationId"] == doc_id){
+              currentLocation['loc']['coordinates'] =doc.loc;
+              currentLocation['loc']['title']=`${doc.state}, ${doc.city}, ${doc.country}`
+              ClassType.update({_id:currentClassType._id},{$set:{filters:currentClassType.filters}})
+         } 
+        })
+      })
       return SLocation.update({ _id: doc_id }, { $set: doc });
     } else {
       throw new Meteor.Error("Permission denied!!");
@@ -43,11 +45,22 @@ Meteor.methods({
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })
     ) {
-      ClassType.update(
-        { locationId: doc._id },
-        { $set: { locationId: null, "filters.location": null } },
-        { multi: true }
-      );
+      let ClassTypeData = ClassType.find().fetch();
+      let pos;
+      ClassTypeData.map((currentClassType)=>{
+        currentClassType.filters && currentClassType.filters['location'] &&
+         currentClassType.filters['location'].map((currentLocation,index)=>{
+         if(currentLocation && currentLocation['loc'] && currentLocation['loc']["locationId"] &&
+         currentLocation['loc']["locationId"] == doc._id){
+          pos =index;
+          currentClassType.filters['location'].splice(pos,1);
+          ClassType.update({_id:currentClassType._id},{$set:{filters:currentClassType.filters}})
+         } 
+        })
+      })
+      
+      ClassTime.update({locationId:doc._id},{$set:{locationId:'',roomId:''}},{multi:true});
+
       return SLocation.remove({ _id: doc._id });
     } else {
       throw new Meteor.Error("Permission denied!!");

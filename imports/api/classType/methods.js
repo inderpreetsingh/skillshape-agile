@@ -13,6 +13,7 @@ import {
 } from "/imports/api/email";
 import { sendEmailToSchool } from "/imports/api/email";
 import { getUserFullName } from "/imports/util/getUserData";
+import { darkBaseTheme } from "material-ui/styles";
 
 // Need to update Class Times so that we can show ageMin,gender,experienceLevel on class details modal.
 function updateHookForClassTimes({ classTimesIds, classTypeData, doc }) {
@@ -283,5 +284,58 @@ Meteor.methods({
       );
       return { message: "Email Sent successfully!!!" };
     }
+  },
+  'classType.addLocationFilter':function(_id,locationId,classTimeId,type){
+    try{
+
+    let filters ,currentLocation={};
+    const location = SLocation.findOne(locationId);
+    let classTypeData = ClassType.findOne(_id);
+    filters = classTypeData.filters;
+    // new object for the the location when new class time is added
+    if(type == 'newTime'){
+      currentLocation = {
+        loc: {
+          type: "Point",
+          coordinates: location.loc,
+          title: `${location.state}, ${location.city}, ${location.country}`,
+          locationId: locationId || '',
+          classTimeId: classTimeId || ''
+        }
+      }
+      if(filters && filters['location']){
+        filters['location'].push(currentLocation);
+      }
+      else if(filters){
+        filters['location']=[currentLocation];
+      }else{
+          filters = {};
+          filters['location'] = [currentLocation];
+        }
+    }
+    else if(type =="editTime"){
+      filters["location"].map((current)=>{
+        if(current['loc']['classTimeId']==classTimeId){
+          current['loc']['coordinates']=location.loc;
+          current['loc']['locationId'] =locationId;
+          current['loc']['title']=`${location.state}, ${location.city}, ${location.country}`;
+        }
+
+      })
+    }
+    else if(type == 'deleteTime'){
+      let pos;
+      filters["location"].map((current,index)=>{
+        if(current['loc']['classTimeId']==classTimeId){
+          pos =index;
+        }
+      })
+      filters['location'].splice(pos,1);
+    }
+    ClassType.update({_id:_id},{$set:{filters:filters}});
+    }catch(error){
+
+    }
   }
 });
+ 
