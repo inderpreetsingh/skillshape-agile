@@ -23,11 +23,18 @@ class App extends Component {
     super(props);
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     ReactGA.initialize("UA-115928788-1", {
       debug: true
     });
+    // setting it false for first visit(One time redirect)..
+    localStorage.setItem('visitorRedirected',false);
   };
+
+  componentWillUnmount = () => {
+    // console.log("visitorRedirected, setting false.......")
+    localStorage.setItem('visitorRedirected', false);
+  }
 
   render() {
     return (
