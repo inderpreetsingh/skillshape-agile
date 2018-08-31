@@ -38,7 +38,7 @@ const Wrapper = styled.div`
   @media screen and (min-width: ${tablet}px) {
     flex: 1;
     height: auto;
-    margin-bottom: ${rhythmDiv * 4}px;
+    margin-bottom: ${rhythmDiv * 2}px;
     border-radius: 5px;
   }
 `;

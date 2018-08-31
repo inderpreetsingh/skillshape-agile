@@ -21,7 +21,7 @@ const styles = theme => ({
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
-    overflow:'hidden'
+    overflow: "hidden"
   },
   content: {
     backgroundColor: theme.palette.background.default
@@ -114,7 +114,13 @@ class PublicLayout extends React.Component {
   render() {
     // console.log("PublicLayout  props -->>",this.props);
     // console.log("PublicLayout  state -->>",this.state);
-    const { currentUser, classes, isUserSubsReady } = this.props;
+    const {
+      currentUser,
+      classes,
+      isUserSubsReady,
+      previousLocationPathName,
+      currentLocationPathName
+    } = this.props;
     let className = {
       mainClass: "wrapper perfectScroll main_wrapper",
       contentClass: "content",
@@ -126,8 +132,6 @@ class PublicLayout extends React.Component {
       className.contentClass = "content no-padding";
       className.id = "UserMainPanel";
     }
-
-  
 
     return (
       <MuiThemeProvider theme={muiTheme}>
@@ -157,8 +161,10 @@ class PublicLayout extends React.Component {
           >
             <main className={classes.content}>
               {React.cloneElement(this.props.children, {
-                currentUser: currentUser,
-                isUserSubsReady: isUserSubsReady
+                currentUser,
+                isUserSubsReady,
+                previousLocationPathName,
+                currentLocationPathName
               })}
             </main>
           </div>

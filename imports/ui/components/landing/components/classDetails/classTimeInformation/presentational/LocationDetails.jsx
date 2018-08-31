@@ -28,7 +28,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 ${rhythmDiv * 2}px;
-  margin-bottom: ${rhythmDiv * 4}px;
+  margin-bottom: ${rhythmDiv * 2}px;
   min-height: 200px;
   height: auto;
 
@@ -77,7 +77,6 @@ const Right = styled.div`
   max-width: 100%;
   width: 100%;
   height: 300px;
-  // margin-bottom: ${rhythmDiv}px;
 
   @media screen and (min-width: ${mobile + 1}px) {
     height: 100%;

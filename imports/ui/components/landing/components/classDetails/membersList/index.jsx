@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 
 import MembersList from "./presentational/MembersList.jsx";
+import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 
 class MembersListContainer extends Component {
@@ -9,9 +10,20 @@ class MembersListContainer extends Component {
     super(props);
     this.state = {
       teachersFilterWith: "",
-      studentsFilterWith: ""
+      studentsFilterWith: "",
+      addInstructorDialogBoxState: false
     };
   }
+
+  handleAddInstructorDialogBoxState = dialogBoxState => () => {
+    console.info("clicked...");
+    this.setState(state => {
+      return {
+        ...state,
+        addInstructorDialogBoxState: dialogBoxState
+      };
+    });
+  };
 
   handleSearchChange = type => e => {
     const value = e.target.value;
@@ -37,13 +49,20 @@ class MembersListContainer extends Component {
 
   render() {
     const { studentsList, instructorsList, currentView } = this.props;
-    console.log(currentView, "From inside membersList");
+    const { addInstructorDialogBoxState } = this.state;
+    // console.log(currentView, "From inside membersList");
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
     //     : "instructorsView";
     return (
       <Fragment>
+        {addInstructorDialogBoxState && (
+          <AddInstructorDialogBox
+            open={addInstructorDialogBoxState}
+            onModalClose={this.handleAddInstructorDialogBoxState(false)}
+          />
+        )}
         <MembersList
           viewType={currentView}
           searchedValue={this.state.teachersFilterWith}
@@ -56,6 +75,7 @@ class MembersListContainer extends Component {
           }
           entityType={"teachers"}
           searchedValue={this.state.teachersFilterWith}
+          onAddIconClick={this.handleAddInstructorDialogBoxState(true)}
         />
         <MembersList
           viewType={currentView}

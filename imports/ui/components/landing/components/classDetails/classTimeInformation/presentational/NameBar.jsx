@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+// import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 
 import {
   tablet,
@@ -22,6 +23,10 @@ const Wrapper = styled.div`
   ${flexHorizontalSpaceBetween}
   padding: ${rhythmDiv * 2}px;
   padding-bottom: ${rhythmDiv}px;
+
+  @media screen and (min-width: ${tablet}px) {
+    padding: 0 ${rhythmDiv * 2}px ${rhythmDiv}px ${rhythmDiv * 2}px;
+  }
 `;
 
 const Left = styled.div`
@@ -55,7 +60,9 @@ const NameBar = props => {
         )}
       </Left>
       <Right>
-        <PrimaryButton
+        <ClassTimeButton
+          icon
+          iconName="add_circle_outline"
           label="Join class"
           onClick={props.onJoinClassButtonClick}
         />
