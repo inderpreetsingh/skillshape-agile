@@ -126,12 +126,12 @@ class ClassTimeForm extends React.Component {
       }
       else {
         locationData.map((location)=>{
-          location.rooms.map((room)=>{
+          location && location.rooms ? location.rooms.map((room)=>{
             if(room.id == state.roomId){
               state.roomData = !_.isEmpty(location.rooms) ? location.rooms :[];
               return;
             }
-          })
+          }):state.roomData = [];
         })
       }
     }

@@ -107,6 +107,7 @@ class ClassTypeForm extends React.Component {
       } else {
         // console.info(res, "==== res ====");
         this.defaultSubjectList = res;
+        this.setState({skillSubjectData:this.defaultSubjectList})
       }
     });
   };
@@ -142,15 +143,15 @@ class ClassTypeForm extends React.Component {
   handleSelectChange = (fieldName, event, index, value) =>
     this.setState({ [fieldName]: value });
 
-  handleSkillCategoryInputChange = value => {
-    Meteor.call("getSkillCategory", { textSearch: value }, (err, res) => {
-      if (res) {
-        this.setState({
-          skillCategoryData: res || []
-        });
-      }
-    });
-  };
+  // handleSkillCategoryInputChange = value => {
+  //   Meteor.call("getSkillCategory", { textSearch: value }, (err, res) => {
+  //     if (res) {
+  //       this.setState({
+  //         skillCategoryData: res || []
+  //       });
+  //     }
+  //   });
+  // };
 
   handleSkillSubjectInputChange = value => {
     // if (!_.isEmpty(this.state.selectedSkillCategory)) {
