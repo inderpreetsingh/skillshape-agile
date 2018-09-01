@@ -65,14 +65,14 @@ Meteor.methods({
         temp.filters["schoolName"] = schoolData.name;
       }
 
-      if (temp.locationId) {
-        const location = SLocation.findOne(doc.locationId);
-        temp.filters["location"] = location.loc;
-        // doc.filters["state"] = location.state;
-        temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${
-          location.country
-        }`;
-      }
+      // if (temp.locationId) {
+      //   const location = SLocation.findOne(doc.locationId);
+      //   temp.filters["location"] = location.loc;
+      //   // doc.filters["state"] = location.state;
+      //   temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${
+      //     location.country
+      //   }`;
+      // }
 
       temp.createdAt = new Date();
 
@@ -89,15 +89,16 @@ Meteor.methods({
       let classTypeData = ClassType.findOne({ _id: doc_id });
       const temp = { ...doc, filters: classTypeData.filters || {} };
 
-      if (temp.locationId) {
-        const location = SLocation.findOne(temp.locationId);
-        // temp.filters =  temp.filters ? temp.filters : {};
-        temp.filters["location"] = location.loc;
-        // temp.filters["state"] = location.state;
-        temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${
-          location.country
-        }`;
-      }
+      // if (temp.locationId) {
+      //   console.log('TCL: temp.locationId', temp.locationId);
+      //   const location = SLocation.findOne(temp.locationId);
+      //   // temp.filters =  temp.filters ? temp.filters : {};
+      //   temp.filters["location"] = location.loc;
+      //   // temp.filters["state"] = location.state;
+      //   temp.filters["locationTitle"] = `${location.state}, ${location.city}, ${
+      //     location.country
+      //   }`;
+      // }
       let classTimesIds = ClassTimes.find({ classTypeId: doc_id }).map(
         data => data._id
       );
