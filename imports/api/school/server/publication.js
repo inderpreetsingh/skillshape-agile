@@ -459,6 +459,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
                 classfilter,
                 collectSkillCategoriesIds,
             })
+           
         }
     }
     
