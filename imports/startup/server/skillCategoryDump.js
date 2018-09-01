@@ -52,7 +52,7 @@ export default (_skillCategoryObj = {
     "Vale Tudo",
     "WuShu"
   ],
-  " Dance": [
+  "Dance": [
     "African",
     "Argentine tango",
     "B-boying",
@@ -306,7 +306,7 @@ export default (_skillCategoryObj = {
     "Band",
     "Wind Instrument",
     "Other Instrument",
-    "Guitar ",
+    "Guitar",
     "Keyboard",
     "Piano",
     "Other / Various Music Activity"

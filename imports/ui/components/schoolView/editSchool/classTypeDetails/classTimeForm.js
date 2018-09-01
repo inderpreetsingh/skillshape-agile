@@ -121,8 +121,8 @@ class ClassTimeForm extends React.Component {
     if(!_.locationData){
       if(!state.locationId && !state.roomId){
         state.locationId = locationData[0]._id;
-        state.roomData = locationData[0].rooms|| [];
-        state.roomId = locationData[0].rooms[0].id || '';
+        state.roomData = locationData[0] && locationData[0].rooms && locationData[0].rooms|| [];
+        state.roomId = locationData[0] && locationData[0].rooms && locationData[0].rooms[0].id || '';
       }
       else {
         locationData.map((location)=>{

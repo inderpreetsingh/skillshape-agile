@@ -82,11 +82,11 @@ Meteor.publish("school.getSchoolClasses", function ({
         // we need to convert the distance to radians
         // the raduis of Earth is approximately 6371 kilometers
         maxDistance /= 63;
-        classfilter["filters.location"] = {
+        classfilter["filters.location.loc"] = {
             $geoWithin: { $center: [coords, maxDistance] }
         };
     } else if (NEPoint && SWPoint) {
-        classfilter["filters.location"] = {
+        classfilter["filters.location.loc"] = {
             $geoWithin: { $box: [NEPoint, SWPoint] }
         };
     }
@@ -219,7 +219,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
             // the raduis of Earth is approximately 6371 kilometers
             // maxDistance /= 63;
             classfilter["$or"].push({
-                ["filters.location"]: {
+                ["filters.location.loc"]: {
                     $geoWithin: { $center: [coords, 30 / 111.12] }
                 }
             });
@@ -233,7 +233,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
         if (user && user.profile && user.profile.coords) {
 
             classfilter["$or"].push({
-                ["filters.location"]: {
+                ["filters.location.loc"]: {
                     $geoWithin: { $center: [user.profile.coords, 30 / 111.12] }
                 }
             });
@@ -245,7 +245,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
                 if (result && result.data && result.data.latitude && result.data.longitude) {
 
                     classfilter["$or"].push({
-                        ["filters.location"]: {
+                        ["filters.location.loc"]: {
                             $geoWithin: { $center: [[result.data.latitude, result.data.longitude], 30 / 111.12] }
                         }
                     });
@@ -257,11 +257,11 @@ Meteor.publish("school.getClassTypesByCategory", function ({
 
     // NEPoint and SWPoint these are NorthEast and SouthWest map Bounds value. These value change when we move the map
     if (NEPoint && SWPoint && is_map_view) {
-        classfilter["filters.location"] = {
+        classfilter["filters.location.loc"] = {
             $geoWithin: { $box: [NEPoint, SWPoint] }
         };
         classfilter["$or"].push({
-            ["filters.location"]: {
+            ["filters.location.loc"]: {
                 $geoWithin: { $box: [NEPoint, SWPoint] }
             }
         });
@@ -592,7 +592,7 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
         // we need to convert the distance to radians
         // the raduis of Earth is approximately 6371 kilometers
         maxDistance /= 63;
-        classTypeFilter["filters.location"] = {
+        classTypeFilter["filters.location.loc"] = {
             $geoWithin: {
                 $center: [coords, maxDistance]
             }

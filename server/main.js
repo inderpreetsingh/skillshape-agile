@@ -31,8 +31,10 @@ Meteor.startup(() => {
     SkillCategory.remove({});
 
     for (var key in _skillCategoryObj) {
+      key = key.trim()
       let objId = SkillCategory.insert({ name: key, _mig_: 1 });
       _skillCategoryObj[key].forEach(f => {
+        f = f.trim();
         SkillSubject.insert({
           name: f,
           skillCategoryId: objId,
@@ -42,10 +44,12 @@ Meteor.startup(() => {
     }
   } else {
     for (var key in _skillCategoryObj) {
+      key = key.trim()
       const skillCategoryData = SkillCategory.findOne({ name: key, _mig_: 1 });
       if (isEmpty(skillCategoryData)) {
         let objId = SkillCategory.insert({ name: key, _mig_: 1 });
         _skillCategoryObj[key].forEach(f => {
+          f = f.trim();
           SkillSubject.insert({
             name: f,
             skillCategoryId: objId,
@@ -54,6 +58,7 @@ Meteor.startup(() => {
         });
       } else {
         _skillCategoryObj[key].forEach(f => {
+          f = f.trim();
           const skillSubjectData = SkillSubject.findOne({ name: f, _mig_: 1 });
           if (isEmpty(skillSubjectData)) {
             SkillSubject.insert({
