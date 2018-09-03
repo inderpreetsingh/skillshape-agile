@@ -87,7 +87,7 @@ Meteor.publish("school.getSchoolClasses", function ({
         };
     } else if (NEPoint && SWPoint) {
         classfilter["filters.location.loc"] = {
-            $geoWithin: { $box: [NEPoint, SWPoint] }
+            $geoWithin: { $box: [[SWPoint[1],SWPoint[0]],[NEPoint[1],NEPoint[0]]] }
         };
     }
 
@@ -198,7 +198,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     locationText,
     applyFilterStatus
 }) {
-
+    
     const classfilter = { isPublish: true, "$or": [] };
     const skillCategoryFilter = {};
 
@@ -259,11 +259,11 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     // NEPoint and SWPoint these are NorthEast and SouthWest map Bounds value. These value change when we move the map
     if (NEPoint && SWPoint && is_map_view) {
         classfilter["filters.location.loc"] = {
-            $geoWithin: { $box: [NEPoint, SWPoint] }
+            $geoWithin: { $box: [[SWPoint[1],SWPoint[0]],[NEPoint[1],NEPoint[0]]] }
         };
         classfilter["$or"].push({
             ["filters.location.loc"]: {
-                $geoWithin: { $box: [NEPoint, SWPoint] }
+                $geoWithin: { $box: [[SWPoint[1],SWPoint[0]],[NEPoint[1],NEPoint[0]]] }
             }
         });
 
