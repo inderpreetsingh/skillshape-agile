@@ -393,7 +393,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
         classTypeCursor = ClassType.find(classfilter, { limit: undefined }).fetch();
 
         classTypeCursor.forEach(classTypeData => {
-            classTypeData['filters']['location'].map((current)=>{
+            classTypeData['filters']&& classTypeData['filters']['location'] && classTypeData['filters']['location'].map((current)=>{
                 current && current['loc'] && current['loc']['locationId'] && locationIds.push(current['loc']['locationId']);
             })
             
@@ -705,7 +705,7 @@ function categorizeClassTypeData({
             // if (classTypeData.locationId) {
             //     locationIds.push(classTypeData.locationId);
             // }
-            classTypeData['filters']['location'].map((current)=>{
+            classTypeData['filters']&& classTypeData['filters']['location'] &&  classTypeData['filters']['location'].map((current)=>{
                 current && current['loc'] && current['loc']['locationId'] && locationIds.push(current['loc']['locationId']);
             })
             classTypeIds.push(classTypeData._id);
