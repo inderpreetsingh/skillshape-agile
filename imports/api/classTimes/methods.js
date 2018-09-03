@@ -55,7 +55,6 @@ Meteor.methods({
   "classTimes.editClassTimes": function({ doc_id, doc }) {
     try{
 
-      console.log("doc  ", doc );
       const user = Meteor.users.findOne(this.userId);
       if (
         checkMyAccess({
@@ -72,7 +71,6 @@ Meteor.methods({
         throw new Meteor.Error("Permission denied!!");
       }
     }catch(error){
-      console.log("error in classTimes.editClassTimes", error);
     }
   },
   "classTimes.removeClassTimes": function({ doc }) {

@@ -25,6 +25,8 @@ import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { isThisSecond } from "date-fns";
+import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -52,6 +54,12 @@ const styles = theme => {
        backgroundColor:'green',
        color: "black",
        fontWeight: 600
+      },
+      dialogActionsRoot: {
+        [`@media screen and (max-width: ${mobile}px)`]: {
+          flexWrap: "wrap",
+          justifyContent: "flex-start"
+        }
       }
   };
 };
@@ -306,19 +314,7 @@ class ClassTypeForm extends React.Component {
                   type="text"
                   fullWidth
                 />
-                {/*<SelectArrayInput
-                  floatingLabelText="Skill Category"
-                  optionValue="_id"
-                  optionText="name"
-                  input={{
-                    value: this.state.selectedSkillCategory,
-                    onChange: this.onSkillCategoryChange
-                  }}
-                  onChange={this.onSkillCategoryChange}
-                  setFilter={this.handleSkillCategoryInputChange}
-                  dataSourceConfig={{ text: "name", value: "_id" }}
-                  choices={skillCategoryData}
-                /> */}
+                
                 <SelectArrayInput
                   floatingLabelText="Skill Subject"
                   optionValue="_id"
@@ -414,53 +410,14 @@ class ClassTypeForm extends React.Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  {/* <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth margin="dense">
-                      <InputLabel htmlFor="location">Location</InputLabel>
-                      <Select
-                        required={true}
-                        input={<Input id="location" />}
-                        value={this.state.location ? this.state.location : !_.isEmpty(locationData) && this.setDefaultLocation(locationData[0]._id) }
-                        onChange={event =>
-                          this.setState({ location: event.target.value })
-                        }
-                        fullWidth
-                      >
-                        {_.isEmpty(locationData) && (
-                          <MenuItem value="" disabled>
-                            No location added in Locations.
-                          </MenuItem>
-                        )}
-                        {locationData.map((data, index) => {
-                          return (
-                            <MenuItem key={index} value={data._id}>{`${
-                              data.address
-                            }, ${data.city}, ${data.country}`}</MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
-                  </Grid> */}
+                 
                 </Grid>
               </form>
             </DialogContent>
           )}
-          <DialogActions>
+          <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
             {data && (
-            //   <Button
-            //     onClick={() => this.setState({ showConfirmationModal: true })}
-            //     color="accent"
-            //     className={classes.delete}
-            //   >
-            //     Delete
-            //   </Button>
-            // )}
-            // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
-            //   Cancel
-            // </Button>
-            // <Button type="submit" form={formId} color="primary" className={classes.save}>
-            //   {data ? "Save" : "Submit"}
-            // </Button>
+          
             <ButtonWrapper>
             <FormGhostButton
               alertColor

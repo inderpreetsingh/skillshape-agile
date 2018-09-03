@@ -38,6 +38,8 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import LocationForm from '/imports/ui/components/schoolView/editSchool/locationDetails/locationForm';
 import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetails/roomForm";
+import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -57,6 +59,12 @@ const styles = theme => {
       backgroundColor:'green',
       color: "black",
       fontWeight: 600
+     },
+     dialogActionsRoot: {
+       [`@media screen and (max-width: ${mobile}px)`]: {
+         flexWrap: "wrap",
+         justifyContent: "flex-start"
+       }
      }
   };
 };
@@ -462,31 +470,9 @@ class ClassTimeForm extends React.Component {
               </form>
             </DialogContent>
           )}
-          <DialogActions>
+          <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
             {data && (
-            //   <Button
-            //     onClick={() => this.setState({ showConfirmationModal: true })}
-            //     color="accent"
-            //     className={classes.delete}
-            //   >
-            //     Delete
-            //   </Button>
-            // )}
-            // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
-            //   Cancel
-            // </Button>
-            // <Button
-            //   type="button"
-            //   form={formId}
-            //   name="save-class-times"
-            //   color="primary"
-            //   className={classes.save}
-            //   onClick={this.saveClassTimes.bind(this, event, {
-            //     addSeperateTime: false
-            //   })}
-            // >
-            //   {data ? "Save" : "Submit"}
-            // </Button>
+           
             <ButtonWrapper>
             <FormGhostButton
               alertColor
