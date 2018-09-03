@@ -7,6 +7,8 @@ Meteor.methods({
     return SLocation.find({ schoolId }).fetch();
   },
   "location.addLocation": function({ doc }) {
+    let temp=doc.loc;;
+    doc.loc=[temp[1],temp[0]];
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })
@@ -19,6 +21,12 @@ Meteor.methods({
     }
   },
   "location.editLocation": function({ doc_id, doc }) {
+    let previousData = SLocation.findOne({_id:doc_id});
+    if(previousData && previousData.loc != doc.loc){
+      let temp=doc.loc;;
+      doc.loc=[temp[1],temp[0]];
+    }
+    
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })

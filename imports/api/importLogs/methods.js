@@ -95,15 +95,15 @@ Meteor.methods({
                                     data.lat = 0
                                     data.lng = 0
                                 }
-                                sLocationDoc.geoLat = data.lat
-                                sLocationDoc.geoLong = data.lng
-                                sLocationDoc.loc = [data.lat, data.lng]
+                                sLocationDoc.geoLat = data.lng
+                                sLocationDoc.geoLong = data.lat
+                                sLocationDoc.loc = [data.lng,data.lat]
                             } catch (err) {
                                 data.lat = 0
                                 data.lng = 0
-                                sLocationDoc.geoLat = data.lat
-                                sLocationDoc.geoLong = data.lng
-                                sLocationDoc.loc = [data.lat, data.lng]
+                                sLocationDoc.geoLat = data.lng
+                                sLocationDoc.geoLong = data.lat
+                                sLocationDoc.loc = [data.lng,data.lat]
                             }
                             if (slocation) {
                                 locationId = slocation._id;
@@ -121,6 +121,7 @@ Meteor.methods({
                                 filters: {
                                     location: [{
                                         loc:{
+                                                type:'Point',
                                                 coordinates : sLocationDoc.loc,
                                                 locationId : locationId,
                                                 title :`${sLocationDoc.state}, ${sLocationDoc.city}, ${sLocationDoc.country}`
@@ -184,8 +185,14 @@ Meteor.methods({
                             classTypeObject.skillCategoryId = skillCategoryIds;
                             classTypeObject.skillSubject = skillSubjectIds;
                             if (classTypeObject.name) {
-                                ClassType.update({ schoolId: schoolId, name: csvdata[i].classTypeName, desc: csvdata[i].classTypeDesc }, { $set: classTypeObject }, { upsert: true });
+                            try{
+
+                                let res=   ClassType.update({ schoolId: schoolId, name: csvdata[i].classTypeName, desc: csvdata[i].classTypeDesc }, { $set: classTypeObject }, { upsert: true });
+                            }catch(error){
+
                             }
+                             
+                        }
                             let classTime = ClassTimes.findOne({ name: csvdata[i].className, schoolId: schoolId });
                             const classTimeObject = {
                                 name: csvdata[i].className,
@@ -321,11 +328,11 @@ Meteor.methods({
                 }
                 ImportLogs.update({ _id: csvLogId }, { $set: { status: "COMPLETED" } })
             } else {
+                
                 throw new Meteor.Error("Permission Denied");
             }
         }catch(error){
         throw new Meteor.Error(error);
-        console.log('TCL: }catch -> error', error);
         }
        
     },

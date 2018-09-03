@@ -83,7 +83,7 @@ Meteor.publish("school.getSchoolClasses", function ({
         // the raduis of Earth is approximately 6371 kilometers
         maxDistance /= 63;
         classfilter["filters.location.loc"] = {
-            $geoWithin: { $center: [coords, maxDistance] }
+            $geoWithin: { $center: [[coords[1],coords[0]], maxDistance] }
         };
     } else if (NEPoint && SWPoint) {
         classfilter["filters.location.loc"] = {
@@ -221,7 +221,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
             // maxDistance /= 63;
             classfilter["$or"].push({
                 ["filters.location.loc"]: {
-                    $geoWithin: { $center: [coords, 30 / 111.12] }
+                    $geoWithin: { $center: [[coords[1],coords[0]], 30 / 111.12] }
                 }
             });
 
@@ -235,7 +235,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
 
             classfilter["$or"].push({
                 ["filters.location.loc"]: {
-                    $geoWithin: { $center: [user.profile.coords, 30 / 111.12] }
+                    $geoWithin: { $center: [[user.profile.coords[1],user.profile.coords[0]], 30 / 111.12] }
                 }
             });
         } else {
@@ -247,7 +247,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
 
                     classfilter["$or"].push({
                         ["filters.location.loc"]: {
-                            $geoWithin: { $center: [[result.data.latitude, result.data.longitude], 30 / 111.12] }
+                            $geoWithin: { $center: [[result.data.longitude,result.data.latitude], 30 / 111.12] }
                         }
                     });
                 }
@@ -414,6 +414,9 @@ Meteor.publish("school.getClassTypesByCategory", function ({
             classfilter,
             collectSkillCategoriesIds,
         })
+        classTypeIds =skillCategoryCursor['classTypeIds'];
+        schoolIds =skillCategoryCursor['schoolIds'];
+        locationIds=skillCategoryCursor['locationIds'];
     }
 
     // const classTypesCursor = ClassType.find({ _id: { $in: classTypeIds } });
@@ -459,6 +462,9 @@ Meteor.publish("school.getClassTypesByCategory", function ({
                 classfilter,
                 collectSkillCategoriesIds,
             })
+            classTypeIds =skillCategoryCursor['classTypeIds'];
+            schoolIds =skillCategoryCursor['schoolIds'];
+            locationIds=skillCategoryCursor['locationIds'];
            
         }
     }
@@ -599,14 +605,14 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
         maxDistance /= 63;
         classTypeFilter["filters.location.loc"] = {
             $geoWithin: {
-                $center: [coords, maxDistance]
+                $center: [[coords[1],coords[0]], maxDistance]
             }
         };
 
         let slocations = SLocation.find({
             loc: {
                 $geoWithin: {
-                    $center: [coords, maxDistance]
+                    $center: [[coords[1],coords[0]], maxDistance]
                 }
             }
         }).fetch();
@@ -682,7 +688,8 @@ function categorizeClassTypeData({
     let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
     skillCategoryClassLimit ? skillCategoryClassLimit : {};
     let newClassFilters = { ...classfilter }
-
+    //Test query
+    //db.ClassType.find({ "filters.location.loc" : { "$geoWithin" : { "$center" : [ [35.6894875,139.69170639999993] , 50 ] } } })
     skillCategoryCursor.forEach(skillCategory => {
         newClassFilters["skillCategoryId"] = { $in: [skillCategory._id] };
         // Initially(classType limit not set) fetch only 4(default) classType for a particular skill category.
@@ -705,6 +712,7 @@ function categorizeClassTypeData({
             schoolIds.push(classTypeData.schoolId);
         });
     });
+    let filter ={locationIds,schoolIds,classTypeIds}
 
-    return skillCategoryCursor
+    return filter;
 }
