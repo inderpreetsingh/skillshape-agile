@@ -198,7 +198,6 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     locationText,
     applyFilterStatus
 }) {
-    
     const classfilter = { isPublish: true, "$or": [] };
     const skillCategoryFilter = {};
 
@@ -215,13 +214,13 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     if (coords && !is_map_view) {
         if (isAllZero) {
             // place variable will have all the information you are looking for.
-            // var maxDistance = 50;
+             var maxDistance = 50;
             // we need to convert the distance to radians
             // the raduis of Earth is approximately 6371 kilometers
-            // maxDistance /= 63;
+            maxDistance /= 63;
             classfilter["$or"].push({
                 ["filters.location.loc"]: {
-                    $geoWithin: { $center: [[coords[1],coords[0]], 30 / 111.12] }
+                    $geoWithin: { $center: [[coords[1],coords[0]], maxDistance] }
                 }
             });
 
@@ -229,7 +228,8 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     }
 
     // If no location is available and user has an address in their profile: Show classes in categories based on address.
-    if ((!coords || !isAllZero) && !locationText) {
+    if (!coords && !locationText && !skillCategoryIds && !age && ! gender && ! experienceLevel&& ! skillCategoryClassLimit&& !schoolName && ! skillTypeText&& !skillSubjectIds) 
+    {
         let user = this.userId && Meteor.users.findOne(this.userId);
         if (user && user.profile && user.profile.coords) {
 
@@ -323,6 +323,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     }
 
     if (age) {
+        age = String(age);
         classfilter["ageMin"] = { $lte: age };
         classfilter["ageMax"] = { $gte: age };
     }
@@ -465,7 +466,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
             classTypeIds =skillCategoryCursor['classTypeIds'];
             schoolIds =skillCategoryCursor['schoolIds'];
             locationIds=skillCategoryCursor['locationIds'];
-           
+            
         }
     }
     
@@ -533,6 +534,7 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
     }
 
     if (age) {
+        age = String(age);
         classTypeFilter["ageMin"] = { $lte: age };
         classTypeFilter["ageMax"] = { $gte: age };
     }
@@ -698,6 +700,8 @@ function categorizeClassTypeData({
             limit: is_map_view ? undefined : limit
         }).fetch();
         
+        // db.ClassType.find({ "isPublish": true, "$or": [{ "filters.location.loc": { "$geoWithin": { "$center": [[-117.16108380000003, 32.715738], 0.26997840172786175] } } }, {"ageMin": { "$lte": "10" }},{"ageMax": { "$gte": "10" }},{"skillCategoryId": { "$in": ["zmB8mKh6gvLm6pJTv"] }}] }).pretty()
+
 
         // findout location and school for a class type.
         classTypeCursor.forEach(classTypeData => {

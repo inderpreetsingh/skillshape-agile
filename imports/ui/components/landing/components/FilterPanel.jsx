@@ -523,9 +523,9 @@ class FilterPanel extends Component {
               onChange={this.props.filterGender}
             >
               <MenuItem value=""> Gender</MenuItem>
-              <MenuItem value={"Male"}> Male </MenuItem>
-              <MenuItem value={"Female"}> Female </MenuItem>
-              <MenuItem value={"Any"}> Any </MenuItem>
+              <MenuItem value={"Male Only"}> Male </MenuItem>
+              <MenuItem value={"Female Only"}> Female </MenuItem>
+              <MenuItem value={"All"}> All </MenuItem>
             </IconSelect>
           </MaterialInputWrapper>
         </Grid>

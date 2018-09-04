@@ -48,8 +48,8 @@ class IconInput extends React.Component {
         autocomplete.addListener("place_changed", function() {
           const coords = [];
           const place = this.getPlace();
-          coords[0] = place.geometry["location"].lat();
-          coords[1] = place.geometry["location"].lng();
+          coords[0] = place.geometry["location"] && place.geometry["location"].lat();
+          coords[1] = place.geometry["location"] && place.geometry["location"].lng();
           that.setState({ value: place.formatted_address });
           props.onLocationChange({
             name: place.name,
