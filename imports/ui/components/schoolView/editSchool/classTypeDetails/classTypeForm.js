@@ -1,6 +1,5 @@
 import React from "react";
 import { ContainerLoader } from "/imports/ui/loading/container";
-import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
 import { withStyles } from "material-ui/styles";
 import { findIndex } from "lodash";
 import Button from "material-ui/Button";
@@ -8,6 +7,8 @@ import config from "/imports/config";
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
 import Select from "material-ui/Select";
+import SkillSubject from "react-select";
+
 import Grid from "material-ui/Grid";
 import Dialog, {
   DialogTitle,
@@ -26,7 +27,7 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { isThisSecond } from "date-fns";
 import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
-
+const customStyle={marginTop:"10px"}
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -83,6 +84,7 @@ class ClassTypeForm extends React.Component {
       selectedSkillSubject: null,
       selectedLocation: null,
       searchSkillCategoryText: "",
+      selectedOption: []
       
     };
     if (data && _.size(data) > 0) {
@@ -109,13 +111,23 @@ class ClassTypeForm extends React.Component {
   };
 
   componentDidMount = () => {
-    Meteor.call("getDefaultSubjectsList", (err, res) => {
+    Meteor.call("getAllSkillSubjects", (err, res) => {
       if (err) {
+      console.log('TCL: ClassTypeForm -> componentDidMount -> err', err);
         
       } else {
         // console.info(res, "==== res ====");
-        this.defaultSubjectList = res;
-        this.setState({skillSubjectData:this.defaultSubjectList})
+        let state ={skillSubjectData:[],selectedOption:[]}
+        console.log('TCL: ClassTypeForm -> componentDidMount -> res', res);
+        res.map((current, index) => {
+          state.skillSubjectData.push({ value: current._id, label: current.name })
+          this.state.skillSubject.map((skillId)=>{
+            if(skillId==current._id){
+              state.selectedOption.push({value:skillId,label:current.name})
+            }
+          })
+        })
+        this.setState({skillSubjectData:state.skillSubjectData,selectedOption:state.selectedOption})
       }
     });
   };
@@ -126,7 +138,7 @@ class ClassTypeForm extends React.Component {
         return ele;
       }
     });
-    // debugger;
+    
     values = _.without(values, undefined);
     if (!_.isEmpty(values)) {
       this.setState({ selectedSkillSubject: values });
@@ -151,53 +163,14 @@ class ClassTypeForm extends React.Component {
   handleSelectChange = (fieldName, event, index, value) =>
     this.setState({ [fieldName]: value });
 
-  // handleSkillCategoryInputChange = value => {
-  //   Meteor.call("getSkillCategory", { textSearch: value }, (err, res) => {
-  //     if (res) {
-  //       this.setState({
-  //         skillCategoryData: res || []
-  //       });
-  //     }
-  //   });
-  // };
+  
 
-  handleSkillSubjectInputChange = value => {
-    // if (!_.isEmpty(this.state.selectedSkillCategory)) {
-    //   let skillCategoryIds = this.state.selectedSkillCategory.map(
-    //     data => data._id
-    //   );
-    //   Meteor.call(
-    //     "getSkillSubjectBySkillCategory",
-    //     { skillCategoryIds: skillCategoryIds, textSearch: value },
-    //     (err, res) => {
-    //       if (res) {
-    //         this.setState({
-    //           skillSubjectData: res || []
-    //         });
-    //       }
-    //     }
-    //   );
-    // } else {
-    //   // toastr.error("Please select skill category first", "Error");
-    // }
-    //
-    Meteor.call(
-      "getSkillSubjectBySkillCategory",
-      { skillCategoryIds: {}, textSearch: value },
-      (err, res) => {
-        if (res.length) {
-          this.setState({
-            skillSubjectData: res,
-            defaultSubjectData: true
-          });
-        } else {
-          this.setState({
-            skillSubjectData: this.defaultSubjectList,
-            defaultSubjectData: true
-          });
-        }
-      }
-    );
+  handleSkillSubjectInputChange = selectedOption => {
+    this.setState(state => {
+			return {
+				selectedOption: selectedOption
+			};
+		});
   };
 
   onSubmit = event => {
@@ -212,8 +185,8 @@ class ClassTypeForm extends React.Component {
       //   this.state.selectedSkillCategory &&
       //   this.state.selectedSkillCategory.map(data => data._id),
       skillSubject:
-        this.state.selectedSkillSubject &&
-        this.state.selectedSkillSubject.map(data => data._id),
+        this.state.selectedOption &&
+        this.state.selectedOption.map(data => data.value),
       gender: this.state.gender,
       experienceLevel: this.state.experienceLevel,
       ageMin: this.ageMin.value && parseInt(this.ageMin.value),
@@ -265,7 +238,7 @@ class ClassTypeForm extends React.Component {
   }
   render() {
     const { fullScreen, data, classes, locationData  } = this.props;
-    const { skillCategoryData, skillSubjectData } = this.state;
+    const { skillCategoryData, skillSubjectData ,selectedOption} = this.state;
     return (
       <div>
         <Dialog
@@ -315,7 +288,7 @@ class ClassTypeForm extends React.Component {
                   fullWidth
                 />
                 
-                <SelectArrayInput
+                {/* <SelectArrayInput
                   floatingLabelText="Skill Subject"
                   optionValue="_id"
                   optionText="name"
@@ -328,7 +301,16 @@ class ClassTypeForm extends React.Component {
                   setFilter={this.handleSkillSubjectInputChange}
                   dataSourceConfig={{ text: "name", value: "_id" }}
                   choices={skillSubjectData}
-                />
+                /> */}
+                <SkillSubject
+										name="filters"
+										placeholder="SKill Subject"
+										value={selectedOption}
+										options={skillSubjectData}
+                    onChange={this.handleSkillSubjectInputChange}
+                    style={customStyle}
+										multi
+									/>
                 <Grid container className={classes.classtypeInputContainer}>
                   <Grid item xs={8} sm={6}>
                     <FormControl fullWidth margin="dense">
