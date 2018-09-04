@@ -325,7 +325,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     if (age) {
     
         classfilter["ageMin"] = { $lte: age };
-        classfilter["ageMax"] = { $eq: age };
+        classfilter["ageMax"]  = { $gte: age };
     }
 
     if (skillSubjectIds && skillSubjectIds.length > 0) {
@@ -536,7 +536,7 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
     if (age) {
        
         classTypeFilter["ageMin"] = { $lte: age };
-        classTypeFilter["ageMax"] = { $eq: age };
+        classTypeFilter["ageMax"] = { $gte: age };
     }
 
     if (!_.isEmpty(skillCategoryIds)) {
