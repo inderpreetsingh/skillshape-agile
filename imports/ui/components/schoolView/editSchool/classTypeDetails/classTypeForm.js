@@ -8,7 +8,6 @@ import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
 import Select from "material-ui/Select";
 import SkillSubject from "react-select";
-
 import Grid from "material-ui/Grid";
 import Dialog, {
   DialogTitle,
@@ -27,7 +26,10 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { isThisSecond } from "date-fns";
 import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
-const customStyle={marginTop:"10px"}
+const customStyle={
+  marginTop:"10px",
+  marginBottom:'10px',
+}
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -113,12 +115,10 @@ class ClassTypeForm extends React.Component {
   componentDidMount = () => {
     Meteor.call("getAllSkillSubjects", (err, res) => {
       if (err) {
-      console.log('TCL: ClassTypeForm -> componentDidMount -> err', err);
         
       } else {
         // console.info(res, "==== res ====");
         let state ={skillSubjectData:[],selectedOption:[]}
-        console.log('TCL: ClassTypeForm -> componentDidMount -> res', res);
         res.map((current, index) => {
           state.skillSubjectData.push({ value: current._id, label: current.name })
           this.state.skillSubject.map((skillId)=>{
@@ -287,30 +287,17 @@ class ClassTypeForm extends React.Component {
                   type="text"
                   fullWidth
                 />
-                
-                {/* <SelectArrayInput
-                  floatingLabelText="Skill Subject"
-                  optionValue="_id"
-                  optionText="name"
-                  input={{
-                    noFilter: this.state.defaultSubjectData,
-                    value: this.state.selectedSkillSubject,
-                    onChange: this.onSkillSubjectChange
-                  }}
-                  onChange={this.onSkillSubjectChange}
-                  setFilter={this.handleSkillSubjectInputChange}
-                  dataSourceConfig={{ text: "name", value: "_id" }}
-                  choices={skillSubjectData}
-                /> */}
                 <SkillSubject
-										name="filters"
+                    name="filters"
+                    style={customStyle}
 										placeholder="SKill Subject"
 										value={selectedOption}
-										options={skillSubjectData}
+                    options={skillSubjectData}
                     onChange={this.handleSkillSubjectInputChange}
-                    style={customStyle}
-										multi
+                    closeMenuOnSelect={false}
+                    multi
 									/>
+                
                 <Grid container className={classes.classtypeInputContainer}>
                   <Grid item xs={8} sm={6}>
                     <FormControl fullWidth margin="dense">
