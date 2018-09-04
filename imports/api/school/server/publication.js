@@ -688,11 +688,9 @@ function categorizeClassTypeData({
     classfilter,
     collectSkillCategoriesIds
 }) {
-    console.log('TCL: classfilter', classfilter);
     let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
     skillCategoryClassLimit ? skillCategoryClassLimit : {};
     let newClassFilters = { ...classfilter }
-    console.log('TCL: newClassFilters', newClassFilters);
     //Test query
     //db.ClassType.find({ "filters.location.loc" : { "$geoWithin" : { "$center" : [ [35.6894875,139.69170639999993] , 50 ] } } })
     skillCategoryCursor.forEach(skillCategory => {

@@ -86,7 +86,8 @@ class ClassTypeForm extends React.Component {
       selectedSkillSubject: null,
       selectedLocation: null,
       searchSkillCategoryText: "",
-      selectedOption: []
+      selectedOption: [],
+      skillSubject:[]
       
     };
     if (data && _.size(data) > 0) {
