@@ -44,11 +44,11 @@ ClassType.attachSchema(
       optional: true
     },
     ageMin: {
-      type: String,
+      type: Number,
       optional: true
     },
     ageMax: {
-      type: String,
+      type: Number,
       optional: true
     },
     experienceLevel: {

@@ -323,9 +323,9 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     }
 
     if (age) {
-        age = String(age);
+    
         classfilter["ageMin"] = { $lte: age };
-        classfilter["ageMax"] = { $gte: age };
+        classfilter["ageMax"] = { $eq: age };
     }
 
     if (skillSubjectIds && skillSubjectIds.length > 0) {
@@ -534,9 +534,9 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
     }
 
     if (age) {
-        age = String(age);
+       
         classTypeFilter["ageMin"] = { $lte: age };
-        classTypeFilter["ageMax"] = { $gte: age };
+        classTypeFilter["ageMax"] = { $eq: age };
     }
 
     if (!_.isEmpty(skillCategoryIds)) {
@@ -677,6 +677,7 @@ function removeKeyValue(object) {
     return temp;
 }
 
+
 function categorizeClassTypeData({
     classTypeIds = [],
     schoolIds = [],
@@ -687,9 +688,11 @@ function categorizeClassTypeData({
     classfilter,
     collectSkillCategoriesIds
 }) {
+    console.log('TCL: classfilter', classfilter);
     let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
     skillCategoryClassLimit ? skillCategoryClassLimit : {};
     let newClassFilters = { ...classfilter }
+    console.log('TCL: newClassFilters', newClassFilters);
     //Test query
     //db.ClassType.find({ "filters.location.loc" : { "$geoWithin" : { "$center" : [ [35.6894875,139.69170639999993] , 50 ] } } })
     skillCategoryCursor.forEach(skillCategory => {
