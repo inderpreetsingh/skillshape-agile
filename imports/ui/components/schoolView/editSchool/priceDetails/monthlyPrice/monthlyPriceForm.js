@@ -186,8 +186,6 @@ class MonthlyPriceForm extends React.Component {
       pymtType: oldPayment,
       [disableKey]:!isInputChecked
     });
-    console.log("pymtType",this.state.pymtType)
-   
   };
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
@@ -273,6 +271,7 @@ class MonthlyPriceForm extends React.Component {
                   label="Maximum classes"
                   type="number"
                   fullWidth
+                  inputProps={{ min: "0"}}
                 />
    
                 
@@ -327,7 +326,7 @@ class MonthlyPriceForm extends React.Component {
                     padding: 10,
                     backgroundColor: "dimgrey"
                   }}
-                >
+                >{console.log("this.state.autoWithDraw,this.state.payAsYouGo",this.state.autoWithDraw,this.state.payAsYouGo)}
                   {this.state.tabValue === 0 && (
                     <Grid container>
                       <Grid item xs={12} sm={6}>

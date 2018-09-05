@@ -1,6 +1,5 @@
 import React from "react";
 import { ContainerLoader } from "/imports/ui/loading/container";
-import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
 import { withStyles } from "material-ui/styles";
 import { findIndex } from "lodash";
 import Button from "material-ui/Button";
@@ -8,6 +7,7 @@ import config from "/imports/config";
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
 import Select from "material-ui/Select";
+import SkillSubject from "react-select";
 import Grid from "material-ui/Grid";
 import Dialog, {
   DialogTitle,
@@ -24,7 +24,12 @@ const formId = "classTypeForm";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
+import { isThisSecond } from "date-fns";
+import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+const customStyle={
+  marginTop:"10px",
+  marginBottom:'10px',
+}
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -52,6 +57,12 @@ const styles = theme => {
        backgroundColor:'green',
        color: "black",
        fontWeight: 600
+      },
+      dialogActionsRoot: {
+        [`@media screen and (max-width: ${mobile}px)`]: {
+          flexWrap: "wrap",
+          justifyContent: "flex-start"
+        }
       }
   };
 };
@@ -75,6 +86,8 @@ class ClassTypeForm extends React.Component {
       selectedSkillSubject: null,
       selectedLocation: null,
       searchSkillCategoryText: "",
+      selectedOption: [],
+      skillSubject:[]
       
     };
     if (data && _.size(data) > 0) {
@@ -101,12 +114,21 @@ class ClassTypeForm extends React.Component {
   };
 
   componentDidMount = () => {
-    Meteor.call("getDefaultSubjectsList", (err, res) => {
+    Meteor.call("getAllSkillSubjects", (err, res) => {
       if (err) {
-        console.error(err.reason, "---");
+        
       } else {
         // console.info(res, "==== res ====");
-        this.defaultSubjectList = res;
+        let state ={skillSubjectData:[],selectedOption:[]}
+        res.map((current, index) => {
+          state.skillSubjectData.push({ value: current._id, label: current.name })
+          this.state.skillSubject.map((skillId)=>{
+            if(skillId==current._id){
+              state.selectedOption.push({value:skillId,label:current.name})
+            }
+          })
+        })
+        this.setState({skillSubjectData:state.skillSubjectData,selectedOption:state.selectedOption})
       }
     });
   };
@@ -117,7 +139,7 @@ class ClassTypeForm extends React.Component {
         return ele;
       }
     });
-    // debugger;
+    
     values = _.without(values, undefined);
     if (!_.isEmpty(values)) {
       this.setState({ selectedSkillSubject: values });
@@ -142,53 +164,14 @@ class ClassTypeForm extends React.Component {
   handleSelectChange = (fieldName, event, index, value) =>
     this.setState({ [fieldName]: value });
 
-  handleSkillCategoryInputChange = value => {
-    Meteor.call("getSkillCategory", { textSearch: value }, (err, res) => {
-      if (res) {
-        this.setState({
-          skillCategoryData: res || []
-        });
-      }
-    });
-  };
+  
 
-  handleSkillSubjectInputChange = value => {
-    // if (!_.isEmpty(this.state.selectedSkillCategory)) {
-    //   let skillCategoryIds = this.state.selectedSkillCategory.map(
-    //     data => data._id
-    //   );
-    //   Meteor.call(
-    //     "getSkillSubjectBySkillCategory",
-    //     { skillCategoryIds: skillCategoryIds, textSearch: value },
-    //     (err, res) => {
-    //       if (res) {
-    //         this.setState({
-    //           skillSubjectData: res || []
-    //         });
-    //       }
-    //     }
-    //   );
-    // } else {
-    //   // toastr.error("Please select skill category first", "Error");
-    // }
-    //
-    Meteor.call(
-      "getSkillSubjectBySkillCategory",
-      { skillCategoryIds: {}, textSearch: value },
-      (err, res) => {
-        if (res.length) {
-          this.setState({
-            skillSubjectData: res,
-            defaultSubjectData: true
-          });
-        } else {
-          this.setState({
-            skillSubjectData: this.defaultSubjectList,
-            defaultSubjectData: true
-          });
-        }
-      }
-    );
+  handleSkillSubjectInputChange = selectedOption => {
+    this.setState(state => {
+			return {
+				selectedOption: selectedOption
+			};
+		});
   };
 
   onSubmit = event => {
@@ -203,8 +186,8 @@ class ClassTypeForm extends React.Component {
       //   this.state.selectedSkillCategory &&
       //   this.state.selectedSkillCategory.map(data => data._id),
       skillSubject:
-        this.state.selectedSkillSubject &&
-        this.state.selectedSkillSubject.map(data => data._id),
+        this.state.selectedOption &&
+        this.state.selectedOption.map(data => data.value),
       gender: this.state.gender,
       experienceLevel: this.state.experienceLevel,
       ageMin: this.ageMin.value && parseInt(this.ageMin.value),
@@ -256,7 +239,7 @@ class ClassTypeForm extends React.Component {
   }
   render() {
     const { fullScreen, data, classes, locationData  } = this.props;
-    const { skillCategoryData, skillSubjectData } = this.state;
+    const { skillCategoryData, skillSubjectData ,selectedOption} = this.state;
     return (
       <div>
         <Dialog
@@ -282,6 +265,7 @@ class ClassTypeForm extends React.Component {
               onClose={() => this.setState({ showConfirmationModal: false })}
             />
           )}
+         
           {this.state.error ? (
             <div style={{ color: "red" }}>{this.state.error}</div>
           ) : (
@@ -304,33 +288,17 @@ class ClassTypeForm extends React.Component {
                   type="text"
                   fullWidth
                 />
-                {/*<SelectArrayInput
-                  floatingLabelText="Skill Category"
-                  optionValue="_id"
-                  optionText="name"
-                  input={{
-                    value: this.state.selectedSkillCategory,
-                    onChange: this.onSkillCategoryChange
-                  }}
-                  onChange={this.onSkillCategoryChange}
-                  setFilter={this.handleSkillCategoryInputChange}
-                  dataSourceConfig={{ text: "name", value: "_id" }}
-                  choices={skillCategoryData}
-                /> */}
-                <SelectArrayInput
-                  floatingLabelText="Skill Subject"
-                  optionValue="_id"
-                  optionText="name"
-                  input={{
-                    noFilter: this.state.defaultSubjectData,
-                    value: this.state.selectedSkillSubject,
-                    onChange: this.onSkillSubjectChange
-                  }}
-                  onChange={this.onSkillSubjectChange}
-                  setFilter={this.handleSkillSubjectInputChange}
-                  dataSourceConfig={{ text: "name", value: "_id" }}
-                  choices={skillSubjectData}
-                />
+                <SkillSubject
+                    name="filters"
+                    style={customStyle}
+										placeholder="SKill Subject"
+										value={selectedOption}
+                    options={skillSubjectData}
+                    onChange={this.handleSkillSubjectInputChange}
+                    closeMenuOnSelect={false}
+                    multi
+									/>
+                
                 <Grid container className={classes.classtypeInputContainer}>
                   <Grid item xs={8} sm={6}>
                     <FormControl fullWidth margin="dense">
@@ -368,6 +336,7 @@ class ClassTypeForm extends React.Component {
                           padding: 2,
                           backgroundColor: "#fff"
                         }}
+                        inputProps={{ min: "0"}}
                       />
                       <TextField
                         defaultValue={data && data.ageMax}
@@ -381,6 +350,7 @@ class ClassTypeForm extends React.Component {
                           padding: 2,
                           backgroundColor: "#fff"
                         }}
+                        inputProps={{ min: "0"}}
                       />
                     </div>
                   </Grid>
@@ -410,53 +380,14 @@ class ClassTypeForm extends React.Component {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth margin="dense">
-                      <InputLabel htmlFor="location">Location</InputLabel>
-                      <Select
-                        required={true}
-                        input={<Input id="location" />}
-                        value={this.state.location ? this.state.location : !_.isEmpty(locationData) && this.setDefaultLocation(locationData[0]._id) }
-                        onChange={event =>
-                          this.setState({ location: event.target.value })
-                        }
-                        fullWidth
-                      >
-                        {_.isEmpty(locationData) && (
-                          <MenuItem value="" disabled>
-                            No location added in Locations.
-                          </MenuItem>
-                        )}
-                        {locationData.map((data, index) => {
-                          return (
-                            <MenuItem key={index} value={data._id}>{`${
-                              data.address
-                            }, ${data.city}, ${data.country}`}</MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
-                  </Grid>
+                 
                 </Grid>
               </form>
             </DialogContent>
           )}
-          <DialogActions>
+          <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
             {data && (
-            //   <Button
-            //     onClick={() => this.setState({ showConfirmationModal: true })}
-            //     color="accent"
-            //     className={classes.delete}
-            //   >
-            //     Delete
-            //   </Button>
-            // )}
-            // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
-            //   Cancel
-            // </Button>
-            // <Button type="submit" form={formId} color="primary" className={classes.save}>
-            //   {data ? "Save" : "Submit"}
-            // </Button>
+          
             <ButtonWrapper>
             <FormGhostButton
               alertColor
@@ -474,6 +405,7 @@ class ClassTypeForm extends React.Component {
             className={classes.cancel}
           />
         </ButtonWrapper>
+        
         <ButtonWrapper>
           <FormGhostButton
             type="submit"

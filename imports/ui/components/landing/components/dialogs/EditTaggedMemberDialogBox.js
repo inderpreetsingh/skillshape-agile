@@ -19,7 +19,7 @@ import Typography from "material-ui/Typography";
 import { withStyles } from "material-ui/styles";
 import { MuiThemeProvider } from "material-ui/styles";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-
+import Select from "react-select";
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
 
@@ -103,13 +103,14 @@ class EditTaggedMemberDialogBox extends Component {
       error: "",
       noMember:false,
       checkedAll:false,
-      taggedMemberData:this.props&&this.props.currentMediaData.taggedMemberData?this.props.currentMediaData.taggedMemberData:[]
-     
+      taggedMemberData:this.props&&this.props.currentMediaData.taggedMemberData?this.props.currentMediaData.taggedMemberData:[],
+      selectedOption: []
     };
   }
 
   componentWillMount() {
     let schoolId = get(this.props, "currentMediaData.schoolId");
+    let taggedMemberIds = this.state.taggedMemberIds;
     if (schoolId) {
       this.setState({ isBusy: true });
       Meteor.call(
@@ -117,19 +118,28 @@ class EditTaggedMemberDialogBox extends Component {
         { schoolId },
         (err, res) => {
           let state = { isBusy: false };
-
+          state.schoolMembers = [];
+          state.selectedOption = [];
           if (err) {
             state.error = err.reason || err.message;
           }
-
-          if (res) {
-            state.schoolMembers = res || [];
+          if (!_.isEmpty(res)) {
+            res.map((current, index) => {
+              state.schoolMembers.push({ value: current._id, label: `${current && current.firstName ? current.firstName : ""} ${current && current.lastName ? current.lastName : ""}` })
+              taggedMemberIds.map((current1,index1)=>{
+                if(current1 == current._id){
+                  state.selectedOption.push(state.schoolMembers[index]);
+                }
+              })
+            })
           }
 
           this.setState(state);
         }
       );
     }
+    this.setState({ isBusy: false });
+
   }
 
   handleMediaSettingChange = (event, type) => {
@@ -138,13 +148,18 @@ class EditTaggedMemberDialogBox extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    if(!isEmpty(this.state.taggedMemberIds))
+    if(!isEmpty(this.state.selectedOption))
     {
+    let  mediaData= {};
+      mediaData.taggedMemberIds = [];
+		  this.state.selectedOption.map((current, index) => {
+			mediaData.taggedMemberIds.push(current.value);
+		})
       const mediaId = get(this.props, "currentMediaData._id");
       const payload = {
         name: this.state.mediaTitle,
         desc: this.state.mediaNotes,
-        taggedMemberIds: this.state.taggedMemberIds,
+        taggedMemberIds: mediaData.taggedMemberIds,
         users_permission: {
           [Meteor.userId()]: { accessType: this.state.mediaDefaultValue }
         }
@@ -181,7 +196,7 @@ class EditTaggedMemberDialogBox extends Component {
   //2.set checked value into the state 
   //3.show slected values into the multiselect.
 handleChange=(e)=>{
-  e.target.checked?this.setState({checkedAll:e.target.checked,taggedMemberIds: this.state.schoolMembers.map(ele => ele._id)}):this.setState({checkedAll:e.target.checked,taggedMemberIds: [],taggedMemberData:[]})
+  e.target.checked ? this.setState({ checkedAll: e.target.checked, selectedOption: this.state.schoolMembers }) : this.setState({ checkedAll: e.target.checked, selectedOption: [] })
 }
   deleteMedia = () => {
     this.setState({ isBusy: true });
@@ -203,7 +218,16 @@ handleChange=(e)=>{
       }
     );
   };
-
+  handleChangeForTagging = (selectedOption) => {
+    this.setState(state => {
+      return {
+        selectedOption: selectedOption
+      };
+    });
+    if (_.isEmpty(selectedOption)) {
+      this.setState({ checkedAll: false })
+    }
+  }
   render() {
     const {
       classes,
@@ -214,7 +238,7 @@ handleChange=(e)=>{
       onEditButtonClick,
       currentMediaData
     } = this.props;
-
+    const { selectedOption, schoolMembers } = this.state;
     const { mediaDefaultValue, isBusy, error } = this.state;
     // This is used to save Tagged media details
     return (
@@ -242,7 +266,7 @@ handleChange=(e)=>{
                   }
                 />
               </Grid>
-              <Grid item md={4} sm={4} xs={4}>
+              <Grid item md={4} sm={4} xs={4} style={{marginTop:'22px'}}>
                 <Typography>Members: </Typography>
               </Grid>
               <Grid item md={8} sm={8} xs={8}>
@@ -260,15 +284,22 @@ handleChange=(e)=>{
               </FormControl>
 
              
-              {!this.state.checkedAll &&  <Multiselect
+              {/* {!this.state.checkedAll &&  <Multiselect
                   textField={'firstName'}
                   valueField={"activeUserId"}
                   data={this.state.schoolMembers}
                   placeholder="School Members"
                   defaultValue={this.state.taggedMemberData}
                   onChange={this.collectSchoolMembers}
-                /> }
-               
+                /> } */}
+               <Select
+										name="filters"
+										placeholder="School Members"
+										value={selectedOption}
+										options={schoolMembers}
+										onChange={this.handleChangeForTagging}
+										multi
+									/>
               </Grid>
               <Grid item md={4} sm={4} xs={4}>
                 <Typography>Permissions:</Typography>

@@ -60,5 +60,7 @@ Meteor.methods({
         .fetch()
         .map(x => x._id);
     }
+  },getAllSkillSubjects:function(){
+    return SkillSubject.find({}).fetch();
   }
 });

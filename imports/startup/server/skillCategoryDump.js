@@ -26,18 +26,18 @@ export default (_skillCategoryObj = {
     "Kendo",
     "Kenjutsu",
     "KenJutsu",
+    "Wing Chun",
     "Kenpo",
     "Kick Boxing",
     "Krav Maga",
     "Kung Fu",
-    "Mixed Martial Arts",
+    "Mixed Martial Arts MMA",
     "Muay Thai",
     "Ninjutsu",
     "Nippon Kempo",
     "Okinawan martial arts",
     "Olympic Wrestling",
     "Other Traditional Martial Art",
-    "Others",
     "Pankration",
     "Sambo",
     "Savate",
@@ -47,13 +47,12 @@ export default (_skillCategoryObj = {
     "Small Circle Jujutsu",
     "Sumo",
     "Systema",
-    "T'ai chi ch'uan",
+    "Tai chi chuan",
     "Taekwondo",
     "Vale Tudo",
-    "Wing Chun",
     "WuShu"
   ],
-  Dance: [
+  "Dance": [
     "African",
     "Argentine tango",
     "B-boying",
@@ -62,7 +61,6 @@ export default (_skillCategoryObj = {
     "Belly dance",
     "Bounce",
     "Break Dancing",
-    "Capoeira",
     "Cha Cha",
     "Charleston",
     "Classical Indian dance",
@@ -80,6 +78,7 @@ export default (_skillCategoryObj = {
     "Footwork",
     "Foxtrot",
     "Hip Hop / Street Dance",
+    "Hula",
     "Jazz dance",
     "Jitterbug",
     "Krumping",
@@ -103,10 +102,9 @@ export default (_skillCategoryObj = {
     "Vogue",
     "Waltz",
     "Zumba",
-    "Others",
-    "Various Dance Styles"
+    "Other / Various Dance Styles"
   ],
-  "Art/Design/Craft": [
+  "Art/ Design/Craft": [
     "Acrylic Painting",
     "Cartoon Art",
     "Crafting",
@@ -122,45 +120,51 @@ export default (_skillCategoryObj = {
     "Oil Paint",
     "Sculpture",
     "Sewing",
-    "Soap/Cosmetic",
+    "Soap / Cosmetic",
     "Stitching",
     "Watercolor",
+    "Painting",
     "Various Arts",
-    "Graffiti",
+    "Grafitti",
     "Fine Arts",
     "Ceramic Arts",
     "Metal Work",
-    "Glass Work",
-    "Others",
+    "Glasswork",
+    "Other /Various Art / Design/ Craft"
   ],
   "Sport/Exercise": [
+    "Acrobatics",
     "American Football",
+    "Barre",
     "Baseball",
     "Basketball",
     "Boot Camp",
     "Cycling",
     "Darts",
     "Football / Soccer",
+    "Frisbee",
     "Gymnastics",
     "High Intensity Interval Training",
     "Jogging",
     "Juggling",
-    "Other Ball Games",
+    "Other Sport/ Exercise",
     "Parkour",
+    "Pilates",
+    "Racketball",
     "Rugby",
     "Sprinting",
+    "Surfing",
     "Swimming",
     "Tai Chi",
     "Tennis",
     "Ultimate Frisbee",
     "Walking",
     "Weight / Resistance",
-    "Racketball",
-    "Pilates",
-    "Acrobatics",
-    "Barre",
-    "Surfing",
-    "Others",
+    "Windsurfing",
+    "Water-skiing",
+    "Wakeboarding",
+    "Waterski",
+    "Standup paddle boarding"
   ],
   Language: [
     "Arabic",
@@ -176,8 +180,7 @@ export default (_skillCategoryObj = {
     "Portuguese",
     "Russian",
     "Spanish",
-    "Others",
-    "Various Languages"
+    "Other Language"
   ],
   "Coding and Computers": [
     "Android",
@@ -185,46 +188,47 @@ export default (_skillCategoryObj = {
     "C+",
     "iOS",
     "Javascript",
+    "Java",
     "Meteor",
     "Node",
     "PHP",
     "Python",
     "Ruby on Rails",
-    "Various Code Languages",
-    "Html",
-    "Css",
-    "Others"
+    "HTML",
+    "CSS",
+    "Wordpress",
+    "Other / Various Code Language"
   ],
-  "Business/Marketing": [
+  "Business/ Marketing": [
     "Accounting",
     "Business Strategy",
     "Business Writing",
     "Entrepreneurship",
     "Marketing",
     "Sales",
-    "Others",
-    "Software Development",
-    "Various Business Skills"
+    "Other / Various Business Skills"
   ],
-  "Meditation/Religion": [
-    "Conflict Resolution / Meditation",
-    "Catholic Prayer Meeting",
-    "Muslim Prayer Meeting",
-    "Buddhist Chanting",
-    "Protestant Prayer Meeting",
-    "Christian Meeting",
+  "Meditation/ Spirituality/ Religion": [
     "Bible Study",
+    "Buddhist Chanting",
+    "Catholic Prayer Meeting",
+    "Christian Meeting",
     "Koran Study",
+    "Meditation",
+    "Muslim Prayer Meeting",
+    "Protestant Prayer Meeting",
     "Sutra Study",
-    "Others"
+    "Other / Various Spirituality/ Religion"
   ],
-  "Acting/Comedy": [
-    "Others",
+  "Acting/ Comedy": [
     "Acting Class",
     "Improvisation",
     "Stand-Up Comedy",
-    "Movement/Slapstick",
-    "Various Acting Styles"
+    "Movement / Slapstick",
+    "Method Acting",
+    "Theatre Acting",
+    "Screen Acting",
+    "Other / Various Acting Styles"
   ],
   Games: [
     "Video Games",
@@ -235,8 +239,7 @@ export default (_skillCategoryObj = {
     "Poker",
     "Board Games",
     "Card Games",
-    "Various Games",
-    "Others",
+    "Other / Various Games"
   ],
   Pets: [
     "Dog Walks",
@@ -244,13 +247,13 @@ export default (_skillCategoryObj = {
     "Dog Meetups",
     "Exotic Pet Meetups",
     "Dog Training",
-    "Others"
+    "Other / Various Pet Activity"
   ],
   "Parents/Children": [
     "Child Meetup by Age",
     "Parents with Autistic Children",
     "Parents with Special Needs Children",
-    "Others"
+    "Other / Various Parenting Activity"
   ],
   Yoga: [
     "Anusara",
@@ -266,29 +269,29 @@ export default (_skillCategoryObj = {
     "Restorative",
     "Sivananda",
     "Viniyoga",
-    "Vinyasa/Power",
-    "Yin",
-    "Others"
+    "Vinyasa / Power",
+    "Yin Yoga",
+    "Health Yoga",
+    "Other / Various Yoga"
   ],
   "Food and Beverage": [
+    "Beer Making",
+    "Bread Making",
+    "Cocktail Mixing",
     "Cooking",
     "Fermentation",
-    "Bread Making",
     "Wine Tasting",
-    "Beer Making",
-    "Cocktail Mixing",
-    "Others"
+    "Other / Various Food / Beverage"
   ],
   "Life Skills": [
+    "Bullying Prevention",
     "Coping",
     "Emotional Intelligence",
-    "Vocational Skills",
-    "Reading/ Literacy",
-    "Conflict Resolution/Meditation",
     "Leadership",
-    "Bullying Prevention",
-    "Various Life Skills",
-    "Others"
+    "Reading/ Literacy",
+    "Vocational Skills",
+    "Conflict Resolution / Mediation",
+    "Other / Various Life Skills"
   ],
   Music: [
     "Percussion",
@@ -306,8 +309,7 @@ export default (_skillCategoryObj = {
     "Guitar",
     "Keyboard",
     "Piano",
-    "Various Instruments",
-    "Others",
+    "Other / Various Music Activity"
   ],
-  Others: []
+  Other: ["Other"]
 });

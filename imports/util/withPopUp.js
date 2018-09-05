@@ -23,6 +23,7 @@ export function withPopUp(WrappedComponent) {
     };
 
     handleAffirmationButtonClick = () => {
+      
       if (this.state.applyClose) {
         this.handleClose();
       }

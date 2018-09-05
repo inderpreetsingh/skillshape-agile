@@ -166,10 +166,10 @@ const MyClockWrapper = styled.div`
   cursor: ${props => (props.clockType === "multiple" ? "pointer" : "initial")};
 `;
 
-const Date = styled.p`
-  text-align: center;
-  margin: 0;
-`;
+// const Date = styled.p`
+//   text-align: center;
+//   margin: 0;
+// `;
 
 const DotsWrapper = styled.div`
   width: 100%;
@@ -307,7 +307,7 @@ class ClassTimeNewClock extends Component {
   handleClockClick = currentClockIndex => {
     const { updateClockAndDayIndex } = this.props;
     const dayIndex = this._getDayIndexFromCurrentClockIndex(currentClockIndex);
-   
+
     updateClockAndDayIndex(currentClockIndex, dayIndex);
   };
 

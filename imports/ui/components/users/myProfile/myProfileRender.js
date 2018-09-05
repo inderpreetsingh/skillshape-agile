@@ -28,7 +28,7 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import MediaUpload from "/imports/ui/componentHelpers/mediaUpload";
 import IconInput from "/imports/ui/components/landing/components/form/IconInput";
-
+import ReactPhoneInput from 'react-phone-input-2';
 const SaveBtnWrapper = styled.div`
   margin: 10px;
   float: right;
@@ -204,13 +204,22 @@ export default function() {
                           We won't be share your private email address with
                           other Members.
                         </Typography>
-                        <IconInput
+                        {/* <IconInput
                           type="tel"
                           labelText="Phone Number"
                           iconName="contact_phone"
                           value={phone}
                           onChange={this.handleTextChange.bind(this, "phone")}
-                        />
+                        /> */}
+                          <ReactPhoneInput 
+                          defaultCountry={'us'} 
+                          value={phone ? phone.toString() : ''}
+                          onChange={phone => this.setState({ phone })}
+                          inputStyle={{width:'100%'}}
+                          placeHolder={'Phone Number'}
+                          containerStyle={{marginTop:'10px'}}
+                          disableAreaCodes={true}
+                          />
                         <Typography
                           className={classes.inputCaption}
                           type="caption"

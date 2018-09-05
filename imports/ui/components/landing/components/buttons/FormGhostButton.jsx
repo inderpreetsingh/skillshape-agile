@@ -18,8 +18,8 @@ const styles = {
     borderColor: helpers.primaryColor,
     color: helpers.primaryColor,
     textTransform: "none",
-    whiteSpace: 'nowrap',
-    marginRight:'10px',
+    whiteSpace: "nowrap",
+    marginRight: "10px",
     "&:hover": {
       backgroundColor: helpers.primaryColor,
       color: "white"
@@ -32,6 +32,14 @@ const styles = {
     display: "inline-block",
     marginRight: "5px",
     fontSize: helpers.baseFontSize
+  },
+  whiteColor: {
+    color: "white",
+    borderColor: "white",
+    "&:hover": {
+      backgroundColor: "white",
+      color: "black"
+    }
   },
   redColor: {
     color: helpers.alertColor,
@@ -104,6 +112,8 @@ const FormGhostButton = props => {
     rootClass = rootClass + " " + props.classes.darkGreyColor;
   } else if (props.alertColor || (props.color == "alert")) {
     rootClass = rootClass + " " + props.classes.redColor;
+  }else if(props.whiteColor || (props.color == 'white')) {
+    rootClass = rootClass + " " + props.classes.whiteColor;
   }
   return (
     <Button

@@ -28,7 +28,6 @@ export default classTypeSettings = {
             { key: "ageMin", label: "Age", "labelSm": 4, "lableMd": 1, "valueSm": 4, "valueMd": 2},
             { key: "ageMax", label: "To", "labelSm": 4, "lableMd": 1, "valueSm": 4, "valueMd": 2},
             { key: "experienceLevel", label: "Experience Level", "labelSm": 4, "lableMd": 3, "valueSm": 4, "valueMd": 3  },
-            { key: "selectedLocation", label: "Location", childKeys: ["address", "city", "country"], "labelSm": 4, "lableMd": 1, "valueSm": 4, "valueMd": 5 },
         ],
         actions: {
             edit: {

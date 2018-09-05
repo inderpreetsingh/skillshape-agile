@@ -515,7 +515,7 @@ class ManageMyCalendar extends React.Component {
     value = value.filter(function(element) {
       return element !== undefined;
     });
-    return value[0] + ":" + Time;
+    return value[0] + ": " + Time;
   };
 
   render() {
@@ -949,7 +949,8 @@ class ManageMyCalendar extends React.Component {
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               )}
-            <MyCalender
+
+         <MyCalender
               manageMyCalendar={
                 this.props.route && this.props.route.name == "MyCalendar"
               }

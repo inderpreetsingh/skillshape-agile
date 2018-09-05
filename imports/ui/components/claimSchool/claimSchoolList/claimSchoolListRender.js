@@ -114,9 +114,9 @@ export default function(props) {
     </Wrapper>
   );
 
-  if (this.props.isLoading) {
-    return <div />;
-  }
+  // if (this.props.isLoading) {
+  //   return <div />;
+  // }
 
   if (isEmpty(schools)) {
     return (

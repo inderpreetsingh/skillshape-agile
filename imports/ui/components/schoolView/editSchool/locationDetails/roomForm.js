@@ -160,6 +160,7 @@ class RoomForm extends React.Component {
                   label="Capicity"
                   type="number"
                   fullWidth
+                  inputProps={{ min: "0"}}
                 />
               </form>
             </DialogContent>
@@ -189,14 +190,16 @@ class RoomForm extends React.Component {
                 label={data ? "Save" : "Submit"}
               />
             </ButtonWrapper>
-            <ButtonWrapper>
+            {this.props && this.props.from && this.props.from=='classTime' ? '' : <ButtonWrapper>
               <FormGhostButton
                 type="button"
                 form={formId}
                 onClick={this.saveRoomFormData.bind(this, "nextTab")}
                 label="Save and Add Classes"
               />
-            </ButtonWrapper>
+            </ButtonWrapper>}
+            
+
           </DialogActions>
         </Dialog>
       </div>

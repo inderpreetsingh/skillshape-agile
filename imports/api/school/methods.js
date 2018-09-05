@@ -60,11 +60,11 @@ Meteor.methods({
     }
     return School.find({ _id: { $in: schoolList } }).fetch();
   },
-  "school.getMySchool": function(schoolId) {
+  "school.getMySchool": function(schoolId,from) {
     if(schoolId){
         return School.findOne({_id:schoolId})
     }
-    else if (this.userId) {
+    else if (this.userId && !from) {
       return School.find({ admins: { $in: [this.userId] } }).fetch();
     }
   },

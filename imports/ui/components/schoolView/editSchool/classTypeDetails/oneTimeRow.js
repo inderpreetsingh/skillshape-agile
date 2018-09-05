@@ -1,6 +1,5 @@
 import React from "react";
 import Grid from "material-ui/Grid";
-import isEmpty from "lodash/isEmpty";
 import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
 import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import Select from "material-ui/Select";
@@ -26,39 +25,34 @@ export class OneTimeRow extends React.Component {
 
   initializeFields = () => {
     let state;
-    const { data, locationData, parentData } = this.props;
-
-    if (isEmpty(data)) {
+    const { data, parentData } = this.props;
+    if (_.isEmpty(data)) {
 
       state = {
         row: [
           {
             startDate: new Date(),
             startTime: new Date(),
-            duration: "",
-            roomId: "",
-            timeUnits: "Minutes"
+            duration: 60,
+            timeUnits: "Minutes",
           }
         ]
       };
       this.props.handleNoOfRow(1);
     } else {
       state = { row: [...data] };
-
-
       this.props.handleNoOfRow(data.length);
-
     }
     return state;
   };
-
+ 
   addNewRow = () => {
+    const {locationData,data,roomData} = this.props;
     const oldRow = [...this.state.row];
     oldRow.push({
       startDate: new Date(),
       startTime: new Date(),
-      duration: "",
-      roomId: ""
+      duration: 60,
     });
     this.setState({ row: oldRow });
     this.props.handleNoOfRow(1);
@@ -84,9 +78,15 @@ export class OneTimeRow extends React.Component {
     oldRow[index][fieldName] = new Date(date);
     this.setState({ row: oldRow });
   };
-
+  //Set default location id if nothing selected 
+  setDefaultLocation=(defaultLocId)=>{
+    this.setState({locationId:defaultLocId})
+    return defaultLocId;
+  }
   handleSelectInputChange = (index, fieldName, event) => {
     //index condition in if below is removed
+    const { locationData } = this.props;
+
     if (fieldName && event) {
       const oldRow = [...this.state.row];
       if (fieldName === "duration") {
@@ -94,18 +94,18 @@ export class OneTimeRow extends React.Component {
       } else {
         oldRow[index][fieldName] = event.target.value;
       }
-
       this.setState({ row: oldRow });
     }
   };
-
   getRowData = () => {
+    console.log("this.state.row ", this.state.row);
     return this.state.row;
   };
-
+  handleRoomData = (locationId,roomId,index)=> {
+  this.setState({row:oldRow});
+  }
   render() {
     const { row } = this.state;
-
     return (
       <div>
         {row.map((data, index) => {
@@ -170,6 +170,7 @@ export class OneTimeRow extends React.Component {
                         "duration"
                       )}
                       fullWidth
+                      inputProps={{ min: "0"}}
                     />
                   </Grid>
                   <Grid sm={6}>
@@ -206,51 +207,9 @@ export class OneTimeRow extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              {
-
-              }
-              <Grid item sm={6} xs={12}>
-                <FormControl fullWidth margin="dense">
-                  <InputLabel htmlFor="roomId">Room</InputLabel>
-                  <Select
-                    input={<Input id="roomId" />}
-                    value={data && data.roomId ? data.roomId : !isEmpty(this.props.roomData) && this.props.roomData[0].id}
-                    onChange={this.handleSelectInputChange.bind(
-                      this,
-                      index,
-                      "roomId"
-                    )}
-                    fullWidth
-                  >
-                    {isEmpty(this.props.roomData) && (
-                      <MenuItem value="" disabled>
-                        No location added in Locations.
-                      </MenuItem>
-                    )}
-                    {this.props.roomData &&
-                      this.props.roomData.map((data, index) => {
-                        return (
-                          <MenuItem key={index} value={data.id}>
-                            {data.name}
-                          </MenuItem>
-                        );
-                      })}
-                  </Select>
-                </FormControl>
-              </Grid>
+              
               <Grid item xs={12} sm={4}>
-                {/* <Button
-                  onClick={this.removeRow.bind(this, index)}
-                  raised
-                  color="accent"
-                  style={{
-                    backgroundColor: 'red',
-                    color: "black",
-                    fontWeight: 600
-                  }}
-                >
-                  Delete
-                </Button> */}
+                
                  <ButtonWrapper>
             <FormGhostButton
               alertColor
@@ -264,44 +223,14 @@ export class OneTimeRow extends React.Component {
         })}
         <div>
           <div>
-            {/* <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between"
-              }}
-            >
-              <Typography
-                type="caption"
-                style={{ maxWidth: "188px", padding: "8px" }}
-              >
-                Use this if there is another class with the same repeating
-                pattern and students are expected to attend all class times in
-                this group.
-              </Typography>
-
-              <Typography
-                type="caption"
-                style={{ maxWidth: "188px", padding: "8px" }}
-              >
-                Use this if there is a different repeating type or students can
-                come to any class time available.
-              </Typography>
-            </div> */}
+            
             <div
               style={{
                 display: "flex",
                 justifyContent: "center"
               }}
             >
-              {/* <Button onClick={this.addNewRow} raised color="secondary"
-                style={{
-                  backgroundColor: 'mediumseagreen',
-                  color: "black",
-                  fontWeight: 600
-                }}
-              >
-                Add Linked Class Time
-              </Button> */}
+              
               <ButtonWrapper>
                   <FormGhostButton
                     darkGreyColor
@@ -309,15 +238,7 @@ export class OneTimeRow extends React.Component {
                     label="Add Linked Class Time"
                   />
                 </ButtonWrapper>
-              {/* <Button
-                onClick={this.props.saveClassTimes.bind(this, event, {
-                  addSeperateTime: true
-                })}
-                raised
-                color="secondary"
-              >
-                Add Separate Class Time
-              </Button> */}
+            
             </div>
           </div>
         </div>

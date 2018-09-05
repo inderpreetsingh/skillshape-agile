@@ -11,10 +11,6 @@ Meteor.methods({
     classTimeId,
     locationId
   }) {
-    
-
-    // console.log("classTimes.getClassTimes -->>",schoolId, classTypeId, classTimeId)
-    // console.log("SchoolSchool -->>",School.find({ _id: schoolId}))
     return {
       school: School.findOne({ _id: schoolId }),
       classTimes: ClassTimes.findOne({ _id: classTimeId }),
@@ -48,33 +44,40 @@ Meteor.methods({
       if (classTypeData && classTypeData.experienceLevel) {
         doc.experienceLevel = classTypeData.experienceLevel;
       }
-      return ClassTimes.insert(doc);
+
+      let _id = ClassTimes.insert(doc);
+      if( doc && doc.classTypeId  && doc.locationId){
+        Meteor.call('classType.addLocationFilter',doc.classTypeId,doc.locationId,_id,"newTime")
+      }
+      return _id;
     } else {
       throw new Meteor.Error("Permission denied!!");
     }
   },
   "classTimes.editClassTimes": function({ doc_id, doc }) {
-    check(doc,Object);
-    check(doc_id,String);
-    const user = Meteor.users.findOne(this.userId);
-    // console.log("classTimes.editClassTimes methods called!!!",doc_id, doc);
-    if (
-      checkMyAccess({
-        user,
-        schoolId: doc.schoolId,
-        viewName: "ClassTimes_CUD"
-      })
-    ) {
-      // console.log(doc);
-      return ClassTimes.update({ _id: doc_id }, { $set: doc });
-    } else {
-      throw new Meteor.Error("Permission denied!!");
+    try{
+
+      const user = Meteor.users.findOne(this.userId);
+      if (
+        checkMyAccess({
+          user,
+          schoolId: doc.schoolId,
+          viewName: "ClassTimes_CUD"
+        })
+      ) {
+        if(  doc && doc.classTypeId  && doc.locationId){
+          Meteor.call('classType.addLocationFilter',doc.classTypeId,doc.locationId,doc_id,"editTime")
+        }
+        return ClassTimes.update({ _id: doc_id }, { $set: doc });
+      } else {
+        throw new Meteor.Error("Permission denied!!");
+      }
+    }catch(error){
     }
   },
   "classTimes.removeClassTimes": function({ doc }) {
     check(doc,Object);
     const user = Meteor.users.findOne(this.userId);
-    // console.log("classTimes.removeClassTimes methods called!!!",doc);
     if (
       checkMyAccess({
         user,
@@ -83,6 +86,7 @@ Meteor.methods({
       })
     ) {
       ClassInterest.remove({ classTimeId: doc._id });
+      Meteor.call('classType.addLocationFilter',doc.classTypeId,doc.locationId,doc._id,"deleteTime")
       return ClassTimes.remove({ _id: doc._id });
     } else {
       throw new Meteor.Error("Permission denied!!");
