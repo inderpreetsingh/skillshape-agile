@@ -3,6 +3,7 @@ import moment from "moment";
 import styled, { keyframes } from "styled-components";
 import PropTypes from "prop-types";
 import { isEmpty, get } from "lodash";
+import {scroller} from 'react-scroll';
 import Button from "material-ui/Button";
 import ClassTimeClockManager from "/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx";
 import ClassTimesCard from "/imports/ui/components/landing/components/cards/ClassTimesCard.jsx";
@@ -355,7 +356,13 @@ class ClassTime extends Component {
     // }
     
   };
-
+  scrollTo(name) {
+    scroller.scrollTo((name || 'content-container'), {
+        duration: 800,
+        delay: 0,
+        smooth: 'easeInOutQuart'
+    })
+}
   render() {
     // debugger;
     const {
@@ -366,11 +373,11 @@ class ClassTime extends Component {
       name,
       inPopUp,
       formattedClassTimesDetails,
-      classTypeName
+      classTypeName,
+      onModalClose
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     const {thinkingAboutAttending,addToCalendar}= this.state;
-    console.log('TCL: render ->  typeof thinkingAboutAttending', typeof thinkingAboutAttending);
     
     //const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(
@@ -398,6 +405,11 @@ class ClassTime extends Component {
             handleAddToMyCalendarButtonClick = {this.handleAddToMyCalendarButtonClick}
             handleRemoveFromCalendarButtonClick = {this.handleRemoveFromCalendarButtonClick}
             addToCalendar = {addToCalendar}
+            purchaseThisPackage ={()=>{
+              this.setState({thinkingAboutAttending:false});
+              this.scrollTo('price-section')
+              onModalClose();
+            }}
             />}
             <div>
               <ClassTimeContainer

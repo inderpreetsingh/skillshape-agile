@@ -578,6 +578,7 @@ class ClassTimesDialogBox extends React.Component {
                     withSlider={false}
                     classTimesData={classTimesData}
                     classInterestData={classInterestData}
+                    onModalClose={onModalClose}
                   />
                 </ContentWrapper>
               )}

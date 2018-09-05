@@ -103,6 +103,7 @@ const ClassTimesBar = props => {
               inPopUp={inPopUp}
               classTimeData={classTimeObj}
               classInterestData={classInterestData}
+              onModalClose ={onModalClose}
             />
           </GridItem>
         );
@@ -117,6 +118,7 @@ const ClassTimesBar = props => {
               inPopUp={inPopUp}
               classTimeData={classTimeObj}
               classInterestData={classInterestData}
+              onModalClose ={onModalClose}
             />
           </GridItem>
         );
@@ -145,6 +147,7 @@ const ClassTimesBar = props => {
               inPopUp={inPopUp}
               classTimeData={classTimeObj}
               classInterestData={classInterestData}
+              onModalClose ={onModalClose}
             />
           </GridItem>)
         }
@@ -159,7 +162,8 @@ const ClassTimesBar = props => {
     inPopUp,
     classTimesData,
     classInterestData,
-    handleRemoveFromCalendarButtonClick
+    handleRemoveFromCalendarButtonClick,
+    onModalClose 
   } = props;
   let addToCalender;
   return (

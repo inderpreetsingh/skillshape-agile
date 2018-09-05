@@ -55,7 +55,7 @@ const ErrorWrapper = styled.span`
     float: right;
 `;
 
-class ThinkingAboutAttending extends SchoolViewBase  {
+class ThinkingAboutAttending extends React.Component {
     constructor(props) {
         super(props);
         this.state = { PackageListingAttachment: false, pacLisAttOpen: true, PackageAddNew: false }
@@ -63,8 +63,7 @@ class ThinkingAboutAttending extends SchoolViewBase  {
    
     render() {
         const { open,onModalClose,addToCalendar,handleRemoveFromCalendarButtonClick,
-            handleClassClosed,handleAddToMyCalendarButtonClick } = this.props;
-            console.log("this",this);
+            handleClassClosed,handleAddToMyCalendarButtonClick,purchaseThisPackage } = this.props;
         return (
             <MuiThemeProvider theme={muiTheme}>
                 <Dialog
@@ -93,7 +92,7 @@ class ThinkingAboutAttending extends SchoolViewBase  {
                       
                         <ButtonWrapper>
                             <FormGhostButton
-                                onClick={() => { this.setState({ PackageAddNew: true }) }}
+                                onClick={purchaseThisPackage}
                                 label="Purchase this Package"
                             />
                         </ButtonWrapper>
