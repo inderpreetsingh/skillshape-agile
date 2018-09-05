@@ -309,10 +309,8 @@ class ClassTime extends Component {
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
     return (<div style={{ display: "flex" }}>
     <FormGhostButton
-      icon
       onClick={()=>{this.setState({thinkingAboutAttending:true,addToCalendar:addToCalender})}}
       label="Thinking About Attending"
-      iconName={iconName}
     />
   </div>)
     // if (addToCalender == 'closed') {
@@ -324,7 +322,7 @@ class ClassTime extends Component {
     //         onClick={this.handleClassClosed}
     //         label="Class Closed"
     //         iconName={iconName}
-    bo//       />
+    //       />
     //     </div>
     //   );
     // }
