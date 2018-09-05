@@ -17,7 +17,7 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
-
+import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
 import Events from "/imports/util/events";
 import {
   withPopUp,
@@ -165,7 +165,8 @@ const Trending = () => {
 
 class ClassTime extends Component {
   state = {
-    isLoading: false
+    isLoading: false,
+    thinkingAboutAttending:false
     // fullTextState: this.props.fullTextState,
   };
 
@@ -202,6 +203,7 @@ class ClassTime extends Component {
         methodName: "classInterest.removeClassInterest",
         data: { doc }
       });
+      this.setState({addToCalendar:true})
     } else {
       // popUp.error("Please login !","Error");
       this.setState({
@@ -224,6 +226,7 @@ class ClassTime extends Component {
         methodName: "classInterest.addClassInterest",
         data: { doc }
       });
+      this.setState({addToCalendar:false})
     } else {
       // alert("Please login !!!!")
       //Events.trigger("loginAsUser");
@@ -303,64 +306,54 @@ class ClassTime extends Component {
   getCalenderButton = (addToCalender, formattedClassTimesDetails) => {
     const iconName = addToCalender ? "add_circle_outline" : "delete";
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
+    return (<div style={{ display: "flex" }}>
+    <FormGhostButton
+      icon
+      onClick={()=>{this.setState({thinkingAboutAttending:true,addToCalendar:addToCalender})}}
+      label="Thinking About Attending"
+      iconName={iconName}
+    />
+  </div>)
+    // if (addToCalender == 'closed') {
 
-    if (addToCalender == 'closed') {
-
-      return (
-        <div style={{ display: "flex" }}>
-          {/* <ClassTimeButton
-            icon
-            onClick={this.handleClassClosed}
-            label="Class Closed"
-            iconName={iconName}
-          /> */}
-          <FormGhostButton
-            icon
-            onClick={this.handleClassClosed}
-            label="Class Closed"
-            iconName={iconName}
-          />
-        </div>
-      );
-    }
-    if (addToCalender || !Meteor.userId()) {
-      return (
-        <div style={{ display: "flex" }}>
-          {/* <ClassTimeButton
-            icon
-            onClick={this.handleAddToMyCalendarButtonClick}
-            label="Add to my Calender"
-            iconName={iconName}
-          /> */}
-          <FormGhostButton
-            icon
-            onClick={this.handleAddToMyCalendarButtonClick}
-            label="Add to my Calender"
-            iconName={iconName}
-          />
-        </div>
-      );
-    } else {
-      return (
-        <div style={{ display: "flex" }}>
-          {/* <ClassTimeButton
-            icon
-            ghost
-            onClick={this.handleRemoveFromCalendarButtonClick}
-            label="Remove from calendar"
-            iconName={iconName}
-          /> */}
-          <FormGhostButton
-            icon
-            ghost
-            onClick={this.handleRemoveFromCalendarButtonClick}
-            label="Remove from calendar"
-            iconName={iconName}
-          />
-        </div>
-      );
-    }
-    return <div />;
+    //   return (
+    //     <div style={{ display: "flex" }}>
+    //       <FormGhostButton
+    //         icon
+    //         onClick={this.handleClassClosed}
+    //         label="Class Closed"
+    //         iconName={iconName}
+    bo//       />
+    //     </div>
+    //   );
+    // }
+    // if (addToCalender || !Meteor.userId()) {
+    //   return (
+    //     <div style={{ display: "flex" }}>
+          
+    //       <FormGhostButton
+    //         icon
+    //         onClick={this.handleAddToMyCalendarButtonClick}
+    //         label="Add to my Calender"
+    //         iconName={iconName}
+    //       />
+    //     </div>
+    //   );
+    // } else {
+    //   return (
+    //     <div style={{ display: "flex" }}>
+          
+    //       <FormGhostButton
+    //         icon
+    //         ghost
+    //         onClick={this.handleRemoveFromCalendarButtonClick}
+    //         label="Remove from calendar"
+    //         iconName={iconName}
+    //       />
+    //     </div>
+    //   );
+    // }
+    
   };
 
   render() {
@@ -376,7 +369,9 @@ class ClassTime extends Component {
       classTypeName
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
-
+    const {thinkingAboutAttending,addToCalendar}= this.state;
+    console.log('TCL: render ->  typeof thinkingAboutAttending', typeof thinkingAboutAttending);
+    
     //const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(
       this.props.addToCalendar
@@ -396,6 +391,14 @@ class ClassTime extends Component {
                 onModalClose={this.handleNonUserDialogBoxState(false)}
               />
             )}
+            {thinkingAboutAttending && <ThinkingAboutAttending
+            open ={thinkingAboutAttending}
+            onModalClose ={()=>{this.setState({thinkingAboutAttending:false})}}
+            handleClassClosed ={this.handleClassClosed}
+            handleAddToMyCalendarButtonClick = {this.handleAddToMyCalendarButtonClick}
+            handleRemoveFromCalendarButtonClick = {this.handleRemoveFromCalendarButtonClick}
+            addToCalendar = {addToCalendar}
+            />}
             <div>
               <ClassTimeContainer
                 inPopUp={inPopUp}
