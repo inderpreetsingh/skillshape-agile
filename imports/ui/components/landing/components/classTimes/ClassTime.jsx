@@ -255,6 +255,7 @@ class ClassTime extends Component {
     });
   };
   handleClassClosed = () => {
+    
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
     const { popUp } = this.props;

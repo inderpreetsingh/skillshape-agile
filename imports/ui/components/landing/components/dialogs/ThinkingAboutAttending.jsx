@@ -12,8 +12,10 @@ import muiTheme from '../jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import PackageListingAttachment from './PackageListingAttachment';
+import { FormControl, FormControlLabel } from "material-ui/Form";
 import PackageAddNew from './PackageAddNew';
 import SchoolViewBase from '/imports/ui/components/schoolView/schoolViewBase';
+import Checkbox from "material-ui/Checkbox";
 import Dialog, {
     DialogActions,
     DialogContent,
@@ -48,31 +50,38 @@ const styles = {
         justifyContent: "flex-start"
       }
     }
+    
 }
-
+const TextWrapper = styled.div`
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    text-decoration: underline;`;
 const ErrorWrapper = styled.span`
     color: red;
     float: right;
 `;
-
+const labelValue =['Add this class to my calendar.','Sign me up for notification of class time or location changes',
+'Sign me up for emails from the school about this class.']
 class ThinkingAboutAttending extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { PackageListingAttachment: false, pacLisAttOpen: true, PackageAddNew: false }
+        this.state = { checkBoxes:[this.props.addToCalendar?true:false,false,false] }
     }
-   
+    
     render() {
+        const {checkBoxes}=this.state;
         const { open,onModalClose,addToCalendar,handleRemoveFromCalendarButtonClick,
             handleClassClosed,handleAddToMyCalendarButtonClick,purchaseThisPackage } = this.props;
-        return (
-            <MuiThemeProvider theme={muiTheme}>
+            return (
+                <MuiThemeProvider theme={muiTheme}>
                 <Dialog
                     title="Select Package"
                     open={open}
                     onClose={onModalClose}
                     onRequestClose={onModalClose}
                     aria-labelledby="Thinking About Attending"
-                >
+                    >
                     {this.props.isLoading && <ContainerLoader />}
                     <DialogTitle>
                         <DialogTitleWrapper>
@@ -84,9 +93,25 @@ class ThinkingAboutAttending extends React.Component {
                         </DialogTitleWrapper>
                     </DialogTitle>
                     <DialogContent style={{ fontSize: '18px' }}>
-                    This will add this class to your calendar and sign you up for notifications about class time or location changes,
-                     as well as emails about this class. To attend, you must purchase a class package. 
-
+}                   {checkBoxes.map((i,index)=>{
+                       return ( <FormControl fullWidth margin="dense">
+                       <FormControlLabel
+                         control={
+                             <Checkbox
+                             checked={checkBoxes[index]}
+                             onChange={(e) => {
+                                 let old = checkBoxes;
+                                 old[index] = e.target.checked;
+                                 this.setState({ checkBoxes: old })
+                                }}
+                                value={index}
+                                />
+                         }
+                         label={labelValue[index]}
+                       />
+                     </FormControl>)
+                   })}
+                  <TextWrapper> To attend you must purchase a class package.</TextWrapper>
                     </DialogContent>
                     <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
                       
@@ -98,8 +123,23 @@ class ThinkingAboutAttending extends React.Component {
                         </ButtonWrapper>
                         <ButtonWrapper>
                             <FormGhostButton
-                                onClick={() => {addToCalendar== 'closed'? handleClassClosed() : addToCalendar ? handleAddToMyCalendarButtonClick() : handleRemoveFromCalendarButtonClick()}}
-                                label={addToCalendar== 'closed'? "Class Closed" : addToCalendar ? "Add To Calendar" : "Remove from Calendar"}
+                                onClick={() => {
+                                    
+                                    if(addToCalendar== 'closed'){
+                                        handleClassClosed();
+                                    }
+                                    else if (addToCalendar && checkBoxes[0]){
+                                        handleAddToMyCalendarButtonClick();
+                                    }
+                                    else if(!checkBoxes[0]  && !addToCalendar){
+                                        handleRemoveFromCalendarButtonClick();
+                                    }
+                                    else{
+                                        
+                                        onModalClose(); 
+                                    }
+                                }}
+                                label={"Purchase at Class"}
                             />
                         </ButtonWrapper>
                         <ButtonWrapper>
