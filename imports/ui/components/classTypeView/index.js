@@ -45,7 +45,7 @@ class ClassTypeView extends Component {
           <TopSearchBar {...this.props} />
         </div>
         {emptyClassTypeData ? (
-          <NotFound title={'No Class Found'}/>
+          <NotFound title={"No Class Found"} />
         ) : (
           <ClassTypeContent {...this.props} />
         )}
