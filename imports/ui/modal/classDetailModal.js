@@ -482,7 +482,6 @@ class ClassDetailModal extends React.Component {
       clickedDate,
       classInterestData
     } = this.props;
-    console.log("this.props in classDetailsmOdal", this.props);
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(
       eventData,
@@ -684,6 +683,7 @@ class ClassDetailModal extends React.Component {
                         withSlider={false}
                         classTimesData={[classTypeData]}
                         classInterestData={classInterestData}
+                        onModalClose ={()=>{this.props.closeEventModal(false, null)}}
                       />
                     </div>
                   </div>
@@ -838,6 +838,7 @@ class ClassDetailModal extends React.Component {
                         withSlider={false}
                         classTimesData={allFormattedClassTimeDetails}
                         classInterestData={classInterestData}
+                        onModalClose ={()=>{this.props.closeEventModal(false, null)}}
                       />
                     </div>
                   </div>

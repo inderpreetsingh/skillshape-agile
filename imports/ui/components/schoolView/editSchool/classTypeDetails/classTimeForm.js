@@ -38,6 +38,8 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import LocationForm from '/imports/ui/components/schoolView/editSchool/locationDetails/locationForm';
 import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetails/roomForm";
+import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -57,6 +59,12 @@ const styles = theme => {
       backgroundColor:'green',
       color: "black",
       fontWeight: 600
+     },
+     dialogActionsRoot: {
+       [`@media screen and (max-width: ${mobile}px)`]: {
+         flexWrap: "wrap",
+         justifyContent: "flex-start"
+       }
      }
   };
 };
@@ -109,20 +117,20 @@ class ClassTimeForm extends React.Component {
       } else if (data.scheduleType === "OnGoing") {
         state.tabValue = 2;
       }
-
+      
       state.startDate = data.startDate;
       state.startTime = data.startTime;
       state.endDate = data.endDate;
       state.duration = data.duration;
-      state.roomId = data.roomId ;
-      state.locationId = data.locationId ;
+      state.roomId = data.roomId || '';
+      state.locationId = data.locationId || '';
       state.closed=data.closed;
     }
     if(!_.locationData){
-      if(!state.roomId){
+      if(!state.locationId && !state.roomId){
         state.locationId = locationData[0]._id;
-        state.roomData = locationData[0].rooms|| [];
-        state.roomId = locationData[0].rooms[0].id || '';
+        state.roomData = locationData[0] && locationData[0].rooms && locationData[0].rooms|| [];
+        state.roomId = locationData[0] && locationData[0].rooms && locationData[0].rooms[0].id || '';
       }
       else {
         locationData.map((location)=>{
@@ -157,16 +165,16 @@ class ClassTimeForm extends React.Component {
   if(key == 'roomId'){
     this.setState({roomId:event.target.value});
   }else{
+    this.setState({locationId:event.target.value})
     const {locationData} = this.props;
     locationData.map((location)=>{
       !_.isEmpty(location.rooms)? location.rooms.map((room)=>{
         if(location._id == event.target.value){
           this.setState({roomData:!_.isEmpty(location.rooms) ? location.rooms :[],
-                         roomId: location && location.rooms && location.rooms[0].id || '',
-                         locationId: location._id
+                         roomId: location && location.rooms && location.rooms[0].id || ''
           });
         }
-      }) : this.setState({roomId:''})
+      }) : this.setState({roomId:'',roomData: []})
     })
   }
   }
@@ -462,31 +470,9 @@ class ClassTimeForm extends React.Component {
               </form>
             </DialogContent>
           )}
-          <DialogActions>
+          <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
             {data && (
-            //   <Button
-            //     onClick={() => this.setState({ showConfirmationModal: true })}
-            //     color="accent"
-            //     className={classes.delete}
-            //   >
-            //     Delete
-            //   </Button>
-            // )}
-            // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
-            //   Cancel
-            // </Button>
-            // <Button
-            //   type="button"
-            //   form={formId}
-            //   name="save-class-times"
-            //   color="primary"
-            //   className={classes.save}
-            //   onClick={this.saveClassTimes.bind(this, event, {
-            //     addSeperateTime: false
-            //   })}
-            // >
-            //   {data ? "Save" : "Submit"}
-            // </Button>
+           
             <ButtonWrapper>
             <FormGhostButton
               alertColor

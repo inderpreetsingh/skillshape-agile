@@ -160,32 +160,14 @@ const ClassTimeButton = props => {
     rootClass = rootClass + " " + props.classes.lgButton;
   }
 
-  if (props.itemScope && props.itemType) {
-    return (
-      <Button
-        classes={{
-          root: rootClass,
-          label: labelClass
-        }}
-        onClick={props.onClick}
-        disabled={props.disabled}
-        itemScope
-        itemType={props.itemType}
-        
-      >
-        {getIconForButton(props)}
-
-        {props.label ? props.label : "Submit"}
-      </Button>
-    );
-  }
-
   return (
     <Button
       classes={{
         root: rootClass,
         label: labelClass
       }}
+      itemScope={props.itemScope}
+      itemType={props.itemType}
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}

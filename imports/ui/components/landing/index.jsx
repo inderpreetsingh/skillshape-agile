@@ -224,6 +224,7 @@ class Landing extends Component {
     this.state = {
       mapView: false,
       sticky: false,
+      isSearching: false,
       filterPanelDialogBox: false,
       filters: {
         coords: null,
@@ -466,6 +467,15 @@ class Landing extends Component {
       } else {
         reject();
       }
+    });
+  };
+
+  handleIsCardsSearching = searchingState => {
+    this.setState(state => {
+      return {
+        ...state,
+        isCardsSearching: searchingState
+      };
     });
   };
 
@@ -921,6 +931,7 @@ class Landing extends Component {
             open={this.state.filterPanelDialogBox}
             onModalClose={() => this.handleFiltersDialogBoxState(false)}
             filterPanelProps={{
+              isCardsSearching: this.state.isCardsSearching,
               currentAddress: this.state.locationName,
               removeAllFilters: this.removeAllFilters,
               filters: this.state.filters,
@@ -1007,6 +1018,7 @@ class Landing extends Component {
               {console.log("re rendering .... classtype list...")}
               <ClassTypeList
                 landingPage={true}
+                handleIsCardsSearching={this.handleIsCardsSearching}
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 defaultLocation={this.state.defaultLocation}
                 mapView={this.state.mapView}

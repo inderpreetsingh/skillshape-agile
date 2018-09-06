@@ -134,7 +134,6 @@ class MainLayout extends React.Component {
 
   render() {
     const { currentUser, isUserSubsReady, classes } = this.props;
-    const visitorTypeValue = localStorage.getItem("visitorType");
     return (
       <div>
         {React.cloneElement(this.props.children, {
@@ -143,7 +142,7 @@ class MainLayout extends React.Component {
           currentLocationPathName: this.state.currentLocationPathName,
           isUserSubsReady: isUserSubsReady
         })}
-        {!visitorTypeValue && <FirstTimeVisitDialogBox />}
+
         {isUserSubsReady &&
           currentUser &&
           !currentUser.term_cond_accepted && (

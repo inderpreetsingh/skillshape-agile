@@ -805,3 +805,15 @@ used in the skillshape eg. searchbar */
   min-height: 36px;
   height: 36px;
 }
+
+
+.Select-value{
+  background-color: mediumpurple !important;
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+.Select-multi-value-wrapper{
+  height: 65px;
+  overflow-x: auto;
+}

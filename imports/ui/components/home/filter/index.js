@@ -22,8 +22,9 @@ class SkillClassFilter extends React.Component {
       autocomplete.addListener("place_changed", () => {
         let place = autocomplete.getPlace();
         let coords = [];
-        coords[0] = place.geometry["location"].lat();
-        coords[1] = place.geometry["location"].lng();
+        coords[0] = place.geometry["location"] && place.geometry["location"].lat();
+        coords[1] = place.geometry["location"] && place.geometry["location"].lng();
+        
         this.coords = coords;
         this.setState({ SLocation: place.formatted_address });
         this.props.onSearch(this);

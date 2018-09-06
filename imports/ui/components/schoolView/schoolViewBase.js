@@ -20,11 +20,13 @@ export default class SchoolViewBase extends React.Component {
   }
 
   componentWillMount() {
-    let { slug } = this.props.params;
-    Meteor.call("school.getBestPrice", { slug }, (error, result) => {
-      this.setState({ bestPriceDetails: result });
-      
-    });
+    if(this.props && this.props.params){
+      let { slug } = this.props.params;
+      Meteor.call("school.getBestPrice", { slug }, (error, result) => {
+        this.setState({ bestPriceDetails: result });
+        
+      });
+    }
     
     // Meteor.call('school.findSchoolById',slug,(err,res)=>{
     //   res&&this.setState({currency:res})
@@ -490,7 +492,7 @@ export default class SchoolViewBase extends React.Component {
     noClasses
   ) => {
     // Start loading
-    const { toastr } = this.props;
+    const { toastr ,popUp} = this.props;
     let self = this;
     Meteor.call(
       "stripe.findAdminStripeAccount",
@@ -590,9 +592,9 @@ export default class SchoolViewBase extends React.Component {
                 // Stop loading
                 self.setState({ isLoading: false });
                 if (err) {
-                  toastr.error(err.error, "Error");
-                } else {
-                  toastr.error(res, "Error");
+                  popUp.appear("success", { title: "Message", content: err.error });
+                } else if (res) {
+                  popUp.appear("success", { title: "Message", content: res });
                 }
               }
             );
