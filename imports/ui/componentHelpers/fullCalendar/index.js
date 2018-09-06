@@ -118,7 +118,6 @@ class FullCalendar extends React.Component {
     } = this.props;
     let { manageMyCalendarFilter } = this.props;
     let sevents = [];
-    debugger;
     let myClassTimesIds = classInterestData.map(data => data.classTimeId);
     // Class Time Ids managed by current user
     let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
@@ -234,6 +233,7 @@ class FullCalendar extends React.Component {
                     temp.dow.push(day.value);
                   }
                   })
+                 
                 // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
                 temp.start = moment(obj.startTime).format("hh:mm");
                 temp.end = moment(new Date(obj.startTime))
