@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
+import { CircularProgress } from "material-ui/Progress";
 import { withStyles } from "material-ui/styles";
 import Button from "material-ui/Button";
 import Icon from "material-ui/Icon";
@@ -35,6 +36,7 @@ const styles = {
   noMarginRight: {
     marginRight: 0
   },
+  circularProgress: {},
   icon: {
     display: "inline-block",
     marginRight: "5px",
@@ -63,17 +65,7 @@ const PreloaderWrapper = styled.div`
 
 const getIconForButton = props => {
   const CustomIcon = props.customIcon;
-  if (props.withPreloader) {
-    debugger;
-    return (
-      <PreloaderWrapper>
-        <Preloader
-          width={helpers.rhythmDiv * 2}
-          height={helpers.rhythmDiv * 2}
-        />
-      </PreloaderWrapper>
-    );
-  } else if (CustomIcon && props.icon) {
+  if (CustomIcon && props.icon) {
     return <CustomIcon className={props.classes.customIcon} />;
   } else if (props.icon) {
     return <Icon className={props.classes.icon}>{props.iconName}</Icon>;
@@ -129,6 +121,17 @@ const PrimaryButton = props => {
         {getIconForButton(props)}
 
         {props.label ? props.label : "Submit"}
+
+        {props.withLoader && (
+          <PreloaderWrapper>
+            <CircularProgress
+              color="secondary"
+              className={props.classes.circularProgress}
+              thickness={5}
+              size={16}
+            />
+          </PreloaderWrapper>
+        )}
       </Button>
     );
   }
