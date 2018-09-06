@@ -142,9 +142,9 @@ class FiltersDialogBox extends Component {
             }}
           >
             <FilterPanel
-              onModalClose={onModalClose}
               {...filterPanelProps}
               filtersInDialogBox
+              onModalClose={onModalClose}
               onGiveSuggestion={onGiveSuggestion}
               filtersForSuggestion={filtersForSuggestion}
             />

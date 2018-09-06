@@ -12,6 +12,7 @@ import IconButton from "material-ui/IconButton";
 // import ChipInput from 'material-ui-chip-input';
 import Multiselect from "react-widgets/lib/Multiselect";
 import { withStyles } from "material-ui/styles";
+import Hidden from "material-ui/Hidden";
 import styled from "styled-components";
 //import './jss/reactWidgets.scss';
 
@@ -27,8 +28,8 @@ import { coverSrc } from "../site-settings.js";
 import { MuiThemeProvider } from "material-ui/styles";
 import * as helpers from "./jss/helpers.js";
 import muiTheme from "./jss/muitheme.jsx";
-import PrimaryButton from "./buttons/PrimaryButton.jsx";
-import Hidden from "material-ui/Hidden";
+import SkillShapeButton from "/imports/ui/components/landing/components/buttons/SkillShapeButton.jsx";
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 
 import { dataSourceSkills } from "../constants/filtersData.js";
 
@@ -615,12 +616,20 @@ class FilterPanel extends Component {
         ) : (
           <Grid item xs={12} sm={6}>
             <FilterPanelAction>
-              <PrimaryButton
-                fullWidth
-                label="Close"
-                icon={true}
-                onClick={() => this.props.onModalClose()}
-              />
+              {this.props.isCardsSearching ? (
+                <PrimaryButton
+                  fullWidth
+                  disabled
+                  withPreloader
+                  label="Searching..."
+                />
+              ) : (
+                <PrimaryButton
+                  fullWidth
+                  label="Close"
+                  onClick={() => this.props.onModalClose()}
+                />
+              )}
             </FilterPanelAction>
           </Grid>
         )}

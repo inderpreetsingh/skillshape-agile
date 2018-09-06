@@ -6,6 +6,7 @@ import { withStyles } from "material-ui/styles";
 import Button from "material-ui/Button";
 import Icon from "material-ui/Icon";
 
+import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 /* Because we are extending a material ui button, it us jss instead of styled Components */
@@ -56,9 +57,23 @@ const styles = {
   }
 };
 
+const PreloaderWrapper = styled.div`
+  width: ${helpers.rhythmDiv * 4}px;
+`;
+
 const getIconForButton = props => {
   const CustomIcon = props.customIcon;
-  if (CustomIcon && props.icon) {
+  if (props.withPreloader) {
+    debugger;
+    return (
+      <PreloaderWrapper>
+        <Preloader
+          width={helpers.rhythmDiv * 2}
+          height={helpers.rhythmDiv * 2}
+        />
+      </PreloaderWrapper>
+    );
+  } else if (CustomIcon && props.icon) {
     return <CustomIcon className={props.classes.customIcon} />;
   } else if (props.icon) {
     return <Icon className={props.classes.icon}>{props.iconName}</Icon>;
