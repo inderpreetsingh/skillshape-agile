@@ -82,12 +82,12 @@ Meteor.publish("school.getSchoolClasses", function ({
         // we need to convert the distance to radians
         // the raduis of Earth is approximately 6371 kilometers
         maxDistance /= 63;
-        classfilter["filters.location"] = {
-            $geoWithin: { $center: [coords, maxDistance] }
+        classfilter["filters.location.loc"] = {
+            $geoWithin: { $center: [[coords[1],coords[0]], maxDistance] }
         };
     } else if (NEPoint && SWPoint) {
-        classfilter["filters.location"] = {
-            $geoWithin: { $box: [NEPoint, SWPoint] }
+        classfilter["filters.location.loc"] = {
+            $geoWithin: { $box: [[SWPoint[1],SWPoint[0]],[NEPoint[1],NEPoint[0]]] }
         };
     }
 
@@ -214,13 +214,13 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     if (coords && !is_map_view) {
         if (isAllZero) {
             // place variable will have all the information you are looking for.
-            // var maxDistance = 50;
+             var maxDistance = 50;
             // we need to convert the distance to radians
             // the raduis of Earth is approximately 6371 kilometers
-            // maxDistance /= 63;
+            maxDistance /= 63;
             classfilter["$or"].push({
-                ["filters.location"]: {
-                    $geoWithin: { $center: [coords, 30 / 111.12] }
+                ["filters.location.loc"]: {
+                    $geoWithin: { $center: [[coords[1],coords[0]], maxDistance] }
                 }
             });
 
@@ -228,13 +228,14 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     }
 
     // If no location is available and user has an address in their profile: Show classes in categories based on address.
-    if ((!coords || !isAllZero) && !locationText) {
+    if (!coords && !locationText && !skillCategoryIds && !age && ! gender && ! experienceLevel&& ! skillCategoryClassLimit&& !schoolName && ! skillTypeText&& !skillSubjectIds) 
+    {
         let user = this.userId && Meteor.users.findOne(this.userId);
         if (user && user.profile && user.profile.coords) {
 
             classfilter["$or"].push({
-                ["filters.location"]: {
-                    $geoWithin: { $center: [user.profile.coords, 30 / 111.12] }
+                ["filters.location.loc"]: {
+                    $geoWithin: { $center: [[user.profile.coords[1],user.profile.coords[0]], 30 / 111.12] }
                 }
             });
         } else {
@@ -245,8 +246,8 @@ Meteor.publish("school.getClassTypesByCategory", function ({
                 if (result && result.data && result.data.latitude && result.data.longitude) {
 
                     classfilter["$or"].push({
-                        ["filters.location"]: {
-                            $geoWithin: { $center: [[result.data.latitude, result.data.longitude], 30 / 111.12] }
+                        ["filters.location.loc"]: {
+                            $geoWithin: { $center: [[result.data.longitude,result.data.latitude], 30 / 111.12] }
                         }
                     });
                 }
@@ -257,12 +258,12 @@ Meteor.publish("school.getClassTypesByCategory", function ({
 
     // NEPoint and SWPoint these are NorthEast and SouthWest map Bounds value. These value change when we move the map
     if (NEPoint && SWPoint && is_map_view) {
-        classfilter["filters.location"] = {
-            $geoWithin: { $box: [NEPoint, SWPoint] }
+        classfilter["filters.location.loc"] = {
+            $geoWithin: { $box: [[SWPoint[1],SWPoint[0]],[NEPoint[1],NEPoint[0]]] }
         };
         classfilter["$or"].push({
-            ["filters.location"]: {
-                $geoWithin: { $box: [NEPoint, SWPoint] }
+            ["filters.location.loc"]: {
+                $geoWithin: { $box: [[SWPoint[1],SWPoint[0]],[NEPoint[1],NEPoint[0]]] }
             }
         });
 
@@ -322,8 +323,9 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     }
 
     if (age) {
+    
         classfilter["ageMin"] = { $lte: age };
-        classfilter["ageMax"] = { $gte: age };
+        classfilter["ageMax"]  = { $gte: age };
     }
 
     if (skillSubjectIds && skillSubjectIds.length > 0) {
@@ -389,10 +391,13 @@ Meteor.publish("school.getClassTypesByCategory", function ({
 
     // when map view enable on homepage, Then send the classType data without categorization of skill category.
     if (is_map_view) {
-        classTypeCursor = ClassType.find(classfilter, { limit: undefined });
+        classTypeCursor = ClassType.find(classfilter, { limit: undefined }).fetch();
 
         classTypeCursor.forEach(classTypeData => {
-            locationIds.push(classTypeData.locationId);
+            classTypeData['filters']&& classTypeData['filters']['location'] && classTypeData['filters']['location'].map((current)=>{
+                current && current['loc'] && current['loc']['locationId'] && locationIds.push(current['loc']['locationId']);
+            })
+            
             classTypeIds.push(classTypeData._id);
             schoolIds.push(classTypeData.schoolId);
         });
@@ -410,6 +415,9 @@ Meteor.publish("school.getClassTypesByCategory", function ({
             classfilter,
             collectSkillCategoriesIds,
         })
+        classTypeIds =skillCategoryCursor['classTypeIds'];
+        schoolIds =skillCategoryCursor['schoolIds'];
+        locationIds=skillCategoryCursor['locationIds'];
     }
 
     // const classTypesCursor = ClassType.find({ _id: { $in: classTypeIds } });
@@ -419,8 +427,8 @@ Meteor.publish("school.getClassTypesByCategory", function ({
     then need to show default classes to user.*/
     if (!applyFilterStatus && _.isEmpty(ClassType.find({ _id: { $in: classTypeIds } }).fetch())) {
         //delete location filter from classType filter, Because initially corresponding to user location data not found then show our featured classType.
-        if (classfilter["filters.location"]) {
-            delete classfilter["filters.location"]
+        if (classfilter["filters.location.loc"]) {
+            delete classfilter["filters.location.loc"]
         }
 
         for (let itemObj of config.defaultClassType) {
@@ -455,9 +463,13 @@ Meteor.publish("school.getClassTypesByCategory", function ({
                 classfilter,
                 collectSkillCategoriesIds,
             })
+            classTypeIds =skillCategoryCursor['classTypeIds'];
+            schoolIds =skillCategoryCursor['schoolIds'];
+            locationIds=skillCategoryCursor['locationIds'];
+            
         }
     }
-
+    
     const cursors = [
         ClassType.find({ _id: { $in: uniq(classTypeIds) } }),
         SLocation.find({ _id: { $in: uniq(locationIds) } }),
@@ -522,6 +534,7 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
     }
 
     if (age) {
+       
         classTypeFilter["ageMin"] = { $lte: age };
         classTypeFilter["ageMax"] = { $gte: age };
     }
@@ -592,16 +605,16 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
         // we need to convert the distance to radians
         // the raduis of Earth is approximately 6371 kilometers
         maxDistance /= 63;
-        classTypeFilter["filters.location"] = {
+        classTypeFilter["filters.location.loc"] = {
             $geoWithin: {
-                $center: [coords, maxDistance]
+                $center: [[coords[1],coords[0]], maxDistance]
             }
         };
 
         let slocations = SLocation.find({
             loc: {
                 $geoWithin: {
-                    $center: [coords, maxDistance]
+                    $center: [[coords[1],coords[0]], maxDistance]
                 }
             }
         }).fetch();
@@ -664,6 +677,7 @@ function removeKeyValue(object) {
     return temp;
 }
 
+
 function categorizeClassTypeData({
     classTypeIds = [],
     schoolIds = [],
@@ -677,26 +691,33 @@ function categorizeClassTypeData({
     let skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
     skillCategoryClassLimit ? skillCategoryClassLimit : {};
     let newClassFilters = { ...classfilter }
-
+    //Test query
+    //db.ClassType.find({ "filters.location.loc" : { "$geoWithin" : { "$center" : [ [35.6894875,139.69170639999993] , 50 ] } } })
     skillCategoryCursor.forEach(skillCategory => {
         newClassFilters["skillCategoryId"] = { $in: [skillCategory._id] };
         // Initially(classType limit not set) fetch only 4(default) classType for a particular skill category.
         let limit = (skillCategoryClassLimit && skillCategoryClassLimit[skillCategory.name]) || 4;
         let classTypeCursor = ClassType.find(newClassFilters, {
             limit: is_map_view ? undefined : limit
-        });
+        }).fetch();
+        
+        // db.ClassType.find({ "isPublish": true, "$or": [{ "filters.location.loc": { "$geoWithin": { "$center": [[-117.16108380000003, 32.715738], 0.26997840172786175] } } }, {"ageMin": { "$lte": "10" }},{"ageMax": { "$gte": "10" }},{"skillCategoryId": { "$in": ["zmB8mKh6gvLm6pJTv"] }}] }).pretty()
 
 
         // findout location and school for a class type.
         classTypeCursor.forEach(classTypeData => {
             collectSkillCategoriesIds.push(skillCategory._id)
-            if (classTypeData.locationId) {
-                locationIds.push(classTypeData.locationId);
-            }
+            // if (classTypeData.locationId) {
+            //     locationIds.push(classTypeData.locationId);
+            // }
+            classTypeData['filters']&& classTypeData['filters']['location'] &&  classTypeData['filters']['location'].map((current)=>{
+                current && current['loc'] && current['loc']['locationId'] && locationIds.push(current['loc']['locationId']);
+            })
             classTypeIds.push(classTypeData._id);
             schoolIds.push(classTypeData.schoolId);
         });
     });
+    let filter ={locationIds,schoolIds,classTypeIds}
 
-    return skillCategoryCursor
+    return filter;
 }

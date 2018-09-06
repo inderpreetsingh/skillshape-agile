@@ -19,6 +19,7 @@ import Dialog, {
     DialogContentText,
     DialogTitle,
 } from 'material-ui/Dialog';
+import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
 import EnrollmentFeeForm from '/imports/ui/components/schoolView/editSchool/priceDetails/enrollmentFee/enrollmentFeeForm'
 import ClassPackageForm from '/imports/ui/components/schoolView/editSchool/priceDetails/classPrice/classPriceForm'
 import MonthlyPackageForm from '/imports/ui/components/schoolView/editSchool/priceDetails/monthlyPrice/monthlyPriceForm.js'
@@ -32,6 +33,7 @@ const ButtonWrapper = styled.div`
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   width: 100%;
+  
 `;
 
 
@@ -42,6 +44,12 @@ const InputWrapper = styled.div`
 const styles = {
     dialogAction: {
         width: '100%'
+    },
+    dialogActionsRoot: {
+      [`@media screen and (max-width: ${mobile}px)`]: {
+        flexWrap: "wrap",
+        justifyContent: "flex-start"
+      }
     }
 }
 
@@ -55,10 +63,10 @@ class PackageAddNew extends React.Component {
         super(props);
         this.state = { classPackageForm:false,enrollmentFeeForm:false,monthlyPackageForm:false}
     }
+   
     render() {
         const { schoolId, data,currency ,classTypeData} = this.props;
-        const {enrollmentFeeForm,classPackageForm,monthlyPackageForm}= this.state;
-        
+        const {enrollmentFeeForm,classPackageForm,monthlyPackageForm,}= this.state;
         return (
             <MuiThemeProvider theme={muiTheme}>
                 <Dialog
@@ -82,32 +90,10 @@ class PackageAddNew extends React.Component {
                         What kind of package you want to create? Please Select
                          the package that you want to add to this class time.
                         </DialogContent>
-                    <DialogActions classes={{ action: this.props.classes.dialogAction }}>
-                        {/* <ClassTimeButton
-                            fullWidth
-                            label="Enrollment Package"
-                            noMarginBottom
-                            onClick={() => { this.setState({enrollmentFeeForm:true})}
-                            }
-                            
-                        />
-                        <ClassTimeButton
-                            fullWidth
-                            noMarginBottom
-                            label="Class Package"
-                            onClick={() => { this.setState({classPackageForm:true}) }
-                            }
-                        />
-                        <ClassTimeButton
-                            fullWidth
-                            noMarginBottom
-                            label="Monthly Package"
-                            onClick={() => { this.setState({monthlyPackageForm:true})  }}
-                        /> */}
-                          <Grid style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <ButtonWrapper>
-                            <FormGhostButton
-                                onClick={() => { this.setState({enrollmentFeeForm:true})}}
+                    <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
+                            <ButtonWrapper>
+                                <FormGhostButton
+                                    onClick={() => { this.setState({enrollmentFeeForm:true})}}
                                 label="Enrollment Package"
                             />
                         </ButtonWrapper>
@@ -123,7 +109,6 @@ class PackageAddNew extends React.Component {
                                 label="Monthly Package"
                             />
                         </ButtonWrapper>
-                        </Grid>
                     </DialogActions>
 
                 </Dialog>

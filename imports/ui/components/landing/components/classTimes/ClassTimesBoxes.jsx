@@ -62,7 +62,8 @@ class ClassTimesBoxes extends Component {
     const { classTimesData,
             classInterestData,
             inPopUp,
-            withSlider
+            withSlider,
+            onModalClose
           } = this.props;
 
     const modifiedClassTimesData = classTimesData.map(data => {
@@ -81,6 +82,7 @@ class ClassTimesBoxes extends Component {
             inPopUp={inPopUp}
             classTimesData={modifiedClassTimesData}
             classInterestData={classInterestData}
+            onModalClose ={onModalClose}
           />
         </BarWrapper>
     </Fragment>)

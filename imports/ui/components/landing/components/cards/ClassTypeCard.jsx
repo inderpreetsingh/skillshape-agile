@@ -50,12 +50,12 @@ class ClassTypeCard extends Component {
     y: null
   };
   handleDialogState = state => e => {
-    e.stopPropagation();
+    e && e.stopPropagation();
     this.setState({
       dialogOpen: state,
       classTimesDialogBoxError: null,
-      x: e.pageX - 500,
-      y: e.clientY - 200
+      x: e && e.pageX - 500,
+      y: e && e.clientY - 200
     });
 
     // this.scrollTo("myScrollToElement");

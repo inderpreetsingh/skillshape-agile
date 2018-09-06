@@ -21,6 +21,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import Grid from 'material-ui/Grid';
 import styled from "styled-components";
+import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 const ButtonWrapper = styled.div`
@@ -39,6 +40,12 @@ const InputWrapper = styled.div`
 const styles = {
     dialogAction: {
         width: '100%'
+    },
+    dialogActionsRoot: {
+      [`@media screen and (max-width: ${mobile}px)`]: {
+        flexWrap: "wrap",
+        justifyContent: "flex-start"
+      }
     }
 }
 
@@ -52,9 +59,10 @@ class PackageAttachment extends React.Component {
         super(props);
         this.state = { PackageListingAttachment: false, pacLisAttOpen: true, PackageAddNew: false }
     }
+   
     render() {
         const { schoolId, classTypeId, classTypeName, parentData, closed } = this.props;
-
+        
         return (
             <MuiThemeProvider theme={muiTheme}>
                 <Dialog
@@ -80,29 +88,8 @@ class PackageAttachment extends React.Component {
                         }
 
                     </DialogContent>
-                    <DialogActions classes={{ action: this.props.classes.dialogAction }}>
-                        {/* <ClassTimeButton
-                            fullWidth
-                            label="Create New Package"
-                            noMarginBottom
-                            onClick={() => {this.setState({PackageAddNew:true}) }
-                            }
-                        />
-                        <ClassTimeButton
-                            fullWidth
-                            noMarginBottom
-                            label="Linked Existing Packages"
-                            onClick={(e) => { this.setState({ PackageListingAttachment: true }) }}
-                            bgColor={'rgb(38, 123, 195)'}
-                        />
-                        <ClassTimeButton
-                            fullWidth
-                            noMarginBottom
-                            label="No thanks"
-                            onClick={() => { this.props.classTimeFormOnClose() }}
-                            bgColor={'rgb(186, 195, 38)'}
-                        /> */}
-                        <Grid style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
+                      
                         <ButtonWrapper>
                             <FormGhostButton
                                 onClick={() => { this.setState({ PackageAddNew: true }) }}
@@ -122,7 +109,6 @@ class PackageAttachment extends React.Component {
                                 label="No thanks"
                             />
                         </ButtonWrapper>
-                        </Grid>
                     </DialogActions>
 
                 </Dialog>
