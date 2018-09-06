@@ -67,7 +67,7 @@ class ThinkingAboutAttending extends React.Component {
     constructor(props) {
         super(props);
         const {addToCalendar,notification}= this.props;
-        this.state = { checkBoxes:[!addToCalendar,notification,false] }
+        this.state = { checkBoxes:[!addToCalendar,notification,true] }
     }
     
     render() {
