@@ -61,18 +61,19 @@ const ErrorWrapper = styled.span`
     color: red;
     float: right;
 `;
-const labelValue =['Add this class to my calendar.','Sign me up for notification of class time or location changes',
+const labelValue =['Add this class to my calendar.','Sign me up for notification of class time or location changes.',
 'Sign me up for emails from the school about this class.']
 class ThinkingAboutAttending extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { checkBoxes:[this.props.addToCalendar?true:false,false,false] }
+        const {addToCalendar,notification}= this.props;
+        this.state = { checkBoxes:[!addToCalendar,notification,false] }
     }
     
     render() {
         const {checkBoxes}=this.state;
-        const { open,onModalClose,addToCalendar,handleRemoveFromCalendarButtonClick,
-            handleClassClosed,handleAddToMyCalendarButtonClick,purchaseThisPackage } = this.props;
+        const { open,onModalClose,addToCalendar,
+            handleClassClosed,handleCheckBoxes,purchaseThisPackage } = this.props;
             return (
                 <MuiThemeProvider theme={muiTheme}>
                 <Dialog
@@ -93,7 +94,7 @@ class ThinkingAboutAttending extends React.Component {
                         </DialogTitleWrapper>
                     </DialogTitle>
                     <DialogContent style={{ fontSize: '18px' }}>
-}                   {checkBoxes.map((i,index)=>{
+                 {checkBoxes.map((i,index)=>{
                        return ( <FormControl fullWidth margin="dense">
                        <FormControlLabel
                          control={
@@ -128,15 +129,8 @@ class ThinkingAboutAttending extends React.Component {
                                     if(addToCalendar== 'closed'){
                                         handleClassClosed();
                                     }
-                                    else if (addToCalendar && checkBoxes[0]){
-                                        handleAddToMyCalendarButtonClick();
-                                    }
-                                    else if(!checkBoxes[0]  && !addToCalendar){
-                                        handleRemoveFromCalendarButtonClick();
-                                    }
                                     else{
-                                        
-                                        onModalClose(); 
+                                        handleCheckBoxes(checkBoxes);
                                     }
                                 }}
                                 label={"Purchase at Class"}
