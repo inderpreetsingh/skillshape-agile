@@ -59,7 +59,7 @@ export class WeekDaysRow extends React.Component {
     } else {
       // Initial state if we are adding time instead of editing class time
       state.row.push({
-        key: [],
+        key: [{label:'Sunday', value:6}],
         startTime: new Date(),
         duration: 60,
         day: 0,
@@ -79,7 +79,7 @@ export class WeekDaysRow extends React.Component {
     const {  locationData,roomData} = this.props;
     const oldRow = [...this.state.row];
     oldRow.push({
-      key: [],
+      key: [{label:'Sunday', value:6}],
       startTime: new Date(),
       duration: 60,
       day: 0,
@@ -170,7 +170,7 @@ export class WeekDaysRow extends React.Component {
                   <MultiSelect
                     name="filters"
                     placeholder="Weekdays"
-                    value={data.key}
+                    value={data.key || [{label:'Sunday', value:6}]}
                     options={Weekdays}
                     onChange={(e)=>{this.handleWeekDay(e,index)}}
                     multi
