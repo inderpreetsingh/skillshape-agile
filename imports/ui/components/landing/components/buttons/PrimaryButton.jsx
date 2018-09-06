@@ -23,6 +23,16 @@ const styles = {
       backgroundColor: helpers.primaryColor
     }
   },
+  disabled: {
+    backgroundColor: helpers.panelColor,
+    "&:hover": {
+      backgroundColor: helpers.panelColor
+    }
+  },
+  disabledButtonLabel: {
+    color: helpers.textColor,
+    textTransform: "none"
+  },
   primaryButtonLabel: {
     color: helpers.lightTextColor,
     textTransform: "none"
@@ -61,6 +71,7 @@ const styles = {
 
 const PreloaderWrapper = styled.div`
   width: ${helpers.rhythmDiv * 4}px;
+  transform: translateY(4px);
 `;
 
 const getIconForButton = props => {
@@ -76,6 +87,7 @@ const getIconForButton = props => {
 
 const PrimaryButton = props => {
   let rootClass = ``;
+  let labelClass = props.classes.primaryButtonLabel;
   // console.log(CustomIcon,"Custom Icon")
   if (props.fullWidth && props.noMarginBottom) {
     rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth} ${
@@ -104,44 +116,21 @@ const PrimaryButton = props => {
     rootClass = rootClass + " " + props.classes.searchBarShadow;
   }
 
-  if (props.itemScope && props.itemType) {
-    return (
-      <Button
-        classes={{
-          root: rootClass,
-          label: props.classes.primaryButtonLabel
-        }}
-        onClick={props.onClick}
-        disabled={props.disabled}
-        itemScope
-        itemType={props.itemType}
-        formId={props.formId}
-        type={props.type}
-      >
-        {getIconForButton(props)}
-
-        {props.label ? props.label : "Submit"}
-
-        {props.withLoader && (
-          <PreloaderWrapper>
-            <CircularProgress
-              color="secondary"
-              className={props.classes.circularProgress}
-              thickness={5}
-              size={16}
-            />
-          </PreloaderWrapper>
-        )}
-      </Button>
-    );
+  if (props.disabled) {
+    rootClass = rootClass + " " + props.classes.disabled;
+    labelClass = props.classes.disabledButtonLabel;
+    console.group("classes for primary buttons");
+    console.log(rootClass, labelClass, "====");
+    console.groupEnd();
   }
-
   return (
     <Button
       classes={{
         root: rootClass,
-        label: props.classes.primaryButtonLabel
+        label: labelClass
       }}
+      itemScope={props.itemScope}
+      itemType={props.itemType}
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
@@ -151,6 +140,17 @@ const PrimaryButton = props => {
       {getIconForButton(props)}
 
       {props.label ? props.label : "Submit"}
+
+      {props.withLoader && (
+        <PreloaderWrapper>
+          <CircularProgress
+            color="secondary"
+            className={props.classes.circularProgress}
+            thickness={5}
+            size={16}
+          />
+        </PreloaderWrapper>
+      )}
     </Button>
   );
 };

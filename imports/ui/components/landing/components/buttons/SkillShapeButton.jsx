@@ -144,31 +144,14 @@ const SkillShapeButton = props => {
   rootClass = getColor(props, rootClass);
   labelClass = getLabelColor(props, labelClass);
 
-  if (props.itemScope && props.itemType) {
-    return (
-      <Button
-        classes={{
-          root: rootClass,
-          label: labelClass
-        }}
-        onClick={props.onClick}
-        disabled={props.disabled}
-        itemScope
-        itemType={props.itemType}
-      >
-        {getIconForButton(props)}
-
-        {props.label ? props.label : "Submit"}
-      </Button>
-    );
-  }
-
   return (
     <Button
       classes={{
         root: rootClass,
         label: labelClass
       }}
+      itemScope={props.itemScope}
+      itemType={props.itemType}
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}

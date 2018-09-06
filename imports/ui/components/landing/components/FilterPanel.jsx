@@ -616,18 +616,12 @@ class FilterPanel extends Component {
         ) : (
           <Grid item xs={12} sm={6}>
             <FilterPanelAction>
-              <PrimaryButton
-                fullWidth
-                disabled
-                withLoader
-                label="Searching..."
-              />
-              {/*this.props.isCardsSearching ? (
+              {this.props.isCardsSearching ? (
                 <PrimaryButton
                   fullWidth
                   disabled
-                  withPreloader
-                  label="Searching..."
+                  withLoader
+                  label="Searching"
                 />
               ) : (
                 <PrimaryButton
@@ -635,7 +629,7 @@ class FilterPanel extends Component {
                   label="Close"
                   onClick={() => this.props.onModalClose()}
                 />
-              )*/}
+              )}
             </FilterPanelAction>
           </Grid>
         )}
