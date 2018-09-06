@@ -139,14 +139,15 @@ Meteor.methods({
           const schoolData = School.findOne({ _id: obj.schoolId });
 
           if (userData && schoolData) {
-            ClassTimesRequest.update(
-              { _id: obj._id },
-              { $set: { notification: false } }
-            );
+          //   ClassTimesRequest.update(
+          //     { _id: obj._id },
+          //     { $set: { notification: false } }
+          //   );
             sendEmailToStudentForClassTypeUpdation(
               userData,
               schoolData,
-              classTypeName
+              classTypeName,
+              'Class Time Updated'
             );
           }
         }
@@ -230,14 +231,15 @@ Meteor.methods({
           const schoolData = School.findOne({ _id: obj.schoolId });
 
           if (userData && schoolData) {
-            ClassTypeLocationRequest.update(
-              { _id: obj._id },
-              { $set: { notification: false } }
-            );
+            // ClassTypeLocationRequest.update(
+            //   { _id: obj._id },
+            //   { $set: { notification: false } }
+            // );
             sendEmailToStudentForClassTypeUpdation(
               userData,
               schoolData,
-              classTypeName
+              classTypeName,
+              'Location Updated'
             );
           }
         }

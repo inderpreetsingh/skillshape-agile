@@ -251,7 +251,8 @@ export const sendClassTimesRequest = function({
 export const sendEmailToStudentForClassTypeUpdation = function(
   userData,
   schoolData,
-  classTypeName
+  classTypeName,
+  subject
 ) {
   if (Meteor.isServer) {
     let to;
@@ -266,7 +267,7 @@ export const sendEmailToStudentForClassTypeUpdation = function(
     Email.send({
       to: to, //userData.emails[0].address
       from: "Notices@SkillShape.com",
-      subject: "School Updated",
+      subject: subject,
       html: `${userName}, <br/>${
         schoolData.name
       } has updated their listing for ${classTypeName}. Please go to <br/> ${Meteor.absoluteUrl(
