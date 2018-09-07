@@ -10,6 +10,7 @@ import { withStyles } from "material-ui/styles";
 import IconButton from "material-ui/IconButton";
 
 import MyMultiSelect from "/imports/ui/components/landing/components/form/multiSelect/MyMultiSelect.jsx";
+import ListMultiSelect from "/imports/ui/components/landing/components/form/listMultiSelect/ListMultiSelect.jsx";
 import SearchBarStyled from "./SearchBarStyled.jsx";
 import IconInput from "./form/IconInput.jsx";
 import MySearchBar from "./MySearchBar.jsx";
@@ -228,8 +229,8 @@ const SearchInputsSection = props => (
 
     {/* UPDATING ...............*/}
     <SkillInputWrapper background="white" marginSmallScreen>
-      <div className="my-multi-select-filter no-border">
-          <MyMultiSelect
+      <div className="list-multiselect-filter no-border">
+          <ListMultiSelect
               textField={"name"}
               valueField={"_id"}
               data={props.skillCategoryData}
