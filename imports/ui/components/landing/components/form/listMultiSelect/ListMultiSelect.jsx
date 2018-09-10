@@ -38,11 +38,13 @@ const InputWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
+  ${props => props.reverseList && 'flex-direction: row-reverse; justify-content: flex-start;'}
 `;
 
 const IconChipWrapper = styled.div`
   display: flex;
   align-items: flex-end;
+  ${props => props.reverseList && 'flex-direction: row-reverse;'}
 `;
 
 let propTypes = {
@@ -152,7 +154,7 @@ let propTypes = {
  *
  * @public
  */
-let ourInputWrapper = '';
+
 
  @withRightToLeft
 class Multiselect extends React.Component {
@@ -497,7 +499,9 @@ class Multiselect extends React.Component {
     let { focusedTag, dataItems } = this.state;
 
     let Component = this.props.tagComponent;
-
+    console.group(" messages in the list");
+    console.log(dataItems);
+    console.groupEnd();
     // console.log('messages...',messages);
     return (<MyTagList
          onNoOfFiltersClick={this.props.onNoOfFiltersClick}
@@ -602,13 +606,15 @@ class Multiselect extends React.Component {
           onTouchEnd={this.handleClick}
         >
           <InputWrapper
+            reverseList={!!dataItems.length}
             innerRef={inputWrapper => {
                 this.inputWrapper = inputWrapper;
-                ourInputWrapper = inputWrapper;
             }}
           >
             {this.renderInput(inputOwns)}
-            <IconChipWrapper>
+            <IconChipWrapper
+              reverseList={!!dataItems.length}
+            >
               <Select
                 busy={busy}
                 icon={focused ? 'caret-down' :''}

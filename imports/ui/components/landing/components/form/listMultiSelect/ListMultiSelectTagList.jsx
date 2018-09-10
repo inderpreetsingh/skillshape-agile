@@ -1,7 +1,7 @@
 import React,{Fragment} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import ShadowDOM from 'react-shadow';
+// import ShadowDOM from 'react-shadow';
 
 import PrimaryButton from '../../buttons/PrimaryButton.jsx';
 
@@ -173,23 +173,21 @@ class ListMultiSelectList extends React.Component {
       >
         {this.state.renderListWithButton ? this.renderListItemWithButton() : this.renderCustomList()}
       </ul>
-      <ShadowDOM>
-        <FakeList>
-          <ul
-            ref={multiselectList => {
-              this.multiselectList = multiselectList;
-              ourMultiSelect = multiselectList;
-            }}
-            id={id}
-            tabIndex='-1'
-            role='listbox'
-            aria-label={label}
-            className='rw-my-multiselect-taglist'
-          >
-            {this.renderCustomList()}
-          </ul>
-        </FakeList>
-      </ShadowDOM>
+      <FakeList>
+        <ul
+          ref={multiselectList => {
+            this.multiselectList = multiselectList;
+            ourMultiSelect = multiselectList;
+          }}
+          id={id}
+          tabIndex='-1'
+          role='listbox'
+          aria-label={label}
+          className='rw-my-multiselect-taglist'
+        >
+          {this.renderCustomList()}
+        </ul>
+      </FakeList>
       </Fragment>
     )
   }

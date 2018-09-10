@@ -60,10 +60,6 @@
     "react-rte-image": "^0.11.1",
     "react-scroll": "^1.7.5",
     "react-select": "^1.3.0",
-<<<<<<< HEAD
-    "react-shadow": "^16.3.0",
-=======
->>>>>>> 746d21988bc1e251775c40e641b811db49b5bb1b
     "react-slick": "^0.16.0",
     "react-social-icons": "^2.8.0",
     "react-stars": "^2.2.5",

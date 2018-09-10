@@ -44,7 +44,7 @@
 
 .my-multi-select-filter, .list-multiselect-filter {
    width: 100%;
-   
+
   .rw-widget-input, .rw-widget-picker, .rw-widget-container, .rw-multiselect {
     background-color: transparent;
   }
@@ -109,17 +109,13 @@
 
 .list-multiselect-filter {
   .rw-input-reset {
-    max-width: 70%;
+    max-width: 80%;
     min-width: 0;
     flex-grow: 1;
 
-    @include respond-to('tablet') {
-      max-width: 60%;
-    }
-
-    @include respond-to('mobile') {
-      max-width: 80%;
-    }
+    // @include respond-to('mobile') {
+    //   max-width: 80%;
+    // }
   }
 }
 
