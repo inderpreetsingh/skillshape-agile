@@ -34,6 +34,13 @@ const ENTER = 13;
 const INSERT = 'insert';
 const REMOVE = 'remove';
 
+const InputAndIcon = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  min-width: 0;
+`;
+
 const InputWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -41,10 +48,10 @@ const InputWrapper = styled.div`
   ${props => props.reverseList && 'flex-direction: row-reverse; justify-content: flex-start;'}
 `;
 
-const IconChipWrapper = styled.div`
+const ChipWrapper = styled.div`
   display: flex;
-  align-items: flex-end;
-  ${props => props.reverseList && 'flex-direction: row-reverse;'}
+  // align-items: flex-end;
+  // ${props => props.reverseList && 'flex-direction: row-reverse;'}
 `;
 
 let propTypes = {
@@ -504,6 +511,7 @@ class Multiselect extends React.Component {
     console.groupEnd();
     // console.log('messages...',messages);
     return (<MyTagList
+         onListCollapse={this.onListCollapse}
          onNoOfFiltersClick={this.props.onNoOfFiltersClick}
          containerWidth={this._getWidthForInputWrapper() || 0}
          id={this.tagsId}
@@ -521,43 +529,20 @@ class Multiselect extends React.Component {
     )
   }
 
-  // static getDerivedStateFromProps(props, state) {
-  //   // console.group("ListMultiSelectList");
-  //   if(ourInputWrapper.getBoundingClientRect) {
-  //     const width = ourInputWrapper.getBoundingClientRect().width;
-  //     return {
-  //       inputWrapperWidth: width
-  //     }
-  //   }
-  //   return null;
-  //   // console.groupEnd();
-  // }
-
   _getWidthForInputWrapper = () => {
-    console.log(this,"---")
+    // console.log(this,"---")
     if(this.inputWrapper)
       return this.inputWrapper.getBoundingClientRect().width;
   }
-  //
-  // componentDidMount(nextProps, nextState) {
-  //   this.setState(state => {
-  //     return {
-  //       ...state,
-  //       inputWrapperWidth: this._getWidthForInputWrapper()
-  //     }
-  //   });
-  // }
-  //
-  // componentDidUpdate(prevProps,prevState) {
-  //   if(this.state.inputWrapperWidth !== prevState.inputWrapperWidth) {
-  //     this.setState(state => {
-  //       return {
-  //         ...state,
-  //         inputWrapperWidth: this._getWidthForInputWrapper()
-  //       }
-  //     })
-  //   }
-  // }
+
+  onListCollapse = (collapsedListState) => {
+    this.setState(state => {
+      return {
+        ...state,
+        collapsedList: collapsedListState
+      }
+    })
+  }
 
   render() {
     let {
@@ -568,7 +553,7 @@ class Multiselect extends React.Component {
       , searchTerm
       , popupTransition } = this.props;
 
-    let { focused, focusedItem, dataItems } = this.state;
+    let { focused, focusedItem, dataItems, collapsedList } = this.state;
 
     let elementProps = Props.pickElementProps(this);
 
@@ -606,31 +591,33 @@ class Multiselect extends React.Component {
           onTouchEnd={this.handleClick}
         >
           <InputWrapper
-            reverseList={!!dataItems.length}
+            reverseList={!!dataItems.length && !collapsedList}
             innerRef={inputWrapper => {
                 this.inputWrapper = inputWrapper;
             }}
           >
+            <InputAndIcon>
             {this.renderInput(inputOwns)}
-            <IconChipWrapper
-              reverseList={!!dataItems.length}
+            <Select
+              busy={busy}
+              icon={focused ? 'caret-down' :''}
+              aria-hidden="true"
+              role="presentational"
+              disabled={disabled || readOnly}
+            />
+            </InputAndIcon>
+            <ChipWrapper
+              reverseList={!!dataItems.length && !collapsedList}
             >
-              <Select
-                busy={busy}
-                icon={focused ? 'caret-down' :''}
-                aria-hidden="true"
-                role="presentational"
-                disabled={disabled || readOnly}
-              />
               <div className="rw-widget-chip">
                 {shouldRenderTags &&
                   this.renderTags(messages)
                 }
               </div>
-            </IconChipWrapper>
+            </ChipWrapper>
           </InputWrapper>
-
-        </WidgetPicker>
+        //
+        // </WidgetPicker>
 
 
         {shouldRenderPopup &&

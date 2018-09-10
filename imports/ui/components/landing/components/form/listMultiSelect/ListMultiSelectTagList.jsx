@@ -48,8 +48,16 @@ class ListMultiSelectList extends React.Component {
   };
 
   state = {
-    renderListWithButton: false,
+    collapsedList: false,
   };
+
+  _getInputWidth = () => {
+    if (window.innerWidth < helpers.mobile) {
+      return 80;
+    }
+
+    return 120;
+  }
 
   handleDelete = (item, event) => {
     // console.log('handling delete,',item);
@@ -125,27 +133,30 @@ class ListMultiSelectList extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const containerWidth = this.props.containerWidth;
     const listWidth = this.multiselectList.getBoundingClientRect().width;
+    const inputWrapperWidth = this._getInputWidth();
+    // console.group("ListMultiSelectList Update");
+    // console.info(containerWidth, - 80, listWidth);
+    // console.groupEnd();
 
-    console.group("ListMultiSelectList Update");
-    console.info(containerWidth, - 80, listWidth);
-    console.groupEnd();
-    if(containerWidth - 80 < listWidth) {
-      if(!this.state.renderListWithButton) {
+    if(containerWidth - inputWrapperWidth < listWidth) {
+      if(!this.state.collapsedList) {
         this.setState(state => {
           return {
             ...state,
-            renderListWithButton : true
+            collapsedList : true
           }
         });
+        this.props.onListCollapse(true);
       }
     }else {
-      if(this.state.renderListWithButton) {
+      if(this.state.collapsedList) {
         this.setState(state => {
           return {
             ...state,
-            renderListWithButton : false
+            collapsedList : false
           }
         });
+        this.props.onListCollapse(false);
       }
     }
     // console.groupEnd();
@@ -171,7 +182,7 @@ class ListMultiSelectList extends React.Component {
         aria-label={label}
         className='rw-my-multiselect-taglist'
       >
-        {this.state.renderListWithButton ? this.renderListItemWithButton() : this.renderCustomList()}
+        {this.state.collapsedList ? this.renderListItemWithButton() : this.renderCustomList()}
       </ul>
       <FakeList>
         <ul
