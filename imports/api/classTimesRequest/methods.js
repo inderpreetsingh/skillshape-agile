@@ -141,5 +141,26 @@ Meteor.methods({
     	} else {
 			     throw new Meteor.Error("Permission denied!!");
     	}
+    },
+    'classTimesRequest.updateRequest': function(data) {
+      let old= ClassTimesRequest.findOne({userId:data.userId,classTypeId:data.classTypeId});
+      if(old && old.notification== data.notification){
+        return 0;
+      }
+      try{
+      let res=  ClassTimesRequest.update({userId:data.userId,classTypeId:data.classTypeId},{$set:data},{upsert:true})
+       return res;
+      }catch(error){
+        throw new Meteor.Error(error);
+      }
+   },
+    'classTimesRequest.getUserRecord':function(classTypeId){
+      let result = ClassTimesRequest.findOne({userId:this.userId,classTypeId});
+      if(result){
+        return result.notification;
+      }
+      else {
+        return false;
+      }
     }
 })

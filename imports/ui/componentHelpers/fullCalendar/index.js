@@ -178,7 +178,10 @@ class FullCalendar extends React.Component {
     } = this.props;
     let { manageMyCalendarFilter } = this.props;
     let sevents = [];
+<<<<<<< HEAD
 
+=======
+>>>>>>> 746d21988bc1e251775c40e641b811db49b5bb1b
     let myClassTimesIds = classInterestData.map(data => data.classTimeId);
     // Class Time Ids managed by current user
     let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;

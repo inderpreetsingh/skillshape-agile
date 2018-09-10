@@ -257,9 +257,10 @@ class Landing extends Component {
   _handleGeoLocationError(err) {
     switch (err.code) {
       case err.PERMISSION_DENIED:
-        if (err.message.indexOf("User denied") == 0) {
-          return "GeoLocation services dont have permission/ or they need to be switched on in your device/browser settings";
-        } else if (
+        // if (err.message.indexOf("User denied") == 0) {
+        //   return "GeoLocation services dont have permission/ or they need to be switched on in your device/browser settings";
+        // } else
+        if (
           err.message.indexOf("Only secure origins are allowed") == 0
         ) {
           return "GeoLocation services will only work in case of secured origin (eg https)";
@@ -461,7 +462,9 @@ class Landing extends Component {
           },
           err => {
             const geolocationError = this._handleGeoLocationError(err);
-            popUp.appear("alert", { content: geolocationError });
+            if(geolocationError){
+              popUp.appear("alert", { content: geolocationError });
+            }
           }
         );
       } else {

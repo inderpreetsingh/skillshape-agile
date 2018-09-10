@@ -32,7 +32,6 @@ Meteor.methods({
 
     // Verfiying the data send..
     if (isValid) {
-      // console.log('adding price request..');
       let locationRequest;
       if(!data.classTypeId) {
         locationRequest = ClassTypeLocationRequest.findOne({email: data.email, schoolId: data.schoolId});
@@ -84,7 +83,6 @@ Meteor.methods({
            const unsubscribeLink = `${Meteor.absoluteUrl()}unsubscribe?locationRequest=true&requestId=${locationRequestId}`;
            const subject = `Subscription for location request of ${classTypeName || schoolData.name}`;
            const joinSkillShapeLink = `${Meteor.absoluteUrl()}`;
-           //console.log(toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink);
            sendEmailForSubscription({toEmail, fromEmail, updateFor, currentUserName, subject, unsubscribeLink, joinSkillShapeLink});
          }
 
@@ -112,5 +110,26 @@ Meteor.methods({
     },
    'classTypeLocationRequest.removeRequest': function(requestId) {
      return ClassTypeLocationRequest.remove({_id: requestId});
+   },
+   'classTypeLocationRequest.updateRequest': function(data) {
+    let old= ClassTypeLocationRequest.findOne({userId:data.userId,classTypeId:data.classTypeId});
+    if(old && old.notification== data.notification){
+      return 0;
+    }
+     try{
+     let res=  ClassTypeLocationRequest.update({userId:data.userId,classTypeId:data.classTypeId},{$set:data},{upsert:true})
+      return res;
+     }catch(error){
+      throw new Meteor.Error(error);
+     }
+  },
+   'classTypeLocationRequest.getUserRecord':function(classTypeId){
+     let result = ClassTypeLocationRequest.findOne({userId:this.userId,classTypeId});
+     if(result){
+       return result.notification;
+     }
+     else {
+       return false;
+     }
    }
 })

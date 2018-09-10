@@ -33,6 +33,7 @@ const ButtonWrapper = styled.div`
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   width: 100%;
+  font-size: 30px;
 `;
 
 
@@ -49,30 +50,33 @@ const styles = {
         flexWrap: "wrap",
         justifyContent: "flex-start"
       }
+    },dialogTitle:{
+        borderTop: `5px solid #4caf50`
     }
     
 }
 const TextWrapper = styled.div`
     text-align: center;
-    font-size: 30px;
+    font-size: 15px;
     font-weight: 500;
-    text-decoration: underline;`;
+   `;
 const ErrorWrapper = styled.span`
     color: red;
     float: right;
 `;
-const labelValue =['Add this class to my calendar.','Sign me up for notification of class time or location changes',
+const labelValue =['Add this class to my calendar.','Sign me up for notification of class time or location changes.',
 'Sign me up for emails from the school about this class.']
 class ThinkingAboutAttending extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { checkBoxes:[this.props.addToCalendar?true:false,false,false] }
+        const {addToCalendar,notification}= this.props;
+        this.state = { checkBoxes:[true,true,true] }
     }
     
     render() {
         const {checkBoxes}=this.state;
-        const { open,onModalClose,addToCalendar,handleRemoveFromCalendarButtonClick,
-            handleClassClosed,handleAddToMyCalendarButtonClick,purchaseThisPackage } = this.props;
+        const { open,onModalClose,addToCalendar,
+            handleClassClosed,handleCheckBoxes,purchaseThisPackage ,name} = this.props;
             return (
                 <MuiThemeProvider theme={muiTheme}>
                 <Dialog
@@ -83,9 +87,9 @@ class ThinkingAboutAttending extends React.Component {
                     aria-labelledby="Thinking About Attending"
                     >
                     {this.props.isLoading && <ContainerLoader />}
-                    <DialogTitle>
+                    <DialogTitle  classes={{ root: this.props.classes.dialogTitle }}>
                         <DialogTitleWrapper>
-                        Thinking About Attending
+                        About Attending {name && name}
 
                             <IconButton color="primary" onClick={() => { onModalClose()}}>
                                 <ClearIcon /> 
@@ -93,7 +97,7 @@ class ThinkingAboutAttending extends React.Component {
                         </DialogTitleWrapper>
                     </DialogTitle>
                     <DialogContent style={{ fontSize: '18px' }}>
-}                   {checkBoxes.map((i,index)=>{
+                 {checkBoxes.map((i,index)=>{
                        return ( <FormControl fullWidth margin="dense">
                        <FormControlLabel
                          control={
@@ -128,15 +132,8 @@ class ThinkingAboutAttending extends React.Component {
                                     if(addToCalendar== 'closed'){
                                         handleClassClosed();
                                     }
-                                    else if (addToCalendar && checkBoxes[0]){
-                                        handleAddToMyCalendarButtonClick();
-                                    }
-                                    else if(!checkBoxes[0]  && !addToCalendar){
-                                        handleRemoveFromCalendarButtonClick();
-                                    }
                                     else{
-                                        
-                                        onModalClose(); 
+                                        handleCheckBoxes(checkBoxes);
                                     }
                                 }}
                                 label={"Purchase at Class"}
@@ -146,7 +143,7 @@ class ThinkingAboutAttending extends React.Component {
                             <FormGhostButton
                                 darkGreyColor
                                 onClick={onModalClose}
-                                label="No thanks"
+                                label="Not Yet, Thanks!"
                             />
                         </ButtonWrapper>
                     </DialogActions>

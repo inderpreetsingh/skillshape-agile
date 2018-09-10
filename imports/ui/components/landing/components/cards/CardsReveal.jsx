@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { CSSTransition, Transition } from 'react-transition-group';
 import styled from 'styled-components';
-
+import ProgressiveImage from "react-progressive-image-loading";
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Icon from 'material-ui/Icon';
@@ -178,7 +178,12 @@ const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCar
   return (<CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
     <CardDescriptionHeader>
       <CardImageContainer>
-        <Avatar bgImg={bgImg} />
+      <ProgressiveImage
+            preview="/images/blur.jpg"
+            src={bgImg}
+            render={(src) => <Avatar bgImg={src} />}
+          />
+        
       </CardImageContainer>
 
       <CardContentTitle description>{_getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
@@ -236,15 +241,19 @@ class CardsReveal extends Component {
     return (<Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
         <div onClick={this.revealCardContent}>
           <CardImageTitleWrapper>
+          <ProgressiveImage
+            preview="/images/blur.jpg"
+            src={this.state.bgImg}
+            render={(src) => <CardImageWrapper bgImage={src}></CardImageWrapper>}
+          />
 
-            <CardImageWrapper bgImage={this.state.bgImg}></CardImageWrapper>
 
-            <CardContentHeader>
-              <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
-              <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
-                <MoreVert />
-              </IconButton>
-            </CardContentHeader>
+          <CardContentHeader>
+            <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
+            <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
+              <MoreVert />
+            </IconButton>
+          </CardContentHeader>
 
           </CardImageTitleWrapper>
 
