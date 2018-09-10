@@ -243,8 +243,8 @@ const SearchInputsSection = props => (
     </SkillInputWrapper>
 
     <SkillInputWrapper background="white" marginSmallScreen>
-      <div className="my-multi-select-filter no-border">
-          <MyMultiSelect
+      <div className="list-multiselect-filter no-border">
+          <ListMultiSelect
               textField={"name"}
               valueField={"_id"}
               data={props.skillSubjectData}
