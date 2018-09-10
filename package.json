@@ -37,7 +37,7 @@
     "rc-tooltip": "^3.7.0",
     "react": "^16.2.0",
     "react-addons-pure-render-mixin": "^15.6.2",
-    "react-autosuggest": "^9.3.2",
+    "react-autosuggest": "9.3.2",
     "react-big-calendar": "^0.17.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-datepicker": "^0.60.2",

@@ -470,6 +470,7 @@ class ClassTime extends Component {
               onModalClose();
             }}
             handleCheckBoxes = {this.handleCheckBoxes}
+            name ={name}
             />}
             <div>
               <ClassTimeContainer

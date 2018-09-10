@@ -33,6 +33,7 @@ const ButtonWrapper = styled.div`
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   width: 100%;
+  font-size: 30px;
 `;
 
 
@@ -54,9 +55,9 @@ const styles = {
 }
 const TextWrapper = styled.div`
     text-align: center;
-    font-size: 30px;
+    font-size: 15px;
     font-weight: 500;
-    text-decoration: underline;`;
+   `;
 const ErrorWrapper = styled.span`
     color: red;
     float: right;
@@ -67,13 +68,13 @@ class ThinkingAboutAttending extends React.Component {
     constructor(props) {
         super(props);
         const {addToCalendar,notification}= this.props;
-        this.state = { checkBoxes:[!addToCalendar,notification,true] }
+        this.state = { checkBoxes:[true,true,true] }
     }
     
     render() {
         const {checkBoxes}=this.state;
         const { open,onModalClose,addToCalendar,
-            handleClassClosed,handleCheckBoxes,purchaseThisPackage } = this.props;
+            handleClassClosed,handleCheckBoxes,purchaseThisPackage ,name} = this.props;
             return (
                 <MuiThemeProvider theme={muiTheme}>
                 <Dialog
@@ -86,7 +87,7 @@ class ThinkingAboutAttending extends React.Component {
                     {this.props.isLoading && <ContainerLoader />}
                     <DialogTitle>
                         <DialogTitleWrapper>
-                        Thinking About Attending
+                        About Attending {name && name}
 
                             <IconButton color="primary" onClick={() => { onModalClose()}}>
                                 <ClearIcon /> 
