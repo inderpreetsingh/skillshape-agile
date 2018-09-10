@@ -50,6 +50,8 @@ const styles = {
         flexWrap: "wrap",
         justifyContent: "flex-start"
       }
+    },dialogTitle:{
+        borderTop: `5px solid #4caf50`
     }
     
 }
@@ -85,7 +87,7 @@ class ThinkingAboutAttending extends React.Component {
                     aria-labelledby="Thinking About Attending"
                     >
                     {this.props.isLoading && <ContainerLoader />}
-                    <DialogTitle>
+                    <DialogTitle  classes={{ root: this.props.classes.dialogTitle }}>
                         <DialogTitleWrapper>
                         About Attending {name && name}
 
@@ -141,7 +143,7 @@ class ThinkingAboutAttending extends React.Component {
                             <FormGhostButton
                                 darkGreyColor
                                 onClick={onModalClose}
-                                label="No thanks"
+                                label="Not Yet, Thanks!"
                             />
                         </ButtonWrapper>
                     </DialogActions>
