@@ -126,9 +126,9 @@ class ListMultiSelectList extends React.Component {
     const containerWidth = this.props.containerWidth;
     const listWidth = this.multiselectList.getBoundingClientRect().width;
 
-    // console.group("ListMultiSelectList Update");
-    // console.info(containerWidth, - 80, listWidth);
-    // console.groupEnd();
+    console.group("ListMultiSelectList Update");
+    console.info(containerWidth, - 80, listWidth);
+    console.groupEnd();
     if(containerWidth - 80 < listWidth) {
       if(!this.state.renderListWithButton) {
         this.setState(state => {

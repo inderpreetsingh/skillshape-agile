@@ -117,6 +117,10 @@
     //   max-width: 80%;
     // }
   }
+
+  .rw-multiselect-tag {
+    max-width: map-get($sizes,'rhythm-div') * 10px;
+  }
 }
 
 .rw-state-focus > .rw-widget-container,.rw-state-focus > .rw-widget-container:hover {

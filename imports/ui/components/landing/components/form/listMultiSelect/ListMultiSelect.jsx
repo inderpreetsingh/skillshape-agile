@@ -505,7 +505,7 @@ class Multiselect extends React.Component {
     // console.log('messages...',messages);
     return (<MyTagList
          onNoOfFiltersClick={this.props.onNoOfFiltersClick}
-         containerWidth={this.state.inputWrapperWidth}
+         containerWidth={this._getWidthForInputWrapper() || 0}
          id={this.tagsId}
          activeId={this.activeTagId}
          textAccessor={this.accessors.text}
@@ -538,26 +538,26 @@ class Multiselect extends React.Component {
     if(this.inputWrapper)
       return this.inputWrapper.getBoundingClientRect().width;
   }
-
-  componentDidMount(nextProps, nextState) {
-    this.setState(state => {
-      return {
-        ...state,
-        inputWrapperWidth: this._getWidthForInputWrapper()
-      }
-    });
-  }
-
-  componentDidUpdate(prevProps,prevState) {
-    if(this.state.inputWrapperWidth !== prevState.inputWrapperWidth) {
-      this.setState(state => {
-        return {
-          ...state,
-          inputWrapperWidth: this._getWidthForInputWrapper()
-        }
-      })
-    }
-  }
+  //
+  // componentDidMount(nextProps, nextState) {
+  //   this.setState(state => {
+  //     return {
+  //       ...state,
+  //       inputWrapperWidth: this._getWidthForInputWrapper()
+  //     }
+  //   });
+  // }
+  //
+  // componentDidUpdate(prevProps,prevState) {
+  //   if(this.state.inputWrapperWidth !== prevState.inputWrapperWidth) {
+  //     this.setState(state => {
+  //       return {
+  //         ...state,
+  //         inputWrapperWidth: this._getWidthForInputWrapper()
+  //       }
+  //     })
+  //   }
+  // }
 
   render() {
     let {
