@@ -469,7 +469,7 @@ class DashBoardView extends React.Component {
         lastName: memberInfo.lastName,
         classTypeIds: memberInfo.classTypeIds,
         firstName: memberInfo.firstName,
-        pic: memberInfo.pic,
+        pic: memberInfo.profile.profile.pic,
         studentWithoutEmail: memberInfo.studentWithoutEmail,
         packageDetails: memberInfo.packageDetails
       },
@@ -650,7 +650,7 @@ class DashBoardView extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="title" color="inherit" noWrap>
-              Foldeable search popover
+              
             </Typography>
           </Toolbar>
         </AppBar>

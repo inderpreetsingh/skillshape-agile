@@ -18,10 +18,12 @@ import EditMemberDialogBox from "/imports/ui/components/landing/components/dialo
 
 const styles = theme => ({
   avatarCss: {
-    width: "100%",
-    height: "150px",
+    width: "200px",
+    height: "163px",
     backgroundSize: "cover",
-    backgroundPosition: "top center"
+    backgroundPosition: "top center",
+    borderRadius: '27px'
+
   },
   btnBackGround: {
     background: `${helpers.action}`
@@ -74,7 +76,8 @@ const UploadDiv = styled.div`
   position: relative;
   text-align: center;
   /* bottom: 21px; */
-  left: 20px;
+  left: 8px;
+  margin: 0 auto 0 auto;
   /* overflow: hidden; */
   width: 137px;
   /* background-image: url((unknown)); */
@@ -85,7 +88,6 @@ const UploadDiv = styled.div`
   border: 1px solid #bbb;
   /* width: 122px; */
   /* height: 100pc; */
-  top: 65px;
   color: #fff;
   font-family: inherit;
   font-weight: 400;
@@ -269,9 +271,8 @@ class SchoolMemberInfo extends Component {
             }}
           >
             <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4}>
-              {memberInfo.pic ? (
-                <img className={classes.avatarCss} src={memberInfo.pic} />
-              ) : view === "admin" ? (
+              <img className={classes.avatarCss} src={memberInfo.pic || "/images/Avatar-Unisex.png"} />
+              {view === "admin" ? (
                 <UploadDiv
                   onClick={() =>
                     this.setState({
