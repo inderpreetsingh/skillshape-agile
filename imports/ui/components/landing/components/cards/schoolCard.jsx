@@ -20,6 +20,7 @@ import { ContainerLoader } from "/imports/ui/loading/container.js";
 import CallUsDialogBox from "/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx";
 import EmailUsDialogBox from "/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import ProgressiveImage from "react-progressive-image-loading";
 
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
@@ -282,9 +283,14 @@ class SchoolCard extends Component {
           <CardImageContentWrapper>
             <MyLink to={`/schools/${schoolCardData.slug}`} target="_blank">
               {" "}
-              <CardImageWrapper
-                bgImage={schoolCardData.mainImage || cardImgSrc}
-              />{" "}
+              <ProgressiveImage
+            preview="/images/blur.jpg"
+            src={schoolCardData.mainImage || cardImgSrc}
+            render={(src) => <CardImageWrapper
+              bgImage={src}
+            />}
+          />
+              {" "}
             </MyLink>
 
             <CardContentHeader>
