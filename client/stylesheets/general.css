@@ -817,3 +817,7 @@ used in the skillshape eg. searchbar */
   height: 65px;
   overflow-x: auto;
 }
+
+/* .sc-sVRsr .sc-CtfFt{
+  transition: background-image 1s linear;
+} */

@@ -76,7 +76,7 @@ const CardImageWrapper = styled.div`
   max-height: 300px;
   flex-grow: 1;
   width: 100%;
-
+  transition: background-image 1s linear !important;
   background-position: 50% 50%;
   background-size: cover;
   background-repeat: no-repeat;

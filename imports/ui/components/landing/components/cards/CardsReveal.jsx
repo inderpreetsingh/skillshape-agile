@@ -48,7 +48,7 @@ const CardImageWrapper = styled.div`
   max-height: 300px;
   height: 100%;
   width: 100%;
-  opacity: ${props=>props.loading ? 0.5 : 1};
+  transition: background-image 1s linear !important;
   background-position: 50% 50%;
   background-size: cover;
   background-repeat: no-repeat;
@@ -137,6 +137,7 @@ const CardContentInnerTitle = styled.span`
 `;
 
 const Avatar = styled.div`
+transition: background-image 1s linear !important;
   background-image: url(${props => props.bgImg});
   background-size: cover;
   border-radius: 50%;
