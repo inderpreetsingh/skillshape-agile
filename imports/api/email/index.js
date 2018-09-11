@@ -128,7 +128,7 @@ export const sendClaimASchoolEmail = function(
                    <b>${
                      claimSchoolData.userName
                    }</b> has requested permission to manage <b>${
-        school.name
+                    school && school.name
       }</b>. You are listed as the admin. <br/>Do you approve this?<br/><br/>
                    <div>
                        <a href=${

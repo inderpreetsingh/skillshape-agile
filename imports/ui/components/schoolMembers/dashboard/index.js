@@ -146,7 +146,8 @@ class DashBoardView extends React.Component {
       classTypeIds: [],
       memberName: ""
     },
-    studentWithoutEmail: false
+    studentWithoutEmail: false,
+    mobileOpen:true
   };
 
   /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
@@ -454,7 +455,7 @@ class DashBoardView extends React.Component {
   handleMemberDetailsToRightPanel = memberId => {
     let memberInfo = SchoolMemberDetails.findOne(memberId);
     // memberInfo = this.state.memberInfo
-
+    this.handleDrawerToggle();
     this.setState({
       memberInfo: {
         _id: memberInfo._id,

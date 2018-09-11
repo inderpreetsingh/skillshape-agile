@@ -2,6 +2,8 @@ export default (config = Object.freeze({
   // defaultSchoolImage: "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg",
   defaultSchoolImage: "/images/new-logo.png",
   defaultSchoolLogo: "/images/new-logo.png",
+  defaultProfilePic: '/images/Avatar-Unisex.png',
+  blurImage: '/images/blur.jpg',
   fromEmailForPurchasePackage: "Notices@SkillShape.com",
   fromEmailForJoiningClass: "Notices@SkillShape.com",
   skillshapeAdminEmail: "sam@skillshape.com",
