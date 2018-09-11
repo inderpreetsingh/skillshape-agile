@@ -30,8 +30,8 @@ const styles = theme => ({
     background: `${helpers.action}`
   },
   avatarContainer: {
-    backgroundColor: "#FFFFFF",
-    width: 100
+    width: 100,
+    textAlign: "center",
   }
 });
 
@@ -71,19 +71,22 @@ const ActionButton = styled.div`
   }
 `;
 const ProfilePic =styled.div`
+transition: background-image 1s linear !important;
 background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-image: url(${props=>props.img});
-    height: 100%;
-    border-radius:15px
+    height: 150px;
+    border-radius:15px;
+    width: 165px;
+    border: 2px solid black;
+    border-radius: 15px;
 `;
 const UploadDiv = styled.div`
   background: #448aff;
   /* display: block; */
   /* overflow: hidden; */
   position: relative;
-  text-align: center;
   /* bottom: 21px; */
   margin: 4px auto 0 auto;
   /* overflow: hidden; */
