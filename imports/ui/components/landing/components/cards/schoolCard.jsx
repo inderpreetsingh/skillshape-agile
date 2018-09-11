@@ -21,7 +21,6 @@ import CallUsDialogBox from "/imports/ui/components/landing/components/dialogs/C
 import EmailUsDialogBox from "/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import ProgressiveImage from "react-progressive-image";
-
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
 import { cardImgSrc } from "/imports/ui/components/landing/site-settings.js";
@@ -296,7 +295,7 @@ class SchoolCard extends Component {
               {" "}
               <ProgressiveImage 
                 src={bgImg}
-                placeholder='/images/blur.jpg'>
+                placeholder={config.blurImage}>
                 {(src) =>  <CardImageWrapper
                   bgImage={src}
                 />}

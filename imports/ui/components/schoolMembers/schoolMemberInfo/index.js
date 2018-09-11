@@ -7,9 +7,10 @@ import Input from "material-ui/Input";
 import isEmpty from "lodash/isEmpty";
 import { withStyles } from "material-ui/styles";
 import styled from "styled-components";
+import {verifyImageURL} from "/imports/util";
 import FileUpload from "material-ui-icons/FileUpload";
 import MobileDetect from "mobile-detect";
-
+import ProgressiveImage from "react-progressive-image";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import UploadAvatar from "/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js";
 import CallMemberDialogBox from "/imports/ui/components/landing/components/dialogs/CallMemberDialogBox.js";
@@ -18,7 +19,7 @@ import EditMemberDialogBox from "/imports/ui/components/landing/components/dialo
 
 const styles = theme => ({
   avatarCss: {
-    width: "200px",
+    minWidth: "100%",
     height: "163px",
     backgroundSize: "cover",
     backgroundPosition: "top center",
@@ -69,6 +70,14 @@ const ActionButton = styled.div`
     margin-right: ${helpers.rhythmDiv}px;
   }
 `;
+const ProfilePic =styled.div`
+background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url(${props=>props.img});
+    height: 100%;
+    border-radius:15px
+`;
 const UploadDiv = styled.div`
   background: #448aff;
   /* display: block; */
@@ -76,8 +85,7 @@ const UploadDiv = styled.div`
   position: relative;
   text-align: center;
   /* bottom: 21px; */
-  left: 8px;
-  margin: 0 auto 0 auto;
+  margin: 4px auto 0 auto;
   /* overflow: hidden; */
   width: 137px;
   /* background-image: url((unknown)); */
@@ -214,7 +222,18 @@ class SchoolMemberInfo extends Component {
   getContactNumber = () => {
     return this.props.memberInfo && this.props.memberInfo.phone;
   };
-
+  
+  componentWillMount() {
+    const { memberInfo } = this.props;
+    verifyImageURL(memberInfo.pic,(res)=>{
+      if(res){
+            this.setState({bgImg:memberInfo.pic});
+      }else{
+        this.setState({bgImg:config.defaultProfilePic});
+      }
+    })
+  }
+  
   render() {
     const { memberInfo, view, classes } = this.props;
     
@@ -222,7 +241,8 @@ class SchoolMemberInfo extends Component {
       showUploadAvatarModal,
       mediaFormData,
       filterStatus,
-      limit
+      limit,
+      bgImg
     } = this.state;
     return (
       <Grid container>
@@ -271,7 +291,12 @@ class SchoolMemberInfo extends Component {
             }}
           >
             <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4}>
-              <img className={classes.avatarCss} src={memberInfo.pic || "/images/Avatar-Unisex.png"} />
+            <ProgressiveImage 
+                src={bgImg}
+                placeholder={config.blurImage}>
+                {(src) =>  <ProfilePic img={src}/>}
+              </ProgressiveImage>
+            
               {view === "admin" ? (
                 <UploadDiv
                   onClick={() =>
@@ -328,7 +353,7 @@ class SchoolMemberInfo extends Component {
           </Grid>
         </Grid>
         {view === "admin" && (
-          <Grid container style={{ backgroundColor: "darkgray" }}>
+          <Grid container style={{ backgroundColor: "darkgray",marginTop:'22px' }}>
             <Grid item>
               <ActionButtons
                 memberInfo={this.props.memberInfo}

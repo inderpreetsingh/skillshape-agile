@@ -181,7 +181,7 @@ const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCar
       <CardImageContainer>
         <ProgressiveImage 
                 src={bgImg}
-                placeholder='/images/blur.jpg'>
+                placeholder={config.blurImage}>
                 {(src) =>  <Avatar bgImg={src} />}
               </ProgressiveImage>
       </CardImageContainer>
@@ -250,7 +250,7 @@ class CardsReveal extends Component {
         <div onClick={this.revealCardContent}>
           <CardImageTitleWrapper>
           <ProgressiveImage
-            placeholder="/images/blur.jpg"
+            placeholder={config.blurImage}
             src={bgImg}>
             {(src) => <CardImageWrapper bgImage={src} />}
                </ProgressiveImage>
