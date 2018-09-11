@@ -222,8 +222,10 @@ class SchoolMemberInfo extends Component {
   getContactNumber = () => {
     return this.props.memberInfo && this.props.memberInfo.phone;
   };
-  
-  componentWillMount() {
+  componentWillReceiveProps(){
+
+  }
+  componentWillMount=()=> {
     const { memberInfo } = this.props;
     verifyImageURL(memberInfo.pic,(res)=>{
       if(res){
@@ -233,7 +235,16 @@ class SchoolMemberInfo extends Component {
       }
     })
   }
-  
+  componentWillReceiveProps=(nextProps,nextState)=>{
+  const { memberInfo } = nextProps;
+  verifyImageURL(memberInfo.pic,(res)=>{
+    if(res){
+          this.setState({bgImg:memberInfo.pic});
+    }else{
+      this.setState({bgImg:config.defaultProfilePic});
+    }
+  })
+  }
   render() {
     const { memberInfo, view, classes } = this.props;
     
@@ -290,7 +301,7 @@ class SchoolMemberInfo extends Component {
               padding: "24px"
             }}
           >
-            <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4}>
+            <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4} key={memberInfo._id}>
             <ProgressiveImage 
                 src={bgImg}
                 placeholder={config.blurImage}>
