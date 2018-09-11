@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
 import { browserHistory, withRouter, BrowserRouter } from "react-router";
-import { Redirect } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 
 import ip from "ip";
 import Chip from "material-ui/Chip";
@@ -224,6 +224,7 @@ class Landing extends Component {
     this.state = {
       mapView: false,
       sticky: false,
+      isSearching: false,
       filterPanelDialogBox: false,
       filters: {
         coords: null,
@@ -258,7 +259,7 @@ class Landing extends Component {
       case err.PERMISSION_DENIED:
         // if (err.message.indexOf("User denied") == 0) {
         //   return "GeoLocation services dont have permission/ or they need to be switched on in your device/browser settings";
-        // } else 
+        // } else
         if (
           err.message.indexOf("Only secure origins are allowed") == 0
         ) {
@@ -277,19 +278,26 @@ class Landing extends Component {
   }
 
   _redirectBasedOnVisitorType = () => {
-    const {location,history} = this.props;
-    const visitorType = localStorage.getItem('visitorType');
-    const visitorRedirected = JSON.parse(localStorage.getItem('visitorRedirected'));
-    if(!visitorRedirected) {
+    const {
+      location,
+      history,
+      match,
+      previousLocationPathName,
+      currentLocationPathName
+    } = this.props;
+    const visitorType = localStorage.getItem("visitorType");
+    const visitorRedirected = JSON.parse(
+      localStorage.getItem("visitorRedirected")
+    );
+    if (!visitorRedirected && previousLocationPathName === "/") {
       if (visitorType === "school") {
-        localStorage.setItem("visitorRedirected",true);
-        return browserHistory.push('/claimSchool');
-      }else if(visitorType === 'student'){
-        localStorage.setItem('visitorRedirected',true);
+        localStorage.setItem("visitorRedirected", true);
+        return browserHistory.push("/claimSchool");
+      } else if (visitorType === "student") {
+        localStorage.setItem("visitorRedirected", true);
       }
     }
-  }
-
+  };
 
   componentDidMount() {
     let positionCoords = this.getUsersCurrentLocation();
@@ -428,7 +436,6 @@ class Landing extends Component {
     });
   };
 
-
   getUsersCurrentLocation = args => {
     const { popUp } = this.props;
     return new Promise((resolve, reject) => {
@@ -463,6 +470,15 @@ class Landing extends Component {
       } else {
         reject();
       }
+    });
+  };
+
+  handleIsCardsSearching = searchingState => {
+    this.setState(state => {
+      return {
+        ...state,
+        isCardsSearching: searchingState
+      };
     });
   };
 
@@ -558,9 +574,10 @@ class Landing extends Component {
         },
         err => {
           const geolocationError = this._handleGeoLocationError(err);
-          if(geolocationError){
-            popUp.appear("alert", { content: geolocationError });
-          }
+          popUp.appear("alert", { content: geolocationError }, true, {
+            autoClose: true,
+            autoTimeout: 4000
+          });
         }
       );
     }
@@ -917,6 +934,7 @@ class Landing extends Component {
             open={this.state.filterPanelDialogBox}
             onModalClose={() => this.handleFiltersDialogBoxState(false)}
             filterPanelProps={{
+              isCardsSearching: this.state.isCardsSearching,
               currentAddress: this.state.locationName,
               removeAllFilters: this.removeAllFilters,
               filters: this.state.filters,
@@ -1003,6 +1021,7 @@ class Landing extends Component {
               {console.log("re rendering .... classtype list...")}
               <ClassTypeList
                 landingPage={true}
+                handleIsCardsSearching={this.handleIsCardsSearching}
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 defaultLocation={this.state.defaultLocation}
                 mapView={this.state.mapView}

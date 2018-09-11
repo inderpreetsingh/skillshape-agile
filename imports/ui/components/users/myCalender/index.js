@@ -11,7 +11,6 @@ export default class MyCalender extends React.Component {
   setDate = (startDate, endDate) => this.setState({ startDate, endDate });
 
   handleEventModal = (isOpen, eventData, clickedDate) => {
-   
     this.setState({
       isOpen,
       eventData,
@@ -21,6 +20,9 @@ export default class MyCalender extends React.Component {
 
   render() {
     let { isOpen, eventData, clickedDate } = this.state;
+    console.group("Calendar Props");
+    console.log(this.props, this.state, "????????????");
+    console.groupEnd();
     return (
       <div>
         <FullCalendarContainer

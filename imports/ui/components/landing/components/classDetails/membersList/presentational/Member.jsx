@@ -11,6 +11,7 @@ import {
   Capitalize
 } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 
+import { addInstructorImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import DropDownMenu from "/imports/ui/components/landing/components/form/DropDownMenu.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 
@@ -30,25 +31,19 @@ const menuOptions = [
 const Wrapper = styled.div`
   background: ${helpers.panelColor};
   display: flex;
-  width: 100%;
-
-  ${props =>
-    props.type === "default"
-      ? `width: 160px;
-      height: 180px;`
-      : ""};
+  width: 160px;
+  height: 180px;
 `;
 
 const Profile = styled.div`
-  ${helpers.flexCenter};
+  display: flex;
+  align-items: center;
   flex-direction: column;
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;
-
-  ${props =>
-    props.type === "default"
-      ? `width: 100%; flex-grow: 1; flex-shrink: 0;`
-      : ""};
+  width: 100%;
+  flex-grow: 1;
+  flex-shrink: 0;
 `;
 
 const ProfilePic = styled.div`
@@ -62,6 +57,7 @@ const ProfilePic = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
+  ${props => props.addInstructor && `cursor: pointer;`};
 `;
 
 const DetailsWrapper = styled.div`
@@ -77,7 +73,6 @@ const DetailsWrapper = styled.div`
 const Details = styled.div`
   display: flex;
   flex-direction: column;
-  margin-right: ${helpers.rhythmDiv}px;
 `;
 
 const StudentNotes = styled.div`
@@ -106,38 +101,49 @@ const ExpiresOn = Designation = Text.extend`
   font-weight: 300;
 `;
 
+const onMenuItemClick = value => {
+  console.log(value, "---", props.history);
+  if (value === "remove_teacher") {
+    props.history.push("/remove_teacher");
+  } else {
+    props.history.push("/some-random-link");
+  }
+};
+
 const Member = props => {
+  const profileSrc = props.addInstructor
+    ? addInstructorImgSrc
+    : props.profileSrc;
+
+  const name = props.addInstructor ? "Add Instuctor" : props.name;
+  // This is the basic card returned for students in case the view
+  // is not instructorsView && for teachers in both the cases.
+
   if (props.type === "student" && props.viewType === "instructorsView") {
     return <MemberExpanded {...props} />;
   }
 
-  // This is the basic card returned for students in case the view
-  // is not instructorsView && for teachers in both the cases.
-
-  const onMenuItemClick = value => {
-    console.log(value, "---", props.history);
-    if (value === "remove_teacher") {
-      props.history.push("/remove_teacher");
-    } else {
-      props.history.push("/some-random-link");
-    }
-  };
-
   return (
-    <Wrapper type="default">
-      <Profile type="default">
-        <ProfilePic src={props.profileSrc} />
+    <Wrapper>
+      <Profile>
+        <ProfilePic
+          addInstructor={props.addInstructor}
+          src={profileSrc}
+          onClick={props.onAddIconClick}
+        />
         <DetailsWrapper type={props.type}>
           <Details>
-            <SubHeading fontSize="20">{props.name}</SubHeading>
-            {props.type !== "student" && (
-              <Text>
-                <Capitalize>{props.type}</Capitalize>
-              </Text>
-            )}
+            <SubHeading fontSize="20">{name}</SubHeading>
+            {props.type !== "student" &&
+              !props.addInstructor && (
+                <Text>
+                  <Capitalize>{props.type}</Capitalize>
+                </Text>
+              )}
           </Details>
           {props.viewType === "instructorsView" &&
-            !addInstructor && <DropDownMenu menuOptions={menuOptions} />}
+            !props.addInstructor && <DropDownMenu menuOptions={menuOptions} />}
+          
         </DetailsWrapper>
       </Profile>
     </Wrapper>

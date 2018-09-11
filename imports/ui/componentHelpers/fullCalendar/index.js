@@ -7,6 +7,7 @@ import moment from "moment";
 import ClassType from "/imports/api/classType/fields";
 import { uniq } from "lodash";
 import fullCalendarRender from "./fullCalendarRender";
+
 class FullCalendar extends React.Component {
   constructor(props) {
     super(props);
@@ -17,35 +18,32 @@ class FullCalendar extends React.Component {
         right: "month,week,listWeek"
         // right: "month,agendaWeek,agendaDay,listWeek"
       },
-      defaultView:$(window).width() < 765 ? 'listWeek' : 'week',
-      views:{
-        week:{
-              type:'basic',
-              duration:{ weeks : 2}
+      defaultView: $(window).width() < 765 ? "listWeek" : "week",
+      views: {
+        week: {
+          type: "basic",
+          duration: { weeks: 2 }
         }
       },
       //theme:false,
       firstDay: moment().day(),
       //columnFormat: 'ddd - D',
-     // contentHeight: 'auto',
-      height: 'auto', // Sets the height of the entire calendar, including header and footer.
+      // contentHeight: 'auto',
+      height: "auto", // Sets the height of the entire calendar, including header and footer.
       defaultDate: new Date(),
       selectable: true,
       selectHelper: true,
       navLinks: false, // can click day/week names to navigate views
       editable: false,
       eventLimit: false,
-      windowResize: (view)=> {
-        if($(window).width() < 765) {
-          $('#fullcalendar-container').fullCalendar('changeView', 'listWeek');
+      windowResize: view => {
+        if ($(window).width() < 765) {
+          $("#fullcalendar-container").fullCalendar("changeView", "listWeek");
+        } else {
+          $("#fullcalendar-container").fullCalendar("changeView", "week");
         }
-        else
-        {
-          $('#fullcalendar-container').fullCalendar('changeView', 'week');
-          
-        } 
       },
-       // allow "more" link when too many events
+      // allow "more" link when too many events
       /*eventSources :[sevents],*/
       eventSources: (start, end, timezone, callback) => {
         let startDate = new Date(start);
@@ -78,7 +76,7 @@ class FullCalendar extends React.Component {
         }
         switch (event.scheduleType) {
           case "oneTime": {
-            return  renderEventBox(event);
+            return renderEventBox(event);
           }
           case "recurring": {
             if (
@@ -87,7 +85,7 @@ class FullCalendar extends React.Component {
               moment(event.start).format("YYYY-MM-DD") <=
                 moment(event.endDate).format("YYYY-MM-DD")
             )
-              return  renderEventBox(event);
+              return renderEventBox(event);
             return false;
           }
           case "OnGoing": {
@@ -108,6 +106,69 @@ class FullCalendar extends React.Component {
       }
     };
   }
+  _getNormalizedDayValue = value => {
+    if (value == 6) {
+      return 0;
+    } else {
+      return value + 1;
+    }
+  };
+
+  _createSEventForSeriesClasses = (sevent, scheduleDetailsObj) => {
+    let temp = { ...sevent };
+    // console.group("object for svent");
+    // console.log(dateObj.value, "----");
+    // console.groupEnd();
+
+    temp.dow = [scheduleDetailsObj.day];
+
+    // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
+    temp.start = moment(scheduleDetailsObj.startTime).format("hh:mm");
+    temp.end = moment(new Date(scheduleDetailsObj.startTime))
+      .add(scheduleDetailsObj.duration, "minutes")
+      .format("hh:mm");
+    temp.eventStartTime = moment(scheduleDetailsObj.startTime).format("hh:mm");
+    temp.eventEndTime = moment(new Date(scheduleDetailsObj.startTime))
+      .add(
+        scheduleDetailsObj.duration,
+        (scheduleDetailsObj.timeUnits &&
+          scheduleDetailsObj.timeUnits.toLowerCase()) ||
+          "minutes"
+      )
+      .format("hh:mm");
+    temp.title = scheduleDetailsObj.title;
+
+    // +
+    // " " +
+    // temp.eventStartTime +
+    // " to " +
+    // temp.eventEndTime;
+    temp.roomId = scheduleDetailsObj.roomId;
+    temp.durationAndTimeunits = `${scheduleDetailsObj.duration} ${
+      scheduleDetailsObj.timeUnits ? scheduleDetailsObj.timeUnits : "Minutes"
+    }`;
+
+    // sevent.age = classTypeData && classTypeData.ageMin;
+    // sevent.gender = classTypeData && classTypeData.gender;
+    // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
+    // if (classTime && classTime.deletedEvents) {
+    //   classTime.deletedEvents.map(current => {
+    //       "condition",
+    //       current,
+    //       moment(temp.start).format("YYYY-MM-DD")
+    //     );
+    //     if (current == moment(temp.start).format("YYYY-MM-DD")) {
+    //     } else {
+    //       sevents.push(temp);
+    //       return;
+    //     }
+    //   });
+    // } else {
+    //   sevents.push(temp);
+    // }
+
+    return temp;
+  };
 
   buildCalander = () => {
     let {
@@ -171,7 +232,7 @@ class FullCalendar extends React.Component {
         if (classTime.scheduleType === "oneTime" && checkedClassTimes) {
           let scheduleData = classTime.scheduleDetails;
           sevent.scheduleDetails = classTime.scheduleDetails;
-          scheduleData.map((obj,index)=>{
+          scheduleData.map((obj, index) => {
             sevent.start = obj.startDate;
             sevent.roomId = obj.roomId;
             sevent.eventStartTime = moment(obj.startTime).format("hh:mm");
@@ -181,18 +242,15 @@ class FullCalendar extends React.Component {
                 (obj.timeUnits && obj.timeUnits.toLowerCase()) || "minutes"
               )
               .format("hh:mm");
-            sevent.title =
-              classTime.classTypeName.name +
-              ": " +
-              classTime.name ;
-              sevent.durationAndTimeunits = `${obj.duration} ${
-                obj.timeUnits ? obj.timeUnits : "Minutes"
-              }`;
-              // +
-              // " " +
-              // sevent.eventStartTime +
-              // " to " +
-              // sevent.eventEndTime;
+            sevent.title = classTime.classTypeName.name + ": " + classTime.name;
+            sevent.durationAndTimeunits = `${obj.duration} ${
+              obj.timeUnits ? obj.timeUnits : "Minutes"
+            }`;
+            // +
+            // " " +
+            // sevent.eventStartTime +
+            // " to " +
+            // sevent.eventEndTime;
             // sevent.age = classTypeData && classTypeData.ageMin;
             // sevent.gender = classTypeData && classTypeData.gender;
             // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
@@ -210,9 +268,9 @@ class FullCalendar extends React.Component {
             //   });
             // } else {
             // }
-            
+
             sevents.push(sevent);
-          })
+          });
         }
 
         if (
@@ -224,65 +282,43 @@ class FullCalendar extends React.Component {
           let scheduleData = classTime.scheduleDetails;
           sevent.scheduleDetails = classTime.scheduleDetails;
           sevent.endDate = classTime.endDate && moment(classTime.endDate);
-              scheduleData.map((obj,index)=>{
 
-                let temp = { ...sevent };
-                temp.dow=[];
-                obj.key && obj.key.map((day)=>{
-                  if(day.value){
-                    temp.dow.push(day.value);
-                  }
-                  })
-                 
-                // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
-                temp.start = moment(obj.startTime).format("hh:mm");
-                temp.end = moment(new Date(obj.startTime))
-                .add(obj.duration, "minutes")
-                .format("hh:mm");
-                temp.eventStartTime = moment(obj.startTime).format("hh:mm");
-              temp.eventEndTime = moment(new Date(obj.startTime))
-              .add(
-                  obj.duration,
-                  (obj.timeUnits && obj.timeUnits.toLowerCase()) || "minutes"
-                )
-                .format("hh:mm");
-              temp.title =
-              classTime.classTypeName.name +
-                ": " +
-                classTime.name 
-                // +
-                // " " +
-                // temp.eventStartTime +
-                // " to " +
-                // temp.eventEndTime;
-                temp.roomId = obj.roomId;
-                temp.durationAndTimeunits = `${obj.duration} ${
-                  obj.timeUnits ? obj.timeUnits : "Minutes"
-              }`;
-              // sevent.age = classTypeData && classTypeData.ageMin;
-              // sevent.gender = classTypeData && classTypeData.gender;
-              // sevent.experienceLevel = classTypeData && classTypeData.experienceLevel;
-              // if (classTime && classTime.deletedEvents) {
-                //   classTime.deletedEvents.map(current => {
-                  //       "condition",
-                  //       current,
-                  //       moment(temp.start).format("YYYY-MM-DD")
-                  //     );
-                  //     if (current == moment(temp.start).format("YYYY-MM-DD")) {
-                    //     } else {
-                      //       sevents.push(temp);
-                      //       return;
-                      //     }
-                      //   });
-                      // } else {
-                        //   sevents.push(temp);
-                        // }
-                        
-                        sevents.push(temp);
-                        
-                      })
+          // In older data we don't have scheduleData as array
+          if (!scheduleData.length) {
+            const daysOfWeek = Object.keys(scheduleData);
+            scheduleData[daysOfWeek].forEach(dayDetails => {
+              const scheduleDetailsObject = {
+                ...dayDetails,
+                startTime: classTime.startDate,
+                title: classTime.classTypeName.name + ": " + classTime.name
+              };
+
+              const newCalendarEvent = this._createSEventForSeriesClasses(
+                sevent,
+                scheduleDetailsObject
+              );
+
+              sevents.push(newCalendarEvent);
+            });
+          } else {
+            scheduleData.map((obj, index) => {
+              obj.key.forEach(dateObj => {
+                const scheduleDetailsObject = {
+                  ...obj,
+                  day: this._getNormalizedDayValue(dateObj.value),
+                  title: classTime.classTypeName.name + ": " + classTime.name
+                };
+                const newCalendarEvent = this._createSEventForSeriesClasses(
+                  sevent,
+                  scheduleDetailsObject
+                );
+
+                sevents.push(newCalendarEvent);
+              });
+            });
+          }
         }
-        // console.warn("<<< dayData sevents>>>>",sevents);
+        console.warn("<<< dayData sevents>>>>", sevents);
       } catch (err) {}
     }
 
@@ -353,8 +389,6 @@ export default createContainer(props => {
     classInterestData = ClassInterest.find(classInterestFilter).fetch();
   }
 
-
-
   return {
     ...props,
     classTimesData,
@@ -362,8 +396,7 @@ export default createContainer(props => {
   };
 }, FullCalendar);
 
-
-const renderEventBox = (event) => {
+const renderEventBox = event => {
   return $(`<div class="fc-day-grid-event fc-h-event fc-event fc-start fc-end" style="
               position: relative;
               background: #f5f5f5;
@@ -376,7 +409,11 @@ const renderEventBox = (event) => {
               margin:  5px;
             ">
             <div>
-              <strong class="primary label hour fc-event ${event.className && event.className[0]}" style="box-shadow: none;display:  block;border-radius:  5px 5px 0 0;color: #fff;text-align: left;padding: 5px;"> ${moment(event.start).format("hh:mm a")} </strong>
+              <strong class="primary label hour fc-event ${event.className &&
+                event
+                  .className[0]}" style="box-shadow: none;display:  block;border-radius:  5px 5px 0 0;color: #fff;text-align: left;padding: 5px;"> ${moment(
+    event.start
+  ).format("hh:mm a")} </strong>
             </div>
             <div class="padded" style="
               padding: 5px;
@@ -389,8 +426,9 @@ const renderEventBox = (event) => {
                 ">
                   <small>${event.title}</small></br>
                   <small style="color: blueviolet;font-size: 12px;font-weight: normal">
-                  ${event.durationAndTimeunits && event.durationAndTimeunits}</small>
+                  ${event.durationAndTimeunits &&
+                    event.durationAndTimeunits}</small>
                 </div>
               </div>
             </div>`);
-}
+};
