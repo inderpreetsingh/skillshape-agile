@@ -28,6 +28,8 @@ import withRightToLeft from 'react-widgets/lib/util/withRightToLeft';
 import { widgetEditable, disabledManager } from 'react-widgets/lib/util/interaction';
 import { instanceId, notify, isFirstFocusedRender } from 'react-widgets/lib/util/widgetHelpers';
 
+import {rhythmDiv} from '/imports/ui/components/landing/components/jss/helpers.js';
+
 const CREATE_OPTION = {};
 const ENTER = 13;
 
@@ -39,13 +41,14 @@ const InputAndIcon = styled.div`
   justify-content: space-between;
   flex-grow: 1;
   min-width: 0;
+  ${props => props.reverseList && `padding-left: ${rhythmDiv}px;`}
 `;
 
 const InputWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  ${props => props.reverseList && 'flex-direction: row-reverse; justify-content: flex-start;'}
+  ${props => props.reverseList && `flex-direction: row-reverse; justify-content: flex-start;`}
 `;
 
 const ChipWrapper = styled.div`
@@ -596,7 +599,9 @@ class Multiselect extends React.Component {
                 this.inputWrapper = inputWrapper;
             }}
           >
-            <InputAndIcon>
+            <InputAndIcon
+              reverseList={!!dataItems.length && !collapsedList}
+            >
             {this.renderInput(inputOwns)}
             <Select
               busy={busy}
