@@ -294,12 +294,6 @@ class ClassTime extends Component {
       });
   };
 
-  handleShowCard = state => () => {
-    this.setState({
-      showCard: state
-    });
-  };
-
   getScheduleTypeFormatted = () => {
     const { startDate, endDate, scheduleType, addToCalendar } = this.props;
     const classScheduleType = scheduleType.toLowerCase();
@@ -537,7 +531,7 @@ class ClassTime extends Component {
                   <ClassTimesCardWrapper inPopUp={inPopUp}>
                     <ClassTimesCard
                       inPopUp={inPopUp}
-                      show={this.state.showCard}
+                      show={true}
                       formattedClassTimes={formattedClassTimesDetails}
                       scheduleType={scheduleType}
                       description={desc}
@@ -547,16 +541,6 @@ class ClassTime extends Component {
 
                 {/* View All times button */}
                 <ButtonsWrapper>
-                  <ButtonWrapper showCard={this.state.showCard}>
-                    <ClassTimeButton
-                      white
-                      lgButton
-                      icon
-                      iconName="av_timer"
-                      onClick={this.handleShowCard(true)}
-                      label="View all times"
-                    />
-                  </ButtonWrapper>
                   <ButtonWrapper>
                     {this.getCalenderButton(this.props.addToCalendar)}
                   </ButtonWrapper>
