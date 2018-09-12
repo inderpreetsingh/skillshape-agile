@@ -463,9 +463,9 @@ class ClassTime extends Component {
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     const { thinkingAboutAttending, addToCalendar, notification } = this.state;
 
-    console.group("formattedClassTimes");
-    console.info(formattedClassTimes);
-    console.groupEnd();
+    // console.group("formattedClassTimes");
+    // console.info(formattedClassTimes);
+    // console.groupEnd();
 
     //const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(
