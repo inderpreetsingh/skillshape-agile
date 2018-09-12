@@ -219,12 +219,12 @@ class ClassTypeList extends Component {
 
   componentDidMount = () => {
     const { handleIsCardsSearching, isLoading } = this.props;
-    handleIsCardsSearching(isLoading);
+    handleIsCardsSearching && handleIsCardsSearching(isLoading);
   };
 
   componentDidUpdate = (prevProps, prevState) => {
     const { handleIsCardsSearching, isLoading } = this.props;
-    if (prevProps.isLoading !== isLoading) handleIsCardsSearching(isLoading);
+    if (prevProps.isLoading !== isLoading) handleIsCardsSearching && handleIsCardsSearching(isLoading);
   };
 
   render() {
