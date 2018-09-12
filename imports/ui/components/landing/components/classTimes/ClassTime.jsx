@@ -154,7 +154,8 @@ const ClassTimesCardWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  max-height: ${props => (props.inPopUp ? "auto" : "296px")}; // computed height
+  max-height: auto;
+  // max-height: ${props => (props.inPopUp ? "auto" : "296px")}; // computed height
 `;
 
 const Trending = () => {
@@ -294,10 +295,29 @@ class ClassTime extends Component {
       });
   };
 
-  handleShowCard = state => () => {
-    this.setState({
-      showCard: state
-    });
+  reformatNewFlowData = (formattedClassTimes, scheduleType) => {
+    const newData = {};
+    if (scheduleType === "recurring") {
+      // key attr specifies the day information is stored on keys
+      if (formattedClassTimes[0].key) {
+        formattedClassTimes.forEach((scheduleData, index) => {
+          scheduleData.key.forEach(dowObj => {
+            // debugger;
+            if (!newData[dowObj.label]) {
+              newData[dowObj.label] = [];
+            }
+
+            const scheduleDataCopy = JSON.parse(JSON.stringify(scheduleData));
+            delete scheduleDataCopy.key;
+            newData[dowObj.label].push(scheduleDataCopy);
+          });
+        });
+      }
+    }
+    console.group("NEW FORMATTED DATA");
+    console.log(newData);
+    console.groupEnd();
+    return newData;
   };
 
   getScheduleTypeFormatted = () => {
@@ -470,7 +490,7 @@ class ClassTime extends Component {
     const { thinkingAboutAttending, addToCalendar, notification } = this.state;
 
     console.group("formattedClassTimes");
-    console.info(formattedClassTimes);
+    console.info(formattedClassTimesDetails);
     console.groupEnd();
 
     //const showDescription = this.showDescription(formattedClassTimes);
@@ -537,8 +557,11 @@ class ClassTime extends Component {
                   <ClassTimesCardWrapper inPopUp={inPopUp}>
                     <ClassTimesCard
                       inPopUp={inPopUp}
-                      show={this.state.showCard}
-                      formattedClassTimes={formattedClassTimesDetails}
+                      show={true}
+                      formattedClassTimes={this.reformatNewFlowData(
+                        formattedClassTimesDetails,
+                        scheduleType
+                      )}
                       scheduleType={scheduleType}
                       description={desc}
                     />
@@ -547,7 +570,7 @@ class ClassTime extends Component {
 
                 {/* View All times button */}
                 <ButtonsWrapper>
-                  <ButtonWrapper showCard={this.state.showCard}>
+                  {/*<ButtonWrapper showCard={this.state.showCard}>
                     <ClassTimeButton
                       white
                       lgButton
@@ -556,7 +579,7 @@ class ClassTime extends Component {
                       onClick={this.handleShowCard(true)}
                       label="View all times"
                     />
-                  </ButtonWrapper>
+                  </ButtonWrapper> */}
                   <ButtonWrapper>
                     {this.getCalenderButton(this.props.addToCalendar)}
                   </ButtonWrapper>
