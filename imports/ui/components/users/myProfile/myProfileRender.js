@@ -28,6 +28,7 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import MediaUpload from "/imports/ui/componentHelpers/mediaUpload";
 import IconInput from "/imports/ui/components/landing/components/form/IconInput";
+
 import ReactPhoneInput from 'react-phone-input-2';
 const SaveBtnWrapper = styled.div`
   margin: 10px;
@@ -61,7 +62,8 @@ export default function() {
       </Typography>
     );
   }
-
+  const pic = currentUser.profile && currentUser.profile.medium ? currentUser.profile.medium :
+  currentUser.profile && currentUser.profile.pic ?currentUser.profile.pic : config.defaultProfilePic;
   if (this.validateUser()) {
     return (
       <DocumentTitle title={this.props.route.name}>
@@ -95,22 +97,15 @@ export default function() {
                 <CardContent>
                   <Grid container>
                     <Grid item xs={12} sm={12} md={4}>
+                
+                   
                       <MediaUpload
-                        fullScreen={false}
-                        onChange={this.handleUserImageChange}
-                        minWidth={201}
-                        data={
-                          (currentUser.profile &&
-                            currentUser.profile.pic && {
-                              file: currentUser.profile.pic,
-                              isUrl: true
-                            }) || {
-                            file: "/images/Avatar-Unisex.png",
-                            isUrl: true
-                          }
-                        }
-                        showVideoOption={false}
-                      />
+                          fullScreen={false}
+                          onChange={this.handleUserImageChange}
+                          minWidth={201}
+                          data={{ file: pic, isUrl: true }}
+                          showVideoOption={false}
+                        />
                     </Grid>
                     <Grid item xs={12} sm={12} md={8}>
                       <form onSubmit={this.submitUserDetails}>

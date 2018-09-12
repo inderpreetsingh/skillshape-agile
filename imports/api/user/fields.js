@@ -27,6 +27,14 @@ Schema.UserProfile = new SimpleSchema({
     optional: true,
     type: String
   },
+  medium: {
+    optional: true,
+    type: String
+  },
+  low: {
+    optional: true,
+    type: String
+  },
   dob: {
     optional: true,
     type: Date

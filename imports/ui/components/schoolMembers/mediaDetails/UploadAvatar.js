@@ -62,9 +62,8 @@ class UploadAvatar extends React.Component {
         const memberData = this.props.memberInfo;
         compressImage(file['org']).then((result)=>{
             let optimizedImages=[];
-        console.log('TCL: UploadAvatar -> onSubmit -> result', result);
         for(let i=0;i<=1;i++){
-            S3.upload({ files: { "0": result[i] }, path: "memberAvatar" }, (err, res) => {
+            S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
                 if (res) {
                     optimizedImages.push(res.secure_url);
                 }
@@ -97,12 +96,10 @@ class UploadAvatar extends React.Component {
        
     }
     editUserCall = (memberData) => {
-        console.log('TCL: editUserCall -> memberData', memberData);
         let payload = {};
         payload.pic = memberData.pic;
         payload.medium= memberData.optimizedImages[0];
         payload.low= memberData.optimizedImages[1];
-        console.log('TCL: editUserCall -> payload', payload);
         Meteor.call(
             "schoolMemberDetails.editSchoolMemberDetails", { doc_id: memberData._id, doc: payload },
             (err, res) => {

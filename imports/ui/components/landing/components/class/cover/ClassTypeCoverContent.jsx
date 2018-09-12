@@ -19,14 +19,12 @@ import ClassTypeLogo from "/imports/ui/components/landing/components/class/Class
 
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
-
+import ProgressiveImage from "react-progressive-image";
 import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 import ManageRequestsDialogBox from "/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx";
-
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import { schoolLogo } from "/imports/ui/components/landing/site-settings.js";
-
 import Events from "/imports/util/events";
 import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
@@ -109,6 +107,7 @@ const LocationNotFound = styled.div`
 
 const ClassTypeForegroundImage = styled.div`
   ${helpers.coverBg}
+  transition: background-image 1s linear !important;
   background-position: center center;
   background-image: url('${props =>
     props.coverSrc ? props.coverSrc : settings.classTypeImgSrc}');
@@ -452,9 +451,10 @@ class ClassTypeCoverContent extends React.Component {
                 </EditButtonWrapper>
               </ShowOnMobile>
             )}
-
-            <ClassTypeForegroundImage coverSrc={props.coverSrc}>
-              <Fragment>
+              <ProgressiveImage 
+                        src={props.coverSrc}
+                        placeholder={config.blurImage}>
+                        {(src) =><ClassTypeForegroundImage coverSrc={src}><Fragment>
                 <LogoAndActionButtons>
                   {props.noClassTypeData &&
                     !props.isEdit &&
@@ -511,7 +511,10 @@ class ClassTypeCoverContent extends React.Component {
                     </EditButtonWrapper>
                   ))}
               </Fragment>
-            </ClassTypeForegroundImage>
+            </ClassTypeForegroundImage>}
+                      </ProgressiveImage>
+            
+              
 
             {/* On large screens this section will be below foregroud image,
                 on smaller screens it's below the left side*/}

@@ -454,6 +454,8 @@ class DashBoardView extends React.Component {
 
   handleMemberDetailsToRightPanel = memberId => {
     let memberInfo = SchoolMemberDetails.findOne(memberId);
+    let profile =memberInfo.profile.profile;
+    let pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic :config.defaultProfilePic ;
     // memberInfo = this.state.memberInfo
     this.handleDrawerToggle();
     this.setState({
@@ -470,7 +472,7 @@ class DashBoardView extends React.Component {
         lastName: memberInfo.lastName,
         classTypeIds: memberInfo.classTypeIds,
         firstName: memberInfo.firstName,
-        pic: memberInfo.profile.profile.pic,
+        pic: pic,
         studentWithoutEmail: memberInfo.studentWithoutEmail,
         packageDetails: memberInfo.packageDetails
       },

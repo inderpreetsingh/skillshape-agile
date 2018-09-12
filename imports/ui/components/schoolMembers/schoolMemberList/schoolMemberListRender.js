@@ -3,6 +3,8 @@ import Avatar from "material-ui/Avatar";
 import List, { ListItem, ListItemText } from "material-ui/List";
 import Typography from "material-ui/Typography";
 import Grid from "material-ui/Grid";
+import {verifyImageURL} from '/imports/util'
+import ProgressiveImage from "react-progressive-image";
 
 {
   /*
@@ -47,8 +49,14 @@ export default function(props) {
                         </ListItem>,
                         membersByName[key] &&
                           membersByName[key].map(data => {
-                            const avtar = data && data.profile && data.profile.profile && data.profile.profile.pic
-                            
+                            let profile =data.profile.profile;
+                            let pic = profile && profile.low ? profile.low : profile && profile.medium ? profile.medium : 
+                            profile && profile.pic ? profile.pic:config.defaultProfilePic ;
+                            verifyImageURL(pic,(res)=>{
+                              if(!res){
+                                   pic=config.defaultProfilePic;
+                              }
+                            })
                             return (
                               <ListItem
                                 key={data._id}
@@ -59,10 +67,14 @@ export default function(props) {
                                     data._id
                                   )
                                 }
-                              >
-                                <Avatar alt="Remy Sharp" src={ avtar}>
-                                   { !avtar && key } 
-                                </Avatar>
+                              ><ProgressiveImage 
+                              src={pic}
+                              placeholder={config.blurImage}>
+                              {(src) =>   <Avatar alt="Remy Sharp" src={src}>{ !src && key } 
+                                </Avatar>}
+                            </ProgressiveImage>
+                               
+                                   
                                 <ListItemText primary={data.firstName} />
                               </ListItem>
                             );

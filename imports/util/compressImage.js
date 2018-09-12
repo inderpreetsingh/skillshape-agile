@@ -6,12 +6,10 @@ export const compressImage = async (file) => {
         let compressedFiles = [];
         for (let i = 0; i < maxSizeMB.length; i++) {
             let compressedFile = await imageCompression(file, maxSizeMB[i], maxWidthOrHeight[i])
-            console.log('TCL: compressImage -> compressedFile', compressedFile);
             compressedFiles.push(compressedFile);
         }
         return compressedFiles;
     } catch (error) {
-        console.log('TCL: }catch -> error', error);
     }
 
 

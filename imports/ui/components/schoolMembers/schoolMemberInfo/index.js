@@ -240,6 +240,7 @@ class SchoolMemberInfo extends Component {
   }
   componentWillReceiveProps=(nextProps,nextState)=>{
   const { memberInfo } = nextProps;
+
   verifyImageURL(memberInfo.pic,(res)=>{
     if(res){
           this.setState({bgImg:memberInfo.pic});

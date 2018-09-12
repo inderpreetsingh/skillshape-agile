@@ -4,7 +4,7 @@ import { browserHistory } from "react-router";
 import moment from "moment";
 import { createContainer } from "meteor/react-meteor-data";
 import MyProfileRender from "./myProfileRender";
-import { withStyles, imageRegex, emailRegex, toastrModal } from "/imports/util";
+import { withStyles, imageRegex, emailRegex, toastrModal,compressImage } from "/imports/util";
 
 const style = theme => {
   return {
@@ -60,7 +60,6 @@ class MyProfile extends React.Component {
   }
 
   initialzeUserProfileForm = currentUser => {
-    console.log("currentUser",currentUser)
     if (currentUser) {
       this.setState({
         firstName: currentUser.profile.firstName || currentUser.profile.name || "",
@@ -131,7 +130,20 @@ class MyProfile extends React.Component {
         "profile.coords": this.state.loc
       };
       const { file } = this.state;
+      compressImage(file['org']).then((result) => {
+        for (let i = 0; i <= 1; i++) {
+          S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+            if (res) {
+              if(i==0){
+                userData['profile.medium'] = res.secure_url;
+              }else{
+                userData['profile.low'] = res.secure_url;
+              }
+            }
 
+          });
+        }
+      })
       if (file && file.fileData && !file.isUrl) {
         S3.upload(
           { files: { "0": file.fileData }, path: "profile" },
