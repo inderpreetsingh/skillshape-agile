@@ -35,6 +35,14 @@ ClassType.attachSchema(
       type: String,
       optional: true
     },
+    medium: {
+      type: String,
+      optional: true
+    },
+    low: {
+      type: String,
+      optional: true
+    },
     classes: {
       type: [String],
       optional: true

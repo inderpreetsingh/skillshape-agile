@@ -2,7 +2,7 @@ import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import ClassTypeDetailsRender from "./classTypeDetailsRender";
 import "/imports/api/classPricing/methods";
-
+import { compressImage } from "/imports/util";
 import ClassType from "/imports/api/classType/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
@@ -29,6 +29,20 @@ class ClassTypeDetails extends React.Component {
     let doc = {
       schoolId: schoolId
     };
+    compressImage(file['org']).then((result) => {
+      for (let i = 0; i <= 1; i++) {
+        S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+          if (res) {
+            if(i==0){
+              doc.medium= res.secure_url;
+            }else{
+              doc.low = res.secure_url;
+            }
+          }
+
+        });
+      }
+    })
     if (file && file.fileData && !file.isUrl) {
       S3.upload(
         { files: { "0": file.fileData }, path: "schools" },
