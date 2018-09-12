@@ -162,7 +162,6 @@ Meteor.startup(function() {
     const found = _.find(indexes, index => {
            return index.key["filters.location"] == "2d";
     });
-    console.log("found   ", found);
     if(found) {
       ClassType._dropIndex({"filters.location": "2d"});
     }
