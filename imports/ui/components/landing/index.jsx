@@ -289,11 +289,32 @@ class Landing extends Component {
     const visitorRedirected = JSON.parse(
       localStorage.getItem("visitorRedirected")
     );
+    console.group("REDIRECT INDEX PAGE");
+    console.info(Meteor.user());
+    // debugger;
+    console.groupEnd();
     if (!visitorRedirected && previousLocationPathName === "/") {
-      if (visitorType === "school") {
+      if (visitorType === "school" && Meteor.user()) {
+
+
+
         localStorage.setItem("visitorRedirected", true);
-        return browserHistory.push("/claimSchool");
-      } else if (visitorType === "student") {
+        Meteor.call('school.getMySchool',(err,res) => {
+          if(err) {
+            console.warn(err);
+          }else {
+            console.info(res,"---");
+            const mySchoolSlug = res[0].slug;
+            localStorage.setItem("visitorRedirected", true);
+            return browserHistory.push(`/schools/${mySchoolSlug}`);
+          }
+        })
+      }
+      // } else if(visitorType === "school" && !Meteor.user()) {
+      //   localStorage.setItem("visitorRedirected", true);
+      //   return browserHistory.push("/claimSchool");
+      // }
+      else if (visitorType === "student") {
         localStorage.setItem("visitorRedirected", true);
       }
     }
@@ -427,7 +448,7 @@ class Landing extends Component {
   };
 
   setFilters = filters => {
-    console.info(filters, "------");
+    // console.info(filters, "------");
     this.setState(state => {
       return {
         ...state,

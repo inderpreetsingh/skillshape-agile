@@ -318,7 +318,7 @@ class FullCalendar extends React.Component {
             });
           }
         }
-        console.warn("<<< dayData sevents>>>>", sevents);
+        // console.warn("<<< dayData sevents>>>>", sevents);
       } catch (err) {}
     }
 
