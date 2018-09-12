@@ -3,7 +3,7 @@ import moment from "moment";
 import styled, { keyframes } from "styled-components";
 import PropTypes from "prop-types";
 import { isEmpty, get } from "lodash";
-import {scroller} from 'react-scroll';
+import { scroller } from "react-scroll";
 import Button from "material-ui/Button";
 import ClassTimeClockManager from "/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx";
 import ClassTimesCard from "/imports/ui/components/landing/components/cards/ClassTimesCard.jsx";
@@ -168,17 +168,22 @@ const Trending = () => {
 class ClassTime extends Component {
   state = {
     isLoading: false,
-    thinkingAboutAttending:false
+    showCard: false,
+    thinkingAboutAttending: false
     // fullTextState: this.props.fullTextState,
   };
 
   componentWillMount() {
-    Meteor.call('classTypeLocationRequest.getUserRecord', this.props.classTypeId, (err, res) => {
-      if (err) { }
-      else {
-        this.setState({ notification: res });
+    Meteor.call(
+      "classTypeLocationRequest.getUserRecord",
+      this.props.classTypeId,
+      (err, res) => {
+        if (err) {
+        } else {
+          this.setState({ notification: res });
+        }
       }
-    })
+    );
   }
 
   handleAddToMyCalendarButtonClick = () => {
@@ -206,7 +211,7 @@ class ClassTime extends Component {
     // check for user login or not
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
-      if(!_.isEmpty(result)){
+      if (!_.isEmpty(result)) {
         const doc = {
           _id: result[0]._id,
           userId
@@ -216,7 +221,7 @@ class ClassTime extends Component {
           data: { doc }
         });
       }
-      this.setState({addToCalendar:true})
+      this.setState({ addToCalendar: true });
     } else {
       // popUp.error("Please login !","Error");
       this.setState({
@@ -239,7 +244,7 @@ class ClassTime extends Component {
         methodName: "classInterest.addClassInterest",
         data: { doc }
       });
-      this.setState({addToCalendar:false})
+      this.setState({ addToCalendar: false });
     } else {
       // alert("Please login !!!!")
       //Events.trigger("loginAsUser");
@@ -260,25 +265,40 @@ class ClassTime extends Component {
         popUp.appear("error", { content: err.message });
       } else {
         if (methodName.indexOf("remove") !== -1)
-          popUp.appear("success", { content: `Hi ${userName}, Class removed successfully from your calendar` });
+          popUp.appear("success", {
+            content: `Hi ${userName}, Class removed successfully from your calendar`
+          });
         else
-          popUp.appear("success", { content: `Hi ${userName}, Class added to your calendar` });
+          popUp.appear("success", {
+            content: `Hi ${userName}, Class added to your calendar`
+          });
       }
     });
   };
   handleClassClosed = () => {
-    
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
     const { popUp } = this.props;
     let emailId;
-    this.props && this.props.schoolId && Meteor.call('school.getMySchool',null,false, (err, res) => {
-      if (res) {
-        emailId = res && res[0].email;
-        popUp.appear("success", { content: `Hi ${userName}, This class is closed to registration. ${emailId && emailId && `contact the administrator at ${emailId} for more details.`} ` });
-      }
-    })
-  }
+    this.props &&
+      this.props.schoolId &&
+      Meteor.call("school.getMySchool", null, false, (err, res) => {
+        if (res) {
+          emailId = res && res[0].email;
+          popUp.appear("success", {
+            content: `Hi ${userName}, This class is closed to registration. ${emailId &&
+              emailId &&
+              `contact the administrator at ${emailId} for more details.`} `
+          });
+        }
+      });
+  };
+
+  handleShowCard = state => () => {
+    this.setState({
+      showCard: state
+    });
+  };
 
   getScheduleTypeFormatted = () => {
     const { startDate, endDate, scheduleType, addToCalendar } = this.props;
@@ -287,7 +307,10 @@ class ClassTime extends Component {
     if (classScheduleType === "recurring")
       return (
         <ScheduleType>
-          {addToCalendar == 'closed' ? 'This is a Closed Series.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series.' : "This is a Series class time."} {<br />}
+          {addToCalendar == "closed"
+            ? "This is a Closed Series.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series."
+            : "This is a Series class time."}{" "}
+          {<br />}
           {formatDate(startDate)} - {formatDate(endDate)}
         </ScheduleType>
       );
@@ -297,7 +320,10 @@ class ClassTime extends Component {
       }
       return (
         <ScheduleType>
-          {addToCalendar == 'closed' ? 'This is a Closed Single/set.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series.' : "This is a Single/Set class time."} {<br />}
+          {addToCalendar == "closed"
+            ? "This is a Closed Single/set.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series."
+            : "This is a Single/Set class time."}{" "}
+          {<br />}
         </ScheduleType>
       );
     }
@@ -320,15 +346,20 @@ class ClassTime extends Component {
   getCalenderButton = (addToCalender, formattedClassTimesDetails) => {
     const iconName = addToCalender ? "add_circle_outline" : "delete";
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
-   
-    return (<div style={{ display: "flex" }}>
-    <FormGhostButton
-      onClick={()=>{
-        this.setState({thinkingAboutAttending:true,addToCalendar:addToCalender})}
-      }
-      label="Thinking About Attending"
-    />
-  </div>)
+
+    return (
+      <div style={{ display: "flex" }}>
+        <FormGhostButton
+          onClick={() => {
+            this.setState({
+              thinkingAboutAttending: true,
+              addToCalendar: addToCalender
+            });
+          }}
+          label="Thinking About Attending"
+        />
+      </div>
+    );
     // if (addToCalender == 'closed') {
 
     //   return (
@@ -345,7 +376,7 @@ class ClassTime extends Component {
     // if (addToCalender || !Meteor.userId()) {
     //   return (
     //     <div style={{ display: "flex" }}>
-          
+
     //       <FormGhostButton
     //         icon
     //         onClick={this.handleAddToMyCalendarButtonClick}
@@ -357,7 +388,7 @@ class ClassTime extends Component {
     // } else {
     //   return (
     //     <div style={{ display: "flex" }}>
-          
+
     //       <FormGhostButton
     //         icon
     //         ghost
@@ -368,59 +399,60 @@ class ClassTime extends Component {
     //     </div>
     //   );
     // }
-    
   };
   scrollTo(name) {
-    scroller.scrollTo((name || 'content-container'), {
-        duration: 800,
-        delay: 0,
-        smooth: 'easeInOutQuart'
-    })
-    }
-    handleNotification =(CheckBoxes)=>{
-      this.setState({ isLoading: true });
-      const {schoolId,classTypeId,classTypeName}= this.props;
-      const currentUser = Meteor.user();
-      const userName = getUserFullName(currentUser);
-      let data={
-        name : userName,
-        email :currentUser.emails[0].address,
-        schoolId : schoolId,
-        classTypeId : classTypeId,
-        userId: Meteor.userId(),
-        notification: CheckBoxes[1],
-        createdAt : new Date(),
-        classTypeName: classTypeName.name,
-        existingUser: true
-      }
-      Meteor.call('classTypeLocationRequest.updateRequest',data,(err,res)=>{
-        this.setState({ isLoading: false });
-        const { popUp } = this.props;
-      if(res){
-        Meteor.call('classTimesRequest.updateRequest',data,(err1,res1)=>{
-          if(res1){
-            popUp.appear("success", { content: `Hi ${userName}, You are ${CheckBoxes[1] ?'subscribed' :'unsubscribed'} to  notification related to the
+    scroller.scrollTo(name || "content-container", {
+      duration: 800,
+      delay: 0,
+      smooth: "easeInOutQuart"
+    });
+  }
+  handleNotification = CheckBoxes => {
+    this.setState({ isLoading: true });
+    const { schoolId, classTypeId, classTypeName } = this.props;
+    const currentUser = Meteor.user();
+    const userName = getUserFullName(currentUser);
+    let data = {
+      name: userName,
+      email: currentUser.emails[0].address,
+      schoolId: schoolId,
+      classTypeId: classTypeId,
+      userId: Meteor.userId(),
+      notification: CheckBoxes[1],
+      createdAt: new Date(),
+      classTypeName: classTypeName.name,
+      existingUser: true
+    };
+    Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
+      this.setState({ isLoading: false });
+      const { popUp } = this.props;
+      if (res) {
+        Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
+          if (res1) {
+            popUp.appear("success", {
+              content: `Hi ${userName}, You are ${
+                CheckBoxes[1] ? "subscribed" : "unsubscribed"
+              } to  notification related to the
             location and time update of class type ${classTypeName.name}.
-            `});
+            `
+            });
             this.componentWillMount();
           }
-        })
+        });
       }
-      })
-    }
-    handleCheckBoxes = (CheckBoxes) =>{
-      const{addToCalendar}=this.props;
-      if(CheckBoxes[0]!=!addToCalendar){
-        if(CheckBoxes[0]){
-          this.handleAddToMyCalendarButtonClick()
-        }
-        else{
-          this.handleRemoveFromCalendarButtonClick()
-        }
+    });
+  };
+  handleCheckBoxes = CheckBoxes => {
+    const { addToCalendar } = this.props;
+    if (CheckBoxes[0] != !addToCalendar) {
+      if (CheckBoxes[0]) {
+        this.handleAddToMyCalendarButtonClick();
+      } else {
+        this.handleRemoveFromCalendarButtonClick();
       }
-      this.handleNotification(CheckBoxes);
-      
     }
+    this.handleNotification(CheckBoxes);
+  };
   render() {
     // debugger;
     const {
@@ -435,8 +467,12 @@ class ClassTime extends Component {
       onModalClose
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
-    const {thinkingAboutAttending,addToCalendar,notification}= this.state;
-    
+    const { thinkingAboutAttending, addToCalendar, notification } = this.state;
+
+    console.group("formattedClassTimes");
+    console.info(formattedClassTimes);
+    console.groupEnd();
+
     //const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(
       this.props.addToCalendar
@@ -456,22 +492,30 @@ class ClassTime extends Component {
                 onModalClose={this.handleNonUserDialogBoxState(false)}
               />
             )}
-            {thinkingAboutAttending && <ThinkingAboutAttending
-            open ={thinkingAboutAttending}
-            onModalClose ={()=>{this.setState({thinkingAboutAttending:false})}}
-            handleClassClosed ={this.handleClassClosed}
-            handleAddToMyCalendarButtonClick = {this.handleAddToMyCalendarButtonClick}
-            handleRemoveFromCalendarButtonClick = {this.handleRemoveFromCalendarButtonClick}
-            addToCalendar = {addToCalendar}
-            notification ={notification}
-            purchaseThisPackage ={()=>{
-              this.setState({thinkingAboutAttending:false});
-              this.scrollTo('price-section')
-              onModalClose();
-            }}
-            handleCheckBoxes = {this.handleCheckBoxes}
-            name ={name}
-            />}
+            {thinkingAboutAttending && (
+              <ThinkingAboutAttending
+                open={thinkingAboutAttending}
+                onModalClose={() => {
+                  this.setState({ thinkingAboutAttending: false });
+                }}
+                handleClassClosed={this.handleClassClosed}
+                handleAddToMyCalendarButtonClick={
+                  this.handleAddToMyCalendarButtonClick
+                }
+                handleRemoveFromCalendarButtonClick={
+                  this.handleRemoveFromCalendarButtonClick
+                }
+                addToCalendar={addToCalendar}
+                notification={notification}
+                purchaseThisPackage={() => {
+                  this.setState({ thinkingAboutAttending: false });
+                  this.scrollTo("price-section");
+                  onModalClose();
+                }}
+                handleCheckBoxes={this.handleCheckBoxes}
+                name={name}
+              />
+            )}
             <div>
               <ClassTimeContainer
                 inPopUp={inPopUp}
@@ -493,7 +537,7 @@ class ClassTime extends Component {
                   <ClassTimesCardWrapper inPopUp={inPopUp}>
                     <ClassTimesCard
                       inPopUp={inPopUp}
-                      show={true}
+                      show={this.state.showCard}
                       formattedClassTimes={formattedClassTimesDetails}
                       scheduleType={scheduleType}
                       description={desc}
@@ -502,11 +546,21 @@ class ClassTime extends Component {
                 </ClassTimeContent>
 
                 {/* View All times button */}
-                <ButtonsWrapper />
                 <ButtonsWrapper>
-                  {this.getCalenderButton(this.props.addToCalendar)}
+                  <ButtonWrapper showCard={this.state.showCard}>
+                    <ClassTimeButton
+                      white
+                      lgButton
+                      icon
+                      iconName="av_timer"
+                      onClick={this.handleShowCard(true)}
+                      label="View all times"
+                    />
+                  </ButtonWrapper>
+                  <ButtonWrapper>
+                    {this.getCalenderButton(this.props.addToCalendar)}
+                  </ButtonWrapper>
                 </ButtonsWrapper>
-
                 {this.props.isTrending && <Trending />}
               </ClassTimeContainer>{" "}
             </div>
@@ -527,6 +581,7 @@ ClassTime.propTypes = {
   description: PropTypes.string.isRequired,
   addToCalendar: PropTypes.bool.isRequired,
   scheduleType: PropTypes.string.isRequired,
+  inPopUp: PropTypes.bool, // True => the class time cards are present inside of pop up in homepage,  false => are on the classtype page
   isTrending: PropTypes.bool
 };
 

@@ -260,9 +260,7 @@ class Landing extends Component {
         // if (err.message.indexOf("User denied") == 0) {
         //   return "GeoLocation services dont have permission/ or they need to be switched on in your device/browser settings";
         // } else
-        if (
-          err.message.indexOf("Only secure origins are allowed") == 0
-        ) {
+        if (err.message.indexOf("Only secure origins are allowed") == 0) {
           return "GeoLocation services will only work in case of secured origin (eg https)";
         }
         break;
@@ -290,31 +288,29 @@ class Landing extends Component {
       localStorage.getItem("visitorRedirected")
     );
     console.group("REDIRECT INDEX PAGE");
-    console.info(Meteor.user());
+    console.info(localStorage.getItem("visitorRedirected"));
     // debugger;
     console.groupEnd();
     if (!visitorRedirected && previousLocationPathName === "/") {
       if (visitorType === "school" && Meteor.user()) {
-
-
-
-        localStorage.setItem("visitorRedirected", true);
-        Meteor.call('school.getMySchool',(err,res) => {
-          if(err) {
+        Meteor.call("school.getMySchool", (err, res) => {
+          if (err) {
             console.warn(err);
-          }else {
-            console.info(res,"---");
-            const mySchoolSlug = res[0].slug;
+          } else {
+            // console.info(res,"---");
             localStorage.setItem("visitorRedirected", true);
-            return browserHistory.push(`/schools/${mySchoolSlug}`);
+            if (res.length) {
+              const mySchoolSlug = res[0].slug;
+              browserHistory.push(`/schools/${mySchoolSlug}`);
+            }
+
+            browserHistory.push("/skillshape-for-school");
           }
-        })
-      }
-      // } else if(visitorType === "school" && !Meteor.user()) {
-      //   localStorage.setItem("visitorRedirected", true);
-      //   return browserHistory.push("/claimSchool");
-      // }
-      else if (visitorType === "student") {
+        });
+      } else if (visitorType === "school" && !Meteor.user()) {
+        localStorage.setItem("visitorRedirected", true);
+        browserHistory.push("/skillshape-for-school");
+      } else if (visitorType === "student") {
         localStorage.setItem("visitorRedirected", true);
       }
     }
@@ -483,7 +479,7 @@ class Landing extends Component {
           },
           err => {
             const geolocationError = this._handleGeoLocationError(err);
-            if(geolocationError){
+            if (geolocationError) {
               popUp.appear("alert", { content: geolocationError });
             }
           }
