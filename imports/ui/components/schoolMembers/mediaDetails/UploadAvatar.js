@@ -10,14 +10,12 @@ import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
-
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { withStyles, imageRegex } from "/imports/util";
+import { withStyles, imageRegex ,imageCompress} from "/imports/util";
 import '/imports/api/media/methods';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
-
-
+import { compressImage } from '../../../../util';
 const formId = "create-media";
 
 class UploadAvatar extends React.Component {
@@ -51,7 +49,7 @@ class UploadAvatar extends React.Component {
         this.state.file = file;
     }
 
-    onSubmit = (event) => {
+    onSubmit = async(event) => {
         event.preventDefault();
         let file = this.state.file;
         if (!this.state.file) {
@@ -60,7 +58,25 @@ class UploadAvatar extends React.Component {
         } else {
             this.setState({ isLoading: true, fileUploadError: false })
         }
+       
         const memberData = this.props.memberInfo;
+        compressImage(file['org']).then((result)=>{
+        console.log('TCL: UploadAvatar -> onSubmit -> result', result);
+        S3.upload({ files: { "0": result[0] }, path: "memberAvatar" }, (err, res) => {
+            if (res) {
+                memberData["medium"] = res.secure_url
+  
+            }
+           
+        });
+        S3.upload({ files: { "0": result[1] }, path: "memberAvatar" }, (err, res) => {
+            if (res) {
+                memberData["low"] = res.secure_url
+            }
+           
+        });
+        })
+        
         if (file && file.fileData && !file.isUrl) {
             S3.upload({ files: { "0": file.fileData }, path: "memberAvatar" }, (err, res) => {
                 if (err) {
@@ -68,20 +84,28 @@ class UploadAvatar extends React.Component {
                 }
                 if (res) {
                     memberData["pic"] = res.secure_url
+                   
                     this.editUserCall(memberData);
-
                 }
+               
             });
         } else if (file && file.isUrl) {
             memberData["pic"] = file.file;
+            
             this.editUserCall(memberData);
         } else {
             this.editUserCall(memberData);
         }
+       
+       
     }
     editUserCall = (memberData) => {
+        console.log('TCL: editUserCall -> memberData', memberData);
         let payload = {};
         payload.pic = memberData.pic;
+        payload.medium= memberData.medium;
+        payload.low= memberData.low;
+        console.log('TCL: editUserCall -> payload', payload);
         Meteor.call(
             "schoolMemberDetails.editSchoolMemberDetails", { doc_id: memberData._id, doc: payload },
             (err, res) => {

@@ -95,11 +95,12 @@ class Upload extends React.Component {
     }
     this.setState({ value });
   };
-  onFileLoad = (e, file) => {
+  onFileLoad = (e, file,org) => {
     let files = { ...this.state.files };
     files["file"] = e.target.result;
     files["fileData"] = file;
     files["isUrl"] = false;
+    files['org']=  org;
     this.setState({ files });
     this.props.onChange && this.props.onChange(files);
   };
@@ -109,12 +110,13 @@ class Upload extends React.Component {
     this.props.onChange && this.props.onChange(null);
   };
   onInputChange = e => {
+    let org=e.target.files[0];
     filter(
       e.target.files,
       file => file.type.match(this.props.fileTypeRegex) !== null
     ).forEach(file => {
       let reader = new FileReader();
-      reader.onload = e => this.onFileLoad(e, file);
+      reader.onload = e => this.onFileLoad(e, file,org);
       reader.readAsDataURL(file);
     });
   };
