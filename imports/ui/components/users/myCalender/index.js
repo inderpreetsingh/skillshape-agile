@@ -20,9 +20,6 @@ export default class MyCalender extends React.Component {
 
   render() {
     let { isOpen, eventData, clickedDate } = this.state;
-    console.group("Calendar Props");
-    console.log(this.props, this.state, "????????????");
-    console.groupEnd();
     return (
       <div>
         <FullCalendarContainer
