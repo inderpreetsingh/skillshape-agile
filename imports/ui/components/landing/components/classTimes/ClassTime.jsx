@@ -330,21 +330,25 @@ class ClassTime extends Component {
     console.groupEnd();
 
     if (scheduleType === "recurring" || scheduleType === "ongoing") {
-      // key attr specifies the day information is stored on keys
-      if (formattedClassTimesDetails[0].key) {
-        formattedClassTimesDetails.forEach((scheduleData, index) => {
-          scheduleData.key.forEach(dowObj => {
-            // debugger;
-            if (!newData[dowObj.label]) {
-              newData[dowObj.label] = [];
-            }
-
-            const scheduleDataCopy = JSON.parse(JSON.stringify(scheduleData));
-            delete scheduleDataCopy.key;
-            newData[dowObj.label].push(scheduleDataCopy);
-          });
-        });
+      if (typeof formattedClassTimesDetails[0] !== "object") {
+        return formattedClassTimesDetails;
       }
+
+      // key attr specifies the day information is stored on keys
+
+      formattedClassTimesDetails.forEach((scheduleData, index) => {
+        scheduleData.key.forEach(dowObj => {
+          // debugger;
+          if (!newData[dowObj.label]) {
+            newData[dowObj.label] = [];
+          }
+
+          const scheduleDataCopy = JSON.parse(JSON.stringify(scheduleData));
+          delete scheduleDataCopy.key;
+          newData[dowObj.label].push(scheduleDataCopy);
+        });
+      });
+
       return newData;
     }
 
