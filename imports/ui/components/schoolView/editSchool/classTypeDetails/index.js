@@ -7,10 +7,11 @@ import ClassType from "/imports/api/classType/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
-
+import { withPopUp } from "/imports/util";
 class ClassTypeDetails extends React.Component {
   constructor(props) {
     super(props);
+    debugger;
     this.state = {
       file: null
     };
@@ -26,6 +27,7 @@ class ClassTypeDetails extends React.Component {
 
   handleImageSave = (schoolId, classTypeId) => {
     const { file } = this.state;
+   
     let doc = {
       schoolId: schoolId
     };
@@ -65,10 +67,13 @@ class ClassTypeDetails extends React.Component {
   };
 
   editClassType = ({ doc, doc_id }) => {
+    const {popUp} = this.props;
     Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
+      console.log('TCL: editClassType -> error, result', error, result);
       if (error) {
       }
       if (result) {
+        popUp.appear("success", { title: "Message", content: 'Image Saved Successfully' });
       }
     });
   };
@@ -144,4 +149,5 @@ export default createContainer(props => {
     classTypeData,
     classTimesData
   };
-}, ClassTypeDetails);
+}, (withPopUp(ClassTypeDetails)));
+

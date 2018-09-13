@@ -46,6 +46,7 @@ class SchoolDetails extends React.Component {
 
   updateSchool = () => {
     let imageFile = this.refs.schoolImage.files[0];
+    debugger;
     if(imageFile) {
       S3.upload({ files: { "0": imageFile}, path: "schools"}, (err, res) => {
         if(err) {
@@ -61,11 +62,12 @@ class SchoolDetails extends React.Component {
 
   editSchoolCall = (nextTab, event) => {
     // Start loading on when user press button to update school details.
+    debugger;
     this.setState({isLoading: true});
     const { schoolId,toastr } = this.props;
 
     let schoolObj = {...this.state}
-    if(this.state && !this.state.mainImage) {
+    if(this.props.schoolData && this.props.schoolData.mainImage) {
       schoolObj['mainImage'] = this.props.schoolData && this.props.schoolData.mainImage;
     }
     // This function is used to edit school details.

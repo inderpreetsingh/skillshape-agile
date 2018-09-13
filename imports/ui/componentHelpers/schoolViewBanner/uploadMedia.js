@@ -10,7 +10,7 @@ import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import { withStyles, imageRegex } from "/imports/util";
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
+import { compressImage } from "/imports/util";
 import { ContainerLoader } from '/imports/ui/loading/container';
 import '/imports/api/media/methods';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
@@ -46,12 +46,28 @@ class UploadMedia extends React.Component {
 
   	onSubmit = (event)=> {
   		event.preventDefault()
-  		// console.log("handleSubmit state -->>",this.state);
   		const mediaData = {};
   		const { file } = this.state;
-  		this.setState({isBusy: true})
+			this.setState({isBusy: true})
+			let doc={};
+			
+			compressImage(file['org']).then((result) => {
+				for (let i = 0; i <= 1; i++) {
+					S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+						if (res) {
+							if(i==0){
+								doc[[this.props.imageType]+'Medium']= res.secure_url;
+							}else{
+								doc[[this.props.imageType]+'Low'] = res.secure_url;
+							}
+						}
+	
+					});
+				}
+			})
       if(file && file.isUrl) {
-        this.handleSubmit({ [this.props.imageType]: file.file })
+				doc[this.props.imageType]=file.file;
+        this.handleSubmit(doc)
       } else {
 
         // console.log("yessssssssssssssssssssssssssssssssssssfile", file.fileData)
@@ -60,22 +76,17 @@ class UploadMedia extends React.Component {
 	                // console.log("err s3 >>>>>>>????????>>>> ",err);
 	            }
 	            if(res) {
-                // console.log("res from s3>>>>>>>>>>>>>>>>>> ", res)
-                this.handleSubmit({ [this.props.imageType]: res.secure_url })
+								// console.log("res from s3>>>>>>>>>>>>>>>>>> ", res)
+								doc[this.props.imageType]=res.secure_url;
+                this.handleSubmit(doc);
 	            }
         	})
   		}
 
   	}
 
-  	handleSubmit = ({ logoImg, mainImage })=> {
-  		const data = {}
-  		if(logoImg) {
-  			data.logoImg = logoImg;
-  		} else if(mainImage) {
-  			data.mainImage = mainImage;
-  		}
-      // console.log("calling >>>>>>>>>>> editSchool")
+  	handleSubmit = (doc)=> {
+			const data = doc;
   		Meteor.call("editSchool", this.props.schoolId, data, (error, result) => {
             if(error) {
               

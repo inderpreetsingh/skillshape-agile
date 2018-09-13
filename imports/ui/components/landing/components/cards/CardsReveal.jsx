@@ -226,10 +226,11 @@ class CardsReveal extends Component {
     this.setState({ revealCard: false });
   }
   componentWillMount (){
-    const {bgImg,schoolId}= this.props;
-    verifyImageURL(bgImg,(res)=>{
+    const {bgImg,schoolId,medium}= this.props;
+    let img=medium ? medium :bgImg;
+    verifyImageURL(img,(res)=>{
       if(res){
-            this.setState({bgImg:bgImg});
+            this.setState({bgImg:img});
       }else{
         this.setState({bgImg:cardImgSrc});
       }
