@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from "react";
 import DocumentTitle from "react-document-title";
 import { debounce, isEmpty, get } from "lodash";
-import { createContainer } from "meteor/react-meteor-data";
 import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
 import { browserHistory, withRouter, BrowserRouter } from "react-router";
 import { Redirect } from "react-router-dom";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 import ip from "ip";
 import Chip from "material-ui/Chip";
@@ -33,6 +33,8 @@ import { cardsData, cardsData1 } from "./constants/cardsData.js";
 import config from "/imports/config";
 import Events from "/imports/util/events";
 import { withPopUp } from "/imports/util";
+import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
+
 const MainContentWrapper = styled.div`
   display: flex;
   position: relative;
@@ -224,6 +226,7 @@ class Landing extends Component {
     this.state = {
       mapView: false,
       sticky: false,
+      isLoading: false,
       isSearching: false,
       filterPanelDialogBox: false,
       filters: {
@@ -292,7 +295,22 @@ class Landing extends Component {
 
     if (!visitorRedirected && previousLocationPathName === "/") {
       if (visitorType === "school" && currentUser && isUserSubsReady) {
+        if (!this.state.showPreloader) {
+          this.setState(state => {
+            return {
+              ...state,
+              showPreloader: true
+            };
+          });
+        }
+
         Meteor.call("school.getMySchool", (err, res) => {
+          this.setState(state => {
+            return {
+              ...state,
+              showPreloader: false
+            };
+          });
           if (err) {
             console.warn(err);
           } else {
@@ -300,7 +318,7 @@ class Landing extends Component {
             if (res.length) {
               // debugger;
               console.info(res, "---");
-              
+
               const mySchoolSlug = res[0].slug;
               browserHistory.push(`/schools/${mySchoolSlug}`);
             } else {
@@ -946,6 +964,10 @@ class Landing extends Component {
   };
 
   render() {
+    if (this.state.showPreloader) {
+      return <Preloader />;
+    }
+
     return (
       <DocumentTitle title={this.props.route.name}>
         <div>
