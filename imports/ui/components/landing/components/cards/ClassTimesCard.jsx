@@ -59,6 +59,7 @@ const OuterWrapper = styled.div`
   overflow: hidden;
   position: relative;
   padding-top: ${props => (props.show ? helpers.rhythmDiv : 0)}px;
+  padding-bottom: ${props => (props.show ? helpers.rhythmDiv : 0)}px;
 `;
 
 const Wrapper = styled.div`

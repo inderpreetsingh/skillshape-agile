@@ -1,25 +1,26 @@
 import React, { Component, Fragment } from "react";
 import moment from "moment";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import PropTypes from "prop-types";
+import { withStyles } from "material-ui/styles";
 import { isEmpty, get } from "lodash";
 import { scroller } from "react-scroll";
+import { Checkbox } from "material-ui";
+import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
+
 import ClassTimeClockManager from "/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx";
 import ClassTimesCard from "/imports/ui/components/landing/components/cards/ClassTimesCard.jsx";
 import TrendingIcon from "/imports/ui/components/landing/components/icons/Trending.jsx";
-import Dialog, {
-  DialogActions,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
-import { cutString } from "/imports/util";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
+
 import Events from "/imports/util/events";
+import { cutString } from "/imports/util";
 import {
   withPopUp,
   formatDate,
@@ -34,8 +35,15 @@ import {
   CLASS_TIMES_CARD_WIDTH
 } from "/imports/ui/components/landing/constants/classTypeConstants.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import { Checkbox } from "material-ui";
+
+const styles = {
+  locationIcon: {
+    fontSize: helpers.baseFontSize,
+    color: helpers.black,
+    transform: `translateY(3px)`
+  }
+};
+
 const ClassTimeContainer = styled.div`
   ${helpers.flexHorizontalSpaceBetween} flex-direction: column;
   max-width: 100%;
@@ -87,16 +95,18 @@ const DescriptionWrapper = styled.div`
 
 const ClassTimeContent = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 const ConfirmationDialog = styled.div`
   margin: 8px;
 `;
 const ClassTimeDescription = styled.div`
-  border: 2px solid black;
+  border: 1px solid ${helpers.darkTextColor};
   margin-top: 5px;
   width: 100%;
-  padding: 7px;
-  border-radius: 10px;
+  padding: ${helpers.rhythmDiv}px;
+  border-radius: 5px;
 `;
 const ClassTypeName = styled.h5`
   width: 100%;
@@ -114,8 +124,22 @@ const ClassTypeName = styled.h5`
 
 const ScheduleType = ClassTypeName.withComponent("p").extend`
   font-weight: 300;
-  font-size: 18px;
-  text-transform: capitalize;
+  font-size: ${helpers.baseFontSize}px;
+  text-transform: none;
+  text-align: left;
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const RecurringDate = ClassTypeName.withComponent("p").extend`
+  font-size: 14px;
+  font-weight: 500;
+`;
+
+const ClassLocation = ClassTypeName.withComponent("p").extend`
+  font-size: ${helpers.baseFontSize}px;
+  font-style: italic;
+  background: white;
+  padding: ${helpers.rhythmDiv}px;
 `;
 
 const Description = styled.p`
@@ -296,29 +320,39 @@ class ClassTime extends Component {
       });
   };
 
-  reformatNewFlowData = (formattedClassTimes, scheduleType) => {
+  reformatNewFlowData = () => {
     const newData = {};
-    if (scheduleType === "recurring" || scheduleType === "onGoing") {
-      // key attr specifies the day information is stored on keys
-      if (formattedClassTimes[0].key) {
-        formattedClassTimes.forEach((scheduleData, index) => {
-          scheduleData.key.forEach(dowObj => {
-            // debugger;
-            if (!newData[dowObj.label]) {
-              newData[dowObj.label] = [];
-            }
+    let { formattedClassTimesDetails, scheduleType } = this.props;
+    scheduleType = scheduleType.toLowerCase();
 
-            const scheduleDataCopy = JSON.parse(JSON.stringify(scheduleData));
-            delete scheduleDataCopy.key;
-            newData[dowObj.label].push(scheduleDataCopy);
-          });
-        });
-      }
-    }
     console.group("NEW FORMATTED DATA");
-    console.log(newData);
+    console.log(formattedClassTimesDetails, scheduleType);
     console.groupEnd();
-    return newData;
+
+    if (scheduleType === "recurring" || scheduleType === "ongoing") {
+      if (typeof formattedClassTimesDetails[0] !== "object") {
+        return formattedClassTimesDetails;
+      }
+
+      // key attr specifies the day information is stored on keys
+
+      formattedClassTimesDetails.forEach((scheduleData, index) => {
+        scheduleData.key.forEach(dowObj => {
+          // debugger;
+          if (!newData[dowObj.label]) {
+            newData[dowObj.label] = [];
+          }
+
+          const scheduleDataCopy = JSON.parse(JSON.stringify(scheduleData));
+          delete scheduleDataCopy.key;
+          newData[dowObj.label].push(scheduleDataCopy);
+        });
+      });
+
+      return newData;
+    }
+
+    return formattedClassTimesDetails;
   };
 
   getScheduleTypeFormatted = () => {
@@ -327,13 +361,18 @@ class ClassTime extends Component {
 
     if (classScheduleType === "recurring")
       return (
-        <ScheduleType>
-          {addToCalendar == "closed"
-            ? "This is a Closed Series.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series."
-            : "This is a Series class time."}{" "}
-          {<br />}
-          {formatDate(startDate)} - {formatDate(endDate)}
-        </ScheduleType>
+        <Fragment>
+          <ScheduleType>
+            {addToCalendar == "closed"
+              ? "This is a Closed Series.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series."
+              : "This is a Series class time."}{" "}
+            {<br />}
+          </ScheduleType>
+          <RecurringDate>
+            Between {formatDate(startDate, "MMM")} and{" "}
+            {formatDate(endDate, "MMM")}
+          </RecurringDate>
+        </Fragment>
       );
     else if (classScheduleType === "onetime") {
       {
@@ -463,6 +502,14 @@ class ClassTime extends Component {
       }
     });
   };
+
+  getCompleteLocation = () => {
+    const { selectedLocation } = this.props;
+    return `${selectedLocation.address}, ${selectedLocation.city}, ${
+      selectedLocation.state
+    }, ${selectedLocation.country}`;
+  };
+
   handleCheckBoxes = CheckBoxes => {
     const { addToCalendar } = this.props;
     if (CheckBoxes[0] != !addToCalendar) {
@@ -477,11 +524,13 @@ class ClassTime extends Component {
   render() {
     // debugger;
     const {
+      selectedLocation,
       desc,
       startDate,
       endDate,
       scheduleType,
       name,
+      classes,
       inPopUp,
       formattedClassTimesDetails,
       classTypeName,
@@ -547,6 +596,12 @@ class ClassTime extends Component {
                 <ClassTimeContent>
                   {/*Class type name */}
                   <ClassTypeName inPopUp={inPopUp}>{`${name}`}</ClassTypeName>
+                  <ClassLocation>
+                    <Icon className={classes.locationIcon}>
+                      {"location_on"}
+                    </Icon>
+                    {selectedLocation.title} - {this.getCompleteLocation()}
+                  </ClassLocation>
                   {/* Schedule type */}
                   {this.getScheduleTypeFormatted()}
                   {this.props.desc && (
@@ -558,10 +613,7 @@ class ClassTime extends Component {
                     <ClassTimesCard
                       inPopUp={inPopUp}
                       show={true}
-                      formattedClassTimes={this.reformatNewFlowData(
-                        formattedClassTimesDetails,
-                        scheduleType
-                      )}
+                      formattedClassTimes={this.reformatNewFlowData()}
                       scheduleType={scheduleType}
                       description={desc}
                     />
@@ -599,4 +651,4 @@ ClassTime.propTypes = {
 };
 
 // export default withPopUp(withShowMoreText(ClassTime, { description: "desc"}));
-export default withPopUp(ClassTime);
+export default withPopUp(withStyles(styles)(ClassTime));
