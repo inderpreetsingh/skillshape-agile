@@ -10,9 +10,7 @@ import { isEmpty } from "lodash";
 import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx";
 
 import ClassInterest from "/imports/api/classInterest/fields";
-import {
-  DAYS_IN_WEEK
-} from "/imports/ui/components/landing/constants/classTypeConstants.js";
+import { DAYS_IN_WEEK } from "/imports/ui/components/landing/constants/classTypeConstants.js";
 import classTime from "/imports/ui/components/landing/constants/structure/classTime.js";
 import { CLASS_TIMES_CARD_WIDTH } from "/imports/ui/components/landing/constants/classTypeConstants.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
@@ -92,86 +90,84 @@ const ClassTimesBar = props => {
       );
     }
   };
-  checkPastEndDate=(classTimesData)=>{
+  checkPastEndDate = classTimesData => {
     return classTimesData.map(classTimeObj => {
-      if(classTimeObj.scheduleType=='OnGoing'){
+      if (classTimeObj.scheduleType == "OnGoing") {
         return (
           <GridItem key={classTimeObj._id} spacing={32} inPopUp={inPopUp}>
-           
             <ClassTime
               {...classTimeObj}
               inPopUp={inPopUp}
               classTimeData={classTimeObj}
               classInterestData={classInterestData}
-              onModalClose ={onModalClose}
+              onModalClose={onModalClose}
             />
           </GridItem>
         );
-      }
-      else if(classTimeObj.endDate > new Date() )
-      {
+      } else if (classTimeObj.endDate > new Date()) {
         return (
           <GridItem key={classTimeObj._id} spacing={32} inPopUp={inPopUp}>
-           
             <ClassTime
               {...classTimeObj}
               inPopUp={inPopUp}
               classTimeData={classTimeObj}
               classInterestData={classInterestData}
-              onModalClose ={onModalClose}
+              onModalClose={onModalClose}
             />
           </GridItem>
         );
-      }
-     else  if(classTimeObj.scheduleType=='oneTime'){
-         //if single/set all times are ended/ in past
-        let allPastDate=false,totalPastDates=0,totalClassTimes;
+      } else if (classTimeObj.scheduleType == "oneTime") {
+        //if single/set all times are ended/ in past
+        let allPastDate = false,
+          totalPastDates = 0,
+          totalClassTimes;
+
         DAYS_IN_WEEK.map(day => {
-          totalClassTimes= classTimeObj.formattedClassTimesDetails.totalClassTimes;
+          debugger;
+          totalClassTimes =
+            classTimeObj.formattedClassTimesDetails.totalClassTimes;
           const scheduleData = classTimeObj.formattedClassTimesDetails[day];
           if (!isEmpty(scheduleData)) {
             scheduleData.forEach((schedule, i) => {
-             if(schedule.startTime < new Date()){
-              totalPastDates++;
-              if(totalPastDates==totalClassTimes){
-                allPastDate=true;
+              if (schedule.startTime < new Date()) {
+                totalPastDates++;
+                if (totalPastDates == totalClassTimes) {
+                  allPastDate = true;
+                }
               }
-             } 
-            })
+            });
           }
-        } ) 
-        if(!allPastDate){
-       return (<GridItem key={classTimeObj._id} spacing={32} inPopUp={inPopUp}>
-            <ClassTime
-              {...classTimeObj}
-              inPopUp={inPopUp}
-              classTimeData={classTimeObj}
-              classInterestData={classInterestData}
-              onModalClose ={onModalClose}
-            />
-          </GridItem>)
-        }
-        
-      }
-    })
-  
+        });
 
-  }
+        if (!allPastDate) {
+          return (
+            <GridItem key={classTimeObj._id} spacing={32} inPopUp={inPopUp}>
+              <ClassTime
+                {...classTimeObj}
+                inPopUp={inPopUp}
+                classTimeData={classTimeObj}
+                classInterestData={classInterestData}
+                onModalClose={onModalClose}
+              />
+            </GridItem>
+          );
+        }
+      }
+    });
+  };
   const {
     handleAddToMyCalendarButtonClick,
     inPopUp,
     classTimesData,
     classInterestData,
     handleRemoveFromCalendarButtonClick,
-    onModalClose 
+    onModalClose
   } = props;
   let addToCalender;
   return (
     <Wrapper>
       <ClassTimesWrapper spacing={32}>
-        <GridContainer>
-          {checkPastEndDate(classTimesData)}
-        </GridContainer>
+        <GridContainer>{checkPastEndDate(classTimesData)}</GridContainer>
       </ClassTimesWrapper>
     </Wrapper>
   );

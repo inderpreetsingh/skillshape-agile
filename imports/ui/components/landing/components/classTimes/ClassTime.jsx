@@ -1,25 +1,26 @@
 import React, { Component, Fragment } from "react";
 import moment from "moment";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import PropTypes from "prop-types";
+import { withStyles } from "material-ui/styles";
 import { isEmpty, get } from "lodash";
 import { scroller } from "react-scroll";
+import { Checkbox } from "material-ui";
+import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
+
 import ClassTimeClockManager from "/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx";
 import ClassTimesCard from "/imports/ui/components/landing/components/cards/ClassTimesCard.jsx";
 import TrendingIcon from "/imports/ui/components/landing/components/icons/Trending.jsx";
-import Dialog, {
-  DialogActions,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
-import { cutString } from "/imports/util";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
+
 import Events from "/imports/util/events";
+import { cutString } from "/imports/util";
 import {
   withPopUp,
   formatDate,
@@ -34,8 +35,14 @@ import {
   CLASS_TIMES_CARD_WIDTH
 } from "/imports/ui/components/landing/constants/classTypeConstants.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import { Checkbox } from "material-ui";
+
+const styles = {
+  locationIcon: {
+    fontSize: helpers.baseFontSize,
+    color: helpers.black,
+    transform: `translateY(3px)`
+  }
+};
 
 const ClassTimeContainer = styled.div`
   ${helpers.flexHorizontalSpaceBetween} flex-direction: column;
@@ -126,6 +133,13 @@ const ScheduleType = ClassTypeName.withComponent("p").extend`
 const RecurringDate = ClassTypeName.withComponent("p").extend`
   font-size: 14px;
   font-weight: 500;
+`;
+
+const ClassLocation = ClassTypeName.withComponent("p").extend`
+  font-size: ${helpers.baseFontSize}px;
+  font-style: italic;
+  background: white;
+  padding: ${helpers.rhythmDiv}px;
 `;
 
 const Description = styled.p`
@@ -311,6 +325,10 @@ class ClassTime extends Component {
     let { formattedClassTimesDetails, scheduleType } = this.props;
     scheduleType = scheduleType.toLowerCase();
 
+    console.group("NEW FORMATTED DATA");
+    console.log(formattedClassTimesDetails, scheduleType);
+    console.groupEnd();
+
     if (scheduleType === "recurring" || scheduleType === "ongoing") {
       // key attr specifies the day information is stored on keys
       if (formattedClassTimesDetails[0].key) {
@@ -327,11 +345,10 @@ class ClassTime extends Component {
           });
         });
       }
+      return newData;
     }
-    console.group("NEW FORMATTED DATA");
-    console.log(newData);
-    console.groupEnd();
-    return newData;
+
+    return formattedClassTimesDetails;
   };
 
   getScheduleTypeFormatted = () => {
@@ -481,6 +498,14 @@ class ClassTime extends Component {
       }
     });
   };
+
+  getCompleteLocation = () => {
+    const { selectedLocation } = this.props;
+    return `${selectedLocation.address}, ${selectedLocation.city}, ${
+      selectedLocation.state
+    }, ${selectedLocation.country}`;
+  };
+
   handleCheckBoxes = CheckBoxes => {
     const { addToCalendar } = this.props;
     if (CheckBoxes[0] != !addToCalendar) {
@@ -495,11 +520,13 @@ class ClassTime extends Component {
   render() {
     // debugger;
     const {
+      selectedLocation,
       desc,
       startDate,
       endDate,
       scheduleType,
       name,
+      classes,
       inPopUp,
       formattedClassTimesDetails,
       classTypeName,
@@ -565,6 +592,12 @@ class ClassTime extends Component {
                 <ClassTimeContent>
                   {/*Class type name */}
                   <ClassTypeName inPopUp={inPopUp}>{`${name}`}</ClassTypeName>
+                  <ClassLocation>
+                    <Icon className={classes.locationIcon}>
+                      {"location_on"}
+                    </Icon>
+                    {selectedLocation.title} - {this.getCompleteLocation()}
+                  </ClassLocation>
                   {/* Schedule type */}
                   {this.getScheduleTypeFormatted()}
                   {this.props.desc && (
@@ -614,4 +647,4 @@ ClassTime.propTypes = {
 };
 
 // export default withPopUp(withShowMoreText(ClassTime, { description: "desc"}));
-export default withPopUp(ClassTime);
+export default withPopUp(withStyles(styles)(ClassTime));

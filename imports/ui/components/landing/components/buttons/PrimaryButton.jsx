@@ -119,9 +119,6 @@ const PrimaryButton = props => {
   if (props.disabled) {
     rootClass = rootClass + " " + props.classes.disabled;
     labelClass = props.classes.disabledButtonLabel;
-    console.group("classes for primary buttons");
-    console.log(rootClass, labelClass, "====");
-    console.groupEnd();
   }
   return (
     <Button
