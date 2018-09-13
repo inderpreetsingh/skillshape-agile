@@ -154,7 +154,9 @@ const ClassTimesCardWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  max-height: ${props => (props.inPopUp ? "auto" : "296px")}; // computed height
+  max-height: auto;
+  // max-height: ${props =>
+    props.inPopUp ? "auto" : "296px"}; // computed height
 `;
 
 const Trending = () => {
@@ -292,6 +294,31 @@ class ClassTime extends Component {
           });
         }
       });
+  };
+
+  reformatNewFlowData = (formattedClassTimes, scheduleType) => {
+    const newData = {};
+    if (scheduleType === "recurring" || scheduleType === "onGoing") {
+      // key attr specifies the day information is stored on keys
+      if (formattedClassTimes[0].key) {
+        formattedClassTimes.forEach((scheduleData, index) => {
+          scheduleData.key.forEach(dowObj => {
+            // debugger;
+            if (!newData[dowObj.label]) {
+              newData[dowObj.label] = [];
+            }
+
+            const scheduleDataCopy = JSON.parse(JSON.stringify(scheduleData));
+            delete scheduleDataCopy.key;
+            newData[dowObj.label].push(scheduleDataCopy);
+          });
+        });
+      }
+    }
+    console.group("NEW FORMATTED DATA");
+    console.log(newData);
+    console.groupEnd();
+    return newData;
   };
 
   getScheduleTypeFormatted = () => {
@@ -464,7 +491,6 @@ class ClassTime extends Component {
     const { thinkingAboutAttending, addToCalendar, notification } = this.state;
 
     // console.group("formattedClassTimes");
-    // console.info(formattedClassTimes);
     // console.groupEnd();
 
     //const showDescription = this.showDescription(formattedClassTimes);
@@ -532,7 +558,10 @@ class ClassTime extends Component {
                     <ClassTimesCard
                       inPopUp={inPopUp}
                       show={true}
-                      formattedClassTimes={formattedClassTimesDetails}
+                      formattedClassTimes={this.reformatNewFlowData(
+                        formattedClassTimesDetails,
+                        scheduleType
+                      )}
                       scheduleType={scheduleType}
                       description={desc}
                     />
