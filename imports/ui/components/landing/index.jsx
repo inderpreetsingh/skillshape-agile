@@ -5,12 +5,8 @@ import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
 import { browserHistory, withRouter, BrowserRouter } from "react-router";
-import { Redirect } from "react-router-dom";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 import ip from "ip";
-import Chip from "material-ui/Chip";
-import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
 
 import Cover from "./components/Cover.jsx";

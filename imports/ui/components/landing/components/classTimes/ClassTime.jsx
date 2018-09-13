@@ -36,6 +36,7 @@ import {
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { Checkbox } from "material-ui";
+
 const ClassTimeContainer = styled.div`
   ${helpers.flexHorizontalSpaceBetween} flex-direction: column;
   max-width: 100%;
@@ -87,16 +88,18 @@ const DescriptionWrapper = styled.div`
 
 const ClassTimeContent = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 const ConfirmationDialog = styled.div`
   margin: 8px;
 `;
 const ClassTimeDescription = styled.div`
-  border: 2px solid black;
+  border: 1px solid ${helpers.darkTextColor};
   margin-top: 5px;
   width: 100%;
-  padding: 7px;
-  border-radius: 10px;
+  padding: ${helpers.rhythmDiv}px;
+  border-radius: 5px;
 `;
 const ClassTypeName = styled.h5`
   width: 100%;
@@ -296,12 +299,15 @@ class ClassTime extends Component {
       });
   };
 
-  reformatNewFlowData = (formattedClassTimes, scheduleType) => {
+  reformatNewFlowData = () => {
     const newData = {};
-    if (scheduleType === "recurring" || scheduleType === "onGoing") {
+    let { formattedClassTimesDetails, scheduleType } = this.props;
+    scheduleType = scheduleType.toLowerCase();
+
+    if (scheduleType === "recurring" || scheduleType === "ongoing") {
       // key attr specifies the day information is stored on keys
-      if (formattedClassTimes[0].key) {
-        formattedClassTimes.forEach((scheduleData, index) => {
+      if (formattedClassTimesDetails[0].key) {
+        formattedClassTimesDetails.forEach((scheduleData, index) => {
           scheduleData.key.forEach(dowObj => {
             // debugger;
             if (!newData[dowObj.label]) {
@@ -558,10 +564,7 @@ class ClassTime extends Component {
                     <ClassTimesCard
                       inPopUp={inPopUp}
                       show={true}
-                      formattedClassTimes={this.reformatNewFlowData(
-                        formattedClassTimesDetails,
-                        scheduleType
-                      )}
+                      formattedClassTimes={this.reformatNewFlowData()}
                       scheduleType={scheduleType}
                       description={desc}
                     />
