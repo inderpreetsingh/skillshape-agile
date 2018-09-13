@@ -155,7 +155,8 @@ const ClassTimesCardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   max-height: auto;
-  // max-height: ${props => (props.inPopUp ? "auto" : "296px")}; // computed height
+  // max-height: ${props =>
+    props.inPopUp ? "auto" : "296px"}; // computed height
 `;
 
 const Trending = () => {
@@ -297,7 +298,7 @@ class ClassTime extends Component {
 
   reformatNewFlowData = (formattedClassTimes, scheduleType) => {
     const newData = {};
-    if (scheduleType === "recurring") {
+    if (scheduleType === "recurring" || scheduleType === "onGoing") {
       // key attr specifies the day information is stored on keys
       if (formattedClassTimes[0].key) {
         formattedClassTimes.forEach((scheduleData, index) => {
@@ -489,9 +490,9 @@ class ClassTime extends Component {
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     const { thinkingAboutAttending, addToCalendar, notification } = this.state;
 
-    console.group("formattedClassTimes");
-    console.info(formattedClassTimesDetails);
-    console.groupEnd();
+    // console.group("formattedClassTimes");
+    // console.info(formattedClassTimesDetails);
+    // console.groupEnd();
 
     //const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(
