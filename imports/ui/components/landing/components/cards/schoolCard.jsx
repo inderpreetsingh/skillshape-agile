@@ -191,10 +191,12 @@ class SchoolCard extends Component {
   };
   componentWillMount (){
    const {schoolCardData}=this.props;
-    const bgImg = schoolCardData.mainImage;
-    verifyImageURL(bgImg,(res)=>{
+    const pic= schoolCardData && schoolCardData.mainImageMedium ? 
+    schoolCardData.mainImageMedium:schoolCardData && schoolCardData.mainImage 
+    ? schoolCardData.mainImage : cardImgSrc;
+    verifyImageURL(pic,(res)=>{
       if(res){
-            this.setState({bgImg:bgImg});
+            this.setState({bgImg:pic});
       }else{
         this.setState({bgImg:cardImgSrc});
       }
