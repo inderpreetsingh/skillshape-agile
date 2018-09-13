@@ -47,42 +47,39 @@ class UploadMedia extends React.Component {
   	onSubmit = (event)=> {
   		event.preventDefault()
   		const mediaData = {};
-  		const { file } = this.state;
+			const { file } = this.state;
 			this.setState({isBusy: true})
 			let doc={};
-			
-			compressImage(file['org']).then((result) => {
+			let allUploadPromise = [];
+			compressImage(file['org'], file.file,file.isUrl).then((result) => {
 				for (let i = 0; i <= 1; i++) {
-					S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
-						if (res) {
-							if(i==0){
-								doc[[this.props.imageType]+'Medium']= res.secure_url;
-							}else{
-								doc[[this.props.imageType]+'Low'] = res.secure_url;
+					allUploadPromise.push(new Promise((resolve, reject)=> {
+						S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+							if (res) {
+								if (i == 0) {
+									doc[[this.props.imageType] + 'Medium'] = res.secure_url;
+								} else {
+									doc[[this.props.imageType] + 'Low'] = res.secure_url;
+								}
 							}
-						}
-	
-					});
+							resolve(true);
+						});
+					}))
 				}
+				Promise.all(allUploadPromise).then(()=> {
+					if (file && file.isUrl) {
+						doc[this.props.imageType] = file.file;
+						this.handleSubmit(doc)
+					} else {
+						S3.upload({ files: { "0": file.fileData }, path: "schools" }, (err, res) => {
+							if (res) {
+								doc[this.props.imageType] = res.secure_url;
+								this.handleSubmit(doc);
+							}
+						})
+					}
+				})
 			})
-      if(file && file.isUrl) {
-				doc[this.props.imageType]=file.file;
-        this.handleSubmit(doc)
-      } else {
-
-        // console.log("yessssssssssssssssssssssssssssssssssssfile", file.fileData)
-  			S3.upload({files: { "0": file.fileData}, path:"schools"}, (err, res) => {
-	            if(err) {
-	                // console.log("err s3 >>>>>>>????????>>>> ",err);
-	            }
-	            if(res) {
-								// console.log("res from s3>>>>>>>>>>>>>>>>>> ", res)
-								doc[this.props.imageType]=res.secure_url;
-                this.handleSubmit(doc);
-	            }
-        	})
-  		}
-
   	}
 
   	handleSubmit = (doc)=> {

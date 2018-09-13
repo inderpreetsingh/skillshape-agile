@@ -18,6 +18,7 @@ import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
 Meteor.methods({
   editSchool: function(id, data) {
+    console.log('TCL: data', data);
     let schoolData = School.findOne({ _id: id });
     if (schoolData && data.name && schoolData.name !== data.name) {
       ClassType.update(
