@@ -51,7 +51,7 @@ export default function(props) {
                           membersByName[key].map(data => {
                             let profile =data.profile.profile;
                             let pic = profile && profile.low ? profile.low : profile && profile.medium ? profile.medium : 
-                            profile && profile.pic ? profile.pic:config.defaultProfilePic ;
+                            profile && profile.pic ? profile.pic:config.defaultProfilePicOptimized ;
                             verifyImageURL(pic,(res)=>{
                               if(!res){
                                    pic=config.defaultProfilePic;
