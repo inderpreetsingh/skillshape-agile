@@ -491,7 +491,6 @@ class ClassTime extends Component {
     const { thinkingAboutAttending, addToCalendar, notification } = this.state;
 
     // console.group("formattedClassTimes");
-    // console.info(formattedClassTimesDetails);
     // console.groupEnd();
 
     //const showDescription = this.showDescription(formattedClassTimes);
@@ -571,16 +570,6 @@ class ClassTime extends Component {
 
                 {/* View All times button */}
                 <ButtonsWrapper>
-                  {/*<ButtonWrapper showCard={this.state.showCard}>
-                    <ClassTimeButton
-                      white
-                      lgButton
-                      icon
-                      iconName="av_timer"
-                      onClick={this.handleShowCard(true)}
-                      label="View all times"
-                    />
-                  </ButtonWrapper> */}
                   <ButtonWrapper>
                     {this.getCalenderButton(this.props.addToCalendar)}
                   </ButtonWrapper>

@@ -71,6 +71,14 @@ School.attachSchema(new SimpleSchema({
     type: String,
     optional: true
   },
+  logoImgMedium: {
+    type: String,
+    optional: true
+  },
+  logoImgLow: {
+    type: String,
+    optional: true
+  },
   topBarColor: {
     type: String,
     optional: true
@@ -92,6 +100,15 @@ School.attachSchema(new SimpleSchema({
     optional: true
   },
   mainImage: {
+    type: String,
+    optional: true
+  },
+  mainImageLow: {
+    type: String,
+    optional: true
+  }
+  ,
+  mainImageMedium: {
     type: String,
     optional: true
   },

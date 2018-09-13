@@ -1,8 +1,17 @@
 import imageCompression from 'browser-image-compression';
-export const compressImage = async (file) => {
+srcToFile = async (src, fileName, mimeType) => {
+    let res = await fetch(src)
+    let buf = await res.arrayBuffer();
+    let final = await new File([buf], fileName, { type: mimeType });
+    return final;
+}
+export const compressImage = async (file,url,useUrl) => {
     try {
-
-        const maxSizeMB = [0.1, 0.01], maxWidthOrHeight = [300, 40];
+        if(useUrl && url){
+            let fileObject = await srcToFile(url, 'new.jpg', 'image/jpg');
+            file=fileObject;
+        }
+        const maxSizeMB = [0.4, 0.04], maxWidthOrHeight = [500, 120];
         let compressedFiles = [];
         for (let i = 0; i < maxSizeMB.length; i++) {
             let compressedFile = await imageCompression(file, maxSizeMB[i], maxWidthOrHeight[i])
@@ -10,6 +19,7 @@ export const compressImage = async (file) => {
         }
         return compressedFiles;
     } catch (error) {
+    console.log('TCL: }catch -> error', error);
     }
 
 
