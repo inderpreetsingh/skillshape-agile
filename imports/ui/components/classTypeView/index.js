@@ -68,6 +68,7 @@ export default createContainer(props => {
   // console.log("ClassType createContainer props -->>",props);
   const { classTypeId } = props.params;
   let subscription;
+  let classTimesSubscription;
   let reviewsSubscription;
   let isLoading = true;
   let classInterestData = [];
@@ -78,6 +79,11 @@ export default createContainer(props => {
     subscription = Meteor.subscribe("classType.getClassTypeWithClassTimes", {
       classTypeId
     });
+    // added cause sLocation field was giving empty response with 2 publishJoinedCursors
+    classTimesSubscription = Meteor.subscribe("classType.getClassTimesWithId", {
+      classTypeId
+    });
+
     reviewsSubscriptions = Meteor.subscribe("review.getReviews", {
       reviewForId: classTypeId
     });
@@ -85,8 +91,8 @@ export default createContainer(props => {
 
   const sub1Ready = subscription && subscription.ready();
   const sub2Ready = reviewsSubscriptions && reviewsSubscriptions.ready();
-
-  if (sub1Ready && sub2Ready) {
+  const sub3Ready = classTimesSubscription && classTimesSubscription.ready();
+  if (sub1Ready && sub2Ready && sub3Ready) {
     isLoading = false;
   }
   Meteor.subscribe("classInterest.getClassInterest");
@@ -98,6 +104,7 @@ export default createContainer(props => {
     schoolData && schoolData.currency
       ? schoolData.currency
       : config.defaultCurrency;
+
   let classTimesData = ClassTimes.find({ classTypeId: classTypeId }).fetch();
   let classPricingData = ClassPricing.find().fetch();
   let monthlyPricingData = MonthlyPricing.find().fetch();

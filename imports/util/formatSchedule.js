@@ -19,9 +19,9 @@ export const formatAmPm = startTime => {
   }
 };
 
-export const formatDate = date => {
+export const formatDate = (date, monthFormat = "MMMM") => {
   // console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
-  return moment(date).format("MMMM DD, YYYY");
+  return moment(date).format(`${monthFormat} DD, YYYY`);
 };
 
 export const formatDateNoYear = date => {
@@ -140,30 +140,27 @@ const removePastTimesFromSchedule = (
   scheduleData
 ) => {
   const currentDate = new Date();
-  if (scheduleType === "recurring" ) {
-   
-     if(scheduleData.endDate > new Date()) 
-     {
-       return addTotalClassTimes(classTimes);
-     }
-     
+  if (scheduleType === "recurring") {
+    if (scheduleData.endDate > new Date()) {
+      return addTotalClassTimes(classTimes);
+    }
+
     return {};
   } else if (scheduleType === "onetime") {
-    let allPastDate=true;
+    let allPastDate = true;
     DAYS_IN_WEEK.map(day => {
       const scheduleData = classTimes[day];
       if (!isEmpty(scheduleData)) {
         scheduleData.forEach((schedule, i) => {
-         if(schedule.startTime > new Date()){
-            allPastDate=false;
-         } 
-        })
+          if (schedule.startTime > new Date()) {
+            allPastDate = false;
+          }
+        });
       }
-    } ) 
-    if(!allPastDate){
-    return addTotalClassTimes(classTimes);
-    }
-    else return {};
+    });
+    if (!allPastDate) {
+      return addTotalClassTimes(classTimes);
+    } else return {};
   }
   return addTotalClassTimes(classTimes);
 };

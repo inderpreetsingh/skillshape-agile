@@ -117,8 +117,15 @@ const ClassTypeName = styled.h5`
 
 const ScheduleType = ClassTypeName.withComponent("p").extend`
   font-weight: 300;
-  font-size: 18px;
-  text-transform: capitalize;
+  font-size: ${helpers.baseFontSize}px;
+  text-transform: none;
+  text-align: left;
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const RecurringDate = ClassTypeName.withComponent("p").extend`
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 const Description = styled.p`
@@ -333,13 +340,18 @@ class ClassTime extends Component {
 
     if (classScheduleType === "recurring")
       return (
-        <ScheduleType>
-          {addToCalendar == "closed"
-            ? "This is a Closed Series.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series."
-            : "This is a Series class time."}{" "}
-          {<br />}
-          {formatDate(startDate)} - {formatDate(endDate)}
-        </ScheduleType>
+        <Fragment>
+          <ScheduleType>
+            {addToCalendar == "closed"
+              ? "This is a Closed Series.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series."
+              : "This is a Series class time."}{" "}
+            {<br />}
+          </ScheduleType>
+          <RecurringDate>
+            Between {formatDate(startDate, "MMM")} and{" "}
+            {formatDate(endDate, "MMM")}
+          </RecurringDate>
+        </Fragment>
       );
     else if (classScheduleType === "onetime") {
       {

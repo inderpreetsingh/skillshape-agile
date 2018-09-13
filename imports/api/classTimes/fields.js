@@ -1,6 +1,7 @@
 import config from "/imports/config";
 import SLocation from "/imports/api/sLocation/fields";
 import ClassType from "/imports/api/classType/fields";
+
 const ClassTimes = new Mongo.Collection(config.collections.classTimes);
 /**
  * Create the schema
@@ -83,14 +84,20 @@ ClassTimes.attachSchema(
       type: String,
       blackbox: true
     },
-    closed:{
+    closed: {
       type: Boolean,
       optional: true
     }
   })
 );
 
-ClassTimes.join(SLocation, "locationId", "selectedLocation", ["rooms"]);
+ClassTimes.join(SLocation, "locationId", "selectedLocation", [
+  "title",
+  "address",
+  "city",
+  "state",
+  "rooms"
+]);
 ClassTimes.join(ClassType, "classTypeId", "classTypeName", ["name"]);
 
 Meteor.startup(function() {
