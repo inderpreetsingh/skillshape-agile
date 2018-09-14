@@ -33,23 +33,49 @@ class ClassTypeDetails extends React.Component {
     };
     try{
       compressImage(file['org'],file.file,file.isUrl).then((result) => {
-        for (let i = 0; i <= 1; i++) {
-          allUploadPromise.push(new Promise((resolve,reject)=>{
-            S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
-              if (res) {
-                if(i==0){
-                  doc.medium= res.secure_url;
-                  resolve();
-                }else{
-                  doc.low = res.secure_url;
-                  resolve();
+        console.group("ClassTypeDetails");
+        if(_.isArray(result)){
+          console.log('Non-cors');
+          for (let i = 0; i <= 1; i++) {
+            allUploadPromise.push(new Promise((resolve,reject)=>{
+              S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+                if (res) {
+                  if(i==0){
+                    doc.medium= res.secure_url;
+                    resolve();
+                  }else{
+                    doc.low = res.secure_url;
+                    resolve();
+                  }
                 }
-              }
-    
-            });
-          }))
+      
+              });
+            }))
+          }
+          Promise.all(allUploadPromise).then(()=>{
+            if (file && file.fileData && !file.isUrl) {
+              S3.upload(
+                { files: { "0": file.fileData }, path: "schools" },
+                (err, res) => {
+                  if (err) {
+                  }
+                  if (res) {
+                    doc.classTypeImg = res.secure_url;
+                    this.editClassType({ doc_id: classTypeId, doc });
+                  }
+                }
+              );
+            } else if (file && file.isUrl) {
+              doc.classTypeImg = file.file;
+              this.editClassType({ doc_id: classTypeId, doc });
+            } else {
+              doc.classTypeImg = null;
+              this.editClassType({ doc_id: classTypeId, doc });
+            }
+          })
         }
-        Promise.all(allUploadPromise).then(()=>{
+        else{
+							console.log('cors');
           if (file && file.fileData && !file.isUrl) {
             S3.upload(
               { files: { "0": file.fileData }, path: "schools" },
@@ -69,7 +95,9 @@ class ClassTypeDetails extends React.Component {
             doc.classTypeImg = null;
             this.editClassType({ doc_id: classTypeId, doc });
           }
-        })
+        }
+        console.groupEnd("ClassTypeDetails");
+
       })
     }catch(error){
     throw new Meteor.Error(error);

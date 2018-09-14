@@ -67,7 +67,9 @@ class UploadAvatar extends React.Component {
         try{
             compressImage(file['org'],file.file,file.isUrl).then((result)=>{
                 let optimizedImages=[];
+                console.group("UploadAvatar");
                 if(_.isArray(result)){
+                    console.log('Non-cors');
                     for(let i=0;i<=1;i++){
                         allUploadPromise.push(new Promise((resolve,reject)=>{
                             S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
@@ -100,13 +102,26 @@ class UploadAvatar extends React.Component {
                         }
                     })
                 }else{
-                    this.setState({isBusy: false});
-                    const {popUp} =this.props;
-                    popUp.appear("alert", { title: "Error Found", content: result && result.TypeError ? result.TypeError 
-                    : 'Please upload image from different source or from local'
-                });
+                    console.log('cors');
+                    if (file && file.fileData && !file.isUrl) {
+                        S3.upload({ files: { "0": file.fileData }, path: "memberAvatar" }, (err, res) => {
+                            if (err) {
+                                this.setState({ isBusy: false, errorText: err.reason || err.message })
+                            }
+                            if (res) {
+                                memberData["pic"] = res.secure_url
+                                this.editUserCall(memberData);
+                            }
+                           
+                        });
+                    } else if (file && file.isUrl) {
+                        memberData["pic"] = file.file;
+                        this.editUserCall(memberData);
+                    } else {
+                        this.editUserCall(memberData);
+                    }
                 }
-           
+                console.groupEnd("UploadAvatar");
             })
         }catch(error){
             throw new Meteor.Error(error);
@@ -116,8 +131,8 @@ class UploadAvatar extends React.Component {
     editUserCall = (memberData) => {
         let payload = {};
         payload.pic = memberData.pic;
-        payload.medium= memberData.optimizedImages[0];
-        payload.low= memberData.optimizedImages[1];
+        payload.medium= memberData.optimizedImages && memberData.optimizedImages[0];
+        payload.low= memberData.optimizedImages && memberData.optimizedImages[1];
         Meteor.call(
             "schoolMemberDetails.editSchoolMemberDetails", { doc_id: memberData._id, doc: payload },
             (err, res) => {

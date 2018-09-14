@@ -134,22 +134,51 @@ class MyProfile extends React.Component {
       const { file } = this.state;
       try{
         compressImage(file['org'],file.file,file.isUrl).then((result) => {
-          for (let i = 0; i <= 1; i++) {
-            allUploadPromise.push(new Promise((resolve,reject)=>{
-              S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
-                if (res) {
-                  if(i==0){
-                    userData['profile.medium'] = res.secure_url;
-                    resolve();
-                  }else{
-                    userData['profile.low'] = res.secure_url;
-                    resolve();
+        console.group("MyProfile");
+          if(_.isArray(result)){
+          console.log('Non-cors');
+            for (let i = 0; i <= 1; i++) {
+              allUploadPromise.push(new Promise((resolve,reject)=>{
+                S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+                  if (res) {
+                    if(i==0){
+                      userData['profile.medium'] = res.secure_url;
+                      resolve();
+                    }else{
+                      userData['profile.low'] = res.secure_url;
+                      resolve();
+                    }
                   }
-                }
-              });
-            }))
+                });
+              }))
+            }
+            Promise.all(allUploadPromise).then(()=>{
+              if (file && file.fileData && !file.isUrl) {
+                S3.upload(
+                  { files: { "0": file.fileData }, path: "profile" },
+                  (err, res) => {
+                    if (err) {
+                      this.setState({
+                        isBusy: false,
+                        errorText: err.reason || err.message
+                      });
+                    }
+                    if (res) {
+                      userData["profile.pic"] = res.secure_url;
+                      this.editUserCall(userData);
+                    }
+                  }
+                );
+              } else if (file && file.isUrl) {
+                userData["profile.pic"] = file.file;
+                this.editUserCall(userData);
+              } else {
+                this.editUserCall(userData);
+              }
+            })
           }
-          Promise.all(allUploadPromise).then(()=>{
+          else{
+          console.log('cors');
             if (file && file.fileData && !file.isUrl) {
               S3.upload(
                 { files: { "0": file.fileData }, path: "profile" },
@@ -172,7 +201,8 @@ class MyProfile extends React.Component {
             } else {
               this.editUserCall(userData);
             }
-          })
+          }
+        console.groupEnd("MyProfile");
         })
       }catch(error){
       throw new Meteor.Error(error);

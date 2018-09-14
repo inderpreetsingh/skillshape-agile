@@ -53,7 +53,9 @@ class UploadMedia extends React.Component {
 			let allUploadPromise = [];
 				try{
 					compressImage(file['org'], file.file,file.isUrl).then((result) => {
+						console.group("UploadMedia");
 						if(_.isArray(result)){
+							console.log('Non-cors');
 							for (let i = 0; i <= 1; i++) {
 								allUploadPromise.push(new Promise((resolve, reject)=> {
 									S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
@@ -63,8 +65,11 @@ class UploadMedia extends React.Component {
 											} else {
 												doc[[this.props.imageType] + 'Low'] = res.secure_url;
 											}
+											resolve(true);
+										}else{
+											reject();
 										}
-										resolve(true);
+										
 									});
 								}))
 							}
@@ -77,19 +82,26 @@ class UploadMedia extends React.Component {
 										if (res) {
 											doc[this.props.imageType] = res.secure_url;
 											this.handleSubmit(doc);
-	
 										}
 									})
 								}
 							})
 						}
 						else{
-							this.setState({isBusy: false});
-							const {popUp} =this.props;
-							popUp.appear("alert", { title: "Error Found", content: result && result.TypeError ? result.TypeError 
-							: 'Please upload image from different source or from local'
-						});
+							console.log('cors');
+							if (file && file.isUrl) {
+								doc[this.props.imageType] = file.file;
+								this.handleSubmit(doc)
+							} else {
+								S3.upload({ files: { "0": file.fileData }, path: "schools" }, (err, res) => {
+									if (res) {
+										doc[this.props.imageType] = res.secure_url;
+										this.handleSubmit(doc);
+									}
+								})
+							}
 						}
+						console.groupEnd("UploadMedia");
 					})
 				}catch(error){
 					throw new Meteor.Error(error);
