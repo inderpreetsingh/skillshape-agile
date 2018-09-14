@@ -27,49 +27,86 @@ class ClassTypeDetails extends React.Component {
 
   handleImageSave = (schoolId, classTypeId) => {
     const { file } = this.state;
-   
+    let allUploadPromise = [];
     let doc = {
       schoolId: schoolId
     };
-    compressImage(file['org']).then((result) => {
-      for (let i = 0; i <= 1; i++) {
-        S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
-          if (res) {
-            if(i==0){
-              doc.medium= res.secure_url;
-            }else{
-              doc.low = res.secure_url;
+    try{
+      compressImage(file['org'],file.file,file.isUrl).then((result) => {
+        console.group("ClassTypeDetails");
+        if(_.isArray(result)){
+          console.log('Non-cors');
+          for (let i = 0; i <= 1; i++) {
+            allUploadPromise.push(new Promise((resolve,reject)=>{
+              S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+                if (res) {
+                  if(i==0){
+                    doc.medium= res.secure_url;
+                    resolve();
+                  }else{
+                    doc.low = res.secure_url;
+                    resolve();
+                  }
+                }
+      
+              });
+            }))
+          }
+          Promise.all(allUploadPromise).then(()=>{
+            if (file && file.fileData && !file.isUrl) {
+              S3.upload(
+                { files: { "0": file.fileData }, path: "schools" },
+                (err, res) => {
+                  if (err) {
+                  }
+                  if (res) {
+                    doc.classTypeImg = res.secure_url;
+                    this.editClassType({ doc_id: classTypeId, doc });
+                  }
+                }
+              );
+            } else if (file && file.isUrl) {
+              doc.classTypeImg = file.file;
+              this.editClassType({ doc_id: classTypeId, doc });
+            } else {
+              doc.classTypeImg = null;
+              this.editClassType({ doc_id: classTypeId, doc });
             }
-          }
-
-        });
-      }
-    })
-    if (file && file.fileData && !file.isUrl) {
-      S3.upload(
-        { files: { "0": file.fileData }, path: "schools" },
-        (err, res) => {
-          if (err) {
-          }
-          if (res) {
-            doc.classTypeImg = res.secure_url;
+          })
+        }
+        else{
+							console.log('cors');
+          if (file && file.fileData && !file.isUrl) {
+            S3.upload(
+              { files: { "0": file.fileData }, path: "schools" },
+              (err, res) => {
+                if (err) {
+                }
+                if (res) {
+                  doc.classTypeImg = res.secure_url;
+                  this.editClassType({ doc_id: classTypeId, doc });
+                }
+              }
+            );
+          } else if (file && file.isUrl) {
+            doc.classTypeImg = file.file;
+            this.editClassType({ doc_id: classTypeId, doc });
+          } else {
+            doc.classTypeImg = null;
             this.editClassType({ doc_id: classTypeId, doc });
           }
         }
-      );
-    } else if (file && file.isUrl) {
-      doc.classTypeImg = file.file;
-      this.editClassType({ doc_id: classTypeId, doc });
-    } else {
-      doc.classTypeImg = null;
-      this.editClassType({ doc_id: classTypeId, doc });
+        console.groupEnd("ClassTypeDetails");
+
+      })
+    }catch(error){
+    throw new Meteor.Error(error);
     }
   };
 
   editClassType = ({ doc, doc_id }) => {
     const {popUp} = this.props;
     Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
-      console.log('TCL: editClassType -> error, result', error, result);
       if (error) {
       }
       if (result) {

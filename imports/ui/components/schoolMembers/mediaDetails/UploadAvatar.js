@@ -16,6 +16,9 @@ import '/imports/api/media/methods';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { compressImage } from '../../../../util';
+import { resolve } from 'url';
+import { withPopUp } from "/imports/util";
+
 const formId = "create-media";
 
 class UploadAvatar extends React.Component {
@@ -49,9 +52,10 @@ class UploadAvatar extends React.Component {
         this.state.file = file;
     }
 
-    onSubmit = async(event) => {
+    onSubmit = (event) => {
         event.preventDefault();
         let file = this.state.file;
+        let allUploadPromise = [];
         if (!this.state.file) {
             this.setState({ fileUploadError: true })
             return
@@ -60,46 +64,75 @@ class UploadAvatar extends React.Component {
         }
        
         const memberData = this.props.memberInfo;
-        compressImage(file['org']).then((result)=>{
-            let optimizedImages=[];
-        for(let i=0;i<=1;i++){
-            S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
-                if (res) {
-                    optimizedImages.push(res.secure_url);
+        try{
+            compressImage(file['org'],file.file,file.isUrl).then((result)=>{
+                let optimizedImages=[];
+                console.group("UploadAvatar");
+                if(_.isArray(result)){
+                    console.log('Non-cors');
+                    for(let i=0;i<=1;i++){
+                        allUploadPromise.push(new Promise((resolve,reject)=>{
+                            S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+                                if (res) {
+                                    optimizedImages.push(res.secure_url);
+                                    resolve(i);
+                                }
+                               
+                            });     
+                        }))    
+                    }
+                    Promise.all(allUploadPromise).then((x)=>{
+                        memberData['optimizedImages']=optimizedImages;
+                        if (file && file.fileData && !file.isUrl) {
+                            S3.upload({ files: { "0": file.fileData }, path: "memberAvatar" }, (err, res) => {
+                                if (err) {
+                                    this.setState({ isBusy: false, errorText: err.reason || err.message })
+                                }
+                                if (res) {
+                                    memberData["pic"] = res.secure_url
+                                    this.editUserCall(memberData);
+                                }
+                               
+                            });
+                        } else if (file && file.isUrl) {
+                            memberData["pic"] = file.file;
+                            this.editUserCall(memberData);
+                        } else {
+                            this.editUserCall(memberData);
+                        }
+                    })
+                }else{
+                    console.log('cors');
+                    if (file && file.fileData && !file.isUrl) {
+                        S3.upload({ files: { "0": file.fileData }, path: "memberAvatar" }, (err, res) => {
+                            if (err) {
+                                this.setState({ isBusy: false, errorText: err.reason || err.message })
+                            }
+                            if (res) {
+                                memberData["pic"] = res.secure_url
+                                this.editUserCall(memberData);
+                            }
+                           
+                        });
+                    } else if (file && file.isUrl) {
+                        memberData["pic"] = file.file;
+                        this.editUserCall(memberData);
+                    } else {
+                        this.editUserCall(memberData);
+                    }
                 }
-               
-            });
+                console.groupEnd("UploadAvatar");
+            })
+        }catch(error){
+            throw new Meteor.Error(error);
         }
-        memberData['optimizedImages']=optimizedImages;
-        })
         
-        if (file && file.fileData && !file.isUrl) {
-            S3.upload({ files: { "0": file.fileData }, path: "memberAvatar" }, (err, res) => {
-                if (err) {
-                    this.setState({ isBusy: false, errorText: err.reason || err.message })
-                }
-                if (res) {
-                    memberData["pic"] = res.secure_url
-                   
-                    this.editUserCall(memberData);
-                }
-               
-            });
-        } else if (file && file.isUrl) {
-            memberData["pic"] = file.file;
-            
-            this.editUserCall(memberData);
-        } else {
-            this.editUserCall(memberData);
-        }
-       
-       
     }
     editUserCall = (memberData) => {
         let payload = {};
         payload.pic = memberData.pic;
-        payload.medium= memberData.optimizedImages[0];
-        payload.low= memberData.optimizedImages[1];
+        payload.medium= memberData.optimizedImages && memberData.optimizedImages[0];
+        payload.low= memberData.optimizedImages && memberData.optimizedImages[1];
         Meteor.call(
             "schoolMemberDetails.editSchoolMemberDetails", { doc_id: memberData._id, doc: payload },
             (err, res) => {
@@ -162,5 +195,4 @@ const styles = theme => {
         }
     }
 }
-
-export default withStyles(styles)(withMobileDialog()(UploadAvatar));
+export default withStyles(styles)(withMobileDialog()(withPopUp(UploadAvatar)));

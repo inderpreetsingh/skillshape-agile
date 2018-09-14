@@ -14,7 +14,7 @@ import { compressImage } from "/imports/util";
 import { ContainerLoader } from '/imports/ui/loading/container';
 import '/imports/api/media/methods';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
-
+import { withPopUp } from "/imports/util";
 class UploadMedia extends React.Component {
 
 	  constructor(props) {
@@ -51,35 +51,64 @@ class UploadMedia extends React.Component {
 			this.setState({isBusy: true})
 			let doc={};
 			let allUploadPromise = [];
-			compressImage(file['org'], file.file,file.isUrl).then((result) => {
-				for (let i = 0; i <= 1; i++) {
-					allUploadPromise.push(new Promise((resolve, reject)=> {
-						S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
-							if (res) {
-								if (i == 0) {
-									doc[[this.props.imageType] + 'Medium'] = res.secure_url;
+				try{
+					compressImage(file['org'], file.file,file.isUrl).then((result) => {
+						console.group("UploadMedia");
+						if(_.isArray(result)){
+							console.log('Non-cors');
+							for (let i = 0; i <= 1; i++) {
+								allUploadPromise.push(new Promise((resolve, reject)=> {
+									S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+										if (res) {
+											if (i == 0) {
+												doc[[this.props.imageType] + 'Medium'] = res.secure_url;
+											} else {
+												doc[[this.props.imageType] + 'Low'] = res.secure_url;
+											}
+											resolve(true);
+										}else{
+											reject();
+										}
+										
+									});
+								}))
+							}
+							Promise.all(allUploadPromise).then(()=> {
+								if (file && file.isUrl) {
+									doc[this.props.imageType] = file.file;
+									this.handleSubmit(doc)
 								} else {
-									doc[[this.props.imageType] + 'Low'] = res.secure_url;
+									S3.upload({ files: { "0": file.fileData }, path: "schools" }, (err, res) => {
+										if (res) {
+											doc[this.props.imageType] = res.secure_url;
+											this.handleSubmit(doc);
+										}
+									})
 								}
+							})
+						}
+						else{
+							console.log('cors');
+							if (file && file.isUrl) {
+								doc[this.props.imageType] = file.file;
+								this.handleSubmit(doc)
+							} else {
+								S3.upload({ files: { "0": file.fileData }, path: "schools" }, (err, res) => {
+									if (res) {
+										doc[this.props.imageType] = res.secure_url;
+										this.handleSubmit(doc);
+									}
+								})
 							}
-							resolve(true);
-						});
-					}))
+						}
+						console.groupEnd("UploadMedia");
+					})
+				}catch(error){
+					throw new Meteor.Error(error);
 				}
-				Promise.all(allUploadPromise).then(()=> {
-					if (file && file.isUrl) {
-						doc[this.props.imageType] = file.file;
-						this.handleSubmit(doc)
-					} else {
-						S3.upload({ files: { "0": file.fileData }, path: "schools" }, (err, res) => {
-							if (res) {
-								doc[this.props.imageType] = res.secure_url;
-								this.handleSubmit(doc);
-							}
-						})
-					}
-				})
-			})
+				
+		
+			
   	}
 
   	handleSubmit = (doc)=> {
@@ -87,7 +116,7 @@ class UploadMedia extends React.Component {
   		Meteor.call("editSchool", this.props.schoolId, data, (error, result) => {
             if(error) {
               
-            }
+						}
             this.setState({isBusy: false})
             this.props.onClose();
         });
@@ -142,4 +171,4 @@ const styles = theme => {
     }
 }
 
-export default withStyles(styles)(withMobileDialog()(UploadMedia));
+export default withStyles(styles)(withMobileDialog()(withPopUp(UploadMedia)));
