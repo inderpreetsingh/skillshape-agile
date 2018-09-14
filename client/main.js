@@ -24,6 +24,10 @@ class App extends Component {
     super(props);
   }
 
+  _isEmbedLink = () => {
+    return window.location.href.indexOf("embed") !== -1;
+  };
+
   componentDidMount = () => {
     ReactGA.initialize("UA-115928788-1", {
       debug: true
@@ -42,7 +46,8 @@ class App extends Component {
 
     return (
       <MuiThemeProvider theme={muiTheme}>
-        {!visitorTypeValue && <FirstTimeVisitDialogBox />}
+        {!visitorTypeValue &&
+          !this._isEmbedLink() && <FirstTimeVisitDialogBox />}
         <div>
           <Routes />
         </div>
