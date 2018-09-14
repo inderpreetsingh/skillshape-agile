@@ -1,6 +1,6 @@
 import imageCompression from 'browser-image-compression';
 srcToFile = async (src, fileName, mimeType) => {
-    let res = await fetch(src)
+    let res = await fetch(src);
     let buf = await res.arrayBuffer();
     let final = await new File([buf], fileName, { type: mimeType });
     return final;
@@ -19,7 +19,8 @@ export const compressImage = async (file,url,useUrl) => {
         }
         return compressedFiles;
     } catch (error) {
-    console.log('TCL: }catch -> error', error);
+    console.log('TCL: compress Image-> error', error);
+        return error;
     }
 
 
