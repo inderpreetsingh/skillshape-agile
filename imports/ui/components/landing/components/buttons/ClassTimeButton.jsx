@@ -13,7 +13,7 @@ const styles = {
   classTimeButton: {
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
-    padding: "0px",
+    padding: `${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px`,
     backgroundColor: helpers.primaryColor,
     height: "inherit",
     minHeight: "auto",
@@ -128,7 +128,7 @@ const getIconForButton = props => {
 };
 
 const ClassTimeButton = props => {
-  let rootClass = ``;
+  let rootClass = props.classes.classTimeButton;
   let labelClass = props.classes.classTimeButtonLabel;
   // console.log(CustomIcon,"Custom Icon")
   if (props.fullWidth && props.noMarginBottom) {
