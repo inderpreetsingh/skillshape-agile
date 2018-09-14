@@ -13,10 +13,10 @@ const styles = {
   classTimeButton: {
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
-    padding: `${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px`,
+    padding: `0`,
     backgroundColor: helpers.primaryColor,
     height: "inherit",
-    minHeight: "auto",
+    minHeight: "32px",
     lineHeight: 1,
     marginRight: helpers.rhythmDiv,
     "&:hover": {
