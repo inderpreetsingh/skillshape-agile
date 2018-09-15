@@ -17,7 +17,7 @@ import imageCompression from 'browser-image-compression';
     let blob = await new Blob([buffer], { type: type });
     return blob;
   }
-srcToFile =  (src, fileName, mimeType) => {
+urlToFile =  (src, fileName, mimeType) => {
    return new Promise((resolve,reject)=>{
         Meteor.call('urlToBase64.urlToBase64',src,(err,res)=>{
         base64ImageToBlob(res).then((blob)=>{
@@ -30,7 +30,7 @@ srcToFile =  (src, fileName, mimeType) => {
 export const compressImage = async (file,url,useUrl) => {
     try {
         if(useUrl && url){
-            let fileObject = await srcToFile(url, 'new.jpg', 'image/jpg');
+            let fileObject = await urlToFile(url, 'new.jpg', 'image/jpg');
             file=fileObject;
         }
         const maxSizeMB = [0.4, 0.04], maxWidthOrHeight = [500, 120];
