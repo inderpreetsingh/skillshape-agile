@@ -1,9 +1,10 @@
 import imageCompression from 'browser-image-compression';
  base64ImageToBlob= async (str)=> {
-    // extract content type and base64 payload from original string
-    let pos = str.indexOf(';base64,');
-    let type = str.substring(5, pos);
-    let b64 = str.substr(pos + 8);
+     try{
+         // extract content type and base64 payload from original string
+    let pos = str && str.indexOf(';base64,');
+    let type = str && str.substring(5, pos);
+    let b64 = str && str.substr(pos + 8);
     // decode base64
     let imageContent = await atob(b64);
     // create an ArrayBuffer and a view (as unsigned 8-bit)
@@ -16,16 +17,25 @@ import imageCompression from 'browser-image-compression';
     // convert ArrayBuffer to Blob
     let blob = await new Blob([buffer], { type: type });
     return blob;
+     }catch(error){
+         return error
+     }
+   
   }
 urlToFile =  (src, fileName, mimeType) => {
-   return new Promise((resolve,reject)=>{
-        Meteor.call('urlToBase64.urlToBase64',src,(err,res)=>{
-        base64ImageToBlob(res).then((blob)=>{
-        let file = new File([blob], fileName, {type: mimeType, lastModified: Date.now()});
-        resolve(file);
-        }) 
+    try{
+        return new Promise((resolve,reject)=>{
+            Meteor.call('urlToBase64.urlToBase64',src,(err,res)=>{
+            base64ImageToBlob(res).then((blob)=>{
+            let file = new File([blob], fileName, {type: mimeType, lastModified: Date.now()});
+            resolve(file);
+            }) 
+            })
         })
-    })
+    }catch(error){
+
+    }
+  
 }
 export const compressImage = async (file,url,useUrl) => {
     try {

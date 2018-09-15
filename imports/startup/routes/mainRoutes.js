@@ -46,6 +46,7 @@ import ContactUsPage from "/imports/ui/pages/ContactUsPage";
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
 import StripeConnectModal from "./../../ui/modal/stripeConnectModal";
 import Financials from "/imports/ui/components/financials";
+import Optimization from '/imports/ui/components/optimization';
 import { componentLoader } from "/imports/util";
 export default (Routes = componentLoader(props => (
   <Router history={browserHistory}>
@@ -145,6 +146,11 @@ export default (Routes = componentLoader(props => (
           path="/SchoolUpload"
           name="SchoolUpload"
           component={SchoolUpload}
+        />
+         <Route
+          path="/optimization"
+          name="Optimization"
+          component={Optimization}
         />
         <Route
           path="/schools/:slug/members"
