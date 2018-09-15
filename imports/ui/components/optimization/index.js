@@ -60,15 +60,14 @@ export default class Optimization extends React.Component {
     const {classTypeData,classTypeStatus,schoolData,schoolStatus} = this.state;
     if(where){
       this.setState({classTypeButtonText:'Optimization Starting'});
-      let allUploadPromise = [],url,doc={},name;
+      let allUploadPromise = [],url,doc=[],name;
       if(where=='classType'){
         classTypeData.map((current,index)=>{
-          if(index<3)
+          if(index<5)
           {
             console.log('TCL: Optimization -> optimize -> current', current);
             if(current.classTypeImg){
-              doc._id=current._id;
-              doc.schoolId=current.schoolId;
+              doc.push({_id:current._id,schoolId:doc.schoolId});
               url = current.classTypeImg;
               name = `${current.name} ${current.filters && current.filters.schoolName ?` of School  ${current.filters.schoolName} `:`` }`;
               classTypeStatus.push({name:name,status:'pending',url:url})
@@ -90,11 +89,11 @@ export default class Optimization extends React.Component {
                         S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
                           if (res) {
                             if (i == 0) {
-                              doc['medium'] = res.secure_url;
+                              doc[index]['medium']=res.secure_url;
                                 classTypeStatus[index]['status']='Medium Version Uploaded';
                                 this.setState({classTypeStatus:classTypeStatus})
                             } else {
-                              doc['low'] = res.secure_url;
+                              doc[index]['low']=res.secure_url;
                                 classTypeStatus[index]['status']='Low Version Uploaded';
                                 this.setState({classTypeStatus:classTypeStatus})
                             }
@@ -107,9 +106,9 @@ export default class Optimization extends React.Component {
                       }))
                     }
                     Promise.all(allUploadPromise).then(()=> {
-                      console.log("doc",doc);
+                      console.log("doc",doc,index);
                       classTypeStatus[index]['status']='Success';
-                      Meteor.call('classType.editClassType',{doc_id:doc._id,doc},(err,res)=>{
+                      Meteor.call('classType.editClassType',{doc_id:doc[index]["_id"],doc:doc[index]},(err,res)=>{
                         if(res)
                         this.setState({classTypeStatus:classTypeStatus});
                       })
@@ -139,7 +138,7 @@ export default class Optimization extends React.Component {
             if(current.mainImage){
               console.log('TCL: current', current);
               url=current.mainImage;
-              doc._id=current._id;
+              doc.push({_id:current._id});
               name=current.name;
               schoolStatus.push({name:name,status:'pending',url:url})
               this.setState({schoolStatus:schoolStatus});
@@ -160,11 +159,11 @@ export default class Optimization extends React.Component {
                         S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
                           if (res) {
                             if (i == 0) {
-                              doc['mainImageMedium'] = res.secure_url;
+                              doc[index]["mainImageMedium"]=res.secure_url;
                               schoolStatus[index]['status']='Medium Version Uploaded';
                                 this.setState({schoolStatus:schoolStatus})
                             } else {
-                              doc['mainImageLow'] = res.secure_url;
+                              doc[index]["mainImageLow"]=res.secure_url;
                               schoolStatus[index]['status']='Low Version Uploaded';
                               this.setState({schoolStatus:schoolStatus})
                             }
@@ -177,9 +176,9 @@ export default class Optimization extends React.Component {
                       }))
                     }
                     Promise.all(allUploadPromise).then(()=> {
-                      console.log("doc",doc);
+                      console.log("doc",index);
                       schoolStatus[index]['status']='Success';
-                      Meteor.call('editSchool',doc._id,doc,(err,res)=>{
+                      Meteor.call('editSchool',doc[index]["_id"],doc[index],(err,res)=>{
                         this.setState({schoolStatus:schoolStatus})
                       })
                      
