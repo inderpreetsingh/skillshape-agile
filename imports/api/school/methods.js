@@ -388,10 +388,9 @@ Meteor.methods({
     let schoolData = School.findOne(filter);
     return !!schoolData;
   },
-  // "school.findSchoolById": function (slug) {
-  //   const schoolData = School.findOne({ slug: slug });
-  //   return schoolData && schoolData.currency ? schoolData.currency : "$" 
-  // }
+  "school.optimizationFinder": function () {
+   return School.find({mainImageMedium:{$exists:false},mainImageLow:{$exists:false},logoImgMedium:{$exists:false},logoImgLow:{$exists:false}}).fetch();
+  }
 });
 
 /*name, email, userType, sendMeSkillShapeNotification*/
