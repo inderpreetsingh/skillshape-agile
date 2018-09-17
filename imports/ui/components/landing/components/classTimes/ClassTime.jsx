@@ -28,6 +28,9 @@ import {
   formatDataBasedOnScheduleType,
   getUserFullName
 } from "/imports/util";
+
+import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 import {
@@ -37,12 +40,14 @@ import {
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const styles = {
-  locationIcon: {
+  classTimeIcon: {
     fontSize: helpers.baseFontSize,
-    color: helpers.black
+    color: helpers.black,
+    marginRight: helpers.rhythmDiv / 2
   },
-  closeIconDescriptionPanel: {
-    top: -1 * helpers.rhythmDiv,
+  descriptionPanelCloseIcon: {
+    top: 0,
+    left: `calc(100% - ${helpers.rhythmDiv * 4}px)`,
     fontSize: helpers.baseFontSize,
     color: helpers.black,
     padding: helpers.rhythmDiv,
@@ -50,8 +55,7 @@ const styles = {
     background: "white",
     position: "absolute",
     boxShadow: helpers.buttonBoxShadow,
-    cursor: "pointer",
-    left: `calc(100% - ${helpers.baseFontSize}px)`
+    cursor: "pointer"
   }
 };
 
@@ -116,43 +120,37 @@ const ClassTimeContentInnerWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  ${props => props.showDescription && "filter: blur(5px);"};
+  ${props => props.showDescription && "filter: blur(2px);"};
 `;
 
 const ConfirmationDialog = styled.div`
   margin: 8px;
 `;
 
-const ClassDescriptionWrapper = styled.div`
+const ClassTimeDescriptionWrapper = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
   transition: transform 0.2s linear;
   max-height: 272px;
-  height: 100%;
   transform-origin: 50% 100%;
   transform: scaleY(${props => (props.show ? 1 : 0)});
   padding-top: ${helpers.rhythmDiv}px;
   margin-bottom: ${helpers.rhythmDiv}px;
   background: transparent;
   overflow-y: auto;
-  // background: rgba(255, 255, 255, 0.7);
+  background: white;
+  border-radius: 5px;
 `;
 
 const ClassTimeDescription = styled.div`
   padding: ${helpers.rhythmDiv}px;
   width: 100%;
-  background: white;
+  // background: white;
   border-radius: 5px;
 `;
 
-const ClassTypeName = styled.h4`
-  width: 100%;
-  margin: 0;
-  line-height: 1;
-  color: ${helpers.black};
-  font-family: ${helpers.specialFont};
-  font-weight: 400;
+const ClassTypeName = Text.withComponent("h4").extend`
   font-size: ${props =>
     props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize * 1.25}px;
   text-align: center;
@@ -160,15 +158,12 @@ const ClassTypeName = styled.h4`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const ScheduleType = ClassTypeName.withComponent("p").extend`
+const ScheduleType = Text.extend`
   font-weight: 300;
-  font-size: ${helpers.baseFontSize}px;
-  text-transform: none;
-  text-align: left;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const RecurringDate = ClassTypeName.withComponent("p").extend`
+const RecurringDate = Text.extend`
   font-size: 14px;
   font-weight: 500;
 `;
@@ -178,32 +173,30 @@ const ClassTimeLocation = styled.div`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const LocationTitle = ClassTypeName.withComponent("p").extend`
-  ${helpers.flexCenter}
-  flex-direction: row;
+const ClassTimeRoom = styled.div`
+  ${helpers.flexCenter};
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const LocationTitle = Text.extend`
+  margin: 0 auto;
   padding: 0;
-  font-size: ${helpers.baseFontSize}px;
   font-style: italic;
-  text-transform: none;
   margin-bottom: ${helpers.rhythmDiv / 2}px;
 `;
 
-const CompleteLocation = ClassTypeName.withComponent("p").extend`
-  padding: 0;
+let LocationContent, RoomInfoContent;
+LocationContent = RoomInfoContent = Text.extend`
   font-weight: 300;
   font-style: italic;
-  text-transform: none;
-  font-size: ${helpers.baseFontSize}px;
-  text-align: left;
+  margin: 0;
 `;
 
-const Description = styled.p`
+const Description = Text.extend`
   margin: ${helpers.rhythmDiv}px 0;
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize}px;
-  font-weight: 400;
   padding: 0 ${helpers.rhythmDiv * 2}px;
   overflow-y: auto;
 `;
@@ -518,9 +511,39 @@ class ClassTime extends Component {
     });
   };
 
+  getClassTimeRoomInfo = () => {
+    const { selectedLocation, classes } = this.props;
+    // console.group("ROOM INFO");
+    // console.log(selectedLocation);
+    // console.groupEnd();
+
+    if (
+      (isEmpty(selectedLocation) && isEmpty(selectedLocation.rooms)) ||
+      !selectedLocation.rooms.length
+    ) {
+      return null;
+    }
+
+    const { rooms } = selectedLocation;
+
+    return (
+      <ClassTimeRoom>
+        <Icon className={classes.classTimeIcon}>{"meeting_room"}</Icon>
+        <RoomInfoContent>
+          {rooms.map(room => room.name).join(",")}
+        </RoomInfoContent>
+      </ClassTimeRoom>
+    );
+  };
+
   getClassTimeLocation = () => {
     // debugger;
     const { selectedLocation, classes } = this.props;
+
+    console.group("CLASSTIME LOCATION INFO");
+    console.log(selectedLocation);
+    console.groupEnd();
+
     if (isEmpty(selectedLocation)) {
       return null;
     }
@@ -536,11 +559,11 @@ class ClassTime extends Component {
     return (
       <ClassTimeLocation>
         <LocationTitle>
-          <Icon className={classes.locationIcon}>{"location_on"}</Icon>
+          <Icon className={classes.classTimeIcon}>{"location_on"}</Icon>
           <span>{eventLocationTitle ? eventLocationTitle : eventLocation}</span>
         </LocationTitle>
         {eventLocationTitle && (
-          <CompleteLocation>{eventAddress}</CompleteLocation>
+          <LocationContent>{eventAddress}</LocationContent>
         )}
       </ClassTimeLocation>
     );
@@ -649,6 +672,9 @@ class ClassTime extends Component {
                     {/* Class Location */}
                     {this.getClassTimeLocation()}
 
+                    {/* Class Time Room */}
+                    {this.getClassTimeRoomInfo()}
+
                     {/* Schedule type */}
                     {this.getScheduleTypeFormatted()}
 
@@ -666,10 +692,12 @@ class ClassTime extends Component {
 
                   {/* description */}
                   {this.props.desc && (
-                    <ClassDescriptionWrapper show={this.state.showDescription}>
+                    <ClassTimeDescriptionWrapper
+                      show={this.state.showDescription}
+                    >
                       <Icon
                         classes={{
-                          root: classes.closeIconDescriptionPanel
+                          root: classes.descriptionPanelCloseIcon
                         }}
                         onClick={this.handleDescriptionState(false)}
                       >
@@ -679,7 +707,7 @@ class ClassTime extends Component {
                       <ClassTimeDescription>
                         {this.props.desc}
                       </ClassTimeDescription>
-                    </ClassDescriptionWrapper>
+                    </ClassTimeDescriptionWrapper>
                   )}
                 </ClassTimeContent>
 

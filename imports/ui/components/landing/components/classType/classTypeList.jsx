@@ -224,7 +224,8 @@ class ClassTypeList extends Component {
 
   componentDidUpdate = (prevProps, prevState) => {
     const { handleIsCardsSearching, isLoading } = this.props;
-    if (prevProps.isLoading !== isLoading) handleIsCardsSearching && handleIsCardsSearching(isLoading);
+    if (prevProps.isLoading !== isLoading)
+      handleIsCardsSearching && handleIsCardsSearching(isLoading);
   };
 
   render() {
@@ -332,8 +333,9 @@ export default createContainer(props => {
   let classInterestData = [];
   let sLocationData = [];
   let isLoading = true;
-  let subscription, reviewsSubscription;
+  let subscription, reviewsSubscription, classTimesSubscription;
   let filters = props.filters ? props.filters : {};
+
   // debugger;
   if (props.mapView) {
     const query = props.location && props.location.query;
@@ -360,9 +362,14 @@ export default createContainer(props => {
   }
 
   classTypeIds = classTypeData.map(data => data._id);
-  // We will subscribe only those reviews with classtype ids
+  // We will subscribe only those reviews && classTimes with classtype ids
   reviewsSubscription = Meteor.subscribe(
     "review.getReviewsWithReviewForIds",
+    classTypeIds
+  );
+
+  classTimesSubscription = Meteor.subscribe(
+    "classType.getClassTimesWithIds",
     classTypeIds
   );
 
@@ -372,13 +379,19 @@ export default createContainer(props => {
   classInterestData = ClassInterest.find().fetch();
   sLocationData = SLocation.find().fetch();
 
+  console.group("ALL LOCATIONS");
+  console.log(sLocationData, classTimesData);
+  console.groupEnd();
+
   /*Find SkillCategory,SkillSubject and SLocation to make this container reactive on these collection
     other wise skills are joined with collections using package
     perak:joins */
   SkillSubject.find().fetch();
 
   if (
-    (subscription.ready() && reviewsSubscription.ready()) ||
+    (subscription.ready() &&
+      reviewsSubscription.ready() &&
+      classTimesSubscription.ready()) ||
     ClassType.find().count() > 0
   ) {
     reviewsData = Reviews.find().fetch();

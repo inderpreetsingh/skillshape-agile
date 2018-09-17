@@ -290,16 +290,16 @@ class Landing extends Component {
     console.groupEnd();
 
     if (!visitorRedirected && previousLocationPathName === "/") {
-      if (visitorType === "school" && currentUser && isUserSubsReady) {
-        if (!this.state.showPreloader) {
-          this.setState(state => {
-            return {
-              ...state,
-              showPreloader: true
-            };
-          });
-        }
+      if (!this.state.showPreloader) {
+        this.setState(state => {
+          return {
+            ...state,
+            showPreloader: true
+          };
+        });
+      }
 
+      if (visitorType === "school" && currentUser && isUserSubsReady) {
         Meteor.call("school.getMySchool", (err, res) => {
           this.setState(state => {
             return {

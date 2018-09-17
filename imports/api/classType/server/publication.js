@@ -22,6 +22,11 @@ Meteor.publish("classType.getClassTimesWithId", function({ classTypeId }) {
   return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
+Meteor.publish("classType.getClassTimesWithIds", function(classTypeIds) {
+  let cursor = ClassTimes.find({ classTypeId: { $in: classTypeIds } });
+  return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
+});
+
 Meteor.publish("classType.getClassTypeWithClassTimes", function({
   classTypeId
 }) {
