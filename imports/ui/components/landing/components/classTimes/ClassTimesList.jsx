@@ -89,6 +89,7 @@ const Description = Text.extend`
       ? `${helpers.rhythmDiv}px 0 ${helpers.rhythmDiv * 2}px 0`
       : `${helpers.rhythmDiv}px 0`};
   font-size: ${props => (props.inPopUp ? 18 : helpers.baseFontSize)}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const Day = Text.extend`
@@ -122,7 +123,7 @@ const IconWithStyles = props => (
 );
 const MyIcon = withStyles(styles)(IconWithStyles);
 
-const ClassTimesCard = props => {
+const ClassTimesList = props => {
   const { classes } = props;
 
   const ScheduleDisplay = props => (
@@ -269,7 +270,7 @@ const ClassTimesCard = props => {
   );
 };
 
-ClassTimesCard.propTypes = {
+ClassTimesList.propTypes = {
   inPopUp: PropTypes.bool,
   description: PropTypes.string,
   scheduleType: PropTypes.string,
@@ -277,8 +278,8 @@ ClassTimesCard.propTypes = {
   show: PropTypes.bool
 };
 
-ClassTimesCard.defaultProps = {
+ClassTimesList.defaultProps = {
   inPopUp: false
 };
 
-export default withStyles(styles)(ClassTimesCard);
+export default withStyles(styles)(ClassTimesList);

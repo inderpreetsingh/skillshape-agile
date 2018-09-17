@@ -10,7 +10,7 @@ import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
 
 import ClassTimeClockManager from "/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx";
-import ClassTimesCard from "/imports/ui/components/landing/components/cards/ClassTimesCard.jsx";
+import ClassTimesList from "/imports/ui/components/landing/components/classTimes/ClassTimesList.jsx";
 import TrendingIcon from "/imports/ui/components/landing/components/icons/Trending.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
@@ -28,6 +28,9 @@ import {
   formatDataBasedOnScheduleType,
   getUserFullName
 } from "/imports/util";
+
+import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 import {
@@ -37,10 +40,22 @@ import {
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const styles = {
-  locationIcon: {
+  classTimeIcon: {
     fontSize: helpers.baseFontSize,
     color: helpers.black,
-    transform: `translateY(3px)`
+    marginRight: helpers.rhythmDiv / 2
+  },
+  descriptionPanelCloseIcon: {
+    top: 0,
+    left: `calc(100% - ${helpers.rhythmDiv * 4}px)`,
+    fontSize: helpers.baseFontSize,
+    color: helpers.black,
+    padding: helpers.rhythmDiv,
+    borderRadius: "50%",
+    background: "white",
+    position: "absolute",
+    boxShadow: helpers.buttonBoxShadow,
+    cursor: "pointer"
   }
 };
 
@@ -97,24 +112,45 @@ const ClassTimeContent = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+  flex-grow: 1;
 `;
+
+const ClassTimeContentInnerWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  ${props => props.showDescription && "filter: blur(2px);"};
+`;
+
 const ConfirmationDialog = styled.div`
   margin: 8px;
 `;
-const ClassTimeDescription = styled.div`
-  border: 1px solid ${helpers.darkTextColor};
-  margin-top: 5px;
+
+const ClassTimeDescriptionWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
   width: 100%;
-  padding: ${helpers.rhythmDiv}px;
+  transition: transform 0.2s linear;
+  max-height: 272px;
+  transform-origin: 50% 100%;
+  transform: scaleY(${props => (props.show ? 1 : 0)});
+  padding-top: ${helpers.rhythmDiv}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
+  background: transparent;
+  overflow-y: auto;
+  background: white;
   border-radius: 5px;
 `;
-const ClassTypeName = styled.h5`
+
+const ClassTimeDescription = styled.div`
+  padding: ${helpers.rhythmDiv}px;
   width: 100%;
-  margin: 0;
-  line-height: 1;
-  color: ${helpers.black};
-  font-family: ${helpers.specialFont};
-  font-weight: 400;
+  // background: white;
+  border-radius: 5px;
+`;
+
+const ClassTypeName = Text.withComponent("h4").extend`
   font-size: ${props =>
     props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize * 1.25}px;
   text-align: center;
@@ -122,31 +158,45 @@ const ClassTypeName = styled.h5`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const ScheduleType = ClassTypeName.withComponent("p").extend`
+const ScheduleType = Text.extend`
   font-weight: 300;
-  font-size: ${helpers.baseFontSize}px;
-  text-transform: none;
-  text-align: left;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const RecurringDate = ClassTypeName.withComponent("p").extend`
+const RecurringDate = Text.extend`
   font-size: 14px;
   font-weight: 500;
 `;
 
-const ClassLocation = ClassTypeName.withComponent("p").extend`
-  font-size: ${helpers.baseFontSize}px;
-  font-style: italic;
-  background: white;
-  padding: ${helpers.rhythmDiv}px;
+const ClassTimeLocation = styled.div`
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const Description = styled.p`
+const ClassTimeRoom = styled.div`
+  ${helpers.flexCenter};
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const LocationTitle = Text.extend`
+  margin: 0 auto;
+  padding: 0;
+  font-style: italic;
+  margin-bottom: ${helpers.rhythmDiv / 2}px;
+`;
+
+let LocationContent, RoomInfoContent;
+LocationContent = RoomInfoContent = Text.extend`
+  font-weight: 300;
+  font-style: italic;
+  margin: 0;
+`;
+
+const Description = Text.extend`
   margin: ${helpers.rhythmDiv}px 0;
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize}px;
-  font-weight: 400;
   padding: 0 ${helpers.rhythmDiv * 2}px;
   overflow-y: auto;
 `;
@@ -154,15 +204,16 @@ const Description = styled.p`
 const ButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 `;
 
 const ButtonWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: ${helpers.rhythmDiv}px;
   transition: 0.1s ease-in opacity;
   ${props => (props.showCard ? "opacity: 0" : "opacity: 1")};
+  ${props => props.marginBottom && `margin-bottom: ${helpers.rhythmDiv}px;`};
 `;
 
 const TrendingWrapper = styled.div`
@@ -195,6 +246,7 @@ class ClassTime extends Component {
   state = {
     isLoading: false,
     showCard: false,
+    showDescription: false,
     thinkingAboutAttending: false
     // fullTextState: this.props.fullTextState,
   };
@@ -325,17 +377,12 @@ class ClassTime extends Component {
     let { formattedClassTimesDetails, scheduleType } = this.props;
     scheduleType = scheduleType.toLowerCase();
 
-    console.group("NEW FORMATTED DATA");
-    console.log(formattedClassTimesDetails, scheduleType);
-    console.groupEnd();
-
     if (scheduleType === "recurring" || scheduleType === "ongoing") {
       if (typeof formattedClassTimesDetails[0] !== "object") {
         return formattedClassTimesDetails;
       }
 
       // key attr specifies the day information is stored on keys
-
       formattedClassTimesDetails.forEach((scheduleData, index) => {
         scheduleData.key.forEach(dowObj => {
           // debugger;
@@ -375,9 +422,7 @@ class ClassTime extends Component {
         </Fragment>
       );
     else if (classScheduleType === "onetime") {
-      {
-        /* Adding manual small letters splitted schedule type one time*/
-      }
+      /* Adding manual small letters splitted schedule type one time*/
       return (
         <ScheduleType>
           {addToCalendar == "closed"
@@ -420,46 +465,8 @@ class ClassTime extends Component {
         />
       </div>
     );
-    // if (addToCalender == 'closed') {
-
-    //   return (
-    //     <div style={{ display: "flex" }}>
-    //       <FormGhostButton
-    //         icon
-    //         onClick={this.handleClassClosed}
-    //         label="Class Closed"
-    //         iconName={iconName}
-    //       />
-    //     </div>
-    //   );
-    // }
-    // if (addToCalender || !Meteor.userId()) {
-    //   return (
-    //     <div style={{ display: "flex" }}>
-
-    //       <FormGhostButton
-    //         icon
-    //         onClick={this.handleAddToMyCalendarButtonClick}
-    //         label="Add to my Calender"
-    //         iconName={iconName}
-    //       />
-    //     </div>
-    //   );
-    // } else {
-    //   return (
-    //     <div style={{ display: "flex" }}>
-
-    //       <FormGhostButton
-    //         icon
-    //         ghost
-    //         onClick={this.handleRemoveFromCalendarButtonClick}
-    //         label="Remove from calendar"
-    //         iconName={iconName}
-    //       />
-    //     </div>
-    //   );
-    // }
   };
+
   scrollTo(name) {
     scroller.scrollTo(name || "content-container", {
       duration: 800,
@@ -467,6 +474,7 @@ class ClassTime extends Component {
       smooth: "easeInOutQuart"
     });
   }
+
   handleNotification = CheckBoxes => {
     this.setState({ isLoading: true });
     const { schoolId, classTypeId, classTypeName } = this.props;
@@ -503,11 +511,62 @@ class ClassTime extends Component {
     });
   };
 
-  getCompleteLocation = () => {
-    const { selectedLocation } = this.props;
-    return `${selectedLocation.address}, ${selectedLocation.city}, ${
-      selectedLocation.state
-    }, ${selectedLocation.country}`;
+  getClassTimeRoomInfo = () => {
+    const { selectedLocation, classes } = this.props;
+    // console.group("ROOM INFO");
+    // console.log(selectedLocation);
+    // console.groupEnd();
+
+    if (
+      (isEmpty(selectedLocation) && isEmpty(selectedLocation.rooms)) ||
+      !selectedLocation.rooms.length
+    ) {
+      return null;
+    }
+
+    const { rooms } = selectedLocation;
+
+    return (
+      <ClassTimeRoom>
+        <Icon className={classes.classTimeIcon}>{"meeting_room"}</Icon>
+        <RoomInfoContent>
+          {rooms.map(room => room.name).join(",")}
+        </RoomInfoContent>
+      </ClassTimeRoom>
+    );
+  };
+
+  getClassTimeLocation = () => {
+    // debugger;
+    const { selectedLocation, classes } = this.props;
+
+    console.group("CLASSTIME LOCATION INFO");
+    console.log(selectedLocation);
+    console.groupEnd();
+
+    if (isEmpty(selectedLocation)) {
+      return null;
+    }
+    const addressComponents = ["address", "city", "state", "country"];
+    const eventLocationTitle = selectedLocation.title || "";
+    let eventAddress = "";
+    addressComponents.forEach(component => {
+      if (selectedLocation[component])
+        eventAddress += ", " + selectedLocation[component];
+    });
+    eventAddress = eventAddress.replace(",", "");
+
+    return (
+      <ClassTimeLocation>
+        <LocationTitle>
+          <Icon className={classes.classTimeIcon}>{"location_on"}</Icon>
+          <span>{eventLocationTitle ? eventLocationTitle : eventLocation}</span>
+        </LocationTitle>
+        {eventLocationTitle && (
+          <LocationContent>{eventAddress}</LocationContent>
+        )}
+      </ClassTimeLocation>
+    );
   };
 
   handleCheckBoxes = CheckBoxes => {
@@ -521,6 +580,16 @@ class ClassTime extends Component {
     }
     this.handleNotification(CheckBoxes);
   };
+
+  handleDescriptionState = descriptionState => () => {
+    this.setState(state => {
+      return {
+        ...state,
+        showDescription: descriptionState
+      };
+    });
+  };
+
   render() {
     // debugger;
     const {
@@ -596,32 +665,66 @@ class ClassTime extends Component {
                 <ClassTimeContent>
                   {/*Class type name */}
                   <ClassTypeName inPopUp={inPopUp}>{`${name}`}</ClassTypeName>
-                  <ClassLocation>
-                    <Icon className={classes.locationIcon}>
-                      {"location_on"}
-                    </Icon>
-                    {selectedLocation.title} - {this.getCompleteLocation()}
-                  </ClassLocation>
-                  {/* Schedule type */}
-                  {this.getScheduleTypeFormatted()}
+
+                  <ClassTimeContentInnerWrapper
+                    showDescription={this.state.showDescription}
+                  >
+                    {/* Class Location */}
+                    {this.getClassTimeLocation()}
+
+                    {/* Class Time Room */}
+                    {this.getClassTimeRoomInfo()}
+
+                    {/* Schedule type */}
+                    {this.getScheduleTypeFormatted()}
+
+                    {/* class times */}
+                    <ClassTimesCardWrapper inPopUp={inPopUp}>
+                      <ClassTimesList
+                        inPopUp={inPopUp}
+                        show={true}
+                        formattedClassTimes={this.reformatNewFlowData()}
+                        scheduleType={scheduleType}
+                        description={desc}
+                      />
+                    </ClassTimesCardWrapper>
+                  </ClassTimeContentInnerWrapper>
+
+                  {/* description */}
                   {this.props.desc && (
-                    <ClassTimeDescription>
-                      {`Description: ${cutString(this.props.desc, 70)}`}
-                    </ClassTimeDescription>
+                    <ClassTimeDescriptionWrapper
+                      show={this.state.showDescription}
+                    >
+                      <Icon
+                        classes={{
+                          root: classes.descriptionPanelCloseIcon
+                        }}
+                        onClick={this.handleDescriptionState(false)}
+                      >
+                        {"close"}
+                      </Icon>
+
+                      <ClassTimeDescription>
+                        {this.props.desc}
+                      </ClassTimeDescription>
+                    </ClassTimeDescriptionWrapper>
                   )}
-                  <ClassTimesCardWrapper inPopUp={inPopUp}>
-                    <ClassTimesCard
-                      inPopUp={inPopUp}
-                      show={true}
-                      formattedClassTimes={this.reformatNewFlowData()}
-                      scheduleType={scheduleType}
-                      description={desc}
-                    />
-                  </ClassTimesCardWrapper>
                 </ClassTimeContent>
 
                 {/* View All times button */}
                 <ButtonsWrapper>
+                  {this.props.desc && (
+                    <ButtonWrapper marginBottom>
+                      <ClassTimeButton
+                        white
+                        fullWidth
+                        icon
+                        iconName="description"
+                        label="View Description"
+                        onClick={this.handleDescriptionState(true)}
+                      />
+                    </ButtonWrapper>
+                  )}
                   <ButtonWrapper>
                     {this.getCalenderButton(this.props.addToCalendar)}
                   </ButtonWrapper>
