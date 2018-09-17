@@ -28,21 +28,22 @@ font-weight: 400;
     super(props);
     this.state = {
      status:true,
-     classTypeRecords:0,
+     classTypeRecords:null,
      classTypeData:'',
      classTypeStatus:[],
      classTypeButtonText:'Optimization Required',
-     schoolRecords:0,
+     schoolRecords:null,
      schoolData:'',
      schoolStatus:[],
      schoolText:'Optimization Required',
      msg1:null,
      msg2:null,
+     b1Text:'Check'
     };
   }
   recordsFinder =()=>{
     const {classTypeRecords,schoolRecords} = this.state;
-    this.setState({status:false})
+    this.setState({status:false,b1Text:'Checking'})
     Meteor.call('classType.optimizationFinder',(err,res)=>{
       if(!_.isEmpty(res)){
         let records= res.length;
@@ -52,7 +53,7 @@ font-weight: 400;
     Meteor.call('school.optimizationFinder',(err,res)=>{
       if(!_.isEmpty(res)){
         let records= res.length;
-       this.setState({schoolRecords:records,status:true,msg2:`${records} School images need optimization.`,schoolData:res,schoolStatus:[]}) ;
+       this.setState({schoolRecords:records,status:true,msg2:`${records} School images need optimization.`,schoolData:res,schoolStatus:[],b1Text:'Check'}) ;
       }
     })
     
@@ -221,11 +222,9 @@ font-weight: 400;
       }
     }
   }
-  componentWillMount =()=>{
-    this.recordsFinder();
-  }
+  
   render() {
-    const {status,msg1,msg2,classTypeRecords,schoolStatus,classTypeStatus,classTypeButtonText,schoolData,schoolText,schoolRecords} = this.state;
+    const {status,b1Text,msg1,msg2,classTypeRecords,schoolStatus,classTypeStatus,classTypeButtonText,schoolData,schoolText,schoolRecords} = this.state;
     return (
       <Fragment>
        <Center>
@@ -233,7 +232,7 @@ font-weight: 400;
         <Head>
           Click Check for finding optimization in the system.
           <EditButton 
-          label='Check'
+          label={b1Text}
           onClick={this.recordsFinder}
           />
         </Head>
