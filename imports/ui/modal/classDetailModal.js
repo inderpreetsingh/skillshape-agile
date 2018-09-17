@@ -793,7 +793,7 @@ class ClassDetailModal extends React.Component {
                         data={"  All levels are welcome"}
                         title={"Experience:  " + " "}
                       />
-                    ) : (
+                    ) :classTypeData.experienceLevel &&  (
                       <MetaInfo
                         data={`  ${classTypeData.experienceLevel}`}
                         title={"Experience:  " + " "}

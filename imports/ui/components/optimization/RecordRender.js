@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { ClassTypeTableRender } from "./classTypeTableRender";
 import {SchoolTableRender} from './schoolTableRender';
 import { TableRow, TableCell } from "material-ui/Table";
+
 const Head = styled.div`
   margin: 5px;
   font-size: larger;
@@ -15,6 +16,11 @@ const Head = styled.div`
 `;
 const Center = styled.div`
   text-align: center;
+  height: 385px;
+  overflow: auto;
+  border: 3px solid #4caf50;
+  border-radius: 15px;
+  margin-top:30px;
 `;
 const Wrapper =styled.div`
 margin: 5px;
@@ -30,6 +36,12 @@ const style = {
     },
     w150: {
       width: 150
+    },
+    w64:{
+      width: 64
+    },
+    w121:{
+      width:121
     }
   };
 export default class RecordRender extends React.Component {
@@ -50,17 +62,20 @@ export default class RecordRender extends React.Component {
        
        <TableName>
           {!_.isEmpty(data)&&
-             data.map(current => {
+             data.map((current,index) => {
                 return (
                   <TableRow key={current._id} selectable={false}>
+                   <TableCell style={{width:'64px'}}>
+                    {index+1}
+                    </TableCell>
                     <TableCell style={style.w150}>
-                     {current.name}
+                    <Wrapper>  {current.name}</Wrapper>
                     </TableCell>
                     <TableCell style={style.w211}>
-                      {current.status}
+                    <Wrapper>   {current.status}</Wrapper>
                     </TableCell>
-                    <TableCell style={style.w211}>
-                    <a href={current.url}>Image Link</a>
+                    <TableCell style={style.w121}>
+                    <Wrapper> <a href={current.url} target="_blank">Image Link</a></Wrapper>
                     </TableCell>
                   </TableRow>
                 );
