@@ -188,6 +188,7 @@ class ClassTypeList extends Component {
   };
 
   getNoResultMsg = (isLoading, filters, classTypeData) => {
+    debugger;
     if (isLoading) {
       return (
         <PreloaderWrapper>
@@ -336,7 +337,6 @@ export default createContainer(props => {
   let subscription, reviewsSubscription, classTimesSubscription;
   let filters = props.filters ? props.filters : {};
 
-  // debugger;
   if (props.mapView) {
     const query = props.location && props.location.query;
     if (query && query.NEPoint && query.SWPoint) {
@@ -368,17 +368,17 @@ export default createContainer(props => {
     classTypeIds
   );
 
-  classTimesSubscription = Meteor.subscribe(
-    "classType.getClassTimesWithIds",
-    classTypeIds
-  );
+  // classTimesSubscription = Meteor.subscribe(
+  //   "classType.getClassTimesWithIds",
+  //   classTypeIds
+  // );
 
   schoolData = School.find().fetch();
   skillCategoryData = SkillCategory.find().fetch();
   classTimesData = ClassTimes.find().fetch();
   classInterestData = ClassInterest.find().fetch();
   sLocationData = SLocation.find().fetch();
-
+  // debugger;
   console.group("ALL LOCATIONS");
   console.log(sLocationData, classTimesData);
   console.groupEnd();
@@ -389,13 +389,15 @@ export default createContainer(props => {
   SkillSubject.find().fetch();
 
   if (
-    (subscription.ready() &&
-      reviewsSubscription.ready() &&
-      classTimesSubscription.ready()) ||
+    (subscription.ready() && reviewsSubscription.ready()) ||
     ClassType.find().count() > 0
   ) {
     reviewsData = Reviews.find().fetch();
-    // console.info("class type data...................................................",classTypeData);
+    // console.info(
+    //   "class type data...................................................",
+    //   classTimesData,
+    //   classTypeData
+    // );
     isLoading = false;
   }
   return {

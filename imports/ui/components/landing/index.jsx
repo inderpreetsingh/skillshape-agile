@@ -297,45 +297,45 @@ class Landing extends Component {
     const visitorRedirected = JSON.parse(
       localStorage.getItem("visitorRedirected")
     );
-    console.group("REDIRECT INDEX PAGE");
-    console.info(Meteor.user(), localStorage.getItem("visitorRedirected"));
-    console.groupEnd();
+    // console.group("REDIRECT INDEX PAGE");
+    // console.info(Meteor.user(), localStorage.getItem("visitorRedirected"));
+    // console.groupEnd();
 
-    debugger;
-    // if (visitorRedirected && isUserSubsReady) {
-    this.handlePreloaderState(false);
-    // }
-    //
-    // if (!visitorRedirected && previousLocationPathName === "/") {
-    //   if (visitorType === "school" && currentUser && isUserSubsReady) {
-    //     Meteor.call("school.getMySchool", (err, res) => {
-    //       if (err) {
-    //         console.warn(err);
-    //       } else {
-    //         localStorage.setItem("visitorRedirected", true);
-    //         if (res.length) {
-    //           // debugger;
-    //           console.info(res, "---");
-    //
-    //           const mySchoolSlug = res[0].slug;
-    //           browserHistory.push(`/schools/${mySchoolSlug}`);
-    //         } else {
-    //           browserHistory.push("/skillshape-for-school");
-    //         }
-    //       }
-    //     });
-    //   } else if (visitorType === "school" && !currentUser && isUserSubsReady) {
-    //     localStorage.setItem("visitorRedirected", true);
-    //     browserHistory.push("/skillshape-for-school");
-    //   } else if (visitorType === "student") {
-    //     localStorage.setItem("visitorRedirected", true);
-    //     this.handlePreloaderState(false);
-    //   } else {
-    //     if (isUserSubsReady) {
-    //       this.handlePreloaderState(false);
-    //     }
-    //   }
-    // }
+    // debugger;
+    if (visitorRedirected && isUserSubsReady) {
+      this.handlePreloaderState(false);
+    }
+
+    if (!visitorRedirected && previousLocationPathName === "/") {
+      if (visitorType === "school" && currentUser && isUserSubsReady) {
+        Meteor.call("school.getMySchool", (err, res) => {
+          if (err) {
+            console.warn(err);
+          } else {
+            localStorage.setItem("visitorRedirected", true);
+            if (res.length) {
+              // debugger;
+              console.info(res, "---");
+
+              const mySchoolSlug = res[0].slug;
+              browserHistory.push(`/schools/${mySchoolSlug}`);
+            } else {
+              browserHistory.push("/skillshape-for-school");
+            }
+          }
+        });
+      } else if (visitorType === "school" && !currentUser && isUserSubsReady) {
+        localStorage.setItem("visitorRedirected", true);
+        browserHistory.push("/skillshape-for-school");
+      } else if (visitorType === "student") {
+        localStorage.setItem("visitorRedirected", true);
+        this.handlePreloaderState(false);
+      } else {
+        if (isUserSubsReady) {
+          this.handlePreloaderState(false);
+        }
+      }
+    }
   };
 
   componentDidMount() {
@@ -1066,7 +1066,7 @@ class Landing extends Component {
               {!this.state.mapView &&
                 this.checkIfAnyFilterIsApplied() &&
                 this.showAppliedTopFilter()}
-              {console.log("re rendering .... classtype list...")}
+              {/*console.log("re rendering .... classtype list...") */}
               <ClassTypeList
                 landingPage={true}
                 handleIsCardsSearching={this.handleIsCardsSearching}
