@@ -221,6 +221,7 @@ class Landing extends Component {
     super(props);
     this.state = {
       mapView: false,
+      showPreloader: true,
       sticky: false,
       isLoading: false,
       isSearching: false,
@@ -274,6 +275,17 @@ class Landing extends Component {
     }
   }
 
+  handlePreloaderState = newPreloaderState => {
+    if (this.state.showPreloader !== newPreloaderState) {
+      this.setState(state => {
+        return {
+          ...state,
+          showPreloader: !state.showPreloader
+        };
+      });
+    }
+  };
+
   _redirectBasedOnVisitorType = () => {
     const {
       currentUser,
@@ -289,46 +301,41 @@ class Landing extends Component {
     console.info(Meteor.user(), localStorage.getItem("visitorRedirected"));
     console.groupEnd();
 
-    if (!visitorRedirected && previousLocationPathName === "/") {
-      if (!this.state.showPreloader) {
-        this.setState(state => {
-          return {
-            ...state,
-            showPreloader: true
-          };
-        });
-      }
-
-      if (visitorType === "school" && currentUser && isUserSubsReady) {
-        Meteor.call("school.getMySchool", (err, res) => {
-          this.setState(state => {
-            return {
-              ...state,
-              showPreloader: false
-            };
-          });
-          if (err) {
-            console.warn(err);
-          } else {
-            localStorage.setItem("visitorRedirected", true);
-            if (res.length) {
-              // debugger;
-              console.info(res, "---");
-
-              const mySchoolSlug = res[0].slug;
-              browserHistory.push(`/schools/${mySchoolSlug}`);
-            } else {
-              browserHistory.push("/skillshape-for-school");
-            }
-          }
-        });
-      } else if (visitorType === "school" && !currentUser && isUserSubsReady) {
-        localStorage.setItem("visitorRedirected", true);
-        browserHistory.push("/skillshape-for-school");
-      } else if (visitorType === "student") {
-        localStorage.setItem("visitorRedirected", true);
-      }
-    }
+    debugger;
+    // if (visitorRedirected && isUserSubsReady) {
+    this.handlePreloaderState(false);
+    // }
+    //
+    // if (!visitorRedirected && previousLocationPathName === "/") {
+    //   if (visitorType === "school" && currentUser && isUserSubsReady) {
+    //     Meteor.call("school.getMySchool", (err, res) => {
+    //       if (err) {
+    //         console.warn(err);
+    //       } else {
+    //         localStorage.setItem("visitorRedirected", true);
+    //         if (res.length) {
+    //           // debugger;
+    //           console.info(res, "---");
+    //
+    //           const mySchoolSlug = res[0].slug;
+    //           browserHistory.push(`/schools/${mySchoolSlug}`);
+    //         } else {
+    //           browserHistory.push("/skillshape-for-school");
+    //         }
+    //       }
+    //     });
+    //   } else if (visitorType === "school" && !currentUser && isUserSubsReady) {
+    //     localStorage.setItem("visitorRedirected", true);
+    //     browserHistory.push("/skillshape-for-school");
+    //   } else if (visitorType === "student") {
+    //     localStorage.setItem("visitorRedirected", true);
+    //     this.handlePreloaderState(false);
+    //   } else {
+    //     if (isUserSubsReady) {
+    //       this.handlePreloaderState(false);
+    //     }
+    //   }
+    // }
   };
 
   componentDidMount() {
@@ -435,6 +442,9 @@ class Landing extends Component {
         userData: this.props.location.query
       });
     }
+
+    // When we redirect back, the componentDidUpdate needs not to be called.
+    this._redirectBasedOnVisitorType();
   }
 
   componentDidUpdate() {
