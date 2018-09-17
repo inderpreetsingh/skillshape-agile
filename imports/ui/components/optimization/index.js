@@ -3,7 +3,8 @@ import { Loading } from "/imports/ui/loading";
 import styled from "styled-components";
 import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx'
 import { compressImage } from "/imports/util";
-import RecordRender from './RecordRender'
+import RecordRender from './RecordRender';
+import { withPopUp } from "/imports/util";
 const Head = styled.div`
   margin: 5px;
   font-size: larger;
@@ -22,7 +23,7 @@ margin: 5px;
 font-size: larger;
 font-weight: 400;
 `;
-export default class Optimization extends React.Component {
+ class Optimization extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,27 +45,27 @@ export default class Optimization extends React.Component {
     this.setState({status:false})
     Meteor.call('classType.optimizationFinder',(err,res)=>{
       if(!_.isEmpty(res)){
-        let records= res.length+1;
-       this.setState({classTypeRecords:records,classTypeData:res,msg1:`${records} Class images need optimization.`}) ;
+        let records= res.length;
+       this.setState({classTypeRecords:records,classTypeData:res,msg1:`${records} Class images need optimization.`,classTypeStatus:[]}) ;
       }
     })
     Meteor.call('school.optimizationFinder',(err,res)=>{
       if(!_.isEmpty(res)){
-        let records= res.length+1;
-       this.setState({schoolRecords:records,status:true,msg2:`${records} School images need optimization.`,schoolData:res}) ;
+        let records= res.length;
+       this.setState({schoolRecords:records,status:true,msg2:`${records} School images need optimization.`,schoolData:res,schoolStatus:[]}) ;
       }
     })
     
   }
   optimize =(where)=>{
-    const {classTypeData,classTypeStatus,schoolData,schoolStatus} = this.state;
+    const {popUp} = this.props;
+    const {classTypeData,classTypeStatus,schoolData,schoolStatus,classTypeRecords,schoolRecords} = this.state;
     if(where){
-      this.setState({classTypeButtonText:'Optimization Starting'});
       let allUploadPromise = [],url,doc=[],name;
       if(where=='classType'){
+        this.setState({classTypeButtonText:'Optimization Starting'});
         classTypeData.map((current,index)=>{
-          if(index<5)
-          {
+          // if(index<5) {
             console.log('TCL: Optimization -> optimize -> current', current);
             if(current.classTypeImg){
               doc.push({_id:current._id,schoolId:doc.schoolId});
@@ -111,6 +112,10 @@ export default class Optimization extends React.Component {
                       Meteor.call('classType.editClassType',{doc_id:doc[index]["_id"],doc:doc[index]},(err,res)=>{
                         if(res)
                         this.setState({classTypeStatus:classTypeStatus});
+                        if(index+2==classTypeRecords){
+                          this.setState({classTypeButtonText:'Optimization Finished'});
+                          popUp.appear("success", { title: "Message", content: 'Optimization Finished' });
+                        }
                       })
                     })
                   }
@@ -118,6 +123,10 @@ export default class Optimization extends React.Component {
                     console.log('cors');
                     classTypeStatus[index]['status']='URL Expired';
                     this.setState({classTypeStatus:classTypeStatus});
+                    if(index+2==classTypeRecords){
+                      this.setState({classTypeButtonText:'Optimization Finished'});
+                      popUp.appear("success", { title: "Message", content: 'Optimization Finished' });
+                    }
                    
                   }
                   console.groupEnd("class type image Optimization");
@@ -127,14 +136,14 @@ export default class Optimization extends React.Component {
               }
             }
   
-          }
+          // }
         })
-      this.setState({classTypeButtonText:'Optimization Finished'});
 
       }
       else{
+        this.setState({schoolText:'Optimization Starting'});
         schoolData.map((current,index)=>{
-          if(index<3){
+          // if(index<3){
             if(current.mainImage){
               console.log('TCL: current', current);
               url=current.mainImage;
@@ -180,6 +189,10 @@ export default class Optimization extends React.Component {
                       schoolStatus[index]['status']='Success';
                       Meteor.call('editSchool',doc[index]["_id"],doc[index],(err,res)=>{
                         this.setState({schoolStatus:schoolStatus})
+                        if(index+1==schoolRecords){
+                          this.setState({schoolText:'Optimization Finished'});
+                          popUp.appear("success", { title: "Message", content: 'Optimization Finished' });
+                        }
                       })
                      
                     })
@@ -188,6 +201,11 @@ export default class Optimization extends React.Component {
                     console.log('cors');
                     schoolStatus[index]['status']='URL Expired';
                     this.setState({schoolStatus:schoolStatus})
+                    if(index+1==schoolRecords){
+        popUp.appear("success", { title: "Message", content: 'Optimization Finished' });
+
+                      this.setState({schoolText:'Optimization Finished'});
+                    }
                   }
                   console.groupEnd("School Image Optimization");
                 })
@@ -196,10 +214,10 @@ export default class Optimization extends React.Component {
 
               }
               
-            }
+            // }
           }
         })
-        this.setState({schoolText:'Optimization Finished'});
+       
       }
     }
   }
@@ -252,3 +270,4 @@ export default class Optimization extends React.Component {
     );
   }
 }
+export default (withPopUp(Optimization));
