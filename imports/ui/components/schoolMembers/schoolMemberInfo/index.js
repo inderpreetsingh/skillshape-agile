@@ -146,22 +146,17 @@ class SchoolMemberInfo extends Component {
     this.state = this.initializeState(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.memberInfo) {
-      this.setState(this.initializeState(nextProps));
-    }
-  }
-
+ 
   initializeState = ({ memberInfo, view }) => {
     let state = {};
     if (view === "admin") {
       state.notes = get(memberInfo, "adminNotes", "");
-    } else {
-      state.notes = get(
-        memberInfo,
-        `classmatesNotes[${Meteor.userId()}].notes`,
-        ""
-      );
+    // } else {
+    //   state.notes = get(
+    //     memberInfo,
+    //     `classmatesNotes[${Meteor.userId()}].notes`,
+    //     ""
+    //   );
     }
     return state;
   };
@@ -230,6 +225,7 @@ class SchoolMemberInfo extends Component {
   }
   componentWillMount=()=> {
     const { memberInfo } = this.props;
+    
     verifyImageURL(memberInfo.pic,(res)=>{
       if(res){
             this.setState({bgImg:memberInfo.pic});
@@ -240,7 +236,7 @@ class SchoolMemberInfo extends Component {
   }
   componentWillReceiveProps=(nextProps,nextState)=>{
   const { memberInfo } = nextProps;
-
+  this.setState(this.initializeState(nextProps));
   verifyImageURL(memberInfo.pic,(res)=>{
     if(res){
           this.setState({bgImg:memberInfo.pic});
