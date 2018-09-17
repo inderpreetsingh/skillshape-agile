@@ -43,8 +43,8 @@ font-weight: 400;
     };
   }
   Notes=()=>(<Head>
-    Caution Notes:-<br/>
-    1.Press any button only one time recommend Like Check and Optimization required.<br/>
+   <u> Caution Notes</u>:-<br/>
+    1.Press  button only one time recommend Like Check and Optimization required.<br/>
     2.Process gonna take time according to results.<br/>
     3.Opening images links in new tab recommend.
   </Head>)
@@ -239,6 +239,7 @@ font-weight: 400;
       <Fragment>
        <Center>
        <Wrapper>
+       {this.Notes()}<br/>
         <Head>
           Click Check for finding optimization in the system.
           <EditButton 
@@ -270,7 +271,7 @@ font-weight: 400;
               />
             }
              </Head><br/>
-           {this.Notes()}
+          
             
           {!status && <Loading/>}
           {!_.isEmpty(classTypeStatus) && <RecordRender data={classTypeStatus} name={'classType'}/>}
