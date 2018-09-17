@@ -75,7 +75,7 @@ export default class RecordRender extends React.Component {
                     <Wrapper>   {current.status}</Wrapper>
                     </TableCell>
                     <TableCell style={style.w121}>
-                    <Wrapper> <a href={current.url}>Image Link</a></Wrapper>
+                    <Wrapper> <a href={current.url} target="_blank">Image Link</a></Wrapper>
                     </TableCell>
                   </TableRow>
                 );

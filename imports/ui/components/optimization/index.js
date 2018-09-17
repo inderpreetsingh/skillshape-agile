@@ -23,6 +23,7 @@ margin: 5px;
 font-size: larger;
 font-weight: 400;
 `;
+
  class Optimization extends React.Component {
   constructor(props) {
     super(props);
@@ -41,6 +42,15 @@ font-weight: 400;
      b1Text:'Check'
     };
   }
+  Notes=()=>(<Head>
+    Caution Notes:-<br/>
+    1.Press any button only one time recommend Like Check and Optimization required.<br/>
+    2.Process gonna take time according to results.<br/>
+    3.Opening images links in new tab recommend.
+  </Head>)
+    
+    
+  
   recordsFinder =()=>{
     const {classTypeRecords,schoolRecords} = this.state;
     this.setState({status:false,b1Text:'Checking'})
@@ -259,7 +269,9 @@ font-weight: 400;
                 }}
               />
             }
-             </Head>
+             </Head><br/>
+           {this.Notes()}
+            
           {!status && <Loading/>}
           {!_.isEmpty(classTypeStatus) && <RecordRender data={classTypeStatus} name={'classType'}/>}
           {!_.isEmpty(schoolStatus) && <RecordRender data={schoolStatus} name={'school'}/>}
