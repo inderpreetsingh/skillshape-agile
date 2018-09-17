@@ -15,6 +15,8 @@ const Head = styled.div`
 `;
 const Center = styled.div`
   text-align: center;
+  height: 500px;
+  overflow: auto;
 `;
 const Wrapper =styled.div`
 margin: 5px;
