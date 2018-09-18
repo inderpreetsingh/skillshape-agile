@@ -14,12 +14,26 @@ import ProgressiveImage from "react-progressive-image";
 */
 }
 export default function(props) {
-  const { src, collectionData } = props;
-  const membersByName = _.groupBy(collectionData && collectionData, function(
-    item
-  ) {
-    return item && item.firstName && item.firstName[0].toUpperCase();
-  });
+  const { src, collectionData,adminView } = props;
+  let handleMemberDetailsToRightPanel;
+
+  let membersByName ;
+  if(!adminView){
+   membersByName= _.groupBy(collectionData && collectionData, function(
+     item
+   ) {
+    return item && item.profile.profile.firstName && item.profile.profile.firstName[0].toUpperCase();
+   });
+   handleMemberDetailsToRightPanel =this.props.handleMemberDetailsToRightPanel;
+  }else{
+    membersByName= _.groupBy(collectionData && collectionData, function(
+      item
+    ) {
+      return item && item.profile.firstName && item.profile.firstName[0].toUpperCase();
+    });
+   handleMemberDetailsToRightPanel =props.handleMemberDetailsToRightPanel;
+
+  }
   return (
     <Grid container>
       {collectionData && collectionData.length > 0 ? (
@@ -49,9 +63,16 @@ export default function(props) {
                         </ListItem>,
                         membersByName[key] &&
                           membersByName[key].map(data => {
-                            let profile =data.profile.profile;
-                            let pic = profile && profile.low ? profile.low : profile && profile.medium ? profile.medium : 
+                            let profile,pic,firstName;
+                            if(!adminView){
+                              profile =data.profile.profile;
+                            }
+                            else{
+                              profile =data.profile;
+                            }
+                            pic = profile && profile.low ? profile.low : profile && profile.medium ? profile.medium : 
                             profile && profile.pic ? profile.pic:config.defaultProfilePicOptimized ;
+                            firstName= profile.firstName;
                             verifyImageURL(pic,(res)=>{
                               if(!res){
                                    pic=config.defaultProfilePic;
@@ -63,7 +84,7 @@ export default function(props) {
                                 dense
                                 button
                                 onClick={() =>
-                                  this.props.handleMemberDetailsToRightPanel(
+                                  handleMemberDetailsToRightPanel(
                                     data._id
                                   )
                                 }
@@ -75,7 +96,7 @@ export default function(props) {
                             </ProgressiveImage>
                                
                                    
-                                <ListItemText primary={data.firstName} />
+                                <ListItemText primary={firstName} />
                               </ListItem>
                             );
                           })
