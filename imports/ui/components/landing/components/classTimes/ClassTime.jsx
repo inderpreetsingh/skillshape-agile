@@ -158,7 +158,7 @@ const ClassTimeDescriptionWrapper = styled.div`
 
 const ClassTimeDescription = styled.div`
   padding: ${helpers.rhythmDiv}px;
-  width: 100%;
+  width: calc(100% - 24px);
   // background: white;
   border-radius: 5px;
 `;
