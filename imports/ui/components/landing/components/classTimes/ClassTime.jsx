@@ -716,7 +716,11 @@ class ClassTime extends Component {
                   {this.props.desc && (
                     <Paper
                       className={classes.descriptionPanel}
-                      show={this.state.showDescription}
+                      style={{
+                        transform: this.state.showDescription
+                          ? "scaleY(1)"
+                          : "scaleY(0)"
+                      }}
                     >
                       <Icon
                         classes={{
