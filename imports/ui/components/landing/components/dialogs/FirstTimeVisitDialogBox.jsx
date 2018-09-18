@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { browserHistory } from "react-router";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { createContainer } from "meteor/react-meteor-data";
+import { browserHistory } from "react-router";
 import IconButton from "material-ui/IconButton";
 import ClearIcon from "material-ui-icons/Clear";
 import { withStyles } from "material-ui/styles";
+import { Loading } from "/imports/ui/loading/";
 // import { withPopUp } from "/imports/util";
 
 import { MuiThemeProvider } from "material-ui/styles";
@@ -25,6 +27,9 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 
 const styles = theme => {
   return {
+    dialogRoot: {
+      minHeight: 100
+    },
     dialogTitleRoot: {
       padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv *
         3}px 0 ${helpers.rhythmDiv * 3}px`,
@@ -126,6 +131,7 @@ const CardWrapper = styled.div`
 const IconWrapper = styled.div`
   width: 80%;
   height: 120px;
+  margin: 0 auto;
 `;
 
 const CardFooter = styled.div`
@@ -158,7 +164,8 @@ class FirstTimeVisitDialogBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: true
+      open: true,
+      showLoader: false
     };
   }
   _redirectTo = path => {
@@ -186,7 +193,7 @@ class FirstTimeVisitDialogBox extends Component {
   };
 
   handleIamStudentClick = () => {
-    localStorage.setItem("visitorRedirected", false);
+    localStorage.setItem("visitorRedirected", true);
     localStorage.setItem("visitorType", "student");
     this._closeModal();
     setTimeout(() => {
@@ -195,17 +202,50 @@ class FirstTimeVisitDialogBox extends Component {
   };
 
   handleIamSchoolClick = () => {
-    localStorage.setItem("visitorRedirected", false);
+    const { isUserSubsReady, currentUser } = this.props;
+    localStorage.setItem("visitorRedirected", true);
     localStorage.setItem("visitorType", "school");
-    this._closeModal();
-    setTimeout(() => {
-      this._redirectTo("/claimSchool");
-    }, 100);
+    // this._closeModal();
+    // setTimeout(() => {
+    //   this._redirectTo("/claimSchool");
+    // }, 100);
+    if (currentUser) {
+      this.setState(state => {
+        return {
+          ...state,
+          showLoader: true
+        };
+      });
+      Meteor.call("school.getMySchool", (err, res) => {
+        this._closeModal();
+        if (err) {
+          console.warn(err);
+          browserHistory.push("/skillshape-for-school");
+        } else {
+          setTimeout(() => {
+            if (res.length) {
+              // debugger;
+              // console.info(res, "---");
+              const mySchoolSlug = res[0].slug;
+              browserHistory.push(`/schools/${mySchoolSlug}`);
+            } else {
+              browserHistory.push("/skillshape-for-school");
+            }
+          }, 100);
+        }
+      });
+    } else {
+      this._closeModal();
+      setTimeout(() => {
+        this._redirectTo("/skillshape-for-school");
+      }, 100);
+    }
   };
 
   render() {
     const { props } = this;
-    const { open } = this.state;
+    const { isUserSubsReady } = props;
+    const { open, showLoader } = this.state;
     // console.log(props,"...");
     return (
       <Dialog
@@ -218,7 +258,9 @@ class FirstTimeVisitDialogBox extends Component {
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
             <DialogTitleWrapper>
-              <Title>Let us know!</Title>
+              <Title>
+                {isUserSubsReady ? "Let us know!" : "Thanks for patience!"}
+              </Title>
               <IconButton
                 color="primary"
                 onClick={this.handleModalClose}
@@ -230,26 +272,37 @@ class FirstTimeVisitDialogBox extends Component {
           </DialogTitle>
 
           <DialogContent classes={{ root: props.classes.dialogContent }}>
-            <Text>
-              You need to select any one option from below, will allow to serve
-              you in a better way.
-            </Text>
+            {isUserSubsReady ? (
+              <Text>
+                You need to select any one option from below, will allow to
+                serve you in a better way.
+              </Text>
+            ) : (
+              <Text>
+                Just give us a moment, we are fetching some data, to make your
+                experience better :).
+              </Text>
+            )}
           </DialogContent>
 
           <DialogActions classes={{ root: props.classes.dialogActionsRoot }}>
-            <CardsWrapper>
-              <OptionCard
-                onClick={this.handleIamStudentClick}
-                message="I am here to learn"
-                icon={<Student />}
-              />
+            {isUserSubsReady || showLoader ? (
+              <CardsWrapper>
+                <OptionCard
+                  onClick={this.handleIamStudentClick}
+                  message="I am here to learn"
+                  icon={<Student />}
+                />
 
-              <OptionCard
-                onClick={this.handleIamSchoolClick}
-                message="I am here to teach"
-                icon={<School />}
-              />
-            </CardsWrapper>
+                <OptionCard
+                  onClick={this.handleIamSchoolClick}
+                  message="I am here to teach"
+                  icon={<School />}
+                />
+              </CardsWrapper>
+            ) : (
+              <Loading />
+            )}
           </DialogActions>
         </MuiThemeProvider>
       </Dialog>
@@ -257,4 +310,11 @@ class FirstTimeVisitDialogBox extends Component {
   }
 }
 
-export default withStyles(styles)(FirstTimeVisitDialogBox);
+export default withStyles(styles)(
+  createContainer(props => {
+    const currentUser = Meteor.user();
+    let userSubs = Meteor.subscribe("myInfo");
+    let isUserSubsReady = userSubs.ready();
+    return { ...props, currentUser, isUserSubsReady };
+  }, FirstTimeVisitDialogBox)
+);
