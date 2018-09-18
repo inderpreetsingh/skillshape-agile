@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { browserHistory } from "react-router";
 
 import NotFoundIcon from "/imports/ui/components/landing/components/icons/NotFound.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
