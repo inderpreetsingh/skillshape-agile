@@ -123,7 +123,6 @@ const ClassTimesBar = props => {
           totalClassTimes;
 
         DAYS_IN_WEEK.map(day => {
-          debugger;
           totalClassTimes =
             classTimeObj.formattedClassTimesDetails.totalClassTimes;
           const scheduleData = classTimeObj.formattedClassTimesDetails[day];

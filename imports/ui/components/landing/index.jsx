@@ -221,6 +221,7 @@ class Landing extends Component {
     super(props);
     this.state = {
       mapView: false,
+      showPreloader: true,
       sticky: false,
       isLoading: false,
       isSearching: false,
@@ -274,6 +275,17 @@ class Landing extends Component {
     }
   }
 
+  handlePreloaderState = newPreloaderState => {
+    if (this.state.showPreloader !== newPreloaderState) {
+      this.setState(state => {
+        return {
+          ...state,
+          showPreloader: !state.showPreloader
+        };
+      });
+    }
+  };
+
   _redirectBasedOnVisitorType = () => {
     const {
       currentUser,
@@ -285,28 +297,18 @@ class Landing extends Component {
     const visitorRedirected = JSON.parse(
       localStorage.getItem("visitorRedirected")
     );
-    console.group("REDIRECT INDEX PAGE");
-    console.info(Meteor.user(), localStorage.getItem("visitorRedirected"));
-    console.groupEnd();
+    // console.group("REDIRECT INDEX PAGE");
+    // console.info(Meteor.user(), localStorage.getItem("visitorRedirected"));
+    // console.groupEnd();
+
+    // debugger;
+    if (visitorRedirected && isUserSubsReady) {
+      this.handlePreloaderState(false);
+    }
 
     if (!visitorRedirected && previousLocationPathName === "/") {
       if (visitorType === "school" && currentUser && isUserSubsReady) {
-        if (!this.state.showPreloader) {
-          this.setState(state => {
-            return {
-              ...state,
-              showPreloader: true
-            };
-          });
-        }
-
         Meteor.call("school.getMySchool", (err, res) => {
-          this.setState(state => {
-            return {
-              ...state,
-              showPreloader: false
-            };
-          });
           if (err) {
             console.warn(err);
           } else {
@@ -327,6 +329,11 @@ class Landing extends Component {
         browserHistory.push("/skillshape-for-school");
       } else if (visitorType === "student") {
         localStorage.setItem("visitorRedirected", true);
+        this.handlePreloaderState(false);
+      } else {
+        if (isUserSubsReady) {
+          this.handlePreloaderState(false);
+        }
       }
     }
   };
@@ -435,6 +442,9 @@ class Landing extends Component {
         userData: this.props.location.query
       });
     }
+
+    // When we redirect back, the componentDidUpdate needs not to be called.
+    this._redirectBasedOnVisitorType();
   }
 
   componentDidUpdate() {
@@ -1056,7 +1066,7 @@ class Landing extends Component {
               {!this.state.mapView &&
                 this.checkIfAnyFilterIsApplied() &&
                 this.showAppliedTopFilter()}
-              {console.log("re rendering .... classtype list...")}
+              {/*console.log("re rendering .... classtype list...") */}
               <ClassTypeList
                 landingPage={true}
                 handleIsCardsSearching={this.handleIsCardsSearching}

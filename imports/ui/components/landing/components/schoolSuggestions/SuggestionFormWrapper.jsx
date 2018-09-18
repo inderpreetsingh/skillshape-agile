@@ -31,6 +31,11 @@ class SuggestionFormWrapper extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     const nextFilters = nextProps.filters;
     const currentFilters = this.props.filters;
+
+    console.group("SUGGESTION FORM FILTERS");
+    console.log(nextFilters, currentFilters);
+    console.groupEnd();
+
     if (
       currentFilters.locationName !== nextFilters.locationName ||
       currentFilters.schoolName !== nextFilters.schoolName ||
