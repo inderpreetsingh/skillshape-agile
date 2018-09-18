@@ -389,7 +389,7 @@ Meteor.methods({
     return !!schoolData;
   },
   "school.optimizationFinder": function () {
-   return School.find({mainImageMedium:{$exists:false},mainImageLow:{$exists:false},logoImgMedium:{$exists:false},logoImgLow:{$exists:false}}).fetch();
+   return School.find({mainImage:{$exists:true},mainImageMedium:{$exists:false},mainImageLow:{$exists:false},logoImgMedium:{$exists:false},logoImgLow:{$exists:false}}).fetch();
   }
 });
 

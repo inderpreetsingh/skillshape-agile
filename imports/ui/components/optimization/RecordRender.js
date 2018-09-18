@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { ClassTypeTableRender } from "./classTypeTableRender";
 import {SchoolTableRender} from './schoolTableRender';
 import { TableRow, TableCell } from "material-ui/Table";
-
+import { Column, Table ,AutoSizer} from 'react-virtualized';
+import 'react-virtualized/styles.css'; 
 const Head = styled.div`
   margin: 5px;
   font-size: larger;
@@ -17,7 +18,7 @@ const Head = styled.div`
 const Center = styled.div`
   text-align: center;
   height: 385px;
-  overflow: auto;
+  overflow: hidden;
   border: 3px solid #4caf50;
   border-radius: 15px;
   margin-top:30px;
@@ -54,13 +55,11 @@ export default class RecordRender extends React.Component {
   
   render() {
     const {data,name} =this.props;
-    debugger;
-    let TableName= name =='classType' ? ClassTypeTableRender:SchoolTableRender;
     return (
       <Fragment>
        <Center>
        
-       <TableName>
+       {/* <TableName>
           {!_.isEmpty(data)&&
              data.map((current,index) => {
                 return (
@@ -80,9 +79,49 @@ export default class RecordRender extends React.Component {
                   </TableRow>
                 );
               })}
-        </TableName>
-         
-         
+        </TableName> */}
+          <div>
+          <AutoSizer disableHeight>
+            {({width}) => {
+              return <Table
+    width={width}        
+    height={385}
+    headerHeight={20}
+    rowHeight={30}
+    rowCount={data.length}
+    rowGetter={({ index }) => data[index]}
+  >
+     <Column
+       width={(width*10)/100} 
+      label='Index'
+      dataKey='url'
+      cellRenderer={(data)=>{
+       return data.rowIndex+1;
+      }}
+    />
+    <Column
+      label={name}
+      dataKey='name'
+      width={(width*50)/100} 
+    />
+    <Column
+      width={(width*20)/100} 
+      label='Status'
+      dataKey='status'
+    />
+     <Column
+       width={(width*20)/100} 
+      label='Image Link'
+      dataKey='url'
+      cellRenderer={(data)=>{
+       return <a href={data.cellData} target="_blank">Image Link</a>
+      }}
+    />
+  </Table>} }
+          
+          </AutoSizer>
+        </div>
+       
        </Center>
         </Fragment>
     );

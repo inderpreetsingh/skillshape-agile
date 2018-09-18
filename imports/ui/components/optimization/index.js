@@ -46,7 +46,8 @@ font-weight: 400;
    <u> Caution Notes</u>:-<br/>
     1.Press  button only one time recommend Like Check and Optimization required.<br/>
     2.Process gonna take time according to results.<br/>
-    3.Opening images links in new tab recommend.
+    3.Opening images links in new tab recommend.<br/>
+    4.Use one optimization in one time for easy handling.
   </Head>)
     
     
@@ -68,27 +69,25 @@ font-weight: 400;
     })
     
   }
-  optimize =(where)=>{
+  optimize =async(where)=>{
     const {popUp} = this.props;
     const {classTypeData,classTypeStatus,schoolData,schoolStatus,classTypeRecords,schoolRecords} = this.state;
     if(where){
       let allUploadPromise = [],url,doc=[],name;
       if(where=='classType'){
         this.setState({classTypeButtonText:'Optimization Starting'});
-        classTypeData.map((current,index)=>{
-          // if(index<5) {
-            console.log('TCL: Optimization -> optimize -> current', current);
+        let parentMap =   classTypeData.map(async(current,index)=>{
+          // if(index<15) {
             if(current.classTypeImg){
-              doc.push({_id:current._id,schoolId:doc.schoolId});
-              url = current.classTypeImg;
-              name = `${current.name} ${current.filters && current.filters.schoolName ?` of School  ${current.filters.schoolName} `:`` }`;
-              classTypeStatus.push({name:name,status:'pending',url:url})
-              this.setState({classTypeStatus:classTypeStatus});
-              classTypeStatus[index]['status']='Image Compression Started';
-              this.setState({classTypeStatus:classTypeStatus});
               try{
-                compressImage(null,url,true).then((result) => {
-                  console.log('TCL: Optimization -> optimize -> result', result);
+                doc.push({_id:current._id,schoolId:doc.schoolId});
+                url = current.classTypeImg;
+                name = `${current.name} ${current.filters && current.filters.schoolName ?` of School  ${current.filters.schoolName} `:`` }`;
+                classTypeStatus.push({name:name,status:'pending',url:url})
+                this.setState({classTypeStatus:classTypeStatus});
+                classTypeStatus[index]['status']='Image Compression Started';
+                this.setState({classTypeStatus:classTypeStatus});
+                  let result = await compressImage(null,url,true);
                   console.group("class type image Optimization");
                   if(_.isArray(result)){
                     console.log('Non-cors');
@@ -117,16 +116,19 @@ font-weight: 400;
                         });
                       }))
                     }
-                    Promise.all(allUploadPromise).then(()=> {
-                      console.log("doc",doc,index);
-                      classTypeStatus[index]['status']='Success';
-                      Meteor.call('classType.editClassType',{doc_id:doc[index]["_id"],doc:doc[index]},(err,res)=>{
-                        if(res)
-                        this.setState({classTypeStatus:classTypeStatus});
-                        if(index+2==classTypeRecords){
-                          this.setState({classTypeButtonText:'Optimization Finished'});
-                          popUp.appear("success", { title: "Message", content: 'Optimization Finished' });
-                        }
+                    Promise.all(allUploadPromise).then(async()=> {
+                      await new Promise((resolve,reject)=>{
+
+                        classTypeStatus[index]['status']='Success';
+                        Meteor.call('classType.editClassType',{doc_id:doc[index]["_id"],doc:doc[index]},(err,res)=>{
+                          if(res)
+                          this.setState({classTypeStatus:classTypeStatus});
+                          resolve();
+                          if(index+1==classTypeRecords){
+                            this.setState({classTypeButtonText:'Optimization Finished'});
+                            popUp.appear("success", { title: "Message", content: 'Optimization Finished' });
+                          }
+                        })
                       })
                     })
                   }
@@ -134,14 +136,14 @@ font-weight: 400;
                     console.log('cors');
                     classTypeStatus[index]['status']='URL Expired';
                     this.setState({classTypeStatus:classTypeStatus});
-                    if(index+2==classTypeRecords){
+                    if(index+1==classTypeRecords){
                       this.setState({classTypeButtonText:'Optimization Finished'});
                       popUp.appear("success", { title: "Message", content: 'Optimization Finished' });
                     }
                    
                   }
                   console.groupEnd("class type image Optimization");
-                })
+              
               }catch(error){
               console.log('TCL: Optimization -> }catch -> error', error);
               }
@@ -149,24 +151,23 @@ font-weight: 400;
   
           // }
         })
-
+        await Promise.all(parentMap);
+        console.log('finished');
       }
       else{
         this.setState({schoolText:'Optimization Starting'});
-        schoolData.map((current,index)=>{
-          // if(index<3){
+        let parentMap= schoolData.map(async(current,index)=>{
+          // if(index<20){
             if(current.mainImage){
-              console.log('TCL: current', current);
-              url=current.mainImage;
-              doc.push({_id:current._id});
-              name=current.name;
-              schoolStatus.push({name:name,status:'pending',url:url})
-              this.setState({schoolStatus:schoolStatus});
-              schoolStatus[index]['status']='Image Compression Started';
-              this.setState({schoolStatus:schoolStatus});
               try{
-                compressImage(null,url,true).then((result) => {
-                  console.log('TCL: result', result);
+                  url=current.mainImage;
+                  doc.push({_id:current._id});
+                  name=current.name;
+                  schoolStatus.push({name:name,status:'pending',url:url})
+                  this.setState({schoolStatus:schoolStatus});
+                  schoolStatus[index]['status']='Image Compression Started';
+                  this.setState({schoolStatus:schoolStatus});
+                  let result=await  compressImage(null,url,true)
                   console.group("School Image Optimization");
                   if(_.isArray(result)){
                     console.log('Non-cors');
@@ -195,17 +196,19 @@ font-weight: 400;
                         });
                       }))
                     }
-                    Promise.all(allUploadPromise).then(()=> {
+                    Promise.all(allUploadPromise).then(async()=> {
+                      await new Promise((resolve,reject)=>{
                       console.log("doc",index);
                       schoolStatus[index]['status']='Success';
                       Meteor.call('editSchool',doc[index]["_id"],doc[index],(err,res)=>{
                         this.setState({schoolStatus:schoolStatus})
+                        resolve();
                         if(index+1==schoolRecords){
                           this.setState({schoolText:'Optimization Finished'});
                           popUp.appear("success", { title: "Message", content: 'Optimization Finished' });
                         }
                       })
-                     
+                    })
                     })
                   }
                   else{
@@ -213,13 +216,13 @@ font-weight: 400;
                     schoolStatus[index]['status']='URL Expired';
                     this.setState({schoolStatus:schoolStatus})
                     if(index+1==schoolRecords){
-        popUp.appear("success", { title: "Message", content: 'Optimization Finished' });
+                      popUp.appear("success", { title: "Message", content: 'Optimization Finished' });
 
                       this.setState({schoolText:'Optimization Finished'});
                     }
                   }
                   console.groupEnd("School Image Optimization");
-                })
+                
               }catch(error){
               console.log('TCL: }catch -> error', error);
 
@@ -228,7 +231,8 @@ font-weight: 400;
             // }
           }
         })
-       
+        await Promise.all(parentMap);
+        console.log('finished');
       }
     }
   }
@@ -274,8 +278,8 @@ font-weight: 400;
           
             
           {!status && <Loading/>}
-          {!_.isEmpty(classTypeStatus) && <RecordRender data={classTypeStatus} name={'classType'}/>}
-          {!_.isEmpty(schoolStatus) && <RecordRender data={schoolStatus} name={'school'}/>}
+          {!_.isEmpty(classTypeStatus) && <RecordRender data={classTypeStatus} name={'Class Type Name'}/>}
+          {!_.isEmpty(schoolStatus) && <RecordRender data={schoolStatus} name={'School Name'}/>}
           </Wrapper>
        </Center>
         </Fragment>

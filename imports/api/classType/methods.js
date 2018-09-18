@@ -341,7 +341,7 @@ Meteor.methods({
     }
   },
   'classType.optimizationFinder':function(){
-    return ClassType.find({medium:{$exists:false},low:{$exists:false}}).fetch();
+    return ClassType.find({medium:{$exists:false},low:{$exists:false},classTypeImg:{$exists:true}}).fetch();
   }
 });
  
