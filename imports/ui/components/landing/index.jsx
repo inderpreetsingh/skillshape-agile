@@ -300,12 +300,7 @@ class Landing extends Component {
     // console.group("REDIRECT INDEX PAGE");
     // console.info(Meteor.user(), localStorage.getItem("visitorRedirected"));
     // console.groupEnd();
-
     // debugger;
-    if (visitorRedirected && isUserSubsReady) {
-      this.handlePreloaderState(false);
-    }
-
     if (!visitorRedirected && previousLocationPathName === "/") {
       if (visitorType === "school" && currentUser && isUserSubsReady) {
         Meteor.call("school.getMySchool", (err, res) => {
@@ -337,7 +332,10 @@ class Landing extends Component {
       }
     } else {
       // Lets say we land on any link and from that we clicked on lets back to homepage
-      if (isUserSubsReady && previousLocationPathName !== "/") {
+      if (
+        (visitorRedirected && isUserSubsReady) ||
+        (isUserSubsReady && previousLocationPathName !== "/")
+      ) {
         this.handlePreloaderState(false);
       }
     }

@@ -22,15 +22,15 @@ Meteor.publish("classType.getClassTimesWithId", function({ classTypeId }) {
   return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
-// Meteor.publish("classType.getClassTimesWithIds", function(classTypeIds) {
-//   if (!classTypeIds.length) {
-//     // this.ready();
-//     return null;
-//   }
-//   let cursor = ClassTimes.find({ classTypeId: { $in: classTypeIds } });
-//   // console.log(cursor);
-//   return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
-// });
+Meteor.publish("classType.getClassTimesWithIds", function(classTypeIds) {
+  if (!classTypeIds.length) {
+    // this.ready();
+    return null;
+  }
+  let cursor = ClassTimes.find({ classTypeId: { $in: classTypeIds } });
+  // console.log(cursor);
+  return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
+});
 
 Meteor.publish("classType.getClassTypeWithClassTimes", function({
   classTypeId
