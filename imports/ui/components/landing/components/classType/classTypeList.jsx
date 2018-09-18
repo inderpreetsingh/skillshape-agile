@@ -17,6 +17,7 @@ import SearchBarStyled from "/imports/ui/components/landing/components/SearchBar
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
+import SuggestionForm from "/imports/ui/components/landing/components/schoolSuggestions/SuggestionForm.jsx";
 import SuggestionFormWrapper from "/imports/ui/components/landing/components/schoolSuggestions/SuggestionFormWrapper.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { cardsData, cardsData1 } from "../../constants/cardsData.js";
@@ -198,21 +199,18 @@ class ClassTypeList extends Component {
     } else if (isEmpty(classTypeData)) {
       return (
         <NoResultContainer>
-          {/*<NoResults
-            removeAllFiltersButtonClick={this.props.removeAllFilters}
-            addYourSchoolButtonClick={this.handleAddSchool}
-          />
-          <RevertSearch>
-            {this.props.mapView
-              ? "No results in this area. Try a different area?"
-              : "Try changing your search"}
-          </RevertSearch> */}
-          <SuggestionFormWrapper
+          <SuggestionForm
             onSearchAgainButtonClick={this.props.onSearchAgainButtonClick}
             filters={this.props.filters}
             tempFilters={this.props.tempFilters}
             removeAllFilters={this.props.removeAllFilters}
           />
+          {/*<SuggestionFormWrapper
+            onSearchAgainButtonClick={this.props.onSearchAgainButtonClick}
+            filters={this.props.filters}
+            tempFilters={this.props.tempFilters}
+            removeAllFilters={this.props.removeAllFilters}
+          /> */}
         </NoResultContainer>
       );
     }
@@ -368,10 +366,10 @@ export default createContainer(props => {
     classTypeIds
   );
 
-  // classTimesSubscription = Meteor.subscribe(
-  //   "classType.getClassTimesWithIds",
-  //   classTypeIds
-  // );
+  classTimesSubscription = Meteor.subscribe(
+    "classType.getClassTimesWithIds",
+    classTypeIds
+  );
 
   schoolData = School.find().fetch();
   skillCategoryData = SkillCategory.find().fetch();
@@ -379,9 +377,9 @@ export default createContainer(props => {
   classInterestData = ClassInterest.find().fetch();
   sLocationData = SLocation.find().fetch();
   // debugger;
-  console.group("ALL LOCATIONS");
-  console.log(sLocationData, classTimesData);
-  console.groupEnd();
+  // console.group("ALL LOCATIONS");
+  // console.log(sLocationData, classTimesData);
+  // console.groupEnd();
 
   /*Find SkillCategory,SkillSubject and SLocation to make this container reactive on these collection
     other wise skills are joined with collections using package
@@ -389,7 +387,9 @@ export default createContainer(props => {
   SkillSubject.find().fetch();
 
   if (
-    (subscription.ready() && reviewsSubscription.ready()) ||
+    (subscription.ready() &&
+      reviewsSubscription.ready() &&
+      classTimesSubscription.ready()) ||
     ClassType.find().count() > 0
   ) {
     reviewsData = Reviews.find().fetch();
