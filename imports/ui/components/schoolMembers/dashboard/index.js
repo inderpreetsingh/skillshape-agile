@@ -32,6 +32,7 @@ import Checkbox from "material-ui/Checkbox";
 import { dateFriendly } from "/imports/util";
 import { phoneRegex } from "/imports/util";
 import SchoolMemberListItems from "/imports/ui/components/schoolMembers/schoolMemberList/index.js";
+import SchoolAdminListItems from '/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js'
 import SchoolMemberFilter from "../filter";
 import SchoolMemberInfo from "../schoolMemberInfo";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
@@ -155,9 +156,20 @@ class DashBoardView extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.schoolData !== this.props.schoolData) {
       this.setState({ memberInfo: {} });
+      const {adminsIds}=this.props;
+ 
+   adminsIds && Meteor.call('user.findAdminsDetails',adminsIds,(err,res)=>{
+       if(res){
+        this.setState({adminsData:res});
+       }
+     })
     }
   }
-
+ componentWillMount(){
+   
+ }
+    
+ 
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
@@ -453,25 +465,34 @@ class DashBoardView extends React.Component {
   };
 
   handleMemberDetailsToRightPanel = memberId => {
-    let memberInfo = SchoolMemberDetails.findOne(memberId);
-    let profile =memberInfo.profile.profile;
-    let pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic :config.defaultProfilePic ;
+    const {adminView,schoolData} = this.props;
+    const {adminsData} = this.state;
+    let memberInfo,profile,pic,schoolId=schoolData[0]._id;
+    if(!adminView){
+      memberInfo = SchoolMemberDetails.findOne(memberId);
+      profile =memberInfo.profile.profile;
+    }
+    else{
+      memberInfo=adminsData.find( ele => ele._id == memberId);
+       profile =memberInfo.profile;
+    }
+     pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic :config.defaultProfilePic ;
     // memberInfo = this.state.memberInfo
     this.handleDrawerToggle();
     this.setState({
       memberInfo: {
         _id: memberInfo._id,
         memberId: memberInfo._id,
-        name: memberInfo.firstName,
-        phone: memberInfo.phone,
-        email: memberInfo.email,
-        schoolId: memberInfo.schoolId,
+        name: profile.firstName,
+        phone: profile.phone,
+        email: profile.email,
+        schoolId: schoolId,
         adminNotes: memberInfo.adminNotes,
         classmatesNotes: memberInfo.classmatesNotes,
-        birthYear: memberInfo.birthYear,
-        lastName: memberInfo.lastName,
+        birthYear: profile.birthYear,
+        lastName: profile.lastName,
         classTypeIds: memberInfo.classTypeIds,
-        firstName: memberInfo.firstName,
+        firstName: profile.firstName,
         pic: pic,
         studentWithoutEmail: memberInfo.studentWithoutEmail,
         packageDetails: memberInfo.packageDetails
@@ -557,9 +578,10 @@ class DashBoardView extends React.Component {
       schoolData,
       classTypeData,
       slug,
-      schoolAdmin
+      schoolAdmin,
+      adminView
     } = this.props;
-    const { renderStudentModal, memberInfo } = this.state;
+    const { renderStudentModal, memberInfo,adminsData } = this.state;
 
     let schoolMemberListFilters = { ...this.state.filters };
     if (slug) {
@@ -612,16 +634,24 @@ class DashBoardView extends React.Component {
                 color="primary"
                 onClick={() => this.setState({ renderStudentModal: true })}
               >
-                Add New Student
+                {adminView ? "Add New Admin" :"Add New Student" }
               </Button>
             </Grid>
           )}
-          <SchoolMemberListItems
+         {adminView ?
+          <SchoolAdminListItems
+          collectionData={adminsData}
+          handleMemberDetailsToRightPanel={
+            this.handleMemberDetailsToRightPanel
+          }
+          adminView={adminView}
+        />:<SchoolMemberListItems
             filters={schoolMemberListFilters}
             handleMemberDetailsToRightPanel={
               this.handleMemberDetailsToRightPanel
             }
-          />
+            adminView={adminView}
+          />} 
         </List>
       </div>
     );
@@ -818,13 +848,15 @@ class DashBoardView extends React.Component {
 
 export default createContainer(props => {
   let { slug } = props.params;
+  let { query } = props.location;
   let schoolData = [];
   let isLoading = true;
   let classTypeData = [];
   let filters = { ...props.filters, slug };
   let schoolAdmin;
+  let adminsIds;
   let schoolId;
-  let classPricing,monthlyPricing,enrollmentFee;
+  let classPricing,monthlyPricing,enrollmentFee,adminView=false;
   let subscription = Meteor.subscribe(
     "schoolMemberDetails.getSchoolMemberWithSchool",
     filters
@@ -866,10 +898,15 @@ export default createContainer(props => {
         schoolData[0].superAdmin == currentUser._id
       ) {
         schoolAdmin = true;
+        if(schoolData[0].superAdmin == currentUser._id && query.admin=='true'){
+          adminView=true;
+         adminsIds=schoolData[0].admins;
+        }
       }
+                    
     }
   }
-
+  
   return {
     ...props,
     schoolData,
@@ -878,6 +915,9 @@ export default createContainer(props => {
     slug,
     schoolAdmin,
     classPricing,
-    enrollmentFee,monthlyPricing
+    enrollmentFee,
+    monthlyPricing,
+    adminsIds,
+   adminView
   };
 }, withStyles(styles, { withTheme: true })(DashBoardView));

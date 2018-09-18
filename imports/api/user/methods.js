@@ -161,5 +161,11 @@ Meteor.methods({
     } else {
       throw new Meteor.Error("Email Address not found!!");
     }
+  },
+  "user.findAdminsDetails":function(ids){
+     
+  return Meteor.users.find({_id:{$in:ids}}).fetch();
+
+  
   }
 });
