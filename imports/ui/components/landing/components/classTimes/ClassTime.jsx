@@ -6,6 +6,7 @@ import { withStyles } from "material-ui/styles";
 import { isEmpty, get } from "lodash";
 import { scroller } from "react-scroll";
 import { Checkbox } from "material-ui";
+import Paper from "material-ui/Paper";
 import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
 
@@ -56,6 +57,19 @@ const styles = {
     position: "absolute",
     boxShadow: helpers.buttonBoxShadow,
     cursor: "pointer"
+  },
+  descriptionPanel: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    transition: "transform 0.2s linear",
+    maxHeight: "272px",
+    transformOrigin: "50% 100%",
+    paddingTop: helpers.rhythmDiv,
+    marginBottom: helpers.rhythmDiv,
+    overflowY: "auto",
+    background: "white",
+    borderRadius: 5
   }
 };
 
@@ -137,7 +151,6 @@ const ClassTimeDescriptionWrapper = styled.div`
   transform: scaleY(${props => (props.show ? 1 : 0)});
   padding-top: ${helpers.rhythmDiv}px;
   margin-bottom: ${helpers.rhythmDiv}px;
-  background: transparent;
   overflow-y: auto;
   background: white;
   border-radius: 5px;
@@ -195,12 +208,6 @@ LocationContent = RoomInfoContent = Text.extend`
   margin: 0;
 `;
 
-const Description = Text.extend`
-  margin: ${helpers.rhythmDiv}px 0;
-  padding: 0 ${helpers.rhythmDiv * 2}px;
-  overflow-y: auto;
-`;
-
 const ButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -250,6 +257,18 @@ class ClassTime extends Component {
     thinkingAboutAttending: false
     // fullTextState: this.props.fullTextState,
   };
+
+  escFunction = event => {
+    if (event.keyCode === 27) {
+      this.handleDescriptionState(false)(event);
+    }
+  };
+  componentDidMount() {
+    document.addEventListener("keydown", this.escFunction, false);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.escFunction, false);
+  }
 
   componentWillMount() {
     Meteor.call(
@@ -540,9 +559,9 @@ class ClassTime extends Component {
     // debugger;
     const { selectedLocation, classes } = this.props;
 
-    console.group("CLASSTIME LOCATION INFO");
-    console.log(selectedLocation);
-    console.groupEnd();
+    // console.group("CLASSTIME LOCATION INFO");
+    // console.log(selectedLocation);
+    // console.groupEnd();
 
     if (isEmpty(selectedLocation)) {
       return null;
@@ -581,7 +600,9 @@ class ClassTime extends Component {
     this.handleNotification(CheckBoxes);
   };
 
-  handleDescriptionState = descriptionState => () => {
+  handleDescriptionState = descriptionState => e => {
+    e.stopPropagation();
+
     this.setState(state => {
       return {
         ...state,
@@ -656,6 +677,7 @@ class ClassTime extends Component {
             )}
             <div>
               <ClassTimeContainer
+                onClick={this.handleDescriptionState(false)}
                 inPopUp={inPopUp}
                 className={`class-time-bg-transition ${this.getWrapperClassName(
                   this.props.addToCalendar
@@ -681,7 +703,7 @@ class ClassTime extends Component {
                     {/* class times */}
                     <ClassTimesCardWrapper inPopUp={inPopUp}>
                       <ClassTimesList
-                        inPopUp={inPopUp}
+                        inPopUp={true}
                         show={true}
                         formattedClassTimes={this.reformatNewFlowData()}
                         scheduleType={scheduleType}
@@ -692,7 +714,8 @@ class ClassTime extends Component {
 
                   {/* description */}
                   {this.props.desc && (
-                    <ClassTimeDescriptionWrapper
+                    <Paper
+                      className={classes.descriptionPanel}
                       show={this.state.showDescription}
                     >
                       <Icon
@@ -707,7 +730,7 @@ class ClassTime extends Component {
                       <ClassTimeDescription>
                         {this.props.desc}
                       </ClassTimeDescription>
-                    </ClassTimeDescriptionWrapper>
+                    </Paper>
                   )}
                 </ClassTimeContent>
 
