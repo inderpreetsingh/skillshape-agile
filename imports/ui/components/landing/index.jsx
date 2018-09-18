@@ -335,6 +335,11 @@ class Landing extends Component {
           this.handlePreloaderState(false);
         }
       }
+    } else {
+      // Lets say we land on any link and from that we clicked on lets back to homepage
+      if (isUserSubsReady && previousLocationPathName !== "/") {
+        this.handlePreloaderState(false);
+      }
     }
   };
 
