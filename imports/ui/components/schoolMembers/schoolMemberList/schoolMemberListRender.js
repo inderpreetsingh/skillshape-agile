@@ -15,6 +15,7 @@ import ProgressiveImage from "react-progressive-image";
 }
 export default function(props) {
   const { src, collectionData,adminView } = props;
+  console.log('TCL: collectionData', collectionData);
   let handleMemberDetailsToRightPanel;
 
   let membersByName ;
@@ -72,7 +73,7 @@ export default function(props) {
                             }
                             pic = profile && profile.low ? profile.low : profile && profile.medium ? profile.medium : 
                             profile && profile.pic ? profile.pic:config.defaultProfilePicOptimized ;
-                            firstName= profile.firstName;
+                            firstName= profile && profile.firstName;
                             verifyImageURL(pic,(res)=>{
                               if(!res){
                                    pic=config.defaultProfilePic;
