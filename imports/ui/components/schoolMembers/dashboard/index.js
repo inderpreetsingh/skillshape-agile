@@ -672,7 +672,7 @@ class DashBoardView extends React.Component {
               </Button>
             </Grid>
           )}
-         {adminView ?
+         {adminView && !_.isEmpty(adminsData)?
           <SchoolAdminListItems
           collectionData={adminsData}
           handleMemberDetailsToRightPanel={
