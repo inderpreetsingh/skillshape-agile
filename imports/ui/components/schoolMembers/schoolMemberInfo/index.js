@@ -16,7 +16,7 @@ import UploadAvatar from "/imports/ui/components/schoolMembers/mediaDetails/Uplo
 import CallMemberDialogBox from "/imports/ui/components/landing/components/dialogs/CallMemberDialogBox.js";
 import EmailMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EmailMemberDialogBox.jsx";
 import EditMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditMemberDialogBox.js";
-
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 const styles = theme => ({
   avatarCss: {
     minWidth: "100%",
@@ -137,6 +137,16 @@ const ActionButtons = props => (
         onClick={props.openEditMemberModal}
       />
     </ActionButton>
+    {props.adminView &&  <ActionButton>
+      <MemberActionButton
+        noMarginBottom
+        label="Remove Admin"
+        icon
+        iconName="remove_circle_outline"
+        onClick={props.removeButtonClick}
+      />
+    </ActionButton>}
+   
   </ActionButtonsWrapper>
 );
 
@@ -149,6 +159,7 @@ class SchoolMemberInfo extends Component {
  
   initializeState = ({ memberInfo, view }) => {
     let state = {};
+    state.showConfirmation=false;
     if (view === "admin") {
       state.notes = get(memberInfo, "adminNotes", "");
     // } else {
@@ -245,18 +256,44 @@ class SchoolMemberInfo extends Component {
     }
   })
   }
+  handleRemove = () => {
+    let _id, schoolId,to,userName,schoolName;
+    const { memberInfo } = this.props;
+    _id = memberInfo._id;
+    schoolId = memberInfo.schoolId;
+    to = memberInfo.email;
+    userName = memberInfo.firstName;
+    schoolName = memberInfo.schoolName;
+   debugger;
+    Meteor.call('school.manageAdmin',_id,schoolId,'remove',to,userName,schoolName,(err,res)=>{
+      if(res){
+        this.setState({showConfirmation:false});
+      }
+    })
+  }
   render() {
-    const { memberInfo, view, classes } = this.props;
-    
+    const { memberInfo, view, classes ,adminView} = this.props;
+    debugger;
     const {
       showUploadAvatarModal,
       mediaFormData,
       filterStatus,
       limit,
-      bgImg
+      bgImg,
+      showConfirmation
     } = this.state;
     return (
       <Grid container>
+      {showConfirmation && (
+            <ConfirmationModal
+              open={showConfirmation}
+              submitBtnLabel="Yes, Remove"
+              cancelBtnLabel="Cancel"
+              message="You will remove this admin, Are you sure?"
+              onSubmit={this.handleRemove}
+              onClose={() => this.setState({ showConfirmation: false })}
+            />
+          )}
         {this.state.callMemberDialog && (
           <CallMemberDialogBox
             contactNumbers={this.getContactNumber()}
@@ -373,6 +410,8 @@ class SchoolMemberInfo extends Component {
                 openEditMemberModal={event => {
                   this.setState({ openEditMemberModal: true });
                 }}
+                adminView={adminView}
+                removeButtonClick={()=>{this.setState({showConfirmation:true})}}
               />
             </Grid>
           </Grid>

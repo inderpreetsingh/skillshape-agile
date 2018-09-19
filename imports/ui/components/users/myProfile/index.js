@@ -205,6 +205,7 @@ class MyProfile extends React.Component {
         console.groupEnd("MyProfile");
         })
       }catch(error){
+      this.editUserCall(userData);
       throw new Meteor.Error(error);
       }
     } else {

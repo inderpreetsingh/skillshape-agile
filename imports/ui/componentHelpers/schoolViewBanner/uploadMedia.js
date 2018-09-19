@@ -104,6 +104,7 @@ class UploadMedia extends React.Component {
 						console.groupEnd("UploadMedia");
 					})
 				}catch(error){
+					this.handleSubmit(doc);
 					throw new Meteor.Error(error);
 				}
 				
