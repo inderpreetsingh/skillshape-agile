@@ -27,7 +27,7 @@ Meteor.methods({
         email: email,
         password: password,
         profile: {
-          name: name,
+          firstName: name,
           passwordSetByUser: false,
           userType: accessType,
           sendMeSkillShapeNotification: sendMeSkillShapeNotification

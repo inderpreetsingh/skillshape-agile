@@ -5,7 +5,7 @@ import Typography from "material-ui/Typography";
 import Grid from "material-ui/Grid";
 import {verifyImageURL} from '/imports/util'
 import ProgressiveImage from "react-progressive-image";
-
+import get from 'lodash/get';
 {
   /*
 1.Set profile pic for student.
@@ -17,14 +17,13 @@ export default function(props) {
   const { src, collectionData,adminView } = props;
   console.log('TCL: collectionData', collectionData);
   let handleMemberDetailsToRightPanel;
-
   let membersByName ;
   if(!adminView){
    membersByName= _.groupBy(collectionData && collectionData, function(
      item
    ) {
     
-    return item && item.profile.profile.firstName ? item.profile.profile.firstName[0].toUpperCase() :item.firstName ?item.firstName[0].toUpperCase():'0';
+    return get(item, "profile.profile.firstName", get(item,"profile.profile.name","0"))[0].toUpperCase();
     
   });
    handleMemberDetailsToRightPanel =this.props.handleMemberDetailsToRightPanel;
@@ -75,7 +74,7 @@ export default function(props) {
                             }
                             pic = profile && profile.low ? profile.low : profile && profile.medium ? profile.medium : 
                             profile && profile.pic ? profile.pic:config.defaultProfilePicOptimized ;
-                            firstName= profile && profile.firstName ? profile.firstName : data.firstName ? data.firstName :'Top Secret';
+                            firstName= get(profile,"firstName",get(profile,"name","Old Data"));
                             verifyImageURL(pic,(res)=>{
                               if(!res){
                                    pic=config.defaultProfilePic;

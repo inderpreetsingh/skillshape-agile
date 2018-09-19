@@ -391,22 +391,31 @@ Meteor.methods({
   "school.optimizationFinder": function () {
    return School.find({mainImage:{$exists:true},mainImageMedium:{$exists:false},mainImageLow:{$exists:false},logoImgMedium:{$exists:false},logoImgLow:{$exists:false}}).fetch();
   },
-  "school.manageAdmin":function(_id,schoolId,action,to,userName,schoolName){
+  "school.manageAdmin":function(_id,schoolId,action,to,userName,schoolName,payload){
     if(action=='remove'){
     let res=School.update({_id:schoolId},{$pull:{admins:_id}});
-    console.log('TCL: res admin removed', res);
     adminInvitation(to,userName,schoolName,action)
     return res;
     }
     else if(action=='add'){
       let res=School.update({_id:schoolId},{$push:{admins:_id}});
-      console.log('TCL: res admin added', res);
       adminInvitation(to,userName,schoolName),action;
       return res;
     }
     else if(action =='join'){
-      sendSkillShapeJoinInvitation(to,userName,schoolName);
-      return 1;
+      Meteor.call("user.createUser",payload,(err,res)=>{
+        if(res){
+          try{
+            School.update({_id:schoolId},{$push:{admins:res.user._id}})
+          sendSkillShapeJoinInvitation(to,userName,schoolName,res.password);
+          }catch(error){
+            console.log('TCL: }catch -> error', error);
+            throw new Meteor.Error(error);
+          }
+         
+        }
+    })
+    return 1;
     }
   }
 });

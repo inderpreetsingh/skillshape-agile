@@ -609,14 +609,15 @@ export const sendPackagePurchasedEmailToSchool = (schoolName, schoolEmail, userN
              Thank you for using skillshape.com <br/>${EmailSignature}`
   });
 };
-export const sendSkillShapeJoinInvitation = (to,userName,schoolName)=>{
+export const sendSkillShapeJoinInvitation = (to,userName,schoolName,password)=>{
   Email.send({
     to: to, // Needs to replace this with requester's Email.
     from: "Notices@SkillShape.com",
     subject: "SkillShape Join Invitation",
     html: `Hi  ${userName}<br/>
               School ${schoolName} want you to become admin of their school on skillShape.<br/>
-              Please Join Skillshape by Clicking Here.<a href=${Meteor.absoluteUrl()} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Join Skillshape</a>        
+              Please Join Skillshape by Clicking Here.<a href=${Meteor.absoluteUrl()} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Join Skillshape</a> <br/>
+              Your Temporary password is this :- ${password}       
     `
   })
 }

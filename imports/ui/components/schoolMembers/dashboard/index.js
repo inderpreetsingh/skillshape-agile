@@ -345,24 +345,25 @@ class DashBoardView extends React.Component {
   allowAddNewMemberWithThisEmail = event => {
     // event.preventDefault();
     // const { payload } = this.state;
-    const {adminView}=this.props;
-    const { schoolData } = this.props;
+    const {adminView,schoolData,adminsIds}=this.props;
     let schoolId= schoolData[0]._id;
     let _id=this.state.message && this.state.message.userId || null;
     let schoolName = schoolData[0].name;
     let to = this.email.value;
     let userName =this.firstName.value;
+    let payload = {};
+    payload.firstName = this.firstName.value;
+    payload.lastName = this.lastName.value;
+    payload.email = this.email.value;
+    payload.phone = this.phone.value;
+    payload.schoolId = schoolData[0]._id;
+    payload.classTypeIds = this.state.selectedClassTypes;
+    payload.birthYear = this.state.birthYear;
+    payload.studentWithoutEmail = this.state.studentWithoutEmail;
+    payload.signUpType="member-signup"
+    payload.sendMeSkillShapeNotification = true;
     if(!adminView)
     {
-      let payload = {};
-      payload.firstName = this.firstName.value;
-      payload.lastName = this.lastName.value;
-      payload.email = this.email.value;
-      payload.phone = this.phone.value;
-      payload.schoolId = schoolData[0]._id;
-      payload.classTypeIds = this.state.selectedClassTypes;
-      payload.birthYear = this.state.birthYear;
-      payload.studentWithoutEmail = this.state.studentWithoutEmail;
   
       let state = {
         isLoading: true
@@ -385,20 +386,26 @@ class DashBoardView extends React.Component {
         this.setState(state);
       });
     }else if(_id && schoolId){
-      Meteor.call('school.manageAdmin',_id,schoolId,'add',to,userName,schoolName,(err,res)=>{
-        if(res){
-          this.setState({renderStudentModal:false,showConfirmationModal:false});
-        }
-      })
+      this.setState({isLoading:true})      
+        Meteor.call('school.manageAdmin',_id,schoolId,'add',to,userName,schoolName,(err,res)=>{
+          if(res){
+            this.setState({renderStudentModal:false,showConfirmationModal:false,isLoading:false});
+          }
+        })
+      
+      
     }
     else{
-      this.setState({joinSkillShape:true,to:this.email.value,userName:this.firstName.value});
+      console.log("in else part")
+      payload.userType='School';
+      payload.name=this.firstName.value;
+      this.setState({joinSkillShape:true,to:this.email.value,userName:this.firstName.value,payload:payload});
     }
   };
 
   addNewMember = event => {
     event.preventDefault();
-    const { schoolData,adminView } = this.props;
+    const { schoolData,adminView ,adminsIds} = this.props;
     // Check for existing user only if users has entered their email.
     if (!isEmpty(schoolData) && !this.state.studentWithoutEmail) {
       // Show Loading
@@ -410,13 +417,19 @@ class DashBoardView extends React.Component {
           adminView: adminView
         },
         (err, res) => {
-         
+          console.log('TCL: err, res', err, res);
+          
           let state = {};
           if (res) {
             // Open Modal
+            let _id=res.userId ;
             state.showConfirmationModal = true;
             state.message = res;
             state.isLoading = false;
+            if(findIndex(adminsIds,(o)=>{return o==_id})!=-1){
+              this.setState({error:'This person is already an admin.',isLoading:false});
+              return ;
+             }
             // this.setState({showConfirmationModal:true, message:res});
           }
           if (err) {
@@ -594,11 +607,12 @@ class DashBoardView extends React.Component {
   // Return Dash view from here
   joinSkillShape = () => {
     const {schoolData} = this.props;
-    const {to,userName} = this.state;
-    let schoolName
+    const {to,userName,payload} = this.state;
+    let schoolName;
+    let schoolId= schoolData[0]._id;
     schoolName=schoolData[0].name;
     this.setState({isLoading: true})
-    Meteor.call('school.manageAdmin',null,null,"join",to,userName,schoolName,(err,res)=>{
+    Meteor.call('school.manageAdmin',null,schoolId,"join",to,userName,schoolName,payload,(err,res)=>{
       if(res){
         this.setState({renderStudentModal:false,joinSkillShape:false,isLoading:false});
       }
@@ -698,7 +712,6 @@ class DashBoardView extends React.Component {
 
     return (
       <Grid container className={classes.root}>
-      {isLoading &&  <Preloader />}
       {joinSkillShape && (
             <ConfirmationModal
               open={joinSkillShape}
