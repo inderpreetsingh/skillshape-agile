@@ -532,13 +532,14 @@ class ClassTime extends Component {
 
   getClassTimeRoomInfo = () => {
     const { selectedLocation, classes } = this.props;
-    // console.group("ROOM INFO");
-    // console.log(selectedLocation);
-    // console.groupEnd();
+    console.group("ROOM INFO");
+    console.log(selectedLocation);
+    console.groupEnd();
 
     if (
-      (isEmpty(selectedLocation) && isEmpty(selectedLocation.rooms)) ||
-      !selectedLocation.rooms.length
+      isEmpty(selectedLocation) ||
+      (typeof selectedLocation.rooms === "undefined" ||
+        !selectedLocation.rooms.length)
     ) {
       return null;
     }
@@ -566,9 +567,10 @@ class ClassTime extends Component {
     if (isEmpty(selectedLocation)) {
       return null;
     }
+
+    let eventAddress = "";
     const addressComponents = ["address", "city", "state", "country"];
     const eventLocationTitle = selectedLocation.title || "";
-    let eventAddress = "";
     addressComponents.forEach(component => {
       if (selectedLocation[component])
         eventAddress += ", " + selectedLocation[component];
@@ -579,7 +581,7 @@ class ClassTime extends Component {
       <ClassTimeLocation>
         <LocationTitle>
           <Icon className={classes.classTimeIcon}>{"location_on"}</Icon>
-          <span>{eventLocationTitle ? eventLocationTitle : eventLocation}</span>
+          <span>{eventLocationTitle ? eventLocationTitle : eventAddress}</span>
         </LocationTitle>
         {eventLocationTitle && (
           <LocationContent>{eventAddress}</LocationContent>
