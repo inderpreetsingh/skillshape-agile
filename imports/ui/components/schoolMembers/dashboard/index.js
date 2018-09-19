@@ -20,6 +20,8 @@ import find from "lodash/find";
 import Drawer from "material-ui/Drawer";
 import AppBar from "material-ui/AppBar";
 import isEmpty from "lodash/isEmpty";
+import remove from 'lodash/remove';
+import findIndex from 'lodash/findIndex';
 import IconButton from "material-ui/IconButton";
 import Toolbar from "material-ui/Toolbar";
 import MenuIcon from "material-ui-icons/Menu";
@@ -940,18 +942,21 @@ export default createContainer(props => {
 
     if (!isEmpty(schoolData) && schoolData[0].admins) {
       let currentUser = Meteor.user();
-      if (
-        _.contains(schoolData[0].admins, currentUser._id) ||
-        schoolData[0].superAdmin == currentUser._id
-      ) {
+      if (checkMyAccess({user:currentUser,schoolId:schoolData[0]._id,viewName:'schoolMemberDetails_CUD'}) ) {
         schoolAdmin = true;
-        if(schoolData[0].superAdmin == currentUser._id && query.admin=='true'){
-          adminView=true;
-         adminsIds=schoolData[0].admins;
-          Meteor.subscribe("user.findAdminsDetails",adminsIds)
-          adminsData=Meteor.users.find().fetch()
-        }
       }
+          if(schoolAdmin && query.admin=='true'){
+            adminView=true;
+           adminsIds=schoolData[0].admins;
+            Meteor.subscribe("user.findAdminsDetails",adminsIds)
+            adminsData=Meteor.users.find().fetch()
+           let x= findIndex(adminsIds,(o)=>{return o==Meteor.userId()})
+            console.log('TCL: x -> x', x);
+            if(x==-1){
+             adminData=remove(adminsData,(o)=>{return o._id==Meteor.userId()});
+            }
+            
+          }
                     
     }
   }

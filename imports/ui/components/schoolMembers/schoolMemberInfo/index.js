@@ -273,7 +273,6 @@ class SchoolMemberInfo extends Component {
   }
   render() {
     const { memberInfo, view, classes ,adminView} = this.props;
-    debugger;
     const {
       showUploadAvatarModal,
       mediaFormData,
