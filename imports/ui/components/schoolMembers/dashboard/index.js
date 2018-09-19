@@ -159,18 +159,9 @@ class DashBoardView extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.schoolData !== this.props.schoolData) {
       this.setState({ memberInfo: {} });
-      const {adminsIds}=this.props;
- 
-   adminsIds && Meteor.call('user.findAdminsDetails',adminsIds,(err,res)=>{
-       if(res){
-        this.setState({adminsData:res});
-       }
-     })
     }
   }
- componentWillMount(){
-   
- }
+ 
     
  
   handleChange = name => event => {
@@ -489,8 +480,7 @@ class DashBoardView extends React.Component {
   };
 
   handleMemberDetailsToRightPanel = memberId => {
-    const {adminView,schoolData} = this.props;
-    const {adminsData} = this.state;
+    const {adminView,schoolData,adminsData} = this.props;
     let memberInfo,profile,pic,schoolId=schoolData[0]._id,email,_id;
     let schoolName =schoolData[0].name;
     if(!adminView){
@@ -621,9 +611,10 @@ class DashBoardView extends React.Component {
       classTypeData,
       slug,
       schoolAdmin,
-      adminView
+      adminView,
+      adminsData
     } = this.props;
-    const { renderStudentModal, memberInfo,adminsData ,joinSkillShape,isLoading} = this.state;
+    const { renderStudentModal, memberInfo, joinSkillShape,isLoading} = this.state;
 
     let schoolMemberListFilters = { ...this.state.filters };
     if (slug) {
@@ -912,7 +903,7 @@ export default createContainer(props => {
   let schoolAdmin;
   let adminsIds;
   let schoolId;
-  let classPricing,monthlyPricing,enrollmentFee,adminView=false;
+  let classPricing,monthlyPricing,enrollmentFee,adminView=false,adminsData=[];
   let subscription = Meteor.subscribe(
     "schoolMemberDetails.getSchoolMemberWithSchool",
     filters
@@ -957,6 +948,8 @@ export default createContainer(props => {
         if(schoolData[0].superAdmin == currentUser._id && query.admin=='true'){
           adminView=true;
          adminsIds=schoolData[0].admins;
+          Meteor.subscribe("user.findAdminsDetails",adminsIds)
+          adminsData=Meteor.users.find().fetch()
         }
       }
                     
@@ -974,6 +967,7 @@ export default createContainer(props => {
     enrollmentFee,
     monthlyPricing,
     adminsIds,
-   adminView
+   adminView,
+   adminsData
   };
 }, withStyles(styles, { withTheme: true })(DashBoardView));
