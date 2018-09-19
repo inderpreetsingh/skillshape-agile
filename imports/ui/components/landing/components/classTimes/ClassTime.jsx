@@ -137,30 +137,10 @@ const ClassTimeContentInnerWrapper = styled.div`
   ${props => props.showDescription && "filter: blur(2px);"};
 `;
 
-const ConfirmationDialog = styled.div`
-  margin: 8px;
-`;
-
-const ClassTimeDescriptionWrapper = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  transition: transform 0.2s linear;
-  max-height: 272px;
-  transform-origin: 50% 100%;
-  transform: scaleY(${props => (props.show ? 1 : 0)});
-  padding-top: ${helpers.rhythmDiv}px;
-  margin-bottom: ${helpers.rhythmDiv}px;
-  overflow-y: auto;
-  background: white;
-  border-radius: 5px;
-`;
-
-const ClassTimeDescription = styled.div`
+const ClassTimeDescription = Text.extend`
+  margin: 0;
   padding: ${helpers.rhythmDiv}px;
   width: calc(100% - 24px);
-  // background: white;
-  border-radius: 5px;
 `;
 
 const ClassTypeName = Text.withComponent("h4").extend`

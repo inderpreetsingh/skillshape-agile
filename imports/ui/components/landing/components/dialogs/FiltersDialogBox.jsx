@@ -10,6 +10,7 @@ import Typography from "material-ui/Typography";
 import { withStyles } from "material-ui/styles";
 import { MuiThemeProvider } from "material-ui/styles";
 
+import AttachedAlert from "/imports/ui/components/landing/components/helpers/AttachedAlert.jsx";
 import PrimaryButton from "../buttons/PrimaryButton.jsx";
 import FilterPanel from "../FilterPanel.jsx";
 import IconInput from "../form/IconInput.jsx";
@@ -22,17 +23,8 @@ import Dialog, {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
   withMobileDialog
 } from "material-ui/Dialog";
-
-import {
-  FormLabel,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  FormHelperText
-} from "material-ui/Form";
 
 const styles = {
   dialogPaper: {
@@ -48,38 +40,25 @@ const styles = {
       minHeight: "150px"
     }
   },
-  dialogAction: {
-    width: "100%",
-    margin: 0
-  },
-  dialogActionsRoot: {
+  dialogContentRoot: {
     width: "100%",
     padding: `0 ${helpers.rhythmDiv * 3}px`,
+    paddingTop: helpers.rhythmDiv * 2,
     margin: 0,
     "@media screen and (max-width : 500px)": {
       padding: `0 ${helpers.rhythmDiv * 3}px`
     }
   },
-  dialogActionsRootButtons: {
-    width: "100%",
-    padding: `0 ${helpers.rhythmDiv}px`,
-    margin: 0,
-    "@media screen and (max-width : 500px)": {
-      padding: `0 ${helpers.rhythmDiv}px`
-    }
-  },
   iconButton: {
     height: "auto",
     width: "auto"
-  },
-  formControlRoot: {
-    marginBottom: `${helpers.rhythmDiv * 2}px`
   }
 };
 
-const DialogBoxHeaderText = styled.p`
-  font-family: ${helpers.commonFont};
-  color: ${helpers.textColor};
+const AttachedAlertWrapper = styled.div`
+  position: absolute;
+  top: 50px;
+  right: ${helpers.rhythmDiv * 6}px;
 `;
 
 const DialogTitleContainer = styled.div`
@@ -88,7 +67,7 @@ const DialogTitleContainer = styled.div`
   padding: 0 ${helpers.rhythmDiv * 3}px;
 `;
 
-const DialogTitleWrapper = styled.h1`
+const DialogTitle = styled.h1`
   ${helpers.flexCenter};
   font-family: ${helpers.specialFont};
   font-weight: 500;
@@ -101,8 +80,30 @@ const DialogTitleWrapper = styled.h1`
 `;
 
 class FiltersDialogBox extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      filterDialogBoxNoSearch: true
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.info(
+      this.props.filterPanelProps,
+      nextProps.filterPanelProps,
+      "component will receive props....................."
+    );
+    if (
+      this.props.filterPanelProps.isCardsBeingSearched !==
+      nextProps.filterPanelProps.isCardsBeingSearched
+    )
+      this.setState({
+        filterDialogBoxNoSearch: false
+      });
+  }
+
   render() {
-    // console.log("FiltersDialogBox props--->>",this.props);
     const {
       classes,
       open,
@@ -125,7 +126,7 @@ class FiltersDialogBox extends Component {
       >
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitleContainer>
-            <DialogTitleWrapper>{title}</DialogTitleWrapper>
+            <DialogTitle>{title}</DialogTitle>
             <IconButton
               color="primary"
               onClick={onModalClose}
@@ -135,12 +136,20 @@ class FiltersDialogBox extends Component {
             </IconButton>
           </DialogTitleContainer>
 
-          <DialogActions
+          <DialogContent
             classes={{
-              root: classes.dialogActionsRoot,
-              action: classes.dialogAction
+              root: classes.dialogContentRoot
             }}
           >
+            <AttachedAlertWrapper>
+              <AttachedAlert
+                open={
+                  !filterPanelProps.isCardsBeingSearched &&
+                  !this.state.filterDialogBoxNoSearch
+                }
+                alertMsg={"Search criteria updated"}
+              />
+            </AttachedAlertWrapper>
             <FilterPanel
               {...filterPanelProps}
               filtersInDialogBox
@@ -148,7 +157,7 @@ class FiltersDialogBox extends Component {
               onGiveSuggestion={onGiveSuggestion}
               filtersForSuggestion={filtersForSuggestion}
             />
-          </DialogActions>
+          </DialogContent>
         </MuiThemeProvider>
       </Dialog>
     );
