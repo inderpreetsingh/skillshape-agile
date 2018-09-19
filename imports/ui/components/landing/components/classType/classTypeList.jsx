@@ -361,7 +361,7 @@ export default createContainer(props => {
   }
 
   Meteor.subscribe("classInterest.getClassInterest");
-  debugger;
+  // debugger;
   if (props.filters.schoolId) {
     classTypeData = ClassType.find({
       schoolId: props.filters.schoolId
