@@ -103,25 +103,6 @@ const ClassTimeContainer = styled.div`
   }
 `;
 
-const ClassScheduleWrapper = styled.div`
-  ${helpers.flexCenter};
-`;
-
-const ScheduleAndDescriptionWrapper = styled.div`
-  max-height: 330px; // This is the computed max-height for the container.
-  display: flex;
-  flex-direction: column;
-`;
-
-const ScheduleWrapper = styled.div`
-  flex-shrink: 0;
-`;
-
-const DescriptionWrapper = styled.div`
-  flex-grow: 1;
-  display: flex;
-`;
-
 const ClassTimeContent = styled.div`
   width: 100%;
   display: flex;
@@ -137,13 +118,11 @@ const ClassTimeContentInnerWrapper = styled.div`
   ${props => props.showDescription && "filter: blur(2px);"};
 `;
 
-const ConfirmationDialog = styled.div`
-  margin: 8px;
-`;
-
 const ClassTimeDescription = Text.extend`
   padding: ${helpers.rhythmDiv}px;
   width: calc(100% - 24px);
+  max-height: 100%;
+  overflow-y: auto;
 `;
 
 const ClassTypeName = Text.withComponent("h4").extend`
@@ -156,6 +135,7 @@ const ClassTypeName = Text.withComponent("h4").extend`
 
 const ScheduleType = Text.extend`
   font-weight: 300;
+  text-align: center;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
@@ -174,7 +154,7 @@ const ClassTimeLocationWrapper = styled.div`
 
 const EventLocation = styled.div`
   ${helpers.flexCenter}
-  justify-content: ${props => props.roomInfo ? 'space-around' : 'flex-start'};
+  justify-content: flex-start;
   flex-direction: ${props => !props.locationTitle ? 'column-reverse' : 'row'};
   margin-bottom: ${helpers.rhythmDiv/2}px;
 `;
@@ -183,8 +163,10 @@ let ClassTimeRoom, ClassTimeLocation;
 ClassTimeLocation = ClassTimeRoom = styled.div`
   ${helpers.flexCenter};
   ${props => !props.locationTitle && 'align-items: flex-start;'}
-  // margin-bottom: ${helpers.rhythmDiv}px;
-  // margin-bottom: ${helpers.rhythmDiv / 2}px;
+`;
+
+ClassTimeLocation = ClassTimeLocation.extend`
+  margin-right: ${helpers.rhythmDiv}px;
 `;
 
 let LocationTitle, LocationDetails , RoomName;
@@ -382,27 +364,27 @@ class ClassTime extends Component {
     let { formattedClassTimesDetails, scheduleType } = this.props;
     scheduleType = scheduleType.toLowerCase();
 
-    if (scheduleType === "recurring" || scheduleType === "ongoing") {
-      if (typeof formattedClassTimesDetails[0] !== "object") {
-        return formattedClassTimesDetails;
-      }
-
-      // key attr specifies the day information is stored on keys
-      formattedClassTimesDetails.forEach((scheduleData, index) => {
-        scheduleData.key.forEach(dowObj => {
-          // debugger;
-          if (!newData[dowObj.label]) {
-            newData[dowObj.label] = [];
-          }
-
-          const scheduleDataCopy = JSON.parse(JSON.stringify(scheduleData));
-          delete scheduleDataCopy.key;
-          newData[dowObj.label].push(scheduleDataCopy);
-        });
-      });
-
-      return newData;
-    }
+    // if (scheduleType === "recurring" || scheduleType === "ongoing") {
+    //   if (typeof formattedClassTimesDetails[0] !== "object") {
+    //     return formattedClassTimesDetails;
+    //   }
+    //
+    //   // key attr specifies the day information is stored on keys
+    //   formattedClassTimesDetails.forEach((scheduleData, index) => {
+    //     scheduleData.key.forEach(dowObj => {
+    //       // debugger;
+    //       if (!newData[dowObj.label]) {
+    //         newData[dowObj.label] = [];
+    //       }
+    //
+    //       const scheduleDataCopy = JSON.parse(JSON.stringify(scheduleData));
+    //       delete scheduleDataCopy.key;
+    //       newData[dowObj.label].push(scheduleDataCopy);
+    //     });
+    //   });
+    //
+    //   return newData;
+    // }
 
     return formattedClassTimesDetails;
   };
@@ -420,10 +402,6 @@ class ClassTime extends Component {
               : "This is a Series class time."}{" "}
             {<br />}
           </ScheduleType>
-          <RecurringDate>
-            Between {formatDate(startDate, "MMM")} and{" "}
-            {formatDate(endDate, "MMM")}
-          </RecurringDate>
         </Fragment>
       );
     else if (classScheduleType === "onetime") {
@@ -518,9 +496,6 @@ class ClassTime extends Component {
 
   getClassTimeRoomInfo = () => {
     const { selectedLocation, classes } = this.props;
-    // console.group("ROOM INFO");
-    // console.log(selectedLocation);
-    // console.groupEnd();
 
     if (
       isEmpty(selectedLocation) ||
@@ -545,10 +520,6 @@ class ClassTime extends Component {
   getClassTimeLocation = () => {
     // debugger;
     const { selectedLocation, classes } = this.props;
-
-    // console.group("CLASSTIME LOCATION INFO");
-    // console.log(selectedLocation);
-    // console.groupEnd();
 
     if (isEmpty(selectedLocation)) {
       return null;
@@ -683,11 +654,16 @@ class ClassTime extends Component {
                   <ClassTimeContentInnerWrapper
                     showDescription={this.state.showDescription}
                   >
+                    {/* Schedule type */}
+                    {this.getScheduleTypeFormatted()}
+
                     {/* Class Location */}
                     {this.getClassTimeLocation()}
 
-                    {/* Schedule type */}
-                    {this.getScheduleTypeFormatted()}
+                    {scheduleType === 'recurring' && <RecurringDate>
+                      Between {formatDate(startDate, "MMM")} and{" "}
+                      {formatDate(endDate, "MMM")}
+                    </RecurringDate>}
 
                     {/* class times */}
                     <ClassTimesCardWrapper inPopUp={inPopUp}>
@@ -756,12 +732,6 @@ class ClassTime extends Component {
 }
 
 ClassTime.propTypes = {
-  classTimes: PropTypes.arrayOf({
-    time: PropTypes.string.isRequired,
-    timePeriod: PropTypes.string.isRequired,
-    day: PropTypes.string.isRequired,
-    duration: PropTypes.number.isRequired
-  }),
   description: PropTypes.string.isRequired,
   addToCalendar: PropTypes.bool.isRequired,
   scheduleType: PropTypes.string.isRequired,

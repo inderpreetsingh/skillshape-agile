@@ -128,41 +128,36 @@ const ClassTimesList = props => {
 
   const ScheduleDisplay = props => (
     <Time>
-      {" "}
       <MyIcon iconName={"access_time"} /> At <Bold>{props.time}</Bold> for{" "}
       <Bold>{props.duration}</Bold> mins
     </Time>
   );
 
   const SchedulePopUp = props => {
-    let { day } = props;
-    if (props.scheduleType === "recurring") day += "s";
+    let { day, time, duration, eventDate } = props;
     if (
       props.scheduleType === "recurring" ||
       props.scheduleType === "ongoing"
     ) {
       return (
         <DateTime>
-          {" "}
-          {day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold>{" "}
-          mins{" "}
+          {day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold>
+          mins
         </DateTime>
       );
     } else {
       return (
         <DateTime>
-          {" "}
-          {props.day.substr(0, 3)}, {formatDateNoYear(props.eventDate)} at{" "}
-          <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins{" "}
+          {props.day.substr(0, 3)}, {formatDateNoYear(props.eventDate)} at
+          <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins
         </DateTime>
       );
     }
   };
 
   const formatScheduleDisplay = (data, scheduleType, inPopUp) => {
-    const { eventStartTime, time, timePeriod, duration } = data;
-
     let eventTime;
+    const { day, eventDate, eventStartTime, time, timePeriod, duration } = data;
 
     if (scheduleType === "recurring" || scheduleType === "ongoing") {
       eventTime = `${formatTime(eventStartTime)} ${formatAmPm(eventStartTime)}`;
@@ -176,8 +171,8 @@ const ClassTimesList = props => {
           time={eventTime}
           duration={duration}
           scheduleType={scheduleType}
-          day={data.day}
-          eventDate={data.eventDate}
+          day={day}
+          eventDate={eventDate}
         />
       );
     }
@@ -193,6 +188,60 @@ const ClassTimesList = props => {
     const eventScheduleType = scheduleType.toLowerCase();
     let cardItemClass = classes.cardItem;
     if (inPopUp) cardItemClass = cardItemClass + " " + classes.cardItemPopUp;
+
+    console.group("FORMATTED CLASS TIMES");
+    console.info(formattedClassTimes);
+    console.groupEnd();
+
+    return formattedClassTimes.map(scheduleData => {
+      if(!isEmpty(scheduleData)) {
+        const allDatesData = [];
+        const eventStartTime = new Date(scheduleData.startTime);
+        eventDate = scheduleData.date;
+
+        let daysWithComma = scheduleData.key.map(schedule => schedule.label + 's').join(', ');
+        const commaIndex = daysWithComma.lastIndexOf(',');
+        const daysWithAnd = daysWithComma.substr(0, commaIndex) + 'and' + daysWithComma.substr(commaIndex);
+
+        const data = {
+          eventStartTime: eventStartTime,
+          time: scheduleData.time,
+          timePeriod: scheduleData.timePeriod,
+          duration: scheduleData.duration,
+          days: scheduleData.key.length,
+          day: daysWithAnd,
+          eventDate: eventDate
+        };
+
+        allDatesData.push(
+          formatScheduleDisplay(data, eventScheduleType, inPopUp)
+        );
+
+      if (
+        eventScheduleType == "recurring" ||
+        eventScheduleType == "ongoing"
+      ) {
+        return (
+          <Paper className={cardItemClass}>
+            {!props.inPopUp &&
+              (data.days ? <Day>{data.day}</Day> : <Day>Every {data.day}</Day>)}
+            <Times>{allDatesData}</Times>
+          </Paper>
+        );
+      } else {
+        return (
+          <Paper className={cardItemClass}>
+            {!props.inPopUp && (
+              <Day>
+                On {data.day}, {formatDateNoYear(eventDate)}
+              </Day>
+            )}
+            <Times>{allDatesData}</Times>
+          </Paper>
+        );
+      }
+    }
+  });
 
     return DAYS_IN_WEEK.map(day => {
       const scheduleData = formattedClassTimes[day];
@@ -239,6 +288,7 @@ const ClassTimesList = props => {
             </Paper>
           );
         }
+
       }
     });
   };
