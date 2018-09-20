@@ -120,8 +120,8 @@ class LocationForm extends React.Component {
   _getMyLocation = (nextProps = {}) => {
     const data = nextProps.data || this.props.data || { loc: ["", ""] };
     return {
-      lat: data.loc[0],
-      lng: data.loc[1]
+      lat: data.loc[1],
+      lng: data.loc[0]
     };
   };
 
