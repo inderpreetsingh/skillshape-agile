@@ -164,7 +164,7 @@ const RecurringDate = Text.extend`
   font-weight: 500;
 `;
 
-const ClassTimeLocation = styled.div`
+const ClassTimeLocationWrapper = styled.div`
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -172,20 +172,23 @@ const ClassTimeLocation = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const ClassTimeRoom = styled.div`
+const EventLocation = styled.div`
+  ${helpers.flexCenter}
+  justify-content: ${props => props.roomInfo ? 'space-around' : 'flex-start'};
+  flex-direction: ${props => !props.locationTitle ? 'column-reverse' : 'row'};
+  margin-bottom: ${helpers.rhythmDiv/2}px;
+`;
+
+let ClassTimeRoom, ClassTimeLocation;
+ClassTimeLocation = ClassTimeRoom = styled.div`
   ${helpers.flexCenter};
-  margin-bottom: ${helpers.rhythmDiv}px;
+  ${props => !props.locationTitle && 'align-items: flex-start;'}
+  // margin-bottom: ${helpers.rhythmDiv}px;
+  // margin-bottom: ${helpers.rhythmDiv / 2}px;
 `;
 
-const LocationTitle = Text.extend`
-  margin: 0 auto;
-  padding: 0;
-  font-style: italic;
-  margin-bottom: ${helpers.rhythmDiv / 2}px;
-`;
-
-let LocationContent, RoomInfoContent;
-LocationContent = RoomInfoContent = Text.extend`
+let LocationTitle, LocationDetails , RoomName;
+LocationTitle = LocationDetails = RoomName = Text.extend`
   font-weight: 300;
   font-style: italic;
   margin: 0;
@@ -515,9 +518,9 @@ class ClassTime extends Component {
 
   getClassTimeRoomInfo = () => {
     const { selectedLocation, classes } = this.props;
-    console.group("ROOM INFO");
-    console.log(selectedLocation);
-    console.groupEnd();
+    // console.group("ROOM INFO");
+    // console.log(selectedLocation);
+    // console.groupEnd();
 
     if (
       isEmpty(selectedLocation) ||
@@ -532,9 +535,9 @@ class ClassTime extends Component {
     return (
       <ClassTimeRoom>
         <Icon className={classes.classTimeIcon}>{"meeting_room"}</Icon>
-        <RoomInfoContent>
+        <RoomName>
           {rooms.map(room => room.name).join(",")}
-        </RoomInfoContent>
+        </RoomName>
       </ClassTimeRoom>
     );
   };
@@ -560,16 +563,20 @@ class ClassTime extends Component {
     });
     eventAddress = eventAddress.replace(",", "");
 
+    const RoomInfo = this.getClassTimeRoomInfo();
     return (
-      <ClassTimeLocation>
-        <LocationTitle>
-          <Icon className={classes.classTimeIcon}>{"location_on"}</Icon>
-          <span>{eventLocationTitle ? eventLocationTitle : eventAddress}</span>
-        </LocationTitle>
+      <ClassTimeLocationWrapper>
+        <EventLocation locationTitle={eventLocationTitle} roomInfo={RoomInfo}>
+          <ClassTimeLocation locationTitle={eventLocationTitle}>
+            <Icon className={classes.classTimeIcon}>{"location_on"}</Icon>
+            <LocationTitle>{eventLocationTitle ? eventLocationTitle : eventAddress}</LocationTitle>
+          </ClassTimeLocation>
+          {this.getClassTimeRoomInfo()}
+        </EventLocation>
         {eventLocationTitle && (
-          <LocationContent>{eventAddress}</LocationContent>
+          <LocationDetails>{eventAddress}</LocationDetails>
         )}
-      </ClassTimeLocation>
+      </ClassTimeLocationWrapper>
     );
   };
 
@@ -678,9 +685,6 @@ class ClassTime extends Component {
                   >
                     {/* Class Location */}
                     {this.getClassTimeLocation()}
-
-                    {/* Class Time Room */}
-                    {this.getClassTimeRoomInfo()}
 
                     {/* Schedule type */}
                     {this.getScheduleTypeFormatted()}
