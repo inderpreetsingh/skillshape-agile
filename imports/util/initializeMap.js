@@ -36,13 +36,14 @@ function infoSchool({school, classTypes}) {
 }
 
 export function createMarkersOnMap(mapId, locationData) {
+    console.log('TCL: createMarkersOnMap -> locationData', locationData);
     if(document.getElementById(mapId)) {
         let map = new google.maps.Map(document.getElementById(mapId), {zoom: 5});
         let i = 0;
             for(let obj of locationData) {
 
-                if(obj.loc && isNumber(obj.loc[0]) && isNumber(obj.loc[1])) {
-                    let geolocate = new google.maps.LatLng(obj.loc[0], obj.loc[1])
+                if(obj.loc && isNumber(obj.loc[1]) && isNumber(obj.loc[0])) {
+                    let geolocate = new google.maps.LatLng(obj.loc[1], obj.loc[0])
                     let marker = new google.maps.Marker({
                         position: geolocate,
                         map: map
@@ -66,7 +67,7 @@ export function createMarkersOnMap(mapId, locationData) {
 }
 
 export function reCenterMap(map, center) {
-    map && map.panTo(new google.maps.LatLng(center[0], center[1]));
+    map && map.panTo(new google.maps.LatLng(center[1], center[0]));
     return map;
 }
 
@@ -114,7 +115,7 @@ export function initializeMap(center) {
         let geolocate;
         let map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
 
-        geolocate = new google.maps.LatLng(center[0], center[1])
+        geolocate = new google.maps.LatLng(center[1], center[0])
         map.setCenter(geolocate);
         let mcOptions = {  maxZoom: 12 };
         mc = new MarkerClusterer(map, [], mcOptions);

@@ -93,5 +93,8 @@ Meteor.methods({
       { multi: true }
     );
     return true;
+  },
+  "location.getLocsFromIds": function(locIds){
+    return SLocation.find({_id:{$in:locIds}}).fetch();
   }
 });

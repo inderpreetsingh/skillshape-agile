@@ -9,7 +9,7 @@ import Button from "material-ui/Button";
 import Icon from "material-ui/Icon";
 
 import { createMarkersOnMap, toastrModal } from "/imports/util";
-
+import get from 'lodash/get';
 import ClassMap from "/imports/ui/components/landing/components/map/ClassMap";
 import ClassTypeDescription from "/imports/ui/components/landing/components/class/ClassTypeDescription.jsx";
 import ClassTypeInfo from "/imports/ui/components/landing/components/class/ClassTypeInfo.jsx";
@@ -197,9 +197,14 @@ class ClassTypeCoverContent extends React.Component {
         createMarkersOnMap("myMap", locationData);
       }
     } else {
-      if (!isEmpty(this.props.classTypeData.selectedLocation)) {
-        locationData = [this.props.classTypeData.selectedLocation];
-        createMarkersOnMap("myMap", locationData);
+      if (!isEmpty(this.props.classTypeData.filters.location)) {
+        let locIds=[];
+        this.props.classTypeData.filters.location.map((obj)=>{locIds.push(get(obj,"loc.locationId",null))});
+        console.log('TCL: ClassTypeCoverContent -> _addLocationOnMap -> locIds', locIds);
+        Meteor.call("location.getLocsFromIds",locIds,(err,res)=>{
+          locationData = res;
+          createMarkersOnMap("myMap", locationData);
+        })
       }
     }
   }
@@ -368,7 +373,7 @@ class ClassTypeCoverContent extends React.Component {
             {/* Displays map when it's not edit mode*/}
             {!props.isEdit && (
               <MapContainer>
-                {isEmpty(selectedLocation) ? (
+                {isEmpty(this.props.classTypeData.filters.location) ? (
                   <LocationNotFound>
                       <PrimaryButton
                         icon
