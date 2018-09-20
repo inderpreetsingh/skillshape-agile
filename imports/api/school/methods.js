@@ -399,10 +399,11 @@ Meteor.methods({
     }
     else if(action=='add'){
       let res=School.update({_id:schoolId},{$push:{admins:_id}});
-      adminInvitation(to,userName,schoolName),action;
+      adminInvitation(to,userName,schoolName,action);
       return res;
     }
     else if(action =='join'){
+      payload.schoolName=schoolName;
       Meteor.call("user.createUser",payload,(err,res)=>{
         if(res){
           try{
