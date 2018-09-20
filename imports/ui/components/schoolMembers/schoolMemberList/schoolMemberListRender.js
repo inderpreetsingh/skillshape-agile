@@ -31,7 +31,7 @@ export default function(props) {
     membersByName= _.groupBy(collectionData && collectionData, function(
       item
     ) {
-      return item && item.profile.firstName && item.profile.firstName[0].toUpperCase();
+      return get(item, "profile.firstName", get(item,"profile.name","0"))[0].toUpperCase();
     });
    handleMemberDetailsToRightPanel =props.handleMemberDetailsToRightPanel;
 

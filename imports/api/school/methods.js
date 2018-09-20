@@ -407,7 +407,7 @@ Meteor.methods({
         if(res){
           try{
             School.update({_id:schoolId},{$push:{admins:res.user._id}})
-          sendSkillShapeJoinInvitation(to,userName,schoolName,res.password);
+         // sendSkillShapeJoinInvitation(to,userName,schoolName,res.password);
           }catch(error){
             console.log('TCL: }catch -> error', error);
             throw new Meteor.Error(error);
