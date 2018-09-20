@@ -141,14 +141,15 @@ const ClassTimesList = props => {
     ) {
       return (
         <DateTime>
-          {day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold>
+          {" "}
+          {day} at <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold>{" "}
           mins
         </DateTime>
       );
     } else {
       return (
         <DateTime>
-          {props.day.substr(0, 3)}, {formatDateNoYear(props.eventDate)} at
+          {props.day.substr(0, 3)}, {formatDateNoYear(props.eventDate)} at{" "}
           <Bold>{props.time}</Bold> for <Bold>{props.duration}</Bold> mins
         </DateTime>
       );
@@ -180,6 +181,7 @@ const ClassTimesList = props => {
     return <ScheduleDisplay time={eventTime} duration={duration} />;
   };
 
+
   const getScheduleDetailsFromFormattedClassTimes = (
     formattedClassTimes,
     scheduleType,
@@ -189,59 +191,52 @@ const ClassTimesList = props => {
     let cardItemClass = classes.cardItem;
     if (inPopUp) cardItemClass = cardItemClass + " " + classes.cardItemPopUp;
 
-    console.group("FORMATTED CLASS TIMES");
-    console.info(formattedClassTimes);
-    console.groupEnd();
+    // console.group("FORMATTED CLASS TIMES");
+    // console.info(formattedClassTimes);
+    // console.groupEnd();
 
-    return formattedClassTimes.map(scheduleData => {
-      if(!isEmpty(scheduleData)) {
-        const allDatesData = [];
-        const eventStartTime = new Date(scheduleData.startTime);
-        eventDate = scheduleData.date;
+    if(eventScheduleType === 'recurring' || eventScheduleType === 'ongoing') {
+      return formattedClassTimes.map(scheduleData => {
+        if(!isEmpty(scheduleData)) {
+          const allDatesData = [];
+          const eventStartTime = new Date(scheduleData.startTime);
+          eventDate = scheduleData.date;
 
-        let daysWithComma = scheduleData.key.map(schedule => schedule.label + 's').join(', ');
-        const commaIndex = daysWithComma.lastIndexOf(',');
-        const daysWithAnd = daysWithComma.substr(0, commaIndex) + 'and' + daysWithComma.substr(commaIndex);
+          let eventDaysUnformatted = scheduleData.key.map(schedule => schedule.label).join(', ');
+          const commaIndex = eventDaysUnformatted.lastIndexOf(',');
+          const eventDaysFormatted = eventDaysUnformatted.substr(0, commaIndex) + ' and ' + eventDaysUnformatted.substr(commaIndex + 1);
+          const noOfDays = scheduleData.key.length;
+          const eventDay = scheduleData.key[0].label;
 
-        const data = {
-          eventStartTime: eventStartTime,
-          time: scheduleData.time,
-          timePeriod: scheduleData.timePeriod,
-          duration: scheduleData.duration,
-          days: scheduleData.key.length,
-          day: daysWithAnd,
-          eventDate: eventDate
-        };
+          const data = {
+            eventStartTime: eventStartTime,
+            time: scheduleData.time,
+            timePeriod: scheduleData.timePeriod,
+            duration: scheduleData.duration,
+            days: noOfDays,
+            day: noOfDays > 1 ? eventDaysFormatted : eventDay,
+            eventDate: eventDate
+          };
 
-        allDatesData.push(
-          formatScheduleDisplay(data, eventScheduleType, inPopUp)
-        );
+          allDatesData.push(
+            formatScheduleDisplay(data, eventScheduleType, inPopUp)
+          );
 
-      if (
-        eventScheduleType == "recurring" ||
-        eventScheduleType == "ongoing"
-      ) {
-        return (
-          <Paper className={cardItemClass}>
-            {!props.inPopUp &&
-              (data.days ? <Day>{data.day}</Day> : <Day>Every {data.day}</Day>)}
-            <Times>{allDatesData}</Times>
-          </Paper>
-        );
-      } else {
-        return (
-          <Paper className={cardItemClass}>
-            {!props.inPopUp && (
-              <Day>
-                On {data.day}, {formatDateNoYear(eventDate)}
-              </Day>
-            )}
-            <Times>{allDatesData}</Times>
-          </Paper>
-        );
+        if (
+          eventScheduleType == "recurring" ||
+          eventScheduleType == "ongoing"
+        ) {
+          return (
+            <Paper className={cardItemClass}>
+              {!props.inPopUp &&
+                (data.days ? <Day>{data.day}</Day> : <Day>Every {data.day}</Day>)}
+              <Times>{allDatesData}</Times>
+            </Paper>
+          );
+        }
       }
-    }
-  });
+    });
+  }
 
     return DAYS_IN_WEEK.map(day => {
       const scheduleData = formattedClassTimes[day];
@@ -266,28 +261,14 @@ const ClassTimesList = props => {
           );
         });
 
-        if (
-          eventScheduleType == "recurring" ||
-          eventScheduleType == "ongoing"
-        ) {
-          return (
-            <Paper className={cardItemClass}>
-              {!props.inPopUp && <Day>Every {day}</Day>}
-              <Times>{allDatesData}</Times>
-            </Paper>
-          );
-        } else {
-          return (
-            <Paper className={cardItemClass}>
-              {!props.inPopUp && (
-                <Day>
-                  On {day}, {formatDateNoYear(eventDate)}
-                </Day>
-              )}
-              <Times>{allDatesData}</Times>
-            </Paper>
-          );
-        }
+        return (<Paper className={cardItemClass}>
+          {!props.inPopUp && (
+            <Day>
+              On {day}, {formatDateNoYear(eventDate)}
+            </Day>
+          )}
+          <Times>{allDatesData}</Times>
+        </Paper>)
 
       }
     });
