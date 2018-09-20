@@ -209,6 +209,17 @@ const ClassTimesCardWrapper = styled.div`
     props.inPopUp ? "auto" : "296px"}; // computed height
 `;
 
+const ClickableLink = Text.extend`
+  cursor: pointer;
+  font-style: italic;
+  font-weight: 300;
+  display: inline;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const Trending = () => {
   return (
     <TrendingWrapper>
@@ -222,15 +233,21 @@ class ClassTime extends Component {
     isLoading: false,
     showCard: false,
     showDescription: false,
-    thinkingAboutAttending: false
-    // fullTextState: this.props.fullTextState,
+    thinkingAboutAttending: false,
+    description: this.props.desc
   };
 
-  escFunction = event => {
-    if (event.keyCode === 27) {
-      this.handleDescriptionState(false)(event);
+  componentWillReceiveProps(nextProps) {
+    if(this.state.description != nextProps.description) {
+      this.setState(state => {
+        return {
+          ...state,
+          description: nextProps.description
+        }
+      })
     }
-  };
+  }
+
   componentDidMount() {
     document.addEventListener("keydown", this.escFunction, false);
   }
@@ -250,6 +267,16 @@ class ClassTime extends Component {
       }
     );
   }
+
+  handleShowMoreLinkClick = (event) => {
+    this.handleDescriptionState(true)(event);
+  }
+
+  escFunction = event => {
+    if (event.keyCode === 27) {
+      this.handleDescriptionState(false)(event);
+    }
+  };
 
   handleAddToMyCalendarButtonClick = () => {
     const classTimeData = { ...this.props };
@@ -389,28 +416,43 @@ class ClassTime extends Component {
     return formattedClassTimesDetails;
   };
 
+  handleShowMoreLinkClick = (completeDesc) => (event) => {
+    this.handleDescriptionState(true,completeDesc)(event);
+  }
+
+  returnClickableLink(completeDesc, shortDesc){
+    return <span>{shortDesc} <ClickableLink onClick={this.handleShowMoreLinkClick(completeDesc)}>click for more info.</ClickableLink></span>
+  }
+
   getScheduleTypeFormatted = () => {
     const { startDate, endDate, scheduleType, addToCalendar } = this.props;
     const classScheduleType = scheduleType.toLowerCase();
 
-    if (classScheduleType === "recurring")
+    if (classScheduleType === "recurring") {
+      const strAsDesc = "This is a Closed Series. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
+
       return (
         <Fragment>
           <ScheduleType>
             {addToCalendar == "closed"
-              ? "This is a Closed Series.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series."
-              : "This is a Series class time."}{" "}
+              ?
+              this.returnClickableLink(
+                strAsDesc,'This is closed series.')
+              : "This is a series class time."}{" "}
             {<br />}
           </ScheduleType>
         </Fragment>
       );
+    }
     else if (classScheduleType === "onetime") {
       /* Adding manual small letters splitted schedule type one time*/
+      const strAsDesc = "This is a Closed Single/set. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
       return (
         <ScheduleType>
           {addToCalendar == "closed"
-            ? "This is a Closed Single/set.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series."
-            : "This is a Single/Set class time."}{" "}
+            ? this.returnClickableLink(
+              strAsDesc,'This is closed single/set.')
+            : "This is a single/set class time."}{" "}
           {<br />}
         </ScheduleType>
       );
@@ -563,15 +605,16 @@ class ClassTime extends Component {
     this.handleNotification(CheckBoxes);
   };
 
-  handleDescriptionState = descriptionState => e => {
+  handleDescriptionState = (descriptionState,description) => e => {
     e.stopPropagation();
-
     this.setState(state => {
       return {
         ...state,
+        description: description ? description : state.description,
         showDescription: descriptionState
       };
     });
+
   };
 
   render() {
@@ -697,7 +740,7 @@ class ClassTime extends Component {
                       </Icon>
 
                       <ClassTimeDescription>
-                        {this.props.desc}
+                        {this.state.description}
                       </ClassTimeDescription>
                     </Paper>
                   )}
@@ -713,7 +756,7 @@ class ClassTime extends Component {
                         icon
                         iconName="description"
                         label="View Description"
-                        onClick={this.handleDescriptionState(true)}
+                        onClick={this.handleDescriptionState(true, this.props.desc)}
                       />
                     </ButtonWrapper>
                   )}
