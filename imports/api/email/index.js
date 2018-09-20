@@ -283,16 +283,17 @@ export const userRegistrationAndVerifyEmail = function(
   verificationToken,
   passwd,
   fromEmail,
-  toEmail
+  toEmail,
+  schoolName
 ) {
   Email.send({
     from: fromEmail,
     to: toEmail,
     replyTo: fromEmail,
     subject: "skillshape Registration",
-    html: `Hi ${user.profile.name},
+    html: `Hi ${user.profile.firstName || user.profile.name},
             <br/><br/>
-                Your Email: ${user.emails[0].address} has been registered.
+                Your Email: ${user.emails[0].address} has been registered ${schoolName && `with ${schoolName}`}.
             <br/>
                 Please click on the button below to verify your email address and set your password.
             <br/><br/>
@@ -622,6 +623,7 @@ export const sendSkillShapeJoinInvitation = (to,userName,schoolName,password)=>{
   })
 }
 export const adminInvitation = (to,userName,schoolName,action)=>{
+  console.log('TCL: adminInvitation -> to,userName,schoolName,action', to,userName,schoolName,action);
   Email.send({
     to: to, // Needs to replace this with requester's Email.
     from: "Notices@SkillShape.com",
