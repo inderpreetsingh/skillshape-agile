@@ -415,12 +415,7 @@ class ClassTime extends Component {
     return formattedClassTimesDetails;
   };
 
-<<<<<<< HEAD
-  handleShowMoreLinkClick = completeDesc => event => {
-    this.handleDescriptionState(true, completeDesc)(event);
-  };
 
-=======
   setDescription = description => {
     if (this.state.description !== description) {
       this.setState(state => {
@@ -437,7 +432,6 @@ class ClassTime extends Component {
     this.handleDescriptionState(true)(event);
   };
 
->>>>>>> c266cf675b044e0b77a706fe65247d42e941e8a0
   returnClickableLink(completeDesc, shortDesc) {
     return (
       <span>
@@ -471,10 +465,7 @@ class ClassTime extends Component {
       /* Adding manual small letters splitted schedule type one time*/
       const strAsDesc =
         "This is a Closed Single/set. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
-<<<<<<< HEAD
-=======
 
->>>>>>> c266cf675b044e0b77a706fe65247d42e941e8a0
       return (
         <ScheduleType>
           {addToCalendar == "closed"
@@ -632,11 +623,7 @@ class ClassTime extends Component {
     this.handleNotification(CheckBoxes);
   };
 
-<<<<<<< HEAD
-  handleDescriptionState = (descriptionState, description) => e => {
-=======
   handleDescriptionState = descriptionState => e => {
->>>>>>> c266cf675b044e0b77a706fe65247d42e941e8a0
     e.stopPropagation();
     this.setState(state => {
       return {
@@ -756,15 +743,6 @@ class ClassTime extends Component {
                   </ClassTimeContentInnerWrapper>
 
                   {/* description */}
-<<<<<<< HEAD
-                  {description && (
-                    <Paper
-                      className={classes.descriptionPanel}
-                      style={{
-                        transform: this.state.showDescription
-                          ? "scaleY(1)"
-                          : "scaleY(0)"
-=======
                   <Paper
                     className={classes.descriptionPanel}
                     style={{
@@ -773,14 +751,6 @@ class ClassTime extends Component {
                         : "scaleY(0)"
                     }}
                   >
-                    <Icon
-                      classes={{
-                        root: classes.descriptionPanelCloseIcon
->>>>>>> c266cf675b044e0b77a706fe65247d42e941e8a0
-                      }}
-                      onClick={this.handleDescriptionState(false)}
-                    >
-<<<<<<< HEAD
                       <Icon
                         classes={{
                           root: classes.descriptionPanelCloseIcon
@@ -791,17 +761,7 @@ class ClassTime extends Component {
                       </Icon>
 
                       <ClassTimeDescription>{description}</ClassTimeDescription>
-                    </Paper>
-                  )}
-=======
-                      {"close"}
-                    </Icon>
-
-                    <ClassTimeDescription>
-                      {this.state.description}
-                    </ClassTimeDescription>
                   </Paper>
->>>>>>> c266cf675b044e0b77a706fe65247d42e941e8a0
                 </ClassTimeContent>
 
                 {/* View All times button */}
@@ -814,16 +774,9 @@ class ClassTime extends Component {
                         icon
                         iconName="description"
                         label="View Description"
-<<<<<<< HEAD
-                        onClick={this.handleDescriptionState(
-                          true,
-                          this.props.desc
-                        )}
-=======
                         onClick={e => {
                           e.stopPropagation();
 
-                          debugger;
                           this.setState(state => {
                             return {
                               ...state,
@@ -832,7 +785,6 @@ class ClassTime extends Component {
                             };
                           });
                         }}
->>>>>>> c266cf675b044e0b77a706fe65247d42e941e8a0
                       />
                     </ButtonWrapper>
                   )}

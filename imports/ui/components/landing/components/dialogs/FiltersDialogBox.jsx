@@ -58,7 +58,7 @@ const styles = {
 const AttachedAlertWrapper = styled.div`
   position: absolute;
   top: 50px;
-  right: ${helpers.rhythmDiv * 6}px;
+  left: ${helpers.rhythmDiv * 6}px;
 `;
 
 const DialogTitleContainer = styled.div`
@@ -89,11 +89,11 @@ class FiltersDialogBox extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.info(
-      this.props.filterPanelProps,
-      nextProps.filterPanelProps,
-      "component will receive props....................."
-    );
+    // console.info(
+    //   this.props.filterPanelProps,
+    //   nextProps.filterPanelProps,
+    //   "component will receive props....................."
+    // );
     if (
       this.props.filterPanelProps.isCardsBeingSearched !==
       nextProps.filterPanelProps.isCardsBeingSearched

@@ -18,6 +18,7 @@ import { Text } from "/imports/ui/components/landing/components/jss/sharedStyled
 
 const Wrapper = styled.div`
   height: 30px;
+  
   &::after {
     clear: both;
   }
@@ -25,29 +26,33 @@ const Wrapper = styled.div`
 
 const InnerWrapper = styled.div`
   display: flex;
+  position: relative;
   justify-content: center;
+  flex-direction: ${props => props.direction === 'right' ? 'row-reverse' : 'row'};
   align-items: center;
   border-radius: 2px;
   padding: 0 ${rhythmDiv}px;
-  max-width: ${props => (props.open ? "100%" : "30px")};
+  max-width: ${props => (props.open ? "300px" : "30px")};
   width: 100%;
   background: ${props =>
     props.open ? props.color || information : "transparent"};
-  transition: 0.3s max-width linear, 0.1s background linear;
+  transition: 0.2s max-width linear, 0.2s background linear;
   height: 100%;
-  float: right;
+  float: ${props => props.direction === 'right' ? 'right' : 'left'};
 `;
 
 const AlertContent = Text.extend`
   color: white;
-  margin-bottom: 0;
-  margin-right: ${rhythmDiv}px;
-  transform-origin: top left;
+  padding-left: ${rhythmDiv * 3}px;
+  margin: 0;
 `;
 
 const styles = {
   icon: {
     fontSize: baseFontSize,
+    position: 'absolute',
+    left: rhythmDiv,
+    marginRight: rhythmDiv,
     transition: "0.1s color linear"
   },
   isOpen: {
@@ -85,17 +90,17 @@ class AttachedAlert extends Component {
     return (
       <Wrapper>
         <InnerWrapper open={open} color={bgColor}>
+          <Icon className={open ? alertOpenIconClasses : alertCloseIconClases}>
+            {iconName}
+          </Icon>
           <CSSTransition
             in={open}
-            timeout={200}
+            timeout={50}
             classNames="message"
             unmountOnExit
           >
             <AlertContent>{alertMsg}</AlertContent>
           </CSSTransition>
-          <Icon className={open ? alertOpenIconClasses : alertCloseIconClases}>
-            {iconName}
-          </Icon>
         </InnerWrapper>
       </Wrapper>
     );
@@ -103,12 +108,14 @@ class AttachedAlert extends Component {
 }
 
 AttachedAlert.propTypes = {
+  direction: PropTypes.string,
   iconName: PropTypes.string,
   alertMsg: PropTypes.string
 };
 
 AttachedAlert.defaultProps = {
   iconName: "info",
+  direction: "left",
   alertMsg: "Hi this is sample alert"
 };
 

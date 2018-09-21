@@ -5,19 +5,15 @@
 // alert-message
 .message-enter {
   opacity: 0.01;
-  transform: scale(0.1);
 }
 .message-enter-active {
   opacity: 1;
-  transform: scale(1);
   transition: all 200ms ease-out 0.1s;
 }
 .message-exit {
   opacity: 1;
-  transform: scale(1);
 }
 .message-exit-active {
   opacity: 1;
-  transform: scale(0.9) translateY(50%);
-  transition: all 100ms ease-out;
+  transition: all 200ms ease-out;
 }
