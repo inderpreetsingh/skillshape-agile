@@ -59,7 +59,7 @@ export class WeekDaysRow extends React.Component {
     } else {
       // Initial state if we are adding time instead of editing class time
       state.row.push({
-        key: [{label:'Sunday', value:6}],
+        key: [{label:'Sunday', value:0}],
         startTime: new Date(),
         duration: 60,
         day: 0,
@@ -79,7 +79,7 @@ export class WeekDaysRow extends React.Component {
     const {  locationData,roomData} = this.props;
     const oldRow = [...this.state.row];
     oldRow.push({
-      key: [{label:'Sunday', value:6}],
+      key: [{label:'Sunday', value:0}],
       startTime: new Date(),
       duration: 60,
       day: 0,
