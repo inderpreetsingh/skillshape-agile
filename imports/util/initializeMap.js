@@ -17,10 +17,10 @@ let locations = [];
 let InfoBoxInstance;
 
 const mapOptions = {
-    zoom: 8,
+    zoom: 1,
     scrollwheel: true,
     minZoom: 1,
-    center: { lat: -25.363, lng: 131.044 }
+    center: { lat:0, lng: 0 }
 };
 
 
@@ -38,8 +38,9 @@ function infoSchool({school, classTypes}) {
 export function createMarkersOnMap(mapId, locationData) {
     console.log('TCL: createMarkersOnMap -> locationData', locationData);
     if(document.getElementById(mapId)) {
-        let map = new google.maps.Map(document.getElementById(mapId), {zoom: 5});
+        let map = new google.maps.Map(document.getElementById(mapId), {zoom: 1});
         let i = 0;
+        let bounds = new google.maps.LatLngBounds();
             for(let obj of locationData) {
 
                 if(obj.loc && isNumber(obj.loc[1]) && isNumber(obj.loc[0])) {
@@ -48,21 +49,23 @@ export function createMarkersOnMap(mapId, locationData) {
                         position: geolocate,
                         map: map
                     });
+                    bounds.extend(marker.getPosition());
                     google.maps.event.addListener(marker, 'click', function() {
                         const address = `<div id="address-content">
-                         ${obj.address && obj.address}, ${obj.city && obj.city}, ${obj.country && obj.country}
+                        ${obj.address && obj.address}, ${obj.city && obj.city}, ${obj.country && obj.country}
                         </div>`
                         let infowindow = new google.maps.InfoWindow();
                         infowindow.setContent(address);
                         infowindow.open(map, marker);
                     });
-
+                    
                     if(i=== 0) {
                         map.setCenter(geolocate);
                     }
                     i++;
                 }
             }
+            map.fitBounds(bounds);
     }
 }
 
