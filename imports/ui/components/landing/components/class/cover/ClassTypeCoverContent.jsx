@@ -184,7 +184,7 @@ class ClassTypeCoverContent extends React.Component {
 
   _createAddressStr(locationData) {
     for (obj of locationData) {
-      const addressArray = [obj.address, obj.city, obj.state, obj.country];
+      const addressArray = [obj.address && obj.address, obj.city && obj.city, obj.state && obj.state, obj.country && obj.country];
       return addressArray.filter(str => str).join(", ");
     }
   }
@@ -197,7 +197,7 @@ class ClassTypeCoverContent extends React.Component {
         createMarkersOnMap("myMap", locationData);
       }
     } else {
-      if (!isEmpty(this.props.classTypeData.filters.location)) {
+      if (!isEmpty(get(this.props,"classTypeData.filters.location",[]))) {
         let locIds=[];
         this.props.classTypeData.filters.location.map((obj)=>{locIds.push(get(obj,"loc.locationId",null))});
         console.log('TCL: ClassTypeCoverContent -> _addLocationOnMap -> locIds', locIds);
@@ -331,6 +331,7 @@ class ClassTypeCoverContent extends React.Component {
 
   render() {
     const props = this.props;
+    const {noClassTypeData}=this.props;
     const classTypeName = props.noClassTypeData ? "" : props.classTypeData.name;
     const selectedLocation = props.noClassTypeData
       ? props.schoolLocation
@@ -373,7 +374,7 @@ class ClassTypeCoverContent extends React.Component {
             {/* Displays map when it's not edit mode*/}
             {!props.isEdit && (
               <MapContainer>
-                {isEmpty(this.props.classTypeData.filters.location) ? (
+                {noClassTypeData && isEmpty(get(this.props,"schoolLocation",[]) || get(this.props,"classTypeData.filters.location",[])) ? (
                   <LocationNotFound>
                       <PrimaryButton
                         icon

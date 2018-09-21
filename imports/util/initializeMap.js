@@ -50,7 +50,7 @@ export function createMarkersOnMap(mapId, locationData) {
                     });
                     google.maps.event.addListener(marker, 'click', function() {
                         const address = `<div id="address-content">
-                         ${obj.address}, ${obj.city}, ${obj.country}
+                         ${obj.address && obj.address}, ${obj.city && obj.city}, ${obj.country && obj.country}
                         </div>`
                         let infowindow = new google.maps.InfoWindow();
                         infowindow.setContent(address);
