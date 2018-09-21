@@ -399,6 +399,7 @@ class LocationForm extends React.Component {
 
   handleSubmit = (payload, deleteObj) => {
   console.log('TCL: handleSubmit -> handleSubmit');
+  this.setState({ isBusy: true });
     
     const { data } = this.props;
     let methodName;
