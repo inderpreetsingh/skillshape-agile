@@ -10,6 +10,7 @@ import Icon from "material-ui/Icon";
 
 import { createMarkersOnMap, toastrModal } from "/imports/util";
 import get from 'lodash/get';
+import uniq from 'lodash/uniq'
 import ClassMap from "/imports/ui/components/landing/components/map/ClassMap";
 import ClassTypeDescription from "/imports/ui/components/landing/components/class/ClassTypeDescription.jsx";
 import ClassTypeInfo from "/imports/ui/components/landing/components/class/ClassTypeInfo.jsx";
@@ -168,11 +169,15 @@ const LogoAndActionButtons = styled.div`
     padding: 0;
   }
 `;
+const Li =styled.li`
+list-style-position: outside;
+`;
 
 class ClassTypeCoverContent extends React.Component {
   state = {
     nonUserDefaultDialog: false,
-    isBusy: false
+    isBusy: false,
+    locationData:[]
   };
   componentDidMount() {
     this._addLocationOnMap();
@@ -181,46 +186,53 @@ class ClassTypeCoverContent extends React.Component {
   componentDidUpdate() {
     this._addLocationOnMap();
   }
-
-  _createAddressStr(locationData) {
-    for (obj of locationData) {
-      const addressArray = [obj.address && obj.address, obj.city && obj.city, obj.state && obj.state, obj.country && obj.country];
-      return addressArray.filter(str => str).join(", ");
+  componentWillMount(){
+    if (!isEmpty(get(this.props,"classTypeData.filters.location",[]))) {
+      let locIds=[];
+      this.props.classTypeData.filters.location.map((obj)=>{locIds.push(get(obj,"loc.locationId",null))});
+      Meteor.call("location.getLocsFromIds",locIds,(err,res)=>{
+        if(res){
+          this.setState({locationData:res});
+        }
+      })
     }
+  }
+  _createAddressStr(locationData) {
+    let address=[];
+    for (obj of locationData) {
+      // const addressArray = [obj.address && obj.address, obj.city && obj.city, obj.state && obj.state, obj.country && obj.country];
+      // return addressArray.filter(str => str).join(", ");
+      address.push(`${obj.address ? obj.address:'Address'}, ${obj.city ? obj.city:'City'}, ${obj.state ? obj.state:'State'}, ${obj.country ? obj.country: "Country"}`)
+    }
+    return uniq(address);
   }
 
   _addLocationOnMap() {
-    let locationData;
+    let locationData=get(this.state,"locationData",[]);
     if (this.props.noClassTypeData) {
       if (!isEmpty(this.props.schoolLocation)) {
         locationData = this.props.schoolLocation;
         createMarkersOnMap("myMap", locationData);
       }
     } else {
-      if (!isEmpty(get(this.props,"classTypeData.filters.location",[]))) {
-        let locIds=[];
-        this.props.classTypeData.filters.location.map((obj)=>{locIds.push(get(obj,"loc.locationId",null))});
-        console.log('TCL: ClassTypeCoverContent -> _addLocationOnMap -> locIds', locIds);
-        Meteor.call("location.getLocsFromIds",locIds,(err,res)=>{
-          locationData = res;
-          createMarkersOnMap("myMap", locationData);
-        })
+      if (!isEmpty(locationData)) {
+        createMarkersOnMap("myMap", locationData);
       }
     }
   }
 
   getAddress() {
-    let locationData;
+    let locationData=get(this.state,"locationData",[]);
     if (this.props.noClassTypeData) {
       if (!isEmpty(this.props.schoolLocation)) {
         locationData = this.props.schoolLocation;
         return this._createAddressStr(locationData);
       }
     } else {
-      if (!isEmpty(this.props.classTypeData.selectedLocation)) {
-        locationData = [this.props.classTypeData.selectedLocation];
-        return this._createAddressStr(locationData);
+      if (!isEmpty(locationData)) {
+          return this._createAddressStr(locationData);
       }
+      return []
     }
   }
 
@@ -394,7 +406,11 @@ class ClassTypeCoverContent extends React.Component {
                       <Icon className={props.classes.myLocationIcon}>
                         location_on
                       </Icon>{" "}
-                      {this.getAddress()}
+                      <ul>
+                      {this.getAddress().map((a,index)=>{
+                        return (<Li>{a}</Li>)
+                      })}
+                      </ul>
                     </MyLocation>
                   </Fragment>
                 )}
