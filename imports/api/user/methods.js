@@ -13,7 +13,8 @@ Meteor.methods({
     userType,
     sendMeSkillShapeNotification,
     signUpType,
-    birthYear
+    birthYear,
+    schoolName
   }) {
     if (!isEmpty(name) && !isEmpty(email)) {
       const password = generator.generate({
@@ -55,7 +56,8 @@ Meteor.methods({
         urlToken,
         password,
         fromEmail,
-        email
+        email,
+        schoolName
       );
       return { user: user, password: password };
     } else {

@@ -264,7 +264,6 @@ class SchoolMemberInfo extends Component {
     to = memberInfo.email;
     userName = memberInfo.firstName;
     schoolName = memberInfo.schoolName;
-   debugger;
     Meteor.call('school.manageAdmin',_id,schoolId,'remove',to,userName,schoolName,(err,res)=>{
       if(res){
         this.setState({showConfirmation:false});

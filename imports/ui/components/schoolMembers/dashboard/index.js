@@ -16,6 +16,7 @@ import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-pic
 import { TableRow, TableCell } from "material-ui/Table";
 import List from "material-ui/List";
 import Hidden from "material-ui/Hidden";
+import get from 'lodash/get';
 import find from "lodash/find";
 import Drawer from "material-ui/Drawer";
 import AppBar from "material-ui/AppBar";
@@ -29,7 +30,6 @@ import ClassType from "/imports/api/classType/fields";
 import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import get from "lodash/get";
 import Checkbox from "material-ui/Checkbox";
 import { dateFriendly } from "/imports/util";
 import { phoneRegex } from "/imports/util";
@@ -352,6 +352,7 @@ class DashBoardView extends React.Component {
     let to = this.email.value;
     let userName =this.firstName.value;
     let payload = {};
+    let adminName = get(Meteor.user(),"profile.firstName",get(Meteor.user(),"profile.name"),"Admin" )
     payload.firstName = this.firstName.value;
     payload.lastName = this.lastName.value;
     payload.email = this.email.value;
@@ -362,6 +363,7 @@ class DashBoardView extends React.Component {
     payload.studentWithoutEmail = this.state.studentWithoutEmail;
     payload.signUpType="member-signup"
     payload.sendMeSkillShapeNotification = true;
+    payload.schoolName=schoolName;
     if(!adminView)
     {
   
@@ -387,9 +389,9 @@ class DashBoardView extends React.Component {
       });
     }else if(_id && schoolId){
       this.setState({isLoading:true})      
-        Meteor.call('school.manageAdmin',_id,schoolId,'add',to,userName,schoolName,(err,res)=>{
+        Meteor.call('school.manageAdmin',_id,schoolId,'add',to,userName,schoolName,null,adminName,(err,res)=>{
           if(res){
-            this.setState({renderStudentModal:false,showConfirmationModal:false,isLoading:false});
+            this.setState({renderStudentModal:false,showConfirmationModal:false,isLoading:false,message:null});
           }
         })
       
@@ -399,7 +401,7 @@ class DashBoardView extends React.Component {
       console.log("in else part")
       payload.userType='School';
       payload.name=this.firstName.value;
-      this.setState({joinSkillShape:true,to:this.email.value,userName:this.firstName.value,payload:payload});
+      this.setState({joinSkillShape:true,to:this.email.value,userName:this.firstName.value,payload:payload,message:null});
     }
   };
 
@@ -423,13 +425,16 @@ class DashBoardView extends React.Component {
           if (res) {
             // Open Modal
             let _id=res.userId ;
-            state.showConfirmationModal = true;
+           // state.showConfirmationModal = fals;
             state.message = res;
             state.isLoading = false;
             if(findIndex(adminsIds,(o)=>{return o==_id})!=-1){
               this.setState({error:'This person is already an admin.',isLoading:false});
               return ;
              }
+             this.setState(state);
+             this.allowAddNewMemberWithThisEmail();
+
             // this.setState({showConfirmationModal:true, message:res});
           }
           if (err) {

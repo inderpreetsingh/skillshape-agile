@@ -391,7 +391,7 @@ Meteor.methods({
   "school.optimizationFinder": function () {
    return School.find({mainImage:{$exists:true},mainImageMedium:{$exists:false},mainImageLow:{$exists:false},logoImgMedium:{$exists:false},logoImgLow:{$exists:false}}).fetch();
   },
-  "school.manageAdmin":function(_id,schoolId,action,to,userName,schoolName,payload){
+  "school.manageAdmin":function(_id,schoolId,action,to,userName,schoolName,payload,adminName){
     if(action=='remove'){
     let res=School.update({_id:schoolId},{$pull:{admins:_id}});
     adminInvitation(to,userName,schoolName,action)
@@ -399,15 +399,16 @@ Meteor.methods({
     }
     else if(action=='add'){
       let res=School.update({_id:schoolId},{$push:{admins:_id}});
-      adminInvitation(to,userName,schoolName),action;
+      adminInvitation(to,userName,schoolName,action,adminName);
       return res;
     }
     else if(action =='join'){
+      payload.schoolName=schoolName;
       Meteor.call("user.createUser",payload,(err,res)=>{
         if(res){
           try{
             School.update({_id:schoolId},{$push:{admins:res.user._id}})
-          sendSkillShapeJoinInvitation(to,userName,schoolName,res.password);
+         // sendSkillShapeJoinInvitation(to,userName,schoolName,res.password);
           }catch(error){
             console.log('TCL: }catch -> error', error);
             throw new Meteor.Error(error);
