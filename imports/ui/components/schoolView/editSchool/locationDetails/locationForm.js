@@ -311,6 +311,7 @@ class LocationForm extends React.Component {
 
   onSubmit = (event, submit = true) => {
     event.preventDefault();
+    console.log('TCL: onSubmit -> onSubmit');
     // debugger;
     const payload = {
       createdBy: Meteor.userId(),
@@ -397,6 +398,9 @@ class LocationForm extends React.Component {
   };
 
   handleSubmit = (payload, deleteObj) => {
+  console.log('TCL: handleSubmit -> handleSubmit');
+  this.setState({ isBusy: true });
+    
     const { data } = this.props;
     let methodName;
     let docObj = {};

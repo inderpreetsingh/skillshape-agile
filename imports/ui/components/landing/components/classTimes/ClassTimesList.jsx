@@ -82,16 +82,6 @@ const Text = styled.p`
   line-height: 1;
 `;
 
-const Description = Text.extend`
-  line-height: 1;
-  padding: ${props =>
-    props.inPopUp
-      ? `${helpers.rhythmDiv}px 0 ${helpers.rhythmDiv * 2}px 0`
-      : `${helpers.rhythmDiv}px 0`};
-  font-size: ${props => (props.inPopUp ? 18 : helpers.baseFontSize)}px;
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
-
 const Day = Text.extend`
   text-align: center;
   font-weight: 400;
@@ -181,7 +171,6 @@ const ClassTimesList = props => {
     return <ScheduleDisplay time={eventTime} duration={duration} />;
   };
 
-
   const getScheduleDetailsFromFormattedClassTimes = (
     formattedClassTimes,
     scheduleType,
@@ -195,16 +184,21 @@ const ClassTimesList = props => {
     // console.info(formattedClassTimes);
     // console.groupEnd();
 
-    if(eventScheduleType === 'recurring' || eventScheduleType === 'ongoing') {
+    if (eventScheduleType === "recurring" || eventScheduleType === "ongoing") {
       return formattedClassTimes.map(scheduleData => {
-        if(!isEmpty(scheduleData)) {
+        if (!isEmpty(scheduleData)) {
           const allDatesData = [];
           const eventStartTime = new Date(scheduleData.startTime);
           eventDate = scheduleData.date;
 
-          let eventDaysUnformatted = scheduleData.key.map(schedule => schedule.label).join(', ');
-          const commaIndex = eventDaysUnformatted.lastIndexOf(',');
-          const eventDaysFormatted = eventDaysUnformatted.substr(0, commaIndex) + ' and ' + eventDaysUnformatted.substr(commaIndex + 1);
+          let eventDaysUnformatted = scheduleData.key
+            .map(schedule => schedule.label)
+            .join(", ");
+          const commaIndex = eventDaysUnformatted.lastIndexOf(",");
+          const eventDaysFormatted =
+            eventDaysUnformatted.substr(0, commaIndex) +
+            " and " +
+            eventDaysUnformatted.substr(commaIndex + 1);
           const noOfDays = scheduleData.key.length;
           const eventDay = scheduleData.key[0].label;
 
@@ -222,21 +216,25 @@ const ClassTimesList = props => {
             formatScheduleDisplay(data, eventScheduleType, inPopUp)
           );
 
-        if (
-          eventScheduleType == "recurring" ||
-          eventScheduleType == "ongoing"
-        ) {
-          return (
-            <Paper className={cardItemClass}>
-              {!props.inPopUp &&
-                (data.days ? <Day>{data.day}</Day> : <Day>Every {data.day}</Day>)}
-              <Times>{allDatesData}</Times>
-            </Paper>
-          );
+          if (
+            eventScheduleType == "recurring" ||
+            eventScheduleType == "ongoing"
+          ) {
+            return (
+              <Paper className={cardItemClass}>
+                {!props.inPopUp &&
+                  (data.days ? (
+                    <Day>{data.day}</Day>
+                  ) : (
+                    <Day>Every {data.day}</Day>
+                  ))}
+                <Times>{allDatesData}</Times>
+              </Paper>
+            );
+          }
         }
-      }
-    });
-  }
+      });
+    }
 
     return DAYS_IN_WEEK.map(day => {
       const scheduleData = formattedClassTimes[day];
@@ -261,15 +259,16 @@ const ClassTimesList = props => {
           );
         });
 
-        return (<Paper className={cardItemClass}>
-          {!props.inPopUp && (
-            <Day>
-              On {day}, {formatDateNoYear(eventDate)}
-            </Day>
-          )}
-          <Times>{allDatesData}</Times>
-        </Paper>)
-
+        return (
+          <Paper className={cardItemClass}>
+            {!props.inPopUp && (
+              <Day>
+                On {day}, {formatDateNoYear(eventDate)}
+              </Day>
+            )}
+            <Times>{allDatesData}</Times>
+          </Paper>
+        );
       }
     });
   };
@@ -291,9 +290,6 @@ const ClassTimesList = props => {
               props.scheduleType,
               props.inPopUp
             )}
-            {/* {props.description && <Description inPopUp={props.inPopUp}>
-              {props.description}
-            </Description>} */}
           </CardContent>
         </Wrapper>
       </Paper>
@@ -303,7 +299,6 @@ const ClassTimesList = props => {
 
 ClassTimesList.propTypes = {
   inPopUp: PropTypes.bool,
-  description: PropTypes.string,
   scheduleType: PropTypes.string,
   formattedClassTimes: PropTypes.shape,
   show: PropTypes.bool
