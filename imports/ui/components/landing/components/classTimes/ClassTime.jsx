@@ -153,23 +153,22 @@ const ClassTimeLocationWrapper = styled.div`
 `;
 
 const EventLocation = styled.div`
-  ${helpers.flexCenter}
-  justify-content: flex-start;
-  flex-direction: ${props => !props.locationTitle ? 'column-reverse' : 'row'};
-  margin-bottom: ${helpers.rhythmDiv/2}px;
+  ${helpers.flexCenter} justify-content: flex-start;
+  flex-direction: ${props => (!props.locationTitle ? "column-reverse" : "row")};
+  margin-bottom: ${helpers.rhythmDiv / 2}px;
 `;
 
 let ClassTimeRoom, ClassTimeLocation;
 ClassTimeLocation = ClassTimeRoom = styled.div`
   ${helpers.flexCenter};
-  ${props => !props.locationTitle && 'align-items: flex-start;'}
+  ${props => !props.locationTitle && "align-items: flex-start;"};
 `;
 
 ClassTimeLocation = ClassTimeLocation.extend`
   margin-right: ${helpers.rhythmDiv}px;
 `;
 
-let LocationTitle, LocationDetails , RoomName;
+let LocationTitle, LocationDetails, RoomName;
 LocationTitle = LocationDetails = RoomName = Text.extend`
   font-weight: 300;
   font-style: italic;
@@ -238,13 +237,13 @@ class ClassTime extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if(this.state.description != nextProps.description) {
+    if (this.state.description != nextProps.desc) {
       this.setState(state => {
         return {
           ...state,
-          description: nextProps.description
-        }
-      })
+          description: nextProps.desc
+        };
+      });
     }
   }
 
@@ -268,9 +267,9 @@ class ClassTime extends Component {
     );
   }
 
-  handleShowMoreLinkClick = (event) => {
+  handleShowMoreLinkClick = event => {
     this.handleDescriptionState(true)(event);
-  }
+  };
 
   escFunction = event => {
     if (event.keyCode === 27) {
@@ -416,12 +415,31 @@ class ClassTime extends Component {
     return formattedClassTimesDetails;
   };
 
-  handleShowMoreLinkClick = (completeDesc) => (event) => {
-    this.handleDescriptionState(true,completeDesc)(event);
-  }
+  setDescription = description => {
+    if (this.state.description !== description) {
+      this.setState(state => {
+        return {
+          ...state,
+          description
+        };
+      });
+    }
+  };
 
-  returnClickableLink(completeDesc, shortDesc){
-    return <span>{shortDesc} <ClickableLink onClick={this.handleShowMoreLinkClick(completeDesc)}>click for more info.</ClickableLink></span>
+  handleShowMoreLinkClick = completeDesc => event => {
+    this.setDescription(completeDesc);
+    this.handleDescriptionState(true)(event);
+  };
+
+  returnClickableLink(completeDesc, shortDesc) {
+    return (
+      <span>
+        {shortDesc}{" "}
+        <ClickableLink onClick={this.handleShowMoreLinkClick(completeDesc)}>
+          click for more info.
+        </ClickableLink>
+      </span>
+    );
   }
 
   getScheduleTypeFormatted = () => {
@@ -429,29 +447,28 @@ class ClassTime extends Component {
     const classScheduleType = scheduleType.toLowerCase();
 
     if (classScheduleType === "recurring") {
-      const strAsDesc = "This is a Closed Series. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
+      const strAsDesc =
+        "This is a Closed Series. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
 
       return (
         <Fragment>
           <ScheduleType>
             {addToCalendar == "closed"
-              ?
-              this.returnClickableLink(
-                strAsDesc,'This is closed series.')
+              ? this.returnClickableLink(strAsDesc, "This is closed series.")
               : "This is a series class time."}{" "}
             {<br />}
           </ScheduleType>
         </Fragment>
       );
-    }
-    else if (classScheduleType === "onetime") {
+    } else if (classScheduleType === "onetime") {
       /* Adding manual small letters splitted schedule type one time*/
-      const strAsDesc = "This is a Closed Single/set. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
+      const strAsDesc =
+        "This is a Closed Single/set. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
+
       return (
         <ScheduleType>
           {addToCalendar == "closed"
-            ? this.returnClickableLink(
-              strAsDesc,'This is closed single/set.')
+            ? this.returnClickableLink(strAsDesc, "This is closed single/set.")
             : "This is a single/set class time."}{" "}
           {<br />}
         </ScheduleType>
@@ -552,9 +569,7 @@ class ClassTime extends Component {
     return (
       <ClassTimeRoom>
         <Icon className={classes.classTimeIcon}>{"meeting_room"}</Icon>
-        <RoomName>
-          {rooms.map(room => room.name).join(",")}
-        </RoomName>
+        <RoomName>{rooms.map(room => room.name).join(",")}</RoomName>
       </ClassTimeRoom>
     );
   };
@@ -582,7 +597,9 @@ class ClassTime extends Component {
         <EventLocation locationTitle={eventLocationTitle} roomInfo={RoomInfo}>
           <ClassTimeLocation locationTitle={eventLocationTitle}>
             <Icon className={classes.classTimeIcon}>{"location_on"}</Icon>
-            <LocationTitle>{eventLocationTitle ? eventLocationTitle : eventAddress}</LocationTitle>
+            <LocationTitle>
+              {eventLocationTitle ? eventLocationTitle : eventAddress}
+            </LocationTitle>
           </ClassTimeLocation>
           {this.getClassTimeRoomInfo()}
         </EventLocation>
@@ -605,16 +622,14 @@ class ClassTime extends Component {
     this.handleNotification(CheckBoxes);
   };
 
-  handleDescriptionState = (descriptionState,description) => e => {
+  handleDescriptionState = descriptionState => e => {
     e.stopPropagation();
     this.setState(state => {
       return {
         ...state,
-        description: description ? description : state.description,
         showDescription: descriptionState
       };
     });
-
   };
 
   render() {
@@ -703,10 +718,12 @@ class ClassTime extends Component {
                     {/* Class Location */}
                     {this.getClassTimeLocation()}
 
-                    {scheduleType === 'recurring' && <RecurringDate>
-                      Between {formatDate(startDate, "MMM")} and{" "}
-                      {formatDate(endDate, "MMM")}
-                    </RecurringDate>}
+                    {scheduleType === "recurring" && (
+                      <RecurringDate>
+                        Between {formatDate(startDate, "MMM")} and{" "}
+                        {formatDate(endDate, "MMM")}
+                      </RecurringDate>
+                    )}
 
                     {/* class times */}
                     <ClassTimesCardWrapper inPopUp={inPopUp}>
@@ -715,40 +732,37 @@ class ClassTime extends Component {
                         show={true}
                         formattedClassTimes={this.reformatNewFlowData()}
                         scheduleType={scheduleType}
-                        description={desc}
                       />
                     </ClassTimesCardWrapper>
                   </ClassTimeContentInnerWrapper>
 
                   {/* description */}
-                  {this.props.desc && (
-                    <Paper
-                      className={classes.descriptionPanel}
-                      style={{
-                        transform: this.state.showDescription
-                          ? "scaleY(1)"
-                          : "scaleY(0)"
+                  <Paper
+                    className={classes.descriptionPanel}
+                    style={{
+                      transform: this.state.showDescription
+                        ? "scaleY(1)"
+                        : "scaleY(0)"
+                    }}
+                  >
+                    <Icon
+                      classes={{
+                        root: classes.descriptionPanelCloseIcon
                       }}
+                      onClick={this.handleDescriptionState(false)}
                     >
-                      <Icon
-                        classes={{
-                          root: classes.descriptionPanelCloseIcon
-                        }}
-                        onClick={this.handleDescriptionState(false)}
-                      >
-                        {"close"}
-                      </Icon>
+                      {"close"}
+                    </Icon>
 
-                      <ClassTimeDescription>
-                        {this.state.description}
-                      </ClassTimeDescription>
-                    </Paper>
-                  )}
+                    <ClassTimeDescription>
+                      {this.state.description}
+                    </ClassTimeDescription>
+                  </Paper>
                 </ClassTimeContent>
 
                 {/* View All times button */}
                 <ButtonsWrapper>
-                  {this.props.desc && (
+                  {this.state.description && (
                     <ButtonWrapper marginBottom>
                       <ClassTimeButton
                         white
@@ -756,7 +770,18 @@ class ClassTime extends Component {
                         icon
                         iconName="description"
                         label="View Description"
-                        onClick={this.handleDescriptionState(true, this.props.desc)}
+                        onClick={e => {
+                          e.stopPropagation();
+
+                          debugger;
+                          this.setState(state => {
+                            return {
+                              ...state,
+                              description: desc ? desc : state.description,
+                              showDescription: true
+                            };
+                          });
+                        }}
                       />
                     </ButtonWrapper>
                   )}
