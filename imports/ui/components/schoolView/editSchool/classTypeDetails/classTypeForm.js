@@ -287,6 +287,7 @@ class ClassTypeForm extends React.Component {
                   label="Brief Description"
                   type="text"
                   fullWidth
+                  multiline
                 />
                 <SkillSubject
                     name="filters"
