@@ -466,7 +466,6 @@ class Landing extends Component {
       { skillCategoryIds: skillCategoryIds, textSearch: text },
       (err, res) => {
         if (res) {
-          // console.log("result",res)
           this.setState({ skillSubjectData: res || [] });
         }
       }
@@ -596,7 +595,6 @@ class Landing extends Component {
                 let place = results[0];
                 // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
                 // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
-                //console.log(results[0],"location details...")
                 sLocation = results[0].formatted_address;
                 oldFilters["coords"] = coords;
                 oldFilters["locationName"] = this._getNormalizedLocation(
@@ -621,10 +619,12 @@ class Landing extends Component {
         },
         err => {
           const geolocationError = this._handleGeoLocationError(err);
-          popUp.appear("alert", { content: geolocationError }, true, {
-            autoClose: true,
-            autoTimeout: 4000
-          });
+          if(geolocationError){
+            popUp.appear("alert", { content: geolocationError }, true, {
+              autoClose: true,
+              autoTimeout: 4000
+            });
+          }
         }
       );
     }
@@ -681,7 +681,6 @@ class Landing extends Component {
 
   onLocationChange = (location, updateKey1, updateKey2) => {
     let stateObj = {};
-    //console.log('onLocationChange',location,".....................");
     if (updateKey1) {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
@@ -1069,7 +1068,6 @@ class Landing extends Component {
               {!this.state.mapView &&
                 this.checkIfAnyFilterIsApplied() &&
                 this.showAppliedTopFilter()}
-              {/*console.log("re rendering .... classtype list...") */}
               <ClassTypeList
                 landingPage={true}
                 handleIsCardsSearching={this.handleIsCardsSearching}
