@@ -29,21 +29,17 @@ import Dialog, {
 const styles = {
   dialogPaper: {
     padding: `${helpers.rhythmDiv * 2}px`,
-    paddingBottom: `${helpers.rhythmDiv}px`
+    paddingBottom: `${helpers.rhythmDiv}px`,
+    position: 'relative',
+    overflowY: 'auto'
   },
   dialogTitleRoot: {
     display: "flex",
     fontFamily: `${helpers.specialFont}`
   },
-  dialogContent: {
-    "@media screen and (max-width : 500px)": {
-      minHeight: "150px"
-    }
-  },
   dialogContentRoot: {
     width: "100%",
-    padding: `0 ${helpers.rhythmDiv * 3}px`,
-    paddingTop: helpers.rhythmDiv * 2,
+    padding: `${helpers.rhythmDiv}px 0 0 ${helpers.rhythmDiv}px`,
     margin: 0,
     "@media screen and (max-width : 500px)": {
       padding: `0 ${helpers.rhythmDiv * 3}px`
@@ -51,7 +47,7 @@ const styles = {
   },
   iconButton: {
     position: 'absolute',
-    right: helpers.rhythmDiv * 2,
+    right: helpers.rhythmDiv,
     height: "auto",
     width: "auto"
   }
@@ -59,26 +55,26 @@ const styles = {
 
 const DialogTitleContainer = styled.div`
   ${helpers.flexCenter};
+  width: calc(100% - ${helpers.rhythmDiv * 4}px);
   justify-content: space-between;
-  margin: 0 0 ${helpers.rhythmDiv * 2}px 0;
   padding: 0 ${helpers.rhythmDiv * 3}px;
+  padding-right: 0;
+  margin: 0 0 ${helpers.rhythmDiv * 2}px 0;
+
+  @media screen and (max-width: ${helpers.mobile - 100}px) {
+    flex-direction: column;
+  }
 `;
 
 const DialogTitle = styled.h1`
   font-family: ${helpers.specialFont};
   font-weight: 500;
   margin: 0;
-  padding-left: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize * 1.25}px;
   }
 `;
-
-const AlertWrapper = styled.div`
-  display: flex;
-`;
-
 
 class FiltersDialogBox extends Component {
   constructor(props) {
@@ -126,20 +122,17 @@ class FiltersDialogBox extends Component {
         classes={{ paper: classes.dialogPaper }}
       >
         <MuiThemeProvider theme={muiTheme}>
-          <DialogTitleContainer>
+          <DialogTitleContainer fullScreen={fullScreen}>
             <DialogTitle>{title}</DialogTitle>
 
-            <AlertWrapper>
-              <AttachedAlert
-                open={
-                  !filterPanelProps.isCardsBeingSearched &&
-                  !this.state.filterDialogBoxNoSearch
-                }
-                direction={"right"}
-                alertMsg={"Search results updated"}
-
-              />
-            </AlertWrapper>
+            <AttachedAlert
+              open={
+                !filterPanelProps.isCardsBeingSearched &&
+                !this.state.filterDialogBoxNoSearch
+              }
+              direction={"right"}
+              alertMsg={"Search results updated"}
+            />
             <IconButton
               color="primary"
               onClick={onModalClose}
