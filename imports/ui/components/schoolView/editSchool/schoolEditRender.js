@@ -60,7 +60,8 @@ export default function (props) {
                 "Media",
                 "Embed Codes",
                 "Students",
-                "Admins"
+                "Admins",
+                "View School"
               ]}
               color="primary"
               onTabChange={this.onTabChange}
@@ -143,7 +144,11 @@ export default function (props) {
                   browserHistory.push(`/schools/${slug}/members?admin=true`)
                 )
               }
-              
+               {
+                this.state.tabValue === 8 &&(
+                  browserHistory.push(`/schools/${slug}`)
+                )
+              }
             </div>
           </div>
         </DocumentTitle>
