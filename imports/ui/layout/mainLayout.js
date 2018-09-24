@@ -15,6 +15,7 @@ class MainLayout extends React.Component {
     super(props);
 
     this.state = {
+      showBrandBarLogo: false,
       memberInvitation: true,
       previousLocationPathName: this.props.location.pathname,
       currentLocationPathName: this.props.location.pathname
@@ -44,7 +45,7 @@ class MainLayout extends React.Component {
       this.rejectMemberInvitation(nextProps.location.query);
     }
 
-    /// NEED TO ACCESS PREVIOUS LOCATION
+    /// NEED TO ACCESS PREVIOUS LOCATION ON LANDING PAGE
     this.setState(state => {
       return {
         ...state,
@@ -56,6 +57,7 @@ class MainLayout extends React.Component {
 
   componentDidUpdate() {
     const { currentUser, isUserSubsReady } = this.props;
+
     let invite = get(this.props, "location.query.acceptInvite");
     // console.log("MainLayout componentDidUpdate -->>",this.props)
     if (invite && !currentUser && isUserSubsReady) {

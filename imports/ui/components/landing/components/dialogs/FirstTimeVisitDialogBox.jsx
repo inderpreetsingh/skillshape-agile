@@ -223,9 +223,7 @@ class FirstTimeVisitDialogBox extends Component {
           browserHistory.push("/skillshape-for-school");
         } else {
           setTimeout(() => {
-            if (res.length) {
-              // debugger;
-              // console.info(res, "---");
+            if (res.length == 1) { // redirect only if there is a single school
               const mySchoolSlug = res[0].slug;
               browserHistory.push(`/schools/${mySchoolSlug}`);
             } else {

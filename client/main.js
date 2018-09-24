@@ -39,6 +39,8 @@ class App extends Component {
   componentWillUnmount = () => {
     // console.log("visitorRedirected, setting false.......")
     localStorage.setItem("visitorRedirected", false);
+    localStorage.setItem("mySchoolSlug", null);
+    localStorage.setItem("multipleSchools", true);
   };
 
   render() {

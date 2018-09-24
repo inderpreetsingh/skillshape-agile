@@ -12,6 +12,8 @@ import schoolIssuesData from "./constants/schoolIssues.js";
 import schoolPageCards from "./constants/schoolPageCards.js";
 import schoolPagePricingCards from "./constants/schoolPagePriceCards.js";
 
+import { withUserSchoolInfo } from "/imports/util";
+
 import * as helpers from "./components/jss/helpers.js";
 
 const Wrapper = styled.div`
@@ -41,4 +43,4 @@ const School = props => (
   </Wrapper>
 );
 
-export default School;
+export default withUserSchoolInfo(School);
