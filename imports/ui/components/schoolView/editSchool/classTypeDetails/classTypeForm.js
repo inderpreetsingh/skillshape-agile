@@ -288,6 +288,7 @@ class ClassTypeForm extends React.Component {
                   type="text"
                   fullWidth
                   multiline
+                  inputProps={{maxLength: 200}}
                 />
                 <SkillSubject
                     name="filters"
