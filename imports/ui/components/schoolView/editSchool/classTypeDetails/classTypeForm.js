@@ -284,9 +284,11 @@ class ClassTypeForm extends React.Component {
                   defaultValue={data && data.desc}
                   margin="dense"
                   inputRef={ref => (this.desc = ref)}
-                  label="Brief Description"
+                  label="Brief Description (200 Characters)"
                   type="text"
                   fullWidth
+                  multiline
+                  inputProps={{maxLength: 200}}
                 />
                 <SkillSubject
                     name="filters"
