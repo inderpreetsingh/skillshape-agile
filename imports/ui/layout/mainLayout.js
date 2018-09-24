@@ -1,4 +1,5 @@
 import React from "react";
+import { Meteor } from "meteor/meteor";
 import { isEmpty, get } from "lodash";
 import { createContainer } from "meteor/react-meteor-data";
 import { Route, Redirect } from "react-router-dom";
@@ -15,6 +16,8 @@ class MainLayout extends React.Component {
 
     this.state = {
       memberInvitation: true,
+      previousLocationPathName: this.props.location.pathname,
+      currentLocationPathName: this.props.location.pathname
     };
   }
 
@@ -40,6 +43,15 @@ class MainLayout extends React.Component {
     ) {
       this.rejectMemberInvitation(nextProps.location.query);
     }
+
+    /// NEED TO ACCESS PREVIOUS LOCATION
+    this.setState(state => {
+      return {
+        ...state,
+        previousLocationPathName: this.props.location.pathname,
+        currentLocationPathName: nextProps.location.pathname
+      };
+    });
   }
 
   componentDidUpdate() {
@@ -52,8 +64,6 @@ class MainLayout extends React.Component {
       });
     }
   }
-
-
 
   acceptMemberInvitation = invitationObj => {
     const { popUp } = this.props;
@@ -120,19 +130,19 @@ class MainLayout extends React.Component {
     });
   };
 
-
   showTermsOfServiceDialogBox = () => {};
 
   render() {
     const { currentUser, isUserSubsReady, classes } = this.props;
-    const visitorTypeValue = localStorage.getItem('visitorType');
     return (
       <div>
         {React.cloneElement(this.props.children, {
           currentUser: currentUser,
+          previousLocationPathName: this.state.previousLocationPathName,
+          currentLocationPathName: this.state.currentLocationPathName,
           isUserSubsReady: isUserSubsReady
         })}
-        {!visitorTypeValue && <FirstTimeVisitDialogBox />}
+
         {isUserSubsReady &&
           currentUser &&
           !currentUser.term_cond_accepted && (

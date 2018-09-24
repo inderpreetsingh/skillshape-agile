@@ -10,11 +10,11 @@ import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import { withStyles, imageRegex } from "/imports/util";
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
+import { compressImage } from "/imports/util";
 import { ContainerLoader } from '/imports/ui/loading/container';
 import '/imports/api/media/methods';
 import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
-
+import { withPopUp } from "/imports/util";
 class UploadMedia extends React.Component {
 
 	  constructor(props) {
@@ -46,40 +46,78 @@ class UploadMedia extends React.Component {
 
   	onSubmit = (event)=> {
   		event.preventDefault()
-  		// console.log("handleSubmit state -->>",this.state);
   		const mediaData = {};
-  		const { file } = this.state;
-  		this.setState({isBusy: true})
-      if(file && file.isUrl) {
-        this.handleSubmit({ [this.props.imageType]: file.file })
-      } else {
-
-        // console.log("yessssssssssssssssssssssssssssssssssssfile", file.fileData)
-  			S3.upload({files: { "0": file.fileData}, path:"schools"}, (err, res) => {
-	            if(err) {
-	                // console.log("err s3 >>>>>>>????????>>>> ",err);
-	            }
-	            if(res) {
-                // console.log("res from s3>>>>>>>>>>>>>>>>>> ", res)
-                this.handleSubmit({ [this.props.imageType]: res.secure_url })
-	            }
-        	})
-  		}
-
+			const { file } = this.state;
+			this.setState({isBusy: true})
+			let doc={};
+			let allUploadPromise = [];
+				try{
+					compressImage(file['org'], file.file,file.isUrl).then((result) => {
+						console.group("UploadMedia");
+						if(_.isArray(result)){
+							console.log('Non-cors');
+							for (let i = 0; i <= 1; i++) {
+								allUploadPromise.push(new Promise((resolve, reject)=> {
+									S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+										if (res) {
+											if (i == 0) {
+												doc[[this.props.imageType] + 'Medium'] = res.secure_url;
+											} else {
+												doc[[this.props.imageType] + 'Low'] = res.secure_url;
+											}
+											resolve(true);
+										}else{
+											reject();
+										}
+										
+									});
+								}))
+							}
+							Promise.all(allUploadPromise).then(()=> {
+								if (file && file.isUrl) {
+									doc[this.props.imageType] = file.file;
+									this.handleSubmit(doc)
+								} else {
+									S3.upload({ files: { "0": file.fileData }, path: "schools" }, (err, res) => {
+										if (res) {
+											doc[this.props.imageType] = res.secure_url;
+											this.handleSubmit(doc);
+										}
+									})
+								}
+							})
+						}
+						else{
+							console.log('cors');
+							if (file && file.isUrl) {
+								doc[this.props.imageType] = file.file;
+								this.handleSubmit(doc)
+							} else {
+								S3.upload({ files: { "0": file.fileData }, path: "schools" }, (err, res) => {
+									if (res) {
+										doc[this.props.imageType] = res.secure_url;
+										this.handleSubmit(doc);
+									}
+								})
+							}
+						}
+						console.groupEnd("UploadMedia");
+					})
+				}catch(error){
+					this.handleSubmit(doc);
+					throw new Meteor.Error(error);
+				}
+				
+		
+			
   	}
 
-  	handleSubmit = ({ logoImg, mainImage })=> {
-  		const data = {}
-  		if(logoImg) {
-  			data.logoImg = logoImg;
-  		} else if(mainImage) {
-  			data.mainImage = mainImage;
-  		}
-      // console.log("calling >>>>>>>>>>> editSchool")
+  	handleSubmit = (doc)=> {
+			const data = doc;
   		Meteor.call("editSchool", this.props.schoolId, data, (error, result) => {
             if(error) {
               
-            }
+						}
             this.setState({isBusy: false})
             this.props.onClose();
         });
@@ -134,4 +172,4 @@ const styles = theme => {
     }
 }
 
-export default withStyles(styles)(withMobileDialog()(UploadMedia));
+export default withStyles(styles)(withMobileDialog()(withPopUp(UploadMedia)));

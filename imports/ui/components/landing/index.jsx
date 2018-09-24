@@ -1,16 +1,12 @@
 import React, { Component, Fragment } from "react";
 import DocumentTitle from "react-document-title";
 import { debounce, isEmpty, get } from "lodash";
-import { createContainer } from "meteor/react-meteor-data";
 import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
 import { browserHistory, withRouter, BrowserRouter } from "react-router";
-import { Redirect } from 'react-router-dom';
 
 import ip from "ip";
-import Chip from "material-ui/Chip";
-import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
 
 import Cover from "./components/Cover.jsx";
@@ -33,6 +29,8 @@ import { cardsData, cardsData1 } from "./constants/cardsData.js";
 import config from "/imports/config";
 import Events from "/imports/util/events";
 import { withPopUp } from "/imports/util";
+import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
+
 const MainContentWrapper = styled.div`
   display: flex;
   position: relative;
@@ -223,7 +221,10 @@ class Landing extends Component {
     super(props);
     this.state = {
       mapView: false,
+      showPreloader: true,
       sticky: false,
+      isLoading: false,
+      isSearching: false,
       filterPanelDialogBox: false,
       filters: {
         coords: null,
@@ -256,11 +257,10 @@ class Landing extends Component {
   _handleGeoLocationError(err) {
     switch (err.code) {
       case err.PERMISSION_DENIED:
-        if (err.message.indexOf("User denied") == 0) {
-          return "GeoLocation services dont have permission/ or they need to be switched on in your device/browser settings";
-        } else if (
-          err.message.indexOf("Only secure origins are allowed") == 0
-        ) {
+        // if (err.message.indexOf("User denied") == 0) {
+        //   return "GeoLocation services dont have permission/ or they need to be switched on in your device/browser settings";
+        // } else
+        if (err.message.indexOf("Only secure origins are allowed") == 0) {
           return "GeoLocation services will only work in case of secured origin (eg https)";
         }
         break;
@@ -275,20 +275,71 @@ class Landing extends Component {
     }
   }
 
+  handlePreloaderState = newPreloaderState => {
+    if (this.state.showPreloader !== newPreloaderState) {
+      this.setState(state => {
+        return {
+          ...state,
+          showPreloader: !state.showPreloader
+        };
+      });
+    }
+  };
+
   _redirectBasedOnVisitorType = () => {
-    const {location,history} = this.props;
-    const visitorType = localStorage.getItem('visitorType');
-    const visitorRedirected = JSON.parse(localStorage.getItem('visitorRedirected'));
-    if(!visitorRedirected) {
-      if (visitorType === "school") {
-        localStorage.setItem("visitorRedirected",true);
-        return browserHistory.push('/claimSchool');
-      }else if(visitorType === 'student'){
-        localStorage.setItem('visitorRedirected',true);
+    const {
+      currentUser,
+      isUserSubsReady,
+      previousLocationPathName,
+      currentLocationPathName
+    } = this.props;
+    const visitorType = localStorage.getItem("visitorType");
+    const visitorRedirected = JSON.parse(
+      localStorage.getItem("visitorRedirected")
+    );
+    // console.group("REDIRECT INDEX PAGE");
+    // console.info(Meteor.user(), localStorage.getItem("visitorRedirected"));
+    // console.groupEnd();
+    // debugger;
+    if (!visitorRedirected && previousLocationPathName === "/") {
+      if (visitorType === "school" && currentUser && isUserSubsReady) {
+        Meteor.call("school.getMySchool", (err, res) => {
+          if (err) {
+            console.warn(err);
+          } else {
+            localStorage.setItem("visitorRedirected", true);
+            if (res.length) {
+              // debugger;
+              console.info(res, "---");
+
+              const mySchoolSlug = res[0].slug;
+              browserHistory.push(`/schools/${mySchoolSlug}`);
+            } else {
+              browserHistory.push("/skillshape-for-school");
+            }
+          }
+        });
+      } else if (visitorType === "school" && !currentUser && isUserSubsReady) {
+        localStorage.setItem("visitorRedirected", true);
+        browserHistory.push("/skillshape-for-school");
+      } else if (visitorType === "student") {
+        localStorage.setItem("visitorRedirected", true);
+        this.handlePreloaderState(false);
+      } else {
+        if (isUserSubsReady) {
+          this.handlePreloaderState(false);
+        }
+      }
+    } else {
+      // Lets say we land on any link and from that we clicked on lets back to homepage
+      if (
+        (visitorRedirected && isUserSubsReady) ||
+        (isUserSubsReady && previousLocationPathName !== "/")
+      ) {
+        this.handlePreloaderState(false);
       }
     }
-  }
-
+  };
 
   componentDidMount() {
     let positionCoords = this.getUsersCurrentLocation();
@@ -394,11 +445,16 @@ class Landing extends Component {
         userData: this.props.location.query
       });
     }
+
+    // When we redirect back, the componentDidUpdate needs not to be called.
+    this._redirectBasedOnVisitorType();
   }
 
   componentDidUpdate() {
     // Have to manually set it , otherwise it resets automatically in mapView.
     document.title = "Skillshape";
+
+    this._redirectBasedOnVisitorType();
   }
 
   // This is used to get subjects on the basis of subject category.
@@ -418,7 +474,7 @@ class Landing extends Component {
   };
 
   setFilters = filters => {
-    console.info(filters, "------");
+    // console.info(filters, "------");
     this.setState(state => {
       return {
         ...state,
@@ -426,7 +482,6 @@ class Landing extends Component {
       };
     });
   };
-
 
   getUsersCurrentLocation = args => {
     const { popUp } = this.props;
@@ -454,12 +509,23 @@ class Landing extends Component {
           },
           err => {
             const geolocationError = this._handleGeoLocationError(err);
-            popUp.appear("alert", { content: geolocationError });
+            if (geolocationError) {
+              popUp.appear("alert", { content: geolocationError });
+            }
           }
         );
       } else {
         reject();
       }
+    });
+  };
+
+  handleIsCardsSearching = searchingState => {
+    this.setState(state => {
+      return {
+        ...state,
+        isCardsSearching: searchingState
+      };
     });
   };
 
@@ -555,7 +621,10 @@ class Landing extends Component {
         },
         err => {
           const geolocationError = this._handleGeoLocationError(err);
-          popUp.appear("alert", { content: geolocationError });
+          popUp.appear("alert", { content: geolocationError }, true, {
+            autoClose: true,
+            autoTimeout: 4000
+          });
         }
       );
     }
@@ -904,14 +973,19 @@ class Landing extends Component {
   };
 
   render() {
+    if (this.state.showPreloader) {
+      return <Preloader />;
+    }
+
     return (
       <DocumentTitle title={this.props.route.name}>
         <div>
-          {this._redirectBasedOnVisitorType()}
+          {/*this._redirectBasedOnVisitorType()*/}
           <FiltersDialogBox
             open={this.state.filterPanelDialogBox}
             onModalClose={() => this.handleFiltersDialogBoxState(false)}
             filterPanelProps={{
+              isCardsSearching: this.state.isCardsSearching,
               currentAddress: this.state.locationName,
               removeAllFilters: this.removeAllFilters,
               filters: this.state.filters,
@@ -995,9 +1069,10 @@ class Landing extends Component {
               {!this.state.mapView &&
                 this.checkIfAnyFilterIsApplied() &&
                 this.showAppliedTopFilter()}
-              {console.log("re rendering .... classtype list...")}
+              {/*console.log("re rendering .... classtype list...") */}
               <ClassTypeList
                 landingPage={true}
+                handleIsCardsSearching={this.handleIsCardsSearching}
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 defaultLocation={this.state.defaultLocation}
                 mapView={this.state.mapView}

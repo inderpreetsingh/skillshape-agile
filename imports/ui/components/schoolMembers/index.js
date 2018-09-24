@@ -41,6 +41,7 @@ class SchoolMemberView extends Component {
                     <DashBoardView
                         filters={filters}
                         params={this.props.params}
+                        location={this.props.location}
                     />
                 </Grid>
             </DocumentTitle>

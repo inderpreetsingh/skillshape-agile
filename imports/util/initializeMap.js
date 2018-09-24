@@ -17,10 +17,10 @@ let locations = [];
 let InfoBoxInstance;
 
 const mapOptions = {
-    zoom: 8,
+    zoom: 1,
     scrollwheel: true,
     minZoom: 1,
-    center: { lat: -25.363, lng: 131.044 }
+    center: { lat:0, lng: 0 }
 };
 
 
@@ -36,37 +36,41 @@ function infoSchool({school, classTypes}) {
 }
 
 export function createMarkersOnMap(mapId, locationData) {
+    console.log('TCL: createMarkersOnMap -> locationData', locationData);
     if(document.getElementById(mapId)) {
-        let map = new google.maps.Map(document.getElementById(mapId), {zoom: 5});
+        let map = new google.maps.Map(document.getElementById(mapId), {zoom: 1});
         let i = 0;
+        let bounds = new google.maps.LatLngBounds();
             for(let obj of locationData) {
 
-                if(obj.loc && isNumber(obj.loc[0]) && isNumber(obj.loc[1])) {
-                    let geolocate = new google.maps.LatLng(obj.loc[0], obj.loc[1])
+                if(obj.loc && isNumber(obj.loc[1]) && isNumber(obj.loc[0])) {
+                    let geolocate = new google.maps.LatLng(obj.loc[1], obj.loc[0])
                     let marker = new google.maps.Marker({
                         position: geolocate,
                         map: map
                     });
+                    bounds.extend(marker.getPosition());
                     google.maps.event.addListener(marker, 'click', function() {
                         const address = `<div id="address-content">
-                         ${obj.address}, ${obj.city}, ${obj.country}
+                        ${obj.address && obj.address}, ${obj.city && obj.city}, ${obj.country && obj.country}
                         </div>`
                         let infowindow = new google.maps.InfoWindow();
                         infowindow.setContent(address);
                         infowindow.open(map, marker);
                     });
-
+                    
                     if(i=== 0) {
                         map.setCenter(geolocate);
                     }
                     i++;
                 }
             }
+            map.fitBounds(bounds);
     }
 }
 
 export function reCenterMap(map, center) {
-    map && map.panTo(new google.maps.LatLng(center[0], center[1]));
+    map && map.panTo(new google.maps.LatLng(center[1], center[0]));
     return map;
 }
 
@@ -77,7 +81,7 @@ export function initializeSchoolEditLocationMap(location) {
         let geolocate;
         let map = new google.maps.Map(document.getElementById(mapId), mapOptions);
 
-        geolocate = new google.maps.LatLng(location.loc[0], location.loc[1])
+        geolocate = new google.maps.LatLng(location.loc[1], location.loc[0])
         map.setCenter(geolocate);
 
         let marker = new google.maps.Marker({
@@ -114,7 +118,7 @@ export function initializeMap(center) {
         let geolocate;
         let map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
 
-        geolocate = new google.maps.LatLng(center[0], center[1])
+        geolocate = new google.maps.LatLng(center[1], center[0])
         map.setCenter(geolocate);
         let mcOptions = {  maxZoom: 12 };
         mc = new MarkerClusterer(map, [], mcOptions);

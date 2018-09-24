@@ -248,6 +248,13 @@ const LoginUserSideNav = props => {
           <SideNavItem
             button
             menuListItemText={props.classes.menuListItemText}
+            name="Optimization"
+            iconName="motorcycle"
+            onClick={() => props.childItemOnClick("/optimization")}
+          />
+          <SideNavItem
+            button
+            menuListItemText={props.classes.menuListItemText}
             name="Manage Users"
             iconName="supervisor_account"
             onClick={() => props.childItemOnClick("/manage-users")}

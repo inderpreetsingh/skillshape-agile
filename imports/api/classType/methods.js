@@ -87,7 +87,7 @@ Meteor.methods({
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
     ) {
       let classTypeData = ClassType.findOne({ _id: doc_id });
-      const temp = { ...doc, filters: classTypeData.filters || {} };
+      const temp = { ...doc, filters: classTypeData && classTypeData.filters || {} };
 
       // if (temp.locationId) {
       //   console.log('TCL: temp.locationId', temp.locationId);
@@ -339,6 +339,9 @@ Meteor.methods({
     }catch(error){
 
     }
+  },
+  'classType.optimizationFinder':function(){
+    return ClassType.find({medium:{$exists:false},low:{$exists:false},classTypeImg:{$exists:true}}).fetch();
   }
 });
  

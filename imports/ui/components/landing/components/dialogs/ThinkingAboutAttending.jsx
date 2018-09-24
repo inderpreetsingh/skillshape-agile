@@ -33,6 +33,7 @@ const ButtonWrapper = styled.div`
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   width: 100%;
+  font-size: 30px;
 `;
 
 
@@ -49,14 +50,16 @@ const styles = {
         flexWrap: "wrap",
         justifyContent: "flex-start"
       }
+    },dialogTitle:{
+        borderTop: `5px solid #4caf50`
     }
     
 }
 const TextWrapper = styled.div`
     text-align: center;
-    font-size: 30px;
+    font-size: 15px;
     font-weight: 500;
-    text-decoration: underline;`;
+   `;
 const ErrorWrapper = styled.span`
     color: red;
     float: right;
@@ -67,13 +70,13 @@ class ThinkingAboutAttending extends React.Component {
     constructor(props) {
         super(props);
         const {addToCalendar,notification}= this.props;
-        this.state = { checkBoxes:[!addToCalendar,notification,true] }
+        this.state = { checkBoxes:[true,true,true] }
     }
     
     render() {
         const {checkBoxes}=this.state;
         const { open,onModalClose,addToCalendar,
-            handleClassClosed,handleCheckBoxes,purchaseThisPackage } = this.props;
+            handleClassClosed,handleCheckBoxes,purchaseThisPackage ,name} = this.props;
             return (
                 <MuiThemeProvider theme={muiTheme}>
                 <Dialog
@@ -84,9 +87,9 @@ class ThinkingAboutAttending extends React.Component {
                     aria-labelledby="Thinking About Attending"
                     >
                     {this.props.isLoading && <ContainerLoader />}
-                    <DialogTitle>
+                    <DialogTitle  classes={{ root: this.props.classes.dialogTitle }}>
                         <DialogTitleWrapper>
-                        Thinking About Attending
+                        About Attending {name && name}
 
                             <IconButton color="primary" onClick={() => { onModalClose()}}>
                                 <ClearIcon /> 
@@ -140,7 +143,7 @@ class ThinkingAboutAttending extends React.Component {
                             <FormGhostButton
                                 darkGreyColor
                                 onClick={onModalClose}
-                                label="No thanks"
+                                label="Not Yet, Thanks!"
                             />
                         </ButtonWrapper>
                     </DialogActions>

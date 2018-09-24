@@ -37,6 +37,7 @@ export { toastrModal } from "/imports/util/toastrModal.js";
 export { withPopUp } from "/imports/util/withPopUp.js";
 export { default as withImageExists } from "/imports/util/withImageExists";
 export { default as withMarker } from "/imports/util/withMarker.js";
+export {verifyImageURL} from '/imports/util/verifyImageURL.js'
 export {
   withSubscriptionAndPagination
 } from "/imports/util/subscriptionAndPagination";
@@ -49,3 +50,4 @@ export { openMailToInNewTab } from './openInNewTabHelpers';
 export { goToSchoolPage, goToClassTypePage, checkForAddToCalender } from './handleRedirect.js';
 export {maximumClasses} from './maximumClasses.js'
 export {normalizeMonthlyPricingData} from './packageFormat.js'
+export {compressImage} from './compressImage.js'

@@ -5,6 +5,7 @@ import { browserHistory, Link } from "react-router";
 import { FormBuilderModal } from "/imports/ui/modal";
 import ResponsiveTabs from "/imports/util/responsiveTabs";
 import Typography from "material-ui/Typography";
+import SchoolMemberView from "/imports/ui/components/schoolMembers";
 
 // import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 
@@ -19,7 +20,7 @@ import MediaDetails from "./mediaDetails";
 
 export default function (props) {
   const { selecetdView, formBuilderModal } = this.state;
-
+  
   let {
     schoolId,
     schoolData,
@@ -31,7 +32,10 @@ export default function (props) {
     isLoading,
     ...editSchoolProps
   } = this.props;
-
+  let slug;
+  if(schoolData){
+    slug=schoolData.slug;
+  }
   if (isLoading) {
     // return <Preloader />;
   }
@@ -54,7 +58,10 @@ export default function (props) {
                 "Class Details",
                 "Prices",
                 "Media",
-                "Embed Codes"
+                "Embed Codes",
+                "Students",
+                "Admins",
+                "View School"
               ]}
               color="primary"
               onTabChange={this.onTabChange}
@@ -127,6 +134,21 @@ export default function (props) {
                   moveTab={this.moveTab}
                 />
               )}
+              {
+                this.state.tabValue === 6 &&(
+                  browserHistory.push(`/schools/${slug}/members`)
+                )
+              }
+              {
+                this.state.tabValue === 7 &&(
+                  browserHistory.push(`/schools/${slug}/members?admin=true`)
+                )
+              }
+               {
+                this.state.tabValue === 8 &&(
+                  browserHistory.push(`/schools/${slug}`)
+                )
+              }
             </div>
           </div>
         </DocumentTitle>

@@ -50,9 +50,13 @@ class DropDownMenu extends Component {
     this.props.onMenuItemClick && this.props.onMenuItemClick(option);
   };
 
+  handleMenuEnter = element => {
+    // NOTE: Allow first menu to not be focused.
+    element.firstChild.firstChild.blur();
+    // console.log(element, );
+  };
+
   render() {
-    let rootClass,
-      iconClass = "";
     const { menu, anchorEl } = this.state;
     const {
       options,
@@ -64,6 +68,9 @@ class DropDownMenu extends Component {
       menuButtonClass,
       classes
     } = this.props;
+
+    let rootClass,
+      iconClass = "";
     rootClass = classes.iconButton;
     iconClass = classes.icon;
 
@@ -88,14 +95,16 @@ class DropDownMenu extends Component {
 
         <Menu
           id="my-menu"
-          disableAutoFocusItem
+          disableAutoFocusItem={true}
           open={Boolean(anchorEl)}
           anchorEl={anchorEl}
           onClose={this.handleClose}
+          onEnter={this.handleMenuEnter}
         >
           {menuOptions.map(option => (
             <MenuItem
               key={option.value}
+              selected={false}
               onClick={this.handleMenuItemClick(option)}
             >
               {option.name}

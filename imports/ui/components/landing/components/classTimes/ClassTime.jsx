@@ -1,25 +1,27 @@
 import React, { Component, Fragment } from "react";
 import moment from "moment";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import PropTypes from "prop-types";
+import { withStyles } from "material-ui/styles";
 import { isEmpty, get } from "lodash";
-import {scroller} from 'react-scroll';
+import { scroller } from "react-scroll";
+import { Checkbox } from "material-ui";
+import Paper from "material-ui/Paper";
+import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
+
 import ClassTimeClockManager from "/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx";
-import ClassTimesCard from "/imports/ui/components/landing/components/cards/ClassTimesCard.jsx";
+import ClassTimesList from "/imports/ui/components/landing/components/classTimes/ClassTimesList.jsx";
 import TrendingIcon from "/imports/ui/components/landing/components/icons/Trending.jsx";
-import Dialog, {
-  DialogActions,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
-import { cutString } from "/imports/util";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
+
 import Events from "/imports/util/events";
+import { cutString } from "/imports/util";
 import {
   withPopUp,
   formatDate,
@@ -27,6 +29,9 @@ import {
   formatDataBasedOnScheduleType,
   getUserFullName
 } from "/imports/util";
+
+import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 import {
@@ -34,8 +39,40 @@ import {
   CLASS_TIMES_CARD_WIDTH
 } from "/imports/ui/components/landing/constants/classTypeConstants.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import { Checkbox } from "material-ui";
+
+const styles = {
+  classTimeIcon: {
+    fontSize: helpers.baseFontSize,
+    color: helpers.black,
+    marginRight: helpers.rhythmDiv / 2
+  },
+  descriptionPanelCloseIcon: {
+    top: 0,
+    left: `calc(100% - ${helpers.rhythmDiv * 4}px)`,
+    fontSize: helpers.baseFontSize,
+    color: helpers.black,
+    padding: helpers.rhythmDiv,
+    borderRadius: "50%",
+    background: "white",
+    position: "absolute",
+    boxShadow: helpers.buttonBoxShadow,
+    cursor: "pointer"
+  },
+  descriptionPanel: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    transition: "transform 0.2s linear",
+    maxHeight: "272px",
+    transformOrigin: "50% 100%",
+    paddingTop: helpers.rhythmDiv,
+    marginBottom: helpers.rhythmDiv,
+    overflowY: "auto",
+    background: "white",
+    borderRadius: 5
+  }
+};
+
 const ClassTimeContainer = styled.div`
   ${helpers.flexHorizontalSpaceBetween} flex-direction: column;
   max-width: 100%;
@@ -66,45 +103,29 @@ const ClassTimeContainer = styled.div`
   }
 `;
 
-const ClassScheduleWrapper = styled.div`
-  ${helpers.flexCenter};
-`;
-
-const ScheduleAndDescriptionWrapper = styled.div`
-  max-height: 330px; // This is the computed max-height for the container.
-  display: flex;
-  flex-direction: column;
-`;
-
-const ScheduleWrapper = styled.div`
-  flex-shrink: 0;
-`;
-
-const DescriptionWrapper = styled.div`
-  flex-grow: 1;
-  display: flex;
-`;
-
 const ClassTimeContent = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  flex-grow: 1;
 `;
-const ConfirmationDialog = styled.div`
-  margin: 8px;
-`;
-const ClassTimeDescription = styled.div`
-  border: 2px solid black;
-  margin-top: 5px;
+
+const ClassTimeContentInnerWrapper = styled.div`
   width: 100%;
-  padding: 7px;
-  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  ${props => props.showDescription && "filter: blur(2px);"};
 `;
-const ClassTypeName = styled.h5`
-  width: 100%;
-  margin: 0;
-  line-height: 1;
-  color: ${helpers.black};
-  font-family: ${helpers.specialFont};
-  font-weight: 400;
+
+const ClassTimeDescription = Text.extend`
+  padding: ${helpers.rhythmDiv}px;
+  width: calc(100% - 24px);
+  max-height: 100%;
+  overflow-y: auto;
+`;
+
+const ClassTypeName = Text.withComponent("h4").extend`
   font-size: ${props =>
     props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize * 1.25}px;
   text-align: center;
@@ -112,33 +133,61 @@ const ClassTypeName = styled.h5`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const ScheduleType = ClassTypeName.withComponent("p").extend`
+const ScheduleType = Text.extend`
   font-weight: 300;
-  font-size: 18px;
-  text-transform: capitalize;
+  text-align: center;
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const Description = styled.p`
-  margin: ${helpers.rhythmDiv}px 0;
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize}px;
-  font-weight: 400;
-  padding: 0 ${helpers.rhythmDiv * 2}px;
-  overflow-y: auto;
+const RecurringDate = Text.extend`
+  font-size: 14px;
+  font-weight: 500;
+`;
+
+const ClassTimeLocationWrapper = styled.div`
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const EventLocation = styled.div`
+  ${helpers.flexCenter} justify-content: flex-start;
+  flex-direction: ${props => (!props.locationTitle ? "column-reverse" : "row")};
+  margin-bottom: ${helpers.rhythmDiv / 2}px;
+`;
+
+let ClassTimeRoom, ClassTimeLocation;
+ClassTimeLocation = ClassTimeRoom = styled.div`
+  ${helpers.flexCenter};
+  ${props => !props.locationTitle && "align-items: flex-start;"};
+`;
+
+ClassTimeLocation = ClassTimeLocation.extend`
+  margin-right: ${helpers.rhythmDiv}px;
+`;
+
+let LocationTitle, LocationDetails, RoomName;
+LocationTitle = LocationDetails = RoomName = Text.extend`
+  font-weight: 300;
+  font-style: italic;
+  margin: 0;
 `;
 
 const ButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 `;
 
 const ButtonWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: ${helpers.rhythmDiv}px;
   transition: 0.1s ease-in opacity;
   ${props => (props.showCard ? "opacity: 0" : "opacity: 1")};
+  ${props => props.marginBottom && `margin-bottom: ${helpers.rhythmDiv}px;`};
 `;
 
 const TrendingWrapper = styled.div`
@@ -154,7 +203,20 @@ const ClassTimesCardWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  max-height: ${props => (props.inPopUp ? "auto" : "296px")}; // computed height
+  max-height: auto;
+  // max-height: ${props =>
+    props.inPopUp ? "auto" : "296px"}; // computed height
+`;
+
+const ClickableLink = Text.extend`
+  cursor: pointer;
+  font-style: italic;
+  font-weight: 300;
+  display: inline;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const Trending = () => {
@@ -168,18 +230,52 @@ const Trending = () => {
 class ClassTime extends Component {
   state = {
     isLoading: false,
-    thinkingAboutAttending:false
-    // fullTextState: this.props.fullTextState,
+    showCard: false,
+    showDescription: false,
+    thinkingAboutAttending: false,
+    description: this.props.desc
   };
 
-  componentWillMount() {
-    Meteor.call('classTypeLocationRequest.getUserRecord', this.props.classTypeId, (err, res) => {
-      if (err) { }
-      else {
-        this.setState({ notification: res });
-      }
-    })
+  componentWillReceiveProps(nextProps) {
+    if (this.state.description != nextProps.desc) {
+      this.setState(state => {
+        return {
+          ...state,
+          description: nextProps.desc
+        };
+      });
+    }
   }
+
+  componentDidMount() {
+    document.addEventListener("keydown", this.escFunction, false);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.escFunction, false);
+  }
+
+  componentWillMount() {
+    Meteor.call(
+      "classTypeLocationRequest.getUserRecord",
+      this.props.classTypeId,
+      (err, res) => {
+        if (err) {
+        } else {
+          this.setState({ notification: res });
+        }
+      }
+    );
+  }
+
+  handleShowMoreLinkClick = event => {
+    this.handleDescriptionState(true)(event);
+  };
+
+  escFunction = event => {
+    if (event.keyCode === 27) {
+      this.handleDescriptionState(false)(event);
+    }
+  };
 
   handleAddToMyCalendarButtonClick = () => {
     const classTimeData = { ...this.props };
@@ -206,7 +302,7 @@ class ClassTime extends Component {
     // check for user login or not
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
-      if(!_.isEmpty(result)){
+      if (!_.isEmpty(result)) {
         const doc = {
           _id: result[0]._id,
           userId
@@ -216,7 +312,7 @@ class ClassTime extends Component {
           data: { doc }
         });
       }
-      this.setState({addToCalendar:true})
+      this.setState({ addToCalendar: true });
     } else {
       // popUp.error("Please login !","Error");
       this.setState({
@@ -239,7 +335,7 @@ class ClassTime extends Component {
         methodName: "classInterest.addClassInterest",
         data: { doc }
       });
-      this.setState({addToCalendar:false})
+      this.setState({ addToCalendar: false });
     } else {
       // alert("Please login !!!!")
       //Events.trigger("loginAsUser");
@@ -260,44 +356,121 @@ class ClassTime extends Component {
         popUp.appear("error", { content: err.message });
       } else {
         if (methodName.indexOf("remove") !== -1)
-          popUp.appear("success", { content: `Hi ${userName}, Class removed successfully from your calendar` });
+          popUp.appear("success", {
+            content: `Hi ${userName}, Class removed successfully from your calendar`
+          });
         else
-          popUp.appear("success", { content: `Hi ${userName}, Class added to your calendar` });
+          popUp.appear("success", {
+            content: `Hi ${userName}, Class added to your calendar`
+          });
       }
     });
   };
   handleClassClosed = () => {
-    
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
     const { popUp } = this.props;
     let emailId;
-    this.props && this.props.schoolId && Meteor.call('school.getMySchool',null,false, (err, res) => {
-      if (res) {
-        emailId = res && res[0].email;
-        popUp.appear("success", { content: `Hi ${userName}, This class is closed to registration. ${emailId && emailId && `contact the administrator at ${emailId} for more details.`} ` });
-      }
-    })
+    this.props &&
+      this.props.schoolId &&
+      Meteor.call("school.getMySchool", null, false, (err, res) => {
+        if (res) {
+          emailId = res && res[0].email;
+          popUp.appear("success", {
+            content: `Hi ${userName}, This class is closed to registration. ${emailId &&
+              emailId &&
+              `contact the administrator at ${emailId} for more details.`} `
+          });
+        }
+      });
+  };
+
+  reformatNewFlowData = () => {
+    const newData = {};
+    let { formattedClassTimesDetails, scheduleType } = this.props;
+    scheduleType = scheduleType.toLowerCase();
+
+    // if (scheduleType === "recurring" || scheduleType === "ongoing") {
+    //   if (typeof formattedClassTimesDetails[0] !== "object") {
+    //     return formattedClassTimesDetails;
+    //   }
+    //
+    //   // key attr specifies the day information is stored on keys
+    //   formattedClassTimesDetails.forEach((scheduleData, index) => {
+    //     scheduleData.key.forEach(dowObj => {
+    //       // debugger;
+    //       if (!newData[dowObj.label]) {
+    //         newData[dowObj.label] = [];
+    //       }
+    //
+    //       const scheduleDataCopy = JSON.parse(JSON.stringify(scheduleData));
+    //       delete scheduleDataCopy.key;
+    //       newData[dowObj.label].push(scheduleDataCopy);
+    //     });
+    //   });
+    //
+    //   return newData;
+    // }
+
+    return formattedClassTimesDetails;
+  };
+
+  setDescription = description => {
+    if (this.state.description !== description) {
+      this.setState(state => {
+        return {
+          ...state,
+          description
+        };
+      });
+    }
+  };
+
+  handleShowMoreLinkClick = completeDesc => event => {
+    this.setDescription(completeDesc);
+    this.handleDescriptionState(true)(event);
+  };
+
+  returnClickableLink(completeDesc, shortDesc) {
+    return (
+      <span>
+        {shortDesc}{" "}
+        <ClickableLink onClick={this.handleShowMoreLinkClick(completeDesc)}>
+          click for more info.
+        </ClickableLink>
+      </span>
+    );
   }
 
   getScheduleTypeFormatted = () => {
     const { startDate, endDate, scheduleType, addToCalendar } = this.props;
     const classScheduleType = scheduleType.toLowerCase();
 
-    if (classScheduleType === "recurring")
+    if (classScheduleType === "recurring") {
+      const strAsDesc =
+        "This is a Closed Series. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
+
       return (
-        <ScheduleType>
-          {addToCalendar == 'closed' ? 'This is a Closed Series.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series.' : "This is a Series class time."} {<br />}
-          {formatDate(startDate)} - {formatDate(endDate)}
-        </ScheduleType>
+        <Fragment>
+          <ScheduleType>
+            {addToCalendar == "closed"
+              ? this.returnClickableLink(strAsDesc, "This is closed series.")
+              : "This is a series class time."}{" "}
+            {<br />}
+          </ScheduleType>
+        </Fragment>
       );
-    else if (classScheduleType === "onetime") {
-      {
-        /* Adding manual small letters splitted schedule type one time*/
-      }
+    } else if (classScheduleType === "onetime") {
+      /* Adding manual small letters splitted schedule type one time*/
+      const strAsDesc =
+        "This is a Closed Single/set. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
+
       return (
         <ScheduleType>
-          {addToCalendar == 'closed' ? 'This is a Closed Single/set.Enrollment closes once the first class starts.If you join the class, you are enrolled in all the classes in the series.' : "This is a Single/Set class time."} {<br />}
+          {addToCalendar == "closed"
+            ? this.returnClickableLink(strAsDesc, "This is closed single/set.")
+            : "This is a single/set class time."}{" "}
+          {<br />}
         </ScheduleType>
       );
     }
@@ -320,123 +493,166 @@ class ClassTime extends Component {
   getCalenderButton = (addToCalender, formattedClassTimesDetails) => {
     const iconName = addToCalender ? "add_circle_outline" : "delete";
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
-   
-    return (<div style={{ display: "flex" }}>
-    <FormGhostButton
-      onClick={()=>{
-        this.setState({thinkingAboutAttending:true,addToCalendar:addToCalender})}
-      }
-      label="Thinking About Attending"
-    />
-  </div>)
-    // if (addToCalender == 'closed') {
 
-    //   return (
-    //     <div style={{ display: "flex" }}>
-    //       <FormGhostButton
-    //         icon
-    //         onClick={this.handleClassClosed}
-    //         label="Class Closed"
-    //         iconName={iconName}
-    //       />
-    //     </div>
-    //   );
-    // }
-    // if (addToCalender || !Meteor.userId()) {
-    //   return (
-    //     <div style={{ display: "flex" }}>
-          
-    //       <FormGhostButton
-    //         icon
-    //         onClick={this.handleAddToMyCalendarButtonClick}
-    //         label="Add to my Calender"
-    //         iconName={iconName}
-    //       />
-    //     </div>
-    //   );
-    // } else {
-    //   return (
-    //     <div style={{ display: "flex" }}>
-          
-    //       <FormGhostButton
-    //         icon
-    //         ghost
-    //         onClick={this.handleRemoveFromCalendarButtonClick}
-    //         label="Remove from calendar"
-    //         iconName={iconName}
-    //       />
-    //     </div>
-    //   );
-    // }
-    
+    return (
+      <div style={{ display: "flex" }}>
+        <FormGhostButton
+          onClick={() => {
+            this.setState({
+              thinkingAboutAttending: true,
+              addToCalendar: addToCalender
+            });
+          }}
+          label="Thinking About Attending"
+        />
+      </div>
+    );
   };
+
   scrollTo(name) {
-    scroller.scrollTo((name || 'content-container'), {
-        duration: 800,
-        delay: 0,
-        smooth: 'easeInOutQuart'
-    })
-    }
-    handleNotification =(CheckBoxes)=>{
-      this.setState({ isLoading: true });
-      const {schoolId,classTypeId,classTypeName}= this.props;
-      const currentUser = Meteor.user();
-      const userName = getUserFullName(currentUser);
-      let data={
-        name : userName,
-        email :currentUser.emails[0].address,
-        schoolId : schoolId,
-        classTypeId : classTypeId,
-        userId: Meteor.userId(),
-        notification: CheckBoxes[1],
-        createdAt : new Date(),
-        classTypeName: classTypeName.name,
-        existingUser: true
-      }
-      Meteor.call('classTypeLocationRequest.updateRequest',data,(err,res)=>{
-        this.setState({ isLoading: false });
-        const { popUp } = this.props;
-      if(res){
-        Meteor.call('classTimesRequest.updateRequest',data,(err1,res1)=>{
-          if(res1){
-            popUp.appear("success", { content: `Hi ${userName}, You are ${CheckBoxes[1] ?'subscribed' :'unsubscribed'} to  notification related to the
+    scroller.scrollTo(name || "content-container", {
+      duration: 800,
+      delay: 0,
+      smooth: "easeInOutQuart"
+    });
+  }
+
+  handleNotification = CheckBoxes => {
+    this.setState({ isLoading: true });
+    const { schoolId, classTypeId, classTypeName } = this.props;
+    const currentUser = Meteor.user();
+    const userName = getUserFullName(currentUser);
+    let data = {
+      name: userName,
+      email: currentUser.emails[0].address,
+      schoolId: schoolId,
+      classTypeId: classTypeId,
+      userId: Meteor.userId(),
+      notification: CheckBoxes[1],
+      createdAt: new Date(),
+      classTypeName: classTypeName.name,
+      existingUser: true
+    };
+    Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
+      this.setState({ isLoading: false });
+      const { popUp } = this.props;
+      if (res) {
+        Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
+          if (res1) {
+            popUp.appear("success", {
+              content: `Hi ${userName}, You are ${
+                CheckBoxes[1] ? "subscribed" : "unsubscribed"
+              } to  notification related to the
             location and time update of class type ${classTypeName.name}.
-            `});
+            `
+            });
             this.componentWillMount();
           }
-        })
+        });
       }
-      })
+    });
+  };
+
+  getClassTimeRoomInfo = () => {
+    const { selectedLocation, classes } = this.props;
+
+    if (
+      isEmpty(selectedLocation) ||
+      (typeof selectedLocation.rooms === "undefined" ||
+        !selectedLocation.rooms.length)
+    ) {
+      return null;
     }
-    handleCheckBoxes = (CheckBoxes) =>{
-      const{addToCalendar}=this.props;
-      if(CheckBoxes[0]!=!addToCalendar){
-        if(CheckBoxes[0]){
-          this.handleAddToMyCalendarButtonClick()
-        }
-        else{
-          this.handleRemoveFromCalendarButtonClick()
-        }
+
+    const { rooms } = selectedLocation;
+
+    return (
+      <ClassTimeRoom>
+        <Icon className={classes.classTimeIcon}>{"meeting_room"}</Icon>
+        <RoomName>{rooms.map(room => room.name).join(",")}</RoomName>
+      </ClassTimeRoom>
+    );
+  };
+
+  getClassTimeLocation = () => {
+    // debugger;
+    const { selectedLocation, classes } = this.props;
+
+    if (isEmpty(selectedLocation)) {
+      return null;
+    }
+
+    let eventAddress = "";
+    const addressComponents = ["address", "city", "state", "country"];
+    const eventLocationTitle = selectedLocation.title || "";
+    addressComponents.forEach(component => {
+      if (selectedLocation[component])
+        eventAddress += ", " + selectedLocation[component];
+    });
+    eventAddress = eventAddress.replace(",", "");
+
+    const RoomInfo = this.getClassTimeRoomInfo();
+    return (
+      <ClassTimeLocationWrapper>
+        <EventLocation locationTitle={eventLocationTitle} roomInfo={RoomInfo}>
+          <ClassTimeLocation locationTitle={eventLocationTitle}>
+            <Icon className={classes.classTimeIcon}>{"location_on"}</Icon>
+            <LocationTitle>
+              {eventLocationTitle ? eventLocationTitle : eventAddress}
+            </LocationTitle>
+          </ClassTimeLocation>
+          {this.getClassTimeRoomInfo()}
+        </EventLocation>
+        {eventLocationTitle && (
+          <LocationDetails>{eventAddress}</LocationDetails>
+        )}
+      </ClassTimeLocationWrapper>
+    );
+  };
+
+  handleCheckBoxes = CheckBoxes => {
+    const { addToCalendar } = this.props;
+    if (CheckBoxes[0] != !addToCalendar) {
+      if (CheckBoxes[0]) {
+        this.handleAddToMyCalendarButtonClick();
+      } else {
+        this.handleRemoveFromCalendarButtonClick();
       }
-      this.handleNotification(CheckBoxes);
-      
     }
+    this.handleNotification(CheckBoxes);
+  };
+
+  handleDescriptionState = descriptionState => e => {
+    e.stopPropagation();
+    this.setState(state => {
+      return {
+        ...state,
+        showDescription: descriptionState
+      };
+    });
+  };
+
   render() {
     // debugger;
     const {
+      selectedLocation,
       desc,
       startDate,
       endDate,
       scheduleType,
       name,
+      classes,
       inPopUp,
       formattedClassTimesDetails,
       classTypeName,
       onModalClose
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
-    const {thinkingAboutAttending,addToCalendar,notification}= this.state;
-    
+    const { thinkingAboutAttending, addToCalendar, notification } = this.state;
+
+    // console.group("formattedClassTimes");
+    // console.groupEnd();
+
     //const showDescription = this.showDescription(formattedClassTimes);
     const classNameForClock = this.getOuterClockClassName(
       this.props.addToCalendar
@@ -456,23 +672,33 @@ class ClassTime extends Component {
                 onModalClose={this.handleNonUserDialogBoxState(false)}
               />
             )}
-            {thinkingAboutAttending && <ThinkingAboutAttending
-            open ={thinkingAboutAttending}
-            onModalClose ={()=>{this.setState({thinkingAboutAttending:false})}}
-            handleClassClosed ={this.handleClassClosed}
-            handleAddToMyCalendarButtonClick = {this.handleAddToMyCalendarButtonClick}
-            handleRemoveFromCalendarButtonClick = {this.handleRemoveFromCalendarButtonClick}
-            addToCalendar = {addToCalendar}
-            notification ={notification}
-            purchaseThisPackage ={()=>{
-              this.setState({thinkingAboutAttending:false});
-              this.scrollTo('price-section')
-              onModalClose();
-            }}
-            handleCheckBoxes = {this.handleCheckBoxes}
-            />}
+            {thinkingAboutAttending && (
+              <ThinkingAboutAttending
+                open={thinkingAboutAttending}
+                onModalClose={() => {
+                  this.setState({ thinkingAboutAttending: false });
+                }}
+                handleClassClosed={this.handleClassClosed}
+                handleAddToMyCalendarButtonClick={
+                  this.handleAddToMyCalendarButtonClick
+                }
+                handleRemoveFromCalendarButtonClick={
+                  this.handleRemoveFromCalendarButtonClick
+                }
+                addToCalendar={addToCalendar}
+                notification={notification}
+                purchaseThisPackage={() => {
+                  this.setState({ thinkingAboutAttending: false });
+                  this.scrollTo("price-section");
+                  onModalClose();
+                }}
+                handleCheckBoxes={this.handleCheckBoxes}
+                name={name}
+              />
+            )}
             <div>
               <ClassTimeContainer
+                onClick={this.handleDescriptionState(false)}
                 inPopUp={inPopUp}
                 className={`class-time-bg-transition ${this.getWrapperClassName(
                   this.props.addToCalendar
@@ -482,30 +708,87 @@ class ClassTime extends Component {
                 <ClassTimeContent>
                   {/*Class type name */}
                   <ClassTypeName inPopUp={inPopUp}>{`${name}`}</ClassTypeName>
-                  {/* Schedule type */}
-                  {this.getScheduleTypeFormatted()}
-                  {this.props.desc && (
+
+                  <ClassTimeContentInnerWrapper
+                    showDescription={this.state.showDescription}
+                  >
+                    {/* Schedule type */}
+                    {this.getScheduleTypeFormatted()}
+
+                    {/* Class Location */}
+                    {this.getClassTimeLocation()}
+
+                    {scheduleType === "recurring" && (
+                      <RecurringDate>
+                        Between {formatDate(startDate, "MMM")} and{" "}
+                        {formatDate(endDate, "MMM")}
+                      </RecurringDate>
+                    )}
+
+                    {/* class times */}
+                    <ClassTimesCardWrapper inPopUp={inPopUp}>
+                      <ClassTimesList
+                        inPopUp={true}
+                        show={true}
+                        formattedClassTimes={this.reformatNewFlowData()}
+                        scheduleType={scheduleType}
+                      />
+                    </ClassTimesCardWrapper>
+                  </ClassTimeContentInnerWrapper>
+
+                  {/* description */}
+                  <Paper
+                    className={classes.descriptionPanel}
+                    style={{
+                      transform: this.state.showDescription
+                        ? "scaleY(1)"
+                        : "scaleY(0)"
+                    }}
+                  >
+                    <Icon
+                      classes={{
+                        root: classes.descriptionPanelCloseIcon
+                      }}
+                      onClick={this.handleDescriptionState(false)}
+                    >
+                      {"close"}
+                    </Icon>
+
                     <ClassTimeDescription>
-                      {`Description: ${cutString(this.props.desc, 70)}`}
+                      {this.state.description}
                     </ClassTimeDescription>
-                  )}
-                  <ClassTimesCardWrapper inPopUp={inPopUp}>
-                    <ClassTimesCard
-                      inPopUp={inPopUp}
-                      show={true}
-                      formattedClassTimes={formattedClassTimesDetails}
-                      scheduleType={scheduleType}
-                      description={desc}
-                    />
-                  </ClassTimesCardWrapper>
+                  </Paper>
                 </ClassTimeContent>
 
                 {/* View All times button */}
-                <ButtonsWrapper />
                 <ButtonsWrapper>
-                  {this.getCalenderButton(this.props.addToCalendar)}
-                </ButtonsWrapper>
+                  {this.state.description && (
+                    <ButtonWrapper marginBottom>
+                      <ClassTimeButton
+                        white
+                        fullWidth
+                        icon
+                        iconName="description"
+                        label="View Description"
+                        onClick={e => {
+                          e.stopPropagation();
 
+                          debugger;
+                          this.setState(state => {
+                            return {
+                              ...state,
+                              description: desc ? desc : state.description,
+                              showDescription: true
+                            };
+                          });
+                        }}
+                      />
+                    </ButtonWrapper>
+                  )}
+                  <ButtonWrapper>
+                    {this.getCalenderButton(this.props.addToCalendar)}
+                  </ButtonWrapper>
+                </ButtonsWrapper>
                 {this.props.isTrending && <Trending />}
               </ClassTimeContainer>{" "}
             </div>
@@ -517,17 +800,12 @@ class ClassTime extends Component {
 }
 
 ClassTime.propTypes = {
-  classTimes: PropTypes.arrayOf({
-    time: PropTypes.string.isRequired,
-    timePeriod: PropTypes.string.isRequired,
-    day: PropTypes.string.isRequired,
-    duration: PropTypes.number.isRequired
-  }),
   description: PropTypes.string.isRequired,
   addToCalendar: PropTypes.bool.isRequired,
   scheduleType: PropTypes.string.isRequired,
+  inPopUp: PropTypes.bool, // True => the class time cards are present inside of pop up in homepage,  false => are on the classtype page
   isTrending: PropTypes.bool
 };
 
 // export default withPopUp(withShowMoreText(ClassTime, { description: "desc"}));
-export default withPopUp(ClassTime);
+export default withPopUp(withStyles(styles)(ClassTime));

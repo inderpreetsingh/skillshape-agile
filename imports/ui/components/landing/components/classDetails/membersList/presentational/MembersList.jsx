@@ -16,7 +16,7 @@ import Member from "./Member.jsx";
 
 const Wrapper = styled.div`
   padding: 0 ${rhythmDiv * 2}px;
-  margin-bottom: ${rhythmDiv * 3}px;
+  margin-bottom: ${rhythmDiv * 7}px;
 `;
 
 const ListHeading = styled.div`
@@ -30,7 +30,7 @@ const ListHeading = styled.div`
 const MembersGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  ${props => (props.entityType === "students" ? `flex-direction: column` : "")};
+  ${props => props.expanded && `flex-direction: column`};
 
   @media screen and (min-width: ${mobile - 50}px) {
     flex-direction: row;
@@ -69,7 +69,7 @@ const MembersList = props => {
           searchedValue={props.searchedValue}
         />
       </ListHeading>
-      <MembersGrid entityType={props.entityType}>
+      <MembersGrid expanded={expanded}>
         {props.data &&
           props.data.map(obj => (
             <MemberWrapper expanded={expanded} type={obj.type}>
@@ -80,11 +80,17 @@ const MembersList = props => {
               )}
             </MemberWrapper>
           ))}
-        {entityType === "instructors" && (
-          <MemberWrapper>
-            <Member viewType={props.viewType} addInstructor />
-          </MemberWrapper>
-        )}
+        {/* Adding add instructors box*/}
+        {props.entityType === "teachers" &&
+          props.viewType === "instructorsView" && (
+            <MemberWrapper expanded={expanded} type={"instructor"}>
+              <Member
+                addInstructor
+                onAddIconClick={props.onAddIconClick}
+                type="instructor"
+              />
+            </MemberWrapper>
+          )}
       </MembersGrid>
     </Wrapper>
   );

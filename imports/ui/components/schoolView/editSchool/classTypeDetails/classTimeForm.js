@@ -126,9 +126,9 @@ class ClassTimeForm extends React.Component {
       state.locationId = data.locationId || '';
       state.closed=data.closed;
     }
-    if(!_.locationData){
+    
       if(!state.locationId && !state.roomId){
-        state.locationId = locationData[0]._id;
+        state.locationId = locationData[0] && locationData[0]._id || '';
         state.roomData = locationData[0] && locationData[0].rooms && locationData[0].rooms|| [];
         state.roomId = locationData[0] && locationData[0].rooms && locationData[0].rooms[0].id || '';
       }
@@ -142,7 +142,7 @@ class ClassTimeForm extends React.Component {
           }):state.roomData = [];
         })
       }
-    }
+    
     
     return state;
   };

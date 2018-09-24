@@ -7,28 +7,31 @@ import Input from "material-ui/Input";
 import isEmpty from "lodash/isEmpty";
 import { withStyles } from "material-ui/styles";
 import styled from "styled-components";
+import {verifyImageURL} from "/imports/util";
 import FileUpload from "material-ui-icons/FileUpload";
 import MobileDetect from "mobile-detect";
-
+import ProgressiveImage from "react-progressive-image";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import UploadAvatar from "/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js";
 import CallMemberDialogBox from "/imports/ui/components/landing/components/dialogs/CallMemberDialogBox.js";
 import EmailMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EmailMemberDialogBox.jsx";
 import EditMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditMemberDialogBox.js";
-
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 const styles = theme => ({
   avatarCss: {
-    width: "100%",
-    height: "150px",
+    minWidth: "100%",
+    height: "163px",
     backgroundSize: "cover",
-    backgroundPosition: "top center"
+    backgroundPosition: "top center",
+    borderRadius: '27px'
+
   },
   btnBackGround: {
     background: `${helpers.action}`
   },
   avatarContainer: {
-    backgroundColor: "#FFFFFF",
-    width: 100
+    width: 100,
+    textAlign: "center",
   }
 });
 
@@ -67,14 +70,25 @@ const ActionButton = styled.div`
     margin-right: ${helpers.rhythmDiv}px;
   }
 `;
+const ProfilePic =styled.div`
+transition: background-image 1s linear !important;
+background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url(${props=>props.img});
+    height: 150px;
+    border-radius:15px;
+    width: 165px;
+    border: 2px solid black;
+    border-radius: 15px;
+`;
 const UploadDiv = styled.div`
   background: #448aff;
   /* display: block; */
   /* overflow: hidden; */
   position: relative;
-  text-align: center;
   /* bottom: 21px; */
-  left: 20px;
+  margin: 4px auto 0 auto;
   /* overflow: hidden; */
   width: 137px;
   /* background-image: url((unknown)); */
@@ -85,7 +99,6 @@ const UploadDiv = styled.div`
   border: 1px solid #bbb;
   /* width: 122px; */
   /* height: 100pc; */
-  top: 65px;
   color: #fff;
   font-family: inherit;
   font-weight: 400;
@@ -124,6 +137,16 @@ const ActionButtons = props => (
         onClick={props.openEditMemberModal}
       />
     </ActionButton>
+    {props.adminView &&  <ActionButton>
+      <MemberActionButton
+        noMarginBottom
+        label="Remove Admin"
+        icon
+        iconName="remove_circle_outline"
+        onClick={props.removeButtonClick}
+      />
+    </ActionButton>}
+   
   </ActionButtonsWrapper>
 );
 
@@ -133,22 +156,18 @@ class SchoolMemberInfo extends Component {
     this.state = this.initializeState(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.memberInfo) {
-      this.setState(this.initializeState(nextProps));
-    }
-  }
-
+ 
   initializeState = ({ memberInfo, view }) => {
     let state = {};
+    state.showConfirmation=false;
     if (view === "admin") {
       state.notes = get(memberInfo, "adminNotes", "");
-    } else {
-      state.notes = get(
-        memberInfo,
-        `classmatesNotes[${Meteor.userId()}].notes`,
-        ""
-      );
+    // } else {
+    //   state.notes = get(
+    //     memberInfo,
+    //     `classmatesNotes[${Meteor.userId()}].notes`,
+    //     ""
+    //   );
     }
     return state;
   };
@@ -212,18 +231,67 @@ class SchoolMemberInfo extends Component {
   getContactNumber = () => {
     return this.props.memberInfo && this.props.memberInfo.phone;
   };
+  componentWillReceiveProps(){
 
-  render() {
-    const { memberInfo, view, classes } = this.props;
+  }
+  componentWillMount=()=> {
+    const { memberInfo } = this.props;
     
+    verifyImageURL(memberInfo.pic,(res)=>{
+      if(res){
+            this.setState({bgImg:memberInfo.pic});
+      }else{
+        this.setState({bgImg:config.defaultProfilePic});
+      }
+    })
+  }
+  componentWillReceiveProps=(nextProps,nextState)=>{
+  const { memberInfo } = nextProps;
+  this.setState(this.initializeState(nextProps));
+  verifyImageURL(memberInfo.pic,(res)=>{
+    if(res){
+          this.setState({bgImg:memberInfo.pic});
+    }else{
+      this.setState({bgImg:config.defaultProfilePic});
+    }
+  })
+  }
+  handleRemove = () => {
+    let _id, schoolId,to,userName,schoolName;
+    const { memberInfo } = this.props;
+    _id = memberInfo._id;
+    schoolId = memberInfo.schoolId;
+    to = memberInfo.email;
+    userName = memberInfo.firstName;
+    schoolName = memberInfo.schoolName;
+    Meteor.call('school.manageAdmin',_id,schoolId,'remove',to,userName,schoolName,(err,res)=>{
+      if(res){
+        this.setState({showConfirmation:false});
+      }
+    })
+  }
+  render() {
+    const { memberInfo, view, classes ,adminView} = this.props;
     const {
       showUploadAvatarModal,
       mediaFormData,
       filterStatus,
-      limit
+      limit,
+      bgImg,
+      showConfirmation
     } = this.state;
     return (
       <Grid container>
+      {showConfirmation && (
+            <ConfirmationModal
+              open={showConfirmation}
+              submitBtnLabel="Yes, Remove"
+              cancelBtnLabel="Cancel"
+              message="You will remove this admin, Are you sure?"
+              onSubmit={this.handleRemove}
+              onClose={() => this.setState({ showConfirmation: false })}
+            />
+          )}
         {this.state.callMemberDialog && (
           <CallMemberDialogBox
             contactNumbers={this.getContactNumber()}
@@ -268,10 +336,14 @@ class SchoolMemberInfo extends Component {
               padding: "24px"
             }}
           >
-            <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4}>
-              {memberInfo.pic ? (
-                <img className={classes.avatarCss} src={memberInfo.pic} />
-              ) : view === "admin" ? (
+            <Grid className={classes.avatarContainer} item sm={4} xs={4} md={4} key={memberInfo._id}>
+            <ProgressiveImage 
+                src={bgImg}
+                placeholder={config.blurImage}>
+                {(src) =>  <ProfilePic img={src}/>}
+              </ProgressiveImage>
+            
+              {view === "admin" ? (
                 <UploadDiv
                   onClick={() =>
                     this.setState({
@@ -327,7 +399,7 @@ class SchoolMemberInfo extends Component {
           </Grid>
         </Grid>
         {view === "admin" && (
-          <Grid container style={{ backgroundColor: "darkgray" }}>
+          <Grid container style={{ backgroundColor: "darkgray",marginTop:'22px' }}>
             <Grid item>
               <ActionButtons
                 memberInfo={this.props.memberInfo}
@@ -336,6 +408,8 @@ class SchoolMemberInfo extends Component {
                 openEditMemberModal={event => {
                   this.setState({ openEditMemberModal: true });
                 }}
+                adminView={adminView}
+                removeButtonClick={()=>{this.setState({showConfirmation:true})}}
               />
             </Grid>
           </Grid>

@@ -112,7 +112,8 @@ class MemberDialogBox extends Component {
             fullScreen,
             onModalClose,
             filterPanelProps,
-            renderStudentAddModal
+            renderStudentAddModal,
+            adminView
         } = this.props;
 
         return(
@@ -127,7 +128,7 @@ class MemberDialogBox extends Component {
                 <MuiThemeProvider theme={muiTheme}>
                   <DialogTitleContainer>
                     <DialogTitleWrapper>
-                      Add New Member
+                     {!adminView ?"Add New Member" :"Add New Admin"} 
                     </DialogTitleWrapper>
                     <IconButton color="primary" onClick={onModalClose} classes={{root: classes.iconButton}}>
                         <ClearIcon/>

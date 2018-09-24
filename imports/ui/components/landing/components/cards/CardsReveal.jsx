@@ -3,13 +3,14 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { CSSTransition, Transition } from 'react-transition-group';
 import styled from 'styled-components';
-
+import ProgressiveImage from "react-progressive-image";
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Clear from 'material-ui-icons/Clear';
 import MoreVert from 'material-ui-icons/MoreVert';
+import { verifyImageURL} from "/imports/util";
 
 import withImageExists from '/imports/util/withImageExists.js';
 
@@ -47,7 +48,7 @@ const CardImageWrapper = styled.div`
   max-height: 300px;
   height: 100%;
   width: 100%;
-
+  transition: background-image 1s linear !important;
   background-position: 50% 50%;
   background-size: cover;
   background-repeat: no-repeat;
@@ -136,6 +137,7 @@ const CardContentInnerTitle = styled.span`
 `;
 
 const Avatar = styled.div`
+transition: background-image 1s linear !important;
   background-image: url(${props => props.bgImg});
   background-size: cover;
   border-radius: 50%;
@@ -178,7 +180,11 @@ const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCar
   return (<CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
     <CardDescriptionHeader>
       <CardImageContainer>
-        <Avatar bgImg={bgImg} />
+        <ProgressiveImage 
+                src={bgImg}
+                placeholder={config.blurImage}>
+                {(src) =>  <Avatar bgImg={src} />}
+              </ProgressiveImage>
       </CardImageContainer>
 
       <CardContentTitle description>{_getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
@@ -220,7 +226,15 @@ class CardsReveal extends Component {
     this.setState({ revealCard: false });
   }
   componentWillMount (){
-    const {bgImg,schoolId}= this.props;
+    const {bgImg,schoolId,medium}= this.props;
+    let img=medium ? medium :bgImg;
+    verifyImageURL(img,(res)=>{
+      if(res){
+            this.setState({bgImg:img});
+      }else{
+        this.setState({bgImg:cardImgSrc});
+      }
+    })
     Meteor.call('school.getMySchool',schoolId,true,(err,res)=>{
       if(res && res.mainImage && bgImg == '/images/classtype/classtype-cover.jpg'){
         this.setState({bgImg:res.mainImage})
@@ -230,21 +244,25 @@ class CardsReveal extends Component {
   }
 
   render() {
-    const { name, classTypeImg, descriptionContent, body, classes, bgImg } = this.props;
+    const { name, classTypeImg, descriptionContent, body, classes } = this.props;
+    const {bgImg} = this.state;
     const myTitle = name.toLowerCase();
     //console.log(ShowDetails,"adsljfj")
     return (<Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
         <div onClick={this.revealCardContent}>
           <CardImageTitleWrapper>
-
-            <CardImageWrapper bgImage={this.state.bgImg}></CardImageWrapper>
-
-            <CardContentHeader>
-              <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
-              <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
-                <MoreVert />
-              </IconButton>
-            </CardContentHeader>
+          <ProgressiveImage
+            placeholder={config.blurImage}
+            src={bgImg}>
+            {(src) => <CardImageWrapper bgImage={src} />}
+               </ProgressiveImage>
+              
+          <CardContentHeader>
+            <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
+            <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
+              <MoreVert />
+            </IconButton>
+          </CardContentHeader>
 
           </CardImageTitleWrapper>
 

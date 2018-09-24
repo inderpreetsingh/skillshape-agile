@@ -9,7 +9,8 @@ import Button from "material-ui/Button";
 import Icon from "material-ui/Icon";
 
 import { createMarkersOnMap, toastrModal } from "/imports/util";
-
+import get from 'lodash/get';
+import uniq from 'lodash/uniq'
 import ClassMap from "/imports/ui/components/landing/components/map/ClassMap";
 import ClassTypeDescription from "/imports/ui/components/landing/components/class/ClassTypeDescription.jsx";
 import ClassTypeInfo from "/imports/ui/components/landing/components/class/ClassTypeInfo.jsx";
@@ -19,14 +20,12 @@ import ClassTypeLogo from "/imports/ui/components/landing/components/class/Class
 
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
-
+import ProgressiveImage from "react-progressive-image";
 import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 import ManageRequestsDialogBox from "/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx";
-
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import { schoolLogo } from "/imports/ui/components/landing/site-settings.js";
-
 import Events from "/imports/util/events";
 import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
@@ -109,6 +108,7 @@ const LocationNotFound = styled.div`
 
 const ClassTypeForegroundImage = styled.div`
   ${helpers.coverBg}
+  transition: background-image 1s linear !important;
   background-position: center center;
   background-image: url('${props =>
     props.coverSrc ? props.coverSrc : settings.classTypeImgSrc}');
@@ -169,11 +169,15 @@ const LogoAndActionButtons = styled.div`
     padding: 0;
   }
 `;
+const Li =styled.li`
+list-style-position: outside;
+`;
 
 class ClassTypeCoverContent extends React.Component {
   state = {
     nonUserDefaultDialog: false,
-    isBusy: false
+    isBusy: false,
+    locationData:[]
   };
   componentDidMount() {
     this._addLocationOnMap();
@@ -182,41 +186,53 @@ class ClassTypeCoverContent extends React.Component {
   componentDidUpdate() {
     this._addLocationOnMap();
   }
-
-  _createAddressStr(locationData) {
-    for (obj of locationData) {
-      const addressArray = [obj.address, obj.city, obj.state, obj.country];
-      return addressArray.filter(str => str).join(", ");
+  componentWillMount(){
+    if (!isEmpty(get(this.props,"classTypeData.filters.location",[]))) {
+      let locIds=[];
+      this.props.classTypeData.filters.location.map((obj)=>{locIds.push(get(obj,"loc.locationId",null))});
+      Meteor.call("location.getLocsFromIds",locIds,(err,res)=>{
+        if(res){
+          this.setState({locationData:res});
+        }
+      })
     }
+  }
+  _createAddressStr(locationData) {
+    let address=[];
+    for (obj of locationData) {
+      // const addressArray = [obj.address && obj.address, obj.city && obj.city, obj.state && obj.state, obj.country && obj.country];
+      // return addressArray.filter(str => str).join(", ");
+      address.push(`${obj.address ? obj.address:'Address'}, ${obj.city ? obj.city:'City'}, ${obj.state ? obj.state:'State'}, ${obj.country ? obj.country: "Country"}`)
+    }
+    return uniq(address);
   }
 
   _addLocationOnMap() {
-    let locationData;
+    let locationData=get(this.state,"locationData",[]);
     if (this.props.noClassTypeData) {
       if (!isEmpty(this.props.schoolLocation)) {
         locationData = this.props.schoolLocation;
         createMarkersOnMap("myMap", locationData);
       }
     } else {
-      if (!isEmpty(this.props.classTypeData.selectedLocation)) {
-        locationData = [this.props.classTypeData.selectedLocation];
+      if (!isEmpty(locationData)) {
         createMarkersOnMap("myMap", locationData);
       }
     }
   }
 
   getAddress() {
-    let locationData;
+    let locationData=get(this.state,"locationData",[]);
     if (this.props.noClassTypeData) {
       if (!isEmpty(this.props.schoolLocation)) {
         locationData = this.props.schoolLocation;
         return this._createAddressStr(locationData);
       }
     } else {
-      if (!isEmpty(this.props.classTypeData.selectedLocation)) {
-        locationData = [this.props.classTypeData.selectedLocation];
-        return this._createAddressStr(locationData);
+      if (!isEmpty(locationData)) {
+          return this._createAddressStr(locationData);
       }
+      return []
     }
   }
 
@@ -327,6 +343,7 @@ class ClassTypeCoverContent extends React.Component {
 
   render() {
     const props = this.props;
+    const {noClassTypeData}=this.props;
     const classTypeName = props.noClassTypeData ? "" : props.classTypeData.name;
     const selectedLocation = props.noClassTypeData
       ? props.schoolLocation
@@ -369,7 +386,7 @@ class ClassTypeCoverContent extends React.Component {
             {/* Displays map when it's not edit mode*/}
             {!props.isEdit && (
               <MapContainer>
-                {isEmpty(selectedLocation) ? (
+                {noClassTypeData && isEmpty(get(this.props,"schoolLocation",[]) || get(this.props,"classTypeData.filters.location",[])) ? (
                   <LocationNotFound>
                       <PrimaryButton
                         icon
@@ -389,7 +406,11 @@ class ClassTypeCoverContent extends React.Component {
                       <Icon className={props.classes.myLocationIcon}>
                         location_on
                       </Icon>{" "}
-                      {this.getAddress()}
+                      <ul>
+                      {this.getAddress().map((a,index)=>{
+                        return (<Li>{a}</Li>)
+                      })}
+                      </ul>
                     </MyLocation>
                   </Fragment>
                 )}
@@ -452,9 +473,10 @@ class ClassTypeCoverContent extends React.Component {
                 </EditButtonWrapper>
               </ShowOnMobile>
             )}
-
-            <ClassTypeForegroundImage coverSrc={props.coverSrc}>
-              <Fragment>
+              <ProgressiveImage 
+                        src={props.coverSrc}
+                        placeholder={config.blurImage}>
+                        {(src) =><ClassTypeForegroundImage coverSrc={src}><Fragment>
                 <LogoAndActionButtons>
                   {props.noClassTypeData &&
                     !props.isEdit &&
@@ -511,7 +533,10 @@ class ClassTypeCoverContent extends React.Component {
                     </EditButtonWrapper>
                   ))}
               </Fragment>
-            </ClassTypeForegroundImage>
+            </ClassTypeForegroundImage>}
+                      </ProgressiveImage>
+            
+              
 
             {/* On large screens this section will be below foregroud image,
                 on smaller screens it's below the left side*/}

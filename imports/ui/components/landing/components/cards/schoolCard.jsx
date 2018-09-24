@@ -14,13 +14,13 @@ import Typography from "material-ui/Typography";
 import Grid from "material-ui/Grid";
 import { Link } from "react-router";
 
-import { cutString, withPopUp, handleOutBoundLink } from "/imports/util";
+import { cutString, withPopUp, handleOutBoundLink ,verifyImageURL} from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 import CallUsDialogBox from "/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx";
 import EmailUsDialogBox from "/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-
+import ProgressiveImage from "react-progressive-image";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
 import { cardImgSrc } from "/imports/ui/components/landing/site-settings.js";
@@ -76,7 +76,7 @@ const CardImageWrapper = styled.div`
   max-height: 300px;
   flex-grow: 1;
   width: 100%;
-
+  transition: background-image 1s linear !important;
   background-position: 50% 50%;
   background-size: cover;
   background-repeat: no-repeat;
@@ -189,7 +189,19 @@ class SchoolCard extends Component {
     revealCard: false,
     isLoading: false
   };
-
+  componentWillMount (){
+   const {schoolCardData}=this.props;
+    const pic= schoolCardData && schoolCardData.mainImageMedium ? 
+    schoolCardData.mainImageMedium:schoolCardData && schoolCardData.mainImage 
+    ? schoolCardData.mainImage : cardImgSrc;
+    verifyImageURL(pic,(res)=>{
+      if(res){
+            this.setState({bgImg:pic});
+      }else{
+        this.setState({bgImg:cardImgSrc});
+      }
+    })
+  }
   componentDidCatch(error, info) {
     // Display fallback UI
     // You can also log the error to an error reporting service
@@ -242,6 +254,7 @@ class SchoolCard extends Component {
     const { classes, schoolCardData, toastr } = this.props;
     const name = schoolCardData.name.toLowerCase();
     const ourEmail = this.getOurEmail();
+    const {bgImg} = this.state;
     return (
       <Paper
         className={classes.cardWrapper}
@@ -282,9 +295,15 @@ class SchoolCard extends Component {
           <CardImageContentWrapper>
             <MyLink to={`/schools/${schoolCardData.slug}`} target="_blank">
               {" "}
-              <CardImageWrapper
-                bgImage={schoolCardData.mainImage || cardImgSrc}
-              />{" "}
+              <ProgressiveImage 
+                src={bgImg}
+                placeholder={config.blurImage}>
+                {(src) =>  <CardImageWrapper
+                  bgImage={src}
+                />}
+              </ProgressiveImage>
+
+              {" "}
             </MyLink>
 
             <CardContentHeader>

@@ -16,10 +16,13 @@ import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-pic
 import { TableRow, TableCell } from "material-ui/Table";
 import List from "material-ui/List";
 import Hidden from "material-ui/Hidden";
+import get from 'lodash/get';
 import find from "lodash/find";
 import Drawer from "material-ui/Drawer";
 import AppBar from "material-ui/AppBar";
 import isEmpty from "lodash/isEmpty";
+import remove from 'lodash/remove';
+import findIndex from 'lodash/findIndex';
 import IconButton from "material-ui/IconButton";
 import Toolbar from "material-ui/Toolbar";
 import MenuIcon from "material-ui-icons/Menu";
@@ -27,11 +30,11 @@ import ClassType from "/imports/api/classType/fields";
 import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import get from "lodash/get";
 import Checkbox from "material-ui/Checkbox";
 import { dateFriendly } from "/imports/util";
 import { phoneRegex } from "/imports/util";
 import SchoolMemberListItems from "/imports/ui/components/schoolMembers/schoolMemberList/index.js";
+import SchoolAdminListItems from '/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js'
 import SchoolMemberFilter from "../filter";
 import SchoolMemberInfo from "../schoolMemberInfo";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
@@ -146,7 +149,11 @@ class DashBoardView extends React.Component {
       classTypeIds: [],
       memberName: ""
     },
-    studentWithoutEmail: false
+    studentWithoutEmail: false,
+    mobileOpen:true,
+    joinSkillShape:false,
+    to:null,
+    userName:null
   };
 
   /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
@@ -156,12 +163,15 @@ class DashBoardView extends React.Component {
       this.setState({ memberInfo: {} });
     }
   }
-
+ 
+    
+ 
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
 
   renderStudentAddModal = () => {
+    const { adminView } = this.props;
     var currentYear = new Date().getFullYear();
     let birthYears = [];
     for (let i = 0; i < 60; i++) {
@@ -318,7 +328,7 @@ class DashBoardView extends React.Component {
           <PrimaryButton
             formId="addUser"
             type="submit"
-            label="Add a New Member"
+            label={`Add a New ${!adminView?"Member":'Admin'}`}
           />
           <PrimaryButton
             formId="cancelUser"
@@ -335,8 +345,14 @@ class DashBoardView extends React.Component {
   allowAddNewMemberWithThisEmail = event => {
     // event.preventDefault();
     // const { payload } = this.state;
-    const { schoolData } = this.props;
+    const {adminView,schoolData,adminsIds}=this.props;
+    let schoolId= schoolData[0]._id;
+    let _id=this.state.message && this.state.message.userId || null;
+    let schoolName = schoolData[0].name;
+    let to = this.email.value;
+    let userName =this.firstName.value;
     let payload = {};
+    let adminName = get(Meteor.user(),"profile.firstName",get(Meteor.user(),"profile.name"),"Admin" )
     payload.firstName = this.firstName.value;
     payload.lastName = this.lastName.value;
     payload.email = this.email.value;
@@ -345,32 +361,53 @@ class DashBoardView extends React.Component {
     payload.classTypeIds = this.state.selectedClassTypes;
     payload.birthYear = this.state.birthYear;
     payload.studentWithoutEmail = this.state.studentWithoutEmail;
-
-    let state = {
-      isLoading: true
-    };
-    // Confirmation modal open then close it.
-    if (this.state.showConfirmationModal) {
-      state.showConfirmationModal = false;
-    }
-    this.setState(state);
-    Meteor.call("school.addNewMember", payload, (err, res) => {
+    payload.signUpType="member-signup"
+    payload.sendMeSkillShapeNotification = true;
+    payload.schoolName=schoolName;
+    if(!adminView)
+    {
+  
       let state = {
-        isLoading: false
+        isLoading: true
       };
-      if (err) {
-        state.error = err.reason || err.message;
-      }
-      if (res) {
-        state.renderStudentModal = false;
+      // Confirmation modal open then close it.
+      if (this.state.showConfirmationModal) {
+        state.showConfirmationModal = false;
       }
       this.setState(state);
-    });
+      Meteor.call("school.addNewMember", payload, (err, res) => {
+        let state = {
+          isLoading: false
+        };
+        if (err) {
+          state.error = err.reason || err.message;
+        }
+        if (res) {
+          state.renderStudentModal = false;
+        }
+        this.setState(state);
+      });
+    }else if(_id && schoolId){
+      this.setState({isLoading:true})      
+        Meteor.call('school.manageAdmin',_id,schoolId,'add',to,userName,schoolName,null,adminName,(err,res)=>{
+          if(res){
+            this.setState({renderStudentModal:false,showConfirmationModal:false,isLoading:false,message:null});
+          }
+        })
+      
+      
+    }
+    else{
+      console.log("in else part")
+      payload.userType='School';
+      payload.name=this.firstName.value;
+      this.setState({joinSkillShape:true,to:this.email.value,userName:this.firstName.value,payload:payload,message:null});
+    }
   };
 
   addNewMember = event => {
     event.preventDefault();
-    const { schoolData } = this.props;
+    const { schoolData,adminView ,adminsIds} = this.props;
     // Check for existing user only if users has entered their email.
     if (!isEmpty(schoolData) && !this.state.studentWithoutEmail) {
       // Show Loading
@@ -378,15 +415,26 @@ class DashBoardView extends React.Component {
       // Check if user with this email already exists If member exists, school admin sees a dialogue.
       Meteor.call(
         "user.checkForRegisteredUser",
-        { email: this.email.value },
+        { email: this.email.value ,
+          adminView: adminView
+        },
         (err, res) => {
-         
+          console.log('TCL: err, res', err, res);
+          
           let state = {};
           if (res) {
             // Open Modal
-            state.showConfirmationModal = true;
+            let _id=res.userId ;
+           // state.showConfirmationModal = fals;
             state.message = res;
             state.isLoading = false;
+            if(findIndex(adminsIds,(o)=>{return o==_id})!=-1){
+              this.setState({error:'This person is already an admin.',isLoading:false});
+              return ;
+             }
+             this.setState(state);
+             this.allowAddNewMemberWithThisEmail();
+
             // this.setState({showConfirmationModal:true, message:res});
           }
           if (err) {
@@ -452,26 +500,42 @@ class DashBoardView extends React.Component {
   };
 
   handleMemberDetailsToRightPanel = memberId => {
-    let memberInfo = SchoolMemberDetails.findOne(memberId);
+    const {adminView,schoolData,adminsData} = this.props;
+    let memberInfo,profile,pic,schoolId=schoolData[0]._id,email,_id;
+    let schoolName =schoolData[0].name;
+    if(!adminView){
+      memberInfo = SchoolMemberDetails.findOne(memberId);
+      profile =memberInfo.profile.profile;
+      email=memberInfo.email;
+      _id=memberInfo.activeUserId;
+    }
+    else{
+      memberInfo=adminsData.find( ele => ele._id == memberId);
+       profile =memberInfo.profile;
+       email=memberInfo.emails[0].address;
+       _id=memberInfo._id;
+    }
+     pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic :config.defaultProfilePic ;
     // memberInfo = this.state.memberInfo
-
+    this.handleDrawerToggle();
     this.setState({
       memberInfo: {
-        _id: memberInfo._id,
+        _id: _id,
         memberId: memberInfo._id,
-        name: memberInfo.firstName,
-        phone: memberInfo.phone,
-        email: memberInfo.email,
-        schoolId: memberInfo.schoolId,
+        name: profile.firstName,
+        phone: profile.phone,
+        email: email,
+        schoolId: schoolId,
         adminNotes: memberInfo.adminNotes,
         classmatesNotes: memberInfo.classmatesNotes,
-        birthYear: memberInfo.birthYear,
-        lastName: memberInfo.lastName,
+        birthYear: profile.birthYear,
+        lastName: profile.lastName,
         classTypeIds: memberInfo.classTypeIds,
-        firstName: memberInfo.firstName,
-        pic: memberInfo.pic,
+        firstName: profile.firstName,
+        pic: pic,
         studentWithoutEmail: memberInfo.studentWithoutEmail,
-        packageDetails: memberInfo.packageDetails
+        packageDetails: memberInfo.packageDetails,
+        schoolName:schoolName
       },
       schoolMemberDetailsFilters: { _id: memberId }
     });
@@ -546,6 +610,19 @@ class DashBoardView extends React.Component {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };
   // Return Dash view from here
+  joinSkillShape = () => {
+    const {schoolData} = this.props;
+    const {to,userName,payload} = this.state;
+    let schoolName;
+    let schoolId= schoolData[0]._id;
+    schoolName=schoolData[0].name;
+    this.setState({isLoading: true})
+    Meteor.call('school.manageAdmin',null,schoolId,"join",to,userName,schoolName,payload,(err,res)=>{
+      if(res){
+        this.setState({renderStudentModal:false,joinSkillShape:false,isLoading:false});
+      }
+    })
+  }
   render() {
 
     const {
@@ -554,9 +631,11 @@ class DashBoardView extends React.Component {
       schoolData,
       classTypeData,
       slug,
-      schoolAdmin
+      schoolAdmin,
+      adminView,
+      adminsData
     } = this.props;
-    const { renderStudentModal, memberInfo } = this.state;
+    const { renderStudentModal, memberInfo, joinSkillShape,isLoading} = this.state;
 
     let schoolMemberListFilters = { ...this.state.filters };
     if (slug) {
@@ -590,6 +669,7 @@ class DashBoardView extends React.Component {
             handleMemberNameChange={this.handleMemberNameChange}
             classTypeData={classTypeData}
             filters={filters}
+            adminView={adminView}
           />
           {slug && (
             <Grid
@@ -609,16 +689,24 @@ class DashBoardView extends React.Component {
                 color="primary"
                 onClick={() => this.setState({ renderStudentModal: true })}
               >
-                Add New Student
+                {adminView ? "Add New Admin" :"Add New Student" }
               </Button>
             </Grid>
           )}
-          <SchoolMemberListItems
+         {adminView && !_.isEmpty(adminsData)?
+          <SchoolAdminListItems
+          collectionData={adminsData}
+          handleMemberDetailsToRightPanel={
+            this.handleMemberDetailsToRightPanel
+          }
+          adminView={adminView}
+        />:<SchoolMemberListItems
             filters={schoolMemberListFilters}
             handleMemberDetailsToRightPanel={
               this.handleMemberDetailsToRightPanel
             }
-          />
+            adminView={adminView}
+          />} 
         </List>
       </div>
     );
@@ -629,6 +717,16 @@ class DashBoardView extends React.Component {
 
     return (
       <Grid container className={classes.root}>
+      {joinSkillShape && (
+            <ConfirmationModal
+              open={joinSkillShape}
+              submitBtnLabel="Yes, Send Invitation"
+              cancelBtnLabel="Cancel"
+              message="No user exists with this email.Do you want to send SkillShape join invitation to this person."
+              onSubmit={this.joinSkillShape}
+              onClose={() => this.setState({ joinSkillShape: false,isLoading:false,renderStudentModal:false })}
+            />
+          )}
         {this.state.showConfirmationModal && (
           <ConfirmationModal
             open={this.state.showConfirmationModal}
@@ -650,7 +748,7 @@ class DashBoardView extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="title" color="inherit" noWrap>
-              Foldeable search popover
+              
             </Typography>
           </Toolbar>
         </AppBar>
@@ -665,6 +763,7 @@ class DashBoardView extends React.Component {
                   onModalClose={() =>
                     this.setState({ renderStudentModal: false, error: false })
                   }
+                  adminView={adminView}
                 />
               )}
             </form>
@@ -716,6 +815,7 @@ class DashBoardView extends React.Component {
                 handleMemberDetailsToRightPanel={
                   this.handleMemberDetailsToRightPanel
                 }
+                adminView={adminView}
               />
               {memberInfo &&
                 Meteor.settings.public.paymentEnabled && (
@@ -815,13 +915,15 @@ class DashBoardView extends React.Component {
 
 export default createContainer(props => {
   let { slug } = props.params;
+  let { query } = props.location;
   let schoolData = [];
   let isLoading = true;
   let classTypeData = [];
   let filters = { ...props.filters, slug };
   let schoolAdmin;
+  let adminsIds;
   let schoolId;
-  let classPricing,monthlyPricing,enrollmentFee;
+  let classPricing,monthlyPricing,enrollmentFee,adminView=false,adminsData=[];
   let subscription = Meteor.subscribe(
     "schoolMemberDetails.getSchoolMemberWithSchool",
     filters
@@ -858,15 +960,25 @@ export default createContainer(props => {
 
     if (!isEmpty(schoolData) && schoolData[0].admins) {
       let currentUser = Meteor.user();
-      if (
-        _.contains(schoolData[0].admins, currentUser._id) ||
-        schoolData[0].superAdmin == currentUser._id
-      ) {
+      if (checkMyAccess({user:currentUser,schoolId:schoolData[0]._id,viewName:'schoolMemberDetails_CUD'}) ) {
         schoolAdmin = true;
       }
+          if(schoolAdmin && query.admin=='true'){
+            adminView=true;
+           adminsIds=schoolData[0].admins;
+            Meteor.subscribe("user.findAdminsDetails",adminsIds)
+            adminsData=Meteor.users.find().fetch()
+           let x= findIndex(adminsIds,(o)=>{return o==Meteor.userId()})
+            console.log('TCL: x -> x', x);
+            if(x==-1){
+             adminData=remove(adminsData,(o)=>{return o._id==Meteor.userId()});
+            }
+            
+          }
+                    
     }
   }
-
+  
   return {
     ...props,
     schoolData,
@@ -875,6 +987,10 @@ export default createContainer(props => {
     slug,
     schoolAdmin,
     classPricing,
-    enrollmentFee,monthlyPricing
+    enrollmentFee,
+    monthlyPricing,
+    adminsIds,
+   adminView,
+   adminsData
   };
 }, withStyles(styles, { withTheme: true })(DashBoardView));

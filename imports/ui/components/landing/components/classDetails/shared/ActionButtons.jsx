@@ -26,7 +26,7 @@ const Wrapper = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  margin: 0 auto ${rhythmDiv * 4}px; auto;
+  margin: 0 auto ${rhythmDiv * 8}px; auto;
 
   @media screen and (min-width: ${mobile - 100}px) {
     width: 100%;
@@ -36,6 +36,7 @@ const Wrapper = styled.div`
   @media screen and (min-width: ${tablet}px) {
     justify-content: flex-end;
     padding: 0 ${rhythmDiv}px;
+    margin-bottom: ${rhythmDiv * 2}px;
   }
 `;
 
@@ -56,10 +57,10 @@ const ActionButtons = props => (
   <OuterWrapper>
     <Wrapper>
       <ButtonWrapper marginBottom>
-        <ClassTimeButton icon iconName="class" label="Visit Classtype" />
+        <ClassTimeButton label="Visit Classtype" />
       </ButtonWrapper>
       <ButtonWrapper>
-        <ClassTimeButton icon iconName="school" label="Visit School" />
+        <ClassTimeButton label="Visit School" />
       </ButtonWrapper>
       {/*<Link
         to={

@@ -1,7 +1,7 @@
 .skillshape-button {
   font-size: $base-font-size * 1px;
   font-family: map-get($fonts,special);
-  margin-right: map-get($sizes, rhythm-div) * 1px;
+  // margin-right: map-get($sizes, rhythm-div) * 1px;
   padding: map-get($sizes,rhythm-div) * 1px map-get($sizes,rhythm-div) * 2px;
   min-width: map-get($sizes,rhythm-div) * 11px;
   box-sizing: border-box;

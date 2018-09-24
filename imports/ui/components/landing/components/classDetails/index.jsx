@@ -8,10 +8,12 @@ import ClassTimeInformation from "./classTimeInformation/index.jsx";
 import MembersList from "./membersList/index.jsx";
 import TimeLine from "./timeline/index.jsx";
 
+import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 
 import {
+  rhythmDiv,
   panelColor,
   tablet,
   danger,
@@ -27,10 +29,11 @@ const InnerWrapper = styled.div`
   margin: 0 auto;
 `;
 
-const Header = styled.header`
+const ClassTimeWrapper = styled.div`
   @media screen and (min-width: ${tablet}px) {
     display: flex;
     flex-direction: row-reverse;
+    margin-bottom: ${rhythmDiv * 4}px;
   }
 `;
 
@@ -43,6 +46,7 @@ const ClassDetails = props => {
       : "instructorsView";
   return (
     <Wrapper>
+      <TopSearchBar />
       {props.noPurchasedClasses &&
         currentView === "studentsView" && (
           <Notification
@@ -52,15 +56,15 @@ const ClassDetails = props => {
             onButtonClick={props.onPurchaseButtonClick}
           />
         )}
-      <TopSearchBar />
       <InnerWrapper>
-        <Header>
+        <ClassTimeWrapper>
           <ClassTimeCover {...props.headerProps} />
           <ClassTimeInformation {...props.ClassTimeInformation} />
-        </Header>
+        </ClassTimeWrapper>
         <TimeLine {...props.timeLineProps} />
         <MembersList currentView={currentView} />
       </InnerWrapper>
+      <Footer />
     </Wrapper>
   );
 };
