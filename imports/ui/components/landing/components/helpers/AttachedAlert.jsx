@@ -12,13 +12,14 @@ import {
   information,
   flexCenter,
   baseFontSize,
-  rhythmDiv
+  rhythmDiv,
+  mobile,
 } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 
 const Wrapper = styled.div`
   height: 30px;
-  
+
   &::after {
     clear: both;
   }
@@ -43,17 +44,26 @@ const InnerWrapper = styled.div`
 
 const AlertContent = Text.extend`
   color: white;
-  padding-left: ${rhythmDiv * 3}px;
   margin: 0;
+  ${props => props.direction === 'right' ? `padding-right: ${rhythmDiv * 3}px` : `padding-left: ${rhythmDiv * 3}px`};
+  @media screen and (max-width: ${mobile}px) {
+    font-size: 14px;
+  }
 `;
 
 const styles = {
   icon: {
     fontSize: baseFontSize,
     position: 'absolute',
+    transition: "0.1s color linear"
+  },
+  iconLeftSide: {
     left: rhythmDiv,
     marginRight: rhythmDiv,
-    transition: "0.1s color linear"
+  },
+  iconRightSide: {
+    right: rhythmDiv,
+    marginLeft: rhythmDiv,
   },
   isOpen: {
     color: "white"
@@ -84,12 +94,12 @@ class AttachedAlert extends Component {
 
   render() {
     const { open } = this.state;
-    const { bgColor, classes, iconName, alertMsg } = this.props;
-    const alertOpenIconClasses = [classes.icon, classes.isOpen].join(" ");
+    const { bgColor, classes, iconName, alertMsg, direction } = this.props;
+    const alertOpenIconClasses = [classes.icon, classes.isOpen , direction === 'right' ? classes.iconRightSide : classes.iconLeftSide].join(" ");
     const alertCloseIconClases = [classes.icon, classes.isClosed].join(" ");
     return (
       <Wrapper>
-        <InnerWrapper open={open} color={bgColor}>
+        <InnerWrapper open={open} color={bgColor} direction={direction}>
           <Icon className={open ? alertOpenIconClasses : alertCloseIconClases}>
             {iconName}
           </Icon>
@@ -99,7 +109,7 @@ class AttachedAlert extends Component {
             classNames="message"
             unmountOnExit
           >
-            <AlertContent>{alertMsg}</AlertContent>
+            <AlertContent direction={direction}>{alertMsg}</AlertContent>
           </CSSTransition>
         </InnerWrapper>
       </Wrapper>

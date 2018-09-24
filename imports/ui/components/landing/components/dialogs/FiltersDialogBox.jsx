@@ -50,34 +50,35 @@ const styles = {
     }
   },
   iconButton: {
+    position: 'absolute',
+    right: helpers.rhythmDiv * 2,
     height: "auto",
     width: "auto"
   }
 };
 
-const AttachedAlertWrapper = styled.div`
-  position: absolute;
-  top: 50px;
-  left: ${helpers.rhythmDiv * 6}px;
-`;
-
 const DialogTitleContainer = styled.div`
   ${helpers.flexCenter};
+  justify-content: space-between;
   margin: 0 0 ${helpers.rhythmDiv * 2}px 0;
   padding: 0 ${helpers.rhythmDiv * 3}px;
 `;
 
 const DialogTitle = styled.h1`
-  ${helpers.flexCenter};
   font-family: ${helpers.specialFont};
   font-weight: 500;
-  width: 100%;
   margin: 0;
+  padding-left: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize * 1.25}px;
   }
 `;
+
+const AlertWrapper = styled.div`
+  display: flex;
+`;
+
 
 class FiltersDialogBox extends Component {
   constructor(props) {
@@ -127,6 +128,18 @@ class FiltersDialogBox extends Component {
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitleContainer>
             <DialogTitle>{title}</DialogTitle>
+
+            <AlertWrapper>
+              <AttachedAlert
+                open={
+                  !filterPanelProps.isCardsBeingSearched &&
+                  !this.state.filterDialogBoxNoSearch
+                }
+                direction={"right"}
+                alertMsg={"Search results updated"}
+
+              />
+            </AlertWrapper>
             <IconButton
               color="primary"
               onClick={onModalClose}
@@ -141,15 +154,6 @@ class FiltersDialogBox extends Component {
               root: classes.dialogContentRoot
             }}
           >
-            <AttachedAlertWrapper>
-              <AttachedAlert
-                open={
-                  !filterPanelProps.isCardsBeingSearched &&
-                  !this.state.filterDialogBoxNoSearch
-                }
-                alertMsg={"Search criteria updated"}
-              />
-            </AttachedAlertWrapper>
             <FilterPanel
               {...filterPanelProps}
               filtersInDialogBox
