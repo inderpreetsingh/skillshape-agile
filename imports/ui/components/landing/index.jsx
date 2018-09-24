@@ -224,7 +224,7 @@ class Landing extends Component {
       showPreloader: true,
       sticky: false,
       isLoading: false,
-      isSearching: false,
+      isCardsBeingSearched: false,
       filterPanelDialogBox: false,
       filters: {
         coords: null,
@@ -523,7 +523,7 @@ class Landing extends Component {
     this.setState(state => {
       return {
         ...state,
-        isCardsSearching: searchingState
+        isCardsBeingSearched: searchingState
       };
     });
   };
@@ -980,35 +980,37 @@ class Landing extends Component {
       <DocumentTitle title={this.props.route.name}>
         <div>
           {/*this._redirectBasedOnVisitorType()*/}
-          <FiltersDialogBox
-            open={this.state.filterPanelDialogBox}
-            onModalClose={() => this.handleFiltersDialogBoxState(false)}
-            filterPanelProps={{
-              isCardsSearching: this.state.isCardsSearching,
-              currentAddress: this.state.locationName,
-              removeAllFilters: this.removeAllFilters,
-              filters: this.state.filters,
-              tempFilters: this.state.tempFilters,
-              stickyPosition: this.state.sticky,
-              onLocationChange: this.onLocationChange,
-              locationName: this.state.locationName,
-              locationInputChanged: this.locationInputChanged,
-              fliterSchoolName: this.fliterSchoolName,
-              filterAge: this.filterAge,
-              filterGender: this.filterGender,
-              skillLevelFilter: this.skillLevelFilter,
-              perClassPriceFilter: this.perClassPriceFilter,
-              pricePerMonthFilter: this.pricePerMonthFilter,
-              collectSelectedSkillCategories: this
-                .collectSelectedSkillCategories,
-              collectSelectedSkillSubject: this.collectSelectedSkillSubject,
-              handleSkillTypeSearch: this.handleSkillTypeSearch,
-              skillTypeText: this.state.filters.skillTypeText,
-              handleFiltersDialogBoxState: this.handleFiltersDialogBoxState,
-              handleFiltersDialogSaveButtonClick: this
-                .handleFiltersDialogSaveButtonClick
-            }}
-          />
+          {this.state.filterPanelDialogBox && (
+            <FiltersDialogBox
+              open={this.state.filterPanelDialogBox}
+              onModalClose={() => this.handleFiltersDialogBoxState(false)}
+              filterPanelProps={{
+                isCardsBeingSearched: this.state.isCardsBeingSearched,
+                currentAddress: this.state.locationName,
+                removeAllFilters: this.removeAllFilters,
+                filters: this.state.filters,
+                tempFilters: this.state.tempFilters,
+                stickyPosition: this.state.sticky,
+                onLocationChange: this.onLocationChange,
+                locationName: this.state.locationName,
+                locationInputChanged: this.locationInputChanged,
+                fliterSchoolName: this.fliterSchoolName,
+                filterAge: this.filterAge,
+                filterGender: this.filterGender,
+                skillLevelFilter: this.skillLevelFilter,
+                perClassPriceFilter: this.perClassPriceFilter,
+                pricePerMonthFilter: this.pricePerMonthFilter,
+                collectSelectedSkillCategories: this
+                  .collectSelectedSkillCategories,
+                collectSelectedSkillSubject: this.collectSelectedSkillSubject,
+                handleSkillTypeSearch: this.handleSkillTypeSearch,
+                skillTypeText: this.state.filters.skillTypeText,
+                handleFiltersDialogBoxState: this.handleFiltersDialogBoxState,
+                handleFiltersDialogSaveButtonClick: this
+                  .handleFiltersDialogSaveButtonClick
+              }}
+            />
+          )}
 
           {/* Cover */}
           <CoverWrapper>

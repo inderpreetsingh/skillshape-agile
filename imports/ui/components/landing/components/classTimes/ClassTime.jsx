@@ -415,6 +415,7 @@ class ClassTime extends Component {
     return formattedClassTimesDetails;
   };
 
+
   setDescription = description => {
     if (this.state.description !== description) {
       this.setState(state => {
@@ -648,7 +649,12 @@ class ClassTime extends Component {
       onModalClose
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
-    const { thinkingAboutAttending, addToCalendar, notification } = this.state;
+    const {
+      thinkingAboutAttending,
+      description,
+      addToCalendar,
+      notification
+    } = this.state;
 
     // console.group("formattedClassTimes");
     // console.groupEnd();
@@ -745,18 +751,16 @@ class ClassTime extends Component {
                         : "scaleY(0)"
                     }}
                   >
-                    <Icon
-                      classes={{
-                        root: classes.descriptionPanelCloseIcon
-                      }}
-                      onClick={this.handleDescriptionState(false)}
-                    >
-                      {"close"}
-                    </Icon>
+                      <Icon
+                        classes={{
+                          root: classes.descriptionPanelCloseIcon
+                        }}
+                        onClick={this.handleDescriptionState(false)}
+                      >
+                        {"close"}
+                      </Icon>
 
-                    <ClassTimeDescription>
-                      {this.state.description}
-                    </ClassTimeDescription>
+                      <ClassTimeDescription>{description}</ClassTimeDescription>
                   </Paper>
                 </ClassTimeContent>
 
@@ -773,7 +777,6 @@ class ClassTime extends Component {
                         onClick={e => {
                           e.stopPropagation();
 
-                          debugger;
                           this.setState(state => {
                             return {
                               ...state,
