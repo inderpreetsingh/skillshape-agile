@@ -357,7 +357,13 @@ class ClassTypeCoverContent extends React.Component {
     const noOfReviews =
       !props.isEdit && !isEmpty(props.reviews) && props.reviews.noOfReviews;
     const EditButton = props.editButton;
-
+    let noLocation=false;
+    if(noClassTypeData){
+      noLocation=isEmpty(get(this.props,"schoolLocation",[]));
+    }
+    else{
+      noLocation=isEmpty(get(this.props,"classTypeData.filters.location",[]));
+    }
     return (
       <CoverContentWrapper>
         <CoverContent>
@@ -386,7 +392,7 @@ class ClassTypeCoverContent extends React.Component {
             {/* Displays map when it's not edit mode*/}
             {!props.isEdit && (
               <MapContainer>
-                {noClassTypeData && isEmpty(get(this.props,"schoolLocation",[]) || get(this.props,"classTypeData.filters.location",[])) ? (
+                {noLocation ? (
                   <LocationNotFound>
                       <PrimaryButton
                         icon
