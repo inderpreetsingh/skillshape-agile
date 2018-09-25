@@ -134,11 +134,13 @@ Logo.propTypes = {
   brandTagline: PropTypes.string,
   brandText: PropTypes.string,
   logoSrc: PropTypes.string,
+  showLogo: PropTypes.bool,
   smallBrandText: PropTypes.bool
 };
 
 Logo.defaultProps = {
   smallBrandText: false,
+  showLogo: true,
   brandTextShown: true,
   brandText: settings.brandText,
   brandTagline: settings.brandTagline,

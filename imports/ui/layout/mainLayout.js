@@ -67,6 +67,12 @@ class MainLayout extends React.Component {
     }
   }
 
+  isEmbedLink = () => {
+    const { location } = this.props;
+    console.info(location, "...........");
+    return location.pathname.indexOf("embed") !== -1;
+  };
+
   acceptMemberInvitation = invitationObj => {
     const { popUp } = this.props;
     // console.log("Landing acceptMemberInvitation")
@@ -135,9 +141,17 @@ class MainLayout extends React.Component {
   showTermsOfServiceDialogBox = () => {};
 
   render() {
+    const visitorTypeValue = localStorage.getItem("visitorType");
+
     const { currentUser, isUserSubsReady, classes } = this.props;
     return (
       <div>
+        {isUserSubsReady &&
+          !visitorTypeValue &&
+          !this.isEmbedLink() &&
+          !currentUser && (
+            <FirstTimeVisitDialogBox isUserSubsReady={isUserSubsReady} />
+          )}
         {React.cloneElement(this.props.children, {
           currentUser: currentUser,
           previousLocationPathName: this.state.previousLocationPathName,

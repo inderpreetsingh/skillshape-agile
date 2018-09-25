@@ -12,8 +12,6 @@ import schoolIssuesData from "./constants/schoolIssues.js";
 import schoolPageCards from "./constants/schoolPageCards.js";
 import schoolPagePricingCards from "./constants/schoolPagePriceCards.js";
 
-import { withUserSchoolInfo } from "/imports/util";
-
 import * as helpers from "./components/jss/helpers.js";
 
 const Wrapper = styled.div`
@@ -24,6 +22,7 @@ const School = props => (
   <Wrapper>
     <div>
       <BrandBar
+        isUserSubsReady={props.isUserSubsReady}
         currentUser={props.currentUser}
         navBarHeight="70"
         positionStatic={true}
@@ -43,4 +42,4 @@ const School = props => (
   </Wrapper>
 );
 
-export default withUserSchoolInfo(School);
+export default School;

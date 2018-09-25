@@ -3,8 +3,8 @@ import { browserHistory } from "react-router";
 
 // NOTE: This is very specific HOC for hiding logo's on brandbar, topBar etc..
 // currentUser, isUserSubsReady props are expected..
-export default (withUserSchoolInfo = WrappedComponent =>
-  class withUserSchoolInfoHOC extends React.Component {
+export default (withUserSchoolInfo = WrappedComponent => {
+  return class withUserSchoolInfoHOC extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -14,21 +14,39 @@ export default (withUserSchoolInfo = WrappedComponent =>
 
     _storeUserSchoolInfo() {
       const { currentUser, isUserSubsReady } = this.props;
-      debugger;
+      const userInfoStored = JSON.parse(localStorage.getItem("userInfoStored"));
 
-      if (currentUser && currentUser.profile.userType === "School") {
-        Meteor.call("school.getMySchool", (err, res) => {
-          if (err) {
-            localStorage.setItem("multipleSchools", true);
-          } else {
-            if (res.length == 1) {
-              // redirect only if there is a single school
-              const mySchoolSlug = res[0].slug;
-              localStorage.setItem("mySchoolSlug", mySchoolSlug);
-              localStorage.setItem("multipleSchools", false);
-            } else {
+      if (!userInfoStored) {
+        if (currentUser && currentUser.profile.userType === "School") {
+          Meteor.call("school.getMySchool", (err, res) => {
+            localStorage.setItem("userInfoStored", true);
+            if (err) {
               localStorage.setItem("multipleSchools", true);
+            } else {
+              if (res.length == 1) {
+                // redirect only if there is a single school
+                const mySchoolSlug = res[0].slug;
+                localStorage.setItem("mySchoolSlug", mySchoolSlug);
+                localStorage.setItem("multipleSchools", false);
+              } else {
+                localStorage.setItem("multipleSchools", true);
+              }
+              this.setState(state => {
+                return {
+                  ...state,
+                  showLogo: true
+                };
+              });
             }
+          });
+        } else if (
+          (currentUser && currentUser.profile.userType !== "School") ||
+          (isUserSubsReady && !currentUser)
+        ) {
+          if (!this.state.showLogo) {
+            localStorage.setItem("userInfoStored", true);
+            localStorage.setItem("mySchoolSlug", null);
+            localStorage.setItem("multipleSchools", false);
             this.setState(state => {
               return {
                 ...state,
@@ -36,11 +54,8 @@ export default (withUserSchoolInfo = WrappedComponent =>
               };
             });
           }
-        });
-      } else if (
-        (currentUser && currentUser.profile.userType !== "School") ||
-        (isUserSubsReady && !currentUser)
-      ) {
+        }
+      } else {
         if (!this.state.showLogo) {
           this.setState(state => {
             return {
@@ -52,26 +67,39 @@ export default (withUserSchoolInfo = WrappedComponent =>
       }
     }
 
-    handleLogoClick() {
-      const { isUserSubsReady } = this.props;
+    handleLogoClick = () => {
+      console.log(this.props, this, "isUserSubsReady");
+      const { currentUser, isUserSubsReady } = this.props;
       const visitorType = localStorage.getItem("visitorType");
 
-      if (isUserSubsReady) {
-        // There is current user loggedIn
-        if (visitorType === "school") {
-          const mySchoolSlug = localStorage.getItem("mySchoolSlug");
-          const multipleSchools = localStorage.getItem("multipleSchools");
-          if (mySchoolSlug && !multipleSchools) {
-            browserHistory.push(`/schools/${mySchoolSlug}`);
-          }
-
+      if (
+        isUserSubsReady &&
+        currentUser &&
+        currentUser.profile.userType === "School"
+      ) {
+        const mySchoolSlug = localStorage.getItem("mySchoolSlug");
+        const multipleSchools = JSON.parse(
+          localStorage.getItem("multipleSchools")
+        );
+        if (mySchoolSlug !== "null" && !multipleSchools) {
+          browserHistory.push(`/schools/${mySchoolSlug}`);
+        } else {
           browserHistory.push("/skillshape-for-school");
         }
+      } else if (
+        isUserSubsReady &&
+        currentUser &&
+        currentUser.profile.userType !== "School"
+      ) {
         browserHistory.push("/");
+      } else if (isUserSubsReady && !currentUser) {
+        if (visitorType === "school") {
+          browserHistory.push("/skillshape-for-school");
+        } else {
+          browserHistory.push("/");
+        }
       }
-
-      browserHistory.push("/");
-    }
+    };
 
     shouldComponentUpdate(nextProps, nextState) {
       if (
@@ -85,6 +113,9 @@ export default (withUserSchoolInfo = WrappedComponent =>
     }
 
     componentDidUpdate() {
+      console.group("THESE ARE PROPS");
+      console.log("this .props", this.props);
+      console.groupEnd();
       this._storeUserSchoolInfo();
     }
     componentDidMount() {
@@ -100,4 +131,5 @@ export default (withUserSchoolInfo = WrappedComponent =>
         />
       );
     }
-  });
+  };
+});
