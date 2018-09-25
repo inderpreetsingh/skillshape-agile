@@ -11,7 +11,7 @@ import IconButton from 'material-ui/IconButton';
 import Clear from 'material-ui-icons/Clear';
 import MoreVert from 'material-ui-icons/MoreVert';
 import { verifyImageURL} from "/imports/util";
-
+import get from "lodash/get";
 import withImageExists from '/imports/util/withImageExists.js';
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
@@ -225,27 +225,41 @@ class CardsReveal extends Component {
   hideCardContent = (e) => {
     this.setState({ revealCard: false });
   }
-  componentWillMount (){
-    const {bgImg,schoolId,medium}= this.props;
-    let img=medium ? medium :bgImg;
-    verifyImageURL(img,(res)=>{
-      if(res){
-            this.setState({bgImg:img});
-      }else{
-        this.setState({bgImg:cardImgSrc});
-      }
-    })
+  setSchoolImage = (schoolId)=>{
     Meteor.call('school.getMySchool',schoolId,true,(err,res)=>{
-      if(res && res.mainImage && bgImg == '/images/classtype/classtype-cover.jpg'){
-        this.setState({bgImg:res.mainImage})
+      if(res && res.mainImage){
+       let img=get(res,"mainImageMedium",get(res,"mainImage",""));
+        verifyImageURL(img,(res)=>{
+          if(res){
+            this.setState({bgImg:img})
+          }else{
+            this.setState({bgImg:cardImgSrc});
+          }
+        })
       }
-      
     })
+  }
+  componentWillMount (){
+    const {bgImg,schoolId,medium,name}= this.props;
+    let img=medium ? medium :bgImg;
+    if(img=="/images/classtype/classtype-cover.jpg"){
+      this.setSchoolImage(schoolId);
+    }
+    else{
+      verifyImageURL(img,(res)=>{
+        if(res){
+          this.setState({bgImg:img})
+        }else{
+          this.setSchoolImage(schoolId);
+        }
+      })
+    }
   }
 
   render() {
     const { name, classTypeImg, descriptionContent, body, classes } = this.props;
     const {bgImg} = this.state;
+    console.log('TCL: CardsReveal -> render -> bgImg',name, bgImg);
     const myTitle = name.toLowerCase();
     //console.log(ShowDetails,"adsljfj")
     return (<Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
