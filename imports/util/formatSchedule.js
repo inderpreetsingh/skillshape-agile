@@ -86,9 +86,9 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
     classTimes = data.scheduleDetails;
   }
 
-  console.group("CLASS TIMES DATA");
-  console.info(classTimes, data.scheduleType);
-  console.groupEnd();
+  // console.group("CLASS TIMES DATA");
+  // console.info(classTimes, data.scheduleType);
+  // console.groupEnd();
 
   if (hidePastDates)
     return removePastTimesFromSchedule(

@@ -1,24 +1,26 @@
-import React from 'react';
-import isEmpty from 'lodash/isEmpty';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React from "react";
+import isEmpty from "lodash/isEmpty";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
-import Logo from './Logo.jsx';
-import SideNav from './SideNav.jsx';
-import LoginButton from './buttons/LoginButton.jsx';
-import AddSchoolButton from './buttons/AddSchoolButton.jsx';
-import JoinButton from './buttons/JoinButton.jsx';
+import Logo from "./Logo.jsx";
+import SideNav from "./SideNav.jsx";
+import LoginButton from "./buttons/LoginButton.jsx";
+import AddSchoolButton from "./buttons/AddSchoolButton.jsx";
+import JoinButton from "./buttons/JoinButton.jsx";
+
+import { withUserSchoolInfo } from "/imports/util/";
 
 //TODO: Automatic imports depending upon variables used - intellij
-import * as helpers from './jss/helpers.js';
+import * as helpers from "./jss/helpers.js";
 
 const NavBarWrapper = styled.div`
-  display : flex;
+  display: flex;
   justify-content: space-between;
   width: 100%;
-  height: ${props => props.navBarHeight ? props.navBarHeight + 'px' : 'auto'};
+  height: ${props => (props.navBarHeight ? props.navBarHeight + "px" : "auto")};
   z-index: 1299;
-  position: ${props => props.positionStatic ? 'static': 'absolute'};
+  position: ${props => (props.positionStatic ? "static" : "absolute")};
   top: 0;
   background: ${props => props.navBgColor};
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -27,7 +29,7 @@ const NavBarWrapper = styled.div`
 `;
 
 const ActionArea = styled.div`
-  ${helpers.flexCenter},
+  ${helpers.flexCenter},;
 `;
 
 const ButtonsWrapper = styled.div`
@@ -40,14 +42,14 @@ const ButtonsWrapper = styled.div`
 const NavBarInnerContent = styled.div`
   width: 100%;
   position: relative;
-  display : flex;
+  display: flex;
   justify-content: space-between;
   padding: ${helpers.rhythmDiv}px;
   z-index: 1;
 
   @media screen and (max-width: ${helpers.tablet}px) {
     :after {
-      content: '';
+      content: "";
       position: absolute;
       width: 100%;
       height: 100%;
@@ -55,29 +57,46 @@ const NavBarInnerContent = styled.div`
       bottom: 0;
       left: 0;
       right: 0;
-      background-color: ${props => props.overlay ? helpers.overlayColor : 'transparent'};
+      background-color: ${props =>
+        props.overlay ? helpers.overlayColor : "transparent"};
       z-index: -1;
     }
   }
 `;
 
-const BrandBar = (props) => (
-    <NavBarWrapper positionStatic={props.positionStatic} navBarHeight={props.navBarHeight} navBgColor={props.navBgColor}>
-      <NavBarInnerContent overlay={props.overlay}>
-        {props.logoArea ? props.logoArea : <Logo {...props.logoProps} />}
+const BrandBar = props => (
+  <NavBarWrapper
+    positionStatic={props.positionStatic}
+    navBarHeight={props.navBarHeight}
+    navBgColor={props.navBgColor}
+  >
+    <NavBarInnerContent overlay={props.overlay}>
+      {props.logoArea || (
+        <Logo
+          {...props.logoProps}
+          showLogo={props.showLogo}
+          handleLogoClick={props.handleLogoClick}
+        />
+      )}
 
-        <ActionArea>
-          {props.barButton ? props.barButton
-          :
-          (<ButtonsWrapper>
+      <ActionArea>
+        {props.barButton ? (
+          props.barButton
+        ) : (
+          <ButtonsWrapper>
             {isEmpty(props.currentUser) && <AddSchoolButton />}
-            <JoinButton label="Sign Up" {...props}/>
-            <LoginButton icon={true} {...props}/>
-          </ButtonsWrapper>)}
-          {props.menuButton ? props.menuButton : <SideNav {...props} {...props.menuButton}/> }
-        </ActionArea>
-      </NavBarInnerContent>
-    </NavBarWrapper>
+            <JoinButton label="Sign Up" {...props} />
+            <LoginButton icon={true} {...props} />
+          </ButtonsWrapper>
+        )}
+        {props.menuButton ? (
+          props.menuButton
+        ) : (
+          <SideNav {...props} {...props.menuButton} />
+        )}
+      </ActionArea>
+    </NavBarInnerContent>
+  </NavBarWrapper>
 );
 
 BrandBar.propTypes = {
@@ -87,14 +106,16 @@ BrandBar.propTypes = {
   barButton: PropTypes.element,
   menuButton: PropTypes.element,
   navBarHeight: PropTypes.string,
-  overlay: PropTypes.bool
-}
+  overlay: PropTypes.bool,
+  showLogo: PropTypes.bool
+};
 
 BrandBar.defaultProps = {
   positionStatic: false,
-  navBgColor: 'white',
-  navBarHeight: 'auto',
-  overlay: false
-}
+  navBgColor: "white",
+  navBarHeight: "auto",
+  overlay: false,
+  showLogo: true
+};
 
-export default BrandBar;
+export default withUserSchoolInfo(BrandBar);
