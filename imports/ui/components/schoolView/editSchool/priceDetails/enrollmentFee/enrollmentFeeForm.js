@@ -87,7 +87,7 @@ class EnrollmentFeeForm extends React.Component {
             schoolId: schoolId,
             name: this.enrollmentName.value,
             classTypeId: this.state.includeAllClassTypes ? allClassTypeIds : selectedClassType && selectedClassType.map(data => data._id),
-            cost: this.enrollmentCost.value && parseInt(this.enrollmentCost.value),
+            cost: this.enrollmentCost.value && parseFloat(this.enrollmentCost.value).toFixed(2),
             includeAllClassTypes: this.state.includeAllClassTypes,
             currency:this.state.currency
         }

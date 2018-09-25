@@ -13,6 +13,8 @@ EnrollmentFees.attachSchema(new SimpleSchema({
     },
     cost: {
         type: Number,
+        optional: true,
+		decimal: true
     },
     classTypeId: {
         type: [String],

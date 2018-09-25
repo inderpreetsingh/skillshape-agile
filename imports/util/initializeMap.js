@@ -38,7 +38,7 @@ function infoSchool({school, classTypes}) {
 export function createMarkersOnMap(mapId, locationData) {
     console.log('TCL: createMarkersOnMap -> locationData', locationData);
     if(document.getElementById(mapId)) {
-        let map = new google.maps.Map(document.getElementById(mapId), {zoom: 1});
+        let map = new google.maps.Map(document.getElementById(mapId), {zoom: locationData.length>1 ? 1 : 8});
         let i = 0;
         let bounds = new google.maps.LatLngBounds();
             for(let obj of locationData) {
@@ -49,7 +49,7 @@ export function createMarkersOnMap(mapId, locationData) {
                         position: geolocate,
                         map: map
                     });
-                    bounds.extend(marker.getPosition());
+                        bounds.extend(marker.getPosition());
                     google.maps.event.addListener(marker, 'click', function() {
                         const address = `<div id="address-content">
                         ${obj.address && obj.address}, ${obj.city && obj.city}, ${obj.country && obj.country}
@@ -65,7 +65,9 @@ export function createMarkersOnMap(mapId, locationData) {
                     i++;
                 }
             }
-            map.fitBounds(bounds);
+            if(locationData.length>1){
+                map.fitBounds(bounds);
+            }
     }
 }
 

@@ -1,3 +1,19 @@
 .transit-height {
-  transition: height .250s linear;
+  transition: height 0.25s linear;
+}
+
+// alert-message
+.message-enter {
+  opacity: 0.01;
+}
+.message-enter-active {
+  opacity: 1;
+  transition: all 200ms ease-out 0.1s;
+}
+.message-exit {
+  opacity: 1;
+}
+.message-exit-active {
+  opacity: 1;
+  transition: all 200ms ease-out;
 }

@@ -5,31 +5,29 @@ import isEmpty from "lodash/isEmpty";
 
 import PropTypes from "prop-types";
 import Grid from "material-ui/Grid";
+import { MuiThemeProvider } from "material-ui/styles";
 import Menu, { MenuItem } from "material-ui/Menu";
 import Button from "material-ui/Button";
 import Icon from "material-ui/Icon";
 import IconButton from "material-ui/IconButton";
-// import ChipInput from 'material-ui-chip-input';
 import Multiselect from "react-widgets/lib/Multiselect";
 import { withStyles } from "material-ui/styles";
 import Hidden from "material-ui/Hidden";
 import styled from "styled-components";
-//import './jss/reactWidgets.scss';
 
 import IconInput from "./form/IconInput.jsx";
 import IconSelect from "./form/IconSelect.jsx";
 import SliderControl from "./form/SliderControl.jsx";
 import MyMultiSelect from "./form/multiSelect/MyMultiSelect.jsx";
-import FloatingChangeViewButton from "./buttons/FloatingChangeViewButton.jsx";
+import AttachedAlert from "/imports/ui/components/landing/components/helpers/AttachedAlert.jsx";
 
 import { FormHelperText } from "material-ui/Form";
 import { coverSrc } from "../site-settings.js";
 
-import { MuiThemeProvider } from "material-ui/styles";
-import * as helpers from "./jss/helpers.js";
 import muiTheme from "./jss/muitheme.jsx";
 import SkillShapeButton from "/imports/ui/components/landing/components/buttons/SkillShapeButton.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import * as helpers from "./jss/helpers.js";
 
 import { dataSourceSkills } from "../constants/filtersData.js";
 
@@ -616,7 +614,7 @@ class FilterPanel extends Component {
         ) : (
           <Grid item xs={12} sm={6}>
             <FilterPanelAction>
-              {this.props.isCardsSearching ? (
+              {this.props.isCardsBeingSearched ? (
                 <PrimaryButton
                   fullWidth
                   disabled
@@ -672,12 +670,6 @@ class FilterPanel extends Component {
     );
   }
 }
-
-const CssTransitionGroupWrapperGrid = props => (
-  <Grid container spacing="24">
-    {props.children}
-  </Grid>
-);
 
 FilterPanel.propTypes = {
   handleShowMoreFiltersButtonClick: PropTypes.func,

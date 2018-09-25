@@ -33,7 +33,12 @@ export default class AddRow extends React.Component {
 
 	onChangeInput = (key, index, event) => {
 		const oldRow = [...this.state.row];
-		oldRow[index][key] = parseInt(event.target.value);
+		if(key=='cost'){
+			oldRow[index][key] = parseFloat(event.target.value).toFixed(2);
+		}
+		else{
+			oldRow[index][key] = parseInt(event.target.value);
+		}
 		this.setState({ row: oldRow });
 	}
 
@@ -41,8 +46,8 @@ export default class AddRow extends React.Component {
 		const oldRow = [...this.state.row];
 		oldRow.splice(index, 1);
 		this.setState({ row: oldRow });
+		
 	}
-
 	getRowData = () => {
 		return this.state.row;
 	}

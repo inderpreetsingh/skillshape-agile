@@ -95,6 +95,7 @@ class ClassPriceForm extends React.Component {
     let allClassTypeIds = classTypeData.map(item => {
       return item._id;
     });
+    console.log('TCL: ClassPriceForm -> this.classPriceCost.value', this.classPriceCost.value,typeof this.classPriceCost.value);
     const payload = {
       schoolId: schoolId,
       packageName: this.packageName.value,
@@ -107,7 +108,7 @@ class ClassPriceForm extends React.Component {
           ? expPeriod
           : expPeriod.replace("s", ""),
       noClasses: this.noClasses.value && parseInt(this.noClasses.value),
-      cost: this.classPriceCost.value && parseInt(this.classPriceCost.value),
+      cost: this.classPriceCost.value && parseFloat(this.classPriceCost.value).toFixed(2),
       noExpiration: this.state.noExpiration,
       includeAllClassTypes: this.state.includeAllClassTypes,
       currency:this.state.currency
@@ -288,6 +289,7 @@ class ClassPriceForm extends React.Component {
                 <InputLabel htmlFor="amount">Cost</InputLabel>
                 <Input
                   id="class-cost"
+                  
                   defaultValue={data && data.cost}
                   inputRef={ref => (this.classPriceCost = ref)}
                   label="Cost"

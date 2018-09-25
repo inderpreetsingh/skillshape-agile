@@ -224,7 +224,7 @@ class Landing extends Component {
       showPreloader: true,
       sticky: false,
       isLoading: false,
-      isSearching: false,
+      isCardsBeingSearched: false,
       filterPanelDialogBox: false,
       filters: {
         coords: null,
@@ -466,7 +466,6 @@ class Landing extends Component {
       { skillCategoryIds: skillCategoryIds, textSearch: text },
       (err, res) => {
         if (res) {
-          // console.log("result",res)
           this.setState({ skillSubjectData: res || [] });
         }
       }
@@ -524,7 +523,7 @@ class Landing extends Component {
     this.setState(state => {
       return {
         ...state,
-        isCardsSearching: searchingState
+        isCardsBeingSearched: searchingState
       };
     });
   };
@@ -596,7 +595,6 @@ class Landing extends Component {
                 let place = results[0];
                 // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
                 // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
-                //console.log(results[0],"location details...")
                 sLocation = results[0].formatted_address;
                 oldFilters["coords"] = coords;
                 oldFilters["locationName"] = this._getNormalizedLocation(
@@ -621,10 +619,12 @@ class Landing extends Component {
         },
         err => {
           const geolocationError = this._handleGeoLocationError(err);
-          popUp.appear("alert", { content: geolocationError }, true, {
-            autoClose: true,
-            autoTimeout: 4000
-          });
+          if(geolocationError){
+            popUp.appear("alert", { content: geolocationError }, true, {
+              autoClose: true,
+              autoTimeout: 4000
+            });
+          }
         }
       );
     }
@@ -681,7 +681,6 @@ class Landing extends Component {
 
   onLocationChange = (location, updateKey1, updateKey2) => {
     let stateObj = {};
-    //console.log('onLocationChange',location,".....................");
     if (updateKey1) {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
@@ -981,35 +980,37 @@ class Landing extends Component {
       <DocumentTitle title={this.props.route.name}>
         <div>
           {/*this._redirectBasedOnVisitorType()*/}
-          <FiltersDialogBox
-            open={this.state.filterPanelDialogBox}
-            onModalClose={() => this.handleFiltersDialogBoxState(false)}
-            filterPanelProps={{
-              isCardsSearching: this.state.isCardsSearching,
-              currentAddress: this.state.locationName,
-              removeAllFilters: this.removeAllFilters,
-              filters: this.state.filters,
-              tempFilters: this.state.tempFilters,
-              stickyPosition: this.state.sticky,
-              onLocationChange: this.onLocationChange,
-              locationName: this.state.locationName,
-              locationInputChanged: this.locationInputChanged,
-              fliterSchoolName: this.fliterSchoolName,
-              filterAge: this.filterAge,
-              filterGender: this.filterGender,
-              skillLevelFilter: this.skillLevelFilter,
-              perClassPriceFilter: this.perClassPriceFilter,
-              pricePerMonthFilter: this.pricePerMonthFilter,
-              collectSelectedSkillCategories: this
-                .collectSelectedSkillCategories,
-              collectSelectedSkillSubject: this.collectSelectedSkillSubject,
-              handleSkillTypeSearch: this.handleSkillTypeSearch,
-              skillTypeText: this.state.filters.skillTypeText,
-              handleFiltersDialogBoxState: this.handleFiltersDialogBoxState,
-              handleFiltersDialogSaveButtonClick: this
-                .handleFiltersDialogSaveButtonClick
-            }}
-          />
+          {this.state.filterPanelDialogBox && (
+            <FiltersDialogBox
+              open={this.state.filterPanelDialogBox}
+              onModalClose={() => this.handleFiltersDialogBoxState(false)}
+              filterPanelProps={{
+                isCardsBeingSearched: this.state.isCardsBeingSearched,
+                currentAddress: this.state.locationName,
+                removeAllFilters: this.removeAllFilters,
+                filters: this.state.filters,
+                tempFilters: this.state.tempFilters,
+                stickyPosition: this.state.sticky,
+                onLocationChange: this.onLocationChange,
+                locationName: this.state.locationName,
+                locationInputChanged: this.locationInputChanged,
+                fliterSchoolName: this.fliterSchoolName,
+                filterAge: this.filterAge,
+                filterGender: this.filterGender,
+                skillLevelFilter: this.skillLevelFilter,
+                perClassPriceFilter: this.perClassPriceFilter,
+                pricePerMonthFilter: this.pricePerMonthFilter,
+                collectSelectedSkillCategories: this
+                  .collectSelectedSkillCategories,
+                collectSelectedSkillSubject: this.collectSelectedSkillSubject,
+                handleSkillTypeSearch: this.handleSkillTypeSearch,
+                skillTypeText: this.state.filters.skillTypeText,
+                handleFiltersDialogBoxState: this.handleFiltersDialogBoxState,
+                handleFiltersDialogSaveButtonClick: this
+                  .handleFiltersDialogSaveButtonClick
+              }}
+            />
+          )}
 
           {/* Cover */}
           <CoverWrapper>
@@ -1069,7 +1070,6 @@ class Landing extends Component {
               {!this.state.mapView &&
                 this.checkIfAnyFilterIsApplied() &&
                 this.showAppliedTopFilter()}
-              {/*console.log("re rendering .... classtype list...") */}
               <ClassTypeList
                 landingPage={true}
                 handleIsCardsSearching={this.handleIsCardsSearching}
