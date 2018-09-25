@@ -41,7 +41,9 @@ const Right = styled.div`
 const ClassTimeName = Heading.extend`
   font-weight: 400;
   text-transform: capitalize;
+
   @media screen and (min-width: ${tablet}px) {
+    padding-top: ${rhythmDiv}px;
     margin-right: ${rhythmDiv}px;
   }
 `;

@@ -1,20 +1,19 @@
 import React, { Fragment } from "react";
 import styled from "styled-components";
 
-import { withImageExists } from "/imports/util";
-import {
-  schoolDetailsImgSrc,
-  coverSrc
-} from "/imports/ui/components/landing/site-settings.js";
-
 import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
-
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
+import { withImageExists } from "/imports/util";
 import {
   tablet,
   rhythmDiv,
   danger
 } from "/imports/ui/components/landing/components/jss/helpers.js";
+
+import {
+  schoolDetailsImgSrc,
+  coverSrc
+} from "/imports/ui/components/landing/site-settings.js";
 
 const imageExistsConfigSchoolSrc = {
   originalImagePath: "schoolCoverSrc",
@@ -56,11 +55,6 @@ const ClassTypeProfile = styled.div`
   background-repeat: no-repeat;
 `;
 
-const ClassTypeProfileWithDefaultImage = withImageExists(props => {
-  const { bgImg, classTypeCoverSrc } = props;
-  return <ClassTypeProfile url={bgImg || classTypeCoverSrc} />;
-}, imageExistsConfigClassSrc);
-
 const ButtonsWrapper = styled.div`
   display: none;
   @media screen and (min-width: ${tablet}px) {
@@ -72,6 +66,11 @@ const ButtonsWrapper = styled.div`
     justify-content: flex-end;
   }
 `;
+
+const ClassTypeProfileWithDefaultImage = withImageExists(props => {
+  const { bgImg, classTypeCoverSrc } = props;
+  return <ClassTypeProfile url={bgImg || classTypeCoverSrc} />;
+}, imageExistsConfigClassSrc);
 
 const ClassTimeCover = props => (
   <Wrapper url={props.bgImg || props.schoolCoverSrc}>
