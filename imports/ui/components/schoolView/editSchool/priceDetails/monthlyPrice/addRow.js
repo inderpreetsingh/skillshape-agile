@@ -46,8 +46,8 @@ export default class AddRow extends React.Component {
 		const oldRow = [...this.state.row];
 		oldRow.splice(index, 1);
 		this.setState({ row: oldRow });
+		
 	}
-
 	getRowData = () => {
 		return this.state.row;
 	}
