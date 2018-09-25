@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { CSSTransition, Transition } from 'react-transition-group';
@@ -10,8 +10,8 @@ import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Clear from 'material-ui-icons/Clear';
 import MoreVert from 'material-ui-icons/MoreVert';
-import { verifyImageURL} from "/imports/util";
-
+import { verifyImageURL } from "/imports/util";
+import get from "lodash/get";
 import withImageExists from '/imports/util/withImageExists.js';
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
@@ -26,7 +26,7 @@ const styles = {
     position: 'relative',
     cursor: 'pointer',
   },
-  cardIcon : {
+  cardIcon: {
     cursor: 'pointer',
     height: 24,
     width: 24
@@ -145,30 +145,30 @@ transition: background-image 1s linear !important;
   width: 100%;
 `;
 
-const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCardContent, descriptionContent, bgImg}) => {
+const CardDescription = ({ key, classes, className, name, maxCharsLimit, hideCardContent, descriptionContent, bgImg }) => {
 
   const _getRefactoredTitle = (title, maxLimit) => {
-    if(title.length <= maxLimit) {
+    if (title.length <= maxLimit) {
       return title;
     }
 
     const words = title.split(' ');
-    const maxCharsToDisplay = _getMaxCharsTitleLimit(words,maxLimit);
-    return title.substr(0,maxCharsToDisplay) + '...';
+    const maxCharsToDisplay = _getMaxCharsTitleLimit(words, maxLimit);
+    return title.substr(0, maxCharsToDisplay) + '...';
   }
 
   // This function will let us count the max words of title we can display
   const _getMaxCharsTitleLimit = (words, maxLimit) => {
     let count = 0;
 
-    for(let i = 0; i < words.length; ++i) {
+    for (let i = 0; i < words.length; ++i) {
       count += words[i].length + 1;
 
       // if the count increases the maxLimit, gets the last complete word
-      if(count > maxLimit) {
+      if (count > maxLimit) {
         count -= (words[i].length + 1);
         break;
-      }else if( count == maxLimit) {
+      } else if (count == maxLimit) {
         break;
       }
     }
@@ -180,11 +180,11 @@ const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCar
   return (<CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
     <CardDescriptionHeader>
       <CardImageContainer>
-        <ProgressiveImage 
-                src={bgImg}
-                placeholder={config.blurImage}>
-                {(src) =>  <Avatar bgImg={src} />}
-              </ProgressiveImage>
+        <ProgressiveImage
+          src={bgImg}
+          placeholder={config.blurImage}>
+          {(src) => <Avatar bgImg={src} />}
+        </ProgressiveImage>
       </CardImageContainer>
 
       <CardContentTitle description>{_getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
@@ -198,7 +198,7 @@ const CardDescription = ({ key, classes, className, name, maxCharsLimit ,hideCar
   </CardDescriptionWrapper>);
 }
 
-const Reveal = ({children, ...props}) => {
+const Reveal = ({ children, ...props }) => {
   // console.log(props,"props..");
   return (
     <CSSTransition
@@ -206,7 +206,7 @@ const Reveal = ({children, ...props}) => {
       classNames="reveal-card"
       timeout={500}
     >
-    {children}
+      {children}
     </CSSTransition>
   );
 }
@@ -215,7 +215,7 @@ class CardsReveal extends Component {
   state = {
     maxCharsLimit: 18,
     revealCard: false,
-    bgImg:this.props.bgImg
+    bgImg: this.props.bgImg
   };
 
   revealCardContent = (e) => {
@@ -225,38 +225,51 @@ class CardsReveal extends Component {
   hideCardContent = (e) => {
     this.setState({ revealCard: false });
   }
-  componentWillMount (){
-    const {bgImg,schoolId,medium}= this.props;
-    let img=medium ? medium :bgImg;
-    verifyImageURL(img,(res)=>{
-      if(res){
-            this.setState({bgImg:img});
-      }else{
-        this.setState({bgImg:cardImgSrc});
+  setSchoolImage = (schoolId) => {
+    Meteor.call('school.getMySchool', schoolId, true, (err, res) => {
+      if (res && res.mainImage) {
+        let img = get(res, "mainImageMedium", get(res, "mainImage", ""));
+        verifyImageURL(img, (res) => {
+          if (res) {
+            this.setState({ bgImg: img })
+          } else {
+            this.setState({ bgImg: cardImgSrc });
+          }
+        })
       }
     })
-    Meteor.call('school.getMySchool',schoolId,true,(err,res)=>{
-      if(res && res.mainImage && bgImg == '/images/classtype/classtype-cover.jpg'){
-        this.setState({bgImg:res.mainImage})
-      }
-      
-    })
+  }
+  componentWillMount() {
+    const { bgImg, schoolId, medium, name } = this.props;
+    let img = medium ? medium : bgImg;
+    if (img == "/images/classtype/classtype-cover.jpg") {
+      this.setSchoolImage(schoolId);
+    }
+    else {
+      verifyImageURL(img, (res) => {
+        if (res) {
+          this.setState({ bgImg: img })
+        } else {
+          this.setSchoolImage(schoolId);
+        }
+      })
+    }
   }
 
   render() {
     const { name, classTypeImg, descriptionContent, body, classes } = this.props;
-    const {bgImg} = this.state;
+    const { bgImg } = this.state;
     const myTitle = name.toLowerCase();
     //console.log(ShowDetails,"adsljfj")
     return (<Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
-        <div onClick={this.revealCardContent}>
-          <CardImageTitleWrapper>
+      <div onClick={this.revealCardContent}>
+        <CardImageTitleWrapper>
           <ProgressiveImage
             placeholder={config.blurImage}
             src={bgImg}>
             {(src) => <CardImageWrapper bgImage={src} />}
-               </ProgressiveImage>
-              
+          </ProgressiveImage>
+
           <CardContentHeader>
             <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
             <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
@@ -264,49 +277,49 @@ class CardsReveal extends Component {
             </IconButton>
           </CardContentHeader>
 
-          </CardImageTitleWrapper>
+        </CardImageTitleWrapper>
 
-          <CardContent>
-            <CardContentBody>{body}</CardContentBody>
-          </CardContent>
-        </div>
+        <CardContent>
+          <CardContentBody>{body}</CardContentBody>
+        </CardContent>
+      </div>
 
-        <Transition timeout={{enter : 0, exit: 0}} in={this.state.revealCard}>
-          {(transitionState) => (<CardDescription
-              descriptionContent={descriptionContent}
-              hideCardContent={this.hideCardContent}
-              name={myTitle}
-              classes={classes}
-              className={transitionState}
-              maxCharsLimit={this.state.maxCharsLimit}
-              key={this.props._id}
-              bgImg={bgImg}
-            />)}
-        </Transition>
-      </Paper>
+      <Transition timeout={{ enter: 0, exit: 0 }} in={this.state.revealCard}>
+        {(transitionState) => (<CardDescription
+          descriptionContent={descriptionContent}
+          hideCardContent={this.hideCardContent}
+          name={myTitle}
+          classes={classes}
+          className={transitionState}
+          maxCharsLimit={this.state.maxCharsLimit}
+          key={this.props._id}
+          bgImg={bgImg}
+        />)}
+      </Transition>
+    </Paper>
     );
   }
 }
 
 CardDescription.propTypes = {
-    name : PropTypes.string,
-    descriptionContent: PropTypes.element,
-    hideCardContent : PropTypes.func.isRequired
+  name: PropTypes.string,
+  descriptionContent: PropTypes.element,
+  hideCardContent: PropTypes.func.isRequired
 }
 
 CardsReveal.propTypes = {
-    name: PropTypes.string,
-    classTypeImg: PropTypes.string,
-    height: PropTypes.number,
-    classes: PropTypes.object.isRequired,
-    descriptionContent: PropTypes.element,
-    body: PropTypes.element,
-    showDetailsComponent : PropTypes.element
+  name: PropTypes.string,
+  classTypeImg: PropTypes.string,
+  height: PropTypes.number,
+  classes: PropTypes.object.isRequired,
+  descriptionContent: PropTypes.element,
+  body: PropTypes.element,
+  showDetailsComponent: PropTypes.element
 }
 
 CardsReveal.defaultProps = {
-   classTypeImg: cardImgSrc,
-   name: 'Card Title'
+  classTypeImg: cardImgSrc,
+  name: 'Card Title'
 }
 
 export default withStyles(styles)(CardsReveal);
