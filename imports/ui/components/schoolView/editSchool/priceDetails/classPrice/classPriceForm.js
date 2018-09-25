@@ -95,6 +95,7 @@ class ClassPriceForm extends React.Component {
     let allClassTypeIds = classTypeData.map(item => {
       return item._id;
     });
+    console.log('TCL: ClassPriceForm -> this.classPriceCost.value', this.classPriceCost.value,typeof this.classPriceCost.value);
     const payload = {
       schoolId: schoolId,
       packageName: this.packageName.value,
