@@ -32,7 +32,6 @@ export default class AddRow extends React.Component {
 	}
 
 	onChangeInput = (key, index, event) => {
-  	console.log('TCL: AddRow -> onChangeInput -> key', key);
 		const oldRow = [...this.state.row];
 		if(key=='cost'){
 			oldRow[index][key] = parseFloat(event.target.value).toFixed(2);
