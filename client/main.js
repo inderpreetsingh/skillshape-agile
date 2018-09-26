@@ -24,10 +24,6 @@ class App extends Component {
     super(props);
   }
 
-  _isEmbedLink = () => {
-    return window.location.href.indexOf("embed") !== -1;
-  };
-
   componentDidMount = () => {
     ReactGA.initialize("UA-115928788-1", {
       debug: true
@@ -38,16 +34,15 @@ class App extends Component {
 
   componentWillUnmount = () => {
     // console.log("visitorRedirected, setting false.......")
+    localStorage.setItem("userInfoStored", false);
     localStorage.setItem("visitorRedirected", false);
+    localStorage.setItem("mySchoolSlug", null);
+    localStorage.setItem("multipleSchools", true);
   };
 
   render() {
-    const visitorTypeValue = localStorage.getItem("visitorType");
-
     return (
       <MuiThemeProvider theme={muiTheme}>
-        {!visitorTypeValue &&
-          !this._isEmbedLink() && <FirstTimeVisitDialogBox />}
         <div>
           <Routes />
         </div>

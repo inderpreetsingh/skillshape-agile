@@ -22,6 +22,7 @@ const School = props => (
   <Wrapper>
     <div>
       <BrandBar
+        isUserSubsReady={props.isUserSubsReady}
         currentUser={props.currentUser}
         navBarHeight="70"
         positionStatic={true}

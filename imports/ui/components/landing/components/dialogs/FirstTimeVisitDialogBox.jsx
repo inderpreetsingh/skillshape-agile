@@ -209,37 +209,41 @@ class FirstTimeVisitDialogBox extends Component {
     // setTimeout(() => {
     //   this._redirectTo("/claimSchool");
     // }, 100);
-    if (currentUser) {
-      this.setState(state => {
-        return {
-          ...state,
-          showLoader: true
-        };
-      });
-      Meteor.call("school.getMySchool", (err, res) => {
-        this._closeModal();
-        if (err) {
-          console.warn(err);
-          browserHistory.push("/skillshape-for-school");
-        } else {
-          setTimeout(() => {
-            if (res.length) {
-              // debugger;
-              // console.info(res, "---");
-              const mySchoolSlug = res[0].slug;
-              browserHistory.push(`/schools/${mySchoolSlug}`);
-            } else {
-              browserHistory.push("/skillshape-for-school");
-            }
-          }, 100);
-        }
-      });
-    } else {
-      this._closeModal();
-      setTimeout(() => {
-        this._redirectTo("/skillshape-for-school");
-      }, 100);
-    }
+    // if (currentUser) {
+    //   this.setState(state => {
+    //     return {
+    //       ...state,
+    //       showLoader: true
+    //     };
+    //   });
+    //   Meteor.call("school.getMySchool", (err, res) => {
+    //     this._closeModal();
+    //     if (err) {
+    //       console.warn(err);
+    //       browserHistory.push("/skillshape-for-school");
+    //     } else {
+    //       setTimeout(() => {
+    //         if (res.length == 1) {
+    //           // redirect only if there is a single school
+    //           const mySchoolSlug = res[0].slug;
+    //           browserHistory.push(`/schools/${mySchoolSlug}`);
+    //         } else {
+    //           browserHistory.push("/skillshape-for-school");
+    //         }
+    //       }, 100);
+    //     }
+    //   });
+    // } else {
+    //   this._closeModal();
+    //   setTimeout(() => {
+    //     this._redirectTo("/skillshape-for-school");
+    //   }, 100);
+    // }
+
+    this._closeModal();
+    setTimeout(() => {
+      this._redirectTo("/skillshape-for-school");
+    }, 100);
   };
 
   render() {
@@ -310,11 +314,13 @@ class FirstTimeVisitDialogBox extends Component {
   }
 }
 
-export default withStyles(styles)(
-  createContainer(props => {
-    const currentUser = Meteor.user();
-    let userSubs = Meteor.subscribe("myInfo");
-    let isUserSubsReady = userSubs.ready();
-    return { ...props, currentUser, isUserSubsReady };
-  }, FirstTimeVisitDialogBox)
-);
+export default withStyles(styles)(FirstTimeVisitDialogBox);
+
+// export default withStyles(styles)(
+//   createContainer(props => {
+//     const currentUser = Meteor.user();
+//     let userSubs = Meteor.subscribe("myInfo");
+//     let isUserSubsReady = userSubs.ready();
+//     return { ...props, currentUser, isUserSubsReady };
+//   }, FirstTimeVisitDialogBox)
+// );
