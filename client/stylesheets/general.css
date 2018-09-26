@@ -824,3 +824,7 @@ ui for the multi value react select component
 /* .sc-sVRsr .sc-CtfFt{
   transition: background-image 1s linear;
 } */
+.rc-tooltip-inner{
+  font-weight: 500;
+  font-size: larger;
+}

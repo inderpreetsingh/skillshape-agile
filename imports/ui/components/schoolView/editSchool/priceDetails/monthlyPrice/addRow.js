@@ -8,8 +8,9 @@ import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
-import {inputRestriction} from '/imports/util';
+import {inputRestriction,formatMoney} from '/imports/util';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import Tooltip from 'rc-tooltip';
 export default class AddRow extends React.Component {
 
 	constructor(props) {
@@ -90,6 +91,7 @@ export default class AddRow extends React.Component {
 										fullWidth
 									>
 										<InputLabel htmlFor="amount">Cost</InputLabel>
+								 <Tooltip animation="zoom" placement="top" trigger={['click','focus','hover']} overlay={<span>Actual Amount: {formatMoney(data.cost,data.currency )}</span>} overlayStyle={{zIndex:9999}}>
 										<Input
 											defaultValue={data && Number.parseFloat(data.cost).toFixed(2)}
 											inputRef={(ref)=> this.monthlyCost = ref}
@@ -99,7 +101,6 @@ export default class AddRow extends React.Component {
 												input={<Input id="currency" />}
 												value={data && data.currency || currency}
 												onChange={(event) => {
-
 													const oldRow = [...this.state.row];
 													oldRow[index]['currency'] = event.target.value;
 													this.setState({ row: oldRow });
@@ -118,8 +119,9 @@ export default class AddRow extends React.Component {
 											label="Cost"
 											type="number"
 											fullWidth
-											inputProps={{ min: "0"}}
+											inputProps={{ min:'0',step:'0.01'}}
 										/>
+										 </Tooltip>
 									</FormControl>
 								</Grid>
 								<Grid item xs={12} sm={4}>
