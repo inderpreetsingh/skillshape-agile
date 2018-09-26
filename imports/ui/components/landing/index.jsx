@@ -4,7 +4,7 @@ import { debounce, isEmpty, get } from "lodash";
 import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
-import { browserHistory, withRouter, BrowserRouter } from "react-router";
+import { browserHistory, withRouter } from "react-router";
 
 import ip from "ip";
 import Button from "material-ui/Button";
@@ -28,7 +28,7 @@ import * as helpers from "./components/jss/helpers.js";
 import { cardsData, cardsData1 } from "./constants/cardsData.js";
 import config from "/imports/config";
 import Events from "/imports/util/events";
-import { withPopUp } from "/imports/util";
+import { withPopUp, redirectUserBasedOnType } from "/imports/util";
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 
 const MainContentWrapper = styled.div`
@@ -302,7 +302,11 @@ class Landing extends Component {
     // console.groupEnd();
     // debugger;
     if (!visitorRedirected && previousLocationPathName === "/") {
-      if (visitorType === "school" && currentUser && isUserSubsReady) {
+      if (
+        isUserSubsReady &&
+        currentUser &&
+        currentUser.profile.userType === "School"
+      ) {
         Meteor.call("school.getMySchool", (err, res) => {
           if (err) {
             console.warn(err);
@@ -317,14 +321,18 @@ class Landing extends Component {
             }
           }
         });
-      } else if (visitorType === "school" && !currentUser && isUserSubsReady) {
-        localStorage.setItem("visitorRedirected", true);
-        browserHistory.push("/skillshape-for-school");
-      } else if (visitorType === "student") {
+      } else if (
+        isUserSubsReady &&
+        currentUser &&
+        currentUser.profile.userType !== "School"
+      ) {
         localStorage.setItem("visitorRedirected", true);
         this.handlePreloaderState(false);
-      } else {
-        if (isUserSubsReady) {
+      } else if (isUserSubsReady && !currentUser) {
+        localStorage.setItem("visitorRedirected", true);
+        if (visitorType === "school") {
+          browserHistory.push("/skillshape-for-school");
+        } else {
           this.handlePreloaderState(false);
         }
       }

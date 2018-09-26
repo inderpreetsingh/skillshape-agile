@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { redirectUserBasedOnType } from "/imports/util";
 import { browserHistory } from "react-router";
 
 //TODO: Automatic imports depending upon variables used - intellij
@@ -92,10 +93,10 @@ const Logo = ({
   brandTagline,
   logoSrc,
   showLogo,
-  handleLogoClick
+  onLogoClick
 }) => (
   <BrandArea
-    onClick={handleLogoClick}
+    onClick={onLogoClick}
     itemScope
     itemType="http://schema.org/Brand"
     smallBrandText={smallBrandText}
@@ -135,7 +136,8 @@ Logo.propTypes = {
   brandText: PropTypes.string,
   logoSrc: PropTypes.string,
   showLogo: PropTypes.bool,
-  smallBrandText: PropTypes.bool
+  smallBrandText: PropTypes.bool,
+  onLogoClick: PropTypes.func
 };
 
 Logo.defaultProps = {

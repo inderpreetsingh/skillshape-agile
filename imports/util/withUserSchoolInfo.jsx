@@ -67,40 +67,6 @@ export default (withUserSchoolInfo = WrappedComponent => {
       }
     }
 
-    handleLogoClick = () => {
-      console.log(this.props, this, "isUserSubsReady");
-      const { currentUser, isUserSubsReady } = this.props;
-      const visitorType = localStorage.getItem("visitorType");
-
-      if (
-        isUserSubsReady &&
-        currentUser &&
-        currentUser.profile.userType === "School"
-      ) {
-        const mySchoolSlug = localStorage.getItem("mySchoolSlug");
-        const multipleSchools = JSON.parse(
-          localStorage.getItem("multipleSchools")
-        );
-        if (mySchoolSlug !== "null" && !multipleSchools) {
-          browserHistory.push(`/schools/${mySchoolSlug}`);
-        } else {
-          browserHistory.push("/skillshape-for-school");
-        }
-      } else if (
-        isUserSubsReady &&
-        currentUser &&
-        currentUser.profile.userType !== "School"
-      ) {
-        browserHistory.push("/");
-      } else if (isUserSubsReady && !currentUser) {
-        if (visitorType === "school") {
-          browserHistory.push("/skillshape-for-school");
-        } else {
-          browserHistory.push("/");
-        }
-      }
-    };
-
     shouldComponentUpdate(nextProps, nextState) {
       if (
         nextProps.currentUser !== this.props.currentUser ||
@@ -113,9 +79,9 @@ export default (withUserSchoolInfo = WrappedComponent => {
     }
 
     componentDidUpdate() {
-      console.group("THESE ARE PROPS");
-      console.log("this .props", this.props);
-      console.groupEnd();
+      // console.group("THESE ARE PROPS");
+      // console.log("this .props", this.props);
+      // console.groupEnd();
       this._storeUserSchoolInfo();
     }
     componentDidMount() {
@@ -124,11 +90,7 @@ export default (withUserSchoolInfo = WrappedComponent => {
 
     render() {
       return (
-        <WrappedComponent
-          {...this.props}
-          showLogo={this.state.showLogo}
-          handleLogoClick={this.handleLogoClick}
-        />
+        <WrappedComponent {...this.props} showLogo={this.state.showLogo} />
       );
     }
   };
