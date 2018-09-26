@@ -12,6 +12,8 @@ import LoginButton from "./buttons/LoginButton.jsx";
 import AddSchoolButton from "./buttons/AddSchoolButton.jsx";
 import JoinButton from "./buttons/JoinButton.jsx";
 
+import { withUserSchoolInfo } from "/imports/util";
+
 //TODO: Automatic imports depending upon variables used - intellij
 import * as helpers from "./jss/helpers.js";
 
@@ -104,24 +106,32 @@ const MyLink = styled(Link)`
   display: flex;
 `;
 
+const LogoWrapper = styled.div`
+  display: flex;
+`;
+
 const TopSearchBar = props => (
   <NavBarWrapper>
     <LogoSearchSection>
-      {props.logoArea ? (
-        props.logoArea
-      ) : (
-        <MyLink to="/">
-          <Logo brandTextShown={false} width={32} height={32} />
-          <BrandText>Skillshape</BrandText>
-        </MyLink>
-      )}
+      {props.logoArea ||
+        (props.showLogo ? (
+          <LogoWrapper onClick={props.handleLogoClick}>
+            <Logo
+              showLogo={props.showLogo}
+              brandTextShown={false}
+              width={32}
+              height={32}
+            />
+            <BrandText>Skillshape</BrandText>
+          </LogoWrapper>
+        ) : null)}
       {/*<MySearchBarStyled {...props.searchBar}/> */}
     </LogoSearchSection>
 
     <NavRightSection>
       <LinksWrapper>
         {isEmpty(props.currentUser) && (
-          <TopBarLink onClick={props.onSkillShapeForSchoolsClick}>
+          <TopBarLink onClick={props.handleLogoClick}>
             SkillShape For Schools
           </TopBarLink>
         )}
@@ -143,12 +153,7 @@ TopSearchBar.propTypes = {
   searchBar: PropTypes.object,
   onSignUpLinkClick: PropTypes.func,
   onLoginLinkClick: PropTypes.func,
-  onSkillShapeForSchoolsClick: PropTypes.func
+  handleLogoClick: PropTypes.func
 };
 
-TopSearchBar.defaultProps = {
-  onSkillShapeForSchoolsClick: () =>
-    browserHistory.push("/skillshape-for-school")
-};
-
-export default TopSearchBar;
+export default withUserSchoolInfo(TopSearchBar);

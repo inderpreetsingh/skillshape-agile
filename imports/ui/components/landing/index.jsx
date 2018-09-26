@@ -308,10 +308,8 @@ class Landing extends Component {
             console.warn(err);
           } else {
             localStorage.setItem("visitorRedirected", true);
-            if (res.length) {
-              // debugger;
-              console.info(res, "---");
-
+            if (res.length == 1) {
+              //if there is only 1 school, then visit it else
               const mySchoolSlug = res[0].slug;
               browserHistory.push(`/schools/${mySchoolSlug}`);
             } else {
@@ -619,7 +617,7 @@ class Landing extends Component {
         },
         err => {
           const geolocationError = this._handleGeoLocationError(err);
-          if(geolocationError){
+          if (geolocationError) {
             popUp.appear("alert", { content: geolocationError }, true, {
               autoClose: true,
               autoTimeout: 4000
@@ -1019,7 +1017,11 @@ class Landing extends Component {
               itemScope
               itemType="http://schema.org/WPHeader"
             >
-              <BrandBar positionStatic currentUser={this.props.currentUser} />
+              <BrandBar
+                positionStatic
+                currentUser={this.props.currentUser}
+                isUserSubsReady={this.props.isUserSubsReady}
+              />
               <SearchArea
                 onLocationInputChange={this.handleLocationSearch}
                 onSkillTypeChange={this.handleSkillTypeSearch}

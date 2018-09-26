@@ -11,8 +11,8 @@ import { sendEmailToStudentForPriceInfoUpdate } from "/imports/api/email";
 
 Meteor.methods({
     "classPricing.addClassPricing": function({doc}) {
+        
         const user = Meteor.users.findOne(this.userId);
-
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {
 
             if(doc.classTypeId && _.isArray(doc.classTypeId)) {
@@ -27,6 +27,7 @@ Meteor.methods({
         }
     },
     "classPricing.editclassPricing": function({doc_id, doc}) {
+        
         const user = Meteor.users.findOne(this.userId);
 
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {

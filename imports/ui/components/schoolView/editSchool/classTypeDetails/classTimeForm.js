@@ -313,7 +313,9 @@ class ClassTimeForm extends React.Component {
           open={true}
           schoolId = {schoolId}
           onClose = {(result)=>{
-             if(result)this.setState({showLocationForm:false,showRoomForm:true,locId:result})}}
+             if(result)this.setState({showLocationForm:false,showRoomForm:true,locId:result})
+             else this.setState({showLocationForm:false})
+            } }
           />}
          {this.state.showRoomForm && this.state.locId &&
          <RoomForm

@@ -36,8 +36,11 @@ export { handleOutBoundLink } from "/imports/util/handleAnalytics.js";
 export { toastrModal } from "/imports/util/toastrModal.js";
 export { withPopUp } from "/imports/util/withPopUp.js";
 export { default as withImageExists } from "/imports/util/withImageExists";
+export {
+  default as withUserSchoolInfo
+} from "/imports/util/withUserSchoolInfo";
 export { default as withMarker } from "/imports/util/withMarker.js";
-export {verifyImageURL} from '/imports/util/verifyImageURL.js'
+export { verifyImageURL } from "/imports/util/verifyImageURL.js";
 export {
   withSubscriptionAndPagination
 } from "/imports/util/subscriptionAndPagination";
@@ -48,6 +51,7 @@ export { componentLoader } from "./loading";
 export { dateFriendly } from './dateFriendly';
 export { openMailToInNewTab } from './openInNewTabHelpers';
 export { goToSchoolPage, goToClassTypePage, checkForAddToCalender } from './handleRedirect.js';
-export {maximumClasses} from './maximumClasses.js'
-export {normalizeMonthlyPricingData} from './packageFormat.js'
-export {compressImage} from './compressImage.js'
+export {maximumClasses} from './maximumClasses.js';
+export {normalizeMonthlyPricingData} from './packageFormat.js';
+export {compressImage} from './compressImage.js';
+export {inputRestriction,formatMoney} from './inputRestriction.js'

@@ -34,6 +34,8 @@ import Grid from 'material-ui/Grid';
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import {formatMoney} from '/imports/util';
+
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -391,10 +393,9 @@ class PackageListingAttachment extends React.Component {
               {props.classPackages ? (
                 <PriceSection>
                   <Price>
-                    {props.cost &&
-                      `${props.cost}${
-                      props.currency ? props.currency : props.schoolCurrency
-                      }`}
+                  {props.cost &&
+                    `${formatMoney( Number.parseFloat(props.cost).toFixed(2),props.currency ? props.currency : props.schoolCurrency)
+                    }`}
                   </Price>
                   <NoOfClasses>
                     {props.noClasses && `for ${props.noClasses} classes`}
@@ -406,12 +407,10 @@ class PackageListingAttachment extends React.Component {
                     return (
                       <PriceSection key={`${payment.cost}-${index}`}>
                         <Price>
-                          {payment.cost &&
-                            `${payment.cost}${
-                            payment.currency
-                              ? payment.currency
-                              : props.schoolCurrency
-                            }`}
+                        {payment.cost &&
+                        `${formatMoney(Number.parseFloat(payment.cost).toFixed(2), payment.currency
+                          ? payment.currency
+                          : props.schoolCurrency)}`}
                         </Price>
                         <NoOfClasses>
                           {payment.month && `per month for ${payment.month} months`}
@@ -427,9 +426,8 @@ class PackageListingAttachment extends React.Component {
                 {/* used for enrollment packages */}
                 <Price>
                   {props.cost &&
-                    `${props.cost}${
-                    props.currency ? props.currency : props.schoolCurrency
-                    }`}
+                     `${formatMoney(Number.parseFloat(props.cost).toFixed(2),props.currency ? props.currency : props.schoolCurrency) }` }
+
                 </Price>
                 <NoOfClasses>{props.cost && "For Enrollment"}</NoOfClasses>
               </PriceSection>
