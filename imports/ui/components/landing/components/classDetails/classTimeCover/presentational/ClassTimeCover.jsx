@@ -33,11 +33,10 @@ const Wrapper = styled.div`
   width: 100%;
   height: 160px;
   position: relative;
-
+  
   @media screen and (min-width: ${tablet}px) {
     flex: 1;
     height: auto;
-    margin-bottom: ${rhythmDiv * 2}px;
     border-radius: 5px;
   }
 `;
@@ -73,7 +72,7 @@ const ClassTypeProfileWithDefaultImage = withImageExists(props => {
 }, imageExistsConfigClassSrc);
 
 const ClassTimeCover = props => (
-  <Wrapper url={props.bgImg || props.schoolCoverSrc}>
+  <Wrapper url={props.schoolCoverSrc}>
     <ClassTypeProfileWithDefaultImage
       classTypeCoverSrc={props.classTypeCoverSrc}
     />
@@ -83,4 +82,4 @@ const ClassTimeCover = props => (
   </Wrapper>
 );
 
-export default withImageExists(ClassTimeCover, imageExistsConfigSchoolSrc);
+export default ClassTimeCover;
