@@ -32,6 +32,7 @@ export { downloadingFunction } from "/imports/util/csvFileDownload";
 export { imageExists } from "/imports/util/imageExists";
 export { lightenDarkenColor } from "/imports/util/colors.js";
 export { getContainerMaxWidth } from "/imports/util/cards.js";
+export { redirectUserBasedOnType } from "/imports/util/redirectUser.js";
 export { handleOutBoundLink } from "/imports/util/handleAnalytics.js";
 export { toastrModal } from "/imports/util/toastrModal.js";
 export { withPopUp } from "/imports/util/withPopUp.js";
@@ -48,10 +49,14 @@ export {
 export { withStyles } from "./withStyle";
 export { material_ui_next_theme } from "./theme";
 export { componentLoader } from "./loading";
-export { dateFriendly } from './dateFriendly';
-export { openMailToInNewTab } from './openInNewTabHelpers';
-export { goToSchoolPage, goToClassTypePage, checkForAddToCalender } from './handleRedirect.js';
-export {maximumClasses} from './maximumClasses.js';
-export {normalizeMonthlyPricingData} from './packageFormat.js';
-export {compressImage} from './compressImage.js';
-export {inputRestriction,formatMoney} from './inputRestriction.js'
+export { dateFriendly } from "./dateFriendly";
+export { openMailToInNewTab } from "./openInNewTabHelpers";
+export {
+  goToSchoolPage,
+  goToClassTypePage,
+  checkForAddToCalender
+} from "./handleRedirect.js";
+export { maximumClasses } from "./maximumClasses.js";
+export { normalizeMonthlyPricingData } from "./packageFormat.js";
+export { compressImage } from "./compressImage.js";
+export { inputRestriction, formatMoney } from "./inputRestriction.js";
