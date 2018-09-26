@@ -24,9 +24,11 @@ import "/imports/api/classPricing/methods";
 import Checkbox from "material-ui/Checkbox";
 const formId = "ClassPriceForm";
 import styled from "styled-components";
+import {inputRestriction,formatMoney} from '/imports/util';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
+import Tooltip from 'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap_white.css';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -64,7 +66,8 @@ class ClassPriceForm extends React.Component {
       expPeriod: get(this.props, "data.expPeriod", ""),
       includeAllClassTypes: get(this.props, "data.includeAllClassTypes", ""),
       noExpiration: get(this.props, "data.noExpiration", ""),
-      currency: get(this.props, "data.currency", this.props.currency)
+      currency: get(this.props, "data.currency", this.props.currency),
+      cost: get(this.props,"data.cost",'0')
     };
   }
 
@@ -95,7 +98,6 @@ class ClassPriceForm extends React.Component {
     let allClassTypeIds = classTypeData.map(item => {
       return item._id;
     });
-    console.log('TCL: ClassPriceForm -> this.classPriceCost.value', this.classPriceCost.value,typeof this.classPriceCost.value);
     const payload = {
       schoolId: schoolId,
       packageName: this.packageName.value,
@@ -147,11 +149,12 @@ class ClassPriceForm extends React.Component {
 
   cancelConfirmationModal = () =>
     this.setState({ showConfirmationModal: false });
-
   render() {
     const { fullScreen, data, classes,schoolData,currency } = this.props;
-    const { classTypeData } = this.state;
-    
+    const { classTypeData,cost} = this.state;
+    let selectedCost,selectedCurrency;
+    selectedCost = get(this.state,"cost",get(this.props,"data.cost",0));
+    selectedCurrency =  get(this.state,"currency",get(this.props,"data.currency","$"));
     return (
       <Dialog
         open={this.props.open}
@@ -281,40 +284,43 @@ class ClassPriceForm extends React.Component {
                   4.User selected currency name and symbol store in the state.(Done)
                   5.On Save store in the collection.(Done)
               */}
-              
-                    
-                 
-                
+
               <FormControl required={true} fullWidth>
                 <InputLabel htmlFor="amount">Cost</InputLabel>
+              <Tooltip animation="zoom" placement="top" trigger={['click','focus','hover']} overlay={<span>Actual Amount: {formatMoney(selectedCost,selectedCurrency)}</span>} overlayStyle={{zIndex:9999}}>
                 <Input
                   id="class-cost"
-                  
-                  defaultValue={data && data.cost}
                   inputRef={ref => (this.classPriceCost = ref)}
                   label="Cost"
+                  defaultValue={data && Number.parseFloat(data.cost).toFixed(2)}
                   type="number"
+                  onChange={(e)=>{
+                    let x = inputRestriction(e);
+                    this.classPriceCost.value = x;
+                    this.setState({cost:x});
+                  }}
                   startAdornment={
                     <Select
-                      required={true}
-                      input={<Input id="currency" />}
-                      value={this.state.currency}
-                      onChange={event =>
-                        this.setState({ currency: event.target.value })
-                      }
+                    required={true}
+                    input={<Input id="currency" />}
+                    value={this.state.currency}
+                    onChange={event =>
+                      this.setState({ currency: event.target.value })
+                    }
                     >
                      {config.currency.map((data, index)=> {
-                                    return <MenuItem
-                                      key={data.label}
-                                      value={data.value}>
+                       return <MenuItem
+                       key={data.label}
+                       value={data.value}>
                                       {data.value}
                                     </MenuItem>
                                 })} 
                     </Select>
                   }
                   fullWidth
-                  inputProps={{ min: "0"}}
-                />
+                  inputProps={{ min: "0",step:"0.01"}}
+                  />
+                  </Tooltip>
               </FormControl>
             </form>
           </DialogContent>

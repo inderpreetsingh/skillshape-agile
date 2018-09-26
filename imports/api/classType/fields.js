@@ -86,7 +86,8 @@ ClassType.attachSchema(
     "filters.classPriceCost": {
       type: Number,
       optional: true,
-      decimal:true
+      decimal:true,
+      blackbox:true
     },
     "filters.monthlyPriceCost": {
       type: Object,

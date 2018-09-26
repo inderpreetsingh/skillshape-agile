@@ -6,7 +6,8 @@ import { maximumClasses } from '/imports/util';
 import Cart from "/imports/ui/components/landing/components/icons/Cart.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx'
+import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
+import {formatMoney} from '/imports/util';
 const Wrapper = styled.div`
   ${helpers.flexCenter} justify-content: space-between;
 
@@ -189,8 +190,7 @@ const Package = props => (
               <PriceSection>
                 <Price>
                   {props.cost &&
-                    `${props.cost}${
-                      props.currency ? props.currency : props.schoolCurrency
+                    `${formatMoney( Number.parseFloat(props.cost).toFixed(2),props.currency ? props.currency : props.schoolCurrency)
                     }`}
                 </Price>
                 <NoOfClasses>
@@ -204,11 +204,9 @@ const Package = props => (
                   <PriceSection key={`${payment.cost}-${index}`}>
                     <Price>
                       {payment.cost &&
-                        `${payment.cost}${
-                          payment.currency
-                            ? payment.currency
-                            : props.schoolCurrency
-                        }`}
+                        `${formatMoney(Number.parseFloat(payment.cost).toFixed(2), payment.currency
+                          ? payment.currency
+                          : props.schoolCurrency)}`}
                     </Price>
                     <NoOfClasses>
                       {payment.month && `per month for ${payment.month} months`}
@@ -224,9 +222,7 @@ const Package = props => (
             {/* used for enrollment packages */}
             <Price>
               {props.cost &&
-                `${props.cost}${
-                  props.currency ? props.currency : props.schoolCurrency
-                }`}
+                `${formatMoney(Number.parseFloat(props.cost).toFixed(2),props.currency ? props.currency : props.schoolCurrency) }` }
             </Price>
             <NoOfClasses>{props.cost && "For Enrollment"}</NoOfClasses>
           </PriceSection>
