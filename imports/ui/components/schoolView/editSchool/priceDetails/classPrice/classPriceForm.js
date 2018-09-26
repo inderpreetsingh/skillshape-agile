@@ -24,9 +24,9 @@ import "/imports/api/classPricing/methods";
 import Checkbox from "material-ui/Checkbox";
 const formId = "ClassPriceForm";
 import styled from "styled-components";
+import {inputRestriction} from '/imports/util';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -64,7 +64,7 @@ class ClassPriceForm extends React.Component {
       expPeriod: get(this.props, "data.expPeriod", ""),
       includeAllClassTypes: get(this.props, "data.includeAllClassTypes", ""),
       noExpiration: get(this.props, "data.noExpiration", ""),
-      currency: get(this.props, "data.currency", this.props.currency)
+      currency: get(this.props, "data.currency", this.props.currency),
     };
   }
 
@@ -95,7 +95,6 @@ class ClassPriceForm extends React.Component {
     let allClassTypeIds = classTypeData.map(item => {
       return item._id;
     });
-    console.log('TCL: ClassPriceForm -> this.classPriceCost.value', this.classPriceCost.value,typeof this.classPriceCost.value);
     const payload = {
       schoolId: schoolId,
       packageName: this.packageName.value,
@@ -151,7 +150,6 @@ class ClassPriceForm extends React.Component {
   render() {
     const { fullScreen, data, classes,schoolData,currency } = this.props;
     const { classTypeData } = this.state;
-    
     return (
       <Dialog
         open={this.props.open}
@@ -281,19 +279,16 @@ class ClassPriceForm extends React.Component {
                   4.User selected currency name and symbol store in the state.(Done)
                   5.On Save store in the collection.(Done)
               */}
-              
-                    
-                 
-                
+
               <FormControl required={true} fullWidth>
                 <InputLabel htmlFor="amount">Cost</InputLabel>
                 <Input
                   id="class-cost"
-                  
-                  defaultValue={data && data.cost}
                   inputRef={ref => (this.classPriceCost = ref)}
                   label="Cost"
+                  defaultValue={data && Number.parseFloat(data.cost).toFixed(2)}
                   type="number"
+                  onChange={(e)=>{this.classPriceCost.value = inputRestriction(e)}}
                   startAdornment={
                     <Select
                       required={true}
@@ -313,7 +308,7 @@ class ClassPriceForm extends React.Component {
                     </Select>
                   }
                   fullWidth
-                  inputProps={{ min: "0"}}
+                  inputProps={{ min: "0",step:"0.01",pattern:"^\d+(?:\.\d{1,2})?$"}}
                 />
               </FormControl>
             </form>

@@ -20,6 +20,7 @@ import { FormControl, FormControlLabel } from 'material-ui/Form';
 import '/imports/api/enrollmentFee/methods';
 import Checkbox from 'material-ui/Checkbox';
 import styled from "styled-components";
+import {inputRestriction} from '/imports/util';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
@@ -63,7 +64,6 @@ class EnrollmentFeeForm extends React.Component {
             includeAllClassTypes:get(this.props, 'data.includeAllClassTypes', ""),
             currency: get(this.props, "data.currency", this.props.currency)
         }
-        console.log('classTypeName in the packageaddnew',this.props)
     }
 
     handleClassTypeInputChange = (value) => {
@@ -191,8 +191,9 @@ class EnrollmentFeeForm extends React.Component {
                                 >
                                     <InputLabel htmlFor="amount">Cost</InputLabel>
                                     <Input
-                                        defaultValue={data && data.cost}
+                                        defaultValue={data && Number.parseFloat(data.cost).toFixed(2)}
                                         inputRef={(ref)=> this.enrollmentCost = ref}
+                                        onChange={(e)=>{this.enrollmentCost.value = inputRestriction(e)}}
                                         startAdornment={<Select
                                             required={true}
                                             input={<Input id="currency" />}

@@ -8,6 +8,7 @@ import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
+import {inputRestriction} from '/imports/util';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 export default class AddRow extends React.Component {
 
@@ -34,7 +35,9 @@ export default class AddRow extends React.Component {
 	onChangeInput = (key, index, event) => {
 		const oldRow = [...this.state.row];
 		if(key=='cost'){
-			oldRow[index][key] = parseFloat(event.target.value).toFixed(2);
+			let x = inputRestriction(event);
+			oldRow[index][key] = x;
+			this.monthlyCost.value = x;
 		}
 		else{
 			oldRow[index][key] = parseInt(event.target.value);
@@ -88,7 +91,8 @@ export default class AddRow extends React.Component {
 									>
 										<InputLabel htmlFor="amount">Cost</InputLabel>
 										<Input
-											defaultValue={data && data.cost}
+											defaultValue={data && Number.parseFloat(data.cost).toFixed(2)}
+											inputRef={(ref)=> this.monthlyCost = ref}
 											onChange={this.onChangeInput.bind(this, "cost", index)}
 											startAdornment={<Select
 												required={true}

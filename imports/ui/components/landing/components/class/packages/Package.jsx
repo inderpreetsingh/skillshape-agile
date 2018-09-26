@@ -189,7 +189,7 @@ const Package = props => (
               <PriceSection>
                 <Price>
                   {props.cost &&
-                    `${props.cost}${
+                    `${Number.parseFloat(props.cost).toFixed(2)}${
                       props.currency ? props.currency : props.schoolCurrency
                     }`}
                 </Price>
@@ -204,7 +204,7 @@ const Package = props => (
                   <PriceSection key={`${payment.cost}-${index}`}>
                     <Price>
                       {payment.cost &&
-                        `${payment.cost}${
+                        `${Number.parseFloat(payment.cost).toFixed(2)}${
                           payment.currency
                             ? payment.currency
                             : props.schoolCurrency
@@ -224,7 +224,7 @@ const Package = props => (
             {/* used for enrollment packages */}
             <Price>
               {props.cost &&
-                `${props.cost}${
+                `${Number.parseFloat(props.cost).toFixed(2)}${
                   props.currency ? props.currency : props.schoolCurrency
                 }`}
             </Price>
