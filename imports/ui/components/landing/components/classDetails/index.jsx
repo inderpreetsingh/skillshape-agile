@@ -46,7 +46,7 @@ const ClassDetails = props => {
       : "instructorsView";
   return (
     <Wrapper>
-      <TopSearchBar />
+      <TopSearchBar {...props.topSearchBarProps} />
       {props.noPurchasedClasses &&
         currentView === "studentsView" && (
           <Notification

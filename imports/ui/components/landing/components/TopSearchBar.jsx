@@ -5,6 +5,7 @@ import isEmpty from "lodash/isEmpty";
 // import SearchBar from 'material-ui-search-bar';
 import { browserHistory, Link } from "react-router";
 import MySearchBar from "./MySearchBar.jsx";
+import { redirectUserBasedOnType } from "/imports/util";
 
 import Logo from "./Logo.jsx";
 import SideNav from "./SideNav.jsx";
@@ -115,7 +116,12 @@ const TopSearchBar = props => (
     <LogoSearchSection>
       {props.logoArea ||
         (props.showLogo ? (
-          <LogoWrapper onClick={props.handleLogoClick}>
+          <LogoWrapper
+            onClick={redirectUserBasedOnType(
+              props.currentUser,
+              props.isUserSubsReady
+            )}
+          >
             <Logo
               showLogo={props.showLogo}
               brandTextShown={false}
@@ -153,7 +159,7 @@ TopSearchBar.propTypes = {
   searchBar: PropTypes.object,
   onSignUpLinkClick: PropTypes.func,
   onLoginLinkClick: PropTypes.func,
-  handleLogoClick: PropTypes.func
+  onLogoClick: PropTypes.func
 };
 
 export default withUserSchoolInfo(TopSearchBar);

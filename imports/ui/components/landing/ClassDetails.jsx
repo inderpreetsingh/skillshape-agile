@@ -12,8 +12,13 @@ class ClassDetailsContainer extends Component {
   }
 
   render() {
+    const { currentUser, isUserSubsReady } = this.props;
     return (
       <ClassDetails
+        topSearchBarProps={{
+          currentUser,
+          isUserSubsReady
+        }}
         headerProps={{
           classTypeCoverSrc: "",
           schoolCoverSrc: ""
