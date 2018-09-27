@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import { Link } from 'react-router';
 import styled from 'styled-components';
 import find from "lodash/find";
-
+import get from 'lodash/get';
 import Grid from 'material-ui/Grid';
 import Card, {CardMedia} from 'material-ui/Card';
 import Button from 'material-ui/Button';
@@ -96,7 +96,7 @@ class SchoolViewBanner extends React.Component {
 	}
 
 	getContactNumbers = () => {
-		return this.props.schoolData.phone.split(/[\|\,\\]/);
+		return get(this.props,"schoolData.phone","000").split(/[\|\,\\]/);
 	}
 
 	getOurEmail = () => {

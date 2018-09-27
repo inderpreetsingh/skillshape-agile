@@ -25,10 +25,9 @@ class Settings extends React.Component {
       _.indexOf(this.props.currentUser.roles, "Superadmin");
     return (
       <div>
-        {this.props.adminPermission &&
-          role == -1 && (
+        
             <div>
-              >{this.props.currentUser.profile.stripeStatus ? (
+              {this.props.currentUser.profile.stripeStatus ? (
                 <center>
                   <Card>
                     {" "}
@@ -88,7 +87,7 @@ class Settings extends React.Component {
                 </center>
               )}
             </div>
-          )}
+          
       </div>
     );
   }

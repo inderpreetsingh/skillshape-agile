@@ -9,6 +9,6 @@ Meteor.publish("purchases.getAllPurchaseData", function (slug, filters) {
   return Purchases.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 Meteor.publish("purchases.getPurchasesListByMemberId", function (filter) {
-  check(filters, Object);
+  check(filter, Object);
   return Purchases.find(filter);
 });

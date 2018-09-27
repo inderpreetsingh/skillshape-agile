@@ -678,8 +678,7 @@ export default class SchoolViewBase extends React.Component {
           });
         // }
       }
-
-      else if (this.state.addRequest) {
+      else  {
         if (Meteor.userId()) {
           this.setState({ isLoading: true });
           Meteor.call("packageRequest.addRequest", { typeOfTable: packageType, tableId: packageId, schoolId: schoolId }, (err, res) => {
@@ -707,7 +706,6 @@ export default class SchoolViewBase extends React.Component {
           amount = amount * data.multiplyFactor;
         }
       })
-      debugger;
       let self = this;
       let userId = this.props.currentUser._id;
       //check is package is already purchased

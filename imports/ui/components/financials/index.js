@@ -40,6 +40,7 @@ export default class Financials extends React.Component {
       this.props.currentUser._id,
       this.props.routeParams.slug,
       (error, result) => {
+        if(result)
         this.setState({ adminPermission: result });
       }
     );

@@ -58,6 +58,10 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       schoolName = schoolData.name;
       let superAdminId = schoolData.superAdmin;
       let stripeAccountId = UserStripeData.findOne({ userId: superAdminId });
+      console.log('TCL: stripeAccountId', stripeAccountId);
+      if(!stripeAccountId.stripe_user_id){
+        throw new Meteor.Error('School not connected stripe yet.')
+      }
       stripeAccountId = stripeAccountId.stripe_user_id;
       const token = stripeToken;
       const skillshapeAmount = Math.round(amount * (2.9 / 100) + 40);
@@ -141,6 +145,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       sendPackagePurchasedEmailToSchool(schoolName, schoolEmail, userName, userEmail, packageName)
       return "Payment Successfully Done";
     } catch (error) {
+      console.log('TCL: }catch -> error', error);
       payload = {
         stripeResponse: error,
         status: "Error"
@@ -203,7 +208,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
   },
   "stripe.findAdminStripeAccount": function (superAdminId) {
     check(superAdminId,String);
-    let result = UserStripeData.findOne({ userId: superAdminId });
+    let result = UserStripeData.findOne({ userId: superAdminId ,stripe_user_id:{$exists:true}});
     if (result) {
       return true;
     } else {

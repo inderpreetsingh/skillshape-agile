@@ -732,3 +732,7 @@ function categorizeClassTypeData({
 
     return filter;
 }
+Meteor.publish("school.findSchoolByIds",function(schoolIds){
+    check(schoolIds,Array);
+    return School.find({_id:{$in:schoolIds}});
+})
