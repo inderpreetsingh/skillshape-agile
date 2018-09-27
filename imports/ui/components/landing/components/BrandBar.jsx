@@ -9,7 +9,7 @@ import LoginButton from "./buttons/LoginButton.jsx";
 import AddSchoolButton from "./buttons/AddSchoolButton.jsx";
 import JoinButton from "./buttons/JoinButton.jsx";
 
-import { withUserSchoolInfo } from "/imports/util/";
+import { withUserSchoolInfo, redirectUserBasedOnType } from "/imports/util/";
 
 //TODO: Automatic imports depending upon variables used - intellij
 import * as helpers from "./jss/helpers.js";
@@ -75,7 +75,10 @@ const BrandBar = props => (
         <Logo
           {...props.logoProps}
           showLogo={props.showLogo}
-          handleLogoClick={props.handleLogoClick}
+          onLogoClick={redirectUserBasedOnType(
+            props.currentUser,
+            props.isUserSubsReady
+          )}
         />
       )}
 
