@@ -3,6 +3,8 @@ import PanelWithTable from "/imports/ui/componentHelpers/panelWithTable";
 import classTypeSettings from "./classTypeSettings";
 import isEmpty from "lodash/isEmpty";
 
+import ClassTypeExpansion from "./classTypeExpansion.jsx";
+
 export default function() {
   let {
     classTypeData,
@@ -14,6 +16,9 @@ export default function() {
 
   return (
     <div style={{ paddingTop: "20px" }}>
+      <ClassTypeExpansion
+        classTypeData={this.modifySelectSubjectsInClassTypeData()}
+      />
       <PanelWithTable
         schoolId={schoolId}
         className="class-type-details"

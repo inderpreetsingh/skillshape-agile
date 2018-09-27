@@ -57,13 +57,16 @@ class ClassTimesBoxes extends Component {
       classInterestData,
       inPopUp,
       withSlider,
-      onModalClose
+      onModalClose,
+      editMode
     } = this.props;
-
-    const modifiedClassTimesData = classTimesData.map(data => {
-      data.addToCalendar = this._checkForAddToCalender(data);
-      return data;
-    });
+    let modifiedClassTimesData = classTimesData;
+    if (!editMode) {
+      modifiedClassTimesData = classTimesData.map(data => {
+        data.addToCalendar = this._checkForAddToCalender(data);
+        return data;
+      });
+    }
     return (
       <Fragment>
         {withSlider && (
@@ -76,6 +79,7 @@ class ClassTimesBoxes extends Component {
         )}
         <BarWrapper show={withSlider}>
           <ClassTimesBar
+            editMode={editMode}
             inPopUp={inPopUp}
             classTimesData={modifiedClassTimesData}
             classInterestData={classInterestData}

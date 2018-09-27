@@ -160,7 +160,8 @@ const ClassTimesBar = props => {
     classTimesData,
     classInterestData,
     handleRemoveFromCalendarButtonClick,
-    onModalClose
+    onModalClose,
+    editMode
   } = props;
   let addToCalender;
   return (
