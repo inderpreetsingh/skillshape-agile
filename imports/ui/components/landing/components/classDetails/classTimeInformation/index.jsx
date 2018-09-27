@@ -15,9 +15,11 @@ import { classTimeData } from "/imports/ui/components/landing/constants/classDet
 
 const Wrapper = styled.div`
   padding: 0;
+
   @media screen and (min-width: ${tablet}px) {
     flex: 1;
     margin-right: ${rhythmDiv * 2}px;
+    border-radius: 5px;
   }
 `;
 
@@ -29,10 +31,15 @@ const HideOnLargeScreen = styled.div`
 
 class ClassTimeInformation extends Component {
   render() {
-    const { classTimeData, classTypeName, schoolName } = this.props;
+    const {
+      classTimeData,
+      classTypeName,
+      schoolName,
+      schoolCoverSrc
+    } = this.props;
 
     return (
-      <Wrapper>
+      <Wrapper bgImg={schoolCoverSrc}>
         <NameBar
           classTimeName={classTimeData.name}
           classTypeName={classTimeData.classTypeName || classTypeName}

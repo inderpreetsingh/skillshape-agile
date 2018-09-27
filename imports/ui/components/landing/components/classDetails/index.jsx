@@ -12,6 +12,18 @@ import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 
+import { withImageExists } from "/imports/util";
+
+import {
+  schoolDetailsImgSrc,
+  coverSrc
+} from "/imports/ui/components/landing/site-settings.js";
+
+const imageExistsConfigSchoolSrc = {
+  originalImagePath: "headerProps.schoolCoverSrc",
+  defaultImage: coverSrc
+};
+
 import {
   rhythmDiv,
   panelColor,
@@ -30,6 +42,27 @@ const InnerWrapper = styled.div`
 `;
 
 const ClassTimeWrapper = styled.div`
+  position: relative;
+  z-index: 0;
+  background-image: url('${props => props.bgImg}');
+  background-position: 50% 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  &:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0.9;
+    background: white;
+    z-index: -1;
+  }
+
   @media screen and (min-width: ${tablet}px) {
     display: flex;
     flex-direction: row-reverse;
@@ -38,7 +71,7 @@ const ClassTimeWrapper = styled.div`
 `;
 
 const ClassDetails = props => {
-  const { location } = props;
+  const { location, bgImg, headerProps } = props;
 
   const currentView =
     location.pathname === "/classdetails-student"
@@ -57,9 +90,12 @@ const ClassDetails = props => {
           />
         )}
       <InnerWrapper>
-        <ClassTimeWrapper>
-          <ClassTimeCover {...props.headerProps} />
-          <ClassTimeInformation {...props.ClassTimeInformation} />
+        <ClassTimeWrapper bgImg={bgImg}>
+          <ClassTimeCover {...headerProps} schoolCoverSrc={bgImg} />
+          <ClassTimeInformation
+            {...props.ClassTimeInformation}
+            schoolCoverSrc={bgImg}
+          />
         </ClassTimeWrapper>
         <TimeLine {...props.timeLineProps} />
         <MembersList currentView={currentView} />
@@ -76,4 +112,7 @@ ClassDetails.defaultProps = {
   noPurchasedClasses: true
 };
 
-export default withRouter(ClassDetails);
+export default withImageExists(
+  withRouter(ClassDetails),
+  imageExistsConfigSchoolSrc
+);
