@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
+import ProgressiveImage from "react-progressive-image";
 import * as helpers from '../../jss/helpers.js';
 import { classTypeImgSrc } from '../../../site-settings.js';
 
 const CoverDiv = styled.div`
     ${helpers.coverBg}
+    transition: background-image 1s linear !important;
     background-position: center center;
     background-image: url('${props => props.coverSrc}');
     min-height: ${helpers.baseFontSize * 30}px;
@@ -39,15 +40,25 @@ const CoverDiv = styled.div`
 const ClassTypeCover = (props) => {
     if(props.itemScope && props.itemType) {
         return(
-          <CoverDiv coverSrc={props.coverSrc} itemScope itemType={props.itemType} isEdit={props.isEdit}>
+          <ProgressiveImage
+          src={props.coverSrc}
+          placeholder={config.blurImage}>
+          {(src) => <CoverDiv coverSrc={src} itemScope itemType={props.itemType} isEdit={props.isEdit}>
             {props.children}
-          </CoverDiv>
+          </CoverDiv> }
+        </ProgressiveImage>
+         
         )
     }
     return(
-      <CoverDiv coverSrc={props.coverSrc} isEdit={props.isEdit}>
+      <ProgressiveImage
+      src={props.coverSrc}
+      placeholder={config.blurImage}>
+      {(src) =>  <CoverDiv coverSrc={src} isEdit={props.isEdit}>
         {props.children}
-      </CoverDiv>
+      </CoverDiv>}
+    </ProgressiveImage>
+     
     )
   }
 

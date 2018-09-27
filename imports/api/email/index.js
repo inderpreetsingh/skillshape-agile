@@ -128,7 +128,7 @@ export const sendClaimASchoolEmail = function(
                    <b>${
                      claimSchoolData.userName
                    }</b> has requested permission to manage <b>${
-        school.name
+                    school && school.name
       }</b>. You are listed as the admin. <br/>Do you approve this?<br/><br/>
                    <div>
                        <a href=${
@@ -251,7 +251,8 @@ export const sendClassTimesRequest = function({
 export const sendEmailToStudentForClassTypeUpdation = function(
   userData,
   schoolData,
-  classTypeName
+  classTypeName,
+  subject
 ) {
   if (Meteor.isServer) {
     let to;
@@ -266,7 +267,7 @@ export const sendEmailToStudentForClassTypeUpdation = function(
     Email.send({
       to: to, //userData.emails[0].address
       from: "Notices@SkillShape.com",
-      subject: "School Updated",
+      subject: subject,
       html: `${userName}, <br/>${
         schoolData.name
       } has updated their listing for ${classTypeName}. Please go to <br/> ${Meteor.absoluteUrl(
@@ -282,16 +283,17 @@ export const userRegistrationAndVerifyEmail = function(
   verificationToken,
   passwd,
   fromEmail,
-  toEmail
+  toEmail,
+  schoolName
 ) {
   Email.send({
     from: fromEmail,
     to: toEmail,
     replyTo: fromEmail,
     subject: "skillshape Registration",
-    html: `Hi ${user.profile.name},
+    html: `Hi ${user.profile.firstName || user.profile.name},
             <br/><br/>
-                Your Email: ${user.emails[0].address} has been registered.
+                Your Email: ${user.emails[0].address} has been registered ${schoolName && `with ${schoolName}`}.
             <br/>
                 Please click on the button below to verify your email address and set your password.
             <br/><br/>
@@ -608,3 +610,45 @@ export const sendPackagePurchasedEmailToSchool = (schoolName, schoolEmail, userN
              Thank you for using skillshape.com <br/>${EmailSignature}`
   });
 };
+export const sendSkillShapeJoinInvitation = (to,userName,schoolName,password)=>{
+  Email.send({
+    to: to, // Needs to replace this with requester's Email.
+    from: "Notices@SkillShape.com",
+    subject: "SkillShape Join Invitation",
+    html: `Hi  ${userName}<br/>
+              School ${schoolName} want you to become admin of their school on skillShape.<br/>
+              Please Join Skillshape by Clicking Here.<a href=${Meteor.absoluteUrl()} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Join Skillshape</a> <br/>
+              Your Temporary password is this :- ${password}       
+    `
+  })
+}
+export const adminInvitation = (to,userName,schoolName,action,adminName)=>{
+  console.log('TCL: adminInvitation -> to,userName,schoolName,action', to,userName,schoolName,action);
+  let content;
+  if(action=='add'){
+    content=`Hi ${userName}<br/>
+    ${adminName} from ${schoolName} added you as an admin to their school on skillShape.<br/>
+     This will allow you to manage classes, members, and much more. To log in, click the button below.<br/>
+     <a href=${Meteor.absoluteUrl()} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Skillshape</a>        
+     <br/>
+     Thanks<br/>
+     The SkillShape Team<br/>
+    `;
+  }
+  else{
+    content=`Hi ${userName}
+    You have been removed as an admin from ${schoolName} on skillShape. If you believe this is a mistake,<br/>
+     contact the administrator of the school.<br/>
+     <a href=${Meteor.absoluteUrl()} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Skillshape</a>        
+     <br/>
+    Thanks<br/>
+    The SkillShape Team<br/>
+    `;
+  }
+  Email.send({
+    to: to, // Needs to replace this with requester's Email.
+    from: "Notices@SkillShape.com",
+    subject: `SkillShape Admin ${action =='add'? "Invitation" : "Removal"}`,
+    html: content
+  })
+}

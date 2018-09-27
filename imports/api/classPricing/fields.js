@@ -14,7 +14,9 @@ ClassPricing.attachSchema(new SimpleSchema({
 	},
 	cost: {
 		type: Number,
-		optional: true
+		optional: true,
+		decimal:true,
+        blackbox:true
 	},
 	classTypeId: {
 		type: [String],

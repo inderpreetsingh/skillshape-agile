@@ -20,9 +20,10 @@ import { FormControl, FormControlLabel } from 'material-ui/Form';
 import '/imports/api/enrollmentFee/methods';
 import Checkbox from 'material-ui/Checkbox';
 import styled from "styled-components";
+import {inputRestriction,formatMoney} from '/imports/util';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
+import Tooltip from 'rc-tooltip';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -61,9 +62,9 @@ class EnrollmentFeeForm extends React.Component {
             pymtType: get(this.props, 'data.pymtType', ''),
             selectedClassType: get(this.props, 'data.selectedClassType', null),
             includeAllClassTypes:get(this.props, 'data.includeAllClassTypes', ""),
-            currency: get(this.props, "data.currency", this.props.currency)
+            currency: get(this.props, "data.currency", this.props.currency),
+            cost: get(this.props,"data.cost",'0')
         }
-        console.log('classTypeName in the packageaddnew',this.props)
     }
 
     handleClassTypeInputChange = (value) => {
@@ -87,7 +88,7 @@ class EnrollmentFeeForm extends React.Component {
             schoolId: schoolId,
             name: this.enrollmentName.value,
             classTypeId: this.state.includeAllClassTypes ? allClassTypeIds : selectedClassType && selectedClassType.map(data => data._id),
-            cost: this.enrollmentCost.value && parseInt(this.enrollmentCost.value),
+            cost: this.enrollmentCost.value && parseFloat(this.enrollmentCost.value).toFixed(2),
             includeAllClassTypes: this.state.includeAllClassTypes,
             currency:this.state.currency
         }
@@ -122,7 +123,10 @@ class EnrollmentFeeForm extends React.Component {
     render() {
 		const { fullScreen, data, classes ,schoolData,currency} = this.props;
         const { classTypeData } = this.state;
-      
+        let selectedCost,selectedCurrency;
+        selectedCost = get(this.state,"cost",get(this.props,"data.cost",0));
+        selectedCurrency =  get(this.state,"currency",get(this.props,"data.currency","$"));
+    
 		return (
 			<Dialog
                 open={this.props.open}
@@ -190,9 +194,15 @@ class EnrollmentFeeForm extends React.Component {
                                     fullWidth
                                 >
                                     <InputLabel htmlFor="amount">Cost</InputLabel>
+                                    <Tooltip animation="zoom" placement="top" trigger={['click','focus','hover']} overlay={<span>Actual Amount: {formatMoney(selectedCost,selectedCurrency)}</span>} overlayStyle={{zIndex:9999}}>
                                     <Input
-                                        defaultValue={data && data.cost}
+                                        defaultValue={data && Number.parseFloat(data.cost).toFixed(2)}
                                         inputRef={(ref)=> this.enrollmentCost = ref}
+                                        onChange={(e)=>{
+                                            let x = inputRestriction(e);
+                                            this.enrollmentCost.value = x;
+                                            this.setState({cost:x});
+                                        }}
                                         startAdornment={<Select
                                             required={true}
                                             input={<Input id="currency" />}
@@ -212,8 +222,9 @@ class EnrollmentFeeForm extends React.Component {
                                         label="Cost"
                                         type="number"
                                         fullWidth
-                                        inputProps={{ min: "0"}}
+                                        inputProps={{ min: "0",step:'0.01'}}
                                     />
+                                    </Tooltip>
                                 </FormControl>
                             </form>
                         </DialogContent>

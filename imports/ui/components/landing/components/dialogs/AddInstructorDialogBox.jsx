@@ -5,7 +5,6 @@ import styled from "styled-components";
 import IconButton from "material-ui/IconButton";
 import ClearIcon from "material-ui-icons/Clear";
 import { withStyles } from "material-ui/styles";
-import { withPopUp } from "/imports/util";
 
 import { MuiThemeProvider } from "material-ui/styles";
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
@@ -39,20 +38,10 @@ const styles = theme => {
       flexGrow: 0,
       display: "flex",
       justifyContent: "center",
+      minHeight: 200,
       "@media screen and (max-width : 500px)": {
         // minHeight: "150px"
       }
-    },
-    dialogActionsRoot: {
-      padding: `0 ${helpers.rhythmDiv}px`,
-      paddingBottom: helpers.rhythmDiv * 2,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    },
-    dialogActions: {
-      width: "100%",
-      paddingLeft: `${helpers.rhythmDiv * 2}px`
     },
     dialogRoot: {
       width: "100%"
@@ -72,60 +61,11 @@ const DialogTitleWrapper = styled.div`
 
 const ContentWrapper = styled.div``;
 
-const ButtonsWrapper = styled.div`
-  ${helpers.flexCenter}
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    flex-direction: column;
-  }
-`;
-
-const ButtonWrapper = styled.div`
-  /* prettier-ignore */
-  ${helpers.flexCenter}
-`;
-
 const Title = styled.span`
   display: inline-block;
   width: 100%;
   text-align: center;
 `;
-
-const CardsWrapper = styled.div`
-  width: 100%;
-  ${helpers.flexHorizontalSpaceBetween};
-`;
-
-const CardWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 250px;
-  height: 200px;
-  cursor: pointer;
-  box-shadow: ${helpers.heavyBoxShadow};
-  margin-right: ${helpers.rhythmDiv * 2}px;
-`;
-
-const IconWrapper = styled.div`
-  width: 100%;
-  height: 160px;
-`;
-
-const CardFooter = styled.div`
-  ${helpers.flexCenter} background: white;
-  flex-direction: column;
-  flex-grow: 1;
-  font-family: ${helpers.specialFont};
-`;
-
-const OptionCard = props => (
-  <CardWrapper onClick={props.onClick}>
-    <IconWrapper>{React.cloneElement(props.icon)}</IconWrapper>
-    <CardFooter>
-      <Text>{props.message}</Text>
-    </CardFooter>
-  </CardWrapper>
-);
 
 class AddInstructorDialogBox extends Component {
   constructor(props) {
@@ -147,17 +87,17 @@ class AddInstructorDialogBox extends Component {
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
             <DialogTitleWrapper>
-              <Title>Add Instructor</Title>
+              <Title>Add instructor</Title>
+
               <IconButton
                 color="primary"
-                onClick={this.handleModalClose}
+                onClick={props.onModalClose}
                 classes={{ root: props.classes.iconButton }}
               >
                 <ClearIcon />
               </IconButton>
             </DialogTitleWrapper>
           </DialogTitle>
-
           <DialogContent classes={{ root: props.classes.dialogContent }}>
             <Text>Add the instructor to your </Text>
           </DialogContent>
@@ -184,10 +124,8 @@ class AddInstructorDialogBox extends Component {
 }
 
 AddInstructorDialogBox.propTypes = {
-  onSchoolButtonClick: PropTypes.func,
-  onStudentButtonClick: PropTypes.func,
   onModalClose: PropTypes.func,
   loading: PropTypes.bool
 };
 
-export default withStyles(styles)(withPopUp(AddInstructorDialogBox));
+export default withStyles(styles)(AddInstructorDialogBox);

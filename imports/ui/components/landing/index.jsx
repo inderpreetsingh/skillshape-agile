@@ -1,16 +1,12 @@
 import React, { Component, Fragment } from "react";
 import DocumentTitle from "react-document-title";
 import { debounce, isEmpty, get } from "lodash";
-import { createContainer } from "meteor/react-meteor-data";
 import styled from "styled-components";
 import { Element, scroller } from "react-scroll";
 import Sticky from "react-stickynode";
 import { browserHistory, withRouter, BrowserRouter } from "react-router";
-import { Redirect } from 'react-router-dom';
 
 import ip from "ip";
-import Chip from "material-ui/Chip";
-import Icon from "material-ui/Icon";
 import Button from "material-ui/Button";
 
 import Cover from "./components/Cover.jsx";
@@ -33,6 +29,8 @@ import { cardsData, cardsData1 } from "./constants/cardsData.js";
 import config from "/imports/config";
 import Events from "/imports/util/events";
 import { withPopUp } from "/imports/util";
+import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
+
 const MainContentWrapper = styled.div`
   display: flex;
   position: relative;
@@ -223,7 +221,10 @@ class Landing extends Component {
     super(props);
     this.state = {
       mapView: false,
+      showPreloader: true,
       sticky: false,
+      isLoading: false,
+      isCardsBeingSearched: false,
       filterPanelDialogBox: false,
       filters: {
         coords: null,
@@ -256,11 +257,10 @@ class Landing extends Component {
   _handleGeoLocationError(err) {
     switch (err.code) {
       case err.PERMISSION_DENIED:
-        if (err.message.indexOf("User denied") == 0) {
-          return "GeoLocation services dont have permission/ or they need to be switched on in your device/browser settings";
-        } else if (
-          err.message.indexOf("Only secure origins are allowed") == 0
-        ) {
+        // if (err.message.indexOf("User denied") == 0) {
+        //   return "GeoLocation services dont have permission/ or they need to be switched on in your device/browser settings";
+        // } else
+        if (err.message.indexOf("Only secure origins are allowed") == 0) {
           return "GeoLocation services will only work in case of secured origin (eg https)";
         }
         break;
@@ -275,20 +275,69 @@ class Landing extends Component {
     }
   }
 
+  handlePreloaderState = newPreloaderState => {
+    if (this.state.showPreloader !== newPreloaderState) {
+      this.setState(state => {
+        return {
+          ...state,
+          showPreloader: !state.showPreloader
+        };
+      });
+    }
+  };
+
   _redirectBasedOnVisitorType = () => {
-    const {location,history} = this.props;
-    const visitorType = localStorage.getItem('visitorType');
-    const visitorRedirected = JSON.parse(localStorage.getItem('visitorRedirected'));
-    if(!visitorRedirected) {
-      if (visitorType === "school") {
-        localStorage.setItem("visitorRedirected",true);
-        return browserHistory.push('/claimSchool');
-      }else if(visitorType === 'student'){
-        localStorage.setItem('visitorRedirected',true);
+    const {
+      currentUser,
+      isUserSubsReady,
+      previousLocationPathName,
+      currentLocationPathName
+    } = this.props;
+    const visitorType = localStorage.getItem("visitorType");
+    const visitorRedirected = JSON.parse(
+      localStorage.getItem("visitorRedirected")
+    );
+    // console.group("REDIRECT INDEX PAGE");
+    // console.info(Meteor.user(), localStorage.getItem("visitorRedirected"));
+    // console.groupEnd();
+    // debugger;
+    if (!visitorRedirected && previousLocationPathName === "/") {
+      if (visitorType === "school" && currentUser && isUserSubsReady) {
+        Meteor.call("school.getMySchool", (err, res) => {
+          if (err) {
+            console.warn(err);
+          } else {
+            localStorage.setItem("visitorRedirected", true);
+            if (res.length == 1) {
+              //if there is only 1 school, then visit it else
+              const mySchoolSlug = res[0].slug;
+              browserHistory.push(`/schools/${mySchoolSlug}`);
+            } else {
+              browserHistory.push("/skillshape-for-school");
+            }
+          }
+        });
+      } else if (visitorType === "school" && !currentUser && isUserSubsReady) {
+        localStorage.setItem("visitorRedirected", true);
+        browserHistory.push("/skillshape-for-school");
+      } else if (visitorType === "student") {
+        localStorage.setItem("visitorRedirected", true);
+        this.handlePreloaderState(false);
+      } else {
+        if (isUserSubsReady) {
+          this.handlePreloaderState(false);
+        }
+      }
+    } else {
+      // Lets say we land on any link and from that we clicked on lets back to homepage
+      if (
+        (visitorRedirected && isUserSubsReady) ||
+        (isUserSubsReady && previousLocationPathName !== "/")
+      ) {
+        this.handlePreloaderState(false);
       }
     }
-  }
-
+  };
 
   componentDidMount() {
     let positionCoords = this.getUsersCurrentLocation();
@@ -394,11 +443,16 @@ class Landing extends Component {
         userData: this.props.location.query
       });
     }
+
+    // When we redirect back, the componentDidUpdate needs not to be called.
+    this._redirectBasedOnVisitorType();
   }
 
   componentDidUpdate() {
     // Have to manually set it , otherwise it resets automatically in mapView.
     document.title = "Skillshape";
+
+    this._redirectBasedOnVisitorType();
   }
 
   // This is used to get subjects on the basis of subject category.
@@ -410,7 +464,6 @@ class Landing extends Component {
       { skillCategoryIds: skillCategoryIds, textSearch: text },
       (err, res) => {
         if (res) {
-          // console.log("result",res)
           this.setState({ skillSubjectData: res || [] });
         }
       }
@@ -418,7 +471,7 @@ class Landing extends Component {
   };
 
   setFilters = filters => {
-    console.info(filters, "------");
+    // console.info(filters, "------");
     this.setState(state => {
       return {
         ...state,
@@ -426,7 +479,6 @@ class Landing extends Component {
       };
     });
   };
-
 
   getUsersCurrentLocation = args => {
     const { popUp } = this.props;
@@ -454,12 +506,23 @@ class Landing extends Component {
           },
           err => {
             const geolocationError = this._handleGeoLocationError(err);
-            popUp.appear("alert", { content: geolocationError });
+            if (geolocationError) {
+              popUp.appear("alert", { content: geolocationError });
+            }
           }
         );
       } else {
         reject();
       }
+    });
+  };
+
+  handleIsCardsSearching = searchingState => {
+    this.setState(state => {
+      return {
+        ...state,
+        isCardsBeingSearched: searchingState
+      };
     });
   };
 
@@ -530,7 +593,6 @@ class Landing extends Component {
                 let place = results[0];
                 // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
                 // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
-                //console.log(results[0],"location details...")
                 sLocation = results[0].formatted_address;
                 oldFilters["coords"] = coords;
                 oldFilters["locationName"] = this._getNormalizedLocation(
@@ -555,7 +617,12 @@ class Landing extends Component {
         },
         err => {
           const geolocationError = this._handleGeoLocationError(err);
-          popUp.appear("alert", { content: geolocationError });
+          if (geolocationError) {
+            popUp.appear("alert", { content: geolocationError }, true, {
+              autoClose: true,
+              autoTimeout: 4000
+            });
+          }
         }
       );
     }
@@ -612,7 +679,6 @@ class Landing extends Component {
 
   onLocationChange = (location, updateKey1, updateKey2) => {
     let stateObj = {};
-    //console.log('onLocationChange',location,".....................");
     if (updateKey1) {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
@@ -904,38 +970,45 @@ class Landing extends Component {
   };
 
   render() {
+    if (this.state.showPreloader) {
+      return <Preloader />;
+    }
+
     return (
       <DocumentTitle title={this.props.route.name}>
         <div>
-          {this._redirectBasedOnVisitorType()}
-          <FiltersDialogBox
-            open={this.state.filterPanelDialogBox}
-            onModalClose={() => this.handleFiltersDialogBoxState(false)}
-            filterPanelProps={{
-              currentAddress: this.state.locationName,
-              removeAllFilters: this.removeAllFilters,
-              filters: this.state.filters,
-              tempFilters: this.state.tempFilters,
-              stickyPosition: this.state.sticky,
-              onLocationChange: this.onLocationChange,
-              locationName: this.state.locationName,
-              locationInputChanged: this.locationInputChanged,
-              fliterSchoolName: this.fliterSchoolName,
-              filterAge: this.filterAge,
-              filterGender: this.filterGender,
-              skillLevelFilter: this.skillLevelFilter,
-              perClassPriceFilter: this.perClassPriceFilter,
-              pricePerMonthFilter: this.pricePerMonthFilter,
-              collectSelectedSkillCategories: this
-                .collectSelectedSkillCategories,
-              collectSelectedSkillSubject: this.collectSelectedSkillSubject,
-              handleSkillTypeSearch: this.handleSkillTypeSearch,
-              skillTypeText: this.state.filters.skillTypeText,
-              handleFiltersDialogBoxState: this.handleFiltersDialogBoxState,
-              handleFiltersDialogSaveButtonClick: this
-                .handleFiltersDialogSaveButtonClick
-            }}
-          />
+          {/*this._redirectBasedOnVisitorType()*/}
+          {this.state.filterPanelDialogBox && (
+            <FiltersDialogBox
+              open={this.state.filterPanelDialogBox}
+              onModalClose={() => this.handleFiltersDialogBoxState(false)}
+              filterPanelProps={{
+                isCardsBeingSearched: this.state.isCardsBeingSearched,
+                currentAddress: this.state.locationName,
+                removeAllFilters: this.removeAllFilters,
+                filters: this.state.filters,
+                tempFilters: this.state.tempFilters,
+                stickyPosition: this.state.sticky,
+                onLocationChange: this.onLocationChange,
+                locationName: this.state.locationName,
+                locationInputChanged: this.locationInputChanged,
+                fliterSchoolName: this.fliterSchoolName,
+                filterAge: this.filterAge,
+                filterGender: this.filterGender,
+                skillLevelFilter: this.skillLevelFilter,
+                perClassPriceFilter: this.perClassPriceFilter,
+                pricePerMonthFilter: this.pricePerMonthFilter,
+                collectSelectedSkillCategories: this
+                  .collectSelectedSkillCategories,
+                collectSelectedSkillSubject: this.collectSelectedSkillSubject,
+                handleSkillTypeSearch: this.handleSkillTypeSearch,
+                skillTypeText: this.state.filters.skillTypeText,
+                handleFiltersDialogBoxState: this.handleFiltersDialogBoxState,
+                handleFiltersDialogSaveButtonClick: this
+                  .handleFiltersDialogSaveButtonClick
+              }}
+            />
+          )}
 
           {/* Cover */}
           <CoverWrapper>
@@ -944,7 +1017,11 @@ class Landing extends Component {
               itemScope
               itemType="http://schema.org/WPHeader"
             >
-              <BrandBar positionStatic currentUser={this.props.currentUser} />
+              <BrandBar
+                positionStatic
+                currentUser={this.props.currentUser}
+                isUserSubsReady={this.props.isUserSubsReady}
+              />
               <SearchArea
                 onLocationInputChange={this.handleLocationSearch}
                 onSkillTypeChange={this.handleSkillTypeSearch}
@@ -995,9 +1072,9 @@ class Landing extends Component {
               {!this.state.mapView &&
                 this.checkIfAnyFilterIsApplied() &&
                 this.showAppliedTopFilter()}
-              {console.log("re rendering .... classtype list...")}
               <ClassTypeList
                 landingPage={true}
+                handleIsCardsSearching={this.handleIsCardsSearching}
                 getMyCurrentLocation={this.getMyCurrentLocation}
                 defaultLocation={this.state.defaultLocation}
                 mapView={this.state.mapView}

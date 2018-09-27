@@ -2,15 +2,16 @@ import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import ClassTypeDetailsRender from "./classTypeDetailsRender";
 import "/imports/api/classPricing/methods";
-
+import { compressImage } from "/imports/util";
 import ClassType from "/imports/api/classType/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
-
+import { withPopUp } from "/imports/util";
 class ClassTypeDetails extends React.Component {
   constructor(props) {
     super(props);
+    debugger;
     this.state = {
       file: null
     };
@@ -26,35 +27,90 @@ class ClassTypeDetails extends React.Component {
 
   handleImageSave = (schoolId, classTypeId) => {
     const { file } = this.state;
+    let allUploadPromise = [];
     let doc = {
       schoolId: schoolId
     };
-    if (file && file.fileData && !file.isUrl) {
-      S3.upload(
-        { files: { "0": file.fileData }, path: "schools" },
-        (err, res) => {
-          if (err) {
+    try{
+      compressImage(file['org'],file.file,file.isUrl).then((result) => {
+        console.group("ClassTypeDetails");
+        if(_.isArray(result)){
+          console.log('Non-cors');
+          for (let i = 0; i <= 1; i++) {
+            allUploadPromise.push(new Promise((resolve,reject)=>{
+              S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+                if (res) {
+                  if(i==0){
+                    doc.medium= res.secure_url;
+                    resolve();
+                  }else{
+                    doc.low = res.secure_url;
+                    resolve();
+                  }
+                }
+      
+              });
+            }))
           }
-          if (res) {
-            doc.classTypeImg = res.secure_url;
+          Promise.all(allUploadPromise).then(()=>{
+            if (file && file.fileData && !file.isUrl) {
+              S3.upload(
+                { files: { "0": file.fileData }, path: "schools" },
+                (err, res) => {
+                  if (err) {
+                  }
+                  if (res) {
+                    doc.classTypeImg = res.secure_url;
+                    this.editClassType({ doc_id: classTypeId, doc });
+                  }
+                }
+              );
+            } else if (file && file.isUrl) {
+              doc.classTypeImg = file.file;
+              this.editClassType({ doc_id: classTypeId, doc });
+            } else {
+              doc.classTypeImg = null;
+              this.editClassType({ doc_id: classTypeId, doc });
+            }
+          })
+        }
+        else{
+							console.log('cors');
+          if (file && file.fileData && !file.isUrl) {
+            S3.upload(
+              { files: { "0": file.fileData }, path: "schools" },
+              (err, res) => {
+                if (err) {
+                }
+                if (res) {
+                  doc.classTypeImg = res.secure_url;
+                  this.editClassType({ doc_id: classTypeId, doc });
+                }
+              }
+            );
+          } else if (file && file.isUrl) {
+            doc.classTypeImg = file.file;
+            this.editClassType({ doc_id: classTypeId, doc });
+          } else {
+            doc.classTypeImg = null;
             this.editClassType({ doc_id: classTypeId, doc });
           }
         }
-      );
-    } else if (file && file.isUrl) {
-      doc.classTypeImg = file.file;
-      this.editClassType({ doc_id: classTypeId, doc });
-    } else {
-      doc.classTypeImg = null;
-      this.editClassType({ doc_id: classTypeId, doc });
+        console.groupEnd("ClassTypeDetails");
+
+      })
+    }catch(error){
+    throw new Meteor.Error(error);
     }
   };
 
   editClassType = ({ doc, doc_id }) => {
+    const {popUp} = this.props;
     Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
       if (error) {
       }
       if (result) {
+        popUp.appear("success", { title: "Message", content: 'Image Saved Successfully' });
       }
     });
   };
@@ -130,4 +186,5 @@ export default createContainer(props => {
     classTypeData,
     classTimesData
   };
-}, ClassTypeDetails);
+}, (withPopUp(ClassTypeDetails)));
+

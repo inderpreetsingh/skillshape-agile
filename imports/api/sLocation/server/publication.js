@@ -7,5 +7,5 @@ Meteor.publish("location.getSchoolLocation", function({ schoolId }) {
 });
 
 Meteor.publish("salocation", function() {
-    return SLocation.find({});
+  return SLocation.find({});
 });

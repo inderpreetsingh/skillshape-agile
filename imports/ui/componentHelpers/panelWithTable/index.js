@@ -190,6 +190,7 @@ class PanelWithTable extends React.Component {
     this.setState({ showConfirmationModal: false });
 
   handleDeleteData = () => {
+    this.setState({isBusy:true});
     const { popUp } = this.props;
     const { formData } = this.state;
     const delAction = this.props.settings.mainTable.actions.del;
@@ -210,21 +211,23 @@ class PanelWithTable extends React.Component {
   };
 
   showDeleteConfirmationModal = () => {
-    this.setState(state => {
-      return {
-        ...state,
-        deleteConfirmationModal: true
-      };
-    });
+    // this.setState(state => {
+    //   return {
+    //     ...state,
+    //     deleteConfirmationModal: true
+    //   };
+    // });
+    this.setState({deleteConfirmationModal:true,isBusy:false})
   };
 
   closeDeleteConfirmationModal = () => {
-    this.setState(state => {
-      return {
-        ...state,
-        deleteConfirmationModal: false
-      };
-    });
+    // this.setState(state => {
+    //   return {
+    //     ...state,
+    //     deleteConfirmationModal: false
+    //   };
+    // });
+    this.setState({deleteConfirmationModal:false,isBusy:false})
   };
 
   getExpansionPanelTitle = (data, keys) => {

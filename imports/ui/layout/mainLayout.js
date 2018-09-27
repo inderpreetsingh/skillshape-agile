@@ -1,4 +1,5 @@
 import React from "react";
+import { Meteor } from "meteor/meteor";
 import { isEmpty, get } from "lodash";
 import { createContainer } from "meteor/react-meteor-data";
 import { Route, Redirect } from "react-router-dom";
@@ -14,7 +15,10 @@ class MainLayout extends React.Component {
     super(props);
 
     this.state = {
+      showBrandBarLogo: false,
       memberInvitation: true,
+      previousLocationPathName: this.props.location.pathname,
+      currentLocationPathName: this.props.location.pathname
     };
   }
 
@@ -40,10 +44,20 @@ class MainLayout extends React.Component {
     ) {
       this.rejectMemberInvitation(nextProps.location.query);
     }
+
+    /// NEED TO ACCESS PREVIOUS LOCATION ON LANDING PAGE
+    this.setState(state => {
+      return {
+        ...state,
+        previousLocationPathName: this.props.location.pathname,
+        currentLocationPathName: nextProps.location.pathname
+      };
+    });
   }
 
   componentDidUpdate() {
     const { currentUser, isUserSubsReady } = this.props;
+
     let invite = get(this.props, "location.query.acceptInvite");
     // console.log("MainLayout componentDidUpdate -->>",this.props)
     if (invite && !currentUser && isUserSubsReady) {
@@ -53,7 +67,11 @@ class MainLayout extends React.Component {
     }
   }
 
-
+  isEmbedLink = () => {
+    const { location } = this.props;
+    console.info(location, "...........");
+    return location.pathname.indexOf("embed") !== -1;
+  };
 
   acceptMemberInvitation = invitationObj => {
     const { popUp } = this.props;
@@ -120,19 +138,27 @@ class MainLayout extends React.Component {
     });
   };
 
-
   showTermsOfServiceDialogBox = () => {};
 
   render() {
+    const visitorTypeValue = localStorage.getItem("visitorType");
+
     const { currentUser, isUserSubsReady, classes } = this.props;
-    const visitorTypeValue = localStorage.getItem('visitorType');
     return (
       <div>
+        {isUserSubsReady &&
+          !visitorTypeValue &&
+          !this.isEmbedLink() &&
+          !currentUser && (
+            <FirstTimeVisitDialogBox isUserSubsReady={isUserSubsReady} />
+          )}
         {React.cloneElement(this.props.children, {
           currentUser: currentUser,
+          previousLocationPathName: this.state.previousLocationPathName,
+          currentLocationPathName: this.state.currentLocationPathName,
           isUserSubsReady: isUserSubsReady
         })}
-        {!visitorTypeValue && <FirstTimeVisitDialogBox />}
+
         {isUserSubsReady &&
           currentUser &&
           !currentUser.term_cond_accepted && (

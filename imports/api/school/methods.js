@@ -6,13 +6,13 @@ import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "./fields";
-import { sendPackagePurchaseEmail } from "/imports/api/email";
+import { sendPackagePurchaseEmail,sendSkillShapeJoinInvitation } from "/imports/api/email";
 import ClaimSchoolRequest from "/imports/api/claimSchoolRequest/fields.js";
 import PriceInfoRequest from "/imports/api/priceInfoRequest/fields.js";
 import { sendClaimASchoolEmail } from "/imports/api/email";
 import { sendConfirmationEmail } from "/imports/api/email";
 import { sendPriceInfoRequestEmail } from "/imports/api/email";
-import { sendEmailToStudentForClaimAsMember } from "/imports/api/email";
+import { sendEmailToStudentForClaimAsMember,adminInvitation } from "/imports/api/email";
 import { getUserFullName } from "/imports/util/getUserData";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import { check } from 'meteor/check';
@@ -415,10 +415,37 @@ Meteor.methods({
     let schoolData = School.findOne(filter);
     return !!schoolData;
   },
-  // "school.findSchoolById": function (slug) {
-  //   const schoolData = School.findOne({ slug: slug });
-  //   return schoolData && schoolData.currency ? schoolData.currency : "$" 
-  // }
+  "school.optimizationFinder": function () {
+   return School.find({mainImage:{$exists:true},mainImageMedium:{$exists:false},mainImageLow:{$exists:false},logoImgMedium:{$exists:false},logoImgLow:{$exists:false}}).fetch();
+  },
+  "school.manageAdmin":function(_id,schoolId,action,to,userName,schoolName,payload,adminName){
+    if(action=='remove'){
+    let res=School.update({_id:schoolId},{$pull:{admins:_id}});
+    adminInvitation(to,userName,schoolName,action)
+    return res;
+    }
+    else if(action=='add'){
+      let res=School.update({_id:schoolId},{$push:{admins:_id}});
+      adminInvitation(to,userName,schoolName,action,adminName);
+      return res;
+    }
+    else if(action =='join'){
+      payload.schoolName=schoolName;
+      Meteor.call("user.createUser",payload,(err,res)=>{
+        if(res){
+          try{
+            School.update({_id:schoolId},{$push:{admins:res.user._id}})
+         // sendSkillShapeJoinInvitation(to,userName,schoolName,res.password);
+          }catch(error){
+            console.log('TCL: }catch -> error', error);
+            throw new Meteor.Error(error);
+          }
+         
+        }
+    })
+    return 1;
+    }
+  }
 });
 
 /*name, email, userType, sendMeSkillShapeNotification*/

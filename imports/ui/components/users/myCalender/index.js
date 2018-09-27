@@ -11,7 +11,6 @@ export default class MyCalender extends React.Component {
   setDate = (startDate, endDate) => this.setState({ startDate, endDate });
 
   handleEventModal = (isOpen, eventData, clickedDate) => {
-   
     this.setState({
       isOpen,
       eventData,

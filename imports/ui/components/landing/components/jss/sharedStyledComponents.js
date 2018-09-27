@@ -2,7 +2,7 @@ import styled from "styled-components";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 export const GenericText = styled.p`
-  font-family: ${helpers.specialFont}px;
+  font-family: ${helpers.specialFont};
   line-height: 1;
   margin: 0;
   margin-bottom: ${props => props.marginBottom || helpers.rhythmDiv}px;

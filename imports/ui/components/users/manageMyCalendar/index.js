@@ -210,7 +210,6 @@ class ManageMyCalendar extends React.Component {
     event,
     isInputChecked
   ) => {
-    
     const data = this.state[fieldName];
     let oldFilter = { ...this.state.filter };
     let ids = oldFilter[childKey] || [];
@@ -287,12 +286,15 @@ class ManageMyCalendar extends React.Component {
     event,
     isInputChecked
   ) => {
-    console.log('parentKey,classTypeId,fieldName,childKey,event,isInputChecked',parentKey,
-    classTypeId,
-    fieldName,
-    childKey,
-    event,
-    isInputChecked)
+    console.log(
+      "parentKey,classTypeId,fieldName,childKey,event,isInputChecked",
+      parentKey,
+      classTypeId,
+      fieldName,
+      childKey,
+      event,
+      isInputChecked
+    );
     const data = this.state[fieldName];
     let oldFilter = { ...this.state.filter };
     let ids = _.uniq(oldFilter[childKey] || []);
@@ -305,7 +307,7 @@ class ManageMyCalendar extends React.Component {
     let classTimesIds = [...oldFilter.classTimesIds];
     let manageClassTimeIds = [...oldFilter.manageClassTimeIds];
     let schoolClassTimeId = [...oldFilter.schoolClassTimeId];
-   
+
     for (let i = 0; i < data.length; i++) {
       if (data[i].classTypeId === classTypeId) {
         data[i].isCheck = isInputChecked;
@@ -401,7 +403,7 @@ class ManageMyCalendar extends React.Component {
         }
       }
     }
-    oldFilter[childKey]=_.uniq(oldFilter[childKey]);
+    oldFilter[childKey] = _.uniq(oldFilter[childKey]);
     this.setState({
       filter: oldFilter,
       classTypeForInterests,
@@ -420,7 +422,6 @@ class ManageMyCalendar extends React.Component {
     event,
     isInputChecked
   ) => {
-    
     // get class interests:
     // loop over class interests.
     // get classTypeId from class interest.
@@ -533,7 +534,7 @@ class ManageMyCalendar extends React.Component {
       schoolClassTypes,
       classTypeForInterests
     } = this.state;
-    console.log("filter",filter);
+    console.log("filter", myClassTimes, "=========", filter);
     return (
       <DocumentTitle title={this.props.route && this.props.route.name}>
         <div>
@@ -950,7 +951,7 @@ class ManageMyCalendar extends React.Component {
                 </ExpansionPanel>
               )}
 
-         <MyCalender
+            <MyCalender
               manageMyCalendar={
                 this.props.route && this.props.route.name == "MyCalendar"
               }

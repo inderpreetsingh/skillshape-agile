@@ -10,6 +10,7 @@ import Typography from "material-ui/Typography";
 import { withStyles } from "material-ui/styles";
 import { MuiThemeProvider } from "material-ui/styles";
 
+import AttachedAlert from "/imports/ui/components/landing/components/helpers/AttachedAlert.jsx";
 import PrimaryButton from "../buttons/PrimaryButton.jsx";
 import FilterPanel from "../FilterPanel.jsx";
 import IconInput from "../form/IconInput.jsx";
@@ -22,77 +23,52 @@ import Dialog, {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
   withMobileDialog
 } from "material-ui/Dialog";
-
-import {
-  FormLabel,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  FormHelperText
-} from "material-ui/Form";
 
 const styles = {
   dialogPaper: {
     padding: `${helpers.rhythmDiv * 2}px`,
-    paddingBottom: `${helpers.rhythmDiv}px`
+    paddingBottom: `${helpers.rhythmDiv}px`,
+    position: 'relative',
+    overflowY: 'auto'
   },
   dialogTitleRoot: {
     display: "flex",
     fontFamily: `${helpers.specialFont}`
   },
-  dialogContent: {
-    "@media screen and (max-width : 500px)": {
-      minHeight: "150px"
-    }
-  },
-  dialogAction: {
+  dialogContentRoot: {
     width: "100%",
-    margin: 0
-  },
-  dialogActionsRoot: {
-    width: "100%",
-    padding: `0 ${helpers.rhythmDiv * 3}px`,
+    padding: `${helpers.rhythmDiv}px 0 0 ${helpers.rhythmDiv}px`,
     margin: 0,
     "@media screen and (max-width : 500px)": {
       padding: `0 ${helpers.rhythmDiv * 3}px`
     }
   },
-  dialogActionsRootButtons: {
-    width: "100%",
-    padding: `0 ${helpers.rhythmDiv}px`,
-    margin: 0,
-    "@media screen and (max-width : 500px)": {
-      padding: `0 ${helpers.rhythmDiv}px`
-    }
-  },
   iconButton: {
+    position: 'absolute',
+    right: helpers.rhythmDiv,
     height: "auto",
     width: "auto"
-  },
-  formControlRoot: {
-    marginBottom: `${helpers.rhythmDiv * 2}px`
   }
 };
 
-const DialogBoxHeaderText = styled.p`
-  font-family: ${helpers.commonFont};
-  color: ${helpers.textColor};
-`;
-
 const DialogTitleContainer = styled.div`
   ${helpers.flexCenter};
-  margin: 0 0 ${helpers.rhythmDiv * 2}px 0;
+  width: calc(100% - ${helpers.rhythmDiv * 4}px);
+  justify-content: space-between;
   padding: 0 ${helpers.rhythmDiv * 3}px;
+  padding-right: 0;
+  margin: 0 0 ${helpers.rhythmDiv * 2}px 0;
+
+  @media screen and (max-width: ${helpers.mobile - 100}px) {
+    flex-direction: column;
+  }
 `;
 
-const DialogTitleWrapper = styled.h1`
-  ${helpers.flexCenter};
+const DialogTitle = styled.h1`
   font-family: ${helpers.specialFont};
   font-weight: 500;
-  width: 100%;
   margin: 0;
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -101,8 +77,30 @@ const DialogTitleWrapper = styled.h1`
 `;
 
 class FiltersDialogBox extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      filterDialogBoxNoSearch: true
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // console.info(
+    //   this.props.filterPanelProps,
+    //   nextProps.filterPanelProps,
+    //   "component will receive props....................."
+    // );
+    if (
+      this.props.filterPanelProps.isCardsBeingSearched !==
+      nextProps.filterPanelProps.isCardsBeingSearched
+    )
+      this.setState({
+        filterDialogBoxNoSearch: false
+      });
+  }
+
   render() {
-    // console.log("FiltersDialogBox props--->>",this.props);
     const {
       classes,
       open,
@@ -124,8 +122,17 @@ class FiltersDialogBox extends Component {
         classes={{ paper: classes.dialogPaper }}
       >
         <MuiThemeProvider theme={muiTheme}>
-          <DialogTitleContainer>
-            <DialogTitleWrapper>{title}</DialogTitleWrapper>
+          <DialogTitleContainer fullScreen={fullScreen}>
+            <DialogTitle>{title}</DialogTitle>
+
+            <AttachedAlert
+              open={
+                !filterPanelProps.isCardsBeingSearched &&
+                !this.state.filterDialogBoxNoSearch
+              }
+              direction={"right"}
+              alertMsg={"Search results updated"}
+            />
             <IconButton
               color="primary"
               onClick={onModalClose}
@@ -135,20 +142,19 @@ class FiltersDialogBox extends Component {
             </IconButton>
           </DialogTitleContainer>
 
-          <DialogActions
+          <DialogContent
             classes={{
-              root: classes.dialogActionsRoot,
-              action: classes.dialogAction
+              root: classes.dialogContentRoot
             }}
           >
             <FilterPanel
-              onModalClose={onModalClose}
               {...filterPanelProps}
               filtersInDialogBox
+              onModalClose={onModalClose}
               onGiveSuggestion={onGiveSuggestion}
               filtersForSuggestion={filtersForSuggestion}
             />
-          </DialogActions>
+          </DialogContent>
         </MuiThemeProvider>
       </Dialog>
     );

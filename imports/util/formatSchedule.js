@@ -19,9 +19,9 @@ export const formatAmPm = startTime => {
   }
 };
 
-export const formatDate = date => {
+export const formatDate = (date, monthFormat = "MMMM") => {
   // console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
-  return moment(date).format("MMMM DD, YYYY");
+  return moment(date).format(`${monthFormat} DD, YYYY`);
 };
 
 export const formatDateNoYear = date => {
@@ -43,9 +43,9 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
   const classTimesData = { ...data };
   // debugger;
   let classTimes;
-  if (data && data.scheduleDetails && data.scheduleDetails.oneTime) {
+  if (data && data.scheduleDetails && data.scheduleType === "oneTime") {
     classTimes = {};
-    let schoolDetails = data.scheduleDetails.oneTime;
+    let currentSchedule = data.scheduleDetails.oneTime || data.scheduleDetails;
     let startDate,
       dayOfTheWeek,
       day,
@@ -54,7 +54,8 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
       timePeriod,
       currentJsonData,
       timeUnits;
-    schoolDetails.forEach(item => {
+
+    currentSchedule.forEach(item => {
       startDate = new Date(item.startDate);
       dayOfTheWeek = startDate.getDay(); // day of the week (from 0 to 6)
       if (dayOfTheWeek === 0) dayOfTheWeek = 7;
@@ -85,6 +86,10 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
     classTimes = data.scheduleDetails;
   }
 
+  // console.group("CLASS TIMES DATA");
+  // console.info(classTimes, data.scheduleType);
+  // console.groupEnd();
+
   if (hidePastDates)
     return removePastTimesFromSchedule(
       classTimes,
@@ -92,27 +97,26 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
       { startDate: data.startDate, endDate: data.endDate }
     );
   else return addTotalClassTimes(classTimes);
-
-  // if (hidePastDates)
-  //   return removePastTimesFromSchedule(
-  //     classTimes,
-  //     data.scheduleType.toLowerCase(),
-  //     { startDate: data.startDate, endDate: data.endDate }
-  //   );
-  // else return addTotalClassTimes(classTimes);
 };
 
-const addTotalClassTimes = classTimes => {
-  let classTimesCounter = classTimes.length;
-  // Object.keys(classTimes).forEach(day => {
-  //   if (typeof classTimes[day] == "object") {
-  //     classTimes[day].filter(classTime => {
-  //       if (!isEmpty(classTime)) {
-  //         ++classTimesCounter;
-  //       }
-  //     });
-  //   }
-  // });
+const addTotalClassTimes = (classTimes, scheduleType) => {
+  let classTimesCounter = 0;
+  if (typeof classTimes === "object" && !classTimes.length) {
+    Object.keys(classTimes).forEach(day => {
+      if (typeof classTimes[day] == "object") {
+        classTimes[day].filter(classTime => {
+          if (!isEmpty(classTime)) {
+            ++classTimesCounter;
+          }
+        });
+      }
+    });
+  } else {
+    classTimes.forEach(classTime => {
+      classTimesCounter += classTime.key.length;
+    });
+  }
+
   classTimes.totalClassTimes = classTimesCounter;
 
   return classTimes;
@@ -140,30 +144,27 @@ const removePastTimesFromSchedule = (
   scheduleData
 ) => {
   const currentDate = new Date();
-  if (scheduleType === "recurring" ) {
-   
-     if(scheduleData.endDate > new Date()) 
-     {
-       return addTotalClassTimes(classTimes);
-     }
-     
+  if (scheduleType === "recurring") {
+    if (scheduleData.endDate > new Date()) {
+      return addTotalClassTimes(classTimes);
+    }
+
     return {};
   } else if (scheduleType === "onetime") {
-    let allPastDate=true;
+    let allPastDate = true;
     DAYS_IN_WEEK.map(day => {
       const scheduleData = classTimes[day];
       if (!isEmpty(scheduleData)) {
         scheduleData.forEach((schedule, i) => {
-         if(schedule.startTime > new Date()){
-            allPastDate=false;
-         } 
-        })
+          if (schedule.startTime > new Date()) {
+            allPastDate = false;
+          }
+        });
       }
-    } ) 
-    if(!allPastDate){
-    return addTotalClassTimes(classTimes);
-    }
-    else return {};
+    });
+    if (!allPastDate) {
+      return addTotalClassTimes(classTimes);
+    } else return {};
   }
   return addTotalClassTimes(classTimes);
 };

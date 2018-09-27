@@ -126,9 +126,9 @@ class ClassTimeForm extends React.Component {
       state.locationId = data.locationId || '';
       state.closed=data.closed;
     }
-    if(!_.locationData){
+    
       if(!state.locationId && !state.roomId){
-        state.locationId = locationData[0]._id;
+        state.locationId = locationData[0] && locationData[0]._id || '';
         state.roomData = locationData[0] && locationData[0].rooms && locationData[0].rooms|| [];
         state.roomId = locationData[0] && locationData[0].rooms && locationData[0].rooms[0].id || '';
       }
@@ -142,7 +142,7 @@ class ClassTimeForm extends React.Component {
           }):state.roomData = [];
         })
       }
-    }
+    
     
     return state;
   };
@@ -313,7 +313,9 @@ class ClassTimeForm extends React.Component {
           open={true}
           schoolId = {schoolId}
           onClose = {(result)=>{
-             if(result)this.setState({showLocationForm:false,showRoomForm:true,locId:result})}}
+             if(result)this.setState({showLocationForm:false,showRoomForm:true,locId:result})
+             else this.setState({showLocationForm:false})
+            } }
           />}
          {this.state.showRoomForm && this.state.locId &&
          <RoomForm
@@ -346,9 +348,11 @@ class ClassTimeForm extends React.Component {
                     defaultValue={data && data.desc}
                     margin="dense"
                     inputRef={ref => (this.desc = ref)}
-                    label="Brief Description"
+                    label="Brief Description (200 Characters)"
                     type="text"
                     fullWidth
+                    multiline
+                    inputProps={{maxLength: 200}}
                   />
                     <FormControl fullWidth margin="dense">
                       <InputLabel htmlFor="location">Location</InputLabel>

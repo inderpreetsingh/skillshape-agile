@@ -35,6 +35,14 @@ ClassType.attachSchema(
       type: String,
       optional: true
     },
+    medium: {
+      type: String,
+      optional: true
+    },
+    low: {
+      type: String,
+      optional: true
+    },
     classes: {
       type: [String],
       optional: true
@@ -77,7 +85,9 @@ ClassType.attachSchema(
     },
     "filters.classPriceCost": {
       type: Number,
-      optional: true
+      optional: true,
+      decimal:true,
+      blackbox:true
     },
     "filters.monthlyPriceCost": {
       type: Object,
@@ -162,7 +172,6 @@ Meteor.startup(function() {
     const found = _.find(indexes, index => {
            return index.key["filters.location"] == "2d";
     });
-    console.log("found   ", found);
     if(found) {
       ClassType._dropIndex({"filters.location": "2d"});
     }

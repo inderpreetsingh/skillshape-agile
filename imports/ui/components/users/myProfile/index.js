@@ -4,7 +4,8 @@ import { browserHistory } from "react-router";
 import moment from "moment";
 import { createContainer } from "meteor/react-meteor-data";
 import MyProfileRender from "./myProfileRender";
-import { withStyles, imageRegex, emailRegex, toastrModal } from "/imports/util";
+import { withStyles, imageRegex, emailRegex, toastrModal,compressImage } from "/imports/util";
+import { resolve } from "url";
 
 const style = theme => {
   return {
@@ -60,7 +61,6 @@ class MyProfile extends React.Component {
   }
 
   initialzeUserProfileForm = currentUser => {
-    console.log("currentUser",currentUser)
     if (currentUser) {
       this.setState({
         firstName: currentUser.profile.firstName || currentUser.profile.name || "",
@@ -118,6 +118,7 @@ class MyProfile extends React.Component {
   submitUserDetails = event => {
     event.preventDefault();
     this.setState({ isBusy: true });
+    let allUploadPromise = [];
     if (this.validateUser()) {
       const userData = {
         "profile.firstName": this.state.firstName,
@@ -131,28 +132,81 @@ class MyProfile extends React.Component {
         "profile.coords": this.state.loc
       };
       const { file } = this.state;
-
-      if (file && file.fileData && !file.isUrl) {
-        S3.upload(
-          { files: { "0": file.fileData }, path: "profile" },
-          (err, res) => {
-            if (err) {
-              this.setState({
-                isBusy: false,
-                errorText: err.reason || err.message
-              });
+      try{
+        compressImage(file['org'],file.file,file.isUrl).then((result) => {
+        console.group("MyProfile");
+          if(_.isArray(result)){
+          console.log('Non-cors');
+            for (let i = 0; i <= 1; i++) {
+              allUploadPromise.push(new Promise((resolve,reject)=>{
+                S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
+                  if (res) {
+                    if(i==0){
+                      userData['profile.medium'] = res.secure_url;
+                      resolve();
+                    }else{
+                      userData['profile.low'] = res.secure_url;
+                      resolve();
+                    }
+                  }
+                });
+              }))
             }
-            if (res) {
-              userData["profile.pic"] = res.secure_url;
+            Promise.all(allUploadPromise).then(()=>{
+              if (file && file.fileData && !file.isUrl) {
+                S3.upload(
+                  { files: { "0": file.fileData }, path: "profile" },
+                  (err, res) => {
+                    if (err) {
+                      this.setState({
+                        isBusy: false,
+                        errorText: err.reason || err.message
+                      });
+                    }
+                    if (res) {
+                      userData["profile.pic"] = res.secure_url;
+                      this.editUserCall(userData);
+                    }
+                  }
+                );
+              } else if (file && file.isUrl) {
+                userData["profile.pic"] = file.file;
+                this.editUserCall(userData);
+              } else {
+                this.editUserCall(userData);
+              }
+            })
+          }
+          else{
+          console.log('cors');
+            if (file && file.fileData && !file.isUrl) {
+              S3.upload(
+                { files: { "0": file.fileData }, path: "profile" },
+                (err, res) => {
+                  if (err) {
+                    this.setState({
+                      isBusy: false,
+                      errorText: err.reason || err.message
+                    });
+                  }
+                  if (res) {
+                    userData["profile.pic"] = res.secure_url;
+                    this.editUserCall(userData);
+                  }
+                }
+              );
+            } else if (file && file.isUrl) {
+              userData["profile.pic"] = file.file;
+              this.editUserCall(userData);
+            } else {
               this.editUserCall(userData);
             }
           }
-        );
-      } else if (file && file.isUrl) {
-        userData["profile.pic"] = file.file;
-        this.editUserCall(userData);
-      } else {
-        this.editUserCall(userData);
+        console.groupEnd("MyProfile");
+        })
+      }catch(error){
+      this.editUserCall(userData);
+      throw new Meteor.Error(error);
       }
     } else {
       this.setState({ isBusy: false, errorText: "Access Denied" });

@@ -95,7 +95,7 @@ Meteor.methods({
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
     ) {
       let classTypeData = ClassType.findOne({ _id: doc_id });
-      const temp = { ...doc, filters: classTypeData.filters || {} };
+      const temp = { ...doc, filters: classTypeData && classTypeData.filters || {} };
 
       // if (temp.locationId) {
       //   console.log('TCL: temp.locationId', temp.locationId);
@@ -153,14 +153,15 @@ Meteor.methods({
           const schoolData = School.findOne({ _id: obj.schoolId });
 
           if (userData && schoolData) {
-            ClassTimesRequest.update(
-              { _id: obj._id },
-              { $set: { notification: false } }
-            );
+          //   ClassTimesRequest.update(
+          //     { _id: obj._id },
+          //     { $set: { notification: false } }
+          //   );
             sendEmailToStudentForClassTypeUpdation(
               userData,
               schoolData,
-              classTypeName
+              classTypeName,
+              'Class Time Updated'
             );
           }
         }
@@ -250,14 +251,15 @@ Meteor.methods({
           const schoolData = School.findOne({ _id: obj.schoolId });
 
           if (userData && schoolData) {
-            ClassTypeLocationRequest.update(
-              { _id: obj._id },
-              { $set: { notification: false } }
-            );
+            // ClassTypeLocationRequest.update(
+            //   { _id: obj._id },
+            //   { $set: { notification: false } }
+            // );
             sendEmailToStudentForClassTypeUpdation(
               userData,
               schoolData,
-              classTypeName
+              classTypeName,
+              'Location Updated'
             );
           }
         }
@@ -362,6 +364,9 @@ Meteor.methods({
     }catch(error){
 
     }
+  },
+  'classType.optimizationFinder':function(){
+    return ClassType.find({medium:{$exists:false},low:{$exists:false},classTypeImg:{$exists:true}}).fetch();
   }
 });
  

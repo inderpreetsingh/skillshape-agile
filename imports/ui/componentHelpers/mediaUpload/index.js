@@ -18,11 +18,11 @@ import Link from "material-ui-icons/Link";
 import Clear from "material-ui-icons/Clear";
 import { findDOMNode } from "react-dom";
 import { filter, assign } from "lodash";
-
+import ProgressiveImage from "react-progressive-image";
 import Input, { InputLabel, InputAdornment } from "material-ui/Input";
 import { FormControl, FormHelperText } from "material-ui/Form";
 import Typography from "material-ui/Typography";
-
+import styled from "styled-components";
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -31,10 +31,16 @@ import Dialog, {
   withMobileDialog
 } from "material-ui/Dialog";
 
-// console.log("Upload mi-version:-26 BottomNavigationButton-->>",BottomNavigationButton);
-
+const ProfilePic =styled.div`
+transition: background-image 1s linear !important;
+background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url(${props=>props.img});
+    height: 187px;
+    width: 223px;
+`;
 const styles = theme => {
-  // console.log("theme", theme);
   return {
     card: {
       maxWidth: 300
@@ -45,10 +51,11 @@ const styles = theme => {
       display: "inline-flex",
       alignItems: "center",
       color: "#fff",
-      width: "100%",
+      width: "230px",
       minHeight: 195,
       justifyContent: "center",
-      backgroundSize: "auto"
+      backgroundSize: "auto",
+      transition: "all 1s linear !important",
     },
     button: {
       position: "absolute",
@@ -58,6 +65,7 @@ const styles = theme => {
       // color: '#fff'
     },
     image: {
+      transition: "all 1s linear !important",
       verticalAlign: "middle",
       width: "100%"
     }
@@ -95,11 +103,12 @@ class Upload extends React.Component {
     }
     this.setState({ value });
   };
-  onFileLoad = (e, file) => {
+  onFileLoad = (e, file,org) => {
     let files = { ...this.state.files };
     files["file"] = e.target.result;
     files["fileData"] = file;
     files["isUrl"] = false;
+    files['org']=  org;
     this.setState({ files });
     this.props.onChange && this.props.onChange(files);
   };
@@ -109,12 +118,13 @@ class Upload extends React.Component {
     this.props.onChange && this.props.onChange(null);
   };
   onInputChange = e => {
+    let org=e.target.files[0];
     filter(
       e.target.files,
       file => file.type.match(this.props.fileTypeRegex) !== null
     ).forEach(file => {
       let reader = new FileReader();
-      reader.onload = e => this.onFileLoad(e, file);
+      reader.onload = e => this.onFileLoad(e, file,org);
       reader.readAsDataURL(file);
     });
   };
@@ -136,8 +146,6 @@ class Upload extends React.Component {
   }
 
   render() {
-    // console.log("Upload props>>>>> ", this.props)
-    // console.log("Upload state>>>>> ", this.state)
     const { classes, fullScreen, loading, minWidth } = this.props;
     let style = {
       position: "relative"
@@ -154,10 +162,12 @@ class Upload extends React.Component {
         <Card style={style}>
           <CardContent>
             <div className={classes.media}>
-              <img
-                className={classes.image}
-                src={this.state.files && this.state.files.file}
-              />
+            <ProgressiveImage 
+                        src={this.state.files && this.state.files.file}
+                        placeholder={config.blurImage}>
+                        {(src) =><ProfilePic img={src}/>}
+                      </ProgressiveImage>
+              
             </div>
             {/* this.state.files && this.state.files.file &&
               <Button onClick={this.clearSelectedImage} fab color="primary"  aria-label="clear" className={classes.button}>

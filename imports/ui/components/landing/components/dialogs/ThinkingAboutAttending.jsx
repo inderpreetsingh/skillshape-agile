@@ -12,8 +12,10 @@ import muiTheme from '../jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import PackageListingAttachment from './PackageListingAttachment';
+import { FormControl, FormControlLabel } from "material-ui/Form";
 import PackageAddNew from './PackageAddNew';
 import SchoolViewBase from '/imports/ui/components/schoolView/schoolViewBase';
+import Checkbox from "material-ui/Checkbox";
 import Dialog, {
     DialogActions,
     DialogContent,
@@ -31,6 +33,7 @@ const ButtonWrapper = styled.div`
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   width: 100%;
+  font-size: 30px;
 `;
 
 
@@ -47,37 +50,46 @@ const styles = {
         flexWrap: "wrap",
         justifyContent: "flex-start"
       }
+    },dialogTitle:{
+        borderTop: `5px solid #4caf50`
     }
+    
 }
-
+const TextWrapper = styled.div`
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+   `;
 const ErrorWrapper = styled.span`
     color: red;
     float: right;
 `;
-
-class ThinkingAboutAttending extends SchoolViewBase  {
+const labelValue =['Add this class to my calendar.','Sign me up for notification of class time or location changes.',
+'Sign me up for emails from the school about this class.']
+class ThinkingAboutAttending extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { PackageListingAttachment: false, pacLisAttOpen: true, PackageAddNew: false }
+        const {addToCalendar,notification}= this.props;
+        this.state = { checkBoxes:[true,true,true] }
     }
-   
+    
     render() {
-        const { open,onModalClose,addToCalendar,handleRemoveFromCalendarButtonClick,
-            handleClassClosed,handleAddToMyCalendarButtonClick } = this.props;
-            console.log("this",this);
-        return (
-            <MuiThemeProvider theme={muiTheme}>
+        const {checkBoxes}=this.state;
+        const { open,onModalClose,addToCalendar,
+            handleClassClosed,handleCheckBoxes,purchaseThisPackage ,name} = this.props;
+            return (
+                <MuiThemeProvider theme={muiTheme}>
                 <Dialog
                     title="Select Package"
                     open={open}
                     onClose={onModalClose}
                     onRequestClose={onModalClose}
                     aria-labelledby="Thinking About Attending"
-                >
+                    >
                     {this.props.isLoading && <ContainerLoader />}
-                    <DialogTitle>
+                    <DialogTitle  classes={{ root: this.props.classes.dialogTitle }}>
                         <DialogTitleWrapper>
-                        Thinking About Attending
+                        About Attending {name && name}
 
                             <IconButton color="primary" onClick={() => { onModalClose()}}>
                                 <ClearIcon /> 
@@ -85,29 +97,53 @@ class ThinkingAboutAttending extends SchoolViewBase  {
                         </DialogTitleWrapper>
                     </DialogTitle>
                     <DialogContent style={{ fontSize: '18px' }}>
-                    This will add this class to your calendar and sign you up for notifications about class time or location changes,
-                     as well as emails about this class. To attend, you must purchase a class package. 
-
+                 {checkBoxes.map((i,index)=>{
+                       return ( <FormControl fullWidth margin="dense">
+                       <FormControlLabel
+                         control={
+                             <Checkbox
+                             checked={checkBoxes[index]}
+                             onChange={(e) => {
+                                 let old = checkBoxes;
+                                 old[index] = e.target.checked;
+                                 this.setState({ checkBoxes: old })
+                                }}
+                                value={index}
+                                />
+                         }
+                         label={labelValue[index]}
+                       />
+                     </FormControl>)
+                   })}
+                  <TextWrapper> To attend you must purchase a class package.</TextWrapper>
                     </DialogContent>
                     <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
                       
                         <ButtonWrapper>
                             <FormGhostButton
-                                onClick={() => { this.setState({ PackageAddNew: true }) }}
+                                onClick={purchaseThisPackage}
                                 label="Purchase this Package"
                             />
                         </ButtonWrapper>
                         <ButtonWrapper>
                             <FormGhostButton
-                                onClick={() => {addToCalendar== 'closed'? handleClassClosed() : addToCalendar ? handleAddToMyCalendarButtonClick() : handleRemoveFromCalendarButtonClick()}}
-                                label={addToCalendar== 'closed'? "Class Closed" : addToCalendar ? "Add To Calendar" : "Remove from Calendar"}
+                                onClick={() => {
+                                    
+                                    if(addToCalendar== 'closed'){
+                                        handleClassClosed();
+                                    }
+                                    else{
+                                        handleCheckBoxes(checkBoxes);
+                                    }
+                                }}
+                                label={"Purchase at Class"}
                             />
                         </ButtonWrapper>
                         <ButtonWrapper>
                             <FormGhostButton
                                 darkGreyColor
                                 onClick={onModalClose}
-                                label="No thanks"
+                                label="Not Yet, Thanks!"
                             />
                         </ButtonWrapper>
                     </DialogActions>

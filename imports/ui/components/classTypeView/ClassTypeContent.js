@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { isEmpty, get } from "lodash";
+import { isEmpty } from "lodash";
 import DocumentTitle from "react-document-title";
 import { Element, scroller } from "react-scroll";
 
@@ -485,13 +485,13 @@ class ClassTypeContent extends Component {
       );
     }
 
-    if (isEmpty(classTypeData)) {
+    /*if (isEmpty(classTypeData)) {
       return (
         <Typography type="display2" gutterBottom align="center">
           Class Type not found!!!
         </Typography>
       );
-    }
+    }*/
 
     let submitBtnLabel = "Request pricing";
     let requestFor = "price";

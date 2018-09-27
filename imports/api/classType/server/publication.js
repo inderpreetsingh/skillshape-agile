@@ -9,33 +9,56 @@ import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import Media from "/imports/api/media/fields";
 
 Meteor.publish("classType.getclassType", function({ schoolId }) {
-    check(schoolId,String);
-
-    // console.log("classType.getclassType pub -->>",schoolId)
-    let cursor = ClassType.find({schoolId});
-    // let data = ClassType.publishJoinedCursors(cursor,{ reactive: true }, this);
-    // data.map((cursorData)=>{
-    // 	console.log("testing---->",cursorData.fetch());
-    // })
-    return ClassType.publishJoinedCursors(cursor,{ reactive: true }, this);
+  // console.log("classType.getclassType pub -->>",schoolId)
+  let cursor = ClassType.find({ schoolId });
+  // let data = ClassType.publishJoinedCursors(cursor,{ reactive: true }, this);
+  // data.map((cursorData)=>{
+  // 	console.log("testing---->",cursorData.fetch());
+  // })
+  return ClassType.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
-Meteor.publish("classType.getClassTypeWithClassTimes", function({ classTypeId }) {
-    check(classTypeId,String);
 
-    let cursor = ClassType.find({_id: classTypeId});
-    let classTypeData = cursor.fetch();
+Meteor.publish("classType.getClassTimesWithIds", function(classTypeIds) {
+  if (!classTypeIds.length) {
+    // this.ready();
+    return null;
+  }
+  let cursor = ClassTimes.find({ classTypeId: { $in: classTypeIds } });
+  // console.log(cursor);
+  return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
+});
 
-    if(isEmpty(classTypeData)) {
-        return [];
-    }
+Meteor.publish("classType.getClassTypeWithClassTimes", function({
+  classTypeId
+}) {
+  let cursor = ClassType.find({ _id: classTypeId });
+  let classTypeData = cursor.fetch();
 
-	let publishJoinedCursors = ClassType.publishJoinedCursors(cursor,{ reactive: true }, this)
-    publishJoinedCursors.push(ClassTimes.find({ classTypeId: classTypeId  }));
-    publishJoinedCursors.push(School.find({ _id: classTypeData[0].schoolId  }));
-    publishJoinedCursors.push(ClassPricing.find({ classTypeId: { $in: [classTypeId] }  }));
-    publishJoinedCursors.push(MonthlyPricing.find({ classTypeId: { $in: [classTypeId] }  }));
-    publishJoinedCursors.push(Media.find({ schoolId: classTypeData[0].schoolId  }));
+  if (isEmpty(classTypeData)) {
+    return [];
+  }
 
-	return publishJoinedCursors
+  // const classTimesCursor = ClassTimes.find({ classTypeId: classTypeId });
+
+  let publishJoinedCursors = ClassType.publishJoinedCursors(
+    cursor,
+    { reactive: true },
+    this
+  );
+
+  // console.log(publishJoinedCursors, "===============");
+  publishJoinedCursors.push(ClassTimes.find({ classTypeId: classTypeId }));
+  publishJoinedCursors.push(School.find({ _id: classTypeData[0].schoolId }));
+  publishJoinedCursors.push(
+    ClassPricing.find({ classTypeId: { $in: [classTypeId] } })
+  );
+  publishJoinedCursors.push(
+    MonthlyPricing.find({ classTypeId: { $in: [classTypeId] } })
+  );
+  publishJoinedCursors.push(
+    Media.find({ schoolId: classTypeData[0].schoolId })
+  );
+
+  return publishJoinedCursors;
 });

@@ -14,7 +14,8 @@ Meteor.methods({
     userType,
     sendMeSkillShapeNotification,
     signUpType,
-    birthYear
+    birthYear,
+    schoolName
   }) {
     if (!isEmpty(name) && !isEmpty(email)) {
       const password = generator.generate({
@@ -28,7 +29,7 @@ Meteor.methods({
         email: email,
         password: password,
         profile: {
-          name: name,
+          firstName: name,
           passwordSetByUser: false,
           userType: accessType,
           sendMeSkillShapeNotification: sendMeSkillShapeNotification
@@ -56,7 +57,8 @@ Meteor.methods({
         urlToken,
         password,
         fromEmail,
-        email
+        email,
+        schoolName
       );
       return { user: user, password: password };
     } else {
@@ -154,15 +156,14 @@ Meteor.methods({
       return new Meteor.Error("Permission Denied!!");
     }
   },
-  "user.checkForRegisteredUser": function({ email }) {
-    check(email,String);
-
+  "user.checkForRegisteredUser": function({ email,adminView }) {
     if (email) {
       const userData = Meteor.users.findOne({ "emails.address": email });
       if (userData) {
         let userName = getUserFullName(userData);
         return {
-          userInfo: `${userName}  at ${email} already exists. Is this your student?`
+          userInfo: `${userName}  at ${email} already exists. Is this your ${!adminView ? "student ": " known"}?`,
+          userId:userData._id
         };
       } else {
         throw new Meteor.Error("No User Found with this Email!!!");
@@ -170,5 +171,6 @@ Meteor.methods({
     } else {
       throw new Meteor.Error("Email Address not found!!");
     }
-  }
+  },
+ 
 });

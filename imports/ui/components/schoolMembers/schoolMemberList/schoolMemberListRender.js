@@ -3,7 +3,9 @@ import Avatar from "material-ui/Avatar";
 import List, { ListItem, ListItemText } from "material-ui/List";
 import Typography from "material-ui/Typography";
 import Grid from "material-ui/Grid";
-
+import {verifyImageURL} from '/imports/util'
+import ProgressiveImage from "react-progressive-image";
+import get from 'lodash/get';
 {
   /*
 1.Set profile pic for student.
@@ -12,18 +14,34 @@ import Grid from "material-ui/Grid";
 */
 }
 export default function(props) {
-  const { src, collectionData } = props;
-  const membersByName = _.groupBy(collectionData && collectionData, function(
-    item
-  ) {
-    return item && item.firstName && item.firstName[0].toUpperCase();
+  const { src, collectionData,adminView } = props;
+  console.log('TCL: collectionData', collectionData);
+  let handleMemberDetailsToRightPanel;
+  let membersByName ;
+  if(!adminView){
+   membersByName= _.groupBy(collectionData && collectionData, function(
+     item
+   ) {
+    
+    return get(item, "profile.profile.firstName", get(item,"profile.profile.name","0"))[0].toUpperCase();
+    
   });
+   handleMemberDetailsToRightPanel =this.props.handleMemberDetailsToRightPanel;
+  }else{
+    membersByName= _.groupBy(collectionData && collectionData, function(
+      item
+    ) {
+      return get(item, "profile.firstName", get(item,"profile.name","0"))[0].toUpperCase();
+    });
+   handleMemberDetailsToRightPanel =props.handleMemberDetailsToRightPanel;
+
+  }
   return (
     <Grid container>
       {collectionData && collectionData.length > 0 ? (
         <Grid item sm={12} xs={12} md={12}>
           <Grid item sm={12} xs={12} md={12} style={{ padding: 8 }}>
-            <Typography>{collectionData.length} Students</Typography>
+            <Typography>{collectionData.length} {!adminView ? 'Students' : 'Admins'}</Typography>
           </Grid>
           <Grid item sm={12} xs={12} md={12}>
             <Grid
@@ -47,23 +65,40 @@ export default function(props) {
                         </ListItem>,
                         membersByName[key] &&
                           membersByName[key].map(data => {
-                            const avtar = data && data.profile && data.profile.profile && data.profile.profile.pic
-                            
+                            let profile,pic,firstName;
+                            if(!adminView){
+                              profile =data.profile.profile;
+                            }
+                            else{
+                              profile =data.profile;
+                            }
+                            pic = profile && profile.low ? profile.low : profile && profile.medium ? profile.medium : 
+                            profile && profile.pic ? profile.pic:config.defaultProfilePicOptimized ;
+                            firstName= get(profile,"firstName",get(profile,"name","Old Data"));
+                            verifyImageURL(pic,(res)=>{
+                              if(!res){
+                                   pic=config.defaultProfilePic;
+                              }
+                            })
                             return (
                               <ListItem
                                 key={data._id}
                                 dense
                                 button
                                 onClick={() =>
-                                  this.props.handleMemberDetailsToRightPanel(
+                                  handleMemberDetailsToRightPanel(
                                     data._id
                                   )
                                 }
-                              >
-                                <Avatar alt="Remy Sharp" src={ avtar}>
-                                   { !avtar && key } 
-                                </Avatar>
-                                <ListItemText primary={data.firstName} />
+                              ><ProgressiveImage 
+                              src={pic}
+                              placeholder={config.blurImage}>
+                              {(src) =>   <Avatar alt="Remy Sharp" src={src}>{ !src && key } 
+                                </Avatar>}
+                            </ProgressiveImage>
+                               
+                                   
+                                <ListItemText primary={firstName} />
                               </ListItem>
                             );
                           })

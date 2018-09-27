@@ -13,10 +13,10 @@ const styles = {
   classTimeButton: {
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
-    padding: "0px",
+    padding: `0`,
     backgroundColor: helpers.primaryColor,
     height: "inherit",
-    minHeight: "auto",
+    minHeight: "32px",
     lineHeight: 1,
     marginRight: helpers.rhythmDiv,
     "&:hover": {
@@ -128,7 +128,7 @@ const getIconForButton = props => {
 };
 
 const ClassTimeButton = props => {
-  let rootClass = ``;
+  let rootClass = props.classes.classTimeButton;
   let labelClass = props.classes.classTimeButtonLabel;
   // console.log(CustomIcon,"Custom Icon")
   if (props.fullWidth && props.noMarginBottom) {
@@ -160,36 +160,18 @@ const ClassTimeButton = props => {
     rootClass = rootClass + " " + props.classes.lgButton;
   }
 
-  if (props.itemScope && props.itemType) {
-    return (
-      <Button
-        classes={{
-          root: rootClass,
-          label: labelClass
-        }}
-        onClick={props.onClick}
-        disabled={props.disabled}
-        itemScope
-        itemType={props.itemType}
-        
-      >
-        {getIconForButton(props)}
-
-        {props.label ? props.label : "Submit"}
-      </Button>
-    );
-  }
-
   return (
     <Button
       classes={{
         root: rootClass,
         label: labelClass
       }}
+      itemScope={props.itemScope}
+      itemType={props.itemType}
       onClick={props.onClick}
       disabled={props.disabled}
       type={props.type}
-      style={{backgroundColor:`${props.bgColor&& props.bgColor}`}}
+      style={{ backgroundColor: `${props.bgColor && props.bgColor}` }}
     >
       {getIconForButton(props)}
 

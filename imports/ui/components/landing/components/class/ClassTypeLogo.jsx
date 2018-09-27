@@ -1,10 +1,10 @@
 import React, { Fragment } from "react";
 import styled from "styled-components";
-
+import ProgressiveImage from "react-progressive-image";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { schoolLogo } from "/imports/ui/components/landing/site-settings.js";
-
 const Logo = styled.div`
+  transition: background-image 1s linear !important;
   width: ${helpers.rhythmDiv * 20}px;
   height: ${helpers.rhythmDiv * 20}px;
   border-radius: 5px;
@@ -36,15 +36,20 @@ const LogoImg = styled.img`
 `;
 
 const ClassTypeLogo = props => (
-  <Logo
+  <ProgressiveImage
+  src={props.logoSrc ? props.bgImg : props.logoSrc}
+  placeholder={config.blurImage}>
+  {(src) => <Logo
     bottom={props.bottom}
     left={props.left}
     publicView={props.publicView}
     position={props.position}
-    logoSrc={props.logoSrc ? props.bgImg : props.logoSrc}
+    logoSrc={src}
   >
     {props.children}
-  </Logo>
+  </Logo>}
+</ProgressiveImage>
+  
 );
 
 export default withImageExists(ClassTypeLogo, imageExistsConfig);

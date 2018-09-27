@@ -12,6 +12,7 @@ import { MuiThemeProvider } from "material-ui/styles";
 
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import pickerStyles from "/imports/startup/client/material-ui-picker-styles/styles.js";
+import FirstTimeVisitDialogBox from "/imports/ui/components/landing/components/dialogs/FirstTimeVisitDialogBox.jsx";
 
 muiTheme.overrides = pickerStyles;
 
@@ -28,13 +29,16 @@ class App extends Component {
       debug: true
     });
     // setting it false for first visit(One time redirect)..
-    localStorage.setItem('visitorRedirected',false);
+    localStorage.setItem("visitorRedirected", false);
   };
 
   componentWillUnmount = () => {
     // console.log("visitorRedirected, setting false.......")
-    localStorage.setItem('visitorRedirected', false);
-  }
+    localStorage.setItem("userInfoStored", false);
+    localStorage.setItem("visitorRedirected", false);
+    localStorage.setItem("mySchoolSlug", null);
+    localStorage.setItem("multipleSchools", true);
+  };
 
   render() {
     return (
