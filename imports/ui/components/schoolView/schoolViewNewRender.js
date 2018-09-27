@@ -369,7 +369,7 @@ export default function() {
                   '' :
                   <PackagesList
                     schoolId={schoolId}
-                    onAddToCartIconButtonClick={this.handlePurcasePackage}
+                    onAddToCartIconButtonClick={this.handlePurchasePackage}
                     enrollMentPackages
                     enrollMentPackagesData={enrollmentFee}
                     perClassPackagesData={classPricing}

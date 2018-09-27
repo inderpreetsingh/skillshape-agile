@@ -485,6 +485,7 @@ export default class SchoolViewBase extends React.Component {
   };
   //handle PayUpfront case
   handlePayUpFront = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content) => {
+    amount = amount * monthlyPymtDetails[0].month || 1;
     const { popUp } = this.props;
     popUp.appear("inform", {
       title: 'PayUpFront',
@@ -523,43 +524,58 @@ export default class SchoolViewBase extends React.Component {
     });
   }
   //This function is used to find out if a user is already purchased an package or not
-  isAlreadyPurchased =  (userId, planId, packageId, packageType, pymtType) => {
-    if (userId && planId || packageId) {
-       Meteor.call('purchases.isAlreadyPurchased', { userId, planId, packageId, packageType, pymtType }, (err, res) => {
-        if (res) {
-          const { popUp } = this.props;
-          popUp.appear("success", { title: "Already Purchased", content: "You have already purchased this package." });
-          this.setState({ isAlreadyPurchased: true, addRequest: false });
-        }
-        else {
-          this.setState({ isAlreadyPurchased: false });
-        }
-
-
-      })
-    }
-
+  isAlreadyPurchased =   (userId, planId, packageId, packageType, pymtType) => {
+    return new Promise((resolve,reject)=>{
+      if (userId && planId || packageId) {
+         Meteor.call('purchases.isAlreadyPurchased', { userId, planId, packageId, packageType, pymtType },async (err, res) => {
+          if (res) {
+            const { popUp } = this.props;
+            popUp.appear("success", { title: "Already Purchased", content: "You have already purchased this package." });
+            this.setState({ isAlreadyPurchased: true });
+            // check payment type  and take required action
+             resolve();
+          }
+          else {
+            this.setState({ isAlreadyPurchased: false });
+             // check payment type  and take required action
+             if (packageType == 'MP') {
+              await this.checkPymtType(pymtType, userId, planId);
+              resolve();
+            }else{
+              resolve();
+            }
+          }
+        })
+      }
+       
+    })
   }
   //check payment type and take action then
   checkPymtType =  (pymtType, userId, planId) => {
-    if (pymtType && pymtType.payAsYouGo || pymtType.payUpFront) {
-       Meteor.call('classSubscription.isAlreadyMarked', { userId, planId }, (err, res) => {
-        if (res) {
-          const { popUp } = this.props;
-          popUp.appear("success", { title: "Already Marked", content: "You are already marked for this package." });
-          this.setState({ isAlreadyPurchased: true, addRequest: false });
-        }
-        else {
-          this.setState({ isAlreadyPurchased: false, addRequest: false });
-          if (pymtType.payAsYouGo) {
-            this.setState({ payAsYouGo: true });
-          } else if (pymtType.payUpFront) {
-            this.setState({ payUpFront: true });
+    return new Promise((resolve,reject)=>{
+      if (pymtType && pymtType.payAsYouGo || pymtType.payUpFront) {
+         Meteor.call('classSubscription.isAlreadyMarked', { userId, planId }, (err, res) => {
+          if (res) {
+            const { popUp } = this.props;
+            popUp.appear("success", { title: "Already Marked", content: "You are already marked for this package." });
+            this.setState({ isAlreadyPurchased: true});
+            resolve();
           }
-        }
-
-      })
-    }
+          else {
+            this.setState({ isAlreadyPurchased: false});
+            if (pymtType.payAsYouGo) {
+              this.setState({ payAsYouGo: true ,payUpFront:false});
+            } else if (pymtType.payUpFront) {
+              this.setState({ payUpFront: true ,payAsYouGo: false});
+            }
+            resolve()
+          }
+  
+        })
+      }else{
+        resolve()
+      }
+    })
 
   }
   //handle monthly subscription
@@ -639,13 +655,14 @@ export default class SchoolViewBase extends React.Component {
             if (packageType == "CP" || packageType == "EP" || payUpFront) {
               self.handleCharge(token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self);
             } else if (packageType == "MP" && pymtType && pymtType.autoWithDraw) {
+
               self.handleSubscription(token, planId, schoolId, packageName, packageId, monthlyPymtDetails, self);
             }
           }
         });
 
         // Open Checkout with further options:
-        if (packageType == "CP" || packageType == "EP" || packageType == "MP" && pymtType && pymtType.autoWithDraw || payUpFront) {
+        // if (packageType == "CP" || packageType == "EP" || packageType == "MP" && pymtType && pymtType.autoWithDraw || payUpFront) {
           handler.open({
             name: this.props.schoolData.name,
             description: packageName,
@@ -659,7 +676,7 @@ export default class SchoolViewBase extends React.Component {
           window.addEventListener("popstate", function () {
             handler.close();
           });
-        }
+        // }
       }
 
       else if (this.state.addRequest) {
@@ -681,45 +698,44 @@ export default class SchoolViewBase extends React.Component {
     }
     );
   }
-  // This is used to send purchase request email when user wants to purchase a package.
-  handlePurcasePackage = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) => {
-    config.currency.map((data, index) => {
-      if (data.value == currency) {
-        currency = data.label;
-        amount = amount * data.multiplyFactor;
+  // whenever user click cart button request come here.
+  handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) => {
+    try{
+      config.currency.map((data, index) => {
+        if (data.value == currency) {
+          currency = data.label;
+          amount = amount * data.multiplyFactor;
+        }
+      })
+      debugger;
+      let self = this;
+      let userId = this.props.currentUser._id;
+      //check is package is already purchased
+  
+      await this.isAlreadyPurchased(userId, planId, packageId, packageType, pymtType);
+     
+      if (this.state.isAlreadyPurchased) {
+        return;
       }
-    })
-    let self = this;
-    let userId = this.props.currentUser._id;
-    //check is package is already purchased
-
-    this.isAlreadyPurchased(userId, planId, packageId, packageType, pymtType);
-    // check payment type  and take required action
-    if (packageType == 'MP') {
-      this.checkPymtType(pymtType, userId, planId);
+      
+      if (this.state.payAsYouGo) {
+        let title = "Pay As You GO Package";
+        let content = "This is a Pay As You Go package.We will mark you. You have to pay your fees at School.";
+        this.handleOffline(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content);
+        return;
+      }
+  
+      if (this.state.payUpFront) {
+        let title = "Pay Up Front Package";
+        let content = "This is Pay Up Front package.We will mark you. You have to pay your fees at School.";
+        this.handlePayUpFront(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content);
+        return;
+      }
+      //this will handle charge and subscription both
+      this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self);
+  
+    }catch(error){
     }
-    if (this.state.isAlreadyPurchased) {
-      return;
-    }
-
-    if (this.state.payAsYouGo) {
-      let title = "Pay As You GO Package";
-      let content = "This is a Pay As You Go package.We will mark you. You have to pay your fees at School.";
-      this.handleOffline(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content);
-      return;
-    }
-
-    if (this.state.payUpFront) {
-      let title = "Pay Up Front Package";
-      let content = "This is Pay Up Front package.We will mark you. You have to pay your fees at School.";
-      this.handlePayUpFront(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content);
-      return;
-    }
-
-    //this will handle charge and subscription both
-    this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self);
-
-
   };
 
   checkForHtmlCode = data => {

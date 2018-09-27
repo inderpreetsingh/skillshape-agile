@@ -36,7 +36,6 @@ function infoSchool({school, classTypes}) {
 }
 
 export function createMarkersOnMap(mapId, locationData) {
-    console.log('TCL: createMarkersOnMap -> locationData', locationData);
     if(document.getElementById(mapId)) {
         let map = new google.maps.Map(document.getElementById(mapId), {zoom: locationData.length>1 ? 1 : 8});
         let i = 0;

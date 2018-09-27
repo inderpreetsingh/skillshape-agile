@@ -5,11 +5,12 @@ import ClassSubscription from "../classSubscription/fields";
 import ClassPricing from "../classPricing/fields";
 import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 import { check } from 'meteor/check';
+import get from 'lodash/get';
 import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} from '/imports/api/email/index';
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
 // :":":":":":":"" classtypeids removed 
-var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
+let stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packageId, packageType, schoolId, expDuration, expPeriod, noClasses ,planId) {
     try {
@@ -18,7 +19,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     check(packageId,String);
     check(packageType,String);
     check(schoolId,String);
-    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail;
+    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status;
     packageName=desc;
     //Get amount and currency from database using package ids
     if (packageType == "EP") {
@@ -93,10 +94,10 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       };
       recordId = Meteor.call("purchases.addPurchase", payload);
       let charge = await stripe.charges.create(stripeRequest);
-
+      status = get(charge,'status','error')
       payload = {
         stripeResponse: charge,
-        status: "Succeeded"
+        status: status
       };
       let currentUserRec = Meteor.users.findOne(this.userId);
       Meteor.call("purchases.updatePurchases", { payload, recordId });
