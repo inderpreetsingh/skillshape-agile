@@ -43,7 +43,6 @@ import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import SubscriptionDetails from "/imports/ui/componentHelpers/subscriptionDetails";
 import ClassPricing from "/imports/api/classPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
@@ -817,10 +816,7 @@ class DashBoardView extends React.Component {
                 }
                 adminView={adminView}
               />
-              {memberInfo &&
-                Meteor.settings.public.paymentEnabled && (
-                  <SubscriptionDetails memberInfo={memberInfo} />
-                )}
+              
               {/* <div
                 style={{
                   height: "300px",
