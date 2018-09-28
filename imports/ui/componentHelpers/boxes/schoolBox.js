@@ -11,6 +11,7 @@ import ProgressiveImage from "react-progressive-image";
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import MemberActionButton from "/imports/ui/components/landing/components/buttons/MemberActionButton.jsx";
+import SubscriptionBox from './subscriptionBox';
 const styles = theme => ({
     root: {
         paddingTop: theme.spacing.unit * 2,
@@ -122,6 +123,7 @@ class SchoolBox extends React.Component {
     const { classes,purchaseData,schoolData } = this.props;
     let {callUsDialog, emailUsDialog,phone,email} = this.state;
     let purchaseBySchoolId = groupBy(purchaseData,'schoolId')
+    console.log('TCL: SchoolBox -> render -> purchaseBySchoolId', purchaseBySchoolId);
 
     return (
         <div>
@@ -129,6 +131,7 @@ class SchoolBox extends React.Component {
             {emailUsDialog && <EmailUsDialogBox ourEmail={email} schoolData={schoolData} open={emailUsDialog} onModalClose={() => this.setState({emailUsDialog:false})} />}
             {!isEmpty(schoolData) && schoolData.map((current)=>{
             let src = get(current,'mainImageMedium',get(current,'mainImage',cardImgSrc))
+            let subscriptionList = purchaseBySchoolId[current._id];
             return   <div><Paper className={classes.root}>
                 <Paper className={classes.schoolArea}>
                 <SchoolArea>
@@ -143,6 +146,10 @@ class SchoolBox extends React.Component {
                  handleEmail = {()=>{this.setState({emailUsDialog:true,email:get(current,"email",'fake@email.com')})}}
                  />
                 </SchoolArea>
+                {}
+                <SubscriptionBox 
+                subscriptionList = {subscriptionList}
+                />
                 </Paper>
             </Paper></div>
           

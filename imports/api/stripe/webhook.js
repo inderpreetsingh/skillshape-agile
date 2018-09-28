@@ -52,7 +52,8 @@ var dataFile = function (params, request, response, next) {
             endDate: endDate,
             planId: classSubscriptionData[0].subscriptionRequest.items[0].plan,
             packageStatus: 'active',
-            emailId:classSubscriptionData[0].emailId
+            emailId:classSubscriptionData[0].emailId,
+            packageType:'MP'
           }
          packageName = payload.packageName;
          userId = payload.userId;

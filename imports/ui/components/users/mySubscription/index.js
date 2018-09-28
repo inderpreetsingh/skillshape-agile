@@ -27,7 +27,7 @@ import uniq from 'lodash/uniq';
 }
 export default createContainer(props => {
   const {currentUser} = props;
-  let userId,purchaseData=[],purchaseSubscription,filter,schoolIds=[],schoolSubscription,schoolData = [];
+  let userId,purchaseData=[],purchaseSubscription,filter,schoolIds=[],schoolSubscription,schoolData = [],classSubscription,classSubscriptionData;
   userId = get(currentUser,'_id',null);
   filter = {userId}
   purchaseSubscription = Meteor.subscribe("purchases.getPurchasesListByMemberId",filter);
@@ -42,7 +42,7 @@ export default createContainer(props => {
   }
   if(schoolSubscription && schoolSubscription.ready()){
     schoolData = School.find().fetch();
-    console.log('TCL: schoolData', schoolData);
+    
    }
   return {
     schoolData,
