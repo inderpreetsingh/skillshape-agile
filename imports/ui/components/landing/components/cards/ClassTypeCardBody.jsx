@@ -31,39 +31,43 @@ const handleReviewsClick = e => {
 
 const ClassTypeCardBody = props => (
   <Fragment>
-    <ReviewsWrapper
-      itemProp="aggregateRating"
-      itemScope
-      itemType="http://schema.org/AggregateRating"
-    >
-      {!props.hideClassTypeOptions && (
-        <Fragment>
-          <div onClick={handleStarsClick}>
-            <ReactStars
-              size={15}
-              value={props.ratings}
-              edit={false}
-              itemProp="ratingCount"
-            />
-          </div>
-          <Reviews href="#" onClick={handleReviewsClick}>
-            <span itemProp="reviewCount">{props.reviews}</span> Reviews
-          </Reviews>
-        </Fragment>
-      )}
-    </ReviewsWrapper>
+    {!props.editMode && (
+      <ReviewsWrapper
+        itemProp="aggregateRating"
+        itemScope
+        itemType="http://schema.org/AggregateRating"
+      >
+        {!props.hideClassTypeOptions && (
+          <Fragment>
+            <div onClick={handleStarsClick}>
+              <ReactStars
+                size={15}
+                value={props.ratings}
+                edit={false}
+                itemProp="ratingCount"
+              />
+            </div>
+            <Reviews href="#" onClick={handleReviewsClick}>
+              <span itemProp="reviewCount">{props.reviews}</span> Reviews
+            </Reviews>
+          </Fragment>
+        )}
+      </ReviewsWrapper>
+    )}
 
     <Grid container spacing={8}>
-      <Grid item xs={12} sm={7}>
-        <PrimaryButton
-          icon
-          iconName="add_circle_outline"
-          fullWidth
-          label="Join Class"
-          onClick={props.onJoinClassButtonClick}
-        />
-      </Grid>
-      <Grid item xs={12} sm={5}>
+      {!props.editMode && (
+        <Grid item xs={12} sm={7}>
+          <PrimaryButton
+            icon
+            iconName="add_circle_outline"
+            fullWidth
+            label="Join Class"
+            onClick={props.onJoinClassButtonClick}
+          />
+        </Grid>
+      )}
+      <Grid item xs={12} sm={props.editMode ? 12 : 5}>
         <SecondaryButton fullWidth label="Details" />
       </Grid>
     </Grid>
@@ -73,7 +77,12 @@ const ClassTypeCardBody = props => (
 ClassTypeCardBody.propTypes = {
   ratings: PropTypes.number,
   joinClassButtonClick: PropTypes.func,
-  reviews: PropTypes.number
+  reviews: PropTypes.number,
+  editMode: PropTypes.bool
+};
+
+ClassTypeCardBody.defaultProps = {
+  editMode: false
 };
 
 export default ClassTypeCardBody;

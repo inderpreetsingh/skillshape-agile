@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+
+import { formatClassTimesData } from "/imports/util";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ClassTimes from "/imports/api/classTimes/fields";
 import ClassTypeExpansionRender from "./classTypeExpansionRender.js";
 
@@ -9,19 +12,21 @@ class ClassTypeExpansion extends Component {
   }
 
   getClassTimesData(classTypeId) {
-    return ClassTimes.find({ classTypeId }).fetch();
+    const classTimesData = ClassTimes.find({ classTypeId }).fetch();
+    return formatClassTimesData(classTimesData, false);
   }
 
   render() {
-    const { classTypeData } = this.props;
+    const { classTypeData, isLoading } = this.props;
+    debugger;
+    if (isLoading) {
+      return <ContainerLoader />;
+    }
 
-    // console.group("CLASS TYPE DATA");
-    // console.info(classTypeData, "----------");
-    // console.groupEnd();
     return (
       <ClassTypeExpansionRender
         classTypeData={classTypeData}
-        getClassTimeData={this.getClassTimeData}
+        getClassTimesData={this.getClassTimesData}
       />
     );
   }

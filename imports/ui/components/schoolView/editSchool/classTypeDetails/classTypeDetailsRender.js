@@ -8,15 +8,19 @@ import ClassTypeExpansion from "./classTypeExpansion.jsx";
 export default function() {
   let {
     classTypeData,
+    classTimesData,
     showFormBuilderModal,
     moveTab,
     schoolId,
-    locationData
+    locationData,
+    isLoading
   } = this.props;
 
   return (
     <div style={{ paddingTop: "20px" }}>
       <ClassTypeExpansion
+        isLoading={isLoading}
+        completeClassTimesData={classTimesData}
         classTypeData={this.modifySelectSubjectsInClassTypeData()}
       />
       <PanelWithTable

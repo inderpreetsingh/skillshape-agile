@@ -45,13 +45,11 @@ const styles = {
 
 const ClassTypeExpansionRender = props => {
   const {
-    getClassTimeData,
+    getClassTimesData,
     classTypeData,
     classes: { expansionPanelDetails }
   } = props;
-  console.group("CLASS TYPE EXPANSION RENDER");
-  console.info(props);
-  console.groupEnd();
+
   return (
     <Fragment>
       {classTypeData.map(cardData => (
@@ -95,15 +93,16 @@ const ClassTypeExpansionRender = props => {
 
             <CardsWrapper>
               <ClassTypeCardWrapper>
-                <ClassTypeCard {...cardData} />
+                <ClassTypeCard editMode {...cardData} />
               </ClassTypeCardWrapper>
-
-              <ClassTimesBoxes
-                editMode
-                classTimesData={getclassTimesData(cardData._id)}
-                inPopUp={false}
-                withSlider={false}
-              />
+              {
+                <ClassTimesBoxes
+                  editMode
+                  classTimesData={getClassTimesData(cardData._id)}
+                  inPopUp={false}
+                  withSlider={false}
+                />
+              }
             </CardsWrapper>
           </ExpansionPanelDetails>
         </ExpansionPanel>

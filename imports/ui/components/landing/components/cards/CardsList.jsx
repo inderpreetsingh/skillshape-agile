@@ -210,8 +210,8 @@ class CardsList extends Component {
               return (
                 <GridItem key={card._id} spacing={24}>
                   <ClassTypeCard
-                    classInterestData={classInterestData}
                     {...card}
+                    classInterestData={classInterestData}
                     hideClassTypeOptions={this.props.hideClassTypeOptions}
                   />
                 </GridItem>
