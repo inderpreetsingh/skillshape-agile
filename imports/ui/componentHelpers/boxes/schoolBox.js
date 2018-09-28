@@ -39,6 +39,7 @@ const styles = theme => ({
   margin-bottom: ${helpers.rhythmDiv}px;
   background-position: 50% 50%;
   background-image: url('${props => props.src}');
+  transition: background-image 1s linear !important;
 `;
 const SchoolArea = styled.div`
   ${helpers.flexHorizontalSpaceBetween};

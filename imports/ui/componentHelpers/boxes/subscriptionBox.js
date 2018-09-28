@@ -24,11 +24,10 @@ const styles = theme => ({
         margin:"8px"
     },
     subscriptionStatus:{
-        paddingTop: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 2,
         backgroundColor: "#4caf50;",
         borderRadius: "20px",
-        width:'74px'
+        width: "auto",
+        padding: "10px"
     }
    
   });
@@ -77,7 +76,7 @@ class SubscriptionBox extends React.Component {
                  <SubscriptionName>
                  {get(current,'packageName','No Name Found')}
                 <Paper className={classes.subscriptionStatus}>
-                {get(current,'packageStatus','No Status')}
+                {get(current,'packageStatus',get(current,'status','No Status'))}
                  </Paper>   
                  
                 </SubscriptionName>

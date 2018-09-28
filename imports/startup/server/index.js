@@ -56,3 +56,4 @@ import "/imports/api/purchases/cronJobForPackageStatus";
 import "/imports/api/stripe/server/publication";
 import "/imports/api/purchases/server/publication";
 import "/imports/api/schoolSuggestion/server/publication";
+import "/imports/api/classSubscription/server/publication";

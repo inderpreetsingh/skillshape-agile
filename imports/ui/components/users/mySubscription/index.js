@@ -5,8 +5,10 @@ import SchoolBox from '/imports/ui/componentHelpers/boxes/schoolBox.js'
 import get from "lodash/get";
 import Purchases from "/imports/api/purchases/fields";
 import School from "/imports/api/school/fields";
+import ClassSubscription from "/imports/api/classSubscription/fields";
 import isEmpty from 'lodash/isEmpty'
 import uniq from 'lodash/uniq';
+import concat from 'lodash/concat';
  class MySubscription extends React.Component {
   constructor(props) {
     super(props);
@@ -31,12 +33,19 @@ export default createContainer(props => {
   userId = get(currentUser,'_id',null);
   filter = {userId}
   purchaseSubscription = Meteor.subscribe("purchases.getPurchasesListByMemberId",filter);
-  if(purchaseSubscription && purchaseSubscription.ready())
+  classSubscription = Meteor.subscribe('classSubscription.findDataById',filter);
+  if(purchaseSubscription && purchaseSubscription.ready() && classSubscription && classSubscription.ready())
   purchaseData = Purchases.find().fetch();
+  classSubscriptionData = ClassSubscription.find().fetch();
   if(!isEmpty(purchaseData)){
     purchaseData.map((current)=>{
       schoolIds.push(current.schoolId);
     })
+    if(!isEmpty(classSubscriptionData)){
+      classSubscriptionData.map((current)=>{
+        schoolIds.push(current.schoolId);
+      })
+    }
     schoolSubscription = Meteor.subscribe("school.findSchoolByIds",uniq(schoolIds));
   
   }
@@ -44,6 +53,10 @@ export default createContainer(props => {
     schoolData = School.find().fetch();
     
    }
+   console.log('TCL: purchaseData', purchaseData);
+   purchaseData = concat(purchaseData,classSubscriptionData);
+   console.log('TCL: classSubscriptionData', classSubscriptionData);
+   console.log('TCL: purchaseData', purchaseData);
   return {
     schoolData,
     purchaseData
