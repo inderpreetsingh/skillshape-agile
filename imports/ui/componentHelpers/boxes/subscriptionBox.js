@@ -7,6 +7,7 @@ import groupBy from 'lodash/groupBy'
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import moment from "moment";
+import { Scrollbars } from 'react-custom-scrollbars';
 const styles = theme => ({
     root: {
         paddingTop: theme.spacing.unit * 2,
@@ -15,6 +16,7 @@ const styles = theme => ({
         backgroundColor: "dodgerblue;",
         borderRadius: "20px",
         maxWidth: "400px",
+        maxHeight: "507px",
     },
     singleSubscription:{
         paddingTop: theme.spacing.unit * 2,
@@ -69,6 +71,14 @@ class SubscriptionBox extends React.Component {
             <Heading>
                 SUBSCRIPTIONS
             </Heading>
+            <Scrollbars
+            autoHeight
+            autoHeightMin={100}
+            autoHeightMax={459}
+            autoHide
+            autoHideTimeout={1000}
+            autoHideDuration={200}
+             >
             {!isEmpty(subscriptionList) && subscriptionList.map((current,index)=>{
 
                 return <div>
@@ -90,6 +100,7 @@ class SubscriptionBox extends React.Component {
                   </Paper>
                 </div>
             })}
+            </Scrollbars>
             </Paper>
         </div>
     );
