@@ -234,7 +234,8 @@ export default function() {
     const {
         claimSchoolModal,
         claimRequestModal,
-        successModal
+        successModal,
+        snackBar
     } = this.state;
 
     if(showLoading) {
@@ -375,6 +376,9 @@ export default function() {
                     perClassPackagesData={classPricing}
                     monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricing)}
                     currency={currency}
+                    snackBar={snackBar}
+                    closeSnackBar={()=>{this.setState({snackBar:false})}}
+
                   />
                 }
                 </PackagesWrapper>

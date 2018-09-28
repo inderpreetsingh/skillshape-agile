@@ -123,6 +123,8 @@ const PackageList = props => (
             setFormData={() => {
               props.setFormData(packageData);
             }}
+            snackBar = {props.snackBar}
+            closeSnackBar = {props.closeSnackBar}
           />
         </PackageWrapper>
       ))}
@@ -148,6 +150,8 @@ const EnrollmentPackagesList = props => (
             setFormData={() => {
               props.setFormData(packageData);
             }}
+            snackBar = {props.snackBar}
+            closeSnackBar = {props.closeSnackBar}
           />
         </PackageWrapper>
       ))}
@@ -159,6 +163,7 @@ const PackagesList = props => {
   const classPackagesEmpty = isEmpty(props.perClassPackagesData);
   const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
   const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
+  let {snackBar} = props;
   const schoolCurrency=props.currency;
   return (
     <Fragment>
@@ -185,6 +190,8 @@ const PackagesList = props => {
                 props.setFormData(packageData);
               }}
               onPriceEdit={props.onPriceEdit}
+              snackBar = {snackBar}
+              closeSnackBar = {props.closeSnackBar}
             />
           </Wrapper>
         )}
@@ -213,7 +220,10 @@ const PackagesList = props => {
               props.setFormData(packageData);
             }}
             onPriceEdit={props.onPriceEdit}
+            snackBar = {snackBar}
+            closeSnackBar = {props.closeSnackBar}
           />
+         
         )}
 
         {!monthlyPackagesEmpty && (
@@ -238,6 +248,8 @@ const PackagesList = props => {
               props.setFormData(packageData);
             }}
             onPriceEdit={props.onPriceEdit}
+            snackBar = {snackBar}
+            closeSnackBar = {props.closeSnackBar}
           />
         )}
       </Wrapper>

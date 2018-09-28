@@ -700,6 +700,7 @@ export default class SchoolViewBase extends React.Component {
   // whenever user click cart button request come here.
   handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) => {
     try{
+      this.setState({snackBar:true})
       config.currency.map((data, index) => {
         if (data.value == currency) {
           currency = data.label;

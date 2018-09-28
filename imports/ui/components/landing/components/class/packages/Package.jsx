@@ -8,6 +8,7 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
 import {formatMoney} from '/imports/util';
+import Snackbar from 'material-ui/Snackbar';
 const Wrapper = styled.div`
   ${helpers.flexCenter} justify-content: space-between;
 
@@ -151,6 +152,20 @@ function getPaymentType(payment) {
 const Package = props => (
   <OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
     <Wrapper>
+    <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={props.snackBar  }
+          autoHideDuration={4000}
+          onClose={props.closeSnackBar}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span>Please Wait One Sec...</span>}
+        />
+
       <ClassDetailsSection>
      
         <Title>{props.packageName || props.name}</Title>
