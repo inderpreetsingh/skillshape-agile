@@ -124,7 +124,6 @@ class SchoolBox extends React.Component {
     const { classes,purchaseData,schoolData } = this.props;
     let {callUsDialog, emailUsDialog,phone,email} = this.state;
     let purchaseBySchoolId = groupBy(purchaseData,'schoolId')
-    console.log('TCL: SchoolBox -> render -> purchaseBySchoolId', purchaseBySchoolId);
 
     return (
         <div>

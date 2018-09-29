@@ -24,6 +24,8 @@ import {inputRestriction,formatMoney} from '/imports/util';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import Tooltip from 'rc-tooltip';
+import { withPopUp } from "/imports/util";
+import isEmpty from 'lodash/isEmpty';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -82,7 +84,7 @@ class EnrollmentFeeForm extends React.Component {
     onSubmit = (event) => {
         event.preventDefault();
         const { selectedClassType } = this.state;
-        const { data, schoolId, classTypeData } = this.props;
+        const { data, schoolId, classTypeData ,popUp} = this.props;
         let allClassTypeIds = classTypeData.map((item) => {return item._id});
         const payload = {
             schoolId: schoolId,
@@ -94,6 +96,10 @@ class EnrollmentFeeForm extends React.Component {
         }
         if(payload.classTypeId==null){
             payload.classTypeId=[];
+          }
+          if(isEmpty(payload.classTypeId) || !payload.currency || !payload.name || !payload.cost){
+            popUp.appear("alert", { title: "Error", content: "Some Field is missing." });
+            return ;
           }
         this.setState({isBusy: true});
         if(data && data._id) {
@@ -276,4 +282,4 @@ class EnrollmentFeeForm extends React.Component {
 	}
 }
 
-export default withStyles(styles)(withMobileDialog()(EnrollmentFeeForm));
+export default withStyles(styles)(withMobileDialog()(withPopUp(EnrollmentFeeForm)));

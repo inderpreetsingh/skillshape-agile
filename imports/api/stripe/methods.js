@@ -90,7 +90,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         packageId: packageId,
         packageType: packageType,
         schoolId: schoolId,
-        status: "In_Progress",
+        status: "inProgress",
         startDate: startDate,
         endDate: endDate,
         noOfClasses: noClasses,

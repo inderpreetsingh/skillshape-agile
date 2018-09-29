@@ -2,7 +2,7 @@ import React from "react";
 import { get } from "lodash";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
-import { withStyles, toastrModal } from "/imports/util";
+import { withStyles } from "/imports/util";
 import Button from "material-ui/Button";
 import TextField from "material-ui/TextField";
 import { MenuItem } from "material-ui/Menu";
@@ -26,7 +26,8 @@ import Input, { InputLabel} from "material-ui/Input";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
+import { withPopUp } from "/imports/util";
+import isEmpty from 'lodash/isEmpty';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -96,7 +97,7 @@ class MonthlyPriceForm extends React.Component {
     onSubmit = (event) => {
         event.preventDefault();
         const { selectedClassType, pymtType, tabValue } = this.state;
-        const { data, schoolId, toastr, classTypeData } = this.props;
+        const { data, schoolId, popUp, classTypeData } = this.props;
         let rowsUniqueness=true;
         let allClassTypeIds = classTypeData.map((item) => {return item._id});
         this.refs.AddRow.getRowData().map((value1,index1)=>{
@@ -119,10 +120,14 @@ class MonthlyPriceForm extends React.Component {
                 noClasses:this.noClasses.value,
                 duPeriod: this.state.duPeriod
             }
+            if(isEmpty(payload.classTypeId)  || !payload.packageName || !payload.noClasses || !payload.pymtDetails){
+              popUp.appear("alert", { title: "Error", content: "Some Field is missing." });
+              return ;
+            }
             if(tabValue === 0) {
                 // No option is selected for making payment then need to show this `Please select any payment type`.
                 if(pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo || !pymtType) {
-                    toastr.error("Please select any payment type.","Error");
+                  popUp.appear("alert", { title: "Error", content: "Please select any payment type." }); 
                     return
                 }
                 if(pymtType && pymtType.payUpFront) {
@@ -143,7 +148,7 @@ class MonthlyPriceForm extends React.Component {
         }
         else
         {
-            toastr.error("Month and currency must be unique","Error");
+          popUp.appear("alert", { title: "Error", content: "Month and currency must be unique" });
         }
     }
    
@@ -436,5 +441,5 @@ class MonthlyPriceForm extends React.Component {
 }
 
 export default withStyles(styles)(
-  withMobileDialog()(toastrModal(MonthlyPriceForm))
+  withMobileDialog()(withPopUp(MonthlyPriceForm))
 );

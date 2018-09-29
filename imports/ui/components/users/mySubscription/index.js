@@ -53,10 +53,7 @@ export default createContainer(props => {
     schoolData = School.find().fetch();
     
    }
-   console.log('TCL: purchaseData', purchaseData);
    purchaseData = concat(purchaseData,classSubscriptionData);
-   console.log('TCL: classSubscriptionData', classSubscriptionData);
-   console.log('TCL: purchaseData', purchaseData);
   return {
     schoolData,
     purchaseData

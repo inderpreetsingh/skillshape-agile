@@ -26,7 +26,7 @@ const styles = theme => ({
         margin:"8px"
     },
     subscriptionStatus:{
-        backgroundColor: "#4caf50;",
+        backgroundColor: "#4caf50",
         borderRadius: "20px",
         width: "auto",
         padding: "10px"
@@ -80,15 +80,15 @@ class SubscriptionBox extends React.Component {
             autoHideDuration={200}
              >
             {!isEmpty(subscriptionList) && subscriptionList.map((current,index)=>{
-
+                let status =  get(current,'packageStatus',get(current,'status','No Status'));
+                let backgroundColor = status=='active'?'#4caf50':status=='inProgress' ? 'yellow' : status == 'inActive' ? 'blue' : 'red' ;
                 return <div>
                 <Paper className={classes.singleSubscription}>
                  <SubscriptionName>
                  {get(current,'packageName','No Name Found')}
-                <Paper className={classes.subscriptionStatus}>
-                {get(current,'packageStatus',get(current,'status','No Status'))}
+                <Paper className={classes.subscriptionStatus} style={{backgroundColor}}>
+                 {status}
                  </Paper>   
-                 
                 </SubscriptionName>
                 <Expiring>
                  Expiring On {moment(current.endDate).format("Do MMMM YYYY")}
@@ -96,7 +96,6 @@ class SubscriptionBox extends React.Component {
                  {get(current,'packageType','MP')=='MP' &&  <Expiring>
                  Renewal On {moment(current.endDate).add(1, 'M').format("Do MMMM YYYY")}
                  </Expiring>}
-                
                   </Paper>
                 </div>
             })}
