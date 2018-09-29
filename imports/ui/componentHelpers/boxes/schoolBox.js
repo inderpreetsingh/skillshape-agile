@@ -25,8 +25,10 @@ const styles = theme => ({
         paddingBottom: theme.spacing.unit * 2,
         margin: "10px",
         borderRadius: "20px",
-        backgroundColor: "dimgrey"
-    }
+        background: "radial-gradient(black 15%, transparent 16%) 0 0, radial-gradient(black 15%, transparent 16%) 8px 8px, radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px, radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px",
+        backgroundColor: "dimgrey",
+        backgroundSize: "8px 8px"
+      }
   });
   const ImageContainer = styled.div`
   width: 100px;
@@ -84,8 +86,10 @@ const ActionButton = styled.div`
   }
 `;
 const SchoolName = styled.div`
-  font-size: x-large;
-  font-weight: 500;
+font-size: x-large;
+font-weight: bold;
+color: white;
+font-style: italic;
 `;
 const ActionButtons = props => (
     <ActionButtonsWrapper>
