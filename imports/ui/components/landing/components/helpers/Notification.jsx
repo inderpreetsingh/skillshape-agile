@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   background: ${props => props.bgColor};
-  padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 4}px;
+  padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 4}px;
   transition: 0.25s ease-in max-height, 0.25s linear opacity,
     0.05s linear padding 0.1s;
   opacity: 1;
@@ -54,10 +54,12 @@ const NotificationInnerWrapper = styled.div`
 const NotificationContent = Text.extend`
   font-size: ${helpers.baseFontSize * 1.25}px;
   margin-right: ${helpers.rhythmDiv}px;
+  margin-bottom: 0;
   color: white;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     font-size: 18px;
+    margin-bottom: ${helpers.rhythmDiv};
   }
 `;
 const ButtonWrapper = styled.div`
