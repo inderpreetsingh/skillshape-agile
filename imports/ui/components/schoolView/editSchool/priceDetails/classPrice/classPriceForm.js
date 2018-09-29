@@ -117,7 +117,6 @@ class ClassPriceForm extends React.Component {
       includeAllClassTypes: this.state.includeAllClassTypes,
       currency:this.state.currency
     };
-    console.log('TCL: ClassPriceForm -> payload.classTypeId', payload.classTypeId);
     if(isEmpty(payload.classTypeId) || !payload.currency || !payload.packageName || !payload.expPeriod || !payload.expDuration || !payload.noClasses || !payload.cost){
       popUp.appear("alert", { title: "Error", content: "Some Field is missing." });
       return ;

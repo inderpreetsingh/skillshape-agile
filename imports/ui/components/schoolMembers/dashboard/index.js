@@ -46,6 +46,10 @@ import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import ClassPricing from "/imports/api/classPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
+import Purchases from "/imports/api/purchases/fields";
+import ClassSubscription from "/imports/api/classSubscription/fields";
+import concat from 'lodash/concat';
+import groupBy from 'lodash/groupBy';
 const drawerWidth = 400;
 const style = {
   w211: {
@@ -499,7 +503,8 @@ class DashBoardView extends React.Component {
   };
 
   handleMemberDetailsToRightPanel = memberId => {
-    const {adminView,schoolData,adminsData} = this.props;
+    console.log('TCL: memberId', memberId);
+    const {adminView,schoolData,adminsData,purchaseByUserId} = this.props;
     let memberInfo,profile,pic,schoolId=schoolData[0]._id,email,_id;
     let schoolName =schoolData[0].name;
     if(!adminView){
@@ -516,6 +521,7 @@ class DashBoardView extends React.Component {
     }
      pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic :config.defaultProfilePic ;
     // memberInfo = this.state.memberInfo
+    let subscriptionList = get(purchaseByUserId,_id,[]);
     this.handleDrawerToggle();
     this.setState({
       memberInfo: {
@@ -534,7 +540,8 @@ class DashBoardView extends React.Component {
         pic: pic,
         studentWithoutEmail: memberInfo.studentWithoutEmail,
         packageDetails: memberInfo.packageDetails,
-        schoolName:schoolName
+        schoolName:schoolName,
+        subscriptionList
       },
       schoolMemberDetailsFilters: { _id: memberId }
     });
@@ -919,7 +926,9 @@ export default createContainer(props => {
   let schoolAdmin;
   let adminsIds;
   let schoolId;
-  let classPricing,monthlyPricing,enrollmentFee,adminView=false,adminsData=[];
+  let classPricing,monthlyPricing,enrollmentFee,adminView=false,adminsData=[],classSubscription,classSubscriptionData
+  ,purchaseData=[],purchaseSubscription,filter,purchaseByUserId;
+  ;
   let subscription = Meteor.subscribe(
     "schoolMemberDetails.getSchoolMemberWithSchool",
     filters
@@ -936,6 +945,15 @@ export default createContainer(props => {
     }
     //find school id
     schoolId=!isEmpty(schoolData) && schoolData[0]._id;
+    filter = {schoolId}
+    purchaseSubscription = Meteor.subscribe("purchases.getPurchasesListByMemberId",filter);
+    classSubscription = Meteor.subscribe('classSubscription.findDataById',filter);
+    if (purchaseSubscription && purchaseSubscription.ready() && classSubscription && classSubscription.ready()) {
+      purchaseData = Purchases.find().fetch();
+      classSubscriptionData = ClassSubscription.find().fetch();
+      purchaseData = concat(purchaseData,classSubscriptionData);
+      purchaseByUserId= groupBy(purchaseData,'userId')
+    }
     //find all classpricing from subscription for displaying in add new member popup
     let classPricingSubscription=Meteor.subscribe("classPricing.getClassPricing",{schoolId})
     if(classPricingSubscription.ready()){
@@ -986,6 +1004,7 @@ export default createContainer(props => {
     monthlyPricing,
     adminsIds,
    adminView,
-   adminsData
+   adminsData,
+   purchaseByUserId,
   };
 }, withStyles(styles, { withTheme: true })(DashBoardView));

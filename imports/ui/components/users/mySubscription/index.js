@@ -3,8 +3,8 @@ import { createContainer } from "meteor/react-meteor-data";
 import { withPopUp } from "/imports/util";
 import SchoolBox from '/imports/ui/componentHelpers/boxes/schoolBox.js'
 import get from "lodash/get";
-import Purchases from "/imports/api/purchases/fields";
 import School from "/imports/api/school/fields";
+import Purchases from "/imports/api/purchases/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
 import isEmpty from 'lodash/isEmpty'
 import uniq from 'lodash/uniq';
@@ -35,8 +35,10 @@ export default createContainer(props => {
   purchaseSubscription = Meteor.subscribe("purchases.getPurchasesListByMemberId",filter);
   classSubscription = Meteor.subscribe('classSubscription.findDataById',filter);
   if(purchaseSubscription && purchaseSubscription.ready() && classSubscription && classSubscription.ready())
+  {
   purchaseData = Purchases.find().fetch();
   classSubscriptionData = ClassSubscription.find().fetch();
+  }
   if(!isEmpty(purchaseData)){
     purchaseData.map((current)=>{
       schoolIds.push(current.schoolId);

@@ -3,7 +3,7 @@ import Paper from 'material-ui/Paper'
 import { withStyles } from "material-ui/styles";
 import styled from "styled-components";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import groupBy from 'lodash/groupBy'
+import groupBy from 'lodash/groupBy';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { cardImgSrc } from "/imports/ui/components/landing/site-settings.js";
