@@ -25,7 +25,7 @@ export default function() {
         completeClassTimesData={classTimesData}
         classTypeData={this.modifySelectSubjectsInClassTypeData()}
       />
-      <PanelWithTable
+      {/*<PanelWithTable
         schoolId={schoolId}
         className="class-type-details"
         settings={classTypeSettings}
@@ -38,7 +38,7 @@ export default function() {
         showClassTypeModal={isEmpty(classTypeData)}
         moveToNextTab={this.moveToNextTab}
         moveToPreviousTab={this.moveToPreviousTab}
-      />
+      />*/}
     </div>
   );
 }

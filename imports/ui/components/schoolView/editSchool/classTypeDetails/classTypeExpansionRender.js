@@ -87,7 +87,7 @@ const ClassTypeExpansionRender = props => {
       <Paper className={paperRoot} elevation={1}>
         <IconWrapper>
           <Icon className={barIcon}>{"class"}</Icon>
-          ClassType`
+          <Text marginBottom="0" color="white">ClassType</Text>
         </IconWrapper>
         <TextWrapper>
           <Text color="white">
