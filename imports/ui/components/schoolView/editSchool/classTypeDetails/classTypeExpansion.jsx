@@ -9,6 +9,7 @@ import ClassTypeForm from "/imports/ui/components/schoolView/editSchool/classTyp
 import ClassTypeExpansionRender from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeExpansionRender.js";
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 
+
 class ClassTypeExpansion extends Component {
   constructor(props) {
     super(props);
@@ -97,6 +98,16 @@ class ClassTypeExpansion extends Component {
     })
   }
 
+  handleAddClassTypeClick = () => {
+    this.setState(state => {
+      return {
+        ...state,
+        classTypeForm: true,
+        selectedClassTypeData: null
+      }
+    })
+  }
+
   render() {
     const { classTypeData, isLoading, schoolId, locationData } = this.props;
     debugger;
@@ -157,9 +168,9 @@ class ClassTypeExpansion extends Component {
             {...this.props}
           />
         )}
-
         <ClassTypeExpansionRender
           classTypeData={classTypeData}
+          onAddClassTypeClick={this.handleAddClassTypeClick}
           onEditClassTypeClick={this.handleEditClassTypeClick}
           onEditClassTimesClick={this.handleEditClassTimesClick}
           getClassTimesData={this.getClassTimesData}

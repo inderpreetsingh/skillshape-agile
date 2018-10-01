@@ -662,9 +662,7 @@ class ClassTime extends Component {
     // console.groupEnd();
 
     //const showDescription = this.showDescription(formattedClassTimes);
-    const classNameForClock = this.getOuterClockClassName(
-      this.props.addToCalendar
-    );
+    
     const dotColor = this.getDotColor(this.props.addToCalendar);
     return (
       <Fragment>
@@ -709,7 +707,7 @@ class ClassTime extends Component {
               <ClassTimeContainer
                 onClick={this.handleDescriptionState(false)}
                 inPopUp={inPopUp}
-                className={`class-time-bg-transition ${this.getWrapperClassName(
+                className={`class-time-bg-transition ${editMode ? 'add-to-calendar' : this.getWrapperClassName(
                   this.props.addToCalendar
                 )}`}
                 key={this.props._id}
