@@ -45,8 +45,8 @@ const styles = {
 
 const ClassTypeExpansionRender = props => {
   const {
-
     getClassTimesData,
+    onEditClassTypeClick,
     onEditClassTimesClick,
     classTypeData,
     classes: { expansionPanelDetails }
@@ -95,7 +95,11 @@ const ClassTypeExpansionRender = props => {
 
             <CardsWrapper>
               <ClassTypeCardWrapper>
-                <ClassTypeCard editMode {...cardData} />
+                <ClassTypeCard 
+                   editMode 
+                   {...cardData}
+                   onEditClassTypeClick={onEditClassTypeClick(cardData)} 
+                   />
               </ClassTypeCardWrapper>
               {
                 <ClassTimesBoxes

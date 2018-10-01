@@ -74,6 +74,18 @@ class ClassTypeExpansion extends Component {
     return formatClassTimesData(classTimesData, false);
   }
 
+  handleEditClassTypeClick = (classTypeData) => (e) => {
+    e.stopPropagation();
+
+    this.setState(state => {
+      return {
+        ...state,
+        classTypeForm: true,
+        selectedClassTypeData: classTypeData
+      }
+    });
+  }
+
   handleEditClassTimesClick = (classTypeData) => (classTimeData) => () => {
     this.setState(state => {
       return {
@@ -141,14 +153,14 @@ class ClassTypeExpansion extends Component {
             data={this.state.selectedClassTypeData}
             open={this.state.classTypeForm}
             onClose={this.handleModalState("classTypeForm", false)}
-            enableParentPanelToDefaultOpen={this.enableParentPanelToDefaultOpen}
-            settings={settings}
+            locationData={locationData}
             {...this.props}
           />
         )}
 
         <ClassTypeExpansionRender
           classTypeData={classTypeData}
+          onEditClassTypeClick={this.handleEditClassTypeClick}
           onEditClassTimesClick={this.handleEditClassTimesClick}
           getClassTimesData={this.getClassTimesData}
         />
