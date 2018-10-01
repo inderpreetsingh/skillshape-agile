@@ -58,7 +58,8 @@ class ClassTimesBoxes extends Component {
       inPopUp,
       withSlider,
       onModalClose,
-      editMode
+      editMode,
+      onEditClassTimesClick,
     } = this.props;
     console.group("CLASS TIMES DATA IN BOXES");
     console.info(classTimesData);
@@ -87,6 +88,7 @@ class ClassTimesBoxes extends Component {
         <BarWrapper show={withSlider}>
           <ClassTimesBar
             editMode={editMode}
+            onEditClassTimesClick={onEditClassTimesClick}
             inPopUp={inPopUp}
             classTimesData={modifiedClassTimesData}
             classInterestData={classInterestData}

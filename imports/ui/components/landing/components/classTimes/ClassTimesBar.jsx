@@ -157,13 +157,14 @@ const ClassTimesBar = props => {
 
   displayAll = classTimesData => {
     console.group("CLASS TIME DATA IN BAR");
-    console.info(classTimesData);
+    console.info(props);
     console.groupEnd();
 
     return classTimesData.map(classTimeObj => (
       <GridItem key={classTimeObj._id} spacing={32} inPopUp={inPopUp}>
         <ClassTime
           {...classTimeObj}
+          onEditClassTimesClick={onEditClassTimesClick}
           editMode={editMode}
           inPopUp={inPopUp}
           classTimeData={classTimeObj}
@@ -181,7 +182,8 @@ const ClassTimesBar = props => {
     classTimesData,
     classInterestData,
     handleRemoveFromCalendarButtonClick,
-    onModalClose
+    onModalClose,
+    onEditClassTimesClick
   } = props;
   let addToCalender;
   return (

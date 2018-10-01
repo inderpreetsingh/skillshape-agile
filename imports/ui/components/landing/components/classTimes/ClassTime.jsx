@@ -646,7 +646,9 @@ class ClassTime extends Component {
       formattedClassTimesDetails,
       classTypeName,
       onModalClose,
-      editMode
+      editMode,
+      classTimeData,
+      onEditClassTimesClick,
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     const {
@@ -799,6 +801,7 @@ class ClassTime extends Component {
                         label="Edit ClassTime"
                         icon
                         iconName="edit"
+                        onClick={onEditClassTimesClick(classTimeData)}
                       />
                     </ButtonWrapper>
                   )}

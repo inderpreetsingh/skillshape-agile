@@ -19,6 +19,8 @@ export default function() {
   return (
     <div style={{ paddingTop: "20px" }}>
       <ClassTypeExpansion
+        schoolId={schoolId}
+        locationData={locationData}
         isLoading={isLoading}
         completeClassTimesData={classTimesData}
         classTypeData={this.modifySelectSubjectsInClassTypeData()}

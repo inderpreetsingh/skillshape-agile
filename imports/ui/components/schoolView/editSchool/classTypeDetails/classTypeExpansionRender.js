@@ -17,7 +17,7 @@ import ClassTimesBoxes from "/imports/ui/components/landing/components/classTime
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import {rhythmDiv, primaryColor} from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const CARD_WIDTH = 280;
 
@@ -33,7 +33,7 @@ const Notifications = styled.div`
 `;
 
 const NotificationWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv}px;
+  margin-bottom: ${rhythmDiv}px;
 `;
 
 const styles = {
@@ -45,7 +45,9 @@ const styles = {
 
 const ClassTypeExpansionRender = props => {
   const {
+
     getClassTimesData,
+    onEditClassTimesClick,
     classTypeData,
     classes: { expansionPanelDetails }
   } = props;
@@ -71,7 +73,7 @@ const ClassTypeExpansionRender = props => {
                       "classType.notifyToStudentForClassTimes"
                     );
                   }}
-                  bgColor={helpers.primaryColor}
+                  bgColor={primaryColor}
                 />
               </NotificationWrapper>
               <NotificationWrapper>
@@ -86,7 +88,7 @@ const ClassTypeExpansionRender = props => {
                       "classType.notifyToStudentForClassTimes"
                     );
                   }}
-                  bgColor={helpers.primaryColor}
+                  bgColor={primaryColor}
                 />
               </NotificationWrapper>
             </Notifications>
@@ -98,6 +100,7 @@ const ClassTypeExpansionRender = props => {
               {
                 <ClassTimesBoxes
                   editMode
+                  onEditClassTimesClick={onEditClassTimesClick(cardData)}
                   classTimesData={getClassTimesData(cardData._id)}
                   inPopUp={false}
                   withSlider={false}
