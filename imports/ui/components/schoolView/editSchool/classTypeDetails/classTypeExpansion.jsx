@@ -108,6 +108,44 @@ class ClassTypeExpansion extends Component {
     })
   }
 
+  handleNotifyForChange = () => {
+    const data = this.state.selectedClassTypeData;
+    if (this.state.methodName) {
+      this.setState({ isBusy: true });
+      Meteor.call(
+        this.state.methodName,
+        {
+          schoolId: data.schoolId,
+          classTypeId: data._id,
+          classTypeName: data.name
+        },
+        (err, res) => {
+          // console.log("classType.notifyToStudentForClassTimes",error, result)
+          const { popUp } = this.props;
+          this.setState({ showConfirmationModal: false, isBusy: false }, () => {
+            if (res && res.message) {
+              // Need to show message to user when email is send successfully.
+              popUp.appear("success", { content: res.message });
+            }
+            if (err) {
+              popUp.appear("alert", { content: err.reason || err.message });
+            }
+          });
+        }
+      );
+    }
+  }
+
+  // This is done so that we can show confirmation modal.
+  handleNotifyClassTypeUpdate = (selectedClassTypeData, methodName, notifyFor) => () => {
+    this.setState({
+      showConfirmationModal: true,
+      selectedClassTypeData,
+      methodName,
+      notifyFor
+    });
+  };
+
   render() {
     const { classTypeData, isLoading, schoolId, locationData } = this.props;
     debugger;
@@ -123,7 +161,7 @@ class ClassTypeExpansion extends Component {
             type="alert"
             defaultButtons
             title="Are you sure?"
-            content="This will email all attending and interested students of the time change. Are you sure?"
+            content={`This will email all attending and interested students of the ${this.state.notifyFor} change. Are you sure?`}
             cancelBtnText="Cancel"
             onAffirmationButtonClick={() => {
               this.handleExpansionPanelRightBtn(currentTableData);
@@ -170,6 +208,7 @@ class ClassTypeExpansion extends Component {
         )}
         <ClassTypeExpansionRender
           classTypeData={classTypeData}
+          onNotifyClassTypeUpdate={this.handleNotifyClassTypeUpdate}
           onAddClassTypeClick={this.handleAddClassTypeClick}
           onEditClassTypeClick={this.handleEditClassTypeClick}
           onEditClassTimesClick={this.handleEditClassTimesClick}

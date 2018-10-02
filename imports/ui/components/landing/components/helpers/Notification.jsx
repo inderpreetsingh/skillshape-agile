@@ -52,7 +52,7 @@ const NotificationInnerWrapper = styled.div`
 `;
 
 const NotificationContent = Text.extend`
-  font-size: ${helpers.baseFontSize * 1.25}px;
+  font-size: ${props => props.smallText ? helpers.baseFontSize : helpers.baseFontSize * 1.25}px;
   margin-right: ${helpers.rhythmDiv}px;
   margin-bottom: 0;
   color: white;
@@ -85,16 +85,18 @@ class Notification extends Component {
       buttonLabel,
       onButtonClick,
       actionButton,
+      smallText,
+      withCloseIcon, 
       notificationContent
     } = this.props;
     return (
       <Wrapper bgColor={bgColor} show={this.state.show}>
-        <ClearIcon
+        {withCloseIcon && <ClearIcon
           classes={{ root: classes.icon }}
           onClick={this.handleNotificationState(false)}
-        />
+        />}
         <NotificationInnerWrapper>
-          <NotificationContent>{notificationContent}</NotificationContent>
+          <NotificationContent smallText={smallText}>{notificationContent}</NotificationContent>
           {actionButton || (
             <ButtonWrapper>
               <FormGhostButton
@@ -114,11 +116,13 @@ Notification.propTypes = {
   bgColor: PropTypes.string,
   onPurchaseButtonClick: PropTypes.func,
   actionButton: PropTypes.element,
+  withCloseIcon: PropTypes.bool,
   notificationContent: PropTypes.string
 };
 
 Notification.defaultProps = {
   bgColor: helpers.alertColor,
+  withCloseIcon: true,
   notificationContent: "sample notification text"
 };
 

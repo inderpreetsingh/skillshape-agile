@@ -78,6 +78,7 @@ const ClassTypeExpansionRender = props => {
     onAddClassTypeClick,
     onEditClassTypeClick,
     onEditClassTimesClick,
+    onNotifyClassTypeUpdate,
     classTypeData,
     classes: { expansionPanelDetails, expansionPanelRoot, paperRoot, barIcon }
   } = props;
@@ -115,12 +116,14 @@ const ClassTypeExpansionRender = props => {
             interested in this class of any schedule changes. Please do not
             abuse this button."
                   buttonLabel="click to notify"
-                  onButtonClick={() => {
-                    props.handleNotifyClassTypeUpdate(
-                      tableData,
-                      "classType.notifyToStudentForClassTimes"
-                    );
-                  }}
+                  onButtonClick={onNotifyClassTypeUpdate(
+                      cardData,
+                      "classType.notifyToStudentForClassTimes",
+                      "Class Times"
+                    )
+                  }
+                  smallText
+                  withCloseIcon={false}
                   bgColor={primaryColor}
                 />
               </NotificationWrapper>
@@ -130,12 +133,14 @@ const ClassTypeExpansionRender = props => {
             interested in this class of any location changes. Please do not
             abuse this button."
                   buttonLabel="click to notify"
-                  onButtonClick={() => {
-                    props.handleNotifyClassTypeUpdate(
-                      tableData,
-                      "classType.notifyToStudentForClassTimes"
-                    );
-                  }}
+                  onButtonClick={onNotifyClassTypeUpdate(
+                      cardData,
+                      "classType.notifyToStudentForLocation",
+                      "Class Location"
+                    )
+                  }
+                  smallText
+                  withCloseIcon={false}
                   bgColor={primaryColor}
                 />
               </NotificationWrapper>
