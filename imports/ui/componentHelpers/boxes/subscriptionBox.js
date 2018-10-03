@@ -6,6 +6,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import groupBy from 'lodash/groupBy'
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+import reverse from 'lodash/reverse';
 import moment from "moment";
 import { Scrollbars } from 'react-custom-scrollbars';
 const styles = theme => ({
@@ -64,7 +65,8 @@ class SubscriptionBox extends React.Component {
   }
  
   render() {
-    const { classes,subscriptionList} = this.props;
+    let { classes,subscriptionList} = this.props;
+    subscriptionList = reverse(subscriptionList);
     return (
         <div>
             <Paper className={classes.root}>
