@@ -11,30 +11,37 @@ import ExpansionPanel, {
   ExpansionPanelActions
 } from "material-ui/ExpansionPanel";
 
-import {Text} from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import {Text, GridMaxWidthWrapper, GridContainer, GridItem} from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import ClassTypeCard from "/imports/ui/components/landing/components/cards/ClassTypeCard.jsx";
-import CardsList from "/imports/ui/components/landing/components/cards/CardsList.jsx";
-import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes.jsx";
+import ClassTimeCard from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx";
 
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 
-import {rhythmDiv, flexCenter, primaryColor} from "/imports/ui/components/landing/components/jss/helpers.js";
+import { getContainerMaxWidth } from "/imports/util";
+import {rhythmDiv, flexCenter, primaryColor, mobile} from "/imports/ui/components/landing/components/jss/helpers.js";
 
+const SPACING = rhythmDiv * 2;
 const CARD_WIDTH = 280;
 
 const CardsWrapper = styled.div``;
-
-const ClassTypeCardWrapper = styled.div`
-  max-width: ${CARD_WIDTH}px;
-  margin-left: ${rhythmDiv * 2}px;
-`;
 
 const Notifications = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+const PaperInner = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  @media screen and (max-width: ${mobile + 100}px) {
+    width: 100%;
+    justify-content: space-evenly;
+    margin-bottom: ${rhythmDiv}px;
+  }
+  `;
 
 const NotificationWrapper = styled.div`
   margin-bottom: ${rhythmDiv}px;
@@ -45,12 +52,27 @@ const IconWrapper = styled.div`
 `;
 
 const TextWrapper = styled.div`
-  max-width: 50%;
+  padding: 0 ${rhythmDiv * 4}px;
 `;
 
 const ExpansionsWrapper = styled.div`
   padding: ${rhythmDiv * 2}px;
 `;
+
+const ToggleVisibility = styled.div`
+  display: ${props => props.hideOnSmall ? 'flex' : 'none'};
+  
+  @media screen and (max-width: ${mobile + 100}px) {
+    display: ${props => props.hideOnSmall ? 'none' : 'flex'};
+  }
+`;
+
+const TopBarButton = styled.div`
+  flex-shrink: 0;
+  align-self: center;
+`;
+
+
 
 const styles = {
   paperRoot: {
@@ -58,7 +80,11 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',  
     background: primaryColor,
-    padding: rhythmDiv
+    padding: rhythmDiv,
+    [`@media screen and (max-width: ${mobile + 100}px)`]: {
+      flexDirection: 'column',
+      justifyContent: 'center'
+    } 
   }, 
   barIcon: {
     color: 'white',
@@ -71,7 +97,6 @@ const styles = {
     flexDirection: "column"
   }
 };
-
 
 const ClassTypeExpansionRender = props => {
   const {
@@ -87,27 +112,41 @@ const ClassTypeExpansionRender = props => {
   return (
     <Fragment>
       <Paper className={paperRoot} elevation={1}>
-        <IconWrapper>
-          <Icon className={barIcon}>{"class"}</Icon>
-          <Text marginBottom="0" color="white">ClassType</Text>
-        </IconWrapper>
-        <TextWrapper>
-          <Text color="white">
-            Class Types are a group of one or more Class Times where similar or related material is taught to students, possibly grouped by age, skill level, or gender. 
-            If you separate classes by age, gender, skill level or material, separate Class Types should be created.
-          </Text>
-        </TextWrapper>
-        <FormGhostButton
-          whiteColor
-          label={"Add Class Type"}
-          onClick={onAddClassTypeClick}
-        />      
+        <PaperInner>
+          <IconWrapper>
+            <Icon className={barIcon}>{"class"}</Icon>
+            <Text marginBottom="0" color="white">ClassType</Text>
+          </IconWrapper>
+          <ToggleVisibility hideOnSmall>
+            <TextWrapper>
+              <Text color="white">
+                Class Types are a group of one or more Class Times where similar or related material is taught to students, possibly grouped by age, skill level, or gender. 
+                If you separate classes by age, gender, skill level or material, separate Class Types should be created.
+              </Text>
+            </TextWrapper>
+          </ToggleVisibility>
+          <TopBarButton>
+            <FormGhostButton
+              whiteColor
+              label={"Add Class Type"}
+              onClick={onAddClassTypeClick}
+            />  
+          </TopBarButton>   
+        </PaperInner>
+        <ToggleVisibility>
+          <TextWrapper>
+            <Text color="white">
+              Class Types are a group of one or more Class Times where similar or related material is taught to students, possibly grouped by age, skill level, or gender. 
+              If you separate classes by age, gender, skill level or material, separate Class Types should be created.
+            </Text>
+          </TextWrapper>
+        </ToggleVisibility>
       </Paper>    
       <ExpansionsWrapper>
       {classTypeData.map(cardData => (
         <ExpansionPanel className={expansionPanelRoot}>
           <ExpansionPanelSummary expandIcon={<Icon>{"expand_more"}</Icon>}>
-            <Typography>Class Type Data</Typography>
+            <Typography>{cardData.name}</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={expansionPanelDetails}>
             <Notifications>
@@ -148,22 +187,28 @@ const ClassTypeExpansionRender = props => {
             </Notifications>
 
             <CardsWrapper>
-              <ClassTypeCardWrapper>
-                <ClassTypeCard 
-                   editMode 
-                   {...cardData}
-                   onEditClassTypeClick={onEditClassTypeClick(cardData)} 
-                   />
-              </ClassTypeCardWrapper>
-              {
-                <ClassTimesBoxes
-                  editMode
-                  onEditClassTimesClick={onEditClassTimesClick(cardData)}
-                  classTimesData={getClassTimesData(cardData._id)}
-                  inPopUp={false}
-                  withSlider={false}
-                />
-              }
+                <GridMaxWidthWrapper>  
+                  <GridContainer>
+                    <GridItem spacing={SPACING} cardWidth={CARD_WIDTH} >
+                      <ClassTypeCard 
+                        editMode 
+                        {...cardData}
+                        onEditClassTypeClick={onEditClassTypeClick(cardData)} 
+                      />  
+                    </GridItem>
+                    {getClassTimesData(cardData._id).map(classTimeObj => (
+                      <GridItem key={classTimeObj._id} spacing={SPACING} cardWidth={CARD_WIDTH} inPopUp={false}>
+                        <ClassTimeCard
+                          {...classTimeObj}
+                          onEditClassTimesClick={onEditClassTimesClick(cardData)}
+                          editMode
+                          inPopUp={false}
+                          classTimeData={classTimeObj}
+                        /> 
+                      </GridItem>
+                    ))}
+                  </GridContainer>  
+                </GridMaxWidthWrapper>
             </CardsWrapper>
           </ExpansionPanelDetails>
         </ExpansionPanel>

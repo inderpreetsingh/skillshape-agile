@@ -151,7 +151,7 @@ transition: background-image 1s linear !important;
   width: 100%;
 `;
 
-const CardDescription = ({ key, classes, className, name, maxCharsLimit, hideCardContent, descriptionContent, bgImg }) => {
+const CardDescription = ({ editMode, key, classes, className, name, maxCharsLimit, hideCardContent, descriptionContent, bgImg }) => {
 
   const _getRefactoredTitle = (title, maxLimit) => {
     if (title.length <= maxLimit) {
@@ -193,7 +193,7 @@ const CardDescription = ({ key, classes, className, name, maxCharsLimit, hideCar
         </ProgressiveImage>
       </CardImageContainer>
 
-      <CardContentTitle description>{_getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
+      <CardContentTitle description>{editMode ? name : _getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
 
       <CardDescriptionActionArea>
         <IconButton className={classes.cardIcon} color="primary" onClick={hideCardContent}> <Clear /> </IconButton>
@@ -299,6 +299,7 @@ class CardsReveal extends Component {
 
       <Transition timeout={{ enter: 0, exit: 0 }} in={this.state.revealCard}>
         {(transitionState) => (<CardDescription
+          editMode
           descriptionContent={descriptionContent}
           hideCardContent={this.hideCardContent}
           name={myTitle}

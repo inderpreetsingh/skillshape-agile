@@ -147,9 +147,10 @@ class ClassTypeExpansion extends Component {
   };
 
   render() {
+    const {isBusy} = this.state;
     const { classTypeData, isLoading, schoolId, locationData } = this.props;
-    debugger;
-    if (isLoading) {
+    // debugger;
+    if (isLoading || isBusy) {
       return <ContainerLoader />;
     }
 

@@ -30,6 +30,14 @@ const styles = {
   }
 };
 
+const ClassContainer = styled.div`
+  width: 90%;
+  padding: ${helpers.rhythmDiv}px;
+  margin: 3px auto;
+  border-radius: ${helpers.rhythmDiv}px;
+  background: #ebf6ed;
+`;
+
 const ClassTimesWrapper = styled.div`
   max-width: ${props => getContainerMaxWidth(CARD_WIDTH, props.spacing, 4)}px;
   margin: 0 auto;
@@ -54,13 +62,7 @@ const GridContainer = styled.div`
   ${helpers.flexCenter} justify-content: flex-start;
   flex-wrap: wrap;
 `;
-const ClassContainer = styled.div`
-  width: 90%;
-  padding: ${helpers.rhythmDiv}px;
-  margin: 3px auto;
-  border-radius: ${helpers.rhythmDiv}px;
-  background: #ebf6ed;
-`;
+
 const GridItem = styled.div`
   padding: ${props => (props.spacing ? props.spacing / 2 : "16")}px;
   flex-grow: 1;
