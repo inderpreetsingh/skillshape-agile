@@ -31,28 +31,32 @@ class ClassTypeDetails extends React.Component {
     let doc = {
       schoolId: schoolId
     };
-    try{
-      compressImage(file['org'],file.file,file.isUrl).then((result) => {
+    try {
+      compressImage(file["org"], file.file, file.isUrl).then(result => {
         console.group("ClassTypeDetails");
-        if(_.isArray(result)){
-          console.log('Non-cors');
+        if (_.isArray(result)) {
+          console.log("Non-cors");
           for (let i = 0; i <= 1; i++) {
-            allUploadPromise.push(new Promise((resolve,reject)=>{
-              S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
-                if (res) {
-                  if(i==0){
-                    doc.medium= res.secure_url;
-                    resolve();
-                  }else{
-                    doc.low = res.secure_url;
-                    resolve();
+            allUploadPromise.push(
+              new Promise((resolve, reject) => {
+                S3.upload(
+                  { files: { "0": result[i] }, path: "compressed" },
+                  (err, res) => {
+                    if (res) {
+                      if (i == 0) {
+                        doc.medium = res.secure_url;
+                        resolve();
+                      } else {
+                        doc.low = res.secure_url;
+                        resolve();
+                      }
+                    }
                   }
-                }
-      
-              });
-            }))
+                );
+              })
+            );
           }
-          Promise.all(allUploadPromise).then(()=>{
+          Promise.all(allUploadPromise).then(() => {
             if (file && file.fileData && !file.isUrl) {
               S3.upload(
                 { files: { "0": file.fileData }, path: "schools" },
@@ -72,10 +76,9 @@ class ClassTypeDetails extends React.Component {
               doc.classTypeImg = null;
               this.editClassType({ doc_id: classTypeId, doc });
             }
-          })
-        }
-        else{
-							console.log('cors');
+          });
+        } else {
+          console.log("cors");
           if (file && file.fileData && !file.isUrl) {
             S3.upload(
               { files: { "0": file.fileData }, path: "schools" },
@@ -97,20 +100,22 @@ class ClassTypeDetails extends React.Component {
           }
         }
         console.groupEnd("ClassTypeDetails");
-
-      })
-    }catch(error){
-    throw new Meteor.Error(error);
+      });
+    } catch (error) {
+      throw new Meteor.Error(error);
     }
   };
 
   editClassType = ({ doc, doc_id }) => {
-    const {popUp} = this.props;
+    const { popUp } = this.props;
     Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
       if (error) {
       }
       if (result) {
-        popUp.appear("success", { title: "Message", content: 'Image Saved Successfully' });
+        popUp.appear("success", {
+          title: "Message",
+          content: "Image Saved Successfully"
+        });
       }
     });
   };
@@ -166,10 +171,13 @@ export default createContainer(props => {
   classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
   let classTypeIds = classTypeData && classTypeData.map(data => data._id);
 
-  Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {
-    schoolId,
-    classTypeIds
-  });
+  let classTimesDataSubscription = Meteor.subscribe(
+    "classTimes.getclassTimesByClassTypeIds",
+    {
+      schoolId,
+      classTypeIds
+    }
+  );
   classTimesData = ClassTimes.find({ schoolId }, { sort: { _id: -1 } }).fetch();
   // }
 
@@ -181,10 +189,10 @@ export default createContainer(props => {
   /*****************************************************/
 
   return {
+    isLoading: !classTimesDataSubscription.ready() && !subscription.ready(),
     ...props,
     schoolId,
     classTypeData,
     classTimesData
   };
-}, (withPopUp(ClassTypeDetails)));
-
+}, withPopUp(ClassTypeDetails));

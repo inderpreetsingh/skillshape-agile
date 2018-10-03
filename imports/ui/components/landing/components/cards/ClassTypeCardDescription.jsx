@@ -1,22 +1,27 @@
-import React, {Fragment} from 'react';
-import styled from 'styled-components';
-import { browserHistory } from 'react-router';
-import ReactStars from 'react-stars';
-import PropTypes from 'prop-types';
+import React, { Fragment } from "react";
+import styled from "styled-components";
+import { browserHistory } from "react-router";
+import ReactStars from "react-stars";
+import PropTypes from "prop-types";
 
-import { withStyles ,MuiThemeProvider} from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid'
+import { withStyles, MuiThemeProvider } from "material-ui/styles";
+import Typography from "material-ui/Typography";
+import Grid from "material-ui/Grid";
 
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
-import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton.jsx";
 
-import { cutString, goToSchoolPage, goToClassTypePage, addDelimiter } from "/imports/util";
-import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+import {
+  cutString,
+  goToSchoolPage,
+  goToClassTypePage,
+  addDelimiter
+} from "/imports/util";
+import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import School from "/imports/api/school/fields";
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import MuiTheme from '/imports/ui/components/landing/components/jss/muitheme';
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import MuiTheme from "/imports/ui/components/landing/components/jss/muitheme";
 
 const RatingsWrapper = styled.div`
   display: flex;
@@ -95,7 +100,7 @@ const ButtonsWrapper = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  padding: 0 ${helpers.rhythmDiv/2}px;
+  padding: 0 ${helpers.rhythmDiv / 2}px;
   margin-bottom: ${helpers.rhythmDiv}px;
   width: 50%;
 
@@ -105,38 +110,45 @@ const ButtonWrapper = styled.div`
 `;
 
 const styles = {
-  gridDescriptionWrapper : {
+  gridDescriptionWrapper: {
     margin: `${helpers.rhythmDiv * 2}px 0`,
     marginBottom: 4,
     border: `1px solid #ddd`
   },
-  descriptionHeader : {
+  descriptionHeader: {
     marginTop: `${helpers.rhythmDiv}px`,
-    fontSize: '17px',
+    fontSize: "17px",
     fontWeight: 500
   }
-}
+};
 
-
-const ClassTypeCardDescription = (props) => {
-
-  const {cardRevealInfo, schoolData} = props;
+const ClassTypeCardDescription = props => {
+  const { cardRevealInfo, schoolData } = props;
   // console.log("ClassTypeCardDescription props-->>",props);
-  return(
+  return (
     <MuiThemeProvider theme={MuiTheme}>
-        <Fragment>
-            <RatingsWrapper itemScope itemType="http://schema.org/AggregateRating">
-                {!props.hideClassTypeOptions &&
-                <Fragment>
-                <ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount"/>
+      <Fragment>
+        <RatingsWrapper itemScope itemType="http://schema.org/AggregateRating">
+          {!props.hideClassTypeOptions &&
+            !props.editMode && (
+              <Fragment>
+                <ReactStars
+                  size={15}
+                  value={props.ratings}
+                  edit={false}
+                  itemProp="ratingCount"
+                />
                 <Reviews href="#">
-                    <Typography>
-                      <span itemProp="reviewCount">{props.reviews}</span> Reviews</Typography>
-                </Reviews></Fragment>}
-            </RatingsWrapper>
+                  <Typography>
+                    <span itemProp="reviewCount">{props.reviews}</span> Reviews
+                  </Typography>
+                </Reviews>
+              </Fragment>
+            )}
+        </RatingsWrapper>
 
-            <ClassDescription className="description">
-              {/*
+        <ClassDescription className="description">
+          {/*
                 <Grid container spacing={8}>
                  <Grid item xs={12} classes={{typeItem: props.classes.gridDescriptionWrapper}}>
                     {cardRevealInfo.ageMin && <Text>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Text>}
@@ -148,67 +160,103 @@ const ClassTypeCardDescription = (props) => {
                  </Grid>
                </Grid> */}
 
-               <ClassDescriptionInnerWrapper>
-                 <ClassTypeRequirements>
-                   {cardRevealInfo.ageMin && <Text>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Text>}
-                   {cardRevealInfo.gender && <Text>{cardRevealInfo.gender && (cardRevealInfo.gender !== "All") && `${cardRevealInfo.gender}`}</Text>}
-                   {cardRevealInfo.experienceLevel && <Text>Level: {cardRevealInfo.experienceLevel == "All" ? "All levels are welcomed": cardRevealInfo.experienceLevel}</Text>}
-                 </ClassTypeRequirements>
+          <ClassDescriptionInnerWrapper>
+            <ClassTypeRequirements>
+              {cardRevealInfo.ageMin && (
+                <Text>
+                  Age: {cardRevealInfo.ageMin}{" "}
+                  {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}
+                </Text>
+              )}
+              {cardRevealInfo.gender && (
+                <Text>
+                  {cardRevealInfo.gender &&
+                    cardRevealInfo.gender !== "All" &&
+                    `${cardRevealInfo.gender}`}
+                </Text>
+              )}
+              {cardRevealInfo.experienceLevel && (
+                <Text>
+                  Level:{" "}
+                  {cardRevealInfo.experienceLevel == "All"
+                    ? "All levels are welcomed"
+                    : cardRevealInfo.experienceLevel}
+                </Text>
+              )}
+            </ClassTypeRequirements>
 
-                 <ClassDescriptionContentWrapper>
-                   <Typography classes={{root: props.classes.descriptionHeader}}>Class Description: </Typography>
-                   {cardRevealInfo.description && <ClassDescriptionContent>{cardRevealInfo.description}</ClassDescriptionContent>}
-                 </ClassDescriptionContentWrapper>
-               </ClassDescriptionInnerWrapper>
+            <ClassDescriptionContentWrapper>
+              <Typography classes={{ root: props.classes.descriptionHeader }}>
+                Class Description:{" "}
+              </Typography>
+              {cardRevealInfo.description && (
+                <ClassDescriptionContent>
+                  {cardRevealInfo.description}
+                </ClassDescriptionContent>
+              )}
+            </ClassDescriptionContentWrapper>
+          </ClassDescriptionInnerWrapper>
 
-               <Buttons>
-                {props && !props.hideClassTypeOptions &&
-                  <ButtonsWrapper>
-                   <ButtonWrapper>
-                     <SecondaryButton
+          <Buttons>
+            {props &&
+              !props.hideClassTypeOptions && (
+                <ButtonsWrapper>
+                  <ButtonWrapper>
+                    <SecondaryButton
                       noMarginBottom
                       fullWidth
-                      onClick={() => goToClassTypePage(addDelimiter(cardRevealInfo.name),cardRevealInfo._id )}
-                      label="Class Details"/>
-                    </ButtonWrapper>
-
-                    <ButtonWrapper>
-                      <SecondaryButton
-                        noMarginBottom
-                        fullWidth
-                        label="View School"
-                        onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
-                      />
-                    </ButtonWrapper>
-                </ButtonsWrapper>
-                }
-                {
-                    props.classTimeCheck ?
-                    <PrimaryButton
-                      label="View Class Times"
-                      fullWidth
-                      onClick={props.onClassTimeButtonClick}
-                      itemScope
-                      itemType="http://schema.org/ViewAction"
-                      />
-                    : <PrimaryButton
-                      label="Request Class Times"
-                      fullWidth
-                      onClick={props.onRequestClassTimeButtonClick}
+                      onClick={() =>
+                        goToClassTypePage(
+                          addDelimiter(cardRevealInfo.name),
+                          cardRevealInfo._id
+                        )
+                      }
+                      label="Class Details"
                     />
-                }
-              </Buttons>
-            </ClassDescription>
-        </Fragment>
+                  </ButtonWrapper>
+
+                  <ButtonWrapper>
+                    <SecondaryButton
+                      noMarginBottom
+                      fullWidth
+                      label="View School"
+                      onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
+                    />
+                  </ButtonWrapper>
+                </ButtonsWrapper>
+              )}
+            {props.classTimeCheck ? (
+              <PrimaryButton
+                label="View Class Times"
+                fullWidth
+                onClick={props.onClassTimeButtonClick}
+                itemScope
+                itemType="http://schema.org/ViewAction"
+              />
+            ) : (
+              <PrimaryButton
+                label="Request Class Times"
+                fullWidth
+                onClick={props.onRequestClassTimeButtonClick}
+              />
+            )}
+          </Buttons>
+        </ClassDescription>
+      </Fragment>
     </MuiThemeProvider>
-)
+  );
 };
 
 ClassTypeCardDescription.propTypes = {
-    ratings : PropTypes.number,
-    reviews: PropTypes.number,
-    description: PropTypes.string,
-    onClassTimeButtonClick: PropTypes.func
+  ratings: PropTypes.number,
+  reviews: PropTypes.number,
+  description: PropTypes.string,
+  editMode: PropTypes.bool,
+  onClassTimeButtonClick: PropTypes.func
+};
+
+ClassTypeCardDescription.defaultProps = {
+  editMode: false
 };
 
 export default withStyles(styles)(ClassTypeCardDescription);

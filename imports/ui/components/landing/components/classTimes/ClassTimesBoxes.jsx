@@ -57,25 +57,38 @@ class ClassTimesBoxes extends Component {
       classInterestData,
       inPopUp,
       withSlider,
-      onModalClose
+      onModalClose,
+      editMode,
+      onEditClassTimesClick,
     } = this.props;
+    console.group("CLASS TIMES DATA IN BOXES");
+    console.info(classTimesData);
+    console.groupEnd();
 
-    const modifiedClassTimesData = classTimesData.map(data => {
-      data.addToCalendar = this._checkForAddToCalender(data);
-      return data;
-    });
+    let modifiedClassTimesData = classTimesData;
+
+    if (!editMode) {
+      modifiedClassTimesData = classTimesData.map(data => {
+        data.addToCalendar = this._checkForAddToCalender(data);
+        return data;
+      });
+    }
+
     return (
       <Fragment>
-        {withSlider && (
-          <SliderWrapper>
-            <ClassTimesSlider
-              data={modifiedClassTimesData}
-              componentProps={{ classInterestData: classInterestData }}
-            />
-          </SliderWrapper>
-        )}
+        {withSlider &&
+          !editMode && (
+            <SliderWrapper>
+              <ClassTimesSlider
+                data={modifiedClassTimesData}
+                componentProps={{ classInterestData: classInterestData }}
+              />
+            </SliderWrapper>
+          )}
         <BarWrapper show={withSlider}>
           <ClassTimesBar
+            editMode={editMode}
+            onEditClassTimesClick={onEditClassTimesClick}
             inPopUp={inPopUp}
             classTimesData={modifiedClassTimesData}
             classInterestData={classInterestData}

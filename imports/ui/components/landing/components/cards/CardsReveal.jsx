@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import get from "lodash/get";
 import { CSSTransition, Transition } from 'react-transition-group';
+
 import styled from 'styled-components';
 import ProgressiveImage from "react-progressive-image";
 import { withStyles } from 'material-ui/styles';
@@ -10,8 +12,8 @@ import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Clear from 'material-ui-icons/Clear';
 import MoreVert from 'material-ui-icons/MoreVert';
+import Edit from 'material-ui-icons/Edit';
 import { verifyImageURL } from "/imports/util";
-import get from "lodash/get";
 import withImageExists from '/imports/util/withImageExists.js';
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
@@ -64,6 +66,10 @@ const CardImage = styled.img`
 
 const CardContent = styled.div`
 
+`;
+
+const IconButtons = styled.div`
+  ${helpers.flexCenter}
 `;
 
 const CardContentHeader = styled.div`
@@ -257,7 +263,7 @@ class CardsReveal extends Component {
   }
 
   render() {
-    const { name, classTypeImg, descriptionContent, body, classes } = this.props;
+    const { name, classTypeImg, descriptionContent, body, classes, onEditClassTypeClick,editMode } = this.props;
     const { bgImg } = this.state;
     const myTitle = name.toLowerCase();
     //console.log(ShowDetails,"adsljfj")
@@ -272,9 +278,16 @@ class CardsReveal extends Component {
 
           <CardContentHeader>
             <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
-            <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
-              <MoreVert />
-            </IconButton>
+            
+            <IconButtons>
+              {editMode && <IconButton className={classes.cardIcon} onClick={onEditClassTypeClick}>
+                <Edit />  
+              </IconButton>}
+              <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >  
+                <MoreVert />
+              </IconButton>
+            </IconButtons>  
+            
           </CardContentHeader>
 
         </CardImageTitleWrapper>

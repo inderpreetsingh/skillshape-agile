@@ -85,9 +85,36 @@ const getIconForButton = props => {
   return "";
 };
 
+const getButtonClassesConfiguration = classes => {
+  const {
+    disabled,
+    noMarginRight,
+    noMarginBottom,
+    fullWidth,
+    searchBarHeight,
+    searchBarShadow,
+    disabledButtonLabel
+  } = classes;
+
+  return {
+    fullWidth,
+    noMarginRight,
+    noMarginBottom,
+    increaseHeight: searchBarHeight,
+    boxShadow: searchBarShadow,
+    disabled,
+    disabledButtonLabel: disabledButtonLabel
+  };
+};
+
+const createString = (propertyToCheck, stringToCreate) => {
+  return propertyToCheck === "true" ? stringToCreate : null;
+};
+
 const PrimaryButton = props => {
   let rootClass = ``;
   let labelClass = props.classes.primaryButtonLabel;
+  // const buttonClassesConfiguration = getButtonClassesConfiguration(props.classes);
   // console.log(CustomIcon,"Custom Icon")
   if (props.fullWidth && props.noMarginBottom) {
     rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth} ${
@@ -120,6 +147,18 @@ const PrimaryButton = props => {
     rootClass = rootClass + " " + props.classes.disabled;
     labelClass = props.classes.disabledButtonLabel;
   }
+
+  // const rootClasses = [
+  //   createString(props.noMarginBottom, "noMarginBottom"),
+  //   createString(props.boxShadow, "boxShadow"),
+  //   createString(props.disabled,'disabled')
+  //   createString(props.increaseHeight,'increaseHeight')
+  //   createString(props.noMarginBottom,'noMarginBottom')
+  //   createString(props.noMarginBottom,'noMarginBottom')
+  //   createString(props.noMarginBottom,'noMarginBottom')
+  // ];
+  // const labelClasses = [];
+
   return (
     <Button
       classes={{

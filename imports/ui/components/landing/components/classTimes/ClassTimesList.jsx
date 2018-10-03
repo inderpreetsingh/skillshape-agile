@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { isEmpty } from "lodash";
+import { isEmpty, isArray } from "lodash";
 import { withStyles } from "material-ui/styles";
 import Paper from "material-ui/Paper";
 import Icon from "material-ui/Icon";
@@ -185,6 +185,9 @@ const ClassTimesList = props => {
     // console.groupEnd();
 
     if (eventScheduleType === "recurring" || eventScheduleType === "ongoing") {
+      if (!isArray(formattedClassTimes)) {
+        return;
+      }
       return formattedClassTimes.map(scheduleData => {
         if (!isEmpty(scheduleData)) {
           const allDatesData = [];
