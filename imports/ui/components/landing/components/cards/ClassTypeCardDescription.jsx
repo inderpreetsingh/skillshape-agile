@@ -190,7 +190,7 @@ const ClassTypeCardDescription = props => {
               )}
               {editMode && !isEmpty(selectedSkillSubject) &&
                  <Text>
-                   Selected Subjects: {" "} 
+                   Subjects: {" "} 
                    {selectedSkillSubject.map(selectedSubj => selectedSubj.name).join(', ')}
                  </Text> 
               }
