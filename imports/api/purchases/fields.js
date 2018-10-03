@@ -6,12 +6,28 @@ export const PurchasesSchema = new SimpleSchema({
     type: String,
     optional: true
   },
-  stripe_Request: {
+  emailId: {
+    type: String,
+    optional: true
+  },
+  userName: {
+    type: String,
+    optional: true
+  },
+  packageName: {
+    type: String,
+    optional: true
+  },
+  planId: {
+    type: String,
+    optional: true
+  },
+  stripeRequest: {
     type: Object,
     optional: true,
     blackbox: true
   },
-  stripe_Response: {
+  stripeResponse: {
     type: Object,
     optional: true,
     blackbox: true
@@ -38,6 +54,34 @@ export const PurchasesSchema = new SimpleSchema({
   },
   fee: {
     type: Number,
+    optional: true
+  },
+  packageStatus: {
+    type: String,
+    optional: true
+  },
+  noOfClasses: {
+    type: String,
+    optional: true
+  },
+  startDate: {
+    type: Date,
+    optional: true
+  },
+  endDate: {
+    type: Date,
+    optional: true
+  },
+  memberId: {
+    type: String,
+    optional: true
+  },
+  classId: {
+    type: String,
+    optional: true
+  },
+  subscriptionId: {
+    type: String,
     optional: true
   }
 });

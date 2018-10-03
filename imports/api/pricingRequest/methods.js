@@ -3,12 +3,14 @@ import {sendRequestReceivedEmail, sendEmailForSubscription} from '/imports/api/e
 import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields.js';
 import ClassType from '/imports/api/classType/fields.js';
 import School from '/imports/api/school/fields.js';
+import { check } from 'meteor/check';
 
 import { getUserFullName } from '/imports/util/getUserData';
 
 Meteor.methods({
   'pricingRequest.addRequest': function(data,subscriptionRequest) {
-
+    check(subscriptionRequest,String);
+    check(data,Object);
     if(!this.userId) {
       // check for user
       const userData = Meteor.users.findOne({"emails.address": data.email});
@@ -99,6 +101,7 @@ Meteor.methods({
     }
   },
   'pricingRequest.getRequestData': function(requestId) {
+    check(requestId,String);
       const pricingRequestData = PricingRequest.findOne({_id: requestId});
       if(!pricingRequestData) {
         throw new Meteor.Error('no pricing data has been found with this id.');
@@ -111,6 +114,7 @@ Meteor.methods({
       }
     },
    'pricingRequest.removeRequest': function(requestId) {
+    check(requestId,String);
      return PricingRequest.remove({_id: requestId});
    }
 })

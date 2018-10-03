@@ -3,7 +3,7 @@ import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import School from "/imports/api/school/fields";
-
+import { check } from 'meteor/check';
 Meteor.methods({
   "classTimes.getClassTimes": function({
     schoolId,
@@ -19,6 +19,8 @@ Meteor.methods({
     };
   },
   "classTimes.addClassTimes": function({ doc }) {
+    check(doc,Object);
+
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({
@@ -74,6 +76,7 @@ Meteor.methods({
     }
   },
   "classTimes.removeClassTimes": function({ doc }) {
+    check(doc,Object);
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({
@@ -90,6 +93,7 @@ Meteor.methods({
     }
   },
   "classTimes.permanentlyRemove": function(classTimeId, clickedDate) {
+    check(classTimeId,String);
     ClassTimes.update(
       { _id: classTimeId },
       { $push: { deletedEvents: clickedDate } }

@@ -148,7 +148,8 @@ const CallUsDialogBox = props => {
           <ContentWrapper>
             <Title>Call us at any of the following numbers:</Title>
             <ContactNumbersWrapper>
-              {props.contactNumbers.map((contactNumber, i) => (
+{              console.log('TCL: contactNumbers', props.contactNumbers)
+}              {props.contactNumbers.map((contactNumber, i) => (
                 <ContactNumber
                   key={i}
                   tel={contactNumber}

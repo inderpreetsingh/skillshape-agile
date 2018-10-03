@@ -1,9 +1,11 @@
 import isEmpty from "lodash/isEmpty";
-
+import { check } from 'meteor/check';
 import Reviews, { ReviewsSchema } from "./fields.js";
 
 Meteor.methods({
-  "reviews.addReview": function(data) {
+  "reviews.addReview": function (data) {
+    check(data, Object);
+
     if (this.userId) {
       const validationContext = ReviewsSchema.newContext();
       data.reviewerId = this.userId;
@@ -27,7 +29,9 @@ Meteor.methods({
       throw new Meteor.Error("Permission Denied !");
     }
   },
-  "reviews.getMyReview": function(reviewForId) {
+  "reviews.getMyReview": function (reviewForId) {
+    check(reviewForId, String);
+
     const myReview = Reviews.findOne({
       reviewerId: this.userId,
       reviewForId: reviewForId

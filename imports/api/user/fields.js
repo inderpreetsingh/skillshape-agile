@@ -201,6 +201,10 @@ Schema.User = new SimpleSchema({
   term_cond_accepted: {
     type: Boolean,
     optional: true
+  },
+  stripeCusId: {
+    type: String,
+    optional: true
   }
 });
 

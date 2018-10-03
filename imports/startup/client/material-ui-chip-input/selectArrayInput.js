@@ -92,14 +92,12 @@ export class SelectArrayInput extends Component {
   };
 
   handleAdd = newValue => {
-    // console.log("handleAdd newValue-->",newValue)
     const values = [...this.state.values, newValue];
     this.setState({ values });
     this.handleChange(values);
   };
 
   handleDelete = newValue => {
-    // console.log("newValue --->>",newValue)
     const values = this.state.values.filter(
       v => v[this.props.optionValue] !== newValue
     );
@@ -110,7 +108,6 @@ export class SelectArrayInput extends Component {
   handleChange = eventOrValue => {
     const extracted = eventOrValue;
     this.props.onChange(extracted);
-    console.log("extracted", extracted);
     this.props.input.onChange(extracted);
   };
 
@@ -145,9 +142,6 @@ export class SelectArrayInput extends Component {
 
   formatChoice = choice => {
     const { optionText, optionValue } = this.props;
-    // console.log("formatChoice choice-->>",choice)
-    // console.log("formatChoice optionText-->>",optionText)
-    // console.log("formatChoice optionValue-->>",optionValue)
     const choiceText =
       typeof optionText === "function"
         ? optionText(choice)
@@ -159,8 +153,6 @@ export class SelectArrayInput extends Component {
   };
 
   render() {
-    // console.log("SelectArrayInput render state -->>",this.state)
-    // console.log("SelectArrayInput render props -->>",this.props)
     const {
       elStyle,
       input,
@@ -174,7 +166,6 @@ export class SelectArrayInput extends Component {
       setFilter,
       dataSourceConfig
     } = this.props;
-    // console.log("muiTheme", muiTheme)
     // console.info("mui Theme",material_ui_next_theme,muiTheme);
 
     return (

@@ -1,4 +1,5 @@
 import ClassPricing from "../fields";
+import { check } from 'meteor/check';
 
 Meteor.publish("classPricing.getClassPricing", function({ schoolId }) {
 	// console.log("classPricing.getClassPricing -->>",schoolId)

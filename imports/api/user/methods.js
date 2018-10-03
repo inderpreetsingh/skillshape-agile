@@ -1,6 +1,7 @@
 import isEmpty from "lodash/isEmpty";
 import get from "lodash/get";
 import generator from "generate-password";
+import { check } from 'meteor/check';
 
 import "./fields.js";
 import { userRegistrationAndVerifyEmail } from "/imports/api/email";
@@ -108,6 +109,8 @@ Meteor.methods({
     }
   },
   "user.editUser": function({ doc, docId }) {
+    check(docId,String);
+    check(doc,Object);
     if (this.userId === docId) {
       return Meteor.users.update({ _id: docId }, { $set: doc });
     } else {
@@ -115,6 +118,8 @@ Meteor.methods({
     }
   },
   "user.sendVerificationEmailLink": function(email) {
+    check(email,String);
+
     if (email) {
       let user = Meteor.users.findOne({ "emails.address": email });
       if (user && user._id) {
@@ -127,6 +132,8 @@ Meteor.methods({
     throw new Meteor.Error("Invalid email address!!");
   },
   "user.getUsers": function({ limit, skip }) {
+    check(limit,Number);
+    check(skip,Number);
     if (this.userId && Roles.userIsInRole(this.userId, "Superadmin")) {
       const filters = {};
       return {

@@ -5,9 +5,11 @@ import ClassType from "/imports/api/classType/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
+import { check } from 'meteor/check';
 
 Meteor.methods({
   "classInterest.addClassInterest": function({ doc }) {
+    check(doc,Object);
     doc.createdAt = new Date();
     if (this.userId && this.userId == doc.userId) {
       return ClassInterest.insert(doc, () => {
@@ -48,6 +50,8 @@ Meteor.methods({
     }
   },
   "classInterest.editClassInterest": function({ doc_id, doc }) {
+    check(doc,Object);
+    check(doc_id,String);
     if (this.userId === doc.userId) {
       return ClassInterest.update({ _id: doc_id }, { $set: doc });
     } else {
@@ -55,6 +59,7 @@ Meteor.methods({
     }
   },
   "classInterest.removeClassInterest": function({ doc }) {
+    check(doc,Object);
     if (this.userId) {
       return ClassInterest.remove({ _id: doc._id, userId: this.userId });
     } else {
@@ -62,6 +67,7 @@ Meteor.methods({
     }
   },
   "classInterest.removeClassInterestByClassTimeId": function({ classTimeId }) {
+    check(classTimeId,String);
     // console.log("classInterest.removeClassInterestByClassTimeId -->>",classTimeId)
     if (this.userId && classTimeId) {
       return ClassInterest.remove({ userId: this.userId, classTimeId });
@@ -75,6 +81,7 @@ Meteor.methods({
     classTimeId,
     clickedDate
   ) {
+    check(classTimeId,String);
     let result = ClassInterest.update(
       { classTimeId: classTimeId, userId: this.userId },
       { $push: { deletedEvents: clickedDate } }

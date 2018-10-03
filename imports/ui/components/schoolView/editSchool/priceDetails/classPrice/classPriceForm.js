@@ -29,6 +29,8 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
+import { withPopUp } from "/imports/util";
+import isEmpty from 'lodash/isEmpty';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -91,7 +93,7 @@ class ClassPriceForm extends React.Component {
   onSubmit = event => {
     event.preventDefault();
     const { selectedClassType, expPeriod } = this.state;
-    const { classTypeData } = this.props;
+    const { classTypeData ,popUp} = this.props;
     const { data, schoolId } = this.props;
     const expDuration =
       this.expDuration.value && parseInt(this.expDuration.value);
@@ -115,6 +117,10 @@ class ClassPriceForm extends React.Component {
       includeAllClassTypes: this.state.includeAllClassTypes,
       currency:this.state.currency
     };
+    if(isEmpty(payload.classTypeId) || !payload.currency || !payload.packageName || !payload.expPeriod || !payload.expDuration || !payload.noClasses || !payload.cost){
+      popUp.appear("alert", { title: "Error", content: "Some Field is missing." });
+      return ;
+    }
     if(payload.classTypeId==null){
       payload.classTypeId=[];
     }
@@ -373,4 +379,4 @@ class ClassPriceForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(withMobileDialog()(ClassPriceForm));
+export default withStyles(styles)(withMobileDialog()(withPopUp(ClassPriceForm)));

@@ -2,7 +2,7 @@ import React from "react";
 import { get } from "lodash";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
-import { withStyles, toastrModal } from "/imports/util";
+import { withStyles } from "/imports/util";
 import Button from "material-ui/Button";
 import TextField from "material-ui/TextField";
 import { MenuItem } from "material-ui/Menu";
@@ -26,7 +26,8 @@ import Input, { InputLabel} from "material-ui/Input";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
+import { withPopUp } from "/imports/util";
+import isEmpty from 'lodash/isEmpty';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -93,67 +94,74 @@ class MonthlyPriceForm extends React.Component {
     return state;
   };
 
-  onSubmit = event => {
-    event.preventDefault();
-    const { selectedClassType, pymtType, tabValue } = this.state;
-    const { data, schoolId, toastr, classTypeData } = this.props;
-    let allClassTypeIds = classTypeData.map(item => {
-      return item._id;
-    });
-    const payload = {
-      schoolId: schoolId,
-      packageName: this.packageName.value,
-      classTypeId: this.state.includeAllClassTypes
-        ? allClassTypeIds
-        : selectedClassType && selectedClassType.map(data => data._id),
-      pymtMethod: "Pay Up Front",
-      pymtDetails: this.refs.AddRow.getRowData(),
-      includeAllClassTypes: this.state.includeAllClassTypes,
-      noClasses:this.noClasses.value,
-      duPeriod: this.state.duPeriod
-
-    };
-    if(payload.classTypeId==null){
-      payload.classTypeId=[];
+    onSubmit = (event) => {
+        event.preventDefault();
+        const { selectedClassType, pymtType, tabValue } = this.state;
+        const { data, schoolId, popUp, classTypeData } = this.props;
+        let rowsUniqueness=true;
+        let allClassTypeIds = classTypeData.map((item) => {return item._id});
+        this.refs.AddRow.getRowData().map((value1,index1)=>{
+            this.refs.AddRow.getRowData().map((value2,index2)=>{
+                if(value1.month == value2.month && value1.currency == value2.currency && index1 !=index2)
+                {   
+                    rowsUniqueness=false;
+                }
+            })
+        })
+        if(rowsUniqueness)
+        {
+            const payload = {
+                schoolId: schoolId,
+                packageName: this.packageName.value,
+                classTypeId: this.state.includeAllClassTypes ? allClassTypeIds : selectedClassType && selectedClassType.map(data => data._id),
+                pymtMethod: "Pay Up Front",
+                pymtDetails: this.refs.AddRow.getRowData(),
+                includeAllClassTypes: this.state.includeAllClassTypes,
+                noClasses:this.noClasses.value,
+                duPeriod: this.state.duPeriod
+            }
+            if(isEmpty(payload.classTypeId)  || !payload.packageName || !payload.noClasses || !payload.pymtDetails){
+              popUp.appear("alert", { title: "Error", content: "Some Field is missing." });
+              return ;
+            }
+            if(tabValue === 0) {
+                // No option is selected for making payment then need to show this `Please select any payment type`.
+                if(pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo || !pymtType) {
+                  popUp.appear("alert", { title: "Error", content: "Please select any payment type." }); 
+                    return
+                }
+                if(pymtType && pymtType.payUpFront) {
+                    delete pymtType.payUpFront;
+                }
+                payload.pymtType = pymtType;
+                payload.pymtMethod = "Pay Each Month";
+            } else {
+                payload.pymtType ={payUpFront:true};
+            }
+            this.setState({isBusy: true});
+    
+            if(data && data._id) {
+                this.handleSubmit({ methodName: "monthlyPricing.editMonthlyPricing", doc: payload, doc_id: data._id})
+            } else {
+                this.handleSubmit({ methodName: "monthlyPricing.addMonthlyPricing", doc: payload })
+            }
+        }
+        else
+        {
+          popUp.appear("alert", { title: "Error", content: "Month and currency must be unique" });
+        }
     }
-    if (tabValue === 0) {
-      // No option is selected for making payment then need to show this `Please select any payment type`.
-      if (pymtType && pymtType.payUpFront) {
-        delete pymtType.payUpFront;
-      }
-      payload.pymtType = pymtType;
-      payload.pymtMethod = "Pay Each Month";
-    } else {
-      payload.pymtType = { payUpFront: true };
-    }
-      if ( payload.pymtType==null || !payload.pymtType.autoWithDraw && !payload.pymtType.payAsYouGo) {
-        toastr.error("Please select one payment type.", "Error");
-        return;
-      }
-      
-    this.setState({ isBusy: true });
-    if (data && data._id) {
-      this.handleSubmit({
-        methodName: "monthlyPricing.editMonthlyPricing",
-        doc: payload,
-        doc_id: data._id
-      });
-    } else {
-      this.handleSubmit({
-        methodName: "monthlyPricing.addMonthlyPricing",
-        doc: payload
-      });
-    }
-  };
+   
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
-      if (error) {
-      }
+     
       if (result) {
+        console.log(result);
         this.props.onClose();
+      }else{
+        this.setState({ isBusy: false, error });
       }
-      this.setState({ isBusy: false, error });
     });
   };
 
@@ -433,5 +441,5 @@ class MonthlyPriceForm extends React.Component {
 }
 
 export default withStyles(styles)(
-  withMobileDialog()(toastrModal(MonthlyPriceForm))
+  withMobileDialog()(withPopUp(MonthlyPriceForm))
 );

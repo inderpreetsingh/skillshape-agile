@@ -1,9 +1,12 @@
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "/imports/api/school/fields";
+import { check } from 'meteor/check';
 
 Meteor.methods({
   "school.getBestPrice": function({ slug }) {
+    check(slug,String);
+
     let school = School.findOne({ slug: slug });
     const schoolId = school && school._id;
 

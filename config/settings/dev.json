@@ -11,8 +11,10 @@
     },
     "DevelopmentSiteCaptchKey": "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
     "stripeClientId": "ca_ChCRiYcffQXD6VnZonJ91zaljBbQRQQL",
-    "paymentEnabled": false
+    "paymentEnabled": true
   },
+
+  "productId": "SKILLSHAPE_DOMFJ4ZGYKIO6Q",
   "stripe": {
     "PRIVATE_KEY": "sk_test_GI9ZJ9DjWz23AoqjlOusnSIO"
   },
@@ -37,7 +39,6 @@
       "loginStyle": "popup",
       "secret": "yspUqSye1D0y0IHaDYIl1G4q"
     }
-  }
-  ,
+  },
   "platform": "local"
 }
