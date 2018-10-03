@@ -415,7 +415,6 @@ class ClassTime extends Component {
     return formattedClassTimesDetails;
   };
 
-
   setDescription = description => {
     if (this.state.description !== description) {
       this.setState(state => {
@@ -646,7 +645,10 @@ class ClassTime extends Component {
       inPopUp,
       formattedClassTimesDetails,
       classTypeName,
-      onModalClose
+      onModalClose,
+      editMode,
+      classTimeData,
+      onEditClassTimesClick,
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     const {
@@ -660,9 +662,7 @@ class ClassTime extends Component {
     // console.groupEnd();
 
     //const showDescription = this.showDescription(formattedClassTimes);
-    const classNameForClock = this.getOuterClockClassName(
-      this.props.addToCalendar
-    );
+    
     const dotColor = this.getDotColor(this.props.addToCalendar);
     return (
       <Fragment>
@@ -678,35 +678,36 @@ class ClassTime extends Component {
                 onModalClose={this.handleNonUserDialogBoxState(false)}
               />
             )}
-            {thinkingAboutAttending && (
-              <ThinkingAboutAttending
-                open={thinkingAboutAttending}
-                onModalClose={() => {
-                  this.setState({ thinkingAboutAttending: false });
-                }}
-                handleClassClosed={this.handleClassClosed}
-                handleAddToMyCalendarButtonClick={
-                  this.handleAddToMyCalendarButtonClick
-                }
-                handleRemoveFromCalendarButtonClick={
-                  this.handleRemoveFromCalendarButtonClick
-                }
-                addToCalendar={addToCalendar}
-                notification={notification}
-                purchaseThisPackage={() => {
-                  this.setState({ thinkingAboutAttending: false });
-                  this.scrollTo("price-section");
-                  onModalClose();
-                }}
-                handleCheckBoxes={this.handleCheckBoxes}
-                name={name}
-              />
-            )}
+            {thinkingAboutAttending &&
+              !editMode && (
+                <ThinkingAboutAttending
+                  open={thinkingAboutAttending}
+                  onModalClose={() => {
+                    this.setState({ thinkingAboutAttending: false });
+                  }}
+                  handleClassClosed={this.handleClassClosed}
+                  handleAddToMyCalendarButtonClick={
+                    this.handleAddToMyCalendarButtonClick
+                  }
+                  handleRemoveFromCalendarButtonClick={
+                    this.handleRemoveFromCalendarButtonClick
+                  }
+                  addToCalendar={addToCalendar}
+                  notification={notification}
+                  purchaseThisPackage={() => {
+                    this.setState({ thinkingAboutAttending: false });
+                    this.scrollTo("price-section");
+                    onModalClose();
+                  }}
+                  handleCheckBoxes={this.handleCheckBoxes}
+                  name={name}
+                />
+              )}
             <div>
               <ClassTimeContainer
                 onClick={this.handleDescriptionState(false)}
                 inPopUp={inPopUp}
-                className={`class-time-bg-transition ${this.getWrapperClassName(
+                className={`class-time-bg-transition ${editMode ? 'add-to-calendar' : this.getWrapperClassName(
                   this.props.addToCalendar
                 )}`}
                 key={this.props._id}
@@ -751,16 +752,16 @@ class ClassTime extends Component {
                         : "scaleY(0)"
                     }}
                   >
-                      <Icon
-                        classes={{
-                          root: classes.descriptionPanelCloseIcon
-                        }}
-                        onClick={this.handleDescriptionState(false)}
-                      >
-                        {"close"}
-                      </Icon>
+                    <Icon
+                      classes={{
+                        root: classes.descriptionPanelCloseIcon
+                      }}
+                      onClick={this.handleDescriptionState(false)}
+                    >
+                      {"close"}
+                    </Icon>
 
-                      <ClassTimeDescription>{description}</ClassTimeDescription>
+                    <ClassTimeDescription>{description}</ClassTimeDescription>
                   </Paper>
                 </ClassTimeContent>
 
@@ -788,9 +789,20 @@ class ClassTime extends Component {
                       />
                     </ButtonWrapper>
                   )}
-                  <ButtonWrapper>
-                    {this.getCalenderButton(this.props.addToCalendar)}
-                  </ButtonWrapper>
+                  {!editMode ? (
+                    <ButtonWrapper>
+                      {this.getCalenderButton(this.props.addToCalendar)}
+                    </ButtonWrapper>
+                  ) : (
+                    <ButtonWrapper>
+                      <FormGhostButton
+                        label="Edit ClassTime"
+                        icon
+                        iconName="edit"
+                        onClick={onEditClassTimesClick(classTimeData)}
+                      />
+                    </ButtonWrapper>
+                  )}
                 </ButtonsWrapper>
                 {this.props.isTrending && <Trending />}
               </ClassTimeContainer>{" "}
@@ -807,8 +819,12 @@ ClassTime.propTypes = {
   addToCalendar: PropTypes.bool.isRequired,
   scheduleType: PropTypes.string.isRequired,
   inPopUp: PropTypes.bool, // True => the class time cards are present inside of pop up in homepage,  false => are on the classtype page
-  isTrending: PropTypes.bool
+  isTrending: PropTypes.bool,
+  editMode: PropTypes.bool
 };
 
+ClassTime.defaultProps = {
+  editMode: false
+};
 // export default withPopUp(withShowMoreText(ClassTime, { description: "desc"}));
 export default withPopUp(withStyles(styles)(ClassTime));

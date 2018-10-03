@@ -8,10 +8,10 @@ import Grid from "material-ui/Grid";
 import { isEmpty } from "lodash";
 
 import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx";
-
 import ClassInterest from "/imports/api/classInterest/fields";
-import { DAYS_IN_WEEK } from "/imports/ui/components/landing/constants/classTypeConstants.js";
 import classTime from "/imports/ui/components/landing/constants/structure/classTime.js";
+
+import { DAYS_IN_WEEK } from "/imports/ui/components/landing/constants/classTypeConstants.js";
 import { CLASS_TIMES_CARD_WIDTH } from "/imports/ui/components/landing/constants/classTypeConstants.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
@@ -121,7 +121,7 @@ const ClassTimesBar = props => {
         let allPastDate = false,
           totalPastDates = 0,
           totalClassTimes;
-
+        // debugger;
         DAYS_IN_WEEK.map(day => {
           totalClassTimes =
             classTimeObj.formattedClassTimesDetails.totalClassTimes;
@@ -154,19 +154,46 @@ const ClassTimesBar = props => {
       }
     });
   };
+
+  displayAll = classTimesData => {
+    console.group("CLASS TIME DATA IN BAR");
+    console.info(props);
+    console.groupEnd();
+
+    return classTimesData.map(classTimeObj => (
+      <GridItem key={classTimeObj._id} spacing={32} inPopUp={inPopUp}>
+        <ClassTime
+          {...classTimeObj}
+          onEditClassTimesClick={onEditClassTimesClick}
+          editMode={editMode}
+          inPopUp={inPopUp}
+          classTimeData={classTimeObj}
+          classInterestData={classInterestData}
+          onModalClose={onModalClose}
+        />
+      </GridItem>
+    ));
+  };
+
   const {
-    handleAddToMyCalendarButtonClick,
+    editMode,
     inPopUp,
+    handleAddToMyCalendarButtonClick,
     classTimesData,
     classInterestData,
     handleRemoveFromCalendarButtonClick,
-    onModalClose
+    onModalClose,
+    onEditClassTimesClick
   } = props;
   let addToCalender;
   return (
     <Wrapper>
       <ClassTimesWrapper spacing={32}>
-        <GridContainer>{checkPastEndDate(classTimesData)}</GridContainer>
+        <GridContainer>
+          {editMode
+            ? displayAll(classTimesData)
+            : checkPastEndDate(classTimesData)}
+        </GridContainer>
       </ClassTimesWrapper>
     </Wrapper>
   );

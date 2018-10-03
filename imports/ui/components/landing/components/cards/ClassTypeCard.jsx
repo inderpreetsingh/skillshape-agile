@@ -150,7 +150,8 @@ class ClassTypeCard extends Component {
       reviewsStats,
       classInterestData,
       hideClassTypeOptions,
-      bgImg
+      bgImg,
+      editMode
     } = this.props;
     const cardRevealData = {
       _id: _id,
@@ -216,6 +217,7 @@ class ClassTypeCard extends Component {
             bgImg={this.props.bgImg}
             body={
               <ClassTypeCardBody
+                editMode={editMode}
                 ratings={ratings}
                 reviews={reviews}
                 hideClassTypeOptions={this.props.hideClassTypeOptions}
@@ -224,10 +226,11 @@ class ClassTypeCard extends Component {
             }
             descriptionContent={
               <ClassTypeCardDescription
-                schoolData={this.props.schoolData}
-                classTimeCheck={!isEmpty(formattedClassTimesData)}
+                editMode={editMode}
                 ratings={ratings}
                 reviews={reviews}
+                schoolData={this.props.schoolData}
+                classTimeCheck={!isEmpty(formattedClassTimesData)}
                 description={this.props.desc}
                 onClassTimeButtonClick={this.handleDialogState(true)}
                 onRequestClassTimeButtonClick={this.handleDialogState(true)}
