@@ -119,7 +119,47 @@ const AddToCartSection = styled.div`
   margin-left: ${helpers.rhythmDiv * 2}px;
   cursor: pointer;
 `;
-
+const SnackBarContent = styled.div`
+  align-items: center;
+  background-color: #4caf50;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0px 6px 10px 0px, rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+  box-sizing: border-box;
+  color: black;
+  display: flex;
+  flex-wrap: wrap;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  height: 48px;
+  line-height: 20.5001px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  max-width: 568px;
+  min-width: 288px;
+  padding-bottom: 6px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 6px;
+  pointer-events: auto;
+  transform: matrix(1, 0, 0, 1, 0, 0);
+  transition-delay: 0s;
+  transition-duration: 0.225s;
+  transition-property: -webkit-transform;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  cubic-bezier(0, 0, 0.2, 1)element.stylewidth: 288px;
+  font-weight: 500;
+  font-size: 19px;
+  border: 1px solid black;
+  border-radius: 12px;
+  transition: top 2s;
+`;
 const RightSection = styled.div`
   ${helpers.flexCenter};
 `;
@@ -158,14 +198,19 @@ const Package = props => (
             horizontal: 'center',
           }}
           open={props.snackBar  }
-          autoHideDuration={4000}
+          
           onClose={props.closeSnackBar}
           ContentProps={{
             'aria-describedby': 'message-id',
+            "background-color":"green"
           }}
-          message={<span>Please Wait One Sec...</span>}
-        />
-
+          autoHideDuration={4000}
+          style={{top:"50%" }}
+        >
+        <SnackBarContent>
+        Please Wait One Sec...
+        </SnackBarContent>
+          </Snackbar>
       <ClassDetailsSection>
      
         <Title>{props.packageName || props.name}</Title>
