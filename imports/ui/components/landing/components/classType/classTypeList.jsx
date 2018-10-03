@@ -190,11 +190,7 @@ class ClassTypeList extends Component {
 
   getNoResultMsg = (isLoading, filters, classTypeData) => {
     // debugger;
-    console.info(
-      "returing , empty and no results",
-      classTypeData,
-      "with empty container.."
-    );
+   
     if (isLoading) {
       return (
         <PreloaderWrapper>
@@ -202,11 +198,7 @@ class ClassTypeList extends Component {
         </PreloaderWrapper>
       );
     } else if (isEmpty(classTypeData)) {
-      console.info(
-        "returing , empty and no results",
-        classTypeData,
-        "with empty container.."
-      );
+     
       return (
         <NoResultContainer>
           {/*<SuggestionForm
@@ -344,7 +336,6 @@ export default createContainer(props => {
   let isLoading = true;
   let subscription, reviewsSubscription, classTimesSubscription;
   let filters = props.filters ? props.filters : {};
-
   if (props.mapView) {
     const query = props.location && props.location.query;
     if (query && query.NEPoint && query.SWPoint) {
@@ -370,10 +361,7 @@ export default createContainer(props => {
     classTypeData = ClassType.find().fetch();
   }
 
-  console.info(
-    "subscriptions, reviews, classtimes subscriptions",
-    classTypeData
-  );
+  
 
   // NOTE: By adding classTimesSubscription, we get certain results in classTypeData
   // temporarily filtering out those results fixes the issues..

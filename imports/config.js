@@ -49,7 +49,8 @@ export default (config = Object.freeze({
     PackageRequest: "PackageRequest",
     userStripeData: "UserStripeData",
     purchases: "Purchases",
-    schoolSuggestion: "SchoolSuggestion"
+    schoolSuggestion: "SchoolSuggestion",
+    classSubscription: 'ClassSubscription',
   },
   gender: [
     { label: "Other", value: "Other" },
@@ -74,15 +75,16 @@ export default (config = Object.freeze({
   ],
   defaultCurrency: "$",
   currency: [
-    { label: "USD", value: "$" },
-    { label: "INR", value: "₹" },
-    { label: "EUR", value: "€" },
-    { label: "GBP", value: "£" },
-    { label: "CAD", value: "C$" },
-    { label: "AUD", value: "A$" },
-    { label: "JPY", value: "¥" },
-    { label: "KRW", value: "₩" },
-    { label: "BRL", value: "R$" }
+    { label: "USD", value: "$" ,multiplyFactor: 100},
+    { label: "INR", value: "₹" ,multiplyFactor: 100},
+    { label: "EUR", value: "€" ,multiplyFactor: 100},
+    { label: "GBP", value: "£" ,multiplyFactor: 100},
+    { label: "CAD", value: "C$",multiplyFactor: 100},
+    { label: "AUD", value: "A$",multiplyFactor: 100},
+    { label: "JPY", value: "¥" ,multiplyFactor: 1},
+    { label: "KRW", value: "₩" ,multiplyFactor: 100},
+    { label: "BRL", value: "R$" ,multiplyFactor: 100},
+
   ],
   duration: [
     { label: "Minutes", value: "Minutes" },

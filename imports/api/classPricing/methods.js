@@ -1,4 +1,5 @@
 import isEmpty from "lodash/isEmpty";
+import { check } from 'meteor/check';
 
 import ClassPricing from "./fields";
 import ClassType from "/imports/api/classType/fields";
@@ -11,7 +12,6 @@ import { sendEmailToStudentForPriceInfoUpdate } from "/imports/api/email";
 
 Meteor.methods({
     "classPricing.addClassPricing": function({doc}) {
-        
         const user = Meteor.users.findOne(this.userId);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {
 
@@ -53,6 +53,8 @@ Meteor.methods({
         }
     },
     "classPricing.removeClassPricing": function({doc}) {
+    check(doc,Object);
+
         const user = Meteor.users.findOne(this.userId);
 
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classPricing_CUD" })) {
@@ -67,7 +69,8 @@ Meteor.methods({
         }
     },
     "classPricing.notifyStudentForPricingUpdate": function({schoolId}) {
-       
+    check(schoolId,String);
+
             if(this.userId) {
                 const PricingRequestData = PricingRequest.find({schoolId,notification: true}).fetch();
                 if(!isEmpty(PricingRequestData)) {
@@ -90,6 +93,9 @@ Meteor.methods({
         
     },
     'classPricing.handleClassTypes':function({ classTypeId, selectedIds, diselectedIds }){
+    check(classTypeId,String);
+    check(selectedIds,[String]);
+    check(diselectedIds,[String]);
         ClassPricing.update({classTypeId:null},{$set:{classTypeId:[]}}) 
     try {
         if (!isEmpty(diselectedIds)) {

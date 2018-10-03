@@ -57,9 +57,9 @@ class Students extends React.Component {
                           : "Unavilable"}
                       </TableCell>
                       <TableCell style={style.w150}>
-                        {purchase.stripe_Request &&
-                        purchase.stripe_Request.description
-                          ? purchase.stripe_Request.description
+                        {purchase.stripeRequest &&
+                        purchase.stripeRequest.description
+                          ? purchase.stripeRequest.description
                           : "Unavilable"}
                       </TableCell>
                       <TableCell style={style.w150}>

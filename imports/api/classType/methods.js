@@ -13,6 +13,7 @@ import {
 } from "/imports/api/email";
 import { sendEmailToSchool } from "/imports/api/email";
 import { getUserFullName } from "/imports/util/getUserData";
+import { check } from 'meteor/check';
 import { darkBaseTheme } from "material-ui/styles";
 
 // Need to update Class Times so that we can show ageMin,gender,experienceLevel on class details modal.
@@ -43,6 +44,8 @@ function updateHookForClassTimes({ classTimesIds, classTypeData, doc }) {
 
 Meteor.methods({
   "classType.getClassType": function({ schoolId }) {
+    check(schoolId,String);
+
     return ClassType.find({ schoolId }).fetch();
   },
   "classType.getClassTypeByTextSearch": function({ schoolId, textSearch }) {
@@ -52,6 +55,8 @@ Meteor.methods({
     ).fetch();
   },
   "classType.addClassType": function({ doc }) {
+    check(doc,Object);
+
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
@@ -82,6 +87,9 @@ Meteor.methods({
     }
   },
   "classType.editClassType": function({ doc_id, doc }) {
+    check(doc,Object);
+    check(doc_id,String);
+
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
@@ -111,6 +119,8 @@ Meteor.methods({
     }
   },
   "classType.removeClassType": function({ doc }) {
+    check(doc,Object);
+
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
@@ -127,6 +137,10 @@ Meteor.methods({
     classTypeId,
     classTypeName
   }) {
+    check(schoolId,String);
+    check(classTypeId,String);
+    check(classTypeName,String);
+
     if (this.userId) {
       const classTimesRequestData = ClassTimesRequest.find({
         schoolId,
@@ -164,6 +178,9 @@ Meteor.methods({
     classTypeId,
     classTypeName
   }) {
+    check(schoolId,String);
+    check(classTypeId,String);
+    check(classTypeName,String);
     if (this.userId && schoolId) {
       const classTypeLocationRequest = ClassTypeLocationRequest.findOne({
         schoolId,
@@ -219,6 +236,9 @@ Meteor.methods({
     classTypeId,
     classTypeName
   }) {
+    check(schoolId,String);
+    check(classTypeId,String);
+    check(classTypeName,String);
     if (this.userId) {
       const classTimesRequestData = ClassTypeLocationRequest.find({
         schoolId,
@@ -258,6 +278,11 @@ Meteor.methods({
     yourEmail,
     yourName
   ) {
+    check(subject,String);
+    check(message,String);
+    check(schoolData,Object);
+    check(yourEmail,String);
+    check(yourName,String);
     let contactName;
     if (Meteor.isServer) {
       let schoolAdmin = Meteor.users.findOne({

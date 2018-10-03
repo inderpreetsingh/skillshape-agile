@@ -17,6 +17,7 @@ import CallMemberDialogBox from "/imports/ui/components/landing/components/dialo
 import EmailMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EmailMemberDialogBox.jsx";
 import EditMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditMemberDialogBox.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import SubscriptionBox from '/imports/ui/componentHelpers/boxes/subscriptionBox.js';
 const styles = theme => ({
   avatarCss: {
     minWidth: "100%",
@@ -280,6 +281,7 @@ class SchoolMemberInfo extends Component {
       bgImg,
       showConfirmation
     } = this.state;
+    let subscriptionList= get(memberInfo,'subscriptionList',[])
     return (
       <Grid container>
       {showConfirmation && (
@@ -414,6 +416,7 @@ class SchoolMemberInfo extends Component {
             </Grid>
           </Grid>
         )}
+          { !isEmpty(subscriptionList) && view === "admin" && Meteor.settings.public.paymentEnabled && <SubscriptionBox subscriptionList = {subscriptionList}/> }
       </Grid>
     );
   }

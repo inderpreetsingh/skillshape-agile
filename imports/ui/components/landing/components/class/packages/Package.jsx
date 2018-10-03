@@ -8,6 +8,7 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
 import {formatMoney} from '/imports/util';
+import Snackbar from 'material-ui/Snackbar';
 const Wrapper = styled.div`
   ${helpers.flexCenter} justify-content: space-between;
 
@@ -151,6 +152,20 @@ function getPaymentType(payment) {
 const Package = props => (
   <OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
     <Wrapper>
+    <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={props.snackBar  }
+          autoHideDuration={4000}
+          onClose={props.closeSnackBar}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span>Please Wait One Sec...</span>}
+        />
+
       <ClassDetailsSection>
      
         <Title>{props.packageName || props.name}</Title>
@@ -182,7 +197,6 @@ const Package = props => (
       }
         
       </ClassDetailsSection>
-
       <RightSection>
         {props.packageType !== "EP" ? (
           <Fragment>
@@ -242,14 +256,15 @@ const Package = props => (
                 props.packageType,
                 props._id,
                 props.schoolId,
-                props.packageName,
-                props.cost,
-                props._id,
-                props.packageType,
+                props.packageName || props.name,
+                props.cost ? props.cost : props.pymtDetails[0].cost,
                 props.pymtDetails,
                 props.expDuration,
                 props.expPeriod,
-                props.noClasses
+                props.noClasses,
+                props.pymtDetails && props.pymtDetails[0].planId,
+                props.currency ? props.currency : props.pymtDetails ? props.pymtDetails[0].currency : props.schoolCurrency,
+                props.pymtType 
               )
             }
           />

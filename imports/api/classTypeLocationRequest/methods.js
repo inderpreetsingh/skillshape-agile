@@ -3,11 +3,15 @@ import {sendRequestReceivedEmail, sendEmailForSubscription} from '/imports/api/e
 import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields.js';
 import ClassType from '/imports/api/classType/fields.js';
 import School from '/imports/api/school/fields.js';
+import { check } from 'meteor/check';
 
 import { getUserFullName } from '/imports/util/getUserData';
 
 Meteor.methods({
   'classTypeLocationRequest.addRequest': function(data,subscriptionRequest) {
+    check(subscriptionRequest,String);
+    check(data,Object);
+
     if(!this.userId) {
       // check for user
       const userData = Meteor.users.findOne({"emails.address": data.email});
@@ -97,6 +101,8 @@ Meteor.methods({
     }
   },
   'classTypeLocationRequest.getRequestData': function(requestId) {
+    check(requestId,String);
+
       const locationRequestData = ClassTypeLocationRequest.findOne({_id: requestId});
       if(!locationRequestData) {
         throw new Meteor.Error('no location request data has been found with this id.');
@@ -109,6 +115,8 @@ Meteor.methods({
       }
     },
    'classTypeLocationRequest.removeRequest': function(requestId) {
+    check(requestId,String);
+
      return ClassTypeLocationRequest.remove({_id: requestId});
    },
    'classTypeLocationRequest.updateRequest': function(data) {

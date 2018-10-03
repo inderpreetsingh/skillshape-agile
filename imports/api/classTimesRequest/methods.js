@@ -1,6 +1,7 @@
 import ClassTimesRequest, {ClassTimesRequestSchema} from "./fields";
 import ClassType from '/imports/api/classType/fields.js';
 import School from '/imports/api/school/fields.js';
+import { check } from 'meteor/check';
 
 import {sendRequestReceivedEmail, sendEmailForSubscription} from '/imports/api/email/index.js';
 import { getUserFullName } from '/imports/util/getUserData';
@@ -10,6 +11,8 @@ import { sendClassTimesRequest } from "/imports/api/email";
 
 Meteor.methods({
   "classTimesRequest.addRequest": function(data, subscriptionRequest) {
+    check(data,Object);
+    check(subscriptionRequest,String);
     if(!this.userId) {
       // check for user
       const userData = Meteor.users.findOne({"emails.address": data.email});
@@ -96,6 +99,7 @@ Meteor.methods({
     }
   },
   'classTimesRequest.getRequestData': function(requestId) {
+    check(requestId,String);
       const classTimesRequestData = ClassTimesRequest.findOne({_id: requestId});
       if(!classTimesRequestData) {
         throw new Meteor.Error('no class times data has been found with this id.');
@@ -107,9 +111,15 @@ Meteor.methods({
       }
     },
    'classTimesRequest.removeRequest': function(requestId) {
+    check(requestId,String);
+
      return ClassTimesRequest.remove({_id: requestId});
     },
     "classTimesRequest.notifyToSchool": function({schoolId, classTypeId, classTypeName}) {
+    check(schoolId,String);
+    check(classTypeId,String);
+    check(classTypeName,String);
+
     	if (this.userId && schoolId && classTypeId) {
     		// console.log("classTimesRequest.notifyToSchool -->>", schoolId, classTypeId)
     		// first check your request already have or not

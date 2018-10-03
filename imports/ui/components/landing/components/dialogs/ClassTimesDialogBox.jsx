@@ -312,7 +312,7 @@ class ClassTimesDialogBox extends React.Component {
     if (scheduleType === "recurring") {
       startDate = moment(new Date(data.startDate)).format(dateFormat);
       endDate = moment(new Date(data.endDate)).format(dateFormat);
-      debugger;
+      //debugger;
       if (startDate == "Invalid date") {
         return `Recurring ending on ${endDate}`;
       } else if (endDate == "Invalid date") {

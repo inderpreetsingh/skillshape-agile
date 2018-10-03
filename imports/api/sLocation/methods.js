@@ -1,12 +1,17 @@
 import SLocation from "./fields";
 import ClassType from "/imports/api/classType/fields";
+import { check } from 'meteor/check';
 import ClassTime from "/imports/api/classTimes/fields";
 
 Meteor.methods({
   "location.getLocationBySchoolId": function({ schoolId }) {
+    check(schoolId, String);
+
     return SLocation.find({ schoolId }).fetch();
   },
   "location.addLocation": function({ doc }) {
+    check(doc, Object);
+
     let temp=doc.loc;;
     doc.loc=[temp[1],temp[0]];
     const user = Meteor.users.findOne(this.userId);
@@ -21,6 +26,9 @@ Meteor.methods({
     }
   },
   "location.editLocation": function({ doc_id, doc }) {
+    check(doc, Object);
+    check(doc_id, String);
+
     let previousData = SLocation.findOne({_id:doc_id});
     if(previousData && previousData.loc != doc.loc){
       let temp=doc.loc;;
@@ -49,6 +57,8 @@ Meteor.methods({
     }
   },
   "location.removeLocation": function({ doc }) {
+    check(doc, Object);
+
     const user = Meteor.users.findOne(this.userId);
     if (
       checkMyAccess({ user, schoolId: doc.schoolId, viewName: "SLocation_CUD" })
@@ -75,18 +85,24 @@ Meteor.methods({
     }
   },
   "location.addRoom": function({ locationId, data }) {
+    check(locationId, String);
     data.id = Math.random()
       .toString(36)
       .substr(2, 16);
     return SLocation.update({ _id: locationId }, { $push: { rooms: data } });
   },
   "location.editRoom": function({ locationId, data }) {
+    check(locationId, String);
+    check(data, Object);
+
     return SLocation.update(
       { _id: locationId, "rooms.id": data.id },
       { $set: { "rooms.$": data } }
     );
   },
   "location.roomRemove": function({ locationId, data }) {
+    check(locationId, String);
+    check(data, Object);
     SLocation.update(
       { _id: locationId },
       { $pull: { rooms: { id: data.id } } },

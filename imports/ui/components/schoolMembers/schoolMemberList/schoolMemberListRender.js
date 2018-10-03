@@ -15,7 +15,6 @@ import get from 'lodash/get';
 }
 export default function(props) {
   const { src, collectionData,adminView } = props;
-  console.log('TCL: collectionData', collectionData);
   let handleMemberDetailsToRightPanel;
   let membersByName ;
   if(!adminView){

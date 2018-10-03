@@ -1,9 +1,11 @@
 import Media from "../fields";
+import { check } from 'meteor/check';
 
 Meteor.publish("media.getMedia", function({ schoolId, mediaName, startDate, endDate, limit, $or }) {
 	// console.log("<<<< media.getMedia called--->>>",schoolId, mediaName, startDate, endDate)
     // console.log("<<<<<<<<<<<<<<<<media.getMediafilter>>>>>>>>>>>>>>>", JSON.stringify($or, null, "  "));
-
+    check(schoolId, String);
+	check(limit,Number);
 	let filters = {
 		schoolId: schoolId
 	};

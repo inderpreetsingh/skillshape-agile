@@ -15,10 +15,12 @@ import { sendPriceInfoRequestEmail } from "/imports/api/email";
 import { sendEmailToStudentForClaimAsMember,adminInvitation } from "/imports/api/email";
 import { getUserFullName } from "/imports/util/getUserData";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
+import { check } from 'meteor/check';
 
 Meteor.methods({
   editSchool: function(id, data) {
-    console.log('TCL: data', data);
+    check(data, Object);
+    check(id,String);
     let schoolData = School.findOne({ _id: id });
     if (schoolData && data.name && schoolData.name !== data.name) {
       ClassType.update(
@@ -30,12 +32,15 @@ Meteor.methods({
     return School.update({ _id: id }, { $set: data });
   },
   getClassesForMap: function({ schoolId }) {
+    check(schoolId,String);
+
     return {
       school: School.findOne({ _id: schoolId }),
       classTypes: ClassType.find({ schoolId }).fetch()
     };
   },
   "school.getConnectedSchool": function(userId) {
+    
     let schoolList = [];
     const user = Meteor.users.findOne({ _id: userId });
     if (
@@ -64,6 +69,9 @@ Meteor.methods({
     }
   },
   "school.claimSchool": function(userId, schoolId) {
+    check(userId,String);
+    check(schoolId,String);
+
     const data = {};
     data.userId = userId;
     data.claimed = "Y";
@@ -79,6 +87,9 @@ Meteor.methods({
     );
   },
   "school.publishSchool": function({ schoolId, isPublish }) {
+    check(schoolId,String);
+    check(isPublish,Boolean);
+
     ClassType.update(
       { schoolId: schoolId },
       { $set: { isPublish: isPublish } },
@@ -87,6 +98,9 @@ Meteor.methods({
     return School.update({ _id: schoolId }, { $set: { isPublish: isPublish } });
   },
   "school.purchasePackage": function({ typeOfTable, tableId, schoolId }) {
+    check(schoolId,String);
+    check(typeOfTable,String);
+    check(tableId,String);
     // Do validation
     let PricingTable = "";
     if (!typeOfTable || !tableId || !schoolId) {
@@ -123,6 +137,8 @@ Meteor.methods({
     return { emailSent: false };
   },
   "school.requestPricingInfo": function(schoolData) {
+    check(schoolData,Object);
+    
     if (this.userId && schoolData._id) {
       const schoolId = schoolData._id;
       // Check if reuest for this user already exist in DB then just update `notification` and send Email.
@@ -196,6 +212,8 @@ Meteor.methods({
    * if user is already a skillshape user then just make them as a member of School.
    */
   "school.addNewMember": function(doc) {
+    check(doc,Object);
+
     // Validations
     const schoolAdminRec = Meteor.users.findOne({
       "profile.schoolId": doc.schoolId
@@ -289,6 +307,8 @@ Meteor.methods({
   },
   // This is used to save admin notes in School Members.
   "school.saveAdminNotesToMember": function(doc) {
+    check(doc,Object);
+
     // Validations
     // Only school admin can add a new Memeber.
     doc.updatedBy = this.userId;
@@ -309,6 +329,8 @@ Meteor.methods({
     schoolId,
     acceptInvite
   }) {
+    check(memberId,String);
+    check(schoolId,String);
     let schoolMemberDetails = SchoolMemberDetails.find({
       _id: memberId,
       schoolId: schoolId
@@ -328,6 +350,8 @@ Meteor.methods({
     return { inviteAccepted: true };
   },
   "school.addNewSchool": function(doc) {
+    check(doc,Object);
+
     const currentUser = doc || Meteor.users.findOne(this.userId);
     if (!this.userId) {
       throw new Meteor.Error("Access denied", "Error while adding new school");
@@ -355,6 +379,8 @@ Meteor.methods({
     return schoolEditViewLink;
   },
   "school.addNewMemberWithoutEmail": function(doc) {
+    check(doc,Object);
+
     const schoolAdminRec = Meteor.users.findOne({
       "profile.schoolId": doc.schoolId
     });
@@ -378,6 +404,7 @@ Meteor.methods({
     }
   },
   "school.findSuperAdmin": function(userId, slug, SchoolId) {
+    
     let usersId;
     const filter = {superAdmin : userId || this.userId};
     if (slug) {
@@ -386,7 +413,7 @@ Meteor.methods({
       filter._id = SchoolId;
     }
     let schoolData = School.findOne(filter);
-    return !!schoolData;
+    return schoolData ? true : false;
   },
   "school.optimizationFinder": function () {
    return School.find({mainImage:{$exists:true},mainImageMedium:{$exists:false},mainImageLow:{$exists:false},logoImgMedium:{$exists:false},logoImgLow:{$exists:false}}).fetch();

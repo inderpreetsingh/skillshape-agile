@@ -1,4 +1,5 @@
-import isEmpty from "lodash/isEmpty";
+import isEmpty from 'lodash/isEmpty';
+import { check } from 'meteor/check';
 
 import ClassType from "../fields";
 import ClassTimes from "/imports/api/classTimes/fields";
@@ -17,10 +18,6 @@ Meteor.publish("classType.getclassType", function({ schoolId }) {
   return ClassType.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
-Meteor.publish("classType.getClassTimesWithId", function({ classTypeId }) {
-  let cursor = ClassTimes.find({ classTypeId: classTypeId });
-  return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
-});
 
 Meteor.publish("classType.getClassTimesWithIds", function(classTypeIds) {
   if (!classTypeIds.length) {
