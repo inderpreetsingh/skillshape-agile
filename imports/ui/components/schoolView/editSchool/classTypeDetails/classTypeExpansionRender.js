@@ -28,6 +28,7 @@ const CardsWrapper = styled.div``;
 
 const ClassTypeCardWrapper = styled.div`
   max-width: ${CARD_WIDTH}px;
+  margin-left: ${rhythmDiv * 2}px;
 `;
 
 const Notifications = styled.div`

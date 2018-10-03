@@ -163,9 +163,7 @@ class ClassTypeExpansion extends Component {
             title="Are you sure?"
             content={`This will email all attending and interested students of the ${this.state.notifyFor} change. Are you sure?`}
             cancelBtnText="Cancel"
-            onAffirmationButtonClick={() => {
-              this.handleExpansionPanelRightBtn(currentTableData);
-            }}
+            onAffirmationButtonClick={this.handleNotifyForChange}
             onModalClose={this.cancelConfirmationModal}
             onCloseButtonClick={this.cancelConfirmationModal}
           />
