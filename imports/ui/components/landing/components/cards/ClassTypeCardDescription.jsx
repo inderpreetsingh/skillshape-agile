@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import styled from "styled-components";
+import isEmpty from 'lodash/isEmpty';
 import { browserHistory } from "react-router";
 import ReactStars from "react-stars";
 import PropTypes from "prop-types";
@@ -91,6 +92,10 @@ const Buttons = styled.div`
   flex-shrink: 0;
 `;
 
+const SelectedSkillSubject = styled.div`
+  
+`;
+
 const ButtonsWrapper = styled.div`
   display: flex;
 
@@ -123,8 +128,8 @@ const styles = {
 };
 
 const ClassTypeCardDescription = props => {
-  const { cardRevealInfo, schoolData, editMode } = props;
-  // console.log("ClassTypeCardDescription props-->>",props);
+  const { cardRevealInfo, schoolData, editMode, selectedSkillSubject } = props;
+  console.log("ClassTypeCardDescription props-->>",props);
   return (
     <MuiThemeProvider theme={MuiTheme}>
       <Fragment>
@@ -183,6 +188,12 @@ const ClassTypeCardDescription = props => {
                     : cardRevealInfo.experienceLevel}
                 </Text>
               )}
+              {editMode && !isEmpty(selectedSkillSubject) &&
+                 <Text>
+                   Selected Subjects: {" "} 
+                   {selectedSkillSubject.map(selectedSubj => selectedSubj.name).join(', ')}
+                 </Text> 
+              }
             </ClassTypeRequirements>
 
             <ClassDescriptionContentWrapper>
@@ -196,6 +207,12 @@ const ClassTypeCardDescription = props => {
               )}
             </ClassDescriptionContentWrapper>
           </ClassDescriptionInnerWrapper>
+
+          {/*editMode && isEmpty(selectedSkillSubject) && <SelectedSkillSubject>
+            <Typography classes={{ root: props.classes.descriptionHeader }}>
+                Selected Skills:{" "}
+              </Typography>  
+          </SelectedSkillSubject>*/}
 
           {!editMode && <Buttons>
             {props &&
