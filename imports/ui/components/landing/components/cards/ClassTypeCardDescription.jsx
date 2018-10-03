@@ -47,7 +47,7 @@ const ClassDescriptionInnerWrapper = styled.div`
   margin: ${helpers.rhythmDiv * 2}px 0;
   border: 1px solid #ddd;
   height: 100%;
-  max-height: 200px;
+  max-height: ${props => props.editMode ? '100%' : '200px'};
   display: flex;
   flex-direction: column;
   //
@@ -123,7 +123,7 @@ const styles = {
 };
 
 const ClassTypeCardDescription = props => {
-  const { cardRevealInfo, schoolData } = props;
+  const { cardRevealInfo, schoolData, editMode } = props;
   // console.log("ClassTypeCardDescription props-->>",props);
   return (
     <MuiThemeProvider theme={MuiTheme}>
@@ -160,7 +160,7 @@ const ClassTypeCardDescription = props => {
                  </Grid>
                </Grid> */}
 
-          <ClassDescriptionInnerWrapper>
+          <ClassDescriptionInnerWrapper editMode={editMode}>
             <ClassTypeRequirements>
               {cardRevealInfo.ageMin && (
                 <Text>
@@ -197,7 +197,7 @@ const ClassTypeCardDescription = props => {
             </ClassDescriptionContentWrapper>
           </ClassDescriptionInnerWrapper>
 
-          <Buttons>
+          {!editMode && <Buttons>
             {props &&
               !props.hideClassTypeOptions && (
                 <ButtonsWrapper>
@@ -240,7 +240,7 @@ const ClassTypeCardDescription = props => {
                 onClick={props.onRequestClassTimeButtonClick}
               />
             )}
-          </Buttons>
+          </Buttons>}
         </ClassDescription>
       </Fragment>
     </MuiThemeProvider>

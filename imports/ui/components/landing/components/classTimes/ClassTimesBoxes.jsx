@@ -61,9 +61,9 @@ class ClassTimesBoxes extends Component {
       editMode,
       onEditClassTimesClick,
     } = this.props;
-    console.group("CLASS TIMES DATA IN BOXES");
-    console.info(classTimesData);
-    console.groupEnd();
+    // console.group("CLASS TIMES DATA IN BOXES");
+    // console.info(classTimesData);
+    // console.groupEnd();
 
     let modifiedClassTimesData = classTimesData;
 
