@@ -41,8 +41,7 @@ class SchoolView extends SchoolViewBase {
       filter: {
         classTimesIds: [],
         classTimesIdsForCI: []
-      },
-      snackBar:false
+      }
     }
     return state;
   }

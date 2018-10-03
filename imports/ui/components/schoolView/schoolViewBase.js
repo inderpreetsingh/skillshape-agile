@@ -655,7 +655,6 @@ export default class SchoolViewBase extends React.Component {
             if (packageType == "CP" || packageType == "EP" || payUpFront) {
               self.handleCharge(token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self);
             } else if (packageType == "MP" && pymtType && pymtType.autoWithDraw) {
-
               self.handleSubscription(token, planId, schoolId, packageName, packageId, monthlyPymtDetails, self);
             }
           }
@@ -700,7 +699,8 @@ export default class SchoolViewBase extends React.Component {
   // whenever user click cart button request come here.
   handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) => {
     try{
-      this.setState({snackBar:true})
+      const {popUp} = this.props;
+      popUp.appear("success", { title: "Wait", content: "Please Wait One Sec..." }, true, { autoClose: true, autoTimeout: 4000 });
       config.currency.map((data, index) => {
         if (data.value == currency) {
           currency = data.label;
