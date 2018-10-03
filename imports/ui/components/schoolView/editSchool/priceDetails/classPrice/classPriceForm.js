@@ -272,7 +272,6 @@ class ClassPriceForm extends React.Component {
                   label="No Expiration"
                 />
               </FormControl>
-{              console.log('TCL: render -> data && data.noClasses', data && data.noClasses)}
               <TextField
                 required={true}
                 defaultValue={data && data.noClasses}
