@@ -54,19 +54,11 @@ Meteor.methods({
   },
   "purchases.isAlreadyPurchased": function({userId, planId,packageId,packageType,pymtType}) {
     check(userId,String);
-    let result;
-    if(packageType == 'MP' && !pymtType.payUpFront ){
-      result =  Purchases.find({userId,planId,packageStatus:'active'}).fetch();
+    if(packageType == 'MP' && pymtType.autoWithDraw ){
+      return Purchases.findOne({userId,planId,packageStatus:'active'});
     }
     else{
-      result = Purchases.find({userId,packageId,packageStatus:'active'}).fetch();
+      return Purchases.findOne({userId,packageId,packageStatus:'active'});
     }
-    
-    if(!isEmpty(result)){
-      return true;
-    }
-    else
-    return false;
   }
-   
 });

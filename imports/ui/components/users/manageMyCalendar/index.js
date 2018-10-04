@@ -286,15 +286,6 @@ class ManageMyCalendar extends React.Component {
     event,
     isInputChecked
   ) => {
-    console.log(
-      "parentKey,classTypeId,fieldName,childKey,event,isInputChecked",
-      parentKey,
-      classTypeId,
-      fieldName,
-      childKey,
-      event,
-      isInputChecked
-    );
     const data = this.state[fieldName];
     let oldFilter = { ...this.state.filter };
     let ids = _.uniq(oldFilter[childKey] || []);
@@ -534,7 +525,6 @@ class ManageMyCalendar extends React.Component {
       schoolClassTypes,
       classTypeForInterests
     } = this.state;
-    console.log("filter", myClassTimes, "=========", filter);
     return (
       <DocumentTitle title={this.props.route && this.props.route.name}>
         <div>
