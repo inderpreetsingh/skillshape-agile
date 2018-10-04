@@ -1,7 +1,9 @@
 //Get Expiry date if no. of years to be added
 
 export const getExpiryDateForPackages = (startDate, expPeriod, expDuration) => {
-
+  if(!expDuration){
+    expDuration = 1;
+  }
   if (expPeriod == "Year") {
     let date = new Date(startDate);
     let currentYear = date.getFullYear();

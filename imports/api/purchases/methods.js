@@ -36,21 +36,17 @@ Meteor.methods({
     check(userId,String);
     check(packageId,String);
 
-    let result = Purchases.find({
+    let result = Purchases.findOne({
       userId: userId,
       packageId: packageId
-    }).fetch();
+    });
     let packageStatus = "active";
-    if (result) {
-      result.map(current => {
-        if (current.packageStatus == "active") {
+    if (result && result.packageType != 'CP') {
+        if (result.packageStatus == "active") {
           packageStatus = "inactive";
         }
-      });
-      return packageStatus;
-    } else {
-      return packageStatus;
-    }
+    } 
+    return packageStatus;
   },
   "purchases.isAlreadyPurchased": function({userId, planId,packageId,packageType,pymtType}) {
     check(userId,String);

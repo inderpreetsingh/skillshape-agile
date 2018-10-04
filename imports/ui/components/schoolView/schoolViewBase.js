@@ -532,21 +532,30 @@ export default class SchoolViewBase extends React.Component {
          Meteor.call('purchases.isAlreadyPurchased', { userId, planId, packageId, packageType, pymtType },async (err, res) => {
           if (res) {
             const { popUp } = this.props;
+            if(packageType == 'EP'){
+              popUp.appear("success", { title: "Already Purchased", content: "You already have paid this Enrolment fee. No payment is needed at this time." });
+            }
             if(packageType == 'CP'){
-              popUp.appear("inform", {
-                title: "Already Purchased",
-                content: `You already have ${get(res,'noOfClasses',0)} Classes left. Would you like to purchases this package to add on to your Existing Classes ?`,
-                RenderActions: (
-                  <ButtonsWrapper>
-                    <Button onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,this) }} applyClose>
-                      Purchase 
-                    </Button>
-                    <Button onClick={() => { }} applyClose>
-                      No, thanks
-                    </Button>
-                  </ButtonsWrapper>
-                )
-              }, true);
+              let classesLeft = get(res,'noOfClasses',0);
+              let purchaseId = res._id;
+              if(classesLeft){
+                popUp.appear("inform", {
+                  title: "Already Purchased",
+                  content: `You already have ${classesLeft} Classes left. Would you like to purchases this package to add on to your Existing Classes ?`,
+                  RenderActions: (
+                    <ButtonsWrapper>
+                      <Button onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, Number(noClasses)+Number(classesLeft), planId, currency, pymtType,this,purchaseId) }} applyClose>
+                        Purchase 
+                      </Button>
+                      <Button onClick={() => { }} applyClose>
+                        No, thanks
+                      </Button>
+                    </ButtonsWrapper>
+                  )
+                }, true);
+              }else{
+                this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,this,purchaseId)
+              }
             }
             else if(packageType == "MP"){
               if(get(pymtType,"autoWithDraw",false)){
@@ -633,9 +642,9 @@ export default class SchoolViewBase extends React.Component {
     );
   }
   //handle single charge for cp,ep,payupfront online
-  handleCharge = (token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self) => {
+  handleCharge = (token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self,purchaseId) => {
     const { popUp } = self.props;
-    Meteor.call("stripe.chargeCard", token.id, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, (error, result) => {
+    Meteor.call("stripe.chargeCard", token.id, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId,purchaseId, (error, result) => {
 
       if (result) {
         if (result == "Payment Successfully Done") {
@@ -681,10 +690,10 @@ export default class SchoolViewBase extends React.Component {
 
   }
   // handleChargeAndSubscription
-  handleChargeAndSubscription = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self) => {
+  handleChargeAndSubscription = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self,purchaseId) => {
     const { popUp } = this.props;
     let {payUpFront,payAsYouGo} = this.state;
-
+    popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...",RenderActions:(<spna/>) });/* , true, { autoClose: true, autoTimeout: 4000 } */
     Meteor.call("stripe.findAdminStripeAccount", this.props.schoolData.superAdmin, (error, result) => {
       if (result && Meteor.settings.public.paymentEnabled) {
         let handler = StripeCheckout.configure({
@@ -693,10 +702,10 @@ export default class SchoolViewBase extends React.Component {
           currency: currency,
           locale: "auto",
           token: function (token) {
-            popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress" });
+            popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress",RenderActions:(<spna/>) });
             //toastr.success("Please wait transaction in Progress", "Success");
             if (packageType == "CP" || packageType == "EP" || payUpFront || payAsYouGo) {
-              self.handleCharge(token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self);
+              self.handleCharge(token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self,purchaseId);
             } else if (packageType == "MP" && pymtType && pymtType.autoWithDraw) {
               self.handleSubscription(token, planId, schoolId, packageName, packageId, monthlyPymtDetails, self);
             }
@@ -743,7 +752,7 @@ export default class SchoolViewBase extends React.Component {
   handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) => {
     try{
       const {popUp} = this.props;
-      popUp.appear("success", { title: "Wait", content: "Please Wait One Sec..." });/* , true, { autoClose: true, autoTimeout: 4000 } */
+      popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...",RenderActions:(<spna/>) });/* , true, { autoClose: true, autoTimeout: 4000 } */
       config.currency.map((data, index) => {
         if (data.value == currency) {
           currency = data.label;

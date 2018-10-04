@@ -12,7 +12,7 @@ import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} fr
 // :":":":":":":"" classtypeids removed 
 let stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
-Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packageId, packageType, schoolId, expDuration, expPeriod, noClasses ,planId) {
+Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packageId, packageType, schoolId, expDuration, expPeriod, noOfClasses ,planId,purchaseId) {
     try {
     check(stripeToken,String);
     check(desc,String);
@@ -53,22 +53,21 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     let endDate;
     let startDate;
     let user = Meteor.user();
-      let schoolData = School.findOne({ _id: schoolId });
-      schoolEmail = schoolData.email;
-      schoolName = schoolData.name;
-      let superAdminId = schoolData.superAdmin;
-      let stripeAccountId = UserStripeData.findOne({ userId: superAdminId });
-      console.log('TCL: stripeAccountId', stripeAccountId);
-      if(!stripeAccountId.stripe_user_id){
-        throw new Meteor.Error('School not connected stripe yet.')
-      }
-      stripeAccountId = stripeAccountId.stripe_user_id;
-      const token = stripeToken;
-      const skillshapeAmount = Math.round(amount * (2.9 / 100) + 40);
-      const destinationAmount = Math.round(amount - skillshapeAmount);
-      let stripeRequest = {
-        amount: amount,
-        currency: currency,
+    let schoolData = School.findOne({ _id: schoolId });
+    schoolEmail = schoolData.email;
+    schoolName = schoolData.name;
+    let superAdminId = schoolData.superAdmin;
+    let stripeAccountId = UserStripeData.findOne({ userId: superAdminId });
+    if(!stripeAccountId.stripe_user_id){
+      throw new Meteor.Error('School not connected stripe yet.')
+    }
+    stripeAccountId = stripeAccountId.stripe_user_id;
+    const token = stripeToken;
+    const skillshapeAmount = Math.round(amount * (2.9 / 100) + 40);
+    const destinationAmount = Math.round(amount - skillshapeAmount);
+    let stripeRequest = {
+      amount: amount,
+      currency: currency,
         description: desc,
         source: token,
         destination: {
@@ -76,7 +75,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
           account: stripeAccountId
         }
       };
-
+      
       startDate = getExpiryDateForPackages(new Date());
       endDate = getExpiryDateForPackages(startDate, expPeriod, expDuration);
       let payload = {
@@ -93,15 +92,21 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         status: "inProgress",
         startDate: startDate,
         endDate: endDate,
-        noOfClasses: noClasses,
+        noOfClasses: noOfClasses,
         fee: Math.round(amount * (2.9 / 100) + 30)
       };
-      recordId = Meteor.call("purchases.addPurchase", payload);
+      if(purchaseId){
+        recordId = purchaseId;
+      }else{
+        recordId = Meteor.call("purchases.addPurchase", payload);
+      }
       let charge = await stripe.charges.create(stripeRequest);
       status = get(charge,'status','error')
       payload = {
         stripeResponse: charge,
-        status: status
+        status: status,
+        noOfClasses: noOfClasses,
+        
       };
       let currentUserRec = Meteor.users.findOne(this.userId);
       Meteor.call("purchases.updatePurchases", { payload, recordId });
@@ -109,7 +114,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       userEmail=currentUserRec.emails[0].address;
       let memberData = {
         firstName:
-          currentUserRec.profile.name || currentUserRec.profile.firstName,
+        currentUserRec.profile.name || currentUserRec.profile.firstName,
         lastName: currentUserRec.profile.firstName || "",
         email: currentUserRec.emails[0].address,
         phone: "",
@@ -121,16 +126,9 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         createdBy: "",
         inviteAccepted: false
       };
-      Meteor.call(
-        "schoolMemberDetails.addNewMember",
-        memberData,
-        (error, result) => {
+      Meteor.call( "schoolMemberDetails.addNewMember", memberData, (error, result) => {
           let memberId = result;
-          Meteor.call(
-            "purchases.checkExisitingPackagePurchases",
-            userId,
-            packageId,
-            (error, result) => {
+          Meteor.call( "purchases.checkExisitingPackagePurchases", userId, packageId, (error, result) => {
               status = result;
               payload = { memberId: memberId, packageStatus: status };
               Meteor.call("purchases.updatePurchases", { payload, recordId });
@@ -145,7 +143,6 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       sendPackagePurchasedEmailToSchool(schoolName, schoolEmail, userName, userEmail, packageName)
       return "Payment Successfully Done";
     } catch (error) {
-      console.log('TCL: }catch -> error', error);
       payload = {
         stripeResponse: error,
         status: "Error"

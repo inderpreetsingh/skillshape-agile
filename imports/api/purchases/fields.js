@@ -61,7 +61,7 @@ export const PurchasesSchema = new SimpleSchema({
     optional: true
   },
   noOfClasses: {
-    type: String,
+    type: Number,
     optional: true
   },
   startDate: {
