@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import styled from "styled-components";
+import isEmpty from 'lodash/isEmpty';
 import { browserHistory } from "react-router";
 import ReactStars from "react-stars";
 import PropTypes from "prop-types";
@@ -47,7 +48,7 @@ const ClassDescriptionInnerWrapper = styled.div`
   margin: ${helpers.rhythmDiv * 2}px 0;
   border: 1px solid #ddd;
   height: 100%;
-  max-height: 200px;
+  max-height: ${props => props.editMode ? '100%' : '200px'};
   display: flex;
   flex-direction: column;
   //
@@ -91,6 +92,10 @@ const Buttons = styled.div`
   flex-shrink: 0;
 `;
 
+const SelectedSkillSubject = styled.div`
+  
+`;
+
 const ButtonsWrapper = styled.div`
   display: flex;
 
@@ -123,8 +128,8 @@ const styles = {
 };
 
 const ClassTypeCardDescription = props => {
-  const { cardRevealInfo, schoolData } = props;
-  // console.log("ClassTypeCardDescription props-->>",props);
+  const { cardRevealInfo, schoolData, editMode, selectedSkillSubject } = props;
+  console.log("ClassTypeCardDescription props-->>",props);
   return (
     <MuiThemeProvider theme={MuiTheme}>
       <Fragment>
@@ -160,7 +165,7 @@ const ClassTypeCardDescription = props => {
                  </Grid>
                </Grid> */}
 
-          <ClassDescriptionInnerWrapper>
+          <ClassDescriptionInnerWrapper editMode={editMode}>
             <ClassTypeRequirements>
               {cardRevealInfo.ageMin && (
                 <Text>
@@ -183,6 +188,12 @@ const ClassTypeCardDescription = props => {
                     : cardRevealInfo.experienceLevel}
                 </Text>
               )}
+              {editMode && !isEmpty(selectedSkillSubject) &&
+                 <Text>
+                   Subjects: {" "} 
+                   {selectedSkillSubject.map(selectedSubj => selectedSubj.name).join(', ')}
+                 </Text> 
+              }
             </ClassTypeRequirements>
 
             <ClassDescriptionContentWrapper>
@@ -197,7 +208,13 @@ const ClassTypeCardDescription = props => {
             </ClassDescriptionContentWrapper>
           </ClassDescriptionInnerWrapper>
 
-          <Buttons>
+          {/*editMode && isEmpty(selectedSkillSubject) && <SelectedSkillSubject>
+            <Typography classes={{ root: props.classes.descriptionHeader }}>
+                Selected Skills:{" "}
+              </Typography>  
+          </SelectedSkillSubject>*/}
+
+          {!editMode && <Buttons>
             {props &&
               !props.hideClassTypeOptions && (
                 <ButtonsWrapper>
@@ -240,7 +257,7 @@ const ClassTypeCardDescription = props => {
                 onClick={props.onRequestClassTimeButtonClick}
               />
             )}
-          </Buttons>
+          </Buttons>}
         </ClassDescription>
       </Fragment>
     </MuiThemeProvider>

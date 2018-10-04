@@ -77,7 +77,7 @@ const ClassTimeContainer = styled.div`
   ${helpers.flexHorizontalSpaceBetween} flex-direction: column;
   max-width: 100%;
   width: 100%;
-  height: ${props => (props.inPopUp ? "auto" : "420px")};
+  height: ${props => (props.inPopUp ? "auto" : "380px")};
   padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
   z-index: 0;
@@ -705,6 +705,7 @@ class ClassTime extends Component {
               )}
             <div>
               <ClassTimeContainer
+                editMode
                 onClick={this.handleDescriptionState(false)}
                 inPopUp={inPopUp}
                 className={`class-time-bg-transition ${editMode ? 'add-to-calendar' : this.getWrapperClassName(

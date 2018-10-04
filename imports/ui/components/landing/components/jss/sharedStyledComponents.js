@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {getContainerMaxWidth} from '/imports/util';
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 export const GenericText = styled.p`
@@ -50,4 +51,48 @@ export const Bold = styled.span`
 
 export const Italic = styled.span`
   font-style: italic;
+`;
+
+// GRID COMPONENTS
+export const GridMaxWidthWrapper = styled.div`
+  max-width: ${props => getContainerMaxWidth(props.cardWidth, props.spacing, 4)}px;
+  margin: 0 auto;
+
+  @media screen and (max-width: ${props =>
+      getContainerMaxWidth(props.cardWidth, props.spacing, 4)}px) {
+    max-width: ${props => getContainerMaxWidth(props.cardWidth, props.spacing, 3)}px;
+  }
+
+  @media screen and (max-width: ${props =>
+      getContainerMaxWidth(props.cardWidth, props.spacing, 3)}px) {
+    max-width: ${props => getContainerMaxWidth(props.cardWidth, props.spacing, 2)}px;
+  }
+
+  @media screen and (max-width: ${props =>
+      getContainerMaxWidth(props.cardWidth, props.spacing, 2)}px) {
+    max-width: 600px;
+  }
+`;
+
+export const GridContainer = styled.div`
+  ${helpers.flexCenter} justify-content: flex-start;
+  flex-wrap: wrap;
+`;
+
+export const GridItem = styled.div`
+  padding: ${props => (props.spacing ? props.spacing / 2 : "16")}px;
+  flex-grow: 1;
+  width: 100%;
+  max-width: ${props =>
+    props.inPopUp ? "100%" : props.cardWidth + props.spacing + "px"};
+
+  @media screen and (max-width: ${props =>
+      getContainerMaxWidth(props.cardWidth, props.spacing, 2)}px) {
+    max-width: ${props => (props.inPopUp ? "100%" : props.cardWidth + "px")};
+  }
+
+  media screen and (max-width: 600px) {
+    max-width: ${props =>
+      props.inPopUp ? "100%" : props.cardWidth + props.spacing + "px"};
+  }
 `;

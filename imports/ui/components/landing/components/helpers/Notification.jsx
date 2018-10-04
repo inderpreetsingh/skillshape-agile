@@ -28,7 +28,6 @@ const Wrapper = styled.div`
   transition: 0.25s ease-in max-height, 0.25s linear opacity,
     0.05s linear padding 0.1s;
   opacity: 1;
-  max-height: 160px;
   ${props => (!props.show ? `max-height: 0; opacity: 0; padding: 0` : "")};
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -58,8 +57,8 @@ const NotificationContent = Text.extend`
   color: white;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    font-size: 18px;
-    margin-bottom: ${helpers.rhythmDiv};
+    font-size: ${props => props.smallText ? helpers.baseFontSize : 18}px;
+    margin-bottom: ${helpers.rhythmDiv}px;
   }
 `;
 const ButtonWrapper = styled.div`
