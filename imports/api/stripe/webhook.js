@@ -4,7 +4,7 @@ import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 import School from '/imports/api/school/fields';
 import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} from '/imports/api/email/index';
 import  bodyParser from "body-parser";
-if(Meteor.settings.platform=='local'){
+if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
   Picker.middleware(bodyParser.json());
   Picker.middleware(bodyParser.urlencoded({ extended: false }));
   let dataFile = function (params, request, response, next) {
@@ -71,11 +71,14 @@ if(Meteor.settings.platform=='local'){
         userEmail = userData.emails[0].address;
         sendPackagePurchasedEmailToStudent(userName, userEmail, packageName);
         sendPackagePurchasedEmailToSchool(schoolName, schoolEmail, userName, userEmail, packageName);
+        response.end("Ok Done");
         break;
       }
+      response.end("Case not used");
     }
     catch(error){
       console.log("error in webhook work",error)
+      response.end("Not Ok ");
       throw new Meteor.Error(error);
     }
   };

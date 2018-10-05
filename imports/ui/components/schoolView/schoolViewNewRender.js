@@ -376,8 +376,6 @@ export default function() {
                     perClassPackagesData={classPricing}
                     monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricing)}
                     currency={currency}
-                    snackBar={snackBar}
-                    closeSnackBar={()=>{this.setState({snackBar:false})}}
 
                   />
                 }

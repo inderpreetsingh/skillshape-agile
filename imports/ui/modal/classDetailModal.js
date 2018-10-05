@@ -23,7 +23,8 @@ import { browserHistory, Link } from "react-router";
 import ClassType from "/imports/api/classType/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import SLocation from "/imports/api/sLocation/fields";
-
+import get from 'lodash/get';
+import includes from 'lodash/includes';
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import {
   flexCenter,
@@ -277,10 +278,12 @@ class ClassDetailModal extends React.Component {
     Meteor.call(
       "school.findSuperAdmin",
       null,
-      null,
       this.props.eventData.schoolId,
       (err, res) => {
-        this.setState({ adminAccess: res });
+        if(res)
+        if(get(result,'superAdmin',null) == Meteor.userId() || includes(get(result,'admins',[]),Meteor.userId())){
+          this.setState({ adminAccess: true });
+        }
       }
     );
     if (this.props.eventData) {

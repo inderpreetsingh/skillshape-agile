@@ -14,7 +14,7 @@ import get from 'lodash/get';
 */
 }
 export default function(props) {
-  const { src, collectionData,adminView } = props;
+  const { src, collectionData,adminView ,superAdminId} = props;
   let handleMemberDetailsToRightPanel;
   let membersByName ;
   if(!adminView){
@@ -74,6 +74,9 @@ export default function(props) {
                             pic = profile && profile.low ? profile.low : profile && profile.medium ? profile.medium : 
                             profile && profile.pic ? profile.pic:config.defaultProfilePicOptimized ;
                             firstName= get(profile,"firstName",get(profile,"name","Old Data"));
+                            if(get(data,"_id",null) == superAdminId){
+                              firstName = `${firstName} (SuperAdmin)`;
+                            }
                             verifyImageURL(pic,(res)=>{
                               if(!res){
                                    pic=config.defaultProfilePic;

@@ -8,6 +8,8 @@ import Students from "./students";
 import Payouts from "./payouts";
 import Transactions from "./transactions";
 import Settings from "./settings";
+import get from 'lodash/get';
+import includes from 'lodash/includes';
 export default class Financials extends React.Component {
   constructor(props) {
     super(props);
@@ -37,11 +39,13 @@ export default class Financials extends React.Component {
   componentWillMount() {
     Meteor.call(
       "school.findSuperAdmin",
-      this.props.currentUser._id,
       this.props.routeParams.slug,
       (error, result) => {
-        if(result)
-        this.setState({ adminPermission: result });
+        if(result){
+          if(get(result,'superAdmin',null) == this.props.currentUser._id || includes(get(result,'admins',[]),this.props.currentUser._id )){
+            this.setState({adminPermission:true,schoolData:result})
+          }
+        }
       }
     );
 
@@ -55,7 +59,7 @@ export default class Financials extends React.Component {
   render() {
     let { currentUser } = this.props;
     const role = currentUser && _.indexOf(currentUser.roles, "Superadmin");
-
+    const {schoolData} = this.state;
     return (
       <DocumentTitle title="Financials">
         {(Meteor.settings.public.paymentEnabled &&
@@ -99,6 +103,7 @@ export default class Financials extends React.Component {
                 <Settings
                   {...this.props}
                   adminPermission={this.state.adminPermission}
+                  schoolData = {schoolData}
                 />
               )}
             </div>

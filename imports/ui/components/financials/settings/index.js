@@ -1,6 +1,7 @@
 import React from "react";
 import Card from "material-ui/Card";
-import { toastrModal } from "/imports/util";
+import { withPopUp } from "/imports/util";
+import get from 'lodash/get';
 class Settings extends React.Component {
   constructor(props) {
     super(props);
@@ -12,22 +13,35 @@ class Settings extends React.Component {
   }
 
   disconnectStripe = () => {
-    const { toastr } = this.props;
-    Meteor.call("stripe.disconnectStripeUser", (error, result) => {
-      toastr.success(result, "Success");
-    });
+    const { popUp } = this.props;
+    let {superAdmin} = this.state;
+    if(superAdmin==Meteor.userId()){
+      Meteor.call("stripe.disconnectStripeUser", superAdmin,(error, result) => {
+        this.setState({status:false});
+        popUp.appear("success", { title: "Success", content: result});
+      });
+    }else{
+      popUp.appear("alert", { title: "Error", content: "Only super admin of school can control stripe."});
+    }
   };
-
+  
+  componentWillMount() {
+    const {schoolData} = this.props;
+    let superAdmin = get(schoolData,'superAdmin',null)
+    this.setState({superAdmin});
+    Meteor.call("stripe.findAdminStripeAccount",superAdmin,(err,res)=>{
+      this.setState({status:res});      
+    })
+  }
+  
   render() {
-    const role =
-      this.props &&
-      this.props.currentUser &&
-      _.indexOf(this.props.currentUser.roles, "Superadmin");
+    const role = this.props && this.props.currentUser && _.indexOf(this.props.currentUser.roles, "Superadmin");
+    const {status,superAdmin} = this.state; 
+    const {popUp} = this.props;
     return (
       <div>
-        
             <div>
-              {this.props.currentUser.profile.stripeStatus ? (
+              {status ? (
                 <center>
                   <Card>
                     {" "}
@@ -74,9 +88,12 @@ class Settings extends React.Component {
                             marginTop: "5px"
                           }}
                           onClick={() => {
-                            location.href = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${
-                              Meteor.settings.public.stripeClientId
-                            }&scope=read_write&redirect_uri=${Meteor.absoluteUrl()}redirect-to-stripe`;
+                            if(superAdmin==Meteor.userId()){
+                              location.href = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${ Meteor.settings.public.stripeClientId }&scope=read_write&redirect_uri=${Meteor.absoluteUrl()}redirect-to-stripe`;
+                            }
+                            else{
+                              popUp.appear("alert", { title: "Error", content: "Only super admin of school can control stripe."});
+                            }
                           }}
                         >
                           Connect Stripe
@@ -92,4 +109,4 @@ class Settings extends React.Component {
     );
   }
 }
-export default toastrModal(Settings);
+export default withPopUp(Settings);

@@ -65,7 +65,7 @@ Meteor.methods({
         return School.findOne({_id:schoolId})
     }
     else if (this.userId && !from) {
-      return School.find({ admins: { $in: [this.userId] } }).fetch();
+      return School.find({$or:[{admins: { $in: [this.userId] }},{superAdmin:this.userId}]  }).fetch();
     }
   },
   "school.claimSchool": function(userId, schoolId) {
@@ -403,17 +403,15 @@ Meteor.methods({
       throw new Meteor.Error("Access Denied!!!!");
     }
   },
-  "school.findSuperAdmin": function(userId, slug, SchoolId) {
-    
-    let usersId;
-    const filter = {superAdmin : userId || this.userId};
+  "school.findSuperAdmin": function( slug, SchoolId) {
+    const filter = {};
     if (slug) {
       filter.slug = slug;
     } else {
       filter._id = SchoolId;
     }
     let schoolData = School.findOne(filter);
-    return schoolData ? true : false;
+    return schoolData ;
   },
   "school.optimizationFinder": function () {
    return School.find({mainImage:{$exists:true},mainImageMedium:{$exists:false},mainImageLow:{$exists:false},logoImgMedium:{$exists:false},logoImgLow:{$exists:false}}).fetch();

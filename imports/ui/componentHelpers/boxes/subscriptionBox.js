@@ -83,7 +83,10 @@ class SubscriptionBox extends React.Component {
              >
             {!isEmpty(subscriptionList) && subscriptionList.map((current,index)=>{
                 let status =  get(current,'packageStatus',get(current,'status','No Status'));
-                let backgroundColor = status=='active' || status=='succeeded'?'#4caf50':status=='inProgress' ? 'yellow' : status == 'inActive' ? 'blue' : 'red' ;
+                if(status == 'inProgress' || status == 'In_Progress'){
+                    status = 'In Progress'
+                }
+                let backgroundColor = status=='active' || status=='succeeded'?'#4caf50':status=='In Progress' ? 'yellow' : status == 'inActive' ? 'blue' : 'red' ;
                 return <div>
                 <Paper className={classes.singleSubscription}>
                  <SubscriptionName>

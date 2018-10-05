@@ -3,7 +3,7 @@ import { Meteor } from "meteor/meteor";
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 
 export function withPopUp(WrappedComponent) {
-  const DEFAULT_AUTO_TIMEOUT = 2000;
+  const DEFAULT_AUTO_TIMEOUT = 4000;
   return class extends React.Component {
     constructor(props) {
       super(props);
