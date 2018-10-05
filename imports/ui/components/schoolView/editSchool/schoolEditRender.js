@@ -40,7 +40,7 @@ export default function (props) {
     // return <Preloader />;
   }
 
-  if (isUserSubsReady && schoolData) {
+  if (schoolData) {
     // this.checkSchoolAccess(currentUser, schoolId)
     if (this.checkSchoolAccess(currentUser, schoolId)) {
       return (

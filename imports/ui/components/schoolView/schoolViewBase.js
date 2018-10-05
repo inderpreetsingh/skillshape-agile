@@ -17,6 +17,7 @@ import styled from "styled-components";
 import Button from "material-ui/Button";
 import get from 'lodash/get';
 import moment from "moment";
+import {formatMoney} from '/imports/util';
 const ButtonsWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -501,7 +502,7 @@ export default class SchoolViewBase extends React.Component {
             Purchase Now
           </Button>
           {/* Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school. */}
-          {/* <Button onClick={() => { this.handleOffline(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
+          {/* <Button onClick={() => { this.handlePayAsYouGo(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
             Offline
           </Button> */}
         </ButtonsWrapper>
@@ -509,22 +510,29 @@ export default class SchoolViewBase extends React.Component {
     }, true);
   }
   //handle payAsYouGo case
-  handleOffline = (planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) => {
+  handlePayAsYouGo = (planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) => {
     const { popUp } = this.props;
     popUp.appear("inform", {
       title: title, content: content,
-      defaultButtons: true,
-      onAffirmationButtonClick: () => {
+      RenderActions: (
+        <ButtonsWrapper>
+          <Button onClick={() => { }} applyClose>
+            Cancel
+          </Button>
+          <Button onClick={() => {
         Meteor.call("stripe.handleCustomerAndSubscribe", null, planId, schoolId, packageName, packageId, monthlyPymtDetails, (err, res) => {
           if (res) {
             popUp.appear("success", { title: "Success", content: `We have mark you as interested student.` });
           } else {
             popUp.appear("warning", { title: "Error", content: (err && err.message) || "something went wrong" });
           }
-        }
-        );
-      }
-    });
+        });
+      }} >Agree and Pay First Month Now
+      </Button></ButtonsWrapper>)})
+          {/* Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school. */}
+          {/* <Button onClick={() => { this.handlePayAsYouGo(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
+            Offline
+          </Button> */}
   }
   //This function is used to find out if a user is already purchased an package or not
   isAlreadyPurchased =   ({userId,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType}) => {
@@ -753,6 +761,7 @@ export default class SchoolViewBase extends React.Component {
   }
   // whenever user click cart button request come here.
   handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) => {
+    console.log('TCL: handlePurchasePackage -> monthlyPymtDetails', monthlyPymtDetails);
     try{
       const {popUp} = this.props;
       popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...",RenderActions:(<spna/>) });/* , true, { autoClose: true, autoTimeout: 4000 } */
@@ -773,9 +782,14 @@ export default class SchoolViewBase extends React.Component {
       }
       
       if (this.state.payAsYouGo) {
-        let title = "Pay As You GO Package";
-        let content = "This is a Pay As You Go package.We will mark you. You have to pay your fees at School.";
-        this.handleOffline(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content);
+        let money = formatMoney( amount/100,get(monthlyPymtDetails[0],"currency",$));
+        let months = get(monthlyPymtDetails[0],"month",0);
+        let title = "Pay As You Go ";
+        let content =<div> With this Payment type, you agree to pay the monthly fee for the length of the period you sign up for.
+         You are not signing up for Automatic Withdrawal, and are expected to initiate your own payment each month. 
+         <br/><br/>Do you agree to sign up for <b> {packageName} </b> and pay <b>  {money} per month for {months} {months>1 ?'months' : 'month'}</b>?
+          If so, you can pay for the first month now.</div>;
+        this.handlePayAsYouGo(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content);
         return;
       }
   
