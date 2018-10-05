@@ -8,6 +8,8 @@ import Students from "./students";
 import Payouts from "./payouts";
 import Transactions from "./transactions";
 import Settings from "./settings";
+import get from 'lodash/get';
+import includes from 'lodash/includes';
 export default class Financials extends React.Component {
   constructor(props) {
     super(props);
@@ -37,11 +39,13 @@ export default class Financials extends React.Component {
   componentWillMount() {
     Meteor.call(
       "school.findSuperAdmin",
-      this.props.currentUser._id,
       this.props.routeParams.slug,
       (error, result) => {
-        if(result)
-        this.setState({ adminPermission: true,schoolData:result });
+        if(result){
+          if(get(result,'superAdmin',null) == this.props.currentUser._id || includes(get(result,'admins',[]),this.props.currentUser._id )){
+            this.setState({adminPermission:true,schoolData:result})
+          }
+        }
       }
     );
 

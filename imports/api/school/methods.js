@@ -403,10 +403,8 @@ Meteor.methods({
       throw new Meteor.Error("Access Denied!!!!");
     }
   },
-  "school.findSuperAdmin": function(userId, slug, SchoolId) {
-    
-    let usersId;
-    const filter = {superAdmin : userId || this.userId};
+  "school.findSuperAdmin": function( slug, SchoolId) {
+    const filter = {};
     if (slug) {
       filter.slug = slug;
     } else {
