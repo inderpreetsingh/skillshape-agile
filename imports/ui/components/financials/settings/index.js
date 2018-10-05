@@ -13,7 +13,7 @@ class Settings extends React.Component {
   }
 
   disconnectStripe = () => {
-    const { popUp,schoolData } = this.props;
+    const { popUp } = this.props;
     let {superAdmin} = this.state;
     if(superAdmin==Meteor.userId()){
       Meteor.call("stripe.disconnectStripeUser", superAdmin,(error, result) => {

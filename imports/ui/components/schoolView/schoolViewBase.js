@@ -490,19 +490,20 @@ export default class SchoolViewBase extends React.Component {
     amount = amount * monthlyPymtDetails[0].month || 1;
     const { popUp } = this.props;
     popUp.appear("inform", {
-      title: 'PayUpFront',
-      content: 'Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school.',
+      title: 'Pay Up Front',
+      content: 'When you pay for a number of monthly subscription fees at once.',
       RenderActions: (
         <ButtonsWrapper>
-          <Button onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self); }} applyClose>
-            Online
-          </Button>
-          <Button onClick={() => { this.handleOffline(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
-            Offline
-          </Button>
           <Button onClick={() => { }} applyClose>
             Cancel
           </Button>
+          <Button onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self); }} applyClose>
+            Purchase Now
+          </Button>
+          {/* Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school. */}
+          {/* <Button onClick={() => { this.handleOffline(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
+            Offline
+          </Button> */}
         </ButtonsWrapper>
       )
     }, true);
@@ -544,12 +545,14 @@ export default class SchoolViewBase extends React.Component {
                   content: `You already have ${classesLeft} Classes left. Would you like to purchases this package to add on to your Existing Classes ?`,
                   RenderActions: (
                     <ButtonsWrapper>
-                      <Button onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,this,purchaseId) }} applyClose>
-                        Purchase 
-                      </Button>
+                      
                       <Button onClick={() => { }} applyClose>
                         No, thanks
                       </Button>
+                      <Button  onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,this,purchaseId) }} applyClose>
+                        Purchase 
+                      </Button>
+                      
                     </ButtonsWrapper>
                   )
                 }, true);
@@ -600,11 +603,11 @@ export default class SchoolViewBase extends React.Component {
               content: `We are waiting for payment of ${packageName}. You can Pay Now via online payment now or go to the school to complete the payment.`,
               RenderActions: (
                 <ButtonsWrapper>
-                  <Button onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,this) }} applyClose>
-                    Purchase 
-                  </Button>
                   <Button onClick={() => { }} applyClose>
                     No, thanks
+                  </Button>
+                  <Button  onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,this) }} applyClose>
+                    Purchase 
                   </Button>
                 </ButtonsWrapper>
               )

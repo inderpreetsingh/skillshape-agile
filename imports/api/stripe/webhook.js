@@ -71,11 +71,14 @@ if(Meteor.settings.platform=='local' || Meteor.settings.platform=='dev'){
         userEmail = userData.emails[0].address;
         sendPackagePurchasedEmailToStudent(userName, userEmail, packageName);
         sendPackagePurchasedEmailToSchool(schoolName, schoolEmail, userName, userEmail, packageName);
+        response.end("Ok Done");
         break;
       }
+      response.end("Case not used");
     }
     catch(error){
       console.log("error in webhook work",error)
+      response.end("Not Ok ");
       throw new Meteor.Error(error);
     }
   };
