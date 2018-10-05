@@ -41,7 +41,7 @@ export default class Financials extends React.Component {
       this.props.routeParams.slug,
       (error, result) => {
         if(result)
-        this.setState({ adminPermission: result });
+        this.setState({ adminPermission: true,schoolData:result });
       }
     );
 
@@ -55,7 +55,7 @@ export default class Financials extends React.Component {
   render() {
     let { currentUser } = this.props;
     const role = currentUser && _.indexOf(currentUser.roles, "Superadmin");
-
+    const {schoolData} = this.state;
     return (
       <DocumentTitle title="Financials">
         {(Meteor.settings.public.paymentEnabled &&
@@ -99,6 +99,7 @@ export default class Financials extends React.Component {
                 <Settings
                   {...this.props}
                   adminPermission={this.state.adminPermission}
+                  schoolData = {schoolData}
                 />
               )}
             </div>

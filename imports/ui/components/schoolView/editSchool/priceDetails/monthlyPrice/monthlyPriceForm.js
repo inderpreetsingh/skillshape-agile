@@ -120,7 +120,7 @@ class MonthlyPriceForm extends React.Component {
                 noClasses:this.noClasses.value,
                 duPeriod: this.state.duPeriod
             }
-            if(isEmpty(payload.classTypeId)  || !payload.packageName || !payload.noClasses || !payload.pymtDetails){
+            if(isEmpty(payload.classTypeId)  || !payload.packageName || !payload.pymtDetails){
               popUp.appear("alert", { title: "Error", content: "Some Field is missing." });
               return ;
             }

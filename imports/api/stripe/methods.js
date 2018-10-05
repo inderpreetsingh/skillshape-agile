@@ -95,17 +95,12 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         noOfClasses: noOfClasses,
         fee: Math.round(amount * (2.9 / 100) + 30)
       };
-      if(purchaseId){
-        recordId = purchaseId;
-      }else{
-        recordId = Meteor.call("purchases.addPurchase", payload);
-      }
+      recordId = Meteor.call("purchases.addPurchase", payload);
       let charge = await stripe.charges.create(stripeRequest);
       status = get(charge,'status','error')
       payload = {
         stripeResponse: charge,
         status: status,
-        noOfClasses: noOfClasses,
         
       };
       let currentUserRec = Meteor.users.findOne(this.userId);
@@ -195,12 +190,12 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       { $set: { "profile.stripeStatus": true } }
     );
   },
-  "stripe.disconnectStripeUser": function () {
+  "stripe.disconnectStripeUser": function (superAdminId) {
     Meteor.users.update(
-      { _id: this.userId },
+      { _id: superAdminId},
       { $set: { "profile.stripeStatus": false } }
     );
-    UserStripeData.remove({ userId: this.userId });
+    UserStripeData.remove({ userId: superAdminId});
     return "Successfully Disconnected";
   },
   "stripe.findAdminStripeAccount": function (superAdminId) {

@@ -413,7 +413,7 @@ Meteor.methods({
       filter._id = SchoolId;
     }
     let schoolData = School.findOne(filter);
-    return schoolData ? true : false;
+    return schoolData ;
   },
   "school.optimizationFinder": function () {
    return School.find({mainImage:{$exists:true},mainImageMedium:{$exists:false},mainImageLow:{$exists:false},logoImgMedium:{$exists:false},logoImgLow:{$exists:false}}).fetch();

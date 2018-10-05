@@ -280,7 +280,8 @@ class ClassDetailModal extends React.Component {
       null,
       this.props.eventData.schoolId,
       (err, res) => {
-        this.setState({ adminAccess: res });
+        if(res)
+        this.setState({ adminAccess: true });
       }
     );
     if (this.props.eventData) {

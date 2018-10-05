@@ -12,22 +12,28 @@ class Settings extends React.Component {
   }
 
   disconnectStripe = () => {
-    const { toastr } = this.props;
-    Meteor.call("stripe.disconnectStripeUser", (error, result) => {
+    const { toastr,schoolData } = this.props;
+
+    Meteor.call("stripe.disconnectStripeUser", schoolData.superAdmin,(error, result) => {
+      this.setState({status:false});
       toastr.success(result, "Success");
     });
   };
-
+  
+  componentWillMount() {
+    const {schoolData} = this.props;
+    Meteor.call("stripe.findAdminStripeAccount",schoolData.superAdmin,(err,res)=>{
+      this.setState({status:res});      
+    })
+  }
+  
   render() {
-    const role =
-      this.props &&
-      this.props.currentUser &&
-      _.indexOf(this.props.currentUser.roles, "Superadmin");
+    const role = this.props && this.props.currentUser && _.indexOf(this.props.currentUser.roles, "Superadmin");
+    const {status} = this.state; 
     return (
       <div>
-        
             <div>
-              {this.props.currentUser.profile.stripeStatus ? (
+              {status ? (
                 <center>
                   <Card>
                     {" "}

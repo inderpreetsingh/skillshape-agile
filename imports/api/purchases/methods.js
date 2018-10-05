@@ -41,7 +41,7 @@ Meteor.methods({
       packageId: packageId
     });
     let packageStatus = "active";
-    if (result && result.packageType != 'CP') {
+    if (result) {
         if (result.packageStatus == "active") {
           packageStatus = "inactive";
         }

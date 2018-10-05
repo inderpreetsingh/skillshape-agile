@@ -544,7 +544,7 @@ export default class SchoolViewBase extends React.Component {
                   content: `You already have ${classesLeft} Classes left. Would you like to purchases this package to add on to your Existing Classes ?`,
                   RenderActions: (
                     <ButtonsWrapper>
-                      <Button onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, Number(noClasses)+Number(classesLeft), planId, currency, pymtType,this,purchaseId) }} applyClose>
+                      <Button onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,this,purchaseId) }} applyClose>
                         Purchase 
                       </Button>
                       <Button onClick={() => { }} applyClose>
