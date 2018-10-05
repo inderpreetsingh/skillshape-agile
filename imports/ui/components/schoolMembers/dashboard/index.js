@@ -50,6 +50,7 @@ import Purchases from "/imports/api/purchases/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
 import concat from 'lodash/concat';
 import groupBy from 'lodash/groupBy';
+import includes from 'lodash/includes';
 const drawerWidth = 400;
 const style = {
   w211: {
@@ -631,16 +632,7 @@ class DashBoardView extends React.Component {
   }
   render() {
 
-    const {
-      classes,
-      theme,
-      schoolData,
-      classTypeData,
-      slug,
-      schoolAdmin,
-      adminView,
-      adminsData
-    } = this.props;
+    const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, adminView, adminsData, superAdminId } = this.props;
     const { renderStudentModal, memberInfo, joinSkillShape,isLoading} = this.state;
 
     let schoolMemberListFilters = { ...this.state.filters };
@@ -700,19 +692,20 @@ class DashBoardView extends React.Component {
             </Grid>
           )}
          {adminView && !_.isEmpty(adminsData)?
-          <SchoolAdminListItems
-          collectionData={adminsData}
-          handleMemberDetailsToRightPanel={
-            this.handleMemberDetailsToRightPanel
-          }
-          adminView={adminView}
-        />:<SchoolMemberListItems
-            filters={schoolMemberListFilters}
-            handleMemberDetailsToRightPanel={
-              this.handleMemberDetailsToRightPanel
-            }
-            adminView={adminView}
-          />} 
+            <SchoolAdminListItems
+              collectionData = {adminsData}
+              handleMemberDetailsToRightPanel = {
+                this.handleMemberDetailsToRightPanel
+              }
+              adminView = {adminView}
+              superAdminId = {superAdminId}
+            /> : <SchoolMemberListItems
+              filters = {schoolMemberListFilters}
+              handleMemberDetailsToRightPanel={
+                this.handleMemberDetailsToRightPanel
+              }
+              adminView = {adminView}
+            />} 
         </List>
       </div>
     );
@@ -923,11 +916,11 @@ export default createContainer(props => {
   let isLoading = true;
   let classTypeData = [];
   let filters = { ...props.filters, slug };
-  let schoolAdmin;
+  let schoolAdmin=false;
   let adminsIds;
   let schoolId;
   let classPricing,monthlyPricing,enrollmentFee,adminView=false,adminsData=[],classSubscription,classSubscriptionData
-  ,purchaseData=[],purchaseSubscription,filter,purchaseByUserId;
+  ,purchaseData=[],purchaseSubscription,filter,purchaseByUserId,superAdminId;
   ;
   let subscription = Meteor.subscribe(
     "schoolMemberDetails.getSchoolMemberWithSchool",
@@ -973,21 +966,22 @@ export default createContainer(props => {
 
 
     if (!isEmpty(schoolData) && schoolData[0].admins) {
-      let currentUser = Meteor.user();
-      if (checkMyAccess({user:currentUser,schoolId:schoolData[0]._id,viewName:'schoolMemberDetails_CUD'}) ) {
+      adminView = true;
+      adminsIds = schoolData[0].admins;
+      superAdminId = schoolData[0].superAdmin || null
+      adminsIds.push(superAdminId)
+      if(includes(adminsIds,Meteor.userId())){
         schoolAdmin = true;
       }
-          if(schoolAdmin && query.admin=='true'){
-            adminView=true;
-           adminsIds=schoolData[0].admins;
-            Meteor.subscribe("user.findAdminsDetails",adminsIds)
-            adminsData=Meteor.users.find().fetch()
-           let x= findIndex(adminsIds,(o)=>{return o==Meteor.userId()})
-            if(x==-1){
-             adminData=remove(adminsData,(o)=>{return o._id==Meteor.userId()});
-            }
-            
-          }
+      if (schoolAdmin && query.admin == 'true') {
+        Meteor.subscribe("user.findAdminsDetails", adminsIds)
+        adminsData = Meteor.users.find().fetch()
+        let x = findIndex(adminsIds, (o) => { return o == Meteor.userId() })
+        if (x == -1) {
+          adminData = remove(adminsData, (o) => { return o._id == Meteor.userId() });
+        }
+
+      }
                     
     }
   }
@@ -1006,5 +1000,6 @@ export default createContainer(props => {
    adminView,
    adminsData,
    purchaseByUserId,
+   superAdminId
   };
 }, withStyles(styles, { withTheme: true })(DashBoardView));

@@ -129,7 +129,6 @@ const styles = {
 
 const ClassTypeCardDescription = props => {
   const { cardRevealInfo, schoolData, editMode, selectedSkillSubject } = props;
-  console.log("ClassTypeCardDescription props-->>",props);
   return (
     <MuiThemeProvider theme={MuiTheme}>
       <Fragment>

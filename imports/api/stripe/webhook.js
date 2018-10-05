@@ -4,7 +4,7 @@ import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 import School from '/imports/api/school/fields';
 import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} from '/imports/api/email/index';
 import  bodyParser from "body-parser";
-if(Meteor.settings.platform=='local' || Meteor.settings.platform=='dev'){
+if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
   Picker.middleware(bodyParser.json());
   Picker.middleware(bodyParser.urlencoded({ extended: false }));
   let dataFile = function (params, request, response, next) {

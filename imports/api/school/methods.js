@@ -65,7 +65,7 @@ Meteor.methods({
         return School.findOne({_id:schoolId})
     }
     else if (this.userId && !from) {
-      return School.find({ admins: { $in: [this.userId] } }).fetch();
+      return School.find({$or:[{admins: { $in: [this.userId] }},{superAdmin:this.userId}]  }).fetch();
     }
   },
   "school.claimSchool": function(userId, schoolId) {

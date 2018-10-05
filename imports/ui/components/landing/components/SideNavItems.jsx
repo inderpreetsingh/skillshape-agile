@@ -318,18 +318,18 @@ class SideNavItems extends React.Component {
         }
         if (result) {
           {
+            const mySchool = result.map((school, index) => {
+              return {
+                name: school.name,
+                link: `/schools/${school.slug}`,
+                iconName: "school",
+                schoolEditLink: `/SchoolAdmin/${school._id}/edit`,
+                superAdmin: school && school.superAdmin,
+                admins: school.admins
+              };
+            });
+            this.setState({ mySchool: mySchool });
           }
-          const mySchool = result.map((school, index) => {
-            return {
-              name: school.name,
-              link: `/schools/${school.slug}`,
-              iconName: "school",
-              schoolEditLink: `/SchoolAdmin/${school._id}/edit`,
-              superAdmin: school && school.superAdmin,
-              admins: school.admins
-            };
-          });
-          this.setState({ mySchool: mySchool });
         }
       });
     }
