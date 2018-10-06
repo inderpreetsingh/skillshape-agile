@@ -69,12 +69,14 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
         }
         userData = Meteor.users.findOne({_id:userId})
         schoolData = School.findOne({_id:schoolId});
-        schoolEmail = schoolData.email;
-        schoolName = schoolData.name;
-        userName = userData.profile.name;
-        userEmail = userData.emails[0].address;
-        sendPackagePurchasedEmailToStudent(userName, userEmail, packageName);
-        sendPackagePurchasedEmailToSchool(schoolName, schoolEmail, userName, userEmail, packageName);
+        if(!isEmpty(userData) && !isEmpty(schoolData)){
+          schoolEmail = schoolData.email;
+          schoolName = schoolData.name;
+          userName = userData.profile.name;
+          userEmail = userData.emails[0].address;
+          sendPackagePurchasedEmailToStudent(userName, userEmail, packageName);
+          sendPackagePurchasedEmailToSchool(schoolName, schoolEmail, userName, userEmail, packageName);
+        }
         response.end("Ok Done");
         break;
       }
