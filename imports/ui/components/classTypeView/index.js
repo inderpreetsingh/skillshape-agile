@@ -74,7 +74,6 @@ export default createContainer(props => {
   let classInterestData = [];
   let currency;
   let schoolData;
-
   if (classTypeId) {
     subscription = Meteor.subscribe("classType.getClassTypeWithClassTimes", {
       classTypeId
@@ -91,8 +90,7 @@ export default createContainer(props => {
 
   const sub1Ready = subscription && subscription.ready();
   const sub2Ready = reviewsSubscriptions && reviewsSubscriptions.ready();
-  const sub3Ready = classTimesSubscription && classTimesSubscription.ready();
-  if (sub1Ready && sub2Ready && sub3Ready) {
+  if (sub1Ready && sub2Ready) {
     isLoading = false;
   }
   Meteor.subscribe("classInterest.getClassInterest");
@@ -106,6 +104,7 @@ export default createContainer(props => {
       : config.defaultCurrency;
 
   let classTimesData = ClassTimes.find({ classTypeId: classTypeId }).fetch();
+  console.log('TCL: classTimesData', classTimesData);
   let classPricingData = ClassPricing.find().fetch();
   let monthlyPricingData = MonthlyPricing.find().fetch();
   let mediaData = Media.find().fetch();

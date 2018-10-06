@@ -19,13 +19,12 @@ Meteor.publish("classType.getclassType", function({ schoolId }) {
 });
 
 
-Meteor.publish("classType.getClassTimesWithIds", function(classTypeIds) {
-  if (!classTypeIds.length) {
+Meteor.publish("classType.getClassTimesWithIds", function({classTypeId}) {
+  if (!classTypeId) {
     // this.ready();
     return null;
   }
-  let cursor = ClassTimes.find({ classTypeId: { $in: classTypeIds } });
-  // console.log(cursor);
+  let cursor = ClassTimes.find({ classTypeId});
   return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
