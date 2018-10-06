@@ -8,7 +8,7 @@ import { sendClaimASchoolEmail } from "/imports/api/email";
 // if (Meteor.isServer) {
     // import ClaimSchoolEmailCronJob from "/imports/api/claimSchoolEmailCronJob/fields.js";
     SyncedCron.add({
-      name: 'Crunch some important numbers for the marketing department',
+      name: 'Claim School Request Cron Job',
       schedule: function(parser) {
         // parser is a later.parse object
         return parser.text('at 3:27 pm');

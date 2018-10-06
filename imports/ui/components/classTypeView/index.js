@@ -104,7 +104,6 @@ export default createContainer(props => {
       : config.defaultCurrency;
 
   let classTimesData = ClassTimes.find({ classTypeId: classTypeId }).fetch();
-  console.log('TCL: classTimesData', classTimesData);
   let classPricingData = ClassPricing.find().fetch();
   let monthlyPricingData = MonthlyPricing.find().fetch();
   let mediaData = Media.find().fetch();

@@ -5,7 +5,7 @@ import School from '/imports/api/school/fields';
 import { sendPackageExpiredEmail ,sendPackageExpiredEmailToSchool} from "/imports/api/email";
 var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
 SyncedCron.add({
-  name: "cronJobForPackageStatus",
+  name: "cron Job For Package Status",
   schedule: function (parser) {
     // parser is a later.parse object
     return parser.text("every 24 hours");
