@@ -78,6 +78,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       
       startDate = new Date();
       endDate = getExpiryDateForPackages(startDate, expPeriod, expDuration);
+      console.log('TCL: endDate', endDate);
       let payload = {
         userId: userId,
         stripeRequest: stripeRequest,
@@ -138,6 +139,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       sendPackagePurchasedEmailToSchool(schoolName, schoolEmail, userName, userEmail, packageName)
       return "Payment Successfully Done";
     } catch (error) {
+      console.log('TCL: }catch -> error', error);
       payload = {
         stripeResponse: error,
         status: "Error"
