@@ -28,14 +28,17 @@ import { sendClaimASchoolEmail } from "/imports/api/email";
                         toField = "ramesh.bansal@daffodilsw.com";
                     }
                     // Update count in `ClaimSchoolRequest`.
-                    ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj })
-                    emailSuccess = sendClaimSchoolEmail(requestObj,requestObj._id, toField);
-                } else {
+                   
+                } else if(requestObj && requestObj.emailCount == 3){
                     // To: should be Super Admin.
+                    requestObj.emailCount+=1;
                     toField = "help@skillshape.com";
-                    emailSuccess = sendClaimSchoolEmail(requestObj,requestObj._id, toField);
-
+                    if(process.env["NODE_ENV"] == "development") {
+                        toField = "ramesh.bansal@daffodilsw.com";
+                    }
                 }
+                ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj })
+                emailSuccess = sendClaimSchoolEmail(requestObj,requestObj._id, toField);
 
             });
             return emailSuccess;
