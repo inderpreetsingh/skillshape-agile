@@ -36,9 +36,11 @@ Meteor.methods({
       reviewerId: this.userId,
       reviewForId: reviewForId
     });
-    return {
-      ratings: myReview.ratings,
-      comment: myReview.comment
-    };
+    if(!isEmpty(myReview)){
+      return {
+        ratings: myReview.ratings,
+        comment: myReview.comment
+      };
+    }
   }
 });
