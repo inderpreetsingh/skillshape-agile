@@ -3,6 +3,7 @@ import Purchases from '/imports/api/purchases/fields';
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 import School from '/imports/api/school/fields';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} from '/imports/api/email/index';
 import  bodyParser from "body-parser";
 if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
@@ -18,7 +19,7 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
         // updating classSubscription collection
           let subscriptionId = request.body.data.object.subscription;
           let subscriptionResponse = request.body;
-          let classSubscriptionData= ClassSubscription.find({subscriptionId}).fetch();
+          let classSubscriptionData= ClassSubscription.findOne({subscriptionId});
           let payload = {
                         subscriptionResponse,
                         status: "successful"
@@ -29,7 +30,7 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
           // updating purchases collections
           /* if subscription already in collection then update it by one month or else add new entry in purchase collection*/
          let result= Purchases.findOne({subscriptionId});
-         if(result){
+         if(!isEmpty(result)){
           endDate=getExpiryDateForPackages(result.endDate, "Months", 1);
           payload={ 
                   endDate: endDate,
@@ -42,20 +43,21 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
           
         }
         else{
-          if(classSubscriptionData){
-            startDate = get(classSubscriptionData[0],'startDate',new Date())
+          if(!isEmpty(classSubscriptionData)){
+            console.log('TCL: dataFile -> classSubscriptionData', classSubscriptionData);
+            startDate = get(classSubscriptionData,'startDate',new Date())
             endDate=getExpiryDateForPackages(startDate, "Months", 1);
             payload={ 
-              userId: classSubscriptionData[0].userId,
-              packageId: classSubscriptionData[0].packageId,
+              userId: classSubscriptionData.userId,
+              packageId: classSubscriptionData.packageId,
               subscriptionId: subscriptionId,
-              packageName: classSubscriptionData[0].packageName,
-              schoolId: classSubscriptionData[0].schoolId,
+              packageName: classSubscriptionData.packageName,
+              schoolId: classSubscriptionData.schoolId,
               startDate,
               endDate: endDate,
-              planId: classSubscriptionData[0].subscriptionRequest.items[0].plan,
+              planId: classSubscriptionData.subscriptionRequest.items[0].plan,
               packageStatus: 'active',
-              emailId:classSubscriptionData[0].emailId,
+              emailId:classSubscriptionData.emailId,
               packageType:'MP'
             }
            packageName = payload.packageName;
