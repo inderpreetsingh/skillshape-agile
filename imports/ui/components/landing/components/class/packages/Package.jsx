@@ -1,13 +1,11 @@
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
-import { maximumClasses } from '/imports/util';
-import Cart from "/imports/ui/components/landing/components/icons/Cart.jsx";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import PropTypes from "prop-types";
+import React, { Fragment } from "react";
+import styled from "styled-components";
 import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
-import {formatMoney} from '/imports/util';
+import Cart from "/imports/ui/components/landing/components/icons/Cart.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { formatMoney, maximumClasses } from '/imports/util';
 const Wrapper = styled.div`
   ${helpers.flexCenter} justify-content: space-between;
 
@@ -236,7 +234,7 @@ const Package = props => (
           />
           :  <AddToCartSection>
           <Cart
-            onClick={() =>
+            onClick={() =>{
               props.onAddToCartIconButtonClick(
                 props.packageType,
                 props._id,
@@ -245,13 +243,13 @@ const Package = props => (
                 props.cost ? props.cost : props.pymtDetails[0].cost,
                 props.pymtDetails,
                 props.expDuration,
-                props.expPeriod,
+                props.expPeriod || props.duPeriod,
                 props.noClasses,
                 props.pymtDetails && props.pymtDetails[0].planId,
                 props.currency ? props.currency : props.pymtDetails ? props.pymtDetails[0].currency : props.schoolCurrency,
                 props.pymtType 
               )
-            }
+            }}
           />
           {/* </a> */}
         </AddToCartSection>}

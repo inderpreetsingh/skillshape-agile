@@ -76,7 +76,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         }
       };
       
-      startDate = getExpiryDateForPackages(new Date());
+      startDate = new Date();
       endDate = getExpiryDateForPackages(startDate, expPeriod, expDuration);
       let payload = {
         userId: userId,
@@ -299,7 +299,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
           );
         }
       }
-      startDate = getExpiryDateForPackages(new Date());
+      startDate = new Date();
       endDate = getExpiryDateForPackages(startDate,"Months",monthlyPymtDetails[0].month);
       subscriptionRequest = {
         customer: stripeCusId,

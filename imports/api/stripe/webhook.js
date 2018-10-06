@@ -2,6 +2,7 @@ import ClassSubscription from "../classSubscription/fields";
 import Purchases from '/imports/api/purchases/fields';
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 import School from '/imports/api/school/fields';
+import get from 'lodash/get';
 import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} from '/imports/api/email/index';
 import  bodyParser from "body-parser";
 if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
@@ -9,9 +10,9 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
   Picker.middleware(bodyParser.urlencoded({ extended: false }));
   let dataFile = function (params, request, response, next) {
     let type = request.body.type;
-    let endDate,userId,userName, userEmail,userData, packageName,schoolId,schoolData,schoolName, schoolEmail;
+    let endDate,userId,userName, userEmail,userData, packageName,schoolId,schoolData,schoolName, schoolEmail,startDate;
     try{
-      console.log("----------------type--------------",type);
+      console.log("WebHook type received:---->",type);
       switch (type) {
         case "invoice.payment_succeeded":
         // updating classSubscription collection
@@ -42,14 +43,15 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
         }
         else{
           if(classSubscriptionData){
-            endDate=getExpiryDateForPackages(classSubscriptionData[0].startDate, "Months", 1);
+            startDate = get(classSubscriptionData[0],'startDate',new Date())
+            endDate=getExpiryDateForPackages(startDate, "Months", 1);
             payload={ 
               userId: classSubscriptionData[0].userId,
               packageId: classSubscriptionData[0].packageId,
               subscriptionId: subscriptionId,
               packageName: classSubscriptionData[0].packageName,
               schoolId: classSubscriptionData[0].schoolId,
-              startDate: classSubscriptionData[0].startDate,
+              startDate,
               endDate: endDate,
               planId: classSubscriptionData[0].subscriptionRequest.items[0].plan,
               packageStatus: 'active',
@@ -77,7 +79,7 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
       response.end("Case not used");
     }
     catch(error){
-      console.log("error in webhook work",error)
+      console.log("error in webHook work",error)
       response.end("Not Ok ");
       throw new Meteor.Error(error);
     }

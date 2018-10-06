@@ -1,23 +1,19 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { checkSuperAdmin, createMarkersOnMap } from "/imports/util";
-import Events from "/imports/util/events";
-import { capitalizeString } from "/imports/util";
-import { browserHistory, Link } from "react-router";
-// import collection definition over here
-import ClassType from "/imports/api/classType/fields";
-import ClassPricing from "/imports/api/classPricing/fields";
-import SLocation from "/imports/api/sLocation/fields";
-import { Loading } from "/imports/ui/loading";
-import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import { isEmpty } from "lodash";
-import { getUserFullName } from "/imports/util/getUserData";
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
-import styled from "styled-components";
-import Button from "material-ui/Button";
 import get from 'lodash/get';
 import moment from "moment";
-import {formatMoney} from '/imports/util';
+import React from "react";
+import ReactDOM from "react-dom";
+import { browserHistory } from "react-router";
+import styled from "styled-components";
+import ClassPricing from "/imports/api/classPricing/fields";
+// import collection definition over here
+import ClassType from "/imports/api/classType/fields";
+import SLocation from "/imports/api/sLocation/fields";
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+import { capitalizeString, checkSuperAdmin, createMarkersOnMap, formatMoney } from "/imports/util";
+import Events from "/imports/util/events";
+import { getUserFullName } from "/imports/util/getUserData";
+import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 const ButtonsWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -30,14 +26,14 @@ export default class SchoolViewBase extends React.Component {
 
 
   componentWillMount() {
-    if(this.props && this.props.params){
+    if (this.props && this.props.params) {
       let { slug } = this.props.params;
       Meteor.call("school.getBestPrice", { slug }, (error, result) => {
         this.setState({ bestPriceDetails: result });
-        
+
       });
     }
-    
+
     // Meteor.call('school.findSchoolById',slug,(err,res)=>{
     //   res&&this.setState({currency:res})
     // })
@@ -486,159 +482,166 @@ export default class SchoolViewBase extends React.Component {
     //     }
     // });
   };
+  noThanksButton = () => (
+    <FormGhostButton
+      label={"No, thanks"}
+      onClick={() => { }}
+      greyColor
+      applyClose
+    />
+  )
   //handle PayUpfront case
   handlePayUpFront = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content) => {
+    console.log('TCL: handlePayUpFront -> monthlyPymtDetails', monthlyPymtDetails);
     amount = amount * monthlyPymtDetails[0].month || 1;
+    expDuration =  monthlyPymtDetails[0].month ;
     const { popUp } = this.props;
     popUp.appear("inform", {
-      title: 'Pay Up Front',
-      content: 'When you pay for a number of monthly subscription fees at once.',
-      RenderActions: (
-        <ButtonsWrapper>
-          <Button onClick={() => { }} applyClose>
-            Cancel
-          </Button>
-          <Button onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self); }} applyClose>
-            Purchase Now
-          </Button>
-          {/* Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school. */}
-          {/* <Button onClick={() => { this.handlePayAsYouGo(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
+      title: "Pay Up Front", content: "When you pay for a number of monthly subscription fees at once.",
+      RenderActions: (<ButtonsWrapper>
+        {this.noThanksButton()}
+        <FormGhostButton
+          label={"Purchase Now"}
+          onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self); }}
+          applyClose
+        />
+        {/* Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school. */}
+        {/* <Button onClick={() => { this.handlePayAsYouGo(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
             Offline
           </Button> */}
-        </ButtonsWrapper>
-      )
+      </ButtonsWrapper>)
     }, true);
   }
   //handle payAsYouGo case
-  handlePayAsYouGo = (planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) => {
+  handlePayAsYouGo = ({packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content}) => {
     const { popUp } = this.props;
     popUp.appear("inform", {
       title: title, content: content,
       RenderActions: (
         <ButtonsWrapper>
-          <Button onClick={() => { }} applyClose>
-            Cancel
-          </Button>
-          <Button onClick={() => {
-        Meteor.call("stripe.handleCustomerAndSubscribe", null, planId, schoolId, packageName, packageId, monthlyPymtDetails, (err, res) => {
-          if (res) {
-            popUp.appear("success", { title: "Success", content: `We have mark you as interested student.` });
-          } else {
-            popUp.appear("warning", { title: "Error", content: (err && err.message) || "something went wrong" });
-          }
-        });
-      }} >Agree and Pay First Month Now
-      </Button></ButtonsWrapper>)})
-          {/* Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school. */}
-          {/* <Button onClick={() => { this.handlePayAsYouGo(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
+          {this.noThanksButton()}
+          <FormGhostButton
+            label={"Agree and Pay First Month Now"}
+            onClick={() => {
+              this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, this)
+            }}
+            applyClose
+          />
+        </ButtonsWrapper>)
+    })
+    {/* Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school. */ }
+    {/* <Button onClick={() => { this.handlePayAsYouGo(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
             Offline
           </Button> */}
   }
   //This function is used to find out if a user is already purchased an package or not
-  isAlreadyPurchased =   ({userId,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType}) => {
-    return new Promise((resolve,reject)=>{
+  isAlreadyPurchased = ({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType }) => {
+    return new Promise((resolve, reject) => {
       if (userId && planId || packageId) {
-         Meteor.call('purchases.isAlreadyPurchased', { userId, planId, packageId, packageType, pymtType },async (err, res) => {
+        Meteor.call('purchases.isAlreadyPurchased', { userId, planId, packageId, packageType, pymtType }, async (err, res) => {
           if (res) {
             const { popUp } = this.props;
-            if(packageType == 'EP'){
+            if (packageType == 'EP') {
               popUp.appear("success", { title: "Already Purchased", content: "You already have paid this Enrolment fee. No payment is needed at this time." });
             }
-            if(packageType == 'CP'){
-              let classesLeft = get(res,'noOfClasses',0);
+            if (packageType == 'CP') {
+              let classesLeft = get(res, 'noOfClasses', 0);
               let purchaseId = res._id;
-              if(classesLeft){
+              if (classesLeft) {
                 popUp.appear("inform", {
                   title: "Already Purchased",
                   content: `You already have ${classesLeft} Classes left. Would you like to purchases this package to add on to your Existing Classes ?`,
                   RenderActions: (
                     <ButtonsWrapper>
-                      
-                      <Button onClick={() => { }} applyClose>
-                        No, thanks
-                      </Button>
-                      <Button  onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,this,purchaseId) }} applyClose>
-                        Purchase 
-                      </Button>
-                      
+
+                      {this.noThanksButton()}
+                      <FormGhostButton
+                        label={"Purchase"}
+                        onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, this, purchaseId) }}
+                        applyClose
+                      />
                     </ButtonsWrapper>
                   )
                 }, true);
-              }else{
-                this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,this,purchaseId)
+              } else {
+                this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, this, purchaseId)
               }
             }
-            else if(packageType == "MP"){
-              if(get(pymtType,"autoWithDraw",false)){
-                popUp.appear("success", { title: "Already Subscribed", content: `You already have a subscription for this package that automatically renews on ${moment(get(res,"endDate",new Date())).format("Do MMMM YYYY")}. No payment is needed at this time.` });
+            else if (packageType == "MP") {
+              if (get(pymtType, "autoWithDraw", false)) {
+                popUp.appear("success", { title: "Already Subscribed", content: `You already have a subscription for this package that automatically renews on ${moment(get(res, "endDate", new Date())).format("Do MMMM YYYY")}. No payment is needed at this time.` });
               }
-              else if(get(pymtType,"payAsYouGo",false)){
-                popUp.appear("success", { title: "Already Subscribed", content: `You already have a subscription for this package that expires on ${moment(get(res,"endDate",new Date())).format("Do MMMM YYYY")}. Would you like to pay up until ${moment(res.endDate).add(1, 'M').format("Do MMMM YYYY")}?` });
+              else if (get(pymtType, "payAsYouGo", false)) {
+                popUp.appear("success", { title: "Already Subscribed", content: `You already have a subscription for this package that expires on ${moment(get(res, "endDate", new Date())).format("Do MMMM YYYY")}. Would you like to pay up until ${moment(res.endDate).add(1, 'M').format("Do MMMM YYYY")}?` });
               }
-              else{
+              else {
                 popUp.appear("success", { title: "Already Purchased", content: `You already have purchased this package.` });
 
               }
             }
             this.setState({ isAlreadyPurchased: true });
             // check payment type  and take required action
-             resolve();
+            resolve();
           }
           else {
             this.setState({ isAlreadyPurchased: false });
-             // check payment type  and take required action
-             if (packageType == 'MP') {
-              await this.checkPymtType({userId,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType});
+            // check payment type  and take required action
+            if (packageType == 'MP') {
+              await this.checkPymtType({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType });
               resolve();
-            }else{
+            } else {
               resolve();
             }
           }
         })
       }
-       
+
     })
   }
   //check payment type and take action then
-  checkPymtType =  ({userId,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType}) => {
-    return new Promise((resolve,reject)=>{
+  checkPymtType = ({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType }) => {
+    return new Promise((resolve, reject) => {
       const { popUp } = this.props;
       if (pymtType && pymtType.payAsYouGo || pymtType.payUpFront) {
-         Meteor.call('classSubscription.isAlreadyMarked', { userId, planId }, (err, res) => {
+        Meteor.call('classSubscription.isAlreadyMarked', { userId, planId }, (err, res) => {
           if (res) {
             popUp.appear("inform", {
               title: "Waiting for Payment",
               content: `We are waiting for payment of ${packageName}. You can Pay Now via online payment now or go to the school to complete the payment.`,
               RenderActions: (
                 <ButtonsWrapper>
-                  <Button onClick={() => { }} applyClose>
-                    No, thanks
-                  </Button>
-                  <Button  onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,this) }} applyClose>
-                    Purchase 
-                  </Button>
+                  {this.noThanksButton()}
+                  <FormGhostButton
+                    label={" Purchase "}
+                    onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, this) }}
+                    applyClose
+                  />
                 </ButtonsWrapper>
               )
             }, true);
-            this.setState({ isAlreadyPurchased: true,payAsYouGo:true});
+            this.setState({ isAlreadyPurchased: true, payAsYouGo: true });
             resolve();
           }
           else {
-            this.setState({ isAlreadyPurchased: false});
+            this.setState({ isAlreadyPurchased: false });
             if (pymtType.payAsYouGo) {
-              this.setState({ payAsYouGo: true ,payUpFront:false});
+              this.setState({ payAsYouGo: true, payUpFront: false });
             } else if (pymtType.payUpFront) {
-              this.setState({ payUpFront: true ,payAsYouGo: false});
+              this.setState({ payUpFront: true, payAsYouGo: false });
             }
             resolve()
           }
-  
+
         })
-      }else{
+      } else {
         resolve()
       }
     })
 
+  }
+  // resetStates
+  resetStates = ()=>{
+    this.setState({isAlreadyPurchased:false,payAsYouGo:false,payUpFront:false});
   }
   //handle monthly subscription
   handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPymtDetails, self) => {
@@ -646,6 +649,7 @@ export default class SchoolViewBase extends React.Component {
     Meteor.call("stripe.handleCustomerAndSubscribe", token.id, planId, schoolId, packageName, packageId, monthlyPymtDetails, (err, res) => {
       if (res) {
         popUp.appear("success", { title: "Success", content: `Subscription successfully subscribed` });
+        this.resetStates();
       } else {
         popUp.appear("warning", { title: "Error", content: (err && err.message) || "something went wrong" });
       }
@@ -653,9 +657,9 @@ export default class SchoolViewBase extends React.Component {
     );
   }
   //handle single charge for cp,ep,payupfront online
-  handleCharge = (token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self,purchaseId) => {
+  handleCharge = (token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self, purchaseId) => {
     const { popUp } = self.props;
-    Meteor.call("stripe.chargeCard", token.id, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId,purchaseId, (error, result) => {
+    Meteor.call("stripe.chargeCard", token.id, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, purchaseId, (error, result) => {
 
       if (result) {
         if (result == "Payment Successfully Done") {
@@ -690,6 +694,7 @@ export default class SchoolViewBase extends React.Component {
           };
           Meteor.call("schoolMemberDetails.addNewMember", memberData);
           popUp.appear("success", { title: "Success", content: "Payment Successful" });
+          this.resetStates();
         } else {
           popUp.appear("success", { title: "Success", content: result.message });
         }
@@ -701,10 +706,10 @@ export default class SchoolViewBase extends React.Component {
 
   }
   // handleChargeAndSubscription
-  handleChargeAndSubscription = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self,purchaseId) => {
+  handleChargeAndSubscription = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, purchaseId) => {
     const { popUp } = this.props;
-    let {payUpFront,payAsYouGo} = this.state;
-    popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...",RenderActions:(<spna/>) });/* , true, { autoClose: true, autoTimeout: 4000 } */
+    let { payUpFront, payAsYouGo } = this.state;
+    popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...", RenderActions: (<spna />) });/* , true, { autoClose: true, autoTimeout: 4000 } */
     Meteor.call("stripe.findAdminStripeAccount", this.props.schoolData.superAdmin, (error, result) => {
       if (result && Meteor.settings.public.paymentEnabled) {
         let handler = StripeCheckout.configure({
@@ -713,10 +718,10 @@ export default class SchoolViewBase extends React.Component {
           currency: currency,
           locale: "auto",
           token: function (token) {
-            popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress",RenderActions:(<spna/>) });
+            popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress", RenderActions: (<spna />) });
             //toastr.success("Please wait transaction in Progress", "Success");
             if (packageType == "CP" || packageType == "EP" || payUpFront || payAsYouGo) {
-              self.handleCharge(token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self,purchaseId);
+              self.handleCharge(token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self, purchaseId);
             } else if (packageType == "MP" && pymtType && pymtType.autoWithDraw) {
               self.handleSubscription(token, planId, schoolId, packageName, packageId, monthlyPymtDetails, self);
             }
@@ -725,22 +730,22 @@ export default class SchoolViewBase extends React.Component {
 
         // Open Checkout with further options:
         // if (packageType == "CP" || packageType == "EP" || packageType == "MP" && pymtType && pymtType.autoWithDraw || payUpFront) {
-          handler.open({
-            name: this.props.schoolData.name,
-            description: packageName,
-            zipCode: true,
-            amount: amount
-          });
+        handler.open({
+          name: this.props.schoolData.name,
+          description: packageName,
+          zipCode: true,
+          amount: amount
+        });
 
 
 
-          // Close Checkout on page navigation:
-          window.addEventListener("popstate", function () {
-            handler.close();
-          });
+        // Close Checkout on page navigation:
+        window.addEventListener("popstate", function () {
+          handler.close();
+        });
         // }
       }
-      else  {
+      else {
         if (Meteor.userId()) {
           this.setState({ isLoading: true });
           Meteor.call("packageRequest.addRequest", { typeOfTable: packageType, tableId: packageId, schoolId: schoolId }, (err, res) => {
@@ -761,10 +766,9 @@ export default class SchoolViewBase extends React.Component {
   }
   // whenever user click cart button request come here.
   handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) => {
-    console.log('TCL: handlePurchasePackage -> monthlyPymtDetails', monthlyPymtDetails);
-    try{
-      const {popUp} = this.props;
-      popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...",RenderActions:(<spna/>) });/* , true, { autoClose: true, autoTimeout: 4000 } */
+    try {
+      const { popUp } = this.props;
+      popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...", RenderActions: (<span />) });/* , true, { autoClose: true, autoTimeout: 4000 } */
       config.currency.map((data, index) => {
         if (data.value == currency) {
           currency = data.label;
@@ -774,25 +778,25 @@ export default class SchoolViewBase extends React.Component {
       let self = this;
       let userId = this.props.currentUser._id;
       //check is package is already purchased
-  
-      await this.isAlreadyPurchased({userId,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType});
-     
+
+      await this.isAlreadyPurchased({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType });
+
       if (this.state.isAlreadyPurchased) {
         return;
       }
-      
+
       if (this.state.payAsYouGo) {
-        let money = formatMoney( amount/100,get(monthlyPymtDetails[0],"currency",$));
-        let months = get(monthlyPymtDetails[0],"month",0);
+        let money = formatMoney(amount / 100, get(monthlyPymtDetails[0], "currency", $));
+        let months = get(monthlyPymtDetails[0], "month", 0);
         let title = "Pay As You Go ";
-        let content =<div> With this Payment type, you agree to pay the monthly fee for the length of the period you sign up for.
-         You are not signing up for Automatic Withdrawal, and are expected to initiate your own payment each month. 
-         <br/><br/>Do you agree to sign up for <b> {packageName} </b> and pay <b>  {money} per month for {months} {months>1 ?'months' : 'month'}</b>?
+        let content = <div> With this Payment type, you agree to pay the monthly fee for the length of the period you sign up for.
+         You are not signing up for Automatic Withdrawal, and are expected to initiate your own payment each month.
+         <br /><br />Do you agree to sign up for <b> {packageName} </b> and pay <b>  {money} per month for {months} {months > 1 ? 'months' : 'month'}</b>?
           If so, you can pay for the first month now.</div>;
-        this.handlePayAsYouGo(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content);
+        this.handlePayAsYouGo({packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content});
         return;
       }
-  
+
       if (this.state.payUpFront) {
         let title = "Pay Up Front Package";
         let content = "This is Pay Up Front package.We will mark you. You have to pay your fees at School.";
@@ -801,8 +805,8 @@ export default class SchoolViewBase extends React.Component {
       }
       //this will handle charge and subscription both
       this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self);
-  
-    }catch(error){
+
+    } catch (error) {
     }
   };
 
