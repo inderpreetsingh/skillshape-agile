@@ -78,7 +78,6 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       
       startDate = new Date();
       endDate = getExpiryDateForPackages(startDate, expPeriod, expDuration);
-      console.log('TCL: endDate', endDate);
       let payload = {
         userId: userId,
         stripeRequest: stripeRequest,
