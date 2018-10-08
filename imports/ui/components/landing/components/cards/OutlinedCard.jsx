@@ -29,9 +29,14 @@ const ButtonWrapper = styled.div`
 	margin-bottom: ${rhythmDiv}px;
 `;
 
+const Content = Text.extend`
+	text-align: center;
+	font-size: 18px;
+`;
+
 const OutlinedCard = (props) => (
 	<Wrapper borderColor={props.borderColor}>
-		<Text fontSize={18}>{props.content}</Text>
+		<Content>{props.content}</Content>
 		<Buttons>
 			<ButtonWrapper>
 				<FormGhostButton
