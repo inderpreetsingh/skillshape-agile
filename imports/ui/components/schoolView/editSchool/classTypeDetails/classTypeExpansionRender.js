@@ -145,41 +145,6 @@ const ClassTypeExpansionRender = (props) => {
 							<Typography>{cardData.name}</Typography>
 						</ExpansionPanelSummary>
 						<ExpansionPanelDetails className={expansionPanelDetails}>
-							{/*<Notifications>
-								<NotificationWrapper>
-									<Notification
-										notificationContent="Pressing this button will inform students who are enrolled or
-            interested in this class of any schedule changes. Please do not
-            abuse this button."
-										buttonLabel="click to notify"
-										onButtonClick={onNotifyClassTypeUpdate(
-											cardData,
-											'classType.notifyToStudentForClassTimes',
-											'Class Times'
-										)}
-										smallText
-										withCloseIcon={false}
-										bgColor={primaryColor}
-									/>
-								</NotificationWrapper>
-								<NotificationWrapper>
-									<Notification
-										notificationContent="Pressing this button will inform students who are enrolled or
-            interested in this class of any location changes. Please do not
-            abuse this button."
-										buttonLabel="click to notify"
-										onButtonClick={onNotifyClassTypeUpdate(
-											cardData,
-											'classType.notifyToStudentForLocation',
-											'Class Location'
-										)}
-										smallText
-										withCloseIcon={false}
-										bgColor={primaryColor}
-									/>
-								</NotificationWrapper>
-                    </Notifications> */}
-
 							<CardsWrapper>
 								<GridMaxWidthWrapper>
 									<GridContainer>
@@ -210,14 +175,14 @@ const ClassTypeExpansionRender = (props) => {
 											<OutLinedCard
 												content="Inform enrolled or interested students for changes in this class. Please do not abuse these buttons."
 												button1Icon={'location_on'}
-												button1Label="Notify Location changes"
+												button1Label="Notify location changes"
 												onButton1Click={onNotifyClassTypeUpdate(
 													cardData,
 													'classType.notifyToStudentForLocation',
 													'Class Location'
 												)}
 												button2Icon={'class'}
-												button2Label="Notify ClassTimes changes"
+												button2Label="Notify time changes"
 												onButton2Click={onNotifyClassTypeUpdate(
 													cardData,
 													'classType.notifyToStudentForClassTimes',
