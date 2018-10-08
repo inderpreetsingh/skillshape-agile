@@ -47,7 +47,7 @@ SyncedCron.add({
         let userId = currentPurchase.userId;
         Purchases.update(
           {
-            packageStatus: "inactive",
+            packageStatus: "inActive",
             packageId: currentPurchase.packageId,
             userId: userId
           },

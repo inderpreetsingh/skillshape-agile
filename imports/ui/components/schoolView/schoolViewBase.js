@@ -492,7 +492,6 @@ export default class SchoolViewBase extends React.Component {
   )
   //handle PayUpfront case
   handlePayUpFront = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content) => {
-    console.log('TCL: handlePayUpFront -> monthlyPymtDetails', monthlyPymtDetails);
     amount = amount * monthlyPymtDetails[0].month || 1;
     expDuration =  monthlyPymtDetails[0].month ;
     const { popUp } = this.props;
@@ -540,13 +539,14 @@ export default class SchoolViewBase extends React.Component {
       if (userId && planId || packageId) {
         Meteor.call('purchases.isAlreadyPurchased', { userId, planId, packageId, packageType, pymtType }, async (err, res) => {
           if (res) {
+            console.log('TCL: isAlreadyPurchased -> res', res);
             const { popUp } = this.props;
+            let purchaseId = res._id;
             if (packageType == 'EP') {
               popUp.appear("success", { title: "Already Purchased", content: "You already have paid this Enrolment fee. No payment is needed at this time." });
             }
             if (packageType == 'CP') {
               let classesLeft = get(res, 'noOfClasses', 0);
-              let purchaseId = res._id;
               if (classesLeft) {
                 popUp.appear("inform", {
                   title: "Already Purchased",
@@ -568,18 +568,48 @@ export default class SchoolViewBase extends React.Component {
               }
             }
             else if (packageType == "MP") {
+              let expiry,nextExpiry;
+              expiry = moment(get(res, "endDate", new Date()))
+              nextExpiry = moment(res.endDate).add(1, 'M')
               if (get(pymtType, "autoWithDraw", false)) {
                 popUp.appear("success", { title: "Already Subscribed", content: `You already have a subscription for this package that automatically renews on ${moment(get(res, "endDate", new Date())).format("Do MMMM YYYY")}. No payment is needed at this time.` });
               }
               else if (get(pymtType, "payAsYouGo", false)) {
-                popUp.appear("success", { title: "Already Subscribed", content: `You already have a subscription for this package that expires on ${moment(get(res, "endDate", new Date())).format("Do MMMM YYYY")}. Would you like to pay up until ${moment(res.endDate).add(1, 'M').format("Do MMMM YYYY")}?` });
+                this.setState({ payAsYouGo: true});
+                popUp.appear("inform", {
+                  title: "Already Purchased",
+                  content: `You already have a subscription for this package that expires on ${res.endDate}. Would you like to pay up until ${nextExpiry}?`,
+                  RenderActions: (
+                    <ButtonsWrapper>
+                      {this.noThanksButton()}
+                      <FormGhostButton
+                        label={"Purchase"}
+                        onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, this, purchaseId) }}
+                        applyClose
+                      />
+                    </ButtonsWrapper>
+                  )
+                }, true);
               }
               else {
-                popUp.appear("success", { title: "Already Purchased", content: `You already have purchased this package.` });
-
+                this.setState({ payUpFront: true});
+                popUp.appear("inform", {
+                  title: "Already Purchased",
+                  content: `You have an existing Pay Up Front plan which is good until ${expiry}.Would you like to pay ahead until ${nextExpiry } on this plan?`,
+                  RenderActions: (
+                    <ButtonsWrapper>
+                      {this.noThanksButton()}
+                      <FormGhostButton
+                        label={"Purchase"}
+                        onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, this, purchaseId) }}
+                        applyClose
+                      />
+                    </ButtonsWrapper>
+                  )
+                }, true);
               }
             }
-            this.setState({ isAlreadyPurchased: true });
+            this.setState({ isAlreadyPurchased: true});
             // check payment type  and take required action
             resolve();
           }

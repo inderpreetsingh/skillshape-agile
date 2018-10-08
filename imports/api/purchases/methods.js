@@ -2,7 +2,8 @@ import Purchases from "./fields";
 import School from "../school/fields";
 import isEmpty from "lodash/isEmpty";
 import { check } from 'meteor/check';
-
+import moment from "moment";
+import get from 'lodash/get';
 Meteor.methods({
   "purchases.addPurchase": function(payload) {
     check(payload,Object);
@@ -43,18 +44,34 @@ Meteor.methods({
     let packageStatus = "active";
     if (result) {
         if (result.packageStatus == "active") {
-          packageStatus = "inactive";
+          packageStatus = "inActive";
         }
     } 
     return packageStatus;
   },
   "purchases.isAlreadyPurchased": function({userId, planId,packageId,packageType,pymtType}) {
-    check(userId,String);
-    if(packageType == 'MP' && pymtType.autoWithDraw ){
-      return Purchases.findOne({userId,planId,packageStatus:'active'});
-    }
-    else{
-      return Purchases.findOne({userId,packageId,packageStatus:'active'});
+    try{
+      check(userId,String);
+      let activePurchase,inActivePurchases,noOfClasses=0;
+      if(packageType == 'MP' && pymtType.autoWithDraw ){
+       return Purchases.findOne({userId,planId,packageStatus:'active'});
+      }
+      else{
+       activePurchase = Purchases.findOne({userId,packageId,packageStatus:'active'});
+       if(packageType == 'CP'){
+        inActivePurchases = Purchases.find({userId,packageId,packageStatus:'inActive'}).count();
+        noOfClasses = get(Purchases.findOne({userId,packageId,packageStatus:'inActive'}),'noOfClasses',0) * inActivePurchases;
+         activePurchase.noOfClasses = activePurchase.noOfClasses + noOfClasses;
+       }else{
+         console.log('TCL: inActivePurchases', inActivePurchases);
+         console.log('TCL: activePurchase.endDate', activePurchase.endDate);
+         activePurchase.endDate = moment(activePurchase.endDate).add(inActivePurchases, 'M').format("Do MMMM YYYY");;
+       }
+       console.log('<><><><><><><><><><><', activePurchase);
+       return activePurchase;
+      }
+    }catch(error){
+    console.log('TCL: }catch -> error', error);
     }
   }
 });
