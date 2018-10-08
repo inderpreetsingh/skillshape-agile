@@ -119,9 +119,3 @@ export default (config = Object.freeze({
   ]
 }));
 
-/*
-connect mongo ss2 on local
-mongo ds155414.mlab.com:55414/heroku_dr32rk73 -u ramesh-daffodil -p daffodil 
-Check heroku ss2 logs
-heroku logs -a skillshape2 -t
-*/
