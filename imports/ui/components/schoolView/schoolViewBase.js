@@ -648,7 +648,7 @@ export default class SchoolViewBase extends React.Component {
     const { popUp } = self.props;
     Meteor.call("stripe.handleCustomerAndSubscribe", token.id, planId, schoolId, packageName, packageId, monthlyPymtDetails, (err, res) => {
       if (res) {
-        popUp.appear("success", { title: "Success", content: `Subscription successfully subscribed` });
+        popUp.appear("success", { title: "Success", content: `Payment Request generated you can check the status of this package in my subscription.` });
         this.resetStates();
       } else {
         popUp.appear("warning", { title: "Error", content: (err && err.message) || "something went wrong" });
@@ -767,6 +767,7 @@ export default class SchoolViewBase extends React.Component {
   // whenever user click cart button request come here.
   handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) => {
     try {
+      this.resetStates();
       const { popUp } = this.props;
       popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...", RenderActions: (<span />) });/* , true, { autoClose: true, autoTimeout: 4000 } */
       config.currency.map((data, index) => {

@@ -202,7 +202,11 @@ Schema.User = new SimpleSchema({
     type: Boolean,
     optional: true
   },
-  stripeCusId: {
+  stripeCusIds: {
+    type: Array,
+    optional: true
+  },
+  "stripeCusIds.$":{
     type: String,
     optional: true
   }

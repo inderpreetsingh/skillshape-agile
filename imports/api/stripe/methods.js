@@ -6,6 +6,8 @@ import ClassPricing from "../classPricing/fields";
 import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 import { check } from 'meteor/check';
 import get from 'lodash/get';
+import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
 import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} from '/imports/api/email/index';
 //chargeCard for  creating charge and purchasing package
 //getStripeToken for getting stripe account id
@@ -270,35 +272,23 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     check(packageId,String);
     check(monthlyPymtDetails,[Object]);
     //customer creation and subscribe if new otherwise straight to subscribe
-    let startDate,
-      expiryDate,
-      subscriptionRequest,
-      subscriptionDbId,
-      payload,
-      subscriptionResponse,
-      stripeCusId;
+    let startDate, expiryDate, subscriptionRequest, subscriptionDbId, payload, subscriptionResponse, stripeCusId,stripeCusIds=[];
     try {
       let userId = this.userId;
       let emailId=Meteor.user().emails[0].address;
       if(token){
-        let currentUserProfile = Meteor.users.findOne({
-          _id: userId,
-          stripeCusId: { $exists: true }
-        });
-        //find stripeCusId from users or create a new one and store in the users collection
-        if (currentUserProfile) {
-          stripeCusId = currentUserProfile.stripeCusId;
-        } else {
-          let stripeCustomer = await stripe.customers.create({
-            description: emailId,
-            source: token
-          });
-          stripeCusId = stripeCustomer.id;
-          Meteor.users.update(
-            { _id: userId },
-            { $set: { stripeCusId: stripeCusId } }
-          );
+        let currentUserProfile = Meteor.users.findOne({ _id: userId, stripeCusIds: { $exists: true } });
+        //find stripeCusId from users ond create a new one and store in the users collection
+        let stripeCustomer = await stripe.customers.create({ description: `${emailId} ${packageName}`, source: token });
+        stripeCusId = stripeCustomer.id;
+        if(!isEmpty(currentUserProfile) && isArray(currentUserProfile.stripeCusIds)){
+          currentUserProfile.stripeCusIds.push(stripeCusId);
+          stripeCusIds = currentUserProfile.stripeCusIds;
         }
+        else{
+          stripeCusIds.push(stripeCusId);
+        }
+        Meteor.users.update( { _id: userId }, { $set: { stripeCusIds } } );
       }
       startDate = new Date();
       endDate = getExpiryDateForPackages(startDate,"Months",monthlyPymtDetails[0].month);
