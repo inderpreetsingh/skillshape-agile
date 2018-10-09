@@ -286,9 +286,9 @@ class SolutionBox extends Component {
 										in={isCurrentSolutionSelected}
 										timeout={{
 											enter: 600,
-											exit: 500
+											exit: 400
 										}}
-										classNames="slide-in-fade-out"
+										classNames="fade"
 										unmountOnExit
 									>
 										<SolutionContent key={i} solutionContent={card.solutionContent} />

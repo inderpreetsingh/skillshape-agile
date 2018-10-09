@@ -25,7 +25,7 @@ const CardWrapper = styled.article`
   padding: ${helpers.rhythmDiv * 2}px;
   height: 100%;
   background-color: ${(props) => props.active && props.cardBgColor};
-  transition: 0.2s background-color ease-in, 0.2s background-image ease-in;
+  transition: 0.2s background-color ease-in, 0.2s background-image ease-in, 0.2s height linear;
   margin-bottom: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.tablet}px ) {
@@ -35,9 +35,12 @@ const CardWrapper = styled.article`
 `;
 
 const CardContent = Text.extend`
+	display: flex;
 	margin: 0;
 	line-height: 1.2;
-	${(props) => (props.showContent ? `display: block` : 'display: none')};
+	transition: 0.2s max-height linear, 0.2s opacity linear 0.1s;
+	max-height: ${(props) => (props.showContent ? helpers.baseFontSize * 4 : 0)}px;
+	opacity: ${(props) => (props.showContent ? 1 : 0)};
 `;
 
 const CardTitle = styled.h3`
@@ -89,16 +92,7 @@ class SchoolSolutionCard extends Component {
 			>
 				<SolutionContent showContent={active} solutionContent={solutionContent} />
 				<CardTitle>{title}</CardTitle>
-				<CSSTransition
-					in={active}
-					timeout={{
-						enter: 300,
-						exit: 300
-					}}
-					classNames="fade"
-				>
-					<CardContent showContent={active}>{content}</CardContent>
-				</CSSTransition>
+				<CardContent showContent={active}>{content}</CardContent>
 			</CardWrapper>
 		);
 	}

@@ -37,7 +37,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     padding-top: 0;
 	min-height: 100vh;
 	height: auto;
@@ -118,11 +118,11 @@ class SchoolIssues extends Component {
 
 	_getAvatar = (index, smallScreen) => {
 		if (index == 0) {
-			return smallScreen ? <Boy height="75px" /> : <Boy />;
+			return smallScreen ? <Boy height="50px" /> : <Boy />;
 		} else if (index == 1) {
-			return smallScreen ? <Girl height="75px" /> : <Girl />;
+			return smallScreen ? <Girl height="50px" /> : <Girl />;
 		} else if (index == 2) {
-			return smallScreen ? <Desk height="75px" /> : <Desk />;
+			return smallScreen ? <Desk height="50px" /> : <Desk />;
 		}
 	};
 
