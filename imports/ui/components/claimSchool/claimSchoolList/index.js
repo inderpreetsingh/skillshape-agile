@@ -1,58 +1,45 @@
-import React from "react";
-import { createContainer } from "meteor/react-meteor-data";
-import isEmpty from "lodash/isEmpty";
+import React from 'react';
+import { createContainer } from 'meteor/react-meteor-data';
+import isEmpty from 'lodash/isEmpty';
 
-import ClaimSchoolListRender from "./claimSchoolListRender";
-import { Session } from "meteor/session";
-import { withPopUp, withSubscriptionAndPagination } from "/imports/util";
-import { withStyles } from "material-ui/styles";
-import { emailRegex } from "/imports/util";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
+import ClaimSchoolListRender from './claimSchoolListRender';
+import { Session } from 'meteor/session';
+import { withPopUp, withSubscriptionAndPagination } from '/imports/util';
+import { withStyles } from 'material-ui/styles';
+import { emailRegex } from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
-import School from "/imports/api/school/fields";
-import {
-  danger,
-  rhythmDiv
-} from "/imports/ui/components/landing/components/jss/helpers.js";
-
-const styles = {
-  buttonStyles: {
-    fontWeight: 600,
-    borderRadius: 10,
-    backgroundColor: danger,
-    color: "white",
-    marginRight: rhythmDiv * 2
-  }
-};
+import School from '/imports/api/school/fields';
 
 class ClaimSchoolList extends React.Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-      listLoaded: false
-    };
-  }
+		this.state = {
+			listLoaded: false
+		};
+	}
 
-  // componentDidMount() {
-  //   this.setState({
-  //     listLoaded: true
-  //   })
-  // }
+	// componentDidMount() {
+	//   this.setState({
+	//     listLoaded: true
+	//   })
+	// }
 
-  componentWillUnmount() {
-    Session.set("pagesToload", 1);
-  }
+	componentWillUnmount() {
+		Session.set('pagesToload', 1);
+	}
 
-  render() {
-    return ClaimSchoolListRender.call(this, this.props, this.state);
-  }
+	render() {
+		return ClaimSchoolListRender.call(this, this.props, this.state);
+	}
 }
 
-export default withSubscriptionAndPagination(
-  withStyles(styles)(withPopUp(ClaimSchoolList)),
-  { collection: School, subscriptionName: "ClaimSchoolFilter", recordLimit: 10 }
-);
+export default withSubscriptionAndPagination(withPopUp(ClaimSchoolList), {
+	collection: School,
+	subscriptionName: 'ClaimSchoolFilter',
+	recordLimit: 10
+});
 
 // export default createContainer(props => {
 //   let pagesToload = Session.get("pagesToload") || 1;
