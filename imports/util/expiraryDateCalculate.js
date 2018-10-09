@@ -4,7 +4,7 @@ export const getExpiryDateForPackages = (startDate, expPeriod="Months", expDurat
  if(!expDuration){
   expDuration = 1;
  }
-  if (expPeriod == "Year") {
+  if (expPeriod == "Years") {
     let date = new Date(startDate);
     let currentYear = date.getFullYear();
     let month = date.getMonth();
@@ -23,6 +23,10 @@ export const getExpiryDateForPackages = (startDate, expPeriod="Months", expDurat
     let today = new Date(startDate);
     let newdate = new Date(startDate);
     return new Date(newdate.setDate(today.getDate() + parseInt(expDuration)));
+  }
+  else if(expPeriod == 'Weeks'){
+    let days = 7 * parseInt(expDuration);
+   return new Date(new Date().getTime()+(days*24*60*60*1000));
   }
   return new Date(startDate.getTime()+1000*60*60*24);
 };

@@ -27,7 +27,7 @@ ClassPricing.attachSchema(new SimpleSchema({
 		optional: true
 	},
 	expDuration: {
-		type: String,
+		type: Number,
 		optional: true
 	},
 	expPeriod: {

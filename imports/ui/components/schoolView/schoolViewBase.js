@@ -541,7 +541,7 @@ export default class SchoolViewBase extends React.Component {
           </Button> */}
   }
   //This function is used to find out if a user is already purchased an package or not
-  isAlreadyPurchased = ({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType }) => {
+  isAlreadyPurchased = ({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType ,self}) => {
     return new Promise((resolve, reject) => {
       if (userId && planId || packageId) {
         Meteor.call('purchases.isAlreadyPurchased', { userId, planId, packageId, packageType, pymtType }, async (err, res) => {
@@ -553,7 +553,7 @@ export default class SchoolViewBase extends React.Component {
               popUp.appear("success", { title: "Already Purchased", content: "You already have paid this Enrolment fee. No payment is needed at this time." });
             }
             if (packageType == 'CP') {
-              let classesLeft = get(res, 'noOfClasses', 0);
+              let classesLeft = get(res, 'noClasses', 0);
               if (classesLeft) {
                 popUp.appear("inform", {
                   title: "Already Purchased",
@@ -824,7 +824,7 @@ export default class SchoolViewBase extends React.Component {
       let userId = this.props.currentUser._id;
       //check is package is already purchased
 
-      await this.isAlreadyPurchased({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType });
+      await this.isAlreadyPurchased({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType ,self});
 
       if (this.state.isAlreadyPurchased) {
         return;
@@ -851,7 +851,7 @@ export default class SchoolViewBase extends React.Component {
       this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self);
 
     } catch (error) {
-    console.log('TCL: }catch -> error', error);
+      console.log('Error in handlePurchasePackage', error);
     }
   };
 

@@ -107,10 +107,7 @@ class ClassPriceForm extends React.Component {
         ? allClassTypeIds
         : selectedClassType && selectedClassType.map(data => data._id),
       expDuration: (!this.state.noExpiration && expDuration) || null,
-      expPeriod:
-        !this.state.noExpiration && expDuration && expDuration > 1
-          ? expPeriod
-          : expPeriod.replace("s", ""),
+      expPeriod,
       noClasses: this.noClasses.value && parseInt(this.noClasses.value),
       cost: this.classPriceCost.value && parseFloat(this.classPriceCost.value).toFixed(2),
       noExpiration: this.state.noExpiration,
@@ -254,8 +251,9 @@ class ClassPriceForm extends React.Component {
                       disabled={this.state.noExpiration}
                     >
                       <MenuItem value={"Days"}>Days</MenuItem>
+                      <MenuItem value={"Weeks"}>Weeks</MenuItem>
                       <MenuItem value={"Months"}>Months</MenuItem>
-                      <MenuItem value={"Year"}>Year</MenuItem>
+                      <MenuItem value={"Years"}>Year</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
