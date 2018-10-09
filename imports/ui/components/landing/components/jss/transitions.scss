@@ -1,19 +1,42 @@
 .transit-height {
-  transition: height 0.25s linear;
+	transition: height 0.25s linear;
 }
 
-// alert-message
-.message-enter {
-  opacity: 0.01;
+// fade
+.fade-enter {
+	opacity: 0.01;
 }
-.message-enter-active {
-  opacity: 1;
-  transition: all 200ms ease-out 0.1s;
+
+.fade-enter-active {
+	opacity: 1;
+	transition: all 100ms ease-out 0.1s;
 }
-.message-exit {
-  opacity: 1;
+.fade-exit {
+	opacity: 1;
 }
-.message-exit-active {
-  opacity: 1;
-  transition: all 200ms ease-out;
+.fade-exit-active {
+	opacity: 1;
+	transition: all 100ms ease-out;
+}
+
+//slide-in-fade-out
+.slide-in-fade-out-enter {
+	transform-origin: center center;
+	transform: translateX(1000px);
+}
+
+.slide-in-fade-out-enter-active {
+	transform-origin: center center;
+	transform: translateX(0px);
+	transition: all 600ms ease-in;
+}
+
+.slide-in-fade-out-exit {
+	position: absolute;
+	opacity: 1;
+}
+
+.slide-in-fade-out-exit-active {
+	opacity: 0;
+	transition: all 500ms ease-out;
 }
