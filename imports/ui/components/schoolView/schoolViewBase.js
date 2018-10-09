@@ -539,7 +539,6 @@ export default class SchoolViewBase extends React.Component {
       if (userId && planId || packageId) {
         Meteor.call('purchases.isAlreadyPurchased', { userId, planId, packageId, packageType, pymtType }, async (err, res) => {
           if (res) {
-            console.log('TCL: isAlreadyPurchased -> res', res);
             const { popUp } = this.props;
             let purchaseId = res._id;
             if (packageType == 'EP') {
@@ -568,17 +567,20 @@ export default class SchoolViewBase extends React.Component {
               }
             }
             else if (packageType == "MP") {
-              let expiry,nextExpiry;
-              expiry = moment(get(res, "endDate", new Date()))
-              nextExpiry = moment(res.endDate).add(1, 'M')
+              let expiry,nextExpiry,endDate,inActivePurchases,monthPack;
+              inActivePurchases = get(res,'inActivePurchases',0);
+              endDate = get(res, "endDate", new Date());
+              
               if (get(pymtType, "autoWithDraw", false)) {
                 popUp.appear("success", { title: "Already Subscribed", content: `You already have a subscription for this package that automatically renews on ${moment(get(res, "endDate", new Date())).format("Do MMMM YYYY")}. No payment is needed at this time.` });
               }
               else if (get(pymtType, "payAsYouGo", false)) {
+                expiry = moment(endDate).add(inActivePurchases,'M').format("Do MMMM YYYY");
+                nextExpiry = moment(endDate).add(inActivePurchases+1, 'M').format("Do MMMM YYYY");
                 this.setState({ payAsYouGo: true});
                 popUp.appear("inform", {
                   title: "Already Purchased",
-                  content: `You already have a subscription for this package that expires on ${res.endDate}. Would you like to pay up until ${nextExpiry}?`,
+                  content: `You already have a subscription for this package that expires on ${expiry}. Would you like to pay up until ${nextExpiry}?`,
                   RenderActions: (
                     <ButtonsWrapper>
                       {this.noThanksButton()}
@@ -592,6 +594,9 @@ export default class SchoolViewBase extends React.Component {
                 }, true);
               }
               else {
+                monthPack = get(monthlyPymtDetails[0],"month",1);
+                expiry = moment(endDate).add(monthPack*inActivePurchases,'M').format("Do MMMM YYYY");
+                nextExpiry = moment(endDate).add(monthPack*(inActivePurchases+1), 'M').format("Do MMMM YYYY");
                 this.setState({ payUpFront: true});
                 popUp.appear("inform", {
                   title: "Already Purchased",
@@ -739,6 +744,7 @@ export default class SchoolViewBase extends React.Component {
   handleChargeAndSubscription = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, purchaseId) => {
     const { popUp } = this.props;
     let { payUpFront, payAsYouGo } = this.state;
+    console.log('TCL: handleChargeAndSubscription -> payAsYouGo', payAsYouGo);
     popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...", RenderActions: (<spna />) });/* , true, { autoClose: true, autoTimeout: 4000 } */
     Meteor.call("stripe.findAdminStripeAccount", this.props.schoolData.superAdmin, (error, result) => {
       if (result && Meteor.settings.public.paymentEnabled) {

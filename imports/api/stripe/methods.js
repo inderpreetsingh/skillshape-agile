@@ -43,6 +43,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
           currency = current.currency;
         }
       })
+      expPeriod = 'Months';
     }
     //Get currency name and correct amount using multipleFactor from config
     config.currency.map((data, index) => {
