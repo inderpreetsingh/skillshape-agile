@@ -66,7 +66,6 @@ class SubscriptionBox extends React.Component {
  
   render() {
     let { classes,subscriptionList} = this.props;
-    subscriptionList = reverse(subscriptionList);
     return (
         <div>
             <Paper className={classes.root}>
