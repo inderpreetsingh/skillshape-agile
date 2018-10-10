@@ -44,7 +44,6 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
         }
         else{
           if(!isEmpty(classSubscriptionData)){
-            console.log('TCL: dataFile -> classSubscriptionData', classSubscriptionData);
             startDate = get(classSubscriptionData,'startDate',new Date())
             endDate=getExpiryDateForPackages(startDate, "Months", 1);
             payload={ 
