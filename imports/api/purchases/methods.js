@@ -59,11 +59,13 @@ Meteor.methods({
       else{
        activePurchase = Purchases.findOne({userId,packageId,packageStatus:'active'});
        inActivePurchases = Purchases.find({userId,packageId,packageStatus:'inActive'}).count();
-       if(packageType == 'CP'){
-        noClasses = get(Purchases.findOne({userId,packageId,packageStatus:'inActive'}),'noClasses',0) * inActivePurchases;
-         activePurchase.noClasses = get(activePurchase,"noClasses",0) + noClasses;
-       }else if(inActivePurchases){
-          activePurchase.inActivePurchases = inActivePurchases;
+       if(!isEmpty(activePurchase)){
+         if(packageType == 'CP' ){
+          noClasses = get(Purchases.findOne({userId,packageId,packageStatus:'inActive'}),'noClasses',0) * inActivePurchases;
+           activePurchase.noClasses = get(activePurchase,"noClasses",0) + noClasses;
+         }else if(inActivePurchases){
+            activePurchase.inActivePurchases = inActivePurchases;
+         }
        }
        return activePurchase;
       }

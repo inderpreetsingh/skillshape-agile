@@ -741,7 +741,19 @@ export default class SchoolViewBase extends React.Component {
             }
           };
           Meteor.call("schoolMemberDetails.addNewMember", memberData);
-          popUp.appear("success", { title: "Success", content: "Payment Successful" });
+          popUp.appear("success", {
+            title: "Success",
+            content: `Your Payment is received successfully.`,
+            RenderActions: (
+              <ButtonsWrapper>
+                <FormGhostButton
+                  label={"My Subscriptions"}
+                  onClick={() => { browserHistory.push(`/mySubscription/${Meteor.userId()}`) }}
+                  applyClose
+                />
+              </ButtonsWrapper>
+            )
+          }, true);
           this.resetStates();
         } else {
           popUp.appear("success", { title: "Success", content: result.message });
