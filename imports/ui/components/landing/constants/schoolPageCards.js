@@ -96,12 +96,12 @@ export default (schoolPageCards = {
 				bgImage: '/images/school/solution-box1/feature1bg.svg',
 				title: 'Beautiful Directory With Filters',
 				tagline: "Highlights your school and it's offerings",
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/filter-content.png',
 				content:
 					'SkillShape’s beautiful directory highlights your school and it’s offerings, and makes it easy for students'
 			},
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/filter-content.png',
 				bgImage: '/images/school/solution-box1/feature2bg.svg',
 				title: 'Patented Media Management',
 				tagline: 'Share photo and videos of school',
@@ -109,7 +109,7 @@ export default (schoolPageCards = {
 					'Our Patented Media Management system allows students to socially share video and images taken of them at your school'
 			},
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/frames.png',
 				bgImage: '/images/school/solution-box1/feature3bg.svg',
 				title: 'Frames for website',
 				tagline: 'Calendar frame, pricing frame, and Media frame',
@@ -117,7 +117,7 @@ export default (schoolPageCards = {
 					'SkillShape’s Calendar Frame, Pricing Frame, and Media Frames bring our thoughtfully crafted student interfaces to your website.'
 			},
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/filter-content.png',
 				bgImage: '/images/school/solution-box1/feature4bg.svg',
 				title: 'SkillBoard platform Option',
 				tagline: 'Pay monthly fee for limited access to trial classes',
@@ -130,7 +130,7 @@ export default (schoolPageCards = {
 		cardBgColor: '#F9EEE6',
 		cardsData: [
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/filter-content.png',
 				bgImage: '/images/school/solution-box2/sc2feature1.svg',
 				title: 'Class group chat',
 				tagline: 'Increases the potential for camaraderie and fellowship',
@@ -138,7 +138,7 @@ export default (schoolPageCards = {
 					'SkillShape offers a Class Chat. Students can chat with each other to plan outings or any special events.'
 			},
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/filter-content.png',
 				bgImage: '/images/school/solution-box2/sc2feature2.svg',
 				title: 'Training materials',
 				tagline: 'List the skills and techniques you will cover',
@@ -146,14 +146,14 @@ export default (schoolPageCards = {
 					'Students get access to training materials. You can list all of the skills and techniques you cover.'
 			},
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/track-students.png',
 				bgImage: '/images/school/solution-box2/sc2feature3.svg',
 				title: 'Track Attendance',
 				tagline: 'Inform when a student drops off attendance',
 				content: 'SkillShape can keep track of attendance inform you when a student drops off attendance. '
 			},
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/track-students.png',
 				bgImage: '/images/school/solution-box2/sc2feature4.svg',
 				title: 'Class Progression System',
 				tagline: "Track student's exposure when they attend classes",
@@ -166,7 +166,7 @@ export default (schoolPageCards = {
 		cardBgColor: '#e3f1f7',
 		cardsData: [
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/school-admin.png',
 				bgImage: '/images/school/solution-box3/sc3feature1.svg',
 				title: 'Intuitive interface',
 				tagline: 'Easily update calendar and pricing at one place',
@@ -174,7 +174,7 @@ export default (schoolPageCards = {
 					'SkillShape’s clean and intuitive interface allows you to log in and update your website and SkillShap Listing in one place.'
 			},
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/track-students.png',
 				bgImage: '/images/school/solution-box3/sc3feature2.svg',
 				title: 'Tracking Students',
 				tagline: "See who's in class from your phone",
@@ -182,7 +182,7 @@ export default (schoolPageCards = {
 					'Students can enroll and check into class from their phone, and from your phone, you can see who is in class & check students in.'
 			},
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/financial-mgm.png',
 				bgImage: '/images/school/solution-box3/sc3feature3.svg',
 				title: 'Financial Management',
 				tagline: 'Students can purchase monthly or per class packages',
@@ -190,7 +190,7 @@ export default (schoolPageCards = {
 					'Students can enroll, and purchase monthly or per class packages. They can set up automatic withdrawal using credit cards or bank transfer for lower fees.'
 			},
 			{
-				solutionContent: '/images/school/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/filter-content.png',
 				bgImage: '/images/school/solution-box3/sc3feature4.svg',
 				title: 'Rent your room',
 				tagline: 'Let other schools operate within your facility',

@@ -14,7 +14,7 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 const BoxWrapper = styled.div`
 	${helpers.flexCenter} flex-direction: column;
 	flex-grow: 1;
-	justify-content: space-evenly;
+	justify-content: flex-start;
 	max-width: ${helpers.schoolPageContainer + 200}px;
 	width: 100%;
 	margin: 0 auto;

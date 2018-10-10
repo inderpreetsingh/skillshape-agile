@@ -60,7 +60,7 @@ const Avatar = styled.div`
 	position: absolute;
 	bottom: 8px;
 	left: 30px;
-	z-index: 4;
+	z-index: 1;
 
 	@media screen and (max-width: ${helpers.tablet}px) {
 		display: none;
@@ -70,9 +70,9 @@ const Avatar = styled.div`
 const AvatarSmallScreen = styled.div`
 	position: absolute;
 	bottom: 8px;
-	left: 30px;
+	right: 30px;
 	display: none;
-	z-index: 4;
+	z-index: 1;
 
 	@media screen and (max-width: ${helpers.tablet}px) {
 		display: block;
@@ -103,6 +103,8 @@ class SchoolIssues extends Component {
 	};
 
 	componentWillMount = () => {
+		// Need to create a default array for storing multiple wrappers
+		// when the actual DOM is created.
 		this.wrappers = [];
 	};
 

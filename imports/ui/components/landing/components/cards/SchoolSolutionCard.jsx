@@ -27,10 +27,12 @@ const CardWrapper = styled.article`
   background-color: ${(props) => props.active && props.cardBgColor};
   transition: 0.2s background-color ease-in, 0.2s background-image ease-in, 0.2s height linear;
   margin-bottom: ${helpers.rhythmDiv}px;
+  position: relative;
+  z-index: 2;	
 
   @media screen and (max-width: ${helpers.tablet}px ) {
-    margin-right: ${helpers.rhythmDiv * 2}px;
-    margin-bottom: ${helpers.rhythmDiv * 2}px;
+	max-width: 500px;
+	margin-bottom: ${helpers.rhythmDiv * 2}px;
   }
 `;
 
@@ -39,7 +41,7 @@ const CardContent = Text.extend`
 	margin: 0;
 	line-height: 1.2;
 	transition: 0.2s max-height linear, 0.2s opacity linear 0.1s;
-	max-height: ${(props) => (props.showContent ? helpers.baseFontSize * 4 : 0)}px;
+	max-height: ${(props) => (props.showContent ? helpers.baseFontSize * 10 : 0)}px;
 	opacity: ${(props) => (props.showContent ? 1 : 0)};
 `;
 
@@ -73,6 +75,7 @@ const SolutionContent = styled.div`
 		background-image: url('${(props) => props.solutionContent}');
 		background-position: 50% 50%;
 		background-size: cover;
+		margin-bottom: ${helpers.rhythmDiv}px;
 	}
 
 `;
