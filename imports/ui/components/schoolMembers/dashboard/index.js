@@ -402,7 +402,6 @@ class DashBoardView extends React.Component {
       
     }
     else{
-      console.log("in else part")
       payload.userType='School';
       payload.name=this.firstName.value;
       this.setState({joinSkillShape:true,to:this.email.value,userName:this.firstName.value,payload:payload,message:null});
@@ -423,7 +422,6 @@ class DashBoardView extends React.Component {
           adminView: adminView
         },
         (err, res) => {
-          console.log('TCL: err, res', err, res);
           
           let state = {};
           if (res) {
@@ -503,23 +501,23 @@ class DashBoardView extends React.Component {
     this.setState({ selectedClassTypes: classTypeIds });
   };
 
-  handleMemberDetailsToRightPanel = memberId => {
-    console.log('TCL: memberId', memberId);
-    const {adminView,schoolData,adminsData,purchaseByUserId} = this.props;
-    let memberInfo,profile,pic,schoolId=schoolData[0]._id,email,_id;
-    let schoolName =schoolData[0].name;
-    if(!adminView){
+  handleMemberDetailsToRightPanel = (memberId,superAdminId) => {
+    const { adminView, schoolData, adminsData, purchaseByUserId } = this.props;
+    let memberInfo, profile, pic, schoolId = schoolData[0]._id, email, _id,superAdmin;
+    let schoolName = schoolData[0].name;
+    if (!adminView) {
       memberInfo = SchoolMemberDetails.findOne(memberId);
-      profile =memberInfo.profile.profile;
-      email=memberInfo.email;
-      _id=memberInfo.activeUserId;
+      profile = memberInfo.profile.profile;
+      email = memberInfo.email;
+      _id = memberInfo.activeUserId;
     }
-    else{
-      memberInfo=adminsData.find( ele => ele._id == memberId);
-       profile =memberInfo.profile;
-       email=memberInfo.emails[0].address;
-       _id=memberInfo._id;
+    else {
+      memberInfo = adminsData.find(ele => ele._id == memberId);
+      profile = memberInfo.profile;
+      email = memberInfo.emails[0].address;
+      _id = memberInfo._id;
     }
+    superAdmin = superAdminId == _id ? true :false ;
      pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic :config.defaultProfilePic ;
     // memberInfo = this.state.memberInfo
     let subscriptionList = get(purchaseByUserId,_id,[]);
@@ -542,7 +540,8 @@ class DashBoardView extends React.Component {
         studentWithoutEmail: memberInfo.studentWithoutEmail,
         packageDetails: memberInfo.packageDetails,
         schoolName:schoolName,
-        subscriptionList
+        subscriptionList,
+        superAdmin
       },
       schoolMemberDetailsFilters: { _id: memberId }
     });
@@ -966,7 +965,7 @@ export default createContainer(props => {
 
 
     if (!isEmpty(schoolData) && schoolData[0].admins) {
-      adminView = true;
+     
       adminsIds = schoolData[0].admins;
       superAdminId = schoolData[0].superAdmin || null
       adminsIds.push(superAdminId)
@@ -975,14 +974,13 @@ export default createContainer(props => {
       }
       if (schoolAdmin && query.admin == 'true') {
         Meteor.subscribe("user.findAdminsDetails", adminsIds)
-        adminsData = Meteor.users.find().fetch()
+        adminsData = Meteor.users.find().fetch();
+        adminView = true;
         let x = findIndex(adminsIds, (o) => { return o == Meteor.userId() })
         if (x == -1) {
           adminData = remove(adminsData, (o) => { return o._id == Meteor.userId() });
         }
-
       }
-                    
     }
   }
   
