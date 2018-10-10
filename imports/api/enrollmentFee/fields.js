@@ -29,7 +29,19 @@ EnrollmentFees.attachSchema(new SimpleSchema({
     },
     currency:{
         type: String
-    }
+    },
+	expDuration: {
+		type: Number,
+		optional: true
+	},
+	expPeriod: {
+		type: String,
+		optional: true
+    },
+	noExpiration: {
+		type: Boolean,
+		optional: true
+	}
 }));
 
 EnrollmentFees.join(ClassType, "classTypeId", "selectedClassType", ["name"]);

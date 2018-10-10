@@ -69,7 +69,8 @@ class ClassPriceForm extends React.Component {
       includeAllClassTypes: get(this.props, "data.includeAllClassTypes", ""),
       noExpiration: get(this.props, "data.noExpiration", ""),
       currency: get(this.props, "data.currency", this.props.currency),
-      cost: get(this.props,"data.cost",'0')
+      cost: get(this.props,"data.cost",'0'),
+      expDuration: get(this.props,"data.exDuration",false)
     };
   }
 
@@ -113,7 +114,7 @@ class ClassPriceForm extends React.Component {
       currency:this.state.currency
     };
     if(isEmpty(payload.classTypeId) || !payload.currency || !payload.packageName ||  !payload.noClasses || !payload.cost || !this.state.noExpiration && !this.expDuration.value || !this.state.noExpiration && !expPeriod){
-      popUp.appear("alert", { title: "Error", content: "Some Field is missing." });
+      popUp.appear("alert", { title: "Please Check", content: "Not all required fields are complete." });
       return ;
     }
     if(!this.state.noExpiration){
@@ -228,7 +229,7 @@ class ClassPriceForm extends React.Component {
                   <TextField
                     required={!this.state.noExpiration}
                     disabled={this.state.noExpiration}
-                    defaultValue={data && data.expDuration}
+                    defaultValue={this.state.expDuration}
                     margin="dense"
                     inputRef={ref => (this.expDuration = ref)}
                     type="number"

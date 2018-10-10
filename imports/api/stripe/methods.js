@@ -28,6 +28,14 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       let enrollmentData = EnrollmentFees.findOne({ _id: packageId });
       currency = enrollmentData.currency;
       amount = enrollmentData.cost;
+      if(get(enrollmentData,'noExpiration',false)){
+        expDuration = 100;
+        expPeriod = 'Years';
+      }
+      else{
+        expDuration = get(enrollmentData,'expDuration',100);
+        expPeriod = get(enrollmentData,'expPeriod','Years');
+      }
      
     }
     else if(packageType == 'CP'){
