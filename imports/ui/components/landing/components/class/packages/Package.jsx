@@ -152,9 +152,9 @@ const Package = props => (
       <ClassDetailsSection>
      
         <Title>{props.packageName || props.name}</Title>
-        {props.packageType !== "EP" && (
+        { (
           <Fragment>
-            {props.classPackages ? (
+            {props.classPackages || props.packageType == "EP" ? (
               <ClassDetailsText>
                 Expiration:{" "}
                 {props.expDuration && props.expPeriod && !props.noExpiration
