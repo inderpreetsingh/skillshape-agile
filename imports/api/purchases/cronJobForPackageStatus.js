@@ -12,7 +12,7 @@ SyncedCron.add({
   },
   job: function () {
     try {
-      let schoolName, schoolEmail,schoolId,schoolData, userName, userEmail, packageName;
+      let schoolName, schoolEmail,schoolId,schoolData, userName, userEmail, packageName,newActivePackages=0;
       let activePurchasesData = Purchases.find({
         packageStatus: "active",
         endDate: { $lte: new Date() }
@@ -21,6 +21,7 @@ SyncedCron.add({
         status: "successful",
         endDate: { $lte: new Date() }
       }).fetch();
+      console.log('TCL:expired packages found--->', activePurchasesData.length);
       let packageIds = [];
       activePurchasesData.map(currentPurchase => {
         packageIds.push(currentPurchase._id);
@@ -39,21 +40,17 @@ SyncedCron.add({
           );
         }
         if (schoolName && schoolEmail&& userName&& userEmail&& packageName) {
-          sendPackageExpiredEmailToSchool(
-              schoolName, schoolEmail, userName, userEmail, packageName
-            );
+          sendPackageExpiredEmailToSchool( schoolName, schoolEmail, userName, userEmail, packageName );
           }
         let packageId = currentPurchase.packageId;
         let userId = currentPurchase.userId;
-        Purchases.update(
-          {
-            packageStatus: "inActive",
-            packageId: currentPurchase.packageId,
-            userId: userId
-          },
-          { $set: { packageStatus: "active" } }
-        );
+        let days = (currentPurchase.startDate-currentPurchase.endDate)/(1000 * 60 * 60 * 24);
+        let startDate = new Date();
+        let endDate = new Date(new Date().getTime()+(days*24*60*60*1000));
+        let result = Purchases.update( { packageStatus: "inActive", packageId, userId, }, { $set: { packageStatus: "active",startDate, endDate } } );
+        newActivePackages = result + newActivePackages ;  
       });
+      console.log('TCL: Package made active', newActivePackages);
       if (!isEmpty(packageIds)) {
         Purchases.update(
           { _id: { $in: packageIds } },
