@@ -34,8 +34,14 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       let classData = ClassPricing.findOne({ _id: packageId })
       currency = get(classData,"currency",'$');
       amount = get(classData,'cost',0);
-      expDuration = get(classData,'expDuration',100);
-      expPeriod = get(classData,'expPeriod','Years');
+      if(get(classData,'noExpiration',false)){
+        expDuration = 100;
+        expPeriod = 'Years';
+      }
+      else{
+        expDuration = get(classData,'expDuration',100);
+        expPeriod = get(classData,'expPeriod','Years');
+      }
 
     }
     else {
