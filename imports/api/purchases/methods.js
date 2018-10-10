@@ -52,23 +52,25 @@ Meteor.methods({
   "purchases.isAlreadyPurchased": function({userId, planId,packageId,packageType,pymtType}) {
     try{
       check(userId,String);
-      let activePurchase,inActivePurchases,noOfClasses=0;
+      let activePurchase,inActivePurchases,noClasses=0;
       if(packageType == 'MP' && pymtType.autoWithDraw ){
        return Purchases.findOne({userId,planId,packageStatus:'active'});
       }
       else{
        activePurchase = Purchases.findOne({userId,packageId,packageStatus:'active'});
        inActivePurchases = Purchases.find({userId,packageId,packageStatus:'inActive'}).count();
-       if(packageType == 'CP'){
-        noOfClasses = get(Purchases.findOne({userId,packageId,packageStatus:'inActive'}),'noOfClasses',0) * inActivePurchases;
-         activePurchase.noOfClasses = activePurchase.noOfClasses + noOfClasses;
-       }else if(inActivePurchases){
-          activePurchase.inActivePurchases = inActivePurchases;
+       if(!isEmpty(activePurchase)){
+         if(packageType == 'CP' ){
+          noClasses = get(Purchases.findOne({userId,packageId,packageStatus:'inActive'}),'noClasses',0) * inActivePurchases;
+           activePurchase.noClasses = get(activePurchase,"noClasses",0) + noClasses;
+         }else if(inActivePurchases){
+            activePurchase.inActivePurchases = inActivePurchases;
+         }
        }
        return activePurchase;
       }
     }catch(error){
-    console.log('TCL: }catch -> error', error);
+    console.log('Error in purchases.isAlreadyPurchased', error);
     }
   }
 });

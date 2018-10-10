@@ -138,7 +138,7 @@ const ActionButtons = props => (
         onClick={props.openEditMemberModal}
       />
     </ActionButton>
-    {props.adminView &&  <ActionButton>
+    {props.adminView && !props.superAdmin &&  <ActionButton>
       <MemberActionButton
         noMarginBottom
         label="Remove Admin"
@@ -281,7 +281,8 @@ class SchoolMemberInfo extends Component {
       bgImg,
       showConfirmation
     } = this.state;
-    let subscriptionList= get(memberInfo,'subscriptionList',[])
+    let subscriptionList = get(memberInfo,'subscriptionList',[])
+    let superAdmin = get(memberInfo,'superAdmin',false);
     return (
       <Grid container>
       {showConfirmation && (
@@ -412,6 +413,7 @@ class SchoolMemberInfo extends Component {
                 }}
                 adminView={adminView}
                 removeButtonClick={()=>{this.setState({showConfirmation:true})}}
+                superAdmin = {superAdmin}
               />
             </Grid>
           </Grid>

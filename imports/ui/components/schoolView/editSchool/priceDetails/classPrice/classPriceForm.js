@@ -106,20 +106,19 @@ class ClassPriceForm extends React.Component {
       classTypeId: this.state.includeAllClassTypes
         ? allClassTypeIds
         : selectedClassType && selectedClassType.map(data => data._id),
-      expDuration: (!this.state.noExpiration && expDuration) || null,
-      expPeriod:
-        !this.state.noExpiration && expDuration && expDuration > 1
-          ? expPeriod
-          : expPeriod.replace("s", ""),
       noClasses: this.noClasses.value && parseInt(this.noClasses.value),
       cost: this.classPriceCost.value && parseFloat(this.classPriceCost.value).toFixed(2),
       noExpiration: this.state.noExpiration,
       includeAllClassTypes: this.state.includeAllClassTypes,
       currency:this.state.currency
     };
-    if(isEmpty(payload.classTypeId) || !payload.currency || !payload.packageName ||  !payload.noClasses || !payload.cost){
+    if(isEmpty(payload.classTypeId) || !payload.currency || !payload.packageName ||  !payload.noClasses || !payload.cost || !this.state.noExpiration && !this.expDuration.value || !this.state.noExpiration && !expPeriod){
       popUp.appear("alert", { title: "Error", content: "Some Field is missing." });
       return ;
+    }
+    if(!this.state.noExpiration){
+      payload.expDuration = parseInt(this.expDuration.value);
+      payload.expPeriod = expPeriod;
     }
     if(payload.classTypeId==null){
       payload.classTypeId=[];
@@ -254,8 +253,9 @@ class ClassPriceForm extends React.Component {
                       disabled={this.state.noExpiration}
                     >
                       <MenuItem value={"Days"}>Days</MenuItem>
+                      <MenuItem value={"Weeks"}>Weeks</MenuItem>
                       <MenuItem value={"Months"}>Months</MenuItem>
-                      <MenuItem value={"Year"}>Year</MenuItem>
+                      <MenuItem value={"Years"}>Year</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

@@ -89,7 +89,8 @@ export default function(props) {
                                 button
                                 onClick={() =>
                                   handleMemberDetailsToRightPanel(
-                                    data._id
+                                    data._id,
+                                    superAdminId
                                   )
                                 }
                               ><ProgressiveImage 

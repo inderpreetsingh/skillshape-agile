@@ -157,7 +157,7 @@ const Package = props => (
             {props.classPackages ? (
               <ClassDetailsText>
                 Expiration:{" "}
-                {props.expDuration && props.expPeriod
+                {props.expDuration && props.expPeriod && !props.noExpiration
                   ? `${props.expDuration} ${props.expPeriod}`
                   : "None"}
               </ClassDetailsText>

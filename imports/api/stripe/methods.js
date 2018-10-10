@@ -32,8 +32,17 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     }
     else if(packageType == 'CP'){
       let classData = ClassPricing.findOne({ _id: packageId })
-      currency = classData.currency;
-      amount = classData.cost;
+      currency = get(classData,"currency",'$');
+      amount = get(classData,'cost',0);
+      if(get(classData,'noExpiration',false)){
+        expDuration = 100;
+        expPeriod = 'Years';
+      }
+      else{
+        expDuration = get(classData,'expDuration',100);
+        expPeriod = get(classData,'expPeriod','Years');
+      }
+
     }
     else {
       let MonthlyData = MonthlyPricing.findOne({'pymtDetails.planId':planId})
@@ -95,7 +104,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         status: "inProgress",
         startDate: startDate,
         endDate: endDate,
-        noOfClasses: noOfClasses,
+        noClasses: noOfClasses,
         fee: Math.round(amount * (2.9 / 100) + 30)
       };
       recordId = Meteor.call("purchases.addPurchase", payload);
