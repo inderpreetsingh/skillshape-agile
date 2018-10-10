@@ -17,7 +17,6 @@ import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import { CSSTransition } from 'react-transition-group';
 
 const CardWrapper = styled.article`
-  max-width: 400px;    
   width: 100%;
   border-radius: ${helpers.rhythmDiv * 2}px;
   cursor: pointer;
@@ -26,13 +25,12 @@ const CardWrapper = styled.article`
   height: 100%;
   background-color: ${(props) => props.active && props.cardBgColor};
   transition: 0.2s background-color ease-in, 0.2s background-image ease-in, 0.2s height linear;
-  margin-bottom: ${helpers.rhythmDiv}px;
+  margin-bottom: ${helpers.rhythmDiv}px; 
   position: relative;
   z-index: 2;	
 
   @media screen and (max-width: ${helpers.tablet}px ) {
-	max-width: 500px;
-	margin-bottom: ${helpers.rhythmDiv * 2}px;
+	
   }
 `;
 
@@ -68,10 +66,12 @@ const SolutionContent = styled.div`
 	display: none;
 
 	@media screen and (max-width: ${helpers.mobile}px) {
-		display: ${(props) => (props.showContent ? 'block' : 'none')};	
+		display: block;	
 		max-width: 500px;
 		width: 100%;
-		height: 300px;
+		transition: 0.2s height linear, 0.1s opacity linear;
+		opacity: ${(props) => (props.showContent ? 1 : 0)};
+		height: ${(props) => (props.showContent ? 300 : 0)}px;
 		background-image: url('${(props) => props.solutionContent}');
 		background-position: 50% 50%;
 		background-size: cover;

@@ -38,9 +38,12 @@ const Wrapper = styled.div`
   flex-direction: column;
 
   @media screen and (max-width: ${helpers.tablet}px) {
-    padding-top: 0;
-	min-height: 100vh;
+    min-height: 100vh;
 	height: auto;
+   }
+
+   @media screen and (max-width: ${helpers.mobile}px) {
+	padding-top: 0;
    }
 
 `;
@@ -68,10 +71,10 @@ const Avatar = styled.div`
 `;
 
 const AvatarSmallScreen = styled.div`
+	display: none;
 	position: absolute;
 	bottom: 8px;
-	right: 30px;
-	display: none;
+	right: -10px;
 	z-index: 1;
 
 	@media screen and (max-width: ${helpers.tablet}px) {

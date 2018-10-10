@@ -44,31 +44,41 @@ const BoxInnerWrapper = styled.div`
   }
 `;
 
-CardsListInner = styled.div`
+const CardsListInner = styled.div`
 	${helpers.flexCenter} flex-direction: column;
-	width: 100%;
+	min-width: 0;
 	justify-content: flex-start;
 `;
 
-CardsList = styled.div`
-	max-width: 500px;
+const CardsList = styled.div`
+	max-width: 400px;
 	width: 100%;
+	height: 380px; // computed based on the cards and it's content.
+	min-width: 0;
 	display: flex;
-	flex-direction: column;
+	flex-grow: 1;
 	padding: 0 ${helpers.rhythmDiv * 2}px;
 	margin-top: ${helpers.rhythmDiv * 2}px;
-	flex-shrink: 1;
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		max-width: 500px;
+		height: calc(380px + 324px); // + 300px for the content of image/gif + 24px for margins .
+	}
 `;
 
 const SolutionContentWrapper = styled.div`
-	${helpers.flexCenter};
+	display: flex;
 	flex-direction: column;
 	padding: 0 ${helpers.rhythmDiv * 2}px;
-	flex-shrink: 1;
 	position: relative;
+	max-width: 400px;
+	width: 100%;
+	height: 300px;
 	margin: 0;
+	position: relative;
 
 	@media screen and (max-width: ${helpers.tablet}px) {
+		max-width: 500px;
 		justify-content: flex-start;
 		margin-bottom: ${helpers.rhythmDiv * 2}px;
 	}
@@ -78,9 +88,8 @@ const SolutionContentWrapper = styled.div`
 	}
 `;
 
-const SolutionContent = styled.div`
-  width: 500px;
-  height: 300px;
+const SolutionContent = styled.div`		
+  height: 100%;
   background-image: url('${(props) => props.solutionContent}');
   background-size: cover;
   background-position: 50% 50%;
@@ -285,8 +294,8 @@ class SolutionBox extends Component {
 									<CSSTransition
 										in={isCurrentSolutionSelected}
 										timeout={{
-											enter: 600,
-											exit: 400
+											enter: 5600,
+											exit: 5400
 										}}
 										classNames="fade"
 										unmountOnExit
