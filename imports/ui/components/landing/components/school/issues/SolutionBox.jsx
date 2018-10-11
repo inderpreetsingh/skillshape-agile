@@ -60,9 +60,13 @@ const CardsList = styled.div`
 	padding: 0 ${helpers.rhythmDiv * 2}px;
 	margin-top: ${helpers.rhythmDiv * 2}px;
 
-	@media screen and (max-width: ${helpers.mobile}px) {
+	@media screen and (max-width: ${helpers.tablet}px) {
 		max-width: 500px;
-		height: calc(380px + 324px); // + 300px for the content of image/gif + 24px for margins .
+		height: calc(400px + 360px);
+	}
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		min-height: 800px;
 	}
 `;
 
@@ -81,9 +85,6 @@ const SolutionContentWrapper = styled.div`
 		max-width: 500px;
 		justify-content: flex-start;
 		margin-bottom: ${helpers.rhythmDiv * 2}px;
-	}
-
-	@media screen and (max-width: ${helpers.mobile}px) {
 		display: none;
 	}
 `;

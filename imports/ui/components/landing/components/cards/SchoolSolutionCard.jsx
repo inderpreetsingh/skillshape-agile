@@ -18,11 +18,11 @@ import { CSSTransition } from 'react-transition-group';
 
 const CardWrapper = styled.article`
   width: 100%;
+  height: 100%;
   border-radius: ${helpers.rhythmDiv * 2}px;
   cursor: pointer;
   background-image: url('${(props) => props.active && props.bgImage}');
   padding: ${helpers.rhythmDiv * 2}px;
-  height: 100%;
   background-color: ${(props) => props.active && props.cardBgColor};
   transition: 0.2s background-color ease-in, 0.2s background-image ease-in, 0.2s height linear;
   margin-bottom: ${helpers.rhythmDiv}px; 
@@ -30,7 +30,7 @@ const CardWrapper = styled.article`
   z-index: 2;	
 
   @media screen and (max-width: ${helpers.tablet}px ) {
-	
+	height: auto;	
   }
 `;
 
@@ -65,7 +65,7 @@ const CardTitle = styled.h3`
 const SolutionContent = styled.div`
 	display: none;
 
-	@media screen and (max-width: ${helpers.mobile}px) {
+	@media screen and (max-width: ${helpers.tablet}px) {
 		display: block;	
 		max-width: 500px;
 		width: 100%;
