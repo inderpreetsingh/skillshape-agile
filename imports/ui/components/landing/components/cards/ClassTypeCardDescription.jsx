@@ -1,46 +1,37 @@
-import React, { Fragment } from "react";
-import styled from "styled-components";
+import React, { Fragment } from 'react';
+import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
-import { browserHistory } from "react-router";
-import ReactStars from "react-stars";
-import PropTypes from "prop-types";
+import { browserHistory } from 'react-router';
+import ReactStars from 'react-stars';
+import PropTypes from 'prop-types';
 
-import { withStyles, MuiThemeProvider } from "material-ui/styles";
-import Typography from "material-ui/Typography";
-import Grid from "material-ui/Grid";
+import { withStyles, MuiThemeProvider } from 'material-ui/styles';
+import Typography from 'material-ui/Typography';
+import Grid from 'material-ui/Grid';
 
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton.jsx";
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
 
-import {
-  cutString,
-  goToSchoolPage,
-  goToClassTypePage,
-  addDelimiter
-} from "/imports/util";
-import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
-import School from "/imports/api/school/fields";
+import { cutString, goToSchoolPage, goToClassTypePage, addDelimiter } from '/imports/util';
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+import School from '/imports/api/school/fields';
 
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import MuiTheme from "/imports/ui/components/landing/components/jss/muitheme";
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import MuiTheme from '/imports/ui/components/landing/components/jss/muitheme';
 
 const RatingsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
 `;
 
-const Reviews = styled.a`
-  color: ${helpers.primaryColor};
-`;
-const NoFoundResultWapper = styled.div`
-  text-align: center;
-`;
+const Reviews = styled.a`color: ${helpers.primaryColor};`;
+const NoFoundResultWapper = styled.div`text-align: center;`;
 
 const ClassDescription = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 `;
 
 const ClassDescriptionInnerWrapper = styled.div`
@@ -48,7 +39,7 @@ const ClassDescriptionInnerWrapper = styled.div`
   margin: ${helpers.rhythmDiv * 2}px 0;
   border: 1px solid #ddd;
   height: 100%;
-  max-height: ${props => props.editMode ? '100%' : '200px'};
+  max-height: ${(props) => (props.editMode ? '100%' : '200px')};
   display: flex;
   flex-direction: column;
   //
@@ -58,101 +49,94 @@ const ClassDescriptionInnerWrapper = styled.div`
 `;
 
 const ClassTypeRequirements = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
 `;
 
 const ClassDescriptionContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-height: 100%;
-  overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	max-height: 100%;
+	overflow-y: auto;
 `;
 
 const ClassDescriptionContent = styled.p`
-  overflow-y: auto;
-  color: ${helpers.black};
-  font-size: ${helpers.baseFontSize}px;
-  display: flex;
-  flex-shrink: 1;
+	overflow-y: auto;
+	color: ${helpers.black};
+	font-size: ${helpers.baseFontSize}px;
+	display: flex;
+	flex-shrink: 1;
 `;
 
 const Text = styled.p`
-  font-size: ${helpers.baseFontSize}px;
-  font-family: ${helpers.commontFont};
-  color: ${helpers.black};
-  line-height: 1.2;
-  margin: 0;
+	font-size: ${helpers.baseFontSize}px;
+	font-family: ${helpers.commontFont};
+	color: ${helpers.black};
+	line-height: 1.2;
+	margin: 0;
 `;
 
 const Buttons = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
 `;
 
-const SelectedSkillSubject = styled.div`
-  
-`;
+const SelectedSkillSubject = styled.div``;
 
 const ButtonsWrapper = styled.div`
-  display: flex;
+	display: flex;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
-    flex-direction: column;
-  }
+	@media screen and (max-width: ${helpers.mobile}px) {
+		flex-direction: column;
+	}
 `;
 
 const ButtonWrapper = styled.div`
-  padding: 0 ${helpers.rhythmDiv / 2}px;
-  margin-bottom: ${helpers.rhythmDiv}px;
-  width: 50%;
+	padding: 0 ${helpers.rhythmDiv / 2}px;
+	margin-bottom: ${helpers.rhythmDiv}px;
+	width: 50%;
 
-  @media screen and (max-width: ${helpers.mobile}px) {
-    width: 100%;
-  }
+	@media screen and (max-width: ${helpers.mobile}px) {
+		width: 100%;
+	}
 `;
 
 const styles = {
-  gridDescriptionWrapper: {
-    margin: `${helpers.rhythmDiv * 2}px 0`,
-    marginBottom: 4,
-    border: `1px solid #ddd`
-  },
-  descriptionHeader: {
-    marginTop: `${helpers.rhythmDiv}px`,
-    fontSize: "17px",
-    fontWeight: 500
-  }
+	gridDescriptionWrapper: {
+		margin: `${helpers.rhythmDiv * 2}px 0`,
+		marginBottom: 4,
+		border: `1px solid #ddd`
+	},
+	descriptionHeader: {
+		marginTop: `${helpers.rhythmDiv}px`,
+		fontSize: '17px',
+		fontWeight: 500
+	}
 };
 
-const ClassTypeCardDescription = props => {
-  const { cardRevealInfo, schoolData, editMode, selectedSkillSubject } = props;
-  return (
-    <MuiThemeProvider theme={MuiTheme}>
-      <Fragment>
-        <RatingsWrapper itemScope itemType="http://schema.org/AggregateRating">
-          {!props.hideClassTypeOptions &&
-            !props.editMode && (
-              <Fragment>
-                <ReactStars
-                  size={15}
-                  value={props.ratings}
-                  edit={false}
-                  itemProp="ratingCount"
-                />
-                <Reviews href="#">
-                  <Typography>
-                    <span itemProp="reviewCount">{props.reviews}</span> Reviews
-                  </Typography>
-                </Reviews>
-              </Fragment>
-            )}
-        </RatingsWrapper>
+const ClassTypeCardDescription = (props) => {
+	const { cardRevealInfo, schoolData, editMode, selectedSkillSubject, onEditClassTypeClick } = props;
+	return (
+		<MuiThemeProvider theme={MuiTheme}>
+			<Fragment>
+				<RatingsWrapper itemScope itemType="http://schema.org/AggregateRating">
+					{!props.hideClassTypeOptions &&
+					!props.editMode && (
+						<Fragment>
+							<ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount" />
+							<Reviews href="#">
+								<Typography>
+									<span itemProp="reviewCount">{props.reviews}</span> Reviews
+								</Typography>
+							</Reviews>
+						</Fragment>
+					)}
+				</RatingsWrapper>
 
-        <ClassDescription className="description">
-          {/*
+				<ClassDescription className="description">
+					{/*
                 <Grid container spacing={8}>
                  <Grid item xs={12} classes={{typeItem: props.classes.gridDescriptionWrapper}}>
                     {cardRevealInfo.ageMin && <Text>Age: {cardRevealInfo.ageMin} {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}</Text>}
@@ -164,115 +148,118 @@ const ClassTypeCardDescription = props => {
                  </Grid>
                </Grid> */}
 
-          <ClassDescriptionInnerWrapper editMode={editMode}>
-            <ClassTypeRequirements>
-              {cardRevealInfo.ageMin && (
-                <Text>
-                  Age: {cardRevealInfo.ageMin}{" "}
-                  {cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}
-                </Text>
-              )}
-              {cardRevealInfo.gender && (
-                <Text>
-                  {cardRevealInfo.gender &&
-                    cardRevealInfo.gender !== "All" &&
-                    `${cardRevealInfo.gender}`}
-                </Text>
-              )}
-              {cardRevealInfo.experienceLevel && (
-                <Text>
-                  Level:{" "}
-                  {cardRevealInfo.experienceLevel == "All"
-                    ? "All levels are welcomed"
-                    : cardRevealInfo.experienceLevel}
-                </Text>
-              )}
-              {editMode && !isEmpty(selectedSkillSubject) &&
-                 <Text>
-                   Subjects: {" "} 
-                   {selectedSkillSubject.map(selectedSubj => selectedSubj.name).join(', ')}
-                 </Text> 
-              }
-            </ClassTypeRequirements>
+					<ClassDescriptionInnerWrapper editMode={editMode}>
+						<ClassTypeRequirements>
+							{cardRevealInfo.ageMin && (
+								<Text>
+									Age: {cardRevealInfo.ageMin}{' '}
+									{cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}
+								</Text>
+							)}
+							{cardRevealInfo.gender && (
+								<Text>
+									{cardRevealInfo.gender &&
+										cardRevealInfo.gender !== 'All' &&
+										`${cardRevealInfo.gender}`}
+								</Text>
+							)}
+							{cardRevealInfo.experienceLevel && (
+								<Text>
+									Level:{' '}
+									{cardRevealInfo.experienceLevel == 'All' ? (
+										'All levels are welcomed'
+									) : (
+										cardRevealInfo.experienceLevel
+									)}
+								</Text>
+							)}
+							{editMode &&
+							!isEmpty(selectedSkillSubject) && (
+								<Text>
+									Subjects: {' '}
+									{selectedSkillSubject.map((selectedSubj) => selectedSubj.name).join(', ')}
+								</Text>
+							)}
+						</ClassTypeRequirements>
 
-            <ClassDescriptionContentWrapper>
-              <Typography classes={{ root: props.classes.descriptionHeader }}>
-                Class Description:{" "}
-              </Typography>
-              {cardRevealInfo.description && (
-                <ClassDescriptionContent>
-                  {cardRevealInfo.description}
-                </ClassDescriptionContent>
-              )}
-            </ClassDescriptionContentWrapper>
-          </ClassDescriptionInnerWrapper>
+						<ClassDescriptionContentWrapper>
+							<Typography classes={{ root: props.classes.descriptionHeader }}>
+								Class Description:{' '}
+							</Typography>
+							{cardRevealInfo.description && (
+								<ClassDescriptionContent>{cardRevealInfo.description}</ClassDescriptionContent>
+							)}
+						</ClassDescriptionContentWrapper>
+					</ClassDescriptionInnerWrapper>
 
-          {/*editMode && isEmpty(selectedSkillSubject) && <SelectedSkillSubject>
+					{/*editMode && isEmpty(selectedSkillSubject) && <SelectedSkillSubject>
             <Typography classes={{ root: props.classes.descriptionHeader }}>
                 Selected Skills:{" "}
               </Typography>  
           </SelectedSkillSubject>*/}
 
-          {!editMode && <Buttons>
-            {props &&
-              !props.hideClassTypeOptions && (
-                <ButtonsWrapper>
-                  <ButtonWrapper>
-                    <SecondaryButton
-                      noMarginBottom
-                      fullWidth
-                      onClick={() =>
-                        goToClassTypePage(
-                          addDelimiter(cardRevealInfo.name),
-                          cardRevealInfo._id
-                        )
-                      }
-                      label="Class Details"
-                    />
-                  </ButtonWrapper>
+					{!editMode && (
+						<Buttons>
+							{props &&
+							!props.hideClassTypeOptions && (
+								<ButtonsWrapper>
+									<ButtonWrapper>
+										<SecondaryButton
+											noMarginBottom
+											fullWidth
+											onClick={() =>
+												goToClassTypePage(
+													addDelimiter(cardRevealInfo.name),
+													cardRevealInfo._id
+												)}
+											label="Class Details"
+										/>
+									</ButtonWrapper>
 
-                  <ButtonWrapper>
-                    <SecondaryButton
-                      noMarginBottom
-                      fullWidth
-                      label="View School"
-                      onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
-                    />
-                  </ButtonWrapper>
-                </ButtonsWrapper>
-              )}
-            {props.classTimeCheck ? (
-              <PrimaryButton
-                label="View Class Times"
-                fullWidth
-                onClick={props.onClassTimeButtonClick}
-                itemScope
-                itemType="http://schema.org/ViewAction"
-              />
-            ) : (
-              <PrimaryButton
-                label="Request Class Times"
-                fullWidth
-                onClick={props.onRequestClassTimeButtonClick}
-              />
-            )}
-          </Buttons>}
-        </ClassDescription>
-      </Fragment>
-    </MuiThemeProvider>
-  );
+									<ButtonWrapper>
+										<SecondaryButton
+											noMarginBottom
+											fullWidth
+											label="View School"
+											onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
+										/>
+									</ButtonWrapper>
+								</ButtonsWrapper>
+							)}
+
+							{props.classTimeCheck ? (
+								<PrimaryButton
+									label="View Class Times"
+									fullWidth
+									onClick={props.onClassTimeButtonClick}
+									itemScope
+									itemType="http://schema.org/ViewAction"
+								/>
+							) : (
+								<PrimaryButton
+									label="Request Class Times"
+									fullWidth
+									onClick={props.onRequestClassTimeButtonClick}
+								/>
+							)}
+						</Buttons>
+					)}
+				</ClassDescription>
+			</Fragment>
+		</MuiThemeProvider>
+	);
 };
 
 ClassTypeCardDescription.propTypes = {
-  ratings: PropTypes.number,
-  reviews: PropTypes.number,
-  description: PropTypes.string,
-  editMode: PropTypes.bool,
-  onClassTimeButtonClick: PropTypes.func
+	ratings: PropTypes.number,
+	reviews: PropTypes.number,
+	description: PropTypes.string,
+	editMode: PropTypes.bool,
+	onClassTimeButtonClick: PropTypes.func
 };
 
 ClassTypeCardDescription.defaultProps = {
-  editMode: false
+	editMode: false
 };
 
 export default withStyles(styles)(ClassTypeCardDescription);
