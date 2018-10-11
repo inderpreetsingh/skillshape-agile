@@ -482,6 +482,9 @@ export default class SchoolViewBase extends React.Component {
     //     }
     // });
   };
+  schoolLogoFinder = (schoolData) =>{
+  return get(schoolData,'logoImg',get(schoolData,'mainImage',config.defaultSchoolLogo))
+  }
   noThanksButton = () => (
     <FormGhostButton
       label={"No, thanks"}
@@ -767,18 +770,18 @@ export default class SchoolViewBase extends React.Component {
   }
   // handleChargeAndSubscription
   handleChargeAndSubscription = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, purchaseId) => {
-    const { popUp } = this.props;
+    const { popUp,schoolData } = this.props;
     let { payUpFront, payAsYouGo } = this.state;
-    popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...", RenderActions: (<spna />) });/* , true, { autoClose: true, autoTimeout: 4000 } */
+    popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...", RenderActions: (<span />) });/* , true, { autoClose: true, autoTimeout: 4000 } */
     Meteor.call("stripe.findAdminStripeAccount", this.props.schoolData.superAdmin, (error, result) => {
       if (result && Meteor.settings.public.paymentEnabled) {
         let handler = StripeCheckout.configure({
           key: Meteor.settings.public.stripe.PUBLIC_KEY,
-          image: this.props.schoolData.mainImage,
+          image: this.schoolLogoFinder(schoolData),
           currency: currency,
           locale: "auto",
           token: function (token) {
-            popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress", RenderActions: (<spna />) });
+            popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress", RenderActions: (<span />) });
             //toastr.success("Please wait transaction in Progress", "Success");
             if (packageType == "CP" || packageType == "EP" || payUpFront || payAsYouGo) {
               self.handleCharge(token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self, purchaseId);
@@ -790,7 +793,7 @@ export default class SchoolViewBase extends React.Component {
 
         // Open Checkout with further options:
         handler.open({
-          name: this.props.schoolData.name,
+          name: get(this.props.schoolData,"name",'School Name'),
           description: packageName,
           zipCode: true,
           amount: amount
