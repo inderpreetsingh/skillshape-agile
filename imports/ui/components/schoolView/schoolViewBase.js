@@ -483,7 +483,7 @@ export default class SchoolViewBase extends React.Component {
     // });
   };
   schoolLogoFinder = (schoolData) =>{
-  return get(schoolData,'logoImg',get(schoolData,'mainImage',config.defaultSchoolLogo))
+  return get(schoolData,'logoImgMedium',get(schoolData,'logoImg',get(schoolData,'mainImage',config.defaultSchoolLogo)))
   }
   noThanksButton = () => (
     <FormGhostButton
@@ -770,6 +770,7 @@ export default class SchoolViewBase extends React.Component {
   }
   // handleChargeAndSubscription
   handleChargeAndSubscription = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, purchaseId) => {
+    self.setState({closed:false});
     const { popUp,schoolData } = this.props;
     let { payUpFront, payAsYouGo } = this.state;
     popUp.appear("success", { title: "Wait", content: "Please Wait One Sec...", RenderActions: (<span />) });/* , true, { autoClose: true, autoTimeout: 4000 } */
@@ -780,7 +781,12 @@ export default class SchoolViewBase extends React.Component {
           image: this.schoolLogoFinder(schoolData),
           currency: currency,
           locale: "auto",
+          closed:function () {
+            if(!self.state.closed)
+            popUp.appear("alert", { title: "Canceled ", content: "The transaction is canceled by the user.", RenderActions: (<span />) }) 
+          },
           token: function (token) {
+            self.setState({closed:true});
             popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress", RenderActions: (<span />) });
             //toastr.success("Please wait transaction in Progress", "Success");
             if (packageType == "CP" || packageType == "EP" || payUpFront || payAsYouGo) {
