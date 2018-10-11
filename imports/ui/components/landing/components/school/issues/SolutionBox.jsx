@@ -134,17 +134,6 @@ const ProblemTitle = styled.h2`
 	}
 `;
 
-const TOTAL_NUMBER_OF_SOLUTIONS = 3;
-
-let myPosition = {
-	initX: 0,
-	initY: 0,
-	currentX: 0,
-	currentY: 0
-};
-
-const TOUCH_MOVE_THRESHOLD = 40;
-
 class SolutionBox extends Component {
 	state = {
 		currentSolution: 0,
@@ -162,34 +151,6 @@ class SolutionBox extends Component {
 		Events.trigger('registerAsSchool', { userType: 'School' });
 	};
 
-	_getNextSolution = (direction) => {
-		let nextSolution = this.state.currentSolution;
-
-		if (direction === 'left') {
-			if (nextSolution === 0) {
-				nextSolution = TOTAL_NUMBER_OF_SOLUTIONS;
-			} else {
-				nextSolution = --nextSolution;
-			}
-		} else {
-			nextSolution = ++nextSolution % (TOTAL_NUMBER_OF_SOLUTIONS + 1);
-		}
-
-		return nextSolution;
-	};
-
-	_moveToSolution = (direction) => {
-		// get next solution with given direction.
-		const nextSolution = this._getNextSolution(direction);
-
-		//debugger;
-		this.handleSolutionChange(nextSolution);
-	};
-
-	handleArrowClick = (arrow) => {
-		this._moveToSolution(arrow);
-	};
-
 	handleSolutionChange = (currentSolution) => {
 		this.setState({ currentSolution });
 	};
@@ -200,41 +161,6 @@ class SolutionBox extends Component {
 		} else {
 			if (!this.state.showCards) this.setState({ showCards: true });
 		}
-	};
-
-	handleMouseEvent = (state) => {
-		this.setState({
-			showArrows: state
-		});
-	};
-
-	handleTouchStart = (e) => {
-		this.touchStarted = true;
-		myPosition.initX = e.touches[0].clientX;
-	};
-
-	handleTouchMove = (e) => {
-		myPosition.currentX = e.touches[0].clientX;
-	};
-
-	_resetTouchEventData = () => {
-		this.touchStarted = this.touchMoved = false;
-		myPosition.initX = myPosition.initY = myPosition.currentX = myPosition.currentY = 0;
-	};
-
-	handleTouchCancel = (e) => {
-		this._resetTouchEventData();
-	};
-
-	handleTouchEnd = (e) => {
-		if (Math.abs(myPosition.currentX - myPosition.initX) > TOUCH_MOVE_THRESHOLD) {
-			if (myPosition.initX < myPosition.currentX) {
-				this._moveToSolution('right');
-			} else {
-				this._moveToSolution('left');
-			}
-		}
-		this._resetTouchEventData();
 	};
 
 	componentWillMount = () => {
@@ -283,10 +209,7 @@ class SolutionBox extends Component {
 						</CardsListInner>
 					</CardsList>
 
-					<SolutionContentWrapper
-						onMouseOver={() => this.handleMouseEvent(true)}
-						onMouseOut={() => this.handleMouseEvent(false)}
-					>
+					<SolutionContentWrapper>
 						{props.cardsData &&
 							props.cardsData.map((card, i) => {
 								const isCurrentSolutionSelected = this.state.currentSolution === i;
