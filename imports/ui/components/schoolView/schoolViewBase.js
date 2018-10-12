@@ -482,6 +482,15 @@ export default class SchoolViewBase extends React.Component {
     //     }
     // });
   };
+  contractLengthFinder = (res,monthlyPymtDetails) => {
+      let oldContractLength,newContractLength;
+      oldContractLength = get(res,'contractLength',0);
+      newContractLength = get(monthlyPymtDetails[0],'month',0);
+      if(oldContractLength && newContractLength > oldContractLength){
+        return {contractLength:'longer',oldContractLength,newContractLength};
+      }
+      return {contractLength:'shorter',oldContractLength,newContractLength}
+  }
   schoolLogoFinder = (schoolData) =>{
   return get(schoolData,'logoImgMedium',get(schoolData,'logoImg',get(schoolData,'mainImage',config.defaultSchoolLogo)))
   }
@@ -496,6 +505,20 @@ export default class SchoolViewBase extends React.Component {
   purchaseButton = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self) => (
     <FormGhostButton
       label={"Purchase Now"}
+      onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self); }}
+      applyClose
+    />
+  );
+  purchaseOldContract = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self) => (
+    <FormGhostButton
+      label={"Continue Old Contract"}
+      onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self,'useOldContract'); }}
+      applyClose
+    />
+  );
+  purchaseNewContract = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self) => (
+    <FormGhostButton
+      label={"Purchase New Contract"}
       onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self); }}
       applyClose
     />
@@ -576,7 +599,7 @@ export default class SchoolViewBase extends React.Component {
               }
             }
             else if (packageType == "MP") {
-              let expiry,nextExpiry,endDate,inActivePurchases,monthPack;
+              let expiry,nextExpiry,endDate,inActivePurchases,monthPack,details,oldRate,newRate,newNextExpiryDate;
               inActivePurchases = get(res,'inActivePurchases',0);
               endDate = get(res, "endDate", new Date());
               
@@ -587,18 +610,38 @@ export default class SchoolViewBase extends React.Component {
                 expiry = moment(endDate).add(inActivePurchases,'M').format("Do MMMM YYYY");
                 nextExpiry = moment(endDate).add(inActivePurchases+1, 'M').format("Do MMMM YYYY");
                 this.setState({ payAsYouGo: true});
-                popUp.appear("inform", {
-                  title: "Already Purchased",
-                  content: `You have one or more  Monthly Subscriptions at ${schoolName} including Pay As You Go plan that expires on ${expiry}. Would you like to pay up until ${nextExpiry}?`,
-                  RenderActions: (
-                    <ButtonsWrapper>
-                      {this.noThanksButton()}
-                      {this.purchaseButton(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self)}
-                      {this.pastSubscriptionButton()}
-
-                    </ButtonsWrapper>
-                  )
-                }, true);
+                details = this.contractLengthFinder(res,monthlyPymtDetails);
+                if(details.contractLength == 'shorter'){
+                  popUp.appear("inform", {
+                    title: "Already Purchased",
+                    content: `You have one or more  Monthly Subscriptions at ${schoolName} including Pay As You Go plan that expires on ${expiry}. Would you like to pay up until ${nextExpiry}?`,
+                    RenderActions: (
+                      <ButtonsWrapper>
+                        {this.noThanksButton()}
+                        {this.purchaseButton(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self)}
+                        {this.pastSubscriptionButton()}
+  
+                      </ButtonsWrapper>
+                    )
+                  }, true);
+                }
+                else{
+                  oldRate = formatMoney(get(res,"amount",0),get(res,"currency","$"));
+                  newRate =  formatMoney(get(monthlyPymtDetails[0],'cost',0),get(monthlyPymtDetails[0],'currency',"$"));
+                  newNextExpiryDate = moment(new Date()).add(details.newContractLength, 'M').format("Do MMMM YYYY");
+                  popUp.appear("inform", {
+                    title: "Already Purchased",
+                    content: `You have one or more Monthly Subscriptions at ${schoolName}, including an existing Pay As You Go contract which is active until ${expiry}. The rate is ${oldRate}. Would you like to make a payment on the existing plan, extend the length of your contract to ${newNextExpiryDate} and have the new monthly rate of ${newRate}, or purchase an additional plan?`,
+                    RenderActions: (
+                      <ButtonsWrapper>
+                        {this.noThanksButton()}
+                        {this.purchaseNewContract(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self)}
+                        {this.purchaseOldContract(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self)}
+                        {this.pastSubscriptionButton()}
+                      </ButtonsWrapper>
+                    )
+                  }, true);
+                }
               }
               else {
                 monthPack = get(monthlyPymtDetails[0],"month",1);
@@ -613,7 +656,6 @@ export default class SchoolViewBase extends React.Component {
                       {this.noThanksButton()}
                       {this.purchaseButton(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self)}
                       {this.pastSubscriptionButton()}
-
                     </ButtonsWrapper>
                   )
                 }, true);
@@ -708,9 +750,9 @@ export default class SchoolViewBase extends React.Component {
     );
   }
   //handle single charge for cp,ep,payupfront online
-  handleCharge = (token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self, purchaseId) => {
+  handleCharge = (token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self,contract) => {
     const { popUp } = self.props;
-    Meteor.call("stripe.chargeCard", token.id, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, purchaseId, (error, result) => {
+    Meteor.call("stripe.chargeCard", token.id, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId,contract, (error, result) => {
 
       if (result) {
         if (result == "Payment Successfully Done") {
@@ -769,7 +811,7 @@ export default class SchoolViewBase extends React.Component {
 
   }
   // handleChargeAndSubscription
-  handleChargeAndSubscription = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, purchaseId) => {
+  handleChargeAndSubscription = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, contract) => {
     self.setState({closed:false});
     const { popUp,schoolData } = this.props;
     let { payUpFront, payAsYouGo } = this.state;
@@ -790,7 +832,7 @@ export default class SchoolViewBase extends React.Component {
             popUp.appear("success", { title: "Wait", content: "Please wait transaction in Progress", RenderActions: (<span />) });
             //toastr.success("Please wait transaction in Progress", "Success");
             if (packageType == "CP" || packageType == "EP" || payUpFront || payAsYouGo) {
-              self.handleCharge(token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self, purchaseId);
+              self.handleCharge(token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self,contract);
             } else if (packageType == "MP" && pymtType && pymtType.autoWithDraw) {
               self.handleSubscription(token, planId, schoolId, packageName, packageId, monthlyPymtDetails, self);
             }
@@ -851,7 +893,7 @@ export default class SchoolViewBase extends React.Component {
         return;
       }
       if (this.state.payAsYouGo) {
-        let money = formatMoney(amount / 100, get(monthlyPymtDetails[0], "currency", $));
+        let money = formatMoney(amount / 100, get(monthlyPymtDetails[0], "currency", "$"));
         let months = get(monthlyPymtDetails[0], "month", 0);
         let title = "Pay As You Go ";
         let content = <div> With this Payment type, you agree to pay the monthly fee for the length of the period you sign up for.

@@ -1,36 +1,28 @@
-import React, { Fragment, Component } from 'react';
-import ReactStars from 'react-stars';
 import { get, isEmpty } from 'lodash';
-import styled from 'styled-components';
+import React, { Component, Fragment } from 'react';
 import { scroller } from 'react-scroll';
-
-import { MuiThemeProvider } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-
+import styled from 'styled-components';
+import ClassTimes from '/imports/api/classTimes/fields';
+import School from '/imports/api/school/fields';
 import CardsReveal from '/imports/ui/components/landing/components/cards/CardsReveal.jsx';
-import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
-
-import ClassTimesDialogBox from '/imports/ui/components/landing/components/dialogs/ClassTimesDialogBox.jsx';
-import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx';
-
 import ClassTypeCardBody from '/imports/ui/components/landing/components/cards/ClassTypeCardBody.jsx';
 import ClassTypeCardDescription from '/imports/ui/components/landing/components/cards/ClassTypeCardDescription.jsx';
-
-import classTimesData from '/imports/ui/components/landing/constants/classTimesData';
-
-import { withPopUp, formatClassTimesData } from '/imports/util';
-import { ContainerLoader } from '/imports/ui/loading/container.js';
+import ClassTimesDialogBox from '/imports/ui/components/landing/components/dialogs/ClassTimesDialogBox.jsx';
+import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx';
 import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
+import { formatClassTimesData, withPopUp } from '/imports/util';
 import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 
-import School from '/imports/api/school/fields';
-import ClassTimes from '/imports/api/classTimes/fields';
 
-import MuiTheme from '/imports/ui/components/landing/components/jss/muitheme';
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
+
+
+
+
+
 
 const CardsRevealWrapper = styled.div`width: 100%;`;
 

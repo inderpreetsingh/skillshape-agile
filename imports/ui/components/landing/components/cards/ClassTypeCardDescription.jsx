@@ -1,23 +1,19 @@
-import React, { Fragment } from 'react';
-import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
-import { browserHistory } from 'react-router';
-import ReactStars from 'react-stars';
-import PropTypes from 'prop-types';
-
-import { withStyles, MuiThemeProvider } from 'material-ui/styles';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
-
+import PropTypes from 'prop-types';
+import React, { Fragment } from 'react';
+import ReactStars from 'react-stars';
+import styled from 'styled-components';
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
-
-import { cutString, goToSchoolPage, goToClassTypePage, addDelimiter } from '/imports/util';
-import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
-import School from '/imports/api/school/fields';
-
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import MuiTheme from '/imports/ui/components/landing/components/jss/muitheme';
+import { addDelimiter, goToClassTypePage, goToSchoolPage } from '/imports/util';
+
+
+
+
 
 const RatingsWrapper = styled.div`
 	display: flex;

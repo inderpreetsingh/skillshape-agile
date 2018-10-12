@@ -1,14 +1,12 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
+import { GoogleMap, withGoogleMap } from "react-google-maps";
 import styled from "styled-components";
-
-import { withProps } from "recompose";
-import { withScriptjs, withGoogleMap, GoogleMap } from "react-google-maps";
-
-import config from "/imports/util";
-import { withMarker } from "/imports/util";
-
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import config, { withMarker } from "/imports/util";
+
+
+
 
 const mapOptions = {
   zoom: 8,

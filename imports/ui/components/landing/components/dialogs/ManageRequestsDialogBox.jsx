@@ -1,36 +1,28 @@
-import React, { Fragment, Component } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import Radio, { RadioGroup } from "material-ui/Radio";
-import { FormControlLabel } from "material-ui/Form";
 import { isEmpty } from "lodash";
-
+import ClearIcon from "material-ui-icons/Clear";
+import Dialog, { DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import { FormControlLabel } from "material-ui/Form";
+import IconButton from "material-ui/IconButton";
+import Radio, { RadioGroup } from "material-ui/Radio";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React, { Component, Fragment } from "react";
+import styled from "styled-components";
+import PrimaryButton from "../buttons/PrimaryButton";
+import IconInput from "../form/IconInput.jsx";
+import * as helpers from "../jss/helpers.js";
+import muiTheme from "../jss/muitheme.jsx";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
+import { withPopUp } from "/imports/util";
 import Events from "/imports/util/events";
 import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
-import { withPopUp } from "/imports/util";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
 
-import PrimaryButton from "../buttons/PrimaryButton";
-import IconButton from "material-ui/IconButton";
-import ClearIcon from "material-ui-icons/Clear";
-import TextField from "material-ui/TextField";
 
-import IconInput from "../form/IconInput.jsx";
 
-import { MuiThemeProvider } from "material-ui/styles";
-import { withStyles } from "material-ui/styles";
 
-import * as helpers from "../jss/helpers.js";
-import muiTheme from "../jss/muitheme.jsx";
 
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
+
 
 const styles = theme => {
   return {
