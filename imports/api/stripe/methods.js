@@ -14,14 +14,14 @@ import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} fr
 // :":":":":":":"" classtypeids removed 
 let stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
-Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packageId, packageType, schoolId, expDuration, expPeriod, noOfClasses ,planId,purchaseId) {
+Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packageId, packageType, schoolId, expDuration, expPeriod, noOfClasses ,planId,contract) {
     try {
     check(stripeToken,String);
     check(desc,String);
     check(packageId,String);
     check(packageType,String);
     check(schoolId,String);
-    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status;
+    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status,contractLength = 0,payAsYouGo = false,currencySymbol = '$';
     packageName=desc;
     //Get amount and currency from database using package ids
     if (packageType == "EP") {
@@ -56,12 +56,24 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       let MonthlyData = MonthlyPricing.findOne({'pymtDetails.planId':planId})
       MonthlyData.pymtDetails.map((current,index)=>{
         if(current.planId == planId){
-          amount = current.cost * current.month;
+          amount = current.cost ;
+          if(get(MonthlyData,'pymtType.payUpFront',false)){
+            amount = amount * current.month;
+          }
           currency = current.currency;
+          contractLength = current.month;
         }
       })
+      payAsYouGo = get(MonthlyData,'pymtType.payAsYouGo',false);
       expPeriod = 'Months';
+      if(contract == 'useOldContract'){
+        Meteor.call('purchases.isAlreadyPurchased', { userId : this.userId, planId, packageId, packageType,pymtType:get(MonthlyData,'pymtType',{}) },async (err,res)=>{
+          amount = get(res,'amount',0)*100;
+          contractLength = get(res,'contractLength',0);
+        })
+      }
     }
+    currencySymbol = currency;
     //Get currency name and correct amount using multipleFactor from config
     config.currency.map((data, index) => {
       if (data.value == currency) {
@@ -81,6 +93,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     if(!stripeAccountId.stripe_user_id){
       throw new Meteor.Error('School not connected stripe yet.')
     }
+    
     stripeAccountId = stripeAccountId.stripe_user_id;
     const token = stripeToken;
     const skillshapeAmount = Math.round(amount * (2.9 / 100) + 40);
@@ -113,7 +126,11 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         startDate: startDate,
         endDate: endDate,
         noClasses: noOfClasses,
-        fee: Math.round(amount * (2.9 / 100) + 30)
+        fee: Math.round(amount * (2.9 / 100) + 30),
+        amount:amount/100,
+        contractLength,
+        payAsYouGo,
+        currency : currencySymbol
       };
       recordId = Meteor.call("purchases.addPurchase", payload);
       let charge = await stripe.charges.create(stripeRequest);
@@ -158,7 +175,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       sendPackagePurchasedEmailToSchool(schoolName, schoolEmail, userName, userEmail, packageName)
       return "Payment Successfully Done";
     } catch (error) {
-      console.log('TCL: }catch -> error', error);
+      console.log('TCL: error in stripe.chargeCard', error);
       payload = {
         stripeResponse: error,
         status: "Error"

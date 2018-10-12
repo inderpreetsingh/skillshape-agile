@@ -53,7 +53,7 @@ Meteor.methods({
     try{
       check(userId,String);
       let activePurchase,inActivePurchases,noClasses=0;
-      if(packageType == 'MP' && pymtType.autoWithDraw ){
+      if(packageType == 'MP' && get(pymtType,"autoWithDraw",false) ){
        return Purchases.findOne({userId,planId,packageStatus:'active'});
       }
       else{

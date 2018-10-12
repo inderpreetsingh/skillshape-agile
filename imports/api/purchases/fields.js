@@ -6,6 +6,10 @@ export const PurchasesSchema = new SimpleSchema({
     type: String,
     optional: true
   },
+  currency: {
+    type: String,
+    optional: true
+  },
   emailId: {
     type: String,
     optional: true
@@ -62,6 +66,18 @@ export const PurchasesSchema = new SimpleSchema({
   },
   noClasses: {
     type: Number,
+    optional: true
+  },
+  contractLength: {
+    type: Number,
+    optional: true
+  },
+  amount: {
+    type: Number,
+    optional: true
+  },
+  payAsYouGo: {
+    type: Boolean,
     optional: true
   },
   startDate: {
