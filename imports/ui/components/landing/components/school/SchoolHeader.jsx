@@ -46,7 +46,7 @@ const OuterWrapper = styled.div`
   background-color: ${helpers.schoolPageColor};
   position: relative;
   z-index: 1;
-  clip-path: ${helpers.clipPathCurve};
+  ${(props) => !props.isVideoInFullScreenMode && `clip-path: ${helpers.clipPathCurve}`};
 
   //
   // &:after {
@@ -151,6 +151,7 @@ const InputWrapper = styled.div`
 
 const VideoPlayerWrapper = styled.div`
 	padding-right: 80px;
+	margin-bottom: ${helpers.rhythmDiv}px;
 
 	@media screen and (max-width: ${helpers.mobile}px) {
 		padding-right: 0;
@@ -175,7 +176,19 @@ const ButtonSmallWrapper = styled.div`
 
 class SchoolHeader extends Component {
 	state = {
-		userEmail: ''
+		userEmail: '',
+		isVideoInFullScreenMode: false
+	};
+
+	handleFullScreenModeChange = (videoState) => {
+		if (this.state.isVideoInFullScreenMode !== videoState) {
+			this.setState((state) => {
+				return {
+					...state,
+					isVideoInFullScreenMode: videoState
+				};
+			});
+		}
 	};
 
 	handleInputChange = (e) => {
@@ -191,13 +204,14 @@ class SchoolHeader extends Component {
 
 	render() {
 		const { props } = this;
+		const { isVideoInFullScreenMode } = this.state;
 		return (
-			<OuterWrapper>
+			<OuterWrapper isVideoInFullScreenMode={isVideoInFullScreenMode}>
 				<Wrapper bgSrc={props.schoolHeaderImgSrc}>
 					<HeaderContentWrapper>
 						<HeaderContent>
 							<VideoPlayerWrapper>
-								<VideoPlayer />
+								<VideoPlayer onFullScreenChange={this.handleFullScreenModeChange} />
 							</VideoPlayerWrapper>
 							<Title>{props.title}</Title>
 							<Content>{props.content}</Content>

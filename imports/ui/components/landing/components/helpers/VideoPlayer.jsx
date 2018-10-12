@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Player, BigPlayButton } from 'video-react';
@@ -13,20 +13,55 @@ const Wrapper = styled.div`
 	box-shadow: ${heavyBoxShadow};
 `;
 
-const VideoPlayer = (props) => {
-	return (
-		<Wrapper className="ss-vid-player">
-			<Player {...props}>
-				<BigPlayButton />
-				<source src={props.src} />
-			</Player>
-		</Wrapper>
-	);
-};
+class VideoPlayer extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			isFullscreen: false
+		};
+	}
+	componentDidMount() {
+		// subscribe state change
+		this.player.subscribeToStateChange(this.handleStateChange);
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if (prevProps.onFullScreenChange) {
+			prevProps.onFullScreenChange(this.state.isFullscreen);
+		}
+	}
+
+	setupVideoPlayer = (player) => {
+		this.player = player;
+	};
+
+	handleStateChange = (state) => {
+		this.setState((prevState) => {
+			return {
+				...prevState,
+				isFullscreen: state.isFullscreen
+			};
+		});
+	};
+
+	render() {
+		const { props } = this;
+
+		return (
+			<Wrapper className="ss-vid-player">
+				<Player ref={this.setupVideoPlayer} {...props}>
+					<BigPlayButton />
+					<source src={props.src} />
+				</Player>
+			</Wrapper>
+		);
+	}
+}
 
 VideoPlayer.propTypes = {
 	src: PropTypes.string,
-	poster: PropTypes.string
+	poster: PropTypes.string,
+	onFullScreenChange: PropTypes.func
 };
 
 VideoPlayer.defaultProps = {
