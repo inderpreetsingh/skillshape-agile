@@ -1,18 +1,14 @@
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
-
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
-
-import { lightenDarkenColor } from '/imports/util';
+import Icon from 'material-ui/Icon';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import styled from 'styled-components';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
-import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
+import { lightenDarkenColor } from '/imports/util';
+
+
+
 
 const styles = {
   cardWrapper: {

@@ -1,44 +1,28 @@
-import React from "react";
-import PropTypes from "prop-types";
-import moment from "moment";
 import { isEmpty } from "lodash";
-import { browserHistory, Link } from "react-router";
-import { createContainer } from "meteor/react-meteor-data";
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
-import Button from "material-ui/Button";
-import IconButton from "material-ui/IconButton";
-import Chip from "material-ui/Chip";
-import Typography from "material-ui/Typography";
-import TextField from "material-ui/TextField";
-import { withStyles } from "material-ui/styles";
-import { MuiThemeProvider } from "material-ui/styles";
 import ClearIcon from "material-ui-icons/Clear";
-import ClassTimesBar from "/imports/ui/components/landing/components/classTimes/ClassTimesBar";
-import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import Grid from "material-ui/Grid";
 import Icon from "material-ui/Icon";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
-import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
-import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
-import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
-import School from "/imports/api/school/fields";
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
-
+import IconButton from "material-ui/IconButton";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
+import Typography from "material-ui/Typography";
+import moment from "moment";
+import PropTypes from "prop-types";
+import React from "react";
+import { browserHistory } from "react-router";
+import { scroller } from "react-scroll";
+import styled from "styled-components";
 import ClassInterest from "/imports/api/classInterest/fields";
+import School from "/imports/api/school/fields";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
+import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
+import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import Events from "/imports/util/events";
 import withImageExists from "/imports/util/withImageExists";
-import { Element } from "react-scroll";
-import { scroller } from "react-scroll";
-import Grid from "material-ui/Grid";
-import styled from "styled-components";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;

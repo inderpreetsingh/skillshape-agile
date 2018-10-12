@@ -1,15 +1,12 @@
-import React from "react";
-import { createContainer } from 'meteor/react-meteor-data';
-import styled from 'styled-components';
-import { initializeMap, setMarkersOnMap, reCenterMap } from '/imports/util';
-import Events from '/imports/util/events';
-import config from '/imports/config';
 import isMatch from 'lodash/isMatch';
-
+import React from "react";
+import styled from 'styled-components';
 import * as helpers from "../jss/helpers.js";
+import config from '/imports/config';
+import { initializeMap, reCenterMap, setMarkersOnMap } from '/imports/util';
+import Events from '/imports/util/events';
 
-import ClassType from "/imports/api/classType/fields";
-import SLocation from "/imports/api/sLocation/fields";
+
 
 // fixed height causing slight issues in rendering
 const MapContainer = styled.div`

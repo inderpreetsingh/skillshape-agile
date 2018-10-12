@@ -1,36 +1,28 @@
-import React, { Component, Fragment } from "react";
+import { findIndex, isEmpty } from "lodash";
 import { createContainer } from "meteor/react-meteor-data";
-import styled from "styled-components";
-import { findIndex, isEmpty, find } from "lodash";
-import Typography from "material-ui/Typography";
+import React, { Component } from "react";
+import { browserHistory } from "react-router";
 //import `Sticky` from 'react-sticky-el';
 import Sticky from "react-stickynode";
-import { browserHistory } from "react-router";
-
-import { getAverageNoOfRatings } from "/imports/util";
-
-import NoResults from "/imports/ui/components/landing/components/NoResults.jsx";
-import ClassMap from "/imports/ui/components/landing/components/map/ClassMap.jsx";
-import MapView from "/imports/ui/components/landing/components/map/mapView.jsx";
-import CardsList from "/imports/ui/components/landing/components/cards/CardsList.jsx";
-import SearchBarStyled from "/imports/ui/components/landing/components/SearchBarStyled.jsx";
-import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
-import SuggestionForm from "/imports/ui/components/landing/components/schoolSuggestions/SuggestionForm.jsx";
-import SuggestionFormWrapper from "/imports/ui/components/landing/components/schoolSuggestions/SuggestionFormWrapper.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { cardsData, cardsData1 } from "../../constants/cardsData.js";
-
+import styled from "styled-components";
+import ClassInterest from "/imports/api/classInterest/fields";
+import ClassTimes from "/imports/api/classTimes/fields";
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
 import Reviews from "/imports/api/review/fields";
 import School from "/imports/api/school/fields";
-import SLocation from "/imports/api/sLocation/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
-import ClassTimes from "/imports/api/classTimes/fields";
-import ClassInterest from "/imports/api/classInterest/fields";
+import SLocation from "/imports/api/sLocation/fields";
+import CardsList from "/imports/ui/components/landing/components/cards/CardsList.jsx";
+import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import MapView from "/imports/ui/components/landing/components/map/mapView.jsx";
+import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
+import SuggestionFormWrapper from "/imports/ui/components/landing/components/schoolSuggestions/SuggestionFormWrapper.jsx";
+
+
+
 
 const MainContentWrapper = styled.div`
   // margin-top: ${props => (props.isAnyFilterApplied ? -56 : 0)}px;

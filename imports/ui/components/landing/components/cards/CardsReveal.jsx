@@ -1,25 +1,21 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import get from "lodash/get";
-import { CSSTransition, Transition } from 'react-transition-group';
-
-import styled from 'styled-components';
-import ProgressiveImage from "react-progressive-image";
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import Icon from 'material-ui/Icon';
-import IconButton from 'material-ui/IconButton';
 import Clear from 'material-ui-icons/Clear';
-import MoreVert from 'material-ui-icons/MoreVert';
 import Edit from 'material-ui-icons/Edit';
-import { verifyImageURL } from "/imports/util";
-import withImageExists from '/imports/util/withImageExists.js';
-
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
-
+import MoreVert from 'material-ui-icons/MoreVert';
+import IconButton from 'material-ui/IconButton';
+import Paper from 'material-ui/Paper';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import ProgressiveImage from "react-progressive-image";
+import { CSSTransition, Transition } from 'react-transition-group';
+import styled from 'styled-components';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
+import { verifyImageURL } from "/imports/util";
+
+
+
 
 const styles = {
   cardWrapper: {

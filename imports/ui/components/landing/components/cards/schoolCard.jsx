@@ -1,29 +1,24 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
-import { CSSTransitionGroup } from "react-transition-group";
-import styled from "styled-components";
-
-import { withStyles } from "material-ui/styles";
-import Paper from "material-ui/Paper";
+import Grid from "material-ui/Grid";
 import Icon from "material-ui/Icon";
 import IconButton from "material-ui/IconButton";
-import Clear from "material-ui-icons/Clear";
-import MoreVert from "material-ui-icons/MoreVert";
-import Typography from "material-ui/Typography";
-import Grid from "material-ui/Grid";
+import Paper from "material-ui/Paper";
+import { withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import ProgressiveImage from "react-progressive-image";
 import { Link } from "react-router";
-
-import { cutString, withPopUp, handleOutBoundLink ,verifyImageURL} from "/imports/util";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-
+import styled from "styled-components";
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import CallUsDialogBox from "/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx";
 import EmailUsDialogBox from "/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import ProgressiveImage from "react-progressive-image";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
 import { cardImgSrc } from "/imports/ui/components/landing/site-settings.js";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import { handleOutBoundLink, verifyImageURL, withPopUp } from "/imports/util";
+
+
+
 
 const styles = {
   cardWrapper: {

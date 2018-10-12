@@ -1,13 +1,11 @@
-import React, {Fragment} from "react";
 import { createContainer } from "meteor/react-meteor-data";
-
-import LoginButton from "/imports/ui/components/landing/components/buttons/LoginButton.jsx";
-
-import School from "/imports/api/school/fields";
+import React from "react";
 import ClassType from "/imports/api/classType/fields";
-import ClassTimes from "/imports/api/classTimes/fields";
-import ClassTypeList from "/imports/ui/components/landing/components/classType/classTypeList.jsx";
+import School from "/imports/api/school/fields";
 import config from "/imports/config.js";
+import ClassTypeList from "/imports/ui/components/landing/components/classType/classTypeList.jsx";
+
+
 
 class SchoolClassTypeView extends React.Component {
   constructor(props) {
@@ -63,7 +61,8 @@ class SchoolClassTypeView extends React.Component {
 
   render() {
     const { schoolId } = this.props;
-    return ( <div className="wrapper">
+    return (
+      <div className="wrapper">
         <ClassTypeList
           containerPaddingTop="0px"
           locationName={null}
@@ -76,7 +75,8 @@ class SchoolClassTypeView extends React.Component {
           hideClassTypeOptions={this.props.route.name == "EmbedClassTypeView"}
           classTimesData={this.props.classTimesData}
         />
-      </div>);
+      </div>
+    );
   }
 }
 

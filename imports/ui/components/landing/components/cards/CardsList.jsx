@@ -1,19 +1,17 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import size from "lodash/size";
 import isEmpty from "lodash/isEmpty";
-
-import Grid from "material-ui/Grid";
-
-import Reviews from "/imports/api/review/fields.js";
-
-import { getContainerMaxWidth, getAverageNoOfRatings } from "/imports/util";
-import ClassTypeCard from "/imports/ui/components/landing/components/cards/ClassTypeCard.jsx";
-import CardStructure from "/imports/ui/components/landing/constants/structure/card.js";
+import size from "lodash/size";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import styled from "styled-components";
 import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton.jsx";
-
+import ClassTypeCard from "/imports/ui/components/landing/components/cards/ClassTypeCard.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import CardStructure from "/imports/ui/components/landing/constants/structure/card.js";
+import { getAverageNoOfRatings, getContainerMaxWidth } from "/imports/util";
+
+
+
+
 
 const SPACING = helpers.rhythmDiv * 3;
 const CARD_WIDTH = 280;
