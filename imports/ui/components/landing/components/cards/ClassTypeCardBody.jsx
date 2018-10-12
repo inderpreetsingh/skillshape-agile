@@ -46,29 +46,28 @@ const ClassTypeCardBody = (props) => (
 
 		<Grid container spacing={8}>
 			{!props.editMode && (
-				<Fragment>
-					<Grid item xs={12} sm={7}>
-						<PrimaryButton
-							icon
-							iconName="add_circle_outline"
-							fullWidth
-							label="Join Class"
-							onClick={props.onJoinClassButtonClick}
-						/>
-					</Grid>
-					<Grid item xs={12} sm={5}>
-						<SecondaryButton fullWidth label={'Details'} />
-					</Grid>
-				</Fragment>
+				<Grid item xs={12} sm={7}>
+					<PrimaryButton
+						icon
+						iconName="add_circle_outline"
+						fullWidth
+						label="Join Class"
+						onClick={props.onJoinClassButtonClick}
+					/>
+				</Grid>
 			)}
 
+			<Grid item xs={12} sm={5}>
+				<SecondaryButton fullWidth label={'Details'} />
+			</Grid>
+
 			{props.editMode && (
-				<Grid item xs={12} sm={12}>
+				<Grid item xs={12} sm={7}>
 					<PrimaryButton
 						icon
 						iconName="edit"
 						fullWidth
-						label="Edit Class Details"
+						label="Edit Details"
 						onClick={props.onEditClassTypeClick}
 					/>
 				</Grid>
