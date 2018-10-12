@@ -110,12 +110,12 @@ const styles = {
 	}
 };
 
-const ListingButton = withStyles(styles)((props) => (
-	<Button className={props.classes.claimListingButton} onClick={props.onClick}>
+const ListingButton = (props) => (
+	<button className="danger-button" onClick={props.onClick}>
+		<span className="skillshape-button--icon">{props.iconName}</span>
 		{props.label}
-		<Icon className={props.classes.claimListingIcon}>{props.iconName}</Icon>
-	</Button>
-));
+	</button>
+);
 
 console.log(withStyles, '>>>>>>>>>>>>>.');
 
@@ -138,10 +138,6 @@ const ClaimSchoolRender = function(props) {
 			</FormSubmitButtonWrapper>
 		</NonListingWrapper>
 	);
-
-	// if (this.props.isLoading) {
-	//   return <div />;
-	// }
 
 	if (isEmpty(schools)) {
 		return (
