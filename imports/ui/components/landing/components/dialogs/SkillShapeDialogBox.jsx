@@ -1,19 +1,15 @@
 import React, { Component, Fragment } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-
 import { MuiThemeProvider } from "material-ui/styles";
 import Button from "material-ui/Button";
 import IconButton from "material-ui/IconButton";
 import ClearIcon from "material-ui-icons/Clear";
 import { withStyles } from "material-ui/styles";
-
 import LoginButton from "/imports/ui/components/landing/components/buttons/LoginButton.jsx";
 import JoinButton from "/imports/ui/components/landing/components/buttons/JoinButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
-import { ContainerLoader } from "/imports/ui/loading/container";
-
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -87,7 +83,6 @@ const popUpBasicConfig = {
 const styles = () => {
   const stylesObject = {
     dialogRoot: {
-      maxWidth: 450,
       width: "100%",
       overflow: "hidden"
     },
