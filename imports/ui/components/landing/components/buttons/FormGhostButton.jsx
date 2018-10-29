@@ -19,7 +19,6 @@ const styles = {
     color: helpers.primaryColor,
     textTransform: "none",
     fontWeight: 500,
-    whiteSpace: "nowrap",
     marginRight: "10px",
     "&:hover": {
       backgroundColor: helpers.primaryColor,

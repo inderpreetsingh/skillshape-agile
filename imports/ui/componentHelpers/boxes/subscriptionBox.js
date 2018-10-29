@@ -66,6 +66,7 @@ class SubscriptionBox extends React.Component {
  
   render() {
     let { classes,subscriptionList} = this.props;
+    subscriptionList = subscriptionList.reverse();
     return (
         <div>
             <Paper className={classes.root}>
@@ -95,7 +96,7 @@ class SubscriptionBox extends React.Component {
                  </Paper>   
                 </SubscriptionName>
                 <Expiring>
-                 Expiring On {moment(current.endDate).format("Do MMMM YYYY")}
+                {status == "inActive" ? 'Starting' : 'Expiring'} {moment(current.endDate).format("Do MMMM YYYY")}
                  </Expiring>
                  {get(current,'packageType','MP')=='MP' &&  <Expiring>
                  Renewal On {moment(current.endDate).add(1, 'M').format("Do MMMM YYYY")}

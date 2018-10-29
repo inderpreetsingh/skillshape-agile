@@ -74,7 +74,8 @@ export const PurchasesSchema = new SimpleSchema({
   },
   amount: {
     type: Number,
-    optional: true
+    optional: true,
+    decimal: true
   },
   payAsYouGo: {
     type: Boolean,

@@ -68,7 +68,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       expPeriod = 'Months';
       if(contract == 'useOldContract'){
         Meteor.call('purchases.isAlreadyPurchased', { userId : this.userId, planId, packageId, packageType,pymtType:get(MonthlyData,'pymtType',{}) },async (err,res)=>{
-          amount = get(res,'amount',0)*100;
+          amount = get(res,'amount',0);
           contractLength = get(res,'contractLength',0);
         })
       }
@@ -78,7 +78,11 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     config.currency.map((data, index) => {
       if (data.value == currency) {
         currency = data.label;
-        amount = amount * data.multiplyFactor;
+        amount = String(amount);
+        if(amount.indexOf('.') == -1)
+        amount = parseInt(String(amount).split(".").join("")) * data.multiplyFactor;
+        else
+        amount = parseInt(String(amount).split(".").join(""));
       }
     })
     let userId = this.userId;
