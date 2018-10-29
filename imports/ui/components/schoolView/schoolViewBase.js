@@ -512,14 +512,14 @@ export default class SchoolViewBase extends React.Component {
   );
   purchaseOldContract = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self) => (
     <FormGhostButton
-      label={"Continue Old Contract"}
+      label={"Make a Payment on Existing Plan"}
       onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self,'useOldContract'); }}
       applyClose
     />
   );
   purchaseNewContract = (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self) => (
     <FormGhostButton
-      label={"Purchase New Contract"}
+      label={"Switch to New Plan"}
       onClick={() => { this.handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self); }}
       applyClose
     />
@@ -632,7 +632,7 @@ export default class SchoolViewBase extends React.Component {
                   newNextExpiryDate = moment(new Date()).add(details.newContractLength, 'M').format("Do MMMM YYYY");
                   popUp.appear("inform", {
                     title: "Already Purchased",
-                    content: `You have one or more Monthly Subscriptions at ${schoolName}, including an existing Pay As You Go contract which is active until ${expiry}. The rate is ${oldRate}. Would you like to make a payment on the existing plan, extend the length of your contract to ${newNextExpiryDate} and have the new monthly rate of ${newRate}, or purchase an additional plan?`,
+                    content: `You have one or more Monthly Subscriptions at ${schoolName}, including an existing Pay As You Go contract, ${oldRate} per month until ${expiry}. Would you like to make a payment on the existing plan, or cancel the existing plan and start the new plan which will expire ${newNextExpiryDate} and have the new monthly rate of ${newRate}? or purchase an additional plan? If you switch, the new contract will start at the current plan's month expiration.`,
                     RenderActions: (
                       <ButtonsWrapper>
                         {this.noThanksButton()}

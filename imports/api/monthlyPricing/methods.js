@@ -43,7 +43,11 @@ Meteor.methods({
               config.currency.map((data, index) => {
                 if (data.value == elem.currency) {
                   currency = data.label;
-                  amount = elem.cost * data.multiplyFactor;
+                  amount = String(elem.cost);
+                  if(amount.indexOf('.') == -1)
+                  amount = parseInt(String(elem.cost).split(".").join("")) * data.multiplyFactor;
+                  else
+                  amount = parseInt(String(elem.cost).split(".").join(""));
                 }
               })
               let result = Meteor.call(

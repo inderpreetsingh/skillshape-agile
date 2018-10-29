@@ -163,7 +163,6 @@ const Package = props => (
               </ClassDetailsText>
             ) : (
               <Fragment>
-                <ClassDetailsText>{props.pymtMethod || "NA"}</ClassDetailsText>
                 <ClassDetailsText>
                   {getPaymentType(props.pymtType) || "NA"}
                 </ClassDetailsText>
