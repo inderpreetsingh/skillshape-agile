@@ -632,7 +632,7 @@ export default class SchoolViewBase extends React.Component {
                   newNextExpiryDate = moment(new Date()).add(details.newContractLength, 'M').format("Do MMMM YYYY");
                   popUp.appear("inform", {
                     title: "Already Purchased",
-                    content: `You have one or more Monthly Subscriptions at ${schoolName}, including an existing Pay As You Go contract, ${oldRate} per month until ${expiry}. Would you like to make a payment on the existing plan, or cancel the existing plan and start the new plan which will expire ${newNextExpiryDate} and have the new monthly rate of ${newRate}? or purchase an additional plan? If you switch, the new contract will start at the current plan's month expiration.`,
+                    content: `You have one or more Monthly Subscriptions at ${schoolName}, including an existing Pay As You Go contract, ${oldRate} per month until ${expiry}. Would you like to make a payment on the existing plan, or cancel the existing plan and start the new plan which will expire ${newNextExpiryDate} and have the new monthly rate of ${newRate}? If you switch, the new contract will start at the current plan's month expiration.`,
                     RenderActions: (
                       <ButtonsWrapper>
                         {this.noThanksButton()}
