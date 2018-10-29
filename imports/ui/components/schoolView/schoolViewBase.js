@@ -14,6 +14,7 @@ import { capitalizeString, checkSuperAdmin, createMarkersOnMap, formatMoney } fr
 import Events from "/imports/util/events";
 import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
+import LoginButton from "/imports/ui/components/landing/components/buttons/LoginButton.jsx";
 const ButtonsWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -884,9 +885,16 @@ export default class SchoolViewBase extends React.Component {
         }
       })
       let self = this;
-      let userId = this.props.currentUser._id;
+      let userId = get(this.props.currentUser,"_id",null);
       //check is package is already purchased
-
+      if(!userId){
+        popUp.appear("alert", {
+          title: "Login Required",
+          content: `To purchase any package you must be logged.`,
+          RenderActions: ( <ButtonsWrapper> <LoginButton icon={false} {...this.props} /> </ButtonsWrapper> )
+        }, true);
+        return ;
+      }
       await this.isAlreadyPurchased({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType ,self});
 
       if (this.state.isAlreadyPurchased) {
