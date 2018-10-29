@@ -1,16 +1,12 @@
-import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
-import { lightenDarkenColor } from '/imports/util';
 
 import { lightenDarkenColor } from '/imports/util';
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
-import { CSSTransition } from 'react-transition-group';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const CardWrapper = styled.article`
   width: 100%;
