@@ -1,18 +1,11 @@
+import { FormControl } from 'material-ui/Form';
+import Grid from 'material-ui/Grid';
+import TextField from 'material-ui/TextField';
 import React from "react";
 import styled from 'styled-components';
-import Grid from 'material-ui/Grid';
-import Multiselect from 'react-widgets/lib/Multiselect'
-import Hidden from 'material-ui/Hidden';
-import { MuiThemeProvider } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Icon from 'material-ui/Icon';
-import TextField from 'material-ui/TextField';
-import { FormControl } from 'material-ui/Form';
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
-import muiTheme from '/imports/ui/components/landing/components/jss/muitheme';
-import IconInput from '/imports/ui/components/landing/components/form/IconInput';
 
 const FilterPanelContainer = styled.div`
     max-width:1100px;

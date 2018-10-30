@@ -1,18 +1,16 @@
-import React, { Fragment } from "react";
-import Grid from 'material-ui/Grid';
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import FileUpload from 'material-ui-icons/FileUpload';
-import Switch from 'material-ui/Switch';
+import Card from 'material-ui/Card';
 import { FormControlLabel, FormGroup } from 'material-ui/Form';
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import { ContainerLoader } from '/imports/ui/loading/container.js';
-import MediaFilter from './filter';
-import MediaList from './mediaList';
-import ImageGridGallery from './gridGallery/gridGalleryView.js';
-import CreateMedia from './createMedia';
+import Grid from 'material-ui/Grid';
+import Switch from 'material-ui/Switch';
+import React, { Fragment } from "react";
 //import Sticky from 'react-sticky-el';
 import Sticky from 'react-stickynode';
+import CreateMedia from './createMedia';
+import MediaFilter from './filter';
+import ImageGridGallery from './gridGallery/gridGalleryView.js';
+import MediaList from './mediaList';
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 export default function () {
 

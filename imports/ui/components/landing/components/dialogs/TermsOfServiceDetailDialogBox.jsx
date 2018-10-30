@@ -1,25 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import Typography from 'material-ui/Typography';
 import ClearIcon from 'material-ui-icons/Clear';
-
-import {withStyles} from 'material-ui/styles';
-import { MuiThemeProvider} from 'material-ui/styles';
-
-import PrimaryButton from '../buttons/PrimaryButton';
+import Button from 'material-ui/Button';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import Typography from 'material-ui/Typography';
+import PropTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
 
-import Dialog , {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from 'material-ui/Dialog';
+
+
+
 
 const styles = {
     dialogPaper: {

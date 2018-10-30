@@ -1,35 +1,19 @@
-import React from "react";
-import Button from "material-ui/Button";
-import { withStyles } from "material-ui/styles";
-import PropTypes from "prop-types";
-
-import Card, {
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions
-} from "material-ui/Card";
-import BottomNavigation, {
-  BottomNavigationButton
-} from "material-ui/BottomNavigation";
-import Videocam from "material-ui-icons/Videocam";
+import { filter } from "lodash";
 import FileUpload from "material-ui-icons/FileUpload";
 import Link from "material-ui-icons/Link";
-import Clear from "material-ui-icons/Clear";
+import Videocam from "material-ui-icons/Videocam";
+import BottomNavigation, { BottomNavigationButton } from "material-ui/BottomNavigation";
+import Button from "material-ui/Button";
+import Card, { CardActions, CardContent } from "material-ui/Card";
+import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
+import Input, { InputAdornment } from "material-ui/Input";
+import { withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React from "react";
 import { findDOMNode } from "react-dom";
-import { filter, assign } from "lodash";
 import ProgressiveImage from "react-progressive-image";
-import Input, { InputLabel, InputAdornment } from "material-ui/Input";
-import { FormControl, FormHelperText } from "material-ui/Form";
-import Typography from "material-ui/Typography";
 import styled from "styled-components";
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
+
 
 const ProfilePic =styled.div`
 transition: background-image 1s linear !important;
