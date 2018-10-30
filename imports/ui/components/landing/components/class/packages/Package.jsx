@@ -173,10 +173,10 @@ const Package = props => (
         <ClassDetailsText>
           Covers: {getCovers(props.selectedClassType)}
         </ClassDetailsText>
-        {props.packageType == 'MP'&&  <ClassDetailsText>
+        {/* {props.packageType == 'MP'&&  <ClassDetailsText>
           Maximum Classes: {maximumClasses(props)}
         </ClassDetailsText>
-      }
+      } */}
         
       </ClassDetailsSection>
       <RightSection>
