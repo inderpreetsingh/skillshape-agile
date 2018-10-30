@@ -1,19 +1,24 @@
 import React from 'react';
+import styled from 'styled-components';
+import { browserHistory } from 'react-router';
 import { createContainer } from 'meteor/react-meteor-data';
-import { withPopUp } from '/imports/util';
-import SchoolBox from '/imports/ui/componentHelpers/boxes/schoolBox.js';
 
 import get from 'lodash/get';
-import School from '/imports/api/school/fields';
-import Purchases from '/imports/api/purchases/fields';
-import ClassSubscription from '/imports/api/classSubscription/fields';
-
 import isEmpty from 'lodash/isEmpty';
 import uniq from 'lodash/uniq';
 import concat from 'lodash/concat';
 
+import School from '/imports/api/school/fields';
+import Purchases from '/imports/api/purchases/fields';
+import ClassSubscription from '/imports/api/classSubscription/fields';
+
+import SchoolBox from '/imports/ui/componentHelpers/boxes/schoolBox.js';
 import MySubscriptionRender from './MySubscriptionRender.jsx';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
+import { withPopUp } from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
+const Wrapper = styled.div`background: white;`;
 
 class MySubscription extends React.Component {
 	constructor(props) {
@@ -56,23 +61,30 @@ class MySubscription extends React.Component {
 
 	render() {
 		const { callUsDialog, phone, emailUsDialog, email } = this.state;
-		const { schoolData, purchaseData } = this.props;
-		console.group('My Subscriptions');
-		console.log(schoolData, purchaseData);
-		console.groupEnd();
+		const { isLoading, schoolData, purchaseData } = this.props;
+		// console.group('My Subscriptions');
+		// console.log(schoolData, purchaseData, isLoading);
+		// console.groupEnd();
+
+		if (isLoading) {
+			return <ContainerLoader />;
+		}
+
 		return (
-			<div>
+			<Wrapper>
 				{/*<SchoolBox schoolData={schoolData} purchaseData={purchaseData} />*/}
 				<MySubscriptionRender
 					email={email}
 					phone={phone}
+					schoolData={schoolData}
+					purchaseData={purchaseData}
 					callUsDialog={callUsDialog}
 					emailUsDialog={emailUsDialog}
 					handleEmail={this.handleEmail}
 					handleCall={this.handleCall}
 					handleSchoolVisit={this.handleSchoolVisit}
 				/>
-			</div>
+			</Wrapper>
 		);
 	}
 }
@@ -80,6 +92,7 @@ class MySubscription extends React.Component {
 export default createContainer((props) => {
 	const { currentUser } = props;
 	let userId,
+		isLoading = true,
 		purchaseData = [],
 		purchaseSubscription,
 		filter,
@@ -92,26 +105,42 @@ export default createContainer((props) => {
 	filter = { userId };
 	purchaseSubscription = Meteor.subscribe('purchases.getPurchasesListByMemberId', filter);
 	classSubscription = Meteor.subscribe('classSubscription.findDataById', filter);
+
 	if (purchaseSubscription && purchaseSubscription.ready() && classSubscription && classSubscription.ready()) {
 		purchaseData = Purchases.find().fetch();
 		classSubscriptionData = ClassSubscription.find().fetch();
-	}
-	if (!isEmpty(purchaseData)) {
-		purchaseData.map((current) => {
-			schoolIds.push(current.schoolId);
-		});
-		if (!isEmpty(classSubscriptionData)) {
-			classSubscriptionData.map((current) => {
+		console.log(purchaseData, classSubscription, ' in purchase subscription');
+
+		if (!isEmpty(purchaseData)) {
+			purchaseData.map((current) => {
 				schoolIds.push(current.schoolId);
 			});
+			if (!isEmpty(classSubscriptionData)) {
+				classSubscriptionData.map((current) => {
+					schoolIds.push(current.schoolId);
+				});
+			}
+			schoolSubscription = Meteor.subscribe('school.findSchoolByIds', uniq(schoolIds));
+			if (
+				schoolSubscription &&
+				schoolSubscription.ready() &&
+				purchaseSubscription.ready() &&
+				classSubscription.ready()
+			) {
+				schoolData = School.find().fetch();
+				console.log(purchaseData, classSubscriptionData, schoolData, '________________ IS LOADING FALSE NOW');
+				isLoading = false;
+			}
+		} else {
+			console.log(purchaseData, classSubscriptionData, '---- isLOADING false in else block');
+			isLoading = false;
 		}
-		schoolSubscription = Meteor.subscribe('school.findSchoolByIds', uniq(schoolIds));
 	}
-	if (schoolSubscription && schoolSubscription.ready()) {
-		schoolData = School.find().fetch();
-	}
+
 	purchaseData = concat(purchaseData, classSubscriptionData);
+
 	return {
+		isLoading,
 		schoolData,
 		purchaseData
 	};

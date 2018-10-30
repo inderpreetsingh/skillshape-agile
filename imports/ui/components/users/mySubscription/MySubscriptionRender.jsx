@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
+import isEmpty from 'lodash/isEmpty';
 import ProgressiveImage from 'react-progressive-image';
 
 import { withStyles } from 'material-ui/styles';
@@ -9,6 +10,9 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import MemberActionButton from '/imports/ui/components/landing/components/buttons/MemberActionButton.jsx';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+
+import School from '/imports/api/school/fields';
 
 import {
 	Heading,
@@ -19,11 +23,15 @@ import {
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+	max-width: 800px;
+	margin: 0 auto;
+`;
 
 const ImageContainer = styled.div`
   width: 100px;
   height: 100px;
+  border-radius: 50%;
   flex-shrink: 0;
   ${helpers.coverBg};
   margin-right: ${helpers.rhythmDiv * 2}px;
@@ -65,10 +73,22 @@ const ActionButton = styled.div`
 	}
 `;
 
-const Subscriptions = styled.div`display: flex;`;
+const Subscriptions = styled.div`
+	display: flex;
+	width: 100%;
+`;
+
+const SubscriptionsTitle = Text.withComponent('h3').extend`
+	text-align: center;
+	font-size: ${helpers.baseFontSize}px;
+	font-style: italic;
+	margin-bottom: ${helpers.rhythmDiv}px;
+`;
 
 const SubscriptionsContent = styled.div`
 	position: relative;
+	width: 50%;
+	padding: ${helpers.rhythmDiv * 2}px;
 
 	:after {
 		content: "";
@@ -84,20 +104,29 @@ const SubscriptionsContent = styled.div`
 	}
 `;
 
-const SchoolName = SubHeading.extend`color: white;`;
+const PageTitle = Heading.extend`
+	font-size: ${helpers.baseFontSize * 2}px;
+	text-align: center;
+	margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+const SchoolProfile = styled.div`
+	/* prettier-ignore */
+	${helpers.flexCenter}
+`;
 
 const ActionButtons = (props) => (
 	<ActionButtonsWrapper>
-		<ActionButton onClick={props.handleVisitSchool(props.schoolSlug)}>
-			<MemberActionButton icon iconName="school" label="Visit School" />
+		<ActionButton onClick={() => props.handleVisitSchool(props.schoolSlug)}>
+			<FormGhostButton icon iconName="school" label="Visit School" />
 		</ActionButton>
 
-		<ActionButton onClick={props.handleCall(props.memberInfo)}>
-			<MemberActionButton icon iconName="phone" label="Call" />
+		<ActionButton onClick={() => props.handleCall(props.memberInfo)}>
+			<FormGhostButton icon iconName="phone" label="Call" />
 		</ActionButton>
 
-		<ActionButton onClick={props.handleEmail(props.memberInfo)}>
-			<MemberActionButton secondary noMarginBottom label="Email" icon iconName="email" />
+		<ActionButton onClick={() => props.handleEmail(props.memberInfo)}>
+			<FormGhostButton icon iconName="email" label="Email" noMarginBottom />
 		</ActionButton>
 	</ActionButtonsWrapper>
 );
@@ -108,20 +137,36 @@ const styles = {
 	},
 	expansionPanelRootExpanded: {
 		border: `1px solid black`
+	},
+	expansionPanelDetails: {
+		padding: 0,
+		marginTop: helpers.rhythmDiv
+	},
+	expansionPanelSummary: {
+		margin: 0,
+		padding: helpers.rhythmDiv
+	},
+	expansionPanelSummaryContent: {
+		margin: 0,
+		justifyContent: 'space-between'
 	}
 };
 
 const MySubscriptionRender = (props) => {
+	const getSchoolDataBasedOnSubscription = (sbsData) => {
+		return School.find({ _id: sbsData.schoolId }).fetch()[0];
+	};
+
 	const {
 		src,
 		phone,
 		classes,
-		handleCall,
-		handleEmail,
 		schoolData,
 		purchaseData,
 		callUsDialog,
 		emailUsDialog,
+		handleCall,
+		handleEmail,
 		handleModelState,
 		handleVisitSchool
 	} = props;
@@ -143,40 +188,57 @@ const MySubscriptionRender = (props) => {
 					onModalClose={handleModelState('emailUsDialog', false)}
 				/>
 			)}
+			<PageTitle>My Subscriptions</PageTitle>
 			<Wrapper>
-				<Heading>My Subscriptions</Heading>
-				{purchaseData.map((sbsData) => (
-					<ExpansionPanel
-						classes={{
-							root: classes.expansionPanelRoot
-						}}
-					>
-						<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-							<ProgressiveImage src={src} placeholder={config.blurImage}>
-								{(src) => <ImageContainer src={src} />}
-							</ProgressiveImage>
-							<SchoolName> {current.name.toUpperCase()} </SchoolName>
-							<ActionButtons handleCall={props.handleCall} handleEmail={props.handleEmail} />
-						</ExpansionPanelSummary>
-						<ExpansionPanelDetails>
-							<Subscriptions>
-								<SubscriptionsContent active>
-									<Text>
-										<Italic>Active Subscriptions</Italic>
-									</Text>
-								</SubscriptionsContent>
-								<SubscriptionsContent>
-									<Text>
-										<Italic>Expired Subscriptions</Italic>
-									</Text>
-								</SubscriptionsContent>
-							</Subscriptions>
-						</ExpansionPanelDetails>
-					</ExpansionPanel>
-				))}
+				{!isEmpty(purchaseData) &&
+					purchaseData.map((sbsData) => {
+						const schoolData = getSchoolDataBasedOnSubscription(sbsData);
+						// console.group(' MY SUBSCRIPTION');
+						// console.log(schoolData, sbsData, '===============');
+						// console.group();
+						return (
+							<ExpansionPanel
+								classes={{
+									root: classes.expansionPanelRoot
+								}}
+							>
+								<ExpansionPanelSummary
+									classes={{
+										root: classes.expansionPanelSummary,
+										content: classes.expansionPanelSummaryContent
+									}}
+									expandIcon={<ExpandMoreIcon />}
+								>
+									<SchoolProfile>
+										<ProgressiveImage src={src} placeholder={config.blurImage}>
+											{(src) => <ImageContainer src={src} />}
+										</ProgressiveImage>
+										<SubHeading> {schoolData.name} </SubHeading>
+									</SchoolProfile>
+
+									<ActionButtons
+										handleCall={props.handleCall}
+										handleEmail={props.handleEmail}
+										handleVisitSchool={props.handleVisitSchool}
+									/>
+								</ExpansionPanelSummary>
+
+								<ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
+									<Subscriptions>
+										<SubscriptionsContent active>
+											<SubscriptionsTitle>Active Subscription</SubscriptionsTitle>
+										</SubscriptionsContent>
+										<SubscriptionsContent>
+											<SubscriptionsTitle>Expired Subscriptions</SubscriptionsTitle>
+										</SubscriptionsContent>
+									</Subscriptions>
+								</ExpansionPanelDetails>
+							</ExpansionPanel>
+						);
+					})}
 			</Wrapper>
 		</Fragment>
 	);
 };
 
-export default MySubscriptionRender;
+export default withStyles(styles)(MySubscriptionRender);
