@@ -1,6 +1,5 @@
 import React from "react";
 import { Router, Route, browserHistory } from "react-router";
-
 import EmbedLayout from "/imports/ui/layout/embedLayout";
 import MainLayout from "/imports/ui/layout/mainLayout";
 import { componentLoader } from "/imports/util";

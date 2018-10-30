@@ -1,53 +1,44 @@
 import React from "react";
-import {
-  Router,
-  Route,
-  browserHistory,
-  DefaultRoute,
-  IndexRoute
-} from "react-router";
-//layout
-import MainLayout from "/imports/ui/layout/mainLayout";
-import AdminLayout from "/imports/ui/layout/adminLayout";
-import PublicLayout from "/imports/ui/layout/publicLayout";
-import EmbedLayout from "/imports/ui/layout/embedLayout";
-
-//components
-import Home from "/imports/ui/components/home";
-import Landing from "/imports/ui/components/landing/index.jsx";
-import TestPopUps from "/imports/ui/components/landing/TestPopUps.jsx";
-import ClassType from "/imports/ui/components/landing/ClassType.jsx";
-import NoResults from "/imports/ui/components/landing/components/NoResults";
-import ClassTypeView from "/imports/ui/components/classTypeView";
-import SchoolSuggestionsView from "/imports/ui/components/landing/components/schoolSuggestions/index.jsx";
-import School from "/imports/ui/components/landing/School.jsx";
-import NoPageFound from "/imports/ui/components/landing/components/NoPageFound";
-
+import { browserHistory, IndexRoute, Route, Router } from "react-router";
+import StripeConnectModal from "./../../ui/modal/stripeConnectModal";
 import ResetPassword from "/imports/ui/components/account/resetPassword";
-import MyProfile from "/imports/ui/components/users/myProfile";
-import MyMedia from "/imports/ui/components/users/myMedia";
-import MySubscription from "/imports/ui/components/users/mySubscription";
-import SchoolView from "/imports/ui/components/schoolView";
-import SchoolMemberView from "/imports/ui/components/schoolMembers";
+import VerifyEmail from "/imports/ui/components/account/verifyEmail";
 import ClaimSchool from "/imports/ui/components/claimSchool";
-import SchoolEditView from "/imports/ui/components/schoolView/editSchool";
-import ManageMyCalendar from "/imports/ui/components/users/manageMyCalendar";
+import ClassTypeView from "/imports/ui/components/classTypeView";
+import Financials from "/imports/ui/components/financials";
+import ClassDetails from "/imports/ui/components/landing/ClassDetails.jsx";
+import ClassType from "/imports/ui/components/landing/ClassType.jsx";
+import NoPageFound from "/imports/ui/components/landing/components/NoPageFound";
+import NoResults from "/imports/ui/components/landing/components/NoResults";
+import SchoolSuggestionsView from "/imports/ui/components/landing/components/schoolSuggestions/index.jsx";
+import Landing from "/imports/ui/components/landing/index.jsx";
+import School from "/imports/ui/components/landing/School.jsx";
+import TestPopUps from "/imports/ui/components/landing/TestPopUps.jsx";
+import ManageUsers from "/imports/ui/components/manage-users";
+import Optimization from '/imports/ui/components/optimization';
+import SchoolMemberView from "/imports/ui/components/schoolMembers";
 // import MyCalender from '/imports/ui/components/users/myCalender';
 import SchoolUpload from "/imports/ui/components/schoolUpload";
-import VerifyEmail from "/imports/ui/components/account/verifyEmail";
+import SchoolView from "/imports/ui/components/schoolView";
 import SkillShapeSchool from "/imports/ui/components/skillshape-school";
-import ManageUsers from "/imports/ui/components/manage-users";
-import ClassDetails from "/imports/ui/components/landing/ClassDetails.jsx";
-
+import ManageMyCalendar from "/imports/ui/components/users/manageMyCalendar";
+import MyMedia from "/imports/ui/components/users/myMedia";
+import MyProfile from "/imports/ui/components/users/myProfile";
+import MySubscription from "/imports/ui/components/users/mySubscription";
+import AdminLayout from "/imports/ui/layout/adminLayout";
+import EmbedLayout from "/imports/ui/layout/embedLayout";
+//layout
+import MainLayout from "/imports/ui/layout/mainLayout";
+import PublicLayout from "/imports/ui/layout/publicLayout";
 //pages
 import AboutUs from "/imports/ui/pages/aboutUs";
 import ContactUs from "/imports/ui/pages/contactUs";
 import ContactUsPage from "/imports/ui/pages/ContactUsPage";
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
-import StripeConnectModal from "./../../ui/modal/stripeConnectModal";
-import Financials from "/imports/ui/components/financials";
-import Optimization from '/imports/ui/components/optimization';
 import { componentLoader } from "/imports/util";
+
+
+
 export default (Routes = componentLoader(props => (
   <Router history={browserHistory}>
     <Route name="SkillShape" path="/" component={MainLayout}>
