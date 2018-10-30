@@ -1,18 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { isEmpty, isArray } from "lodash";
-import { withStyles } from "material-ui/styles";
-import Paper from "material-ui/Paper";
+import { isArray, isEmpty } from "lodash";
 import Icon from "material-ui/Icon";
-import Button from "material-ui/Button";
-
-import { formatTime, formatAmPm, formatDateNoYear } from "/imports/util";
-import {
-  DAYS_IN_WEEK,
-  CLASS_TIMES_CARD_WIDTH
-} from "/imports/ui/components/landing/constants/classTypeConstants.js";
+import Paper from "material-ui/Paper";
+import { withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React from "react";
+import styled from "styled-components";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { DAYS_IN_WEEK } from "/imports/ui/components/landing/constants/classTypeConstants.js";
+import { formatAmPm, formatDateNoYear, formatTime } from "/imports/util";
+
 
 const styles = {
   cardWrapper: {

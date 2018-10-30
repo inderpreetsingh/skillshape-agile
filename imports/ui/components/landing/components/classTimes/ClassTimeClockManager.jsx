@@ -1,13 +1,13 @@
-import React, { Component, Fragment } from "react";
-import { isEqual, isEmpty } from "lodash";
-
-import styled from "styled-components";
+import { isEqual } from "lodash";
 import PropTypes from "prop-types";
-
+import React, { Component, Fragment } from "react";
+import styled from "styled-components";
 import ClassTimeNewClock from "/imports/ui/components/landing/components/classTimes/ClassTimeNewClock.jsx";
-
-import { DAYS_IN_WEEK } from "/imports/ui/components/landing/constants/classTypeConstants.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { DAYS_IN_WEEK } from "/imports/ui/components/landing/constants/classTypeConstants.js";
+
+
+
 
 const ONE_TIME = "onetime";
 

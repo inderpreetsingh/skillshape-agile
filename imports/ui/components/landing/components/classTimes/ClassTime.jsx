@@ -1,44 +1,27 @@
-import React, { Component, Fragment } from "react";
-import moment from "moment";
-import styled from "styled-components";
-import PropTypes from "prop-types";
-import { withStyles } from "material-ui/styles";
-import { isEmpty, get } from "lodash";
-import { scroller } from "react-scroll";
-import { Checkbox } from "material-ui";
-import Paper from "material-ui/Paper";
+import { isEmpty } from "lodash";
 import Icon from "material-ui/Icon";
-import Button from "material-ui/Button";
-
-import ClassTimeClockManager from "/imports/ui/components/landing/components/classTimes/ClassTimeClockManager.jsx";
-import ClassTimesList from "/imports/ui/components/landing/components/classTimes/ClassTimesList.jsx";
-import TrendingIcon from "/imports/ui/components/landing/components/icons/Trending.jsx";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton";
+import Paper from "material-ui/Paper";
+import { withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React, { Component, Fragment } from "react";
+import { scroller } from "react-scroll";
+import styled from "styled-components";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import ClassTimesList from "/imports/ui/components/landing/components/classTimes/ClassTimesList.jsx";
 import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
-
-import Events from "/imports/util/events";
-import { cutString } from "/imports/util";
-import {
-  withPopUp,
-  formatDate,
-  formatTime,
-  formatDataBasedOnScheduleType,
-  getUserFullName
-} from "/imports/util";
-
-import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-
-import {
-  DAYS_IN_WEEK,
-  CLASS_TIMES_CARD_WIDTH
-} from "/imports/ui/components/landing/constants/classTypeConstants.js";
+import TrendingIcon from "/imports/ui/components/landing/components/icons/Trending.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+import { CLASS_TIMES_CARD_WIDTH } from "/imports/ui/components/landing/constants/classTypeConstants.js";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
+import { formatDate, getUserFullName, withPopUp } from "/imports/util";
+
+
+
+
+
 
 const styles = {
   classTimeIcon: {

@@ -1,59 +1,35 @@
-import React, { Fragment } from "react";
-import moment from "moment";
-import isEmpty from "lodash/isEmpty";
-import { formStyles } from "/imports/util";
-// import { blue500 } from 'material-ui/styles/colors';
-
-import Dialog, {
-  DialogActions,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
-import Card, { CardActions, CardContent, CardMedia } from "material-ui/Card";
-
-import Icon from "material-ui/Icon";
-import IconButton from "material-ui/IconButton";
-import ClearIcon from "material-ui-icons/Clear";
-import Button from "material-ui/Button";
-import Typography from "material-ui/Typography";
-import { withStyles } from "material-ui/styles";
-
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { browserHistory, Link } from "react-router";
-import ClassType from "/imports/api/classType/fields";
-import ClassTimes from "/imports/api/classTimes/fields";
-import SLocation from "/imports/api/sLocation/fields";
 import get from 'lodash/get';
 import includes from 'lodash/includes';
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import {
-  flexCenter,
-  rhythmDiv
-} from "/imports/ui/components/landing/components/jss/helpers";
-
-import "/imports/api/classInterest/methods";
-import "/imports/api/classTimes/methods";
-
-import {
-  checkForAddToCalender,
-  formatDate,
-  formatTime,
-  formatClassTimesData,
-  formatDataBasedOnScheduleType
-} from "/imports/util";
-
-import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes.jsx";
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
-import ClassTime from "/imports/ui/components/landing/components/classTimes/ClassTime.jsx";
-import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
-
-import Events from "/imports/util/events";
-import { imageExists } from "/imports/util";
-import * as settings from "/imports/ui/components/landing/site-settings.js";
+import isEmpty from "lodash/isEmpty";
+import ClearIcon from "material-ui-icons/Clear";
+// import { blue500 } from 'material-ui/styles/colors';
+import Dialog, { DialogActions, DialogTitle, withMobileDialog } from "material-ui/Dialog";
 import Grid from "material-ui/Grid";
+import Icon from "material-ui/Icon";
+import IconButton from "material-ui/IconButton";
+import { withStyles } from "material-ui/styles";
+import moment from "moment";
+import React from "react";
+import { browserHistory } from "react-router";
 import styled from "styled-components";
+import "/imports/api/classInterest/methods";
+import ClassTimes from "/imports/api/classTimes/fields";
+import "/imports/api/classTimes/methods";
+import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes.jsx";
+import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import * as settings from "/imports/ui/components/landing/site-settings.js";
+import { ContainerLoader } from "/imports/ui/loading/container";
+import { checkForAddToCalender, formatClassTimesData, formatDataBasedOnScheduleType, formStyles, imageExists } from "/imports/util";
+import Events from "/imports/util/events";
+
+
+
+
+
+
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
