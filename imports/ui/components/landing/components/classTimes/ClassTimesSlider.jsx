@@ -1,11 +1,7 @@
-import React from 'react';
-import Slider from 'react-slick';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-
 import ClassTime from '/imports/ui/components/landing/components/classTimes/ClassTime';
 // import ClassTimeNew from '/imports/ui/components/landing/components/classTimes/ClassTimeNew.jsx';
 import withSlider from '/imports/util/withSlider.js';
+
 
 const config = {
   desktop: 4,

@@ -1,40 +1,19 @@
 
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import Recaptcha from 'react-recaptcha';
-import styled from 'styled-components';
-import { SocialIcon } from 'react-social-icons';
-
-import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import Typography from 'material-ui/Typography';
-import {withStyles} from 'material-ui/styles';
-import { MuiThemeProvider} from 'material-ui/styles';
-
-import PrimaryButton from '../buttons/PrimaryButton.jsx';
-import FilterPanel from '../FilterPanel.jsx';
-import AddSchoolMember from '/imports/ui/components/schoolMembers/AddSchoolMembers.js';
-import IconInput from '../form/IconInput.jsx';
-
+import Dialog, { DialogActions, withMobileDialog } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import styled from 'styled-components';
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
-import config from '/imports/config';
+import AddSchoolMember from '/imports/ui/components/schoolMembers/AddSchoolMembers.js';
 
-import Dialog , {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog,
-} from 'material-ui/Dialog';
 
-import {
-  FormLabel,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  FormHelperText,
-} from 'material-ui/Form';
+
+
+
 
 const styles = {
   dialogPaper: {

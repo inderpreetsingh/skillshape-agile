@@ -1,12 +1,10 @@
-import React from "react";
-import styled from "styled-components";
-import ReactStars from "react-stars";
 import PropTypes from "prop-types";
+import React from "react";
 import ReactHtmlParser from "react-html-parser";
-
-import { cutString } from "/imports/util";
-
+import styled from "styled-components";
 import * as helpers from "../../jss/helpers.js";
+
+
 
 const Wrapper = styled.div`
   display: flex;

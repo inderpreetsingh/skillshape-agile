@@ -1,10 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
-import ReactStars from 'react-stars';
 import PropTypes from 'prop-types';
+import React from 'react';
 import ReactHtmlParser from 'react-html-parser';
-
+import styled from 'styled-components';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
 
 const Wrapper = styled.div`
   display: flex;

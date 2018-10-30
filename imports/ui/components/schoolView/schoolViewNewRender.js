@@ -1,53 +1,35 @@
-import React,{Fragment} from 'react';
-import ReactDOM from 'react-dom';
-import { Element } from 'react-scroll';
-import DocumentTitle from 'react-document-title';
-import { browserHistory, Link } from 'react-router';
-
-import styled from 'styled-components';
-import { floor, isArray, isEmpty } from 'lodash';
-import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
+import { floor, isEmpty } from 'lodash';
 import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
-import Button from 'material-ui/Button';
-import Email from 'material-ui-icons/Email';
-import Phone from 'material-ui-icons/Phone';
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
-import Switch from 'material-ui/Switch';
-import Divider from 'material-ui/Divider';
-import Paper from 'material-ui/Paper';
-
-import { Loading } from '/imports/ui/loading';
-import { getAverageNoOfRatings, checkSuperAdmin, cutString } from '/imports/util';
-import { CustomModal } from '/imports/ui/modal';
-import MyCalender from '/imports/ui/components/users/myCalender';
-import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
-
+import React, { Fragment } from 'react';
+import DocumentTitle from 'react-document-title';
+import { Element } from 'react-scroll';
+import styled from 'styled-components';
+import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
+import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes.jsx';
+import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 //import ReviewsSlider from '/imports/ui/components/landing/components/class/reviews/ReviewsSlider.jsx';
 import ReviewsManager from '/imports/ui/components/landing/components/class/reviews/ReviewsManager.jsx';
-import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes.jsx';
-import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
-import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
-import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTypeList from '/imports/ui/components/landing/components/classType/classTypeList.jsx';
-import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
-import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
-import ConfirmationModal from '/imports/ui/modal/confirmationModal';
-import NoMediaFound from '/imports/ui/components/landing/components/helpers/NoMediaFound.jsx';
-
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
-import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
 import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx';
-
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
-import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
-
-import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
-import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
-import { normalizeMonthlyPricingData } from "/imports/util";
-import { schoolDetailsImgSrc } from '/imports/ui/components/landing/site-settings.js';
+import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
+import NoMediaFound from '/imports/ui/components/landing/components/helpers/NoMediaFound.jsx';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
+import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { CustomModal } from '/imports/ui/modal';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import { getAverageNoOfRatings, normalizeMonthlyPricingData } from '/imports/util';
+
+
+
+
+
+
 
 const Wrapper = styled.div`
   background: white;

@@ -1,32 +1,26 @@
-import React, { Fragment } from "react";
-import styled from "styled-components";
-import DocumentTitle from "react-document-title";
+import ExpandMoreIcon from "material-ui-icons/ExpandMore";
+import Card from "material-ui/Card";
+import Checkbox from "material-ui/Checkbox";
+import Divider from "material-ui/Divider";
+import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from "material-ui/ExpansionPanel";
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import Radio, { RadioGroup } from "material-ui/Radio";
+import { withStyles } from "material-ui/styles";
+import Typography from "material-ui/Typography";
 import { createContainer } from "meteor/react-meteor-data";
-
-import { formStyles, cutString } from "/imports/util";
-import MyCalender from "/imports/ui/components/users/myCalender";
+import React, { Fragment } from "react";
+import DocumentTitle from "react-document-title";
+import styled from "styled-components";
+import newStyles from "./styles.js";
+import ClassInterest from "/imports/api/classInterest/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import ClassType from "/imports/api/classType/fields";
-import ClassInterest from "/imports/api/classInterest/fields";
-
-import { withStyles } from "material-ui/styles";
-import Radio, { RadioGroup } from "material-ui/Radio";
-import Card from "material-ui/Card";
-import Divider from "material-ui/Divider";
-import Checkbox from "material-ui/Checkbox";
-import { FormControlLabel, FormControl } from "material-ui/Form";
-import ExpansionPanel, {
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  ExpansionPanelActions
-} from "material-ui/ExpansionPanel";
-import Typography from "material-ui/Typography";
-import PropTypes from "prop-types";
-import ExpandMoreIcon from "material-ui-icons/ExpandMore";
-import uniqBy from "lodash/uniqBy";
-
-import newStyles from "./styles.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import MyCalender from "/imports/ui/components/users/myCalender";
+import { cutString, formStyles } from "/imports/util";
+
+
+
 const styles = formStyles();
 
 const inputStyle = {

@@ -1,14 +1,12 @@
+import PropTypes from "prop-types";
 import React, { Component, Fragment } from "react";
 import styled from "styled-components";
-import ReactHtmlParser from "react-html-parser";
-import moment from "moment";
-import PropTypes from "prop-types";
-
 import SliderDots from "/imports/ui/components/landing/components/helpers/SliderDots.jsx";
-
-import { formatDate, formatTime } from "/imports/util";
-import { DAYS_IN_WEEK } from "/imports/ui/components/landing/constants/classTypeConstants.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { DAYS_IN_WEEK } from "/imports/ui/components/landing/constants/classTypeConstants.js";
+import { formatDate, formatTime } from "/imports/util";
+
+
 
 const DATE_FONT_SIZE = 18;
 

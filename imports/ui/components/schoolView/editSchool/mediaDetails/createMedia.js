@@ -1,26 +1,16 @@
-import React from 'react';
-import Dialog, {
-	DialogActions,
-	DialogContent,
-	DialogContentText,
-	DialogTitle,
-	withMobileDialog,
-} from 'material-ui/Dialog';
+import Checkbox from "material-ui/Checkbox";
+import Dialog, { DialogActions, DialogContent, withMobileDialog } from 'material-ui/Dialog';
+import { FormControl, FormControlLabel } from "material-ui/Form";
 import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
-import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
-import Multiselect from "react-widgets/lib/Multiselect";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { withStyles, imageRegex } from "/imports/util";
+import React from 'react';
+import Select from "react-select";
 import '/imports/api/media/methods';
 import MediaUpload from '/imports/ui/componentHelpers/mediaUpload';
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { ContainerLoader } from '/imports/ui/loading/container.js';
-import { FormControl, FormControlLabel } from "material-ui/Form";
-import Checkbox from "material-ui/Checkbox";
-import Select from "react-select";
-import EditTaggedMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditTaggedMemberDialogBox.js";
+import { withStyles } from "/imports/util";
 const formId = "create-media";
 
 

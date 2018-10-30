@@ -1,27 +1,24 @@
-import React,{Fragment} from 'react';
-import Grid from 'material-ui/Grid';
-import Card, {CardMedia} from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
+import find from "lodash/find";
 import Edit from 'material-ui-icons/Edit';
 import Email from 'material-ui-icons/Email';
 import Phone from 'material-ui-icons/Phone';
-import { Link } from 'react-router';
-import find from "lodash/find";
-
-
+import Button from 'material-ui/Button';
+import { CardMedia } from 'material-ui/Card';
+import Grid from 'material-ui/Grid';
+import Typography from 'material-ui/Typography';
 import MobileDetect from 'mobile-detect';
+import React from 'react';
+import { Link } from 'react-router';
+import styles from "./style";
 import UploadMedia from './uploadMedia';
 import config from '/imports/config';
-import styles from "./style";
+import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import { withStyles } from "/imports/util";
 import { getUserFullName } from '/imports/util/getUserData';
-
-import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
-import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
-import ClassTypeCoverContent from '/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx';
-import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+
+
+
 
 
 class SchoolViewBanner extends React.Component {

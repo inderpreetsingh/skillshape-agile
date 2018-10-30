@@ -1,7 +1,5 @@
 import React from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
 import MediaDetailsRender from './mediaDetailsRender';
-import Media from "/imports/api/media/fields";
 import '/imports/api/media/methods';
 
 class MediaDetails extends React.Component {

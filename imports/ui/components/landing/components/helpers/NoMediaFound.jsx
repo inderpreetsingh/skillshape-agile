@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import {logoSrc} from '/imports/ui/components/landing/site-settings.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { logoSrc } from '/imports/ui/components/landing/site-settings.js';
+
 
 const Wrapper = styled.div`
   width: 100%;

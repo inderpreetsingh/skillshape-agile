@@ -1,20 +1,12 @@
-import React from 'react';
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog,
-} from 'material-ui/Dialog';
-import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
-import { withStyles, imageRegex } from "/imports/util";
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { compressImage } from "/imports/util";
-import { ContainerLoader } from '/imports/ui/loading/container';
+import Dialog, { DialogActions, DialogContent, withMobileDialog } from 'material-ui/Dialog';
+import Grid from 'material-ui/Grid';
+import React from 'react';
 import '/imports/api/media/methods';
-import MediaUpload from  '/imports/ui/componentHelpers/mediaUpload';
-import { withPopUp } from "/imports/util";
+import MediaUpload from '/imports/ui/componentHelpers/mediaUpload';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { compressImage, withPopUp, withStyles } from "/imports/util";
 class UploadMedia extends React.Component {
 
 	  constructor(props) {

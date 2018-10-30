@@ -1,22 +1,20 @@
+import Typography from "material-ui/Typography";
 import React from "react";
 import DocumentTitle from "react-document-title";
-import { Loading } from "/imports/ui/loading";
-import { browserHistory, Link } from "react-router";
-import { FormBuilderModal } from "/imports/ui/modal";
-import ResponsiveTabs from "/imports/util/responsiveTabs";
-import Typography from "material-ui/Typography";
-import SchoolMemberView from "/imports/ui/components/schoolMembers";
-
-// import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
-
-//tab details import over here
-import SchoolDetails from "./schoolDetails";
-import LocationDetails from "./locationDetails";
+import { browserHistory } from "react-router";
 import ClassTypeDetails from "./classTypeDetails";
-import PriceDetails from "./priceDetails";
 // import Modules from './modules';
 import EmbedCodes from "./embedCodes";
+import LocationDetails from "./locationDetails";
 import MediaDetails from "./mediaDetails";
+import PriceDetails from "./priceDetails";
+// import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
+//tab details import over here
+import SchoolDetails from "./schoolDetails";
+import { Loading } from "/imports/ui/loading";
+import { FormBuilderModal } from "/imports/ui/modal";
+import ResponsiveTabs from "/imports/util/responsiveTabs";
+
 
 export default function (props) {
   const { selecetdView, formBuilderModal } = this.state;
