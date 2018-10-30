@@ -1,37 +1,25 @@
-import React,{Fragment} from 'react';
-import {scroller} from 'react-scroll';
-import {isEmpty} from 'lodash';
-import { Link } from 'react-router';
-import styled from 'styled-components';
-import find from "lodash/find";
 import get from 'lodash/get';
-import Grid from 'material-ui/Grid';
-import Card, {CardMedia} from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import Edit from 'material-ui-icons/Edit';
-import Email from 'material-ui-icons/Email';
-import Phone from 'material-ui-icons/Phone';
 import Switch from 'material-ui/Switch';
 import MobileDetect from 'mobile-detect';
-
+import React, { Fragment } from 'react';
+import { Link } from 'react-router';
+import { scroller } from 'react-scroll';
+import styled from 'styled-components';
+import styles from "./style";
+import UploadMedia from './uploadMedia';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
 import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx';
 import ClassTypeCoverContent from '/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx';
-
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
-
-import withImageExists from '/imports/util/withImageExists.js';
-import {imageExists} from '/imports/util';
-import { withStyles } from "/imports/util";
-import { getUserFullName } from '/imports/util/getUserData';
-import config from '/imports/config';
-import styles from "./style";
-import UploadMedia from './uploadMedia';
-
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { schoolDetailsImgSrc } from '/imports/ui/components/landing/site-settings.js';
+import { withStyles } from "/imports/util";
+import withImageExists from '/imports/util/withImageExists.js';
+
+
+
+
 
 const PublishStatusButtonWrapper = styled.div`
 	${helpers.flexCenter}

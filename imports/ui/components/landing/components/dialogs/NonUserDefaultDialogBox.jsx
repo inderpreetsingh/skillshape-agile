@@ -1,32 +1,19 @@
-import React, {Component} from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-
-import { MuiThemeProvider} from 'material-ui/styles';
-import {withStyles} from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import TextField from 'material-ui/TextField';
-import Typography from 'material-ui/Typography';
-import IconInput from '../form/IconInput.jsx';
-
-import PrimaryButton from '../buttons/PrimaryButton';
-import LoginButton from '../buttons/LoginButton.jsx';
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
 import JoinButton from '../buttons/JoinButton.jsx';
-
+import LoginButton from '../buttons/LoginButton.jsx';
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
 
-import Dialog , {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog,
-} from 'material-ui/Dialog';
 
-import { ContainerLoader } from '/imports/ui/loading/container';
+
+
+
 
 const styles = theme => {
   return {

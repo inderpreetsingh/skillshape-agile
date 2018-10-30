@@ -1,7 +1,6 @@
 import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
 import SchoolViewBase from "./schoolViewBase";
-import SchoolViewRender from "./schoolViewRender";
 import SchoolViewNewRender from "./schoolViewNewRender";
 import styles from "./style";
 import { withStyles } from "/imports/util";

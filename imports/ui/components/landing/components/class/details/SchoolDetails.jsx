@@ -1,13 +1,13 @@
-import React, {Fragment} from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
-
-import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes.jsx';
-import AboutSchool from '/imports/ui/components/landing/components/class/details/AboutSchool.jsx';
+import PropTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
 import ClassTypeImgSlider from '/imports/ui/components/landing/components/class/ClassTypeImgSlider.jsx';
-
+import AboutSchool from '/imports/ui/components/landing/components/class/details/AboutSchool.jsx';
+import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes.jsx';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
+
 
 const Wrapper = styled.div`
   display: flex;
