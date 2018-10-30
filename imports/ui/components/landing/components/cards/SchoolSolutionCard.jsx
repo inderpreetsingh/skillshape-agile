@@ -1,11 +1,8 @@
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import { lightenDarkenColor } from '/imports/util';
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
-import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
-
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 const CardWrapper = styled.article`
   width: 100%;
   height: 100%;
