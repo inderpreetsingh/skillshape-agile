@@ -11,6 +11,7 @@ import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/C
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import MemberActionButton from '/imports/ui/components/landing/components/buttons/MemberActionButton.jsx';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+import Package from '/imports/ui/components/landing/components/class/packages/Package.jsx';
 
 import School from '/imports/api/school/fields';
 
@@ -26,6 +27,7 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 const Wrapper = styled.div`
 	max-width: 800px;
 	margin: 0 auto;
+	margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
 const ImageContainer = styled.div`
@@ -76,6 +78,10 @@ const ActionButton = styled.div`
 const Subscriptions = styled.div`
 	display: flex;
 	width: 100%;
+
+	@media screen and (max-width: ${helpers.tablet}px) {
+		flex-direction: column;
+	}
 `;
 
 const SubscriptionsTitle = Text.withComponent('h3').extend`
@@ -102,6 +108,31 @@ const SubscriptionsContent = styled.div`
 		background-color: ${(props) => (props.active ? helpers.primaryColor : helpers.panelColor)};
 		opacity: 0.1;
 	}
+
+	@media screen and (max-width: ${helpers.tablet}px) {
+		width: 100%;
+	}
+`;
+
+const SubscriptionDetails = styled.div`
+	margin-bottom: ${helpers.rhythmDiv * 2}px;
+
+	@media screen and (max-width: ${helpers.tablet}px) {
+		max-width: 500px;
+		width: 100%;
+		margin: 0 auto;
+		margin-bottom: ${helpers.rhythmDiv * 2}px;
+	}
+`;
+
+const SubscriptionsList = styled.div`
+	max-width: 500px;
+	width: 100%;
+	margin: 0 auto;
+
+	@media screen and (max-width: ${helpers.tablet}px) {
+		max-width: 100%;
+	}
 `;
 
 const PageTitle = Heading.extend`
@@ -117,15 +148,15 @@ const SchoolProfile = styled.div`
 
 const ActionButtons = (props) => (
 	<ActionButtonsWrapper>
-		<ActionButton onClick={() => props.handleVisitSchool(props.schoolSlug)}>
+		<ActionButton onClick={props.handleSchoolVisit(props.schoolSlug)}>
 			<FormGhostButton icon iconName="school" label="Visit School" />
 		</ActionButton>
 
-		<ActionButton onClick={() => props.handleCall(props.memberInfo)}>
+		<ActionButton onClick={props.handleCall(props.memberInfo)}>
 			<FormGhostButton icon iconName="phone" label="Call" />
 		</ActionButton>
 
-		<ActionButton onClick={() => props.handleEmail(props.memberInfo)}>
+		<ActionButton onClick={props.handleEmail(props.memberInfo)}>
 			<FormGhostButton icon iconName="email" label="Email" noMarginBottom />
 		</ActionButton>
 	</ActionButtonsWrapper>
@@ -153,8 +184,8 @@ const styles = {
 };
 
 const MySubscriptionRender = (props) => {
-	const getSchoolDataBasedOnSubscription = (sbsData) => {
-		return School.find({ _id: sbsData.schoolId }).fetch()[0];
+	const getSubsDataBasedOnSchool = (schoolId, purchaseData) => {
+		return purchaseData.filter((sbsData) => sbsData.schoolId === schoolId);
 	};
 
 	const {
@@ -168,7 +199,7 @@ const MySubscriptionRender = (props) => {
 		handleCall,
 		handleEmail,
 		handleModelState,
-		handleVisitSchool
+		handleSchoolVisit
 	} = props;
 
 	return (
@@ -190,12 +221,16 @@ const MySubscriptionRender = (props) => {
 			)}
 			<PageTitle>My Subscriptions</PageTitle>
 			<Wrapper>
-				{!isEmpty(purchaseData) &&
-					purchaseData.map((sbsData) => {
-						const schoolData = getSchoolDataBasedOnSubscription(sbsData);
-						// console.group(' MY SUBSCRIPTION');
-						// console.log(schoolData, sbsData, '===============');
-						// console.group();
+				{!isEmpty(schoolData) &&
+					schoolData.map((school) => {
+						const subsData = getSubsDataBasedOnSchool(school._id, purchaseData);
+						const activeSubsData = subsData.filter((subs) => subs.packageStatus === 'active');
+						const inactiveSubsData = subsData.filter((subs) => subs.packageStatus !== 'active');
+
+						console.group(' MY SUBSCRIPTION');
+						console.log(subsData, '===============');
+						console.group();
+
 						return (
 							<ExpansionPanel
 								classes={{
@@ -217,25 +252,61 @@ const MySubscriptionRender = (props) => {
 									</SchoolProfile>
 
 									<ActionButtons
+										schoolSlug={school.slug}
 										handleCall={props.handleCall}
 										handleEmail={props.handleEmail}
-										handleVisitSchool={props.handleVisitSchool}
+										handleSchoolVisit={props.handleSchoolVisit}
 									/>
 								</ExpansionPanelSummary>
 
 								<ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
 									<Subscriptions>
 										<SubscriptionsContent active>
-											<SubscriptionsTitle>Active Subscription</SubscriptionsTitle>
+											<SubscriptionsTitle>
+												{!isEmpty(activeSubsData) ? (
+													'Active Subscriptions'
+												) : (
+													'No Active Subscriptions'
+												)}
+											</SubscriptionsTitle>
+
+											<SubscriptionsList>
+												{!isEmpty(activeSubsData) &&
+													activeSubsData.map((subs) => {
+														return (
+															<SubscriptionDetails>
+																<Package forMySubscriptions {...subs} />
+															</SubscriptionDetails>
+														);
+													})}
+											</SubscriptionsList>
 										</SubscriptionsContent>
 										<SubscriptionsContent>
-											<SubscriptionsTitle>Expired Subscriptions</SubscriptionsTitle>
+											<SubscriptionsTitle>
+												{!isEmpty(inactiveSubsData) ? (
+													'Expired Subscriptions'
+												) : (
+													'No Expired Subscriptions'
+												)}
+											</SubscriptionsTitle>
+											<SubscriptionsList>
+												{!isEmpty(inactiveSubsData) &&
+													inactiveSubsData.map((subs) => {
+														return (
+															<SubscriptionDetails>
+																<Package forMySubscriptions {...subs} />
+															</SubscriptionDetails>
+														);
+													})}
+											</SubscriptionsList>
 										</SubscriptionsContent>
 									</Subscriptions>
 								</ExpansionPanelDetails>
 							</ExpansionPanel>
 						);
 					})}
+
+				{!isEmpty(purchaseData) && purchaseData.map((sbsData) => {})}
 			</Wrapper>
 		</Fragment>
 	);

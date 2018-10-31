@@ -15,15 +15,6 @@ import { formatClassTimesData, withPopUp } from '/imports/util';
 import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 
-
-
-
-
-
-
-
-
-
 const CardsRevealWrapper = styled.div`width: 100%;`;
 
 const imageExistsConfig = {
@@ -216,6 +207,7 @@ class ClassTypeCard extends Component {
 								ratings={ratings}
 								reviews={reviews}
 								schoolData={schoolData}
+								onEditClassTypeClick={onEditClassTypeClick}
 								classTimeCheck={!isEmpty(formattedClassTimesData)}
 								description={desc}
 								onClassTimeButtonClick={this.handleDialogState(true)}
@@ -223,6 +215,7 @@ class ClassTypeCard extends Component {
 								cardRevealInfo={cardRevealData}
 								selectedSkillSubject={selectedSkillSubject}
 								hideClassTypeOptions={hideClassTypeOptions}
+								onEditClassTypeClick={onEditClassTypeClick}
 							/>
 						}
 					/>
