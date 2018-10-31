@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
