@@ -31,7 +31,7 @@ const NoResultContainer = styled.div`
 
 const NonListingWrapper = styled.div`
 	max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 4) + 24}px;
-	padding: ${helpers.rhythmDiv * 2}px;
+	padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -45,6 +45,10 @@ const NonListingWrapper = styled.div`
 	@media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 3) + 24}px) {
 		max-width: 100%;
 	}
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		flex-direction: column;
+	}
 `;
 
 const ButtonWrapper = styled.div``;
@@ -54,6 +58,10 @@ const TextWrapper = styled.div`
 	text-align: left;
 	max-width: 900px;
 	margin-right: ${helpers.rhythmDiv * 2}px;
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-bottom: ${helpers.rhythmDiv}px;
+	}
 `;
 
 const GridInnerWrapper = styled.div`
@@ -132,8 +140,7 @@ const ClaimSchoolRender = function(props) {
 		<NonListingWrapper>
 			<TextWrapper>
 				Check to see if any of these are your school. The filters can help you search! If you find your school,
-				press the <b>claim</b> button. If you do not find it, click the button to the right to open a new
-				listing!
+				press the <b>claim</b> button. Else to create a new listing, click the New Listing button!
 			</TextWrapper>
 
 			<ListingButton
