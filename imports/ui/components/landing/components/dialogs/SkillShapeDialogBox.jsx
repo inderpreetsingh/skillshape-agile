@@ -83,7 +83,8 @@ const styles = () => {
 		dialogRoot: {
 			maxWidth: 600,
 			width: '100%',
-			overflow: 'hidden'
+			overflowX: 'hidden',
+			overflowY: 'auto'
 		},
 		dialogActionRoot: {
 			width: '100%',

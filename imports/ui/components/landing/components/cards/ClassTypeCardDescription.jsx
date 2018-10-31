@@ -12,9 +12,6 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 import MuiTheme from '/imports/ui/components/landing/components/jss/muitheme';
 import { addDelimiter, goToClassTypePage, goToSchoolPage } from '/imports/util';
 
-
-
-
 const RatingsWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -114,7 +111,7 @@ const styles = {
 
 const ClassTypeCardDescription = (props) => {
 	const { cardRevealInfo, schoolData, editMode, selectedSkillSubject, onEditClassTypeClick } = props;
-	let BB = {backgroundColor:'black'};
+	let BB = { backgroundColor: 'black' };
 	return (
 		<MuiThemeProvider theme={MuiTheme}>
 			<Fragment>
@@ -151,11 +148,10 @@ const ClassTypeCardDescription = (props) => {
 								<Text>
 									Age: {cardRevealInfo.ageMin}{' '}
 									{cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}
-									<Divider style={BB}/>
+									<Divider style={BB} />
 								</Text>
-								
 							)}
-							
+
 							{cardRevealInfo.gender && (
 								<Text>
 									{cardRevealInfo.gender &&
@@ -163,7 +159,7 @@ const ClassTypeCardDescription = (props) => {
 										`${cardRevealInfo.gender}`}
 								</Text>
 							)}
-							
+
 							{cardRevealInfo.experienceLevel && (
 								<Text>
 									Level:{' '}
@@ -172,20 +168,20 @@ const ClassTypeCardDescription = (props) => {
 									) : (
 										cardRevealInfo.experienceLevel
 									)}
-									<Divider style={BB}/>
+									<Divider style={BB} />
 								</Text>
 							)}
-							
+
 							{editMode &&
 							!isEmpty(selectedSkillSubject) && (
 								<Text>
 									Subjects: {' '}
 									{selectedSkillSubject.map((selectedSubj) => selectedSubj.name).join(', ')}
-									<Divider style={BB}/>
+									<Divider style={BB} />
 								</Text>
 							)}
 						</ClassTypeRequirements>
-						
+
 						<ClassDescriptionContentWrapper>
 							<Typography classes={{ root: props.classes.descriptionHeader }}>
 								Class Description:{' '}
@@ -232,15 +228,14 @@ const ClassTypeCardDescription = (props) => {
 							)}
 
 							{props.classTimeCheck ? (
-								<div 	style={{ bottom: "0px", position: "absolute", width: "93%"}}>
-								<PrimaryButton
-									label="View Class Times"
-									fullWidth
-									onClick={props.onClassTimeButtonClick}
-									itemScope
-									itemType="http://schema.org/ViewAction"
-								
-								/>
+								<div style={{ bottom: '0px', position: 'absolute', width: '93%' }}>
+									<PrimaryButton
+										label="View Class Times"
+										fullWidth
+										onClick={props.onClassTimeButtonClick}
+										itemScope
+										itemType="http://schema.org/ViewAction"
+									/>
 								</div>
 							) : (
 								<PrimaryButton
@@ -251,15 +246,25 @@ const ClassTypeCardDescription = (props) => {
 							)}
 						</Buttons>
 					) : (
-							<PrimaryButton
-								icon
-								iconName="edit"
-								fullWidth
-								label="Edit Details"
-								onClick={onEditClassTypeClick}
-							/>
+						<PrimaryButton
+							icon
+							iconName="edit"
+							fullWidth
+							label="Edit Details"
+							onClick={onEditClassTypeClick}
+						/>
 					)}
 				</ClassDescription>
+
+				{editMode && (
+					<PrimaryButton
+						icon
+						iconName="edit"
+						label="Edit Details"
+						fullWidth
+						onClick={props.onEditClassTypeClick}
+					/>
+				)}
 			</Fragment>
 		</MuiThemeProvider>
 	);

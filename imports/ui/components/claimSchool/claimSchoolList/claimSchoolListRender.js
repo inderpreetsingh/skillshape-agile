@@ -30,24 +30,38 @@ const NoResultContainer = styled.div`
 `;
 
 const NonListingWrapper = styled.div`
+	max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 4) + 24}px;
+	padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+	margin: 0 auto;
 
-	@media screen and (max-width: ${helpers.tablet}px) {
+	@media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 4) + 24}px) {
+		max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 3) + 24}px;
+	}
+
+	@media screen and (max-width: ${getContainerMaxWidth(CARD_WIDTH, SPACING, 3) + 24}px) {
+		max-width: 100%;
+	}
+
+	@media screen and (max-width: ${helpers.mobile}px) {
 		flex-direction: column;
-		align-items: center;
 	}
 `;
 
-const FormSubmitButtonWrapper = styled.div`padding: ${helpers.rhythmDiv * 2}px;`;
+const ButtonWrapper = styled.div``;
 
 const TextWrapper = styled.div`
 	font-size: ${helpers.baseFontSize * 1.25}px;
 	text-align: left;
 	max-width: 900px;
-	margin-left: ${helpers.rhythmDiv * 2}px;
+	margin-right: ${helpers.rhythmDiv * 2}px;
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-bottom: ${helpers.rhythmDiv}px;
+	}
 `;
 
 const GridInnerWrapper = styled.div`
@@ -111,13 +125,13 @@ const styles = {
 };
 
 const ListingButton = (props) => (
-	<button className="danger-button" onClick={props.onClick}>
-		<span className="skillshape-button--icon">{props.iconName}</span>
-		{props.label}
-	</button>
+	<ButtonWrapper>
+		<button className="danger-button" onClick={props.onClick}>
+			<span className="skillshape-button--icon">{props.iconName}</span>
+			{props.label}
+		</button>
+	</ButtonWrapper>
 );
-
-console.log(withStyles, '>>>>>>>>>>>>>.');
 
 const ClaimSchoolRender = function(props) {
 	let schools = this.props.collectionData;
@@ -126,16 +140,14 @@ const ClaimSchoolRender = function(props) {
 		<NonListingWrapper>
 			<TextWrapper>
 				Check to see if any of these are your school. The filters can help you search! If you find your school,
-				press the <b>claim</b> button. If you do not find it, click the button to the right to open a new
-				listing!
+				press the <b>claim</b> button. Else to create a new listing, click the New Listing button!
 			</TextWrapper>
-			<FormSubmitButtonWrapper>
-				<ListingButton
-					onClick={props.onStartNewListingButtonClick}
-					label={'New listing'}
-					iconName={'add_circle_outline'}
-				/>
-			</FormSubmitButtonWrapper>
+
+			<ListingButton
+				onClick={props.onStartNewListingButtonClick}
+				label={'New listing'}
+				iconName={'add_circle_outline'}
+			/>
 		</NonListingWrapper>
 	);
 
@@ -157,8 +169,8 @@ const ClaimSchoolRender = function(props) {
 	} else {
 		return (
 			<div>
+				<NoneOfMyLisiting {...props} />
 				<GridWrapper>
-					<NoneOfMyLisiting {...props} />
 					<GridInnerWrapper>
 						{schools &&
 							schools.map((school, index) => {
