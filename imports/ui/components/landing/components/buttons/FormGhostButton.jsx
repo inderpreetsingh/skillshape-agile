@@ -17,6 +17,7 @@ const styles = {
     borderColor: helpers.primaryColor,
     color: helpers.primaryColor,
     textTransform: "none",
+    height: "100%",
     fontWeight: 500,
     marginRight: "10px",
     "&:hover": {

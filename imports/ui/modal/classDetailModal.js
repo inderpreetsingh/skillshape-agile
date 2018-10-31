@@ -851,6 +851,15 @@ class ClassDetailModal extends React.Component {
                   }}
                 /> */}
                 <Grid style={{ display: "flex", justifyContent: "flex-end" }}>
+                <ButtonWrapper>
+                    <FormGhostButton
+                      darkGreyColor
+                      label="Close"
+                      onClick={() => {
+                        this.props.closeEventModal(false, null);
+                      }}
+                    />
+                  </ButtonWrapper>
                   <ButtonWrapper>
                     <FormGhostButton
                       label="View Class"
@@ -868,15 +877,7 @@ class ClassDetailModal extends React.Component {
                       onClick={() => this.goToSchoolPage(school)}
                     />
                   </ButtonWrapper>
-                  <ButtonWrapper>
-                    <FormGhostButton
-                      darkGreyColor
-                      label="Close"
-                      onClick={() => {
-                        this.props.closeEventModal(false, null);
-                      }}
-                    />
-                  </ButtonWrapper>
+                 
                 </Grid>
               </DialogActions>
 
