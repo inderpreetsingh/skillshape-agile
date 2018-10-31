@@ -132,12 +132,7 @@ export default class SchoolViewBase extends React.Component {
 	};
 
 	claimBtnCSS = (currentUser, claimed) => {
-		if (
-			currentUser &&
-			currentUser.profile &&
-			currentUser.profile.schoolId &&
-			currentUser.profile.schoolId.length > 1
-		) {
+		if ( currentUser && currentUser.profile && currentUser.profile.schoolId && currentUser.profile.schoolId.length > 1 ) {
 			return 'btn-default';
 		} else if (claimed == 'Y') {
 			return 'btn-danger';
@@ -468,114 +463,28 @@ export default class SchoolViewBase extends React.Component {
 		);
 	};
 	noThanksButton = () => <FormGhostButton label={'No, thanks'} onClick={() => {}} greyColor applyClose />;
-	purchaseButton = (
-		packageType,
-		packageId,
-		schoolId,
-		packageName,
-		amount,
-		monthlyPymtDetails,
-		expDuration,
-		expPeriod,
-		noClasses,
-		planId,
-		currency,
-		pymtType,
-		self
-	) => (
-		<FormGhostButton
+	purchaseButton = ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self ) => ( <FormGhostButton
 			label={'Purchase Now'}
 			onClick={() => {
-				this.handleChargeAndSubscription(
-					packageType,
-					packageId,
-					schoolId,
-					packageName,
-					amount,
-					monthlyPymtDetails,
-					expDuration,
-					expPeriod,
-					noClasses,
-					planId,
-					currency,
-					pymtType,
-					self
-				);
+				this.handleChargeAndSubscription( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self );
 			}}
 			applyClose
 		/>
 	);
-	purchaseOldContract = (
-		packageType,
-		packageId,
-		schoolId,
-		packageName,
-		amount,
-		monthlyPymtDetails,
-		expDuration,
-		expPeriod,
-		noClasses,
-		planId,
-		currency,
-		pymtType,
-		self
-	) => (
+	purchaseOldContract = ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self ) => (
 		<FormGhostButton
 			label={'Continue Old Contract'}
 			onClick={() => {
-				this.handleChargeAndSubscription(
-					packageType,
-					packageId,
-					schoolId,
-					packageName,
-					amount,
-					monthlyPymtDetails,
-					expDuration,
-					expPeriod,
-					noClasses,
-					planId,
-					currency,
-					pymtType,
-					self,
-					'useOldContract'
-				);
+				this.handleChargeAndSubscription( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, 'useOldContract' );
 			}}
 			applyClose
 		/>
 	);
-	purchaseNewContract = (
-		packageType,
-		packageId,
-		schoolId,
-		packageName,
-		amount,
-		monthlyPymtDetails,
-		expDuration,
-		expPeriod,
-		noClasses,
-		planId,
-		currency,
-		pymtType,
-		self
-	) => (
+	purchaseNewContract = ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self ) => (
 		<FormGhostButton
 			label={'Purchase New Contract'}
 			onClick={() => {
-				this.handleChargeAndSubscription(
-					packageType,
-					packageId,
-					schoolId,
-					packageName,
-					amount,
-					monthlyPymtDetails,
-					expDuration,
-					expPeriod,
-					noClasses,
-					planId,
-					currency,
-					pymtType,
-					self
-				);
+				this.handleChargeAndSubscription( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self );
 			}}
 			applyClose
 		/>
@@ -590,23 +499,7 @@ export default class SchoolViewBase extends React.Component {
 		/>
 	);
 	//handle PayUpfront case
-	handlePayUpFront = (
-		packageType,
-		packageId,
-		schoolId,
-		packageName,
-		amount,
-		monthlyPymtDetails,
-		expDuration,
-		expPeriod,
-		noClasses,
-		planId,
-		currency,
-		pymtType,
-		self,
-		title,
-		content
-	) => {
+	handlePayUpFront = ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content ) => {
 		amount = amount * monthlyPymtDetails[0].month || 1;
 		expDuration = monthlyPymtDetails[0].month;
 		const { popUp } = this.props;
@@ -619,21 +512,7 @@ export default class SchoolViewBase extends React.Component {
 					<ButtonsWrapper>
 						<ButtonWrapper>{this.noThanksButton()}</ButtonWrapper>
 						<ButtonWrapper>
-							{this.purchaseButton(
-								packageType,
-								packageId,
-								schoolId,
-								packageName,
-								amount,
-								monthlyPymtDetails,
-								expDuration,
-								expPeriod,
-								noClasses,
-								planId,
-								currency,
-								pymtType,
-								self
-							)}
+							{this.purchaseButton( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self )}
 						</ButtonWrapper>
 						<ButtonWrapper>{this.pastSubscriptionButton()}</ButtonWrapper>
 
@@ -648,23 +527,7 @@ export default class SchoolViewBase extends React.Component {
 		);
 	};
 	//handle payAsYouGo case
-	handlePayAsYouGo = ({
-		packageType,
-		packageId,
-		schoolId,
-		packageName,
-		amount,
-		monthlyPymtDetails,
-		expDuration,
-		expPeriod,
-		noClasses,
-		planId,
-		currency,
-		pymtType,
-		self,
-		title,
-		content
-	}) => {
+	handlePayAsYouGo = ({ packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content }) => {
 		const { popUp } = this.props;
 		popUp.appear('inform', {
 			title: title,
@@ -672,21 +535,7 @@ export default class SchoolViewBase extends React.Component {
 			RenderActions: (
 				<ButtonsWrapper>
 					{this.noThanksButton()}
-					{this.purchaseButton(
-						packageType,
-						packageId,
-						schoolId,
-						packageName,
-						amount,
-						monthlyPymtDetails,
-						expDuration,
-						expPeriod,
-						noClasses,
-						planId,
-						currency,
-						pymtType,
-						self
-					)}
+					{this.purchaseButton( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self )}
 					{this.pastSubscriptionButton()}
 				</ButtonsWrapper>
 			)
@@ -701,22 +550,7 @@ export default class SchoolViewBase extends React.Component {
 		}
 	};
 	//This function is used to find out if a user is already purchased an package or not
-	isAlreadyPurchased = ({
-		userId,
-		packageType,
-		packageId,
-		schoolId,
-		packageName,
-		amount,
-		monthlyPymtDetails,
-		expDuration,
-		expPeriod,
-		noClasses,
-		planId,
-		currency,
-		pymtType,
-		self
-	}) => {
+	isAlreadyPurchased = ({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self }) => {
 		return new Promise((resolve, reject) => {
 			if ((userId && planId) || packageId) {
 				Meteor.call(
@@ -745,21 +579,7 @@ export default class SchoolViewBase extends React.Component {
 											RenderActions: (
 												<ButtonsWrapper>
 													{this.noThanksButton()}
-													{this.purchaseButton(
-														packageType,
-														packageId,
-														schoolId,
-														packageName,
-														amount,
-														monthlyPymtDetails,
-														expDuration,
-														expPeriod,
-														noClasses,
-														planId,
-														currency,
-														pymtType,
-														self
-													)}
+													{this.purchaseButton( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self )}
 													{this.pastSubscriptionButton()}
 												</ButtonsWrapper>
 											)
@@ -767,33 +587,10 @@ export default class SchoolViewBase extends React.Component {
 										true
 									);
 								} else {
-									this.handleChargeAndSubscription(
-										packageType,
-										packageId,
-										schoolId,
-										packageName,
-										amount,
-										monthlyPymtDetails,
-										expDuration,
-										expPeriod,
-										noClasses,
-										planId,
-										currency,
-										pymtType,
-										this,
-										purchaseId
-									);
+									this.handleChargeAndSubscription( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, this, purchaseId );
 								}
 							} else if (packageType == 'MP') {
-								let expiry,
-									nextExpiry,
-									endDate,
-									inActivePurchases,
-									monthPack,
-									details,
-									oldRate,
-									newRate,
-									newNextExpiryDate;
+								let expiry, nextExpiry, endDate, inActivePurchases, monthPack, details, oldRate, newRate, newNextExpiryDate;
 								inActivePurchases = get(res, 'inActivePurchases', 0);
 								endDate = get(res, 'endDate', new Date());
 
@@ -818,21 +615,7 @@ export default class SchoolViewBase extends React.Component {
 												RenderActions: (
 													<ButtonsWrapper>
 														{this.noThanksButton()}
-														{this.purchaseButton(
-															packageType,
-															packageId,
-															schoolId,
-															packageName,
-															amount,
-															monthlyPymtDetails,
-															expDuration,
-															expPeriod,
-															noClasses,
-															planId,
-															currency,
-															pymtType,
-															self
-														)}
+														{this.purchaseButton( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self )}
 														{this.pastSubscriptionButton()}
 													</ButtonsWrapper>
 												)
@@ -856,36 +639,8 @@ export default class SchoolViewBase extends React.Component {
 												RenderActions: (
 													<ButtonsWrapper>
 														{this.noThanksButton()}
-														{this.purchaseNewContract(
-															packageType,
-															packageId,
-															schoolId,
-															packageName,
-															amount,
-															monthlyPymtDetails,
-															expDuration,
-															expPeriod,
-															noClasses,
-															planId,
-															currency,
-															pymtType,
-															self
-														)}
-														{this.purchaseOldContract(
-															packageType,
-															packageId,
-															schoolId,
-															packageName,
-															amount,
-															monthlyPymtDetails,
-															expDuration,
-															expPeriod,
-															noClasses,
-															planId,
-															currency,
-															pymtType,
-															self
-														)}
+														{this.purchaseNewContract( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self )}
+														{this.purchaseOldContract( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self )}
 														{this.pastSubscriptionButton()}
 													</ButtonsWrapper>
 												)
@@ -910,21 +665,7 @@ export default class SchoolViewBase extends React.Component {
 											RenderActions: (
 												<ButtonsWrapper>
 													{this.noThanksButton()}
-													{this.purchaseButton(
-														packageType,
-														packageId,
-														schoolId,
-														packageName,
-														amount,
-														monthlyPymtDetails,
-														expDuration,
-														expPeriod,
-														noClasses,
-														planId,
-														currency,
-														pymtType,
-														self
-													)}
+													{this.purchaseButton( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self )}
 													{this.pastSubscriptionButton()}
 												</ButtonsWrapper>
 											)
@@ -940,21 +681,7 @@ export default class SchoolViewBase extends React.Component {
 							this.setState({ isAlreadyPurchased: false });
 							// check payment type  and take required action
 							if (packageType == 'MP') {
-								await this.checkPymtType({
-									userId,
-									packageType,
-									packageId,
-									schoolId,
-									packageName,
-									amount,
-									monthlyPymtDetails,
-									expDuration,
-									expPeriod,
-									noClasses,
-									planId,
-									currency,
-									pymtType
-								});
+								await this.checkPymtType({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType });
 								resolve();
 							} else {
 								resolve();
@@ -966,21 +693,7 @@ export default class SchoolViewBase extends React.Component {
 		});
 	};
 	//check payment type and take action then
-	checkPymtType = ({
-		userId,
-		packageType,
-		packageId,
-		schoolId,
-		packageName,
-		amount,
-		monthlyPymtDetails,
-		expDuration,
-		expPeriod,
-		noClasses,
-		planId,
-		currency,
-		pymtType
-	}) => {
+	checkPymtType = ({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType }) => {
 		return new Promise((resolve, reject) => {
 			const { popUp } = this.props;
 			if ((pymtType && pymtType.payAsYouGo) || pymtType.payUpFront) {
@@ -994,21 +707,7 @@ export default class SchoolViewBase extends React.Component {
 								RenderActions: (
 									<ButtonsWrapper>
 										{this.noThanksButton()}
-										{this.purchaseButton(
-											packageType,
-											packageId,
-											schoolId,
-											packageName,
-											amount,
-											monthlyPymtDetails,
-											expDuration,
-											expPeriod,
-											noClasses,
-											planId,
-											currency,
-											pymtType,
-											self
-										)}
+										{this.purchaseButton( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self )}
 										{this.pastSubscriptionButton()}
 									</ButtonsWrapper>
 								)
@@ -1040,15 +739,7 @@ export default class SchoolViewBase extends React.Component {
 	handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPymtDetails, self) => {
 		const { popUp } = self.props;
 
-		Meteor.call(
-			'stripe.handleCustomerAndSubscribe',
-			token.id,
-			planId,
-			schoolId,
-			packageName,
-			packageId,
-			monthlyPymtDetails,
-			(err, res) => {
+		Meteor.call( 'stripe.handleCustomerAndSubscribe', token.id, planId, schoolId, packageName, packageId, monthlyPymtDetails, (err, res) => {
 				if (res) {
 					popUp.appear(
 						'success',
@@ -1080,33 +771,9 @@ export default class SchoolViewBase extends React.Component {
 		);
 	};
 	//handle single charge for cp,ep,payupfront online
-	handleCharge = (
-		token,
-		packageName,
-		packageId,
-		packageType,
-		schoolId,
-		expDuration,
-		expPeriod,
-		noClasses,
-		planId,
-		self,
-		contract
-	) => {
+	handleCharge = ( token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self, contract ) => {
 		const { popUp } = self.props;
-		Meteor.call(
-			'stripe.chargeCard',
-			token.id,
-			packageName,
-			packageId,
-			packageType,
-			schoolId,
-			expDuration,
-			expPeriod,
-			noClasses,
-			planId,
-			contract,
-			(error, result) => {
+		Meteor.call( 'stripe.chargeCard', token.id, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, contract, (error, result) => {
 				if (result) {
 					if (result == 'Payment Successfully Done') {
 						let x = new Date().getTime();
@@ -1166,22 +833,7 @@ export default class SchoolViewBase extends React.Component {
 		);
 	};
 	// handleChargeAndSubscription
-	handleChargeAndSubscription = (
-		packageType,
-		packageId,
-		schoolId,
-		packageName,
-		amount,
-		monthlyPymtDetails,
-		expDuration,
-		expPeriod,
-		noClasses,
-		planId,
-		currency,
-		pymtType,
-		self,
-		contract
-	) => {
+	handleChargeAndSubscription = ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, contract ) => {
 		self.setState({ closed: false });
 		const { popUp, schoolData } = this.props;
 		let { payUpFront, payAsYouGo } = this.state;
@@ -1214,29 +866,9 @@ export default class SchoolViewBase extends React.Component {
 						});
 						//toastr.success("Please wait transaction in Progress", "Success");
 						if (packageType == 'CP' || packageType == 'EP' || payUpFront || payAsYouGo) {
-							self.handleCharge(
-								token,
-								packageName,
-								packageId,
-								packageType,
-								schoolId,
-								expDuration,
-								expPeriod,
-								noClasses,
-								planId,
-								self,
-								contract
-							);
+							self.handleCharge( token, packageName, packageId, packageType, schoolId, expDuration, expPeriod, noClasses, planId, self, contract );
 						} else if (packageType == 'MP' && pymtType && pymtType.autoWithDraw) {
-							self.handleSubscription(
-								token,
-								planId,
-								schoolId,
-								packageName,
-								packageId,
-								monthlyPymtDetails,
-								self
-							);
+							self.handleSubscription( token, planId, schoolId, packageName, packageId, monthlyPymtDetails, self );
 						}
 					}
 				});
@@ -1275,20 +907,7 @@ export default class SchoolViewBase extends React.Component {
 		});
 	};
 	// whenever user click cart button request come here.
-	handlePurchasePackage = async (
-		packageType,
-		packageId,
-		schoolId,
-		packageName,
-		amount,
-		monthlyPymtDetails,
-		expDuration,
-		expPeriod,
-		noClasses,
-		planId,
-		currency,
-		pymtType
-	) => {
+	handlePurchasePackage = async ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType ) => {
 		try {
 			this.resetStates();
 			const { popUp } = this.props;
@@ -1307,22 +926,7 @@ export default class SchoolViewBase extends React.Component {
 			let userId = this.props.currentUser._id;
 			//check is package is already purchased
 
-			await this.isAlreadyPurchased({
-				userId,
-				packageType,
-				packageId,
-				schoolId,
-				packageName,
-				amount,
-				monthlyPymtDetails,
-				expDuration,
-				expPeriod,
-				noClasses,
-				planId,
-				currency,
-				pymtType,
-				self
-			});
+			await this.isAlreadyPurchased({ userId, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self });
 
 			if (this.state.isAlreadyPurchased) {
 				return;
@@ -1345,64 +949,18 @@ export default class SchoolViewBase extends React.Component {
 						</b>? If so, you can pay for the first month now.
 					</div>
 				);
-				this.handlePayAsYouGo({
-					packageType,
-					packageId,
-					schoolId,
-					packageName,
-					amount,
-					monthlyPymtDetails,
-					expDuration,
-					expPeriod,
-					noClasses,
-					planId,
-					currency,
-					pymtType,
-					self,
-					title,
-					content
-				});
+				this.handlePayAsYouGo({ packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content });
 				return;
 			}
 
 			if (this.state.payUpFront) {
 				let title = 'Pay Up Front Package';
 				let content = 'This is Pay Up Front package.We will mark you. You have to pay your fees at School.';
-				this.handlePayUpFront(
-					packageType,
-					packageId,
-					schoolId,
-					packageName,
-					amount,
-					monthlyPymtDetails,
-					expDuration,
-					expPeriod,
-					noClasses,
-					planId,
-					currency,
-					pymtType,
-					self,
-					title,
-					content
-				);
+				this.handlePayUpFront( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self, title, content );
 				return;
 			}
 			//this will handle charge and subscription both
-			this.handleChargeAndSubscription(
-				packageType,
-				packageId,
-				schoolId,
-				packageName,
-				amount,
-				monthlyPymtDetails,
-				expDuration,
-				expPeriod,
-				noClasses,
-				planId,
-				currency,
-				pymtType,
-				self
-			);
+			this.handleChargeAndSubscription( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self );
 		} catch (error) {
 			console.log('Error in handlePurchasePackage', error);
 		}

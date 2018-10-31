@@ -1,4 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
+import Divider from 'material-ui/Divider';
 import { MuiThemeProvider, withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
@@ -10,8 +11,6 @@ import SecondaryButton from '/imports/ui/components/landing/components/buttons/S
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import MuiTheme from '/imports/ui/components/landing/components/jss/muitheme';
 import { addDelimiter, goToClassTypePage, goToSchoolPage } from '/imports/util';
-import Divider from 'material-ui/Divider';
-import Grid from 'material-ui/Grid';
 
 
 
