@@ -1,42 +1,35 @@
-import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
 import { isEmpty } from "lodash";
-import DocumentTitle from "react-document-title";
-import { Element, scroller } from "react-scroll";
-
 import Typography from "material-ui/Typography";
-import Button from "material-ui/Button";
-
-import { getAverageNoOfRatings, withPopUp } from "/imports/util";
-import withImageExists from "/imports/util/withImageExists.js";
-import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-
+import React, { Component, Fragment } from "react";
+import { Element, scroller } from "react-scroll";
+import styled from "styled-components";
+import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton";
+import ClassTypeCover from "/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx";
+import ClassTypeCoverContent from "/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx";
+import SchoolDetails from "/imports/ui/components/landing/components/class/details/SchoolDetails.jsx";
+import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
+import ReviewsManager from "/imports/ui/components/landing/components/class/reviews/ReviewsManager.jsx";
+import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
 import CallUsDialogBox from "/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx";
 import EmailUsDialogBox from "/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx";
 import GiveReviewDialogBox from "/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx";
-import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 import ManageRequestsDialogBox from "/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx";
-
-import reviewsData from "/imports/ui/components/landing/constants/reviewsData.js";
-import ReviewsManager from "/imports/ui/components/landing/components/class/reviews/ReviewsManager.jsx";
+import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
-import ClassTypeCover from "/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx";
-import ClassTypeCoverContent from "/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx";
-import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
-import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
-import SchoolDetails from "/imports/ui/components/landing/components/class/details/SchoolDetails.jsx";
-import MyCalendar from "/imports/ui/components/users/myCalender";
+import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import ManageMyCalendar from "/imports/ui/components/users/manageMyCalendar/index.js";
-
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton";
-
-import { capitalizeString, formatClassTimesData } from "/imports/util";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
+import { capitalizeString, formatClassTimesData, getAverageNoOfRatings, withPopUp } from "/imports/util";
 import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import withImageExists from "/imports/util/withImageExists.js";
+
+
+
+
+
+
 
 const imageExistsConfig = {
   originalImagePath: "classTypeData.classTypeImg",

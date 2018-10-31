@@ -598,6 +598,13 @@ class ClassTimesDialogBox extends React.Component {
                 /> */}
               {!hideClassTypeOptions && (
                 <Grid style={{ display: "flex", justifyContent: "flex-end" }}>
+                 <ButtonWrapper>
+                    <FormGhostButton
+                      darkGreyColor
+                      label="Close"
+                      onClick={onModalClose}
+                    />
+                  </ButtonWrapper>
                   <ButtonWrapper>
                     <FormGhostButton
                       onClick={e => {
@@ -616,13 +623,7 @@ class ClassTimesDialogBox extends React.Component {
                       label="View School"
                     />
                   </ButtonWrapper>
-                  <ButtonWrapper>
-                    <FormGhostButton
-                      darkGreyColor
-                      label="Close"
-                      onClick={onModalClose}
-                    />
-                  </ButtonWrapper>
+                 
                 </Grid>
               )}
             </DialogActions>

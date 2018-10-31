@@ -83,6 +83,13 @@ const LogOutUserSideNav = props => (
     <SideNavItem
       button
       menuListItemText={props.classes.menuListItemText}
+      name="SkillShape for Schools"
+      iconName="school"
+      onClick={() => props.childItemOnClick("/skillshape-for-school")}
+    />
+    <SideNavItem
+      button
+      menuListItemText={props.classes.menuListItemText}
       name="Find a School"
       iconName="find_in_page"
       onClick={() => props.childItemOnClick("/")}
@@ -186,6 +193,13 @@ const LoginUserSideNav = props => {
         childData={props.connectedSchool}
         onClick={props.childItemOnClick}
       />
+      <SideNavItem
+      button
+      menuListItemText={props.classes.menuListItemText}
+      name="SkillShape for Schools"
+      iconName="school"
+      onClick={() => props.childItemOnClick("/skillshape-for-school")}
+    />
       <SideNavItem
         button
         menuListItemText={props.classes.menuListItemText}

@@ -17,7 +17,6 @@ const styles = {
 		textTransform: 'none',
 		fontWeight: 500,
 		marginRight: helpers.rhythmDiv,
-		height: 'auto',
 		'&:hover': {
 			backgroundColor: helpers.primaryColor,
 			color: 'white'

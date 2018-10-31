@@ -215,6 +215,7 @@ class ClassTypeCard extends Component {
 								cardRevealInfo={cardRevealData}
 								selectedSkillSubject={selectedSkillSubject}
 								hideClassTypeOptions={hideClassTypeOptions}
+								onEditClassTypeClick={onEditClassTypeClick}
 							/>
 						}
 					/>
