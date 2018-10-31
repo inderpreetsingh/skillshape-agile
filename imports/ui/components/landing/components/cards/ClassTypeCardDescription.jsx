@@ -11,10 +11,6 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 import MuiTheme from '/imports/ui/components/landing/components/jss/muitheme';
 import { addDelimiter, goToClassTypePage, goToSchoolPage } from '/imports/util';
 
-
-
-
-
 const RatingsWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -241,6 +237,16 @@ const ClassTypeCardDescription = (props) => {
 						</Buttons>
 					)}
 				</ClassDescription>
+
+				{editMode && (
+					<PrimaryButton
+						icon
+						iconName="edit"
+						label="Edit Details"
+						fullWidth
+						onClick={props.onEditClassTypeClick}
+					/>
+				)}
 			</Fragment>
 		</MuiThemeProvider>
 	);
