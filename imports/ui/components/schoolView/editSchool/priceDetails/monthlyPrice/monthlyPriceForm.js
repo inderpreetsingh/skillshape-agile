@@ -293,9 +293,9 @@ class MonthlyPriceForm extends React.Component {
                       }
                       fullWidth
                     >
-                      <MenuItem value={"Days"}>Day</MenuItem>
-                      <MenuItem value={"Weeks"}>Weeks</MenuItem>
-                      <MenuItem value={"Months"}>Month</MenuItem>
+                      <MenuItem value={"Day"}>Day</MenuItem>
+                      <MenuItem value={"Week"}>Week</MenuItem>
+                      <MenuItem value={"Month"}>Month</MenuItem>
                       <MenuItem value={"Year"}>Year</MenuItem>
                     </Select>
                   </FormControl>
