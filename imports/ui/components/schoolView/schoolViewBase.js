@@ -467,7 +467,11 @@ export default class SchoolViewBase extends React.Component {
 			get(schoolData, 'logoImg', get(schoolData, 'mainImage', config.defaultSchoolLogo))
 		);
 	};
-	noThanksButton = () => <FormGhostButton label={'No, thanks'} onClick={() => {}} greyColor applyClose />;
+	noThanksButton = () => (
+		<ButtonWrapper>
+			<FormGhostButton label={'No, thanks'} onClick={() => {}} greyColor applyClose />
+		</ButtonWrapper>
+	);
 	purchaseButton = (
 		packageType,
 		packageId,
@@ -483,27 +487,29 @@ export default class SchoolViewBase extends React.Component {
 		pymtType,
 		self
 	) => (
-		<FormGhostButton
-			label={'Purchase Now'}
-			onClick={() => {
-				this.handleChargeAndSubscription(
-					packageType,
-					packageId,
-					schoolId,
-					packageName,
-					amount,
-					monthlyPymtDetails,
-					expDuration,
-					expPeriod,
-					noClasses,
-					planId,
-					currency,
-					pymtType,
-					self
-				);
-			}}
-			applyClose
-		/>
+		<ButtonWrapper>
+			<FormGhostButton
+				label={'Purchase Now'}
+				onClick={() => {
+					this.handleChargeAndSubscription(
+						packageType,
+						packageId,
+						schoolId,
+						packageName,
+						amount,
+						monthlyPymtDetails,
+						expDuration,
+						expPeriod,
+						noClasses,
+						planId,
+						currency,
+						pymtType,
+						self
+					);
+				}}
+				applyClose
+			/>
+		</ButtonWrapper>
 	);
 	purchaseOldContract = (
 		packageType,
@@ -520,28 +526,30 @@ export default class SchoolViewBase extends React.Component {
 		pymtType,
 		self
 	) => (
-		<FormGhostButton
-			label={'Continue Old Contract'}
-			onClick={() => {
-				this.handleChargeAndSubscription(
-					packageType,
-					packageId,
-					schoolId,
-					packageName,
-					amount,
-					monthlyPymtDetails,
-					expDuration,
-					expPeriod,
-					noClasses,
-					planId,
-					currency,
-					pymtType,
-					self,
-					'useOldContract'
-				);
-			}}
-			applyClose
-		/>
+		<ButtonWrapper>
+			<FormGhostButton
+				label={'Continue Old Contract'}
+				onClick={() => {
+					this.handleChargeAndSubscription(
+						packageType,
+						packageId,
+						schoolId,
+						packageName,
+						amount,
+						monthlyPymtDetails,
+						expDuration,
+						expPeriod,
+						noClasses,
+						planId,
+						currency,
+						pymtType,
+						self,
+						'useOldContract'
+					);
+				}}
+				applyClose
+			/>
+		</ButtonWrapper>
 	);
 	purchaseNewContract = (
 		packageType,
@@ -558,36 +566,40 @@ export default class SchoolViewBase extends React.Component {
 		pymtType,
 		self
 	) => (
-		<FormGhostButton
-			label={'Purchase New Contract'}
-			onClick={() => {
-				this.handleChargeAndSubscription(
-					packageType,
-					packageId,
-					schoolId,
-					packageName,
-					amount,
-					monthlyPymtDetails,
-					expDuration,
-					expPeriod,
-					noClasses,
-					planId,
-					currency,
-					pymtType,
-					self
-				);
-			}}
-			applyClose
-		/>
+		<ButtonWrapper>
+			<FormGhostButton
+				label={'Purchase New Contract'}
+				onClick={() => {
+					this.handleChargeAndSubscription(
+						packageType,
+						packageId,
+						schoolId,
+						packageName,
+						amount,
+						monthlyPymtDetails,
+						expDuration,
+						expPeriod,
+						noClasses,
+						planId,
+						currency,
+						pymtType,
+						self
+					);
+				}}
+				applyClose
+			/>
+		</ButtonWrapper>
 	);
 	pastSubscriptionButton = () => (
-		<FormGhostButton
-			label={'Past Subscriptions'}
-			onClick={() => {
-				browserHistory.push(`/mySubscription/${Meteor.userId()}`);
-			}}
-			applyClose
-		/>
+		<ButtonWrapper>
+			<FormGhostButton
+				label={'Past Subscriptions'}
+				onClick={() => {
+					browserHistory.push(`/mySubscription/${Meteor.userId()}`);
+				}}
+				applyClose
+			/>
+		</ButtonWrapper>
 	);
 	//handle PayUpfront case
 	handlePayUpFront = (
@@ -617,25 +629,24 @@ export default class SchoolViewBase extends React.Component {
 				content: 'When you pay for a number of monthly subscription fees at once.',
 				RenderActions: (
 					<ButtonsWrapper>
-						<ButtonWrapper>{this.noThanksButton()}</ButtonWrapper>
-						<ButtonWrapper>
-							{this.purchaseButton(
-								packageType,
-								packageId,
-								schoolId,
-								packageName,
-								amount,
-								monthlyPymtDetails,
-								expDuration,
-								expPeriod,
-								noClasses,
-								planId,
-								currency,
-								pymtType,
-								self
-							)}
-						</ButtonWrapper>
-						<ButtonWrapper>{this.pastSubscriptionButton()}</ButtonWrapper>
+						{this.noThanksButton()}
+						{this.purchaseButton(
+							packageType,
+							packageId,
+							schoolId,
+							packageName,
+							amount,
+							monthlyPymtDetails,
+							expDuration,
+							expPeriod,
+							noClasses,
+							planId,
+							currency,
+							pymtType,
+							self
+						)}
+
+						{this.pastSubscriptionButton()}
 
 						{/* Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school. */}
 						{/* <Button onClick={() => { this.handlePayAsYouGo(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
