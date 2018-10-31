@@ -118,11 +118,17 @@ class ThinkingAboutAttending extends React.Component {
                   <TextWrapper> To attend you must purchase a class package.</TextWrapper>
                     </DialogContent>
                     <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
-                      
+                    <ButtonWrapper>
+                            <FormGhostButton
+                                darkGreyColor
+                                onClick={onModalClose}
+                                label="Not Yet, Thanks!"
+                            />
+                        </ButtonWrapper>
                         <ButtonWrapper>
                             <FormGhostButton
                                 onClick={purchaseThisPackage}
-                                label="Purchase this Package"
+                                label="Purchase Package Now"
                             />
                         </ButtonWrapper>
                         <ButtonWrapper>
@@ -136,16 +142,10 @@ class ThinkingAboutAttending extends React.Component {
                                         handleCheckBoxes(checkBoxes);
                                     }
                                 }}
-                                label={"Purchase at Class"}
+                                label={"Purchase at School"}
                             />
                         </ButtonWrapper>
-                        <ButtonWrapper>
-                            <FormGhostButton
-                                darkGreyColor
-                                onClick={onModalClose}
-                                label="Not Yet, Thanks!"
-                            />
-                        </ButtonWrapper>
+                    
                     </DialogActions>
 
                 </Dialog>

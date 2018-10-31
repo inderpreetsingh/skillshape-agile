@@ -10,7 +10,8 @@ import SecondaryButton from '/imports/ui/components/landing/components/buttons/S
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import MuiTheme from '/imports/ui/components/landing/components/jss/muitheme';
 import { addDelimiter, goToClassTypePage, goToSchoolPage } from '/imports/util';
-
+import Divider from 'material-ui/Divider';
+import Grid from 'material-ui/Grid';
 
 
 
@@ -114,6 +115,7 @@ const styles = {
 
 const ClassTypeCardDescription = (props) => {
 	const { cardRevealInfo, schoolData, editMode, selectedSkillSubject, onEditClassTypeClick } = props;
+	let BB = {backgroundColor:'black'};
 	return (
 		<MuiThemeProvider theme={MuiTheme}>
 			<Fragment>
@@ -150,8 +152,11 @@ const ClassTypeCardDescription = (props) => {
 								<Text>
 									Age: {cardRevealInfo.ageMin}{' '}
 									{cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}
+									<Divider style={BB}/>
 								</Text>
+								
 							)}
+							
 							{cardRevealInfo.gender && (
 								<Text>
 									{cardRevealInfo.gender &&
@@ -159,6 +164,7 @@ const ClassTypeCardDescription = (props) => {
 										`${cardRevealInfo.gender}`}
 								</Text>
 							)}
+							
 							{cardRevealInfo.experienceLevel && (
 								<Text>
 									Level:{' '}
@@ -167,17 +173,20 @@ const ClassTypeCardDescription = (props) => {
 									) : (
 										cardRevealInfo.experienceLevel
 									)}
+									<Divider style={BB}/>
 								</Text>
 							)}
+							
 							{editMode &&
 							!isEmpty(selectedSkillSubject) && (
 								<Text>
 									Subjects: {' '}
 									{selectedSkillSubject.map((selectedSubj) => selectedSubj.name).join(', ')}
+									<Divider style={BB}/>
 								</Text>
 							)}
 						</ClassTypeRequirements>
-
+						
 						<ClassDescriptionContentWrapper>
 							<Typography classes={{ root: props.classes.descriptionHeader }}>
 								Class Description:{' '}
@@ -194,7 +203,7 @@ const ClassTypeCardDescription = (props) => {
               </Typography>  
           </SelectedSkillSubject>*/}
 
-					{!editMode && (
+					{!editMode ? (
 						<Buttons>
 							{props &&
 							!props.hideClassTypeOptions && (
@@ -224,13 +233,16 @@ const ClassTypeCardDescription = (props) => {
 							)}
 
 							{props.classTimeCheck ? (
+								<div 	style={{ bottom: "0px", position: "absolute", width: "93%"}}>
 								<PrimaryButton
 									label="View Class Times"
 									fullWidth
 									onClick={props.onClassTimeButtonClick}
 									itemScope
 									itemType="http://schema.org/ViewAction"
+								
 								/>
+								</div>
 							) : (
 								<PrimaryButton
 									label="Request Class Times"
@@ -239,6 +251,14 @@ const ClassTypeCardDescription = (props) => {
 								/>
 							)}
 						</Buttons>
+					) : (
+							<PrimaryButton
+								icon
+								iconName="edit"
+								fullWidth
+								label="Edit Details"
+								onClick={onEditClassTypeClick}
+							/>
 					)}
 				</ClassDescription>
 			</Fragment>
