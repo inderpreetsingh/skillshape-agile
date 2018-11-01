@@ -20,16 +20,10 @@ import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import ManageMyCalendar from "/imports/ui/components/users/manageMyCalendar/index.js";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
-import { capitalizeString, formatClassTimesData, getAverageNoOfRatings, withPopUp } from "/imports/util";
+import { capitalizeString, formatClassTimesData, getAverageNoOfRatings, withPopUp, stripePaymentHelper } from "/imports/util";
 import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import withImageExists from "/imports/util/withImageExists.js";
-
-
-
-
-
-
 
 const imageExistsConfig = {
   originalImagePath: "classTypeData.classTypeImg",
@@ -345,7 +339,7 @@ class ClassTypeContent extends Component {
       }%3F %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
 
-      console.info(mailTo, "my mail To data.............");
+    
       // const mailToNormalized = encodeURI(mailTo);
       // window.location.href = mailToNormalized;
       openMailToInNewTab(mailTo);
@@ -453,7 +447,14 @@ class ClassTypeContent extends Component {
         : this.props.params.classTypeName;
     });
   };
-
+  handlePurchasePackage = async ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType
+    ) => {
+      try {
+        stripePaymentHelper.call(this,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
+      } catch (error) {
+        console.log('Error in handlePurchasePackage', error);
+      }
+    };
   render() {
     const {
       bgImg,
@@ -496,7 +497,7 @@ class ClassTypeContent extends Component {
       data => data.formattedClassTimesDetails.totalClassTimes > 0
     );
 
-    console.info("this.state", this.state);
+    
     if (manageRequestTitle) {
       submitBtnLabel =
         manageRequestTitle != "Pricing"
@@ -674,6 +675,7 @@ class ClassTypeContent extends Component {
                 </ClassContainer>
               ) : (
                 <PackagesList
+                onAddToCartIconButtonClick={this.handlePurchasePackage}
                   schoolId={classTypeData.schoolId}
                   enrollMentPackages
                   enrollMentPackagesData={enrollmentFeeData}

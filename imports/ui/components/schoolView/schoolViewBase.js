@@ -7,7 +7,7 @@ import ClassPricing from '/imports/api/classPricing/fields';
 // import collection definition over here
 import ClassType from '/imports/api/classType/fields';
 import SLocation from '/imports/api/sLocation/fields';
-import { capitalizeString, checkSuperAdmin, createMarkersOnMap, formatMoney,stripePaymentHelper } from '/imports/util';
+import { capitalizeString, checkSuperAdmin, createMarkersOnMap,stripePaymentHelper } from '/imports/util';
 import Events from '/imports/util/events';
 import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';

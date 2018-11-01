@@ -8,7 +8,7 @@ import ClassType from "/imports/api/classType/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
-import { withPopUp, emailRegex } from "/imports/util";
+import { withPopUp, emailRegex,stripePaymentHelper } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import Events from "/imports/util/events";
 import LoginDialogBox from "/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx";
@@ -116,36 +116,14 @@ class SchoolPriceView extends React.Component {
       return "";
     }
   };
-
-  handlePurcasePackage = (typeOfTable, tableId, schoolId) => {
-    // Start loading
-    const { popUp } = this.props;
-    let self = this;
-    if (Meteor.userId()) {
-      this.setState({ isLoading: true });
-      Meteor.call(
-        "packageRequest.addRequest",
-        {
-          typeOfTable: typeOfTable,
-          tableId: tableId,
-          schoolId: schoolId
-        },
-        (err, res) => {
-          // Stop loading
-          self.setState({ isLoading: false });
-          if (err) {
-            popUp.appear("alert", { content: err.reason || err.message });
-          } else {
-            // Show confirmation to user that purchase request has been created.
-            popUp.appear("success", { content: res });
-          }
-        }
-      );
-    } else {
-      // Events.trigger("loginAsUser");
-      this.handleLoginModalState(true);
-    }
-  };
+  handlePurchasePackage = async ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType
+    ) => {
+      try {
+        stripePaymentHelper.call(this,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
+      } catch (error) {
+        console.log('Error in handlePurchasePackage', error);
+      }
+    };
 
   normalizeMonthlyPricingData = monthlyPricingData => {
     if (monthlyPricingData) {
@@ -440,7 +418,7 @@ class SchoolPriceView extends React.Component {
         )}
         <PackagesList
           schoolId={schoolId}
-          onAddToCartIconButtonClick={this.handlePurcasePackage}
+          onAddToCartIconButtonClick={this.handlePurchasePackage}
           forIframes
           enrollMentPackages
           enrollMentPackagesData={enrollmentFee}

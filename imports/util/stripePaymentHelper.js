@@ -3,10 +3,9 @@ import get from 'lodash/get';
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import styled from 'styled-components';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import moment from 'moment';
 import {  formatMoney } from '/imports/util';
-
+import { browserHistory } from 'react-router';
 const ButtonsWrapper = styled.div`
 	display: flex;
 	justify-content: center;
@@ -28,7 +27,7 @@ export const stripePaymentHelper = async function(packageType, packageId, school
         }
     });
     let self = this;
-    let userId = this.props.currentUser._id;
+    let userId = Meteor.userId();
     //check is package is already purchased
 
     await isAlreadyPurchased({
@@ -769,6 +768,7 @@ handleCharge = (
     contract
 ) => {
     const { popUp } = self.props;
+    let currentUser = Meteor.user();
     Meteor.call(
         'stripe.chargeCard',
         token.id,
@@ -785,17 +785,17 @@ handleCharge = (
             if (result) {
                 if (result == 'Payment Successfully Done') {
                     let x = new Date().getTime();
+                    console.log('TCL: self.props', self.props);
                     let memberData = {
-                        firstName: self.props.currentUser.profile.name || self.props.currentUser.profile.firstName,
-                        lastName: self.props.currentUser.profile.firstName || '',
-                        email: self.props.currentUser.emails[0].address,
+                        firstName: currentUser.profile.name || currentUser.profile.firstName,
+                        lastName: currentUser.profile.firstName || '',
+                        email: currentUser.emails[0].address,
                         phone: '',
                         schoolId: self.props.schoolId,
-                        classTypeIds: self.props.classType._id,
                         birthYear: '',
                         studentWithoutEmail: false,
                         sendMeSkillShapeNotification: true,
-                        activeUserId: self.props.currentUser._id,
+                        activeUserId: currentUser._id,
                         createdBy: '',
                         inviteAccepted: false,
                         packageDetails: {
