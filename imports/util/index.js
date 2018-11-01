@@ -60,3 +60,4 @@ export { maximumClasses } from "./maximumClasses.js";
 export { normalizeMonthlyPricingData } from "./packageFormat.js";
 export { compressImage } from "./compressImage.js";
 export { inputRestriction, formatMoney } from "./inputRestriction.js";
+export {stripePaymentHelper} from "./stripePaymentHelper.js";
