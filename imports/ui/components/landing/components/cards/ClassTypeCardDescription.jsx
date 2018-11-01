@@ -149,7 +149,7 @@ const ClassTypeCardDescription = (props) => {
 						<ClassTypeRequirements>
 							{cardRevealInfo.ageMin && (
 								<Text>
-									Age: {cardRevealInfo.ageMin}{' '}
+									<b>Age:</b> {cardRevealInfo.ageMin}{' '}
 									{cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}
 									<Divider style={BB}/>
 								</Text>
@@ -166,7 +166,7 @@ const ClassTypeCardDescription = (props) => {
 							
 							{cardRevealInfo.experienceLevel && (
 								<Text>
-									Level:{' '}
+									<b>Level:</b>{' '}
 									{cardRevealInfo.experienceLevel == 'All' ? (
 										'All levels are welcomed'
 									) : (
@@ -179,7 +179,7 @@ const ClassTypeCardDescription = (props) => {
 							{editMode &&
 							!isEmpty(selectedSkillSubject) && (
 								<Text>
-									Subjects: {' '}
+									<b>Subjects:</b> {' '}
 									{selectedSkillSubject.map((selectedSubj) => selectedSubj.name).join(', ')}
 									<Divider style={BB}/>
 								</Text>
@@ -188,7 +188,7 @@ const ClassTypeCardDescription = (props) => {
 						
 						<ClassDescriptionContentWrapper>
 							<Typography classes={{ root: props.classes.descriptionHeader }}>
-								Class Description:{' '}
+								<b>Class Description:</b>{' '}
 							</Typography>
 							{cardRevealInfo.description && (
 								<ClassDescriptionContent>{cardRevealInfo.description}</ClassDescriptionContent>
