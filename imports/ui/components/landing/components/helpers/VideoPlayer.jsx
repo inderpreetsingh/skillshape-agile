@@ -65,7 +65,7 @@ VideoPlayer.propTypes = {
 };
 
 VideoPlayer.defaultProps = {
-	src: 'https://media.w3.org/2010/05/sintel/trailer_hd.mp4',
+	src: 'https://youtu.be/2kMi6MfmGM8',
 	poster: '/images/school/solution-gifs/filter-content.png'
 };
 
