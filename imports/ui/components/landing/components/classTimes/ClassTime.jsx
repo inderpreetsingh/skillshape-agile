@@ -505,6 +505,7 @@ class ClassTime extends Component {
     const { schoolId, classTypeId, classTypeName } = this.props;
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
+    if(!isEmpty(currentUser)){
     let data = {
       name: userName,
       email: currentUser.emails[0].address,
@@ -517,7 +518,6 @@ class ClassTime extends Component {
       existingUser: true
     };
     Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
-      this.setState({ isLoading: false });
       const { popUp } = this.props;
       if (res) {
         Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
@@ -534,6 +534,8 @@ class ClassTime extends Component {
         });
       }
     });
+  }
+  this.setState({ isLoading: false });
   };
 
   getClassTimeRoomInfo = () => {
