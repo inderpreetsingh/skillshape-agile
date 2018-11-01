@@ -26,7 +26,8 @@ const CardContent = Text.extend`
 	margin: 0;
 	line-height: 1.2;
 	transition: 0.2s max-height linear, 0.2s opacity linear 0.1s;
-	max-height: ${(props) => (props.showContent ? helpers.baseFontSize * 10 : 0)}px;
+	font-size: 18px;
+	max-height: ${(props) => (props.showContent ? helpers.rhythmDiv * 20 : 0)}px;
 	opacity: ${(props) => (props.showContent ? 1 : 0)};
 `;
 

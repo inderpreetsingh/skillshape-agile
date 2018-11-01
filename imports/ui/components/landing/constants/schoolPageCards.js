@@ -98,15 +98,15 @@ export default (schoolPageCards = {
 				tagline: "Highlights your school and it's offerings",
 				solutionContent: '/images/school/solution-gifs/filter-content.png',
 				content:
-					'SkillShape’s beautiful directory highlights your school and it’s offerings, and makes it easy for students'
+					'SkillShape’s beautiful directory highlights your school and it’s offerings, and makes it easy for students to find what they need.'
 			},
 			{
-				solutionContent: '/images/school/solution-gifs/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/patented-media-mgm.png',
 				bgImage: '/images/school/solution-box1/feature2bg.svg',
 				title: 'Patented Media Management',
 				tagline: 'Share photo and videos of school',
 				content:
-					'Our Patented Media Management system allows students to socially share video and images taken of them at your school'
+					'Our Patented Media Management system allows students to socially share video and images taken of them at your school, with a link to your school.'
 			},
 			{
 				solutionContent: '/images/school/solution-gifs/frames.png',
@@ -135,7 +135,7 @@ export default (schoolPageCards = {
 				title: 'Class group chat',
 				tagline: 'Increases the potential for camaraderie and fellowship',
 				content:
-					'SkillShape offers a Class Chat. Students can chat with each other to plan outings or any special events.'
+					'SkillShape offers a Class Chat. Students can chat with each other to plan outings after class or organize transportation or any special events.'
 			},
 			{
 				solutionContent: '/images/school/solution-gifs/filter-content.png',
@@ -143,7 +143,7 @@ export default (schoolPageCards = {
 				title: 'Training materials',
 				tagline: 'List the skills and techniques you will cover',
 				content:
-					'Students get access to training materials. You can list all of the skills and techniques you cover.'
+					'Students get access to training materials. You can list all of the skills and techniques you cover, provide text and/or media overviews.'
 			},
 			{
 				solutionContent: '/images/school/solution-gifs/track-students.png',
@@ -153,7 +153,7 @@ export default (schoolPageCards = {
 				content: 'SkillShape can keep track of attendance inform you when a student drops off attendance. '
 			},
 			{
-				solutionContent: '/images/school/solution-gifs/track-students.png',
+				solutionContent: '/images/school/solution-gifs/class-progressive-system.png',
 				bgImage: '/images/school/solution-box2/sc2feature4.svg',
 				title: 'Class Progression System',
 				tagline: "Track student's exposure when they attend classes",
@@ -166,7 +166,7 @@ export default (schoolPageCards = {
 		cardBgColor: '#e3f1f7',
 		cardsData: [
 			{
-				solutionContent: '/images/school/solution-gifs/school-admin.png',
+				solutionContent: '/images/school/solution-gifs/intuitive-interface.png',
 				bgImage: '/images/school/solution-box3/sc3feature1.svg',
 				title: 'Intuitive interface',
 				tagline: 'Easily update calendar and pricing at one place',
@@ -190,7 +190,7 @@ export default (schoolPageCards = {
 					'Students can enroll, and purchase monthly or per class packages. They can set up automatic withdrawal using credit cards or bank transfer for lower fees.'
 			},
 			{
-				solutionContent: '/images/school/solution-gifs/filter-content.png',
+				solutionContent: '/images/school/solution-gifs/rent-your-room.png',
 				bgImage: '/images/school/solution-box3/sc3feature4.svg',
 				title: 'Rent your room',
 				tagline: 'Let other schools operate within your facility',
