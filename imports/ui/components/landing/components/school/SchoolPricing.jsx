@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {findDOMNode} from 'react-dom';
+import React, { Component } from 'react';
+import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -9,19 +9,18 @@ import SchoolPriceCard from '/imports/ui/components/landing/components/cards/Sch
 import Events from '/imports/util/events';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-
 const Wrapper = styled.div`
-  max-width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: ${helpers.schoolPageColor};
+	max-width: 100vw;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background-color: ${helpers.schoolPageColor};
 `;
 
 const Text = styled.p`
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize}px;
-  font-weight: 300;
+	font-family: ${helpers.specialFont};
+	font-size: ${helpers.baseFontSize}px;
+	font-weight: 300;
 `;
 
 const Title = Text.withComponent('h2').extend`
@@ -37,9 +36,9 @@ const Title = Text.withComponent('h2').extend`
 // `;
 
 const TitleWrapper = styled.div`
-  background-color: ${helpers.black};
-  padding: ${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 2}px;
-  text-align: center;
+	background-color: ${helpers.black};
+	padding: ${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 2}px;
+	text-align: center;
 `;
 
 const PricingBoxWrapper = styled.div`
@@ -49,12 +48,14 @@ const PricingBoxWrapper = styled.div`
   padding: ${helpers.rhythmDiv * 4}px;
   height: 100%;
   flex-grow: 1;
-  ${helpers.flexCenter};
+  /* prettier-ignore */
+  ${helpers.flexCenter}
 `;
 
 const PricingWrapper = styled.div`
   width: 100%;
-  ${helpers.flexCenter};
+  /* prettier-ignore */
+  ${helpers.flexCenter}
   justify-content: space-between;
 
   @media screen and (max-width: ${helpers.tablet + 50}px) {
@@ -63,31 +64,35 @@ const PricingWrapper = styled.div`
 `;
 
 const onJoinNowButtonClick = () => {
-  Events.trigger("registerAsSchool",{userType : 'School'});
-}
+	Events.trigger('registerAsSchool', { userType: 'School' });
+};
 
-const ComingSoon = () => <SecondaryButton noMarginBottom label="Coming Soon" disabled/>
+const ComingSoon = () => <SecondaryButton noMarginBottom label="Coming Soon" disabled />;
 
 const SchoolPricing = (props) => {
-  return(<Wrapper>
-    <TitleWrapper><Title>{props.title}</Title></TitleWrapper>
-    <PricingBoxWrapper>
-      <PricingWrapper>
-        {props.cardsData && props.cardsData.map((card, index) => {
-          if(index > 0) {
-            return <SchoolPriceCard key={index} {...card} myCustomComponent={<ComingSoon />}/>
-          }
-          else{
-            return <SchoolPriceCard key={index} {...card} onButtonClick={onJoinNowButtonClick} />
-          }
-        })}
-      </PricingWrapper>
-    </PricingBoxWrapper>
-  </Wrapper>)
-}
+	return (
+		<Wrapper>
+			<TitleWrapper>
+				<Title>{props.title}</Title>
+			</TitleWrapper>
+			<PricingBoxWrapper>
+				<PricingWrapper>
+					{props.cardsData &&
+						props.cardsData.map((card, index) => {
+							if (index > 0) {
+								return <SchoolPriceCard key={index} {...card} myCustomComponent={<ComingSoon />} />;
+							} else {
+								return <SchoolPriceCard key={index} {...card} onButtonClick={onJoinNowButtonClick} />;
+							}
+						})}
+				</PricingWrapper>
+			</PricingBoxWrapper>
+		</Wrapper>
+	);
+};
 
 SchoolPricing.defaultProps = {
-  title: 'So sign up for a skillshape account and see what everyone is talking about.'
-}
+	title: 'So sign up for a skillshape account and see what everyone is talking about.'
+};
 
 export default SchoolPricing;
