@@ -2,7 +2,7 @@ import isEmpty from 'lodash/isEmpty';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
-
+import get from 'lodash/get';
 import { formatMoney, maximumClasses } from '/imports/util';
 import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
 import Cart from '/imports/ui/components/landing/components/icons/Cart.jsx';
@@ -214,12 +214,15 @@ const Package = (props) => {
 											<Price>
 												{payment.cost &&
 													`${formatMoney(
-														Number.parseFloat(payment.cost).toFixed(2),
+														Number.parseFloat(get(props.pymtType,'payUpFront',false) ? payment.cost*payment.month : payment.cost).toFixed(2),
 														payment.currency ? payment.currency : props.schoolCurrency
 													)}`}
 											</Price>
 											<NoOfClasses>
-												{payment.month && `per month for ${payment.month} months`}
+												{payment.month && `${get(props.pymtType,'payUpFront',false)? '' : "per month"} for ${payment.month} ${payment.month > 1 ?'months' :' month'} ${get(props.pymtType,'payUpFront',false) ? `(${formatMoney(
+														Number.parseFloat(payment.cost).toFixed(2),
+														payment.currency ? payment.currency : props.schoolCurrency
+													)} per month)`:''}`}
 											</NoOfClasses>
 										</PriceSection>
 									);
