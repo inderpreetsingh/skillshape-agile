@@ -26,12 +26,22 @@ class MySubscription extends React.Component {
 		this.state = {};
 	}
 
-	handleCall = (schoolData) => () => {
+	_getContactNumbers = (data) => {
+		console.info('data for phones', data);
+		return (data.phone && data.phone.split(/[\|\,\\]/)) || 9999999999;
+	};
+
+	_getOurEmail = (data) => {
+		return data.email || 'info@skillshape.com';
+	};
+
+	handleCall = (data) => () => {
+		console.info('data.....', data);
 		this.setState((state) => {
 			return {
 				...state,
 				callUsDialog: true,
-				phone: get(schoolData, 'phone', 99999999)
+				phone: this._getContactNumbers(data)
 			};
 		});
 	};
@@ -41,13 +51,13 @@ class MySubscription extends React.Component {
 			return {
 				...state,
 				emailUsDialog: true,
-				email: get(data, 'email', 'fake@email.com')
+				email: this._getOurEmail(data)
 			};
 		});
 	};
 
-	handleSchoolVisit = (schoolData) => () => {
-		browserHistory.push('/');
+	handleSchoolVisit = (slug) => () => {
+		browserHistory.push(`/schools/${slug}`);
 	};
 
 	handleModelState = (modelName, modelState) => () => {
@@ -80,6 +90,7 @@ class MySubscription extends React.Component {
 					purchaseData={purchaseData}
 					callUsDialog={callUsDialog}
 					emailUsDialog={emailUsDialog}
+					handleModelState={this.handleModelState}
 					handleEmail={this.handleEmail}
 					handleCall={this.handleCall}
 					handleSchoolVisit={this.handleSchoolVisit}
@@ -92,14 +103,15 @@ class MySubscription extends React.Component {
 export default createContainer((props) => {
 	const { currentUser } = props;
 	let userId,
-		isLoading = true,
-		purchaseData = [],
-		purchaseSubscription,
 		filter,
 		schoolIds = [],
-		schoolSubscription,
 		schoolData = [],
+		purchaseData = [],
+		isLoading = true,
+		schoolSubscription,
 		classSubscription,
+		purchaseSubscription,
+		adminsDataSubscriptions,
 		classSubscriptionData;
 	userId = get(currentUser, '_id', null);
 	filter = { userId };
@@ -123,9 +135,9 @@ export default createContainer((props) => {
 			schoolSubscription = Meteor.subscribe('school.findSchoolByIds', uniq(schoolIds));
 			if (
 				schoolSubscription &&
-				schoolSubscription.ready() &&
+				classSubscription.ready() &&
 				purchaseSubscription.ready() &&
-				classSubscription.ready()
+				schoolSubscription.ready()
 			) {
 				schoolData = School.find().fetch();
 				console.log(purchaseData, classSubscriptionData, schoolData, '________________ IS LOADING FALSE NOW');

@@ -158,7 +158,10 @@ const Package = (props) => {
 				<Wrapper>
 					<ClassDetailsSection>
 						<Title>{props.packageName || props.name}</Title>
-						<ClassDetailsText>Expiration Date: {formatDate(props.endDate)}</ClassDetailsText>
+						<ClassDetailsText>
+							{props.payAsYouGo ? 'Contract active until : ' : 'Expiration Date : '}{' '}
+							{formatDate(props.endDate)}
+						</ClassDetailsText>
 					</ClassDetailsSection>
 					<RightSection>
 						<AddToCartSection>
