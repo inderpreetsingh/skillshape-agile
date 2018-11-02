@@ -16,6 +16,7 @@ const styles = {
 		color: helpers.primaryColor,
 		textTransform: 'none',
 		fontWeight: 500,
+		height: '100%',
 		marginRight: helpers.rhythmDiv,
 		'&:hover': {
 			backgroundColor: helpers.primaryColor,

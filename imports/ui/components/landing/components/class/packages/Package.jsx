@@ -6,7 +6,6 @@ import get from 'lodash/get';
 import { formatMoney, maximumClasses } from '/imports/util';
 import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
 import Cart from '/imports/ui/components/landing/components/icons/Cart.jsx';
-
 import { formatDate } from '/imports/util/formatSchedule.js';
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -170,7 +169,7 @@ const Package = (props) => {
 			</OuterWrapper>
 		);
 	}
-
+	let BB = { backgroundColor: 'black' };
 	return (
 		<OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
 			<Wrapper>
@@ -179,17 +178,17 @@ const Package = (props) => {
 
 					{props.classPackages || props.packageType == 'EP' ? (
 						<ClassDetailsText>
-							Expiration:{' '}
+							<b>Expiration:</b>{' '}
 							{props.expDuration && props.expPeriod && !props.noExpiration ? (
 								`${props.expDuration} ${props.expPeriod}`
 							) : (
 								'None'
 							)}
-						</ClassDetailsText>
+							</ClassDetailsText>
 					) : (
 						<ClassDetailsText>{getPaymentType(props.pymtType) || 'NA'}</ClassDetailsText>
 					)}
-					<ClassDetailsText>Covers: {getCovers(props.selectedClassType)}</ClassDetailsText>
+					<ClassDetailsText><b>Covers:</b> {getCovers(props.selectedClassType)}</ClassDetailsText>
 					{props.packageType == 'MP' && <ClassDetailsText>{maximumClasses(props)}</ClassDetailsText>}
 				</ClassDetailsSection>
 				<RightSection>

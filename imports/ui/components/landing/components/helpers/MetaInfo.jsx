@@ -29,7 +29,7 @@ const CapsuleText = styled.span`
 
 const MetaInfo = props => (
   <InfoCapsule {...props}>
-    <CapsuleHead>{props.title}</CapsuleHead>
+    <CapsuleHead><b>{props.title}</b></CapsuleHead>
     <CapsuleText style={{ marginLeft: "10px" }}> {props.data}</CapsuleText>
   </InfoCapsule>
 );
