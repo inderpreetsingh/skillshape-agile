@@ -1,17 +1,8 @@
 import React from "react";
-import Icon from 'material-ui/Icon';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
-import Grid from 'material-ui/Grid';
-import Add from 'material-ui-icons/Add';
-import Edit from 'material-ui-icons/Edit';
-import Button from 'material-ui/Button';
-import Delete from 'material-ui-icons/Delete';
+import PanelHeader from '../panelHeader';
+import EnrollmentFeeForm from './enrollmentFeeForm';
 import PackageList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 
-import EnrollmentFeeForm from './enrollmentFeeForm';
-import PanelHeader from '../panelHeader';
 
 export default function () {
 

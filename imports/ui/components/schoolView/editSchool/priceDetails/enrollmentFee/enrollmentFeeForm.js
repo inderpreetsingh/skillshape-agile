@@ -321,7 +321,7 @@ class EnrollmentFeeForm extends React.Component {
                     label="Cost"
                     type="number"
                     fullWidth
-                    inputProps={{ min: "0", step: "0.01" }}
+                    inputProps={{ min: "0"}}
                   />
                 </Tooltip>
               </FormControl>

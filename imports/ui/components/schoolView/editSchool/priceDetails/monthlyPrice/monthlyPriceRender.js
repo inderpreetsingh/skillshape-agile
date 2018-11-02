@@ -1,18 +1,7 @@
-import React, { Fragment } from "react";
-import Icon from 'material-ui/Icon';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
-import Grid from 'material-ui/Grid';
-import Add from 'material-ui-icons/Add';
-import Edit from 'material-ui-icons/Edit';
-import Button from 'material-ui/Button';
-import Delete from 'material-ui-icons/Delete';
-import { maximumClasses } from '/imports/util';
-import MonthlyPriceForm from './monthlyPriceForm';
+import React from "react";
 import PanelHeader from '../panelHeader';
+import MonthlyPriceForm from './monthlyPriceForm';
 import PackageList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
-import { normalizeMonthlyPricingData } from "/imports/util";
 export default function () {
 
 
@@ -44,7 +33,7 @@ export default function () {
                	}
                </Grid> */}
             <PackageList
-                monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricingData)}
+                monthlyPackagesData={monthlyPricingData}
                 currency={currency}
                 onSchoolEdit={true}
                 onEditClick={() => this.setState({ showForm: true })}
