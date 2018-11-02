@@ -153,8 +153,12 @@ const MySubscriptionRender = (props) => {
 				{!isEmpty(schoolData) &&
 					schoolData.map((school) => {
 						const subsData = getSubsDataBasedOnSchool(school._id, purchaseData);
-						const activeSubsData = subsData.filter((subs) => subs.packageStatus === 'active');
-						const inactiveSubsData = subsData.filter((subs) => subs.packageStatus !== 'active');
+						const activeSubsData = subsData.filter(
+							(subs) => subs.packageStatus !== 'expired' || subs.status !== 'expired'
+						);
+						const expiredSubsData = subsData.filter(
+							(subs) => subs.packageStatus === 'expired' || subs.status === 'expired'
+						);
 
 						console.group(' MY SUBSCRIPTION');
 						console.log(subsData, '===============');
@@ -194,6 +198,7 @@ const MySubscriptionRender = (props) => {
 										<ListWrapper>
 											<SubscriptionsList
 												active
+												subsType="mySubscriptions"
 												subsData={activeSubsData}
 												title={
 													isEmpty(activeSubsData) ? (
@@ -206,12 +211,13 @@ const MySubscriptionRender = (props) => {
 										</ListWrapper>
 										<ListWrapper>
 											<SubscriptionsList
-												subsData={inactiveSubsData}
+												subsType="mySubscriptions"
+												subsData={expiredSubsData}
 												title={
-													isEmpty(inactiveSubsData) ? (
-														'No Inactive Subscriptions'
+													isEmpty(expiredSubsData) ? (
+														'No Expired Subscriptions'
 													) : (
-														'Inactive Subscriptions'
+														'Expired Subscriptions'
 													)
 												}
 											/>

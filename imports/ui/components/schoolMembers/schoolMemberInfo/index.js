@@ -388,7 +388,9 @@ class SchoolMemberInfo extends Component {
 				)}
 				{!isEmpty(subscriptionList) &&
 				view === 'admin' &&
-				Meteor.settings.public.paymentEnabled && <SubscriptionsList subsData={subscriptionList} />}
+				Meteor.settings.public.paymentEnabled && (
+					<SubscriptionsList subsType="adminSubscriptions" subsData={subscriptionList} />
+				)}
 				{console.log(subscriptionList, '=========')
 				/*<SubscriptionBox subscriptionList={subscriptionList} />*/
 				}

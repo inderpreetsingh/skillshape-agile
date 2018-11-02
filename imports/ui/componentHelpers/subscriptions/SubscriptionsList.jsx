@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
-import moment from 'moment.js';
+import moment from 'moment';
+
 import { formatDate } from '/imports/util/formatSchedule.js';
 
 import Package from '/imports/ui/components/landing/components/class/packages/Package.jsx';
@@ -62,7 +63,7 @@ const SubscriptionDetails = styled.div`
 	}
 `;
 const SubscriptionsList = (props) => {
-	const { active, title, subsData } = props;
+	const { active, title, subsData, subsType } = props;
 	return (
 		<Wrapper active={active}>
 			<SubscriptionsTitle>{title}</SubscriptionsTitle>
@@ -70,16 +71,32 @@ const SubscriptionsList = (props) => {
 			{!isEmpty(subsData) && (
 				<AllSubscriptions>
 					{subsData.map((subs) => {
-						const startDate = formatDate(subs.startDate);
-						const endDate = formatDate(subs.endDate);
+						const startDate = moment(formatDate(subs.startDate));
+						const endDate = moment(formatDate(subs.endDate));
+						// console.log(endDate.diff(startDate, 'years'), 'expirey....');
 						if (endDate.diff(startDate, 'years') > 20) {
 							subs.expiry = 'none';
 						} else {
 							subs.expiry = true;
 						}
+
+						if (subs.packageStatus === 'expired') {
+							return (
+								<SubscriptionDetails>
+									<Package
+										forSubscription
+										opacity={0.1}
+										bgColor={helpers.primaryColor}
+										subsType={subsType}
+										{...subs}
+									/>
+								</SubscriptionDetails>
+							);
+						}
+
 						return (
 							<SubscriptionDetails>
-								<Package forMySubscriptions {...subs} />
+								<Package forSubscription opacity={1} bgColor={'white'} subsType={subsType} {...subs} />
 							</SubscriptionDetails>
 						);
 					})}
@@ -92,6 +109,7 @@ const SubscriptionsList = (props) => {
 SubscriptionsList.propTypes = {
 	title: PropTypes.string,
 	active: PropTypes.bool,
+	subsType: PropTypes.string,
 	subsData: PropTypes.object
 };
 

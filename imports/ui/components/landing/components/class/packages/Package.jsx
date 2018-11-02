@@ -3,12 +3,23 @@ import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import get from 'lodash/get';
-import { formatMoney, maximumClasses } from '/imports/util';
-import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
+
 import Cart from '/imports/ui/components/landing/components/icons/Cart.jsx';
-import { formatDate } from '/imports/util/formatSchedule.js';
+import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
+import { formatMoney, maximumClasses, capitalizeString, calcRenewalDate, formatDate } from '/imports/util';
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
+const ADMIN_SUBSCRIPTIONS = 'adminSubscriptions';
+const MY_SUBSCRIPTIONS = 'mySubscriptions';
+
+const packageStatus = {
+	active: helpers.primaryColor,
+	inactive: helpers.caution,
+	inProgress: helpers.information,
+	in_Progress: helpers.information,
+	expired: helpers.danger
+};
 
 const Wrapper = styled.div`
 	${helpers.flexCenter} justify-content: space-between;
@@ -44,8 +55,10 @@ const OuterWrapper = styled.div`
 		right: 0;
 		bottom: 0;
 		left: 0;
-		background-color: ${(props) => (props.forIframes ? props.bgColor : 'white')};
+		background-color: ${(props) => (props.forIframes || props.forSubscription ? props.bgColor : 'white')};
 		opacity: ${(props) => (props.forIframes ? 0.1 : 1)};
+		${(props) =>
+			props.forSubscription && `opacity: ${props.opacity} || 1`}; /* overriding the opacity for the subscription*/
 		border-radius: ${helpers.rhythmDiv * 6}px;
 	}
 `;
@@ -123,7 +136,7 @@ const RightSection = styled.div`${helpers.flexCenter};`;
 
 const Status = Text.extend`
 	font-weight: 500;
-	color: ${(props) => (props.packageStatus === 'active' ? helpers.primaryColor : helpers.danger)};
+	color: ${(props) => packageStatus[props.packageStatus]};
 `;
 
 function getCovers(data) {
@@ -152,20 +165,35 @@ function getPaymentType(payment) {
 }
 
 const Package = (props) => {
-	if (props.forMySubscriptions) {
+	const ourPackageStatus = props.packageStatus || props.status;
+	const getDateForSubscriptions = (props) => {
+		let stringToPrint = '';
+		if (props.subsType === ADMIN_SUBSCRIPTIONS) {
+			return (stringToPrint += `Renewal Date : ` + calcRenewalDate(props.endDate, props.packageType === 'MP', 1));
+		} else if (props.payAsYouGo) {
+			stringToPrint += `Contract active : `;
+		} else {
+			stringToPrint += 'Expiration Date : ';
+		}
+		return stringToPrint + formatDate(props.endDate);
+	};
+
+	if (props.subsType === ADMIN_SUBSCRIPTIONS || props.subsType === MY_SUBSCRIPTIONS) {
 		return (
-			<OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
+			<OuterWrapper
+				opacity={props.opacity}
+				forSubscription={props.forSubscription}
+				forIframes={props.forIframes}
+				bgColor={props.bgColor}
+			>
 				<Wrapper>
 					<ClassDetailsSection>
 						<Title>{props.packageName || props.name}</Title>
-						<ClassDetailsText>
-							{props.payAsYouGo ? 'Contract active until : ' : 'Expiration Date : '}{' '}
-							{formatDate(props.endDate)}
-						</ClassDetailsText>
+						<ClassDetailsText>{getDateForSubscriptions(props)}</ClassDetailsText>
 					</ClassDetailsSection>
 					<RightSection>
 						<AddToCartSection>
-							<Status packageStatus={props.packageStatus}>{props.packageStatus}</Status>
+							<Status packageStatus={ourPackageStatus}>{capitalizeString(ourPackageStatus)}</Status>
 						</AddToCartSection>
 					</RightSection>
 				</Wrapper>
@@ -187,11 +215,13 @@ const Package = (props) => {
 							) : (
 								'None'
 							)}
-							</ClassDetailsText>
+						</ClassDetailsText>
 					) : (
 						<ClassDetailsText>{getPaymentType(props.pymtType) || 'NA'}</ClassDetailsText>
 					)}
-					<ClassDetailsText><b>Covers:</b> {getCovers(props.selectedClassType)}</ClassDetailsText>
+					<ClassDetailsText>
+						<b>Covers:</b> {getCovers(props.selectedClassType)}
+					</ClassDetailsText>
 					{props.packageType == 'MP' && <ClassDetailsText>{maximumClasses(props)}</ClassDetailsText>}
 				</ClassDetailsSection>
 				<RightSection>
@@ -216,15 +246,26 @@ const Package = (props) => {
 											<Price>
 												{payment.cost &&
 													`${formatMoney(
-														Number.parseFloat(get(props.pymtType,'payUpFront',false) ? payment.cost*payment.month : payment.cost).toFixed(2),
+														Number.parseFloat(
+															get(props.pymtType, 'payUpFront', false)
+																? payment.cost * payment.month
+																: payment.cost
+														).toFixed(2),
 														payment.currency ? payment.currency : props.schoolCurrency
 													)}`}
 											</Price>
 											<NoOfClasses>
-												{payment.month && `${get(props.pymtType,'payUpFront',false)? '' : "per month"} for ${payment.month} ${payment.month > 1 ?'months' :' month'} ${get(props.pymtType,'payUpFront',false) ? `(${formatMoney(
-														Number.parseFloat(payment.cost).toFixed(2),
-														payment.currency ? payment.currency : props.schoolCurrency
-													)} per month)`:''}`}
+												{payment.month &&
+													`${get(props.pymtType, 'payUpFront', false)
+														? ''
+														: 'per month'} for ${payment.month} ${payment.month > 1
+														? 'months'
+														: ' month'} ${get(props.pymtType, 'payUpFront', false)
+														? `(${formatMoney(
+																Number.parseFloat(payment.cost).toFixed(2),
+																payment.currency ? payment.currency : props.schoolCurrency
+															)} per month)`
+														: ''}`}
 											</NoOfClasses>
 										</PriceSection>
 									);
