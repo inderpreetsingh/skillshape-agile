@@ -7,13 +7,16 @@ import { withStyles } from 'material-ui/styles';
 import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
+import School from '/imports/api/school/fields';
+
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import MemberActionButton from '/imports/ui/components/landing/components/buttons/MemberActionButton.jsx';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
+import { withImageExists } from '/imports/util';
 
-import School from '/imports/api/school/fields';
+import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
 
 import {
 	Heading,
@@ -24,7 +27,31 @@ import {
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-// const schoolImageExistsConfig =
+const imageExistsConfig = {
+	originalImagePath: 'src',
+	defaultImage: schoolLogo
+};
+
+const styles = {
+	expansionPanelRoot: {
+		border: 'none'
+	},
+	expansionPanelRootExpanded: {
+		border: `1px solid black`
+	},
+	expansionPanelDetails: {
+		padding: 0,
+		marginTop: helpers.rhythmDiv
+	},
+	expansionPanelSummary: {
+		margin: 0,
+		padding: helpers.rhythmDiv
+	},
+	expansionPanelSummaryContent: {
+		margin: 0,
+		justifyContent: 'space-between'
+	}
+};
 
 const Wrapper = styled.div`
 	max-width: 800px;
@@ -42,6 +69,7 @@ const ImageContainer = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
   background-position: 50% 50%;
   background-image: url('${(props) => props.src}');
+  background-size: 100px auto;
   transition: background-image 1s linear;
 `;
 
@@ -85,6 +113,17 @@ const SchoolProfile = styled.div`
 	${helpers.flexCenter}
 `;
 
+const SchoolImage = withImageExists((props) => {
+	console.group('SCHOOL IMAGE');
+	console.info(props);
+	console.groupEnd();
+	return (
+		<ProgressiveImage src={props.bgImg} placeholder={config.blurImage}>
+			{(src) => <ImageContainer src={src} />}
+		</ProgressiveImage>
+	);
+}, imageExistsConfig);
+
 const ActionButtons = (props) => (
 	<ActionButtonsWrapper>
 		<ActionButton onClick={props.handleSchoolVisit(props.schoolSlug)}>
@@ -100,27 +139,6 @@ const ActionButtons = (props) => (
 		</ActionButton>
 	</ActionButtonsWrapper>
 );
-
-const styles = {
-	expansionPanelRoot: {
-		border: 'none'
-	},
-	expansionPanelRootExpanded: {
-		border: `1px solid black`
-	},
-	expansionPanelDetails: {
-		padding: 0,
-		marginTop: helpers.rhythmDiv
-	},
-	expansionPanelSummary: {
-		margin: 0,
-		padding: helpers.rhythmDiv
-	},
-	expansionPanelSummaryContent: {
-		margin: 0,
-		justifyContent: 'space-between'
-	}
-};
 
 const MySubscriptionRender = (props) => {
 	const getSubsDataBasedOnSchool = (schoolId, purchaseData) => {
@@ -188,9 +206,7 @@ const MySubscriptionRender = (props) => {
 									expandIcon={<ExpandMoreIcon />}
 								>
 									<SchoolProfile>
-										<ProgressiveImage src={src} placeholder={config.blurImage}>
-											{(src) => <ImageContainer src={src} />}
-										</ProgressiveImage>
+										<SchoolImage src={src} />
 										<SubHeading> {schoolData.name} </SubHeading>
 									</SchoolProfile>
 
