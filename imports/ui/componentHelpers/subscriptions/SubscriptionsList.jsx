@@ -63,7 +63,7 @@ const SubscriptionDetails = styled.div`
 	}
 `;
 const SubscriptionsList = (props) => {
-	const { active, title, subsData, subsType } = props;
+	const { active, title, subsData, subsType, packageProps } = props;
 	return (
 		<Wrapper active={active}>
 			<SubscriptionsTitle>{title}</SubscriptionsTitle>
@@ -80,23 +80,9 @@ const SubscriptionsList = (props) => {
 							subs.expiry = true;
 						}
 
-						if (subs.packageStatus === 'expired') {
-							return (
-								<SubscriptionDetails>
-									<Package
-										forSubscription
-										opacity={0.1}
-										bgColor={helpers.primaryColor}
-										subsType={subsType}
-										{...subs}
-									/>
-								</SubscriptionDetails>
-							);
-						}
-
 						return (
 							<SubscriptionDetails>
-								<Package forSubscription opacity={1} bgColor={'white'} subsType={subsType} {...subs} />
+								<Package forSubscription {...packageProps} subsType={subsType} {...subs} />
 							</SubscriptionDetails>
 						);
 					})}
@@ -110,7 +96,11 @@ SubscriptionsList.propTypes = {
 	title: PropTypes.string,
 	active: PropTypes.bool,
 	subsType: PropTypes.string,
-	subsData: PropTypes.object
+	subsData: PropTypes.object,
+	packageProps: PropTypes.shape({
+		bgColor: PropTypes.string,
+		opacity: PropTypes.number
+	})
 };
 
 SubscriptionsList.defaultProps = {

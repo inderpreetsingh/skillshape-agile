@@ -58,7 +58,7 @@ const OuterWrapper = styled.div`
 		background-color: ${(props) => (props.forIframes || props.forSubscription ? props.bgColor : 'white')};
 		opacity: ${(props) => (props.forIframes ? 0.1 : 1)};
 		${(props) =>
-			props.forSubscription && `opacity: ${props.opacity} || 1`}; /* overriding the opacity for the subscription*/
+			props.forSubscription && `opacity: ${props.opacity || 1}`}; /* overriding the opacity for the subscription*/
 		border-radius: ${helpers.rhythmDiv * 6}px;
 	}
 `;

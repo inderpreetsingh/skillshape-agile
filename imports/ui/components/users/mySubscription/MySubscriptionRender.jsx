@@ -160,9 +160,9 @@ const MySubscriptionRender = (props) => {
 							(subs) => subs.packageStatus === 'expired' || subs.status === 'expired'
 						);
 
-						console.group(' MY SUBSCRIPTION');
-						console.log(subsData, '===============');
-						console.group();
+						// console.group(' MY SUBSCRIPTION');
+						// console.log(subsData, '===============');
+						// console.group();
 
 						return (
 							<ExpansionPanel
@@ -198,6 +198,10 @@ const MySubscriptionRender = (props) => {
 										<ListWrapper>
 											<SubscriptionsList
 												active
+												packageProps={{
+													bgColor: 'white',
+													opacity: 1
+												}}
 												subsType="mySubscriptions"
 												subsData={activeSubsData}
 												title={
@@ -212,6 +216,10 @@ const MySubscriptionRender = (props) => {
 										<ListWrapper>
 											<SubscriptionsList
 												subsType="mySubscriptions"
+												packageProps={{
+													bgColor: helpers.primaryColor,
+													opacity: 0.1
+												}}
 												subsData={expiredSubsData}
 												title={
 													isEmpty(expiredSubsData) ? (
