@@ -24,6 +24,8 @@ import {
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
+// const schoolImageExistsConfig =
+
 const Wrapper = styled.div`
 	max-width: 800px;
 	margin: 0 auto;
@@ -51,7 +53,10 @@ const ActionButtonsWrapper = styled.div`
 	flex-wrap: wrap;
 `;
 
-const ActionButton = styled.div`margin-right: ${helpers.rhythmDiv}px;`;
+const ActionButton = styled.div`
+	margin-right: ${helpers.rhythmDiv}px;
+	margin-bottom: ${helpers.rhythmDiv}px;
+`;
 
 const Subscriptions = styled.div`
 	display: flex;
@@ -62,7 +67,12 @@ const Subscriptions = styled.div`
 	}
 `;
 
-const ListWrapper = styled.div`width: 50%;`;
+const ListWrapper = styled.div`
+	width: 50%;
+	@media screen and (max-width: ${helpers.tablet}px) {
+		width: 100%;
+	}
+`;
 
 const PageTitle = Heading.extend`
 	font-size: ${helpers.baseFontSize * 2}px;
