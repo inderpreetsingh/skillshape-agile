@@ -159,8 +159,8 @@ const ClassTypeCardDescription = (props) => {
 							{cardRevealInfo.gender && (
 								<Text>
 									{cardRevealInfo.gender &&
-										cardRevealInfo.gender !== 'All' &&
-										`${cardRevealInfo.gender}`}
+										cardRevealInfo.gender !== 'All' && <div>
+									<b>Gender:</b>	{cardRevealInfo.gender}<Divider style={BB}/> </div>}
 								</Text>
 							)}
 							
