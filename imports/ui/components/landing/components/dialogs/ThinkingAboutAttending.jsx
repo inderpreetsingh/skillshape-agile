@@ -1,32 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import PrimaryButton from '../buttons/PrimaryButton';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
-import { MuiThemeProvider } from 'material-ui/styles';
-import IconInput from '../form/IconInput.jsx';
-import muiTheme from '../jss/muitheme.jsx';
-import { ContainerLoader } from '/imports/ui/loading/container';
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
-import PackageListingAttachment from './PackageListingAttachment';
-import { FormControl, FormControlLabel } from "material-ui/Form";
-import PackageAddNew from './PackageAddNew';
-import SchoolViewBase from '/imports/ui/components/schoolView/schoolViewBase';
 import Checkbox from "material-ui/Checkbox";
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from 'material-ui/Dialog';
-import Grid from 'material-ui/Grid';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import React from 'react';
 import styled from "styled-components";
-import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+import muiTheme from '../jss/muitheme.jsx';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { ContainerLoader } from '/imports/ui/loading/container';
+import Button from 'material-ui/Button';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -35,7 +20,6 @@ const DialogTitleWrapper = styled.div`
   width: 100%;
   font-size: 30px;
 `;
-
 
 const InputWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
@@ -52,9 +36,23 @@ const styles = {
       }
     },dialogTitle:{
         borderTop: `5px solid #4caf50`
+    },
+    StyleForButton  :{
+        fontFamily: helpers.specialFont,
+        fontSize: helpers.baseFontSize,
+        backgroundColor: '#4caf50',
+        border: '1px solid',
+        borderColor: helpers.primaryColor,
+        color: 'black',
+        textTransform: 'none',
+        fontWeight: 500,
+        height: '100%',
+        marginRight: helpers.rhythmDiv,
+        '&:hover': {
+            backgroundColor: 'white',
     }
     
-}
+}}
 const TextWrapper = styled.div`
     text-align: center;
     font-size: 15px;
@@ -124,12 +122,18 @@ class ThinkingAboutAttending extends React.Component {
                                 onClick={onModalClose}
                                 label="Not Yet, Thanks!"
                             />
-                        </ButtonWrapper>
-                        <ButtonWrapper>
-                            <FormGhostButton
+                            </ButtonWrapper>
+                            <ButtonWrapper>
+                                <Button
+                                    onClick={purchaseThisPackage}
+                                    classes={{ root: this.props.classes.StyleForButton }}
+                                >
+                                    Purchase Package Now
+		                        </Button>
+                            {/* <FormGhostButton
                                 onClick={purchaseThisPackage}
                                 label="Purchase Package Now"
-                            />
+                            /> */}
                         </ButtonWrapper>
                         <ButtonWrapper>
                             <FormGhostButton
