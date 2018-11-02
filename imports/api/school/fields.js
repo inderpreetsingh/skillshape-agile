@@ -171,7 +171,6 @@ School.friendlySlugs({
 });
 
 School.join(Meteor.users, 'admins', 'adminsData', [ 'profile' ]);
-School.join(Meteor.users, 'superAdmin', 'superAdminData', [ 'profile' ]);
 Meteor.startup(function() {
 	if (Meteor.isServer) {
 		School._ensureIndex({ name: 'text', website: 'text' });
