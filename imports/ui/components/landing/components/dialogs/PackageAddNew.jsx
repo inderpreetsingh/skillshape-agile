@@ -1,32 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { createContainer } from "meteor/react-meteor-data";
-import PrimaryButton from '../buttons/PrimaryButton';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
-import { MuiThemeProvider } from 'material-ui/styles';
-import IconInput from '../form/IconInput.jsx';
-import School from '/imports/api/school/fields.js'
-import muiTheme from '../jss/muitheme.jsx';
-import { ContainerLoader } from '/imports/ui/loading/container';
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from 'material-ui/Dialog';
-import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
-import EnrollmentFeeForm from '/imports/ui/components/schoolView/editSchool/priceDetails/enrollmentFee/enrollmentFeeForm'
-import ClassPackageForm from '/imports/ui/components/schoolView/editSchool/priceDetails/classPrice/classPriceForm'
-import MonthlyPackageForm from '/imports/ui/components/schoolView/editSchool/priceDetails/monthlyPrice/monthlyPriceForm.js'
-import Grid from 'material-ui/Grid';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import { createContainer } from "meteor/react-meteor-data";
+import React from 'react';
 import styled from "styled-components";
+import muiTheme from '../jss/muitheme.jsx';
+import School from '/imports/api/school/fields.js';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+import ClassPackageForm from '/imports/ui/components/schoolView/editSchool/priceDetails/classPrice/classPriceForm';
+import EnrollmentFeeForm from '/imports/ui/components/schoolView/editSchool/priceDetails/enrollmentFee/enrollmentFeeForm';
+import MonthlyPackageForm from '/imports/ui/components/schoolView/editSchool/priceDetails/monthlyPrice/monthlyPriceForm.js';
+import { ContainerLoader } from '/imports/ui/loading/container';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;

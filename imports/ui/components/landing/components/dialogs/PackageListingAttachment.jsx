@@ -1,40 +1,25 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
 import isEmpty from "lodash/isEmpty";
-import uniq from 'lodash/uniq'
-import PrimaryButton from '../buttons/PrimaryButton';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import MonthlyPricing from "/imports/api/monthlyPricing/fields.js";
-import EnrollmentFees from "/imports/api/enrollmentFee/fields";
-import ClassPricing from "/imports/api/classPricing/fields";
-import School from '/imports/api/school/fields.js'
+import uniq from 'lodash/uniq';
 import ClearIcon from 'material-ui-icons/Clear';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
-import { createContainer } from "meteor/react-meteor-data";
-import { MuiThemeProvider } from 'material-ui/styles';
-import IconInput from '../form/IconInput.jsx';
-import { normalizeMonthlyPricingData } from "/imports/util";
-import muiTheme from '../jss/muitheme.jsx';
-import { ContainerLoader } from '/imports/ui/loading/container';
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import Checkbox from "material-ui/Checkbox";
+import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
 import { FormControl, FormControlLabel } from "material-ui/Form";
-import Cart from "/imports/ui/components/landing/components/icons/Cart.jsx";
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from 'material-ui/Dialog';
-import { maximumClasses } from '/imports/util';
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 import Grid from 'material-ui/Grid';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import { createContainer } from "meteor/react-meteor-data";
+import React, { Fragment } from 'react';
 import styled from "styled-components";
+import muiTheme from '../jss/muitheme.jsx';
+import ClassPricing from "/imports/api/classPricing/fields";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import MonthlyPricing from "/imports/api/monthlyPricing/fields.js";
+import School from '/imports/api/school/fields.js';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import {formatMoney} from '/imports/util';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { formatMoney, maximumClasses, normalizeMonthlyPricingData } from "/imports/util";
 
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -196,6 +181,7 @@ class PackageListingAttachment extends React.Component {
     super(props);
     this.state = this.initializeFields();
   }
+  
   initializeFields = () => {
     let state = {
       packageSelect: { MP: {}, EP: {}, CP: {} },

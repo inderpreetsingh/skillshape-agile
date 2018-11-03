@@ -40,6 +40,7 @@ export default class MyCalender extends React.Component {
             clickedDate={clickedDate}
             routeName={this.props.route && this.props.route.name}
             type={this.props.type}
+            params={this.props.params}
           />
         )}
       </div>

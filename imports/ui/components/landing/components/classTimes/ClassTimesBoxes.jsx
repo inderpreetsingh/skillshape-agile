@@ -60,6 +60,7 @@ class ClassTimesBoxes extends Component {
       onModalClose,
       editMode,
       onEditClassTimesClick,
+      params
     } = this.props;
     // console.group("CLASS TIMES DATA IN BOXES");
     // console.info(classTimesData);
@@ -93,6 +94,7 @@ class ClassTimesBoxes extends Component {
             classTimesData={modifiedClassTimesData}
             classInterestData={classInterestData}
             onModalClose={onModalClose}
+            params ={params}
           />
         </BarWrapper>
       </Fragment>

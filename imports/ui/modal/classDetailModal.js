@@ -257,7 +257,7 @@ class ClassDetailModal extends React.Component {
       this.props.eventData.schoolId,
       (err, res) => {
         if(res)
-        if(get(result,'superAdmin',null) == Meteor.userId() || includes(get(result,'admins',[]),Meteor.userId())){
+        if(get(res,'superAdmin',null) == Meteor.userId() || includes(get(res,'admins',[]),Meteor.userId())){
           this.setState({ adminAccess: true });
         }
       }
@@ -459,7 +459,8 @@ class ClassDetailModal extends React.Component {
       fullScreen,
       classes,
       clickedDate,
-      classInterestData
+      classInterestData,
+      params
     } = this.props;
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(
@@ -663,6 +664,7 @@ class ClassDetailModal extends React.Component {
                         classTimesData={[classTypeData]}
                         classInterestData={classInterestData}
                         onModalClose ={()=>{this.props.closeEventModal(false, null)}}
+                        params= {params}
                       />
                     </div>
                   </div>
@@ -818,6 +820,7 @@ class ClassDetailModal extends React.Component {
                         classTimesData={allFormattedClassTimeDetails}
                         classInterestData={classInterestData}
                         onModalClose ={()=>{this.props.closeEventModal(false, null)}}
+                        params= {params}
                       />
                     </div>
                   </div>

@@ -11,6 +11,7 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from '/imports/ui/loading/container';
+import ClassTypePackages from './classTypePackages.jsx';
 import Button from 'material-ui/Button';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -68,13 +69,14 @@ class ThinkingAboutAttending extends React.Component {
     constructor(props) {
         super(props);
         const {addToCalendar,notification}= this.props;
-        this.state = { checkBoxes:[true,true,true] }
+        this.state = { checkBoxes:[true,true,true],classTypePackages:false }
     }
     
     render() {
-        const {checkBoxes}=this.state;
+        const {checkBoxes,classTypePackages}=this.state;
         const { open,onModalClose,addToCalendar,
-            handleClassClosed,handleCheckBoxes,purchaseThisPackage ,name} = this.props;
+            handleClassClosed,handleCheckBoxes,purchaseThisPackage ,name,schoolId,params,classTypeId} = this.props;
+            console.log('TCL: ThinkingAboutAttending -> render -> this.props', this.props);
             return (
                 <MuiThemeProvider theme={muiTheme}>
                 <Dialog
@@ -85,6 +87,13 @@ class ThinkingAboutAttending extends React.Component {
                     aria-labelledby="Thinking About Attending"
                     >
                     {this.props.isLoading && <ContainerLoader />}
+                    {classTypePackages && <ClassTypePackages 
+                    schoolId = {schoolId}
+                    open={classTypePackages}
+                    onClose={()=>{this.setState({classTypePackages:false})}}
+                    params= {params}
+                    classTypeId = {classTypeId}
+                    />}
                     <DialogTitle  classes={{ root: this.props.classes.dialogTitle }}>
                         <DialogTitleWrapper>
                         About Attending {name && name}
@@ -125,7 +134,7 @@ class ThinkingAboutAttending extends React.Component {
                             </ButtonWrapper>
                             <ButtonWrapper>
                                 <Button
-                                    onClick={purchaseThisPackage}
+                                    onClick={()=>{this.setState({classTypePackages:true})}}
                                     classes={{ root: this.props.classes.StyleForButton }}
                                 >
                                     Purchase Package Now

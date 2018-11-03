@@ -1,29 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import PrimaryButton from '../buttons/PrimaryButton';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
-import { MuiThemeProvider } from 'material-ui/styles';
-import IconInput from '../form/IconInput.jsx';
-import muiTheme from '../jss/muitheme.jsx';
-import { ContainerLoader } from '/imports/ui/loading/container';
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
-import PackageListingAttachment from './PackageListingAttachment';
-import PackageAddNew from './PackageAddNew';
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from 'material-ui/Dialog';
-import Grid from 'material-ui/Grid';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import React from 'react';
 import styled from "styled-components";
-import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+import muiTheme from '../jss/muitheme.jsx';
+import PackageAddNew from './PackageAddNew';
+import PackageListingAttachment from './PackageListingAttachment';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { ContainerLoader } from '/imports/ui/loading/container';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;

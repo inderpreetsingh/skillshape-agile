@@ -634,6 +634,9 @@ class ClassTime extends Component {
       editMode,
       classTimeData,
       onEditClassTimesClick,
+      schoolId,
+      params,
+      classTypeId
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     const {
@@ -666,6 +669,7 @@ class ClassTime extends Component {
             {thinkingAboutAttending &&
               !editMode && (
                 <ThinkingAboutAttending
+                  schoolId = {schoolId}
                   open={thinkingAboutAttending}
                   onModalClose={() => {
                     this.setState({ thinkingAboutAttending: false });
@@ -685,7 +689,9 @@ class ClassTime extends Component {
                     onModalClose();
                   }}
                   handleCheckBoxes={this.handleCheckBoxes}
-                  name={name}
+                  name= {name}
+                  params = {params}
+                  classTypeId = {classTypeId}
                 />
               )}
             <div>
