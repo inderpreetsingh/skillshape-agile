@@ -18,7 +18,7 @@ class FullCalendar extends React.Component {
         right: "month,week,listWeek"
         // right: "month,agendaWeek,agendaDay,listWeek"
       },
-      defaultView: $(window).width() < 765 ? "listWeek" : "week",
+      defaultView: $(window).width() < 500 ? "listWeek" : "week",
       views: {
         week: {
           type: "basic",
