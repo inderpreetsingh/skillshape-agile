@@ -400,7 +400,8 @@ class ClassTimesDialogBox extends React.Component {
       ageMin,
       ageMax,
       _id,
-      schoolId
+      schoolId,
+      params
     } = this.props;
     {
     }
@@ -563,6 +564,7 @@ class ClassTimesDialogBox extends React.Component {
                     classTimesData={classTimesData}
                     classInterestData={classInterestData}
                     onModalClose={onModalClose}
+                    params= {params}
                   />
                 </ContentWrapper>
               )}

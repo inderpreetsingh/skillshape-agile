@@ -163,7 +163,7 @@ class CardsList extends Component {
 
 	render() {
 		const { title, cardsData, mapView, handleSeeMore, name, classInterestData, filters } = this.props;
-		let { reviewsData } = this.props;
+		let { reviewsData,params } = this.props;
 		// debugger;
 		return (
 			<CardsListWrapper>
@@ -189,6 +189,7 @@ class CardsList extends Component {
 										{...card}
 										classInterestData={classInterestData}
 										hideClassTypeOptions={this.props.hideClassTypeOptions}
+										params = {params}
 									/>
 								</GridItem>
 							);

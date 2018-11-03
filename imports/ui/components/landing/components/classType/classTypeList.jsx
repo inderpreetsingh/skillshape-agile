@@ -218,7 +218,8 @@ class ClassTypeList extends Component {
 			splitByCategory,
 			filters,
 			isLoading,
-			classTimesData
+			classTimesData,
+			params
 		} = this.props;
 		return (
 			<MainContentWrapper>
@@ -247,6 +248,7 @@ class ClassTypeList extends Component {
 										hideClassTypeOptions={this.props.hideClassTypeOptions}
 										landingPage={this.props.landingPage}
 										classTypeData={classTypeData}
+										params = {params}
 									/>
 
 									{/*Hack to get rid of this on school type page*/
@@ -282,6 +284,7 @@ class ClassTypeList extends Component {
 								hideClassTypeOptions={this.props.hideClassTypeOptions}
 								landingPage={this.props.landingPage}
 								classTypeData={classTypeData}
+								params = {params}
 							/>
 						)}
 

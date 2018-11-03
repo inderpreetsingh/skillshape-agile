@@ -210,7 +210,8 @@ export default function() {
         classes,
         enrollmentFee,
         showLoading,
-        currency
+        currency,
+        params
     } = this.props;
 
     const {
@@ -331,6 +332,7 @@ export default function() {
               classTypeBySchool='classTypeBySchool'
               handleSeeMore={this.handleSeeMore}
               schoolView={true}
+              params = {params}
             />
         </ClassTypeListWrapper>
 

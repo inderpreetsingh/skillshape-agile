@@ -129,7 +129,8 @@ class ClassTypeCard extends Component {
 			hideClassTypeOptions,
 			bgImg,
 			editMode,
-			onEditClassTypeClick
+			onEditClassTypeClick,
+			params
 		} = this.props;
 		const cardRevealData = {
 			_id: _id,
@@ -171,6 +172,7 @@ class ClassTypeCard extends Component {
 						x={this.state.x}
 						y={this.state.y}
 						{...this.props}
+						params= {params}
 					/>
 				)}
 				{this.state.manageRequestsDialog && (
