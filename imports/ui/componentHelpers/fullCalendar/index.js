@@ -36,8 +36,9 @@ class FullCalendar extends React.Component {
       navLinks: false, // can click day/week names to navigate views
       editable: false,
       eventLimit: false,
+      disableResizing:true,
       windowResize: view => {
-        if ($(window).width() < 765) {
+        if ($(window).width() < 500) {
           $("#fullcalendar-container").fullCalendar("changeView", "listWeek");
         } else {
           $("#fullcalendar-container").fullCalendar("changeView", "week");
