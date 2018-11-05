@@ -33,7 +33,7 @@ const styles = {
     dialogActionsRoot: {
       [`@media screen and (max-width: ${mobile}px)`]: {
         flexWrap: "wrap",
-        justifyContent: "flex-start"
+        justifyContent: "center"
       }
     },dialogTitle:{
         borderTop: `5px solid #4caf50`
