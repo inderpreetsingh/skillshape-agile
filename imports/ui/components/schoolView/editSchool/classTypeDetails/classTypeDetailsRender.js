@@ -1,9 +1,6 @@
 import React from "react";
-import PanelWithTable from "/imports/ui/componentHelpers/panelWithTable";
-import classTypeSettings from "./classTypeSettings";
-import isEmpty from "lodash/isEmpty";
-
 import ClassTypeExpansion from "./classTypeExpansion.jsx";
+
 
 export default function() {
   let {

@@ -63,7 +63,7 @@ const styles = theme => {
      dialogActionsRoot: {
        [`@media screen and (max-width: ${mobile}px)`]: {
          flexWrap: "wrap",
-         justifyContent: "flex-start"
+         justifyContent: "center"
        }
      }
   };

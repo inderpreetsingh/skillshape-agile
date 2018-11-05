@@ -11,7 +11,7 @@ import { withPopUp } from "/imports/util";
 class ClassTypeDetails extends React.Component {
   constructor(props) {
     super(props);
-    debugger;
+   
     this.state = {
       file: null
     };
