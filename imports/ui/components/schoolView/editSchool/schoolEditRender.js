@@ -11,10 +11,10 @@ import PriceDetails from "./priceDetails";
 // import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 //tab details import over here
 import SchoolDetails from "./schoolDetails";
+import SchoolMemberView from "/imports/ui/components/schoolMembers";
 import { Loading } from "/imports/ui/loading";
 import { FormBuilderModal } from "/imports/ui/modal";
 import ResponsiveTabs from "/imports/util/responsiveTabs";
-
 
 export default function (props) {
   const { selecetdView, formBuilderModal } = this.state;
@@ -134,12 +134,22 @@ export default function (props) {
               )}
               {
                 this.state.tabValue === 6 &&(
-                  browserHistory.push(`/schools/${slug}/members`)
+                  <SchoolMemberView
+                  slug = {slug}
+                  currentUser = {currentUser}
+                  isUserSubsReady = {isUserSubsReady}
+                  admin = {false}
+                  />
                 )
               }
               {
                 this.state.tabValue === 7 &&(
-                  browserHistory.push(`/schools/${slug}/members?admin=true`)
+                  <SchoolMemberView
+                  slug = {slug}
+                  currentUser = {currentUser}
+                  isUserSubsReady = {isUserSubsReady}
+                  admin = {true}
+                  />
                 )
               }
                {

@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
-import DocumentTitle from 'react-document-title';
+import get from 'lodash/get';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
-import debounce from 'lodash/debounce';
-
+import React, { Component } from 'react';
+import DocumentTitle from 'react-document-title';
 import DashBoardView from './dashboard';
-import SchoolMemberFilter from "./filter";
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 
 class SchoolMemberView extends Component {
@@ -18,8 +16,8 @@ class SchoolMemberView extends Component {
     }
 
     render() {
-        let { currentUser, isUserSubsReady } = this.props;
-        let { slug } = this.props.params;
+        let { currentUser, isUserSubsReady,admin } = this.props;
+        let  slug  = get(this.props.params,'slug',this.props.slug);
         let filters = {...this.state.filters};
 
         if(!isUserSubsReady)
@@ -36,12 +34,14 @@ class SchoolMemberView extends Component {
         }
 
         return(
-            <DocumentTitle title={this.props.route.name}>
+            <DocumentTitle title={get(this.props.route,'name','Member Listing')}>
                 <Grid container className="containerDiv" style={{position:'relative',backgroundColor: '#fff'}}>
                     <DashBoardView
                         filters={filters}
                         params={this.props.params}
                         location={this.props.location}
+                        slug = {slug}
+                        admin = {admin}
                     />
                 </Grid>
             </DocumentTitle>

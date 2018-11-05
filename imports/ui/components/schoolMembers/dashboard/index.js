@@ -1,56 +1,51 @@
-import React, { Fragment } from "react";
-import Grid from "material-ui/Grid";
-import styled from "styled-components";
-import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
-import { createContainer } from "meteor/react-meteor-data";
-import Multiselect from "react-widgets/lib/Multiselect";
-import { withStyles } from "material-ui/styles";
-import Typography from "material-ui/Typography";
-import Select from "material-ui/Select";
-import Input, { InputLabel } from "material-ui/Input";
-import { FormControl, FormControlLabel } from "material-ui/Form";
-import { MenuItem } from "material-ui/Menu";
-import { PackageDetailsTable } from "./packageDetailsTable";
-import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
-import { TableRow, TableCell } from "material-ui/Table";
-import List from "material-ui/List";
-import Hidden from "material-ui/Hidden";
-import get from 'lodash/get';
+import concat from 'lodash/concat';
 import find from "lodash/find";
-import Drawer from "material-ui/Drawer";
-import AppBar from "material-ui/AppBar";
+import findIndex from 'lodash/findIndex';
+import get from 'lodash/get';
+import groupBy from 'lodash/groupBy';
+import includes from 'lodash/includes';
 import isEmpty from "lodash/isEmpty";
 import remove from 'lodash/remove';
-import findIndex from 'lodash/findIndex';
-import IconButton from "material-ui/IconButton";
-import Toolbar from "material-ui/Toolbar";
 import MenuIcon from "material-ui-icons/Menu";
-import ClassType from "/imports/api/classType/fields";
-import School from "/imports/api/school/fields";
-import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import AppBar from "material-ui/AppBar";
+import Button from "material-ui/Button";
 import Checkbox from "material-ui/Checkbox";
-import { dateFriendly } from "/imports/util";
-import { phoneRegex } from "/imports/util";
-import SchoolMemberListItems from "/imports/ui/components/schoolMembers/schoolMemberList/index.js";
-import SchoolAdminListItems from '/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js'
+import Drawer from "material-ui/Drawer";
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import Grid from "material-ui/Grid";
+import Hidden from "material-ui/Hidden";
+import IconButton from "material-ui/IconButton";
+import Input, { InputLabel } from "material-ui/Input";
+import List from "material-ui/List";
+import { MenuItem } from "material-ui/Menu";
+import Select from "material-ui/Select";
+import { withStyles } from "material-ui/styles";
+import TextField from "material-ui/TextField";
+import Toolbar from "material-ui/Toolbar";
+import Typography from "material-ui/Typography";
+import { createContainer } from "meteor/react-meteor-data";
+import React, { Fragment } from "react";
+import Multiselect from "react-widgets/lib/Multiselect";
+import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
 import SchoolMemberInfo from "../schoolMemberInfo";
-import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
-import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import ClassPricing from "/imports/api/classPricing/fields";
+import ClassSubscription from "/imports/api/classSubscription/fields";
+import ClassType from "/imports/api/classType/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import Purchases from "/imports/api/purchases/fields";
-import ClassSubscription from "/imports/api/classSubscription/fields";
-import concat from 'lodash/concat';
-import groupBy from 'lodash/groupBy';
-import includes from 'lodash/includes';
+import School from "/imports/api/school/fields";
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
+import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
+import SchoolMemberListItems from "/imports/ui/components/schoolMembers/schoolMemberList/index.js";
+import SchoolAdminListItems from '/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js';
+import { ContainerLoader } from "/imports/ui/loading/container.js";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 const drawerWidth = 400;
 const style = {
   w211: {
@@ -332,10 +327,7 @@ class DashBoardView extends React.Component {
           <PrimaryButton
             formId="addUser"
             type="submit"
-            label={`Add a New ${!adminView?"Member":'Admin'}`}
-          />
-          <PrimaryButton
-            formId="cancelUser"
+            label={`Add a New ${!adminView?"Member":'Admin'}`} /> <PrimaryButton formId="cancelUser"
             label="Cancel"
             onClick={() =>
               this.setState({ renderStudentModal: false, error: false })
@@ -633,7 +625,6 @@ class DashBoardView extends React.Component {
 
     const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, adminView, adminsData, superAdminId } = this.props;
     const { renderStudentModal, memberInfo, joinSkillShape,isLoading} = this.state;
-
     let schoolMemberListFilters = { ...this.state.filters };
     if (slug) {
       schoolMemberListFilters.schoolId =
@@ -808,7 +799,7 @@ class DashBoardView extends React.Component {
                 handleInput={this.handleInput}
                 saveAdminNotesInMembers={this.saveAdminNotesInMembers}
                 disabled={slug ? false : true}
-                view={slug ? "admin" : "classmates"}
+                view={adminView ? "admin" : "classmates"}
                 classTypeData={get(this.props, "classTypeData", [])}
                 handleMemberDetailsToRightPanel={
                   this.handleMemberDetailsToRightPanel
@@ -909,8 +900,8 @@ class DashBoardView extends React.Component {
 }
 
 export default createContainer(props => {
-  let { slug } = props.params;
-  let { query } = props.location;
+  let  slug  = get(props.params,'slug',props.slug);
+  let  query  = {admin:props.admin};
   let schoolData = [];
   let isLoading = true;
   let classTypeData = [];
@@ -972,7 +963,7 @@ export default createContainer(props => {
       if(includes(adminsIds,Meteor.userId())){
         schoolAdmin = true;
       }
-      if (schoolAdmin && query.admin == 'true') {
+      if (schoolAdmin && query.admin ) {
         Meteor.subscribe("user.findAdminsDetails", adminsIds)
         adminsData = Meteor.users.find().fetch();
         adminView = true;
@@ -983,7 +974,6 @@ export default createContainer(props => {
       }
     }
   }
-  
   return {
     ...props,
     schoolData,
@@ -995,9 +985,9 @@ export default createContainer(props => {
     enrollmentFee,
     monthlyPricing,
     adminsIds,
-   adminView,
-   adminsData,
-   purchaseByUserId,
-   superAdminId
+    adminView,
+    adminsData,
+    purchaseByUserId,
+    superAdminId
   };
 }, withStyles(styles, { withTheme: true })(DashBoardView));
