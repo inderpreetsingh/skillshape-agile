@@ -76,7 +76,6 @@ class ThinkingAboutAttending extends React.Component {
         const {checkBoxes,classTypePackages}=this.state;
         const { open,onModalClose,addToCalendar,
             handleClassClosed,handleCheckBoxes,purchaseThisPackage ,name,schoolId,params,classTypeId} = this.props;
-            console.log('TCL: ThinkingAboutAttending -> render -> this.props', this.props);
             return (
                 <MuiThemeProvider theme={muiTheme}>
                 <Dialog

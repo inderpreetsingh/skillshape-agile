@@ -74,6 +74,7 @@ class SchoolClassTypeView extends React.Component {
           schoolView={true}
           hideClassTypeOptions={this.props.route.name == "EmbedClassTypeView"}
           classTimesData={this.props.classTimesData}
+          params = {this.props.params}
         />
       </div>
     );
