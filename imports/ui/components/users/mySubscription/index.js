@@ -26,32 +26,33 @@ class MySubscription extends React.Component {
 		this.state = {};
 	}
 
-	_getContactNumbers = (data) => {
-		console.info('data for phones', data);
-		return (data.phone && data.phone.split(/[\|\,\\]/)) || 9999999999;
+	getContactNumbers = (data) => {
+		// console.info('data for phones', data);
+		return (data.phone && data.phone.split(/[\|\,\\]/));
 	};
 
-	_getOurEmail = (data) => {
-		return data.email || 'info@skillshape.com';
+	getOurEmail = (data) => {
+		return data.email;
 	};
 
-	handleCall = (data) => () => {
-		console.info('data.....', data);
+	handleCall = (phone) => () => {
+		// console.info('data.....', data);
 		this.setState((state) => {
 			return {
 				...state,
 				callUsDialog: true,
-				phone: this._getContactNumbers(data)
+				phone,
 			};
 		});
 	};
 
-	handleEmail = (data) => () => {
+	handleEmail = (email, schoolData) => () => {
 		this.setState((state) => {
 			return {
 				...state,
+				selectedSchool: schoolData,
+				email,
 				emailUsDialog: true,
-				email: this._getOurEmail(data)
 			};
 		});
 	};
@@ -70,7 +71,7 @@ class MySubscription extends React.Component {
 	};
 
 	render() {
-		const { callUsDialog, phone, emailUsDialog, email } = this.state;
+		const { callUsDialog, phone, emailUsDialog, email, selectedSchool } = this.state;
 		const { isLoading, schoolData, purchaseData } = this.props;
 		// console.group('My Subscriptions');
 		// console.log(schoolData, purchaseData, isLoading);
@@ -84,8 +85,11 @@ class MySubscription extends React.Component {
 			<Wrapper>
 				{/*<SchoolBox schoolData={schoolData} purchaseData={purchaseData} />*/}
 				<MySubscriptionRender
+					getContactNumbers={this.getContactNumbers}
+					getOurEmail={this.getOurEmail}
 					email={email}
 					phone={phone}
+					selectedSchool={selectedSchool}
 					schoolData={schoolData}
 					purchaseData={purchaseData}
 					callUsDialog={callUsDialog}

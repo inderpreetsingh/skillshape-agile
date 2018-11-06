@@ -78,6 +78,7 @@ const ActionButtonsWrapper = styled.div`
 	bottom: ${helpers.rhythmDiv * 2}px;
 	padding: ${helpers.rhythmDiv}px;
 	right: auto;
+	margin-left: ${helpers.rhythmDiv}px;
 	flex-wrap: wrap;
 `;
 
@@ -114,9 +115,9 @@ const SchoolProfile = styled.div`
 `;
 
 const SchoolImage = withImageExists((props) => {
-	console.group('SCHOOL IMAGE');
-	console.info(props);
-	console.groupEnd();
+	// console.group('SCHOOL IMAGE');
+	// console.info(props);
+	// console.groupEnd();
 	return (
 		<ProgressiveImage src={props.bgImg} placeholder={config.blurImage}>
 			{(src) => <ImageContainer src={src} />}
@@ -130,13 +131,13 @@ const ActionButtons = (props) => (
 			<FormGhostButton icon iconName="school" label="Visit School" />
 		</ActionButton>
 
-		<ActionButton onClick={props.handleCall(props.data)}>
+		{props.phone && props.phone.length && <ActionButton onClick={props.handleCall(props.phone)}>
 			<FormGhostButton icon iconName="phone" label="Call" />
-		</ActionButton>
+		</ActionButton>}
 
-		<ActionButton onClick={props.handleEmail(props.data)}>
+		{props.email && <ActionButton onClick={props.handleEmail(props.email, props.data)}>
 			<FormGhostButton icon iconName="email" label="Email" noMarginBottom />
-		</ActionButton>
+		</ActionButton>}
 	</ActionButtonsWrapper>
 );
 
@@ -147,6 +148,7 @@ const MySubscriptionRender = (props) => {
 
 	const {
 		src,
+		email,
 		phone,
 		classes,
 		schoolData,
@@ -155,6 +157,9 @@ const MySubscriptionRender = (props) => {
 		emailUsDialog,
 		handleCall,
 		handleEmail,
+		getOurEmail,
+		selectedSchool,
+		getContactNumbers,
 		handleModelState,
 		handleSchoolVisit
 	} = props;
@@ -163,7 +168,7 @@ const MySubscriptionRender = (props) => {
 		<Fragment>
 			{callUsDialog && (
 				<CallUsDialogBox
-					contactNumbers={[ phone ]}
+					contactNumbers={[phone]}
 					open={callUsDialog}
 					onModalClose={handleModelState('callUsDialog', false)}
 				/>
@@ -171,7 +176,7 @@ const MySubscriptionRender = (props) => {
 			{emailUsDialog && (
 				<EmailUsDialogBox
 					ourEmail={email}
-					schoolData={schoolData}
+					schoolData={selectedSchool}
 					open={emailUsDialog}
 					onModalClose={handleModelState('emailUsDialog', false)}
 				/>
@@ -207,11 +212,13 @@ const MySubscriptionRender = (props) => {
 								>
 									<SchoolProfile>
 										<SchoolImage src={src} />
-										<SubHeading> {schoolData.name} </SubHeading>
+										<SubHeading> {school.name} </SubHeading>
 									</SchoolProfile>
 
 									<ActionButtons
 										data={school}
+										email={getOurEmail(school)}
+										phone={getContactNumbers(school)}
 										schoolSlug={school.slug}
 										handleCall={props.handleCall}
 										handleEmail={props.handleEmail}
@@ -228,20 +235,22 @@ const MySubscriptionRender = (props) => {
 													bgColor: 'white',
 													opacity: 1
 												}}
+												maxListHeight={300}
 												subsType="mySubscriptions"
 												subsData={activeSubsData}
 												title={
 													isEmpty(activeSubsData) ? (
 														'No Active Subscriptions'
 													) : (
-														'Active Subscriptions'
-													)
+															'Active Subscriptions'
+														)
 												}
 											/>
 										</ListWrapper>
 										<ListWrapper>
 											<SubscriptionsList
 												subsType="mySubscriptions"
+												maxListHeight={300}
 												packageProps={{
 													bgColor: helpers.primaryColor,
 													opacity: 0.1
@@ -251,8 +260,8 @@ const MySubscriptionRender = (props) => {
 													isEmpty(expiredSubsData) ? (
 														'No Expired Subscriptions'
 													) : (
-														'Expired Subscriptions'
-													)
+															'Expired Subscriptions'
+														)
 												}
 											/>
 										</ListWrapper>
@@ -262,7 +271,7 @@ const MySubscriptionRender = (props) => {
 						);
 					})}
 
-				{!isEmpty(purchaseData) && purchaseData.map((sbsData) => {})}
+				{!isEmpty(purchaseData) && purchaseData.map((sbsData) => { })}
 			</Wrapper>
 		</Fragment>
 	);

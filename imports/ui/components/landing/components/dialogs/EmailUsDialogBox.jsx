@@ -12,12 +12,6 @@ import muiTheme from "../jss/muitheme.jsx";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { withPopUp } from "/imports/util";
 
-
-
-
-
-
-
 const styles = theme => {
   return {
     dialogTitleRoot: {
@@ -167,8 +161,7 @@ class EmailUsDialogBox extends Component {
   handleFormSubmit = e => {
     e.preventDefault();
 
-    const { subject, message } = this.state;
-    const name = this.state.name;
+    const { subject, message, name } = this.state;
     const { popUp, schoolData } = this.props;
 
     let yourEmail = "";
@@ -182,7 +175,7 @@ class EmailUsDialogBox extends Component {
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     if (this.state.readyToSumit) {
       if (!emailReg.test(yourEmail) && !Meteor.user()) {
-        toastr.appear("alert",{content: "Please enter valid email address"});
+        toastr.appear("alert", { content: "Please enter valid email address" });
         return false;
       } else {
         // Start loading
@@ -304,13 +297,13 @@ class EmailUsDialogBox extends Component {
                     onClick={this.handleFormSubmit}
                   />
                 ) : (
-                  <button
-                    className="cancel-button full-width increase-height"
-                    disabled
-                  >
-                    Send Message
+                    <button
+                      className="cancel-button full-width increase-height"
+                      disabled
+                    >
+                      Send Message
                   </button>
-                )}
+                  )}
               </ButtonWrapper>
             </form>
           </DialogContent>
