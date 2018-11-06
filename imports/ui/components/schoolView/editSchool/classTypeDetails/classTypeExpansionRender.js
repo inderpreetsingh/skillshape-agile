@@ -94,111 +94,119 @@ const styles = {
 	}
 };
 
-const ClassTypeExpansionRender = (props) => {
-	const {
-		getClassTimesData,
-		onAddClassTypeClick,
-		onEditClassTypeClick,
-		onEditClassTimesClick,
-		onNotifyClassTypeUpdate,
-		classTypeData,
-		classes: { expansionPanelDetails, expansionPanelRoot, paperRoot, barIcon }
-	} = props;
+class ClassTypeExpansionRender extends React.Component {
+	componentDidMount() {
+		console.log("CLASS TYPE EXPANSION RENDERED>............");
+	}
+	componentDidUpdate() {
+		console.log("CLASSTYPE EXPANSION UPDATING>....")
+	}
+	render() {
+		const {
+			getClassTimesData,
+			onAddClassTypeClick,
+			onEditClassTypeClick,
+			onEditClassTimesClick,
+			onNotifyClassTypeUpdate,
+			classTypeData,
+			classes: { expansionPanelDetails, expansionPanelRoot, paperRoot, barIcon }
+		} = this.props;
 
-	return (
-		<Fragment>
-			<Paper className={paperRoot} elevation={1}>
-				<PaperInner>
-					<IconWrapper>
-						<Icon className={barIcon}>{'class'}</Icon>
-						<Text marginBottom="0" color="white">
-							ClassType
+		return (
+			<Fragment>
+				<Paper className={paperRoot} elevation={1}>
+					<PaperInner>
+						<IconWrapper>
+							<Icon className={barIcon}>{'class'}</Icon>
+							<Text marginBottom="0" color="white">
+								ClassType
 						</Text>
-					</IconWrapper>
-					<ToggleVisibility hideOnSmall>
+						</IconWrapper>
+						<ToggleVisibility hideOnSmall>
+							<TextWrapper>
+								<Text color="white">
+									Class Types are a group of one or more Class Times where similar or related material is
+									taught to students, possibly grouped by age, skill level, or gender. If you separate
+									classes by age, gender, skill level or material, separate Class Types should be created.
+							</Text>
+							</TextWrapper>
+						</ToggleVisibility>
+						<TopBarButton>
+							<FormGhostButton whiteColor label={'Add Class Type'} onClick={onAddClassTypeClick} />
+						</TopBarButton>
+					</PaperInner>
+					<ToggleVisibility>
 						<TextWrapper>
 							<Text color="white">
 								Class Types are a group of one or more Class Times where similar or related material is
-								taught to students, possibly grouped by age, skill level, or gender. If you separate
-								classes by age, gender, skill level or material, separate Class Types should be created.
-							</Text>
+								taught to students, possibly grouped by age, skill level, or gender. If you separate classes
+								by age, gender, skill level or material, separate Class Types should be created.
+						</Text>
 						</TextWrapper>
 					</ToggleVisibility>
-					<TopBarButton>
-						<FormGhostButton whiteColor label={'Add Class Type'} onClick={onAddClassTypeClick} />
-					</TopBarButton>
-				</PaperInner>
-				<ToggleVisibility>
-					<TextWrapper>
-						<Text color="white">
-							Class Types are a group of one or more Class Times where similar or related material is
-							taught to students, possibly grouped by age, skill level, or gender. If you separate classes
-							by age, gender, skill level or material, separate Class Types should be created.
-						</Text>
-					</TextWrapper>
-				</ToggleVisibility>
-			</Paper>
-			<ExpansionsWrapper>
-				{classTypeData.map((cardData) => (
-					<ExpansionPanel className={expansionPanelRoot}>
-						<ExpansionPanelSummary expandIcon={<Icon>{'expand_more'}</Icon>}>
-							<Typography>{cardData.name}</Typography>
-						</ExpansionPanelSummary>
-						<ExpansionPanelDetails className={expansionPanelDetails}>
-							<CardsWrapper>
-								<GridMaxWidthWrapper>
-									<GridContainer>
-										<GridItem spacing={SPACING} cardWidth={CARD_WIDTH}>
-											<ClassTypeCard
-												editMode
-												{...cardData}
-												onEditClassTypeClick={onEditClassTypeClick(cardData)}
-											/>
-										</GridItem>
-										{getClassTimesData(cardData._id).map((classTimeObj) => (
-											<GridItem
-												key={classTimeObj._id}
-												spacing={SPACING}
-												cardWidth={CARD_WIDTH}
-												inPopUp={false}
-											>
-												<ClassTimeCard
-													{...classTimeObj}
-													onEditClassTimesClick={onEditClassTimesClick(cardData)}
+				</Paper>
+				<ExpansionsWrapper>
+					{classTypeData && classTypeData.map((cardData) => (
+						<ExpansionPanel className={expansionPanelRoot}>
+							<ExpansionPanelSummary expandIcon={<Icon>{'expand_more'}</Icon>}>
+								<Typography>{cardData.name}</Typography>
+							</ExpansionPanelSummary>
+							<ExpansionPanelDetails className={expansionPanelDetails}>
+								<CardsWrapper>
+									<GridMaxWidthWrapper>
+										<GridContainer>
+											<GridItem spacing={SPACING} cardWidth={CARD_WIDTH}>
+												<ClassTypeCard
 													editMode
-													inPopUp={false}
-													classTimeData={classTimeObj}
+													{...cardData}
+													onEditClassTypeClick={onEditClassTypeClick(cardData)}
 												/>
 											</GridItem>
-										))}
-										<GridItem spacing={SPACING} cardWidth={CARD_WIDTH}>
-											<OutLinedCard
-												content="Inform enrolled or interested students for changes in this class. Please do not abuse these buttons."
-												button1Icon={'location_on'}
-												button1Label="Notify location changes"
-												onButton1Click={onNotifyClassTypeUpdate(
-													cardData,
-													'classType.notifyToStudentForLocation',
-													'Class Location'
-												)}
-												button2Icon={'class'}
-												button2Label="Notify time changes"
-												onButton2Click={onNotifyClassTypeUpdate(
-													cardData,
-													'classType.notifyToStudentForClassTimes',
-													'Class Times'
-												)}
-											/>
-										</GridItem>
-									</GridContainer>
-								</GridMaxWidthWrapper>
-							</CardsWrapper>
-						</ExpansionPanelDetails>
-					</ExpansionPanel>
-				))}
-			</ExpansionsWrapper>
-		</Fragment>
-	);
+											{getClassTimesData(cardData._id).map((classTimeObj) => (
+												<GridItem
+													key={classTimeObj._id}
+													spacing={SPACING}
+													cardWidth={CARD_WIDTH}
+													inPopUp={false}
+												>
+													<ClassTimeCard
+														{...classTimeObj}
+														onEditClassTimesClick={onEditClassTimesClick(cardData)}
+														editMode
+														inPopUp={false}
+														classTimeData={classTimeObj}
+													/>
+												</GridItem>
+											))}
+											<GridItem spacing={SPACING} cardWidth={CARD_WIDTH}>
+												<OutLinedCard
+													content="Inform enrolled or interested students for changes in this class. Please do not abuse these buttons."
+													button1Icon={'location_on'}
+													button1Label="Notify location changes"
+													onButton1Click={onNotifyClassTypeUpdate(
+														cardData,
+														'classType.notifyToStudentForLocation',
+														'Class Location'
+													)}
+													button2Icon={'class'}
+													button2Label="Notify time changes"
+													onButton2Click={onNotifyClassTypeUpdate(
+														cardData,
+														'classType.notifyToStudentForClassTimes',
+														'Class Times'
+													)}
+												/>
+											</GridItem>
+										</GridContainer>
+									</GridMaxWidthWrapper>
+								</CardsWrapper>
+							</ExpansionPanelDetails>
+						</ExpansionPanel>
+					))}
+				</ExpansionsWrapper>
+			</Fragment>
+		);
+	}
 };
 
 export default withStyles(styles)(ClassTypeExpansionRender);
