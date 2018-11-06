@@ -126,17 +126,17 @@ const ActionButtons = (props) => (
 			<MemberActionButton noMarginBottom label="Edit" icon iconName="edit" onClick={props.openEditMemberModal} />
 		</ActionButton>
 		{props.adminView &&
-		!props.superAdmin && (
-			<ActionButton>
-				<MemberActionButton
-					noMarginBottom
-					label="Remove Admin"
-					icon
-					iconName="remove_circle_outline"
-					onClick={props.removeButtonClick}
-				/>
-			</ActionButton>
-		)}
+			!props.superAdmin && (
+				<ActionButton>
+					<MemberActionButton
+						noMarginBottom
+						label="Remove Admin"
+						icon
+						iconName="remove_circle_outline"
+						onClick={props.removeButtonClick}
+					/>
+				</ActionButton>
+			)}
 	</ActionButtonsWrapper>
 );
 
@@ -220,7 +220,7 @@ class SchoolMemberInfo extends Component {
 	getContactNumber = () => {
 		return this.props.memberInfo && this.props.memberInfo.phone;
 	};
-	componentWillReceiveProps() {}
+	componentWillReceiveProps() { }
 	componentWillMount = () => {
 		const { memberInfo } = this.props;
 
@@ -327,8 +327,8 @@ class SchoolMemberInfo extends Component {
 									Upload Image <FileUpload />
 								</UploadDiv>
 							) : (
-								''
-							)}
+									''
+								)}
 						</Grid>
 						{
 							<UploadAvatar
@@ -387,12 +387,13 @@ class SchoolMemberInfo extends Component {
 					</Grid>
 				)}
 				{!isEmpty(subscriptionList) &&
-				view === 'admin' &&
-				Meteor.settings.public.paymentEnabled && (
-					<SubscriptionsList subsType="adminSubscriptions" subsData={subscriptionList} />
-				)}
+					view === 'admin' &&
+					Meteor.settings.public.paymentEnabled &&
+					(
+						<SubscriptionsList packageProps={{ bgColor: "white", opacity: 1 }} title={"Subscriptions"} subsType="adminSubscriptions" subsData={subscriptionList} />
+					)}
 				{console.log(subscriptionList, '=========')
-				/*<SubscriptionBox subscriptionList={subscriptionList} />*/
+					/*<SubscriptionBox subscriptionList={subscriptionList} />*/
 				}
 			</Grid>
 		);
