@@ -114,9 +114,9 @@ const SchoolProfile = styled.div`
 `;
 
 const SchoolImage = withImageExists((props) => {
-	console.group('SCHOOL IMAGE');
-	console.info(props);
-	console.groupEnd();
+	// console.group('SCHOOL IMAGE');
+	// console.info(props);
+	// console.groupEnd();
 	return (
 		<ProgressiveImage src={props.bgImg} placeholder={config.blurImage}>
 			{(src) => <ImageContainer src={src} />}
@@ -163,7 +163,7 @@ const MySubscriptionRender = (props) => {
 		<Fragment>
 			{callUsDialog && (
 				<CallUsDialogBox
-					contactNumbers={[ phone ]}
+					contactNumbers={[phone]}
 					open={callUsDialog}
 					onModalClose={handleModelState('callUsDialog', false)}
 				/>
@@ -180,16 +180,17 @@ const MySubscriptionRender = (props) => {
 			<Wrapper>
 				{!isEmpty(schoolData) &&
 					schoolData.map((school) => {
-						const subsData = getSubsDataBasedOnSchool(school._id, purchaseData);
-						const activeSubsData = subsData.filter(
-							(subs) => subs.packageStatus !== 'expired' || subs.status !== 'expired'
+						const EXPIRED = 'expired';
+						const subscriptionsData = getSubsDataBasedOnSchool(school._id, purchaseData);
+						const activeSubsData = subscriptionsData.filter(
+							(subs) => subs.packageStatus !== EXPIRED || subs.status !== EXPIRED
 						);
-						const expiredSubsData = subsData.filter(
-							(subs) => subs.packageStatus === 'expired' || subs.status === 'expired'
+						const expiredSubsData = subscriptionsData.filter(
+							(subs) => subs.packageStatus === EXPIRED || subs.status === EXPIRED
 						);
 
 						// console.group(' MY SUBSCRIPTION');
-						// console.log(subsData, '===============');
+						console.log(activeSubsData, expiredSubsData, '===============');
 						// console.group();
 
 						return (
@@ -207,7 +208,7 @@ const MySubscriptionRender = (props) => {
 								>
 									<SchoolProfile>
 										<SchoolImage src={src} />
-										<SubHeading> {schoolData.name} </SubHeading>
+										<SubHeading> {school.name} </SubHeading>
 									</SchoolProfile>
 
 									<ActionButtons
@@ -234,7 +235,7 @@ const MySubscriptionRender = (props) => {
 													isEmpty(activeSubsData) ? (
 														'No Active Subscriptions'
 													) : (
-														'Active Subscriptions'
+															'Active Subscriptions'
 													)
 												}
 											/>
@@ -261,8 +262,6 @@ const MySubscriptionRender = (props) => {
 							</ExpansionPanel>
 						);
 					})}
-
-				{!isEmpty(purchaseData) && purchaseData.map((sbsData) => {})}
 			</Wrapper>
 		</Fragment>
 	);

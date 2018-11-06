@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import isEmpty from 'lodash/isEmpty';
 
 import { formatClassTimesData, withPopUp } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
@@ -9,6 +10,10 @@ import ClassTypeForm from "/imports/ui/components/schoolView/editSchool/classTyp
 import ClassTypeExpansionRender from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeExpansionRender.js";
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 
+if (process.env.NODE_ENV !== 'production') {
+  const { whyDidYouUpdate } = require('why-did-you-update');
+  whyDidYouUpdate(React);
+}
 
 class ClassTypeExpansion extends Component {
   constructor(props) {
@@ -19,8 +24,17 @@ class ClassTypeExpansion extends Component {
       selectedClassTypeData: {},
       showConfirmationModal: false,
       deleteConfirmationModal: false,
-      classTimeForm: false
+      classTimeForm: false,
+      classTypeForm: false,
     };
+  }
+
+  getClassTypeData = (classTypeId) => {
+    console.info("CHECKING", classTypeId, this.props);
+    if (!classTypeId) {
+      return null;
+    }
+    return this.props.classTypeData.filter(data => data._id === classTypeId)[0] || null;
   }
 
   cancelConfirmationModal = () =>
@@ -29,14 +43,12 @@ class ClassTypeExpansion extends Component {
   handleDeleteData = () => {
     this.setState({ isBusy: true });
     const { popUp } = this.props;
-    const { formData } = this.state;
+    const { classTypeData } = this.state;
     const delAction = this.props.settings.mainTable.actions.del;
     const methodToCall = delAction.onSubmit;
     // const docObj = formData;
     // console.log(formData, methodToCall, docObj, "===================");
 
-    // NOTE: we are only covering case for location.removeLocation
-    // need to somehow cover it for other panel methods as well.
     Meteor.call(methodToCall, { doc: formData }, (err, res) => {
       this.closeDeleteConfirmationModal();
       if (err) {
@@ -56,18 +68,14 @@ class ClassTypeExpansion extends Component {
     });
   };
 
-  showDeleteConfirmationModal = () => {
-    this.setState({ deleteConfirmationModal: true, isBusy: false });
-  };
-
   closeDeleteConfirmationModal = () => {
-    // this.setState(state => {
-    //   return {
-    //     ...state,
-    //     deleteConfirmationModal: false
-    //   };
-    // });
-    this.setState({ deleteConfirmationModal: false, isBusy: false });
+    this.setState(state => {
+      return {
+        ...state,
+        deleteConfirmationModal: false,
+        isBusy: false
+      }
+    });
   };
 
   getClassTimesData(classTypeId) {
@@ -146,32 +154,104 @@ class ClassTypeExpansion extends Component {
     });
   };
 
+  handleClassTimeFormClose = () => {
+    this.setState(state => {
+      return {
+        ...state,
+        classTimeForm: false,
+        selectedClassTypeId: null,
+        selectedClassTypeData: null
+      }
+    })
+  }
+
+  handleClassTypeFormClose = (parentId) => {
+    this.setState(state => {
+      return {
+        ...state,
+        classTimeForm: true,
+        classTypeForm: false,
+        // isBusy: true,
+        selectedClassTypeId: parentId
+      }
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // debugger;
+    // const { selectedClassTypeId, selectedClassTypeData } = this.state;
+    // if (selectedClassTypeId) {
+    //   const classData = nextProps.classTypeData.filter(data => data._id === selectedClassTypeId)[0];
+    //   if (isEmpty(selectedClassTypeData) || selectedClassTypeData && selectedClassTypeData._id !== classData._id) {
+    //     debugger;
+    //     this.setState(prevState => {
+    //       return {
+    //         ...prevState,
+    //         isBusy: false,
+    //         selectedClassTypeData: classData
+    //       }
+    //     });
+    //   }
+    // }
+  }
+
+  componentDidMount() {
+    console.info("MOUNTED __________ PARENT")
+  }
+
+  componentDidUpdate() {
+    console.info("RE RENDERED ________________ PARENT");
+  }
+
   render() {
-    const {isBusy} = this.state;
-    const { classTypeData, isLoading, schoolId, locationData } = this.props;
+    const {
+      isBusy,
+      notifyFor,
+      classTimeForm,
+      classTypeForm,
+      showConfirmationModal,
+      deleteConfirmationModal,
+      selectedClassTimeData,
+      selectedClassTypeData,
+      selectedClassTypeId,
+    } = this.state;
+
+    const {
+      classTypeData,
+      isLoading,
+      schoolId,
+      locationData
+    } = this.props;
+
     // debugger;
     if (isLoading || isBusy) {
       return <ContainerLoader />;
     }
 
+    const classTimeParentData = selectedClassTypeId ? this.getClassTypeData(selectedClassTypeId) : selectedClassTypeData;
+    console.group("CLASS TYPE DATA");
+    console.log(isLoading, isBusy, classTimeForm)
+    console.groupEnd();
+    debugger;
     return (
       <Fragment>
-        {this.state.showConfirmationModal && (
+        {showConfirmationModal && (
           <SkillShapeDialogBox
-            open={this.state.showConfirmationModal}
+            open={showConfirmationModal}
             type="alert"
             defaultButtons
             title="Are you sure?"
-            content={`This will email all attending and interested students of the ${this.state.notifyFor} change. Are you sure?`}
+            content={`This will email all attending and interested students of the ${notifyFor} change. Are you sure?`}
             cancelBtnText="Cancel"
             onAffirmationButtonClick={this.handleNotifyForChange}
             onModalClose={this.cancelConfirmationModal}
             onCloseButtonClick={this.cancelConfirmationModal}
           />
         )}
-        {this.state.deleteConfirmationModal && (
+
+        {deleteConfirmationModal && (
           <SkillShapeDialogBox
-            open={this.state.deleteConfirmationModal}
+            open={deleteConfirmationModal}
             type="alert"
             defaultButtons
             title="Are you sure?"
@@ -182,29 +262,29 @@ class ClassTypeExpansion extends Component {
             onCloseButtonClick={this.closeDeleteConfirmationModal}
           />
         )}
-        {this.state.classTimeForm && (
+        {classTimeForm &&
           <ClassTimeForm
             schoolId={schoolId}
-            parentKey={this.state.selectedClassTypeData._id}
-            parentData={this.state.selectedClassTypeData}
-            data={this.state.selectedClassTimeData}
-            open={this.state.classTimeForm}
-            onClose={this.handleModalState("classTimeForm", false)}
+            parentKey={selectedClassTypeId || (selectedClassTypeData && selectedClassTypeData._id)}
+            parentData={classTimeParentData || selectedClassTimeData}
+            data={selectedClassTimeData}
+            open={classTimeForm}
+            onClose={this.handleClassTimeFormClose}
             moveToNextTab={this.props.moveToNextTab}
             locationData={locationData}
-          />
-        )}
+          />}
 
-        {this.state.classTypeForm && (
+        {classTypeForm && (
           <ClassTypeForm
             schoolId={schoolId}
-            data={this.state.selectedClassTypeData}
-            open={this.state.classTypeForm}
-            onClose={this.handleModalState("classTypeForm", false)}
+            data={selectedClassTypeData}
+            open={classTypeForm}
+            onClose={this.handleClassTypeFormClose}
             locationData={locationData}
             {...this.props}
           />
         )}
+
         <ClassTypeExpansionRender
           classTypeData={classTypeData}
           onNotifyClassTypeUpdate={this.handleNotifyClassTypeUpdate}

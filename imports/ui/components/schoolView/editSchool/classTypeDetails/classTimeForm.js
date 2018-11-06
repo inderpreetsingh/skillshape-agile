@@ -85,6 +85,18 @@ class ClassTimeForm extends React.Component {
     this.state = this.initializeFields();
   }
 
+  componentDidMount = () => {
+    console.info("MOUNTED");
+  }
+
+  componentDidUpdate = () => {
+    console.info("RE RENDERED....");
+  }
+
+  componentWillUnmount = () => {
+    console.info("COMPONENT WILL UNMOUNT....");
+  }
+
   initializeFields = () => {
     const { data, locationData, parentData } = this.props;
     let state = {
@@ -178,6 +190,12 @@ class ClassTimeForm extends React.Component {
     })
   }
   }
+
+  submitClassTimes = (nextTab, addSeperateTime) => (event) => {
+    event.preventDefault();
+    this.saveClassTimes(nextTab, addSeperateTime, event);
+  }
+
   saveClassTimes = (nextTab, addSeperateTimeJson, event) => {
     event.preventDefault();
     const { schoolId, data, parentKey, parentData, toastr } = this.props;
@@ -214,43 +232,46 @@ class ClassTimeForm extends React.Component {
       payload.scheduleDetails = this.refs.weekDaysRow.getRowData();
     }
     if (data && data._id) {
+      console.info(" EDITING NEW CLASS TIME", payload, nextTab, data, addSeperateTimeJson);
+
       this.onSubmit({
         methodName: "classTimes.editClassTimes",
         doc: payload,
         doc_id: data._id,
         nextTab: nextTab,
-        value: addSeperateTimeJson 
+        value: addSeperateTimeJson,
       });
     } else {
+      console.info(" CREATING NEW CLASS TIME", payload, nextTab, addSeperateTimeJson);
       this.onSubmit({
         methodName: "classTimes.addClassTimes",
         doc: payload,
         nextTab: nextTab,
-        value: addSeperateTimeJson 
+        value: addSeperateTimeJson, 
       });
     }
   };
 
   onSubmit = ({ methodName, doc, doc_id, value }) => {
-    
+
     this.setState({ isBusy: true });
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
-      
+
       if (error) {
       }
       if (result) {
         if (value.addSeperateTime == false) {
-          this.setState({PackageAttachment:true,PackageOpen:true,classTimeFormOnClose:this.props.onClose,value:value.addSeperateTime})
+          this.setState({ PackageAttachment: true, PackageOpen: true, classTimeFormOnClose: this.props.onClose, value: value.addSeperateTime })
 
-        // this.props.onClose();
+          // this.props.onClose();
         } else if (value.addSeperateTime == true) {
-          this.setState({PackageAttachment:true,PackageOpen:true,classTimeFormOnClose:this.props.onClose,value:value.addSeperateTime})
-         //this.props.onClose( value.addSeperateTime );
-        } 
-       else if (value == "delete") {
-        this.props.onClose();
-      }else {
-         this.props.onClose();
+          this.setState({ PackageAttachment: true, PackageOpen: true, classTimeFormOnClose: this.props.onClose, value: value.addSeperateTime })
+          //this.props.onClose( value.addSeperateTime );
+        }
+        else if (value == "delete") {
+          this.props.onClose();
+        } else {
+          this.props.onClose();
           this.props.moveToNextTab();
         }
       }
@@ -475,7 +496,7 @@ class ClassTimeForm extends React.Component {
             </DialogContent>
           )}
           <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
-            {data && (
+            {!_.isEmpty(data) && (
            
             <ButtonWrapper>
             <FormGhostButton
@@ -505,12 +526,15 @@ class ClassTimeForm extends React.Component {
           <FormGhostButton
             type="submit"
             form={formId}
-            onClick={this.saveClassTimes.bind(this, event, {
+                onClick={this.saveClassTimes.bind(this, event, {
                   addSeperateTime: false
                 })}
-            label={data ? "Save" : "Submit"}
+            label={!_.isEmpty(data) ? "Save" : "Submit"}
             className={classes.save}
           />
+              {/*this.saveClassTimes.bind(this, event, {
+                  addSeperateTime: false
+                })*/}
         </ButtonWrapper>
             {/* <Button
               type="button"
@@ -528,7 +552,7 @@ class ClassTimeForm extends React.Component {
        onClose={()=>{this.setState({PackageOpen:false})}} 
        schoolId={schoolId}
        classTypeId={parentKey}
-       classTypeName={data && data.classTypeName?data.classTypeName :{name:parentData.name,_id:parentData._id}}
+       classTypeName={data && data.classTypeName ? data.classTypeName : { name: parentData.name , _id:parentData._id}}
        parentData={parentData}
        classTimeFormOnClose={()=>{
          if(this.state.value){

@@ -2,7 +2,7 @@ import React from "react";
 import ClassTypeExpansion from "./classTypeExpansion.jsx";
 
 
-export default function() {
+export default function () {
   let {
     classTypeData,
     classTimesData,
@@ -10,7 +10,8 @@ export default function() {
     moveTab,
     schoolId,
     locationData,
-    isLoading
+    isLoading,
+    modifySelectSubjectsInClassTypeData
   } = this.props;
 
   return (
@@ -19,10 +20,10 @@ export default function() {
         schoolId={schoolId}
         locationData={locationData}
         isLoading={isLoading}
-        completeClassTimesData={classTimesData}
+        /*completeClassTimesData={classTimesData}*/
         classTypeData={this.modifySelectSubjectsInClassTypeData()}
       />
-      {/*<PanelWithTable
+      <PanelWithTable
         schoolId={schoolId}
         className="class-type-details"
         settings={classTypeSettings}
@@ -35,7 +36,7 @@ export default function() {
         showClassTypeModal={isEmpty(classTypeData)}
         moveToNextTab={this.moveToNextTab}
         moveToPreviousTab={this.moveToPreviousTab}
-      />*/}
+      />
     </div>
   );
 }

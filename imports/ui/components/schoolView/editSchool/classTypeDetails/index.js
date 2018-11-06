@@ -156,6 +156,10 @@ class ClassTypeDetails extends React.Component {
   };
 
   render() {
+    // return <ClassTypeDetailsRender
+    //   {...this.props}
+    //   modifySelectSubjectsInClassTypeData={this.modifySelectSubjectsInClassTypeData}
+    // />
     return ClassTypeDetailsRender.call(this, this.props, this.state);
   }
 }
