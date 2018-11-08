@@ -167,8 +167,9 @@ class ClassTypeDetails extends React.Component {
     return this.props.classTypeData.filter(data => data._id === classTypeId)[0] || null;
   }
 
-  cancelConfirmationModal = () =>
+  cancelConfirmationModal = () => {
     this.setState({ showConfirmationModal: false });
+  }
 
   handleDeleteData = () => {
     this.setState({ isBusy: true });
@@ -219,19 +220,37 @@ class ClassTypeDetails extends React.Component {
     this.setState(state => {
       return {
         ...state,
+        formAction: 'edit',
         classTypeForm: true,
         selectedClassTypeData: classTypeData
       }
     });
   }
 
-  handleEditClassTimesClick = (classTypeData) => (classTimeData) => () => {
+  handleEditClassTimesClick = (classTypeData) => (classTimeData) => (e) => {
+    e.stopPropagation();
+
     this.setState(state => {
       return {
         ...state,
+        formAction: 'edit',
         classTimeForm: true,
         selectedClassTimeData: classTimeData,
         selectedClassTypeData: classTypeData,
+      }
+    })
+  }
+
+  handleAddClassTimeClick = (classTypeData) => (e) => {
+    e.stopPropagation();
+
+    this.setState(state => {
+      return {
+        ...state,
+        formAction: 'add',
+        classTimeForm: true,
+        selectedClassTimeData: null,
+        selectedClassTypeData: classTypeData
       }
     })
   }
@@ -240,6 +259,7 @@ class ClassTypeDetails extends React.Component {
     this.setState(state => {
       return {
         ...state,
+        formAction: 'add',
         classTypeForm: true,
         selectedClassTypeData: null
       }
@@ -284,6 +304,7 @@ class ClassTypeDetails extends React.Component {
     });
   };
 
+
   handleClassTimeFormClose = () => {
     this.setState(state => {
       return {
@@ -292,21 +313,34 @@ class ClassTypeDetails extends React.Component {
         selectedClassTypeId: null,
         selectedClassTypeData: null
       }
-    })
-  }
-
-  handleClassTypeFormClose = (parentId) => {
-    this.setState(state => {
-      return {
-        ...state,
-        classTimeForm: true,
-        classTypeForm: false,
-        // isBusy: true,
-        selectedClassTypeId: parentId
-      }
     });
   }
 
+  handleClassTypeFormClose = (parentId, formAction) => {
+    debugger;
+    if (formAction === 'add') {
+      this.setState(state => {
+        return {
+          ...state,
+          formAction,
+          classTimeForm: true,
+          classTypeForm: false,
+          // isBusy: true,
+          selectedClassTypeId: parentId
+        }
+      });
+    } else {
+      this.setState(state => {
+        return {
+          ...state,
+          formAction,
+          classTypeForm: false,
+          selectedClassTypeId: null,
+          selectedClassTypeData: null
+        }
+      });
+    }
+  }
 
   render() {
     // return <ClassTypeDetailsRender

@@ -8,10 +8,10 @@ import { formatDate } from '/imports/util/formatSchedule.js';
 
 import Package from '/imports/ui/components/landing/components/class/packages/Package.jsx';
 import {
-	Heading,
-	SubHeading,
-	Text,
-	Italic
+    Heading,
+    SubHeading,
+    Text,
+    Italic
 } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -44,6 +44,8 @@ const SubscriptionsTitle = Text.withComponent('h3').extend`
 
 const AllSubscriptions = styled.div`
 	max-width: 500px;
+	max-height: ${props => props.maxListHeight}px;
+	overflow-y: scroll;
 	width: 100%;
 	margin: 0 auto;
 
@@ -63,48 +65,60 @@ const SubscriptionDetails = styled.div`
 	}
 `;
 const SubscriptionsList = (props) => {
-	const { active, title, subsData, subsType, packageProps } = props;
-	return (
-		<Wrapper active={active}>
-			<SubscriptionsTitle>{title}</SubscriptionsTitle>
+    const {
+        active,
+        title,
+        subsData,
+        subsType,
+        packageProps,
+        maxListHeight
+    } = props;
+    return (
+        <Wrapper active={active}>
+            <SubscriptionsTitle>{title}</SubscriptionsTitle>
 
-			{!isEmpty(subsData) && (
-				<AllSubscriptions>
-					{subsData.map((subs) => {
-						const startDate = moment(formatDate(subs.startDate));
-						const endDate = moment(formatDate(subs.endDate));
-						// console.log(endDate.diff(startDate, 'years'), 'expirey....');
-						if (endDate.diff(startDate, 'years') > 20) {
-							subs.expiry = 'none';
-						} else {
-							subs.expiry = true;
-						}
+            {!isEmpty(subsData) && (
+                <AllSubscriptions maxListHeight={maxListHeight}>
+                    {subsData.map((subs) => {
+                        const startDate = moment(formatDate(subs.startDate));
+                        const endDate = moment(formatDate(subs.endDate));
+                        // console.log(endDate.diff(startDate, 'years'), 'expirey....');
+                        if (endDate.diff(startDate, 'years') > 20) {
+                            subs.expiry = 'none';
+                        } else {
+                            subs.expiry = true;
+                        }
 
-						return (
-							<SubscriptionDetails>
-								<Package forSubscription {...packageProps} subsType={subsType} {...subs} />
-							</SubscriptionDetails>
-						);
-					})}
-				</AllSubscriptions>
-			)}
-		</Wrapper>
-	);
+                        return (
+                            <SubscriptionDetails>
+                                <Package
+                                    {...subs}
+                                    {...packageProps}
+                                    subsType={subsType}
+                                    forSubscription />
+                            </SubscriptionDetails>
+                        );
+                    })}
+                </AllSubscriptions>
+            )}
+        </Wrapper>
+    );
 };
 
 SubscriptionsList.propTypes = {
-	title: PropTypes.string,
-	active: PropTypes.bool,
-	subsType: PropTypes.string,
-	subsData: PropTypes.object,
-	packageProps: PropTypes.shape({
-		bgColor: PropTypes.string,
-		opacity: PropTypes.number
-	})
+    title: PropTypes.string,
+    active: PropTypes.bool,
+    subsType: PropTypes.string, // it will be either mySubscriptions or adminSubscriptions
+    subsData: PropTypes.object,
+    packageProps: PropTypes.shape({
+        bgColor: PropTypes.string,
+        opacity: PropTypes.number
+    }),
+    maxListHeight: PropTypes.number,
 };
 
 SubscriptionsList.defaultProps = {
-	active: false
+    active: false
 };
 
 export default SubscriptionsList;

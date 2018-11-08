@@ -25,6 +25,7 @@ export default function () {
 
   const {
     isBusy,
+    formAction,
     notifyFor,
     classTimeForm,
     classTypeForm,
@@ -36,6 +37,9 @@ export default function () {
   } = this.state;
 
   const classTimeParentData = selectedClassTypeId ? this.getClassTypeData(selectedClassTypeId) : selectedClassTypeData;
+  // console.group("CLASS TIME PARENT DATA");
+  // console.log(classTimeParentData, selectedClassTypeData);
+  // console.groupEnd();
 
   return (
     <div style={{ paddingTop: "20px" }}>
@@ -98,6 +102,7 @@ export default function () {
         isLoading={isLoading}
         getClassTimesData={this.getClassTimesData}
         onNotifyClassTypeUpdate={this.handleNotifyClassTypeUpdate}
+        onAddClassTimeClick={this.handleAddClassTimeClick}
         onAddClassTypeClick={this.handleAddClassTypeClick}
         onEditClassTypeClick={this.handleEditClassTypeClick}
         onEditClassTimesClick={this.handleEditClassTimesClick}
