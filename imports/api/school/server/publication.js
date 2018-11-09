@@ -15,7 +15,7 @@ import { check } from 'meteor/check';
 // import ClientReports from '/imports/startup/client';
 
 Meteor.publish("UserSchool", function (schoolId) {
-    check(schoolId,String);
+    
 
     const schoolCursor = School.find({ _id: schoolId })
     const schoolData = schoolCursor.fetch();
@@ -33,7 +33,7 @@ Meteor.publish("UserSchool", function (schoolId) {
 });
 
 Meteor.publish("UserSchoolbySlug", function (slug) {
-    check(slug,String);
+    
 
     const schoolCursor = School.find({ slug: slug })
     const schoolData = schoolCursor.fetch();

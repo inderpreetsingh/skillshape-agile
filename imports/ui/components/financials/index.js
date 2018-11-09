@@ -1,15 +1,12 @@
-import React from "react";
-import DocumentTitle from "react-document-title";
-import { Loading } from "/imports/ui/loading";
-import { browserHistory, Link } from "react-router";
-import ResponsiveTabs from "/imports/util/responsiveTabs";
-import Typography from "material-ui/Typography";
-import Students from "./students";
-import Payouts from "./payouts";
-import Transactions from "./transactions";
-import Settings from "./settings";
 import get from 'lodash/get';
 import includes from 'lodash/includes';
+import React from "react";
+import DocumentTitle from "react-document-title";
+import Payouts from "./payouts";
+import Settings from "./settings";
+import Students from "./students";
+import Transactions from "./transactions";
+import ResponsiveTabs from "/imports/util/responsiveTabs";
 export default class Financials extends React.Component {
   constructor(props) {
     super(props);
@@ -37,9 +34,10 @@ export default class Financials extends React.Component {
     this.setState({ tabValue });
   };
   componentWillMount() {
+    
     Meteor.call(
       "school.findSuperAdmin",
-      this.props.routeParams.slug,
+      this.props.slug,
       (error, result) => {
         if(result){
           if(get(result,'superAdmin',null) == this.props.currentUser._id || includes(get(result,'admins',[]),this.props.currentUser._id )){

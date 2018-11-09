@@ -6,8 +6,6 @@ import Icon from 'material-ui/Icon';
 import Paper from 'material-ui/Paper';
 import ProgressiveImage from 'react-progressive-image';
 
-import { createMuiTheme, MuiThemeProvider } from "material-ui/styles";
-
 import ExpansionPanel, {
 	ExpansionPanelDetails,
 	ExpansionPanelSummary,
@@ -29,7 +27,7 @@ import PrimaryButton from '/imports/ui/components/landing/components/buttons/Pri
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 
 import { getContainerMaxWidth, withImageExists } from '/imports/util';
-import { rhythmDiv, flexCenter, primaryColor, mobile } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { rhythmDiv, flexCenter, primaryColor, mobile, maxContainerWidth } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
 
 const SPACING = rhythmDiv * 2;
@@ -38,6 +36,10 @@ const imageExistsConfig = {
 	originalImagePath: 'src',
 	defaultImage: schoolLogo
 };
+
+const Wrapper = styled.div`
+	max-width: ${maxContainerWidth};
+`;
 
 const CardsWrapper = styled.div``;
 
@@ -140,7 +142,7 @@ const styles = {
 		color: 'white'
 	},
 	expansionPanelRoot: {
-		marginBottom: rhythmDiv
+		marginBottom: rhythmDiv,
 	},
 	expansionPanelSummaryContent: {
 		justifyContent: 'space-between',
@@ -166,6 +168,7 @@ const ClassTypeExpansionRender = (props) => {
 		onEditClassTypeClick,
 		onEditClassTimesClick,
 		onNotifyClassTypeUpdate,
+		onImageSave,
 		classTypeData,
 		classes: {
 			expansionPanelDetails,
@@ -177,124 +180,124 @@ const ClassTypeExpansionRender = (props) => {
 	} = props;
 
 	return (
-		<Fragment>
-			<Paper className={paperRoot} elevation={1}>
+		<Wrapper>
+			-widthper className={paperRoot} elevation={1}>
 				<PaperInner>
-					<IconWrapper>
-						<Icon className={barIcon}>{'class'}</Icon>
-						<Text marginBottom="0" color="white">
-							ClassType
+				<IconWrapper>
+					<Icon className={barIcon}>{'class'}</Icon>
+					<Text marginBottom="0" color="white">
+						ClassType
 						</Text>
-					</IconWrapper>
-					<ToggleVisibility hideOnSmall>
-						<TextWrapper>
-							<Text color="white">
-								Class Types are a group of one or more Class Times where similar or related material is
-								taught to students, possibly grouped by age, skill level, or gender. If you separate
-								classes by age, gender, skill level or material, separate Class Types should be created.
-							</Text>
-						</TextWrapper>
-					</ToggleVisibility>
-					<TopBarButton>
-						<FormGhostButton whiteColor label={'Add Class Type'} onClick={onAddClassTypeClick} />
-					</TopBarButton>
-				</PaperInner>
-				<ToggleVisibility>
+				</IconWrapper>
+				<ToggleVisibility hideOnSmall>
 					<TextWrapper>
 						<Text color="white">
 							Class Types are a group of one or more Class Times where similar or related material is
-							taught to students, possibly grouped by age, skill level, or gender. If you separate classes
-							by age, gender, skill level or material, separate Class Types should be created.
-						</Text>
+							taught to students, possibly grouped by age, skill level, or gender. If you separate
+							classes by age, gender, skill level or material, separate Class Types should be created.
+							</Text>
 					</TextWrapper>
 				</ToggleVisibility>
+				<TopBarButton>
+					<FormGhostButton whiteColor label={'Add Class Type'} onClick={onAddClassTypeClick} />
+				</TopBarButton>
+			</PaperInner>
+			<ToggleVisibility>
+				<TextWrapper>
+					<Text color="white">
+						Class Types are a group of one or more Class Times where similar or related material is
+						taught to students, possibly grouped by age, skill level, or gender. If you separate classes
+						by age, gender, skill level or material, separate Class Types should be created.
+						</Text>
+				</TextWrapper>
+			</ToggleVisibility>
 			</Paper>
-			<ExpansionsWrapper>
-				{classTypeData && classTypeData.map((ctData) => (
-					<ExpansionPanel className={expansionPanelRoot}>
-						<ExpansionPanelSummary
-							classes={{ content: props.classes.expansionPanelSummaryContent }}
-							expandIcon={<Icon>{'expand_more'}</Icon>}>
-							<ClassTypeProfile>
-								<ClassTypeImage src={classTypeData.imgSource} />
-								<ClassTypeName>{ctData.name}</ClassTypeName>
-							</ClassTypeProfile>
-							<ActionButtons>
-								<ActionButton left>
-									<FormGhostButton
-										icon
-										iconName="edit"
-										label="Edit ClassType"
-										onClick={onEditClassTypeClick(ctData)}
-									/>
-								</ActionButton>
+		<ExpansionsWrapper>
+			{classTypeData && classTypeData.map((ctData) => (
+				<ExpansionPanel className={expansionPanelRoot}>
+					<ExpansionPanelSummary
+						classes={{ content: props.classes.expansionPanelSummaryContent }}
+						expandIcon={<Icon>{'expand_more'}</Icon>}>
+						<ClassTypeProfile>
+							<ClassTypeImage src={classTypeData.imgSource} />
+							<ClassTypeName>{ctData.name}</ClassTypeName>
+						</ClassTypeProfile>
+						<ActionButtons>
+							<ActionButton left>
+								<FormGhostButton
+									icon
+									iconName="edit"
+									label="Edit ClassType"
+									onClick={onEditClassTypeClick(ctData)}
+								/>
+							</ActionButton>
 
-								<ActionButton>
-									<FormGhostButton
-										icon
-										iconName="add_circle_outline"
-										label="Add ClassTime"
-										onClick={onAddClassTimeClick(ctData)}
-									/>
-								</ActionButton>
-							</ActionButtons>
-						</ExpansionPanelSummary>
+							<ActionButton>
+								<FormGhostButton
+									icon
+									iconName="add_circle_outline"
+									label="Add ClassTime"
+									onClick={onAddClassTimeClick(ctData)}
+								/>
+							</ActionButton>
+						</ActionButtons>
+					</ExpansionPanelSummary>
 
-						<ExpansionPanelDetails className={expansionPanelDetails}>
-							<CardsWrapper>
-								<GridMaxWidthWrapper>
-									<GridContainer>
-										<GridItem spacing={SPACING} cardWidth={CARD_WIDTH}>
-											<ClassTypeCard
+					<ExpansionPanelDetails className={expansionPanelDetails}>
+						<CardsWrapper>
+							<GridMaxWidthWrapper>
+								<GridContainer>
+									<GridItem spacing={SPACING} cardWidth={CARD_WIDTH}>
+										<ClassTypeCard
+											editMode
+											{...ctData}
+											onEditClassTypeClick={onEditClassTypeClick(ctData)}
+										/>
+									</GridItem>
+									{getClassTimesData(ctData._id).map((classTimeObj) => (
+										<GridItem
+											key={classTimeObj._id}
+											spacing={SPACING}
+											cardWidth={CARD_WIDTH}
+											inPopUp={false}
+										>
+											<ClassTimeCard
 												editMode
-												{...ctData}
-												onEditClassTypeClick={onEditClassTypeClick(ctData)}
-											/>
-										</GridItem>
-										{getClassTimesData(ctData._id).map((classTimeObj) => (
-											<GridItem
-												key={classTimeObj._id}
-												spacing={SPACING}
-												cardWidth={CARD_WIDTH}
+												{...classTimeObj}
 												inPopUp={false}
-											>
-												<ClassTimeCard
-													editMode
-													{...classTimeObj}
-													inPopUp={false}
-													classTimeData={classTimeObj}
-													onEditClassTimesClick={onEditClassTimesClick(ctData)}
-												/>
-											</GridItem>
-										))}
-										<GridItem spacing={SPACING} cardWidth={CARD_WIDTH}>
-											<OutLinedCard
-												content="Inform enrolled or interested students for changes in this class. Please do not abuse these buttons."
-												button1Icon={'location_on'}
-												button1Label="Notify location changes"
-												onButton1Click={onNotifyClassTypeUpdate(
-													ctData,
-													'classType.notifyToStudentForLocation',
-													'Class Location'
-												)}
-												button2Icon={'class'}
-												button2Label="Notify time changes"
-												onButton2Click={onNotifyClassTypeUpdate(
-													ctData,
-													'classType.notifyToStudentForClassTimes',
-													'Class Times'
-												)}
+												classTimeData={classTimeObj}
+												onImageSave={onImageSave}
+												onEditClassTimesClick={onEditClassTimesClick(ctData)}
 											/>
 										</GridItem>
-									</GridContainer>
-								</GridMaxWidthWrapper>
-							</CardsWrapper>
-						</ExpansionPanelDetails>
-					</ExpansionPanel>
-				))}
-			</ExpansionsWrapper>
-		</Fragment>
-	);
+									))}
+									<GridItem spacing={SPACING} cardWidth={CARD_WIDTH}>
+										<OutLinedCard
+											content="Inform enrolled or interested students for changes in this class. Please do not abuse these buttons."
+											button1Icon={'location_on'}
+											button1Label="Notify location changes"
+											onButton1Click={onNotifyClassTypeUpdate(
+												ctData,
+												'classType.notifyToStudentForLocation',
+												'Class Location'
+											)}
+											button2Icon={'class'}
+											button2Label="Notify time changes"
+											onButton2Click={onNotifyClassTypeUpdate(
+												ctData,
+												'classType.notifyToStudentForClassTimes',
+												'Class Times'
+											)}
+										/>
+									</GridItem>
+								</GridContainer>
+							</GridMaxWidthWrapper>
+						</CardsWrapper>
+					</ExpansionPanelDetails>
+				</ExpansionPanel>
+			))}
+		</ExpansionsWrapper>
+		</Wrappe - width;
 }
 
 export default withStyles(styles)(ClassTypeExpansionRender);

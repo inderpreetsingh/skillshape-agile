@@ -65,6 +65,7 @@ const SubscriptionDetails = styled.div`
 	}
 `;
 const SubscriptionsList = (props) => {
+<<<<<<< HEAD
     const {
         active,
         title,
@@ -88,6 +89,31 @@ const SubscriptionsList = (props) => {
                         } else {
                             subs.expiry = true;
                         }
+=======
+	const {
+		active,
+		title,
+		subsData,
+		subsType,
+		packageProps,
+		maxListHeight
+	} = props;
+	return (
+		<Wrapper active={active}>
+			<SubscriptionsTitle>{title}</SubscriptionsTitle>
+
+			{!isEmpty(subsData) && (
+				<AllSubscriptions maxListHeight={maxListHeight}>
+					{subsData.map((subs) => {
+						const startDate = moment(formatDate(subs.startDate));
+						const endDate = moment(formatDate(subs.endDate));
+						// console.log(endDate.diff(startDate, 'years'), 'expirey....');
+						if (endDate.diff(startDate, 'years') > 20) {
+							subs.expiry = 'none';
+						} else {
+							subs.expiry = true;
+						}
+>>>>>>> c3ab566db41cf406b978ea037454e1180ab4e245
 
                         return (
                             <SubscriptionDetails>
@@ -106,6 +132,7 @@ const SubscriptionsList = (props) => {
 };
 
 SubscriptionsList.propTypes = {
+<<<<<<< HEAD
     title: PropTypes.string,
     active: PropTypes.bool,
     subsType: PropTypes.string, // it will be either mySubscriptions or adminSubscriptions
@@ -115,6 +142,17 @@ SubscriptionsList.propTypes = {
         opacity: PropTypes.number
     }),
     maxListHeight: PropTypes.number,
+=======
+	title: PropTypes.string,
+	active: PropTypes.bool,
+	subsType: PropTypes.string, // it will be either mySubscriptions or adminSubscriptions
+	subsData: PropTypes.object,
+	packageProps: PropTypes.shape({
+		bgColor: PropTypes.string,
+		opacity: PropTypes.number
+	}),
+	maxListHeight: PropTypes.number,
+>>>>>>> c3ab566db41cf406b978ea037454e1180ab4e245
 };
 
 SubscriptionsList.defaultProps = {

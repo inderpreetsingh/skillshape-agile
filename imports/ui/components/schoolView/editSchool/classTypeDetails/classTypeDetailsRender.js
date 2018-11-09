@@ -106,6 +106,7 @@ export default function () {
         onAddClassTypeClick={this.handleAddClassTypeClick}
         onEditClassTypeClick={this.handleEditClassTypeClick}
         onEditClassTimesClick={this.handleEditClassTimesClick}
+        onImageSave={this.handleImageSave}
         getClassTimesData={this.getClassTimesData}
         /*moveToNextTab={this.moveToNextTab}*/
         /*moveToPreviousTab={this.moveToPreviousTab}*/

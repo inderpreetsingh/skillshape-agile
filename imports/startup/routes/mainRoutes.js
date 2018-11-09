@@ -146,12 +146,32 @@ export default (Routes = componentLoader(props => (
         <Route
           path="/schools/:slug/members"
           name="SchoolMemberView"
-          component={SchoolMemberView}
+          getComponent={(nextState, cb) => {
+            //set loading:true
+            props.isLoading.show();
+            import("/imports/ui/components/schoolView/editSchool").then(
+              SchoolEditView => {
+                // set loading false
+                props.isLoading.hide();
+                cb(null, SchoolEditView.default);
+              }
+            );
+          }}
         />
         <Route
           path="/schools/:slug/financials"
           name="Financials"
-          component={Financials}
+          getComponent={(nextState, cb) => {
+            //set loading:true
+            props.isLoading.show();
+            import("/imports/ui/components/schoolView/editSchool").then(
+              SchoolEditView => {
+                // set loading false
+                props.isLoading.hide();
+                cb(null, SchoolEditView.default);
+              }
+            );
+          }}
         />
         <Route
           path="/classmates"
