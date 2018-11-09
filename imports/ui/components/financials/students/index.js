@@ -97,7 +97,7 @@ class Students extends React.Component {
 export default createContainer(props => {
   let purchaseSubscription = Meteor.subscribe(
     "purchases.getAllPurchaseData",
-    props.params.slug,
+    props.slug,
     props.filters
   );
   // let purchaseData = [];

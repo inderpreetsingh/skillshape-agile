@@ -15,7 +15,7 @@ import SchoolMemberView from "/imports/ui/components/schoolMembers";
 import { Loading } from "/imports/ui/loading";
 import { FormBuilderModal } from "/imports/ui/modal";
 import ResponsiveTabs from "/imports/util/responsiveTabs";
-
+import Financial from "/imports/ui/components/financials";
 export default function (props) {
   const { selecetdView, formBuilderModal } = this.state;
   
@@ -59,6 +59,7 @@ export default function (props) {
                 "Embed Codes",
                 "Students",
                 "Admins",
+                "Financial",
                 "View School"
               ]}
               color="primary"
@@ -152,8 +153,16 @@ export default function (props) {
                   />
                 )
               }
+              {
+                this.state.tabValue === 8 && (
+                  <Financial
+                  currentUser = {currentUser}
+                  slug = {slug}
+                  />
+                )
+              }
                {
-                this.state.tabValue === 8 &&(
+                this.state.tabValue === 9 &&(
                   browserHistory.push(`/schools/${slug}`)
                 )
               }
