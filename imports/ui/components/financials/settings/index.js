@@ -52,13 +52,12 @@ class Settings extends React.Component {
                             backgroundColor: "#4CAF50",
                             border: "none",
                             color: "white",
-                            padding: "15px 32px",
+                            padding: "9px 21px",
                             textAlign: "center",
                             textDecoration: "none",
                             display: "inline-block",
                             fontSize: "16px",
-                            marginBottom: "5px",
-                            marginTop: "5px"
+                            borderRadius:'17px'
                           }}
                           onClick={this.disconnectStripe}
                         >
@@ -79,13 +78,12 @@ class Settings extends React.Component {
                             backgroundColor: "#f44336",
                             border: "none",
                             color: "white",
-                            padding: "15px 32px",
+                            padding: "9px 21px",
                             textAlign: "center",
                             textDecoration: "none",
                             display: "inline-block",
                             fontSize: "16px",
-                            marginBottom: "5px",
-                            marginTop: "5px"
+                            borderRadius:'17px'
                           }}
                           onClick={() => {
                             if(superAdmin==Meteor.userId()){
