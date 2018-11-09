@@ -259,7 +259,7 @@ export default class SchoolViewBase extends React.Component {
 	};
 
 	handlePublishStatus = (schoolId, event) => {
-		const { toastr } = this.props;
+		const { popUp } = this.props;
 		if (schoolId) {
 			let isPublish = event.target.checked;
 			this.setState({ isLoading: true });
@@ -267,7 +267,8 @@ export default class SchoolViewBase extends React.Component {
 			Meteor.call('school.publishSchool', { schoolId, isPublish }, (error, result) => {
 				this.setState({ isLoading: false }, (_) => {
 					if (error) {
-						toastr.error(error.reason || error.message, 'Error');
+						popUp.appear('alert',{title:'Error',content:error.reason || error.message})
+						
 					}
 					if (result) {
 						let msg;
@@ -276,12 +277,12 @@ export default class SchoolViewBase extends React.Component {
 						} else {
 							msg = 'This School and all his Class Types of this has been unpublished.';
 						}
-						toastr.success(msg, 'success');
+						popUp.appear('success',{title:'Error',content:msg})
 					}
 				});
 			});
 		} else {
-			toastr.error('Something went wrong. Please try after sometime!!', 'Error');
+			popUp.appear('alert',{title:'Error',content:"Something went wrong. Please try after sometime!"})
 		}
 	};
 
@@ -306,7 +307,7 @@ export default class SchoolViewBase extends React.Component {
 
 	modalSubmit = () => {
 		const { claimSchoolModal, claimRequestModal, successModal } = this.state;
-		const { currentUser, schoolId, schoolData } = this.props;
+		const { currentUser, schoolId, schoolData,popUp } = this.props;
 
 		if (claimSchoolModal && currentUser && currentUser._id && schoolId) {
 			Meteor.call('school.claimSchool', currentUser._id, schoolId, (error, result) => {
@@ -329,10 +330,8 @@ export default class SchoolViewBase extends React.Component {
 				if (error) {
 				}
 				if (result) {
-					toastr.success(
-						'You have requested to manage a school that has already been claimed. We will investigate this double claim and inform you as soon as a decision has been made. If you are found to be the rightful manager of the listing, you will be able to edit the school listing.',
-						'Success'
-					);
+					popUp.appear('success',{title:'Success',content:'You have requested to manage a school that has already been claimed. We will investigate this double claim and inform you as soon as a decision has been made. If you are found to be the rightful manager of the listing, you will be able to edit the school listing.'})
+					
 				}
 			});
 		} else if (successModal && schoolId) {
@@ -392,7 +391,7 @@ export default class SchoolViewBase extends React.Component {
 	};
 
 	handlePricingRequest = () => {
-		const { toastr, schoolData } = this.props;
+		const { popUp,schoolData } = this.props;
 		if (!Meteor.userId()) {
 			this.handleDialogState('manageRequestsDialog', true);
 		} else {
@@ -400,14 +399,14 @@ export default class SchoolViewBase extends React.Component {
 				schoolId: schoolData._id
 			};
 
-			Meteor.call('pricingRequest.addRequest', data, schoolData, (err, res) => {
+			Meteor.call('pricingRequest.addRequest', data, "save", (err, res) => {
 				this.setState({ isBusy: false }, () => {
 					if (err) {
-						toastr.error(err.reason || err.message, 'Error', {}, false);
+						popUp.appear('alert',{title:'Error',content:err.reason || err.message});
 					} else if (res.message) {
-						toastr.error(res.message, 'Error');
+						popUp.appear('alert',{content:res.message,title:'Error'});
 					} else if (res) {
-						toastr.success('Your request has been processed', 'success');
+						popUp.appear('success',{content:'Your request has been processed',title:'Error'});
 						this.handleRequest('pricing');
 					}
 				});
