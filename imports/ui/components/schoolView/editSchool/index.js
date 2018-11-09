@@ -1,17 +1,12 @@
-import React from "react";
 import { createContainer } from "meteor/react-meteor-data";
-import SchoolEditRender from "./schoolEditRender";
+import React from "react";
 import { browserHistory } from "react-router";
-import config from "/imports/config";
-// import collection definition over here
-// import Modules from "/imports/api/modules/fields";
-import Skills from "/imports/api/skill/fields";
-import SLocation from "/imports/api/sLocation/fields";
-import School from "/imports/api/school/fields";
+import SchoolEditRender from "./schoolEditRender";
 import ClassType from "/imports/api/classType/fields";
-import SkillCategory from "/imports/api/skillCategory/fields";
-import SkillSubject from "/imports/api/skillSubject/fields";
-
+import School from "/imports/api/school/fields";
+import SLocation from "/imports/api/sLocation/fields";
+import config from "/imports/config";
+import get from 'lodash/get';
 class SchoolEditView extends React.Component {
   constructor(props) {
     super(props);
@@ -26,6 +21,9 @@ class SchoolEditView extends React.Component {
     if (this.props.location.query.tabValue) {
       // We should set state for class details tab so that it opens automatically.
       this.setState({ queryTabValue: this.props.location.query.tabValue });
+    }
+    else if (get(this.props.route,'name',0) == "SchoolMemberView"){
+      this.setState({ tabValue: 6 });
     }
   }
   checkSchoolAccess = (currentUser, schoolId) => {
@@ -84,14 +82,19 @@ class SchoolEditView extends React.Component {
 }
 
 export default createContainer(props => {
-  const { schoolId } = props.params;
+  let { schoolId,slug } = props.params;
   let subscription;
   let schoolData;
   let locationData;
   let moduleData;
   let isLoading = true;
   let currency;
-
+if(slug && !schoolId){
+ subscription = Meteor.subscribe("schoolMemberDetails.getSchoolMemberWithSchool", {slug});
+ if(subscription && subscription.ready()){
+   schoolId = School.find({ slug: slug }).fetch()[0]._id;
+ }
+}
   if (props.isUserSubsReady) {
     subscription = Meteor.subscribe("UserSchool", schoolId);
     Meteor.subscribe("location.getSchoolLocation", { schoolId });
