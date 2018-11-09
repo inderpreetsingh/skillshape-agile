@@ -168,6 +168,7 @@ const ClassTypeExpansionRender = (props) => {
 		onAddClassTypeClick,
 		onEditClassTypeClick,
 		onEditClassTimesClick,
+		onEditClassTypeImageClick,
 		onNotifyClassTypeUpdate,
 		onImageSave,
 		classTypeData,
@@ -252,6 +253,7 @@ const ClassTypeExpansionRender = (props) => {
 											<ClassTypeCard
 												editMode
 												{...ctData}
+												onEditClassTypeImageClick={onEditClassTypeImageClick(ctData)}
 												onEditClassTypeClick={onEditClassTypeClick(ctData)}
 											/>
 										</GridItem>

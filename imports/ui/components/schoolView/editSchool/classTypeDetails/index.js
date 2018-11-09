@@ -23,6 +23,16 @@ class ClassTypeDetails extends React.Component {
     return ClassTimes.find({ classTypeId: parentData._id }).fetch();
   }
 
+  handleEditImageClick = (classTypeData) => (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    this.setState({
+      showBackgroundUpload: true,
+      selectedClassTypeData: classTypeData,
+    })
+  }
+
   handleImageChange = file => {
     this.setState({ file });
   };
@@ -108,6 +118,17 @@ class ClassTypeDetails extends React.Component {
     }
   };
 
+  handleImageUploadClose = () => {
+    this.setState(state => {
+      return {
+        ...state,
+        showBackgroundUpload: false,
+        selectedClassTypeData: null,
+        file: null
+      }
+    })
+  }
+
   editClassType = ({ doc, doc_id }) => {
     const { popUp } = this.props;
     Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
@@ -118,6 +139,7 @@ class ClassTypeDetails extends React.Component {
           title: "Message",
           content: "Image Saved Successfully"
         });
+
       }
     });
   };

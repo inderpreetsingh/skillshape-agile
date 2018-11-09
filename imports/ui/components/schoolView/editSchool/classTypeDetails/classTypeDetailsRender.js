@@ -1,19 +1,24 @@
 import React from "react";
+import styled from 'styled-components';
+import isEmpty from "lodash/isEmpty";
 
 import ClassTimeForm from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTimeForm.js";
 import ClassTypeForm from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeForm.js";
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
+import PanelWithTable from "/imports/ui/componentHelpers/panelWithTable";
+import UploadMedia from '/imports/ui/componentHelpers/schoolViewBanner/uploadMedia.js';
 
 import ClassTypeExpansion from './classTypeExpansion.jsx';
 import ClassTypeExpansionRender from './classTypeExpansionRender';
-import PanelWithTable from "/imports/ui/componentHelpers/panelWithTable";
-
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import classTypeSettings from "./classTypeSettings";
 
-import isEmpty from "lodash/isEmpty";
+const Wrapper = styled.div`
+  padding: ${rhythmDiv * 2}px;
+`;
 
 export default function () {
-  let {
+  const {
     classTypeData,
     classTimesData,
     showFormBuilderModal,
@@ -29,11 +34,13 @@ export default function () {
     notifyFor,
     classTimeForm,
     classTypeForm,
+    showBackgroundUpload,
     showConfirmationModal,
     deleteConfirmationModal,
     selectedClassTimeData,
     selectedClassTypeData,
     selectedClassTypeId,
+    selectedSchoolData,
   } = this.state;
 
   const classTimeParentData = selectedClassTypeId ? this.getClassTypeData(selectedClassTypeId) : selectedClassTypeData;
@@ -42,7 +49,18 @@ export default function () {
   // console.groupEnd();
 
   return (
-    <div style={{ paddingTop: "20px" }}>
+    <Wrapper>
+      {showBackgroundUpload && <UploadMedia
+        forClassType
+        schoolId={schoolId}
+        classTypeId={selectedClassTypeData._id}
+        mediaFormData={selectedClassTypeData}
+        showCreateMediaModal={showBackgroundUpload}
+        onChange={this.handleImageChange}
+        onClose={this.handleImageUploadClose}
+        imageType={"mainImg"}
+      />}
+
       {showConfirmationModal && (
         <SkillShapeDialogBox
           open={showConfirmationModal}
@@ -106,6 +124,7 @@ export default function () {
         onAddClassTypeClick={this.handleAddClassTypeClick}
         onEditClassTypeClick={this.handleEditClassTypeClick}
         onEditClassTimesClick={this.handleEditClassTimesClick}
+        onEditClassTypeImageClick={this.handleEditImageClick}
         onImageSave={this.handleImageSave}
         getClassTimesData={this.getClassTimesData}
         moveToNextTab={this.moveToNextTab}
@@ -128,6 +147,6 @@ export default function () {
         moveToNextTab={this.moveToNextTab}
         moveToPreviousTab={this.moveToPreviousTab}
       />*/}
-    </div>
+    </Wrapper>
   );
 }
