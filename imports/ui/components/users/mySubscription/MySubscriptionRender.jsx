@@ -185,17 +185,17 @@ const MySubscriptionRender = (props) => {
 			<Wrapper>
 				{!isEmpty(schoolData) &&
 					schoolData.map((school) => {
-						const subsData = getSubsDataBasedOnSchool(school._id, purchaseData);
-						const activeSubsData = subsData.filter(
-							(subs) => subs.packageStatus !== 'expired' || subs.status !== 'expired'
+						const allSubsData = getSubsDataBasedOnSchool(school._id, purchaseData);
+						const activeSubsData = allSubsData.filter(
+							(subs) => subs.packageStatus !== 'expired'
 						);
-						const expiredSubsData = subsData.filter(
+						const expiredSubsData = allSubsData.filter(
 							(subs) => subs.packageStatus === 'expired' || subs.status === 'expired'
 						);
 
-						// console.group(' MY SUBSCRIPTION');
-						// console.log(subsData, '===============');
-						// console.group();
+						console.group(' MY SUBSCRIPTIONS ');
+						console.log(school, activeSubsData, expiredSubsData, '===============');
+						console.groupEnd();
 
 						return (
 							<ExpansionPanel
@@ -211,7 +211,7 @@ const MySubscriptionRender = (props) => {
 									expandIcon={<ExpandMoreIcon />}
 								>
 									<SchoolProfile>
-										<SchoolImage src={src} />
+										<SchoolImage src={school.logoImg || school.logoImgMedium} />
 										<SubHeading> {school.name} </SubHeading>
 									</SchoolProfile>
 
