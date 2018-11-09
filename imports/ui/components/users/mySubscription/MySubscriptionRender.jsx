@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
+import { isEmpty, get } from "lodash";
 import ProgressiveImage from 'react-progressive-image';
 
 import { withStyles } from 'material-ui/styles';
@@ -115,9 +115,6 @@ const SchoolProfile = styled.div`
 `;
 
 const SchoolImage = withImageExists((props) => {
-	// console.group('SCHOOL IMAGE');
-	// console.info(props);
-	// console.groupEnd();
 	return (
 		<ProgressiveImage src={props.bgImg} placeholder={config.blurImage}>
 			{(src) => <ImageContainer src={src} />}
@@ -211,7 +208,7 @@ const MySubscriptionRender = (props) => {
 									expandIcon={<ExpandMoreIcon />}
 								>
 									<SchoolProfile>
-										<SchoolImage src={school.logoImg || school.logoImgMedium} />
+										<SchoolImage src={get(school, 'logoImgMedium', get(school, 'logoImg', schoolLogo))} />
 										<SubHeading> {school.name} </SubHeading>
 									</SchoolProfile>
 
