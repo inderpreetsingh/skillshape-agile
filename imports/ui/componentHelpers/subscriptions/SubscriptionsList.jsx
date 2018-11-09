@@ -44,6 +44,8 @@ const SubscriptionsTitle = Text.withComponent('h3').extend`
 
 const AllSubscriptions = styled.div`
 	max-width: 500px;
+	max-height: ${props => props.maxListHeight}px;
+	overflow-y: scroll;
 	width: 100%;
 	margin: 0 auto;
 
@@ -63,13 +65,20 @@ const SubscriptionDetails = styled.div`
 	}
 `;
 const SubscriptionsList = (props) => {
-	const { active, title, subsData, subsType, packageProps } = props;
+	const {
+		active,
+		title,
+		subsData,
+		subsType,
+		packageProps,
+		maxListHeight
+	} = props;
 	return (
 		<Wrapper active={active}>
 			<SubscriptionsTitle>{title}</SubscriptionsTitle>
 
 			{!isEmpty(subsData) && (
-				<AllSubscriptions>
+				<AllSubscriptions maxListHeight={maxListHeight}>
 					{subsData.map((subs) => {
 						const startDate = moment(formatDate(subs.startDate));
 						const endDate = moment(formatDate(subs.endDate));
@@ -95,12 +104,13 @@ const SubscriptionsList = (props) => {
 SubscriptionsList.propTypes = {
 	title: PropTypes.string,
 	active: PropTypes.bool,
-	subsType: PropTypes.string,
+	subsType: PropTypes.string, // it will be either mySubscriptions or adminSubscriptions
 	subsData: PropTypes.object,
 	packageProps: PropTypes.shape({
 		bgColor: PropTypes.string,
 		opacity: PropTypes.number
-	})
+	}),
+	maxListHeight: PropTypes.number,
 };
 
 SubscriptionsList.defaultProps = {
