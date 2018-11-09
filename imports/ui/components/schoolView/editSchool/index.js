@@ -17,14 +17,28 @@ class SchoolEditView extends React.Component {
   }
   componentWillMount() {
     // Listen for `?classDetails=true` so that we can click on tab.
-    
+    console.log('cwm run')
     if (this.props.location.query.tabValue) {
       // We should set state for class details tab so that it opens automatically.
       this.setState({ queryTabValue: this.props.location.query.tabValue });
     }
-    else if (get(this.props.route,'name',0) == "SchoolMemberView"){
+     if (get(this.props.route,'name',0) == "SchoolMemberView"){
       this.setState({ tabValue: 6 });
     }
+     if (get(this.props.route,'name',0) == "Financials"){
+      this.setState({ tabValue: 8 });
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    this.defaultTab(get(nextProps.route,'name',0));
+  }
+  defaultTab = (routeName) => {
+      if(routeName == "SchoolMemberView"){
+        this.setState({ tabValue: 6 });
+      }
+      else if(routeName == "Financials") {
+        this.setState({ tabValue: 8 });
+      }
   }
   checkSchoolAccess = (currentUser, schoolId) => {
     if (!currentUser || !schoolId) {
