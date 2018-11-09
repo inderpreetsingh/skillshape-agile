@@ -224,6 +224,7 @@ class ClassTypeForm extends React.Component {
   handleSubmit = ({ methodName, doc, doc_id }) => {
     //this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
+
       if (error) {
       }
       if (result) {
@@ -263,7 +264,8 @@ class ClassTypeForm extends React.Component {
               onSubmit={() =>
                 this.handleSubmit({
                   methodName: "classType.removeClassType",
-                  doc: data
+                  doc: data,
+                  doc_id: data._id
                 })
               }
               onClose={() => this.setState({ showConfirmationModal: false })}

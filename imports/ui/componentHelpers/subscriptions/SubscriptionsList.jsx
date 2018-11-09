@@ -8,10 +8,10 @@ import { formatDate } from '/imports/util/formatSchedule.js';
 
 import Package from '/imports/ui/components/landing/components/class/packages/Package.jsx';
 import {
-    Heading,
-    SubHeading,
-    Text,
-    Italic
+	Heading,
+	SubHeading,
+	Text,
+	Italic
 } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -65,31 +65,6 @@ const SubscriptionDetails = styled.div`
 	}
 `;
 const SubscriptionsList = (props) => {
-<<<<<<< HEAD
-    const {
-        active,
-        title,
-        subsData,
-        subsType,
-        packageProps,
-        maxListHeight
-    } = props;
-    return (
-        <Wrapper active={active}>
-            <SubscriptionsTitle>{title}</SubscriptionsTitle>
-
-            {!isEmpty(subsData) && (
-                <AllSubscriptions maxListHeight={maxListHeight}>
-                    {subsData.map((subs) => {
-                        const startDate = moment(formatDate(subs.startDate));
-                        const endDate = moment(formatDate(subs.endDate));
-                        // console.log(endDate.diff(startDate, 'years'), 'expirey....');
-                        if (endDate.diff(startDate, 'years') > 20) {
-                            subs.expiry = 'none';
-                        } else {
-                            subs.expiry = true;
-                        }
-=======
 	const {
 		active,
 		title,
@@ -113,36 +88,24 @@ const SubscriptionsList = (props) => {
 						} else {
 							subs.expiry = true;
 						}
->>>>>>> c3ab566db41cf406b978ea037454e1180ab4e245
 
-                        return (
-                            <SubscriptionDetails>
-                                <Package
-                                    {...subs}
-                                    {...packageProps}
-                                    subsType={subsType}
-                                    forSubscription />
-                            </SubscriptionDetails>
-                        );
-                    })}
-                </AllSubscriptions>
-            )}
-        </Wrapper>
-    );
+						return (
+							<SubscriptionDetails>
+								<Package
+									{...subs}
+									{...packageProps}
+									subsType={subsType}
+									forSubscription />
+							</SubscriptionDetails>
+						);
+					})}
+				</AllSubscriptions>
+			)}
+		</Wrapper>
+	);
 };
 
 SubscriptionsList.propTypes = {
-<<<<<<< HEAD
-    title: PropTypes.string,
-    active: PropTypes.bool,
-    subsType: PropTypes.string, // it will be either mySubscriptions or adminSubscriptions
-    subsData: PropTypes.object,
-    packageProps: PropTypes.shape({
-        bgColor: PropTypes.string,
-        opacity: PropTypes.number
-    }),
-    maxListHeight: PropTypes.number,
-=======
 	title: PropTypes.string,
 	active: PropTypes.bool,
 	subsType: PropTypes.string, // it will be either mySubscriptions or adminSubscriptions
@@ -152,11 +115,10 @@ SubscriptionsList.propTypes = {
 		opacity: PropTypes.number
 	}),
 	maxListHeight: PropTypes.number,
->>>>>>> c3ab566db41cf406b978ea037454e1180ab4e245
 };
 
 SubscriptionsList.defaultProps = {
-    active: false
+	active: false
 };
 
 export default SubscriptionsList;

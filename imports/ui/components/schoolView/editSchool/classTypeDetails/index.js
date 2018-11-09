@@ -172,6 +172,7 @@ class ClassTypeDetails extends React.Component {
   }
 
   handleDeleteData = () => {
+    debugger;
     this.setState({ isBusy: true });
     const { popUp } = this.props;
     const { classTypeData } = this.state;
@@ -200,6 +201,7 @@ class ClassTypeDetails extends React.Component {
   };
 
   closeDeleteConfirmationModal = () => {
+    debugger;
     this.setState(state => {
       return {
         ...state,
@@ -261,6 +263,8 @@ class ClassTypeDetails extends React.Component {
         ...state,
         formAction: 'add',
         classTypeForm: true,
+        selectedClassTypeId: null,
+        selectedClassTimeData: null,
         selectedClassTypeData: null
       }
     })
@@ -310,14 +314,15 @@ class ClassTypeDetails extends React.Component {
       return {
         ...state,
         classTimeForm: false,
+        formAction: null,
         selectedClassTypeId: null,
-        selectedClassTypeData: null
+        selectedClassTypeData: null,
+        selectedClassTimeData: null,
       }
     });
   }
 
   handleClassTypeFormClose = (parentId, formAction) => {
-    debugger;
     if (formAction === 'add') {
       this.setState(state => {
         return {
@@ -347,6 +352,9 @@ class ClassTypeDetails extends React.Component {
     //   {...this.props}
     //   modifySelectSubjectsInClassTypeData={this.modifySelectSubjectsInClassTypeData}
     // />
+    console.group("MY CLASSTYPE DETAILS RENDER");
+    console.log(this.state);
+    console.groupEnd();
     return ClassTypeDetailsRender.call(this, this.props, this.state);
   }
 }

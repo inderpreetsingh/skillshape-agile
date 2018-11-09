@@ -108,8 +108,8 @@ export default function () {
         onEditClassTimesClick={this.handleEditClassTimesClick}
         onImageSave={this.handleImageSave}
         getClassTimesData={this.getClassTimesData}
-        /*moveToNextTab={this.moveToNextTab}*/
-        /*moveToPreviousTab={this.moveToPreviousTab}*/
+        moveToNextTab={this.moveToNextTab}
+        moveToPreviousTab={this.moveToPreviousTab}
         /*completeClassTimesData={classTimesData}*/
         classTypeData={this.modifySelectSubjectsInClassTypeData()}
       />}
