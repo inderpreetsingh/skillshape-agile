@@ -7,8 +7,9 @@ export const  normalizeMonthlyPricingData = monthlyPricingData => {
           monthlyPricingObj.pymtDetails &&
           monthlyPricingObj.pymtDetails.forEach(payment => {
             const myMonthlyPricingObj = Object.assign({}, monthlyPricingObj);
-            myMonthlyPricingObj.pymtDetails = [];
-            myMonthlyPricingObj.pymtDetails.push(payment);
+            myMonthlyPricingObj.pymtDetails = monthlyPricingObj.pymtDetails;
+            myMonthlyPricingObj.uiPayment = [];
+            myMonthlyPricingObj.uiPayment.push(payment);
             normalizedMonthlyPricingData.push(myMonthlyPricingObj);
           });
       }

@@ -239,8 +239,8 @@ const Package = (props) => {
 									<NoOfClasses>{props.noClasses && `for ${props.noClasses} classes`}</NoOfClasses>
 								</PriceSection>
 							) : (
-								!isEmpty(props.pymtDetails) &&
-								props.pymtDetails.map((payment, index) => {
+								!isEmpty(props.uiPayment) &&
+								props.uiPayment.map((payment, index) => {
 									return (
 										<PriceSection key={`${payment.cost}-${index}`}>
 											<Price>

@@ -2,6 +2,7 @@ import React from "react";
 import PanelHeader from '../panelHeader';
 import MonthlyPriceForm from './monthlyPriceForm';
 import PackageList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
+import { normalizeMonthlyPricingData } from "/imports/util";
 export default function () {
 
 
@@ -33,7 +34,7 @@ export default function () {
                	}
                </Grid> */}
             <PackageList
-                monthlyPackagesData={monthlyPricingData}
+                monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricingData)}
                 currency={currency}
                 onSchoolEdit={true}
                 onEditClick={() => this.setState({ showForm: true })}
