@@ -257,7 +257,8 @@ pastSubscriptionButton = () => (
         <FormGhostButton
             label={'Past Subscriptions'}
             onClick={() => {
-                browserHistory.push(`/mySubscription/${Meteor.userId()}`);
+                const url = `${Meteor.absoluteUrl()}mySubscription/${Meteor.userId()}`;
+                 window.open(url, '_blank');
             }}
             applyClose
         />
@@ -735,7 +736,8 @@ handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPy
                                 <FormGhostButton
                                     label={'My Subscriptions'}
                                     onClick={() => {
-                                        browserHistory.push(`/mySubscription/${Meteor.userId()}`);
+                                        const url = `${Meteor.absoluteUrl()}mySubscription/${Meteor.userId()}`;
+                                        window.open(url, '_blank');
                                     }}
                                     applyClose
                                 />
@@ -821,7 +823,8 @@ handleCharge = (
                                     <FormGhostButton
                                         label={'My Subscriptions'}
                                         onClick={() => {
-                                            browserHistory.push(`/mySubscription/${Meteor.userId()}`);
+                                            const url = `${Meteor.absoluteUrl()}mySubscription/${Meteor.userId()}`;
+                                            window.open(url, '_blank');
                                         }}
                                         applyClose
                                     />
