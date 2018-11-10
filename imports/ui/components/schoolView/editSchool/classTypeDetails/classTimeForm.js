@@ -271,9 +271,7 @@ class ClassTimeForm extends React.Component {
                         value="closed"
                       />
                     }
-                    label="Do you want to close registration for this series once the first class has started?
-                     This will make it a Closed Series. Students who join the class will be enrolled in the 
-                     entire series."
+                    label="Do you want to make this a Closed Series / Set? This will close registration once the first class has started and students who join will be enrolled in the entire series."
                   />
                 </FormControl>}
     </Fragment>
