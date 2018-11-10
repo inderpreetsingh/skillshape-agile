@@ -114,7 +114,7 @@ const styles = {
 
 const ClassTypeCardDescription = (props) => {
 	const { cardRevealInfo, schoolData, editMode, selectedSkillSubject, onEditClassTypeClick } = props;
-	let BB = {backgroundColor:'black'};
+	let BB = {backgroundColor:'#dddddd'};
 	return (
 		<MuiThemeProvider theme={MuiTheme}>
 			<Fragment>
