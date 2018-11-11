@@ -5,14 +5,21 @@ import styled from 'styled-components';
 import React from 'react';
 import moment from 'moment';
 import {  formatMoney } from '/imports/util';
-import { browserHistory } from 'react-router';
+import LoginButton from "/imports/ui/components/landing/components/buttons/LoginButton.jsx";
+import JoinButton from '/imports/ui/components/landing/components/buttons/JoinButton.jsx';
 const ButtonsWrapper = styled.div`
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
 `;
+const Div = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: center;
+`;
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 export const stripePaymentHelper = async function(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) {
+    
     resetStates(this);
     const { popUp } = this.props;
     popUp.appear('success', {
@@ -28,6 +35,16 @@ export const stripePaymentHelper = async function(packageType, packageId, school
     });
     let self = this;
     let userId = Meteor.userId();
+    if(!userId){
+        popUp.appear("alert", {
+          title: "Login Required",
+          content: `To purchase any package you must be logged.`,
+          RenderActions: ( <Div > <LoginButton {...this.props} />  
+            <JoinButton label="Sign Up" {...this.props} />
+       </Div>)
+        }, true);
+        return ;
+      }
     //check is package is already purchased
 
     await isAlreadyPurchased({

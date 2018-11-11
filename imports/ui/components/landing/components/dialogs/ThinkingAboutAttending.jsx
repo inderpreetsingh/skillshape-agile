@@ -13,6 +13,9 @@ import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTypePackages from './classTypePackages.jsx';
 import Button from 'material-ui/Button';
+import Events from "/imports/util/events";
+import SignUpDialogBox from "/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx";
+
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -71,6 +74,77 @@ class ThinkingAboutAttending extends React.Component {
         const {addToCalendar,notification}= this.props;
         this.state = { checkBoxes:[true,true,true],classTypePackages:false }
     }
+    componentWillMount() {
+        Events.on("loginAsUser", "123456", data => {
+          this.handleLoginModalState(true, data);
+        });
+        Events.on("registerAsSchool", "123#567", data => {
+          let { userType, userEmail, userName } = data;
+          this.handleSignUpDialogBoxState(true, userType, userEmail, userName);
+        });
+      }
+      handleSignUpDialogBoxState = (state, userType, userEmail, userName) => {
+        this.setState({
+          signUpDialogBox: state,
+          userData: { userType: userType },
+          userEmail: userEmail,
+          userName: userName,
+          errorText: null
+        });
+      };
+      handleSignUpSubmit = (payload, event) => {
+        event.preventDefault();
+        let obj = {};
+        if (!payload.name || !payload.email) {
+          obj.errorText = "* fields are mandatory";
+        } else if (!payload.captchaValue) {
+          obj.errorText = "You can't leave Captcha empty";
+        } else {
+          obj.errorText = null;
+          obj.termsOfServiceDialogBox = true;
+          obj.userData = { ...this.state.userData, ...payload };
+        }
+        this.setState(obj);
+      };
+      unsetError = () => this.setState({ errorText: null });
+      handleLoginGoogle = () => {
+        let self = this;
+        this.setState({ loading: true });
+        Meteor.loginWithGoogle({}, function(err, result) {
+          let modalObj = {
+            loginModal: false,
+            loading: false,
+            error: {}
+          };
+          if (err) {
+            modalObj.error.message = err.reason || err.message;
+            modalObj.loginModal = true;
+          }
+          self.setState(modalObj);
+        });
+      };
+    
+      handleLoginFacebook = () => {
+        let self = this;
+        this.setState({ loading: true });
+        Meteor.loginWithFacebook(
+          {
+            requestPermissions: ["user_friends", "public_profile", "email"]
+          },
+          function(err, result) {
+            let modalObj = {
+              loginModal: false,
+              loading: false,
+              error: {}
+            };
+            if (err) {
+              modalObj.error.message = err.reason || err.message;
+              modalObj.loginModal = true;
+            }
+            self.setState(modalObj);
+          }
+        );
+      };
     
     render() {
         const {checkBoxes,classTypePackages}=this.state;
@@ -85,6 +159,19 @@ class ThinkingAboutAttending extends React.Component {
                     onRequestClose={onModalClose}
                     aria-labelledby="Thinking About Attending"
                     >
+                     {this.state.signUpDialogBox && (
+          <SignUpDialogBox
+            open={this.state.signUpDialogBox}
+            onModalClose={() => this.handleSignUpDialogBoxState(false)}
+            onSubmit={this.handleSignUpSubmit}
+            errorText={this.state.errorText}
+            unsetError={this.unsetError}
+            userName={this.state.userName}
+            userEmail={this.state.userEmail}
+            onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
+            onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
+          />
+        )}
                     {this.props.isLoading && <ContainerLoader />}
                     {classTypePackages && <ClassTypePackages 
                     schoolId = {schoolId}

@@ -22,7 +22,7 @@ class JoinButton extends Component {
 
     render() {
         const { joinModal } = this.state;
-        const { fullWidth, currentUser } = this.props;
+        const { fullWidth, currentUser,iconName } = this.props;
 
     	return(
     		<Fragment>
@@ -32,6 +32,8 @@ class JoinButton extends Component {
                     noMarginBottom
                     fullWidth={fullWidth}
                     label={this.props.label}
+                    icon={currentUser ? false : true}
+                    iconName={'assignment_ind'}
                     onClick={()=> this.setState({joinModal: true})}
                 />
             }
