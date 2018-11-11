@@ -64,6 +64,7 @@ class LoginButton extends Component {
     let redirectUrl;
     const { email, password } = this.state;
     let stateObj = { ...this.state };
+    let {fromPurchase} = this.props;
 
     if (this.state.redirectUrl) {
       redirectUrl = this.state.redirectUrl;
@@ -94,7 +95,7 @@ class LoginButton extends Component {
                     so in this case we need to redirect to school admin page that we are getting in query params*/
           if (redirectUrl) {
             browserHistory.push(redirectUrl);
-          } else {
+          } else if(!fromPurchase){
             browserHistory.push("/");
           }
         }

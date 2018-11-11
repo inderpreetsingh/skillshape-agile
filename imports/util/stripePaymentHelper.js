@@ -39,7 +39,7 @@ export const stripePaymentHelper = async function(packageType, packageId, school
         popUp.appear("alert", {
           title: "Login Required",
           content: `To purchase any package you must be logged.`,
-          RenderActions: ( <Div > <LoginButton {...this.props} />  
+          RenderActions: ( <Div > <LoginButton {...this.props} fromPurchase={true}/>  
             <JoinButton label="Sign Up" {...this.props} />
        </Div>)
         }, true);
