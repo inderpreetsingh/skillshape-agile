@@ -390,7 +390,12 @@ class SchoolMemberInfo extends Component {
 					view === 'admin' &&
 					Meteor.settings.public.paymentEnabled &&
 					(
-						<SubscriptionsList packageProps={{ bgColor: "white", opacity: 1 }} title={"Subscriptions"} subsType="adminSubscriptions" subsData={subscriptionList} />
+						<SubscriptionsList
+							maxListHeight={500}
+							packageProps={{ bgColor: "white", opacity: 1 }}
+							title={"Subscriptions"}
+							subsType="adminSubscriptions"
+							subsData={subscriptionList} />
 					)}
 				{console.log(subscriptionList, '=========')
 					/*<SubscriptionBox subscriptionList={subscriptionList} />*/

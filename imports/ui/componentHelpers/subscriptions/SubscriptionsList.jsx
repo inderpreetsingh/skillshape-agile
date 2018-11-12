@@ -30,14 +30,14 @@ const Wrapper = styled.div`
 		right: 0;
 		width: 100%;
 		z-index: 0;
-		background-color: ${(props) => (props.active ? helpers.primaryColor : helpers.panelColor)};
 		opacity: 0.1;
+		background-color: ${(props) => (props.active ? helpers.primaryColor : helpers.panelColor)};
 	}
 `;
 
 const SubscriptionsTitle = Text.withComponent('h3').extend`
 	text-align: center;
-	font-size: ${helpers.baseFontSize}px;
+	font-size: ${helpers.baseFontSize * 1.25}px;
 	font-style: italic;
 	margin-bottom: ${helpers.rhythmDiv}px;
 `;
