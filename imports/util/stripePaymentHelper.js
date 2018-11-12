@@ -42,9 +42,7 @@ export const stripePaymentHelper = async function(packageType, packageId, school
           RenderActions: ( <Div > <LoginButton {...this.props} fromPurchase={true}/>  
             <JoinButton label="Sign Up" {...this.props} />
        </Div>)
-        }, true,{
-            autoClose: true
-        });
+        }, true);
         return ;
       }
     //check is package is already purchased
