@@ -27,7 +27,8 @@ import { emailRegex } from "/imports/util";
 
 const styles = {
   dialogPaper: {
-    padding: `${helpers.rhythmDiv * 2}px`
+    padding: `${helpers.rhythmDiv * 2}px`,
+    height: 'auto'
   },
   dialogTitleRoot: {
     display: "flex",

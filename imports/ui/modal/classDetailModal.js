@@ -41,7 +41,8 @@ const styles = theme => {
       overflowX: "hidden",
       padding: helpers.rhythmDiv * 2,
       maxWidth: 400,
-      maxHeight: "80vh"
+      maxHeight: "80vh",
+      height:'auto'
     },
     dialogTitleRoot: {
       width: "100%",

@@ -50,7 +50,6 @@ const styles = theme => {
     },
   }
 }
-
 const DialogActionWrapper = styled.div `
   display: flex;
   flex-direction: column;
@@ -99,7 +98,8 @@ const SignUpTypeDialogBox = (props) => (
 	    onRequestClose={props.onModalClose}
 	    aria-labelledby="join"
 	    itemScope
-	    itemType="http://schema.org/CheckInAction"
+      itemType="http://schema.org/CheckInAction"
+      style = {{height:'auto',top:'50%'}}
 	>
 		<MuiThemeProvider theme={muiTheme}>
 

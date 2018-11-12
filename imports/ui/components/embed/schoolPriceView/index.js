@@ -8,7 +8,7 @@ import ClassType from "/imports/api/classType/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
-import { withPopUp, emailRegex,stripePaymentHelper } from "/imports/util";
+import { withPopUp, emailRegex,stripePaymentHelper,normalizeMonthlyPricingData } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import Events from "/imports/util/events";
 import LoginDialogBox from "/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx";
@@ -125,24 +125,6 @@ class SchoolPriceView extends React.Component {
       }
     };
 
-  normalizeMonthlyPricingData = monthlyPricingData => {
-    if (monthlyPricingData) {
-      let normalizedMonthlyPricingData = [];
-
-      for (let monthlyPricingObj of monthlyPricingData) {
-        monthlyPricingObj.pymtDetails.forEach(payment => {
-          const myMonthlyPricingObj = Object.assign({}, monthlyPricingObj);
-          myMonthlyPricingObj.pymtDetails = [];
-          myMonthlyPricingObj.pymtDetails.push(payment);
-          normalizedMonthlyPricingData.push(myMonthlyPricingObj);
-        });
-      }
-
-      return normalizedMonthlyPricingData;
-    } else {
-      return monthlyPricingData;
-    }
-  };
 
   handleInputChange = (inputName, event) => {
     if (inputName === "email") {
@@ -423,7 +405,7 @@ class SchoolPriceView extends React.Component {
           enrollMentPackages
           enrollMentPackagesData={enrollmentFee}
           perClassPackagesData={classPricing}
-          monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricing)}
+          monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricing)}
           currency={currency}
         />
       </div>

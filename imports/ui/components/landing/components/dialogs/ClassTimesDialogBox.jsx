@@ -35,7 +35,8 @@ const styles = {
     maxWidth: 400,
     background: "white",
     margin: helpers.rhythmDiv,
-    overflowY: "auto"
+    overflowY: "auto",
+    height:'auto'
   },
   dialogTitle: {
     // padding: `0 ${helpers.rhythmDiv * 3}px`,
