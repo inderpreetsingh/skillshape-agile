@@ -91,7 +91,11 @@ const SubscriptionsList = (props) => {
 
 						return (
 							<SubscriptionDetails>
-								<Package forSubscription {...packageProps} subsType={subsType} {...subs} />
+								<Package
+									{...subs}
+									{...packageProps}
+									subsType={subsType}
+									forSubscription />
 							</SubscriptionDetails>
 						);
 					})}
