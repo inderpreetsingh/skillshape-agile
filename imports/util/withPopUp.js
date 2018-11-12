@@ -50,7 +50,7 @@ export function withPopUp(WrappedComponent) {
       }
       if (this.state.dialogBoxProps.onAffirmationButtonClick) {
         this.state.dialogBoxProps.onAffirmationButtonClick();
-        
+
       }
     };
 

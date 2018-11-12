@@ -131,7 +131,7 @@ export default function () {
         moveToPreviousTab={this.moveToPreviousTab}
         /*completeClassTimesData={classTimesData}*/
         classTypeData={this.modifySelectSubjectsInClassTypeData()}
-      />}
+      />
 
       {/*<PanelWithTable
         schoolId={schoolId}

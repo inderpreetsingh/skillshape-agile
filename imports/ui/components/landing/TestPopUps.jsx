@@ -73,7 +73,9 @@ class TestPopUps extends Component {
           </Button>
         </ButtonsWrapper>
       )
-    });
+    }, true, {
+        autoClose: true
+      });
   };
 
   handleShowBothButtonInAlert = () => {

@@ -28,18 +28,24 @@ import PrimaryButton from '/imports/ui/components/landing/components/buttons/Pri
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 
 import { getContainerMaxWidth, withImageExists } from '/imports/util';
-import { rhythmDiv, flexCenter, primaryColor, mobile, maxContainerWidth } from '/imports/ui/components/landing/components/jss/helpers.js';
+import {
+	rhythmDiv,
+	flexCenter,
+	primaryColor,
+	mobile, maxContainerWidth, tablet
+} from '/imports/ui/components/landing/components/jss/helpers.js';
 import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
 
 const SPACING = rhythmDiv * 2;
 const CARD_WIDTH = 280;
+
 const imageExistsConfig = {
 	originalImagePath: 'src',
 	defaultImage: schoolLogo
 };
 
 const Wrapper = styled.div`
-	max-width: ${maxContainerWidth};
+	max-width: ${maxContainerWidth}px;
 `;
 
 const CardsWrapper = styled.div``;
@@ -49,13 +55,13 @@ const Notifications = styled.div`
 	flex-direction: column;
 `;
 
-const PaperInner = styled.div`
+const TopBar = styled.div`
 	display: flex;
 	justify-content: space-between;
 
 	@media screen and (max-width: ${mobile + 100}px) {
 		width: 100%;
-		justify-content: space-evenly;
+		justify-content: space-between;
 		margin-bottom: ${rhythmDiv}px;
 	}
 `;
@@ -71,20 +77,27 @@ const ImageContainer = styled.div`
   background-image: url('${(props) => props.src}');
   background-size: 50px auto;
   transition: background-image 1s linear;
+
+  @media screen and (max-width: ${tablet}px) {
+		width: 75px;
+		height: 75px;
+		background-size: 75px auto;
+	}
 `;
 
 const NotificationWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 
-const IconWrapper = styled.div`${flexCenter};`;
+const IconWrapper = styled.div`${flexCenter}; margin-right: ${rhythmDiv}px;`;
 
-const TextWrapper = styled.div`padding: 0 ${rhythmDiv * 4}px;`;
+const TextWrapper = styled.div`padding: 0`;
 
 const ExpansionsWrapper = styled.div`padding: ${rhythmDiv * 2}px;`;
 
 const ToggleVisibility = styled.div`
 	display: ${(props) => (props.hideOnSmall ? 'flex' : 'none')};
+	${props => props.noShrink && 'flex-shrink: 0'};
 
-	@media screen and (max-width: ${mobile + 100}px) {
+	@media screen and (max-width: ${props => props.screenSize || mobile + 100}px) {
 		display: ${(props) => (props.hideOnSmall ? 'none' : 'flex')};
 	}
 `;
@@ -96,27 +109,44 @@ const TopBarButton = styled.div`
 
 const ActionButtons = styled.div`
 	${flexCenter}
+	flex-shrink: 0;
 
-	@media screen and (max-width: 450px) {
-		flex-direction: column;
+	@media screen and (max-width: ${mobile}px) {
+		flex-wrap: wrap;
 	}
-`;
-
-const ClassTypeProfile = styled.div`
-	${flexCenter}
-	flex-wrap: wrap;
 `;
 
 const ActionButton = styled.div`
 	max-height: ${rhythmDiv * 5}px;
 	${props => props.left && `margin-right: ${rhythmDiv}px`};
-	margin-bottom: ${rhythmDiv}px;
-	@media screen and (max-width: 450px) {
+	@media screen and (max-width: ${mobile}px) {
 		margin-right: 0;
-}`;
+		${props => props.left && `display: none`};
+	}
+`;
+
+const ClassTypeProfile = styled.div`
+	${flexCenter}
+	@media screen and (max-width : 350px) {
+	 	flex-direction: column;
+		align-items: flex-start;
+	}
+`;
+
+const ClassTypeNameWrapper = styled.div`
+	${flexCenter}
+	flex-direction: column;
+	
+	@media screen and (max-width: ${mobile}px) {
+		align-items: flex-start;
+	}
+`;
 
 const ClassTypeName = Text.extend`
+	font-size: 20px;
+	margin-right: ${rhythmDiv}px;
 	margin-bottom: ${rhythmDiv}px;
+	flex-shrink: 1;
 `;
 
 const ClassTypeImage = withImageExists((props) => {
@@ -147,8 +177,11 @@ const styles = {
 	},
 	expansionPanelSummaryContent: {
 		justifyContent: 'space-between',
-		[`@media screen and (max-width: ${mobile + 100}px)`]: {
-			flexDirection: 'column',
+		[`@media screen and (max-width: ${tablet}px)`]: {
+			justifyContent: 'center'
+		},
+		[`@media screen and (max-width: ${mobile}px)`]: {
+			justifyContent: 'flex-start',
 			"& > :last-child": {
 				paddingRight: 0
 			}
@@ -184,7 +217,7 @@ const ClassTypeExpansionRender = (props) => {
 	return (
 		<Wrapper>
 			<Paper className={paperRoot} elevation={1}>
-				<PaperInner>
+				<TopBar>
 					<IconWrapper>
 						<Icon className={barIcon}>{'class'}</Icon>
 						<Text marginBottom="0" color="white">
@@ -194,16 +227,16 @@ const ClassTypeExpansionRender = (props) => {
 					<ToggleVisibility hideOnSmall>
 						<TextWrapper>
 							<Text color="white">
-								Class Types are a group of one or more Class Times where similar or related material is
+								Class Types are a group of one or more Classtimes where similar or related material is
 								taught to students, possibly grouped by age, skill level, or gender. If you separate
 								classes by age, gender, skill level or material, separate Class Types should be created.
 							</Text>
 						</TextWrapper>
 					</ToggleVisibility>
 					<TopBarButton>
-						<FormGhostButton whiteColor label={'Add Class Type'} onClick={onAddClassTypeClick} />
+						<FormGhostButton whiteColor label={'Add ClassType'} onClick={onAddClassTypeClick} />
 					</TopBarButton>
-				</PaperInner>
+				</TopBar>
 				<ToggleVisibility>
 					<TextWrapper>
 						<Text color="white">
@@ -222,27 +255,54 @@ const ClassTypeExpansionRender = (props) => {
 							expandIcon={<Icon>{'expand_more'}</Icon>}>
 							<ClassTypeProfile>
 								<ClassTypeImage src={get(ctData, 'medium', get(ctData, 'classTypeImg', schoolLogo))} />
-								<ClassTypeName>{ctData.name}</ClassTypeName>
-							</ClassTypeProfile>
-							<ActionButtons>
-								<ActionButton left>
-									<FormGhostButton
-										icon
-										iconName="edit"
-										label="Edit ClassType"
-										onClick={onEditClassTypeClick(ctData)}
-									/>
-								</ActionButton>
+								<ClassTypeNameWrapper>
+									<ClassTypeName>{ctData.name}</ClassTypeName>
+									<ToggleVisibility screenSize={tablet}>
+										<ActionButtons>
+											<ActionButton left>
+												<FormGhostButton
+													icon
+													iconName="edit"
+													label="Edit class"
+													onClick={onEditClassTypeClick(ctData)}
+												/>
+											</ActionButton>
 
-								<ActionButton>
-									<FormGhostButton
-										icon
-										iconName="add_circle_outline"
-										label="Add ClassTime"
-										onClick={onAddClassTimeClick(ctData)}
-									/>
-								</ActionButton>
-							</ActionButtons>
+											<ActionButton>
+												<FormGhostButton
+													icon
+													iconName="add_circle_outline"
+													label="Add time"
+													onClick={onAddClassTimeClick(ctData)}
+												/>
+											</ActionButton>
+										</ActionButtons>
+									</ToggleVisibility>
+								</ClassTypeNameWrapper>
+							</ClassTypeProfile>
+
+							<ToggleVisibility hideOnSmall noShrink screenSize={tablet}>
+								<ActionButtons>
+									<ActionButton left>
+										<FormGhostButton
+											icon
+											iconName="edit"
+											label="Edit class"
+											onClick={onEditClassTypeClick(ctData)}
+										/>
+									</ActionButton>
+
+									<ActionButton>
+										<FormGhostButton
+											icon
+											iconName="add_circle_outline"
+											label="Add time"
+											onClick={onAddClassTimeClick(ctData)}
+										/>
+									</ActionButton>
+								</ActionButtons>
+							</ToggleVisibility>
+
 						</ExpansionPanelSummary>
 
 						<ExpansionPanelDetails className={expansionPanelDetails}>
