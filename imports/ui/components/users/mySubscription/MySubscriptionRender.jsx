@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
-import isEmpty from 'lodash/isEmpty';
+import { isEmpty, get } from "lodash";
 import ProgressiveImage from 'react-progressive-image';
 
 import { withStyles } from 'material-ui/styles';
@@ -115,9 +115,6 @@ const SchoolProfile = styled.div`
 `;
 
 const SchoolImage = withImageExists((props) => {
-	// console.group('SCHOOL IMAGE');
-	// console.info(props);
-	// console.groupEnd();
 	return (
 		<ProgressiveImage src={props.bgImg} placeholder={config.blurImage}>
 			{(src) => <ImageContainer src={src} />}
@@ -185,17 +182,17 @@ const MySubscriptionRender = (props) => {
 			<Wrapper>
 				{!isEmpty(schoolData) &&
 					schoolData.map((school) => {
-						const subsData = getSubsDataBasedOnSchool(school._id, purchaseData);
-						const activeSubsData = subsData.filter(
-							(subs) => subs.packageStatus !== 'expired' || subs.status !== 'expired'
+						const allSubsData = getSubsDataBasedOnSchool(school._id, purchaseData);
+						const activeSubsData = allSubsData.filter(
+							(subs) => subs.packageStatus !== 'expired'
 						);
-						const expiredSubsData = subsData.filter(
+						const expiredSubsData = allSubsData.filter(
 							(subs) => subs.packageStatus === 'expired' || subs.status === 'expired'
 						);
 
-						// console.group(' MY SUBSCRIPTION');
-						// console.log(subsData, '===============');
-						// console.group();
+						console.group(' MY SUBSCRIPTIONS ');
+						console.log(school, activeSubsData, expiredSubsData, '===============');
+						console.groupEnd();
 
 						return (
 							<ExpansionPanel
@@ -211,7 +208,7 @@ const MySubscriptionRender = (props) => {
 									expandIcon={<ExpandMoreIcon />}
 								>
 									<SchoolProfile>
-										<SchoolImage src={src} />
+										<SchoolImage src={get(school, 'logoImgMedium', get(school, 'logoImg', schoolLogo))} />
 										<SubHeading> {school.name} </SubHeading>
 									</SchoolProfile>
 
