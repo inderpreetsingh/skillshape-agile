@@ -130,7 +130,8 @@ class ClassTypeCard extends Component {
 			bgImg,
 			editMode,
 			onEditClassTypeClick,
-			params
+			onEditClassTypeImageClick,
+			params,
 		} = this.props;
 		const cardRevealData = {
 			_id: _id,
@@ -172,7 +173,7 @@ class ClassTypeCard extends Component {
 						x={this.state.x}
 						y={this.state.y}
 						{...this.props}
-						params= {params}
+						params={params}
 					/>
 				)}
 				{this.state.manageRequestsDialog && (
@@ -192,6 +193,7 @@ class ClassTypeCard extends Component {
 				<CardsRevealWrapper>
 					<CardsReveal
 						{...this.props}
+						onEditClassTypeImageClick={onEditClassTypeImageClick}
 						bgImg={this.props.bgImg}
 						body={
 							<ClassTypeCardBody

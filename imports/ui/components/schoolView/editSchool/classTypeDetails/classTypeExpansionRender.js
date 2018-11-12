@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react';
 import { withStyles } from 'material-ui/styles';
 import styled from 'styled-components';
+import { get } from 'lodash';
 import Typography from 'material-ui/Typography';
 import Icon from 'material-ui/Icon';
 import Paper from 'material-ui/Paper';
+import ProgressiveImage from 'react-progressive-image';
 
 import ExpansionPanel, {
 	ExpansionPanelDetails,
@@ -25,11 +27,20 @@ import Notification from '/imports/ui/components/landing/components/helpers/Noti
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 
-import { getContainerMaxWidth } from '/imports/util';
-import { rhythmDiv, flexCenter, primaryColor, mobile } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { getContainerMaxWidth, withImageExists } from '/imports/util';
+import { rhythmDiv, flexCenter, primaryColor, mobile, maxContainerWidth } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
 
 const SPACING = rhythmDiv * 2;
 const CARD_WIDTH = 280;
+const imageExistsConfig = {
+	originalImagePath: 'src',
+	defaultImage: schoolLogo
+};
+
+const Wrapper = styled.div`
+	max-width: ${maxContainerWidth};
+`;
 
 const CardsWrapper = styled.div``;
 
@@ -47,6 +58,19 @@ const PaperInner = styled.div`
 		justify-content: space-evenly;
 		margin-bottom: ${rhythmDiv}px;
 	}
+`;
+
+const ImageContainer = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: ${rhythmDiv * 2}px;
+  margin-bottom: ${rhythmDiv}px;
+  background-position: 50% 50%;
+  background-image: url('${(props) => props.src}');
+  background-size: 50px auto;
+  transition: background-image 1s linear;
 `;
 
 const NotificationWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
@@ -70,6 +94,39 @@ const TopBarButton = styled.div`
 	align-self: center;
 `;
 
+const ActionButtons = styled.div`
+	${flexCenter}
+
+	@media screen and (max-width: 450px) {
+		flex-direction: column;
+	}
+`;
+
+const ClassTypeProfile = styled.div`
+	${flexCenter}
+	flex-wrap: wrap;
+`;
+
+const ActionButton = styled.div`
+	max-height: ${rhythmDiv * 5}px;
+	${props => props.left && `margin-right: ${rhythmDiv}px`};
+	margin-bottom: ${rhythmDiv}px;
+	@media screen and (max-width: 450px) {
+		margin-right: 0;
+}`;
+
+const ClassTypeName = Text.extend`
+	margin-bottom: ${rhythmDiv}px;
+`;
+
+const ClassTypeImage = withImageExists((props) => {
+	return (
+		<ProgressiveImage src={props.bgImg} placeholder={config.blurImage}>
+			{(src) => <ImageContainer src={src} />}
+		</ProgressiveImage>
+	);
+}, imageExistsConfig);
+
 const styles = {
 	paperRoot: {
 		display: 'flex',
@@ -86,27 +143,46 @@ const styles = {
 		color: 'white'
 	},
 	expansionPanelRoot: {
-		marginBottom: rhythmDiv
+		marginBottom: rhythmDiv,
+	},
+	expansionPanelSummaryContent: {
+		justifyContent: 'space-between',
+		[`@media screen and (max-width: ${mobile + 100}px)`]: {
+			flexDirection: 'column',
+			"& > :last-child": {
+				paddingRight: 0
+			}
+		},
 	},
 	expansionPanelDetails: {
 		display: 'flex',
 		flexDirection: 'column'
 	}
-};
+}
+
 
 const ClassTypeExpansionRender = (props) => {
 	const {
 		getClassTimesData,
+		onAddClassTimeClick,
 		onAddClassTypeClick,
 		onEditClassTypeClick,
 		onEditClassTimesClick,
+		onEditClassTypeImageClick,
 		onNotifyClassTypeUpdate,
+		onImageSave,
 		classTypeData,
-		classes: { expansionPanelDetails, expansionPanelRoot, paperRoot, barIcon }
+		classes: {
+			expansionPanelDetails,
+			expansionPanelSummaryContent,
+			expansionPanelRoot,
+			paperRoot,
+			barIcon
+		}
 	} = props;
 
 	return (
-		<Fragment>
+		<Wrapper>
 			<Paper className={paperRoot} elevation={1}>
 				<PaperInner>
 					<IconWrapper>
@@ -139,11 +215,36 @@ const ClassTypeExpansionRender = (props) => {
 				</ToggleVisibility>
 			</Paper>
 			<ExpansionsWrapper>
-				{classTypeData.map((cardData) => (
+				{classTypeData && classTypeData.map((ctData) => (
 					<ExpansionPanel className={expansionPanelRoot}>
-						<ExpansionPanelSummary expandIcon={<Icon>{'expand_more'}</Icon>}>
-							<Typography>{cardData.name}</Typography>
+						<ExpansionPanelSummary
+							classes={{ content: props.classes.expansionPanelSummaryContent }}
+							expandIcon={<Icon>{'expand_more'}</Icon>}>
+							<ClassTypeProfile>
+								<ClassTypeImage src={get(ctData, 'medium', get(ctData, 'classTypeImg', schoolLogo))} />
+								<ClassTypeName>{ctData.name}</ClassTypeName>
+							</ClassTypeProfile>
+							<ActionButtons>
+								<ActionButton left>
+									<FormGhostButton
+										icon
+										iconName="edit"
+										label="Edit ClassType"
+										onClick={onEditClassTypeClick(ctData)}
+									/>
+								</ActionButton>
+
+								<ActionButton>
+									<FormGhostButton
+										icon
+										iconName="add_circle_outline"
+										label="Add ClassTime"
+										onClick={onAddClassTimeClick(ctData)}
+									/>
+								</ActionButton>
+							</ActionButtons>
 						</ExpansionPanelSummary>
+
 						<ExpansionPanelDetails className={expansionPanelDetails}>
 							<CardsWrapper>
 								<GridMaxWidthWrapper>
@@ -151,11 +252,12 @@ const ClassTypeExpansionRender = (props) => {
 										<GridItem spacing={SPACING} cardWidth={CARD_WIDTH}>
 											<ClassTypeCard
 												editMode
-												{...cardData}
-												onEditClassTypeClick={onEditClassTypeClick(cardData)}
+												{...ctData}
+												onEditClassTypeImageClick={onEditClassTypeImageClick(ctData)}
+												onEditClassTypeClick={onEditClassTypeClick(ctData)}
 											/>
 										</GridItem>
-										{getClassTimesData(cardData._id).map((classTimeObj) => (
+										{getClassTimesData(ctData._id).map((classTimeObj) => (
 											<GridItem
 												key={classTimeObj._id}
 												spacing={SPACING}
@@ -163,11 +265,12 @@ const ClassTypeExpansionRender = (props) => {
 												inPopUp={false}
 											>
 												<ClassTimeCard
-													{...classTimeObj}
-													onEditClassTimesClick={onEditClassTimesClick(cardData)}
 													editMode
+													{...classTimeObj}
 													inPopUp={false}
 													classTimeData={classTimeObj}
+													onImageSave={onImageSave}
+													onEditClassTimesClick={onEditClassTimesClick(ctData)}
 												/>
 											</GridItem>
 										))}
@@ -177,14 +280,14 @@ const ClassTypeExpansionRender = (props) => {
 												button1Icon={'location_on'}
 												button1Label="Notify location changes"
 												onButton1Click={onNotifyClassTypeUpdate(
-													cardData,
+													ctData,
 													'classType.notifyToStudentForLocation',
 													'Class Location'
 												)}
 												button2Icon={'class'}
 												button2Label="Notify time changes"
 												onButton2Click={onNotifyClassTypeUpdate(
-													cardData,
+													ctData,
 													'classType.notifyToStudentForClassTimes',
 													'Class Times'
 												)}
@@ -197,8 +300,7 @@ const ClassTypeExpansionRender = (props) => {
 					</ExpansionPanel>
 				))}
 			</ExpansionsWrapper>
-		</Fragment>
-	);
-};
+		</Wrapper>)
+}
 
 export default withStyles(styles)(ClassTypeExpansionRender);

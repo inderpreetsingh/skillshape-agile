@@ -1,20 +1,22 @@
-import get from "lodash/get";
-import Clear from 'material-ui-icons/Clear';
-import Edit from 'material-ui-icons/Edit';
-import MoreVert from 'material-ui-icons/MoreVert';
-import IconButton from 'material-ui/IconButton';
-import Paper from 'material-ui/Paper';
-import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ProgressiveImage from "react-progressive-image";
-import { CSSTransition, Transition } from 'react-transition-group';
 import styled from 'styled-components';
+import get from "lodash/get";
+import { CSSTransition, Transition } from 'react-transition-group';
+
+import Clear from 'material-ui-icons/Clear';
+import Edit from 'material-ui-icons/Edit';
+import PhotoCamera from 'material-ui-icons/PhotoCamera';
+import MoreVert from 'material-ui-icons/MoreVert';
+import IconButton from 'material-ui/IconButton';
+import Paper from 'material-ui/Paper';
+
+import { withStyles } from 'material-ui/styles';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import { verifyImageURL } from "/imports/util";
-
-
+import { callbackify } from "util";
 
 
 const styles = {
@@ -28,6 +30,14 @@ const styles = {
     cursor: 'pointer',
     height: 24,
     width: 24
+  },
+  cardProfileImageIcon: {
+    cursor: 'pointer',
+    height: 24,
+    width: 24,
+    position: 'absolute',
+    top: `8px`,
+    right: `8px`
   }
 }
 
@@ -46,6 +56,7 @@ const CardImageWrapper = styled.div`
   max-height: 300px;
   height: 100%;
   width: 100%;
+  position: relative;
   transition: background-image 1s linear !important;
   background-position: 50% 50%;
   background-size: cover;
@@ -241,8 +252,9 @@ class CardsReveal extends Component {
       }
     })
   }
-  componentWillMount() {
-    const { bgImg, schoolId, medium, name } = this.props;
+
+  verifyAndUpdateImageUrl(data) {
+    const { bgImg, schoolId, medium, name } = data;
     let img = medium ? medium : bgImg;
     if (img == "/images/classtype/classtype-cover.jpg") {
       this.setSchoolImage(schoolId);
@@ -258,8 +270,26 @@ class CardsReveal extends Component {
     }
   }
 
+  componentWillMount() {
+    this.verifyAndUpdateImageUrl(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { bgImg, schoolId, medium, name } = nextProps;
+    let img = medium ? medium : bgImg;
+    if (this.state.bgImg !== img) {
+      this.verifyAndUpdateImageUrl(nextProps);
+    }
+  }
+
   render() {
-    const { name, classTypeImg, descriptionContent, body, classes, onEditClassTypeClick,editMode } = this.props;
+    const { name,
+      classTypeImg,
+      descriptionContent,
+      body, classes,
+      onEditClassTypeImageClick,
+      onEditClassTypeClick,
+      editMode } = this.props;
     const { bgImg } = this.state;
     const myTitle = name.toLowerCase();
     //console.log(ShowDetails,"adsljfj")
@@ -269,21 +299,27 @@ class CardsReveal extends Component {
           <ProgressiveImage
             placeholder={config.blurImage}
             src={bgImg}>
-            {(src) => <CardImageWrapper bgImage={src} />}
+            {(src) => <CardImageWrapper bgImage={src}>
+              {editMode &&
+                (<IconButton
+                  className={classes.cardProfileImageIcon}
+                  onClick={onEditClassTypeImageClick} >
+                  <PhotoCamera />
+                </IconButton>)}</CardImageWrapper>}
           </ProgressiveImage>
 
           <CardContentHeader>
             <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
-            
+
             <IconButtons>
               {editMode && <IconButton className={classes.cardIcon} onClick={onEditClassTypeClick}>
-                <Edit />  
+                <Edit />
               </IconButton>}
-              <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >  
+              <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
                 <MoreVert />
               </IconButton>
-            </IconButtons>  
-            
+            </IconButtons>
+
           </CardContentHeader>
 
         </CardImageTitleWrapper>

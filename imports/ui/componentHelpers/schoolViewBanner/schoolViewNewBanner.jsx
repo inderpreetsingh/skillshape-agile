@@ -40,51 +40,51 @@ const imageExistsConfig = {
 }
 
 class SchoolViewBanner extends React.Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
-		this.state={
+		this.state = {
 			showBackgroundUpload: false,
 		}
 	}
 
 	checkClaim = (currentUser, schoolId) => {
-    if(currentUser && currentUser.profile && currentUser.profile.schoolId === schoolId)
-      return false;
-    return true;
-  }
+		if (currentUser && currentUser.profile && currentUser.profile.schoolId === schoolId)
+			return false;
+		return true;
+	}
 
 	handleCallUs = (schoolData) => {
 		// Detect mobile and dial number on phone else show popup that shows phone information.
 		let md = new MobileDetect(window.navigator.userAgent);
-		if(md.mobile()) {
+		if (md.mobile()) {
 			let schoolPhone = "tel:+1-303-499-7111";
-			if(schoolData.phone) {
+			if (schoolData.phone) {
 				schoolPhone = `tel:${schoolData.phone}`;
 				return `${schoolPhone}`;
 			}
 		}
 		else {
-				this.handleCallUsButtonClick();
+			this.handleCallUsButtonClick();
 		}
 	}
 
 	// Handle call us button click for school page
 	handleCallUsButtonClick = () => {
-		this.handleDialogState('callUsDialog',true);
+		this.handleDialogState('callUsDialog', true);
 	}
 
 	handleEmailUs = () => {
-		this.handleDialogState('emailUsDialog',true);
+		this.handleDialogState('emailUsDialog', true);
 	}
 
-	handleDialogState = (dialogName,state) => {
+	handleDialogState = (dialogName, state) => {
 		this.setState({
 			[dialogName]: state
 		})
 	}
 
 	getContactNumbers = () => {
-		return get(this.props,"schoolData.phone","000").split(/[\|\,\\]/);
+		return get(this.props, "schoolData.phone", "000").split(/[\|\,\\]/);
 	}
 
 	getOurEmail = () => {
@@ -92,56 +92,56 @@ class SchoolViewBanner extends React.Component {
 	}
 
 	scrollTo(name) {
-			scroller.scrollTo((name || 'content-container'), {
-					duration: 800,
-					delay: 0,
-					smooth: 'easeInOutQuart'
-			})
+		scroller.scrollTo((name || 'content-container'), {
+			duration: 800,
+			delay: 0,
+			smooth: 'easeInOutQuart'
+		})
 	}
 
-	render(){
+	render() {
 		const {
-		    classes,
-		    schoolData,
-        schoolLocation,
-		    schoolId,
-        isPublish,
-		    currentUser,
-				reviewsStats,
-				bestPriceDetails,
-		    isEdit,
-				bgImg,
-	  	} = this.props;
-	  	const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
-			const ourEmail = this.getOurEmail();
-			const emailUsButton = ourEmail ? true : false;
-			// console.info('shcooll data',schoolData,"-------");
-		return(<Fragment>
-			{this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
+			classes,
+			schoolData,
+			schoolLocation,
+			schoolId,
+			isPublish,
+			currentUser,
+			reviewsStats,
+			bestPriceDetails,
+			isEdit,
+			bgImg,
+		} = this.props;
+		const checkUserAccess = checkMyAccess({ user: currentUser, schoolId });
+		const ourEmail = this.getOurEmail();
+		const emailUsButton = ourEmail ? true : false;
+		// console.info('shcooll data',schoolData,"-------");
+		return (<Fragment>
+			{this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog', false)} />}
 			{this.state.emailUsDialog && <EmailUsDialogBox
-					ourEmail={ourEmail}
-					schoolData={schoolData}
-					open={this.state.emailUsDialog}
-					onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
+				ourEmail={ourEmail}
+				schoolData={schoolData}
+				open={this.state.emailUsDialog}
+				onModalClose={() => this.handleDialogState('emailUsDialog', false)} />}
 			{this.state.showBackgroundUpload && <UploadMedia
-						schoolId={schoolId}
-						showCreateMediaModal= {this.state.showBackgroundUpload}
-						onClose={()=> this.setState({ showBackgroundUpload: false})}
-						mediaFormData={schoolData}
-						imageType={this.state.imageType}
-				/>}
+				schoolId={schoolId}
+				showCreateMediaModal={this.state.showBackgroundUpload}
+				onClose={() => this.setState({ showBackgroundUpload: false })}
+				mediaFormData={schoolData}
+				imageType={this.state.imageType}
+			/>}
 			<ClassTypeCover isEdit={isEdit} coverSrc={bgImg}>
 				<ClassTypeCoverContent
-	        noClassTypeData
+					noClassTypeData
 					isEdit={isEdit}
 					schoolLocation={schoolLocation}
-					schoolDetails={{...schoolData}}
+					schoolDetails={{ ...schoolData }}
 					logoSrc={schoolData.logoImg}
 					coverSrc={bgImg}
 
 					publishStatusButton={checkUserAccess && (() => <PublishStatusButtonWrapper>Publish / Unpublish
 						<Switch checked={isPublish} className={this.props.classes.switchButton} onChange={this.props.handlePublishStatus} aria-label={schoolId} /></PublishStatusButtonWrapper>)}
-					editButton={checkUserAccess && (() => <Link className={classes.ImageFooterbutton}  to={`/SchoolAdmin/${schoolData._id}/edit`}>
+					editButton={checkUserAccess && (() => <Link className={classes.ImageFooterbutton} to={`/SchoolAdmin/${schoolData._id}/edit`}>
 						<ClassTimeButton icon iconName='edit' label="Edit"> Edit </ClassTimeButton> </Link>)}
 
 					actionButtonProps={{
@@ -159,12 +159,12 @@ class SchoolViewBanner extends React.Component {
 
 					bestPriceDetails={bestPriceDetails}
 
-	        onEditLogoButtonClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})}
-					onEditBgButtonClick={() => this.setState({showBackgroundUpload: true, imageType: "mainImage"})}
+					onEditLogoButtonClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg" })}
+					onEditBgButtonClick={() => this.setState({ showBackgroundUpload: true, imageType: "mainImage" })}
 				/>
 			</ClassTypeCover>
-			</Fragment>)
+		</Fragment>)
 	}
 }
 
-export default withStyles(styles)(withImageExists(SchoolViewBanner,imageExistsConfig));
+export default withStyles(styles)(withImageExists(SchoolViewBanner, imageExistsConfig));

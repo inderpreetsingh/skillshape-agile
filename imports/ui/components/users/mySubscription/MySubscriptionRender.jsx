@@ -182,17 +182,18 @@ const MySubscriptionRender = (props) => {
 			<Wrapper>
 				{!isEmpty(schoolData) &&
 					schoolData.map((school) => {
-						const allSubsData = getSubsDataBasedOnSchool(school._id, purchaseData);
-						const activeSubsData = allSubsData.filter(
-							(subs) => subs.packageStatus !== 'expired'
+						const EXPIRED = 'expired';
+						const subscriptionsData = getSubsDataBasedOnSchool(school._id, purchaseData);
+						const activeSubsData = subscriptionsData.filter(
+							(subs) => subs.packageStatus !== EXPIRED || subs.status !== EXPIRED
 						);
-						const expiredSubsData = allSubsData.filter(
-							(subs) => subs.packageStatus === 'expired' || subs.status === 'expired'
+						const expiredSubsData = subscriptionsData.filter(
+							(subs) => subs.packageStatus === EXPIRED || subs.status === EXPIRED
 						);
 
-						console.group(' MY SUBSCRIPTIONS ');
-						console.log(school, activeSubsData, expiredSubsData, '===============');
-						console.groupEnd();
+						// console.group(' MY SUBSCRIPTION');
+						console.log(activeSubsData, expiredSubsData, '===============');
+						// console.group();
 
 						return (
 							<ExpansionPanel
@@ -240,7 +241,7 @@ const MySubscriptionRender = (props) => {
 														'No Active Subscriptions'
 													) : (
 															'Active Subscriptions'
-														)
+													)
 												}
 											/>
 										</ListWrapper>
@@ -267,8 +268,6 @@ const MySubscriptionRender = (props) => {
 							</ExpansionPanel>
 						);
 					})}
-
-				{!isEmpty(purchaseData) && purchaseData.map((sbsData) => { })}
 			</Wrapper>
 		</Fragment>
 	);

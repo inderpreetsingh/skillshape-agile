@@ -7,11 +7,13 @@ import ClassType from "/imports/api/classType/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
-import { withPopUp } from "/imports/util";
+import { formatClassTimesData, withPopUp } from "/imports/util";
+
+
 class ClassTypeDetails extends React.Component {
   constructor(props) {
     super(props);
-   
+
     this.state = {
       file: null
     };
@@ -19,6 +21,16 @@ class ClassTypeDetails extends React.Component {
 
   getChildTableData(parentData) {
     return ClassTimes.find({ classTypeId: parentData._id }).fetch();
+  }
+
+  handleEditImageClick = (classTypeData) => (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    this.setState({
+      showBackgroundUpload: true,
+      selectedClassTypeData: classTypeData,
+    })
   }
 
   handleImageChange = file => {
@@ -106,6 +118,17 @@ class ClassTypeDetails extends React.Component {
     }
   };
 
+  handleImageUploadClose = () => {
+    this.setState(state => {
+      return {
+        ...state,
+        showBackgroundUpload: false,
+        selectedClassTypeData: null,
+        file: null
+      }
+    })
+  }
+
   editClassType = ({ doc, doc_id }) => {
     const { popUp } = this.props;
     Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
@@ -116,6 +139,7 @@ class ClassTypeDetails extends React.Component {
           title: "Message",
           content: "Image Saved Successfully"
         });
+
       }
     });
   };
@@ -155,7 +179,204 @@ class ClassTypeDetails extends React.Component {
     return classTypeData;
   };
 
+  /* LIFTING THE STATE UP */
+
+  getClassTypeData = (classTypeId) => {
+    console.info("CHECKING", classTypeId, this.props);
+    if (!classTypeId) {
+      return null;
+    }
+    return this.props.classTypeData.filter(data => data._id === classTypeId)[0] || null;
+  }
+
+  cancelConfirmationModal = () => {
+    this.setState({ showConfirmationModal: false });
+  }
+
+  handleDeleteData = () => {
+    debugger;
+    this.setState({ isBusy: true });
+    const { popUp } = this.props;
+    const { classTypeData } = this.state;
+    const delAction = this.props.settings.mainTable.actions.del;
+    const methodToCall = delAction.onSubmit;
+    // const docObj = formData;
+    // console.log(formData, methodToCall, docObj, "===================");
+
+    Meteor.call(methodToCall, { doc: formData }, (err, res) => {
+      this.closeDeleteConfirmationModal();
+      if (err) {
+        popUp.appear("alert", { content: err.reason || err.message });
+      } else {
+        popUp.appear("success", { title: "success", content: res.message });
+      }
+    });
+  };
+
+  handleModalState = (modalName, modalState) => e => {
+    this.setState(state => {
+      return {
+        ...state,
+        [modalName]: modalState
+      };
+    });
+  };
+
+  closeDeleteConfirmationModal = () => {
+    debugger;
+    this.setState(state => {
+      return {
+        ...state,
+        deleteConfirmationModal: false,
+        isBusy: false
+      }
+    });
+  };
+
+  getClassTimesData(classTypeId) {
+    const classTimesData = ClassTimes.find({ classTypeId }).fetch();
+    return formatClassTimesData(classTimesData, false);
+  }
+
+  handleEditClassTypeClick = (classTypeData) => (e) => {
+    e.stopPropagation();
+
+    this.setState(state => {
+      return {
+        ...state,
+        formAction: 'edit',
+        classTypeForm: true,
+        selectedClassTypeData: classTypeData
+      }
+    });
+  }
+
+  handleEditClassTimesClick = (classTypeData) => (classTimeData) => (e) => {
+    e.stopPropagation();
+
+    this.setState(state => {
+      return {
+        ...state,
+        formAction: 'edit',
+        classTimeForm: true,
+        selectedClassTimeData: classTimeData,
+        selectedClassTypeData: classTypeData,
+      }
+    })
+  }
+
+  handleAddClassTimeClick = (classTypeData) => (e) => {
+    e.stopPropagation();
+
+    this.setState(state => {
+      return {
+        ...state,
+        formAction: 'add',
+        classTimeForm: true,
+        selectedClassTimeData: null,
+        selectedClassTypeData: classTypeData
+      }
+    })
+  }
+
+  handleAddClassTypeClick = () => {
+    this.setState(state => {
+      return {
+        ...state,
+        formAction: 'add',
+        classTypeForm: true,
+        selectedClassTypeId: null,
+        selectedClassTimeData: null,
+        selectedClassTypeData: null
+      }
+    })
+  }
+
+  handleNotifyForChange = () => {
+    const data = this.state.selectedClassTypeData;
+    if (this.state.methodName) {
+      this.setState({ isBusy: true });
+      Meteor.call(
+        this.state.methodName,
+        {
+          schoolId: data.schoolId,
+          classTypeId: data._id,
+          classTypeName: data.name
+        },
+        (err, res) => {
+          // console.log("classType.notifyToStudentForClassTimes",error, result)
+          const { popUp } = this.props;
+          this.setState({ showConfirmationModal: false, isBusy: false }, () => {
+            if (res && res.message) {
+              // Need to show message to user when email is send successfully.
+              popUp.appear("success", { content: res.message });
+            }
+            if (err) {
+              popUp.appear("alert", { content: err.reason || err.message });
+            }
+          });
+        }
+      );
+    }
+  }
+
+  // This is done so that we can show confirmation modal.
+  handleNotifyClassTypeUpdate = (selectedClassTypeData, methodName, notifyFor) => () => {
+    this.setState({
+      showConfirmationModal: true,
+      selectedClassTypeData,
+      methodName,
+      notifyFor
+    });
+  };
+
+
+  handleClassTimeFormClose = () => {
+    this.setState(state => {
+      return {
+        ...state,
+        classTimeForm: false,
+        formAction: null,
+        selectedClassTypeId: null,
+        selectedClassTypeData: null,
+        selectedClassTimeData: null,
+      }
+    });
+  }
+
+  handleClassTypeFormClose = (parentId, formAction) => {
+    if (formAction === 'add') {
+      this.setState(state => {
+        return {
+          ...state,
+          formAction,
+          classTimeForm: true,
+          classTypeForm: false,
+          // isBusy: true,
+          selectedClassTypeId: parentId
+        }
+      });
+    } else {
+      this.setState(state => {
+        return {
+          ...state,
+          formAction,
+          classTypeForm: false,
+          selectedClassTypeId: null,
+          selectedClassTypeData: null
+        }
+      });
+    }
+  }
+
   render() {
+    // return <ClassTypeDetailsRender
+    //   {...this.props}
+    //   modifySelectSubjectsInClassTypeData={this.modifySelectSubjectsInClassTypeData}
+    // />
+    console.group("MY CLASSTYPE DETAILS RENDER");
+    console.log(this.state);
+    console.groupEnd();
     return ClassTypeDetailsRender.call(this, this.props, this.state);
   }
 }

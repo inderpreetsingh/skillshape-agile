@@ -25,10 +25,10 @@ import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { isThisSecond } from "date-fns";
-import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
-const customStyle={
-  marginTop:"10px",
-  marginBottom:'10px',
+import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+const customStyle = {
+  marginTop: "10px",
+  marginBottom: '10px',
 }
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -44,26 +44,26 @@ const styles = theme => {
       textAlign: "left"
     },
     delete: {
-      backgroundColor:'red',
+      backgroundColor: 'red',
       color: "black",
       fontWeight: 600
-     },
-     cancel: {
-       backgroundColor:'yellow',
-       color: "black",
-       fontWeight: 600
-      },
-      save: {
-       backgroundColor:'green',
-       color: "black",
-       fontWeight: 600
-      },
-      dialogActionsRoot: {
-        [`@media screen and (max-width: ${mobile}px)`]: {
-          flexWrap: "wrap",
-          justifyContent: "center"
-        }
+    },
+    cancel: {
+      backgroundColor: 'yellow',
+      color: "black",
+      fontWeight: 600
+    },
+    save: {
+      backgroundColor: 'green',
+      color: "black",
+      fontWeight: 600
+    },
+    dialogActionsRoot: {
+      [`@media screen and (max-width: ${mobile}px)`]: {
+        flexWrap: "wrap",
+        justifyContent: "center"
       }
+    }
   };
 };
 
@@ -87,8 +87,8 @@ class ClassTypeForm extends React.Component {
       selectedLocation: null,
       searchSkillCategoryText: "",
       selectedOption: [],
-      skillSubject:[]
-      
+      skillSubject: []
+
     };
     if (data && _.size(data) > 0) {
       if (
@@ -105,7 +105,7 @@ class ClassTypeForm extends React.Component {
         location: data.locationId || "",
         selectedLocation:
           locationData &&
-          _.find(locationData, function(location) {
+          _.find(locationData, function (location) {
             return data.locationId === location._id;
           })
       };
@@ -116,19 +116,19 @@ class ClassTypeForm extends React.Component {
   componentDidMount = () => {
     Meteor.call("getAllSkillSubjects", (err, res) => {
       if (err) {
-        
+
       } else {
         // console.info(res, "==== res ====");
-        let state ={skillSubjectData:[],selectedOption:[]}
+        let state = { skillSubjectData: [], selectedOption: [] }
         res.map((current, index) => {
           state.skillSubjectData.push({ value: current._id, label: current.name })
-          this.state.skillSubject.map((skillId)=>{
-            if(skillId==current._id){
-              state.selectedOption.push({value:skillId,label:current.name})
+          this.state.skillSubject.map((skillId) => {
+            if (skillId == current._id) {
+              state.selectedOption.push({ value: skillId, label: current.name })
             }
           })
         })
-        this.setState({skillSubjectData:state.skillSubjectData,selectedOption:state.selectedOption})
+        this.setState({ skillSubjectData: state.skillSubjectData, selectedOption: state.selectedOption })
       }
     });
   };
@@ -139,7 +139,7 @@ class ClassTypeForm extends React.Component {
         return ele;
       }
     });
-    
+
     values = _.without(values, undefined);
     if (!_.isEmpty(values)) {
       this.setState({ selectedSkillSubject: values });
@@ -164,14 +164,14 @@ class ClassTypeForm extends React.Component {
   handleSelectChange = (fieldName, event, index, value) =>
     this.setState({ [fieldName]: value });
 
-  
+
 
   handleSkillSubjectInputChange = selectedOption => {
     this.setState(state => {
-			return {
-				selectedOption: selectedOption
-			};
-		});
+      return {
+        selectedOption: selectedOption
+      };
+    });
   };
 
   onSubmit = event => {
@@ -224,22 +224,27 @@ class ClassTypeForm extends React.Component {
   handleSubmit = ({ methodName, doc, doc_id }) => {
     //this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
+
       if (error) {
       }
       if (result) {
-        this.props.onClose(result);
+        if (doc_id) {
+          this.props.onClose(result, 'edit');
+        } else {
+          this.props.onClose(result, "add");
+        }
       }
       this.setState({ isBusy: false, error });
     });
   };
   //Set default location id if nothing selected 
-  setDefaultLocation=(defaultLocId)=>{
-    this.setState({location:defaultLocId})
+  setDefaultLocation = (defaultLocId) => {
+    this.setState({ location: defaultLocId })
     return defaultLocId;
   }
   render() {
-    const { fullScreen, data, classes, locationData  } = this.props;
-    const { skillCategoryData, skillSubjectData ,selectedOption} = this.state;
+    const { fullScreen, data, classes, locationData } = this.props;
+    const { skillCategoryData, skillSubjectData, selectedOption } = this.state;
     return (
       <div>
         <Dialog
@@ -259,167 +264,168 @@ class ClassTypeForm extends React.Component {
               onSubmit={() =>
                 this.handleSubmit({
                   methodName: "classType.removeClassType",
-                  doc: data
+                  doc: data,
+                  doc_id: data._id
                 })
               }
               onClose={() => this.setState({ showConfirmationModal: false })}
             />
           )}
-         
+
           {this.state.error ? (
             <div style={{ color: "red" }}>{this.state.error}</div>
           ) : (
-            <DialogContent>
-              <form id={formId} onSubmit={this.onSubmit}>
-                <TextField
-                  required={true}
-                  defaultValue={data && data.name}
-                  margin="dense"
-                  inputRef={ref => (this.classTypeName = ref)}
-                  label="Class Type Name"
-                  type="text"
-                  fullWidth
-                />
-                <TextField
-                  defaultValue={data && data.desc}
-                  margin="dense"
-                  inputRef={ref => (this.desc = ref)}
-                  label="Brief Description (200 Characters)"
-                  type="text"
-                  fullWidth
-                  multiline
-                  inputProps={{maxLength: 200}}
-                />
-                <SkillSubject
+              <DialogContent>
+                <form id={formId} onSubmit={this.onSubmit}>
+                  <TextField
+                    required={true}
+                    defaultValue={data && data.name}
+                    margin="dense"
+                    inputRef={ref => (this.classTypeName = ref)}
+                    label="Class Type Name"
+                    type="text"
+                    fullWidth
+                  />
+                  <TextField
+                    defaultValue={data && data.desc}
+                    margin="dense"
+                    inputRef={ref => (this.desc = ref)}
+                    label="Brief Description (200 Characters)"
+                    type="text"
+                    fullWidth
+                    multiline
+                    inputProps={{ maxLength: 200 }}
+                  />
+                  <SkillSubject
                     name="filters"
                     style={customStyle}
-										placeholder="SKill Subject"
-										value={selectedOption}
+                    placeholder="SKill Subject"
+                    value={selectedOption}
                     options={skillSubjectData}
                     onChange={this.handleSkillSubjectInputChange}
                     closeMenuOnSelect={false}
                     multi
-									/>
-                
-                <Grid container className={classes.classtypeInputContainer}>
-                  <Grid item xs={8} sm={6}>
-                    <FormControl fullWidth margin="dense">
-                      <InputLabel htmlFor="gender">Gender</InputLabel>
-                      <Select
-                        required={true}
-                        input={<Input id="gender" />}
-                        value={this.state.gender}
-                        onChange={event =>
-                          this.setState({ gender: event.target.value })
-                        }
-                        fullWidth
-                      >
-                        {config.genderForClassType.map((data, index) => {
-                          return (
-                            <MenuItem key={index} value={data.label}>
-                              {data.value}
-                            </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
+                  />
+
+                  <Grid container className={classes.classtypeInputContainer}>
+                    <Grid item xs={8} sm={6}>
+                      <FormControl fullWidth margin="dense">
+                        <InputLabel htmlFor="gender">Gender</InputLabel>
+                        <Select
+                          required={true}
+                          input={<Input id="gender" />}
+                          value={this.state.gender}
+                          onChange={event =>
+                            this.setState({ gender: event.target.value })
+                          }
+                          fullWidth
+                        >
+                          {config.genderForClassType.map((data, index) => {
+                            return (
+                              <MenuItem key={index} value={data.label}>
+                                {data.value}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <TextField
+                          defaultValue={data && data.ageMin}
+                          margin="dense"
+                          inputRef={ref => (this.ageMin = ref)}
+                          label="Min Age"
+                          type="number"
+                          style={{
+                            textAlign: "left",
+                            margin: 4,
+                            padding: 2,
+                            backgroundColor: "#fff"
+                          }}
+                          inputProps={{ min: "0" }}
+                        />
+                        <TextField
+                          defaultValue={data && data.ageMax}
+                          margin="dense"
+                          inputRef={ref => (this.ageMax = ref)}
+                          label="Max Age"
+                          type="number"
+                          style={{
+                            textAlign: "left",
+                            margin: 4,
+                            padding: 2,
+                            backgroundColor: "#fff"
+                          }}
+                          inputProps={{ min: "0" }}
+                        />
+                      </div>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <TextField
-                        defaultValue={data && data.ageMin}
-                        margin="dense"
-                        inputRef={ref => (this.ageMin = ref)}
-                        label="Min Age"
-                        type="number"
-                        style={{
-                          textAlign: "left",
-                          margin: 4,
-                          padding: 2,
-                          backgroundColor: "#fff"
-                        }}
-                        inputProps={{ min: "0"}}
-                      />
-                      <TextField
-                        defaultValue={data && data.ageMax}
-                        margin="dense"
-                        inputRef={ref => (this.ageMax = ref)}
-                        label="Max Age"
-                        type="number"
-                        style={{
-                          textAlign: "left",
-                          margin: 4,
-                          padding: 2,
-                          backgroundColor: "#fff"
-                        }}
-                        inputProps={{ min: "0"}}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-                <Grid container>
-                  <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth margin="dense">
-                      <InputLabel htmlFor="experienceLevel">
-                        Experience Level
+                  <Grid container>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl fullWidth margin="dense">
+                        <InputLabel htmlFor="experienceLevel">
+                          Experience Level
                       </InputLabel>
-                      <Select
-                        required={true}
-                        input={<Input id="experienceLevel" />}
-                        value={this.state.experienceLevel}
-                        onChange={event =>
-                          this.setState({ experienceLevel: event.target.value })
-                        }
-                        fullWidth
-                      >
-                        {config.experienceLevel.map((data, index) => {
-                          return (
-                            <MenuItem key={index} value={data.label}>
-                              {data.value}
-                            </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
+                        <Select
+                          required={true}
+                          input={<Input id="experienceLevel" />}
+                          value={this.state.experienceLevel}
+                          onChange={event =>
+                            this.setState({ experienceLevel: event.target.value })
+                          }
+                          fullWidth
+                        >
+                          {config.experienceLevel.map((data, index) => {
+                            return (
+                              <MenuItem key={index} value={data.label}>
+                                {data.value}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
                   </Grid>
-                 
-                </Grid>
-              </form>
-            </DialogContent>
-          )}
+                </form>
+              </DialogContent>
+            )}
           <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
             {data && (
-          
+
+              <ButtonWrapper>
+                <FormGhostButton
+                  alertColor
+                  onClick={() => this.setState({ showConfirmationModal: true })}
+                  label="Delete"
+                  className={classes.delete}
+                />
+              </ButtonWrapper>
+            )}
             <ButtonWrapper>
-            <FormGhostButton
-              alertColor
-              onClick={() => this.setState({ showConfirmationModal: true })}
-              label="Delete"
-              className={classes.delete}
-            />
-          </ButtonWrapper>
-        )}
-        <ButtonWrapper>
-          <FormGhostButton
-            darkGreyColor
-            onClick={() => this.props.onClose()}
-            label="Cancel"
-            className={classes.cancel}
-          />
-        </ButtonWrapper>
-        
-        <ButtonWrapper>
-          <FormGhostButton
-            type="submit"
-            form={formId}
-            onClick={this.onSubmit}
-            label={data ? "Save" : "Submit"}
-            className={classes.save}
-          />
-        </ButtonWrapper>
+              <FormGhostButton
+                darkGreyColor
+                onClick={() => this.props.onClose()}
+                label="Cancel"
+                className={classes.cancel}
+              />
+            </ButtonWrapper>
+
+            <ButtonWrapper>
+              <FormGhostButton
+                type="submit"
+                form={formId}
+                onClick={this.onSubmit}
+                label={data ? "Save" : "Submit"}
+                className={classes.save}
+              />
+            </ButtonWrapper>
           </DialogActions>
         </Dialog>
-       
+
       </div>
     );
   }
