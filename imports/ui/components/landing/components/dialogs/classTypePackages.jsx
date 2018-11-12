@@ -14,7 +14,7 @@ import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import School from "/imports/api/school/fields";
-import { withPopUp,stripePaymentHelper } from "/imports/util";
+import { withPopUp,stripePaymentHelper,normalizeMonthlyPricingData } from "/imports/util";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -46,24 +46,7 @@ class ClassTypePackages extends React.Component {
         super(props);
         
     }
-    normalizeMonthlyPricingData = monthlyPricingData => {
-        if (monthlyPricingData) {
-          let normalizedMonthlyPricingData = [];
-    
-          for (let monthlyPricingObj of monthlyPricingData) {
-            monthlyPricingObj.pymtDetails.forEach(payment => {
-              const myMonthlyPricingObj = Object.assign({}, monthlyPricingObj);
-              myMonthlyPricingObj.pymtDetails = [];
-              myMonthlyPricingObj.pymtDetails.push(payment);
-              normalizedMonthlyPricingData.push(myMonthlyPricingObj);
-            });
-          }
-    
-          return normalizedMonthlyPricingData;
-        } else {
-          return monthlyPricingData;
-        }
-      };
+   
     handlePurchasePackage = async ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType
         ) => {
           try {
@@ -111,7 +94,7 @@ class ClassTypePackages extends React.Component {
                          <PackagesList
                             schoolId={schoolId}
                             onAddToCartIconButtonClick={this.handlePurchasePackage}
-                            monthlyPackagesData={this.normalizeMonthlyPricingData(monthlyPricing)}
+                            monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricing)}
                             currency={currency}
                         />
                     </DialogContent>
