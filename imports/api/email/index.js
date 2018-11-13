@@ -668,7 +668,7 @@ export const sendEmailToRequester = (userEmail,userName,schoolName)=>{
     subject: "School Claim Request Rejected",
     html: `Hi  ${userName}<br/>
               You have requested for claim the ${schoolName}. We have sent your request to <br/>
-              the ${schoolName} administrators and have not responded.If you believe <br/>
+              the ${schoolName} administrators and they have not responded.If you believe <br/>
               there is an error you can try your request again or contact the school directly.<br/>
               Thanks<br/>
               The SkillShape Team<br/>
