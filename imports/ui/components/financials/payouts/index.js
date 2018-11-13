@@ -1,22 +1,13 @@
 import React from "react";
 import Pagination from "/imports/ui/componentHelpers/pagination";
 import { PayoutDetailsTable } from "./payoutDetailsTable";
-import { TableRow, TableCell } from "material-ui/Table";
 import isEmpty from "lodash/isEmpty";
 import { dateFriendly } from "/imports/util";
 import { createContainer } from "meteor/react-meteor-data";
 import Purchases from "/imports/api/purchases/fields";
-const style = {
-  w211: {
-    width: 211
-  },
-  w100: {
-    width: 100
-  },
-  w150: {
-    width: 150
-  }
-};
+import { FncTableRow, FncTableCell } from '../styles.js';
+import { getTableProps } from './payoutDetailsTable.js';
+
 class Payouts extends React.Component {
   constructor(props) {
     super(props);
@@ -29,6 +20,8 @@ class Payouts extends React.Component {
   render() {
     const { purchaseData } = this.props;
     const { pageCount } = this.props;
+    const { tableHeaderColumns } = getTableProps();
+
     return (
       <div>
         <center>
@@ -39,23 +32,23 @@ class Payouts extends React.Component {
           {isEmpty(purchaseData)
             ? "No payout found"
             : purchaseData.reverse().map(purchase => {
-                return (
-                  <TableRow key={purchase._id} selectable={false}>
-                    <TableCell style={style.w150}>
-                      {"$" + purchase && purchase.stripeRequest && purchase.stripeRequest.destination.amount / 100}
-                    </TableCell>
-                    <TableCell style={style.w211}>
-                      {purchase && purchase.stripeRequest && purchase.stripeRequest.destination.account}
-                    </TableCell>
-                    <TableCell style={style.w150}>
-                      {dateFriendly(
-                        purchase.createdOn,
-                        "MMMM Do YYYY, h:mm:ss a"
-                      )}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              return (
+                <FncTableRow key={purchase._id} selectable={false}>
+                  <FncTableCell data-th={tableHeaderColumns[0].columnName} >
+                    {"$" + purchase && purchase.stripeRequest && purchase.stripeRequest.destination.amount / 100}
+                  </FncTableCell>
+                  <FncTableCell data-th={tableHeaderColumns[1].columnName} >
+                    {purchase && purchase.stripeRequest && purchase.stripeRequest.destination.account}
+                  </FncTableCell>
+                  <FncTableCell data-th={tableHeaderColumns[2].columnName}>
+                    {dateFriendly(
+                      purchase.createdOn,
+                      "MMMM Do YYYY, h:mm:ss a"
+                    )}
+                  </FncTableCell>
+                </FncTableRow>
+              );
+            })}
         </PayoutDetailsTable>
         <Pagination
           {...this.state}
