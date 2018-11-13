@@ -25,6 +25,9 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 
 const styles = theme => {
   return {
+    dialogTop:{
+      height:'auto',
+    },
     dialogTitleRoot: {
       padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
       marginBottom: `${helpers.rhythmDiv * 2}px`,
@@ -128,7 +131,7 @@ const LoginDialog = (props) => (
     aria-labelledby="login"
     itemScope
     itemType="http://schema.org/CheckInAction"
-  >
+    classes={{root: props.classes.dialogTop}}>
   { props.loading && <ContainerLoader/>}
   <MuiThemeProvider theme={muiTheme}>
     <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
