@@ -522,7 +522,7 @@ class ClassDetailModal extends React.Component {
       "Saturday",
       "Sunday"
     ];
-
+    let route = this.state.adminAccess ? '/classdetails-instructor' : '/classdetails-student';
     return (
       <Dialog
         fullScreen={true}
@@ -687,16 +687,14 @@ class ClassDetailModal extends React.Component {
                         />
                       </Grid>
                       <Grid item xs={6} style={{ margin: "auto" }}>
+                      <Link to={{ pathname: route, state: { props: this.props,state:this.state} }}>
                         <ClassTimeButton
                           fullWidth
                           noMarginBottom
                           label="Class Detail"
-                          onClick={()=>{if(this.state.adminAccess){
-                            browserHistory.push(`/classdetails-instructor/abc/${this.props}`);
-                          }else{
-                            browserHistory.push(`/classdetails-student/`);
-                          }}}
+                          onClick={()=>{}}
                         />
+                        </Link>
                       </Grid>
                   </Grid>
                 )}

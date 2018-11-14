@@ -61,7 +61,7 @@ export default (Routes = componentLoader(props => (
         component={ClassDetails}
       />
       <Route
-        path="/classdetails-instructor/:classTypeId/:classTimeId"
+        path="/classdetails-instructor"
         name="classdetails-instructor-development"
         component={ClassDetails}
       />
