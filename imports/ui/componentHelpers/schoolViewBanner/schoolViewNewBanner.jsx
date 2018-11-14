@@ -128,6 +128,7 @@ class SchoolViewBanner extends React.Component {
 				open={this.state.emailUsDialog}
 				onModalClose={() => this.handleDialogState('emailUsDialog', false)} />}
 			{this.state.showBackgroundUpload && <UploadMedia
+				fullScreen={false}
 				schoolId={schoolId}
 				showCreateMediaModal={this.state.showBackgroundUpload}
 				onClose={() => this.setState({ showBackgroundUpload: false })}

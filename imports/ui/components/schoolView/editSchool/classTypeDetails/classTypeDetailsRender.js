@@ -52,6 +52,7 @@ export default function () {
     <Wrapper>
       {showBackgroundUpload && <UploadMedia
         forClassType
+        fullScreen={false}
         schoolId={schoolId}
         classTypeId={selectedClassTypeData._id}
         mediaFormData={selectedClassTypeData}
