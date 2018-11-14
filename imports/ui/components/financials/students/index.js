@@ -1,22 +1,12 @@
 import React, { Fragment } from "react";
 import Pagination from "/imports/ui/componentHelpers/pagination";
-import { StudentsDetailsTable } from "./studentsDetailsTable";
-import { TableRow, TableCell } from "material-ui/Table";
+import { StudentsDetailsTable, getTableProps } from "./studentsDetailsTable";
 import isEmpty from "lodash/isEmpty";
 import { createContainer } from "meteor/react-meteor-data";
 import Purchases from "/imports/api/purchases/fields";
 import { dateFriendly } from "/imports/util";
-const style = {
-  w211: {
-    width: 211
-  },
-  w100: {
-    width: 100
-  },
-  w150: {
-    width: 150
-  }
-};
+import { FncTableCell, FncTableRow, length } from '../styles.js';
+
 class Students extends React.Component {
   constructor(props) {
     super(props);
@@ -38,6 +28,7 @@ class Students extends React.Component {
   render() {
     const { purchaseData } = this.props;
     const { pageCount } = this.props;
+    const { tableHeaderColumns } = getTableProps();
     return (
       <div>
         <center>
@@ -48,41 +39,53 @@ class Students extends React.Component {
           {isEmpty(purchaseData)
             ? "No payout found"
             : purchaseData.reverse().map(purchase => {
-                return (
-                  <Fragment>
-                    <TableRow key={purchase._id} selectable={false}>
-                      <TableCell style={style.w150}>
-                        {purchase.profile && purchase.profile.emails
-                          ? purchase.profile.emails[0].address
-                          : "Unavilable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {purchase.stripeRequest &&
+              return (
+                <FncTableRow key={purchase._id} selectable={false}>
+                  <FncTableCell
+                    data-th={tableHeaderColumns[0].columnName}
+                  >
+                    {purchase.profile && purchase.profile.emails
+                      ? purchase.profile.emails[0].address
+                      : "Unavilable"}
+                  </FncTableCell>
+                  <FncTableCell
+                    data-th={tableHeaderColumns[1].columnName}
+                  >
+                    {
+                      purchase.stripeRequest &&
                         purchase.stripeRequest.description
-                          ? purchase.stripeRequest.description
-                          : "Unavilable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {purchase && purchase.packageType
-                          ? purchase.packageType
-                          : "Unavilable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {purchase.profile && purchase.profile.profile
-                          ? purchase.profile.profile.name
-                          : "Unavilable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {dateFriendly(
-                          purchase.createdOn,
-                          "MMMM Do YYYY, h:mm:ss a"
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  </Fragment>
-                );
-              })}
-        </StudentsDetailsTable>
+                        ? purchase.stripeRequest.description
+                        : "Unavilable"}
+                  </FncTableCell>
+                  <FncTableCell
+                    data-th={tableHeaderColumns[2].columnName}
+                  >
+                    {purchase && purchase.packageType
+                      ? purchase.packageType
+                      : "Unavilable"}
+                  </FncTableCell>
+                  <FncTableCell
+                    data-th={tableHeaderColumns[3].columnName}
+                  >
+                    {purchase.profile && purchase.profile.profile
+                      ? purchase.profile.profile.name
+                      : "Unavilable"}
+                  </FncTableCell>
+                  <FncTableCell
+                    data-th={tableHeaderColumns[4].columnName}
+                  >
+                    {
+                      dateFriendly(
+                        purchase.createdOn,
+                        "MMMM Do YYYY, h:mm:ss a"
+                      )
+                    }
+                  </FncTableCell>
+                </FncTableRow >
+              );
+            })
+          }
+        </StudentsDetailsTable >
         <Pagination
           {...this.state}
           pageCount={pageCount}
@@ -90,7 +93,7 @@ class Students extends React.Component {
             this.props.ChangePageClick(skip);
           }}
         />
-      </div>
+      </div >
     );
   }
 }

@@ -41,6 +41,7 @@ export { default as withImageExists } from '/imports/util/withImageExists';
 export { default as withUserSchoolInfo } from '/imports/util/withUserSchoolInfo';
 export { default as withMarker } from '/imports/util/withMarker.js';
 export { verifyImageURL } from '/imports/util/verifyImageURL.js';
+export { addHttp } from '/imports/util/urlHelpers.js';
 export { withSubscriptionAndPagination } from '/imports/util/subscriptionAndPagination';
 
 export { withStyles } from './withStyle';

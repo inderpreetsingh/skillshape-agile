@@ -2,13 +2,14 @@
 import React from "react";
 import { createTable } from "/imports/util";
 
-const getTableProps = () => {
+export const getTableProps = () => {
   const tableProps = {
     className: "table-view"
   };
   const tableHeaderProps = {
     adjustForCheckbox: false,
-    displaySelectAll: false
+    displaySelectAll: false,
+    responsive: true
   };
   const tableRowProps = {
     className: "table-header"
@@ -17,32 +18,32 @@ const getTableProps = () => {
     {
       columnName: "Type",
       tooltip: "",
-      className: "wd-150"
+      // className: "wd-150"
     },
     {
       columnName: "Net",
       tooltip: "",
-      className: "wd-150"
+      // className: "wd-150"
     },
     {
       columnName: "Amount",
       tooltip: "",
-      className: "wd-150"
+      // className: "wd-150"
     },
     {
       columnName: "Fee",
       tooltip: "",
-      className: "wd-211"
+      // className: "wd-211"
     },
     {
       columnName: "Description",
       tooltip: "",
-      className: "wd-100"
+      // className: "wd-100"
     },
     {
       columnName: "Date",
       tooltip: "",
-      className: "wd-100"
+      // className: "wd-100"
     }
   ];
   const tableHeaderColumnProps = {
