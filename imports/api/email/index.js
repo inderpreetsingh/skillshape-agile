@@ -623,7 +623,6 @@ export const sendSkillShapeJoinInvitation = (to,userName,schoolName,password)=>{
   })
 }
 export const adminInvitation = (to,userName,schoolName,action,adminName)=>{
-  console.log('TCL: adminInvitation -> to,userName,schoolName,action', to,userName,schoolName,action);
   let content;
   if(action=='add'){
     content=`Hi ${userName}<br/>
@@ -650,5 +649,30 @@ export const adminInvitation = (to,userName,schoolName,action,adminName)=>{
     from: "Notices@SkillShape.com",
     subject: `SkillShape Admin ${action =='add'? "Invitation" : "Removal"}`,
     html: content
+  })
+}
+export const sendEmailToRequester = (userEmail,userName,schoolName)=>{
+  let to;
+  if(platform == 'local'){
+    to ='ramesh.bansal@daffodilsw.com';
+  }
+  else if(platform == 'dev'){
+    to = config.skillshapeAdminEmail;
+  }
+  else{
+    to = userEmail;
+  }
+  Email.send({
+    to: to, // Needs to replace this with requester's Email.
+    from: "Notices@SkillShape.com",
+    subject: "School Claim Request Rejected",
+    html: `Hi  ${userName}<br/>
+              You have requested for claim the ${schoolName}. We have sent your request to <br/>
+              the ${schoolName} administrators and they have not responded.If you believe <br/>
+              there is an error you can try your request again or contact the school directly.<br/>
+              Thanks<br/>
+              The SkillShape Team<br/>
+              ${EmailSignature}
+    `
   })
 }

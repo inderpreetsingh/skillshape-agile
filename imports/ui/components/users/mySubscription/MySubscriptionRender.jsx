@@ -69,7 +69,7 @@ const ImageContainer = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
   background-position: 50% 50%;
   background-image: url('${(props) => props.src}');
-  background-size: 100px auto;
+  background-size: cover;
   transition: background-image 1s linear;
 `;
 
@@ -184,16 +184,12 @@ const MySubscriptionRender = (props) => {
 					schoolData.map((school) => {
 						const EXPIRED = 'expired';
 						const subscriptionsData = getSubsDataBasedOnSchool(school._id, purchaseData);
-						const activeSubsData = subscriptionsData.filter(
-							(subs) => subs.packageStatus !== EXPIRED || subs.status !== EXPIRED
-						);
-						const expiredSubsData = subscriptionsData.filter(
-							(subs) => subs.packageStatus === EXPIRED || subs.status === EXPIRED
-						);
+						const activeSubsData = subscriptionsData.filter(subs => subs.packageStatus != EXPIRED);
+						const expiredSubsData = subscriptionsData.filter(subs => subs.packageStatus == EXPIRED || subs.status == EXPIRED);
 
-						// console.group(' MY SUBSCRIPTION');
+						console.group(' MY SUBSCRIPTION');
 						console.log(activeSubsData, expiredSubsData, '===============');
-						// console.group();
+						console.group();
 
 						return (
 							<ExpansionPanel
@@ -241,7 +237,7 @@ const MySubscriptionRender = (props) => {
 														'No Active Subscriptions'
 													) : (
 															'Active Subscriptions'
-													)
+														)
 												}
 											/>
 										</ListWrapper>

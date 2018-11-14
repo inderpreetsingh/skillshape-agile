@@ -1,22 +1,13 @@
 import React, { Fragment } from "react";
-import Pagination from "/imports/ui/componentHelpers/pagination";
-import { TransactionDetailsTable } from "./transactionDetailsTable";
-import { TableRow, TableCell } from "material-ui/Table";
 import isEmpty from "lodash/isEmpty";
-import { createContainer } from "meteor/react-meteor-data";
+import Pagination from "/imports/ui/componentHelpers/pagination";
+import { TransactionDetailsTable, getTableProps } from "./transactionDetailsTable";
 import Purchases from "/imports/api/purchases/fields";
+import { createContainer } from "meteor/react-meteor-data";
 import { dateFriendly } from "/imports/util";
-const style = {
-  w211: {
-    width: 211
-  },
-  w100: {
-    width: 100
-  },
-  w150: {
-    width: 150
-  }
-};
+import { length, FncTableCell, FncTableRow } from '../styles.js';
+
+
 class Transactions extends React.Component {
   constructor(props) {
     super(props);
@@ -29,6 +20,8 @@ class Transactions extends React.Component {
   render() {
     const { purchaseData } = this.props;
     const { pageCount } = this.props;
+    const { tableHeaderColumns } = getTableProps();
+
     return (
       <div>
         <center>
@@ -39,75 +32,75 @@ class Transactions extends React.Component {
           {isEmpty(purchaseData)
             ? "No payout found"
             : purchaseData.reverse().map((purchase, index) => {
-                return (
-                  <Fragment>
-                    <TableRow key={index} selectable={false}>
-                      <TableCell style={style.w150}>
-                        {"Payout" || "Unavailable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {purchase.stripeResponse &&
+              return (
+                <Fragment>
+                  <FncTableRow key={index} selectable={false}>
+                    <FncTableCell data-th={tableHeaderColumns[0].columnName}>
+                      {"Payout" || "Unavailable"}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[1].columnName}>
+                      {purchase.stripeResponse &&
                         purchase.stripeResponse.amount
-                          ? "$" +
-                            purchase.stripeRequest.destination.amount / 100
-                          : "Unavailable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {purchase.stripeResponse &&
+                        ? "$" +
+                        purchase.stripeRequest.destination.amount / 100
+                        : "Unavailable"}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[2].columnName}>
+                      {purchase.stripeResponse &&
                         purchase.stripeResponse.amount
-                          ? "$" +
-                            purchase.stripeRequest.destination.amount / 100
-                          : "Unavailable"}
-                      </TableCell>
-                      <TableCell style={style.w211}>-----</TableCell>
-                      <TableCell style={style.w150}>
-                        {"Stripe Transfer" || "Unavailable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {dateFriendly(
-                          purchase.createdOn,
-                          "MMMM Do YYYY, h:mm:ss a"
-                        )}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow selectable={false}>
-                      <TableCell style={style.w150}>
-                        {"Charge" || "Unavailable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {purchase.stripeResponse &&
+                        ? "$" +
+                        purchase.stripeRequest.destination.amount / 100
+                        : "Unavailable"}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[3].columnName}>-----</FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[4].columnName}>
+                      {"Stripe Transfer" || "Unavailable"}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[5].columnName}>
+                      {dateFriendly(
+                        purchase.createdOn,
+                        "MMMM Do YYYY, h:mm:ss a"
+                      )}
+                    </FncTableCell>
+                  </FncTableRow>
+                  <FncTableRow selectable={false}>
+                    <FncTableCell data-th={tableHeaderColumns[0].columnName}>
+                      {"Charge" || "Unavailable"}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[1].columnName}>
+                      {purchase.stripeResponse &&
                         purchase.stripeResponse.amount
-                          ? "$" +
-                            purchase.stripeResponse.amount / 100 -
-                            purchase.fee / 100
-                          : "Unavailable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {purchase.stripeResponse &&
+                        ? "$" +
+                        purchase.stripeResponse.amount / 100 -
+                        purchase.fee / 100
+                        : "Unavailable"}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[2].columnName}>
+                      {purchase.stripeResponse &&
                         purchase.stripeResponse.amount
-                          ? "$" + purchase.stripeResponse.amount / 100
-                          : "Unavailable"}
-                      </TableCell>
-                      <TableCell style={style.w211}>
-                        {purchase && purchase.fee
-                          ? "$" + purchase.fee / 100
-                          : "Unavailable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {purchase.stripeResponse
-                          ? purchase.stripeResponse.description
-                          : "Unavailable"}
-                      </TableCell>
-                      <TableCell style={style.w150}>
-                        {dateFriendly(
-                          purchase.createdOn,
-                          "MMMM Do YYYY, h:mm:ss a"
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  </Fragment>
-                );
-              })}
+                        ? "$" + purchase.stripeResponse.amount / 100
+                        : "Unavailable"}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[3].columnName}>
+                      {purchase && purchase.fee
+                        ? "$" + purchase.fee / 100
+                        : "Unavailable"}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[4].columnName}>
+                      {purchase.stripeResponse
+                        ? purchase.stripeResponse.description
+                        : "Unavailable"}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[5].columnName}>
+                      {dateFriendly(
+                        purchase.createdOn,
+                        "MMMM Do YYYY, h:mm:ss a"
+                      )}
+                    </FncTableCell>
+                  </FncTableRow>
+                </Fragment>
+              );
+            })}
         </TransactionDetailsTable>
         <Pagination
           {...this.state}

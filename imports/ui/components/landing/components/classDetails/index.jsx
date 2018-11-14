@@ -7,7 +7,7 @@ import ClassTimeCover from "./classTimeCover/index.jsx";
 import ClassTimeInformation from "./classTimeInformation/index.jsx";
 import MembersList from "./membersList/index.jsx";
 import TimeLine from "./timeline/index.jsx";
-
+import get from 'lodash/get';
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
@@ -71,12 +71,16 @@ const ClassTimeWrapper = styled.div`
 `;
 
 const ClassDetails = props => {
-  const { location, bgImg, headerProps } = props;
+  const { location,headerProps } = props;
+  const {state} = props.location.state;
+  const dataProps =  props.location.state.props;
+  const {school} = state;
+  let schoolImage,classTypeImage;
+  schoolImage = get(school,'logoImgMedium',get(school,'logoImg',config.defaultSchoolImage))
+	classTypeImage = get(state,'classImg',config.defaultSchoolImage)
 
   const currentView =
-    location.pathname === "/classdetails-student"
-      ? "studentsView"
-      : "instructorsView";
+    location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
   return (
     <Wrapper>
       <TopSearchBar {...props.topSearchBarProps} />
@@ -90,11 +94,13 @@ const ClassDetails = props => {
           />
         )}
       <InnerWrapper>
-        <ClassTimeWrapper bgImg={bgImg}>
-          <ClassTimeCover {...headerProps} schoolCoverSrc={bgImg} />
+        <ClassTimeWrapper bgImg={classTypeImage}>
+          <ClassTimeCover classTypeCoverSrc={schoolImage} schoolCoverSrc={classTypeImage} />
           <ClassTimeInformation
-            {...props.ClassTimeInformation}
-            schoolCoverSrc={bgImg}
+            {...dataProps.eventData}
+            schoolName={school.name}
+            schoolCoverSrc={classTypeImage}
+            locationData = {state.location}
           />
         </ClassTimeWrapper>
         <TimeLine {...props.timeLineProps} />

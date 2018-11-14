@@ -1,7 +1,7 @@
 import ClaimSchoolRequest from "/imports/api/claimSchoolRequest/fields.js";
 import isEmpty from "lodash/isEmpty";
 import School from "/imports/api/school/fields";
-import { sendClaimASchoolEmail } from "/imports/api/email";
+import { sendClaimASchoolEmail,sendEmailToRequester } from "/imports/api/email";
 
 
 
@@ -41,6 +41,20 @@ import { sendClaimASchoolEmail } from "/imports/api/email";
                     ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj })
                     emailSuccess = sendClaimSchoolEmail(requestObj,requestObj._id, toField);
                 }
+                else if(requestObj && requestObj.emailCount == 10){
+                    requestObj.emailCount+=1;
+                    toField = "help@skillshape.com";
+                    if(process.env["NODE_ENV"] == "development") {
+                        toField = "ramesh.bansal@daffodilsw.com";
+                    }
+                    ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj })
+                    sendEmailToRequester(requestObj.userEmail,requestObj.userName,requestObj.schoolName)
+                }
+                else{
+                    requestObj.emailCount+=1; 
+                    ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj })
+                }
+
 
             });
             return emailSuccess;

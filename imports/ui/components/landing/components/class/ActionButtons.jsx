@@ -1,9 +1,10 @@
-import React, {Fragment} from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import { isEmpty } from 'lodash';
 
-import { handleOutBoundLink } from '/imports/util';
+import { handleOutBoundLink, addHttp } from '/imports/util';
 
 import ClassTypeLogo from './ClassTypeLogo.jsx';
 import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
@@ -73,15 +74,15 @@ const ShowOnSmallScreen = styled.div`
 const ActionButtons = (props) => {
   const ActionButtonsContainer = props.rightSide ? ActionButtonsRightSideWrapper : ActionButtonsWrapper;
   const EditButton = props.editButton;
-  return(<ActionButtonsContainer>
-      {props.isEdit ? <Fragment></Fragment> :
+  return (<ActionButtonsContainer>
+    {props.isEdit ? <Fragment></Fragment> :
       <Fragment>
         {props.editButton && <ShowOnSmallScreen><ActionButton rightSide={props.rightSide}>
           <EditButton />
         </ActionButton></ShowOnSmallScreen>}
 
         {props.callUsButton && <ActionButton rightSide={props.rightSide}>
-          <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick}/>
+          <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick} />
         </ActionButton>}
 
         {props.emailUsButton && <ActionButton rightSide={props.rightSide}>
@@ -96,11 +97,11 @@ const ActionButtons = (props) => {
           <ClassTimeButton secondary noMarginBottom label="Schedule" icon iconName="schedule" onClick={props.onScheduleButtonClick} />
         </ActionButton>}
 
-        {props.visitSiteButton && <a href={props.siteLink} target="_blank"><ActionButton rightSide={props.rightSide}>
-          <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" onClick={handleOutBoundLink}/>
+        {props.visitSiteButton && !isEmpty(props.siteLink) && <a href={addHttp(props.siteLink.toLowerCase())} target="_blank" onClick={handleOutBoundLink}><ActionButton rightSide={props.rightSide}>
+          <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" />
         </ActionButton></a>}
       </Fragment>}
-    </ActionButtonsContainer>)
+  </ActionButtonsContainer>)
 }
 
 ActionButtons.propTypes = {
