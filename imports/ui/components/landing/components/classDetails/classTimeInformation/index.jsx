@@ -35,23 +35,23 @@ class ClassTimeInformation extends Component {
       classTimeData,
       classTypeName,
       schoolName,
-      schoolCoverSrc
+      schoolCoverSrc,
+      title,desc,locationData,eventStartTime
     } = this.props;
 
     return (
       <Wrapper bgImg={schoolCoverSrc}>
         <NameBar
-          classTimeName={classTimeData.name}
-          classTypeName={classTimeData.classTypeName || classTypeName}
-          schoolName={classTimeData.schoolName || schoolName}
+          title = {title}
+          schoolName={schoolName}
         />
-        <Description description={classTimeData.description} />
+        <Description description={desc} />
         <LocationDetails
-          time={classTimeData.time}
-          timePeriod={classTimeData.timePeriod}
+          time={eventStartTime}
+          timePeriod={"Missing"}
           startDate={classTimeData.startDate}
           address={classTimeData.address}
-          locationData={classTimeData.locationData}
+          locationData={{lat:locationData.geoLat,lng:locationData.geoLong}}
         />
         <HideOnLargeScreen>
           <ActionButtons />

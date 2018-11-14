@@ -53,7 +53,7 @@ const NameBar = props => {
     <Wrapper>
       <Left>
         <ClassTimeName>
-          {props.classTimeName} : {props.classTypeName}
+          {props.title}
         </ClassTimeName>
         {props.schoolName && (
           <SubHeading color={secondaryTextColor}>
