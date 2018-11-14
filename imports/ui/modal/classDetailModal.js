@@ -10,7 +10,7 @@ import IconButton from "material-ui/IconButton";
 import { withStyles } from "material-ui/styles";
 import moment from "moment";
 import React from "react";
-import { browserHistory } from "react-router";
+import { browserHistory,Link } from "react-router";
 import styled from "styled-components";
 import "/imports/api/classInterest/methods";
 import ClassTimes from "/imports/api/classTimes/fields";
@@ -24,8 +24,7 @@ import * as settings from "/imports/ui/components/landing/site-settings.js";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { checkForAddToCalender, formatClassTimesData, formatDataBasedOnScheduleType, formStyles, imageExists } from "/imports/util";
 import Events from "/imports/util/events";
-
-
+import { withPopUp } from "/imports/util";
 
 
 
@@ -33,7 +32,6 @@ import Events from "/imports/util/events";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
-const formStyle = formStyles();
 
 const styles = theme => {
   return {
@@ -216,6 +214,11 @@ const EventName = Heading.extend`
 `;
 const ConfirmationDialog = styled.div`
   margin: 8px;
+`;
+const Div = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: center;
 `;
 const ClassTypeDescription = styled.div`
   border: 2px solid black;
@@ -444,7 +447,31 @@ class ClassDetailModal extends React.Component {
     this.setState({ removeFromCalendarPopUp: false });
     props.closeEventModal(false, null);
   };
-
+  handleCheckIn = () => {
+    const {popUp} = this.props;
+    popUp.appear("success", {
+      title: "Confirmation",
+      content: `You are going to sign in the class`,
+      RenderActions: ( <Div > 
+         <ClassTimeButton
+          fullWidth
+          label="No"
+          noMarginBottom
+          onClick={() => {
+            this.setState({ removeFromCalendarPopUp: true });
+          }}
+        />
+        <ClassTimeButton
+          fullWidth
+          label="Yes"
+          noMarginBottom
+          onClick={() => {
+            this.setState({ removeFromCalendarPopUp: true });
+          }}
+        />
+      </Div>)
+    }, true);
+  }
   render() {
     const {
       isLoading,
@@ -453,7 +480,8 @@ class ClassDetailModal extends React.Component {
       classType,
       location,
       addToMyCalender,
-      classImg
+      classImg,
+      classDetail
     } = this.state;
     const {
       eventData,
@@ -461,7 +489,7 @@ class ClassDetailModal extends React.Component {
       classes,
       clickedDate,
       classInterestData,
-      params
+      params,
     } = this.props;
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(
@@ -507,6 +535,7 @@ class ClassDetailModal extends React.Component {
       >
         {isLoading && <ContainerLoader />}
         {error && <div style={{ color: "red" }}>{error}</div>}
+        
         {!isLoading &&
           !error && (
             <Grid container style={{ padding: "16px" }}>
@@ -649,6 +678,26 @@ class ClassDetailModal extends React.Component {
                         />
                       </Grid>
                     )}
+                    <Grid item xs={6} style={{ margin: "auto" }}>
+                        <ClassTimeButton
+                          fullWidth
+                          noMarginBottom
+                          label="Check in"
+                          onClick={this.handleCheckIn}
+                        />
+                      </Grid>
+                      <Grid item xs={6} style={{ margin: "auto" }}>
+                        <ClassTimeButton
+                          fullWidth
+                          noMarginBottom
+                          label="Class Detail"
+                          onClick={()=>{if(this.state.adminAccess){
+                            browserHistory.push(`/classdetails-instructor/abc/${this.props}`);
+                          }else{
+                            browserHistory.push(`/classdetails-student/`);
+                          }}}
+                        />
+                      </Grid>
                   </Grid>
                 )}
               </center>
@@ -1002,4 +1051,4 @@ class ClassDetailModal extends React.Component {
   }
 }
 
-export default withMobileDialog()(withStyles(styles)(ClassDetailModal));
+export default withMobileDialog()(withStyles(styles)(withPopUp(ClassDetailModal)));
