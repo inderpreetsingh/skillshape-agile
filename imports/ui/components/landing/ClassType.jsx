@@ -1,39 +1,26 @@
-import React,{ Component,Fragment } from 'react';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-
-// Testing
-import SkillShapeButtonsCollection from './SkillShapeButtonsCollection.jsx';
-
-// import ReviewsBar from './components/class/ReviewsBar.jsx';
-// import ReviewsSlider from './components/class/ReviewsSlider.jsx';
-import ReviewsManager from './components/class/reviews/ReviewsManager.jsx';
 import ClassTypeCover from './components/class/cover/ClassTypeCover.jsx';
-import PackagesList from './components/class/packages/PackagesList.jsx';
-import SchoolDetails from './components/class/details/SchoolDetails.jsx';
 import ClassTypeCoverContent from './components/class/cover/ClassTypeCoverContent.jsx';
-import MyCalendar from '/imports/ui/components/users/myCalender';
+import SchoolDetails from './components/class/details/SchoolDetails.jsx';
+import PackagesList from './components/class/packages/PackagesList.jsx';
+import ClassTimesBoxes from './components/classTimes/ClassTimesBoxes';
+import Footer from './components/footer/index.jsx';
+import * as helpers from './components/jss/helpers.js';
+import TopSearchBar from './components/TopSearchBar';
+import classTimesBarData from './constants/classTimesBarData.js';
+import classTypeData from './constants/classTypeData.js';
+import monthlyPackagesData from './constants/monthlyPackagesData.js';
+import perClassPackagesData from './constants/perClassPackagesData.js';
+import schoolDetails from './constants/schoolDetailsData.js';
+import schoolImages from './constants/schoolImgSliderData.js';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
-import TopSearchBar from './components/TopSearchBar';
-import ContactUsBar from './components/ContactUsBar';
-import Footer from './components/footer/index.jsx';
-import StarsBar from './components/StarsBar.jsx';
-import ClassTimesSlider from './components/classTimes/ClassTimesSlider.jsx';
-import BrandBar from './components/BrandBar';
-import ClassTimesBoxes from './components/classTimes/ClassTimesBoxes';
-import ClassTimeButton from './components/buttons/ClassTimeButton.jsx';
 
-import reviewsData from './constants/reviewsData.js';
-import classTimesBarData from './constants/classTimesBarData.js';
-import perClassPackagesData from './constants/perClassPackagesData.js';
-import monthlyPackagesData from './constants/monthlyPackagesData.js';
-import schoolImages from './constants/schoolImgSliderData.js';
-import schoolDetails from './constants/schoolDetailsData.js';
-import classTypeData from './constants/classTypeData.js';
 
-import * as helpers from './components/jss/helpers.js';
-import * as settings from './site-settings.js';
+
+
 
 const SchoolImgWrapper = styled.div`
   height: 400px;

@@ -1,36 +1,27 @@
-import React from "react";
+import get from 'lodash/get';
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import React from "react";
 import { withRouter } from "react-router";
-
+import styled from "styled-components";
 import ClassTimeCover from "./classTimeCover/index.jsx";
 import ClassTimeInformation from "./classTimeInformation/index.jsx";
 import MembersList from "./membersList/index.jsx";
 import TimeLine from "./timeline/index.jsx";
-import get from 'lodash/get';
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
-
+import { danger, maxContainerWidth, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
+import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
+import { coverSrc } from "/imports/ui/components/landing/site-settings.js";
 import { withImageExists } from "/imports/util";
 
-import {
-  schoolDetailsImgSrc,
-  coverSrc
-} from "/imports/ui/components/landing/site-settings.js";
+
+
 
 const imageExistsConfigSchoolSrc = {
   originalImagePath: "headerProps.schoolCoverSrc",
   defaultImage: coverSrc
 };
 
-import {
-  rhythmDiv,
-  panelColor,
-  tablet,
-  danger,
-  maxContainerWidth
-} from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const Wrapper = styled.div`
   overflow: hidden;

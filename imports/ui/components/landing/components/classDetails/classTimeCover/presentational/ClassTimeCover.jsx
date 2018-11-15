@@ -1,19 +1,11 @@
-import React, { Fragment } from "react";
+import React from "react";
 import styled from "styled-components";
-
 import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
-import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
+import { rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { coverSrc, schoolDetailsImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { withImageExists } from "/imports/util";
-import {
-  tablet,
-  rhythmDiv,
-  danger
-} from "/imports/ui/components/landing/components/jss/helpers.js";
 
-import {
-  schoolDetailsImgSrc,
-  coverSrc
-} from "/imports/ui/components/landing/site-settings.js";
+
 
 const imageExistsConfigSchoolSrc = {
   originalImagePath: "schoolCoverSrc",
