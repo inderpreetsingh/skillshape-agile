@@ -47,23 +47,7 @@ const OuterWrapper = styled.div`
   position: relative;
   z-index: 1;
   ${(props) => !props.isVideoInFullScreenMode && `clip-path: ${helpers.clipPathCurve}`};
-
-  //
-  // &:after {
-  //   content: "";
-  //   position: absolute;
-  //   width: 100%;
-  //   background-color: inherit;
-  //   border-bottom: ${helpers.rhythmDiv * 8}px solid ${helpers.schoolPageColor};
-  //   border-radius: 100%;
-  //   bottom: -${helpers.rhythmDiv * 8}px;
-  //   z-index: -1;
-  //   height: ${helpers.rhythmDiv * 8}px;
-  //
-  //   @media screen and (max-width: ${helpers.tablet}px) {
-  //     opacity: 0.5;
-  //   }
-  // }
+  		
 `;
 
 const Wrapper = styled.div`
@@ -79,6 +63,8 @@ const Wrapper = styled.div`
 
 	@media screen and (max-width: ${helpers.tablet}px) {
 		background-position: calc(100% + 125px) calc(100% - 14px);
+		min-height: 100vh;
+		height: auto;
 	}
 
 	@media screen and (max-width: ${helpers.mobile}px) {
@@ -140,12 +126,13 @@ const HeaderContentWrapper = styled.div`
 	z-index: 0;
 `;
 
-const InputWrapper = styled.div`
+const FieldsWrapper = styled.div`
 	display: flex;
 	align-items: center;
 
 	@media screen and (max-width: ${helpers.mobile}px) {
 		flex-direction: column;
+		margin-bottom: ${helpers.rhythmDiv * 4}px;
 	}
 `;
 
@@ -155,6 +142,8 @@ const VideoPlayerWrapper = styled.div`
 
 	@media screen and (max-width: ${helpers.mobile}px) {
 		padding-right: 0;
+		height: 100%;
+		width: 100%;
 	}
 `;
 
@@ -215,7 +204,7 @@ class SchoolHeader extends Component {
 							</VideoPlayerWrapper>
 							<Title>{props.title}</Title>
 							<Content>{props.content}</Content>
-							<InputWrapper>
+							<FieldsWrapper>
 								<TextField
 									id="user-email"
 									placeholder="Enter Your Email Id"
@@ -249,7 +238,7 @@ class SchoolHeader extends Component {
 										onClick={this.handleSignUpButtonClick}
 									/>
 								</ButtonSmallWrapper>
-							</InputWrapper>
+							</FieldsWrapper>
 						</HeaderContent>
 
 						<HeaderOverlay>

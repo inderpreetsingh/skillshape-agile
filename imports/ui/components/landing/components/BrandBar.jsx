@@ -21,6 +21,7 @@ const NavBarWrapper = styled.div`
   height: ${props => (props.navBarHeight ? props.navBarHeight + "px" : "auto")};
   z-index: 1299;
   position: ${props => (props.positionStatic ? "static" : "absolute")};
+  ${props => props.position && `position: ${props.position};`}
   top: 0;
   background: ${props => props.navBgColor};
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -58,7 +59,7 @@ const NavBarInnerContent = styled.div`
       left: 0;
       right: 0;
       background-color: ${props =>
-        props.overlay ? helpers.overlayColor : "transparent"};
+    props.overlay ? helpers.overlayColor : "transparent"};
       z-index: -1;
     }
   }
@@ -66,6 +67,7 @@ const NavBarInnerContent = styled.div`
 
 const BrandBar = props => (
   <NavBarWrapper
+    position={props.position}
     positionStatic={props.positionStatic}
     navBarHeight={props.navBarHeight}
     navBgColor={props.navBgColor}
@@ -86,17 +88,17 @@ const BrandBar = props => (
         {props.barButton ? (
           props.barButton
         ) : (
-          <ButtonsWrapper>
-            {isEmpty(props.currentUser) && <AddSchoolButton />}
-            <JoinButton label="Sign Up" {...props} />
-            <LoginButton icon={true} {...props} />
-          </ButtonsWrapper>
-        )}
+            <ButtonsWrapper>
+              {isEmpty(props.currentUser) && <AddSchoolButton />}
+              <JoinButton label="Sign Up" {...props} />
+              <LoginButton icon={true} {...props} />
+            </ButtonsWrapper>
+          )}
         {props.menuButton ? (
           props.menuButton
         ) : (
-          <SideNav {...props} {...props.menuButton} />
-        )}
+            <SideNav {...props} {...props.menuButton} />
+          )}
       </ActionArea>
     </NavBarInnerContent>
   </NavBarWrapper>
@@ -109,6 +111,7 @@ BrandBar.propTypes = {
   barButton: PropTypes.element,
   menuButton: PropTypes.element,
   navBarHeight: PropTypes.string,
+  position: PropTypes.string,
   overlay: PropTypes.bool,
   showLogo: PropTypes.bool
 };
