@@ -1,26 +1,23 @@
-import React, { Component } from "react";
-import { browserHistory } from "react-router";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import IconButton from "material-ui/IconButton";
 import ClearIcon from "material-ui-icons/Clear";
-import { withStyles } from "material-ui/styles";
-
-import { MuiThemeProvider } from "material-ui/styles";
-import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
+import Grid from "material-ui/Grid";
+import IconButton from "material-ui/IconButton";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import styled from "styled-components";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import Student from "/imports/ui/components/landing/components/icons/Student.jsx";
-import School from "/imports/ui/components/landing/components/icons/School.jsx";
-
-import Dialog, {
-  DialogContent,
-  DialogActions,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
-
-import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
+import TextField from "material-ui/TextField";
+import Typography from "material-ui/Typography";
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import Input, { InputLabel } from "material-ui/Input";
+import { MenuItem } from "material-ui/Menu";
+import Select from "material-ui/Select";
+import Multiselect from "react-widgets/lib/Multiselect";
+import Checkbox from "material-ui/Checkbox";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 const styles = theme => {
   return {
@@ -52,7 +49,10 @@ const styles = theme => {
     }
   };
 };
-
+const ErrorWrapper = styled.span`
+  color: red;
+  margin: 15px;
+`;
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   font-family: ${helpers.specialFont};
@@ -70,12 +70,31 @@ const Title = styled.span`
 class AddInstructorDialogBox extends Component {
   constructor(props) {
     super(props);
+    this.state={};
   }
 
   onSubmit = () => {};
-
+   handlePhoneChange = event => {
+    const inputPhoneNumber = event.target.value;
+    let phoneRegex = /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g;
+  
+    let showErrorMessage;
+    if (inputPhoneNumber.match(phoneRegex) || inputPhoneNumber == "") {
+      showErrorMessage = false;
+    } else {
+      showErrorMessage = true;
+    }
+    this.setState({
+      showErrorMessage: showErrorMessage
+    });
+  };
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.checked });
+  };
   render() {
     const { props } = this;
+    let birthYears = [];
+    let adminView = true;
     return (
       <Dialog
         open={props.open}
@@ -87,7 +106,7 @@ class AddInstructorDialogBox extends Component {
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
             <DialogTitleWrapper>
-              <Title>Add instructor</Title>
+              <Title>Add Instructor</Title>
 
               <IconButton
                 color="primary"
@@ -99,23 +118,168 @@ class AddInstructorDialogBox extends Component {
             </DialogTitleWrapper>
           </DialogTitle>
           <DialogContent classes={{ root: props.classes.dialogContent }}>
-            <Text>Add the instructor to your </Text>
+          <form id="addUser" onSubmit={this.onSubmit}>
+      <Grid container spacing={24}>
+        {/* 1rst Row */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            id="firstName"
+            label="First Name"
+            margin="normal"
+            fullWidth
+            inputRef={ref => {
+              this.firstName = ref;
+            }}
+            required={true}
+          />
+        </Grid>
+        {this.state.isLoading && <ContainerLoader />}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            id="lastName"
+            label="Last Name"
+            margin="normal"
+            fullWidth
+            inputRef={ref => {
+              this.lastName = ref;
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            id="email"
+            type="email"
+            label="Email"
+            margin="normal"
+            fullWidth
+            inputRef={ref => {
+              this.email = ref;
+            }}
+            required={!this.state.studentWithoutEmail}
+            disabled={this.state.studentWithoutEmail}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            id="phone"
+            label="Phone"
+            margin="normal"
+            inputRef={ref => {
+              this.phone = ref;
+            }}
+            fullWidth
+            onBlur={this.handlePhoneChange}
+          />
+          {this.state.showErrorMessage && (
+            <Typography color="error" type="caption">
+              Not a valid Phone number
+            </Typography>
+          )}
+        </Grid>
+
+        <Grid item sm={6} xs={12}>
+          <FormControl fullWidth margin="dense">
+            <InputLabel htmlFor="birthYear">Birth Year</InputLabel>
+            <Select
+              required={true}
+              input={<Input id="birthYear" />}
+              value={"this.state.birthYear"}
+              onChange={event =>
+                this.setState({ birthYear: event.target.value })
+              }
+              fullWidth
+            >
+              {birthYears.map((index, year) => {
+                return (
+                  <MenuItem key={birthYears[year]} value={birthYears[year]}>
+                    {birthYears[year]}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+          <Multiselect
+            textField={"name"}
+            valueField={"_id"}
+            data={this.props.classTypeData || []}
+            placeholder="Available Classes"
+            onChange={this.collectSelectedClassTypes}
+            />
+        </Grid>
+
+        {/*package details will be show later and the commented code will be used after currency task*/}
+
+
+            {/* {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&& <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+          <Multiselect
+            textField={"name"}
+            valueField={"_id"}
+            data={this.props.enrollmentFee}
+            placeholder="Enrollment Fee"
+            onChange={this.collectSelectedClassTypes}
+          />
+          
+          
+        </Grid>}
+        {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&&  <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+        <Multiselect
+            textField={"packageName"}
+            valueField={"_id"}
+            data={this.props.classPricing}
+            placeholder="Class Packages"
+            onChange={this.collectSelectedClassTypes}
+          />
+          </Grid>}
+        {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&&  <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+           <Multiselect
+            textField={"packageName"}
+            valueField={"_id"}
+            data={this.props.monthlyPricing}
+            placeholder="Monthly Packages"
+            onChange={this.collectSelectedClassTypes}
+          />
+          </Grid>}
+         */}
+       
+         
+          
+           
+        <FormControl fullWidth margin="dense">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.studentWithoutEmail}
+                onChange={this.handleChange("studentWithoutEmail")}
+                value="studentWithoutEmail"
+              />
+            }
+            label="Student does not have an email"
+          />
+        </FormControl>
+        <Grid
+          item
+          sm={12}
+          xs={12}
+          md={12}
+          style={{ display: "flex", justifyContent: "flex-end" }}
+        >
+          {this.state.error && <ErrorWrapper>{this.state.error}</ErrorWrapper>}
+          <PrimaryButton
+            formId="addUser"
+            type="submit"
+            label={`Add a New ${!adminView?"Member":'Instructor'}`} />
+             <PrimaryButton formId="cancelUser"
+            label="Cancel"
+            onClick={props.onModalClose}
+          />
+        </Grid>
+      </Grid>
+      </form>
           </DialogContent>
 
           <DialogActions classes={{ root: props.classes.dialogActionsRoot }}>
-            <CardsWrapper>
-              <OptionCard
-                onClick={this.handleStudentButtonClick}
-                message={"I am here to learn"}
-                icon={<Student />}
-              />
-
-              <OptionCard
-                onClick={this.handleSchoolButtonClick}
-                message={"I am here to teach"}
-                icon={<School />}
-              />
-            </CardsWrapper>
           </DialogActions>
         </MuiThemeProvider>
       </Dialog>

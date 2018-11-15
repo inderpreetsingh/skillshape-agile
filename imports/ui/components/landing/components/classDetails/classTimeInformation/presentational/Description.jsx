@@ -1,11 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-
+import { rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-import {
-  rhythmDiv,
-  baseFontSize
-} from "/imports/ui/components/landing/components/jss/helpers.js";
+
 
 const Wrapper = styled.div`
   padding: 0 ${rhythmDiv * 2}px;

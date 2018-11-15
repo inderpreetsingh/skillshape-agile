@@ -1,18 +1,13 @@
+import Icon from "material-ui/Icon";
+import { withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
-import { withStyles } from "material-ui/styles";
-import Icon from "material-ui/Icon";
-
-import { formatDate } from "/imports/util";
+import { mobile, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
-import {
-  rhythmDiv,
-  tablet,
-  mobile,
-  baseFontSize
-} from "/imports/ui/components/landing/components/jss/helpers.js";
+import { formatDate } from "/imports/util";
+
 
 const styles = {
   icon: {

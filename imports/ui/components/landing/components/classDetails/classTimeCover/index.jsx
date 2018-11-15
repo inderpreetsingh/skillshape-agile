@@ -1,11 +1,10 @@
-import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
-
+import React, { Component, Fragment } from "react";
 import ClassTimeCover from "./presentational/ClassTimeCover.jsx";
 import SelectPackagesDialogBox from "/imports/ui/components/landing/components/dialogs/SelectPackagesDialogBox.jsx";
 // import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { coverSrc } from "/imports/ui/components/landing/site-settings.js";
+
 
 class ClassTimeCoverContainer extends Component {
   constructor(props) {

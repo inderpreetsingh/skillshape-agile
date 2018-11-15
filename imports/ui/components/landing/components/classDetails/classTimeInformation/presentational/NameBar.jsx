@@ -1,22 +1,12 @@
-import React, { Component } from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import styled from "styled-components";
 // import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
+import { flexHorizontalSpaceBetween, rhythmDiv, secondaryTextColor, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { Capitalize, Heading, SubHeading } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 
-import {
-  tablet,
-  rhythmDiv,
-  secondaryTextColor,
-  flexHorizontalSpaceBetween
-} from "/imports/ui/components/landing/components/jss/helpers.js";
 
-import {
-  Text,
-  Heading,
-  SubHeading,
-  Capitalize
-} from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 
 const Wrapper = styled.div`
   /* prettier-ignore */

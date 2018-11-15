@@ -1,21 +1,15 @@
-import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
-import { withStyles } from "material-ui/styles";
+import React from "react";
 import { withRouter } from "react-router";
+import styled from "styled-components";
 import MemberExpanded from "./MemberExpanded.jsx";
-
-import {
-  Text,
-  SubHeading,
-  Capitalize
-} from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-
-import { addInstructorImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import DropDownMenu from "/imports/ui/components/landing/components/form/DropDownMenu.jsx";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { Capitalize, SubHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+import { addInstructorImgSrc } from "/imports/ui/components/landing/site-settings.js";
+
+
+
 
 const menuOptions = [
   {
