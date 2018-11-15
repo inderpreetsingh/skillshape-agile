@@ -114,22 +114,22 @@ const styles = {
 
 const ClassTypeCardDescription = (props) => {
 	const { cardRevealInfo, schoolData, editMode, selectedSkillSubject, onEditClassTypeClick } = props;
-	let BB = {backgroundColor:'#dddddd'};
+	let BB = { backgroundColor: '#dddddd' };
 	return (
 		<MuiThemeProvider theme={MuiTheme}>
 			<Fragment>
 				<RatingsWrapper itemScope itemType="http://schema.org/AggregateRating">
 					{!props.hideClassTypeOptions &&
-					!props.editMode && (
-						<Fragment>
-							<ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount" />
-							<Reviews href="#">
-								<Typography>
-									<span itemProp="reviewCount">{props.reviews}</span> Reviews
+						!props.editMode && (
+							<Fragment>
+								<ReactStars size={15} value={props.ratings} edit={false} itemProp="ratingCount" />
+								<Reviews href="#">
+									<Typography>
+										<span itemProp="reviewCount">{props.reviews}</span> Reviews
 								</Typography>
-							</Reviews>
-						</Fragment>
-					)}
+								</Reviews>
+							</Fragment>
+						)}
 				</RatingsWrapper>
 
 				<ClassDescription className="description">
@@ -151,41 +151,41 @@ const ClassTypeCardDescription = (props) => {
 								<Text>
 									<b>Age:</b> {cardRevealInfo.ageMin}{' '}
 									{cardRevealInfo.ageMax && `to ${cardRevealInfo.ageMax}`}
-									<Divider style={BB}/>
+									<Divider style={BB} />
 								</Text>
-								
+
 							)}
-							
+
 							{cardRevealInfo.gender && (
 								<Text>
 									{cardRevealInfo.gender &&
 										cardRevealInfo.gender !== 'All' && <div>
-									<b>Gender:</b>	{cardRevealInfo.gender}<Divider style={BB}/> </div>}
+											<b>Gender:</b>	{cardRevealInfo.gender}<Divider style={BB} /> </div>}
 								</Text>
 							)}
-							
+
 							{cardRevealInfo.experienceLevel && (
 								<Text>
 									<b>Level:</b>{' '}
 									{cardRevealInfo.experienceLevel == 'All' ? (
 										'All levels are welcomed'
 									) : (
-										cardRevealInfo.experienceLevel
-									)}
-									<Divider style={BB}/>
+											cardRevealInfo.experienceLevel
+										)}
+									<Divider style={BB} />
 								</Text>
 							)}
-							
+
 							{editMode &&
-							!isEmpty(selectedSkillSubject) && (
-								<Text>
-									<b>Subjects:</b> {' '}
-									{selectedSkillSubject.map((selectedSubj) => selectedSubj.name).join(', ')}
-									<Divider style={BB}/>
-								</Text>
-							)}
+								!isEmpty(selectedSkillSubject) && (
+									<Text>
+										<b>Subjects:</b> {' '}
+										{selectedSkillSubject.map((selectedSubj) => selectedSubj.name).join(', ')}
+										<Divider style={BB} />
+									</Text>
+								)}
 						</ClassTypeRequirements>
-						
+
 						<ClassDescriptionContentWrapper>
 							<Typography classes={{ root: props.classes.descriptionHeader }}>
 								<b>Class Description:</b>{' '}
@@ -205,50 +205,50 @@ const ClassTypeCardDescription = (props) => {
 					{!editMode ? (
 						<Buttons>
 							{props &&
-							!props.hideClassTypeOptions && (
-								<ButtonsWrapper>
-									<ButtonWrapper>
-										<SecondaryButton
-											noMarginBottom
-											fullWidth
-											onClick={() =>
-												goToClassTypePage(
-													addDelimiter(cardRevealInfo.name),
-													cardRevealInfo._id
-												)}
-											label="Class Details"
-										/>
-									</ButtonWrapper>
+								!props.hideClassTypeOptions && (
+									<ButtonsWrapper>
+										<ButtonWrapper>
+											<SecondaryButton
+												noMarginBottom
+												fullWidth
+												onClick={() =>
+													goToClassTypePage(
+														addDelimiter(cardRevealInfo.name),
+														cardRevealInfo._id
+													)}
+												label="Class Details"
+											/>
+										</ButtonWrapper>
 
-									<ButtonWrapper>
-										<SecondaryButton
-											noMarginBottom
-											fullWidth
-											label="View School"
-											onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
-										/>
-									</ButtonWrapper>
-								</ButtonsWrapper>
-							)}
+										<ButtonWrapper>
+											<SecondaryButton
+												noMarginBottom
+												fullWidth
+												label="View School"
+												onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
+											/>
+										</ButtonWrapper>
+									</ButtonsWrapper>
+								)}
 
 							{props.classTimeCheck ? (
-								<div 	style={{ bottom: "0px", position: "absolute", width: "93%"}}>
+
 								<PrimaryButton
 									label="View Class Times"
 									fullWidth
 									onClick={props.onClassTimeButtonClick}
 									itemScope
 									itemType="http://schema.org/ViewAction"
-								
+
 								/>
-								</div>
+
 							) : (
-								<PrimaryButton
-									label="Request Class Times"
-									fullWidth
-									onClick={props.onRequestClassTimeButtonClick}
-								/>
-							)}
+									<PrimaryButton
+										label="Request Class Times"
+										fullWidth
+										onClick={props.onRequestClassTimeButtonClick}
+									/>
+								)}
 						</Buttons>
 					) : (
 							<PrimaryButton
@@ -258,7 +258,7 @@ const ClassTypeCardDescription = (props) => {
 								label="Edit Details"
 								onClick={onEditClassTypeClick}
 							/>
-					)}
+						)}
 				</ClassDescription>
 			</Fragment>
 		</MuiThemeProvider>
