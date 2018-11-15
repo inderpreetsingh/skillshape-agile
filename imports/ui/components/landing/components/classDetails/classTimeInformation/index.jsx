@@ -36,7 +36,8 @@ class ClassTimeInformation extends Component {
       classTypeName,
       schoolName,
       schoolCoverSrc,
-      title,desc,locationData,eventStartTime
+      title,desc,locationData,eventStartTime,
+      website,start
     } = this.props;
     locationName = () => {
         return `${get(locationData,'city','')}, ${get(locationData,'state','')}, ${get(locationData,'country','')}, ${get(locationData,'zip','')}`  
@@ -51,12 +52,12 @@ class ClassTimeInformation extends Component {
         <LocationDetails
           time={eventStartTime}
           timePeriod={"Missing"}
-          startDate={classTimeData.startDate}
+          startDate={start}
           address={locationName()}
           locationData={{lat:get(locationData,'loc[1]',''),lng:get(locationData,"loc[0]",'')}}
         />
         <HideOnLargeScreen>
-          <ActionButtons />
+          <ActionButtons  website = {website}/>
         </HideOnLargeScreen>
       </Wrapper>
     );

@@ -1,27 +1,23 @@
-import React, { Component, Fragment } from 'react';
 import { isEmpty } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
-import DocumentTitle from 'react-document-title';
-import Typography from 'material-ui/Typography';
-import get from 'lodash/get';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-
-import ContactUsBar from '/imports/ui/components/landing/components/ContactUsBar';
-import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar';
-import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
-import NotFound from '/imports/ui/components/landing/components/helpers/NotFound.jsx';
-import config from '/imports/config';
+import ClassTypeContent from './ClassTypeContent';
+import ClassInterest from '/imports/api/classInterest/fields';
+import ClassPricing from '/imports/api/classPricing/fields';
+import ClassTimes from '/imports/api/classTimes/fields';
+import ClassType from '/imports/api/classType/fields';
+import EnrollmentFees from '/imports/api/enrollmentFee/fields';
+import Media from '/imports/api/media/fields';
+import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 import Reviews from '/imports/api/review/fields';
 import School from '/imports/api/school/fields';
-import ClassType from '/imports/api/classType/fields';
-import ClassTimes from '/imports/api/classTimes/fields';
-import ClassPricing from '/imports/api/classPricing/fields';
-import MonthlyPricing from '/imports/api/monthlyPricing/fields';
-import Media from '/imports/api/media/fields';
-import EnrollmentFees from '/imports/api/enrollmentFee/fields';
-import ClassInterest from '/imports/api/classInterest/fields';
-import ClassTypeContent from './ClassTypeContent';
+import config from '/imports/config';
+import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
+import NotFound from '/imports/ui/components/landing/components/helpers/NotFound.jsx';
+import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar';
+
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -69,7 +65,7 @@ export default createContainer((props) => {
 	let isLoading = true;
 	let classInterestData = [];
 	let currency;
-	let schoolData;
+	let schoolData,classTypeData;
 	if (classTypeId) {
 		subscription = Meteor.subscribe('classType.getClassTypeWithClassTimes', {
 			classTypeId
@@ -92,7 +88,9 @@ export default createContainer((props) => {
 	Meteor.subscribe('classInterest.getClassInterest');
 	Meteor.subscribe('enrollmentFee.getClassTypeEnrollMentFree', { classTypeId });
 	classInterestData = ClassInterest.find({}).fetch();
-	let classTypeData = ClassType.findOne({ _id: classTypeId });
+	if(sub1Ready){
+	classTypeData = ClassType.findOne({ _id: classTypeId });
+	}
 	schoolData = School.findOne();
 	currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
 

@@ -77,7 +77,11 @@ const ClassTimeCover = props => (
       classTypeCoverSrc={props.classTypeCoverSrc}
     />
     <ButtonsWrapper>
-      <ActionButtons />
+      <ActionButtons 
+      website = {props.website} 
+      classTypeId={props.classTypeId} 
+      classTypeName = {props.classTypeName}
+      />
     </ButtonsWrapper>
   </Wrapper>
 );

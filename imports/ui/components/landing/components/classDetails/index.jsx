@@ -95,12 +95,19 @@ const ClassDetails = props => {
         )}
       <InnerWrapper>
         <ClassTimeWrapper bgImg={classTypeImage}>
-          <ClassTimeCover classTypeCoverSrc={schoolImage} schoolCoverSrc={classTypeImage} />
+          <ClassTimeCover 
+          classTypeCoverSrc={schoolImage}
+           schoolCoverSrc={classTypeImage} 
+           website = {school.website} 
+           classTypeName = {get(state.classType,'name',null)}
+           classTypeId = {get(state.classType,'_id',null)}
+           />
           <ClassTimeInformation
             {...dataProps.eventData}
             schoolName={school.name}
             schoolCoverSrc={classTypeImage}
             locationData = {state.location}
+            website = {school.website}
           />
         </ClassTimeWrapper>
         <TimeLine {...dataProps.eventData} />

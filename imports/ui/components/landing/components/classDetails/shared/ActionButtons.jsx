@@ -6,7 +6,7 @@ import { Link } from "react-router";
 
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
-
+import {goToClassTypePage} from '/imports/util';
 import {
   rhythmDiv,
   mobile,
@@ -57,10 +57,14 @@ const ActionButtons = props => (
   <OuterWrapper>
     <Wrapper>
       <ButtonWrapper marginBottom>
-        <ClassTimeButton label="Visit Classtype" />
+        <ClassTimeButton label="Visit Classtype" 
+        onClick={()=>{goToClassTypePage(props.classTypeName,props.classTypeId)}}/>
       </ButtonWrapper>
       <ButtonWrapper>
-        <ClassTimeButton label="Visit School" />
+        <ClassTimeButton label="Visit School" onClick={()=>{  
+          console.log("​props.website", props)
+          if(props.website)   
+           window.open(props.website, '_blank')}}/>
       </ButtonWrapper>
       {/*<Link
         to={
