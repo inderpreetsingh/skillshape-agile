@@ -2,9 +2,6 @@ import React from "react";
 // import Meteor from "meteor/meteor";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Link } from "react-router";
-
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
 import {goToClassTypePage} from '/imports/util';
 import {
@@ -12,7 +9,7 @@ import {
   mobile,
   tablet
 } from "/imports/ui/components/landing/components/jss/helpers.js";
-
+import { browserHistory } from 'react-router';
 // console.log(Meteor, Meteor.absoluteUrl);
 //const APP_URL = Meteor.absoluteUrl();
 
@@ -62,9 +59,8 @@ const ActionButtons = props => (
       </ButtonWrapper>
       <ButtonWrapper>
         <ClassTimeButton label="Visit School" onClick={()=>{  
-          console.log("​props.website", props)
-          if(props.website)   
-           window.open(props.website, '_blank')}}/>
+         browserHistory.push(`/schools/${props.slug}`)
+         }}/>
       </ButtonWrapper>
       {/*<Link
         to={

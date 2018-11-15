@@ -26,7 +26,7 @@ class ClassTimeCoverContainer extends Component {
   };
 
   render() {
-    const { classTypeCoverSrc, schoolCoverSrc,website ,classTypeName,classTypeId} = this.props;
+    const { classTypeCoverSrc, schoolCoverSrc ,classTypeName,classTypeId,slug} = this.props;
 
     return (
       <Fragment>
@@ -40,9 +40,9 @@ class ClassTimeCoverContainer extends Component {
           classTypeCoverSrc={classTypeCoverSrc}
           schoolCoverSrc={schoolCoverSrc}
           onPurchaseButtonClick={this.handleDialogBoxState(true)}
-          website = {website}
           classTypeName = {classTypeName}
           classTypeId = {classTypeId}
+          slug = {slug}
         />
       </Fragment>
     );

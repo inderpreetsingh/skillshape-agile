@@ -78,7 +78,7 @@ const ClassTimeCover = props => (
     />
     <ButtonsWrapper>
       <ActionButtons 
-      website = {props.website} 
+      slug = {props.slug}
       classTypeId={props.classTypeId} 
       classTypeName = {props.classTypeName}
       />

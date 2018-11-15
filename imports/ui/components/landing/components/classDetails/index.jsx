@@ -98,9 +98,9 @@ const ClassDetails = props => {
           <ClassTimeCover 
           classTypeCoverSrc={schoolImage}
            schoolCoverSrc={classTypeImage} 
-           website = {school.website} 
            classTypeName = {get(state.classType,'name',null)}
            classTypeId = {get(state.classType,'_id',null)}
+           slug = {get(school,'slug','')}
            />
           <ClassTimeInformation
             {...dataProps.eventData}
