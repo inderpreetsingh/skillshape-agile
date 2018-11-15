@@ -103,7 +103,7 @@ const ClassDetails = props => {
             locationData = {state.location}
           />
         </ClassTimeWrapper>
-        <TimeLine {...props.timeLineProps} />
+        <TimeLine {...dataProps.eventData} />
         <MembersList currentView={currentView} />
       </InnerWrapper>
       <Footer />

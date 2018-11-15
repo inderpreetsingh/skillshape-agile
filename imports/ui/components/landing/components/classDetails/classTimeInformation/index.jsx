@@ -6,7 +6,7 @@ import ActionButtons from "/imports/ui/components/landing/components/classDetail
 import Description from "./presentational/Description";
 import LocationDetails from "./presentational/LocationDetails";
 import NameBar from "./presentational/NameBar";
-
+import get from 'lodash/get';
 import {
   tablet,
   rhythmDiv
@@ -38,7 +38,9 @@ class ClassTimeInformation extends Component {
       schoolCoverSrc,
       title,desc,locationData,eventStartTime
     } = this.props;
-
+    locationName = () => {
+        return `${get(locationData,'city','')}, ${get(locationData,'state','')}, ${get(locationData,'country','')}, ${get(locationData,'zip','')}`  
+    }
     return (
       <Wrapper bgImg={schoolCoverSrc}>
         <NameBar
@@ -50,8 +52,8 @@ class ClassTimeInformation extends Component {
           time={eventStartTime}
           timePeriod={"Missing"}
           startDate={classTimeData.startDate}
-          address={classTimeData.address}
-          locationData={{lat:locationData.geoLat,lng:locationData.geoLong}}
+          address={locationName()}
+          locationData={{lat:get(locationData,'loc[1]',''),lng:get(locationData,"loc[0]",'')}}
         />
         <HideOnLargeScreen>
           <ActionButtons />

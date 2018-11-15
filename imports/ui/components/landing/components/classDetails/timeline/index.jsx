@@ -121,47 +121,48 @@ class TimeLineContainer extends PureComponent {
   getClassModulesActivites = () => {
     const { totalEventTime, classModulesData } = this.props;
     let { elapsedTime, eventCompleted } = this.state;
-
-    return classModulesData.map((moduleData, index) => {
-      let currentActivityTimeElapsed = 0;
-      if (elapsedTime >= totalEventTime) {
-        currentActivityTimeElapsed = moduleData.time;
-        // elapsedTime = moduleData.time;
-      } else if (elapsedTime < 0) {
-        currentActivityTimeElapsed = 0;
-        elapsedTime = -1;
-      } else if (
-        elapsedTime > moduleData.time &&
-        elapsedTime < totalEventTime
-      ) {
-        currentActivityTimeElapsed = moduleData.time;
-        elapsedTime -= moduleData.time;
-      } else {
-        currentActivityTimeElapsed = elapsedTime;
-        elapsedTime = 0;
-      }
-
-      // Getting the sizes in percent;
-      const totalActivityLength = (moduleData.time / totalEventTime) * 100;
-      const currentActivityNodeLength =
-        (currentActivityTimeElapsed / moduleData.time) * 100;
-      const even = index % 2 == 0;
-
-      return (
-        <Activity
-          {...moduleData}
-          key={index}
-          color={even ? helpers.primaryColor : helpers.information}
-          evenPosition={even}
-          timeElapsedLength={currentActivityNodeLength}
-          totalTimeLength={totalActivityLength}
-        />
-      );
-    });
+    if(classModulesData){
+      return classModulesData.map((moduleData, index) => {
+        let currentActivityTimeElapsed = 0;
+        if (elapsedTime >= totalEventTime) {
+          currentActivityTimeElapsed = moduleData.time;
+          // elapsedTime = moduleData.time;
+        } else if (elapsedTime < 0) {
+          currentActivityTimeElapsed = 0;
+          elapsedTime = -1;
+        } else if (
+          elapsedTime > moduleData.time &&
+          elapsedTime < totalEventTime
+        ) {
+          currentActivityTimeElapsed = moduleData.time;
+          elapsedTime -= moduleData.time;
+        } else {
+          currentActivityTimeElapsed = elapsedTime;
+          elapsedTime = 0;
+        }
+  
+        // Getting the sizes in percent;
+        const totalActivityLength = (moduleData.time / totalEventTime) * 100;
+        const currentActivityNodeLength =
+          (currentActivityTimeElapsed / moduleData.time) * 100;
+        const even = index % 2 == 0;
+  
+        return (
+          <Activity
+            {...moduleData}
+            key={index}
+            color={even ? helpers.primaryColor : helpers.information}
+            evenPosition={even}
+            timeElapsedLength={currentActivityNodeLength}
+            totalTimeLength={totalActivityLength}
+          />
+        );
+      });
+    }
   };
 
   render() {
-    const { totalEventTime, startTime } = this.props;
+    const { totalEventTime, startTime,durationAndTimeunits } = this.props;
     return (
       <Wrapper>
         <Title>
@@ -170,7 +171,7 @@ class TimeLineContainer extends PureComponent {
           </Heading>
           <TotalTime>
             <TotalTimeText>Total Time:</TotalTimeText>
-            <TotalTimeInMins>{totalEventTime} mins</TotalTimeInMins>
+            <TotalTimeInMins>{durationAndTimeunits}</TotalTimeInMins>
           </TotalTime>
         </Title>
         <OuterActivitesWrapper>
