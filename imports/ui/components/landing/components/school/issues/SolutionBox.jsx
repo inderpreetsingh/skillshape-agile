@@ -17,8 +17,8 @@ const BoxWrapper = styled.div`
 	justify-content: flex-start;
 	max-width: ${helpers.schoolPageContainer + 200}px;
 	width: 100%;
-	margin: 0 auto;
 	height: 100%;
+	margin: 0 auto;
 	padding: 0 ${helpers.rhythmDiv * 2}px;
 	position: relative;
 

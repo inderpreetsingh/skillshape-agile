@@ -25,7 +25,7 @@ const School = props => (
         isUserSubsReady={props.isUserSubsReady}
         currentUser={props.currentUser}
         navBarHeight="70"
-        positionStatic={true}
+        position={'relative'}
         overlay={true}
         navBgColor={helpers.schoolPageColor}
         barButton={<span />}

@@ -10,11 +10,6 @@ import ClassTypeForm from "/imports/ui/components/schoolView/editSchool/classTyp
 import ClassTypeExpansionRender from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeExpansionRender.js";
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 
-if (process.env.NODE_ENV !== 'production') {
-  const { whyDidYouUpdate } = require('why-did-you-update');
-  whyDidYouUpdate(React, { include: [/(^ClassTimeForm)|(^ClassTypeExpansion)|(^ReactMeteorData)/] });
-}
-
 class ClassTypeExpansion extends Component {
   constructor(props) {
     super(props);
