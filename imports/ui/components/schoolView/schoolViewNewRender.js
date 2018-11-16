@@ -25,12 +25,6 @@ import { CustomModal } from '/imports/ui/modal';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import { getAverageNoOfRatings, normalizeMonthlyPricingData } from '/imports/util';
 
-
-
-
-
-
-
 const Wrapper = styled.div`
   background: white;
   overflow-x: hidden;
@@ -81,7 +75,7 @@ const ReviewsWrapper = GenericWrapper.extend`
 const ReviewsInnerWrapper = GenericFixedWidthWrapper.extend`
   padding: ${helpers.rhythmDiv * 4}px;
   overflow: hidden;
-  text-align: ${props => props.centerText ? 'center': 'left'};
+  text-align: ${props => props.centerText ? 'center' : 'left'};
 `;
 
 const ReviewsButtonWrapper = GenericFixedWidthWrapper.extend`
@@ -196,201 +190,201 @@ const ErrorText = styled.p`
 // 	}
 // `;
 
-export default function() {
-    const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
-    const {
-        schoolData,
-        reviewsData,
-        classPricing,
-        monthlyPricing,
-        schoolLocation,
-        classType,
-        currentUser,
-        schoolId,
-        classes,
-        enrollmentFee,
-        showLoading,
-        currency,
-        params
-    } = this.props;
+export default function () {
+  const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
+  const {
+    schoolData,
+    reviewsData,
+    classPricing,
+    monthlyPricing,
+    schoolLocation,
+    classType,
+    currentUser,
+    schoolId,
+    classes,
+    enrollmentFee,
+    showLoading,
+    currency,
+    params
+  } = this.props;
 
-    const {
-        claimSchoolModal,
-        claimRequestModal,
-        successModal,
-        snackBar
-    } = this.state;
+  const {
+    claimSchoolModal,
+    claimRequestModal,
+    successModal,
+    snackBar
+  } = this.state;
 
-    if(showLoading) {
-        return <PreloaderWrapper><Preloader/></PreloaderWrapper>
-    }
+  if (showLoading) {
+    return <PreloaderWrapper><Preloader /></PreloaderWrapper>
+  }
 
-    if(isEmpty(schoolData)) {
-        return <Typography type="display2" gutterBottom align="center">
-            School not found!!!
+  if (isEmpty(schoolData)) {
+    return <Typography type="display2" gutterBottom align="center">
+      School not found!!!
         </Typography>
-    } else {
+  } else {
 
-        const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
-        const claimBtnCSS = this.claimBtnCSS(currentUser, schoolData.claimed);
-        const imageMediaList = this.getImageMediaList(schoolData.mediaList, "Image");
-        const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
-        let isPublish = this.getPublishStatus(schoolData.isPublish)
+    const checkUserAccess = checkMyAccess({ user: currentUser, schoolId });
+    const claimBtnCSS = this.claimBtnCSS(currentUser, schoolData.claimed);
+    const imageMediaList = this.getImageMediaList(schoolData.mediaList, "Image");
+    const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
+    let isPublish = this.getPublishStatus(schoolData.isPublish)
 
 
-        return (
-            <DocumentTitle title={this.props.routeParams.slug}>
-            <Wrapper className="content">
+    return (
+      <DocumentTitle title={this.props.routeParams.slug}>
+        <Wrapper className="content">
           {
             this.state.isLoading && <ContainerLoader />
           }
           {this.state.emailUsDialog && <EmailUsDialogBox
-    					ourEmail={schoolData.email}
-    					schoolData={schoolData}
-    					open={this.state.emailUsDialog}
-    					onModalClose={() => this.handleDialogState('emailUsDialog',false)} /> }
-          {this.state.giveReviewDialog && <GiveReviewDialogBox reviewForId={schoolId} reviewFor='school' title={this.getReviewTitle(schoolData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog',false)} />}
-          {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('',false)} />}
+            ourEmail={schoolData.email}
+            schoolData={schoolData}
+            open={this.state.emailUsDialog}
+            onModalClose={() => this.handleDialogState('emailUsDialog', false)} />}
+          {this.state.giveReviewDialog && <GiveReviewDialogBox reviewForId={schoolId} reviewFor='school' title={this.getReviewTitle(schoolData.name)} open={this.state.giveReviewDialog} onModalClose={() => this.handleDialogState('giveReviewDialog', false)} />}
+          {this.state.nonUserDefaultDialog && <NonUserDefaultDialogBox title={this.state.defaultDialogBoxTitle} open={this.state.nonUserDefaultDialog} onModalClose={() => this.handleDefaultDialogBox('', false)} />}
           {this.state.manageRequestsDialog && <ManageRequestsDialogBox
             title="Pricing"
             open={this.state.manageRequestsDialog}
-            onModalClose={() => this.handleDialogState('manageRequestsDialog',false)}
+            onModalClose={() => this.handleDialogState('manageRequestsDialog', false)}
             requestFor="price"
             schoolData={schoolData}
-            onToastrClose={() => this.handleDialogState('manageRequestsDialog',false)}
-            />}
+            onToastrClose={() => this.handleDialogState('manageRequestsDialog', false)}
+          />}
           {
             this.state.showConfirmationModal && <ConfirmationModal
-                open={this.state.showConfirmationModal}
-                submitBtnLabel="Request pricing"
-                cancelBtnLabel="Cancel"
-                message="No prices have been added by the school. Please click this button to request the school complete their pricing info?"
-                onSubmit={()=>{this.requestPricingInfo(schoolData)}}
-                onClose={this.cancelConfirmationModal}
+              open={this.state.showConfirmationModal}
+              submitBtnLabel="Request pricing"
+              cancelBtnLabel="Cancel"
+              message="No prices have been added by the school. Please click this button to request the school complete their pricing info?"
+              onSubmit={() => { this.requestPricingInfo(schoolData) }}
+              onClose={this.cancelConfirmationModal}
             />
           }
-            {(claimSchoolModal || claimRequestModal || successModal) && <CustomModal
-              className={successModal ? "success-modal" : "info-modal" }
-              title={this.getClaimSchoolModalTitle()}
-              message={successModal && `You are now owner of ${schoolData.name} Would you like to edit ?`}
-              onClose={this.modalClose}
-              onSubmit={this.modalSubmit}
-              closeBtnLabel={successModal ? "Continue" : "No"}
-              submitBtnLabel={"Yes"}
-            />
+          {(claimSchoolModal || claimRequestModal || successModal) && <CustomModal
+            className={successModal ? "success-modal" : "info-modal"}
+            title={this.getClaimSchoolModalTitle()}
+            message={successModal && `You are now owner of ${schoolData.name} Would you like to edit ?`}
+            onClose={this.modalClose}
+            onSubmit={this.modalSubmit}
+            closeBtnLabel={successModal ? "Continue" : "No"}
+            submitBtnLabel={"Yes"}
+          />
           }
           <div>
-            
-          <SchoolViewNewBanner
-            schoolData={schoolData}
-            schoolId={schoolId}
-            isPublish={isPublish}
-            currentUser={currentUser}
-            schoolLocation={schoolLocation}
-            isEdit={false}
-            bestPriceDetails={{
-              monthly: this.state.bestPriceDetails && !isEmpty(this.state.bestPriceDetails.bestMonthlyPrice) ? floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate) : null,
-              class: this.state.bestPriceDetails && !isEmpty(this.state.bestPriceDetails.bestClassPrice) ? floor(this.state.bestPriceDetails.bestClassPrice.avgRate) : null
-            }}
-            reviewsStats={{
-              noOfRatings: getAverageNoOfRatings(reviewsData),
-              noOfReviews: reviewsData.length
-            }}
-            handlePublishStatus={this.handlePublishStatus.bind(this, schoolId)}/> {/* container, school-header ends */}
 
-          {/* Reviews List */}
-          <ReviewsWrapper>
-            {!isEmpty(reviewsData) && (<ReviewsInnerWrapper>
-                <ReviewsManager reviewsData={reviewsData} padding={helpers.rhythmDiv * 2}/>
+            <SchoolViewNewBanner
+              schoolData={schoolData}
+              schoolId={schoolId}
+              isPublish={isPublish}
+              currentUser={currentUser}
+              schoolLocation={schoolLocation}
+              isEdit={false}
+              bestPriceDetails={{
+                monthly: this.state.bestPriceDetails && !isEmpty(this.state.bestPriceDetails.bestMonthlyPrice) ? floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate) : null,
+                class: this.state.bestPriceDetails && !isEmpty(this.state.bestPriceDetails.bestClassPrice) ? floor(this.state.bestPriceDetails.bestClassPrice.avgRate) : null
+              }}
+              reviewsStats={{
+                noOfRatings: getAverageNoOfRatings(reviewsData),
+                noOfReviews: reviewsData.length
+              }}
+              handlePublishStatus={this.handlePublishStatus.bind(this, schoolId)} /> {/* container, school-header ends */}
+
+            {/* Reviews List */}
+            <ReviewsWrapper>
+              {!isEmpty(reviewsData) && (<ReviewsInnerWrapper>
+                <ReviewsManager reviewsData={reviewsData} padding={helpers.rhythmDiv * 2} />
               </ReviewsInnerWrapper>)}
 
-            <ReviewsButtonWrapper marginTop={isEmpty(reviewsData) ? "64" : "0"}>
-              {isEmpty(reviewsData) && <Fragment><Typography>
-                You are the first one to write review for this school.
+              <ReviewsButtonWrapper marginTop={isEmpty(reviewsData) ? "64" : "0"}>
+                {isEmpty(reviewsData) && <Fragment><Typography>
+                  You are the first one to write review for this school.
               </Typography>
-              <br /></Fragment>}
-              <GenericButtonWrapper>
-                <ClassTimeButton
-                  icon
-                  onClick={this.handleGiveReview}
-                  iconName="rate_review"
-                  label="Give review"
-                />
-              </GenericButtonWrapper>
-            </ReviewsButtonWrapper>
-          </ReviewsWrapper>
+                  <br /></Fragment>}
+                <GenericButtonWrapper>
+                  <ClassTimeButton
+                    icon
+                    onClick={this.handleGiveReview}
+                    iconName="rate_review"
+                    label="Give review"
+                  />
+                </GenericButtonWrapper>
+              </ReviewsButtonWrapper>
+            </ReviewsWrapper>
 
 
-        {/* Cards List Section*/}
-        <ClassTypeListWrapper>
-          <ClassTypeList
-              containerPaddingTop="0px"
-              locationName={null}
-              mapView={false}
-              filters={{schoolId: schoolId,limit:this.state.seeMoreCount}}
-              splitByCategory={false}
-              classTypeBySchool='classTypeBySchool'
-              handleSeeMore={this.handleSeeMore}
-              schoolView={true}
-              params = {params}
-            />
-        </ClassTypeListWrapper>
+            {/* Cards List Section*/}
+            <ClassTypeListWrapper>
+              <ClassTypeList
+                containerPaddingTop="0px"
+                locationName={null}
+                mapView={false}
+                filters={{ schoolId: schoolId, limit: this.state.seeMoreCount }}
+                splitByCategory={false}
+                classTypeBySchool='classTypeBySchool'
+                handleSeeMore={this.handleSeeMore}
+                schoolView={true}
+                params={params}
+              />
+            </ClassTypeListWrapper>
 
-        {/* Pricing Section*/}
-        <PricingSection ref={(el) => { this.schoolPrice = el; }}>
-          <Element name="price-section">
-          <SectionTitle>Pay only for what you want.</SectionTitle>
-          {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
-            <ButtonWrapper>
-              <ClassTimeButton
-                onClick={this.handlePricingRequest}
-                icon
-                iconName="attach_money"
-                label="Request pricing info" />
-            </ButtonWrapper> : ''}
+            {/* Pricing Section*/}
+            <PricingSection ref={(el) => { this.schoolPrice = el; }}>
+              <Element name="price-section">
+                <SectionTitle>Pay only for what you want.</SectionTitle>
+                {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length == 0) ?
+                  <ButtonWrapper>
+                    <ClassTimeButton
+                      onClick={this.handlePricingRequest}
+                      icon
+                      iconName="attach_money"
+                      label="Request pricing info" />
+                  </ButtonWrapper> : ''}
 
                 <PackagesWrapper>
-                {(isEmpty(classPricing) && isEmpty(monthlyPricing)) ?
-                  '' :
-                  <PackagesList
-                    schoolId={schoolId}
-                    onAddToCartIconButtonClick={this.handlePurchasePackage}
-                    enrollMentPackages
-                    enrollMentPackagesData={enrollmentFee}
-                    perClassPackagesData={classPricing}
-                    monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricing)}
-                    currency={currency}
+                  {(isEmpty(classPricing) && isEmpty(monthlyPricing)) ?
+                    '' :
+                    <PackagesList
+                      schoolId={schoolId}
+                      onAddToCartIconButtonClick={this.handlePurchasePackage}
+                      enrollMentPackages
+                      enrollMentPackagesData={enrollmentFee}
+                      perClassPackagesData={classPricing}
+                      monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricing)}
+                      currency={currency}
 
-                  />
-                }
+                    />
+                  }
                 </PackagesWrapper>
               </Element>
-          </PricingSection>
+            </PricingSection>
 
-          {/* School Extra Section -- Notes & Media*/}
-          <SchoolExtraSection>
-            {this.checkForHtmlCode(schoolData.studentNotesHtml) && <NotesWrapper>
-              <StudentNotes noClassTypeData notes={schoolData.studentNotesHtml} />
-            </NotesWrapper>}
+            {/* School Extra Section -- Notes & Media*/}
+            <SchoolExtraSection>
+              {this.checkForHtmlCode(schoolData.studentNotesHtml) && <NotesWrapper>
+                <StudentNotes noClassTypeData notes={schoolData.studentNotesHtml} />
+              </NotesWrapper>}
 
-            <MediaWrapper>
-              <MediaDetails
-                noMediaFound={<NoMediaFound
+              <MediaWrapper>
+                <MediaDetails
+                  noMediaFound={<NoMediaFound
                     schoolName={schoolData.name}
                     siteLink={schoolData.website}
-                    onEmailButtonClick={() => this.handleDialogState('emailUsDialog',true)} />}
-                schoolId={schoolId}
-                schoolView= {true}
-              />
-              {/*<Card className={classes.content}> </Card>*/}
-            </MediaWrapper>
-          </SchoolExtraSection>
+                    onEmailButtonClick={() => this.handleDialogState('emailUsDialog', true)} />}
+                  schoolId={schoolId}
+                  schoolView={true}
+                />
+                {/*<Card className={classes.content}> </Card>*/}
+              </MediaWrapper>
+            </SchoolExtraSection>
 
 
             {/* Calendar Section*/}
             <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
               <Element name="schedule-section">
-                {<ManageMyCalendar schoolCalendar={true} {...this.props}/>}
+                {<ManageMyCalendar schoolCalendar={true} {...this.props} />}
               </Element>
             </MyCalendarWrapper>
 
@@ -559,35 +553,35 @@ export default function() {
                             </div>
                     </div>*/}
 
-                    <div className="row">
-                <div className="col-sm-12">
-                        <div className="card">
-                        <div className="card-content">
-                        <div className="">
-                        <div className="thumb about-school-top">
-                                    <figure className="about-head-image">
+            <div className="row">
+              <div className="col-sm-12">
+                <div className="card">
+                  <div className="card-content">
+                    <div className="">
+                      <div className="thumb about-school-top">
+                        <figure className="about-head-image">
                           <div className="overlay-box"></div>
                           {/*<img src={ schoolData.mainImage || defaultSchoolImage }/>*/}
                         </figure>
                         <div className="col-md-12">
 
-                         </div>
-                         <div className="col-md-12">
+                        </div>
+                        <div className="col-md-12">
 
 
 
                         </div>
 
-                                </div>
-                            </div>
-                        </div>
-                        <div className="card-footer">
-                        <div className="col-sm-12">
-                        </div>
-                        </div>
+                      </div>
                     </div>
+                  </div>
+                  <div className="card-footer">
+                    <div className="col-sm-12">
+                    </div>
+                  </div>
                 </div>
-                {/*<div className="col-sm-12">
+              </div>
+              {/*<div className="col-sm-12">
                           <div className="clearfix card" >
                              <div className="col-sm-9">
                                <div className="">
@@ -628,7 +622,7 @@ export default function() {
                              </div>
                           </div>
                         </div>*/}
-                {/*
+              {/*
                     schoolData.descHtml && (
                         <div className="row  card">
                         <div className="col-md-12">
@@ -646,8 +640,8 @@ export default function() {
                       </div>
                     )
                 */
-                }
-                {/*<div className="row  card">
+              }
+              {/*<div className="row  card">
                           <div className="col-sm-12 text-left">
                             <div className="content-list-heading ">
                                <h2 className="text-center">{schoolData.name} offers the following class types
@@ -969,10 +963,10 @@ export default function() {
                             </div>
                           </div>
                         </div>*/}
-                    </div>
-                </div>
-            </Wrapper>
-            </DocumentTitle>
-        )
-    }
+            </div>
+          </div>
+        </Wrapper>
+      </DocumentTitle>
+    )
+  }
 }

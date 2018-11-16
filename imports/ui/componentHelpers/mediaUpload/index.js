@@ -13,14 +13,14 @@ import React from "react";
 import { findDOMNode } from "react-dom";
 import ProgressiveImage from "react-progressive-image";
 import styled from "styled-components";
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-
-const ProfilePic =styled.div`
+const ProfilePic = styled.div`
 transition: background-image 1s linear !important;
 background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url(${props=>props.img});
+    background-image: url(${props => props.img});
     height: 187px;
     width: 223px;
 `;
@@ -52,6 +52,11 @@ const styles = theme => {
       transition: "all 1s linear !important",
       verticalAlign: "middle",
       width: "100%"
+    },
+    dialogBoxPaper: {
+      [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+        margin: 0
+      }
     }
   };
 };
@@ -87,12 +92,12 @@ class Upload extends React.Component {
     }
     this.setState({ value });
   };
-  onFileLoad = (e, file,org) => {
+  onFileLoad = (e, file, org) => {
     let files = { ...this.state.files };
     files["file"] = e.target.result;
     files["fileData"] = file;
     files["isUrl"] = false;
-    files['org']=  org;
+    files['org'] = org;
     this.setState({ files });
     this.props.onChange && this.props.onChange(files);
   };
@@ -102,13 +107,13 @@ class Upload extends React.Component {
     this.props.onChange && this.props.onChange(null);
   };
   onInputChange = e => {
-    let org=e.target.files[0];
+    let org = e.target.files[0];
     filter(
       e.target.files,
       file => file.type.match(this.props.fileTypeRegex) !== null
     ).forEach(file => {
       let reader = new FileReader();
-      reader.onload = e => this.onFileLoad(e, file,org);
+      reader.onload = e => this.onFileLoad(e, file, org);
       reader.readAsDataURL(file);
     });
   };
@@ -146,12 +151,12 @@ class Upload extends React.Component {
         <Card style={style}>
           <CardContent>
             <div className={classes.media}>
-            <ProgressiveImage 
-                        src={this.state.files && this.state.files.file}
-                        placeholder={config.blurImage}>
-                        {(src) =><ProfilePic img={src}/>}
-                      </ProgressiveImage>
-              
+              <ProgressiveImage
+                src={this.state.files && this.state.files.file}
+                placeholder={config.blurImage}>
+                {(src) => <ProfilePic img={src} />}
+              </ProgressiveImage>
+
             </div>
             {/* this.state.files && this.state.files.file &&
               <Button onClick={this.clearSelectedImage} fab color="primary"  aria-label="clear" className={classes.button}>

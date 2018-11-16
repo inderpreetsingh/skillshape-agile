@@ -133,14 +133,14 @@ const ListingButton = (props) => (
 	</ButtonWrapper>
 );
 
-const ClaimSchoolRender = function(props) {
+const ClaimSchoolRender = function (props) {
 	let schools = this.props.collectionData;
 
 	const NoneOfMyLisiting = (props) => (
 		<NonListingWrapper>
 			<TextWrapper>
 				Check to see if any of these are your school. The filters can help you search! If you find your school,
-				press the <b>claim</b> button. Else to create a new listing, click the New Listing button!
+				press the <b>claim</b> button. To create a new listing, click the New Listing button!
 			</TextWrapper>
 
 			<ListingButton

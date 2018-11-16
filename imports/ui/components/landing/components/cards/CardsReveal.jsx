@@ -1,8 +1,10 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
 import ProgressiveImage from "react-progressive-image";
 import styled from 'styled-components';
 import get from "lodash/get";
+import Paper from 'material-ui/Paper';
 import { CSSTransition, Transition } from 'react-transition-group';
 
 import Clear from 'material-ui-icons/Clear';
@@ -10,14 +12,12 @@ import Edit from 'material-ui-icons/Edit';
 import PhotoCamera from 'material-ui-icons/PhotoCamera';
 import MoreVert from 'material-ui-icons/MoreVert';
 import IconButton from 'material-ui/IconButton';
-import Paper from 'material-ui/Paper';
 
-import { withStyles } from 'material-ui/styles';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import { verifyImageURL } from "/imports/util";
 import { callbackify } from "util";
-
 
 const styles = {
   cardWrapper: {
@@ -73,6 +73,12 @@ const CardImage = styled.img`
 
 const CardContent = styled.div`
 
+`;
+
+const EditImageButtonWrapper = styled.div`
+  position: absolute;
+  top: ${helpers.rhythmDiv}px;
+  right: ${helpers.rhythmDiv}px;
 `;
 
 const IconButtons = styled.div`
@@ -158,7 +164,16 @@ transition: background-image 1s linear !important;
   width: 100%;
 `;
 
-const CardDescription = ({ editMode, key, classes, className, name, maxCharsLimit, hideCardContent, descriptionContent, bgImg }) => {
+const CardDescription = ({
+  editMode,
+  key,
+  classes,
+  className,
+  name,
+  maxCharsLimit,
+  hideCardContent,
+  descriptionContent,
+  bgImg }) => {
 
   const _getRefactoredTitle = (title, maxLimit) => {
     if (title.length <= maxLimit) {
@@ -203,7 +218,9 @@ const CardDescription = ({ editMode, key, classes, className, name, maxCharsLimi
       <CardContentTitle description>{editMode ? name : _getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
 
       <CardDescriptionActionArea>
-        <IconButton className={classes.cardIcon} color="primary" onClick={hideCardContent}> <Clear /> </IconButton>
+        <IconButton
+          className={classes.cardIcon}
+          color="primary" onClick={hideCardContent}> <Clear /> </IconButton>
       </CardDescriptionActionArea>
     </CardDescriptionHeader>
 
@@ -301,11 +318,15 @@ class CardsReveal extends Component {
             src={bgImg}>
             {(src) => <CardImageWrapper bgImage={src}>
               {editMode &&
-                (<IconButton
-                  className={classes.cardProfileImageIcon}
-                  onClick={onEditClassTypeImageClick} >
-                  <PhotoCamera />
-                </IconButton>)}</CardImageWrapper>}
+                (<EditImageButtonWrapper>
+                  <PrimaryButton
+                    icon
+                    iconName="photo_camera"
+                    onClick={onEditClassTypeImageClick}
+                    label="Edit Image"
+                  />
+                </EditImageButtonWrapper>)}
+            </CardImageWrapper>}
           </ProgressiveImage>
 
           <CardContentHeader>

@@ -1,12 +1,19 @@
-import Button from 'material-ui/Button';
-import Dialog, { DialogActions, DialogContent, withMobileDialog } from 'material-ui/Dialog';
-import Grid from 'material-ui/Grid';
 import React from 'react';
-import '/imports/api/media/methods';
+import Button from 'material-ui/Button';
+import Dialog, {
+	DialogActions,
+	DialogContent,
+	withMobileDialog
+} from 'material-ui/Dialog';
+import Grid from 'material-ui/Grid';
+
 import MediaUpload from '/imports/ui/componentHelpers/mediaUpload';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import { compressImage, withPopUp, withStyles } from "/imports/util";
+import '/imports/api/media/methods';
+
+
 class UploadMedia extends React.Component {
 
 	constructor(props) {
@@ -227,6 +234,7 @@ class UploadMedia extends React.Component {
 			showCreateMediaModal,
 			onClose,
 			imageType,
+			classes,
 			forClassType
 		} = this.props;
 		// console.log("UploadMedia props -->>",this.props)
@@ -237,6 +245,7 @@ class UploadMedia extends React.Component {
 
 		return (
 			<Dialog
+				classes={{ paper: classes.dialogBoxPaper }}
 				fullScreen={fullScreen}
 				open={showCreateMediaModal}
 				onClose={onClose}
@@ -272,7 +281,7 @@ class UploadMedia extends React.Component {
 }
 
 UploadMedia.defaultProps = {
-	forClassType: false
+	forClassType: false,
 }
 
 const styles = theme => {
@@ -280,6 +289,11 @@ const styles = theme => {
 		button: {
 			margin: 5,
 			width: 150
+		},
+		dialogBoxPaper: {
+			[`@media screen and (max-width: ${helpers.mobile}px)`]: {
+				margin: helpers.rhythmDiv
+			}
 		}
 	}
 }

@@ -34,14 +34,14 @@ import {
 	primaryColor,
 	mobile, maxContainerWidth, tablet
 } from '/imports/ui/components/landing/components/jss/helpers.js';
-import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
+import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 const SPACING = rhythmDiv * 2;
 const CARD_WIDTH = 280;
 
 const imageExistsConfig = {
 	originalImagePath: 'src',
-	defaultImage: schoolLogo
+	defaultImage: classTypeImgSrc
 };
 
 const Wrapper = styled.div`
@@ -75,13 +75,13 @@ const ImageContainer = styled.div`
   margin-bottom: ${rhythmDiv}px;
   background-position: 50% 50%;
   background-image: url('${(props) => props.src}');
-  background-size: 50px auto;
-  transition: background-image 1s linear;
+  background-size: cover;
+  transition: background-image 0.5s linear;
 
   @media screen and (max-width: ${tablet}px) {
 		width: 75px;
 		height: 75px;
-		background-size: 75px auto;
+		background-size: cover;
 	}
 `;
 
@@ -176,6 +176,7 @@ const styles = {
 		marginBottom: rhythmDiv,
 	},
 	expansionPanelSummaryContent: {
+		margin: `${rhythmDiv * 2}px 0`,
 		justifyContent: 'space-between',
 		[`@media screen and (max-width: ${tablet}px)`]: {
 			justifyContent: 'center'
@@ -248,13 +249,14 @@ const ClassTypeExpansionRender = (props) => {
 				</ToggleVisibility>
 			</Paper>
 			<ExpansionsWrapper>
-				{classTypeData && classTypeData.map((ctData) => (
-					<ExpansionPanel className={expansionPanelRoot}>
+				{classTypeData && classTypeData.map(ctData => {
+					{ console.log(ctData, get(ctData, 'medium', get(ctData, 'classTypeImg', classTypeImgSrc)), "ctData-----------------------") }
+					return (< ExpansionPanel className={expansionPanelRoot} >
 						<ExpansionPanelSummary
 							classes={{ content: props.classes.expansionPanelSummaryContent }}
 							expandIcon={<Icon>{'expand_more'}</Icon>}>
 							<ClassTypeProfile>
-								<ClassTypeImage src={get(ctData, 'medium', get(ctData, 'classTypeImg', schoolLogo))} />
+								<ClassTypeImage src={get(ctData, 'medium', get(ctData, 'classTypeImg', null))} />
 								<ClassTypeNameWrapper>
 									<ClassTypeName>{ctData.name}</ClassTypeName>
 									<ToggleVisibility screenSize={tablet}>
@@ -357,8 +359,8 @@ const ClassTypeExpansionRender = (props) => {
 								</GridMaxWidthWrapper>
 							</CardsWrapper>
 						</ExpansionPanelDetails>
-					</ExpansionPanel>
-				))}
+					</ExpansionPanel>)
+				})}
 			</ExpansionsWrapper>
 		</Wrapper>)
 }
