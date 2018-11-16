@@ -4,3 +4,7 @@ Meteor.publish('myInfo', function() {
 Meteor.publish('user.findAdminsDetails', function(ids) {
 	return Meteor.users.find({ _id: { $in: ids } });
 });
+Meteor.publish('user.getUsersFromIds',function(ids){
+	let record = Meteor.users.find({_id:{$in:ids}});
+	return record;
+   })

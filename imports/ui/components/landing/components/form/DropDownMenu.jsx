@@ -42,7 +42,6 @@ class DropDownMenu extends Component {
   };
 
   handleMenuItemClick = option => () => {
-    console.log(option);
     this.setState({
       anchorEl: null
     });

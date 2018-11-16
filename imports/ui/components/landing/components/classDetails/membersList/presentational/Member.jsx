@@ -7,7 +7,8 @@ import DropDownMenu from "/imports/ui/components/landing/components/form/DropDow
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { Capitalize, SubHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { addInstructorImgSrc } from "/imports/ui/components/landing/site-settings.js";
-
+import {get,isEmpty} from 'lodash';
+import {cutString} from '/imports/util'
 
 
 
@@ -44,7 +45,7 @@ const ProfilePic = styled.div`
   background-image: url(${props => props.src});
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: contain;
+  background-size: cover;
   width: 100px;
   height: 100px;
   display: flex;
@@ -96,7 +97,6 @@ const ExpiresOn = Designation = Text.extend`
 `;
 
 const onMenuItemClick = value => {
-  console.log(value, "---", props.history);
   if (value === "remove_teacher") {
     props.history.push("/remove_teacher");
   } else {
@@ -105,18 +105,33 @@ const onMenuItemClick = value => {
 };
 
 const Member = props => {
-  const profileSrc = props.addInstructor
-    ? addInstructorImgSrc
-    : props.profileSrc;
+  const profile = props.profile;
+  const profileSrc = props.addInstructor ? addInstructorImgSrc :get(profile,'medium',get(profile,'pic',config.defaultProfilePicOptimized))
 
-  const name = props.addInstructor ? "Add Instuctor" : props.name;
+  const name = props.addInstructor ? 'Add Instructor' : `${get(profile,'firstName',"")} ${get(profile,'lastName',"")}`
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.
 
   if (props.type === "student" && props.viewType === "instructorsView") {
     return <MemberExpanded {...props} />;
   }
-
+  handleMenuItemClick = (option) =>{
+    let {popUp} = props;
+		console.log("​handleMenuItemClick -> props", props)
+    let operation = get(option,'value',null);
+    if(operation == 'remove_teacher'){
+      let payLoad = {
+        instructorId:get(props,'_id',0),
+        _id:get(props.classData[0],"_id",0),
+        action:'remove'
+      }
+      Meteor.call("classes.handleInstructors",payLoad,(err,res)=>{
+        if(res){
+				console.log("​handleMenuItemClick -> res", res)
+        }
+      })
+    }
+  }
   return (
     <Wrapper>
       <Profile>
@@ -127,7 +142,7 @@ const Member = props => {
         />
         <DetailsWrapper type={props.type}>
           <Details>
-            <SubHeading fontSize="20">{name}</SubHeading>
+            <SubHeading fontSize="20">{cutString(name,13)}</SubHeading>
             {props.type !== "student" &&
               !props.addInstructor && (
                 <Text>
@@ -136,7 +151,10 @@ const Member = props => {
               )}
           </Details>
           {props.viewType === "instructorsView" &&
-            !props.addInstructor && <DropDownMenu menuOptions={menuOptions} />}
+            !props.addInstructor && <DropDownMenu 
+            menuOptions={menuOptions} 
+            onMenuItemClick = {this.handleMenuItemClick}
+            />}
           
         </DetailsWrapper>
       </Profile>

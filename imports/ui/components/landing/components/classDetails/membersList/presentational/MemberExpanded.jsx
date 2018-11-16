@@ -164,7 +164,7 @@ const onMenuItemClick = value => {
 };
 
 const getStatusColor = status => {
-  if (status.checkedIn) {
+  if (true) {
     return helpers.primaryColor;
   }
 
@@ -172,7 +172,7 @@ const getStatusColor = status => {
 };
 
 const getStatusInfo = status => {
-  if (status.checkedIn) {
+  if (true) {
     return "Checked In";
   } else if (!status.checkedIn && status.signedIn) {
     return "Signed In";
@@ -183,7 +183,7 @@ const getStatusInfo = status => {
 
 const PaymentAndStatus = props => (
   <PaymentAndStatusDetails>
-    {props.paymentData.paymentInfo === "expired" ? (
+    {"expired" === "expired" ? (
       <PaymentDetails>
         <Text color={helpers.alertColor}>Payment Expired</Text>
         <SkillShapeButton
@@ -196,7 +196,7 @@ const PaymentAndStatus = props => (
     ) : (
       <PaymentDetails>
         <PaymentExpires>Payment Expires on</PaymentExpires>
-        <ExpiryDate>{formatDate(props.paymentData.expiryDate)}</ExpiryDate>
+        <ExpiryDate>{formatDate(new Date())}</ExpiryDate>
       </PaymentDetails>
     )}
     <StatusOptions {...props} />
@@ -209,7 +209,7 @@ const StatusOptions = props => (
       <PrimaryButton
         noMarginBottom
         fullWidth
-        label={props.status.checkedIn ? "Check in" : "Check out"}
+        label={true? "Check in" : "Check out"}
       />
     </ButtonWrapper>
     <ButtonWrapper>
@@ -217,7 +217,7 @@ const StatusOptions = props => (
         noMarginBottom
         caution
         fullWidth
-        label={props.status.signedIn ? "Sign out" : "Sign in"}
+        label={true ? "Sign out" : "Sign in"}
       />
     </ButtonWrapper>
   </StatusDetails>

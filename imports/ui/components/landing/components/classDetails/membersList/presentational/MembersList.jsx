@@ -76,7 +76,12 @@ const MembersList = props => {
               {expanded ? (
                 <MemberExpanded viewType={props.viewType} {...obj} />
               ) : (
-                <Member viewType={props.viewType} {...obj} />
+                <Member 
+                viewType={props.viewType} 
+                {...obj} 
+                popUp = {props.popUp}
+                classData = {props.classData}
+                />
               )}
             </MemberWrapper>
           ))}
@@ -88,6 +93,8 @@ const MembersList = props => {
                 addInstructor
                 onAddIconClick={props.onAddIconClick}
                 type="instructor"
+                popUp = {props.popUp}
+                classData = {props.classData}
               />
             </MemberWrapper>
           )}

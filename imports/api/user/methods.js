@@ -172,5 +172,4 @@ Meteor.methods({
       throw new Meteor.Error("Email Address not found!!");
     }
   },
- 
 });

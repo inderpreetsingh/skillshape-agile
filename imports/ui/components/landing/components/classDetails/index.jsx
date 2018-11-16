@@ -62,7 +62,7 @@ const ClassTimeWrapper = styled.div`
 `;
 
 const ClassDetails = props => {
-  const { location,headerProps } = props;
+  const { location,headerProps,classData,instructorsData,popUp } = props;
   const {state} = props.location.state;
   const dataProps =  props.location.state.props;
   const {school} = state;
@@ -102,7 +102,12 @@ const ClassDetails = props => {
           />
         </ClassTimeWrapper>
         <TimeLine {...dataProps.eventData} />
-        <MembersList currentView={currentView} />
+        <MembersList 
+        currentView={currentView} 
+        classData = {classData}
+        instructorsData = {instructorsData}
+        popUp = {popUp}
+        />
       </InnerWrapper>
       <Footer />
     </Wrapper>

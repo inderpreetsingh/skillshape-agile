@@ -18,7 +18,7 @@ import Select from "material-ui/Select";
 import Multiselect from "react-widgets/lib/Multiselect";
 import Checkbox from "material-ui/Checkbox";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
-
+import {get,isEmpty} from 'lodash';
 const styles = theme => {
   return {
     dialogTitleRoot: {
@@ -73,7 +73,21 @@ class AddInstructorDialogBox extends Component {
     this.state={};
   }
 
-  onSubmit = () => {};
+  onSubmit = (e) => {
+    e.preventDefault();
+    this.setState({isLoading:true});
+    let payLoad = {
+      action:"add",
+      _id:get(this.props.classData[0],'_id',null),
+      email:this.email.value,
+      instructors:get(this.props.classData[0],'instructors',[])
+    };
+    Meteor.call("classes.handleInstructors",payLoad,(err,res)=>{
+      if(res){
+        this.setState({isLoading:false});
+      }
+    })
+  };
    handlePhoneChange = event => {
     const inputPhoneNumber = event.target.value;
     let phoneRegex = /^\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/g;
@@ -177,38 +191,7 @@ class AddInstructorDialogBox extends Component {
           )}
         </Grid>
 
-        <Grid item sm={6} xs={12}>
-          <FormControl fullWidth margin="dense">
-            <InputLabel htmlFor="birthYear">Birth Year</InputLabel>
-            <Select
-              required={true}
-              input={<Input id="birthYear" />}
-              value={"this.state.birthYear"}
-              onChange={event =>
-                this.setState({ birthYear: event.target.value })
-              }
-              fullWidth
-            >
-              {birthYears.map((index, year) => {
-                return (
-                  <MenuItem key={birthYears[year]} value={birthYears[year]}>
-                    {birthYears[year]}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
-          <Multiselect
-            textField={"name"}
-            valueField={"_id"}
-            data={this.props.classTypeData || []}
-            placeholder="Available Classes"
-            onChange={this.collectSelectedClassTypes}
-            />
-        </Grid>
-
+      
         {/*package details will be show later and the commented code will be used after currency task*/}
 
 
@@ -246,18 +229,7 @@ class AddInstructorDialogBox extends Component {
          
           
            
-        <FormControl fullWidth margin="dense">
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={this.state.studentWithoutEmail}
-                onChange={this.handleChange("studentWithoutEmail")}
-                value="studentWithoutEmail"
-              />
-            }
-            label="Student does not have an email"
-          />
-        </FormControl>
+       
         <Grid
           item
           sm={12}
