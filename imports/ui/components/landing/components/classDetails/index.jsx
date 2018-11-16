@@ -101,7 +101,7 @@ const ClassDetails = props => {
             website = {school.website}
           />
         </ClassTimeWrapper>
-        <TimeLine {...dataProps.eventData} />
+        {/* <TimeLine {...dataProps.eventData} /> */}
         <MembersList 
         currentView={currentView} 
         classData = {classData}

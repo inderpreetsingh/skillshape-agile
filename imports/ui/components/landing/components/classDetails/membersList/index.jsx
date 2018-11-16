@@ -61,6 +61,7 @@ class MembersListContainer extends Component {
             open={addInstructorDialogBoxState}
             onModalClose={this.handleAddInstructorDialogBoxState(false)}
             classData = {classData}
+            popUp = {popUp}
           />
         )}
         <MembersList

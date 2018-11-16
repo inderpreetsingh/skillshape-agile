@@ -9,6 +9,7 @@ import { Capitalize, SubHeading, Text } from "/imports/ui/components/landing/com
 import { addInstructorImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import {get,isEmpty} from 'lodash';
 import {cutString} from '/imports/util'
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 
 
 
@@ -115,21 +116,40 @@ const Member = props => {
   if (props.type === "student" && props.viewType === "instructorsView") {
     return <MemberExpanded {...props} />;
   }
+  handleRemoveInstructor = (props) =>{
+    let {popUp} = props;
+    let payLoad = {
+      instructorId:get(props,'_id',0),
+      _id:get(props.classData[0],"_id",0),
+      action:'remove'
+    }
+    Meteor.call("classes.handleInstructors",payLoad,(err,res)=>{
+      if(res){
+        popUp.appear("success", {
+          title: "Removed Successfully",
+          content: `Successfully removed from instructor listing.`,
+          RenderActions: ( 
+            <FormGhostButton label={'Ok'} onClick={()=>{}}  applyClose />
+          )
+        }, true);
+      }
+    })
+  }
   handleMenuItemClick = (option) =>{
     let {popUp} = props;
-		console.log("​handleMenuItemClick -> props", props)
     let operation = get(option,'value',null);
     if(operation == 'remove_teacher'){
-      let payLoad = {
-        instructorId:get(props,'_id',0),
-        _id:get(props.classData[0],"_id",0),
-        action:'remove'
-      }
-      Meteor.call("classes.handleInstructors",payLoad,(err,res)=>{
-        if(res){
-				console.log("​handleMenuItemClick -> res", res)
-        }
-      })
+      popUp.appear("inform", {
+        title: "Confirmation",
+        content: `Do you really want to remove from instructor list.`,
+        RenderActions: ( 
+          <div>
+          <FormGhostButton label={'Cancel'} onClick={()=>{}}  applyClose />
+          <FormGhostButton label={'Remove'} onClick={()=>{this.handleRemoveInstructor(props)}}  applyClose />
+          </div>
+        )
+      }, true);
+      ;
     }
   }
   return (

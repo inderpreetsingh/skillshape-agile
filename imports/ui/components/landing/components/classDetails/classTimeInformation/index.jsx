@@ -1,17 +1,14 @@
-import React, { Component, Fragment } from "react";
-import styled from "styled-components";
+import get from 'lodash/get';
 import PropTypes from "prop-types";
-
-import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
+import React, { Component } from "react";
+import styled from "styled-components";
 import Description from "./presentational/Description";
 import LocationDetails from "./presentational/LocationDetails";
 import NameBar from "./presentational/NameBar";
-import get from 'lodash/get';
-import {
-  tablet,
-  rhythmDiv
-} from "/imports/ui/components/landing/components/jss/helpers.js";
+import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
+import { rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { classTimeData } from "/imports/ui/components/landing/constants/classDetails/classTimeData";
+
 
 const Wrapper = styled.div`
   padding: 0;

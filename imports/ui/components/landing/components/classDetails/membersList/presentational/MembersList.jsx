@@ -1,18 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-
-import {
-  SlantedHeading,
-  Capitalize
-} from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-import {
-  rhythmDiv,
-  mobile
-} from "/imports/ui/components/landing/components/jss/helpers.js";
-
-import SearchList from "./SearchList.jsx";
-import MemberExpanded from "./MemberExpanded.jsx";
 import Member from "./Member.jsx";
+import MemberExpanded from "./MemberExpanded.jsx";
+import SearchList from "./SearchList.jsx";
+import { mobile, rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { Capitalize, SlantedHeading } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+
+
 
 const Wrapper = styled.div`
   padding: 0 ${rhythmDiv * 2}px;
@@ -74,7 +68,12 @@ const MembersList = props => {
           props.data.map(obj => (
             <MemberWrapper expanded={expanded} type={obj.type}>
               {expanded ? (
-                <MemberExpanded viewType={props.viewType} {...obj} />
+                <MemberExpanded 
+                viewType={props.viewType}
+                 {...obj} 
+                 popUp = {props.popUp}
+                classData = {props.classData}
+                 />
               ) : (
                 <Member 
                 viewType={props.viewType} 

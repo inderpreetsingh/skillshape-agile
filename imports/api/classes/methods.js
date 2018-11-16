@@ -1,5 +1,5 @@
 import Classes from './fields';
-import {get,isEmpty,uniq} from 'lodash';
+import {get,isEmpty,uniq,includes} from 'lodash';
 
 Meteor.methods({
     "classes.handleInstructors":function(payLoad){
@@ -10,13 +10,13 @@ Meteor.methods({
                 payLoad.instructors.push(record._id);
                 payLoad.instructors = uniq(payLoad.instructors);
                 Classes.update({_id:payLoad._id},{$set:payLoad});
-                return true;
+                return 'added';
             }
             else{
-                return false;
+                return 'emailNotFound';
             }
         }
-        else if(payLoad.action=='remove'){
+        else if(payLoad.action =='remove'){
             Classes.update({_id:payLoad._id},{$pull:{instructors:payLoad.instructorId}});
             return true;
         }
