@@ -5,13 +5,14 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { withPopUp } from '/imports/util';
 import Classes from "/imports/api/classes/fields";
 import {get,isEmpty} from 'lodash';
+import ClassTime from '/imports/api/classTimes/fields.js';
 class ClassDetailsContainer extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { currentUser, isUserSubsReady,classData,instructorsData ,popUp} = this.props;
+    const { currentUser, isUserSubsReady,classData,instructorsData ,popUp,instructorsIds} = this.props;
     return (
       <ClassDetails
         topSearchBarProps={{
@@ -31,6 +32,7 @@ class ClassDetailsContainer extends Component {
         classData = {classData}
         instructorsData = {instructorsData}
         popUp = {popUp}
+        instructorsIds = {instructorsIds}
       />
     );
   }
@@ -40,26 +42,40 @@ export default createContainer((props) => {
   const {state} = props.location.state;
   const dataProps =  props.location.state.props;
   let schoolId,classTypeId,classTimeId,scheduled_date,classesSubscription,classData,instructorsIds,
-  instructorsData = [],userSubscription;
+  instructorsData = [],userSubscription,classTimeSubscription,ClassTimeData;
   schoolId = state.school._id;
   classTimeId = dataProps.eventData.classTimeId;
   classTypeId = dataProps.eventData.classTypeId;
-  scheduled_date = new Date(state.classTimes.startDate);
+  scheduled_date = state.classTimes.startDate;
   filter = {schoolId,classTypeId,classTimeId,scheduled_date};
   classesSubscription = Meteor.subscribe('classes.getClassesData',filter);
   if( classesSubscription &&  classesSubscription.ready()){
    classData = Classes.find().fetch();
-   instructorsIds = get(classData[0],'instructors',[])
-   if(!isEmpty(instructorsIds)){
-    userSubscription = Meteor.subscribe('user.getUsersFromIds',instructorsIds);
-    if(userSubscription && userSubscription.ready()){
-      instructorsData = Meteor.users.find().fetch();
+   instructorsIds = get(classData[0],'instructors',[]);
+   if(isEmpty(instructorsIds)){
+    classTimeSubscription = Meteor.subscribe('classTimes.getclassTimes',{ schoolId, classTypeId });
+    if(classTimeSubscription && classTimeSubscription.ready()){
+      ClassTimeData = ClassTime.find().fetch();
+      instructorsIds = get(ClassTimeData[0],'instructors',[]);
+      userSubscription = Meteor.subscribe('user.getUsersFromIds',instructorsIds);
+      if(userSubscription && userSubscription.ready()){
+        instructorsData = Meteor.users.find().fetch();
+      }
     }
-  }
+   
+   }
+   else if(!isEmpty(instructorsIds)){
+     userSubscription = Meteor.subscribe('user.getUsersFromIds',instructorsIds);
+     if(userSubscription && userSubscription.ready()){
+       instructorsData = Meteor.users.find().fetch();
+     }
+   }
+ 
   }
 	return {
   classData,
-  instructorsData
+  instructorsData,
+  instructorsIds
 	};
 }, withPopUp(ClassDetailsContainer));
 

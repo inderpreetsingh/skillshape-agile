@@ -62,7 +62,7 @@ const ClassTimeWrapper = styled.div`
 `;
 
 const ClassDetails = props => {
-  const { location,headerProps,classData,instructorsData,popUp } = props;
+  const { location,headerProps,classData,instructorsData,popUp,instructorsIds } = props;
   const {state} = props.location.state;
   const dataProps =  props.location.state.props;
   const {school} = state;
@@ -107,6 +107,7 @@ const ClassDetails = props => {
         classData = {classData}
         instructorsData = {instructorsData}
         popUp = {popUp}
+        instructorsIds = {instructorsIds}
         />
       </InnerWrapper>
       <Footer />

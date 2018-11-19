@@ -47,7 +47,7 @@ class MembersListContainer extends Component {
   };
 
   render() {
-    const { studentsList, instructorsList, currentView,classData,instructorsData,popUp } = this.props;
+    const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds } = this.props;
     const { addInstructorDialogBoxState } = this.state;
     // console.log(currentView, "From inside membersList");
     // const currentView =
@@ -62,6 +62,7 @@ class MembersListContainer extends Component {
             onModalClose={this.handleAddInstructorDialogBoxState(false)}
             classData = {classData}
             popUp = {popUp}
+            instructorsIds = {instructorsIds}
           />
         )}
         <MembersList

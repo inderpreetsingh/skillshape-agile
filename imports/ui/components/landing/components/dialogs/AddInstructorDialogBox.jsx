@@ -101,7 +101,7 @@ class AddInstructorDialogBox extends Component {
       action:"add",
       _id:!isEmpty(this.props.classData) ? get(this.props.classData[0],'_id',null):'',
       email:this.email.value,
-      instructors:!isEmpty(this.props.classData) ? get(this.props.classData[0],'instructors',[]):'',
+      instructors:!isEmpty(this.props.classData) ? get(this.props.classData[0],'instructors',this.props.instructorsIds):'',
       classTimeForm:this.props.classTimeForm
     };
     popUp.appear("inform", {
