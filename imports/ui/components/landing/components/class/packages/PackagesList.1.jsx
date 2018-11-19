@@ -8,12 +8,9 @@ import PackageStructure from '../../../constants/structure/package.js';
 
 import * as helpers from '../../jss/helpers.js';
 
-const PACKAGE_WIDTH = 500;
-
 const Wrapper = styled.div`
 	width: 100%;
-	${helpers.flexCenter}
-	flex-direction: column; 
+	${helpers.flexCenter} align-items: stretch;
 
 	@media screen and (max-width: ${helpers.tablet}px) {
 		${helpers.flexDirectionColumn};
@@ -21,11 +18,10 @@ const Wrapper = styled.div`
 `;
 
 const PackagesListWrapper = styled.section`
-	width: 100%;
+	${helpers.flexDirectionColumn} width: 50%;
 	position: relative;
 	z-index: 1;
-	// align-items: ${(props) => (props.classPackages ? 'flex-end' : 'flex-start')};
-	align-items: center;
+	align-items: ${(props) => (props.classPackages ? 'flex-end' : 'flex-start')};
 	padding: ${helpers.rhythmDiv * 4}px 0;
 	${(props) => props.fullScreen && `width: 100%; align-items: center`};
 
@@ -59,8 +55,14 @@ const EnrollMentListWrapper = PackagesListWrapper.extend`
 	}
 `;
 
+const PackageWrapper = styled.div`
+	margin-bottom: ${helpers.rhythmDiv * 2}px;
+	max-width: 500px;
+	width: 100%;
+`;
 
 const PackagesWrapper = styled.div`
+  max-width: 500px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -71,29 +73,11 @@ const PackagesWrapper = styled.div`
   ${(props) => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'}
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
-  max-width: ${PACKAGE_WIDTH}px
+  max-width: 500px
     padding: ${helpers.rhythmDiv}px;
     align-items: space-around;
+
   }
-`;
-
-const PackagesInnerWrapper = styled.div`
-	${helpers.flexCenter}  
-	flex-wrap: wrap;
-	justify-content: space-between;
-
-	max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px;
-	margin: 0 auto;
-
-	@media screen and (max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px) {
-		max-width: ${PACKAGE_WIDTH}px;
-	}
-`;
-
-const PackageWrapper = styled.div`
-	margin-bottom: ${helpers.rhythmDiv * 2}px;
-	max-width: ${PACKAGE_WIDTH}px;
-	width: 100%;
 `;
 
 const Title = styled.h2`
@@ -115,29 +99,25 @@ const PackageList = (props) => (
 		fullScreen={props.fullScreen}
 		classPackages={props.classPackages}
 	>
-		<PackagesWrapper
-			classPackages={props.classPackages}
-			onPriceEdit={props.onPriceEdit}>
+		<PackagesWrapper classPackages={props.classPackages} onPriceEdit={props.onPriceEdit}>
 			<Title>{props.packageListName}</Title>
-			<PackagesInnerWrapper>
-				{props.packagesData.map((packageData) => (
-					<PackageWrapper key={packageData._id}>
-						<Package
-							{...packageData}
-							{...props.packageProps}
-							classPackages={props.classPackages}
-							schoolCurrency={props.schoolCurrency}
-							onSchoolEdit={props.onSchoolEdit}
-							onEditClick={() => {
-								props.onEditClick();
-							}}
-							setFormData={() => {
-								props.setFormData(packageData);
-							}}
-						/>
-					</PackageWrapper>
-				))}
-			</PackagesInnerWrapper>
+			{props.packagesData.map((packageData) => (
+				<PackageWrapper key={packageData._id}>
+					<Package
+						{...packageData}
+						{...props.packageProps}
+						classPackages={props.classPackages}
+						schoolCurrency={props.schoolCurrency}
+						onSchoolEdit={props.onSchoolEdit}
+						onEditClick={() => {
+							props.onEditClick();
+						}}
+						setFormData={() => {
+							props.setFormData(packageData);
+						}}
+					/>
+				</PackageWrapper>
+			))}
 		</PackagesWrapper>
 	</PackagesListWrapper>
 );
@@ -175,31 +155,31 @@ const PackagesList = (props) => {
 	return (
 		<Fragment>
 			{props.enrollMentPackages &&
-				!enrollMentPackagesEmpty && (
-					<Wrapper>
-						<EnrollmentPackagesList
-							forIframes={props.forIframes}
-							packageProps={{
-								bgColor: '#dddd',
-								forIframes: props.forIframes,
-								packageType: 'EP',
-								onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-								schoolId: props.schoolId
-							}}
-							packageListName="Enrollment Packages"
-							packagesData={props.enrollMentPackagesData}
-							schoolCurrency={schoolCurrency}
-							onSchoolEdit={props.onSchoolEdit}
-							onEditClick={() => {
-								props.onEditClick();
-							}}
-							setFormData={(packageData) => {
-								props.setFormData(packageData);
-							}}
-							onPriceEdit={props.onPriceEdit}
-						/>
-					</Wrapper>
-				)}
+			!enrollMentPackagesEmpty && (
+				<Wrapper>
+					<EnrollmentPackagesList
+						forIframes={props.forIframes}
+						packageProps={{
+							bgColor: '#dddd',
+							forIframes: props.forIframes,
+							packageType: 'EP',
+							onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+							schoolId: props.schoolId
+						}}
+						packageListName="Enrollment Packages"
+						packagesData={props.enrollMentPackagesData}
+						schoolCurrency={schoolCurrency}
+						onSchoolEdit={props.onSchoolEdit}
+						onEditClick={() => {
+							props.onEditClick();
+						}}
+						setFormData={(packageData) => {
+							props.setFormData(packageData);
+						}}
+						onPriceEdit={props.onPriceEdit}
+					/>
+				</Wrapper>
+			)}
 			<Wrapper>
 				{!classPackagesEmpty && (
 					<PackageList
