@@ -6,15 +6,19 @@ Meteor.methods({
         if(payLoad.action=='add'){
             let record;
             record = Meteor.users.findOne({'emails.address':payLoad.email});
-            if(!isEmpty(record)){
+            if(payLoad.classTimeForm && !isEmpty(record)){
+                return record._id;
+            }
+            else if(isEmpty(record)){
+                return 'emailNotFound';
+            }
+            else{
                 payLoad.instructors.push(record._id);
                 payLoad.instructors = uniq(payLoad.instructors);
                 Classes.update({_id:payLoad._id},{$set:payLoad});
                 return 'added';
             }
-            else{
-                return 'emailNotFound';
-            }
+           
         }
         else if(payLoad.action =='remove'){
             Classes.update({_id:payLoad._id},{$pull:{instructors:payLoad.instructorId}});

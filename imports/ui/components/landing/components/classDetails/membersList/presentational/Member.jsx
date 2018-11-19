@@ -116,8 +116,22 @@ const Member = props => {
   if (props.type === "student" && props.viewType === "instructorsView") {
     return <MemberExpanded {...props} />;
   }
+  removePopUp = (popUp)=>{
+    popUp.appear("success", {
+      title: "Removed Successfully",
+      content: `Successfully removed from instructor listing.`,
+      RenderActions: ( 
+        <FormGhostButton label={'Ok'} onClick={()=>{}}  applyClose />
+      )
+    }, true);
+  }
   handleRemoveInstructor = (props) =>{
     let {popUp} = props;
+    if(props.classTimeForm){
+      props.instructorsIdsSetter(get(props,'_id',0),'remove');
+      this.removePopUp(popUp);
+      return;
+    }
     let payLoad = {
       instructorId:get(props,'_id',0),
       _id:get(props.classData[0],"_id",0),
@@ -125,13 +139,7 @@ const Member = props => {
     }
     Meteor.call("classes.handleInstructors",payLoad,(err,res)=>{
       if(res){
-        popUp.appear("success", {
-          title: "Removed Successfully",
-          content: `Successfully removed from instructor listing.`,
-          RenderActions: ( 
-            <FormGhostButton label={'Ok'} onClick={()=>{}}  applyClose />
-          )
-        }, true);
+       this.removePopUp(popUp)
       }
     })
   }

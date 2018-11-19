@@ -14,6 +14,7 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
+import {isEmpty} from "lodash";
 const styles = theme => {
   return {
     dialogTitleRoot: {
@@ -70,13 +71,12 @@ class AddInstructorDialogBox extends Component {
   handleInstructors = (popUp,payLoad) =>{
     Meteor.call("classes.handleInstructors",payLoad,(err,res)=>{
       this.setState({isLoading:false});
-      if(res == 'added'){
+      if(res != 'emailNotFound'){
         popUp.appear("success", {
           title: "Added Successfully",
           content: `${payLoad.email} successfully added as an instructor.`,
           RenderActions: ( 
-            <FormGhostButton label={'Ok'} onClick={this.props.onModalClose}  applyClose />
-
+            <FormGhostButton label={'Ok'} onClick={()=>{this.props.instructorsIdsSetter ? this.props.instructorsIdsSetter(res,'add') : this.props.onModalClose()}}  applyClose />
           )
         }, true);
       }
@@ -99,9 +99,10 @@ class AddInstructorDialogBox extends Component {
     const {popUp} = this.props;
     let payLoad = {
       action:"add",
-      _id:get(this.props.classData[0],'_id',null),
+      _id:!isEmpty(this.props.classData) ? get(this.props.classData[0],'_id',null):'',
       email:this.email.value,
-      instructors:get(this.props.classData[0],'instructors',[])
+      instructors:!isEmpty(this.props.classData) ? get(this.props.classData[0],'instructors',[]):'',
+      classTimeForm:this.props.classTimeForm
     };
     popUp.appear("inform", {
       title: "Confirmation",

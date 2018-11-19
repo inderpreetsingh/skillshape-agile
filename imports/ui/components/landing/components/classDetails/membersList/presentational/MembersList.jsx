@@ -73,6 +73,8 @@ const MembersList = props => {
                  {...obj} 
                  popUp = {props.popUp}
                 classData = {props.classData}
+                classTimeForm = {props.classTimeForm}
+                instructorsIdsSetter = {props.instructorsIdsSetter}
                  />
               ) : (
                 <Member 
@@ -80,6 +82,8 @@ const MembersList = props => {
                 {...obj} 
                 popUp = {props.popUp}
                 classData = {props.classData}
+                classTimeForm = {props.classTimeForm}
+                instructorsIdsSetter = {props.instructorsIdsSetter}
                 />
               )}
             </MemberWrapper>
@@ -94,6 +98,8 @@ const MembersList = props => {
                 type="instructor"
                 popUp = {props.popUp}
                 classData = {props.classData}
+                classTimeForm = {props.classTimeForm}
+                instructorsIdsSetter = {props.instructorsIdsSetter}
               />
             </MemberWrapper>
           )}

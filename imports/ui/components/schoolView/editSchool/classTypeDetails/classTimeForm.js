@@ -32,14 +32,17 @@ import { MenuItem } from "material-ui/Menu";
 import { OneTimeRow } from "./oneTimeRow";
 import "/imports/api/sLocation/methods";
 import PackageAttachment from '/imports/ui/components/landing/components/dialogs/PackageAttachement.jsx'
-import { toastrModal } from "/imports/util";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import LocationForm from '/imports/ui/components/schoolView/editSchool/locationDetails/locationForm';
 import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetails/roomForm";
 import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
-
+import  InstructorList from '/imports/ui/components/landing/components/classDetails/membersList/presentational/MembersList.jsx';
+import { withPopUp } from '/imports/util';
+import {get,isEmpty,remove} from 'lodash';
+import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
+import { createContainer } from 'meteor/react-meteor-data';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -98,7 +101,7 @@ class ClassTimeForm extends React.Component {
   }
 
   initializeFields = () => {
-    const { data, locationData, parentData } = this.props;
+    const { data, locationData, parentData ,instructorsData} = this.props;
     let state = {
       roomData: [],
       roomId: "",
@@ -112,16 +115,18 @@ class ClassTimeForm extends React.Component {
       PackageOpen:true,
       showLocationForm:false,
       showRoomForm:false,
-      locId:''
+      locId:'',
+      instructors:[],
+      instructorsData:instructorsData
     };
     
       
 
-    if (!_.isEmpty(parentData) && !_.isEmpty(parentData.selectedLocation)) {
+    if (!isEmpty(parentData) && !isEmpty(parentData.selectedLocation)) {
       state.roomData = parentData.selectedLocation.rooms;
     }
     // Default selected tab accoring to data found for `ClassTimes` rec.
-    if (!_.isEmpty(data)) {
+    if (!isEmpty(data)) {
       if (data.scheduleType === "oneTime") {
         state.tabValue = 0;
       } else if (data.scheduleType === "recurring") {
@@ -136,7 +141,9 @@ class ClassTimeForm extends React.Component {
       state.duration = data.duration;
       state.roomId = data.roomId || '';
       state.locationId = data.locationId || '';
-      state.closed=data.closed;
+      state.closed = data.closed;
+      state.instructors = get(data,'instructors',[]);
+    
     }
     
       if(!state.locationId && !state.roomId){
@@ -148,7 +155,7 @@ class ClassTimeForm extends React.Component {
         locationData.map((location)=>{
           location && location.rooms ? location.rooms.map((room)=>{
             if(room.id == state.roomId){
-              state.roomData = !_.isEmpty(location.rooms) ? location.rooms :[];
+              state.roomData = !isEmpty(location.rooms) ? location.rooms :[];
               return;
             }
           }):state.roomData = [];
@@ -180,9 +187,9 @@ class ClassTimeForm extends React.Component {
     this.setState({locationId:event.target.value})
     const {locationData} = this.props;
     locationData.map((location)=>{
-      !_.isEmpty(location.rooms)? location.rooms.map((room)=>{
+      !isEmpty(location.rooms)? location.rooms.map((room)=>{
         if(location._id == event.target.value){
-          this.setState({roomData:!_.isEmpty(location.rooms) ? location.rooms :[],
+          this.setState({roomData:!isEmpty(location.rooms) ? location.rooms :[],
                          roomId: location && location.rooms && location.rooms[0].id || ''
           });
         }
@@ -190,7 +197,23 @@ class ClassTimeForm extends React.Component {
     })
   }
   }
-
+  handleSearchChange = type => e => {
+    const value = e.target.value;
+    this.setState(state => {
+      return {
+        ...state,
+        [type]: value
+      };
+    });
+  };
+  handleAddInstructorDialogBoxState = dialogBoxState => () => {
+    this.setState(state => {
+      return {
+        ...state,
+        addInstructorDialogBoxState: dialogBoxState
+      };
+    });
+  };
   submitClassTimes = (nextTab, addSeperateTime) => (event) => {
     event.preventDefault();
     this.saveClassTimes(nextTab, addSeperateTime, event);
@@ -198,7 +221,7 @@ class ClassTimeForm extends React.Component {
 
   saveClassTimes = (nextTab, addSeperateTimeJson, event) => {
     event.preventDefault();
-    const { schoolId, data, parentKey, parentData, toastr } = this.props;
+    const { schoolId, data, parentKey, parentData, popUp } = this.props;
     const { tabValue, locationId } = this.state;
 
     const payload = {
@@ -209,10 +232,18 @@ class ClassTimeForm extends React.Component {
       locationId: locationId,
       closed: this.state.closed,
       locationId: this.state.locationId,
-      roomId: this.state.roomId
+      roomId: this.state.roomId,
+      instructors: this.state.instructors
     };
     if (!this.classTimeName.value) {
-      toastr.error("Please enter Class Time name.", "Error");
+      popUp.appear("alert", {
+        title: "Class Time Name Empty",
+        content: `Please Enter Class Time Name`,
+        RenderActions: ( 
+          <FormGhostButton label={'Ok'} onClick={()=>{}}  applyClose />
+
+        )
+      }, true);
       return false;
     }
     if (tabValue === 0) {
@@ -232,7 +263,6 @@ class ClassTimeForm extends React.Component {
       payload.scheduleDetails = this.refs.weekDaysRow.getRowData();
     }
     if (data && data._id) {
-      console.info(" EDITING NEW CLASS TIME", payload, nextTab, data, addSeperateTimeJson);
 
       this.onSubmit({
         methodName: "classTimes.editClassTimes",
@@ -242,7 +272,6 @@ class ClassTimeForm extends React.Component {
         value: addSeperateTimeJson,
       });
     } else {
-      console.info(" CREATING NEW CLASS TIME", payload, nextTab, addSeperateTimeJson);
       this.onSubmit({
         methodName: "classTimes.addClassTimes",
         doc: payload,
@@ -297,9 +326,20 @@ class ClassTimeForm extends React.Component {
                 </FormControl>}
     </Fragment>
   }
+  instructorsIdsSetter = (instructorId,action)=>{
+    let instructors = this.state.instructors;
+    if(action=='add')
+    instructors.push(instructorId);
+    else if(action=='remove'){
+      instructors = remove(instructors,(n)=>{
+        return n != instructorId;
+      })
+    }
+    this.setState({instructors,addInstructorDialogBoxState:false});
+  }
   render() {
-    const { fullScreen, data, classes,schoolId,parentKey,parentData,locationData} = this.props;
-    const { roomId,locationId,roomData } = this.state;
+    const { fullScreen, data, classes,schoolId,parentKey,parentData,locationData,popUp,instructorsData} = this.props;
+    const { roomId,locationId,roomData,addInstructorDialogBoxState } = this.state;
 
     let styleForBox =this.state.tabValue ==1 || this.state.tabValue==0 && this.state.noOfRow >= 2 ?{border: '2px solid',padding: '7px',marginBottom: "2px",backgroundColor:"lightgray"} : {} ;
     return (
@@ -311,6 +351,15 @@ class ClassTimeForm extends React.Component {
         >
           <DialogTitle id="form-dialog-title">Add Class Times</DialogTitle>
           {this.state.isBusy && <ContainerLoader />}
+          {addInstructorDialogBoxState && (
+          <AddInstructorDialogBox
+            open={addInstructorDialogBoxState}
+            onModalClose={this.handleAddInstructorDialogBoxState(false)}
+            popUp = {popUp}
+            classTimeForm
+            instructorsIdsSetter = {this.instructorsIdsSetter}
+          />
+        )}
           {this.state.showConfirmationModal && (
             <ConfirmationModal
               open={this.state.showConfirmationModal}
@@ -382,7 +431,7 @@ class ClassTimeForm extends React.Component {
                         onChange={this.handleLocAndRoom.bind(this,'locationId')}
                         fullWidth
                       >
-                        {_.isEmpty(locationData) && (
+                        {isEmpty(locationData) && (
                           <MenuItem value="" disabled>
                             No location added in Locations.
                           </MenuItem>
@@ -490,6 +539,18 @@ class ClassTimeForm extends React.Component {
                     />
                   </div>
                 )}
+                <InstructorList
+                 viewType={"instructorsView"}
+                 searchedValue={this.state.teachersFilterWith}
+                 onSearchChange={this.handleSearchChange("teachersFilterWith")}
+                 data={instructorsData}
+                 entityType={"teachers"}
+                 searchedValue={this.state.teachersFilterWith}
+                 onAddIconClick={this.handleAddInstructorDialogBoxState(true)}
+                 popUp = {popUp}
+                 classTimeForm
+                 instructorsIdsSetter = {this.instructorsIdsSetter}
+                />
               </form>
             </DialogContent>
           )}
@@ -566,7 +627,20 @@ class ClassTimeForm extends React.Component {
     );
   }
 }
+export default createContainer((props) => {
+  const {data} = props;
+  let instructorsData = [],userSubscription;
+  if(!isEmpty(data.instructors)){
+    userSubscription = Meteor.subscribe('user.getUsersFromIds',data.instructors);
+    if(userSubscription && userSubscription.ready()){
+      instructorsData = Meteor.users.find().fetch();
+      console.log("​initializeFields -> state.instructorsData", instructorsData)
+    }}
+  return {
+    props,
+    instructorsData
+  }
+},withStyles(styles)(
+  withPopUp(withMobileDialog()(ClassTimeForm))
+))
 
-export default withStyles(styles)(
-  toastrModal(withMobileDialog()(ClassTimeForm))
-);

@@ -87,7 +87,11 @@ ClassTimes.attachSchema(
     closed: {
       type: Boolean,
       optional: true
-    }
+    },
+    instructors:{
+      type: [String],
+      optional: true
+  }
   })
 );
 
