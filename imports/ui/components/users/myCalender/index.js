@@ -4,6 +4,10 @@ import { browserHistory } from 'react-router';
 import List, { ListItem, ListItemText, ListItemIcon } from 'material-ui/List';
 import ClassIcon from 'material-ui-icons/Class';
 import AvTimerIcon from 'material-ui-icons/AvTimer';
+import CancelIcon from 'material-ui-icons/Cancel';
+import CloseIcon from 'material-ui-icons/Close';
+import UpdateClassTimeIcon from 'material-ui-icons/Update';
+import EmailIcon from 'material-ui-icons/Email';
 
 import FullCalendarContainer from "/imports/ui/componentHelpers/fullCalendar";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
@@ -18,8 +22,8 @@ const styles = {
   }
 }
 
-const PopoverListItem = withStyles(styles)(({ classes, children }) => (
-  <ListItemIcon classes={{ root: classes.listItemIcon}}>
+const PopoverListItemIcon = withStyles(styles)(({ classes, children }) => (
+  <ListItemIcon classes={{ root: classes.listItemIcon }}>
     {children}
   </ListItemIcon>
 ))
@@ -27,7 +31,18 @@ const PopoverListItem = withStyles(styles)(({ classes, children }) => (
 export default class MyCalender extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isAdmin: this._checkIfAdmin(),
+    };
+  }
+
+  _checkIfAdmin = () => {
+    const { schoolData: { admins }, currentUser } = this.props;
+    const currentUserId = currentUser._id;
+    if (admins.indexOf(currentUserId) !== -1) {
+      return true;
+    }
+    return false;
   }
 
   _navigateTo = (link) => (e) => {
@@ -79,15 +94,15 @@ export default class MyCalender extends React.Component {
   getStudentList = () => (
     <List>
       <ListItem button onClick={this._navigateTo('/classdetails-student')}>
-        <PopoverListItem>
+        <PopoverListItemIcon>
           <ClassIcon />
-        </PopoverListItem>
+        </PopoverListItemIcon>
         <ListItemText primary="Class details" />
       </ListItem>
       <ListItem button>
-        <PopoverListItem>
+        <PopoverListItemIcon>
           <AvTimerIcon />
-        </PopoverListItem>
+        </PopoverListItemIcon>
         <ListItemText primary="Class times" />
       </ListItem>
       {!Meteor.userId() && <ListItem button>
@@ -99,25 +114,41 @@ export default class MyCalender extends React.Component {
   getAdminList = () => (
     <List>
       <ListItem button>
-        <ListItemText primary="Bring in Student" />
+        <PopoverListItemIcon>
+          <CancelIcon />
+        </PopoverListItemIcon>
+        <ListItemText primary="Cancel class" />
       </ListItem>
       <ListItem button>
-        <ListItemText primary="Manage School Media " />
+        <PopoverListItemIcon>
+          <CloseIcon />
+        </PopoverListItemIcon>
+        <ListItemText primary="Close for the day" />
       </ListItem>
       <ListItem button>
-        <ListItemText primary="Add Beautiful Calenders and Labels in your Website" />
+        <PopoverListItemIcon>
+          <UpdateClassTimeIcon />
+        </PopoverListItemIcon>
+        <ListItemText primary="Change Class Time for Today" />
       </ListItem>
       <ListItem button>
-        <ListItemText primary="Much More!" />
-      </ListItem>
-      <ListItem button>
-        <ListItemText primary="FREE!" />
+        <PopoverListItemIcon>
+          <EmailIcon />
+        </PopoverListItemIcon>
+        <ListItemText primary="Email Attendencies" />
       </ListItem>
     </List>
   )
 
   render() {
-    let { isOpen, eventData, clickedDate, anchorEl, positionLeft, positionTop } = this.state;
+    const { isOpen,
+      eventData,
+      clickedDate,
+      anchorEl,
+      positionLeft,
+      positionTop,
+      isAdmin
+    } = this.state;
     const { routeName } = this.props;
     console.log("MY CALENDAR STATE", anchorEl, "------")
     return (
@@ -152,7 +183,7 @@ export default class MyCalender extends React.Component {
             isOpen={isOpen}
             onClose={this.handlePopoverClose}
           >
-            {this.getStudentList()}
+            {isAdmin ? this.getAdminList() : this.getStudentList()}
           </SkillshapePopover>
         )}
       </div>
