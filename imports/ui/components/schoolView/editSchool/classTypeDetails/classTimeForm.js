@@ -630,11 +630,10 @@ class ClassTimeForm extends React.Component {
 export default createContainer((props) => {
   const {data} = props;
   let instructorsData = [],userSubscription;
-  if(!isEmpty(data.instructors)){
+  if(!isEmpty(data ? data.instructors : [])){
     userSubscription = Meteor.subscribe('user.getUsersFromIds',data.instructors);
     if(userSubscription && userSubscription.ready()){
       instructorsData = Meteor.users.find().fetch();
-      console.log("​initializeFields -> state.instructorsData", instructorsData)
     }}
   return {
     props,
