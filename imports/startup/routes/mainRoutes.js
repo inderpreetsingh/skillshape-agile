@@ -1,5 +1,6 @@
 import React from "react";
 import { browserHistory, IndexRoute, Route, Router } from "react-router";
+
 import StripeConnectModal from "./../../ui/modal/stripeConnectModal";
 import ResetPassword from "/imports/ui/components/account/resetPassword";
 import VerifyEmail from "/imports/ui/components/account/verifyEmail";
@@ -25,11 +26,14 @@ import ManageMyCalendar from "/imports/ui/components/users/manageMyCalendar";
 import MyMedia from "/imports/ui/components/users/myMedia";
 import MyProfile from "/imports/ui/components/users/myProfile";
 import MySubscription from "/imports/ui/components/users/mySubscription";
+import TestPopover from "/imports/ui/components/landing/TestPopover.jsx";
+
+//layout
 import AdminLayout from "/imports/ui/layout/adminLayout";
 import EmbedLayout from "/imports/ui/layout/embedLayout";
-//layout
 import MainLayout from "/imports/ui/layout/mainLayout";
 import PublicLayout from "/imports/ui/layout/publicLayout";
+
 //pages
 import AboutUs from "/imports/ui/pages/aboutUs";
 import ContactUs from "/imports/ui/pages/contactUs";
@@ -54,6 +58,7 @@ export default (Routes = componentLoader(props => (
         name="Skillshape-for-school"
         component={School}
       />
+      <Route path="/popover-dev" name="popover-testing" component={TestPopover} />
       <Route path="/popups-dev" name="popups-testing" component={TestPopUps} />
       <Route
         path="/classdetails-student"
@@ -138,7 +143,7 @@ export default (Routes = componentLoader(props => (
           name="SchoolUpload"
           component={SchoolUpload}
         />
-         <Route
+        <Route
           path="/optimization"
           name="Optimization"
           component={Optimization}

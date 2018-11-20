@@ -498,7 +498,7 @@ class ManageMyCalendar extends React.Component {
         return index.name;
       }
     });
-    value = value.filter(function(element) {
+    value = value.filter(function (element) {
       return element !== undefined;
     });
     return value[0] + ": " + Time;
@@ -675,9 +675,9 @@ class ManageMyCalendar extends React.Component {
                                     label={`${result &&
                                       result[0] &&
                                       result[0].name}: ${cutString(
-                                      classTime.name,
-                                      12
-                                    )}`}
+                                        classTime.name,
+                                        12
+                                      )}`}
                                     classes={{ label: classes.label }}
                                   />
                                 </div>
@@ -920,9 +920,9 @@ class ManageMyCalendar extends React.Component {
                                     label={`${result &&
                                       result[0] &&
                                       result[0].name}: ${cutString(
-                                      classTime.name,
-                                      12
-                                    )}`}
+                                        classTime.name,
+                                        12
+                                      )}`}
                                   />
                                 </div>
                               </div>
@@ -936,6 +936,7 @@ class ManageMyCalendar extends React.Component {
               )}
 
             <MyCalender
+              routeName={this.props.route.name}
               manageMyCalendar={
                 this.props.route && this.props.route.name == "MyCalendar"
               }
