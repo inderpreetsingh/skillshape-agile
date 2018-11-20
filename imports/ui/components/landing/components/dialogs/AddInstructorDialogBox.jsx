@@ -128,7 +128,7 @@ class AddInstructorDialogBox extends Component {
       if(res != 'emailNotFound'){
         popUp.appear("success", {
           title: "Added Successfully",
-          content: `Successfully added as an instructor.`,
+          content: <div>Successfully added as an instructor.<br/>{payLoad.classTimeForm ?"Changes will show in the Class Times Editor after saving." :''}</div>,
           RenderActions: ( 
             <FormGhostButton label={'Ok'} onClick={()=>{this.props.instructorsIdsSetter ? this.props.instructorsIdsSetter(payLoad.instructors,'add') : this.props.onModalClose()}}  applyClose />
           )

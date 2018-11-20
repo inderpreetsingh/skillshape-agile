@@ -4,7 +4,7 @@ import { classModulesData, classTimeData } from "/imports/ui/components/landing/
 import { createContainer } from 'meteor/react-meteor-data';
 import { withPopUp } from '/imports/util';
 import Classes from "/imports/api/classes/fields";
-import {get,isEmpty} from 'lodash';
+import {get,isEmpty,includes,remove} from 'lodash';
 import ClassTime from '/imports/api/classTimes/fields.js';
 class ClassDetailsContainer extends Component {
   constructor(props) {
@@ -60,6 +60,11 @@ export default createContainer((props) => {
       userSubscription = Meteor.subscribe('user.getUsersFromIds',instructorsIds);
       if(userSubscription && userSubscription.ready()){
         instructorsData = Meteor.users.find().fetch();
+        if(!includes(instructorsIds,Meteor.userId())){
+          instructorsData = remove(instructorsData,(ele)=>{
+            return ele._id != Meteor.userId()
+          })
+        }
       }
     }
    
@@ -68,6 +73,11 @@ export default createContainer((props) => {
      userSubscription = Meteor.subscribe('user.getUsersFromIds',instructorsIds);
      if(userSubscription && userSubscription.ready()){
        instructorsData = Meteor.users.find().fetch();
+       if(!includes(instructorsIds,Meteor.userId())){
+        instructorsData = remove(instructorsData,(ele)=>{
+          return ele._id != Meteor.userId()
+        })
+      }
      }
    }
  

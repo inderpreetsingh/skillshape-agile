@@ -111,10 +111,10 @@ const Member = props => {
   if (props.type === "student" && props.viewType === "instructorsView") {
     return <MemberExpanded {...props} />;
   }
-  removePopUp = (popUp)=>{
+  removePopUp = (popUp,classTime)=>{
     popUp.appear("success", {
       title: "Removed Successfully",
-      content: `Successfully removed from instructor listing.`,
+      content: <div>Successfully removed from instructor listing.<br/> {classTime ? 'Changes will show in the Class Times Editor after saving.':''}</div>,
       RenderActions: ( 
         <FormGhostButton label={'Ok'} onClick={()=>{}}  applyClose />
       )
@@ -124,7 +124,7 @@ const Member = props => {
     let {popUp} = props;
     if(props.classTimeForm){
       props.instructorsIdsSetter(get(props,'_id',0),'remove');
-      this.removePopUp(popUp);
+      this.removePopUp(popUp,true);
       return;
     }
     let payLoad = {
@@ -165,7 +165,7 @@ const Member = props => {
         />
         <DetailsWrapper type={props.type}>
           <Details>
-            <SubHeading fontSize="20">{cutString(name,13)}</SubHeading>
+            <SubHeading fontSize="20">{cutString(name,20)}</SubHeading>
             {props.type !== "student" &&
               !props.addInstructor && (
                 <Text>
