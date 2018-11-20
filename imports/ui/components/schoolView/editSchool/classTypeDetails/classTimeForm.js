@@ -46,6 +46,12 @@ import { createContainer } from 'meteor/react-meteor-data';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
+const Instructors = styled.div`
+    margin-top: 16px;
+    font-size: 17px;
+    padding: 10px;
+    background-color: aliceblue;
+`;
 const styles = theme => {
   return {
     delete: {
@@ -541,6 +547,9 @@ class ClassTimeForm extends React.Component {
                     />
                   </div>
                 )}
+                <Instructors>
+                Instructors changes will show here after saving this class time.
+                </Instructors>
                 <InstructorList
                  viewType={"instructorsView"}
                  searchedValue={this.state.teachersFilterWith}
