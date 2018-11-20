@@ -15,7 +15,6 @@ import SecondaryButton from '/imports/ui/components/landing/components/buttons/S
 
 import { checkSuperAdmin, getUserSchool, logoutUser } from "/imports/util";
 import { specialFont, flexCenter } from "./jss/helpers.js";
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import NestedNavItems from "./NestedNavItems";
 import SchoolSubMenu from "./schoolSubMenu";
 import { getUserFullName } from "/imports/util/getUserData";
@@ -49,7 +48,7 @@ const IconWrapper = styled.div`
 const DrawerHeader = props => (
   <div className={props.drawerHeader}>
     <IconButton onClick={props.handleDrawer}>close</IconButton>
-    {props.currentUser && <SecondaryButton icon iconName="exit_to_app" label="Logout" />}
+    {props.currentUser && <SecondaryButton icon iconName="exit_to_app" label="Logout" onClick={logoutUser} />}
   </div>
 );
 
