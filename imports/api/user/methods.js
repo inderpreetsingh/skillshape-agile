@@ -172,4 +172,7 @@ Meteor.methods({
       throw new Meteor.Error("Email Address not found!!");
     }
   },
+  "user.getAllUsersEmail": function(){
+    return Meteor.users.find({},{fields:{"emails":1}}).fetch();
+  }
 });

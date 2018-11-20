@@ -40,7 +40,7 @@ import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetai
 import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
 import  InstructorList from '/imports/ui/components/landing/components/classDetails/membersList/presentational/MembersList.jsx';
 import { withPopUp } from '/imports/util';
-import {get,isEmpty,remove} from 'lodash';
+import {get,isEmpty,remove,flatten} from 'lodash';
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { createContainer } from 'meteor/react-meteor-data';
 const ButtonWrapper = styled.div`
@@ -328,8 +328,10 @@ class ClassTimeForm extends React.Component {
   }
   instructorsIdsSetter = (instructorId,action)=>{
     let instructors = this.state.instructors;
-    if(action=='add')
-    instructors.push(instructorId);
+    if(action=='add'){
+      instructors.push(instructorId);
+      instructors = flatten(instructors);
+    }
     else if(action=='remove'){
       instructors = remove(instructors,(n)=>{
         return n != instructorId;

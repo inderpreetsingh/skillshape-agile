@@ -250,7 +250,6 @@ const ClassTypeExpansionRender = (props) => {
 			</Paper>
 			<ExpansionsWrapper>
 				{classTypeData && classTypeData.map(ctData => {
-					{ console.log(ctData, get(ctData, 'medium', get(ctData, 'classTypeImg', classTypeImgSrc)), "ctData-----------------------") }
 					return (< ExpansionPanel className={expansionPanelRoot} >
 						<ExpansionPanelSummary
 							classes={{ content: props.classes.expansionPanelSummaryContent }}
