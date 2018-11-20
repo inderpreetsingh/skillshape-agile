@@ -1,26 +1,27 @@
+import get from "lodash/get";
+import uniq from 'lodash/uniq';
+import { check } from 'meteor/check';
 import isEmpty from "lodash/isEmpty";
 import isArray from "lodash/isArray";
-import get from "lodash/get";
 import ClassType from "/imports/api/classType/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "./fields";
-import { sendPackagePurchaseEmail,sendSkillShapeJoinInvitation } from "/imports/api/email";
+import { sendPackagePurchaseEmail, sendSkillShapeJoinInvitation } from "/imports/api/email";
 import ClaimSchoolRequest from "/imports/api/claimSchoolRequest/fields.js";
 import PriceInfoRequest from "/imports/api/priceInfoRequest/fields.js";
 import { sendClaimASchoolEmail } from "/imports/api/email";
 import { sendConfirmationEmail } from "/imports/api/email";
 import { sendPriceInfoRequestEmail } from "/imports/api/email";
-import { sendEmailToStudentForClaimAsMember,adminInvitation } from "/imports/api/email";
+import { sendEmailToStudentForClaimAsMember, adminInvitation } from "/imports/api/email";
 import { getUserFullName } from "/imports/util/getUserData";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
-import { check } from 'meteor/check';
 
 Meteor.methods({
-  editSchool: function(id, data) {
+  editSchool: function (id, data) {
     check(data, Object);
-    check(id,String);
+    check(id, String);
     let schoolData = School.findOne({ _id: id });
     if (schoolData && data.name && schoolData.name !== data.name) {
       ClassType.update(
@@ -31,16 +32,16 @@ Meteor.methods({
     }
     return School.update({ _id: id }, { $set: data });
   },
-  getClassesForMap: function({ schoolId }) {
-    check(schoolId,String);
+  getClassesForMap: function ({ schoolId }) {
+    check(schoolId, String);
 
     return {
       school: School.findOne({ _id: schoolId }),
       classTypes: ClassType.find({ schoolId }).fetch()
     };
   },
-  "school.getConnectedSchool": function(userId) {
-    
+  "school.getConnectedSchool": function (userId) {
+
     let schoolList = [];
     const user = Meteor.users.findOne({ _id: userId });
     if (
@@ -54,23 +55,23 @@ Meteor.methods({
         userId: userId,
         classId: { $in: classIds }
       });
-      schoolList = demand.map(function(a) {
+      schoolList = demand.map(function (a) {
         return a.schoolId;
       });
     }
     return School.find({ _id: { $in: schoolList } }).fetch();
   },
-  "school.getMySchool": function(schoolId,from) {
-    if(schoolId){
-        return School.findOne({_id:schoolId})
+  "school.getMySchool": function (schoolId, from) {
+    if (schoolId) {
+      return School.findOne({ _id: schoolId })
     }
     else if (this.userId && !from) {
-      return School.find({$or:[{admins: { $in: [this.userId] }},{superAdmin:this.userId}]  }).fetch();
+      return School.find({ $or: [{ admins: { $in: [this.userId] } }, { superAdmin: this.userId }] }).fetch();
     }
   },
-  "school.claimSchool": function(userId, schoolId) {
-    check(userId,String);
-    check(schoolId,String);
+  "school.claimSchool": function (userId, schoolId) {
+    check(userId, String);
+    check(schoolId, String);
 
     const data = {};
     data.userId = userId;
@@ -86,9 +87,9 @@ Meteor.methods({
       }
     );
   },
-  "school.publishSchool": function({ schoolId, isPublish }) {
-    check(schoolId,String);
-    check(isPublish,Boolean);
+  "school.publishSchool": function ({ schoolId, isPublish }) {
+    check(schoolId, String);
+    check(isPublish, Boolean);
 
     ClassType.update(
       { schoolId: schoolId },
@@ -97,10 +98,10 @@ Meteor.methods({
     );
     return School.update({ _id: schoolId }, { $set: { isPublish: isPublish } });
   },
-  "school.purchasePackage": function({ typeOfTable, tableId, schoolId }) {
-    check(schoolId,String);
-    check(typeOfTable,String);
-    check(tableId,String);
+  "school.purchasePackage": function ({ typeOfTable, tableId, schoolId }) {
+    check(schoolId, String);
+    check(typeOfTable, String);
+    check(tableId, String);
     // Do validation
     let PricingTable = "";
     if (!typeOfTable || !tableId || !schoolId) {
@@ -136,9 +137,23 @@ Meteor.methods({
     }
     return { emailSent: false };
   },
-  "school.requestPricingInfo": function(schoolData) {
-    check(schoolData,Object);
-    
+  "school.getAdminsEmail": function (schoolId) {
+    check(schoolId, String);
+    // console.log(schoolId, ">>>>>>>>>>>>>")
+    const schoolData = Meteor.call('school.getMySchool', schoolId);
+    if (schoolData) {
+      adminIds = uniq(schoolData.admins.concat(schoolData.superAdmin));
+      console.log(adminIds, "users adminId >>>>>>>>>>>>>")
+      const emails = Meteor.call('user.getSelectedUsersEmail', adminIds);
+      console.log(emails, " usres email >>>>>>>>>>>>>>")
+      return emails;
+    } else {
+      throw new Meteor.Error("No school found")
+    }
+  },
+  "school.requestPricingInfo": function (schoolData) {
+    check(schoolData, Object);
+
     if (this.userId && schoolData._id) {
       const schoolId = schoolData._id;
       // Check if reuest for this user already exist in DB then just update `notification` and send Email.
@@ -181,7 +196,7 @@ Meteor.methods({
       const fromEmail = "Notices@SkillShape.com";
       const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${
         schoolData._id
-      }/edit`;
+        }/edit`;
       let ownerName;
       if (schoolData && schoolData.userId) {
         // Get Admin of School As school Owner
@@ -211,8 +226,8 @@ Meteor.methods({
    * to this user so that it can become active member by clicking on it.
    * if user is already a skillshape user then just make them as a member of School.
    */
-  "school.addNewMember": function(doc) {
-    check(doc,Object);
+  "school.addNewMember": function (doc) {
+    check(doc, Object);
 
     // Validations
     const schoolAdminRec = Meteor.users.findOne({
@@ -276,13 +291,13 @@ Meteor.methods({
 
         let ROOT_URL = `${Meteor.absoluteUrl()}?acceptInvite=${true}&memberId=${memberId}&schoolId=${
           doc.schoolId
-        }`;
+          }`;
         let rejectionUrl;
         // Active member found, then need to send notification to the member with a button to reject the school.
         if (!newlyCreatedUser) {
           rejectionUrl = `${Meteor.absoluteUrl()}?rejectInvite=${true}&memberId=${memberId}&schoolId=${
             doc.schoolId
-          }`;
+            }`;
         }
         // const currentUserData = Meteor.users.findOne({ _id: this.userId });
         const schoolData = School.findOne(doc.schoolId);
@@ -306,8 +321,8 @@ Meteor.methods({
     }
   },
   // This is used to save admin notes in School Members.
-  "school.saveAdminNotesToMember": function(doc) {
-    check(doc,Object);
+  "school.saveAdminNotesToMember": function (doc) {
+    check(doc, Object);
 
     // Validations
     // Only school admin can add a new Memeber.
@@ -324,13 +339,13 @@ Meteor.methods({
     );
     return { updatedNotes: true };
   },
-  "school.updateInviteAcceptedToMemberRec": function({
+  "school.updateInviteAcceptedToMemberRec": function ({
     memberId,
     schoolId,
     acceptInvite
   }) {
-    check(memberId,String);
-    check(schoolId,String);
+    check(memberId, String);
+    check(schoolId, String);
     let schoolMemberDetails = SchoolMemberDetails.find({
       _id: memberId,
       schoolId: schoolId
@@ -349,8 +364,8 @@ Meteor.methods({
     }
     return { inviteAccepted: true };
   },
-  "school.addNewSchool": function(doc) {
-    check(doc,Object);
+  "school.addNewSchool": function (doc) {
+    check(doc, Object);
 
     const currentUser = doc || Meteor.users.findOne(this.userId);
     if (!this.userId) {
@@ -378,8 +393,8 @@ Meteor.methods({
     let schoolEditViewLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
     return schoolEditViewLink;
   },
-  "school.addNewMemberWithoutEmail": function(doc) {
-    check(doc,Object);
+  "school.addNewMemberWithoutEmail": function (doc) {
+    check(doc, Object);
 
     const schoolAdminRec = Meteor.users.findOne({
       "profile.schoolId": doc.schoolId
@@ -403,7 +418,7 @@ Meteor.methods({
       throw new Meteor.Error("Access Denied!!!!");
     }
   },
-  "school.findSuperAdmin": function( slug, SchoolId) {
+  "school.findSuperAdmin": function (slug, SchoolId) {
     const filter = {};
     if (slug) {
       filter.slug = slug;
@@ -411,37 +426,37 @@ Meteor.methods({
       filter._id = SchoolId;
     }
     let schoolData = School.findOne(filter);
-    return schoolData ;
+    return schoolData;
   },
   "school.optimizationFinder": function () {
-   return School.find({mainImage:{$exists:true},mainImageMedium:{$exists:false},mainImageLow:{$exists:false},logoImgMedium:{$exists:false},logoImgLow:{$exists:false}}).fetch();
+    return School.find({ mainImage: { $exists: true }, mainImageMedium: { $exists: false }, mainImageLow: { $exists: false }, logoImgMedium: { $exists: false }, logoImgLow: { $exists: false } }).fetch();
   },
-  "school.manageAdmin":function(_id,schoolId,action,to,userName,schoolName,payload,adminName){
-    if(action=='remove'){
-    let res=School.update({_id:schoolId},{$pull:{admins:_id}});
-    adminInvitation(to,userName,schoolName,action)
-    return res;
-    }
-    else if(action=='add'){
-      let res=School.update({_id:schoolId},{$push:{admins:_id}});
-      adminInvitation(to,userName,schoolName,action,adminName);
+  "school.manageAdmin": function (_id, schoolId, action, to, userName, schoolName, payload, adminName) {
+    if (action == 'remove') {
+      let res = School.update({ _id: schoolId }, { $pull: { admins: _id } });
+      adminInvitation(to, userName, schoolName, action)
       return res;
     }
-    else if(action =='join'){
-      payload.schoolName=schoolName;
-      Meteor.call("user.createUser",payload,(err,res)=>{
-        if(res){
-          try{
-            School.update({_id:schoolId},{$push:{admins:res.user._id}})
-         // sendSkillShapeJoinInvitation(to,userName,schoolName,res.password);
-          }catch(error){
+    else if (action == 'add') {
+      let res = School.update({ _id: schoolId }, { $push: { admins: _id } });
+      adminInvitation(to, userName, schoolName, action, adminName);
+      return res;
+    }
+    else if (action == 'join') {
+      payload.schoolName = schoolName;
+      Meteor.call("user.createUser", payload, (err, res) => {
+        if (res) {
+          try {
+            School.update({ _id: schoolId }, { $push: { admins: res.user._id } })
+            // sendSkillShapeJoinInvitation(to,userName,schoolName,res.password);
+          } catch (error) {
             console.log('TCL: }catch -> error', error);
             throw new Meteor.Error(error);
           }
-         
+
         }
-    })
-    return 1;
+      })
+      return 1;
     }
   }
 });
