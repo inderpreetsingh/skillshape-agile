@@ -1,4 +1,3 @@
-import { get } from 'lodash';
 import ClearIcon from "material-ui-icons/Clear";
 import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
 import Grid from "material-ui/Grid";
@@ -15,7 +14,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import Select from "react-select";
-import {isEmpty,flatten} from "lodash";
+import {isEmpty,flatten,get} from "lodash";
 const styles = theme => {
   return {
     dialogTitleRoot: {
@@ -81,6 +80,48 @@ class AddInstructorDialogBox extends Component {
     })
     return {selectedOption:[]}
   }
+  handleClassesAndClassTime = (popUp,payLoad) => {
+    popUp.appear("inform", {
+      title: "Add Instructor",
+      content: `Add this instructor to this class only, or to this and all future classes?`,
+      RenderActions: ( 
+        <div>
+        <FormGhostButton label={'Cancel'} onClick={()=>{}}  applyClose />
+        <FormGhostButton label={'Just to this instance'} onClick={()=>{this.handleInstructors(popUp,payLoad)}}  applyClose />
+        <FormGhostButton label={'Whole series'} onClick={()=>{this.handleWholeSeries(popUp,payLoad)}}  applyClose />
+        </div>
+      )
+    }, true);
+  }
+  handleWholeSeries = (popUp,payLoad) =>{
+    let {classData} = this.props;
+    payLoad.classTimeId = get(classData[0],'classTimeId','');
+    payLoad.schoolId = get(classData[0],'schoolId','');
+    Meteor.call("classTimes.editClassTimes",{doc_id:payLoad.classTimeId,doc:payLoad},(err,res)=>{
+			
+      this.setState({isLoading:false});
+      if(res != 'emailNotFound'){
+        popUp.appear("success", {
+          title: "Added Successfully",
+          content: `Successfully added as an instructor.`,
+          RenderActions: ( 
+            <FormGhostButton label={'Ok'} onClick={()=>{this.props.instructorsIdsSetter ? this.props.instructorsIdsSetter(payLoad.instructors,'add') : this.props.onModalClose()}}  applyClose />
+          )
+        }, true);
+      }
+      else if(res == 'emailNotFound'){
+        popUp.appear("alert", {
+          title: "Email not found",
+          content: `No account found with this email. Please create one and try again.`,
+          RenderActions: ( 
+            <FormGhostButton label={'Ok'} onClick={()=>{}}  applyClose />
+
+          )
+        }, true);
+      }
+
+    })
+  }
   handleInstructors = (popUp,payLoad) =>{
     Meteor.call("classes.handleInstructors",payLoad,(err,res)=>{
       this.setState({isLoading:false});
@@ -125,7 +166,7 @@ class AddInstructorDialogBox extends Component {
       RenderActions: ( 
         <div>
         <FormGhostButton label={'Cancel'} onClick={()=>{}}  applyClose />
-        <FormGhostButton label={'Yes'} onClick={()=>{this.handleInstructors(popUp,payLoad)}}  applyClose />
+        <FormGhostButton label={'Yes'} onClick={()=>{!payLoad.classTimeForm ? this.handleClassesAndClassTime(popUp,payLoad) : this.handleInstructors(popUp,payLoad)}}  applyClose />
         </div>
       )
     }, true);
