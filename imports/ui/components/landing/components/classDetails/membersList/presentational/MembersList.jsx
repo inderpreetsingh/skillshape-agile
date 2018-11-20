@@ -59,10 +59,10 @@ const MembersList = props => {
         <Title>
           <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
         </Title>
-        <SearchList
+        {/* <SearchList
           onChange={props.onSearchChange}
           searchedValue={props.searchedValue}
-        />
+        /> */}
       </ListHeading>
       <MembersGrid expanded={expanded}>
         {props.data &&
