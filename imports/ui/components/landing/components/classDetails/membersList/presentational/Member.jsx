@@ -15,10 +15,6 @@ import FormGhostButton from '/imports/ui/components/landing/components/buttons/F
 
 const menuOptions = [
   {
-    name: "Evaluate",
-    value: "evalute"
-  },
-  {
     name: "Remove Teacher",
     value: "remove_teacher"
   }

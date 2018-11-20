@@ -33,7 +33,7 @@ const MembersGrid = styled.div`
 `;
 
 const MemberWrapper = styled.div`
-  padding: ${rhythmDiv}px;
+  padding: 4px;
   ${props =>
     props.expanded
       ? `max-width: 500px;
