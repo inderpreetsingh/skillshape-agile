@@ -1,18 +1,21 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
+import styled from 'styled-components';
 import { withStyles } from "material-ui/styles";
 import { browserHistory } from "react-router";
 import { get, isEmpty, size } from "lodash";
 
+import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
+import IconButton from "material-ui/IconButton";
 import Drawer from "material-ui/Drawer";
 import Divider from "material-ui/Divider";
 import Icon from "material-ui/Icon";
-import IconButton from "material-ui/IconButton";
-import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
-
 import LoginButton from "./buttons/LoginButton.jsx";
-import { specialFont } from "./jss/helpers.js";
-import { checkSuperAdmin, getUserSchool } from "/imports/util";
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
+
+import { checkSuperAdmin, getUserSchool, logoutUser } from "/imports/util";
+import { specialFont, flexCenter } from "./jss/helpers.js";
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import NestedNavItems from "./NestedNavItems";
 import SchoolSubMenu from "./schoolSubMenu";
 import { getUserFullName } from "/imports/util/getUserData";
@@ -27,7 +30,7 @@ const styles = theme => {
     },
     drawerHeader: {
       display: "flex",
-      alignItems: "center",
+      justifyContent: "space-between",
       padding: "0 8px"
     },
     nested: {
@@ -39,9 +42,14 @@ const styles = theme => {
   };
 };
 
+const IconWrapper = styled.div`
+  ${flexCenter}
+`;
+
 const DrawerHeader = props => (
   <div className={props.drawerHeader}>
     <IconButton onClick={props.handleDrawer}>close</IconButton>
+    {props.currentUser && <SecondaryButton icon iconName="exit_to_app" labelText="logout" />}
   </div>
 );
 
@@ -56,17 +64,17 @@ const SideNavItem = props => {
       {props.children ? (
         props.children
       ) : (
-        <Fragment>
-          <ListItemIcon>
-            <Icon>{props.iconName}</Icon>
-          </ListItemIcon>
-          <ListItemText
-            classes={{ text: props.menuListItemText }}
-            primary={props.name}
-            itemProp={props.itemProp}
-          />
-        </Fragment>
-      )}
+          <Fragment>
+            <ListItemIcon>
+              <Icon>{props.iconName}</Icon>
+            </ListItemIcon>
+            <ListItemText
+              classes={{ text: props.menuListItemText }}
+              primary={props.name}
+              itemProp={props.itemProp}
+            />
+          </Fragment>
+        )}
     </ListItem>
   );
 };
@@ -194,12 +202,12 @@ const LoginUserSideNav = props => {
         onClick={props.childItemOnClick}
       />
       <SideNavItem
-      button
-      menuListItemText={props.classes.menuListItemText}
-      name="SkillShape for Schools"
-      iconName="school"
-      onClick={() => props.childItemOnClick("/skillshape-for-school")}
-    />
+        button
+        menuListItemText={props.classes.menuListItemText}
+        name="SkillShape for Schools"
+        iconName="school"
+        onClick={() => props.childItemOnClick("/skillshape-for-school")}
+      />
       <SideNavItem
         button
         menuListItemText={props.classes.menuListItemText}
@@ -326,7 +334,7 @@ class SideNavItems extends React.Component {
 
   loadMySchool = () => {
     if (Meteor.userId()) {
-      Meteor.call("school.getMySchool",null,false, (error, result) => {
+      Meteor.call("school.getMySchool", null, false, (error, result) => {
         if (error) {
           // console.log("error", error);
         }
@@ -366,6 +374,7 @@ class SideNavItems extends React.Component {
       >
         <List className={this.props.classes.drawerList}>
           <DrawerHeader
+            currentUser={this.props.currentUser}
             handleDrawer={this.props.handleDrawer}
             drawerHeader={this.props.classes.drawerHeader}
           />
@@ -378,11 +387,11 @@ class SideNavItems extends React.Component {
               {...this.props}
             />
           ) : (
-            <LogOutUserSideNav
-              {...this.props}
-              childItemOnClick={this.handleChildItemOnClick}
-            />
-          )}
+              <LogOutUserSideNav
+                {...this.props}
+                childItemOnClick={this.handleChildItemOnClick}
+              />
+            )}
           <SideNavItem>
             <LoginButton
               fullWidth={true}
