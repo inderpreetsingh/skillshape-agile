@@ -156,11 +156,9 @@ class ClassTypeExpansion extends Component {
   // }
 
   componentDidMount() {
-    console.info("MOUNTED __________ PARENT")
   }
 
   componentDidUpdate() {
-    console.info("RE RENDERED ________________ PARENT");
   }
 
   render() {

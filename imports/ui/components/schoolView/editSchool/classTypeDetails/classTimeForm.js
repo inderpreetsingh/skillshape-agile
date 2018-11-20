@@ -40,11 +40,17 @@ import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetai
 import {mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
 import  InstructorList from '/imports/ui/components/landing/components/classDetails/membersList/presentational/MembersList.jsx';
 import { withPopUp } from '/imports/util';
-import {get,isEmpty,remove} from 'lodash';
+import {get,isEmpty,remove,flatten,includes} from 'lodash';
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { createContainer } from 'meteor/react-meteor-data';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
+`;
+const Instructors = styled.div`
+    margin-top: 16px;
+    font-size: 17px;
+    padding: 10px;
+    background-color: aliceblue;
 `;
 const styles = theme => {
   return {
@@ -328,8 +334,10 @@ class ClassTimeForm extends React.Component {
   }
   instructorsIdsSetter = (instructorId,action)=>{
     let instructors = this.state.instructors;
-    if(action=='add')
-    instructors.push(instructorId);
+    if(action=='add'){
+      instructors.push(instructorId);
+      instructors = flatten(instructors);
+    }
     else if(action=='remove'){
       instructors = remove(instructors,(n)=>{
         return n != instructorId;
@@ -539,6 +547,7 @@ class ClassTimeForm extends React.Component {
                     />
                   </div>
                 )}
+              
                 <InstructorList
                  viewType={"instructorsView"}
                  searchedValue={this.state.teachersFilterWith}
@@ -551,6 +560,9 @@ class ClassTimeForm extends React.Component {
                  classTimeForm
                  instructorsIdsSetter = {this.instructorsIdsSetter}
                 />
+                  <Instructors>
+                Instructors changes will show here after saving this class time.
+                </Instructors>
               </form>
             </DialogContent>
           )}
@@ -588,7 +600,7 @@ class ClassTimeForm extends React.Component {
                 onClick={this.saveClassTimes.bind(this, event, {
                   addSeperateTime: false
                 })}
-            label={!_.isEmpty(data) ? "Save" : "Submit"}
+            label={"Save"}
             className={classes.save}
           />
               {/*this.saveClassTimes.bind(this, event, {
@@ -630,11 +642,15 @@ class ClassTimeForm extends React.Component {
 export default createContainer((props) => {
   const {data} = props;
   let instructorsData = [],userSubscription;
-  if(!isEmpty(data.instructors)){
+  if(!isEmpty(data ? data.instructors : [])){
     userSubscription = Meteor.subscribe('user.getUsersFromIds',data.instructors);
     if(userSubscription && userSubscription.ready()){
       instructorsData = Meteor.users.find().fetch();
-      console.log("​initializeFields -> state.instructorsData", instructorsData)
+      if(!includes(data.instructors,Meteor.userId())){
+        instructorsData = remove(instructorsData,(ele)=>{
+          return ele._id != Meteor.userId()
+        })
+      }
     }}
   return {
     props,

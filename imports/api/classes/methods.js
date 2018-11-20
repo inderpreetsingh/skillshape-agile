@@ -1,19 +1,13 @@
 import Classes from './fields';
-import {get,isEmpty,uniq,includes} from 'lodash';
+import {get,isEmpty,uniq,includes,flatten} from 'lodash';
 
 Meteor.methods({
     "classes.handleInstructors":function(payLoad){
         if(payLoad.action=='add'){
-            let record;
-            record = Meteor.users.findOne({'emails.address':payLoad.email});
-            if(payLoad.classTimeForm && !isEmpty(record)){
-                return record._id;
-            }
-            else if(isEmpty(record)){
-                return 'emailNotFound';
+            if(payLoad.classTimeForm ){
+                return "record._id;"
             }
             else{
-                payLoad.instructors.push(record._id);
                 payLoad.instructors = uniq(payLoad.instructors);
                 Classes.update({_id:payLoad._id},{$set:payLoad});
                 return 'added';

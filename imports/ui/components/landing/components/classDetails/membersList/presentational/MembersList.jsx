@@ -5,6 +5,7 @@ import MemberExpanded from "./MemberExpanded.jsx";
 import SearchList from "./SearchList.jsx";
 import { mobile, rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { Capitalize, SlantedHeading } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+import {get,isEmpty} from 'lodash';
 
 
 
@@ -33,7 +34,7 @@ const MembersGrid = styled.div`
 `;
 
 const MemberWrapper = styled.div`
-  padding: ${rhythmDiv}px;
+  padding: 4px;
   ${props =>
     props.expanded
       ? `max-width: 500px;
@@ -43,6 +44,7 @@ const MemberWrapper = styled.div`
 
 const Title = SlantedHeading.extend`
   display: flex;
+  margin-left:33%;
   margin-bottom: ${rhythmDiv}px;
 
   @media screen and (min-width: ${mobile - 50}px) {
@@ -57,15 +59,15 @@ const MembersList = props => {
     <Wrapper>
       <ListHeading>
         <Title>
-          <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
+           <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
         </Title>
-        <SearchList
+        {/* <SearchList
           onChange={props.onSearchChange}
           searchedValue={props.searchedValue}
-        />
+        /> */}
       </ListHeading>
       <MembersGrid expanded={expanded}>
-        {props.data &&
+        {props.data && !isEmpty(props.data) &&
           props.data.map(obj => (
             <MemberWrapper expanded={expanded} type={obj.type}>
               {expanded ? (

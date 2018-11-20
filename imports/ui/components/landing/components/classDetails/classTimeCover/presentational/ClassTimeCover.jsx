@@ -34,7 +34,7 @@ const Wrapper = styled.div`
 `;
 
 const ClassTypeProfile = styled.div`
-  border-radius: 50%;
+  border-radius: 10%;
   width: 100px;
   height: 100px;
   position: absolute;

@@ -15,10 +15,6 @@ import FormGhostButton from '/imports/ui/components/landing/components/buttons/F
 
 const menuOptions = [
   {
-    name: "Evaluate",
-    value: "evalute"
-  },
-  {
     name: "Remove Teacher",
     value: "remove_teacher"
   }
@@ -108,18 +104,17 @@ const onMenuItemClick = value => {
 const Member = props => {
   const profile = props.profile;
   const profileSrc = props.addInstructor ? addInstructorImgSrc :get(profile,'medium',get(profile,'pic',config.defaultProfilePicOptimized))
-
-  const name = props.addInstructor ? 'Add Instructor' : `${get(profile,'firstName',"")} ${get(profile,'lastName',"")}`
+  const name = props.addInstructor ? 'Add Instructor' : `${get(profile,'firstName',get(profile,'name','Old Data'))} ${get(profile,'lastName',"")}`
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.
 
   if (props.type === "student" && props.viewType === "instructorsView") {
     return <MemberExpanded {...props} />;
   }
-  removePopUp = (popUp)=>{
+  removePopUp = (popUp,classTime)=>{
     popUp.appear("success", {
       title: "Removed Successfully",
-      content: `Successfully removed from instructor listing.`,
+      content: <div>Successfully removed from instructor listing.<br/> {classTime ? 'Changes will show in the Class Times Editor after saving.':''}</div>,
       RenderActions: ( 
         <FormGhostButton label={'Ok'} onClick={()=>{}}  applyClose />
       )
@@ -129,7 +124,7 @@ const Member = props => {
     let {popUp} = props;
     if(props.classTimeForm){
       props.instructorsIdsSetter(get(props,'_id',0),'remove');
-      this.removePopUp(popUp);
+      this.removePopUp(popUp,true);
       return;
     }
     let payLoad = {
@@ -170,7 +165,7 @@ const Member = props => {
         />
         <DetailsWrapper type={props.type}>
           <Details>
-            <SubHeading fontSize="20">{cutString(name,13)}</SubHeading>
+            <SubHeading fontSize="20">{cutString(name,20)}</SubHeading>
             {props.type !== "student" &&
               !props.addInstructor && (
                 <Text>
