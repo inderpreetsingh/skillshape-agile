@@ -61,8 +61,8 @@ class FullCalendar extends React.Component {
         let sevents = this.buildCalander() || [];
         callback(sevents);
       },
-      dayRender: function(date, cell) {},
-      eventRender: function(event, element, view) {
+      dayRender: function (date, cell) { },
+      eventRender: function (event, element, view) {
         let renderEvent = true;
         event.deletedEvents &&
           event.deletedEvents.map(current => {
@@ -81,9 +81,9 @@ class FullCalendar extends React.Component {
           case "recurring": {
             if (
               moment(event.start).format("YYYY-MM-DD") >=
-                moment(event.startDate).format("YYYY-MM-DD") &&
+              moment(event.startDate).format("YYYY-MM-DD") &&
               moment(event.start).format("YYYY-MM-DD") <=
-                moment(event.endDate).format("YYYY-MM-DD")
+              moment(event.endDate).format("YYYY-MM-DD")
             )
               return renderEventBox(event);
             return false;
@@ -98,10 +98,10 @@ class FullCalendar extends React.Component {
           }
         }
       },
-      eventClick: event => {
+      eventClick: (event, jsEvent) => {
         let clickedDate = moment(event.start).format("YYYY-MM-DD");
         if (event.classTimeId && event.classTypeId) {
-          this.props.showEventModal(true, event, clickedDate);
+          this.props.showEventModal(true, event, clickedDate, jsEvent);
         }
       }
     };
@@ -133,7 +133,7 @@ class FullCalendar extends React.Component {
         scheduleDetailsObj.duration,
         (scheduleDetailsObj.timeUnits &&
           scheduleDetailsObj.timeUnits.toLowerCase()) ||
-          "minutes"
+        "minutes"
       )
       .format("hh:mm");
     temp.title = scheduleDetailsObj.title;
@@ -146,7 +146,7 @@ class FullCalendar extends React.Component {
     temp.roomId = scheduleDetailsObj.roomId;
     temp.durationAndTimeunits = `${scheduleDetailsObj.duration} ${
       scheduleDetailsObj.timeUnits ? scheduleDetailsObj.timeUnits : "Minutes"
-    }`;
+      }`;
 
     // sevent.age = classTypeData && classTypeData.ageMin;
     // sevent.gender = classTypeData && classTypeData.gender;
@@ -189,8 +189,8 @@ class FullCalendar extends React.Component {
         if (current1.classTimeId == current2._id) {
           current2 && current2.deletedEvents
             ? (current2.deletedEvents = uniq(
-                current2.deletedEvents.concat(current1.deletedEvents)
-              ))
+              current2.deletedEvents.concat(current1.deletedEvents)
+            ))
             : (current2.deletedEvents = current1.deletedEvents);
         }
       });
@@ -245,7 +245,7 @@ class FullCalendar extends React.Component {
             sevent.title = classTime.classTypeName.name + ": " + classTime.name;
             sevent.durationAndTimeunits = `${obj.duration} ${
               obj.timeUnits ? obj.timeUnits : "Minutes"
-            }`;
+              }`;
             // +
             // " " +
             // sevent.eventStartTime +
@@ -319,7 +319,7 @@ class FullCalendar extends React.Component {
           }
         }
         // console.warn("<<< dayData sevents>>>>", sevents);
-      } catch (err) {}
+      } catch (err) { }
     }
 
     return sevents;
@@ -410,10 +410,10 @@ const renderEventBox = event => {
             ">
             <div>
               <strong class="primary label hour fc-event ${event.className &&
-                event
-                  .className[0]}" style="box-shadow: none;display:  block;border-radius:  5px 5px 0 0;color: #fff;text-align: left;padding: 5px;"> ${moment(
-    event.start
-  ).format("hh:mm a")} </strong>
+    event
+      .className[0]}" style="box-shadow: none;display:  block;border-radius:  5px 5px 0 0;color: #fff;text-align: left;padding: 5px;"> ${moment(
+        event.start
+      ).format("hh:mm a")} </strong>
             </div>
             <div class="padded" style="
               padding: 5px;
@@ -427,7 +427,7 @@ const renderEventBox = event => {
                   <small>${event.title}</small></br>
                   <small style="color: blueviolet;font-size: 12px;font-weight: normal">
                   ${event.durationAndTimeunits &&
-                    event.durationAndTimeunits}</small>
+    event.durationAndTimeunits}</small>
                 </div>
               </div>
             </div>`);

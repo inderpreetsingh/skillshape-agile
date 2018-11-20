@@ -187,9 +187,9 @@ const MySubscriptionRender = (props) => {
 						const activeSubsData = subscriptionsData.filter(subs => subs.packageStatus != EXPIRED);
 						const expiredSubsData = subscriptionsData.filter(subs => subs.packageStatus == EXPIRED || subs.status == EXPIRED);
 
-						console.group(' MY SUBSCRIPTION');
-						console.log(activeSubsData, expiredSubsData, '===============');
-						console.group();
+						// console.group(' MY SUBSCRIPTION');
+						// console.log(activeSubsData, expiredSubsData, '===============');
+						// console.group();
 
 						return (
 							<ExpansionPanel
