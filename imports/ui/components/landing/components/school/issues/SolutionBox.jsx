@@ -92,7 +92,8 @@ const SolutionContentWrapper = styled.div`
 const SolutionContent = styled.div`		
   height: 100%;
   background-image: url('${(props) => props.solutionContent}');
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   background-position: 50% 50%;
 `;
 
