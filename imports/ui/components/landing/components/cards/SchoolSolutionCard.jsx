@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+
 const CardWrapper = styled.article`
   width: 100%;
   height: 100%;
@@ -16,7 +17,7 @@ const CardWrapper = styled.article`
   position: relative;
   z-index: 2;	
 
-  @media screen and (max-width: ${helpers.tablet}px ) {
+  @media screen and (max-width: ${helpers.tablet + 50}px ) {
 	height: auto;	
   }
 `;
@@ -45,7 +46,7 @@ const CardTitle = styled.h3`
 		text-transform: capitalize;
 	}
 
-	@media screen and (max-width: ${helpers.tablet + 100}px) {
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		font-size: ${helpers.baseFontSize * 1.5}px;
 	}
 `;
@@ -53,7 +54,7 @@ const CardTitle = styled.h3`
 const SolutionContent = styled.div`
 	display: none;
 
-	@media screen and (max-width: ${helpers.tablet}px) {
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		display: block;	
 		max-width: 500px;
 		width: 100%;

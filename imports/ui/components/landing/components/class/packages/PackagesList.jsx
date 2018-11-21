@@ -52,7 +52,9 @@ const PackagesListWrapper = styled.section`
 const EnrollMentListWrapper = PackagesListWrapper.extend`
 	width: 100%;
 	align-items: center;
-	${(props) => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'} &:after {
+	${(props) => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'} 
+	
+	&::after {
 		background-color: #dddd;
 		${(props) => (props.forIframes ? 'background-color: transparent' : '')};
 		opacity: 1;
@@ -71,7 +73,7 @@ const PackagesWrapper = styled.div`
   ${(props) => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'}
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
-  max-width: ${PACKAGE_WIDTH}px
+  	max-width: ${PACKAGE_WIDTH}px;
     padding: ${helpers.rhythmDiv}px;
     align-items: space-around;
   }
@@ -110,164 +112,164 @@ const Title = styled.h2`
 `;
 
 const PackageList = (props) => (
-	<PackagesListWrapper
-		forIframes={props.forIframes}
-		fullScreen={props.fullScreen}
-		classPackages={props.classPackages}
-	>
-		<PackagesWrapper
-			classPackages={props.classPackages}
-			onPriceEdit={props.onPriceEdit}>
-			<Title>{props.packageListName}</Title>
-			<PackagesInnerWrapper>
-				{props.packagesData.map((packageData) => (
-					<PackageWrapper key={packageData._id}>
-						<Package
-							{...packageData}
-							{...props.packageProps}
-							classPackages={props.classPackages}
-							schoolCurrency={props.schoolCurrency}
-							onSchoolEdit={props.onSchoolEdit}
-							onEditClick={() => {
-								props.onEditClick();
-							}}
-							setFormData={() => {
-								props.setFormData(packageData);
-							}}
-						/>
-					</PackageWrapper>
-				))}
-			</PackagesInnerWrapper>
-		</PackagesWrapper>
-	</PackagesListWrapper>
+    <PackagesListWrapper
+        forIframes={props.forIframes}
+        fullScreen={props.fullScreen}
+        classPackages={props.classPackages}
+    >
+        <PackagesWrapper
+            classPackages={props.classPackages}
+            onPriceEdit={props.onPriceEdit}>
+            <Title>{props.packageListName}</Title>
+            <PackagesInnerWrapper>
+                {props.packagesData.map((packageData) => (
+                    <PackageWrapper key={packageData._id}>
+                        <Package
+                            {...packageData}
+                            {...props.packageProps}
+                            classPackages={props.classPackages}
+                            schoolCurrency={props.schoolCurrency}
+                            onSchoolEdit={props.onSchoolEdit}
+                            onEditClick={() => {
+                                props.onEditClick();
+                            }}
+                            setFormData={() => {
+                                props.setFormData(packageData);
+                            }}
+                        />
+                    </PackageWrapper>
+                ))}
+            </PackagesInnerWrapper>
+        </PackagesWrapper>
+    </PackagesListWrapper>
 );
 
 const EnrollmentPackagesList = (props) => (
-	<EnrollMentListWrapper forIframes={props.forIframes}>
-		<PackagesWrapper onPriceEdit={props.onPriceEdit}>
-			<Title>{props.packageListName}</Title>
-			{props.packagesData.map((packageData) => (
-				<PackageWrapper key={packageData._id}>
-					<Package
-						{...packageData}
-						{...props.packageProps}
-						classPackages={props.classPackages}
-						schoolCurrency={props.schoolCurrency}
-						onSchoolEdit={props.onSchoolEdit}
-						onEditClick={() => {
-							props.onEditClick();
-						}}
-						setFormData={() => {
-							props.setFormData(packageData);
-						}}
-					/>
-				</PackageWrapper>
-			))}
-		</PackagesWrapper>
-	</EnrollMentListWrapper>
+    <EnrollMentListWrapper forIframes={props.forIframes}>
+        <PackagesWrapper onPriceEdit={props.onPriceEdit}>
+            <Title>{props.packageListName}</Title>
+            {props.packagesData.map((packageData) => (
+                <PackageWrapper key={packageData._id}>
+                    <Package
+                        {...packageData}
+                        {...props.packageProps}
+                        classPackages={props.classPackages}
+                        schoolCurrency={props.schoolCurrency}
+                        onSchoolEdit={props.onSchoolEdit}
+                        onEditClick={() => {
+                            props.onEditClick();
+                        }}
+                        setFormData={() => {
+                            props.setFormData(packageData);
+                        }}
+                    />
+                </PackageWrapper>
+            ))}
+        </PackagesWrapper>
+    </EnrollMentListWrapper>
 );
 
 const PackagesList = (props) => {
-	const classPackagesEmpty = isEmpty(props.perClassPackagesData);
-	const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
-	const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
-	const schoolCurrency = props.currency;
-	return (
-		<Fragment>
-			{props.enrollMentPackages &&
-				!enrollMentPackagesEmpty && (
-					<Wrapper>
-						<EnrollmentPackagesList
-							forIframes={props.forIframes}
-							packageProps={{
-								bgColor: '#dddd',
-								forIframes: props.forIframes,
-								packageType: 'EP',
-								onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-								schoolId: props.schoolId
-							}}
-							packageListName="Enrollment Packages"
-							packagesData={props.enrollMentPackagesData}
-							schoolCurrency={schoolCurrency}
-							onSchoolEdit={props.onSchoolEdit}
-							onEditClick={() => {
-								props.onEditClick();
-							}}
-							setFormData={(packageData) => {
-								props.setFormData(packageData);
-							}}
-							onPriceEdit={props.onPriceEdit}
-						/>
-					</Wrapper>
-				)}
-			<Wrapper>
-				{!classPackagesEmpty && (
-					<PackageList
-						forIframes={props.forIframes}
-						packageProps={{
-							bgColor: '#dddd',
-							forIframes: props.forIframes,
-							packageType: 'CP',
-							onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-							schoolId: props.schoolId
-						}}
-						onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
-						classPackages
-						fullScreen={monthlyPackagesEmpty}
-						packageListName="Class Packages"
-						packagesData={props.perClassPackagesData}
-						schoolCurrency={schoolCurrency}
-						onSchoolEdit={props.onSchoolEdit}
-						onEditClick={() => {
-							props.onEditClick();
-						}}
-						setFormData={(packageData) => {
-							props.setFormData(packageData);
-						}}
-						onPriceEdit={props.onPriceEdit}
-					/>
-				)}
+    const classPackagesEmpty = isEmpty(props.perClassPackagesData);
+    const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
+    const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
+    const schoolCurrency = props.currency;
+    return (
+        <Fragment>
+            {props.enrollMentPackages &&
+                !enrollMentPackagesEmpty && (
+                    <Wrapper>
+                        <EnrollmentPackagesList
+                            forIframes={props.forIframes}
+                            packageProps={{
+                                bgColor: '#dddd',
+                                forIframes: props.forIframes,
+                                packageType: 'EP',
+                                onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+                                schoolId: props.schoolId
+                            }}
+                            packageListName="Enrollment Packages"
+                            packagesData={props.enrollMentPackagesData}
+                            schoolCurrency={schoolCurrency}
+                            onSchoolEdit={props.onSchoolEdit}
+                            onEditClick={() => {
+                                props.onEditClick();
+                            }}
+                            setFormData={(packageData) => {
+                                props.setFormData(packageData);
+                            }}
+                            onPriceEdit={props.onPriceEdit}
+                        />
+                    </Wrapper>
+                )}
+            <Wrapper>
+                {!classPackagesEmpty && (
+                    <PackageList
+                        forIframes={props.forIframes}
+                        packageProps={{
+                            bgColor: '#dddd',
+                            forIframes: props.forIframes,
+                            packageType: 'CP',
+                            onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+                            schoolId: props.schoolId
+                        }}
+                        onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
+                        classPackages
+                        fullScreen={monthlyPackagesEmpty}
+                        packageListName="Class Packages"
+                        packagesData={props.perClassPackagesData}
+                        schoolCurrency={schoolCurrency}
+                        onSchoolEdit={props.onSchoolEdit}
+                        onEditClick={() => {
+                            props.onEditClick();
+                        }}
+                        setFormData={(packageData) => {
+                            props.setFormData(packageData);
+                        }}
+                        onPriceEdit={props.onPriceEdit}
+                    />
+                )}
 
-				{!monthlyPackagesEmpty && (
-					<PackageList
-						forIframes={props.forIframes}
-						packageProps={{
-							bgColor: '#dddd',
-							forIframes: props.forIframes,
-							packageType: 'MP',
-							onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-							schoolId: props.schoolId
-						}}
-						packageListName="Monthly Packages"
-						fullScreen={classPackagesEmpty}
-						packagesData={props.monthlyPackagesData}
-						schoolCurrency={schoolCurrency}
-						onSchoolEdit={props.onSchoolEdit}
-						onEditClick={() => {
-							props.onEditClick();
-						}}
-						setFormData={(packageData) => {
-							props.setFormData(packageData);
-						}}
-						onPriceEdit={props.onPriceEdit}
-					/>
-				)}
-			</Wrapper>
-		</Fragment>
-	);
+                {!monthlyPackagesEmpty && (
+                    <PackageList
+                        forIframes={props.forIframes}
+                        packageProps={{
+                            bgColor: '#dddd',
+                            forIframes: props.forIframes,
+                            packageType: 'MP',
+                            onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+                            schoolId: props.schoolId
+                        }}
+                        packageListName="Monthly Packages"
+                        fullScreen={classPackagesEmpty}
+                        packagesData={props.monthlyPackagesData}
+                        schoolCurrency={schoolCurrency}
+                        onSchoolEdit={props.onSchoolEdit}
+                        onEditClick={() => {
+                            props.onEditClick();
+                        }}
+                        setFormData={(packageData) => {
+                            props.setFormData(packageData);
+                        }}
+                        onPriceEdit={props.onPriceEdit}
+                    />
+                )}
+            </Wrapper>
+        </Fragment>
+    );
 };
 
 PackagesList.propTypes = {
-	perClassPackagesData: PropTypes.arrayOf(PackageStructure),
-	monthlyPackagesData: PropTypes.arrayOf(PackageStructure),
-	enrollMentPackages: PropTypes.bool,
-	forIframes: PropTypes.bool,
-	schoolId: PropTypes.string
+    perClassPackagesData: PropTypes.arrayOf(PackageStructure),
+    monthlyPackagesData: PropTypes.arrayOf(PackageStructure),
+    enrollMentPackages: PropTypes.bool,
+    forIframes: PropTypes.bool,
+    schoolId: PropTypes.string
 };
 
 PackagesList.defaultProps = {
-	enrollMentPackages: false,
-	forIframes: false
+    enrollMentPackages: false,
+    forIframes: false
 };
 
 export default PackagesList;

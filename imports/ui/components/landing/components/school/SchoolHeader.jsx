@@ -63,7 +63,7 @@ const Wrapper = styled.div`
 
 	@media screen and (max-width: ${helpers.tablet}px) {
 		background-position: calc(100% + 125px) calc(100% - 14px);
-		min-height: 100vh;
+		min-height: auto;
 		height: auto;
 	}
 
@@ -91,6 +91,7 @@ const HeaderOverlay = styled.div`
 
 const HeaderContent = styled.div`
 	width: 500px;
+	min-height: 500px;
 	padding: ${helpers.rhythmDiv * 2}px;
 `;
 
@@ -104,11 +105,11 @@ const Title = styled.h2`
 	margin-bottom: ${helpers.rhythmDiv}px;
 
 	@media screen and (max-width: ${helpers.tablet}px) {
-		font-size: ${helpers.baseFontSize * 3}px;
+		font-size: ${helpers.baseFontSize * 2.5}px;
 	}
 `;
 
-const Content = styled.p`
+const Content = styled.h3`
 	margin: 0;
 	line-height: 1;
 	font-family: ${helpers.specialFont};
@@ -117,6 +118,9 @@ const Content = styled.p`
 	color: ${helpers.black};
 	font-weight: 400;
 	margin-bottom: ${helpers.rhythmDiv * 2}px;
+	@media screen and (max-width: ${helpers.tablet}px) {
+		font-size: ${helpers.baseFontSize * 1.5}px;
+	}
 `;
 
 const HeaderContentWrapper = styled.div`
