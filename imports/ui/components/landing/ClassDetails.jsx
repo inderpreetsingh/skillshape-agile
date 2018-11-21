@@ -44,8 +44,8 @@ export default createContainer((props) => {
   let schoolId,classTypeId,classTimeId,scheduled_date,classesSubscription,classData,instructorsIds,
   instructorsData = [],userSubscription,classTimeSubscription,ClassTimeData;
   schoolId = state.school._id;
-  classTimeId = dataProps.eventData.classTimeId;
-  classTypeId = dataProps.eventData.classTypeId;
+  classTimeId = state.eventData.classTimeId;
+  classTypeId = state.eventData.classTypeId;
   scheduled_date = state.classTimes.startDate;
   filter = {schoolId,classTypeId,classTimeId,scheduled_date};
   classesSubscription = Meteor.subscribe('classes.getClassesData',filter);

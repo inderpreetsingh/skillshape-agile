@@ -207,7 +207,7 @@ purchaseOldContract = (
 ) => (
     <ButtonWrapper>
         <FormGhostButton
-            label={'Continue Old Contract'}
+            label={'Make Payment on Existing Plan'}
             onClick={() => {
                 handleChargeAndSubscription(
                     packageType,
