@@ -214,7 +214,7 @@ const PackagesList = (props) => {
 						onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
 						classPackages
 						fullScreen={monthlyPackagesEmpty}
-						packageListName="Class Packages"
+						packageListName="Per Class Packages"
 						packagesData={props.perClassPackagesData}
 						schoolCurrency={schoolCurrency}
 						onSchoolEdit={props.onSchoolEdit}
