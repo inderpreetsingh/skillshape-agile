@@ -145,7 +145,7 @@ const ClaimSchoolRender = function (props) {
 
 			<ListingButton
 				onClick={props.onStartNewListingButtonClick}
-				label={'New listing'}
+				label={'New Listing'}
 				iconName={'add_circle_outline'}
 			/>
 		</NonListingWrapper>
