@@ -687,14 +687,14 @@ class ClassDetailModal extends React.Component {
                         />
                       </Grid>
                       <Grid item xs={6} style={{ margin: "auto" }}>
-                      <Link to={{ pathname: route, state: { props: this.props,state:this.state} }}>
+                      {/* <Link to={{ pathname: route, state: { props: this.props,state:this.state} }}>
                         <ClassTimeButton
                           fullWidth
                           noMarginBottom
                           label="Class Detail"
                           onClick={()=>{}}
                         />
-                        </Link>
+                        </Link> */}
                       </Grid>
                   </Grid>
                 )}

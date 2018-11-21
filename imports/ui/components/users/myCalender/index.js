@@ -1,6 +1,5 @@
 import React from "react";
 import { withStyles } from 'material-ui/styles';
-import { browserHistory } from 'react-router';
 import List, { ListItem, ListItemText, ListItemIcon } from 'material-ui/List';
 import ClassIcon from 'material-ui-icons/Class';
 import AvTimerIcon from 'material-ui-icons/AvTimer';
@@ -8,12 +7,13 @@ import CancelIcon from 'material-ui-icons/Cancel';
 import CloseIcon from 'material-ui-icons/Close';
 import UpdateClassTimeIcon from 'material-ui-icons/Update';
 import EmailIcon from 'material-ui-icons/Email';
-
+import { browserHistory,Link } from "react-router";
 import FullCalendarContainer from "/imports/ui/componentHelpers/fullCalendar";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
 import SkillshapePopover from "/imports/ui/components/landing/components/popovers/SkillshapePopover";
 import DropDownMenu from '/imports/ui/components/landing/components/form/DropDownMenu.jsx';
-
+import {get} from 'lodash';
+import classDetailModal from "../../../modal/classDetailModal";
 const SCHOOL_VIEW = 'SchoolView';
 
 const styles = {
@@ -33,12 +33,14 @@ export default class MyCalender extends React.Component {
     super(props);
     this.state = {
       isAdmin: this._checkIfAdmin(),
+      school:this.props.schoolData
     };
   }
 
   _checkIfAdmin = () => {
-    const { schoolData: { admins }, currentUser } = this.props;
-    const currentUserId = currentUser._id;
+    const { schoolData: { admins }, currentUser,classTimesData,eventData } = this.props;
+  
+    const currentUserId = get(currentUser,"_id",0);
     if (admins.indexOf(currentUserId) !== -1) {
       return true;
     }
@@ -53,9 +55,24 @@ export default class MyCalender extends React.Component {
   setDate = (startDate, endDate) => this.setState({ startDate, endDate });
 
   handleEventModal = (isOpen, eventData, clickedDate, jsEvent) => {
-    const { routeName } = this.props
+    this.setState({classDetailModal:false});
+    const { routeName,classTimesData,classType } = this.props
     const { originalEvent } = jsEvent;
-    console.log(originalEvent, jsEvent.original, "____________");
+    classTimesData && classTimesData.map((obj)=>{
+      if(obj._id==eventData.classTimeId){
+        this.setState({classTimes:obj})
+      }
+    })
+    classType && classType.map((obj)=>{
+      if(obj._id==eventData.classTypeId){
+        this.setState({classType:obj})
+      }
+    })
+    Meteor.call("location.getLocsFromIds",[eventData.locationId],(err,res)=>{
+      if(res){
+        this.setState({location:res[0]})
+      }
+    })
     if (routeName === SCHOOL_VIEW) {
       this.setState(state => {
         return {
@@ -91,14 +108,22 @@ export default class MyCalender extends React.Component {
     })
   }
 
-  getStudentList = () => (
+  getStudentList = (route) => (
     <List>
-      <ListItem button onClick={this._navigateTo('/classdetails-student')}>
+       <ListItem button onClick={()=>{this.setState({classDetailModal:true})}}>
+        <PopoverListItemIcon>
+          <UpdateClassTimeIcon />
+        </PopoverListItemIcon>
+        <ListItemText primary="View Class Time" />
+      </ListItem>
+      <Link to={{ pathname: route, state: { props: this.props,state:this.state} }}>
+        <ListItem button >
         <PopoverListItemIcon>
           <ClassIcon />
         </PopoverListItemIcon>
-        <ListItemText primary="Class details" />
+        <ListItemText primary="View Class Details" />
       </ListItem>
+      </Link>
       <ListItem button>
         <PopoverListItemIcon>
           <AvTimerIcon />
@@ -108,23 +133,31 @@ export default class MyCalender extends React.Component {
       {!Meteor.userId() && <ListItem button>
         <ListItemText primary="Sign in" />
       </ListItem>}
+      <ListItem button onClick={()=>{this.setState({isOpen:false})}}>
+        <PopoverListItemIcon>
+        <CloseIcon />
+        </PopoverListItemIcon>
+        <ListItemText primary="Close" />
+      </ListItem>
     </List>
   )
 
-  getAdminList = () => (
+  getAdminList = (route) => (
     <List>
-      <ListItem button>
+       <ListItem button onClick={()=>{this.setState({classDetailModal:true})}}>
         <PopoverListItemIcon>
-          <CancelIcon />
+          <UpdateClassTimeIcon />
         </PopoverListItemIcon>
-        <ListItemText primary="Cancel class" />
+        <ListItemText primary="View Class Time" />
       </ListItem>
-      <ListItem button>
+      <Link to={{ pathname: route, state: { props: this.props,state:this.state} }}>
+        <ListItem button >
         <PopoverListItemIcon>
-          <CloseIcon />
+          <ClassIcon />
         </PopoverListItemIcon>
-        <ListItemText primary="Close for the day" />
+        <ListItemText primary="View Class Details" />
       </ListItem>
+      </Link>
       <ListItem button>
         <PopoverListItemIcon>
           <UpdateClassTimeIcon />
@@ -137,6 +170,12 @@ export default class MyCalender extends React.Component {
         </PopoverListItemIcon>
         <ListItemText primary="Email Attendencies" />
       </ListItem>
+      <ListItem button onClick={()=>{this.setState({isOpen:false})}}>
+        <PopoverListItemIcon>
+        <CloseIcon />
+        </PopoverListItemIcon>
+        <ListItemText primary="Close" />
+      </ListItem>
     </List>
   )
 
@@ -147,10 +186,11 @@ export default class MyCalender extends React.Component {
       anchorEl,
       positionLeft,
       positionTop,
-      isAdmin
+      isAdmin,
+      classDetailModal
     } = this.state;
     const { routeName } = this.props;
-    console.log("MY CALENDAR STATE", anchorEl, "------")
+    let route = this.state.isAdmin ? '/classdetails-instructor' : '/classdetails-student';
     return (
       <div>
         <FullCalendarContainer
@@ -161,10 +201,10 @@ export default class MyCalender extends React.Component {
           {...this.props}
           manageMyCalendar={true}
         />
-        {isOpen && routeName !== SCHOOL_VIEW && (
+        {classDetailModal  && (
           <ClassDetailModal
             eventData={eventData}
-            showModal={isOpen}
+            showModal={classDetailModal}
             closeEventModal={this.handleEventModal}
             classInterestData={this.props.classInterestData}
             onJoinClassButtonClick={this.props.onJoinClassButtonClick}
@@ -183,7 +223,7 @@ export default class MyCalender extends React.Component {
             isOpen={isOpen}
             onClose={this.handlePopoverClose}
           >
-            {isAdmin ? this.getAdminList() : this.getStudentList()}
+            {isAdmin ? this.getAdminList(route) : this.getStudentList(route)}
           </SkillshapePopover>
         )}
       </div>
