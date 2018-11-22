@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
 
 import Events from '/imports/util/events';
+
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import SchoolSolutionCard from '/imports/ui/components/landing/components/cards/SchoolSolutionCard.jsx';
 import SchoolSolutionSlider from '/imports/ui/components/landing/components/school/issues/SchoolCardsSlider.jsx';
@@ -26,7 +27,7 @@ const BoxWrapper = styled.div`
 		max-width: 500px;
 	}
 
-	@media screen and (max-width: ${helpers.tablet}px) {
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		justify-content: center;
 	}
 `;
@@ -37,21 +38,21 @@ const BoxInnerWrapper = styled.div`
   justify-content: space-around;
   width: 100%;
 
-  @media screen and (max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet + 50}px) {
     flex-direction: column-reverse;
     // padding: 0 ${helpers.rhythmDiv * 2}px;
     padding: 0;
   }
 `;
 
-const CardsListInner = styled.div`
+const SolutionListInner = styled.div`
 	${helpers.flexCenter} flex-direction: column;
 	min-width: 0;
 	justify-content: flex-start;
 `;
 
-const CardsList = styled.div`
-	max-width: 400px;
+const SolutionList = styled.div`
+	max-width: 450px;
 	width: 100%;
 	height: 380px; // computed based on the cards and it's content.
 	min-width: 0;
@@ -60,7 +61,7 @@ const CardsList = styled.div`
 	padding: 0 ${helpers.rhythmDiv * 2}px;
 	margin-top: ${helpers.rhythmDiv * 2}px;
 
-	@media screen and (max-width: ${helpers.tablet}px) {
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		max-width: 500px;
 		height: calc(400px + 360px);
 	}
@@ -77,24 +78,27 @@ const SolutionContentWrapper = styled.div`
 	position: relative;
 	max-width: 400px;
 	width: 100%;
-	height: 300px;
+	height: 200px;
 	margin: 0;
 	position: relative;
 
-	@media screen and (max-width: ${helpers.tablet}px) {
-		max-width: 500px;
-		justify-content: flex-start;
-		margin-bottom: ${helpers.rhythmDiv * 2}px;
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
+		// max-width: 500px;
+		// justify-content: flex-start;
+		// margin-bottom: ${helpers.rhythmDiv * 2}px;
 		display: none;
 	}
 `;
 
-const SolutionContent = styled.div`		
+const SolutionContent = styled.img`	
+  //background-image: url('${(props) => props.solutionContent}');
+  //background-size: contain;
+  //background-repeat: no-repeat;	
   height: 100%;
-  background-image: url('${(props) => props.solutionContent}');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
+  border-radius: 10px;
+  //object-fit: contain;
+  background-position: 50% 50%; 
+  box-shadow: ${helpers.buttonBoxShadow}; 	
 `;
 
 const Problem = styled.div`
@@ -102,6 +106,11 @@ const Problem = styled.div`
 	justify-content: center;
 	width: 100%;
 	margin: ${helpers.rhythmDiv * 4}px 0;
+	margin-bottom: 0;
+
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
+		margin: ${helpers.rhythmDiv * 4}px 0;
+	}
 
 	@media screen and (max-width: ${helpers.mobile}px) {
 		margin-top: 0;
@@ -109,10 +118,6 @@ const Problem = styled.div`
 	}
 `;
 
-const MyProblemWrapper = styled.div`
-	display: flex;
-	flex-direction: column;
-`;
 
 // const ProblemNumber = styled.p`
 //   margin: 0;
@@ -131,7 +136,7 @@ const ProblemTitle = styled.h2`
 	line-height: 1;
 	text-align: center;
 
-	@media screen and (max-width: ${helpers.tablet + 100}px) {
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		font-size: 32px;
 	}
 `;
@@ -188,15 +193,14 @@ class SolutionBox extends Component {
 					/>
 				)}
 				<Problem>
-					<MyProblemWrapper>
-						{/*<ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber> */}
-						<ProblemTitle>{props.title}</ProblemTitle>
-					</MyProblemWrapper>
+					{/*<ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber> */}
+					<ProblemTitle>{props.title}</ProblemTitle>
+
 				</Problem>
 
 				<BoxInnerWrapper>
-					<CardsList>
-						<CardsListInner>
+					<SolutionList>
+						<SolutionListInner>
 							{props.cardsData &&
 								props.cardsData.map((card, i) => (
 									<SchoolSolutionCard
@@ -208,8 +212,8 @@ class SolutionBox extends Component {
 										cardBgColor={props.cardBgColor}
 									/>
 								))}
-						</CardsListInner>
-					</CardsList>
+						</SolutionListInner>
+					</SolutionList>
 
 					<SolutionContentWrapper>
 						{props.cardsData &&
@@ -219,13 +223,13 @@ class SolutionBox extends Component {
 									<CSSTransition
 										in={isCurrentSolutionSelected}
 										timeout={{
-											enter: 5600,
-											exit: 5400
+											enter: 600,
+											exit: 400
 										}}
 										classNames="fade"
 										unmountOnExit
 									>
-										<SolutionContent key={i} solutionContent={card.solutionContent} />
+										<SolutionContent key={i} src={card.solutionContent} />
 									</CSSTransition>
 								);
 							})}

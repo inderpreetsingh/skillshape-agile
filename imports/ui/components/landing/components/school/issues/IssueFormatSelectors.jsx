@@ -19,10 +19,6 @@ const Wrapper = styled.div`
 		margin-right: 0;
 		margin-bottom: ${helpers.rhythmDiv * 4}px;
 	}
-
-	@media screen and (max-width: ${helpers.tablet}px) {
-		margin-bottom: 0;
-	}
 `;
 
 const IssuesTitle = styled.h2`
@@ -147,7 +143,7 @@ class IssueFormatSelectors extends Component {
 
 		this.handleScroll();
 
-		Events.scrollEvent.register('end', function(to, element) {
+		Events.scrollEvent.register('end', function (to, element) {
 			self.setState({ clickEvent: false });
 		});
 

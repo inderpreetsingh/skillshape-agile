@@ -37,7 +37,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media screen and (max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet + 50}px) {
     min-height: 100vh;
 	height: auto;
    }
@@ -54,7 +54,7 @@ const SolutionBoxWrapper = styled.div`
 	min-height: 512px;
 	width: 100%;
 
-	@media screen and (max-width: ${helpers.tablet}px) {
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		max-width: 100%;
 	}
 `;
@@ -65,7 +65,7 @@ const Avatar = styled.div`
 	left: 30px;
 	z-index: 1;
 
-	@media screen and (max-width: ${helpers.tablet}px) {
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		display: none;
 	}
 `;
@@ -77,7 +77,7 @@ const AvatarSmallScreen = styled.div`
 	right: -10px;
 	z-index: 1;
 
-	@media screen and (max-width: ${helpers.tablet}px) {
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		display: block;
 	}
 `;

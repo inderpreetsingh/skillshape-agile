@@ -50,7 +50,7 @@ const Content = styled.p`
   margin: 0;
   transition: opacity .05s linear .2s;
 
-  @media screen and (max-width: ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet + 50}px) {
     opacity: ${props => props.active ? 1 : 0};
   }
 `;
