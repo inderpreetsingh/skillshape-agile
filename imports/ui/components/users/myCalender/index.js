@@ -12,7 +12,7 @@ import FullCalendarContainer from "/imports/ui/componentHelpers/fullCalendar";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
 import SkillshapePopover from "/imports/ui/components/landing/components/popovers/SkillshapePopover";
 import DropDownMenu from '/imports/ui/components/landing/components/form/DropDownMenu.jsx';
-import {get} from 'lodash';
+import {get,isEmpty} from 'lodash';
 import classDetailModal from "../../../modal/classDetailModal";
 const SCHOOL_VIEW = 'SchoolView';
 
@@ -36,10 +36,14 @@ export default class MyCalender extends React.Component {
       school:this.props.schoolData
     };
   }
-
-  _checkIfAdmin = () => {
-    const { schoolData: { admins }, currentUser,classTimesData,eventData } = this.props;
   
+  componentWillMount() {
+    
+  }
+  
+  _checkIfAdmin = () => {
+    const { schoolData, currentUser,classTimesData,eventData } = this.props;
+    let admins = get(schoolData,'admins',[])
     const currentUserId = get(currentUser,"_id",0);
     if (admins.indexOf(currentUserId) !== -1) {
       return true;
@@ -56,7 +60,7 @@ export default class MyCalender extends React.Component {
 
   handleEventModal = (isOpen, eventData, clickedDate, jsEvent) => {
     this.setState({classDetailModal:false});
-    const { routeName,classTimesData,classType } = this.props
+    const { routeName,classTimesData,classType,schoolData } = this.props
     const { originalEvent } = jsEvent;
     classTimesData && classTimesData.map((obj)=>{
       if(obj._id==eventData.classTimeId){
@@ -68,6 +72,19 @@ export default class MyCalender extends React.Component {
         this.setState({classType:obj})
       }
     })
+    if(isEmpty(schoolData)){
+      let schoolId = this.state.classTimes.schoolId;
+      Meteor.call("school.getMySchool",schoolId,(err,res)=>{
+        if(res){
+          let admins = get(res,'admins',[]);
+          if (admins.indexOf(Meteor.userId()) !== -1) {
+            this.setState({isAdmin:true,school:res})
+          }else{
+            this.setState({isAdmin:false,school:res})
+          }
+        }
+      })
+    }
     Meteor.call("location.getLocsFromIds",[eventData.locationId],(err,res)=>{
       if(res){
         this.setState({location:res[0]})
@@ -214,7 +231,7 @@ export default class MyCalender extends React.Component {
             params={this.props.params}
           />
         )}
-        {routeName === SCHOOL_VIEW && (
+        {isOpen && (
           <SkillshapePopover
             anchorEl={anchorEl}
             positionTop={positionTop}
