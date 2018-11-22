@@ -10,6 +10,8 @@ import concat from 'lodash/concat';
 
 import School from '/imports/api/school/fields';
 import Purchases from '/imports/api/purchases/fields';
+import ClassPricing from '/imports/api/classPricing/fields';
+import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 import ClassSubscription from '/imports/api/classSubscription/fields';
 
 import SchoolBox from '/imports/ui/componentHelpers/boxes/schoolBox.js';
@@ -144,11 +146,11 @@ export default createContainer((props) => {
 				schoolSubscription.ready()
 			) {
 				schoolData = School.find().fetch();
-				console.log(purchaseData, classSubscriptionData, schoolData, '________________ IS LOADING FALSE NOW');
+				// console.log(purchaseData, classSubscriptionData, schoolData, '________________ IS LOADING FALSE NOW');
 				isLoading = false;
 			}
 		} else {
-			console.log(purchaseData, classSubscriptionData, '---- isLOADING false in else block');
+			// console.log(purchaseData, classSubscriptionData, '---- isLOADING false in else block');
 			isLoading = false;
 		}
 	}
