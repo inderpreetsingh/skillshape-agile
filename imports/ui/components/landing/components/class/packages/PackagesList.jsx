@@ -45,7 +45,8 @@ const PackagesListWrapper = styled.section`
 
 	@media screen and (max-width: ${helpers.tablet}px) {
 		width: 100%;
-		align-items: center;
+        align-items: center;
+        margin: 0 auto;
 	}
 `;
 
@@ -72,10 +73,11 @@ const PackagesWrapper = styled.div`
   z-index: 1;
   ${(props) => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'}
 
-  @media screen and (max-width: ${helpers.tablet + 100}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
   	max-width: ${PACKAGE_WIDTH}px;
     padding: ${helpers.rhythmDiv}px;
     align-items: space-around;
+    margin: 0 auto;
   }
 `;
 
