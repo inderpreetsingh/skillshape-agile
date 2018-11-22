@@ -28,6 +28,7 @@ const ClassDescription = styled.div`
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	justify-content: space-between;
 `;
 
 const ClassDescriptionInnerWrapper = styled.div`
@@ -35,7 +36,7 @@ const ClassDescriptionInnerWrapper = styled.div`
   margin: ${helpers.rhythmDiv * 2}px 0;
   border: 1px solid #ddd;
   height: 100%;
-  max-height: ${(props) => (props.editMode ? '100%' : '200px')};
+  // max-height: ${(props) => (props.editMode ? '100%' : '200px')};
   display: flex;
   flex-direction: column;
   //
@@ -73,7 +74,7 @@ const Text = styled.p`
 	margin: 0;
 `;
 
-const Buttons = styled.div`
+const ButtonsWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	flex-shrink: 0;
@@ -81,7 +82,7 @@ const Buttons = styled.div`
 
 const SelectedSkillSubject = styled.div``;
 
-const ButtonsWrapper = styled.div`
+const Buttons = styled.div`
 	display: flex;
 
 	@media screen and (max-width: ${helpers.mobile}px) {
@@ -203,10 +204,10 @@ const ClassTypeCardDescription = (props) => {
           </SelectedSkillSubject>*/}
 
 					{!editMode ? (
-						<Buttons>
+						<ButtonsWrapper>
 							{props &&
 								!props.hideClassTypeOptions && (
-									<ButtonsWrapper>
+									<Buttons>
 										<ButtonWrapper>
 											<SecondaryButton
 												noMarginBottom
@@ -228,7 +229,7 @@ const ClassTypeCardDescription = (props) => {
 												onClick={() => goToSchoolPage(cardRevealInfo.schoolId)}
 											/>
 										</ButtonWrapper>
-									</ButtonsWrapper>
+									</Buttons>
 								)}
 
 							{props.classTimeCheck ? (
@@ -249,7 +250,7 @@ const ClassTypeCardDescription = (props) => {
 										onClick={props.onRequestClassTimeButtonClick}
 									/>
 								)}
-						</Buttons>
+						</ButtonsWrapper>
 					) : (
 							<PrimaryButton
 								icon
