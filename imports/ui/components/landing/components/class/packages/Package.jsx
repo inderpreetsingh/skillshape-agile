@@ -58,7 +58,7 @@ const OuterWrapper = styled.div`
 		background-color: ${(props) => (props.forIframes || props.forSubscription ? props.bgColor : 'white')};
 		opacity: ${(props) => (props.forIframes ? 0.1 : 1)};
 		${(props) =>
-			props.forSubscription && `opacity: ${props.opacity || 1}`}; /* overriding the opacity for the subscription*/
+		props.forSubscription && `opacity: ${props.opacity || 1}`}; /* overriding the opacity for the subscription*/
 		border-radius: ${helpers.rhythmDiv * 6}px;
 	}
 `;
@@ -192,9 +192,9 @@ const Package = (props) => {
 						<ClassDetailsText>
 							{getDateForSubscriptions(props)}
 						</ClassDetailsText>
-						<ClassDetailsText>
+						{/*<ClassDetailsText>
 							<b>Covers:</b> {getCovers(props.selectedClassType)}
-						</ClassDetailsText>
+						</ClassDetailsText>*/}
 					</ClassDetailsSection>
 					<RightSection>
 						<AddToCartSection>
@@ -218,12 +218,12 @@ const Package = (props) => {
 							{props.expDuration && props.expPeriod && !props.noExpiration ? (
 								`${props.expDuration} ${props.expPeriod}`
 							) : (
-								'None'
-							)}
+									'None'
+								)}
 						</ClassDetailsText>
 					) : (
-						<ClassDetailsText>{getPaymentType(props.pymtType) || 'NA'}</ClassDetailsText>
-					)}
+							<ClassDetailsText>{getPaymentType(props.pymtType) || 'NA'}</ClassDetailsText>
+						)}
 					<ClassDetailsText>
 						<b>Covers:</b> {getCovers(props.selectedClassType)}
 					</ClassDetailsText>
@@ -244,53 +244,53 @@ const Package = (props) => {
 									<NoOfClasses>{props.noClasses && `for ${props.noClasses} classes`}</NoOfClasses>
 								</PriceSection>
 							) : (
-								!isEmpty(props.uiPayment) &&
-								props.uiPayment.map((payment, index) => {
-									return (
-										<PriceSection key={`${payment.cost}-${index}`}>
-											<Price>
-												{payment.cost &&
-													`${formatMoney(
-														Number.parseFloat(
-															get(props.pymtType, 'payUpFront', false)
-																? payment.cost * payment.month
-																: payment.cost
-														).toFixed(2),
-														payment.currency ? payment.currency : props.schoolCurrency
-													)}`}
-											</Price>
-											<NoOfClasses>
-												{payment.month &&
-													`${get(props.pymtType, 'payUpFront', false)
-														? ''
-														: 'per month'} for ${payment.month} ${payment.month > 1
-														? 'months'
-														: ' month'} ${get(props.pymtType, 'payUpFront', false)
-														? `(${formatMoney(
-																Number.parseFloat(payment.cost).toFixed(2),
-																payment.currency ? payment.currency : props.schoolCurrency
-															)} per month)`
-														: ''}`}
-											</NoOfClasses>
-										</PriceSection>
-									);
-								})
-							)}
+									!isEmpty(props.uiPayment) &&
+									props.uiPayment.map((payment, index) => {
+										return (
+											<PriceSection key={`${payment.cost}-${index}`}>
+												<Price>
+													{payment.cost &&
+														`${formatMoney(
+															Number.parseFloat(
+																get(props.pymtType, 'payUpFront', false)
+																	? payment.cost * payment.month
+																	: payment.cost
+															).toFixed(2),
+															payment.currency ? payment.currency : props.schoolCurrency
+														)}`}
+												</Price>
+												<NoOfClasses>
+													{payment.month &&
+														`${get(props.pymtType, 'payUpFront', false)
+															? ''
+															: 'per month'} for ${payment.month} ${payment.month > 1
+																? 'months'
+																: ' month'} ${get(props.pymtType, 'payUpFront', false)
+																	? `(${formatMoney(
+																		Number.parseFloat(payment.cost).toFixed(2),
+																		payment.currency ? payment.currency : props.schoolCurrency
+																	)} per month)`
+																	: ''}`}
+												</NoOfClasses>
+											</PriceSection>
+										);
+									})
+								)}
 						</Fragment>
 					) : (
-						<PriceSection>
-							{' '}
-							{/* used for enrollment packages */}
-							<Price>
-								{props.cost &&
-									`${formatMoney(
-										Number.parseFloat(props.cost).toFixed(2),
-										props.currency ? props.currency : props.schoolCurrency
-									)}`}
-							</Price>
-							<NoOfClasses>{props.cost && 'For Enrollment'}</NoOfClasses>
-						</PriceSection>
-					)}
+							<PriceSection>
+								{' '}
+								{/* used for enrollment packages */}
+								<Price>
+									{props.cost &&
+										`${formatMoney(
+											Number.parseFloat(props.cost).toFixed(2),
+											props.currency ? props.currency : props.schoolCurrency
+										)}`}
+								</Price>
+								<NoOfClasses>{props.cost && 'For Enrollment'}</NoOfClasses>
+							</PriceSection>
+						)}
 					{props.onSchoolEdit ? (
 						<EditButton
 							label={'Edit'}
@@ -300,30 +300,30 @@ const Package = (props) => {
 							}}
 						/>
 					) : (
-						<AddToCartSection>
-							<Cart
-								onClick={() => {
-									props.onAddToCartIconButtonClick(
-										props.packageType,
-										props._id,
-										props.schoolId,
-										props.packageName || props.name,
-										props.cost ? props.cost : props.pymtDetails[0].cost,
-										props.pymtDetails,
-										props.expDuration,
-										props.expPeriod || props.duPeriod,
-										props.noClasses,
-										props.pymtDetails && props.pymtDetails[0].planId,
-										props.currency
-											? props.currency
-											: props.pymtDetails ? props.pymtDetails[0].currency : props.schoolCurrency,
-										props.pymtType
-									);
-								}}
-							/>
-							{/* </a> */}
-						</AddToCartSection>
-					)}
+							<AddToCartSection>
+								<Cart
+									onClick={() => {
+										props.onAddToCartIconButtonClick(
+											props.packageType,
+											props._id,
+											props.schoolId,
+											props.packageName || props.name,
+											props.cost ? props.cost : props.pymtDetails[0].cost,
+											props.pymtDetails,
+											props.expDuration,
+											props.expPeriod || props.duPeriod,
+											props.noClasses,
+											props.pymtDetails && props.pymtDetails[0].planId,
+											props.currency
+												? props.currency
+												: props.pymtDetails ? props.pymtDetails[0].currency : props.schoolCurrency,
+											props.pymtType
+										);
+									}}
+								/>
+								{/* </a> */}
+							</AddToCartSection>
+						)}
 				</RightSection>
 			</Wrapper>
 		</OuterWrapper>
@@ -343,7 +343,7 @@ Package.propTypes = {
 Package.defaultProps = {
 	packagePerClass: false,
 	forMySubscriptions: false,
-	onAddToCartIconButtonClick: () => {}
+	onAddToCartIconButtonClick: () => { }
 };
 
 export default Package;
