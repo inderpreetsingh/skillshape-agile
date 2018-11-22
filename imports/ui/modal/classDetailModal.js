@@ -447,29 +447,7 @@ class ClassDetailModal extends React.Component {
     this.setState({ removeFromCalendarPopUp: false });
     props.closeEventModal(false, null);
   };
-  handleSignIn = () => {
-    const {popUp} = this.props;
-    popUp.appear("success", {
-      title: "Confirmation",
-      content: `You are going to sign in into this class.`,
-      RenderActions: ( <Div > 
-         <ClassTimeButton
-          fullWidth
-          label="No"
-          noMarginBottom
-          onClick={() => {
-          }}
-        />
-        <ClassTimeButton
-          fullWidth
-          label="Yes"
-          noMarginBottom
-          onClick={() => {
-          }}
-        />
-      </Div>)
-    }, true);
-  }
+ 
   render() {
     const {
       isLoading,
@@ -676,14 +654,7 @@ class ClassDetailModal extends React.Component {
                         />
                       </Grid>
                     )}
-                    <Grid item xs={6} style={{ margin: "auto" }}>
-                        <ClassTimeButton
-                          fullWidth
-                          noMarginBottom
-                          label="Sign in"
-                          onClick={this.handleSignIn}
-                        />
-                      </Grid>
+                   
                       <Grid item xs={6} style={{ margin: "auto" }}>
                       {/* <Link to={{ pathname: route, state: { props: this.props,state:this.state} }}>
                         <ClassTimeButton

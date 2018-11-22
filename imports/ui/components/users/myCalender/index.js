@@ -14,6 +14,13 @@ import SkillshapePopover from "/imports/ui/components/landing/components/popover
 import DropDownMenu from '/imports/ui/components/landing/components/form/DropDownMenu.jsx';
 import {get,isEmpty} from 'lodash';
 import classDetailModal from "../../../modal/classDetailModal";
+import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
+import styled from "styled-components";
+const Div = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: center;
+`;
 const SCHOOL_VIEW = 'SchoolView';
 
 const styles = {
@@ -33,7 +40,8 @@ export default class MyCalender extends React.Component {
     super(props);
     this.state = {
       isAdmin: this._checkIfAdmin(),
-      school:this.props.schoolData
+      school:this.props.schoolData,
+      status:'Sign In'
     };
   }
   
@@ -57,7 +65,11 @@ export default class MyCalender extends React.Component {
   }
 
   setDate = (startDate, endDate) => this.setState({ startDate, endDate });
-
+  getStudentStatus = (filter) =>{
+    Meteor.call("classes.getClassData",filter,(err,res)=>{
+      this.setState({classDetails:res,filter:filter});
+    })
+  }
   handleEventModal = (isOpen, eventData, clickedDate, jsEvent) => {
     this.setState({classDetailModal:false});
     const { routeName,classTimesData,classTypeData,schoolData } = this.props
@@ -72,6 +84,9 @@ export default class MyCalender extends React.Component {
         this.setState({classType:obj})
       }
     })
+    const {schoolId,classTypeId,classTimeId,start} = eventData;
+    let filter = {schoolId,classTypeId,classTimeId,scheduled_date:new Date(eventData.start)};
+    this.getStudentStatus(filter);
     if(isEmpty(schoolData)){
       let schoolId = this.state.classTimes.schoolId;
       Meteor.call("school.getMySchool",schoolId,(err,res)=>{
@@ -124,8 +139,84 @@ export default class MyCalender extends React.Component {
       }
     })
   }
-
-  getStudentList = (route) => (
+  updateClass = (filter,status,popUp)=>{
+    Meteor.call("classes.updateClassData",filter,status,(err,res)=>{
+      if(res){
+        this.setState({status:'Sign In'});
+        popUp.appear("success", {
+          title: `${this.state.status} successfully`,
+          content: `You have been successfully ${this.state.status}.`,
+          RenderActions: ( <Div > 
+            <ClassTimeButton
+              fullWidth
+              label="Ok"
+              noMarginBottom
+              onClick={()=>{}}
+            />
+          </Div>)
+        }, true);
+      }
+    })
+  }
+  handleSignIn = () => {
+    const {popUp} = this.props;
+    const {classDetails,filter,status} = this.state;
+    if(classDetails && classDetails.students){
+      classDetails.students.map((obj,index)=>{
+        if(obj.userId == Meteor.userId()){
+          if(obj.status=='signIn')
+          this.setState({status:'Sign Out'});
+        }
+      })
+    }
+    if(status == "Sign In"){
+      popUp.appear("success", {
+        title: "Confirmation",
+        content: `You are going to sign in into this class.`,
+        RenderActions: ( <Div > 
+           <ClassTimeButton
+            fullWidth
+            label="No"
+            noMarginBottom
+            onClick={() => {
+            }}
+          />
+          <ClassTimeButton
+            fullWidth
+            label="Yes"
+            noMarginBottom
+            onClick={() => {
+              this.updateClass(classDetails ?classDetails : filter,'signIn',popUp)
+            }}
+          />
+        </Div>)
+      }, true);
+    }
+    else{
+      popUp.appear("inform", {
+        title: "Confirmation",
+        content: `You are already sign in. Do you want to sign out?`,
+        RenderActions: ( <Div > 
+           <ClassTimeButton
+            fullWidth
+            label="No"
+            noMarginBottom
+            onClick={() => {
+            }}
+          />
+          <ClassTimeButton
+            fullWidth
+            label="Yes"
+            noMarginBottom
+            onClick={() => {
+              this.updateClass(classDetails ?classDetails : filter,'signOut',popUp)
+            }}
+          />
+        </Div>)
+      }, true);
+    }
+  }
+  getStudentList = (route,status) => (
     <List>
        <ListItem button onClick={()=>{this.setState({classDetailModal:true})}}>
         <PopoverListItemIcon>
@@ -141,15 +232,12 @@ export default class MyCalender extends React.Component {
         <ListItemText primary="View Class Details" />
       </ListItem>
       </Link>
-      <ListItem button>
+      <ListItem button onClick={this.handleSignIn}>
         <PopoverListItemIcon>
-          <AvTimerIcon />
+          <ClassIcon />
         </PopoverListItemIcon>
-        <ListItemText primary="Class times" />
+        <ListItemText primary={status} />
       </ListItem>
-      {!Meteor.userId() && <ListItem button>
-        <ListItemText primary="Sign in" />
-      </ListItem>}
       <ListItem button onClick={()=>{this.setState({isOpen:false})}}>
         <PopoverListItemIcon>
         <CloseIcon />
@@ -159,7 +247,7 @@ export default class MyCalender extends React.Component {
     </List>
   )
 
-  getAdminList = (route) => (
+  getAdminList = (route,status) => (
     <List>
        <ListItem button onClick={()=>{this.setState({classDetailModal:true})}}>
         <PopoverListItemIcon>
@@ -175,17 +263,11 @@ export default class MyCalender extends React.Component {
         <ListItemText primary="View Class Details" />
       </ListItem>
       </Link>
-      <ListItem button>
+      <ListItem button onClick={this.handleSignIn}>
         <PopoverListItemIcon>
-          <UpdateClassTimeIcon />
+          <ClassIcon />
         </PopoverListItemIcon>
-        <ListItemText primary="Change Class Time for Today" />
-      </ListItem>
-      <ListItem button>
-        <PopoverListItemIcon>
-          <EmailIcon />
-        </PopoverListItemIcon>
-        <ListItemText primary="Email Attendencies" />
+        <ListItemText primary={status} />
       </ListItem>
       <ListItem button onClick={()=>{this.setState({isOpen:false})}}>
         <PopoverListItemIcon>
@@ -204,7 +286,8 @@ export default class MyCalender extends React.Component {
       positionLeft,
       positionTop,
       isAdmin,
-      classDetailModal
+      classDetailModal,
+      status
     } = this.state;
     const { routeName } = this.props;
     let route = this.state.isAdmin ? '/classdetails-instructor' : '/classdetails-student';
@@ -240,7 +323,7 @@ export default class MyCalender extends React.Component {
             isOpen={isOpen}
             onClose={this.handlePopoverClose}
           >
-            {isAdmin ? this.getAdminList(route) : this.getStudentList(route)}
+            {isAdmin ? this.getAdminList(route,status) : this.getStudentList(route,status)}
           </SkillshapePopover>
         )}
       </div>
