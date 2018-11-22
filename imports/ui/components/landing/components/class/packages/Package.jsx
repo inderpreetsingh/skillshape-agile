@@ -189,7 +189,12 @@ const Package = (props) => {
 				<Wrapper>
 					<ClassDetailsSection>
 						<Title>{props.packageName || props.name}</Title>
-						<ClassDetailsText>{getDateForSubscriptions(props)}</ClassDetailsText>
+						<ClassDetailsText>
+							{getDateForSubscriptions(props)}
+						</ClassDetailsText>
+						<ClassDetailsText>
+							<b>Covers:</b> {getCovers(props.selectedClassType)}
+						</ClassDetailsText>
 					</ClassDetailsSection>
 					<RightSection>
 						<AddToCartSection>
