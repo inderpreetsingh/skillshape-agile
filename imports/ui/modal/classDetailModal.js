@@ -447,18 +447,17 @@ class ClassDetailModal extends React.Component {
     this.setState({ removeFromCalendarPopUp: false });
     props.closeEventModal(false, null);
   };
-  handleCheckIn = () => {
+  handleSignIn = () => {
     const {popUp} = this.props;
     popUp.appear("success", {
       title: "Confirmation",
-      content: `You are going to sign in the class`,
+      content: `You are going to sign in into this class.`,
       RenderActions: ( <Div > 
          <ClassTimeButton
           fullWidth
           label="No"
           noMarginBottom
           onClick={() => {
-            this.setState({ removeFromCalendarPopUp: true });
           }}
         />
         <ClassTimeButton
@@ -466,7 +465,6 @@ class ClassDetailModal extends React.Component {
           label="Yes"
           noMarginBottom
           onClick={() => {
-            this.setState({ removeFromCalendarPopUp: true });
           }}
         />
       </Div>)
@@ -682,8 +680,8 @@ class ClassDetailModal extends React.Component {
                         <ClassTimeButton
                           fullWidth
                           noMarginBottom
-                          label="Check in"
-                          onClick={this.handleCheckIn}
+                          label="Sign in"
+                          onClick={this.handleSignIn}
                         />
                       </Grid>
                       <Grid item xs={6} style={{ margin: "auto" }}>

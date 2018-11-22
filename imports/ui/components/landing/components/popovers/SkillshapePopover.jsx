@@ -52,7 +52,6 @@ class SkillshapePopover extends Component {
             isOpen
         } = this.props;
 
-        console.log(anchorEl, isOpen, children, "anchorElm");
 
         return (
             <Popover
