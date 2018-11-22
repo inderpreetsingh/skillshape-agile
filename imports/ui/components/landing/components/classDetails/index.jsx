@@ -39,6 +39,7 @@ const ClassTimeWrapper = styled.div`
   background-position: 50% 50%;
   background-size: cover;
   background-repeat: no-repeat;
+  margin-bottom: ${rhythmDiv * 8}px;
 
   &:after {
     content: '';
@@ -62,13 +63,13 @@ const ClassTimeWrapper = styled.div`
 `;
 
 const ClassDetails = props => {
-  const { location,headerProps,classData,instructorsData,popUp,instructorsIds } = props;
-  const {state} = props.location.state;
-  const dataProps =  props.location.state.props;
-  const {school} = state;
-  let schoolImage,classTypeImage;
-  schoolImage = get(school,'logoImgMedium',get(school,'logoImg',config.defaultSchoolImage))
-	classTypeImage = get(state,'classImg',config.defaultSchoolImage)
+  const { location, headerProps, classData, instructorsData, popUp, instructorsIds } = props;
+  const { state } = props.location.state;
+  const dataProps = props.location.state.props;
+  const { school } = state;
+  let schoolImage, classTypeImage;
+  schoolImage = get(school, 'logoImgMedium', get(school, 'logoImg', config.defaultSchoolImage))
+  classTypeImage = get(state, 'classImg', config.defaultSchoolImage)
 
   const currentView =
     location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
@@ -86,28 +87,28 @@ const ClassDetails = props => {
         )}
       <InnerWrapper>
         <ClassTimeWrapper bgImg={classTypeImage}>
-          <ClassTimeCover 
-          classTypeCoverSrc={schoolImage}
-           schoolCoverSrc={classTypeImage} 
-           classTypeName = {get(state.classType,'name',null)}
-           classTypeId = {get(state.classType,'_id',null)}
-           slug = {get(school,'slug','')}
-           />
+          <ClassTimeCover
+            classTypeCoverSrc={schoolImage}
+            schoolCoverSrc={classTypeImage}
+            classTypeName={get(state.classType, 'name', null)}
+            classTypeId={get(state.classType, '_id', null)}
+            slug={get(school, 'slug', '')}
+          />
           <ClassTimeInformation
             {...dataProps.eventData}
             schoolName={school.name}
             schoolCoverSrc={classTypeImage}
-            locationData = {state.location}
-            website = {school.website}
+            locationData={state.location}
+            website={school.website}
           />
         </ClassTimeWrapper>
         {/* <TimeLine {...dataProps.eventData} /> */}
-        <MembersList 
-        currentView={currentView} 
-        classData = {classData}
-        instructorsData = {instructorsData}
-        popUp = {popUp}
-        instructorsIds = {instructorsIds}
+        <MembersList
+          currentView={currentView}
+          classData={classData}
+          instructorsData={instructorsData}
+          popUp={popUp}
+          instructorsIds={instructorsIds}
         />
       </InnerWrapper>
       <Footer />

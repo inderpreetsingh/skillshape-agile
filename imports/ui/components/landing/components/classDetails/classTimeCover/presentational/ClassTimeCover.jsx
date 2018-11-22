@@ -41,7 +41,7 @@ const ClassTypeProfile = styled.div`
   bottom: ${rhythmDiv * 2}px;
   left: ${rhythmDiv * 2}px;
   background-image: url('${props => props.url}');
-  background-size: cover;
+  background-size: contain;
   background-position: 50% 50%;
   background-repeat: no-repeat;
 `;
@@ -69,10 +69,10 @@ const ClassTimeCover = props => (
       classTypeCoverSrc={props.classTypeCoverSrc}
     />
     <ButtonsWrapper>
-      <ActionButtons 
-      slug = {props.slug}
-      classTypeId={props.classTypeId} 
-      classTypeName = {props.classTypeName}
+      <ActionButtons
+        slug={props.slug}
+        classTypeId={props.classTypeId}
+        classTypeName={props.classTypeName}
       />
     </ButtonsWrapper>
   </Wrapper>
