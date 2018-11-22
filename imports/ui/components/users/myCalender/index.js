@@ -60,14 +60,14 @@ export default class MyCalender extends React.Component {
 
   handleEventModal = (isOpen, eventData, clickedDate, jsEvent) => {
     this.setState({classDetailModal:false});
-    const { routeName,classTimesData,classType,schoolData } = this.props
+    const { routeName,classTimesData,classTypeData,schoolData } = this.props
     const { originalEvent } = jsEvent;
     classTimesData && classTimesData.map((obj)=>{
       if(obj._id==eventData.classTimeId){
         this.setState({classTimes:obj})
       }
     })
-    classType && classType.map((obj)=>{
+    classTypeData && classTypeData.map((obj)=>{
       if(obj._id==eventData.classTypeId){
         this.setState({classType:obj})
       }
