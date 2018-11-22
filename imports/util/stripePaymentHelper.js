@@ -272,7 +272,7 @@ purchaseNewContract = (
 pastSubscriptionButton = () => (
     <ButtonWrapper>
         <FormGhostButton
-            label={'Past Subscriptions'}
+            label={'View My Subscriptions'}
             onClick={() => {
                 const url = `${Meteor.absoluteUrl()}mySubscription/${Meteor.userId()}`;
                  window.open(url, '_blank');

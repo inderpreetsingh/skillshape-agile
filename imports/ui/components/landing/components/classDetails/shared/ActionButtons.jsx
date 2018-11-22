@@ -54,7 +54,7 @@ const ActionButtons = props => (
   <OuterWrapper>
     <Wrapper>
       <ButtonWrapper marginBottom>
-        <ClassTimeButton label="Visit Classtype" 
+        <ClassTimeButton label="View Class Type" 
         onClick={()=>{goToClassTypePage(props.classTypeName,props.classTypeId)}}/>
       </ButtonWrapper>
       <ButtonWrapper>
