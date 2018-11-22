@@ -22,6 +22,11 @@ Classes.attachSchema(new SimpleSchema({
     scheduled_date:{
         type: Date,
         optional: true
+    },
+    students:{
+        type: [Object],
+        optional: true,
+        blackbox: true
     }
 }));
 

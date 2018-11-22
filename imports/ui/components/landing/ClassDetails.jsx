@@ -46,7 +46,7 @@ export default createContainer((props) => {
   schoolId = state.school._id;
   classTimeId = state.eventData.classTimeId;
   classTypeId = state.eventData.classTypeId;
-  scheduled_date = state.classTimes.startDate;
+  scheduled_date = new Date(state.eventData.start);
   filter = {schoolId,classTypeId,classTimeId,scheduled_date};
   classesSubscription = Meteor.subscribe('classes.getClassesData',filter);
   if( classesSubscription &&  classesSubscription.ready()){
