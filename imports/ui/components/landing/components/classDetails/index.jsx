@@ -104,6 +104,7 @@ const ClassDetails = props => {
         </ClassTimeWrapper>
         {/* <TimeLine {...dataProps.eventData} /> */}
         <MembersList
+          schoolId={school._id}
           currentView={currentView}
           classData={classData}
           instructorsData={instructorsData}
