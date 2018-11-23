@@ -46,12 +46,11 @@ export default createContainer((props) => {
   schoolId = state.school._id;
   classTimeId = state.eventData.classTimeId;
   classTypeId = state.eventData.classTypeId;
-  scheduled_date = new Date(state.eventData.start);
-  filter = {schoolId,classTypeId,classTimeId,scheduled_date};
+  filter = {_id:state.classDetails._id};
   classesSubscription = Meteor.subscribe('classes.getClassesData',filter);
   if( classesSubscription &&  classesSubscription.ready()){
-   classData = Classes.find().fetch();
-   instructorsIds = get(classData[0],'instructors',[]);
+  classData = Classes.find().fetch();
+  instructorsIds = get(classData[0],'instructors',[]);
    if(isEmpty(instructorsIds)){
     classTimeSubscription = Meteor.subscribe('classTimes.getclassTimes',{ schoolId, classTypeId });
     if(classTimeSubscription && classTimeSubscription.ready()){
@@ -85,7 +84,8 @@ export default createContainer((props) => {
 	return {
   classData,
   instructorsData,
-  instructorsIds
+  instructorsIds,
+  
 	};
 }, withPopUp(ClassDetailsContainer));
 

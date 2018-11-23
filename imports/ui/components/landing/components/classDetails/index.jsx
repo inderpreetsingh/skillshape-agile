@@ -62,7 +62,7 @@ const ClassTimeWrapper = styled.div`
 `;
 
 const ClassDetails = props => {
-  const { location,headerProps,classData,instructorsData,popUp,instructorsIds } = props;
+  const { location,headerProps,classData,instructorsData,popUp,instructorsIds} = props;
   const {state} = props.location.state;
   const dataProps =  props.location.state.props;
   const {school} = state;
@@ -72,6 +72,7 @@ const ClassDetails = props => {
 
   const currentView =
     location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
+   
   return (
     <Wrapper>
       <TopSearchBar {...props.topSearchBarProps} />

@@ -94,7 +94,7 @@ export default class MyCalender extends React.Component {
       }
     })
     const {schoolId,classTypeId,classTimeId,start} = eventData;
-    let filter = {schoolId,classTypeId,classTimeId,scheduled_date:new Date(eventData.start)};
+    let filter = {schoolId,classTypeId,classTimeId,scheduled_date:new Date(start)};
     this.getStudentStatus(filter);
    
     if(isEmpty(schoolData)){
