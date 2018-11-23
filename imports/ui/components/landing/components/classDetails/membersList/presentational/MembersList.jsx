@@ -101,7 +101,7 @@ const MembersList = props => {
                                     />
                                 )}
                         </MemberWrapper>
-                    )) : <Text> No ${props.entityType} Found</Text>}
+                    )) : <Text> No {props.entityType} Found</Text>}
                 {/* Adding add instructors box*/}
                 {props.entityType === "teachers" &&
                     props.viewType === "instructorsView" && (
