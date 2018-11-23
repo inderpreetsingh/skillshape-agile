@@ -3,7 +3,6 @@ import React from "react";
 import { createTable } from "/imports/util";
 
 const getTableProps = () => {
-    console.log("this",this)
   const tableProps = {
     className: "table-view"
   };

@@ -178,5 +178,8 @@ Meteor.methods({
     "user.getSelectedUsersEmail": function(userIds) {
         // console.log(userIds, 'User ids .in emails', Meteor.users.find({ _id: { $in: userIds } }).fetch())
         return Meteor.users.find({ _id: { $in: userIds }} , { fields: { "emails": 1 } }).fetch();
-    }
+    },
+    'user.getUsersFromIds':function(ids){
+        return Meteor.users.find({_id:{$in:ids}}).fetch();
+       }
 });

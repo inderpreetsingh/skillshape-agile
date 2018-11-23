@@ -63,16 +63,17 @@ const ClassTimeWrapper = styled.div`
 `;
 
 const ClassDetails = props => {
-  const { location, headerProps, classData, instructorsData, popUp, instructorsIds } = props;
-  const { state } = props.location.state;
-  const dataProps = props.location.state.props;
-  const { school } = state;
-  let schoolImage, classTypeImage;
-  schoolImage = get(school, 'logoImgMedium', get(school, 'logoImg', config.defaultSchoolImage))
-  classTypeImage = get(state, 'classImg', config.defaultSchoolImage)
+  const { location,headerProps,classData,instructorsData,popUp,instructorsIds} = props;
+  const {state} = props.location.state;
+  const dataProps =  props.location.state.props;
+  const {school} = state;
+  let schoolImage,classTypeImage;
+  schoolImage = get(school,'logoImgMedium',get(school,'logoImg',config.defaultSchoolImage))
+	classTypeImage = get(state,'classImg',config.defaultSchoolImage)
 
   const currentView =
     location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
+   
   return (
     <Wrapper>
       <TopSearchBar {...props.topSearchBarProps} />

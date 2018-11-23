@@ -8,6 +8,8 @@ import DropDownMenu from "/imports/ui/components/landing/components/form/DropDow
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { formatDate } from "/imports/util/formatSchedule";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import {get,isEmpty} from 'lodash';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 
 const styles = {
   iconButton: {
@@ -172,13 +174,17 @@ const getStatusColor = status => {
 };
 
 const getStatusInfo = status => {
-  if (true) {
-    return "Checked In";
-  } else if (!status.checkedIn && status.signedIn) {
-    return "Signed In";
+  if(status == 'signIn'){
+    return 'Signed In';
+  }else if(status == 'signOut'){
+    return 'Singed Out';
   }
-
-  return "Signed Out";
+  else if(status == 'checkIn'){
+    return 'Checked In';
+  }
+  else{
+    return 'Checked Out';
+  }
 };
 
 const PaymentAndStatus = props => (
@@ -202,14 +208,41 @@ const PaymentAndStatus = props => (
     <StatusOptions {...props} />
   </PaymentAndStatusDetails>
 );
-
+  updateStatus = (n,props)=>{
+    let {status,popUp} = props;
+    if(n==1){
+    if(status=='signIn') status='checkIn';
+     else if(status=='checkIn') status='signIn';
+    }
+    else{
+      if(status=='signIn') status='signOut';
+    }
+    let filter = props.classData[0];
+    filter.userId = props._id;
+    Meteor.call("classes.updateClassData",filter,status,(err,res)=>{
+      if(res){
+        popUp.appear("success", {
+          title: `Successfully`,
+          content: `${status} Performed Successfully.`,
+          RenderActions: (<ButtonWrapper>
+            <FormGhostButton
+                label={'Ok'}
+                onClick={() => { }}
+                applyClose
+            />
+        </ButtonWrapper>)
+        }, true);
+      }
+    })
+    }
 const StatusOptions = props => (
   <StatusDetails>
     <ButtonWrapper>
       <PrimaryButton
         noMarginBottom
         fullWidth
-        label={true? "Check in" : "Check out"}
+        label={props.status =='signIn'? "Check in" : "Check out"}
+        onClick ={()=>{this.updateStatus(1,props)}}
       />
     </ButtonWrapper>
     <ButtonWrapper>
@@ -217,22 +250,27 @@ const StatusOptions = props => (
         noMarginBottom
         caution
         fullWidth
-        label={true ? "Sign out" : "Sign in"}
+        label={"Sign Out"}
+        onClick ={()=>{this.updateStatus(2,props)}}
       />
     </ButtonWrapper>
   </StatusDetails>
 );
 
 const MemberExpanded = props => {
+  const profile = props.profile;
+  const profileSrc = get(profile,'medium',get(profile,'pic',config.defaultProfilePicOptimized))
+  const name = `${get(profile,'firstName',get(profile,'name','Old Data'))} ${get(profile,'lastName',"")}`
+   
   return (
     <Wrapper>
       <InnerWrapper>
         <MemberDetails>
           <MemberDetailsInner>
-            <MemberPic url={props.profileSrc} />
+            <MemberPic url={profileSrc} />
             <MemberStatus>
               <Text color="white" fontSize="18">
-                {props.name}
+                {name}
               </Text>
               <Text color={getStatusColor(props.status)}>
                 {getStatusInfo(props.status)}
