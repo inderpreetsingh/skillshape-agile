@@ -43,14 +43,21 @@ Meteor.methods({
             }
             else{
                 if(filter.students){
-                    let found = false;
+                    let found = false,index=-1;
                     userId = filter.userId ? filter.userId : Meteor.userId();
-                    filter.students.map((obj,index)=>{
+                    filter.students.map((obj,i)=>{
                         if(obj.userId == userId){
-                            obj.status = status;
+                            if(status!=='signOut'){
+                                obj.status = status;
+                            }else if(status == 'signOut'){
+                                index = i;
+                            }
                             found = true;
                         }
                       })
+                      if (index > -1) {
+                        filter.students.splice(index, 1);
+                      }
                      if(!found)
                     filter.students.push(obj);
                     filter.students = uniq(filter.students);

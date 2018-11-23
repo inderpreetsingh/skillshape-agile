@@ -211,14 +211,11 @@ const PaymentAndStatus = props => (
   updateStatus = (n,props)=>{
     let {status,popUp} = props;
     if(n==1){
-      if(status=='signIn') status='checkIn';
-     else if (status=='checkOut') status='checkIn';
-     else if(status=='checkIn') status='checkOut';
-     else if(status=='signOut') status='checkIn';
+    if(status=='signIn') status='checkIn';
+     else if(status=='checkIn') status='signIn';
     }
     else{
       if(status=='signIn') status='signOut';
-      else status='signIn';
     }
     let filter = props.classData[0];
     filter.userId = props._id;
@@ -244,7 +241,7 @@ const StatusOptions = props => (
       <PrimaryButton
         noMarginBottom
         fullWidth
-        label={props.status!='checkIn'? "Check in" : "Check out"}
+        label={props.status =='signIn'? "Check in" : "Check out"}
         onClick ={()=>{this.updateStatus(1,props)}}
       />
     </ButtonWrapper>
@@ -253,7 +250,7 @@ const StatusOptions = props => (
         noMarginBottom
         caution
         fullWidth
-        label={props.status!='signIn'? "Sign Out" : "Sign In"}
+        label={"Sign Out"}
         onClick ={()=>{this.updateStatus(2,props)}}
       />
     </ButtonWrapper>
