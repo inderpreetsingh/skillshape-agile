@@ -65,7 +65,7 @@ class DropDownMenu extends Component {
       menuOptions,
       menuIconClass,
       menuButtonClass,
-      classes
+      classes,
     } = this.props;
 
     let rootClass,

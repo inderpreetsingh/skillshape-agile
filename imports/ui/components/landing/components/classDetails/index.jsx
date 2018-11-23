@@ -39,6 +39,7 @@ const ClassTimeWrapper = styled.div`
   background-position: 50% 50%;
   background-size: cover;
   background-repeat: no-repeat;
+  margin-bottom: ${rhythmDiv * 8}px;
 
   &:after {
     content: '';
@@ -87,28 +88,28 @@ const ClassDetails = props => {
         )}
       <InnerWrapper>
         <ClassTimeWrapper bgImg={classTypeImage}>
-          <ClassTimeCover 
-          classTypeCoverSrc={schoolImage}
-           schoolCoverSrc={classTypeImage} 
-           classTypeName = {get(state.classType,'name',null)}
-           classTypeId = {get(state.classType,'_id',null)}
-           slug = {get(school,'slug','')}
-           />
+          <ClassTimeCover
+            classTypeCoverSrc={schoolImage}
+            schoolCoverSrc={classTypeImage}
+            classTypeName={get(state.classType, 'name', null)}
+            classTypeId={get(state.classType, '_id', null)}
+            slug={get(school, 'slug', '')}
+          />
           <ClassTimeInformation
             {...dataProps.eventData}
             schoolName={school.name}
             schoolCoverSrc={classTypeImage}
-            locationData = {state.location}
-            website = {school.website}
+            locationData={state.location}
+            website={school.website}
           />
         </ClassTimeWrapper>
         {/* <TimeLine {...dataProps.eventData} /> */}
-        <MembersList 
-        currentView={currentView} 
-        classData = {classData}
-        instructorsData = {instructorsData}
-        popUp = {popUp}
-        instructorsIds = {instructorsIds}
+        <MembersList
+          currentView={currentView}
+          classData={classData}
+          instructorsData={instructorsData}
+          popUp={popUp}
+          instructorsIds={instructorsIds}
         />
       </InnerWrapper>
       <Footer />

@@ -1,17 +1,18 @@
-import PropTypes from "prop-types";
 import React from "react";
+import PropTypes from "prop-types";
 import { withRouter } from "react-router";
+import { get, isEmpty } from 'lodash';
 import styled from "styled-components";
-import MemberExpanded from "./MemberExpanded.jsx";
+import { withStyles } from 'material-ui/styles';
+
+import { cutString } from '/imports/util';
 import DropDownMenu from "/imports/ui/components/landing/components/form/DropDownMenu.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { Capitalize, SubHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-import { addInstructorImgSrc } from "/imports/ui/components/landing/site-settings.js";
-import {get,isEmpty} from 'lodash';
-import {cutString} from '/imports/util'
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+import { Capitalize, SubHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+import MemberExpanded from "./MemberExpanded.jsx";
 
-
+import { addInstructorImgSrc } from "/imports/ui/components/landing/site-settings.js";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const menuOptions = [
   {
@@ -20,11 +21,25 @@ const menuOptions = [
   }
 ];
 
+const styles = {
+  menuButtonClass: {
+    cursor: "pointer",
+    width: 8,
+    height: 24,
+    fontSize: helpers.baseFontSize
+  },
+  menuIconClass: {
+    height: 24,
+    width: 24
+  }
+};
+
 const Wrapper = styled.div`
   background: ${helpers.panelColor};
   display: flex;
   width: 160px;
   height: 180px;
+  position: relative;
 `;
 
 const Profile = styled.div`
@@ -49,7 +64,11 @@ const ProfilePic = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
   padding-top: 0;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
-  ${props => props.addInstructor && `cursor: pointer;`};
+  ${props => props.addInstructor &&
+    `cursor: pointer; 
+     background-size: 75px; 
+     background-position: 50% 70%;`
+  };
 `;
 
 const DetailsWrapper = styled.div`
@@ -103,52 +122,54 @@ const onMenuItemClick = value => {
 
 const Member = props => {
   const profile = props.profile;
-  const profileSrc = props.addInstructor ? addInstructorImgSrc :get(profile,'medium',get(profile,'pic',config.defaultProfilePicOptimized))
-  const name = props.addInstructor ? 'Add Instructor' : `${get(profile,'firstName',get(profile,'name','Old Data'))} ${get(profile,'lastName',"")}`
+  const profileSrc = props.addInstructor ? addInstructorImgSrc : get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
+  const name = props.addInstructor ? 'Add Instructor' : `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.
 
   if (props.type === "student" && props.viewType === "instructorsView") {
     return <MemberExpanded {...props} />;
   }
-  removePopUp = (popUp,classTime)=>{
+  removePopUp = (popUp, classTime) => {
     popUp.appear("success", {
       title: "Removed Successfully",
-      content: <div>Successfully removed from instructor listing.<br/> {classTime ? 'Changes will show in the Class Times Editor after saving.':''}</div>,
-      RenderActions: ( 
-        <FormGhostButton label={'Ok'} onClick={()=>{}}  applyClose />
+      content: <div>Successfully removed from instructor listing.<br /> {classTime ? 'Changes will show in the Class Times Editor after saving.' : ''}</div>,
+      RenderActions: (
+        <FormGhostButton label={'Ok'} onClick={() => { }} applyClose />
       )
     }, true);
   }
-  handleRemoveInstructor = (props) =>{
-    let {popUp} = props;
-    if(props.classTimeForm){
-      props.instructorsIdsSetter(get(props,'_id',0),'remove');
-      this.removePopUp(popUp,true);
+  handleRemoveInstructor = (props) => {
+    let { popUp } = props;
+    if (props.classTimeForm) {
+      props.instructorsIdsSetter(get(props, '_id', 0), 'remove');
+      this.removePopUp(popUp, true);
       return;
     }
     let payLoad = {
-      instructorId:get(props,'_id',0),
-      _id:get(props.classData[0],"_id",0),
-      action:'remove'
+      instructorId: get(props, '_id', 0),
+      _id: get(props.classData[0], "_id", 0),
+      action: 'remove'
     }
-    Meteor.call("classes.handleInstructors",payLoad,(err,res)=>{
-      if(res){
-       this.removePopUp(popUp)
+    Meteor.call("classes.handleInstructors", payLoad, (err, res) => {
+      if (res) {
+        this.removePopUp(popUp)
       }
     })
   }
-  handleMenuItemClick = (option) =>{
-    let {popUp} = props;
-    let operation = get(option,'value',null);
-    if(operation == 'remove_teacher'){
+  handleMenuItemClick = (option) => {
+    let { popUp } = props;
+    let operation = get(option, 'value', null);
+    if (operation == 'remove_teacher') {
       popUp.appear("inform", {
         title: "Confirmation",
         content: `Do you really want to remove from instructor list.`,
-        RenderActions: ( 
+        RenderActions: (
           <div>
-          <FormGhostButton label={'Cancel'} onClick={()=>{}}  applyClose />
-          <FormGhostButton label={'Remove'} onClick={()=>{this.handleRemoveInstructor(props)}}  applyClose />
+            <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
+            <FormGhostButton label={'Remove'}
+              onClick={() => { this.handleRemoveInstructor(props) }}
+              applyClose />
           </div>
         )
       }, true);
@@ -165,7 +186,7 @@ const Member = props => {
         />
         <DetailsWrapper type={props.type}>
           <Details>
-            <SubHeading fontSize="20">{cutString(name,20)}</SubHeading>
+            <SubHeading fontSize="20">{cutString(name, 20)}</SubHeading>
             {props.type !== "student" &&
               !props.addInstructor && (
                 <Text>
@@ -174,11 +195,12 @@ const Member = props => {
               )}
           </Details>
           {props.viewType === "instructorsView" &&
-            !props.addInstructor && <DropDownMenu 
-            menuOptions={menuOptions} 
-            onMenuItemClick = {this.handleMenuItemClick}
+            !props.addInstructor && <DropDownMenu
+              classes={props.classes}
+              menuOptions={menuOptions}
+              onMenuItemClick={this.handleMenuItemClick}
             />}
-          
+
         </DetailsWrapper>
       </Profile>
     </Wrapper>
@@ -191,4 +213,4 @@ Member.propTypes = {
   type: PropTypes.string //type can be student, teacher
 };
 
-export default withRouter(Member);
+export default withRouter(withStyles(styles)(Member));

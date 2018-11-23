@@ -27,34 +27,49 @@ const HideOnLargeScreen = styled.div`
 `;
 
 class ClassTimeInformation extends Component {
+
+  getTitle = () => {
+    const { classTimeData } = this.props;
+    return get(classTimeData, 'classTypeName', '');
+  }
+  getTime = () => {
+    const { classTimeData } = this.props;
+    return get(classTimeData, 'time', '');
+  }
+  getTimePeriod = () => {
+    const { classTimeData } = this.props;
+    return get(classTimeData, 'timePeriod', '');
+  }
+
   render() {
     const {
       classTimeData,
       classTypeName,
       schoolName,
       schoolCoverSrc,
-      title,desc,locationData,eventStartTime,
-      website,start
+      title, desc, locationData, eventStartTime,
+      website, start
     } = this.props;
     locationName = () => {
-        return `${get(locationData,'city','')}, ${get(locationData,'state','')}, ${get(locationData,'country','')}, ${get(locationData,'zip','')}`  
+      return `${get(locationData, 'city', '')}, ${get(locationData, 'state', '')}, ${get(locationData, 'country', '')}, ${get(locationData, 'zip', '')}`
     }
+
     return (
       <Wrapper bgImg={schoolCoverSrc}>
         <NameBar
-          title = {title}
+          title={this.getTitle()}
           schoolName={schoolName}
         />
         <Description description={desc} />
         <LocationDetails
-          time={eventStartTime}
-          timePeriod={"Missing"}
+          time={this.getTime()}
+          timePeriod={this.getTimePeriod()}
           startDate={start}
           address={locationName()}
-          locationData={{lat:get(locationData,'loc[1]',''),lng:get(locationData,"loc[0]",'')}}
+          locationData={{ lat: get(locationData, 'loc[1]', ''), lng: get(locationData, "loc[0]", '') }}
         />
         <HideOnLargeScreen>
-          <ActionButtons  website = {website}/>
+          <ActionButtons website={website} />
         </HideOnLargeScreen>
       </Wrapper>
     );

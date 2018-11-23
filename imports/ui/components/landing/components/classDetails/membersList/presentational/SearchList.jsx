@@ -41,7 +41,7 @@ const SearchList = props => (
       InputProps={{ classes: { input: props.classes.inputRoot } }}
       onChange={props.onChange}
     />
-    <Icon className={props.classes.icon}>{"search"}</Icon>
+    <Icon className={props.classes.icon}>search</Icon>
   </Wrapper>
 );
 

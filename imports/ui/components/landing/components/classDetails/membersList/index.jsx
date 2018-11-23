@@ -95,21 +95,21 @@ class MembersListContainer extends Component {
           <AddInstructorDialogBox
             open={addInstructorDialogBoxState}
             onModalClose={this.handleAddInstructorDialogBoxState(false)}
-            classData = {classData}
-            popUp = {popUp}
-            instructorsIds = {instructorsIds}
+            classData={classData}
+            popUp={popUp}
+            schoolId={schoolId}
+            instructorsIds={instructorsIds}
           />
         )}
         <MembersList
           viewType={currentView}
-          searchedValue={this.state.teachersFilterWith}
           onSearchChange={this.handleSearchChange("teachersFilterWith")}
           data={instructorsData}
           entityType={"teachers"}
           searchedValue={this.state.teachersFilterWith}
           onAddIconClick={this.handleAddInstructorDialogBoxState(true)}
-          classData = {classData}
-          popUp = {popUp}
+          classData={classData}
+          popUp={popUp}
         />
         <MembersList
           viewType={currentView}
@@ -118,8 +118,8 @@ class MembersListContainer extends Component {
           data={ this.studentsListMaker(studentsData,classData) }
           entityType={"students"}
           searchedValue={this.state.studentsFilterWith}
-          classData = {classData}
-          popUp = {popUp}
+          classData={classData}
+          popUp={popUp}
         />
       </Fragment>
     );

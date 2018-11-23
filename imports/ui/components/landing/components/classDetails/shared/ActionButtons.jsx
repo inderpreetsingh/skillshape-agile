@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
-import {goToClassTypePage} from '/imports/util';
+import { goToClassTypePage } from '/imports/util';
 import {
   rhythmDiv,
   mobile,
@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  margin: 0 auto ${rhythmDiv * 8}px; auto;
+  margin: 0 auto;
 
   @media screen and (min-width: ${mobile - 100}px) {
     width: 100%;
@@ -54,13 +54,13 @@ const ActionButtons = props => (
   <OuterWrapper>
     <Wrapper>
       <ButtonWrapper marginBottom>
-        <ClassTimeButton label="View Class Type" 
-        onClick={()=>{goToClassTypePage(props.classTypeName,props.classTypeId)}}/>
+        <ClassTimeButton label="View Class Type"
+          onClick={() => { goToClassTypePage(props.classTypeName, props.classTypeId) }} />
       </ButtonWrapper>
       <ButtonWrapper>
-        <ClassTimeButton label="Visit School" onClick={()=>{  
-         browserHistory.push(`/schools/${props.slug}`)
-         }}/>
+        <ClassTimeButton label="Visit School" onClick={() => {
+          browserHistory.push(`/schools/${props.slug}`)
+        }} />
       </ButtonWrapper>
       {/*<Link
         to={
