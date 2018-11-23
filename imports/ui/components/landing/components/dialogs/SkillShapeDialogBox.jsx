@@ -214,13 +214,12 @@ class SkillShapeDialogBox extends Component {
 
 	getDefaultButtons = (defaultButtons) => {
 		const {
-			RenderActions,
 			type,
-
-			onAffirmationButtonClick,
-			onModalClose,
-			onCloseButtonClick,
 			classes,
+			onModalClose,
+			RenderActions,
+			onAffirmationButtonClick,
+			onCloseButtonClick,
 			fromPackageListing
 		} = this.props;
 		return (
@@ -239,8 +238,8 @@ class SkillShapeDialogBox extends Component {
 							fromPackageListing ? (
 								classes['ghostCommon'] + ' ' + classes[`ghost.success`]
 							) : (
-								this._getAffirmateButtonClasses()
-							)
+									this._getAffirmateButtonClasses()
+								)
 						}
 					>
 						{this._getAffirmateButtonText()}
@@ -362,7 +361,7 @@ SkillShapeDialogBox.propTypes = {
 };
 
 SkillShapeDialogBox.defaultProps = {
-	onAffirmationButtonClick: () => {},
+	onAffirmationButtonClick: () => { },
 	defaultButtons: false
 };
 
