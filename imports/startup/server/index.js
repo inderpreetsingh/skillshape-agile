@@ -33,6 +33,7 @@ import "/imports/api/schoolSuggestion/methods";
 import '/imports/api/urlToBase64/methods';
 import '/imports/api/classSubscription/methods';
 import "/imports/api/classes/methods";
+import "/imports/api/attendance/methods";
 
 // All publication imported over here
 
@@ -60,3 +61,4 @@ import "/imports/api/purchases/server/publication";
 import "/imports/api/schoolSuggestion/server/publication";
 import "/imports/api/classSubscription/server/publication";
 import "/imports/api/classes/server/publication";
+import "/imports/api/attendance/server/publication";

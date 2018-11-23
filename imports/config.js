@@ -51,7 +51,8 @@ export default (config = Object.freeze({
     purchases: "Purchases",
     schoolSuggestion: "SchoolSuggestion",
     classSubscription: 'ClassSubscription',
-    classes: 'Classes'
+    classes: 'Classes',
+    attendance: 'Attendance'
   },
   gender: [
     { label: "Other", value: "Other" },

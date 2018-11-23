@@ -36,6 +36,11 @@ Meteor.methods({
             if(filter == null)
             filter = {};
             let obj = {userId:this.userId,status};
+            if(status=='checkIn' || status=='checkOut'){
+                Meteor.call("attendance.updateData",filter,(err,res)=>{
+
+                })
+            }
             if(!filter._id){
                 filter.students=[obj];
                 filter.scheduled_date = new Date (filter.scheduled_date);
@@ -61,6 +66,8 @@ Meteor.methods({
                      if(!found)
                     filter.students.push(obj);
                     filter.students = uniq(filter.students);
+                    
+                    
                     return Classes.update({_id:filter._id},{$set:filter});
                 }
                 else{
