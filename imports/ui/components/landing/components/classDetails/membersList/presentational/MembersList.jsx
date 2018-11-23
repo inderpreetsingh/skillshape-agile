@@ -73,7 +73,7 @@ const MembersList = props => {
         /> */}
             </ListHeading>
             <MembersGrid expanded={expanded}>
-                {props.data && !isEmpty(props.data) ?
+                {!isEmpty(props.data) &&
                     props.data.map(obj => (
                         <MemberWrapper expanded={expanded} type={obj.type}>
                             {expanded ? (
@@ -101,7 +101,7 @@ const MembersList = props => {
                                     />
                                 )}
                         </MemberWrapper>
-                    )) : <Text> No {props.entityType} Found</Text>}
+                    ))}
                 {/* Adding add instructors box*/}
                 {props.entityType === "teachers" &&
                     props.viewType === "instructorsView" && (
