@@ -62,14 +62,13 @@ const Wrapper = styled.div`
 const ImageContainer = styled.div`
   width: 100px;
   height: 100px;
-  border-radius: 10%;
   flex-shrink: 0;
   ${helpers.coverBg};
   margin-right: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv}px;
   background-position: 50% 50%;
   background-image: url('${(props) => props.src}');
-  background-size: cover;
+  background-size: contain;
   transition: background-image 1s linear;
 `;
 
