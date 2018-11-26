@@ -1,12 +1,14 @@
-import Icon from "material-ui/Icon";
-import { withStyles } from "material-ui/styles";
-import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
+import Icon from "material-ui/Icon";
+import { withStyles } from "material-ui/styles";
+
+import { formatDate } from "/imports/util";
 import { mobile, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
-import { formatDate } from "/imports/util";
+import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
 
 
 const styles = {
@@ -23,16 +25,13 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 ${rhythmDiv * 2}px;
-  margin-bottom: ${rhythmDiv * 2}px;
   min-height: 200px;
   height: auto;
+  padding-bottom: ${rhythmDiv * 2}px;
 
   @media screen and (min-width: ${mobile + 1}px) {
     flex-direction: row;
-  }
-
-  @media screen and (min-width: ${mobile + 1}px) {
-    height: 200px;
+    height: 250px;
   }
 `;
 
@@ -79,6 +78,13 @@ const Right = styled.div`
   }
 `;
 
+const HideOnLargeScreen = styled.div`
+  @media screen and (min-width: ${tablet}px) {
+    display: none;
+  }
+`;
+
+
 /* prettier-ignore */
 const Time = Address = MyDate = Text.extend`
   display: flex;
@@ -91,28 +97,40 @@ const LocationDetails = props => {
   // console.group("Location Details");
   // console.log(props);
   // console.groupEnd();
+  const {
+    address,
+    classes: { icon },
+    time,
+    timePeriod,
+    startDate,
+    locationData,
+    website
+  } = props;
 
   return (
     <Wrapper>
       <Left>
         <LeftInnerWrapper>
           <MyDate>
-            <Icon classes={{ root: props.classes.icon }}>calendar_today</Icon>
-            {formatDate(props.startDate)}
+            <Icon classes={{ root: icon }}>calendar_today</Icon>
+            {formatDate(startDate)}
           </MyDate>
           <Time>
-            <Icon classes={{ root: props.classes.icon }}>timer</Icon>
-            {props.time} {props.timePeriod}
+            <Icon classes={{ root: icon }}>timer</Icon>
+            {time} {timePeriod}
           </Time>
           <Address>
-            <Icon classes={{ root: props.classes.icon }}>my_location</Icon>
-            {props.address}
+            <Icon classes={{ root: icon }}>my_location</Icon>
+            {address}
           </Address>
+          <HideOnLargeScreen>
+            <ActionButtons website={website} />
+          </HideOnLargeScreen>
         </LeftInnerWrapper>
       </Left>
       <Right>
         <SchoolLocationMap
-          locationData={props.locationData}
+          locationData={locationData}
           markerDraggable={false}
         />
       </Right>

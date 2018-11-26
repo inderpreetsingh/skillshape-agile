@@ -12,9 +12,10 @@ const Wrapper = styled.div`
   margin-bottom: ${rhythmDiv * 7}px;
 `;
 
-const ListHeading = styled.div`
+const ListHeadWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: ${rhythmDiv}px;
   @media screen and (min-width: ${mobile - 50}px) {
     flex-direction: row;
   }
@@ -63,15 +64,15 @@ const MembersList = props => {
 
     return (
         <Wrapper>
-            <ListHeading>
+            <ListHeadWrapper>
                 <Title>
                     <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
-        </Title>
+                </Title>
                 {/* <SearchList
           onChange={props.onSearchChange}
           searchedValue={props.searchedValue}
         /> */}
-            </ListHeading>
+            </ListHeadWrapper>
             <MembersGrid expanded={expanded}>
                 {!isEmpty(props.data) &&
                     props.data.map(obj => (

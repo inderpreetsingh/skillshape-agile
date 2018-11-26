@@ -27,7 +27,8 @@ const Wrapper = styled.div`
 
   @media screen and (min-width: ${mobile - 100}px) {
     width: 100%;
-    justify-content: space-evenly;
+    padding: 0;
+    justify-content: flex-start;
   }
 
   @media screen and (min-width: ${tablet}px) {
@@ -39,14 +40,10 @@ const Wrapper = styled.div`
 
 const ButtonWrapper = styled.div`
   display: flex;
-
-  @media screen and (min-width: ${tablet}px) {
-    ${props => props.marginBottom && `margin-bottom: ${rhythmDiv}px;`};
-  }
+  ${props => props.marginBottom && `margin-bottom: ${rhythmDiv}px;`};
 
   @media screen and (min-width: 300px) and (max-width: 400px) {
     margin-right: ${rhythmDiv}px;
-    ${props => props.marginBottom && `margin-bottom: ${rhythmDiv}px;`};
   }
 `;
 

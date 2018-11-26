@@ -75,10 +75,11 @@ const ProfilePic = styled.div`
   background-image: url(${props => props.src});
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: cover;
+  background-size: contain;
   width: 100px;
   height: 100px;
   display: flex;
+  flex-shrink: 0;
   padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
 
   ${props => props.addInstructor &&
@@ -89,7 +90,7 @@ const ProfilePic = styled.div`
   
   @media screen and (min-width: ${helpers.mobile - 50}px) {
     margin-bottom: ${helpers.rhythmDiv * 2}px;
-    padding-top: 0;
+    flex-shrink: 1;
   }
 `;
 
@@ -175,7 +176,7 @@ const Member = props => {
     let payLoad = {
       instructorId: get(props, '_id', 0),
       _id: get(props.classData[0], "_id", 0),
-      instructorIds:get(props,"instructorsIds",[]),
+      instructorIds: get(props, "instructorsIds", []),
       action: 'remove'
     }
     Meteor.call("classes.handleInstructors", payLoad, (err, res) => {

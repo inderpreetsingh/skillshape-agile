@@ -21,6 +21,14 @@ const imageExistsConfigSchoolSrc = {
 
 const Wrapper = styled.div`
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+`;
+
+const PageContent = styled.div`
+
 `;
 
 const InnerWrapper = styled.div`
@@ -54,7 +62,6 @@ const ClassTimeWrapper = styled.div`
   @media screen and (min-width: ${tablet}px) {
     display: flex;
     flex-direction: row-reverse;
-    margin-bottom: ${rhythmDiv * 4}px;
   }
 `;
 
@@ -76,43 +83,46 @@ const ClassDetails = props => {
 
   return (
     <Wrapper>
-      <TopSearchBar {...props.topSearchBarProps} />
-      {props.noPurchasedClasses &&
-        currentView === "studentsView" && (
-          <Notification
-            notificationContent="You do not have any packages that will cover this class."
-            bgColor={danger}
-            buttonLabel="Purchase Classes"
-            onButtonClick={props.onPurchaseButtonClick}
+      <PageContent>
+        <TopSearchBar {...props.topSearchBarProps} />
+        {props.noPurchasedClasses &&
+          currentView === "studentsView" && (
+            <Notification
+              notificationContent="You do not have any packages that will cover this class."
+              bgColor={danger}
+              buttonLabel="Purchase Classes"
+              onButtonClick={props.onPurchaseButtonClick}
+            />
+          )}
+        <InnerWrapper>
+          <ClassTimeWrapper bgImg={bgImg}>
+            <ClassTimeCover
+              classTypeCoverSrc={headerProps.classTypeCoverSrc}
+              schoolCoverSrc={bgImg}
+              classTypeName={get(state.classType, 'name', null)}
+              classTypeId={get(state.classType, '_id', null)}
+              slug={get(school, 'slug', '')}
+            />
+            <ClassTimeInformation
+              {...dataProps.eventData}
+              schoolName={school.name}
+              locationData={state.location}
+              website={school.website}
+              classType={state.classType}
+            />
+          </ClassTimeWrapper>
+          {/* <TimeLine {...dataProps.eventData} /> */}
+          <MembersList
+            schoolId={school._id}
+            currentView={currentView}
+            classData={classData}
+            instructorsData={instructorsData}
+            popUp={popUp}
+            instructorsIds={instructorsIds}
           />
-        )}
-      <InnerWrapper>
-        <ClassTimeWrapper bgImg={bgImg}>
-          <ClassTimeCover
-            classTypeCoverSrc={headerProps.classTypeCoverSrc}
-            schoolCoverSrc={bgImg}
-            classTypeName={get(state.classType, 'name', null)}
-            classTypeId={get(state.classType, '_id', null)}
-            slug={get(school, 'slug', '')}
-          />
-          <ClassTimeInformation
-            {...dataProps.eventData}
-            schoolName={school.name}
-            locationData={state.location}
-            website={school.website}
-            classType={state.classType}
-          />
-        </ClassTimeWrapper>
-        {/* <TimeLine {...dataProps.eventData} /> */}
-        <MembersList
-          schoolId={school._id}
-          currentView={currentView}
-          classData={classData}
-          instructorsData={instructorsData}
-          popUp={popUp}
-          instructorsIds={instructorsIds}
-        />
-      </InnerWrapper>
+        </InnerWrapper>
+      </PageContent>
+
       <Footer />
     </Wrapper>
   );

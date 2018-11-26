@@ -17,13 +17,12 @@ class ClassDetailsContainer extends Component {
 
   getSchoolImage() {
     const { state: { school } } = this.props.location.state;
-    console.log("SCHOOOL IMG SOURCE",school ,get(school, 'logoImgMedium', get(school, 'logoImg', classTypeImgSrc)));
+    return get(school, 'logoImgMedium', get(school, 'logoImg', classTypeImgSrc));
   }
 
   getClassTypeImage() {
     const { state } = this.props.location.state;
-    return get(state, 'classImg', config.defaultSchoolImage)
-
+    return get(state, 'classImg', "")
   }
 
   render() {

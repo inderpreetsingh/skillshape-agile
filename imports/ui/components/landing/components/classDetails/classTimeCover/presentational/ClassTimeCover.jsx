@@ -60,9 +60,9 @@ const ClassTypeProfileWithDefaultImage = withImageExists(props => {
 
 const ClassTimeCover = props => (
   <Wrapper url={props.schoolCoverSrc}>
-    <ClassTypeProfileWithDefaultImage
+    {props.classTypeCoverSrc && <ClassTypeProfileWithDefaultImage
       classTypeCoverSrc={props.classTypeCoverSrc}
-    />
+    />}
     <ButtonsWrapper>
       <ActionButtons
         slug={props.slug}
