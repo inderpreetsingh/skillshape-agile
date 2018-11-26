@@ -216,7 +216,7 @@ const Package = (props) => {
 						{/*<ClassDetailsText>
 							<b>Covers:</b> {getCovers(props.selectedClassType)}
 						</ClassDetailsText>*/}
-						{getExplainationBasedOnType(props)}
+						{/*getExplainationBasedOnType(props)*/}
 
 					</ClassDetailsSection>
 					<RightSection>
