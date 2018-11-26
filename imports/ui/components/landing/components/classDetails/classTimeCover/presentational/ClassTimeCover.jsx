@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
-import { rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { rhythmDiv, tablet, panelColor } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { coverSrc, schoolDetailsImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { withImageExists } from "/imports/util";
 
@@ -33,9 +33,12 @@ const ClassTypeProfile = styled.div`
   bottom: ${rhythmDiv * 2}px;
   left: ${rhythmDiv * 2}px;
   background-image: url('${props => props.url}');
+  background-color: ${panelColor};
   background-size: contain;
   background-position: 50% 50%;
   background-repeat: no-repeat;
+  border-radius: 5px;
+  padding: ${rhythmDiv}px;
 `;
 
 const ButtonsWrapper = styled.div`
