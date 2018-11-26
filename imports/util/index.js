@@ -25,6 +25,9 @@ export {
 	formatDataBasedOnScheduleType,
 	formatClassTimesData
 } from '/imports/util/formatSchedule.js';
+export {
+	calcContractEnd
+} from '/imports/util/subscriptionsHelpers.js';
 export { getAverageNoOfRatings } from '/imports/util/averageRatings';
 export { capitalizeString, addDelimiter } from '/imports/util/stringOperations';
 export { formStyles } from '/imports/util/formStyle';

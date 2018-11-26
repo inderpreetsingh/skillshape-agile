@@ -85,7 +85,7 @@ const PackagesInnerWrapper = styled.div`
 	${helpers.flexCenter}  
 	flex-wrap: wrap;
 	justify-content: space-between;
-
+    width: 100%;
 	max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px;
 	margin: 0 auto;
 
@@ -150,23 +150,27 @@ const EnrollmentPackagesList = (props) => (
     <EnrollMentListWrapper forIframes={props.forIframes}>
         <PackagesWrapper onPriceEdit={props.onPriceEdit}>
             <Title>{props.packageListName}</Title>
-            {props.packagesData.map((packageData) => (
-                <PackageWrapper key={packageData._id}>
-                    <Package
-                        {...packageData}
-                        {...props.packageProps}
-                        classPackages={props.classPackages}
-                        schoolCurrency={props.schoolCurrency}
-                        onSchoolEdit={props.onSchoolEdit}
-                        onEditClick={() => {
-                            props.onEditClick();
-                        }}
-                        setFormData={() => {
-                            props.setFormData(packageData);
-                        }}
-                    />
-                </PackageWrapper>
-            ))}
+            <PackagesInnerWrapper>
+
+                {props.packagesData.map((packageData) => (
+                    <PackageWrapper key={packageData._id}>
+                        <Package
+                            {...packageData}
+                            {...props.packageProps}
+                            classPackages={props.classPackages}
+                            schoolCurrency={props.schoolCurrency}
+                            onSchoolEdit={props.onSchoolEdit}
+                            onEditClick={() => {
+                                props.onEditClick();
+                            }}
+                            setFormData={() => {
+                                props.setFormData(packageData);
+                            }}
+                        />
+                    </PackageWrapper>
+                ))}
+            </PackagesInnerWrapper>
+
         </PackagesWrapper>
     </EnrollMentListWrapper>
 );
