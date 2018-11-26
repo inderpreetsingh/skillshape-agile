@@ -4,7 +4,7 @@ import Member from "./Member.jsx";
 import MemberExpanded from "./MemberExpanded.jsx";
 import SearchList from "./SearchList.jsx";
 import { mobile, rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
-import { Capitalize, SlantedHeading } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+import { Capitalize, SlantedHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { get, isEmpty } from 'lodash';
 
 const Wrapper = styled.div`
@@ -31,12 +31,19 @@ const MembersGrid = styled.div`
 `;
 
 const MemberWrapper = styled.div`
+  max-width: 500px;
+  width: 100%;
   padding: 4px;
-  ${props =>
+
+  @media screen and (min-width: ${mobile - 50}px) {
+    max-width: auto;
+    width: auto;
+    ${props =>
         props.expanded
             ? `max-width: 500px;
           width: 100%;`
             : ""};
+  }
 `;
 
 const Title = SlantedHeading.extend`
@@ -52,6 +59,8 @@ const Title = SlantedHeading.extend`
 const MembersList = props => {
     const expanded =
         props.viewType === "instructorsView" && props.entityType === "students";
+    const type = props.entityType === 'students' ? 'student' : 'instructor';
+
     return (
         <Wrapper>
             <ListHeading>
@@ -64,13 +73,14 @@ const MembersList = props => {
         /> */}
             </ListHeading>
             <MembersGrid expanded={expanded}>
-                {props.data && !isEmpty(props.data) &&
+                {!isEmpty(props.data) &&
                     props.data.map(obj => (
                         <MemberWrapper expanded={expanded} type={obj.type}>
                             {expanded ? (
                                 <MemberExpanded
                                     viewType={props.viewType}
                                     {...obj}
+                                    type={type}
                                     popUp={props.popUp}
                                     classData={props.classData}
                                     classTimeForm={props.classTimeForm}
@@ -82,6 +92,8 @@ const MembersList = props => {
                                     <Member
                                         viewType={props.viewType}
                                         {...obj}
+                                        type={type}
+                                        designation={type == 'instructor' && 'assistant'}
                                         popUp={props.popUp}
                                         classData={props.classData}
                                         classTimeForm={props.classTimeForm}

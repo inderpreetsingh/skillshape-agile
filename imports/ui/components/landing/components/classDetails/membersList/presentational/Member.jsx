@@ -26,7 +26,15 @@ const styles = {
     cursor: "pointer",
     width: 8,
     height: 24,
-    fontSize: helpers.baseFontSize
+    fontSize: helpers.baseFontSize,
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+      top: '50%',
+      right: 16,
+      transform: 'translateY(-50%)',
+    },
   },
   menuIconClass: {
     height: 24,
@@ -37,20 +45,30 @@ const styles = {
 const Wrapper = styled.div`
   background: ${helpers.panelColor};
   display: flex;
-  width: 160px;
-  height: 180px;
   position: relative;
+  width: 100%;
+  height: auto;
+
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
+    width: 160px;
+    height: 180px;
+  }
 `;
 
 const Profile = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  padding: ${helpers.rhythmDiv * 2}px;
-  padding-top: 0;
+  ${helpers.flexCenter}
+  padding: ${helpers.rhythmDiv}px  ${helpers.rhythmDiv * 2}px;
   width: 100%;
-  flex-grow: 1;
-  flex-shrink: 0;
+  flex-grow: 1; 
+  flex-shrink: 1;
+
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
+    flex-direction: column;
+    justify-content: flex-start;  
+    flex-shrink: 0;
+    padding: ${helpers.rhythmDiv * 2}px;
+    padding-top: 0;
+  }
 `;
 
 const ProfilePic = styled.div`
@@ -61,24 +79,32 @@ const ProfilePic = styled.div`
   width: 100px;
   height: 100px;
   display: flex;
-  padding: ${helpers.rhythmDiv * 2}px;
-  padding-top: 0;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
+
   ${props => props.addInstructor &&
     `cursor: pointer; 
-     background-size: 75px; 
-     background-position: 50% 70%;`
+    background-size: 75px; 
+    background-position: 50% 70%;`
   };
+  
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+    padding-top: 0;
+  }
 `;
 
 const DetailsWrapper = styled.div`
-  ${props =>
-    props.type === "student"
-      ? helpers.flexCenter
-      : helpers.flexHorizontalSpaceBetween};
-  align-items: flex-start;
+  ${helpers.flexCenter}
   width: 100%;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  justify-content: flex-start;
+  padding-left: ${helpers.rhythmDiv * 2}px;
+
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
+    flex-shrink: 0;
+    padding-left: 0;
+    justify-content: center;
+  }
 `;
 
 const Details = styled.div`
@@ -177,6 +203,7 @@ const Member = props => {
       ;
     }
   }
+
   return (
     <Wrapper>
       <Profile>
@@ -191,18 +218,18 @@ const Member = props => {
             {props.type !== "student" &&
               !props.addInstructor && (
                 <Text>
-                  <Capitalize>{props.type}</Capitalize>
+                  <Capitalize>{props.designation}</Capitalize>
                 </Text>
               )}
           </Details>
-          {props.viewType === "instructorsView" &&
-            !props.addInstructor && <DropDownMenu
-              classes={props.classes}
-              menuOptions={menuOptions}
-              onMenuItemClick={this.handleMenuItemClick}
-            />}
-
         </DetailsWrapper>
+        {props.viewType === "instructorsView" &&
+          !props.addInstructor && <DropDownMenu
+            menuIconClass={props.classes.menuIconClass}
+            menuButtonClass={props.classes.menuButtonClass}
+            menuOptions={menuOptions}
+            onMenuItemClick={this.handleMenuItemClick}
+          />}
       </Profile>
     </Wrapper>
   );
